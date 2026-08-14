@@ -1,0 +1,10 @@
+{
+  "name": "BandManager",
+  "description": "Manage bookings, contracts, finances, rehearsals, and logistics with automated performance reports and direct team communication in one centralized platform.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
