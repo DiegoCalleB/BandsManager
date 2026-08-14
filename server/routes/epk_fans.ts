@@ -139,32 +139,69 @@ router.put("/epk", requireAuth, async (req, res) => {
 });
 
 // Public EPK Data endpoint (No Auth required for public sharing)
-router.get("/public/epk", (req, res) => {
-  const state = loadState();
-  const reqBandId = (req.query.band_id as string) || (req.query.band as string) || BAKANDEYA_BAND_ID;
-  const epkConfig = getEpkConfigForBand(state, reqBandId);
-  const songs = (state.songs || []).filter((s: any) => s.band_id === reqBandId || (!s.band_id && reqBandId === BAKANDEYA_BAND_ID));
-  const concerts = (state.concerts || []).filter((c: any) => c.band_id === reqBandId || (!c.band_id && reqBandId === BAKANDEYA_BAND_ID));
+router.get("/public/epk", async (req, res) => {
+  try {
+    const rawBandId = (req.query.band_id as string) || (req.query.band as string) || (req.query.b as string) || (req.headers['x-band-id'] as string) || BAKANDEYA_BAND_ID;
+    const reqBandId = rawBandId.toLowerCase().replace(/^(reg)-/, 'band-');
+    const cleanBandId = reqBandId.replace(/^(band|reg)-/, '');
 
-  const regBand = (state.registeredBands || []).find((b: any) => b.band_id === reqBandId || b.id === reqBandId);
-  const bandName = regBand?.nombre_banda || (reqBandId === BAKANDEYA_BAND_ID ? "Bakandeya" : "Banda");
+    const state = loadState();
+    let epkConfig: any = null;
+    try {
+      epkConfig = await dbGetEpkConfig(reqBandId);
+    } catch (e) {
+      console.warn("Could not fetch EPK from Supabase:", e);
+    }
 
-  // Filter 2-3 highlighted songs
-  const highlightedSongs = epkConfig.temasDestacadosIds?.length > 0
-    ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
-    : songs.slice(0, 3);
+    if (!epkConfig) {
+      epkConfig = getEpkConfigForBand(state, reqBandId);
+    }
 
-  // Upcoming and recent concerts
-  const today = new Date().toISOString().split("T")[0];
-  const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
+    const songs = (state.songs || []).filter((s: any) => {
+      const sBand = (s.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
+      return sBand === cleanBandId || (!s.band_id && cleanBandId === 'bakandeya');
+    });
 
-  res.json({
-    bandName,
-    epkConfig,
-    highlightedSongs,
-    upcomingConcerts: upcomingConcerts.slice(0, 5),
-    totalConcertsCount: concerts.length
-  });
+    const concerts = (state.concerts || []).filter((c: any) => {
+      const cBand = (c.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
+      return cBand === cleanBandId || (!c.band_id && cleanBandId === 'bakandeya');
+    });
+
+    const regBand = (state.registeredBands || []).find((b: any) => {
+      const bId = (b.band_id || b.id || '').replace(/^(band|reg)-/, '').toLowerCase();
+      return bId === cleanBandId;
+    });
+
+    let bandName = regBand?.nombre_banda;
+    if (!bandName && epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) {
+      bandName = epkConfig.contactoBooking.nombre;
+    }
+    if (!bandName) {
+      bandName = cleanBandId === 'bakandeya' ? 'Bakandeya' : (cleanBandId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+    }
+
+    // Filter highlighted songs
+    const highlightedSongs = epkConfig?.temasDestacadosIds?.length > 0
+      ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
+      : songs.slice(0, 3);
+
+    // Upcoming concerts
+    const today = new Date().toISOString().split("T")[0];
+    const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
+
+    res.json({
+      bandId: reqBandId,
+      bandName,
+      logoUrl: epkConfig?.logoUrl || null,
+      epkConfig,
+      highlightedSongs,
+      upcomingConcerts: upcomingConcerts.slice(0, 5),
+      totalConcertsCount: concerts.length
+    });
+  } catch (err: any) {
+    console.error("Error in public EPK endpoint:", err);
+    res.status(500).json({ error: "Error al cargar la información pública del EPK." });
+  }
 });
 
 // Get Fans List (Authenticated)

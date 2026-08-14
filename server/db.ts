@@ -112,20 +112,67 @@ export async function dbDeleteRegisteredBand(bandId: string) {
 // --- USERS ---
 export async function dbGetUsers(bandId?: string) {
   const sb = getSupabase();
-  let query = sb.from("users").select("*");
-  if (bandId) {
-    query = query.eq("band_id", cleanBandId(bandId));
+  if (!bandId) {
+    const { data, error } = await sb.from("users").select("*").order("created_at", { ascending: true });
+    if (error) throw new Error(`Supabase Error (users): ${error.message}`);
+    return (data || []).map(u => ({
+      ...u,
+      bandName: u.band_name || u.bandName,
+      avatarColor: u.avatar_color || u.avatarColor,
+      passwordHash: u.password_hash || u.passwordHash,
+      googleOauth: u.google_oauth || u.googleOauth || {}
+    }));
   }
-  const { data, error } = await query.order("created_at", { ascending: true });
+
+  const cleanId = cleanBandId(bandId);
+  const { data: directUsers, error } = await sb.from("users").select("*").eq("band_id", cleanId).order("created_at", { ascending: true });
   if (error) throw new Error(`Supabase Error (users): ${error.message}`);
   
-  return (data || []).map(u => ({
+  const list = (directUsers || []).map(u => ({
     ...u,
     bandName: u.band_name || u.bandName,
     avatarColor: u.avatar_color || u.avatarColor,
     passwordHash: u.password_hash || u.passwordHash,
     googleOauth: u.google_oauth || u.googleOauth || {}
   }));
+
+  // Also include the band owner/leader from registered_bands if not already in list
+  try {
+    const { data: regBand } = await sb.from("registered_bands").select("user_id, email").eq("band_id", cleanId).maybeSingle();
+    if (regBand) {
+      if (regBand.user_id && !list.some(u => u.id === regBand.user_id)) {
+        const { data: ownerUser } = await sb.from("users").select("*").eq("id", regBand.user_id).maybeSingle();
+        if (ownerUser) {
+          list.unshift({
+            ...ownerUser,
+            band_id: cleanId,
+            role: "leader",
+            bandName: ownerUser.band_name || ownerUser.bandName,
+            avatarColor: ownerUser.avatar_color || ownerUser.avatarColor,
+            passwordHash: ownerUser.password_hash || ownerUser.passwordHash,
+            googleOauth: ownerUser.google_oauth || ownerUser.googleOauth || {}
+          });
+        }
+      } else if (regBand.email && !list.some(u => u.email?.toLowerCase() === regBand.email.toLowerCase() || u.username?.toLowerCase() === regBand.email.toLowerCase())) {
+        const { data: ownerUser } = await sb.from("users").select("*").or(`email.eq.${regBand.email},username.eq.${regBand.email}`).maybeSingle();
+        if (ownerUser) {
+          list.unshift({
+            ...ownerUser,
+            band_id: cleanId,
+            role: "leader",
+            bandName: ownerUser.band_name || ownerUser.bandName,
+            avatarColor: ownerUser.avatar_color || ownerUser.avatarColor,
+            passwordHash: ownerUser.password_hash || ownerUser.passwordHash,
+            googleOauth: ownerUser.google_oauth || ownerUser.googleOauth || {}
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Could not check registered band owner for users:", err);
+  }
+
+  return list;
 }
 
 export async function dbGetUserById(userId: string) {
@@ -609,9 +656,13 @@ export async function dbGetConcerts(bandId: string) {
   if (error) throw new Error(`Supabase Error (concerts): ${error.message}`);
   return (data || []).map(c => ({
     ...c,
-    gastos_detalle: c.gastos_detalle || {},
-    convocados_ids: c.convocados_ids || [],
-    convocados_nombres: c.convocados_nombres || []
+    gastosDetalle: c.gastos_detalle || c.gastosDetalle || {},
+    gastos_detalle: c.gastos_detalle || c.gastosDetalle || {},
+    convocatoria_tipo: c.convocatoria_tipo || c.convocatoriaTipo || "completa",
+    convocados_ids: c.convocados_ids || c.convocadosIds || [],
+    convocados_nombres: c.convocados_nombres || c.convocadosNombres || [],
+    giraId: c.gira_id || c.giraId || undefined,
+    giraNombre: c.gira_nombre || c.giraNombre || undefined
   }));
 }
 
@@ -620,7 +671,7 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   const targetBandId = cleanBandId(concert.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload = {
+  const payload: any = {
     id: concert.id || `cnc-${Date.now()}`,
     band_id: targetBandId,
     band_name: concert.band_name || concert.bandName || "",
@@ -640,12 +691,28 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     gastos_estimados_tipicos: Number(concert.gastos_estimados_tipicos || concert.gastosEstimadosTipicos || 0),
     convocatoria_tipo: concert.convocatoria_tipo || concert.convocatoriaTipo || "completa",
     convocados_ids: concert.convocados_ids || concert.convocadosIds || [],
-    convocados_nombres: concert.convocados_nombres || concert.convocadosNombres || []
+    convocados_nombres: concert.convocados_nombres || concert.convocadosNombres || [],
+    gira_id: concert.gira_id || concert.giraId || null,
+    gira_nombre: concert.gira_nombre || concert.giraNombre || null
   };
 
-  const { data, error } = await sb.from("concerts").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert concert): ${error.message}`);
-  return data;
+  let { data, error } = await sb.from("concerts").upsert(payload).select().single();
+  if (error && (error.message.includes("gira_id") || error.message.includes("gira_nombre"))) {
+    const fallback = { ...payload };
+    delete fallback.gira_id;
+    delete fallback.gira_nombre;
+    const retry = await sb.from("concerts").upsert(fallback).select().single();
+    if (retry.error) throw new Error(`Supabase Error (upsert concert): ${retry.error.message}`);
+    data = retry.data;
+    error = null;
+  } else if (error) {
+    throw new Error(`Supabase Error (upsert concert): ${error.message}`);
+  }
+  return {
+    ...data,
+    giraId: concert.giraId || concert.gira_id,
+    giraNombre: concert.giraNombre || concert.gira_nombre
+  };
 }
 
 export async function dbDeleteConcert(id: string, bandId: string) {
@@ -1080,6 +1147,11 @@ export async function dbGetTours(bandId: string) {
       precioCarburanteEUR: t.precio_carburante_eur ?? t.precioCarburanteEUR,
       tipoCombustible: t.tipo_combustible || t.tipoCombustible || "diesel",
       presupuestoLogistica: t.presupuesto_logistica ?? t.presupuestoLogistica ?? 0,
+      convocatoria_tipo: t.convocatoria_tipo || t.convocatoriaTipo || "completa",
+      convocados_ids: t.convocados_ids || t.convocadosIds || [],
+      convocados_nombres: t.convocados_nombres || t.convocadosNombres || [],
+      sincronizarCalendario: t.sincronizar_calendario ?? t.sincronizarCalendario ?? true,
+      sincronizarFinanzas: t.sincronizar_finanzas ?? t.sincronizarFinanzas ?? false,
       vehiculos,
       stops: t.stops || []
     };
@@ -1118,6 +1190,11 @@ export async function dbUpsertTour(tour: any, bandId: string) {
     precio_carburante_eur: Number(tour.precio_carburante_eur || tour.precioCarburanteEUR || (vehiculos[0]?.precioCarburanteEUR ?? 0)),
     tipo_combustible: tour.tipo_combustible || tour.tipoCombustible || (vehiculos[0]?.tipoCombustible ?? "diesel"),
     presupuesto_logistica: Number(tour.presupuesto_logistica || tour.presupuestoLogistica || 0),
+    convocatoria_tipo: tour.convocatoria_tipo || tour.convocatoriaTipo || "completa",
+    convocados_ids: tour.convocados_ids || tour.convocadosIds || [],
+    convocados_nombres: tour.convocados_nombres || tour.convocadosNombres || [],
+    sincronizar_calendario: tour.sincronizarCalendario ?? tour.sincronizar_calendario ?? true,
+    sincronizar_finanzas: tour.sincronizarFinanzas ?? tour.sincronizar_finanzas ?? false,
     vehiculos: vehiculos,
     stops: tour.stops || [],
     estado: tour.estado || "planificacion"
@@ -1125,21 +1202,40 @@ export async function dbUpsertTour(tour: any, bandId: string) {
 
   let { data, error } = await sb.from("tours").upsert(payload).select().single();
 
-  // If the remote Supabase table does not have the 'vehiculos' column yet, retry gracefully
-  if (error && error.message && error.message.toLowerCase().includes("vehiculos")) {
-    console.warn("Columna 'vehiculos' no detectada en la tabla tours de Supabase. Reintentando sin el campo 'vehiculos'...");
+  // Retry gracefully if any newly introduced optional columns are not yet in remote Supabase schema cache
+  if (error && error.message) {
     const fallbackPayload = { ...payload };
-    delete fallbackPayload.vehiculos;
-    const retry = await sb.from("tours").upsert(fallbackPayload).select().single();
-    if (retry.error) throw new Error(`Supabase Error (upsert tour): ${retry.error.message}`);
-    data = retry.data;
-    error = null;
-  } else if (error) {
-    throw new Error(`Supabase Error (upsert tour): ${error.message}`);
+    let shouldRetry = false;
+    if (error.message.toLowerCase().includes("vehiculos")) {
+      delete fallbackPayload.vehiculos;
+      shouldRetry = true;
+    }
+    if (error.message.toLowerCase().includes("convocatoria_tipo") || error.message.toLowerCase().includes("convocados_") || error.message.toLowerCase().includes("sincronizar_")) {
+      delete fallbackPayload.convocatoria_tipo;
+      delete fallbackPayload.convocados_ids;
+      delete fallbackPayload.convocados_nombres;
+      delete fallbackPayload.sincronizar_calendario;
+      delete fallbackPayload.sincronizar_finanzas;
+      shouldRetry = true;
+    }
+    if (shouldRetry) {
+      console.warn("Reintentando upsert de tour sin campos no presentes en el esquema remoto...");
+      const retry = await sb.from("tours").upsert(fallbackPayload).select().single();
+      if (retry.error) throw new Error(`Supabase Error (upsert tour fallback): ${retry.error.message}`);
+      data = retry.data;
+      error = null;
+    } else {
+      throw new Error(`Supabase Error (upsert tour): ${error.message}`);
+    }
   }
 
   return {
     ...data,
+    convocatoria_tipo: payload.convocatoria_tipo,
+    convocados_ids: payload.convocados_ids,
+    convocados_nombres: payload.convocados_nombres,
+    sincronizarCalendario: payload.sincronizar_calendario,
+    sincronizarFinanzas: payload.sincronizar_finanzas,
     vehiculos: (data && data.vehiculos) || vehiculos
   };
 }

@@ -452,4 +452,11 @@ CREATE POLICY "Permitir acceso total al backend" ON band_schedules FOR ALL USING
 
 -- Migraciones adicionales idempotentes
 ALTER TABLE tours ADD COLUMN IF NOT EXISTS vehiculos JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE tours ADD COLUMN IF NOT EXISTS convocatoria_tipo TEXT DEFAULT 'completa';
+ALTER TABLE tours ADD COLUMN IF NOT EXISTS convocados_ids JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE tours ADD COLUMN IF NOT EXISTS convocados_nombres JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE tours ADD COLUMN IF NOT EXISTS sincronizar_calendario BOOLEAN DEFAULT true;
+ALTER TABLE tours ADD COLUMN IF NOT EXISTS sincronizar_finanzas BOOLEAN DEFAULT false;
+ALTER TABLE concerts ADD COLUMN IF NOT EXISTS gira_id TEXT;
+ALTER TABLE concerts ADD COLUMN IF NOT EXISTS gira_nombre TEXT;
 

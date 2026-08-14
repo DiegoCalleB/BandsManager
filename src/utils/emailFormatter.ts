@@ -147,10 +147,11 @@ export function formatEmailWithSignatureAndDossier(params: {
   const dossierPdfUrl = epkConfig?.dossierPdfUrl || epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier_Oficial.pdf';
 
-  const spotify = epkConfig?.enlacesRedes?.spotify || '';
-  const instagram = epkConfig?.enlacesRedes?.instagram || '';
-  const youtube = epkConfig?.enlacesRedes?.youtube || '';
-  const website = epkConfig?.enlacesRedes?.website || '';
+  const enlaces = epkConfig?.enlacesRedes || {};
+  const spotify = enlaces.spotify || '';
+  const instagram = enlaces.instagram || '';
+  const youtube = enlaces.youtube || '';
+  const website = enlaces.website || '';
 
   // Check if user's pitch body already ends with a personal signature block
   const lowerBody = bodyContent.toLowerCase();
@@ -161,7 +162,10 @@ export function formatEmailWithSignatureAndDossier(params: {
     website ? `<a href="${website}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">🌐 Sitio Web</a>` : '',
     spotify ? `<a href="${spotify}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">Spotify</a>` : '',
     instagram ? `<a href="${instagram}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">Instagram</a>` : '',
-    youtube ? `<a href="${youtube}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">YouTube</a>` : ''
+    youtube ? `<a href="${youtube}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">YouTube</a>` : '',
+    enlaces.bandcamp ? `<a href="${enlaces.bandcamp}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">Bandcamp</a>` : '',
+    enlaces.appleMusic ? `<a href="${enlaces.appleMusic}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">Apple Music</a>` : '',
+    enlaces.tiktok ? `<a href="${enlaces.tiktok}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">TikTok</a>` : ''
   ].filter(Boolean).join(' &nbsp;•&nbsp; ');
 
   // 3. Construct natural, human HTML email body

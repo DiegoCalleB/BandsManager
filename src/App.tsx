@@ -263,7 +263,13 @@ export default function App() {
   }, []);
 
   if (isFanRoute) {
-    return <FansLanding />;
+    return (
+      <FansLanding 
+        currentBandId={currentActiveBandId} 
+        currentBandName={currentActiveBandName} 
+        currentBandLogo={currentActiveBandLogo} 
+      />
+    );
   }
 
  // Auth Screen Render
@@ -908,6 +914,9 @@ export default function App() {
             onDeleteFan={handleDeleteFan}
             onUpdateIncentive={handleUpdateIncentive}
             onUpdateEpkConfig={handleUpdateEpkConfig}
+            currentBandId={currentActiveBandId}
+            currentBandName={currentActiveBandName}
+            currentBandLogo={currentActiveBandLogo}
           />
         )}
         {currentView === 'giras' && (
@@ -918,22 +927,32 @@ export default function App() {
               concerts={activeBandConcerts}
               leads={leads}
               onAddLead={handleAddLead}
-  onDeleteLead={handleDeleteLead}
+              onDeleteLead={handleDeleteLead}
               onSaveTour={handleSaveTour}
               onDeleteTour={handleDeleteTour}
+              bandUsers={bandUsers}
+              currentUser={currentUser}
+              currentBandId={currentUser?.band_id || "band-bakandeya"}
+              currentBandName={currentActiveBandName}
+              onAddConcert={handleAddConcert}
+              onUpdateConcert={handleUpdateConcert}
+              onAddPayment={handleAddPayment}
+              onNavigate={handleNavigate}
             />
           </ErrorBoundary>
         )}
  {currentView === 'finanzas' && (
  isAdmin ? (
  <Finanzas 
- colors={colors}
- payments={payments}
- concerts={activeBandConcerts}
- onAddPayment={handleAddPayment}
- onUpdatePayment={handleUpdatePayment}
- onUpdateConcert={handleUpdateConcert}
- />
+  colors={colors}
+  payments={payments}
+  concerts={activeBandConcerts}
+  onAddPayment={handleAddPayment}
+  onUpdatePayment={handleUpdatePayment}
+  onUpdateConcert={handleUpdateConcert}
+  tours={tours}
+  bandUsers={bandUsers}
+  />
  ) : (
  <div className={`p-8 rounded-2xl text-center space-y-3 ${colors.card} `}>
  <ShieldAlert className="w-10 h-10 text-rose-500 mx-auto" />

@@ -3910,7 +3910,72 @@
       "updated_at": "2026-08-13T09:56:20.795596+00:00"
     }
   ],
-  "tours": [],
+  "tours": [
+    {
+      "id": "tour-1786702252310",
+      "band_id": "band-ruta-66",
+      "nombre": "Verano 2026",
+      "fecha_inicio": "2026-08-15",
+      "fecha_fin": "2026-08-25",
+      "vehiculo": "Furgoneta Grande (Sprinter), Turismo / Coche de Apoyo, Furgoneta Eléctrica",
+      "consumo_l100km": 9.5,
+      "precio_carburante_eur": 1.55,
+      "tipo_combustible": "diesel",
+      "presupuesto_logistica": 224,
+      "stops": [
+        {
+          "id": "stop-1786702193707",
+          "sala": "Galileo Galilei",
+          "fecha": "2026-08-15",
+          "ciudad": "Madrid",
+          "gastosDietas": 50,
+          "gastosGasolina": 62,
+          "gastosAlojamiento": 0,
+          "distanciaAnteriorKm": 200,
+          "ingresoCacheEstimated": 600,
+          "tiempoConduccionHoras": 2.4
+        },
+        {
+          "id": "stop-1786702203507",
+          "sala": "El Octavo Arte",
+          "fecha": "2026-08-25",
+          "ciudad": "Segovia",
+          "gastosDietas": 50,
+          "gastosGasolina": 62,
+          "gastosAlojamiento": 0,
+          "distanciaAnteriorKm": 198,
+          "ingresoCacheEstimated": 500,
+          "tiempoConduccionHoras": 2.3
+        }
+      ],
+      "estado": "planificacion",
+      "created_at": "2026-08-14T10:10:52.712409+00:00",
+      "updated_at": "2026-08-14T10:10:52.712409+00:00",
+      "vehiculos": [
+        {
+          "id": "veh-1",
+          "nombre": "Furgoneta Grande (Sprinter)",
+          "consumoL100km": 9.5,
+          "tipoCombustible": "diesel",
+          "precioCarburanteEUR": 1.55
+        },
+        {
+          "id": "veh-1786702179523-fr4l",
+          "nombre": "Turismo / Coche de Apoyo",
+          "consumoL100km": 6.8,
+          "tipoCombustible": "gasolina95",
+          "precioCarburanteEUR": 1.62
+        },
+        {
+          "id": "veh-1786702183554-fe2u",
+          "nombre": "Furgoneta Eléctrica",
+          "consumoL100km": 22,
+          "tipoCombustible": "electrico",
+          "precioCarburanteEUR": 0.25
+        }
+      ]
+    }
+  ],
   "users": [
     {
       "id": "user-jose",
@@ -4109,7 +4174,7 @@
       "id": "user-fercebe-ruta-66",
       "username": "fercebe@hotmail.com",
       "name": "Fer",
-      "bandName": "Ruta 65",
+      "bandName": "Ruta 66",
       "email": "fercebe@hotmail.com",
       "role": "leader",
       "plan": "profesional",
@@ -4117,7 +4182,7 @@
       "avatarColor": "#f2ca50",
       "passwordHash": "63c66d090cd2b1e05228996f20a54ae58537da6e8ab1a2e60436f8461c8bd857c3d5a8db52d77529d7cd7d6cd3692eb3ab254f7a2315bba9e382bb31371a5f92",
       "salt": "fc01af4c55ac5d648c2b8ba6bce75388",
-      "band_id": "band-ruta-65",
+      "band_id": "band-ruta-66",
       "createdAt": "2026-08-12T10:27:22.561Z",
       "band_name": "Ruta 65",
       "avatar_color": "#f2ca50",
@@ -4126,6 +4191,71 @@
       "created_at": "2026-08-12T10:27:22.748694+00:00",
       "updated_at": "2026-08-12T10:27:22.748694+00:00",
       "googleOauth": {}
+    },
+    {
+      "id": "user-paco",
+      "username": "paco",
+      "name": "Paco",
+      "email": "paco@gmail.com",
+      "role": "member",
+      "instrument": "Cantante / Guitarra / Lider",
+      "avatarColor": "#f97316",
+      "passwordHash": "f28b183628b2f44d2759fcff67bcb513777fe9767598dfabc1317d33df242100b65b951b58b3d9c31b44b1f57b5a650f30620b5eb07345e3f9afd8b0ecf2e2e8",
+      "salt": "fdca17dac700fa55df0925f6417093b2",
+      "band_id": "band-ruta-66",
+      "createdAt": "2026-08-14T10:16:49.209Z"
+    },
+    {
+      "id": "user-bateria",
+      "username": "batería",
+      "name": "batería",
+      "email": "bateria@gmail.com",
+      "role": "member",
+      "instrument": "Batería",
+      "avatarColor": "#10b981",
+      "passwordHash": "19d4fed4de0484c919eca157dd89f7b20771afb2395551c965f9eca7ec9f0184101fe01a814f9876e88b1861e4e90c42bd4c1e7140affe3063b96acc0afc5fd9",
+      "salt": "1061bdf680efe82f5c1ae51b16f3dea7",
+      "band_id": "band-ruta-66",
+      "createdAt": "2026-08-14T10:20:55.173Z"
+    },
+    {
+      "id": "user-guitarra",
+      "username": "guitarra",
+      "name": "Guitarra",
+      "email": "guitarra@gmail.com",
+      "role": "member",
+      "instrument": "Guitarra",
+      "avatarColor": "#ef4444",
+      "passwordHash": "a7f54f3323bdee98d1aefbaa46f09f282ef4484feffd5f23373de4acfc97ca6049cd129b91aaed52580f54aa8fe824fac6348cc3739aa75a061f1ea12606ab90",
+      "salt": "53af8f1765c12993b398601b54fd0b73",
+      "band_id": "band-ruta-66",
+      "createdAt": "2026-08-14T10:22:27.789Z"
+    },
+    {
+      "id": "user-bajista",
+      "username": "bajista",
+      "name": "bajista",
+      "email": "bajista@gmail.com",
+      "role": "member",
+      "instrument": "bajista",
+      "avatarColor": "#06b6d4",
+      "passwordHash": "f6b07f26d5e1aaea62fddb423fd3fa44f02d98b92e5eb22a492a8b862536a14caabe7f798d8778d4310563bb9f2303d328721395d844c351fe99ee49b30f340b",
+      "salt": "51ddb5cf5be16264ebc8adae39ecc80a",
+      "band_id": "band-ruta-66",
+      "createdAt": "2026-08-14T10:22:48.331Z"
+    },
+    {
+      "id": "user-corista",
+      "username": "corista",
+      "name": "corista",
+      "email": "corista@gmail.com",
+      "role": "member",
+      "instrument": "Corista",
+      "avatarColor": "#ec4899",
+      "passwordHash": "bc7906ce77356789fdb809bca23392dc8af8c596d4aac325dcd1c5181f2827e2c0655d9ade0e7243a865f37a03782d939382d37ba90839cd2885f0e814def0ac",
+      "salt": "c24790b766356e2a1ad4ed9383066af6",
+      "band_id": "band-ruta-66",
+      "createdAt": "2026-08-14T10:23:09.268Z"
     }
   ],
   "userBands": [
@@ -4282,6 +4412,41 @@
       "band_id": "band-ruta-66",
       "role": "leader",
       "createdAt": "2026-08-14T06:41:07.106Z"
+    },
+    {
+      "id": "ub-user-paco-band-ruta-66",
+      "user_id": "user-paco",
+      "band_id": "band-ruta-66",
+      "role": "member",
+      "createdAt": "2026-08-14T10:16:49.209Z"
+    },
+    {
+      "id": "ub-user-bateria-band-ruta-66",
+      "user_id": "user-bateria",
+      "band_id": "band-ruta-66",
+      "role": "member",
+      "createdAt": "2026-08-14T10:20:55.173Z"
+    },
+    {
+      "id": "ub-user-guitarra-band-ruta-66",
+      "user_id": "user-guitarra",
+      "band_id": "band-ruta-66",
+      "role": "member",
+      "createdAt": "2026-08-14T10:22:27.789Z"
+    },
+    {
+      "id": "ub-user-bajista-band-ruta-66",
+      "user_id": "user-bajista",
+      "band_id": "band-ruta-66",
+      "role": "member",
+      "createdAt": "2026-08-14T10:22:48.331Z"
+    },
+    {
+      "id": "ub-user-corista-band-ruta-66",
+      "user_id": "user-corista",
+      "band_id": "band-ruta-66",
+      "role": "member",
+      "createdAt": "2026-08-14T10:23:09.268Z"
     }
   ],
   "epkConfigsByBand": {
@@ -4719,9 +4884,9 @@
       "incentivoFans": {},
       "bandId": "band-ruta-66",
       "ciudadesConfig": [],
-      "dossierPdfUrl": "",
-      "dossierPdfName": "",
-      "dossierTextoExtra": "Caché orientativo 300-1000",
+      "dossierPdfUrl": "https://brynltixytuyjdfdupjx.supabase.co/storage/v1/object/public/band-media/bandas/band-ruta-66/dossier/0038ba72-bcf7-4c39-afdc-5a634bf2c324-Dossier_Ruta66.pdf",
+      "dossierPdfName": "Dossier_Ruta66.pdf",
+      "dossierTextoExtra": "Caché orientativo 300-500",
       "firmaEmail": {
         "nombreRemitente": "Booking & Management Team",
         "cargo": "Booking & Management",
@@ -4731,16 +4896,16 @@
         "incluirIconosRedes": true,
         "adjuntarDossierPorDefecto": true,
         "redesSociales": {
-          "spotify": "",
-          "instagram": "",
-          "youtube": "",
           "tiktok": "",
-          "facebook": "",
+          "spotify": "",
           "twitter": "",
-          "appleMusic": "",
-          "bandcamp": "",
           "website": "",
-          "whatsapp": ""
+          "youtube": "",
+          "bandcamp": "",
+          "facebook": "",
+          "whatsapp": "",
+          "instagram": "",
+          "appleMusic": ""
         }
       },
       "band_id": "band-ruta-66",
@@ -4749,7 +4914,7 @@
       "dossier_pdf_name": "",
       "dossier_document_url": "",
       "dossier_document_name": "",
-      "dossier_texto_extra": "",
+      "dossier_texto_extra": "Caché orientativo 300-1000",
       "band_photos": [],
       "rider_tecnico": "",
       "rider_pdf_url": "",
@@ -4759,10 +4924,30 @@
       "temas_destacados_ids": [],
       "incentivo_fans": {},
       "ciudades_config": [],
-      "firma_email": {},
+      "firma_email": {
+        "cargo": "Booking & Management",
+        "email": "",
+        "telefono": "",
+        "textoPie": "Directo en vivo",
+        "redesSociales": {
+          "tiktok": "",
+          "spotify": "",
+          "twitter": "",
+          "website": "",
+          "youtube": "",
+          "bandcamp": "",
+          "facebook": "",
+          "whatsapp": "",
+          "instagram": "",
+          "appleMusic": ""
+        },
+        "nombreRemitente": "Booking & Management Team",
+        "incluirIconosRedes": true,
+        "adjuntarDossierPorDefecto": true
+      },
       "updated_at": "2026-08-12T10:31:37.600247+00:00",
-      "dossierDocumentUrl": "",
-      "dossierDocumentName": "",
+      "dossierDocumentUrl": "https://brynltixytuyjdfdupjx.supabase.co/storage/v1/object/public/band-media/bandas/band-ruta-66/dossier/0038ba72-bcf7-4c39-afdc-5a634bf2c324-Dossier_Ruta66.pdf",
+      "dossierDocumentName": "Dossier_Ruta66.pdf",
       "riderPdfUrl": "",
       "riderPdfName": ""
     },
@@ -4777,9 +4962,9 @@
       "incentivoFans": {},
       "bandId": "band-ruta-66",
       "ciudadesConfig": [],
-      "dossierPdfUrl": "",
-      "dossierPdfName": "",
-      "dossierTextoExtra": "Caché orientativo 300-1000",
+      "dossierPdfUrl": "https://brynltixytuyjdfdupjx.supabase.co/storage/v1/object/public/band-media/bandas/band-ruta-66/dossier/0038ba72-bcf7-4c39-afdc-5a634bf2c324-Dossier_Ruta66.pdf",
+      "dossierPdfName": "Dossier_Ruta66.pdf",
+      "dossierTextoExtra": "Caché orientativo 300-500",
       "firmaEmail": {
         "nombreRemitente": "Booking & Management Team",
         "cargo": "Booking & Management",
@@ -4789,16 +4974,16 @@
         "incluirIconosRedes": true,
         "adjuntarDossierPorDefecto": true,
         "redesSociales": {
-          "spotify": "",
-          "instagram": "",
-          "youtube": "",
           "tiktok": "",
-          "facebook": "",
+          "spotify": "",
           "twitter": "",
-          "appleMusic": "",
-          "bandcamp": "",
           "website": "",
-          "whatsapp": ""
+          "youtube": "",
+          "bandcamp": "",
+          "facebook": "",
+          "whatsapp": "",
+          "instagram": "",
+          "appleMusic": ""
         }
       },
       "band_id": "band-ruta-66",
@@ -4807,7 +4992,7 @@
       "dossier_pdf_name": "",
       "dossier_document_url": "",
       "dossier_document_name": "",
-      "dossier_texto_extra": "",
+      "dossier_texto_extra": "Caché orientativo 300-1000",
       "band_photos": [],
       "rider_tecnico": "",
       "rider_pdf_url": "",
@@ -4817,10 +5002,30 @@
       "temas_destacados_ids": [],
       "incentivo_fans": {},
       "ciudades_config": [],
-      "firma_email": {},
+      "firma_email": {
+        "cargo": "Booking & Management",
+        "email": "",
+        "telefono": "",
+        "textoPie": "Directo en vivo",
+        "redesSociales": {
+          "tiktok": "",
+          "spotify": "",
+          "twitter": "",
+          "website": "",
+          "youtube": "",
+          "bandcamp": "",
+          "facebook": "",
+          "whatsapp": "",
+          "instagram": "",
+          "appleMusic": ""
+        },
+        "nombreRemitente": "Booking & Management Team",
+        "incluirIconosRedes": true,
+        "adjuntarDossierPorDefecto": true
+      },
       "updated_at": "2026-08-12T10:31:37.600247+00:00",
-      "dossierDocumentUrl": "",
-      "dossierDocumentName": "",
+      "dossierDocumentUrl": "https://brynltixytuyjdfdupjx.supabase.co/storage/v1/object/public/band-media/bandas/band-ruta-66/dossier/0038ba72-bcf7-4c39-afdc-5a634bf2c324-Dossier_Ruta66.pdf",
+      "dossierDocumentName": "Dossier_Ruta66.pdf",
       "riderPdfUrl": "",
       "riderPdfName": ""
     },
@@ -4835,9 +5040,9 @@
       "incentivoFans": {},
       "bandId": "band-ruta-66",
       "ciudadesConfig": [],
-      "dossierPdfUrl": "",
-      "dossierPdfName": "",
-      "dossierTextoExtra": "Caché orientativo 300-1000",
+      "dossierPdfUrl": "https://brynltixytuyjdfdupjx.supabase.co/storage/v1/object/public/band-media/bandas/band-ruta-66/dossier/0038ba72-bcf7-4c39-afdc-5a634bf2c324-Dossier_Ruta66.pdf",
+      "dossierPdfName": "Dossier_Ruta66.pdf",
+      "dossierTextoExtra": "Caché orientativo 300-500",
       "firmaEmail": {
         "nombreRemitente": "Booking & Management Team",
         "cargo": "Booking & Management",
@@ -4847,16 +5052,16 @@
         "incluirIconosRedes": true,
         "adjuntarDossierPorDefecto": true,
         "redesSociales": {
-          "spotify": "",
-          "instagram": "",
-          "youtube": "",
           "tiktok": "",
-          "facebook": "",
+          "spotify": "",
           "twitter": "",
-          "appleMusic": "",
-          "bandcamp": "",
           "website": "",
-          "whatsapp": ""
+          "youtube": "",
+          "bandcamp": "",
+          "facebook": "",
+          "whatsapp": "",
+          "instagram": "",
+          "appleMusic": ""
         }
       },
       "band_id": "band-ruta-66",
@@ -4865,7 +5070,7 @@
       "dossier_pdf_name": "",
       "dossier_document_url": "",
       "dossier_document_name": "",
-      "dossier_texto_extra": "",
+      "dossier_texto_extra": "Caché orientativo 300-1000",
       "band_photos": [],
       "rider_tecnico": "",
       "rider_pdf_url": "",
@@ -4875,10 +5080,30 @@
       "temas_destacados_ids": [],
       "incentivo_fans": {},
       "ciudades_config": [],
-      "firma_email": {},
+      "firma_email": {
+        "cargo": "Booking & Management",
+        "email": "",
+        "telefono": "",
+        "textoPie": "Directo en vivo",
+        "redesSociales": {
+          "tiktok": "",
+          "spotify": "",
+          "twitter": "",
+          "website": "",
+          "youtube": "",
+          "bandcamp": "",
+          "facebook": "",
+          "whatsapp": "",
+          "instagram": "",
+          "appleMusic": ""
+        },
+        "nombreRemitente": "Booking & Management Team",
+        "incluirIconosRedes": true,
+        "adjuntarDossierPorDefecto": true
+      },
       "updated_at": "2026-08-12T10:31:37.600247+00:00",
-      "dossierDocumentUrl": "",
-      "dossierDocumentName": "",
+      "dossierDocumentUrl": "https://brynltixytuyjdfdupjx.supabase.co/storage/v1/object/public/band-media/bandas/band-ruta-66/dossier/0038ba72-bcf7-4c39-afdc-5a634bf2c324-Dossier_Ruta66.pdf",
+      "dossierDocumentName": "Dossier_Ruta66.pdf",
       "riderPdfUrl": "",
       "riderPdfName": ""
     },
@@ -5016,13 +5241,13 @@
       "googleAccessToken": "SANITIZED_OAUTH_TOKEN",
       "createdAt": 1786689710477
     },
-    "bd269f3ecb54119ea122ce11b7b903e44f7fedbc93ec1f35671fd7df3653bf1f": {
-      "userId": "MUIF3Rw4eyeny7ywmBVv8IDlRl12",
-      "createdAt": 1786701978482
-    },
     "b8561686b5495ff611c9fb43cfa7cd03eac8df81f3caa2e6ffed41c240a79174": {
       "userId": "user-jose",
       "createdAt": 1786689998636
+    },
+    "5617316fa762b837030325578f6825a349663b4a37a883cb09504b17ad35ea8b": {
+      "userId": "user-fercebe-ruta-66",
+      "createdAt": 1786703458367
     }
   },
   "autonomyConfigsByBand": {

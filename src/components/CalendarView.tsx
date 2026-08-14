@@ -146,65 +146,30 @@ export default function CalendarView({
  { id: 'user-teclados', name: 'Teclados', role: 'member' }
  ], []);
 
- const effectiveBandMembers = React.useMemo(() => {
- const targetBandId = selectedBandIdForNewEvent || activeBandId;
- if (bandUsers && bandUsers.length > 0) {
- // Build a set of external band names to filter out SaaS band admin entries
- const externalBandNames = new Set<string>();
- effectiveBandsList.forEach(b => {
- if (b.band_id !== targetBandId && b.bandName) {
- externalBandNames.add(b.bandName.trim().toLowerCase());
- }
- });
- availableBands?.forEach(b => {
- const bName = b.bandName || b.name;
- if (b.band_id !== targetBandId && bName) {
- externalBandNames.add(bName.trim().toLowerCase());
- }
- });
+   const effectiveBandMembers = React.useMemo(() => {
+    const targetBandId = selectedBandIdForNewEvent || activeBandId || "band-bakandeya";
+    const targetClean = targetBandId.replace(/^(band|reg)-/, "").replace(/-\d+$/, "").toLowerCase();
+    const targetIsBakandeya = targetClean === "bakandeya";
 
- const filtered = bandUsers.filter(u => {
- // 1. Check band_id match
- let isSameBand = false;
- if (!u.band_id) {
- isSameBand = targetBandId === 'band-bakandeya' || targetBandId === 'reg-bakandeya';
- } else if (targetBandId === 'band-bakandeya' || targetBandId === 'reg-bakandeya') {
- isSameBand = u.band_id === 'band-bakandeya' || u.band_id === 'reg-bakandeya';
- } else {
- isSameBand = u.band_id === targetBandId;
- }
+    if (bandUsers && bandUsers.length > 0) {
+      const filtered = bandUsers.filter(u => {
+        const uClean = (u.band_id || "").replace(/^(band|reg)-/, "").replace(/-\d+$/, "").toLowerCase();
+        const uBandName = (u.bandName || "").toLowerCase();
+        return targetIsBakandeya
+          ? (!u.band_id || uClean === "bakandeya" || uClean === "")
+          : (uClean === targetClean || uBandName.includes(targetClean));
+      });
 
- if (!isSameBand) return false;
-
- // 2. Exclude accounts representing external registered bands (SaaS band accounts)
- const userNameClean = (u.name || u.username || '').trim().toLowerCase();
- if (externalBandNames.has(userNameClean)) return false;
-
- // Also exclude accounts where instrument indicates leadership of a different band or SaaS band registration
- if (u.instrument && u.instrument.toLowerCase().startsWith('líder de')) {
- const instLower = u.instrument.toLowerCase();
- const targetIsBakandeya = targetBandId === 'band-bakandeya' || targetBandId === 'reg-bakandeya';
- if (targetIsBakandeya && instLower !== 'líder de bakandeya' && !u.id.includes('diego') && !u.id.includes('jose')) {
- if (instLower !== 'líder de banda' && !instLower.includes('oficina') && !instLower.includes('admin') && !instLower.includes('percusión')) {
- return false;
- }
- if (externalBandNames.has(userNameClean)) return false;
- }
- }
-
- return true;
- });
-
- if (filtered.length > 0) {
- return filtered.map(u => ({
- id: u.id,
- name: u.name || u.username || 'Miembro',
- role: u.role || 'member'
- }));
- }
- }
- return defaultMembers;
- }, [bandUsers, selectedBandIdForNewEvent, activeBandId, effectiveBandsList, availableBands, defaultMembers]);
+      const list = filtered.length > 0 ? filtered : bandUsers;
+      return list.map(u => ({
+        id: u.id,
+        name: u.name || u.username || "Miembro",
+        role: u.role || "member",
+        instrument: u.instrument
+      }));
+    }
+    return defaultMembers;
+  }, [bandUsers, selectedBandIdForNewEvent, activeBandId, defaultMembers]);
 
  // Convocatoria form state
  const [convocatoriaTipo, setConvocatoriaTipo] = useState<'completa' | 'parcial'>('completa');
@@ -1476,7 +1441,17 @@ export default function CalendarView({
  </div>
  )}
 
- {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
+ {selectedConcert?.giraNombre && (
+  <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-neutral-800/60 mt-2">
+  <Navigation className="w-4 h-4 text-amber-400 shrink-0" />
+  <span className={`font-mono ${textSub}`}>Gira:</span>
+  <span className="font-bold font-mono text-amber-400">
+  🚐 {selectedConcert.giraNombre}
+  </span>
+  </div>
+  )}
+
+  {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
  <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-neutral-800/60 mt-2">
  <Users className="w-4 h-4 text-sky-400 shrink-0" />
  <span className={`font-mono ${textSub}`}>Convocatoria:</span>
