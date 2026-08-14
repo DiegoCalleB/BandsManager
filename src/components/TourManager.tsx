@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ThemeColors, Tour, TourRouteStop, Concert, Lead } from '../types';
+import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead } from '../types';
+import { calculateVehiclesFuelCost } from '../utils/tourUtils';
 import { Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign, Activity, TrendingUp, Calculator } from 'lucide-react';
 
 interface TourManagerProps {
@@ -18,40 +19,78 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
 
   // Default new tour state
   const [formNombre, setFormNombre] = useState('');
-  const [formVehiculo, setFormVehiculo] = useState('Furgoneta Sprinter / Master (Grande)');
-  const [formConsumoL100km, setFormConsumoL100km] = useState<number>(9.5);
-  const [formPrecioCarburanteEUR, setFormPrecioCarburanteEUR] = useState<number>(1.55);
-  const [formTipoCombustible, setFormTipoCombustible] = useState<'diesel' | 'gasolina95' | 'gasolina98' | 'electrico'>('diesel');
+  const [formVehiculos, setFormVehiculos] = useState<TourVehicle[]>([
+    {
+      id: 'veh-1',
+      nombre: 'Furgoneta Sprinter / Master (Grande)',
+      consumoL100km: 9.5,
+      precioCarburanteEUR: 1.55,
+      tipoCombustible: 'diesel'
+    }
+  ]);
   const [formEstado, setFormEstado] = useState<'planificacion' | 'confirmada' | 'completada' | 'cancelada'>('planificacion');
   const [formStops, setFormStops] = useState<TourRouteStop[]>([]);
 
   // Vehicle Presets
   const VEHICLE_PRESETS = [
-    { label: '🚐 Furgoneta Grande (Sprinter, Crafter, Master)', name: 'Furgoneta Sprinter / Master (Grande)', l100km: 9.5, fuel: 'diesel' },
-    { label: '🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)', name: 'Furgoneta Transit / Transporter (Mediana)', l100km: 7.8, fuel: 'diesel' },
-    { label: '🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)', name: 'Furgoneta Berlingo / Kangoo (Pequeña)', l100km: 6.2, fuel: 'diesel' },
-    { label: '🚗 Turismo / Coche con Remolque', name: 'Turismo / Coche de Banda', l100km: 6.8, fuel: 'gasolina95' },
-    { label: '⚡ Furgoneta Eléctrica', name: 'Furgoneta Eléctrica', l100km: 22.0, fuel: 'electrico' }, // 22 kWh/100km
-    { label: '⚙️ Personalizado', name: 'Vehículo Personalizado', l100km: 9.0, fuel: 'diesel' },
+    { label: '🚐 Furgoneta Grande (Sprinter, Crafter, Master)', name: 'Furgoneta Grande (Sprinter)', l100km: 9.5, fuel: 'diesel', defaultPrice: 1.55 },
+    { label: '🚐 Furgoneta Mediana (Transit Custom, Transporter, Vito)', name: 'Furgoneta Mediana (Transit/Vito)', l100km: 7.8, fuel: 'diesel', defaultPrice: 1.55 },
+    { label: '🚐 Furgoneta Pequeña (Berlingo, Kangoo, Partner)', name: 'Furgoneta Pequeña (Berlingo)', l100km: 6.2, fuel: 'diesel', defaultPrice: 1.55 },
+    { label: '🚗 Turismo / Coche de Apoyo', name: 'Turismo / Coche de Apoyo', l100km: 6.8, fuel: 'gasolina95', defaultPrice: 1.62 },
+    { label: '⚡ Furgoneta Eléctrica', name: 'Furgoneta Eléctrica', l100km: 22.0, fuel: 'electrico', defaultPrice: 0.25 },
+    { label: '⚙️ Vehículo Personalizado', name: 'Vehículo Adicional', l100km: 8.5, fuel: 'diesel', defaultPrice: 1.55 },
   ];
 
-  const handleSelectVehiclePreset = (presetLabel: string) => {
-    const p = VEHICLE_PRESETS.find(item => item.label === presetLabel);
-    if (p) {
-      setFormVehiculo(p.name);
-      setFormConsumoL100km(p.l100km);
-      setFormTipoCombustible(p.fuel as any);
-      if (p.fuel === 'electrico') setFormPrecioCarburanteEUR(0.25);
-      else if (p.fuel === 'gasolina95') setFormPrecioCarburanteEUR(1.62);
-      else if (p.fuel === 'gasolina98') setFormPrecioCarburanteEUR(1.78);
-      else setFormPrecioCarburanteEUR(1.55);
-    }
+  const handleAddVehicle = (presetIndex: number = 0) => {
+    const preset = VEHICLE_PRESETS[presetIndex] || VEHICLE_PRESETS[0];
+    const newVeh: TourVehicle = {
+      id: `veh-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      nombre: preset.name,
+      consumoL100km: preset.l100km,
+      precioCarburanteEUR: preset.defaultPrice,
+      tipoCombustible: preset.fuel as any
+    };
+    const updated = [...formVehiculos, newVeh];
+    setFormVehiculos(updated);
+    recalculateAllFuelStops(updated);
   };
 
-  const recalculateAllFuelStops = (consumo = formConsumoL100km, precio = formPrecioCarburanteEUR) => {
+  const handleUpdateVehicle = (index: number, field: keyof TourVehicle, value: any) => {
+    const updated = [...formVehiculos];
+    updated[index] = { ...updated[index], [field]: value };
+    setFormVehiculos(updated);
+    recalculateAllFuelStops(updated);
+  };
+
+  const handleRemoveVehicle = (index: number) => {
+    if (formVehiculos.length <= 1) {
+      alert("Debe haber al menos un vehículo en la gira.");
+      return;
+    }
+    const updated = formVehiculos.filter((_, i) => i !== index);
+    setFormVehiculos(updated);
+    recalculateAllFuelStops(updated);
+  };
+
+  const handleApplyPresetToVehicle = (index: number, presetLabel: string) => {
+    const p = VEHICLE_PRESETS.find(item => item.label === presetLabel);
+    if (!p) return;
+    const updated = [...formVehiculos];
+    updated[index] = {
+      ...updated[index],
+      nombre: p.name,
+      consumoL100km: p.l100km,
+      tipoCombustible: p.fuel as any,
+      precioCarburanteEUR: p.defaultPrice
+    };
+    setFormVehiculos(updated);
+    recalculateAllFuelStops(updated);
+  };
+
+  const recalculateAllFuelStops = (vehicles = formVehiculos) => {
     setFormStops(prev => prev.map(s => {
       const km = s.distanciaAnteriorKm || 0;
-      const calcGas = Math.round((km / 100) * consumo * precio);
+      const calcGas = calculateVehiclesFuelCost(km, vehicles);
       return { ...s, gastosGasolina: calcGas };
     }));
   };
@@ -59,10 +98,15 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
   const handleOpenCreateModal = () => {
     setEditingTour(null);
     setFormNombre('');
-    setFormVehiculo('Furgoneta Sprinter / Master (Grande)');
-    setFormConsumoL100km(9.5);
-    setFormPrecioCarburanteEUR(1.55);
-    setFormTipoCombustible('diesel');
+    setFormVehiculos([
+      {
+        id: 'veh-1',
+        nombre: 'Furgoneta Sprinter / Master (Grande)',
+        consumoL100km: 9.5,
+        precioCarburanteEUR: 1.55,
+        tipoCombustible: 'diesel'
+      }
+    ]);
     setFormEstado('planificacion');
     setFormStops([]);
     setIsModalOpen(true);
@@ -71,10 +115,18 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
   const handleOpenEditModal = (tour: Tour) => {
     setEditingTour(tour);
     setFormNombre(tour.nombre);
-    setFormVehiculo(tour.vehiculo || 'Furgoneta 9 Plazas');
-    setFormConsumoL100km(tour.consumoL100km ?? 9.5);
-    setFormPrecioCarburanteEUR(tour.precioCarburanteEUR ?? 1.55);
-    setFormTipoCombustible(tour.tipoCombustible ?? 'diesel');
+
+    const vehicles: TourVehicle[] = (tour.vehiculos && tour.vehiculos.length > 0)
+      ? tour.vehiculos
+      : [{
+          id: 'veh-1',
+          nombre: tour.vehiculo || 'Furgoneta 9 Plazas',
+          consumoL100km: tour.consumoL100km ?? 9.5,
+          precioCarburanteEUR: tour.precioCarburanteEUR ?? 1.55,
+          tipoCombustible: tour.tipoCombustible ?? 'diesel'
+        }];
+
+    setFormVehiculos(vehicles);
     setFormEstado(tour.estado);
     setFormStops([...tour.stops]);
     setIsModalOpen(true);
@@ -93,13 +145,21 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
     const totalGastos = formStops.reduce((sum, stop) => 
       sum + (stop.gastosAlojamiento || 0) + (stop.gastosGasolina || 0) + (stop.gastosDietas || 0), 0);
 
+    const primaryVehicle = formVehiculos[0] || {
+      nombre: 'Furgoneta',
+      consumoL100km: 9.5,
+      precioCarburanteEUR: 1.55,
+      tipoCombustible: 'diesel'
+    };
+
     const tourData: Tour = {
       id: editingTour ? editingTour.id : `tour-${Date.now()}`,
       nombre: formNombre.trim(),
-      vehiculo: formVehiculo,
-      consumoL100km: formConsumoL100km,
-      precioCarburanteEUR: formPrecioCarburanteEUR,
-      tipoCombustible: formTipoCombustible,
+      vehiculo: formVehiculos.map(v => v.nombre).filter(Boolean).join(", ") || primaryVehicle.nombre,
+      consumoL100km: primaryVehicle.consumoL100km,
+      precioCarburanteEUR: primaryVehicle.precioCarburanteEUR,
+      tipoCombustible: primaryVehicle.tipoCombustible,
+      vehiculos: formVehiculos,
       estado: formEstado,
       fechaInicio: startDate,
       fechaFin: endDate,
@@ -130,10 +190,10 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
     const newStops = [...formStops];
     const currentStop = { ...newStops[index], [field]: value };
     
-    // Auto-calculate fuel & driving time based on vehicle parameters
+    // Auto-calculate fuel & driving time based on all vehicles parameters
     if (field === 'distanciaAnteriorKm') {
       const km = Number(value) || 0;
-      currentStop.gastosGasolina = Math.round((km / 100) * formConsumoL100km * formPrecioCarburanteEUR);
+      currentStop.gastosGasolina = calculateVehiclesFuelCost(km, formVehiculos);
       currentStop.tiempoConduccionHoras = Math.round((km / 85) * 10) / 10; // Avg 85 km/h
     }
 
@@ -172,6 +232,13 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
     }
   };
 
+  // Combined fleet cost per 100 km
+  const totalFleetCostPer100Km = formVehiculos.reduce((sum, v) => {
+    const c = Number(v.consumoL100km) || 0;
+    const p = Number(v.precioCarburanteEUR) > 0 ? Number(v.precioCarburanteEUR) : 1.55;
+    return sum + (c * p);
+  }, 0);
+
   return (
     <div className={`space-y-6 ${colors.text}`}>
       {/* Header */}
@@ -183,7 +250,7 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
               Gestor Logístico & Financiero de Giras
             </h2>
             <p className={`text-xs ${colors.textMuted} mt-1`}>
-              Planifica rutas, presupuestos de transporte, alojamientos, dietas y cálculo de beneficio neto por tour.
+              Planifica rutas con múltiples vehículos, combustible combinado, alojamientos, dietas y cálculo de beneficio neto.
             </p>
           </div>
           
@@ -204,7 +271,7 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
             <MapPin className={`w-12 h-12 mx-auto mb-4 ${colors.textMuted} opacity-50`} />
             <h3 className={`text-lg font-bold ${colors.text} mb-2`}>No hay giras organizadas</h3>
             <p className={`text-sm ${colors.textMuted} max-w-md mx-auto mb-4`}>
-              Agrupa tus conciertos en giras para calcular mejor los gastos logísticos, gasolina, dietas, alojamientos y el margen de beneficio.
+              Agrupa tus conciertos en giras para calcular mejor los gastos logísticos, combustible de todos tus vehículos, dietas, alojamientos y el margen de beneficio.
             </p>
             <button
               onClick={handleOpenCreateModal}
@@ -228,6 +295,8 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
               const beneficioNeto = totalIngresos - totalGastos;
               const totalKm = tour.stops.reduce((sum, s) => sum + (s.distanciaAnteriorKm || 0), 0);
 
+              const vehiclesCount = tour.vehiculos?.length || (tour.vehiculo ? 1 : 0);
+
               return (
                 <div key={tour.id || `tour-${index}`} className={`p-5 rounded-2xl ${colors.card} border border-white/5 shadow-sm group hover:border-white/10 transition-colors`}>
                 <div className="flex justify-between items-start mb-4">
@@ -249,12 +318,17 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
                           {totalKm} km totales
                         </span>
                       )}
-                      {tour.vehiculo && (
+                      {vehiclesCount > 1 ? (
+                        <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded font-mono flex items-center gap-1 border border-amber-500/20" title={tour.vehiculos?.map(v => v.nombre).join(" + ")}>
+                          <Truck className="w-3 h-3 text-amber-400" />
+                          {vehiclesCount} vehículos añadidos
+                        </span>
+                      ) : tour.vehiculo ? (
                         <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded font-mono flex items-center gap-1 border border-amber-500/20">
                           <Truck className="w-3 h-3" />
-                          {tour.vehiculo} {tour.consumoL100km ? `(${tour.consumoL100km} L/100km @ ${tour.precioCarburanteEUR || 1.55}€)` : ''}
+                          {tour.vehiculo} {tour.consumoL100km ? `(${tour.consumoL100km} L/100km)` : ''}
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                   <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
@@ -293,7 +367,11 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
                 <div>
                   <h4 className="text-[10px] uppercase font-mono text-neutral-400 mb-2 flex justify-between items-center">
                     <span>Ruta ({tour.stops.length} paradas)</span>
-                    <span className="text-neutral-500">{tour.vehiculo}</span>
+                    <span className="text-neutral-400 truncate max-w-[200px]" title={tour.vehiculos?.map(v => v.nombre).join(", ") || tour.vehiculo}>
+                      {tour.vehiculos && tour.vehiculos.length > 1 
+                        ? `${tour.vehiculos.length} Vehículos` 
+                        : (tour.vehiculo || '1 Vehículo')}
+                    </span>
                   </h4>
                   <div className="space-y-1.5">
                     {tour.stops.length === 0 ? (
@@ -374,99 +452,151 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
                     </select>
                   </div>
 
-                  {/* Vehicle & Fuel Calculation Settings */}
-                  <div className="sm:col-span-3 p-4 rounded-xl bg-sky-950/20 border border-sky-500/30 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-sky-500/20 pb-2">
-                      <span className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <Truck className="w-4 h-4 text-sky-400" /> Configuración de Vehículo & Consumo de Carburante
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => recalculateAllFuelStops()}
-                        className="px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/30 text-[11px] font-mono font-bold flex items-center gap-1 transition-all"
-                        title="Aplica la fórmula de consumo a las distancias de todas las paradas actuales"
-                      >
-                        <Calculator className="w-3 h-3" /> Recalcular todas las paradas
-                      </button>
+                  {/* Multi-Vehicle & Fuel Calculation Settings */}
+                  <div className="sm:col-span-3 p-4 rounded-xl bg-sky-950/20 border border-sky-500/30 space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-sky-500/20 pb-3">
+                      <div>
+                        <span className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider flex items-center gap-1.5">
+                          <Truck className="w-4 h-4 text-sky-400" /> Flota & Vehículos de la Gira ({formVehiculos.length} {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'})
+                        </span>
+                        <p className="text-[11px] text-neutral-400 mt-0.5">
+                          Añade todos los coches o furgonetas que viajan. El consumo de gasolina sumará el coste combinado de todos los vehículos.
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleAddVehicle(0)}
+                          className="px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/30 text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                        >
+                          <Plus className="w-3.5 h-3.5" /> Añadir Vehículo
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => recalculateAllFuelStops()}
+                          className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-white/10 text-xs font-mono font-bold flex items-center gap-1.5 transition-all"
+                          title="Aplica la suma de consumos a las distancias de todas las paradas"
+                        >
+                          <Calculator className="w-3.5 h-3.5 text-amber-400" /> Recalcular Paradas
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      <div>
-                        <label className="text-[10px] font-mono text-neutral-400 uppercase block mb-1">Plantilla de Vehículo</label>
-                        <select
-                          onChange={(e) => handleSelectVehiclePreset(e.target.value)}
-                          defaultValue=""
-                          className="w-full p-2 rounded-lg bg-black/60 border border-white/10 text-xs text-white focus:border-sky-500"
-                        >
-                          <option value="" disabled>-- Selecciona Modelo --</option>
-                          {VEHICLE_PRESETS.map((p, idx) => (
-                            <option key={idx} value={p.label}>{p.label}</option>
+                    {/* Vehicles List */}
+                    <div className="space-y-3">
+                      {formVehiculos.map((veh, vIdx) => (
+                        <div key={veh.id || `veh-${vIdx}`} className="p-3.5 rounded-xl bg-black/50 border border-sky-500/20 relative space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px] font-mono font-bold uppercase">
+                                Vehículo #{vIdx + 1}
+                              </span>
+                              <span className="text-xs font-semibold text-neutral-300">
+                                {veh.nombre || 'Vehículo sin nombre'}
+                              </span>
+                            </div>
+                            {formVehiculos.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveVehicle(vIdx)}
+                                className="p-1 rounded-lg text-rose-400 hover:bg-rose-500/20 transition-colors text-xs flex items-center gap-1"
+                                title="Eliminar este vehículo"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span className="hidden sm:inline text-[10px] font-mono">Eliminar</span>
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <div>
+                              <label className="text-[10px] font-mono text-neutral-400 uppercase block mb-1">Cargar Plantilla</label>
+                              <select
+                                onChange={(e) => handleApplyPresetToVehicle(vIdx, e.target.value)}
+                                defaultValue=""
+                                className="w-full p-2 rounded-lg bg-black/60 border border-white/10 text-xs text-white focus:border-sky-500"
+                              >
+                                <option value="" disabled>-- Seleccionar Modelo --</option>
+                                {VEHICLE_PRESETS.map((p, idx) => (
+                                  <option key={idx} value={p.label}>{p.label}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="text-[10px] font-mono text-neutral-400 uppercase block mb-1">Nombre / Identificador</label>
+                              <input
+                                value={veh.nombre}
+                                onChange={e => handleUpdateVehicle(vIdx, 'nombre', e.target.value)}
+                                placeholder="Ej. Furgoneta Principal (Banda)"
+                                className="w-full p-2 rounded-lg bg-black/60 border border-white/10 text-xs text-white focus:border-sky-500"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="text-[10px] font-mono text-amber-300 uppercase block mb-1">
+                                Consumo ({veh.tipoCombustible === 'electrico' ? 'kWh/100km' : 'L/100km'})
+                              </label>
+                              <input
+                                type="number"
+                                step="0.1"
+                                min="0.1"
+                                value={veh.consumoL100km}
+                                onChange={e => handleUpdateVehicle(vIdx, 'consumoL100km', Number(e.target.value))}
+                                className="w-full p-2 rounded-lg bg-black/60 border border-amber-500/40 text-xs font-bold text-amber-300 focus:border-amber-400"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="text-[10px] font-mono text-emerald-300 uppercase block mb-1">
+                                Precio (€/{veh.tipoCombustible === 'electrico' ? 'kWh' : 'Litro'})
+                              </label>
+                              <div className="flex gap-1">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0.01"
+                                  value={veh.precioCarburanteEUR ?? 1.55}
+                                  onChange={e => handleUpdateVehicle(vIdx, 'precioCarburanteEUR', Number(e.target.value))}
+                                  className="w-full p-2 rounded-lg bg-black/60 border border-emerald-500/40 text-xs font-bold text-emerald-300 focus:border-emerald-400"
+                                />
+                                <select
+                                  value={veh.tipoCombustible || 'diesel'}
+                                  onChange={e => handleUpdateVehicle(vIdx, 'tipoCombustible', e.target.value)}
+                                  className="p-2 rounded-lg bg-black/60 border border-white/10 text-[10px] text-neutral-300"
+                                >
+                                  <option value="diesel">Diésel</option>
+                                  <option value="gasolina95">G95</option>
+                                  <option value="gasolina98">G98</option>
+                                  <option value="electrico">kWh</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Combined Fleet Summary */}
+                    <div className="p-3 rounded-xl bg-black/60 border border-sky-500/30 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                      <div className="space-y-1">
+                        <span className="text-neutral-300 flex items-center gap-1.5">
+                          📐 <strong className="text-white">Cálculo de Consumo Combinado:</strong>
+                        </span>
+                        <div className="text-[11px] text-neutral-400">
+                          {formVehiculos.map((v, i) => (
+                            <span key={i} className="inline-block mr-2">
+                              • {v.nombre || `Vehículo ${i+1}`}: {v.consumoL100km} {v.tipoCombustible === 'electrico' ? 'kWh' : 'L'}/100km @ {v.precioCarburanteEUR || 1.55}€ (≈ {(((Number(v.consumoL100km) || 0) * (Number(v.precioCarburanteEUR) || 1.55))).toFixed(2)}€/100km)
+                            </span>
                           ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="text-[10px] font-mono text-neutral-400 uppercase block mb-1">Nombre / Modelo Exacto</label>
-                        <input
-                          value={formVehiculo}
-                          onChange={e => setFormVehiculo(e.target.value)}
-                          placeholder="Ej. Mercedes Sprinter 9 Plazas"
-                          className="w-full p-2 rounded-lg bg-black/60 border border-white/10 text-xs text-white focus:border-sky-500"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[10px] font-mono text-amber-300 uppercase block mb-1">Consumo Medio ({formTipoCombustible === 'electrico' ? 'kWh/100km' : 'L/100km'})</label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0.1"
-                          value={formConsumoL100km}
-                          onChange={e => {
-                            const val = Number(e.target.value) || 0;
-                            setFormConsumoL100km(val);
-                            recalculateAllFuelStops(val, formPrecioCarburanteEUR);
-                          }}
-                          className="w-full p-2 rounded-lg bg-black/60 border border-amber-500/40 text-xs font-bold text-amber-300 focus:border-amber-400"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-[10px] font-mono text-emerald-300 uppercase block mb-1">Precio Combustible (€/{formTipoCombustible === 'electrico' ? 'kWh' : 'Litro'})</label>
-                        <div className="flex gap-1">
-                          <input
-                            type="number"
-                            step="0.01"
-                            min="0.01"
-                            value={formPrecioCarburanteEUR}
-                            onChange={e => {
-                              const val = Number(e.target.value) || 0;
-                              setFormPrecioCarburanteEUR(val);
-                              recalculateAllFuelStops(formConsumoL100km, val);
-                            }}
-                            className="w-full p-2 rounded-lg bg-black/60 border border-emerald-500/40 text-xs font-bold text-emerald-300 focus:border-emerald-400"
-                          />
-                          <select
-                            value={formTipoCombustible}
-                            onChange={e => setFormTipoCombustible(e.target.value as any)}
-                            className="p-2 rounded-lg bg-black/60 border border-white/10 text-[10px] text-neutral-300"
-                          >
-                            <option value="diesel">Diésel</option>
-                            <option value="gasolina95">G95</option>
-                            <option value="gasolina98">G98</option>
-                            <option value="electrico">kWh</option>
-                          </select>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="p-2 rounded bg-black/40 border border-white/5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
-                      <span className="text-neutral-300">
-                        📐 <strong className="text-white">Fórmula:</strong> (Km / 100) × {formConsumoL100km} {formTipoCombustible === 'electrico' ? 'kWh' : 'L'} × {formPrecioCarburanteEUR} €
-                      </span>
-                      <span className="text-sky-300 font-bold bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">
-                        Estimación: 100 km ≈ {((formConsumoL100km * formPrecioCarburanteEUR)).toFixed(2)} €
-                      </span>
+                      <div className="bg-sky-500/10 border border-sky-500/30 px-3 py-1.5 rounded-lg text-right shrink-0">
+                        <span className="text-[10px] uppercase block text-sky-400 font-mono">Coste Flota Total / 100 km</span>
+                        <span className="text-sm font-extrabold text-amber-300">
+                          {totalFleetCostPer100Km.toFixed(2)} € / 100 km
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -490,7 +620,7 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
                   <div className="space-y-4">
                     {formStops.length === 0 ? (
                       <div className="p-6 text-center rounded-xl bg-black/20 border border-white/5 text-neutral-400 text-sm italic">
-                        Añade paradas para calcular automáticamente kilometraje, estimación de combustible y margen financiero.
+                        Añade paradas para calcular automáticamente kilometraje, estimación de combustible de todos tus vehículos y margen financiero.
                       </div>
                     ) : (
                       formStops.map((stop, idx) => (
@@ -554,11 +684,11 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
                               <label className="text-[10px] uppercase font-mono text-neutral-400 block flex items-center justify-between">
                                 <span className="flex items-center gap-1">
                                   <span>Distancia (Km)</span>
-                                  <Calculator className="w-3 h-3 text-sky-400" title="Calcula gasolina aprox automáticamente" />
+                                  <Calculator className="w-3 h-3 text-sky-400" title="Calcula combustible combinado para toda la flota automáticamente" />
                                 </span>
                                 {stop.distanciaAnteriorKm && stop.distanciaAnteriorKm > 0 ? (
                                   <span className="text-[9px] text-amber-300 font-normal">
-                                    {((stop.distanciaAnteriorKm / 100) * formConsumoL100km).toFixed(1)} {formTipoCombustible === 'electrico' ? 'kWh' : 'L'}
+                                    {formVehiculos.length} {formVehiculos.length === 1 ? 'vehículo' : 'vehículos'}
                                   </span>
                                 ) : null}
                               </label>
@@ -587,7 +717,7 @@ export default function TourManager({ colors, tours, concerts, leads = [], onSav
                             </div>
                             <div>
                               <label className="text-[10px] text-amber-300 block font-mono flex items-center justify-between">
-                                <span>Gasolina / Peajes (€)</span>
+                                <span>Gasolina Flota (€)</span>
                               </label>
                               <input
                                 type="number"

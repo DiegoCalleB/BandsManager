@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateFuelCost,
+  calculateVehiclesFuelCost,
   calculateDrivingTimeHours,
   calculateTourSummary,
-  TourStop
+  TourStop,
+  TourVehicle
 } from '../tourUtils';
 
 describe('tourUtils', () => {
@@ -16,6 +18,36 @@ describe('tourUtils', () => {
 
     it('handles negative distance safely', () => {
       expect(calculateFuelCost(-50)).toBe(0);
+    });
+  });
+
+  describe('calculateVehiclesFuelCost', () => {
+    it('calculates combined fuel cost for multiple vehicles', () => {
+      const vehicles: TourVehicle[] = [
+        {
+          id: 'v1',
+          nombre: 'Furgoneta Sprinter',
+          consumoL100km: 10,
+          precioCarburanteEUR: 1.50
+        },
+        {
+          id: 'v2',
+          nombre: 'Turismo Coche Apoyo',
+          consumoL100km: 6,
+          precioCarburanteEUR: 1.60
+        }
+      ];
+
+      // Distance 200 km:
+      // V1: (200 / 100) * 10 * 1.50 = 30 EUR
+      // V2: (200 / 100) * 6 * 1.60 = 19.2 EUR
+      // Total = 49.2 -> rounded to 49
+      expect(calculateVehiclesFuelCost(200, vehicles)).toBe(49);
+    });
+
+    it('falls back to single vehicle parameters if vehicles list is empty', () => {
+      // 100 km, 10 L/100km, 1.5 EUR/L -> 15 EUR
+      expect(calculateVehiclesFuelCost(100, [], 10, 1.5)).toBe(15);
     });
   });
 

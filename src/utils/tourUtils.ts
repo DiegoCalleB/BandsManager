@@ -1,5 +1,13 @@
 // Tour calculation utilities
 
+export interface TourVehicle {
+  id?: string;
+  nombre?: string;
+  consumoL100km: number;
+  precioCarburanteEUR?: number;
+  tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
+}
+
 export interface TourStop {
   id?: string;
   ciudad: string;
@@ -36,6 +44,32 @@ export function calculateFuelCost(
     return Math.round(litersNeeded * pricePerLiterEUR * 100) / 100;
   }
   return Math.round(distanceKm * rateOrConsumptionL100km);
+}
+
+/**
+ * Calculates the combined fuel cost for multiple vehicles for a given distance.
+ * Iterates through each vehicle and sums the fuel cost.
+ */
+export function calculateVehiclesFuelCost(
+  distanceKm: number,
+  vehicles?: TourVehicle[],
+  fallbackConsumo: number = 9.5,
+  fallbackPrecio: number = 1.55
+): number {
+  if (distanceKm <= 0) return 0;
+  if (!vehicles || vehicles.length === 0) {
+    return Math.round((distanceKm / 100) * fallbackConsumo * fallbackPrecio);
+  }
+
+  let totalCost = 0;
+  for (const v of vehicles) {
+    const consumo = Number(v.consumoL100km) || 0;
+    const precio = Number(v.precioCarburanteEUR) > 0 ? Number(v.precioCarburanteEUR) : fallbackPrecio;
+    const vehicleCost = (distanceKm / 100) * consumo * precio;
+    totalCost += vehicleCost;
+  }
+
+  return Math.round(totalCost);
 }
 
 /**
