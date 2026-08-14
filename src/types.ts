@@ -426,6 +426,14 @@ export interface ThemeColors {
   fontSans: string;
 }
 
+export interface TourVehicle {
+  id: string;
+  nombre: string;
+  consumoL100km: number;
+  precioCarburanteEUR?: number;
+  tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
+}
+
 export interface TourRouteStop {
   id: string;
   concertId?: string;
@@ -447,10 +455,11 @@ export interface Tour {
   nombre: string;
   fechaInicio: string;
   fechaFin: string;
-  vehiculo: string;
+  vehiculo?: string;
   consumoL100km?: number;
   precioCarburanteEUR?: number;
   tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
+  vehiculos?: TourVehicle[];
   presupuestoLogistica?: number;
   stops: TourRouteStop[];
   estado: 'planificacion' | 'confirmada' | 'completada' | 'cancelada';

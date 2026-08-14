@@ -327,6 +327,7 @@ CREATE TABLE IF NOT EXISTS tours (
     precio_carburante_eur NUMERIC,
     tipo_combustible TEXT,
     presupuesto_logistica NUMERIC,
+    vehiculos JSONB DEFAULT '[]'::jsonb,
     stops JSONB DEFAULT '[]'::jsonb,
     estado TEXT DEFAULT 'planificacion',
     created_at TIMESTAMPTZ DEFAULT NOW(),

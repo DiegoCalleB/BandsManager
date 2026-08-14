@@ -1049,10 +1049,31 @@ export async function dbGetTours(bandId: string) {
     .order("fecha_inicio", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (tours): ${error.message}`);
-  return (data || []).map(t => ({
-    ...t,
-    stops: t.stops || []
-  }));
+  return (data || []).map(t => {
+    const vehiculos = Array.isArray(t.vehiculos) && t.vehiculos.length > 0
+      ? t.vehiculos
+      : t.vehiculo
+        ? [{
+            id: 'veh-1',
+            nombre: t.vehiculo,
+            consumoL100km: Number(t.consumo_l100km || 9.5),
+            precioCarburanteEUR: Number(t.precio_carburante_eur || 1.55),
+            tipoCombustible: t.tipo_combustible || 'diesel'
+          }]
+        : [];
+
+    return {
+      ...t,
+      fechaInicio: t.fecha_inicio || t.fechaInicio || "",
+      fechaFin: t.fecha_fin || t.fechaFin || "",
+      consumoL100km: t.consumo_l100km ?? t.consumoL100km,
+      precioCarburanteEUR: t.precio_carburante_eur ?? t.precioCarburanteEUR,
+      tipoCombustible: t.tipo_combustible || t.tipoCombustible || "diesel",
+      presupuestoLogistica: t.presupuesto_logistica ?? t.presupuestoLogistica ?? 0,
+      vehiculos,
+      stops: t.stops || []
+    };
+  });
 }
 
 export async function dbUpsertTour(tour: any, bandId: string) {
@@ -1060,17 +1081,34 @@ export async function dbUpsertTour(tour: any, bandId: string) {
   const targetBandId = cleanBandId(tour.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload = {
+  const vehiculos = Array.isArray(tour.vehiculos) && tour.vehiculos.length > 0
+    ? tour.vehiculos
+    : tour.vehiculo
+      ? [{
+          id: 'veh-1',
+          nombre: tour.vehiculo,
+          consumoL100km: Number(tour.consumoL100km || tour.consumo_l100km || 9.5),
+          precioCarburanteEUR: Number(tour.precioCarburanteEUR || tour.precio_carburante_eur || 1.55),
+          tipoCombustible: tour.tipoCombustible || tour.tipo_combustible || "diesel"
+        }]
+      : [];
+
+  const mainVehiculo = vehiculos.length > 0
+    ? vehiculos.map((v: any) => v.nombre).filter(Boolean).join(", ")
+    : (tour.vehiculo || "");
+
+  const payload: any = {
     id: tour.id || `tour-${Date.now()}`,
     band_id: targetBandId,
     nombre: tour.nombre || "Gira",
     fecha_inicio: tour.fecha_inicio || tour.fechaInicio || "",
     fecha_fin: tour.fecha_fin || tour.fechaFin || "",
-    vehiculo: tour.vehiculo || "",
-    consumo_l100km: Number(tour.consumo_l100km || tour.consumoL100km || 0),
-    precio_carburante_eur: Number(tour.precio_carburante_eur || tour.precioCarburanteEur || 0),
-    tipo_combustible: tour.tipo_combustible || tour.tipoCombustible || "diesel",
+    vehiculo: mainVehiculo,
+    consumo_l100km: Number(tour.consumo_l100km || tour.consumoL100km || (vehiculos[0]?.consumoL100km ?? 0)),
+    precio_carburante_eur: Number(tour.precio_carburante_eur || tour.precioCarburanteEUR || (vehiculos[0]?.precioCarburanteEUR ?? 0)),
+    tipo_combustible: tour.tipo_combustible || tour.tipoCombustible || (vehiculos[0]?.tipoCombustible ?? "diesel"),
     presupuesto_logistica: Number(tour.presupuesto_logistica || tour.presupuestoLogistica || 0),
+    vehiculos: vehiculos,
     stops: tour.stops || [],
     estado: tour.estado || "planificacion"
   };
