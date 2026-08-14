@@ -32,12 +32,19 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     email: '',
     telefono: ''
   },
+  riderTecnico: 'Rider técnico por definir.',
   enlacesRedes: {
     spotify: '',
     youtube: '',
-    instagram: ''
+    instagram: '',
+    tiktok: '',
+    appleMusic: '',
+    bandcamp: '',
+    website: '',
+    whatsapp: '',
+    facebook: '',
+    twitter: ''
   },
-  riderTecnico: 'Rider técnico por definir.',
   firmaEmail: {
     nombreRemitente: 'Booking & Management Team',
     cargo: 'Booking & Management',
@@ -46,20 +53,22 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     textoPie: 'Directo en vivo',
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
-    redesSociales: {
-      spotify: '',
-      instagram: '',
-      youtube: '',
-      tiktok: '',
-      facebook: '',
-      twitter: '',
-      appleMusic: '',
-      bandcamp: '',
-      website: '',
-      whatsapp: ''
-    }
+    redesSociales: {}
   }
 };
+
+const UNIFIED_PLATFORMS = [
+  { key: 'spotify', label: 'Spotify', icon: '🟢', placeholder: 'https://open.spotify.com/artist/...' },
+  { key: 'instagram', label: 'Instagram', icon: '📸', placeholder: 'https://instagram.com/...' },
+  { key: 'youtube', label: 'YouTube', icon: '🔴', placeholder: 'https://youtube.com/...' },
+  { key: 'tiktok', label: 'TikTok', icon: '🎵', placeholder: 'https://tiktok.com/@...' },
+  { key: 'appleMusic', label: 'Apple Music', icon: '🍎', placeholder: 'https://music.apple.com/...' },
+  { key: 'bandcamp', label: 'Bandcamp', icon: '⛺', placeholder: 'https://tubanda.bandcamp.com' },
+  { key: 'website', label: 'Sitio Web Oficial', icon: '🌐', placeholder: 'https://www.tubanda.com' },
+  { key: 'whatsapp', label: 'WhatsApp', icon: '💬', placeholder: '+34600000000' },
+  { key: 'facebook', label: 'Facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
+  { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' }
+];
 
 export const EPKManager: React.FC<EPKManagerProps> = ({ 
   epkConfig, 
@@ -70,24 +79,42 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const activeBandId = currentUser?.band_id || 'band-bakandeya';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
   const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
-  const [config, setConfig] = useState<EPKConfig>(() => ({
-    ...DEFAULT_EPK_CONFIG,
-    ...(epkConfig || {}),
-    firmaEmail: {
-      ...DEFAULT_EPK_CONFIG.firmaEmail,
-      ...(epkConfig?.firmaEmail || {})
-    }
-  }));
+  
+  const [config, setConfig] = useState<EPKConfig>(() => {
+    const initialRedes = {
+      ...DEFAULT_EPK_CONFIG.enlacesRedes,
+      ...(epkConfig?.firmaEmail?.redesSociales || {}),
+      ...(epkConfig?.enlacesRedes || {})
+    };
+    return {
+      ...DEFAULT_EPK_CONFIG,
+      ...(epkConfig || {}),
+      enlacesRedes: initialRedes,
+      firmaEmail: {
+        ...DEFAULT_EPK_CONFIG.firmaEmail,
+        ...(epkConfig?.firmaEmail || {}),
+        redesSociales: initialRedes
+      }
+    };
+  });
 
   React.useEffect(() => {
     if (epkConfig) {
+      const mergedRedes = {
+        ...DEFAULT_EPK_CONFIG.enlacesRedes,
+        ...(config.enlacesRedes || {}),
+        ...(epkConfig.firmaEmail?.redesSociales || {}),
+        ...(epkConfig.enlacesRedes || {})
+      };
       setConfig(prev => ({
         ...prev,
         ...epkConfig,
+        enlacesRedes: mergedRedes,
         firmaEmail: {
           ...DEFAULT_EPK_CONFIG.firmaEmail,
           ...prev.firmaEmail,
-          ...(epkConfig.firmaEmail || {})
+          ...(epkConfig.firmaEmail || {}),
+          redesSociales: mergedRedes
         }
       }));
     }
@@ -110,11 +137,19 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
   const handleSave = async () => {
     try {
+      const payload: EPKConfig = {
+        ...config,
+        firmaEmail: {
+          ...(config.firmaEmail || {}),
+          redesSociales: { ...(config.enlacesRedes || {}) }
+        }
+      };
+
       if (onSave) {
-        onSave(config);
+        onSave(payload);
       }
       
-      await api.updateEpkConfig(config);
+      await api.updateEpkConfig(payload);
 
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3500);
@@ -640,37 +675,53 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-slate-800 space-y-2">
-                <label className="text-xs font-bold text-amber-300 uppercase">Enlaces de Redes & Plataformas</label>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <input
-                    type="text"
-                    placeholder="Spotify URL"
-                    value={config.enlacesRedes?.spotify || ''}
-                    onChange={e => setConfig({ ...config, enlacesRedes: { ...config.enlacesRedes, spotify: e.target.value } })}
-                    className="bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200"
-                  />
-                  <input
-                    type="text"
-                    placeholder="YouTube URL"
-                    value={config.enlacesRedes?.youtube || ''}
-                    onChange={e => setConfig({ ...config, enlacesRedes: { ...config.enlacesRedes, youtube: e.target.value } })}
-                    className="bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Instagram URL"
-                    value={config.enlacesRedes?.instagram || ''}
-                    onChange={e => setConfig({ ...config, enlacesRedes: { ...config.enlacesRedes, instagram: e.target.value } })}
-                    className="bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200"
-                  />
-                  <input
-                    type="text"
-                    placeholder="TikTok URL"
-                    value={config.enlacesRedes?.tiktok || ''}
-                    onChange={e => setConfig({ ...config, enlacesRedes: { ...config.enlacesRedes, tiktok: e.target.value } })}
-                    className="bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200"
-                  />
+              <div className="pt-3 border-t border-slate-800 space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div>
+                    <label className="text-xs font-bold text-amber-300 uppercase flex items-center gap-1.5">
+                      <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
+                    </label>
+                    <p className="text-[11px] text-slate-400">
+                      Fuente única de enlaces: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y agentes IA.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    Fuente Centralizada
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                  {UNIFIED_PLATFORMS.map(item => (
+                    <div key={item.key} className="space-y-1">
+                      <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
+                        <span>{item.icon}</span>
+                        <span>{item.label}</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={item.placeholder}
+                        value={(config.enlacesRedes as any)?.[item.key] || ''}
+                        onChange={e => {
+                          const updatedVal = e.target.value;
+                          setConfig(prev => {
+                            const newRedes = {
+                              ...(prev.enlacesRedes || {}),
+                              [item.key]: updatedVal
+                            };
+                            return {
+                              ...prev,
+                              enlacesRedes: newRedes,
+                              firmaEmail: {
+                                ...(prev.firmaEmail || {}),
+                                redesSociales: newRedes
+                              }
+                            };
+                          });
+                        }}
+                        className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200 outline-none font-mono text-[11px]"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -948,45 +999,54 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               </label>
             </div>
 
-            {/* ENLACES A REDES SOCIALES PARA LA FIRMA */}
+            {/* ENLACES A REDES SOCIALES VINCULADOS (FUENTE ÚNICA) */}
             <div className="pt-3 border-t border-slate-800 space-y-3">
-              <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes y Plataformas para la Firma
-              </h4>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                  <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes y Plataformas Vinculados
+                </h4>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('editor')}
+                  className="px-2.5 py-1 text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg transition flex items-center gap-1 cursor-pointer"
+                >
+                  <FileText className="w-3 h-3" /> Editar Enlaces en Dossier
+                </button>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                {[
-                  { key: 'spotify', label: '🟢 Spotify', placeholder: 'https://open.spotify.com/artist/...' },
-                  { key: 'instagram', label: '📸 Instagram', placeholder: 'https://instagram.com/...' },
-                  { key: 'youtube', label: '🔴 YouTube', placeholder: 'https://youtube.com/...' },
-                  { key: 'tiktok', label: '🎵 TikTok', placeholder: 'https://tiktok.com/@...' },
-                  { key: 'facebook', label: '📘 Facebook', placeholder: 'https://facebook.com/...' },
-                  { key: 'twitter', label: '🐦 Twitter / X', placeholder: 'https://x.com/...' },
-                  { key: 'appleMusic', label: '🍎 Apple Music', placeholder: 'https://music.apple.com/...' },
-                  { key: 'bandcamp', label: '⛺ Bandcamp', placeholder: 'https://bands-manager.up.railway.app' },
-                  { key: 'website', label: '🌐 Sitio Web', placeholder: 'https://bands-manager.up.railway.app' },
-                  { key: 'whatsapp', label: '💬 WhatsApp', placeholder: '+34652938521' }
-                ].map(item => (
-                  <div key={item.key} className="space-y-1">
-                    <label className="text-[11px] font-semibold text-slate-300">{item.label}</label>
-                    <input
-                      type="text"
-                      value={(config.firmaEmail?.redesSociales as any)?.[item.key] || ''}
-                      onChange={e => setConfig({
-                        ...config,
-                        firmaEmail: {
-                          ...(config.firmaEmail || {}),
-                          redesSociales: {
-                            ...(config.firmaEmail?.redesSociales || {}),
-                            [item.key]: e.target.value
-                          }
-                        }
-                      })}
-                      placeholder={item.placeholder}
-                      className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none font-mono"
-                    />
+              <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl space-y-2.5">
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Para evitar duplicidad, los enlaces de tus plataformas (Spotify, Instagram, YouTube, etc.) se gestionan de forma centralizada en <strong className="text-slate-200">Editar Dossier e Información</strong> y se aplican automáticamente aquí en la firma.
+                </p>
+
+                {Object.entries(config.enlacesRedes || {}).filter(([_, url]) => Boolean(url && String(url).trim())).length > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {Object.entries(config.enlacesRedes || {}).map(([key, url]) => {
+                      if (!url || !String(url).trim()) return null;
+                      const platform = UNIFIED_PLATFORMS.find(p => p.key === key);
+                      return (
+                        <span
+                          key={key}
+                          className="px-2 py-1 rounded-md bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300 flex items-center gap-1"
+                        >
+                          <span>{platform?.icon || '🔗'}</span>
+                          <span className="font-semibold text-slate-200">{platform?.label || key}</span>
+                        </span>
+                      );
+                    })}
                   </div>
-                ))}
+                ) : (
+                  <div className="p-2.5 rounded-lg bg-amber-500/5 border border-amber-500/15 flex items-center justify-between gap-2">
+                    <span className="text-[11px] text-amber-300/80">No has añadido enlaces a plataformas todavía.</span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('editor')}
+                      className="text-[11px] font-bold text-amber-400 hover:underline"
+                    >
+                      Añadir ahora &rarr;
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1065,8 +1125,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 {/* ICONOS DE REDES SOCIALES */}
                 {(config.firmaEmail?.incluirIconosRedes ?? true) && (
                   <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2">
-                    {Object.entries(config.firmaEmail?.redesSociales || {}).map(([net, url]) => {
-                      if (!url) return null;
+                    {Object.entries(config.enlacesRedes || {}).map(([net, url]) => {
+                      if (!url || !String(url).trim()) return null;
                       const icons: Record<string, { label: string; bg: string }> = {
                         spotify: { label: '🟢 Spotify', bg: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
                         instagram: { label: '📸 Instagram', bg: 'bg-pink-50 text-pink-700 border-pink-200' },

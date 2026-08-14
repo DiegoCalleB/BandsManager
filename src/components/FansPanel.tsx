@@ -17,6 +17,9 @@ interface FansPanelProps {
   onDeleteFan: (id: string) => void;
   onUpdateIncentive?: (newIncentive: EPKConfig['incentivoFans']) => void;
   onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
+  currentBandId?: string;
+  currentBandName?: string;
+  currentBandLogo?: string;
 }
 
 const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
@@ -28,8 +31,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   onAddFan,
   onDeleteFan,
   onUpdateIncentive,
-  onUpdateEpkConfig
+  onUpdateEpkConfig,
+  currentBandId,
+  currentBandName,
+  currentBandLogo
 }) => {
+  const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
+  const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
+  const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
   const [activeTab, setActiveTab] = useState<'dashboard' | 'fans' | 'qr'>('dashboard');
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
   const [searchQuery, setSearchQuery] = useState('');
@@ -218,8 +227,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Fans Bakandeya");
-    XLSX.writeFile(workbook, `Fans_Bakandeya_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.utils.book_append_sheet(workbook, worksheet, `Fans ${effectiveBandName}`);
+    XLSX.writeFile(workbook, `Fans_${effectiveBandName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   const handleManualAddSubmit = (e: React.FormEvent) => {
@@ -272,7 +281,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     ? (cleanPrefix ? `/${cleanPrefix}/${cleanSlugVal}` : `/${cleanSlugVal}`)
     : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
 
-  const qrConcertUrl = `${rawDomain}${pathFormatted}`;
+  const bandQueryParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(currentBandId || cleanBandId)}` : '';
+  const qrConcertUrl = `${rawDomain}${pathFormatted}${bandQueryParam}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(qrConcertUrl);
@@ -288,8 +298,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   };
 
   const handleShareWhatsApp = () => {
-    const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : 'Bakandeya';
-    const text = `¡Únete a Bakandeya en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
+    const concertTitle = selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : effectiveBandName;
+    const text = `¡Únete a ${effectiveBandName} en ${concertTitle}! 🎶 Escanea o entra en el enlace para recibir sorpresas exclusivas y estar al día:\n\n${qrConcertUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -297,7 +307,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Únete a Bakandeya',
+          title: `Únete a ${effectiveBandName}`,
           text: 'Escanea o entra para unirte a nuestra comunidad.',
           url: qrConcertUrl,
         });
@@ -312,7 +322,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const handlePrintQr = () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
-    const concertTitle = selectedConcert ? `${selectedConcert.sala} — ${selectedConcert.ciudad} (${selectedConcert.fecha})` : 'Bakandeya';
+    const concertTitle = selectedConcert ? `${selectedConcert.sala} — ${selectedConcert.ciudad} (${selectedConcert.fecha})` : effectiveBandName;
     
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -336,15 +346,15 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         </head>
         <body>
           <div class="card">
-            ${epkConfig?.logoUrl ? `<img src="${epkConfig.logoUrl}" class="header-logo" alt="Logo" />` : (epkConfig?.contactoBooking?.nombre || '').toLowerCase().includes('bakandeya') ? `<img src="/logo_bakandeya.jpg" class="header-logo" alt="Bakandeya" />` : ''}
+            ${effectiveBandLogo ? `<img src="${effectiveBandLogo}" class="header-logo" alt="${effectiveBandName}" />` : ''}
             <h1>${concertTitle}</h1>
-            <p class="desc">Escanea este código QR para unirte a la comunidad, recibir contenido exclusivo y no perder el contacto.</p>
+            <p class="desc">Escanea este código QR para unirte a la comunidad de ${effectiveBandName}, recibir contenido exclusivo y no perder el contacto.</p>
             <div class="qr-box">
               <div id="print-qr-svg"></div>
-              ${(epkConfig?.logoUrl || (epkConfig?.contactoBooking?.nombre || '').toLowerCase().includes('bakandeya')) ? `
+              ${effectiveBandLogo ? `
               <div class="qr-center-overlay">
                 <div class="badge-logo">
-                  <img src="${epkConfig?.logoUrl || '/logo_bakandeya.jpg'}" alt="Logo" />
+                  <img src="${effectiveBandLogo}" alt="Logo" />
                 </div>
               </div>` : ''}
             </div>
@@ -453,7 +463,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <TrendingUp className="w-4 h-4 text-amber-500" />
                     Crecimiento Evolutivo de Fans
                   </p>
-                  <p className="text-[11px] text-slate-500 font-mono">Curva acumulativa de la comunidad Bakandeya</p>
+                  <p className="text-[11px] text-slate-500 font-mono">Curva acumulativa de la comunidad {effectiveBandName}</p>
                 </div>
                 <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
                   Total: {fans.length} fans
@@ -1032,19 +1042,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div id="qr-code-svg-container" className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-500 inline-block relative">
                 <QRCode value={qrConcertUrl} size={220} level="H" />
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  {epkConfig?.logoUrl ? (
+                  {effectiveBandLogo ? (
                     <div className="w-16 h-16 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
                       <img 
-                        src={epkConfig.logoUrl} 
-                        alt="Logo" 
-                        className="w-full h-full object-contain rounded-lg" 
-                      />
-                    </div>
-                  ) : (epkConfig?.contactoBooking?.nombre || '').toLowerCase().includes('bakandeya') ? (
-                    <div className="w-16 h-16 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
-                      <img 
-                        src="/logo_bakandeya_bueno_sin_fondo.png" 
-                        alt="Logo Bakandeya" 
+                        src={effectiveBandLogo} 
+                        alt={`Logo ${effectiveBandName}`} 
                         className="w-full h-full object-contain rounded-lg" 
                       />
                     </div>
@@ -1057,7 +1059,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </div>
               <div className="text-center space-y-1 mt-2">
                 <h4 className="font-black text-white font-display text-lg uppercase tracking-wider">
-                  {selectedConcert ? `${selectedConcert.sala}` : 'Únete a Bakandeya'}
+                  {selectedConcert ? `${selectedConcert.sala}` : `Únete a ${effectiveBandName}`}
                 </h4>
                 <p className="text-xs text-slate-400 font-mono">Escanea para no perder el contacto</p>
               </div>

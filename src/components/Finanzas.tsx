@@ -16,6 +16,8 @@ interface FinanzasProps {
   onAddPayment: (payment: Payment) => Promise<void>;
   onUpdatePayment: (id: string, updatedFields: Partial<Payment>) => Promise<void>;
   onUpdateConcert?: (id: string, updatedFields: Partial<Concert>) => Promise<void>;
+  tours?: any[];
+  bandUsers?: any[];
 }
 
 export default function Finanzas({ 
@@ -387,6 +389,10 @@ export default function Finanzas({
 
                  const beneficioNeto = (c.cache || 0) - totalGastosBolo;
                  const margenPct = c.cache > 0 ? Math.round((beneficioNeto / c.cache) * 100) : 0;
+                  const numConvocados = c.convocatoria_tipo === "parcial" && c.convocados_ids && c.convocados_ids.length > 0
+                    ? c.convocados_ids.length 
+                    : (c.convocados_nombres && c.convocados_nombres.length > 0 ? c.convocados_nombres.length : 5);
+                  const netoPorMusico = Math.round(beneficioNeto / (numConvocados || 1));
 
                  let alertBadge = {
                    label: '🟢 Rentable',
@@ -410,10 +416,24 @@ export default function Finanzas({
                      <td className="p-3 font-mono text-slate-300">
                        <span className="font-bold text-white block">{c.fecha}</span>
                        <span className="text-[10px] text-slate-500 capitalize">{c.tipo}</span>
+                          {c.giraNombre && (
+                            <span className="text-[9px] px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono">
+                              🚐 {c.giraNombre}
+                            </span>
+                          )}
                      </td>
                      <td className="p-3">
                        <span className="font-bold text-white block">{c.sala}</span>
                        <span className="text-[10px] text-slate-400">{c.ciudad}</span>
+                        {c.convocatoria_tipo === "parcial" ? (
+                          <span className="inline-block mt-0.5 text-[9px] text-purple-300 bg-purple-500/10 px-1.5 py-0.2 rounded border border-purple-500/20 font-mono" title={c.convocados_nombres?.join(", ")}>
+                            👤 Parcial ({numConvocados} miembros)
+                          </span>
+                        ) : (
+                          <span className="inline-block mt-0.5 text-[9px] text-emerald-400/80 font-mono">
+                            👥 Banda completa
+                          </span>
+                        )}
                      </td>
                      <td className="p-3 font-mono font-bold text-amber-400 text-sm">
                        {c.cache ? `${c.cache}€` : '0€'}
@@ -438,6 +458,9 @@ export default function Finanzas({
                        <span className="block text-[10px] text-slate-500 font-normal">
                          Margen: {margenPct}%
                        </span>
+                        <span className="block text-[9px] text-purple-300 font-normal">
+                          Reparto: {netoPorMusico >= 0 ? "+" + netoPorMusico : netoPorMusico}€/músico
+                        </span>
                      </td>
                      <td className="p-3 text-center">
                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${alertBadge.bgColor}`}>

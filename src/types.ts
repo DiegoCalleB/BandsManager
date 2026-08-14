@@ -156,6 +156,8 @@ export interface Concert {
   convocatoria_tipo?: 'completa' | 'parcial';
   convocados_ids?: string[];
   convocados_nombres?: string[];
+  giraId?: string;
+  giraNombre?: string;
 }
 
 export interface EmailSignatureConfig {
@@ -197,7 +199,13 @@ export interface EPKConfig {
     youtube?: string;
     instagram?: string;
     tiktok?: string;
+    facebook?: string;
+    twitter?: string;
+    appleMusic?: string;
+    bandcamp?: string;
     website?: string;
+    whatsapp?: string;
+    [key: string]: string | undefined;
   };
   contactoBooking: {
     nombre: string;
@@ -447,6 +455,9 @@ export interface TourRouteStop {
   gastosDietas?: number;
   ingresoCacheEstimated?: number;
   notasLogisticas?: string;
+  convocatoria_tipo?: 'completa' | 'parcial';
+  convocados_ids?: string[];
+  convocados_nombres?: string[];
 }
 
 export interface Tour {
@@ -461,6 +472,11 @@ export interface Tour {
   tipoCombustible?: 'diesel' | 'gasolina95' | 'gasolina98' | 'electrico';
   vehiculos?: TourVehicle[];
   presupuestoLogistica?: number;
+  convocatoria_tipo?: 'completa' | 'parcial';
+  convocados_ids?: string[];
+  convocados_nombres?: string[];
+  sincronizarCalendario?: boolean;
+  sincronizarFinanzas?: boolean;
   stops: TourRouteStop[];
   estado: 'planificacion' | 'confirmada' | 'completada' | 'cancelada';
 }

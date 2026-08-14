@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 
-export const FansLanding: React.FC = () => {
+interface FansLandingProps {
+  currentBandId?: string;
+  currentBandName?: string;
+  currentBandLogo?: string;
+}
+
+export const FansLanding: React.FC<FansLandingProps> = ({
+  currentBandId: initialBandId,
+  currentBandName: initialBandName,
+  currentBandLogo: initialBandLogo
+}) => {
   const [activeTab, setActiveTab] = useState<'redes' | 'form'>('redes');
   const [formData, setFormData] = useState({
     nombre: '',
@@ -20,26 +30,64 @@ export const FansLanding: React.FC = () => {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [isConcertLink, setIsConcertLink] = useState(false);
   
-  const [logoUrl, setLogoUrl] = useState('/logo_bakandeya_bueno_sin_fondo.png');
+  const [resolvedBandId, setResolvedBandId] = useState<string>('band-bakandeya');
+  const [bandName, setBandName] = useState<string>('Banda');
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(undefined);
-  const [imgErrorCount, setImgErrorCount] = useState(0);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
-    // Fetch official band logo and social links from public EPK endpoint
-    fetch('/api/public/epk')
+    // 1. Determine active band ID from URL, props or localStorage
+    const params = new URLSearchParams(window.location.search);
+    const queryBand = params.get('band_id') || params.get('band') || params.get('b');
+    
+    let storedBandId = '';
+    try {
+      storedBandId = localStorage.getItem('band_manager_active_band_id') || '';
+      if (!storedBandId) {
+        const storedUser = localStorage.getItem('band_manager_user') || localStorage.getItem('band_manager_current_user');
+        if (storedUser) {
+          const parsed = JSON.parse(storedUser);
+          storedBandId = parsed.band_id || parsed.bandName || '';
+        }
+      }
+    } catch {}
+
+    const targetBandId = (initialBandId || queryBand || storedBandId || 'band-bakandeya').toLowerCase();
+    setResolvedBandId(targetBandId);
+
+    // Initial fallback name
+    if (initialBandName) {
+      setBandName(initialBandName);
+    } else {
+      const clean = targetBandId.replace(/^(band|reg)-/, '');
+      const formatted = clean === 'bakandeya' ? 'Bakandeya' : clean.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      setBandName(formatted);
+    }
+
+    if (initialBandLogo) {
+      setLogoUrl(initialBandLogo);
+    }
+
+    // 2. Fetch public EPK details for this specific band
+    fetch(`/api/public/epk?band_id=${encodeURIComponent(targetBandId)}`)
       .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
       .then(data => {
-        if (data?.epkConfig?.logoUrl) {
-          setLogoUrl(data.epkConfig.logoUrl);
-        }
-        if (data?.epkConfig?.enlacesRedes) {
-          setSocialLinks(data.epkConfig.enlacesRedes);
+        if (data) {
+          if (data.bandName) setBandName(data.bandName);
+          if (data.logoUrl || data.epkConfig?.logoUrl) {
+            setLogoUrl(data.logoUrl || data.epkConfig.logoUrl);
+            setImgError(false);
+          }
+          if (data.epkConfig?.enlacesRedes) {
+            setSocialLinks(data.epkConfig.enlacesRedes);
+          }
         }
       })
       .catch(err => {
         console.warn("Could not fetch EPK data for fans landing:", err);
       });
-  }, []);
+  }, [initialBandId, initialBandName, initialBandLogo]);
 
   useEffect(() => {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
@@ -87,6 +135,7 @@ export const FansLanding: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          band_id: resolvedBandId,
           nombre: formData.nombre,
           email: formData.email,
           ciudad: formData.ciudad,
@@ -123,12 +172,12 @@ export const FansLanding: React.FC = () => {
           <div className="space-y-2">
             <h2 className="text-2xl font-black text-white font-display uppercase tracking-widest flex items-center justify-center gap-2">
               <PartyPopper className="w-6 h-6 text-amber-400" /> 
-              ¡Bienvenido a Bakandeya!
+              ¡Bienvenido a {bandName}!
             </h2>
             <p className="text-neutral-300 font-mono text-sm leading-relaxed max-w-xs mx-auto">
               {successData.alreadyRegistered 
                 ? successData.message 
-                : (incentivo.mensajeAgradecimiento || "¡Registro completado! Nos alegramos de que formes parte de nuestra familia.")}
+                : (incentivo.mensajeAgradecimiento || `¡Registro completado! Nos alegramos de que formes parte de la familia de ${bandName}.`)}
             </p>
           </div>
 
@@ -145,7 +194,7 @@ export const FansLanding: React.FC = () => {
                     className="flex flex-col items-center justify-center gap-2 w-full p-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 rounded-lg text-white font-mono text-xs transition-colors"
                   >
                     <Download className="w-5 h-5 text-amber-400" />
-                    <span className="font-bold">Descargar Tema Inédito</span>
+                    <span className="font-bold">Descargar Contenido Exclusivo</span>
                   </a>
                 </div>
               )}
@@ -163,13 +212,15 @@ export const FansLanding: React.FC = () => {
           )}
 
           {/* Official Social Links in Success View */}
-          <div className="pt-2 border-t border-neutral-800">
-            <SocialPlatformsList 
-              links={socialLinks} 
-              variant="grid" 
-              title="📱 Síguenos en nuestras plataformas" 
-            />
-          </div>
+          {socialLinks && Object.values(socialLinks).some(Boolean) && (
+            <div className="pt-2 border-t border-neutral-800">
+              <SocialPlatformsList 
+                links={socialLinks} 
+                variant="grid" 
+                title="📱 Síguenos en nuestras plataformas" 
+              />
+            </div>
+          )}
           
           <div className="pt-2">
             <a href="/" className="text-xs font-mono text-neutral-500 hover:text-amber-500 underline transition-colors">
@@ -187,25 +238,25 @@ export const FansLanding: React.FC = () => {
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-neutral-800 to-neutral-700" />
         
         <div className="text-center space-y-4 pt-2">
-          {imgErrorCount < 2 ? (
+          {logoUrl && !imgError ? (
             <div className="relative inline-block mx-auto">
               <img 
-                src={imgErrorCount === 0 ? logoUrl : '/logo_bakandeya.jpg'} 
-                alt="Bakandeya" 
-                onError={() => {
-                  setImgErrorCount(prev => prev + 1);
-                }}
+                src={logoUrl} 
+                alt={bandName} 
+                onError={() => setImgError(true)}
                 className="w-24 h-24 mx-auto object-contain p-1 rounded-2xl border-2 border-amber-500/40 bg-neutral-950 shadow-xl drop-shadow-[0_0_15px_rgba(242,202,80,0.2)]" 
               />
             </div>
           ) : (
             <div className="w-24 h-24 mx-auto rounded-2xl border-2 border-amber-500/50 bg-gradient-to-br from-neutral-900 to-neutral-950 flex flex-col items-center justify-center p-2 shadow-2xl drop-shadow-[0_0_20px_rgba(242,202,80,0.25)]">
               <Flame className="w-10 h-10 text-amber-400 mb-0.5 animate-pulse" />
-              <span className="text-[10px] font-black text-amber-300 font-display uppercase tracking-wider">Bakandeya</span>
+              <span className="text-[10px] font-black text-amber-300 font-display uppercase tracking-wider line-clamp-1">{bandName}</span>
             </div>
           )}
           <div className="space-y-1">
-            <h1 className="text-3xl font-black text-white font-display uppercase tracking-widest drop-shadow-md">Únete a Bakandeya!</h1>
+            <h1 className="text-3xl font-black text-white font-display uppercase tracking-widest drop-shadow-md">
+              Únete a {bandName}!
+            </h1>
             <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">Oficial Fan Club</p>
           </div>
           <p className="text-neutral-400 text-xs font-mono leading-relaxed pt-2">
@@ -259,12 +310,7 @@ export const FansLanding: React.FC = () => {
             </div>
 
             <SocialPlatformsList 
-              links={socialLinks || {
-                spotify: 'https://open.spotify.com/artist/bakandeya',
-                instagram: 'https://instagram.com/bakandeya',
-                youtube: 'https://youtube.com/@bakandeya',
-                tiktok: 'https://tiktok.com/@bakandeya'
-              }} 
+              links={socialLinks || {}} 
               variant="grid" 
               showTitle={false} 
             />
@@ -400,11 +446,11 @@ export const FansLanding: React.FC = () => {
             </div>
             
             <div className="text-xs text-neutral-300 font-mono space-y-3 leading-relaxed">
-              <p><strong className="text-white">1. Responsable del tratamiento:</strong> Bakandeya (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu alta en nuestro club de fans ("Bakandeya") e informarte sobre próximos conciertos, lanzamientos y novedades musicales.</p>
+              <p><strong className="text-white">1. Responsable del tratamiento:</strong> {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu alta en nuestro club de fans ("{bandName}") e informarte sobre próximos conciertos, lanzamientos y novedades musicales.</p>
               
               <p><strong className="text-white">2. Legitimación:</strong> El tratamiento de tus datos se basa en tu <span className="text-amber-400">consentimiento explícito</span> al marcar la casilla de aceptación y enviar el formulario.</p>
               
-              <p><strong className="text-white">3. Destinatarios:</strong> Los datos se almacenan de forma segura para uso exclusivo de Bakandeya en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.</p>
+              <p><strong className="text-white">3. Destinatarios:</strong> Los datos se almacenan de forma segura para uso exclusivo de {bandName} en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.</p>
               
               <p><strong className="text-white">4. Derechos:</strong> Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.</p>
             </div>
