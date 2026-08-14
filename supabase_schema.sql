@@ -450,3 +450,6 @@ CREATE TABLE IF NOT EXISTS band_schedules (
 ALTER TABLE band_schedules ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON band_schedules FOR ALL USING (true);
 
+-- Migraciones adicionales idempotentes
+ALTER TABLE tours ADD COLUMN IF NOT EXISTS vehiculos JSONB DEFAULT '[]'::jsonb;
+

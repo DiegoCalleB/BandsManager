@@ -1050,17 +1050,27 @@ export async function dbGetTours(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (tours): ${error.message}`);
   return (data || []).map(t => {
-    const vehiculos = Array.isArray(t.vehiculos) && t.vehiculos.length > 0
-      ? t.vehiculos
-      : t.vehiculo
-        ? [{
-            id: 'veh-1',
-            nombre: t.vehiculo,
-            consumoL100km: Number(t.consumo_l100km || 9.5),
-            precioCarburanteEUR: Number(t.precio_carburante_eur || 1.55),
-            tipoCombustible: t.tipo_combustible || 'diesel'
-          }]
-        : [];
+    let vehiculos: any[] = [];
+    if (Array.isArray(t.vehiculos) && t.vehiculos.length > 0) {
+      vehiculos = t.vehiculos;
+    } else if (t.vehiculo) {
+      try {
+        if (typeof t.vehiculo === "string" && (t.vehiculo.startsWith("[") || t.vehiculo.startsWith("{"))) {
+          const parsed = JSON.parse(t.vehiculo);
+          if (Array.isArray(parsed)) vehiculos = parsed;
+        }
+      } catch (_) {}
+
+      if (vehiculos.length === 0) {
+        vehiculos = [{
+          id: 'veh-1',
+          nombre: t.vehiculo,
+          consumoL100km: Number(t.consumo_l100km || 9.5),
+          precioCarburanteEUR: Number(t.precio_carburante_eur || 1.55),
+          tipoCombustible: t.tipo_combustible || 'diesel'
+        }];
+      }
+    }
 
     return {
       ...t,
@@ -1113,9 +1123,25 @@ export async function dbUpsertTour(tour: any, bandId: string) {
     estado: tour.estado || "planificacion"
   };
 
-  const { data, error } = await sb.from("tours").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert tour): ${error.message}`);
-  return data;
+  let { data, error } = await sb.from("tours").upsert(payload).select().single();
+
+  // If the remote Supabase table does not have the 'vehiculos' column yet, retry gracefully
+  if (error && error.message && error.message.toLowerCase().includes("vehiculos")) {
+    console.warn("Columna 'vehiculos' no detectada en la tabla tours de Supabase. Reintentando sin el campo 'vehiculos'...");
+    const fallbackPayload = { ...payload };
+    delete fallbackPayload.vehiculos;
+    const retry = await sb.from("tours").upsert(fallbackPayload).select().single();
+    if (retry.error) throw new Error(`Supabase Error (upsert tour): ${retry.error.message}`);
+    data = retry.data;
+    error = null;
+  } else if (error) {
+    throw new Error(`Supabase Error (upsert tour): ${error.message}`);
+  }
+
+  return {
+    ...data,
+    vehiculos: (data && data.vehiculos) || vehiculos
+  };
 }
 
 export async function dbDeleteTour(id: string, bandId: string) {
