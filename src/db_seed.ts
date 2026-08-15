@@ -1109,22 +1109,22 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
 
 export const INITIAL_USERS = [
   {
-    id: 'user-jose',
-    username: 'jose',
-    name: 'Jose',
-    role: 'leader' as const,
-    instrument: 'Percusión, Showman y Admin',
-    avatarColor: '#10b981',
-    initialPassword: 'bakandeya2026',
-    createdAt: '2026-01-01T10:00:00.000Z'
-  },
-  {
     id: 'user-diego',
     username: 'diego',
     name: 'Diego',
     role: 'leader' as const,
     instrument: 'Mánager / Booking (Oficina)',
     avatarColor: '#06b6d4',
+    initialPassword: 'bakandeya2026',
+    createdAt: '2026-01-01T10:00:00.000Z'
+  },
+  {
+    id: 'user-jose',
+    username: 'jose',
+    name: 'Jose',
+    role: 'leader' as const,
+    instrument: 'Percusión, Showman y Admin',
+    avatarColor: '#10b981',
     initialPassword: 'bakandeya2026',
     createdAt: '2026-01-01T10:00:00.000Z'
   },

@@ -28,15 +28,16 @@ router.post("/chat", async (req, res) => {
   }
   
   // Intercept agent trigger intents to bypass Gemini API completely
-  // Only trigger if agents are enabled AND user explicitly requests to execute/launch an agent AND NOT expressing negative intent
+  // Only trigger if agents are enabled AND user explicitly requests to execute/launch an agent AND NOT asking questions or hypothetical queries
+  const isQuestionOrHypothetical = /(\?|¿|y si|qué pasa|que pasa|cómo|como funciona|explica|explicame|qué hace|que hace|podrías explicar|dudas)/i.test(lower);
   const isNegativeAgentIntent = /(no quiero|no ejecutes|sin agentes|no lances|sin lanzar|sin disparar|no dispares|no usar|sin usar agentes|no hace falta agente)/i.test(lower);
 
-  const isExplicitAgentTrigger = agentsEnabled && !isNegativeAgentIntent && (
-    (lower.includes("ejecutar") || lower.includes("lanzar") || lower.includes("correr") || lower.includes("disparar") || lower.includes("iniciar") || lower.includes("arrancar")) &&
+  const isExplicitAgentTrigger = agentsEnabled && !isNegativeAgentIntent && !isQuestionOrHypothetical && (
+    (lower.includes("ejecuta") || lower.includes("ejecutar") || lower.includes("lanza") || lower.includes("lanzar") || lower.includes("corre") || lower.includes("correr") || lower.includes("dispara") || lower.includes("disparar") || lower.includes("inicia") || lower.includes("iniciar") || lower.includes("arranca") || lower.includes("arrancar")) &&
     (lower.includes("agente") || lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))
   );
 
-  const isAgentQuery = agentsEnabled && !isNegativeAgentIntent && (isExplicitAgentTrigger || (lower.startsWith("agente ") && (lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))));
+  const isAgentQuery = agentsEnabled && !isNegativeAgentIntent && !isQuestionOrHypothetical && (isExplicitAgentTrigger || (lower.startsWith("agente ") && (lower.includes("scout") || lower.includes("redactor") || lower.includes("enviador") || lower.includes("lector") || lower.includes("descubridor"))));
 
   if (isAgentQuery) {
     let agentName = "Enviador";
@@ -122,7 +123,7 @@ router.post("/chat", async (req, res) => {
     }
 
     return res.json({
-      text: `🤖 **Disparador del Agente '${agentName}' Preparado**\n\nHe detectado que quieres ejecutar el agente **${agentName}** para gestionar tus tareas de booking de ${activeBandName}.${paramText}\n\n*Nota: La ejecución de agentes no requiere el uso de Inteligencia Artificial (Google Gemini) y se conecta directamente con tu repositorio de GitHub a través del workflow configurado.*`,
+      text: `🤖 **Disparador del Agente '${agentName}' Preparado**\n\nHe detectado que quieres ejecutar el agente **${agentName}** para gestionar tus tareas de booking de ${activeBandName}.${paramText}\n\n*Nota: El agente opera de forma nativa e integrada directamente sobre tu base de datos de Supabase.*`,
       proposedActions: [{
         type: "propose_agent_trigger",
         agentName: agentName,
@@ -292,7 +293,7 @@ CONFIGURACIÓN VIGENTE DE AUTONOMÍA Y NEGOCIACIÓN DEL MÁNAGER Y AGENTES AI:
 - FIRMA Y CIERRE FINAL HUMANO: SIEMPRE OBLIGATORIO (No se cierra ningún trato ni se firma contrato sin aprobación directa del usuario).
 
 🚨 REGLA CRÍTICA DE SEGURIDAD ABSOLUTA (MODO SÓLO BORRADORES):
-${autonomy.dispatchLevel === 'draft_only' ? `El nivel de autonomía actual es SÓLO BORRADORES ('draft_only'). TIENES ESTRICTAMENTE PROHIBIDO proponer 'propose_send_email' o enviar/afirmar que envías ningún correo electrónico directamente. NUNCA propongas 'propose_send_email'. Usa ÚNICA Y EXCLUSIVAMENTE 'propose_draft_email' para generar y guardar borradores en Gmail o Google Sheets.` : `Puedes proponer 'propose_draft_email' o 'propose_send_email' siempre con la validación explícita del usuario.`}
+${autonomy.dispatchLevel === 'draft_only' ? `El nivel de autonomía actual es SÓLO BORRADORES ('draft_only'). Si el usuario pide enviar un correo directo individual, usa 'propose_draft_email' para generar y guardar borradores en Gmail o Supabase. Si el usuario pide ejecutar el AGENTE ENVIADOR, propón 'propose_agent_trigger' con 'agentName': 'Enviador' para despachar las salas aprobadas mediante el agente de Supabase.` : `Puedes proponer 'propose_draft_email', 'propose_send_email' o 'propose_agent_trigger' con la validación explícita del usuario.`}
 
 REGLA DE AUTONOMÍA: Cuando el usuario te pregunte sobre negociaciones, ofertas de salas, o te pida generar/enviar correos, DEBES TENER EN CUENTA ESTOS LÍMITES Y MENCIONARLOS SI CORRESPONDE.
 `;
@@ -326,10 +327,10 @@ Estilo de comunicación:
 - Usa un tono amigable, cercano, entusiasta y muy profesional del mundo de la música y backstage (un colega con criterio, nada de corporativo aburrido).
 - Sé directo y conciso. Evita parrafadas innecesarias.
 
-Aquí tienes el estado actual de los datos reales de la banda recopilados en tiempo real:
+Aquí tienes el estado actual de los datos reales de la banda recopilados en tiempo real desde Supabase:
 ${JSON.stringify(stateSummary, null, 2)}
 
-Tu respuesta debe estar estructurada de tal manera que puedas proponer acciones si el usuario lo solicita o si detectas una acción lógica (como aprobar un correo de contacto de una sala, agendar ensayo, cambiar la clasificación de interés o ejecutar un agente de GitHub).
+Tu respuesta debe estar estructurada de tal manera que puedas proponer acciones si el usuario lo solicita o si detectas una acción lógica (como aprobar un correo de contacto de una sala, agendar ensayo, cambiar la clasificación de interés o ejecutar un agente de Supabase).
 Debes devolver la respuesta en formato JSON strictly para que la app pueda renderizar el texto en Markdown y ofrecer botones interactivos.
 
 El JSON de respuesta debe tener la siguiente forma exacta:
@@ -348,26 +349,24 @@ El JSON de respuesta debe tener la siguiente forma exacta:
 Puedes proponer acciones como:
 1. 'propose_lead_approval' para salas en 'pendiente_aprobacion' (con 'leadId' y 'leadName').
 2. 'propose_status_change' con 'leadId', 'leadName' y 'newStatus' (por ejemplo 'interesado', 'negociando', 'no_interesado') para cambiar la clasificación de interés de una sala.
-3. 'propose_concert' para agendar/añadir un concierto o bolo en la agenda de la banda y Google Sheets (incluye 'description', opcional 'leadId', y un objeto 'concert' con { fecha: 'YYYY-MM-DD', ciudad: '...', sala: '...', cache: 0, aforo_total: 200, contrato_firmado: true, estado_pago: 'pendiente', notas: '...', tipo: 'sala' }).
+3. 'propose_concert' para agendar/añadir un concierto o bolo en la agenda de la banda y Supabase (incluye 'description', opcional 'leadId', y un objeto 'concert' con { fecha: 'YYYY-MM-DD', ciudad: '...', sala: '...', cache: 0, aforo_total: 200, contrato_firmado: true, estado_pago: 'pendiente', notas: '...', tipo: 'sala' }).
 4. 'propose_rehearsal' para proponer/agendar un ensayo (incluye 'description' y un objeto 'rehearsal' con { fecha: 'YYYY-MM-DD', hora: '19:00', lugar: '...', asistentes: ['Banda'], notas: '...', estado: 'programado' }).
 5. 'propose_band' para añadir o actualizar una banda en el CRM (incluye 'description' y un objeto 'band' con { id: 'opcional-id-existente', nombre_banda: '...', estilo_musical: '...', localizacion: '...', estado_relacion: 'nuevo', contacto_nombre: '', email: '', telefono: '', instagram: '', notas_colaboracion: '' }). Si la banda ya existe, se actualizarán sus datos sin crear duplicados.
-6. 'propose_tour' para planificar o guardar una gira en el gestor de giras y Google Sheets (incluye 'description' y un objeto 'tour' con { id: 'tour-...', nombre: 'Gira ...', vehiculo: 'Furgoneta 9 Plazas', estado: 'planificacion', fechaInicio: 'YYYY-MM-DD', fechaFin: 'YYYY-MM-DD', presupuestoLogistica: 500, stops: [] }).
+6. 'propose_tour' para planificar o guardar una gira en el gestor de giras y Supabase (incluye 'description' y un objeto 'tour' con { id: 'tour-...', nombre: 'Gira ...', vehiculo: 'Furgoneta 9 Plazas', estado: 'planificacion', fechaInicio: 'YYYY-MM-DD', fechaFin: 'YYYY-MM-DD', presupuestoLogistica: 500, stops: [] }).
 7. 'propose_update_logo' para buscar, asignar o actualizar el logo de una sala, medio, festival o banda. Incluye 'targetType' ('lead' o 'band'), 'leadId' o 'bandId', 'targetName', 'imagen_url', 'icono' y 'description'.
-8. 'propose_add_lead' para guardar y añadir un NUEVO lead, sala, medio de comunicación, festival o ayuntamiento directamente en la base de datos (Google Sheets). Incluye 'description', 'leadName' y 'lead' con { nombre_sala: '...', ciudad: '...', region: '...', aforo: 300, genero: '...', tipo: 'sala'|'medio'|'festival'|'ayuntamiento'|'discoteca', email_contacto: '...', telefono: '...', website: '...', instagram: '...', fuente: 'Chatbot', estado: 'nuevo'|'pendiente_aprobacion', notas: '...' }. REGLA ESTRICTA DE TIPO: Clasifica con precisión el campo 'tipo': usa 'sala' para salas de conciertos, teatros, cafés conciertos y recintos en vivo; 'festival' para festivales; 'discoteca' para clubs nocturnos; 'ayuntamiento' para áreas municipales o festejos; y reserva 'medio' ÚNICAMENTE para medios de comunicación, periódicos, revistas, radio, TV, blogs y podcasts. NUNCA asignes 'medio' a una sala de conciertos o recinto.
+8. 'propose_add_lead' para guardar y añadir un NUEVO lead, sala, medio de comunicación, festival o ayuntamiento directamente en la base de datos Supabase. Incluye 'description', 'leadName' y 'lead' con { nombre_sala: '...', ciudad: '...', region: '...', aforo: 300, genero: '...', tipo: 'sala'|'medio'|'festival'|'ayuntamiento'|'discoteca', email_contacto: '...', telefono: '...', website: '...', instagram: '...', fuente: 'Chatbot', estado: 'nuevo'|'pendiente_aprobacion', notas: '...' }. REGLA ESTRICTA DE TIPO: Clasifica con precisión el campo 'tipo': usa 'sala' para salas de conciertos, teatros, cafés conciertos y recintos en vivo; 'festival' para festivales; 'discoteca' para clubs nocturnos; 'ayuntamiento' para áreas municipales o festejos; y reserva 'medio' ÚNICAMENTE para medios de comunicación, periódicos, revistas, radio, TV, blogs y podcasts. NUNCA asignes 'medio' a una sala de conciertos o recinto.
 9. 'propose_update_lead' para modificar campos de un lead/sala/medio existente. Incluye 'description', 'leadId', 'leadName' y 'updatedFields' (un objeto con los campos a modificar, ej: { estado: 'interesado', notas: '...', email_contacto: '...' }).
 10. 'propose_draft_email' para crear y guardar un borrador de correo electrónico/pitch para una sala o medio. Incluye 'description', 'leadId', 'leadName', 'subject', 'body' y 'attachDossier' (boolean, por defecto true).
 11. 'propose_send_email' para enviar o registrar el envío oficial de un correo a un lead, actualizar la fecha de envío e incluir la firma personalizada con redes sociales y dossier. Incluye 'description', 'leadId', 'leadName', 'subject', 'body', 'senderName', 'attachDossier' (true), 'incluirFirmaRedes' (true).
-${agentsEnabled ? `12. 'propose_agent_trigger' con 'agentName' (debe ser obligatoriamente 'Scout', 'Scout Descubridor', 'Redactor', 'Enviador' o 'Lector') y un objeto 'params' opcional. Usar SOLO cuando el usuario solicite explícitamente ejecutar/lanzar un agente de GitHub Actions.` : `12. [MODO AGENTES GITHUB ACTIONS DESACTIVADO]: El modo de ejecuciones externas de Python está DESACTIVADO por el usuario. NUNCA propongas 'propose_agent_trigger' bajo ningún concepto.`}
+12. 'propose_agent_trigger' con 'agentName' (debe ser obligatoriamente 'Enviador', 'Scout', 'Redactor' o 'Lector') y un objeto 'params' opcional. ÚNICAMENTE propón esta acción cuando el usuario te ordene EXPLÍCITAMENTE ejecutar, lanzar o correr uno de los agentes de Supabase (ej: 'ejecuta el enviador', 'lanza el agente scout en Sevilla'). SI EL USUARIO ESTÁ HACIENDO UNA PREGUNTA INFORMATIVA, HIPOTÉTICA O DE DUDA (ej: '¿qué pasa si me escribe una sala que no tengo?', '¿cómo funciona el lector?', '¿qué hace el scout?'), RESPONDE ÚNICAMENTE CON LA EXPLICACIÓN EN TEXTO Y DEJA 'proposedActions' COMO UNA LISTA VACÍA []. NUNCA propongas disparar un agente ante una simple consulta o pregunta.
 
-PODER ABSOLUTO DE ESCRITURA EN BASE DE DATOS Y CORREOS: Tienes autorización y poder para crear nuevos registros (leads, medios, salas, giras, conciertos, bandas, ensayos), modificar la información de los existentes, redactar borradores y enviar o registrar el envío de emails con firma personalizada e inclusión automática del Dossier EPK. Si el usuario te lo solicita, propón la acción de creación o edición correspondiente inmediatamente.
+PODER ABSOLUTO DE ESCRITURA EN BASE DE DATOS Y CORREOS: Tienes autorización y poder para crear nuevos registros (leads, medios, salas, giras, conciertos, bandas, ensayos), modificar la información de los existentes, redactar borradores y disparar los agentes de Supabase tras confirmación del usuario. Si el usuario te lo solicita, propón la acción correspondiente inmediatamente.
 
-REGLA DE LOGOS E IMÁGENES: Si el usuario te pide buscar, asignar o completar los logos o imágenes de salas, medios o bandas, o si detectas que falta un logo, puedes proponer acciones 'propose_update_logo' para asignar la URL del logo (imagen_url) o un icono emoji (icono). Se guardará automáticamente en Google Sheets.
+REGLA DE LOGOS E IMÁGENES: Si el usuario te pide buscar, asignar o completar los logos o imágenes de salas, medios o bandas, o si detectas que falta un logo, puedes proponer acciones 'propose_update_logo' para asignar la URL del logo (imagen_url) o un icono emoji (icono). Se guardará automáticamente en Supabase.
 
 ENRIQUECIMIENTO AUTOMÁTICO INTELIGENTE: Al añadir o registrar cualquier nuevo lead, sala, medio, festival, ayuntamiento o banda contactada (mediante 'propose_add_lead', 'propose_band' o creación en la interfaz), la plataforma ejecuta en segundo plano un enriquecimiento en tiempo real con IA (Gemini + Google Search). Se buscarán y rellenarán automáticamente todos los datos públicos disponibles (email de contacto/booking, teléfono, sitio web, Instagram, aforo estimado, géneros musicales, persona de contacto, logo/imagen pública y emoji), sin necesidad de que el usuario lo solicite ni tenga que rellenarlo a mano.
 
-REGLA DE AGENTES Y GEMINI: ${agentsEnabled ? `Si el usuario indica que NO quiere usar o lanzar agentes de Python ("no quiero agentes", "sin agentes", "hazlo tú"), NUNCA propongas 'propose_agent_trigger'.` : `El modo Agentes Python está desactivado en la interfaz. NUNCA menciones lanzar agentes de Python ni propongas 'propose_agent_trigger'. Tú como Gemini gestionas directamente la redacción de pitches, búsquedas, filtrados y consultas.`}
-
-REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un concierto o bolo (por ejemplo "añade concierto en Sala Villanos" o "hemos cerrado bolo"), SIEMPRE debes incluir una acción 'propose_concert' con el objeto 'concert' relleno. No te limites solo a cambiar el estado del lead, crea la acción 'propose_concert' para que el concierto se guarde en la pestaña 'conciertos' de Google Sheets.
+REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un concierto o bolo (por ejemplo "añade concierto en Sala Villanos" o "hemos cerrado bolo"), SIEMPRE debes incluir una acción 'propose_concert' con el objeto 'concert' relleno. No te limites solo a cambiar el estado del lead, crea la acción 'propose_concert' para que el concierto se guarde en la tabla 'conciertos' de Supabase.
 
 Si no hay ninguna acción lógica que proponer, devuelve 'proposedActions' como una lista vacía [].
 Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON de estado, indícale amablemente que no tienes registro de ello.`;
@@ -446,7 +445,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
                  `1. **Clave compartida por defecto**: El entorno de vista previa utiliza una clave gratuita con un límite estricto de **20 peticiones al día por proyecto** (\`GenerateRequestsPerDay-FreeTier\`).\n` +
                  `2. **Usa tu clave personal de Google AI Studio**: Ve a [aistudio.google.com](https://aistudio.google.com/), crea una API Key (empieza por \`AIzaSy...\`) e introdúcela en la sección de **Settings / Variables de entorno** como \`GEMINI_API_KEY\`. Tu clave personal tiene una cuota diaria mucho más amplia (1,500 solicitudes/día gratis).\n` +
                  `3. **Reinicio de cuota**: Si estás usando la clave por defecto, la cuota se restablecerá automáticamente.\n\n` +
-                 `*Nota: Todas las demás funciones del panel (Google Sheets, gestión de salas, agenda de ensayos y envío de correos) siguen funcionando con normalidad.*`;
+                 `*Nota: Todas las demás funciones del panel (Supabase, gestión de salas, agenda de ensayos y gestión de propuestas) siguen funcionando con normalidad.*`;
       } else {
         reply += `Ha ocurrido un error inesperado al conectar con Google Gemini:\n\n` +
                  `\`\`\`\n${errMessage}\n\`\`\`\n\n` +

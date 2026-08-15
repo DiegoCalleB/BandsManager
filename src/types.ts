@@ -1,4 +1,19 @@
-export type LeadStatus = 'nuevo' | 'pendiente_aprobacion' | 'aprobado' | 'esperando_respuesta' | 'interesado' | 'no_interesado' | 'negociando';
+export type LeadStatus = 
+  | 'nuevo' 
+  | 'contactado'
+  | 'esperando_respuesta' 
+  | 'enviado'
+  | 'respondido'
+  | 'negociando'
+  | 'confirmado'
+  | 'aplazado'
+  | 'no_interesado' 
+  | 'descartado'
+  | 'interesado' 
+  | 'pendiente_aprobacion' 
+  | 'aprobado' 
+  | 'aprobado_propuesta' 
+  | 'aprobado_respuesta';
 
 export type LeadType = 'sala' | 'festival' | 'ayuntamiento' | 'grupo' | 'productora' | 'medio' | 'discoteca' | 'agencia' | 'manager' | 'sello';
 
@@ -72,6 +87,8 @@ export interface PitchFeedbackLog {
   contenido_rating?: number;
   comentario?: string;
   pitch_nuevo: string;
+  deshecho?: boolean;
+  alcance?: 'este_pitch' | 'global';
 }
 
 export interface Lead {
@@ -94,6 +111,8 @@ export interface Lead {
   pitch_generado: string;
   fecha_envio?: string;
   fecha_ultima_respuesta?: string;
+  thread_id?: string;
+  ultimo_mensaje_recibido?: string;
   contexto_extra?: string;
   notas: string;
   hilo_emails?: EmailMessage[];
@@ -292,9 +311,11 @@ export interface User {
   username: string;
   name: string;
   role: UserRole;
-  plan?: 'emergente' | 'profesional' | 'manager360';
+  plan?: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
   bandName?: string;
   band_id?: string;
+  main_band_id?: string;
+  band_order?: string[];
   email?: string;
   instrument?: string;
   avatarColor?: string;
@@ -487,7 +508,7 @@ export interface RegisteredBand {
   fecha_registro: string;
   nombre_banda: string;
   email: string;
-  plan: 'emergente' | 'consolidada' | 'pro' | string;
+  plan: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
   contacto_nombre?: string;
   estilo_musical?: string;
   localizacion?: string;
@@ -504,6 +525,8 @@ export interface BandSchedule {
   timezone: string;
   horas_lector: number[];
   horas_enviador: number[];
+  dias_enviador?: number[]; // [1..7], 1=Lunes, 7=Domingo
+  dias_lector?: number[];   // [1..7], 1=Lunes, 7=Domingo
   updated_at?: string;
 }
 

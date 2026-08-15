@@ -16,7 +16,7 @@ export function getGlobalPitchFeedbackSummary(leads: any[]) {
   for (const lead of leads) {
     if (Array.isArray(lead.historial_feedback_pitch)) {
       for (const item of lead.historial_feedback_pitch) {
-        if (item.comentario || item.tono_rating || item.contenido_rating) {
+        if (!item.deshecho && (item.comentario || item.tono_rating || item.contenido_rating)) {
           logs.push({
             sala_o_medio: lead.nombre_sala || 'Entidad',
             tipo: lead.tipo || 'sala',

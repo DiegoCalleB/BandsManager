@@ -129,11 +129,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [isUploadingRider, setIsUploadingRider] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const publicEpkUrl = typeof window !== 'undefined' 
+  const bandQueryParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(activeBandId)}` : '';
+  const rawEpkBase = typeof window !== 'undefined' 
     ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
         ? 'https://bands-manager.up.railway.app/epk' 
         : `${window.location.origin}/epk`) 
     : 'https://bands-manager.up.railway.app/epk';
+  const publicEpkUrl = `${rawEpkBase}${bandQueryParam}`;
 
   const handleSave = async () => {
     try {
@@ -307,7 +309,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           </button>
 
           <a
-            href="/epk"
+            href={publicEpkUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs sm:text-sm font-semibold rounded-xl border border-slate-700 flex items-center gap-2 transition"
@@ -1108,10 +1110,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 </div>
 
                 {/* BOTÓN DOSSIER SI ESTÁ HABILITADO */}
-                {(config.firmaEmail?.adjuntarDossierPorDefecto ?? true) && (config.dossierPdfUrl || publicEpkUrl) && (
+                {(config.firmaEmail?.adjuntarDossierPorDefecto ?? true) && (
                   <div className="pt-2">
                     <a
-                      href={config.dossierPdfUrl || publicEpkUrl}
+                      href={publicEpkUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-[11px] shadow-sm transition"
@@ -1196,7 +1198,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 <Copy className="w-4 h-4" /> Copiar Enlace
               </button>
               <a
-                href="/epk"
+                href={publicEpkUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 bg-slate-800 text-amber-300 border border-slate-700 font-bold text-xs rounded-xl flex items-center gap-2 hover:bg-slate-700 transition"

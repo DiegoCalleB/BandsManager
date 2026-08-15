@@ -23,7 +23,8 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   useEffect(() => {
     if (!initialData) {
-      fetch('/api/public/epk')
+      const searchParams = typeof window !== 'undefined' ? window.location.search : '';
+      fetch(`/api/public/epk${searchParams}`)
         .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
         .then(data => {
           if (data) setEpkData(data);
@@ -50,7 +51,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6">
         <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-amber-400 font-medium">Cargando Kit de Prensa de Bakandeya...</p>
+        <p className="text-amber-400 font-medium">Cargando Kit de Prensa...</p>
       </div>
     );
   }
@@ -59,16 +60,16 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const isBakandeya = (epkData?.bandId || '').includes('bakandeya') || bandName.toLowerCase().includes('bakandeya');
 
   const config: EPKConfig = epkData?.epkConfig || {
-    biografia: isBakandeya ? "Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos..." : "Propuesta musical en directo.",
-    logoUrl: isBakandeya ? "/logo_bakandeya.jpg" : "",
-    bandPhotos: isBakandeya ? ["/logo_bakandeya.jpg"] : [],
+    biografia: isBakandeya ? "Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos..." : `${bandName} — Propuesta musical en directo.`,
+    logoUrl: isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "",
+    bandPhotos: [],
     riderTecnico: "PA y microfonía profesional de directo...",
     enlacesRedes: {},
     contactoBooking: { nombre: bandName, email: "", telefono: "" },
     temasDestacadosIds: []
   };
 
-  const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya.jpg" : "");
+  const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "");
 
   const songs: Song[] = epkData?.highlightedSongs || [];
   const concerts: Concert[] = epkData?.upcomingConcerts || [];
@@ -125,22 +126,22 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 </div>
               )}
               <span className="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 text-xs font-black uppercase px-2.5 py-1 rounded-full shadow-md">
-                Directo Rumba / Ska
+                Directo
               </span>
             </div>
 
             <div className="text-center md:text-left space-y-3 flex-1">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" /> Kit de Prensa Oficial 2026
+                <Sparkles className="w-3.5 h-3.5" /> Kit de Prensa Oficial {new Date().getFullYear()}
               </div>
               <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                BAKANDEYA
+                {bandName}
               </h1>
               <p className="text-amber-300 font-medium text-lg sm:text-xl">
-                Ska-Rock, Mestizaje & Ritmos Latinos en Vivo
+                {config.dossierTextoExtra || (isBakandeya ? "Ska-Rock, Mestizaje & Ritmos Latinos en Vivo" : `${bandName} en Directo`)}
               </p>
               <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
-                Energía arrolladora, sección de metales en vivo y un directo de 90 minutos diseñado para llenar plazas, salas y escenarios de festivales.
+                {config.biografia ? (config.biografia.length > 200 ? `${config.biografia.slice(0, 180)}...` : config.biografia) : 'Dossier oficial y propuesta artística en directo.'}
               </p>
 
               {/* Quick links bar */}
@@ -183,7 +184,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <div className="space-y-2.5 pt-2 text-sm">
                 <div className="flex items-center gap-2.5 text-slate-200 print:text-black font-medium">
                   <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-                  <span>{config.contactoBooking?.nombre || "Mánager Bakandeya"}</span>
+                  <span>{config.contactoBooking?.nombre || `Mánager ${bandName}`}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-amber-300 print:text-black font-mono">
                   <Mail className="w-4 h-4 shrink-0 text-amber-400" />
@@ -198,7 +199,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
             <div className="pt-4 border-t border-amber-500/20 print:border-slate-300">
               <a
-                href={`mailto:${config.contactoBooking?.email}?subject=Contratación%20Bakandeya%202026`}
+                href={`mailto:${config.contactoBooking?.email}?subject=Contratación%20${encodeURIComponent(bandName)}%20${new Date().getFullYear()}`}
                 className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition print:hidden"
               >
                 <Mail className="w-4 h-4" /> Solicitar Caché & Disponibilidad
@@ -239,24 +240,26 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         )}
 
         {/* BAND PHOTOS & GALLERY */}
-        <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
-          <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-            <Sparkles className="w-5 h-5" /> Galería de Imagen & Prensa
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {(config.bandPhotos || ["/logo_bakandeya.jpg"]).map((photoUrl, idx) => (
-              <div key={idx} className="group relative rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                <img src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition p-4 flex items-end justify-between">
-                  <span className="text-xs font-semibold text-white">Foto Promocional #{idx + 1}</span>
-                  <a href={photoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+        {((config.bandPhotos && config.bandPhotos.length > 0) || displayLogo) && (
+          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Sparkles className="w-5 h-5" /> Galería de Imagen & Prensa
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
+                <div key={idx} className="group relative rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
+                  <img src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition p-4 flex items-end justify-between">
+                    <span className="text-xs font-semibold text-white">Foto Promocional #{idx + 1}</span>
+                    <a href={photoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* TECHNICAL RIDER */}
         <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
@@ -322,7 +325,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* FOOTER */}
         <footer className="text-center text-xs text-slate-500 space-y-2 pt-6 border-t border-slate-800 print:text-black">
-          <p>© 2026 Bakandeya — Todos los derechos reservados. Kit de prensa generado por BandManager.ai</p>
+          <p>© {new Date().getFullYear()} {bandName} — Todos los derechos reservados. Kit de prensa generado por BandManager.ai</p>
         </footer>
       </div>
     </div>

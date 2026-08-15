@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lead, LeadStatus } from '../../types';
+import { Lead, LeadStatus, LeadType } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { ReliabilityBadge } from '../common/ReliabilityBadge';
@@ -90,13 +90,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3' 
             : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
         }`}>
-          {filteredLeads.map((lead) => {
+          {filteredLeads.map((lead, idx) => {
             const isSelected = selectedLead?.id === lead.id;
             const phoneClean = cleanPhone(lead.telefono);
+            const leadKey = lead.id ? `lead-grid-${lead.id}` : `lead-grid-${idx}`;
 
             return (
               <div
-                key={lead.id}
+                key={leadKey}
                 onClick={() => onSelectLead(lead)}
                 className={`p-4 rounded-2xl transition-all cursor-pointer flex flex-col justify-between gap-3 relative group ${
                   isSelected
@@ -119,7 +120,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   <div className="flex flex-col min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-1.5">
                       <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                        <h4 className="font-display font-bold text-base sm:text-lg tracking-wide text-zinc-50 truncate">
+                        <h4 className="font-display font-bold text-base sm:text-lg tracking-wide text-zinc-50 truncate notranslate" translate="no">
                           {lead.nombre_sala}
                         </h4>
                         <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
@@ -265,13 +266,14 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/60 text-xs font-mono align-middle">
-              {filteredLeads.map((lead) => {
+              {filteredLeads.map((lead, idx) => {
                 const isSelected = selectedLead?.id === lead.id;
                 const phoneClean = cleanPhone(lead.telefono);
+                const leadKey = lead.id ? `lead-row-${lead.id}` : `lead-row-${idx}`;
 
                 return (
                   <tr
-                    key={lead.id}
+                    key={leadKey}
                     onClick={() => onSelectLead(lead)}
                     className={`transition-colors cursor-pointer ${
                       isSelected ? 'bg-[#1A1918]' : 'hover:bg-zinc-900/60'
@@ -298,7 +300,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <span className="truncate font-bold text-xs sm:text-sm text-zinc-100 block max-w-[160px]" title={lead.nombre_sala}>
+                            <span className="truncate font-bold text-xs sm:text-sm text-zinc-100 block max-w-[160px] notranslate" translate="no" title={lead.nombre_sala}>
                               {lead.nombre_sala}
                             </span>
                             <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />

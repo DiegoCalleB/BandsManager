@@ -158,7 +158,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         weight: 15,
         view: 'profile',
         missingLabel: 'Configurar Horarios',
-        agentImpact: 'Sincroniza la zona horaria y ventanas de lectura/envío para los scripts Python de GitHub Actions.'
+        agentImpact: 'Sincroniza la zona horaria y ventanas de lectura/envío para los motores de agentes en Supabase.'
       },
       {
         id: 'google_oauth',
@@ -398,7 +398,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                     ¿Por qué importa completar el Perfil de {bandName}?
                   </h3>
                   <p className="text-xs text-neutral-400 font-mono">
-                    Cómo funcionan autónomamente los 4 agentes Python con tu información
+                    Cómo funcionan autónomamente los 4 agentes de Supabase con tu información
                   </p>
                 </div>
               </div>

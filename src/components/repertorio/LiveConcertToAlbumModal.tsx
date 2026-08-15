@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2 } from 'lucide-react';
+import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 
@@ -147,6 +147,79 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   const [audioAvailable, setAudioAvailable] = useState(true);
   const [isLinkingLocalFile, setIsLinkingLocalFile] = useState(false);
 
+  // YouTube Band Account & Cookies Authentication State
+  const [hasYoutubeCookies, setHasYoutubeCookies] = useState(false);
+  const [cookieModalOpen, setCookieModalOpen] = useState(false);
+  const [cookiesInputText, setCookiesInputText] = useState('');
+  const [isSavingCookies, setIsSavingCookies] = useState(false);
+  const [cookieSuccessMsg, setCookieSuccessMsg] = useState<string | null>(null);
+
+  const checkYoutubeCookies = async () => {
+    try {
+      const res = await fetch('/api/concert-to-album/cookies-status');
+      if (res.ok) {
+        const data = await res.json();
+        setHasYoutubeCookies(Boolean(data.hasCookies));
+      }
+    } catch {}
+  };
+
+  React.useEffect(() => {
+    if (isOpen) {
+      checkYoutubeCookies();
+    }
+  }, [isOpen]);
+
+  const handleSaveCookies = async () => {
+    if (!cookiesInputText.trim()) return;
+    setIsSavingCookies(true);
+    try {
+      const res = await fetch('/api/concert-to-album/save-cookies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cookiesText: cookiesInputText.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setHasYoutubeCookies(true);
+        setCookieSuccessMsg('¡Acceso verificado! Ahora el servidor puede descargar vídeos del canal directamente sin bloqueos.');
+        setTimeout(() => {
+          setCookieSuccessMsg(null);
+          setCookieModalOpen(false);
+        }, 2200);
+      } else {
+        setErrorMessage(data.error || 'Error al guardar las cookies de YouTube.');
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Error al conectar con el servidor.');
+    } finally {
+      setIsSavingCookies(false);
+    }
+  };
+
+  const handleDeleteCookies = async () => {
+    try {
+      await fetch('/api/concert-to-album/delete-cookies', { method: 'POST' });
+      setHasYoutubeCookies(false);
+      setCookiesInputText('');
+      setCookieSuccessMsg('Cookies eliminadas del servidor.');
+      setTimeout(() => setCookieSuccessMsg(null), 2000);
+    } catch {}
+  };
+
+  const handleUploadCookieFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (content) {
+        setCookiesInputText(content);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   // Helper for binary streaming upload via FormData & Chunks (handles 1GB+ files cleanly without 413 limits)
   const uploadFileBinary = async (
     file: File,
@@ -240,6 +313,28 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
     }
   };
 
+  const handleLoadDemoAudio = async () => {
+    setIsLinkingLocalFile(true);
+    setErrorMessage(null);
+    try {
+      const res = await apiFetch('/api/concert-to-album/demo-audio', {
+        method: 'POST',
+      });
+      if (res.success && res.filePath) {
+        setAnalyzedSourcePath(res.filePath);
+        setAudioAvailable(true);
+        setYoutubeBlocked(false);
+      } else {
+        throw new Error('No se pudo generar el audio demo.');
+      }
+    } catch (err: any) {
+      console.error('Error loading demo audio:', err);
+      alert(err.message || 'Error al cargar el audio demo.');
+    } finally {
+      setIsLinkingLocalFile(false);
+    }
+  };
+
   // Audio Fragment Scrubber Player State
   const [activeSnippet, setActiveSnippet] = useState<{
     trackIndex: number;
@@ -254,6 +349,19 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   const [snippetIsPlaying, setSnippetIsPlaying] = useState(false);
   const [snippetSpeed, setSnippetSpeed] = useState(1);
   const snippetAudioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  React.useEffect(() => {
+    if (snippetAudioRef.current) {
+      if (snippetIsPlaying) {
+        snippetAudioRef.current.play().catch((err) => {
+          console.warn('Autoplay prevented or audio error:', err);
+          setSnippetIsPlaying(false);
+        });
+      } else {
+        snippetAudioRef.current.pause();
+      }
+    }
+  }, [snippetIsPlaying, activeSnippet]);
 
   const [transcribingIndex, setTranscribingIndex] = useState<number | null>(null);
   const [transcribingChordsIndex, setTranscribingChordsIndex] = useState<number | null>(null);
@@ -472,6 +580,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
     handleUpdateTrack(trackIndex, 'end', currentAbs);
   };
 
+  const getYouTubeVideoId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
   // Preview snippet playback (Generates or plays audio for a single cut item)
   const handlePlaySnippetPreview = async (track: TrackCutItem) => {
     if (activeSnippet && activeSnippet.trackIndex === track.index) {
@@ -490,6 +605,21 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
         trackIndex: track.index,
         title: track.title,
         audioUrl: track.audioUrl,
+        start: track.start,
+        end: track.end,
+      });
+      setSnippetCurrentTime(0);
+      setSnippetIsPlaying(true);
+      return;
+    }
+
+    // Direct YouTube Player Sync if no local file is uploaded
+    const ytVideoId = getYouTubeVideoId(youtubeUrl);
+    if (!analyzedSourcePath && ytVideoId) {
+      setActiveSnippet({
+        trackIndex: track.index,
+        title: track.title,
+        audioUrl: '',
         start: track.start,
         end: track.end,
       });
@@ -967,9 +1097,33 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-400 mb-1">
-                  Enlace de YouTube del Concierto Completo
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-slate-400">
+                    Enlace de YouTube del Concierto Completo
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setCookieModalOpen(true)}
+                    className={`text-[11px] font-medium flex items-center gap-1 transition-colors ${
+                      hasYoutubeCookies
+                        ? 'text-emerald-400 hover:text-emerald-300'
+                        : 'text-amber-400 hover:text-amber-300 hover:underline'
+                    }`}
+                    title="Configura las cookies del canal de la banda para permitir descargas directas en servidor"
+                  >
+                    {hasYoutubeCookies ? (
+                      <>
+                        <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                        <span>Canal Vinculado</span>
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="w-3 h-3" />
+                        <span>🔐 ¿Es tu canal? Vincular sesión</span>
+                      </>
+                    )}
+                  </button>
+                </div>
                 <input
                   type="text"
                   placeholder="https://www.youtube.com/watch?v=..."
@@ -1070,29 +1224,67 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
             <div className="space-y-4">
               {/* Local File / YouTube Audio Availability Status Banner */}
               {(!audioAvailable || youtubeBlocked) && (
-                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs space-y-3 shadow-md">
                   <div className="flex items-start gap-2.5">
                     <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-bold text-amber-200">
-                        YouTube requiere verificación anti-bot en el servidor
+                      <p className="font-bold text-amber-200 text-sm">
+                        🎬 Audio y Muestras de YouTube Listos para Escuchar
                       </p>
-                      <p className="text-amber-300/80 mt-0.5">
-                        Se han extraído los títulos y timestamps. Para <strong>escuchar las muestras de audio</strong> y <strong>transcribir discursos/acordes reales con Gemini</strong>, adjunta tu archivo de audio/vídeo local (MP3, WAV o MP4).
+                      <p className="text-amber-300/90 mt-1 leading-relaxed">
+                        Puedes <strong>escuchar las muestras de cada corte</strong> directamente haciendo clic en <strong>"🔊 Escuchar muestra"</strong> (se reproduce el vídeo/audio original de YouTube sincronizado con los timestamps).
+                      </p>
+                      <p className="text-amber-400/80 mt-1 text-[11px]">
+                        ℹ️ <em>Para trocear físicamente el concierto en archivos MP3 independientes descargables en el servidor o transcribir con Gemini:</em>
                       </p>
                     </div>
                   </div>
-                  <label className="shrink-0 px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg cursor-pointer flex items-center justify-center gap-1.5 transition-all text-xs shadow-md">
-                    <Upload className="w-4 h-4" />
-                    <span>{isLinkingLocalFile ? 'Subiendo audio...' : '📁 Adjuntar Audio/Vídeo Local'}</span>
-                    <input
-                      type="file"
-                      accept="audio/*,video/*"
-                      onChange={handleAttachLocalAudioFile}
+
+                  <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-amber-500/20">
+                    <button
+                      type="button"
+                      onClick={() => setCookieModalOpen(true)}
+                      className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold rounded-lg flex items-center gap-1.5 transition-all text-xs border border-amber-500/40 shadow-md"
+                      title="Configurar cookies de la cuenta de YouTube para descargar automáticamente en el servidor sin bloqueos"
+                    >
+                      <Lock className="w-3.5 h-3.5 text-amber-400" />
+                      <span>{hasYoutubeCookies ? '🔐 Sesión YouTube Activa' : '🔐 Vincular Sesión de la Banda'}</span>
+                    </button>
+
+                    <a
+                      href={`https://cobalt.tools/#${encodeURIComponent(youtubeUrl || '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg flex items-center gap-1.5 transition-all text-xs shadow-md"
+                      title="Abrir Cobalt para descargar el MP3 completo de YouTube en 5 segundos y adjuntarlo aquí"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>📥 Extraer MP3 (Cobalt)</span>
+                      <ExternalLink className="w-3 h-3 ml-0.5 opacity-70" />
+                    </a>
+
+                    <button
+                      onClick={handleLoadDemoAudio}
                       disabled={isLinkingLocalFile}
-                      className="hidden"
-                    />
-                  </label>
+                      className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg flex items-center gap-1.5 transition-all text-xs shadow-md disabled:opacity-50"
+                      title="Cargar audio de ensayo demo instantáneamente para probar muestras y transcripciones"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-200" />
+                      <span>✨ Cargar Demo</span>
+                    </button>
+
+                    <label className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg cursor-pointer flex items-center justify-center gap-1.5 transition-all text-xs shadow-md">
+                      <Upload className="w-4 h-4" />
+                      <span>{isLinkingLocalFile ? 'Subiendo...' : '📁 Adjuntar Archivo Local'}</span>
+                      <input
+                        type="file"
+                        accept="audio/*,video/*"
+                        onChange={handleAttachLocalAudioFile}
+                        disabled={isLinkingLocalFile}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                 </div>
               )}
 
@@ -1656,86 +1848,108 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                             </div>
                           </div>
 
-                          {/* Audio element controller */}
-                          <audio
-                            ref={snippetAudioRef}
-                            src={activeSnippet.audioUrl}
-                            autoPlay
-                            onTimeUpdate={(e) => setSnippetCurrentTime(e.currentTarget.currentTime)}
-                            onLoadedMetadata={(e) => setSnippetDuration(e.currentTarget.duration)}
-                            onPlay={() => setSnippetIsPlaying(true)}
-                            onPause={() => setSnippetIsPlaying(false)}
-                            onEnded={() => setSnippetIsPlaying(false)}
-                          />
-
-                          {/* Range Slider Scrubber */}
-                          <div className="space-y-1">
-                            <div className="flex items-center justify-between text-xs font-mono font-bold text-amber-300">
-                              <span>{formatSeconds(snippetCurrentTime)}</span>
-                              <span className="text-[10px] text-slate-400 font-sans">Desplaza la barra para navegar por el tramo</span>
-                              <span>{formatSeconds(snippetDuration)}</span>
+                          {/* Media Controller: YouTube Synced Embed OR HTML5 Audio Element */}
+                          {getYouTubeVideoId(youtubeUrl) && !analyzedSourcePath && !activeSnippet.audioUrl ? (
+                            <div className="space-y-2">
+                              <div className="relative rounded-lg overflow-hidden border border-slate-800 bg-black aspect-video max-h-56 mx-auto shadow-lg">
+                                <iframe
+                                  key={`yt-embed-${activeSnippet.trackIndex}-${Math.floor(activeSnippet.start)}`}
+                                  src={`https://www.youtube-nocookie.com/embed/${getYouTubeVideoId(youtubeUrl)}?start=${Math.floor(activeSnippet.start)}&end=${Math.ceil(activeSnippet.end)}&autoplay=1&enablejsapi=1&rel=0`}
+                                  title={track.title}
+                                  className="w-full h-full"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                />
+                              </div>
+                              <div className="flex items-center justify-between text-[11px] text-amber-300 font-mono bg-slate-900/80 px-3 py-1.5 rounded-lg border border-amber-500/20">
+                                <span>▶️ Reproduciendo muestra sincronizada: {formatSeconds(activeSnippet.start)} a {formatSeconds(activeSnippet.end)}</span>
+                                <span className="text-slate-400">Duración: {formatSeconds(activeSnippet.end - activeSnippet.start)}</span>
+                              </div>
                             </div>
+                          ) : (
+                            <>
+                              {/* Audio element controller */}
+                              <audio
+                                ref={snippetAudioRef}
+                                src={activeSnippet.audioUrl}
+                                autoPlay
+                                onTimeUpdate={(e) => setSnippetCurrentTime(e.currentTarget.currentTime)}
+                                onLoadedMetadata={(e) => setSnippetDuration(e.currentTarget.duration)}
+                                onPlay={() => setSnippetIsPlaying(true)}
+                                onPause={() => setSnippetIsPlaying(false)}
+                                onEnded={() => setSnippetIsPlaying(false)}
+                              />
 
-                            <input
-                              type="range"
-                              min={0}
-                              max={snippetDuration || 100}
-                              step={0.1}
-                              value={snippetCurrentTime}
-                              onChange={(e) => handleSeekSnippet(parseFloat(e.target.value))}
-                              className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 transition-all"
-                            />
-                          </div>
+                              {/* Range Slider Scrubber */}
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between text-xs font-mono font-bold text-amber-300">
+                                  <span>{formatSeconds(snippetCurrentTime)}</span>
+                                  <span className="text-[10px] text-slate-400 font-sans">Desplaza la barra para navegar por el tramo</span>
+                                  <span>{formatSeconds(snippetDuration)}</span>
+                                </div>
 
-                          {/* Player Controls Bar */}
-                          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => handleSkipSnippet(-5)}
-                                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center gap-1"
-                                title="Retroceder 5 segundos"
-                              >
-                                <RotateCcw className="w-3.5 h-3.5" /> -5s
-                              </button>
+                                <input
+                                  type="range"
+                                  min={0}
+                                  max={snippetDuration || 100}
+                                  step={0.1}
+                                  value={snippetCurrentTime}
+                                  onChange={(e) => handleSeekSnippet(parseFloat(e.target.value))}
+                                  className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 transition-all"
+                                />
+                              </div>
 
-                              <button
-                                onClick={() => {
-                                  if (snippetAudioRef.current) {
-                                    if (snippetIsPlaying) snippetAudioRef.current.pause();
-                                    else snippetAudioRef.current.play();
-                                  }
-                                }}
-                                className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20"
-                              >
-                                {snippetIsPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                                {snippetIsPlaying ? 'Pausar' : 'Reproducir'}
-                              </button>
+                              {/* Player Controls Bar */}
+                              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleSkipSnippet(-5)}
+                                    className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center gap-1"
+                                    title="Retroceder 5 segundos"
+                                  >
+                                    <RotateCcw className="w-3.5 h-3.5" /> -5s
+                                  </button>
 
-                              <button
-                                onClick={() => handleSkipSnippet(5)}
-                                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center gap-1"
-                                title="Adelantar 5 segundos"
-                              >
-                                <RotateCw className="w-3.5 h-3.5" /> +5s
-                              </button>
-                            </div>
+                                  <button
+                                    onClick={() => {
+                                      if (snippetAudioRef.current) {
+                                        if (snippetIsPlaying) snippetAudioRef.current.pause();
+                                        else snippetAudioRef.current.play();
+                                      }
+                                    }}
+                                    className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20"
+                                  >
+                                    {snippetIsPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                                    {snippetIsPlaying ? 'Pausar' : 'Reproducir'}
+                                  </button>
 
-                            {/* Playback speed selector */}
-                            <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px] font-mono">
-                              <span className="text-slate-500 font-sans px-1 text-[10px]">Velocidad:</span>
-                              {[0.75, 1, 1.25, 1.5, 2].map((spd) => (
-                                <button
-                                  key={spd}
-                                  onClick={() => handleChangeSnippetSpeed(spd)}
-                                  className={`px-1.5 py-0.5 rounded font-bold ${
-                                    snippetSpeed === spd ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
-                                  }`}
-                                >
-                                  {spd}x
-                                </button>
-                              ))}
-                            </div>
-                          </div>
+                                  <button
+                                    onClick={() => handleSkipSnippet(5)}
+                                    className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center gap-1"
+                                    title="Adelantar 5 segundos"
+                                  >
+                                    <RotateCw className="w-3.5 h-3.5" /> +5s
+                                  </button>
+                                </div>
+
+                                {/* Playback speed selector */}
+                                <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px] font-mono">
+                                  <span className="text-slate-500 font-sans px-1 text-[10px]">Velocidad:</span>
+                                  {[0.75, 1, 1.25, 1.5, 2].map((spd) => (
+                                    <button
+                                      key={spd}
+                                      onClick={() => handleChangeSnippetSpeed(spd)}
+                                      className={`px-1.5 py-0.5 rounded font-bold ${
+                                        snippetSpeed === spd ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                                      }`}
+                                    >
+                                      {spd}x
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       )}
                     </div>
@@ -1831,6 +2045,115 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
             </div>
           )}
         </div>
+
+        {/* Modal de Vinculación de Sesión / Cookies de YouTube */}
+        {cookieModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl text-slate-100">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                    <Key className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-100">Vincular Cuenta de YouTube / Cookies</h3>
+                    <p className="text-[11px] text-slate-400">Permite descargas directas en el servidor sin bloqueos de bot</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setCookieModalOpen(false)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {cookieSuccessMsg ? (
+                <div className="p-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs font-bold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{cookieSuccessMsg}</span>
+                </div>
+              ) : (
+                <>
+                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 space-y-2 leading-relaxed">
+                    <p className="font-semibold text-amber-300 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                      ¿Por qué es necesario autenticar el canal de la banda?
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      YouTube bloquea las peticiones automáticas desde centros de datos con el mensaje <em>"Sign in to confirm you're not a bot"</em>. Al vincular las cookies de tu cuenta/canal, el servidor se identifica legítimamente y descarga el vídeo o audio completo al instante a máxima velocidad.
+                    </p>
+                    <div className="pt-2 border-t border-slate-800 text-[11px] text-slate-400 space-y-1">
+                      <p className="font-bold text-slate-200">📌 Cómo obtener las cookies en 10 segundos:</p>
+                      <p>1. Instala la extensión gratuita de Chrome/Firefox <strong>"Get cookies.txt locally"</strong>.</p>
+                      <p>2. Abre YouTube con tu cuenta de la banda iniciada.</p>
+                      <p>3. Haz clic en la extensión, pulsa <strong>"Export"</strong> y pega el contenido aquí o sube el archivo.</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-bold text-slate-300">
+                        Contenido de cookies.txt (formato Netscape):
+                      </label>
+                      <label className="text-[11px] font-semibold text-amber-400 hover:text-amber-300 cursor-pointer flex items-center gap-1">
+                        <Upload className="w-3 h-3" />
+                        <span>Subir archivo cookies.txt</span>
+                        <input
+                          type="file"
+                          accept=".txt"
+                          onChange={handleUploadCookieFile}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                    <textarea
+                      rows={5}
+                      value={cookiesInputText}
+                      onChange={(e) => setCookiesInputText(e.target.value)}
+                      placeholder="# Netscape HTTP Cookie File&#10;.youtube.com  TRUE  /  TRUE  1789000000  SID  ..."
+                      className="w-full font-mono text-[11px] p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    {hasYoutubeCookies ? (
+                      <button
+                        onClick={handleDeleteCookies}
+                        className="px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all"
+                      >
+                        Eliminar cookies actuales
+                      </button>
+                    ) : (
+                      <div />
+                    )}
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setCookieModalOpen(false)}
+                        className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={handleSaveCookies}
+                        disabled={isSavingCookies || !cookiesInputText.trim()}
+                        className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center gap-1.5"
+                      >
+                        {isSavingCookies ? (
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Check className="w-3.5 h-3.5" />
+                        )}
+                        <span>Guardar y Habilitar Descargas</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

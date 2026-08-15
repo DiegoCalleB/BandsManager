@@ -15,7 +15,7 @@ interface GithubWorkflowTrackerProps {
 }
 
 interface WorkflowRun {
- id: number;
+ id: number | string;
  name: string;
  run_number: number;
  event: string;
@@ -38,7 +38,7 @@ interface Step {
 }
 
 interface Job {
- id: number;
+ id: number | string;
  name: string;
  status: string;
  conclusion: string | null;
@@ -56,9 +56,9 @@ export default function GithubWorkflowTracker({
  const [runs, setRuns] = useState<WorkflowRun[]>([]);
  const [loading, setLoading] = useState<boolean>(false);
  const [error, setError] = useState<string | null>(null);
- const [expandedRunId, setExpandedRunId] = useState<number | null>(null);
- const [jobsData, setJobsData] = useState<Record<number, Job[]>>({});
- const [loadingJobs, setLoadingJobs] = useState<Record<number, boolean>>({});
+ const [expandedRunId, setExpandedRunId] = useState<number | string | null>(null);
+ const [jobsData, setJobsData] = useState<Record<string | number, Job[]>>({});
+ const [loadingJobs, setLoadingJobs] = useState<Record<string | number, boolean>>({});
  const [isDemo, setIsDemo] = useState<boolean>(false);
  const [copiedCredentials, setCopiedCredentials] = useState(false);
 
@@ -231,114 +231,127 @@ export default function GithubWorkflowTracker({
  } finally {
  setLoading(false);
  }
- }, [githubPat, githubOwner, githubRepo]);
+ }, [githubPat, githubOwner, githubRepo]); // Fetch jobs and steps for a specific run
+ const fetchJobsForRun = async (runId: number | string) => {
+  try {
+    const token = localStorage.getItem('bakandeya_token');
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      headers['x-auth-token'] = token;
+    }
+    const apiRes = await fetch(`/api/agent-runs/${encodeURIComponent(runId)}/jobs`, { headers });
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+      if (data.jobs && data.jobs.length > 0) {
+        setJobsData(prev => ({ ...prev, [runId]: data.jobs }));
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("Notice querying agent jobs:", err);
+  }
 
- // Fetch jobs and steps for a specific run
- const fetchJobsForRun = async (runId: number) => {
- if (isDemo) {
- // Return high-fidelity simulated steps for each demo run
- let mockSteps: Step[] = [];
- if (runId === 104) { // Enviador
- mockSteps = [
- { name:"Set up job", status:"completed", conclusion:"success", number: 1 },
- { name:"Run actions/checkout@v4", status:"completed", conclusion:"success", number: 2 },
- { name:"Set up Python 3.11", status:"completed", conclusion:"success", number: 3 },
- { name:"Install dependencies", status:"completed", conclusion:"success", number: 4 },
- { name:"Run Enviador Agent (Python)", status:"in_progress", conclusion: null, number: 5 },
- { name:"Post Run actions/checkout@v4", status:"queued", conclusion: null, number: 6 }
- ];
- } else if (runId === 101) { // Scout
- mockSteps = [
- { name:"Set up job", status:"completed", conclusion:"success", number: 1 },
- { name:"Run actions/checkout@v4", status:"completed", conclusion:"success", number: 2 },
- { name:"Set up Python 3.11", status:"completed", conclusion:"success", number: 3 },
- { name:"Install dependencies", status:"completed", conclusion:"success", number: 4 },
- { name:"Run Scout Agent (Python)", status:"completed", conclusion:"success", number: 5 },
- { name:"Post Run actions/checkout@v4", status:"completed", conclusion:"success", number: 6 },
- { name:"Complete job", status:"completed", conclusion:"success", number: 7 }
- ];
- } else if (runId === 102) { // Redactor
- mockSteps = [
- { name:"Set up job", status:"completed", conclusion:"success", number: 1 },
- { name:"Run actions/checkout@v4", status:"completed", conclusion:"success", number: 2 },
- { name:"Set up Python 3.11", status:"completed", conclusion:"success", number: 3 },
- { name:"Install dependencies", status:"completed", conclusion:"success", number: 4 },
- { name:"Run Redactor Agent (Python)", status:"completed", conclusion:"failure", number: 5 },
- { name:"Post Run actions/checkout@v4", status:"completed", conclusion:"success", number: 6 }
- ];
- } else { // Lector
- mockSteps = [
- { name:"Set up job", status:"completed", conclusion:"success", number: 1 },
- { name:"Run actions/checkout@v4", status:"completed", conclusion:"success", number: 2 },
- { name:"Set up Python 3.11", status:"completed", conclusion:"success", number: 3 },
- { name:"Install dependencies", status:"completed", conclusion:"success", number: 4 },
- { name:"Run Lector de Bandeja Agent (Python)", status:"completed", conclusion:"success", number: 5 },
- { name:"Post Run actions/checkout@v4", status:"completed", conclusion:"success", number: 6 }
- ];
- }
+  if (isDemo) {
+  // Return high-fidelity simulated steps for each demo run
+  let mockSteps: Step[] = [];
+  if (runId === 104 || String(runId).includes("enviador")) { // Enviador
+  mockSteps = [
+  { name:"Inicializar entorno", status:"completed", conclusion:"success", number: 1 },
+  { name:"Conectar con Supabase Edge", status:"completed", conclusion:"success", number: 2 },
+  { name:"Verificar plantillas de booking", status:"completed", conclusion:"success", number: 3 },
+  { name:"Ejecutar Agente Enviador (Supabase Engine)", status:"in_progress", conclusion: null, number: 4 },
+  { name:"Auditar envíos en base de datos", status:"queued", conclusion: null, number: 5 }
+  ];
+  } else if (runId === 101 || String(runId).includes("scout")) { // Scout
+  mockSteps = [
+  { name:"Inicializar entorno", status:"completed", conclusion:"success", number: 1 },
+  { name:"Conectar con Supabase Edge", status:"completed", conclusion:"success", number: 2 },
+  { name:"Consultar Google Places & Web", status:"completed", conclusion:"success", number: 3 },
+  { name:"Ejecutar Agente Scout (Supabase Engine)", status:"completed", conclusion:"success", number: 4 },
+  { name:"Insertar nuevos leads en tabla leads", status:"completed", conclusion:"success", number: 5 },
+  { name:"Finalizar proceso", status:"completed", conclusion:"success", number: 6 }
+  ];
+  } else if (runId === 102 || String(runId).includes("redactor")) { // Redactor
+  mockSteps = [
+  { name:"Inicializar entorno", status:"completed", conclusion:"success", number: 1 },
+  { name:"Conectar con Supabase Edge", status:"completed", conclusion:"success", number: 2 },
+  { name:"Cargar leads nuevos sin propuesta", status:"completed", conclusion:"success", number: 3 },
+  { name:"Ejecutar Agente Redactor (Supabase Engine)", status:"completed", conclusion:"failure", number: 4 },
+  { name:"Guardar pitch y actualizar estado", status:"completed", conclusion:"success", number: 5 }
+  ];
+  } else { // Lector
+  mockSteps = [
+  { name:"Inicializar entorno", status:"completed", conclusion:"success", number: 1 },
+  { name:"Conectar con Supabase Edge", status:"completed", conclusion:"success", number: 2 },
+  { name:"Escanear bandeja de respuestas", status:"completed", conclusion:"success", number: 3 },
+  { name:"Ejecutar Agente Lector (Supabase Engine)", status:"completed", conclusion:"success", number: 4 },
+  { name:"Sincronizar hilos en Supabase", status:"completed", conclusion:"success", number: 5 }
+  ];
+  }
 
- setJobsData(prev => ({
- ...prev,
- [runId]: [{
- id: runId * 10,
- name:"run-python-agent",
- status: runId === 104 ?"in_progress" :"completed",
- conclusion: runId === 102 ?"failure" : (runId === 104 ? null :"success"),
- steps: mockSteps
- }]
- }));
- return;
- }
+  setJobsData(prev => ({
+  ...prev,
+  [runId]: [{
+  id: typeof runId === 'number' ? runId * 10 : 1,
+  name:"run-supabase-agent",
+  status: runId === 104 ?"in_progress" :"completed",
+  conclusion: runId === 102 ?"failure" : (runId === 104 ? null :"success"),
+  steps: mockSteps
+  }]
+  }));
+  return;
+  }
 
- setLoadingJobs(prev => ({ ...prev, [runId]: true }));
- const owner = githubOwner || 'DiegoCalleB';
- const repo = githubRepo || 'bakandeya-agent-manager';
- const url = `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/jobs`;
- const authHeader = githubPat.startsWith("github_pat_") || githubPat.length > 40 ? `Bearer ${githubPat}` : `token ${githubPat}`;
+  setLoadingJobs(prev => ({ ...prev, [runId]: true }));
+  const owner = githubOwner || 'DiegoCalleB';
+  const repo = githubRepo || 'bakandeya-agent-manager';
+  const url = `https://api.github.com/repos/${owner}/${repo}/actions/runs/${runId}/jobs`;
+  const authHeader = githubPat.startsWith("github_pat_") || githubPat.length > 40 ? `Bearer ${githubPat}` : `token ${githubPat}`;
 
- try {
- const response = await fetch(url, {
- headers: {
-"Authorization": authHeader,
-"Accept":"application/vnd.github.v3+json",
-"X-GitHub-Api-Version":"2022-11-28"
- }
- });
+  try {
+  const response = await fetch(url, {
+  headers: {
+ "Authorization": authHeader,
+ "Accept":"application/vnd.github.v3+json",
+ "X-GitHub-Api-Version":"2022-11-28"
+  }
+  });
 
- if (!response.ok) throw new Error("No se pudieron cargar los detalles del workflow.");
- const data = await response.json();
- 
- const jobs: Job[] = (data.jobs || []).map((j: any) => ({
- id: j.id,
- name: j.name,
- status: j.status,
- conclusion: j.conclusion,
- steps: (j.steps || []).map((s: any) => ({
- name: s.name,
- status: s.status,
- conclusion: s.conclusion,
- number: s.number
- }))
- }));
+  if (!response.ok) throw new Error("No se pudieron cargar los detalles del workflow.");
+  const data = await response.json();
+  
+  const jobs: Job[] = (data.jobs || []).map((j: any) => ({
+  id: j.id,
+  name: j.name,
+  status: j.status,
+  conclusion: j.conclusion,
+  steps: (j.steps || []).map((s: any) => ({
+  name: s.name,
+  status: s.status,
+  conclusion: s.conclusion,
+  number: s.number
+  }))
+  }));
 
- setJobsData(prev => ({ ...prev, [runId]: jobs }));
- } catch (err) {
- console.error(`Error fetching jobs for run ${runId}:`, err);
- } finally {
- setLoadingJobs(prev => ({ ...prev, [runId]: false }));
- }
- };
+  setJobsData(prev => ({ ...prev, [runId]: jobs }));
+  } catch (err) {
+  console.error(`Error fetching jobs for run ${runId}:`, err);
+  } finally {
+  setLoadingJobs(prev => ({ ...prev, [runId]: false }));
+  }
+  };
 
- const handleToggleExpand = async (runId: number) => {
- if (expandedRunId === runId) {
- setExpandedRunId(null);
- } else {
- setExpandedRunId(runId);
- if (!jobsData[runId]) {
- await fetchJobsForRun(runId);
- }
- }
- };
+  const handleToggleExpand = async (runId: number | string) => {
+   if (expandedRunId === runId) {
+   setExpandedRunId(null);
+   } else {
+   setExpandedRunId(runId);
+   if (!jobsData[runId]) {
+   await fetchJobsForRun(runId);
+   }
+   }
+  };
 
  useEffect(() => {
  fetchWorkflowRuns();

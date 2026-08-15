@@ -142,8 +142,8 @@ router.put("/epk", requireAuth, async (req, res) => {
 router.get("/public/epk", async (req, res) => {
   try {
     const rawBandId = (req.query.band_id as string) || (req.query.band as string) || (req.query.b as string) || (req.headers['x-band-id'] as string) || BAKANDEYA_BAND_ID;
-    const reqBandId = rawBandId.toLowerCase().replace(/^(reg)-/, 'band-');
-    const cleanBandId = reqBandId.replace(/^(band|reg)-/, '');
+    const cleanBandId = rawBandId.toLowerCase().replace(/^(band|reg)-/, '');
+    const reqBandId = cleanBandId === 'bakandeya' ? BAKANDEYA_BAND_ID : `band-${cleanBandId}`;
 
     const state = loadState();
     let epkConfig: any = null;
@@ -157,6 +157,30 @@ router.get("/public/epk", async (req, res) => {
       epkConfig = getEpkConfigForBand(state, reqBandId);
     }
 
+    let regBand: any = null;
+    try {
+      const { getSupabase } = await import("../db.js");
+      const sb = getSupabase();
+      const candidateIds = [reqBandId, `reg-${cleanBandId}`, cleanBandId, `band-${cleanBandId}`];
+      const { data } = await sb.from("registered_bands").select("*").in("band_id", candidateIds).limit(1).maybeSingle();
+      regBand = data;
+    } catch (e) {}
+
+    if (!regBand) {
+      regBand = (state.registeredBands || []).find((b: any) => {
+        const bId = (b.band_id || b.id || '').replace(/^(band|reg)-/, '').toLowerCase();
+        return bId === cleanBandId;
+      });
+    }
+
+    let bandName = regBand?.nombre_banda;
+    if (!bandName && epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) {
+      bandName = epkConfig.contactoBooking.nombre;
+    }
+    if (!bandName) {
+      bandName = cleanBandId === 'bakandeya' ? 'Bakandeya' : (cleanBandId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+    }
+
     const songs = (state.songs || []).filter((s: any) => {
       const sBand = (s.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
       return sBand === cleanBandId || (!s.band_id && cleanBandId === 'bakandeya');
@@ -167,19 +191,6 @@ router.get("/public/epk", async (req, res) => {
       return cBand === cleanBandId || (!c.band_id && cleanBandId === 'bakandeya');
     });
 
-    const regBand = (state.registeredBands || []).find((b: any) => {
-      const bId = (b.band_id || b.id || '').replace(/^(band|reg)-/, '').toLowerCase();
-      return bId === cleanBandId;
-    });
-
-    let bandName = regBand?.nombre_banda;
-    if (!bandName && epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) {
-      bandName = epkConfig.contactoBooking.nombre;
-    }
-    if (!bandName) {
-      bandName = cleanBandId === 'bakandeya' ? 'Bakandeya' : (cleanBandId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
-    }
-
     // Filter highlighted songs
     const highlightedSongs = epkConfig?.temasDestacadosIds?.length > 0
       ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
@@ -189,11 +200,28 @@ router.get("/public/epk", async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
     const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
 
+    // Filter out bakandeya default logo if this is not bakandeya
+    let logoUrl = epkConfig?.logoUrl || regBand?.logo_url || regBand?.imagen_url || null;
+    if (logoUrl && String(logoUrl).includes('bakandeya') && cleanBandId !== 'bakandeya') {
+      logoUrl = null;
+    }
+
+    const cleanEpkConfig = {
+      ...epkConfig,
+      logoUrl,
+      contactoBooking: {
+        ...(epkConfig?.contactoBooking || {}),
+        nombre: (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) 
+          ? epkConfig.contactoBooking.nombre 
+          : (cleanBandId === 'bakandeya' ? 'Bakandeya' : bandName)
+      }
+    };
+
     res.json({
       bandId: reqBandId,
       bandName,
-      logoUrl: epkConfig?.logoUrl || null,
-      epkConfig,
+      logoUrl,
+      epkConfig: cleanEpkConfig,
       highlightedSongs,
       upcomingConcerts: upcomingConcerts.slice(0, 5),
       totalConcertsCount: concerts.length
