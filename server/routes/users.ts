@@ -156,6 +156,25 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
     });
   }
 
+  // Sort available bands:
+  // 1. If band_order exists, use that order.
+  // 2. Otherwise, main band comes first.
+  const orderList = Array.isArray(targetUser.band_order) ? targetUser.band_order.map((id: string) => cleanBandId(id)) : [];
+  availableBands.sort((a, b) => {
+    const aClean = cleanBandId(a.band_id);
+    const bClean = cleanBandId(b.band_id);
+    if (orderList.length > 0) {
+      const aIdx = orderList.indexOf(aClean);
+      const bIdx = orderList.indexOf(bClean);
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+      if (aIdx !== -1) return -1;
+      if (bIdx !== -1) return 1;
+    }
+    if (a.is_main && !b.is_main) return -1;
+    if (!a.is_main && b.is_main) return 1;
+    return 0;
+  });
+
   return availableBands;
 }
 import { loginRateLimiter } from "../middleware/rateLimiter.js";
@@ -233,6 +252,15 @@ router.post("/auth/register", async (req, res) => {
     // Update active band to the newly created one
     userToUse.band_id = bandId;
     userToUse.bandName = rawBandName;
+    if (!userToUse.main_band_id) {
+      userToUse.main_band_id = bandId;
+    }
+    if (Array.isArray(userToUse.band_order)) {
+      const cleanBId = cleanBandId(bandId);
+      userToUse.band_order = [cleanBId, ...userToUse.band_order.filter((b: string) => cleanBandId(b) !== cleanBId)];
+    } else {
+      userToUse.band_order = [cleanBandId(bandId)];
+    }
   } else {
     const { hash, salt } = hashPassword(password);
     const emailUserPart = cleanEmail.split("@")[0] || rawBandName;
@@ -253,6 +281,8 @@ router.post("/auth/register", async (req, res) => {
       passwordHash: hash,
       salt: salt,
       band_id: bandId,
+      main_band_id: bandId,
+      band_order: [cleanBandId(bandId)],
       createdAt: new Date().toISOString()
     };
 
@@ -573,6 +603,35 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
       } catch (e) {
         console.warn("Notice: Supabase sync warning:", e);
       }
+    } else {
+      // Regular Google Login: default to main or favorite band
+      const preferredBandId =
+        user.main_band_id ||
+        (Array.isArray(user.band_order) && user.band_order.length > 0 ? user.band_order[0] : null) ||
+        user.band_id ||
+        'band-bakandeya';
+
+      const normalizedBandId = preferredBandId.startsWith('band-') ? preferredBandId : (preferredBandId === 'bakandeya' ? 'band-bakandeya' : `band-${preferredBandId}`);
+      user.band_id = normalizedBandId;
+      if (!user.main_band_id) {
+        user.main_band_id = normalizedBandId;
+      }
+
+      const cleanPref = cleanBandId(normalizedBandId);
+      const bandInfo = (state.registeredBands || []).find((b: any) =>
+        b.band_id === user.band_id || b.id === user.band_id ||
+        cleanBandId(b.band_id) === cleanPref || cleanBandId(b.id) === cleanPref
+      ) || (state.bands || []).find((b: any) =>
+        b.band_id === user.band_id || b.id === user.band_id ||
+        cleanBandId(b.band_id) === cleanPref || cleanBandId(b.id) === cleanPref
+      );
+
+      if (bandInfo) {
+        user.bandName = bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name || user.bandName;
+        if (bandInfo.plan) {
+          user.plan = normalizePlan(bandInfo.plan);
+        }
+      }
     }
   } else {
     // Auto-register new user authenticated with Google OAuth
@@ -616,6 +675,8 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
       name: cleanName,
       bandName: finalBandName,
       band_id: bandId,
+      main_band_id: bandId,
+      band_order: [cleanBandId(bandId)],
       role: "leader",
       plan: "ensayo",
       createdAt: new Date().toISOString(),
@@ -715,21 +776,39 @@ router.post("/auth/login", loginRateLimiter, async (req, res) => {
     return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
   }
 
-  // Choose target user profile
-  let selectedUser = validUsers[0];
+  // Choose target user profile & default to main or favorite band
+  const userMainBand =
+    validUsers.find((u: any) => u.main_band_id)?.main_band_id ||
+    validUsers[0]?.main_band_id ||
+    (Array.isArray(validUsers[0]?.band_order) && validUsers[0].band_order.length > 0 ? validUsers[0].band_order[0] : null) ||
+    validUsers[0]?.band_id ||
+    'band-bakandeya';
 
-  // If a band_id is passed, we check if there's a legacy user record, or we just switch the active band of the user.
-  if (band_id) {
-    const foundLegacy = validUsers.find((u: any) => u.band_id === band_id);
-    if (foundLegacy) {
-      selectedUser = foundLegacy;
-    } else {
-      // In single-user model, update the band_id on the user
-      const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === band_id);
-      if (bandInfo) {
-        selectedUser.band_id = band_id;
-        selectedUser.bandName = bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name;
-      }
+  const preferredBandId = band_id || userMainBand;
+  const cleanPref = cleanBandId(preferredBandId);
+
+  const foundMatching = validUsers.find((u: any) => u.band_id === preferredBandId || cleanBandId(u.band_id) === cleanPref);
+  let selectedUser = foundMatching || validUsers[0];
+
+  // Ensure active band on login is the preferred / favorite band
+  selectedUser.band_id = preferredBandId.startsWith('band-') ? preferredBandId : (preferredBandId === 'bakandeya' ? 'band-bakandeya' : `band-${preferredBandId}`);
+  if (!selectedUser.main_band_id) {
+    selectedUser.main_band_id = selectedUser.band_id;
+  }
+
+  // Look up band info for name and plan
+  const bandInfo = (state.registeredBands || []).find((b: any) =>
+    b.band_id === selectedUser.band_id || b.id === selectedUser.band_id ||
+    cleanBandId(b.band_id) === cleanPref || cleanBandId(b.id) === cleanPref
+  ) || (state.bands || []).find((b: any) =>
+    b.band_id === selectedUser.band_id || b.id === selectedUser.band_id ||
+    cleanBandId(b.band_id) === cleanPref || cleanBandId(b.id) === cleanPref
+  );
+
+  if (bandInfo) {
+    selectedUser.bandName = bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name || selectedUser.bandName;
+    if (bandInfo.plan) {
+      selectedUser.plan = normalizePlan(bandInfo.plan);
     }
   }
 
@@ -1082,6 +1161,13 @@ router.post(['/set-main-band', '/users/set-main-band'], requireAuth, async (req,
     user.bandName = resolvedName;
     user.plan = resolvedPlan;
 
+    const cleanBId = cleanBandId(band_id);
+    if (Array.isArray(user.band_order)) {
+      user.band_order = [cleanBId, ...user.band_order.filter((b: string) => cleanBandId(b) !== cleanBId)];
+    } else {
+      user.band_order = [cleanBId];
+    }
+
     // Update on all user records sharing this email/username
     const userEmail = (user.email || user.username || reqEmail).toLowerCase();
     if (state.users) {
@@ -1091,6 +1177,7 @@ router.post(['/set-main-band', '/users/set-main-band'], requireAuth, async (req,
           u.main_band_id = band_id;
           u.bandName = resolvedName;
           u.plan = resolvedPlan;
+          u.band_order = user.band_order;
         }
       });
     }
