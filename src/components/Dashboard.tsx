@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Lead, LeadType, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 import { isSameBandId } from '../utils/bandUtils';
 import DirectionsCard from './DirectionsCard';
 import { AddLeadModal } from './dashboard/AddLeadModal';
@@ -13,7 +14,7 @@ import {
  Plus, X, Calendar, AlertCircle, Sparkles, Loader2, Check, RefreshCw, 
  Database, Bot, Activity, ArrowRight, CheckCircle2, Radio, Building2,
  Clock, CheckCircle, Hourglass, Send, Users, ShieldCheck, Play, Navigation,
- FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders
+ FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown
 } from 'lucide-react';
 
 export type NavigationOptions = {
@@ -460,9 +461,24 @@ export default function Dashboard({
  
  
       {/* HEADER / TITULO PRINCIPAL */}
-      <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
-        <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Panel de Control General de {activeBandName}</p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
+          <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Panel de Control General de {activeBandName}</p>
+        </div>
+        {onNavigate && (
+          <button
+            type="button"
+            onClick={() => onNavigate('planes')}
+            className="self-start sm:self-auto px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-400/20 to-amber-500/10 hover:from-amber-500/30 hover:to-amber-400/30 border border-amber-400/50 text-amber-300 text-xs font-mono font-bold flex items-center gap-2 transition-all shadow-md shadow-amber-500/10 cursor-pointer active:scale-95 group"
+          >
+            <Crown className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+            <span>Ver Planes & Precios</span>
+            <span className="px-1.5 py-0.5 rounded bg-amber-400 text-black text-[9px] font-black uppercase">
+              🎁 Regalo
+            </span>
+          </button>
+        )}
       </div>
 
       {/* BARRA DE SALUD Y COMPLETITUD DEL PERFIL */}

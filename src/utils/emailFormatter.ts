@@ -157,8 +157,14 @@ export function formatEmailWithSignatureAndDossier(params: {
   const lowerBody = bodyContent.toLowerCase();
   const hasEmbeddedName = lowerBody.includes(remitenteNombre.toLowerCase()) || lowerBody.includes('diego de la calle');
 
+  const resolvedBandId = epkConfig?.band_id || (resolvedBandName.toLowerCase().includes('bakandeya') ? 'band-bakandeya' : resolvedBandName.toLowerCase().replace(/\s+/g, '-'));
+  const cleanBandId = resolvedBandId.replace(/^(band|reg)-/, '').toLowerCase();
+  const bandParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(resolvedBandId.startsWith('band-') ? resolvedBandId : `band-${cleanBandId}`)}` : '';
+  const webEpkUrl = `https://bands-manager.up.railway.app/epk${bandParam}`;
+  const effectiveEpkLink = webEpkUrl;
+
   const signatureLinksHtml = [
-    dossierPdfUrl ? `<a href="${dossierPdfUrl}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">🌐 Kit de Prensa (EPK)</a>` : '',
+    (firma?.adjuntarDossierPorDefecto ?? true) ? `<a href="${effectiveEpkLink}" style="color: #0284c7; text-decoration: underline; font-weight: 600;">📁 Kit de Prensa (EPK)</a>` : '',
     website ? `<a href="${website}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">🌐 Sitio Web</a>` : '',
     spotify ? `<a href="${spotify}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">Spotify</a>` : '',
     instagram ? `<a href="${instagram}" style="color: #0284c7; text-decoration: underline; font-weight: 500;">Instagram</a>` : '',

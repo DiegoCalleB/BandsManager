@@ -22,9 +22,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     const seen = new Set<string>();
     return arr.filter(item => {
       if (!item) return false;
-      if (!item.id) return true;
-      if (seen.has(item.id)) return false;
-      seen.add(item.id);
+      const idStr = item.id ? String(item.id).trim() : null;
+      if (!idStr) return true;
+      if (seen.has(idStr)) return false;
+      seen.add(idStr);
       return true;
     });
   };
@@ -125,7 +126,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddLead = async (newLead: Lead) => {
-    setLeads(prev => [...prev, newLead]);
+    setLeads(prev => dedupeById([...prev.filter(l => l.id !== newLead.id), newLead]));
     try {
       const res: any = await api.createLead(newLead);
       if (res?.warning) {
@@ -158,7 +159,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddRehearsal = async (reh: Rehearsal) => {
-    setRehearsals(prev => [...prev, reh]);
+    setRehearsals(prev => dedupeById([...prev.filter(r => r.id !== reh.id), reh]));
     try {
       await api.createRehearsal(reh);
     } catch (e) {
@@ -168,7 +169,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddConcert = async (concert: Concert) => {
-    setConcerts(prev => [...prev, concert]);
+    setConcerts(prev => dedupeById([...prev.filter(c => c.id !== concert.id), concert]));
     try {
       await api.createConcert(concert);
     } catch (e) {
@@ -178,7 +179,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddPost = async (post: SocialPost) => {
-    setPosts(prev => [...prev, post]);
+    setPosts(prev => dedupeById([...prev.filter(p => p.id !== post.id), post]));
     try {
       await api.createPost(post);
     } catch (e) {
@@ -198,7 +199,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddMetric = async (metric: SocialMetric) => {
-    setMetrics(prev => [...prev, metric]);
+    setMetrics(prev => dedupeById([...prev.filter(m => m.id !== metric.id), metric]));
     try {
       await api.createMetric(metric);
     } catch (e) {
@@ -228,7 +229,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddPayment = async (pay: Payment) => {
-    setPayments(prev => [...prev, pay]);
+    setPayments(prev => dedupeById([...prev.filter(p => p.id !== pay.id), pay]));
     try {
       await api.createPayment(pay);
     } catch (e) {
@@ -249,11 +250,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   const handleSaveTour = async (tourData: Tour) => {
     const exists = tours.some(t => t.id === tourData.id);
-    setTours(prev => {
-      const ex = prev.some(t => t.id === tourData.id);
-      if (ex) return prev.map(t => t.id === tourData.id ? tourData : t);
-      return [...prev, tourData];
-    });
+    setTours(prev => dedupeById([...prev.filter(t => t.id !== tourData.id), tourData]));
     try {
       if (exists) {
         await api.updateTour(tourData.id, tourData);

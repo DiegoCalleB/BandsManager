@@ -518,6 +518,44 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
   res.json({ success: true, data: resultData });
 });
 
+// Endpoint to trigger direct on-demand enrichment of a single lead (Scout Enriquecedor)
+router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id;
+    const { leadId, force } = req.body;
+    if (!leadId) {
+      return res.status(400).json({ success: false, error: "Falta el leadId a enriquecer." });
+    }
+
+    const state = loadState();
+    const lead = state.leads?.find((l: any) => l.id === leadId) || (await dbGetLeadById(leadId, userBandId));
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Lead no encontrado." });
+    }
+
+    console.log(`[Scout Enriquecedor] Enriqueciendo datos para ${lead.nombre_sala} (${lead.ciudad || 'España'})...`);
+    
+    // Call autoEnrichLead
+    await autoEnrichLead(lead, userBandId);
+
+    // Reload the updated lead
+    const updatedState = loadState();
+    const freshLead = updatedState.leads?.find((l: any) => l.id === leadId) || (await dbGetLeadById(leadId, userBandId));
+
+    return res.json({
+      success: true,
+      lead: freshLead,
+      message: `✨ Datos de "${lead.nombre_sala}" completados y verificados con éxito.`
+    });
+  } catch (error: any) {
+    console.error("[Scout Enriquecedor] Error enriqueciendo lead:", error);
+    return res.status(500).json({
+      success: false,
+      error: error?.message || "Error al enriquecer datos de la sala."
+    });
+  }
+});
+
 router.post("/generate-simulated-email", requireAuth, async (req, res) => {
   const { leadId, role, scenario, customInstruction, senderName } = req.body;
   if (!leadId) {
@@ -666,26 +704,26 @@ Buscamos información de la siguiente sala:
 REGLAS OBLIGATORIAS E INNEGOCIABLES:
 1. PROHIBIDO INVENTAR, ESTIMAR O GENERAR DATOS FALSOS (no crees emails tipo info@sala.com o teléfonos aleatorios). Extrae ÚNICAMENTE información real que encuentres mediante búsqueda web.
 2. Si no localizas un dato con total certeza, deja el campo valor como cadena vacía ("") y marca la confianza como "baja".
-261: 3. Para cada campo (email_contacto, telefono, website, instagram, contacto_nombre, aforo, region, genero, imagen_url, icono, estilo_comunicacion), debes indicar:
-262:    - valor: el dato real o "" (o null para aforo). Para imagen_url, la URL pública del logo o foto oficial de la sala, festival, medio, revista o emisora. Para icono, un emoji adecuado. Para estilo_comunicacion, un resumen de 1 frase sobre la forma de expresarse y trato preferido (ej: "Trato informal y rockero, priorizan directos de alta energía" o "Institucional y formal, gestión por correo oficial").
-263:    - confianza: "alta" (sitio oficial / canal verificado), "media" (directorio secundario), "baja" (desconocido)
-264:    - fuente: URL o referencia del resultado hallado
-265: 
-266: Devuelve strictly un objeto JSON con esta estructura exacta:
-267: {
-268:   "email_contacto": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-269:   "telefono": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-270:   "website": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-271:   "instagram": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-272:   "contacto_nombre": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-273:   "aforo": { "valor": null, "confianza": "alta"|"media"|"baja", "fuente": "" },
-274:   "region": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-275:   "genero": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-276:   "imagen_url": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-277:   "icono": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-278:   "estilo_comunicacion": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
-279:   "source_info": "Resumen técnico de los hallazgos de búsqueda"
-280: }`;
+3. Para cada campo (email_contacto, telefono, website, instagram, contacto_nombre, aforo, region, genero, imagen_url, icono, estilo_comunicacion), debes indicar:
+   - valor: el dato real o "" (o null para aforo). Para imagen_url, la URL pública del logo o foto oficial de la sala, festival, medio, revista o emisora. Para icono, un emoji adecuado. Para estilo_comunicacion, un resumen de 1 frase sobre la forma de expresarse y trato preferido (ej: "Trato informal y rockero, priorizan directos de alta energía" o "Institucional y formal, gestión por correo oficial").
+   - confianza: "alta" (sitio oficial / canal verificado), "media" (directorio secundario), "baja" (desconocido)
+   - fuente: URL o referencia del resultado hallado
+
+Devuelve strictly un objeto JSON con esta estructura exacta:
+{
+  "email_contacto": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "telefono": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "website": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "instagram": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "contacto_nombre": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "aforo": { "valor": null, "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "region": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "genero": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "imagen_url": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "icono": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "estilo_comunicacion": { "valor": "", "confianza": "alta"|"media"|"baja", "fuente": "" },
+  "source_info": "Resumen técnico de los hallazgos de búsqueda"
+}`;
 
     let response: any;
     try {
@@ -875,11 +913,16 @@ export function getGlobalPitchFeedbackSummary(leads: any[]) {
     tono_rating?: number;
     contenido_rating?: number;
     comentario?: string;
+    alcance?: 'este_pitch' | 'global';
   }> = [];
 
   for (const lead of leads) {
     if (Array.isArray(lead.historial_feedback_pitch)) {
       for (const item of lead.historial_feedback_pitch) {
+        // Exclude undone items and items explicitly marked as single-pitch only ('este_pitch')
+        if (item.deshecho) continue;
+        if (item.alcance === 'este_pitch') continue;
+
         if (item.comentario || item.tono_rating || item.contenido_rating) {
           logs.push({
             sala_o_medio: lead.nombre_sala || 'Entidad',
@@ -888,7 +931,8 @@ export function getGlobalPitchFeedbackSummary(leads: any[]) {
             fecha: item.fecha || '',
             tono_rating: item.tono_rating,
             contenido_rating: item.contenido_rating,
-            comentario: item.comentario || ''
+            comentario: item.comentario || '',
+            alcance: item.alcance || 'global'
           });
         }
       }
@@ -1127,18 +1171,27 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
 router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { tono_rating, contenido_rating, comentario } = req.body;
+    const { tono_rating, contenido_rating, comentario, alcance } = req.body;
 
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
     const state = loadState();
-    const lead = state.leads.find((l: any) => l.id === id);
+    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    if (!lead) {
+      try {
+        lead = await dbGetLeadById(id, userBandId);
+        if (lead) {
+          state.leads.push(lead);
+        }
+      } catch (dbErr) {
+        console.warn("Could not fetch lead by ID from Supabase:", dbErr);
+      }
+    }
     if (!lead) {
       return res.status(404).json({ success: false, error: "Sala no encontrada." });
     }
-
-    let userBandId = (req as any).user?.band_id || lead.band_id ;
     const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
     const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
-    const cleanId = userBandId.replace(/^(band|reg)-/, '');
+    const cleanId = (userBandId || 'bakandeya').replace(/^(band|reg)-/, '');
     const isBakandeya = cleanId === 'bakandeya';
     const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
     const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
@@ -1153,6 +1206,11 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
     if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
     if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas de este pitch: "${comentario.trim()}"`);
+    if (alcance === 'este_pitch') {
+      feedbackDetails.push(`Nota de alcance: Aplicar este ajuste únicamente a esta sala en concreto.`);
+    } else {
+      feedbackDetails.push(`Nota de alcance: Ajuste de preferencia general aplicable también a futuros pitches.`);
+    }
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
 
@@ -1201,6 +1259,7 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
     }
 
     // Record learning log in lead
+    const finalAlcance = alcance === 'este_pitch' ? 'este_pitch' : 'global';
     const logEntry = {
       id: `fb-${Date.now()}`,
       fecha: new Date().toISOString(),
@@ -1208,7 +1267,8 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
       tono_rating: tono_rating || undefined,
       contenido_rating: contenido_rating || undefined,
       comentario: comentario || "",
-      pitch_nuevo: newPitchText
+      pitch_nuevo: newPitchText,
+      alcance: finalAlcance
     };
 
     if (!lead.historial_feedback_pitch) {
@@ -1224,8 +1284,8 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
 
     saveState(state);
 
-    userBandId = (req as any).user?.band_id || lead.band_id ;
-    dbUpsertLead(lead, userBandId).catch(err => {
+    const targetBandId = (req as any).user?.band_id || lead.band_id || userBandId;
+    dbUpsertLead(lead, targetBandId).catch(err => {
       console.warn("Async Supabase update for regenerated pitch failed:", err);
     });
 
@@ -1242,6 +1302,66 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
   }
 });
 
+// Revert pitch to previous version and mark training log as undone
+router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { logId } = req.body;
+
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
+    const state = loadState();
+    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    if (!lead) {
+      try {
+        lead = await dbGetLeadById(id, userBandId);
+        if (lead) {
+          state.leads.push(lead);
+        }
+      } catch (dbErr) {
+        console.warn("Could not fetch lead by ID from Supabase:", dbErr);
+      }
+    }
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Sala no encontrada." });
+    }
+
+    const history = lead.historial_feedback_pitch || [];
+    if (history.length === 0) {
+      return res.status(400).json({ success: false, error: "No hay historial de entrenamiento previo para deshacer." });
+    }
+
+    let targetLog = logId ? history.find((h: any) => h.id === logId) : history[0];
+    if (!targetLog) {
+      targetLog = history[0];
+    }
+
+    const restoredPitch = targetLog.pitch_previo || "";
+    
+    // Mark targetLog as deshecho
+    targetLog.deshecho = true;
+
+    // Update lead pitch
+    lead.pitch_generado = restoredPitch;
+
+    saveState(state);
+
+    const targetBandId = (req as any).user?.band_id || lead.band_id || userBandId;
+    dbUpsertLead(lead, targetBandId).catch(err => {
+      console.warn("Async Supabase update for reverted pitch failed:", err);
+    });
+
+    res.json({
+      success: true,
+      restoredPitch,
+      revertedLogId: targetLog.id,
+      lead
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/revert-pitch:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al deshacer el entrenamiento del pitch." });
+  }
+});
+
 // Helper to extract domain from website URL
 function getDomainFromUrl(url: string): string {
   try {
@@ -1253,19 +1373,48 @@ function getDomainFromUrl(url: string): string {
 }
 
 // Google Places Search Endpoint for Venues, Festivals & Media
+// Google Places Search Endpoint for Venues, Festivals, Clubs, Groups & Agencies (Buscador de Salas / Scout Descubridor)
 router.post(["/places-search", "/leads/places-search"], requireAuth, async (req, res) => {
   try {
-    const { query, ciudad, region, tipo } = req.body;
+    const { query, ciudad, region, tipo, limit: rawLimit, aforoMin, aforoMax } = req.body;
+    const limit = Math.max(1, Math.min(10, Number(rawLimit) || 8));
+
     if (!query && !ciudad) {
       return res.status(400).json({ error: "Proporciona una consulta o ciudad de búsqueda." });
     }
 
-    const searchQuery = query || `salas de concierto y festivales de música en ${ciudad}${region ? `, ${region}` : ''}, España`;
+    const lowerTipo = (tipo || "").toLowerCase();
+    const isBandSearch = lowerTipo.includes('grupo') || lowerTipo.includes('banda');
+    const isAyuntamientoSearch = lowerTipo.includes('ayuntamiento') || lowerTipo.includes('institucion') || lowerTipo.includes('ayto');
+    const isWebEntitySearch = isBandSearch || lowerTipo.includes('sello') || lowerTipo.includes('agencia') || lowerTipo.includes('medio');
+
+    const categorySearchPrefixes: Record<string, string> = {
+      ayuntamiento: "ayuntamientos concejalías de festejos fiestas patronales cultura contratación conciertos",
+      festival: "festivales de música ciclos de conciertos y ferias con música en directo",
+      sala: "salas de conciertos locales y teatros con música en directo",
+      discoteca: "discotecas y clubs con djs o música en vivo",
+      grupo: "grupos y bandas de música en activo conciertos directos",
+      agencia: "agencias de booking musical y management de bandas",
+      sello: "sellos discográficos y editoriales de música",
+      medio: "medios musicales programas de radio y prensa musical"
+    };
+
+    const typePrefix = (tipo && categorySearchPrefixes[lowerTipo]) 
+      ? categorySearchPrefixes[lowerTipo] 
+      : (isBandSearch ? "grupos y bandas de música en activo" : "salas de conciertos y festivales de música en directo");
+    const searchQuery = query || `${typePrefix} en ${ciudad}${region ? `, ${region}` : ''}, España`;
     const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
-    if (placesApiKey && placesApiKey.trim() !== "") {
+    // Google Places API is great for physical places (venues, clubs, theaters, city halls).
+    // For musical bands/groups, record labels, and agencies, we skip Places API and use Gemini Grounding directly.
+    if (!isWebEntitySearch && placesApiKey && placesApiKey.trim() !== "") {
       try {
-        console.log(`[Google Places API (New)] Realizando búsqueda v1/places:searchText para: "${searchQuery}"`);
+        let placesQuery = searchQuery;
+        if (isAyuntamientoSearch) {
+          placesQuery = `Ayuntamiento de ${ciudad || 'Madrid'}, España`;
+        }
+
+        console.log(`[Google Places API (New)] Realizando búsqueda v1/places:searchText para: "${placesQuery}" (Límite: ${limit})`);
         const v1Res = await fetch("https://places.googleapis.com/v1/places:searchText", {
           method: "POST",
           headers: {
@@ -1274,8 +1423,9 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.types,places.photos,places.businessStatus"
           },
           body: JSON.stringify({
-            textQuery: searchQuery,
-            languageCode: "es"
+            textQuery: placesQuery,
+            languageCode: "es",
+            pageSize: Math.min(20, limit * 2)
           })
         });
 
@@ -1291,7 +1441,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
               }
               return true;
             })
-            .slice(0, 12)
+            .slice(0, limit)
             .map((place: any) => {
             const addressParts = (place.formattedAddress || "").split(",");
             const extractedCity = ciudad || (addressParts.length >= 2 ? addressParts[addressParts.length - 2].trim().replace(/\d{5}\s*/, '') : "España");
@@ -1306,6 +1456,55 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
               photoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
             }
 
+            // Determine default category based on search type or place types
+            let resolvedType = tipo || "sala";
+            let resolvedIcon = "🏛️";
+            const placeTypes = place.types || [];
+            let defaultGenre = "Música en Directo / Variado";
+            let defaultDesc = `Recinto para conciertos y eventos musicales en ${extractedCity}.`;
+
+            if (isAyuntamientoSearch || placeTypes.includes('city_hall') || placeTypes.includes('local_government_office')) {
+              resolvedType = 'ayuntamiento';
+              resolvedIcon = '🏛️';
+              defaultGenre = 'Fiestas Patronales / Cultura Municipal';
+              defaultDesc = `Ayuntamiento y concejalía de festejos/cultura para contratación y programación de conciertos en ${extractedCity}.`;
+            } else if (lowerTipo.includes('festival') || placeTypes.includes('festival')) {
+              resolvedType = 'festival';
+              resolvedIcon = '🎪';
+              defaultGenre = 'Festivales / Directo / Outdoor';
+              defaultDesc = `Festival / evento cultural con escenarios para actuaciones y conciertos en directo en ${extractedCity}.`;
+            } else if (lowerTipo.includes('discoteca') || placeTypes.includes('night_club')) {
+              resolvedType = 'discoteca';
+              resolvedIcon = '🪩';
+              defaultGenre = 'Electrónica / Club / DJs';
+              defaultDesc = `Club nocturno y sala de baile con sesiones y actuaciones en directo en ${extractedCity}.`;
+            } else if (lowerTipo.includes('teatro') || placeTypes.includes('performing_arts_theater')) {
+              resolvedType = 'sala';
+              resolvedIcon = '🎭';
+              defaultGenre = 'Acústico / Teatro / Directo';
+              defaultDesc = `Espacio escénico y teatro con acústica idónea para directos y conciertos en ${extractedCity}.`;
+            } else if (isBandSearch) {
+              resolvedType = 'grupo';
+              resolvedIcon = '🎸';
+              defaultGenre = 'Banda / Directo';
+              defaultDesc = `Grupo / banda de música en activo para colaboraciones e intercambios.`;
+            } else if (lowerTipo.includes('agencia') || lowerTipo.includes('manager')) {
+              resolvedType = 'agencia';
+              resolvedIcon = '💼';
+              defaultGenre = 'Management & Booking';
+              defaultDesc = `Agencia y promotora de contratación artística y gestión de conciertos.`;
+            } else if (lowerTipo.includes('sello')) {
+              resolvedType = 'sello';
+              resolvedIcon = '💿';
+              defaultGenre = 'Discográfica / Editorial';
+              defaultDesc = `Sello discográfico y distribuidora de proyectos musicales.`;
+            } else if (lowerTipo.includes('medio') || lowerTipo.includes('radio')) {
+              resolvedType = 'medio';
+              resolvedIcon = '📻';
+              defaultGenre = 'Radio / Prensa Musical';
+              defaultDesc = `Medio de comunicación y difusión especializado en escena musical.`;
+            }
+
             return {
               place_id: place.id,
               nombre_sala: place.displayName?.text || "Sala / Recinto",
@@ -1316,9 +1515,12 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
               website: place.websiteUri || "",
               rating: place.rating || null,
               user_ratings_total: place.userRatingCount || null,
-              tipo: tipo || (place.types?.includes("night_club") ? "Discoteca/Sala" : "Sala"),
+              tipo: resolvedType,
+              aforo: aforoMin ? Number(aforoMin) : 0,
+              genero: defaultGenre,
+              descripcion: defaultDesc,
               imagen_url: photoUrl,
-              icono: place.types?.includes("night_club") ? "🪩" : "🏛️",
+              icono: resolvedIcon,
               email_contacto: "",
               fuente: "Google Places API (New)"
             };
@@ -1328,7 +1530,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             success: true,
             isPlacesApi: true,
             source: "Google Places API (New)",
-            query: searchQuery,
+            query: placesQuery,
             results: v1Places
           });
         }
@@ -1337,37 +1539,106 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
       }
     }
 
-    // Fallback: Gemini Search Grounding
-    console.log(`[Google Places Fallback] Using Gemini Search Grounding for query: "${searchQuery}"`);
+    // Fallback or Primary for Bands/Web Entities: Gemini Search Grounding
+    console.log(`[Search Scout Grounding] Using Gemini Search Grounding for query: "${searchQuery}" (Tipo: ${tipo || 'sala'}, Límite: ${limit})`);
     const aiClient = getAiClient();
     if (!aiClient) {
       return res.status(500).json({ error: "Ni Google Places API ni Gemini API están disponibles." });
     }
 
-    const prompt = `Busca información real y actualizada sobre recintos, salas de conciertos, teatros, festivales o medios de comunicación para la siguiente búsqueda en España:
-BÚSQUEDA: "${searchQuery}"
+    const aforoFilterText = (aforoMin || aforoMax) 
+      ? `Filtrar preferentemente recintos o bandas con aforo aproximado ${aforoMin ? `desde ${aforoMin}` : ''} ${aforoMax ? `hasta ${aforoMax}` : ''} personas.` 
+      : '';
 
-Pautas estrictas:
-1. Localiza hasta 8 recintos o medios de comunicación reales con sus datos principales.
-2. EXCLUYE Y FILTRA estrictamente cualquier sala, recinto, festival o negocio que esté CERRADO PERMANENTEMENTE o haya cesado su actividad (por ejemplo: la antigua Beat Club Segovia u otros locales cerrados). Incluye ÚNICAMENTE locales en funcionamiento.
-3. Para cada uno, obtén su nombre oficial, ciudad, dirección, teléfono si existe, sitio web oficial y tipo.
-4. NO inventes datos ni correos ficticios.
+    let specificTypeInstructions = "";
+    if (isBandSearch) {
+      specificTypeInstructions = `
+REGLAS ESTRICTAS PARA GRUPOS Y BANDAS DE MÚSICA:
+- OBJETIVO OBLIGATORIO: Debes encontrar EXCLUSIVAMENTE GRUPOS, BANDAS DE MÚSICA O ARTISTAS MUSICALES REALES EN ACTIVO (originarios de o activos en ${ciudad || 'España'}).
+- PROHIBICIÓN ABSOLUTA: QUEDA TOTALMENTE PROHIBIDO devolver salas de conciertos, bares de copas, discotecas o empresas hosteleras que tengan la palabra "grupo" en su nombre (por ejemplo, NUNCA devuelvas "Grupo Kapital", "Grupo Pachá", "Grupo La Rumba", etc.).
+- Cada resultado DEBE ser un conjunto musical o banda real (ejemplos: bandas de Rock, Indie Pop, Metal, Punk, Garage, Flamenco Fusión, Rumba, etc.).
+- "nombre_sala": Nombre oficial de la BANDA / GRUPO DE MÚSICA (ej. "Arde Bogotá", "Cala Vento", "Derby Motoreta's Burrito Kachimba", "Los Zigarros", "La Pegatina", "Morgan", "Shinova", o bandas locales y emergentes reales de ${ciudad || 'la zona'}).
+- "tipo": "grupo"
+- "icono": "🎸"
+- "genero": Género musical de la banda (ej. "Indie Rock", "Pop Punk", "Garage Rock", "Metal Alternativo", "Folk / Mestizaje")
+- "descripcion": Breve biografía de la banda, formación, directos y estilo musical.
+- "website": Enlace oficial a su Spotify, Bandcamp, Instagram oficial de la banda o web.`;
+    } else if (isAyuntamientoSearch) {
+      specificTypeInstructions = `
+REGLAS ESTRICTAS PARA AYUNTAMIENTOS E INSTITUCIONES PÚBLICAS:
+- OBJETIVO OBLIGATORIO: Localizar AYUNTAMIENTOS, CONCEJALÍAS DE FESTEJOS / FIESTAS PATRONALES, ÁREAS DE CULTURA Y COMISIONES DE FIESTAS MUNICIPALES en ${ciudad || 'España'} y municipios de la comarca o provincia.
+- Las entidades DEBEN organizar programación de conciertos, fiestas mayores, festivales públicos o verbenas.
+- "nombre_sala": Nombre oficial institucional (ej. "Ayuntamiento de ${ciudad || 'Alcorcón'} - Concejalía de Festejos y Cultura", "Ayuntamiento de ... - Comisión de Fiestas")
+- "tipo": "ayuntamiento"
+- "icono": "🏛️"
+- "genero": "Fiestas Patronales / Cultura Municipal / Conciertos Públicos"
+- "descripcion": Resumen de las fiestas patronales, ciclos de conciertos de verano y eventos musicales que programa el consistorio.
+- "direccion": Casa Consistorial o dirección de la sede del Ayuntamiento / Centro Cultural.
+- "website": Web oficial del ayuntamiento o portal de festejos/cultura.`;
+    } else if (lowerTipo.includes('festival')) {
+      specificTypeInstructions = `
+REGLAS PARA FESTIVALES Y FERIAS:
+- Festivales de música, ferias de cerveza con escenario o ciclos de conciertos en ${ciudad || 'España'}.
+- "tipo": "festival"
+- "icono": "🎪"`;
+    } else if (lowerTipo.includes('discoteca')) {
+      specificTypeInstructions = `
+REGLAS PARA CLUBS Y DISCOTECAS:
+- Clubs nocturnos y salas de baile con sesiones y actuaciones en directo en ${ciudad || 'España'}.
+- "tipo": "discoteca"
+- "icono": "🪩"`;
+    } else {
+      specificTypeInstructions = `
+REGLAS PARA SALAS Y TEATROS:
+- Salas de conciertos, locales y teatros con programación regular de música en directo en ${ciudad || 'España'}.
+- "tipo": "sala"
+- "icono": "🏛️"`;
+    }
+
+    const prompt = `Busca información real y actualizada sobre entidades musicales en España para la siguiente búsqueda:
+BÚSQUEDA: "${searchQuery}"
+CATEGORÍA OBJETIVO: "${tipo || 'Cualquiera'}"
+CIUDAD/REGIÓN: "${ciudad || 'España'}"
+${aforoFilterText}
+
+${specificTypeInstructions}
+
+PAUTAS CRÍTICAS DE BÚSQUEDA Y FILTRADO:
+1. Localiza exactamente hasta ${limit} entidades o bandas REALES, ACTIVAS y OPERATIVAS en España con sus datos principales.
+2. EXCLUYE Y FILTRA estrictamente cualquier entidad, sala o banda inactiva o cancelada.
+3. Para cada entidad proporciona:
+   - "nombre_sala": Nombre oficial exacto (si es grupo: nombre de la banda; si es ayuntamiento: Ayuntamiento de X - Concejalía de Fiestas; si es sala: nombre de la sala)
+   - "ciudad": Ciudad donde se ubica o de donde es la banda
+   - "region": Provincia o comunidad autónoma
+   - "direccion": Dirección física o ciudad de origen
+   - "telefono": Teléfono oficial si existe (o "" si no)
+   - "website": Enlace a sitio web oficial, Instagram o perfil oficial
+   - "rating": Puntuación media orientativa (ej. 4.5) o null
+   - "aforo": Aforo aproximado (número entero o 0)
+   - "tipo": "sala" | "ayuntamiento" | "discoteca" | "teatro" | "festival" | "grupo" | "agencia" | "sello" | "medio"
+   - "genero": Estilos musicales principales
+   - "descripcion": Breve resumen descriptivo (1-2 frases)
+   - "icono": Icono emoji representativo ("🎸" para grupo, "🏛️" para ayuntamiento/sala, "🎪" para festival, "🪩" para discoteca, "💼" para agencia, "💿" para sello, "📻" para medio)
+   - "email_contacto": Dejar como "" (no inventar correos ficticios).
 
 Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
 {
   "results": [
     {
       "place_id": "id_unico_o_slug",
-      "nombre_sala": "Nombre de la sala/festival",
+      "nombre_sala": "Nombre oficial",
       "ciudad": "Ciudad",
-      "region": "Comunidad autónoma",
-      "direccion": "Dirección completa",
+      "region": "Comunidad autónoma o provincia",
+      "direccion": "Dirección física o sede",
       "telefono": "Teléfono",
-      "website": "Sitio web oficial",
+      "website": "Sitio web oficial o enlace",
       "rating": 4.5,
-      "tipo": "Sala" | "Festival" | "Medio" | "Teatro",
+      "aforo": 400,
+      "tipo": "grupo",
+      "genero": "Indie / Pop / Rock",
+      "descripcion": "Banda en activo de estilo indie rock con directos enérgicos y giras nacionales.",
       "imagen_url": "URL de logo o foto si existe",
-      "icono": "🏛️" | "🎪" | "📻" | "🪩",
+      "icono": "🎸",
       "email_contacto": "",
       "fuente": "Google Search Grounding via Gemini"
     }
@@ -1392,7 +1663,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
     const textResult = response?.text || "{}";
     const parsed = safeParseJson(textResult);
     const rawResults = Array.isArray(parsed?.results) ? parsed.results : [];
-    const results = rawResults.map((r: any) => {
+    const results = rawResults.slice(0, limit).map((r: any) => {
       let img = r.imagen_url || "";
       const domain = getDomainFromUrl(r.website || "");
       if (!img && domain) {
@@ -1417,7 +1688,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
   }
 });
 
-// Email Extraction Pipeline for Google Places & Web Venues
+// Email Extraction Pipeline for Google Places & Web Venues (Agente Enriquecedor)
 router.post(["/extract-emails", "/leads/extract-emails"], requireAuth, async (req, res) => {
   try {
     const { places } = req.body;
@@ -1427,15 +1698,30 @@ router.post(["/extract-emails", "/leads/extract-emails"], requireAuth, async (re
 
     const aiClient = getAiClient();
     if (!aiClient) {
-      return res.status(500).json({ error: "Gemini API no configurada para extracción de emails." });
+      return res.json({
+        success: true,
+        totalProcessed: places.length,
+        extractedCount: 0,
+        extracted: places.map(p => ({
+          id: p.place_id || p.id || p.nombre_sala,
+          nombre_sala: p.nombre_sala,
+          email_contacto: "",
+          instagram: "",
+          contacto_nombre: "",
+          confianza: "baja",
+          fuente: "Sin API key configurada"
+        }))
+      });
     }
 
     console.log(`[Email Extractor] Procesando extracción de email para ${places.length} salas...`);
 
-    const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de Bakandeya.
+    // Helper to process a sub-batch of max 4 items
+    const processBatch = async (batch: any[]) => {
+      const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de Bakandeya.
 Tu misión es investigar y extraer el CORREO ELECTRÓNICO OFICIAL DE CONTACTO O BOOKING y el USUARIO DE INSTAGRAM REAL para cada una de las siguientes entidades en España:
 
-${JSON.stringify(places.map((p: any) => ({
+${JSON.stringify(batch.map((p: any) => ({
   id: p.place_id || p.id || p.nombre_sala,
   nombre_sala: p.nombre_sala,
   ciudad: p.ciudad || "",
@@ -1469,30 +1755,58 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
   ]
 }`;
 
-    let response: any;
-    try {
-      response = await generateContentWithFallback(aiClient, {
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: {
-          tools: [{ googleSearch: {} }]
+      try {
+        let response: any;
+        try {
+          response = await generateContentWithFallback(aiClient, {
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            config: {
+              tools: [{ googleSearch: {} }]
+            }
+          });
+        } catch (err) {
+          console.warn("[Email Extractor Warning] Grounding failed, fallback to direct JSON model:", err);
+          response = await generateContentWithFallback(aiClient, {
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            config: { responseMimeType: 'application/json' }
+          });
         }
-      });
-    } catch (err) {
-      response = await generateContentWithFallback(aiClient, {
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: { responseMimeType: 'application/json' }
-      });
+
+        const textResult = response?.text || "{}";
+        const parsed = safeParseJson(textResult);
+        return Array.isArray(parsed?.extracted) ? parsed.extracted : [];
+      } catch (err: any) {
+        console.warn("[Email Extractor Warning] Error processing batch:", err?.message);
+        return batch.map(p => ({
+          id: p.place_id || p.id || p.nombre_sala,
+          nombre_sala: p.nombre_sala,
+          email_contacto: "",
+          instagram: "",
+          contacto_nombre: "",
+          confianza: "baja",
+          fuente: "Búsqueda web no concluyente"
+        }));
+      }
+    };
+
+    // Split places into chunks of 3 for fast, reliable search execution without timeouts
+    const CHUNK_SIZE = 3;
+    const chunks: any[][] = [];
+    for (let i = 0; i < places.length; i += CHUNK_SIZE) {
+      chunks.push(places.slice(i, i + CHUNK_SIZE));
     }
 
-    const textResult = response?.text || "{}";
-    const parsed = safeParseJson(textResult);
-    const extractedList = Array.isArray(parsed?.extracted) ? parsed.extracted : [];
+    const allExtracted: any[] = [];
+    for (const chunk of chunks) {
+      const result = await processBatch(chunk);
+      allExtracted.push(...result);
+    }
 
     return res.json({
       success: true,
       totalProcessed: places.length,
-      extractedCount: extractedList.filter((e: any) => e.email_contacto && e.email_contacto.trim() !== "").length,
-      extracted: extractedList
+      extractedCount: allExtracted.filter((e: any) => e.email_contacto && e.email_contacto.trim() !== "").length,
+      extracted: allExtracted
     });
   } catch (error: any) {
     console.error("Error in POST /api/leads/extract-emails:", error);
@@ -1511,6 +1825,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
     const userBandId = (req as any).user?.band_id ;
     const state = loadState();
     let importedCount = 0;
+    const newlyAddedLeads: Lead[] = [];
     const nowStr = new Date().toISOString().split('T')[0];
 
     for (const rawLead of leads) {
@@ -1561,18 +1876,16 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           await dbUpsertLead(existing, userBandId);
         }
       } else {
-        // Create new lead
-        let resolvedType = rawLead.tipo || "Sala";
-        if (rawLead.nombre_sala) {
-          const lowerName = rawLead.nombre_sala.toLowerCase();
-          const isVenue = lowerName.includes('sala') || lowerName.includes('teatro') || lowerName.includes('discoteca') || lowerName.includes('club') || lowerName.includes('sótano') || lowerName.includes('sotano') || lowerName.includes('recinto');
-          const isFestival = lowerName.includes('festiv') || lowerName.includes('fest');
-          if (isVenue && String(resolvedType).toLowerCase().includes('medio')) {
-            resolvedType = 'sala';
-          } else if (isFestival && String(resolvedType).toLowerCase().includes('medio')) {
-            resolvedType = 'festival';
-          }
-        }
+        // Create new lead with normalized category
+        let resolvedType: string = (rawLead.tipo || "sala").toLowerCase();
+        if (resolvedType === 'ayuntamientos' || resolvedType === 'institucion' || resolvedType === 'ayto' || resolvedType === 'consistorio') resolvedType = 'ayuntamiento';
+        if (resolvedType === 'discotecas' || resolvedType === 'club' || resolvedType === 'discoteca/sala') resolvedType = 'discoteca';
+        if (resolvedType === 'salas' || resolvedType === 'teatro') resolvedType = 'sala';
+        if (resolvedType === 'festivales' || resolvedType === 'fest') resolvedType = 'festival';
+        if (resolvedType === 'banda' || resolvedType === 'bandas' || resolvedType === 'grupos') resolvedType = 'grupo';
+        if (resolvedType === 'agencias' || resolvedType === 'management' || resolvedType === 'manager') resolvedType = 'agencia';
+        if (resolvedType === 'sellos' || resolvedType === 'discografica' || resolvedType === 'discográfica') resolvedType = 'sello';
+        if (resolvedType === 'medios' || resolvedType === 'prensa' || resolvedType === 'radio') resolvedType = 'medio';
 
         const newLead: Lead = {
           id: `places-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -1583,22 +1896,25 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           direccion: rawLead.direccion || "",
           aforo: rawLead.aforo || 300,
           genero: rawLead.genero || "Música en Directo / Mestizaje",
-          tipo: resolvedType,
+          tipo: resolvedType as any,
           email_contacto: rawLead.email_contacto || "",
           telefono: rawLead.telefono || "",
           instagram: rawLead.instagram || "",
           website: rawLead.website || "",
           contacto_nombre: rawLead.contacto_nombre || "",
-          fuente: rawLead.fuente || "Google Places API + Extraedor IA",
+          fuente: rawLead.fuente || "Buscador de Salas (Scout Descubridor)",
           estado: "nuevo",
           pitch_generado: "",
-          notas: `Importado mediante Búsqueda de Google Places & Extraedor de Emails IA (${nowStr}).`,
-          icono: rawLead.icono || "🏛️",
+          notas: rawLead.descripcion 
+            ? `${rawLead.descripcion}\n\n[Importado mediante Buscador de Salas & Extraedor de Emails IA - ${nowStr}]`
+            : `Importado mediante Buscador de Salas & Extraedor de Emails IA (${nowStr}).`,
+          icono: rawLead.icono || (resolvedType === 'festival' ? '🎪' : resolvedType === 'discoteca' ? '🪩' : resolvedType === 'grupo' ? '🎸' : resolvedType === 'agencia' ? '💼' : resolvedType === 'sello' ? '💿' : resolvedType === 'medio' ? '📻' : '🏛️'),
           imagen_url: rawLead.imagen_url || ""
         };
 
         state.leads.push(newLead);
         await dbUpsertLead(newLead, userBandId);
+        newlyAddedLeads.push(newLead);
         importedCount++;
       }
     }
@@ -1609,11 +1925,153 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       success: true,
       importedCount,
       totalLeads: state.leads.length,
-      leads: state.leads
+      leads: newlyAddedLeads
     });
   } catch (error: any) {
     console.error("Error in POST /api/leads/import-places:", error);
     res.status(500).json({ error: error?.message || "Error al importar salas de Google Places." });
+  }
+});
+
+// Import Leads from Custom Excel / CSV with Intelligent Mapping & Classification
+router.post("/import-excel", async (req: Request, res: Response) => {
+  try {
+    const { leads, updateDuplicates = true, sourceName = "Importación Excel / CSV" } = req.body;
+    if (!Array.isArray(leads) || leads.length === 0) {
+      return res.status(400).json({ error: "No se han proporcionado contactos para importar." });
+    }
+
+    const userBandId = (req as any).user?.band_id;
+    const state = loadState();
+    let importedCount = 0;
+    let updatedCount = 0;
+    const newlyAddedLeads: Lead[] = [];
+    const nowStr = new Date().toISOString().split('T')[0];
+
+    for (const rawLead of leads) {
+      const nombreSala = (rawLead.nombre_sala || rawLead.nombre || "").trim();
+      if (!nombreSala) continue;
+
+      // Check if lead was previously deleted / blacklisted
+      const isDeleted = await dbCheckDeletedLead(nombreSala, userBandId);
+      if (isDeleted) {
+        console.log(`[Import Excel] Omitiendo ${nombreSala} por lista negra.`);
+        continue;
+      }
+
+      // Check existing lead
+      const existing = state.leads.find((l: any) => 
+        l.nombre_sala.toLowerCase().trim() === nombreSala.toLowerCase().trim() &&
+        (!l.ciudad || !rawLead.ciudad || l.ciudad.toLowerCase().trim() === (rawLead.ciudad || "").toLowerCase().trim())
+      );
+
+      if (existing) {
+        if (updateDuplicates) {
+          let updated = false;
+          if (!existing.email_contacto && rawLead.email_contacto) {
+            existing.email_contacto = rawLead.email_contacto.trim();
+            updated = true;
+          }
+          if (!existing.telefono && rawLead.telefono) {
+            existing.telefono = String(rawLead.telefono).trim();
+            updated = true;
+          }
+          if (!existing.website && rawLead.website) {
+            existing.website = rawLead.website.trim();
+            updated = true;
+          }
+          if (!existing.instagram && rawLead.instagram) {
+            existing.instagram = rawLead.instagram.trim();
+            updated = true;
+          }
+          if (!existing.direccion && rawLead.direccion) {
+            existing.direccion = rawLead.direccion.trim();
+            updated = true;
+          }
+          if ((!existing.aforo || existing.aforo === 0) && rawLead.aforo) {
+            existing.aforo = Number(rawLead.aforo) || existing.aforo;
+            updated = true;
+          }
+          if (!existing.contacto_nombre && rawLead.contacto_nombre) {
+            existing.contacto_nombre = rawLead.contacto_nombre.trim();
+            updated = true;
+          }
+          if (rawLead.notas && !existing.notas?.includes(rawLead.notas)) {
+            existing.notas = `${existing.notas || ''}\n[Nota Excel]: ${rawLead.notas}`.trim();
+            updated = true;
+          }
+
+          if (updated) {
+            await dbUpsertLead(existing, userBandId);
+            updatedCount++;
+          }
+        }
+      } else {
+        // Normalizar categoría
+        let resolvedType: string = (rawLead.tipo || "sala").toLowerCase().trim();
+        if (resolvedType.includes('ayuntamiento') || resolvedType.includes('institucion') || resolvedType.includes('ayto') || resolvedType.includes('festejo') || resolvedType.includes('cultura')) resolvedType = 'ayuntamiento';
+        else if (resolvedType.includes('discoteca') || resolvedType.includes('club')) resolvedType = 'discoteca';
+        else if (resolvedType.includes('teatro')) resolvedType = 'teatro';
+        else if (resolvedType.includes('festival') || resolvedType.includes('feria') || resolvedType.includes('ciclo')) resolvedType = 'festival';
+        else if (resolvedType.includes('grupo') || resolvedType.includes('banda') || resolvedType.includes('artista')) resolvedType = 'grupo';
+        else if (resolvedType.includes('agencia') || resolvedType.includes('management') || resolvedType.includes('manager') || resolvedType.includes('promotor')) resolvedType = 'agencia';
+        else if (resolvedType.includes('sello') || resolvedType.includes('discografica') || resolvedType.includes('editorial')) resolvedType = 'sello';
+        else if (resolvedType.includes('medio') || resolvedType.includes('prensa') || resolvedType.includes('radio') || resolvedType.includes('podcast')) resolvedType = 'medio';
+        else resolvedType = 'sala';
+
+        const defaultIcon = resolvedType === 'festival' ? '🎪' :
+                            resolvedType === 'discoteca' ? '🪩' :
+                            resolvedType === 'teatro' ? '🎭' :
+                            resolvedType === 'grupo' ? '🎸' :
+                            resolvedType === 'agencia' ? '💼' :
+                            resolvedType === 'sello' ? '💿' :
+                            resolvedType === 'medio' ? '📻' :
+                            resolvedType === 'ayuntamiento' ? '🏛️' : '🏛️';
+
+        const parsedAforo = Number(rawLead.aforo);
+
+        const newLead: Lead = {
+          id: `excel-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+          band_id: userBandId,
+          nombre_sala: nombreSala,
+          ciudad: (rawLead.ciudad || "España").trim(),
+          region: (rawLead.region || "España").trim(),
+          direccion: (rawLead.direccion || "").trim(),
+          aforo: !isNaN(parsedAforo) && parsedAforo > 0 ? parsedAforo : (resolvedType === 'sala' ? 250 : 0),
+          genero: (rawLead.genero || (resolvedType === 'ayuntamiento' ? 'Fiestas Patronales / Cultura' : 'Música en Directo / Variado')).trim(),
+          tipo: resolvedType as any,
+          email_contacto: (rawLead.email_contacto || rawLead.email || "").trim(),
+          telefono: String(rawLead.telefono || "").trim(),
+          instagram: (rawLead.instagram || "").trim(),
+          website: (rawLead.website || "").trim(),
+          contacto_nombre: (rawLead.contacto_nombre || rawLead.contacto || "").trim(),
+          fuente: sourceName,
+          estado: (rawLead.estado || "nuevo").toLowerCase().trim() as any,
+          pitch_generado: (rawLead.pitch_generado || "").trim(),
+          notas: (rawLead.notas || `Importado desde archivo Excel / CSV el ${nowStr}.`).trim(),
+          icono: rawLead.icono || defaultIcon,
+          imagen_url: rawLead.imagen_url || ""
+        };
+
+        state.leads.push(newLead);
+        await dbUpsertLead(newLead, userBandId);
+        newlyAddedLeads.push(newLead);
+        importedCount++;
+      }
+    }
+
+    saveState(state);
+
+    return res.json({
+      success: true,
+      importedCount,
+      updatedCount,
+      totalLeads: state.leads.length,
+      leads: newlyAddedLeads
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/import-excel:", error);
+    res.status(500).json({ error: error?.message || "Error al procesar el archivo Excel / CSV." });
   }
 });
 

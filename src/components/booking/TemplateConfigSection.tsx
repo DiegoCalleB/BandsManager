@@ -387,7 +387,7 @@ export function TemplateConfigSection({
             </div>
 
             <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
-              Cuando el agente de Python <strong>"Redactor"</strong> corre, lee estas plantillas y
+              Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y
               pautas, las mezcla con los detalles del contacto capturado por el{' '}
               <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado
               para que lo revises en esta misma pantalla.

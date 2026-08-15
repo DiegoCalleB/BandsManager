@@ -97,9 +97,12 @@ export function SongChordsViewerModal({
       setIsGeneratingAi(true);
       setAiSuccessMsg(null);
 
-      const token = localStorage.getItem('token') || '';
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        headers['x-auth-token'] = token;
+      }
 
       const response = await fetch('/api/generate-song-chords', {
         method: 'POST',
@@ -152,9 +155,12 @@ export function SongChordsViewerModal({
     };
 
     // Save to server
-    const token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      headers['x-auth-token'] = token;
+    }
 
     fetch(`/api/songs/${song.id}`, {
       method: 'PUT',

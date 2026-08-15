@@ -1,5 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Image as ImageIcon, Shirt, Tag, QrCode, Download, RefreshCw, Wand2, Type, Upload, Trash2, Scissors, Layers, Plus } from 'lucide-react';
+import { 
+  Sparkles, 
+  Image as ImageIcon, 
+  Shirt, 
+  Tag, 
+  QrCode, 
+  Download, 
+  RefreshCw, 
+  Wand2, 
+  Type, 
+  Upload, 
+  Trash2, 
+  Scissors, 
+  Layers, 
+  Plus, 
+  Gift, 
+  PackageCheck, 
+  MapPin, 
+  CheckCircle2, 
+  X, 
+  ArrowRight, 
+  Truck, 
+  Clock, 
+  Palette, 
+  Phone, 
+  User, 
+  Building 
+} from 'lucide-react';
 import { ThemeColors, ThemeName } from '../types';
 import QRCode from 'react-qr-code';
 import { resolveAudioUrl, uploadFileToServer } from '../utils/audioStorage';
@@ -120,6 +147,20 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
     { name: "EP Cacharros", url: "https://images.unsplash.com/photo-1493225457124-a1a2a5f590bc?w=500&q=80" }
   ]);
 
+  // Regalo de bienvenida: Estado de canje de pack de pegatinas
+  const [hasGiftPending, setHasGiftPending] = useState(true);
+  const [showClaimModal, setShowClaimModal] = useState(false);
+  const [claimStep, setClaimStep] = useState<'form' | 'success'>('form');
+  const [selectedGiftDesignId, setSelectedGiftDesignId] = useState<string>('default-logo');
+  const [shippingForm, setShippingForm] = useState({
+    nombre: 'Diego de la Calle (Bakandeya)',
+    direccion: 'Calle Gran Vía 28, 4º B',
+    cp: '28013',
+    ciudad: 'Madrid',
+    telefono: '+34 612 345 678',
+    notas: 'Dejar en portería si no estamos en el local.'
+  });
+
   useEffect(() => {
     try {
       const saved = localStorage.getItem('bakandeya_songs_catalog');
@@ -239,6 +280,46 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
           </button>
         )}
       </header>
+
+      {/* 🎁 Banner de Regalo Pendiente de Canjear */}
+      {hasGiftPending && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/10 border-2 border-amber-400/60 shadow-xl shadow-amber-500/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-amber-400 text-black flex items-center justify-center shrink-0 shadow-lg shadow-amber-400/20">
+              <Gift className="w-6 h-6 stroke-[2.5]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-mono font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-400 text-black">
+                  Regalo de Bienvenida · Plan De Gira
+                </span>
+                <span className="text-[10px] font-mono text-amber-300 font-bold">500 uds Vinilo Mate</span>
+              </div>
+              <p className="text-sm font-bold text-zinc-100 mt-1">
+                Tienes 500 pegatinas gratis esperando. Diseña las tuyas y pídelas.
+              </p>
+              <p className="text-xs text-neutral-400 mt-0.5">
+                Impresión en vinilo de alta resistencia y envío gratuito a tu local o domicilio.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 w-full md:w-auto shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setClaimStep('form');
+                setShowClaimModal(true);
+              }}
+              className="w-full md:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase font-mono tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <PackageCheck className="w-4 h-4" />
+              <span>Canjear Pegatinas Gratis</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Panel de Control */}
@@ -608,6 +689,242 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
           </div>
         </div>
       </div>
+
+      {/* 🎁 Modal de Canje de Pegatinas de Bienvenida */}
+      {showClaimModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="relative w-full max-w-2xl rounded-3xl bg-[#141312] border-2 border-amber-500/50 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="p-5 bg-gradient-to-r from-[#1c1813] to-[#141210] border-b border-[#262422] flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-400 text-black flex items-center justify-center font-bold">
+                  <Gift className="w-5 h-5 stroke-[2.5]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black font-display uppercase tracking-wider text-zinc-100 flex items-center gap-2">
+                    <span>Canjear Pack de Pegatinas Gratis</span>
+                    <span className="text-[10px] font-mono font-black uppercase px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40">
+                      100 uds
+                    </span>
+                  </h3>
+                  <p className="text-xs text-neutral-400">
+                    Regalo oficial de bienvenida para tu banda · Envío gratis
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowClaimModal(false)}
+                className="p-2 text-neutral-400 hover:text-white rounded-xl hover:bg-neutral-800/60 transition-colors cursor-pointer"
+                title="Cerrar ventana"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              {claimStep === 'form' ? (
+                <>
+                  {/* 1. Previsualización del diseño elegido */}
+                  <div className="space-y-3">
+                    <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-300 flex items-center gap-2">
+                      <Palette className="w-4 h-4 text-amber-400" />
+                      <span>1. Previsualización del Diseño Elegido</span>
+                    </label>
+
+                    <div className="p-4 rounded-2xl bg-[#0f0e0d] border border-[#262422] flex flex-col sm:flex-row items-center gap-5">
+                      {/* Sticker Preview visual */}
+                      <div className="relative w-28 h-28 shrink-0 rounded-2xl bg-neutral-900 border-4 border-white shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
+                        <div className="w-10 h-10 rounded-lg bg-amber-400 text-black font-black flex items-center justify-center text-lg font-display mb-1">
+                          BK
+                        </div>
+                        <span className="text-[9px] font-black font-display text-white uppercase tracking-wider">BAKANDEYA</span>
+                        <span className="text-[7px] font-mono text-amber-400 font-bold">Oficial Vinyl</span>
+                      </div>
+
+                      <div className="flex-1 text-center sm:text-left space-y-1">
+                        <div className="flex items-center justify-center sm:justify-start gap-2">
+                          <span className="text-xs font-bold text-zinc-100">Logo Bakandeya (Oficial)</span>
+                          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                            Alta resolución 300 DPI
+                          </span>
+                        </div>
+                        <p className="text-xs text-neutral-400">
+                          Vinilo mate exterior troquelado · 8x8 cm · Resistente al agua, al sol y a fundas de guitarra.
+                        </p>
+                        <p className="text-[11px] font-mono text-amber-300/90 pt-1">
+                          ✨ Cantidad asignada por tu plan: <strong>500 unidades</strong>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. Formulario de dirección de envío */}
+                  <div className="space-y-3 pt-2">
+                    <label className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-300 flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-amber-400" />
+                      <span>2. Dirección de Envío (España)</span>
+                    </label>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-[#0f0e0d] border border-[#262422]">
+                      <div className="sm:col-span-2 space-y-1">
+                        <label className="text-[10px] font-mono text-neutral-400 uppercase">
+                          Nombre del Destinatario / Banda
+                        </label>
+                        <div className="relative">
+                          <User className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            value={shippingForm.nombre}
+                            onChange={(e) => setShippingForm({ ...shippingForm, nombre: e.target.value })}
+                            className="w-full pl-9 pr-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-mono text-zinc-100 focus:outline-none focus:border-amber-400"
+                            placeholder="Nombre y apellidos"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-2 space-y-1">
+                        <label className="text-[10px] font-mono text-neutral-400 uppercase">
+                          Calle, número, piso y puerta
+                        </label>
+                        <div className="relative">
+                          <Building className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="text"
+                            value={shippingForm.direccion}
+                            onChange={(e) => setShippingForm({ ...shippingForm, direccion: e.target.value })}
+                            className="w-full pl-9 pr-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-mono text-zinc-100 focus:outline-none focus:border-amber-400"
+                            placeholder="Dirección completa del local o domicilio"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-mono text-neutral-400 uppercase">
+                          Código Postal (CP)
+                        </label>
+                        <input
+                          type="text"
+                          value={shippingForm.cp}
+                          onChange={(e) => setShippingForm({ ...shippingForm, cp: e.target.value })}
+                          className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-mono text-zinc-100 focus:outline-none focus:border-amber-400"
+                          placeholder="28001"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-mono text-neutral-400 uppercase">
+                          Ciudad / Provincia
+                        </label>
+                        <input
+                          type="text"
+                          value={shippingForm.ciudad}
+                          onChange={(e) => setShippingForm({ ...shippingForm, ciudad: e.target.value })}
+                          className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-mono text-zinc-100 focus:outline-none focus:border-amber-400"
+                          placeholder="Madrid"
+                        />
+                      </div>
+
+                      <div className="sm:col-span-2 space-y-1">
+                        <label className="text-[10px] font-mono text-neutral-400 uppercase">
+                          Teléfono de Contacto (para el mensajero)
+                        </label>
+                        <div className="relative">
+                          <Phone className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="tel"
+                            value={shippingForm.telefono}
+                            onChange={(e) => setShippingForm({ ...shippingForm, telefono: e.target.value })}
+                            className="w-full pl-9 pr-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-xs font-mono text-zinc-100 focus:outline-none focus:border-amber-400"
+                            placeholder="+34 600 000 000"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* Pantalla de Confirmación Posterior */
+                <div className="py-8 flex flex-col items-center text-center space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center text-emerald-400 animate-bounce">
+                    <CheckCircle2 className="w-10 h-10" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <h4 className="text-2xl font-black font-display uppercase tracking-wider text-zinc-100">
+                      ¡Pedido Recibido con Éxito!
+                    </h4>
+                    <p className="text-sm font-bold text-amber-300">
+                      Te avisamos cuando salga de imprenta.
+                    </p>
+                    <p className="text-xs text-neutral-400 max-w-md mx-auto leading-relaxed">
+                      Tus 500 pegatinas troqueladas en vinilo mate de alta resistencia entrarán en cola de producción. Recibirás una notificación por email con el número de seguimiento en 48-72h.
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#0f0e0d] border border-[#262422] text-left w-full max-w-md space-y-2 text-xs font-mono">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#262422]">
+                      <span className="text-neutral-400">Destinatario:</span>
+                      <span className="text-zinc-200 font-bold">{shippingForm.nombre}</span>
+                    </div>
+                    <div className="flex items-center justify-between pb-2 border-b border-[#262422]">
+                      <span className="text-neutral-400">Dirección:</span>
+                      <span className="text-zinc-200">{shippingForm.direccion}, {shippingForm.cp} {shippingForm.ciudad}</span>
+                    </div>
+                    <div className="flex items-center justify-between pb-2 border-b border-[#262422]">
+                      <span className="text-neutral-400">Pack:</span>
+                      <span className="text-amber-400 font-bold">500 Pegatinas Vinilo Oficial</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-neutral-400">Coste total:</span>
+                      <span className="text-emerald-400 font-bold">0,00 € (Gratis por suscripción)</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-[#0f0e0d] border-t border-[#262422] flex items-center justify-between">
+              {claimStep === 'form' ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setShowClaimModal(false)}
+                    className="px-4 py-2 rounded-xl text-xs font-mono text-neutral-400 hover:text-white cursor-pointer transition-colors"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setClaimStep('success')}
+                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase font-mono tracking-wider shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2"
+                  >
+                    <PackageCheck className="w-4 h-4" />
+                    <span>Pedir mis pegatinas</span>
+                  </button>
+                </>
+              ) : (
+                <div className="w-full flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowClaimModal(false);
+                      setHasGiftPending(false); // Canjeado
+                    }}
+                    className="px-6 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-zinc-100 text-xs font-mono font-bold cursor-pointer transition-colors"
+                  >
+                    Entendido, volver al Taller
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

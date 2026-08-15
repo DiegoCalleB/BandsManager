@@ -1,6 +1,7 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 import { 
  Disc3, Music, Plus, Settings, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy, 
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
@@ -289,6 +290,7 @@ export default function RepertorioSetlists({
  onUpdateConcert,
  onUpdateRehearsal
 }: RepertorioSetlistsProps) {
+ const { t } = useLanguage();
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName || 'Tu Banda';
 
@@ -297,28 +299,30 @@ export default function RepertorioSetlists({
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'configuracion' | 'discografia'>('setlists');
 
  // Songs Repertoire State
- const [songs, setSongs] = useState<Song[]>(() => {
- const token = localStorage.getItem('bakandeya_token');
- try {
- const saved = localStorage.getItem('bakandeya_songs_catalog');
- if (saved) return JSON.parse(saved);
- return token ? [] : DEFAULT_SONGS;
- } catch {
- return token ? [] : DEFAULT_SONGS;
- }
- });
+  // Songs Repertoire State
+  const [songs, setSongs] = useState<Song[]>(() => {
+    try {
+      localStorage.removeItem('bakandeya_songs_catalog');
+      return DEFAULT_SONGS;
+    } catch {
+      return DEFAULT_SONGS;
+    }
+  });
 
  // Setlists State
- const [setlists, setSetlists] = useState<Setlist[]>(() => {
- const token = localStorage.getItem('bakandeya_token');
- try {
- const saved = localStorage.getItem('bakandeya_setlists_data');
- if (saved) return JSON.parse(saved);
- return token ? [] : DEFAULT_SETLISTS;
- } catch {
- return token ? [] : DEFAULT_SETLISTS;
- }
- });
+  // Setlists State
+  const [setlists, setSetlists] = useState<Setlist[]>(() => {
+    try {
+      const saved = localStorage.getItem('bakandeya_setlists_data');
+      let parsed = saved ? JSON.parse(saved) : [];
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        return DEFAULT_SETLISTS;
+      }
+      return parsed;
+    } catch {
+      return DEFAULT_SETLISTS;
+    }
+  });
 
  // Selected Active Setlist ID
  const [activeSetlistId, setActiveSetlistId] = useState<string>(() => {
@@ -530,7 +534,19 @@ export default function RepertorioSetlists({
  if (resSongs.ok) {
  const dataS = await resSongs.json();
  if (dataS.songs && Array.isArray(dataS.songs)) {
- setSongs(dataS.songs);
+ let fetchedSongs = dataS.songs;
+ if (fetchedSongs.length === 0) {
+ fetchedSongs = DEFAULT_SONGS;
+ } else {
+ const existingIds = new Set(fetchedSongs.map((s: Song) => s.id));
+ const existingTitles = new Set(fetchedSongs.map((s: Song) => s.titulo.toLowerCase()));
+ for (const defSong of DEFAULT_SONGS) {
+ if (!existingIds.has(defSong.id) && !existingTitles.has(defSong.titulo.toLowerCase())) {
+ fetchedSongs.push(defSong);
+ }
+ }
+ }
+ setSongs(fetchedSongs);
  }
  }
 
@@ -1579,8 +1595,8 @@ export default function RepertorioSetlists({
  <div className={`p-4 sm:p-5 rounded-2xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 ${colors.card} `}>
        {/* HEADER / TITULO PRINCIPAL */}
       <div className="mb-4 xl:mb-0 shrink-0">
-        <h1 className={`text-4xl md:text-5xl font-display font-bold tracking-tight mb-2 ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>Repertorio</h1>
-        <p className={`text-sm font-mono uppercase tracking-widest ${isStitchLight ? 'text-slate-500' : 'text-zinc-400'}`}>Gestión de Setlists y Documentos</p>
+        <h1 className={`text-4xl md:text-5xl font-display font-bold tracking-tight mb-2 ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
+        <p className={`text-sm font-mono uppercase tracking-widest ${isStitchLight ? 'text-slate-500' : 'text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists y Documentos')}</p>
       </div>
 
  {/* NAVIGATION SUBTABS */}

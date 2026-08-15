@@ -19,6 +19,7 @@ import EPKManager from './components/EPKManager';
 import ErrorBoundary from './components/ErrorBoundary';
 import FansPanel from './components/FansPanel';
 import FansLanding from './components/FansLanding';
+import Planes from './components/Planes';
 import { LoginModal } from './components/LoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
 import { UserProfileModal } from './components/UserProfileModal';
@@ -27,13 +28,17 @@ import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
 import { BandSwitcherModal } from './components/BandSwitcherModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
+import { hasModuleAccess, getPlanDefinition } from './utils/planPermissions';
+import { useLanguage } from './context/LanguageContext';
 import { 
   Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
   Table, FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
-  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, FileSpreadsheet, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown
+  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, FileSpreadsheet, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap
 } from 'lucide-react';
 
 export default function App() {
+  const { t } = useLanguage();
+
   // Authentication Custom Hook
   const {
     currentUser,
@@ -44,6 +49,7 @@ export default function App() {
     setCurrentUser,
     handleLoginSuccess,
     handleSwitchBand,
+    handleSetMainBand,
     handleLogout
   } = useAuth();
 
@@ -90,7 +96,7 @@ export default function App() {
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
 
   // Active View State mapping directly to the Stitch Design doc
-  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans'>('resumen');
+  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
   const [bookingOptions, setBookingOptions] = useState<{
     sectionTab?: 'salas' | 'medios';
     statusFilter?: LeadStatus | 'todos';
@@ -100,7 +106,7 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans',
+    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes',
     options?: {
       sectionTab?: 'salas' | 'medios';
       statusFilter?: LeadStatus | 'todos';
@@ -109,6 +115,10 @@ export default function App() {
       selectedDate?: string;
     }
   ) => {
+    if (!hasModuleAccess(currentUser?.plan, view, isAdmin)) {
+      setShowUserProfileModal(true);
+      return;
+    }
     setCurrentView(view);
     if (options) {
       setBookingOptions(options);
@@ -314,21 +324,32 @@ export default function App() {
 
   <div className="flex flex-col">
    <div className="flex items-center gap-1.5">
-    <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`}>
+    <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`} translate="no">
      {currentActiveBandName}
     </h1>
     <ChevronDown className="w-3.5 h-3.5 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${syncStatus === 'synced' ? 'bg-emerald-400/20' : syncStatus === 'error' ? 'bg-rose-500' : 'bg-zinc-400 animate-pulse'}`} />
    </div>
+   <button
+    type="button"
+    onClick={(e) => { e.stopPropagation(); setShowUserProfileModal(true); }}
+    className="inline-flex items-center gap-1 px-1.5 py-0.5 mt-0.5 rounded-full text-[8.5px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/30 w-fit cursor-pointer transition-all hover:scale-105"
+    title="Plan actual. Clic para gestionar suscripción (Upgrade / Downgrade)"
+   >
+    <Sparkles className="w-2 h-2 text-amber-400" />
+    <span>{getPlanDefinition(currentUser?.plan).name}</span>
+   </button>
   </div>
  </div>
- <button
- onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
- className="p-2 text-neutral-300 hover:text-white rounded-lg bg-[#1A1918] border-[#22211F] cursor-pointer active:scale-95 transition-all"
- aria-label="Menu"
- >
- {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
- </button>
+ <div className="flex items-center gap-2">
+  <button
+  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+  className="p-2 text-neutral-300 hover:text-white rounded-lg bg-[#1A1918] border-[#22211F] cursor-pointer active:scale-95 transition-all"
+  aria-label="Menu"
+  >
+  {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+  </button>
+ </div>
  </div>
 
  {/* Horizontal Quick Tabs Bar */}
@@ -345,23 +366,24 @@ export default function App() {
  return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
  };
  return [
- { id: 'resumen', label: 'Resumen', icon: Table },
- { id: 'booking', label: 'Booking', icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
- { id: 'medios', label: 'Medios', icon: Radio, badge: leads.filter(l => isMedio(l)).length },
- { id: 'calendario', label: 'Calendario', icon: CalendarRange, badge: (() => {
+ { id: 'resumen', label: t('nav.resumen', 'Resumen'), icon: Table },
+ { id: 'booking', label: t('nav.booking', 'Booking'), icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
+ { id: 'medios', label: t('nav.medios', 'Medios'), icon: Radio, badge: leads.filter(l => isMedio(l)).length },
+ { id: 'calendario', label: t('nav.calendario', 'Calendario'), icon: CalendarRange, badge: (() => {
     const totalEvents = concerts.length + rehearsals.length;
     const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
     if (totalEvents === 0) return 0;
     return `${activeEvents}/${totalEvents}`;
   })() },
- { id: 'bandas', label: 'Bandas', icon: Users },
- { id: 'giras', label: 'Giras', icon: Truck },
- { id: 'epk', label: 'Dossier (EPK)', icon: BookOpen },
- { id: 'fans', label: 'Base de Fans', icon: Heart },
- { id: 'reels', label: 'Reels', icon: Video },
- { id: 'repertorio', label: 'Temas', icon: Disc3 },
- { id: 'chat', label: 'Agente AI', icon: Guitar },
- ...(isAdmin ? [{ id: 'finanzas', label: 'Finanzas', icon: Coins }, { id: 'merchan', label: 'Merchan', icon: Sparkles }] : []),
+ { id: 'bandas', label: t('nav.bandas', 'Bandas'), icon: Users },
+ { id: 'giras', label: t('nav.giras', 'Giras'), icon: Truck },
+ { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
+ { id: 'fans', label: t('nav.fans', 'Base de Fans'), icon: Heart },
+ { id: 'reels', label: t('nav.reels', 'Reels'), icon: Video },
+ { id: 'repertorio', label: t('nav.repertorio', 'Temas'), icon: Disc3 },
+ { id: 'chat', label: t('nav.chat', 'Agente AI'), icon: Guitar },
+ ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchan'), icon: Sparkles }] : []),
+ { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '🎁 Regalo' },
  ];
  })().map((item) => {
  const isSelected = currentView === item.id;
@@ -417,7 +439,7 @@ export default function App() {
  </div>
  )}
  <div className="flex flex-col">
- <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 leading-tight ${currentActiveBandName.length > 20 ? 'text-xs' : currentActiveBandName.length > 12 ? 'text-sm' : 'text-base'}`}>
+ <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 leading-tight notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : currentActiveBandName.length > 12 ? 'text-sm' : 'text-base'}`} translate="no">
  {currentActiveBandName}
  </h1>
  <div className="flex items-center gap-1.5 mt-1">
@@ -448,26 +470,28 @@ export default function App() {
  return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
  };
  return [
- { id: 'resumen', label: 'Resumen', icon: Table },
- { id: 'booking', label: 'Booking Salas', icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
- { id: 'medios', label: 'Medios y Prensa', icon: Radio, badge: leads.filter(l => isMedio(l)).length },
- { id: 'bandas', label: 'Grupos & Agencias', icon: Users },
- { id: 'calendario', label: 'Calendario', icon: CalendarRange, badge: (() => {
+ { id: 'resumen', label: t('nav.resumen', 'Resumen'), icon: Table },
+ { id: 'booking', label: t('nav.booking', 'Booking Salas'), icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
+ { id: 'medios', label: t('nav.medios', 'Medios y Prensa'), icon: Radio, badge: leads.filter(l => isMedio(l)).length },
+ { id: 'bandas', label: t('nav.bandas', 'Grupos & Agencias'), icon: Users },
+ { id: 'calendario', label: t('nav.calendario', 'Calendario'), icon: CalendarRange, badge: (() => {
     const totalEvents = concerts.length + rehearsals.length;
     const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
     if (totalEvents === 0) return 0;
     return `${activeEvents}/${totalEvents}`;
   })() },
- { id: 'giras', label: 'Tour Manager', icon: Truck },
- { id: 'epk', label: 'Dossier (EPK)', icon: BookOpen },
- { id: 'fans', label: 'Base de Fans', icon: Heart },
- { id: 'reels', label: 'Reels Center', icon: Video },
- { id: 'repertorio', label: 'Repertorio', icon: Disc3 },
- { id: 'chat', label: 'Agente Mánager', icon: Guitar },
- ...(isAdmin ? [{ id: 'finanzas', label: 'Finanzas', icon: Coins }, { id: 'merchan', label: 'Merchan', icon: Sparkles }] : []),
+ { id: 'giras', label: t('nav.giras', 'Tour Manager'), icon: Truck },
+ { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
+ { id: 'fans', label: t('nav.fans', 'Base de Fans'), icon: Heart },
+ { id: 'reels', label: t('nav.reels', 'Reels Center'), icon: Video },
+ { id: 'repertorio', label: t('nav.repertorio', 'Repertorio'), icon: Disc3 },
+ { id: 'chat', label: t('nav.chat', 'Agente Mánager'), icon: Guitar },
+ ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
+ { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
  ];
  })().map((item) => {
  const isSelected = currentView === item.id;
+ const isAllowed = hasModuleAccess(currentUser?.plan, item.id, isAdmin);
  const IconComp = item.icon;
  return (
  <button
@@ -476,20 +500,30 @@ export default function App() {
  className={`flex items-center justify-between py-3 px-3.5 rounded-xl text-sm font-sans transition-colors cursor-pointer ${
  isSelected 
  ? 'bg-zinc-800/80 text-zinc-100 font-bold border-zinc-700'
+ : !isAllowed
+ ? 'text-neutral-500 hover:bg-[#22211f]/60'
  : 'text-neutral-300 hover:bg-[#22211f] hover:text-white'
  }`}
  >
  <div className="flex items-center gap-3">
- <IconComp className="w-4 h-4 shrink-0" />
+ <IconComp className={`w-4 h-4 shrink-0 ${!isAllowed ? 'opacity-40' : ''}`} />
  <span className="whitespace-nowrap">{item.label}</span>
  </div>
- {item.badge !== undefined && (
+ <div className="flex items-center gap-1.5">
+ {!isAllowed && (
+ <span className="flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+ <Lock className="w-3 h-3" />
+ <span>Upgrade</span>
+ </span>
+ )}
+ {item.badge !== undefined && isAllowed && (
  <span className={`text-xs px-2 py-0.5 rounded-md font-sans font-bold ${
  isSelected ? 'bg-zinc-700 text-zinc-300' : 'bg-[#22211F] text-neutral-400'
  }`}>
  {item.badge}
  </span>
  )}
+ </div>
  </button>
  );
  })}
@@ -522,6 +556,28 @@ export default function App() {
          <span className="text-[9px] text-emerald-400/70 font-mono truncate">Guitar & Bass</span>
        </div>
      </button>
+   </div>
+ </div>
+
+ {/* Mobile AI Credits Widget */}
+ <div 
+   onClick={() => { handleNavigate('planes'); setIsMobileMenuOpen(false); }}
+   className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
+   title="Ver uso de créditos IA y planes"
+ >
+   <div className="flex items-center justify-between gap-1 mb-1.5">
+     <div className="flex items-center gap-1.5">
+       <Zap className="w-3 h-3 text-amber-400" />
+       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+     </div>
+     <span className="text-[10px] font-mono font-bold text-amber-300">340 / 800</span>
+   </div>
+   <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
+     <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 shadow-xs" style={{ width: '42.5%' }} />
+   </div>
+   <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+     <span>Plan De Gira</span>
+     <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
    </div>
  </div>
 
@@ -605,9 +661,9 @@ export default function App() {
   )}
   </div>
 
-  <div className="flex flex-col items-center w-full px-1">
+  <div className="flex flex-col items-center w-full px-1 gap-1">
   <div className="flex items-center justify-center gap-1 w-full">
-   <h1 className={`font-black font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-tight text-center break-words line-clamp-2 max-w-full ${
+   <h1 className={`font-black font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
      currentActiveBandName.length > 22 
        ? 'text-xs' 
        : currentActiveBandName.length > 14 
@@ -615,12 +671,15 @@ export default function App() {
        : currentActiveBandName.length > 9 
        ? 'text-base' 
        : 'text-lg'
-   }`}>
+   }`} translate="no">
    {currentActiveBandName}
    </h1>
    <ChevronDown className="w-4 h-4 text-amber-400 group-hover:translate-y-0.5 transition-transform shrink-0" />
   </div>
-
+  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300 border border-amber-400/30 shadow-sm">
+   <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+   {getPlanDefinition(currentUser?.plan).name}
+  </span>
   </div>
  </div>
 
@@ -639,23 +698,24 @@ export default function App() {
  };
 
  return [
- { id: 'resumen', label: 'Resumen', icon: Table },
- { id: 'booking', label: 'Booking Salas', icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
- { id: 'medios', label: 'Medios y Prensa', icon: Radio, badge: leads.filter(l => isMedio(l)).length },
- { id: 'bandas', label: 'Grupos & Agencias', icon: Users },
- { id: 'calendario', label: 'Calendario', icon: CalendarRange, badge: (() => {
+ { id: 'resumen', label: t('nav.resumen', 'Resumen'), icon: Table },
+ { id: 'booking', label: t('nav.booking', 'Booking Salas'), icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
+ { id: 'medios', label: t('nav.medios', 'Medios y Prensa'), icon: Radio, badge: leads.filter(l => isMedio(l)).length },
+ { id: 'bandas', label: t('nav.bandas', 'Grupos & Agencias'), icon: Users },
+ { id: 'calendario', label: t('nav.calendario', 'Calendario'), icon: CalendarRange, badge: (() => {
     const totalEvents = concerts.length + rehearsals.length;
     const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
     if (totalEvents === 0) return 0;
     return `${activeEvents}/${totalEvents}`;
   })() },
- { id: 'giras', label: 'Tour Manager', icon: Truck },
- { id: 'epk', label: 'Dossier (EPK)', icon: BookOpen },
- { id: 'fans', label: 'Base de Fans', icon: Heart },
- { id: 'reels', label: 'Reels Center', icon: Video },
- { id: 'repertorio', label: 'Repertorio', icon: Disc3 },
- { id: 'chat', label: 'Agente Mánager', icon: Guitar },
- ...(isAdmin ? [{ id: 'finanzas', label: 'Finanzas', icon: Coins }, { id: 'merchan', label: 'Merchan', icon: Sparkles }] : []),
+ { id: 'giras', label: t('nav.giras', 'Tour Manager'), icon: Truck },
+ { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
+ { id: 'fans', label: t('nav.fans', 'Base de Fans'), icon: Heart },
+ { id: 'reels', label: t('nav.reels', 'Reels Center'), icon: Video },
+ { id: 'repertorio', label: t('nav.repertorio', 'Repertorio'), icon: Disc3 },
+ { id: 'chat', label: t('nav.chat', 'Agente Mánager'), icon: Guitar },
+ ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
+ { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
  ];
  })().map((item) => {
  const isSelected = currentView === item.id;
@@ -676,7 +736,12 @@ export default function App() {
  <IconComp className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isSelected ? 'text-amber-400 scale-110' : 'text-neutral-400'}`} />
  <span className="whitespace-nowrap">{item.label}</span>
  </div>
- {item.badge !== undefined && (
+ {!hasModuleAccess(currentUser?.plan, item.id, isAdmin) ? (
+ <span className="flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
+ <Lock className="w-3 h-3" />
+ <span>Plan</span>
+ </span>
+ ) : item.badge !== undefined && (
  <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold transition-colors ${
  isSelected ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-neutral-800 text-neutral-400'
  }`}>
@@ -722,6 +787,28 @@ export default function App() {
    </div>
  </div>
 
+ {/* Sidebar AI Credits Widget */}
+ <div 
+   onClick={() => handleNavigate('planes')}
+   className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
+   title="Ver consumo de créditos IA y planes"
+ >
+   <div className="flex items-center justify-between gap-1 mb-1.5">
+     <div className="flex items-center gap-1.5">
+       <Zap className="w-3 h-3 text-amber-400 animate-pulse" />
+       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+     </div>
+     <span className="text-[10px] font-mono font-bold text-amber-300">340 / 800</span>
+   </div>
+   <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
+     <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 shadow-xs" style={{ width: '42.5%' }} />
+   </div>
+   <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+     <span>Plan De Gira</span>
+     <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
+   </div>
+ </div>
+
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">
  {currentUser && (
@@ -764,13 +851,15 @@ export default function App() {
  </span>
  </div>
  </div>
- <button
- onClick={handleLogout}
- className="p-1.5 text-neutral-500 hover:text-rose-300 rounded-lg hover:bg-[#22211F] transition-colors cursor-pointer"
- title="Cerrar Sesión"
- >
- <LogOut className="w-4 h-4" />
- </button>
+ <div className="flex items-center gap-1.5">
+  <button
+  onClick={handleLogout}
+  className="p-1.5 text-neutral-500 hover:text-rose-300 rounded-lg hover:bg-[#22211F] transition-colors cursor-pointer"
+  title="Cerrar Sesión"
+  >
+  <LogOut className="w-4 h-4" />
+  </button>
+ </div>
  </div>
  </div>
  </aside>
@@ -985,6 +1074,13 @@ export default function App() {
       />
     </div>
   )}
+
+  {currentView === 'planes' && (
+    <Planes
+      colors={colors}
+      onNavigateToModule={handleNavigate}
+    />
+  )}
  </>
  )}
  </div>
@@ -1009,11 +1105,11 @@ export default function App() {
  ? 'bg-indigo-50 border-indigo-100 text-indigo-600'
  : 'bg-[#f2ca50]/10 border-[#f2ca50]/20 text-[#f2ca50]'
  }`}>
- <Github className="w-3 h-3" /> GitHub Actions Integración
+ <Sliders className="w-3 h-3" /> Configuración Motor de Agentes
  </div>
  <h3 className={`text-lg font-black tracking-wider uppercase font-display ${
  currentTheme === 'stitch_light' ? 'text-slate-900' : 'text-neutral-100'
- }`}>CONFIGURAR AGENTES PYTHON</h3>
+ }`}>MOTOR DE AGENTES SUPABASE</h3>
  </div>
  <button 
  onClick={() => setShowGithubSettings(false)}
@@ -1030,7 +1126,7 @@ export default function App() {
  <p className={`text-xs leading-relaxed ${
  currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
  }`}>
- Los agentes de Bakandeya (**Scout**, **Scout Descubridor**, **Redactor**, **Enviador** y **Lector de bandeja**) corren de forma independiente usando tareas de Python en GitHub Actions. Configura aquí tus claves de acceso para poder despertarlos y lanzarlos en directo desde el chatbot de este panel de control.
+ Los agentes de Bakandeya (**Scout**, **Scout Descubridor**, **Redactor**, **Enviador** y **Lector de bandeja**) operan de forma nativa sobre **Supabase (PostgreSQL)**. Configura aquí los parámetros de ejecución y credenciales para lanzarlos desde el chatbot o panel de control.
  </p>
 
  <form onSubmit={handleSaveGithubSettings} className="space-y-4 font-sans">
@@ -1379,6 +1475,10 @@ export default function App() {
  onUpdateEpkConfig={handleUpdateEpkConfig}
  activeBandName={currentActiveBandName}
  onRefreshData={fetchState}
+ availableBands={availableBands}
+ onSetMainBand={handleSetMainBand}
+ onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
+ onNavigateToPlanes={() => handleNavigate('planes')}
  />
  )}
 
@@ -1486,6 +1586,7 @@ export default function App() {
     await handleSwitchBand(bandId);
     await fetchState();
   }}
+  onSetMainBand={handleSetMainBand}
   onOpenRegisterBand={() => handleNavigate('bandas')}
  />
 

@@ -42,31 +42,45 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const queryBand = params.get('band_id') || params.get('band') || params.get('b');
     
     let storedBandId = '';
+    let storedBandName = '';
+    let storedBandLogo = '';
     try {
-      storedBandId = localStorage.getItem('band_manager_active_band_id') || '';
+      const storedUser = localStorage.getItem('bakandeya_user') || localStorage.getItem('band_manager_user') || localStorage.getItem('band_manager_current_user');
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        storedBandId = parsed.band_id || parsed.bandId || '';
+        storedBandName = parsed.bandName || parsed.name || '';
+        storedBandLogo = parsed.logoUrl || parsed.logo_url || '';
+      }
       if (!storedBandId) {
-        const storedUser = localStorage.getItem('band_manager_user') || localStorage.getItem('band_manager_current_user');
-        if (storedUser) {
-          const parsed = JSON.parse(storedUser);
-          storedBandId = parsed.band_id || parsed.bandName || '';
-        }
+        storedBandId = localStorage.getItem('band_manager_active_band_id') || '';
       }
     } catch {}
 
-    const targetBandId = (initialBandId || queryBand || storedBandId || 'band-bakandeya').toLowerCase();
+    // Priority: 1. URL query param, 2. Props (if explicitly passed and differs from generic), 3. Logged-in stored user, 4. Fallback
+    const targetBandId = (queryBand || initialBandId || storedBandId || 'band-bakandeya').toLowerCase();
+    const cleanId = targetBandId.replace(/^(band|reg)-/, '');
     setResolvedBandId(targetBandId);
 
-    // Initial fallback name
-    if (initialBandName) {
-      setBandName(initialBandName);
-    } else {
-      const clean = targetBandId.replace(/^(band|reg)-/, '');
-      const formatted = clean === 'bakandeya' ? 'Bakandeya' : clean.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    // Initial fallback name & logo
+    if (queryBand) {
+      const formatted = cleanId === 'bakandeya' ? 'Bakandeya' : cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       setBandName(formatted);
-    }
-
-    if (initialBandLogo) {
-      setLogoUrl(initialBandLogo);
+      setLogoUrl(null);
+    } else if (initialBandName && (cleanId === 'bakandeya' || !initialBandName.toLowerCase().includes('bakandeya'))) {
+      setBandName(initialBandName);
+      if (initialBandLogo) setLogoUrl(initialBandLogo);
+    } else if (storedBandName && cleanId !== 'bakandeya') {
+      setBandName(storedBandName);
+      if (storedBandLogo) setLogoUrl(storedBandLogo);
+    } else {
+      const formatted = cleanId === 'bakandeya' ? 'Bakandeya' : cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      setBandName(formatted);
+      if (cleanId === 'bakandeya') {
+        setLogoUrl('/logo_bakandeya_bueno_sin_fondo.png');
+      } else {
+        setLogoUrl(null);
+      }
     }
 
     // 2. Fetch public EPK details for this specific band
@@ -78,6 +92,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           if (data.logoUrl || data.epkConfig?.logoUrl) {
             setLogoUrl(data.logoUrl || data.epkConfig.logoUrl);
             setImgError(false);
+          } else if (cleanId !== 'bakandeya') {
+            setLogoUrl(null);
           }
           if (data.epkConfig?.enlacesRedes) {
             setSocialLinks(data.epkConfig.enlacesRedes);
@@ -418,15 +434,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               )}
             </button>
 
-            <div className="pt-2 text-center">
-              <button
-                type="button"
-                onClick={() => setActiveTab('redes')}
-                className="text-xs font-mono text-neutral-400 hover:text-amber-400 underline transition-colors"
-              >
-                📱 O si lo prefieres, solo síguenos en redes sociales →
-              </button>
-            </div>
+            {/* Social Links shown below form as well */}
+            {socialLinks && Object.values(socialLinks).some(Boolean) && (
+              <div className="pt-4 border-t border-neutral-800 space-y-2">
+                <p className="text-[11px] font-bold text-neutral-400 font-mono text-center uppercase tracking-wider">
+                  O síguenos en redes
+                </p>
+                <SocialPlatformsList 
+                  links={socialLinks} 
+                  variant="pills" 
+                  showTitle={false} 
+                />
+              </div>
+            )}
           </form>
         )}
 

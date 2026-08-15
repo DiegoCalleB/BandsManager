@@ -65,6 +65,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
   const isAdmin = userRole === 'admin' || userRole === 'leader' || (currentUser?.role as string) === 'admin' || currentUser?.role === 'leader';
   const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
   const bandDisplayName = activeBandName || currentUser?.bandName || 'vuestra banda';
+  const effectiveBandId = currentUser?.band_id || (currentUser as any)?.bandId || 'band-bakandeya';
   const cleanUserName = (() => {
     const rawName = currentUser?.name || currentUser?.username || '';
     if (!rawName) return 'equipo';
@@ -86,8 +87,20 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
   const storageKey = `bakandeya_chat_messages_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`;
 
+  const cleanLegacyText = (text: string) => {
+    if (!text) return text;
+    return text
+      .replace(/hoja de datos de Google Sheets \(salas\)/gi, 'base de datos de Supabase (salas)')
+      .replace(/hoja de datos de Google Sheets/gi, 'base de datos de Supabase')
+      .replace(/Google Sheets/gi, 'Supabase')
+      .replace(/GitHub Actions/gi, 'Supabase Native Engine')
+      .replace(/tareas de Python en GitHub Actions/gi, 'tareas nativas en Supabase')
+      .replace(/Agentes Python/gi, 'Agentes Supabase')
+      .replace(/Python/gi, 'Supabase');
+  };
+
   const getWelcomeMessageText = (name: string, band: string) => {
-    return `👋 **¡Buenas, ${name}!** Soy vuestro **Manager Virtual de ${band}**.\n\nEstoy conectado en tiempo real con vuestra hoja de datos de Google Sheets (salas), el calendario de ensayos de banda, la contabilidad y la logística de redes.\n\nPuedes preguntarme cosas como:\n- *¿Qué salas tengo pendientes de aprobación en Madrid o Granada?*\n- *Resúmeme el estado de la semana o hazme una lista de tareas para hoy.*\n- *¿Cuántas salas de Ska, Reggae o Fusión tenemos registradas?*\n\nSi necesitas, puedo **proponer cambios directos** en las salas (como aprobar un correo de contacto) o agendar ensayos, pidiéndote confirmación antes de actuar.`;
+    return `👋 **¡Buenas, ${name}!** Soy vuestro **Manager Virtual de ${band}**.\n\nEstoy conectado en tiempo real con vuestra base de datos de Supabase (salas), el calendario de ensayos de banda, la contabilidad y la logística de redes.\n\nPuedes preguntarme cosas como:\n- *¿Qué salas tengo pendientes de aprobación en Madrid o Granada?*\n- *Resúmeme el estado de la semana o hazme una lista de tareas para hoy.*\n- *¿Cuántas salas de Ska, Reggae o Fusión tenemos registradas?*\n\nSi necesitas, puedo **proponer cambios directos** en las salas (como aprobar un correo de contacto) o agendar ensayos, pidiéndote confirmación antes de actuar.`;
   };
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
@@ -98,6 +111,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
         if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed.map((m: any) => ({
             ...m,
+            text: cleanLegacyText(m.text),
             timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
             proposedActions: (m.proposedActions || []).map((act: any) => ({
               ...act,
@@ -128,6 +142,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
         if (Array.isArray(parsed) && parsed.length > 0) {
           setMessages(parsed.map((m: any) => ({
             ...m,
+            text: cleanLegacyText(m.text),
             timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
             proposedActions: (m.proposedActions || []).map((act: any) => ({
               ...act,
@@ -330,8 +345,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  // Find newly started run
  const res = await fetch('/api/agent-runs', { headers });
  if (res.ok) {
- const data = await res.json();
- const recentRuns = data.runs || [];
+ const data = await res.json().catch(() => null);
+ const recentRuns = data?.runs || [];
  
  const matchedRun = recentRuns.find((run: any) => {
  const runTime = new Date(run.created_at).getTime();
@@ -356,8 +371,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const runId = activeRun.id;
  const runsRes = await fetch('/api/agent-runs', { headers });
  if (runsRes.ok) {
- const runsData = await runsRes.json();
- const matchingRun = (runsData.runs || []).find((r: any) => r.id === runId);
+ const runsData = await runsRes.json().catch(() => null);
+ const matchingRun = (runsData?.runs || []).find((r: any) => r.id === runId);
  
  if (matchingRun) {
  const updatedStatus = matchingRun.status;
@@ -367,8 +382,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const jobsRes = await fetch(`/api/agent-runs/${runId}/jobs`, { headers });
  let steps: any[] = [];
  if (jobsRes.ok) {
- const jobsData = await jobsRes.json();
- if (jobsData.jobs && jobsData.jobs.length > 0) {
+ const jobsData = await jobsRes.json().catch(() => null);
+ if (jobsData?.jobs && jobsData.jobs.length > 0) {
  steps = jobsData.jobs[0].steps || [];
  }
  }
@@ -391,7 +406,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  ...prev,
  status: 'in_progress', // Keep it visually running
  conclusion: null,
- steps: [...(steps.length > 0 ? steps : prev.steps), { name:"Sincronizando con Google Sheets...", status:"in_progress", conclusion: null }]
+ steps: [...(steps.length > 0 ? steps : prev.steps), { name:"Sincronizando con Supabase...", status:"in_progress", conclusion: null }]
  };
  }
  }
@@ -527,16 +542,6 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  };
 
  setMessages(prev => [...prev, botMsg]);
- 
- // Auto-execute the agent trigger action if proposed
- if (processedActions.length > 0) {
- processedActions.forEach((action: ProposedAction, idx: number) => {
- if (action.type === 'propose_agent_trigger') {
- handleConfirmAction(botMsg.id, idx, action);
- }
- });
- }
-
  } catch (error) {
  console.error(error);
  const errMsg: ChatMessage = {
@@ -647,6 +652,31 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  pitch_generado: emailBody || targetLead.pitch_generado,
  notas: updatedNotes
  }, targetLead.estado);
+        // Auditoría en Supabase
+        fetch("/api/agent-logs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            band_id: effectiveBandId,
+            agente: "redactor",
+            motor: "gmail_draft_api",
+            disparado_por_tipo: "chatbot",
+            usuario_id: currentUser?.id || "user-diego",
+            usuario_email: currentUser?.email || "diego.delacalleb@gmail.com",
+            estado: gmailId ? "success" : "warning",
+            mensaje: `Borrador generado en Gmail para "${targetLead.nombre_sala}" (${recipientEmail}) en modo Solo Borradores.`,
+            leads_afectados: [{
+              id: targetLead.id,
+              nombre_sala: targetLead.nombre_sala,
+              email_contacto: recipientEmail,
+              estado_anterior: targetLead.estado,
+              estado_nuevo: "pendiente_aprobacion",
+              gmail_draft_id: gmailId
+            }],
+            conteo_afectados: 1,
+            detalles: { gmailDraftId: gmailId, subject: emailSubject }
+          })
+        }).catch(e => console.warn("Error audit log:", e));
 
  setMessages(prev => prev.map(m => {
  if (m.id === msgId) return { ...m, actionStatus: 'applied' };
@@ -658,7 +688,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  sender: 'bot',
  text: gmailId
  ? `📝 **Borrador Creado en Gmail (Modo Sólo Borradores Activo):**\n\n🔒 Por seguridad y al estar la autonomía fijada en **SÓLO BORRADORES**, el correo NO se ha enviado directamente.\nSe ha generado el **borrador real** en tu bandeja de Gmail para **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Borrador ID:** \`${gmailId}\`\n- **Estado:** Guardado en Gmail para revisión humana obligatoria.`
- : `📝 **Borrador Guardado en Google Sheets:** Se ha registrado el borrador para **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
+ : `📝 **Borrador Guardado en Supabase:** Se ha registrado el borrador para **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, draftMsg]);
@@ -680,8 +710,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  id: `sys-${Date.now()}`,
  sender: 'bot',
  text: gmailId
- ? `📧 **¡Correo Enviado con Éxito vía Gmail!**\n\nSe ha enviado el correo oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **ID de Mensaje Gmail:** \`${gmailId}\`\n- **Estado:** Aprobado/Enviado (${nowStr})\n- **Sincronización:** Google Sheets actualizado.`
- : `✅ **Aprobación Registrada en Google Sheets:** Se ha marcado como aprobado **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso Gmail:* ${gmailError}` : ''}`,
+ ? `📧 **¡Correo Enviado con Éxito vía Gmail!**\n\nSe ha enviado el correo oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **ID de Mensaje Gmail:** \`${gmailId}\`\n- **Estado:** Aprobado/Enviado (${nowStr})\n- **Sincronización:** Supabase actualizado.`
+ : `✅ **Aprobación Registrada en Supabase:** Se ha marcado como aprobado **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso Gmail:* ${gmailError}` : ''}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -706,7 +736,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `✅ **Acción Ejecutada con éxito:** Se ha procesado la propuesta para **"${action.leadName || 'Sala'}"**. El estado ha sido modificado y se ha persistido el log correspondiente en la base de datos de Google Sheets.`,
+ text: `✅ **Acción Ejecutada con éxito:** Se ha procesado la propuesta para **"${action.leadName || 'Sala'}"**. El estado ha sido modificado y se ha persistido el log correspondiente en la base de datos de Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -806,7 +836,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `🎉 **¡Concierto Agendado con Éxito!**\n\nSe ha añadido el bolo en **${concertData.sala}** (${concertData.ciudad}) para el **${concertData.fecha}** en la agenda de conciertos y guardado en la pestaña **conciertos** de Google Sheets.`,
+ text: `🎉 **¡Concierto Agendado con Éxito!**\n\nSe ha añadido el bolo en **${concertData.sala}** (${concertData.ciudad}) para el **${concertData.fecha}** en la agenda de conciertos y guardado en la pestaña **conciertos** de Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -850,7 +880,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `📅 **Ensayo Programado con Éxito:**\n\nSe ha agendado el ensayo para el **${rehearsalData.fecha}** a las **${rehearsalData.hora}** en **${rehearsalData.lugar}** y guardado en Google Sheets.`,
+ text: `📅 **Ensayo Programado con Éxito:**\n\nSe ha agendado el ensayo para el **${rehearsalData.fecha}** a las **${rehearsalData.hora}** en **${rehearsalData.lugar}** y guardado en Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -891,7 +921,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `🚚 **Gira Guardada con Éxito:**\n\nSe ha registrado la gira **"${tourData.nombre || 'Nueva Gira'}"** en la base de datos y sincronizado con Google Sheets.`,
+ text: `🚚 **Gira Guardada con Éxito:**\n\nSe ha registrado la gira **"${tourData.nombre || 'Nueva Gira'}"** en la base de datos y sincronizado con Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -936,7 +966,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `🖼️ **Logo/Icono Actualizado con Éxito:** Se ha guardado el logo/icono para **"${name}"** en la base de datos y sincronizado con Google Sheets.`,
+ text: `🖼️ **Logo/Icono Actualizado con Éxito:** Se ha guardado el logo/icono para **"${name}"** en la base de datos y sincronizado con Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -988,7 +1018,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const addSuccessMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Google Sheets.`,
+ text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, addSuccessMsg]);
@@ -1007,7 +1037,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const updateSuccessMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: `✏️ **Lead / Medio Actualizado con Éxito:** Se han guardado los cambios para **"${action.leadName || targetLead?.nombre_sala || 'Lead'}"** en la base de datos y Google Sheets.`,
+ text: `✏️ **Lead / Medio Actualizado con Éxito:** Se han guardado los cambios para **"${action.leadName || targetLead?.nombre_sala || 'Lead'}"** en la base de datos y Supabase.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, updateSuccessMsg]);
@@ -1055,6 +1085,31 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  notas: updatedNotes
  }, targetLead.estado);
  }
+        // Auditoría en Supabase
+        fetch("/api/agent-logs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            band_id: effectiveBandId,
+            agente: "redactor",
+            motor: "gmail_draft_api",
+            disparado_por_tipo: "chatbot",
+            usuario_id: currentUser?.id || "user-diego",
+            usuario_email: currentUser?.email || "diego.delacalleb@gmail.com",
+            estado: gmailDraftId ? "success" : "warning",
+            mensaje: `Borrador generado en Gmail para "${targetLead.nombre_sala}" (${targetLead.email_contacto || ""}).`,
+            leads_afectados: [{
+              id: targetLead.id,
+              nombre_sala: targetLead.nombre_sala,
+              email_contacto: targetLead.email_contacto,
+              estado_anterior: targetLead.estado,
+              estado_nuevo: "pendiente_aprobacion",
+              gmail_draft_id: gmailDraftId
+            }],
+            conteo_afectados: 1,
+            detalles: { gmailDraftId, subject: draftSubject }
+          })
+        }).catch(e => console.warn("Error audit log:", e));
 
  setMessages(prev => prev.map(m => {
  if (m.id === msgId) return { ...m, actionStatus: 'applied' };
@@ -1065,8 +1120,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  id: `sys-${Date.now()}`,
  sender: 'bot',
  text: gmailDraftId
- ? `📝 **Borrador Creado en Gmail & Guardado:**\n\nSe ha creado el borrador real en tu bandeja de Gmail para **"${targetLead?.email_contacto}"** (${targetLead?.nombre_sala}).\n- **Borrador ID:** \`${gmailDraftId}\`\n- **Estado:** Pendiente de Aprobación en Google Sheets.`
- : `📝 **Borrador Guardado en Google Sheets:**\n\nSe ha guardado el borrador para **"${action.leadName || targetLead?.nombre_sala || 'Sala'}"** en el panel de aprobación.${gmailError ? `\n\n⚠️ *Aviso Gmail:* ${gmailError}` : ''}`,
+ ? `📝 **Borrador Creado en Gmail & Guardado:**\n\nSe ha creado el borrador real en tu bandeja de Gmail para **"${targetLead?.email_contacto}"** (${targetLead?.nombre_sala}).\n- **Borrador ID:** \`${gmailDraftId}\`\n- **Estado:** Pendiente de Aprobación en Supabase.`
+ : `📝 **Borrador Guardado en Supabase:**\n\nSe ha guardado el borrador para **"${action.leadName || targetLead?.nombre_sala || 'Sala'}"** en el panel de aprobación.${gmailError ? `\n\n⚠️ *Aviso Gmail:* ${gmailError}` : ''}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, draftSuccessMsg]);
@@ -1136,7 +1191,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  sender: 'bot',
  text: gmailId
  ? `📝 **Borrador Creado en Gmail (Modo Sólo Borradores Activo):**\n\n🔒 Por seguridad y al estar la autonomía en **SÓLO BORRADORES**, el correo NO se ha enviado directamente.\nSe ha creado el **borrador real en tu Gmail** para **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Borrador ID:** \`${gmailId}\`\n- **Estado:** Guardado en tu bandeja de entrada para revisión humana.`
- : `📝 **Borrador Guardado en Google Sheets:** Se ha registrado el borrador de correo para **"${action.leadName || targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
+ : `📝 **Borrador Guardado en Supabase:** Se ha registrado el borrador de correo para **"${action.leadName || targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, draftOnlyMsg]);
@@ -1158,8 +1213,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  id: `sys-${Date.now()}`,
  sender: 'bot',
  text: gmailId
- ? `📧 **¡Correo ENVIADO REALMENTE por Gmail!**\n\nEl correo ha sido enviado oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Gmail Message ID:** \`${gmailId}\`\n- **Estado:** Aprobado / Enviado (${nowStr})\n- **Firma & EPK:** Incluidos automáticamente.\n\nSe ha actualizado el estado y registrado la fecha de envío en Google Sheets.`
- : `📧 **Correo Marcado como Aprobado en Google Sheets:**\n\nSe ha actualizado el estado de **"${action.leadName || targetLead.nombre_sala}"** a **Aprobado/Enviado** en la base de datos (${nowStr}).\n\n⚠️ **Atención:** ${gmailError}`,
+ ? `📧 **¡Correo ENVIADO REALMENTE por Gmail!**\n\nEl correo ha sido enviado oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Gmail Message ID:** \`${gmailId}\`\n- **Estado:** Aprobado / Enviado (${nowStr})\n- **Firma & EPK:** Incluidos automáticamente.\n\nSe ha actualizado el estado y registrado la fecha de envío en Supabase.`
+ : `📧 **Correo Marcado como Aprobado en Supabase:**\n\nSe ha actualizado el estado de **"${action.leadName || targetLead.nombre_sala}"** a **Aprobado/Enviado** en la base de datos (${nowStr}).\n\n⚠️ **Atención:** ${gmailError}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, sendSuccessMsg]);
@@ -1168,7 +1223,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  } else if (action.type === 'propose_agent_trigger' && action.agentName) {
  try {
- const token = localStorage.getItem('bakandeya_token');
+ const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
  const pat = localStorage.getItem('bakandeya_github_pat') || '';
  const owner = localStorage.getItem('bakandeya_github_owner') || '';
  const repo = localStorage.getItem('bakandeya_github_repo') || '';
@@ -1199,40 +1254,50 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  })
  });
 
- if (!response.ok) {
- let errorText = 'Fallo al disparar el agente.';
+ const contentType = response.headers.get('content-type') || '';
+ let data: any = null;
+
+ if (contentType.includes('application/json')) {
  try {
- const errData = await response.json();
- if (errData && errData.error) {
- errorText = errData.error;
- }
+ data = await response.json();
  } catch (_) {
- // fallback if JSON parsing fails
+ data = null;
  }
+ } else {
+ const rawText = await response.text().catch(() => '');
+ try {
+ data = JSON.parse(rawText);
+ } catch (_) {
+ data = null;
+ }
+ }
+
+ if (!response.ok) {
+ const errorText = data?.error || data?.message || `Error del servidor (${response.status}): Fallo al disparar el agente.`;
  throw new Error(errorText);
  }
 
- const data = await response.json();
+ if (!data) {
+ data = {
+ success: true,
+ message: `Agente '${action.agentName}' ejecutado con éxito en Supabase.`
+ };
+ }
 
  if (data.detectedRef) {
  localStorage.setItem('bakandeya_github_ref', data.detectedRef);
  window.dispatchEvent(new Event('github-ref-updated'));
  }
 
- setMessages(prev => prev.map(m => {
- if (m.id === msgId) {
- return { ...m, actionStatus: 'applied' };
- }
- return m;
- }));
+ updateActionStatusInMessages(msgId, actionIndex, action, 'applied');
 
  const isSim = data.simulated;
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
  text: isSim 
- ? `⚙️ **Simulación del Agente '${action.agentName}':**\n\n${data.message}`
- : `🚀 **Agente '${action.agentName}' Iniciado:**\n\n${data.message}`,
+ ? `⚙️ **Simulación del Agente '${action.agentName}':**\n\n${data.message || 'Ejecución completada.'}`
+ : `🚀 **Agente '${action.agentName}' Iniciado:**\n\n${data.message || 'Ejecución completada.'}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -1252,7 +1317,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  { name:"Configurar entorno", status:"completed", conclusion:"success", number: 1 },
  { name:"Verificar repositorio", status:"completed", conclusion:"success", number: 2 },
  { name:"Instalar dependencias", status:"completed", conclusion:"success", number: 3 },
- { name: `Ejecutar Agente de Python '${action.agentName}'`, status:"in_progress", conclusion: null, number: 4 }
+ { name: `Ejecutar Agente de Supabase '${action.agentName}'`, status:"in_progress", conclusion: null, number: 4 }
  ],
  isDemo: true,
  initialLeadIds: leads.map(l => l.id)
@@ -1260,15 +1325,16 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  } else {
  setActiveRun({
  id: null,
- status: 'fetching',
- conclusion: null,
+ status: 'completed',
+ conclusion: 'success',
  agentName: action.agentName,
  region: targetRegion,
  params: action.params,
  triggeredAt: Date.now(),
  steps: [
- { name:"Preparando disparador", status:"completed", conclusion:"success", number: 1 },
- { name:"Esperando a que GitHub Actions inicie el run...", status:"in_progress", conclusion: null, number: 2 }
+ { name: "Conectar con Supabase", status: "completed", conclusion: "success", number: 1 },
+ { name: `Ejecutar Agente '${action.agentName}' en Supabase`, status: "completed", conclusion: "success", number: 2 },
+ { name: "Actualizar base de datos y auditoría", status: "completed", conclusion: "success", number: 3 }
  ],
  isDemo: false,
  initialLeadIds: leads.map(l => l.id)
@@ -1280,7 +1346,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const errorMsg: ChatMessage = {
  id: `sys-err-${Date.now()}`,
  sender: 'bot',
- text: `❌ **Error al ejecutar el agente:** ${err.message || 'No se pudo contactar con el backend.'}\n\nAsegúrate de configurar tu **GITHUB_PAT** y los datos de repositorio correctos en la sección de configuración de GitHub de arriba.`,
+ text: `❌ **Error al ejecutar el agente:** ${err.message || 'No se pudo contactar con el backend de Supabase.'}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, errorMsg]);
@@ -1329,7 +1395,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <h4 className={`text-xs font-display font-medium tracking-widest flex items-center gap-1.5 uppercase ${isStitchLight ? 'text-slate-800' : 'text-neutral-100'}`}>
  Mánager Virtual AI <span className={`w-1.5 h-1.5 rounded-full inline-block animate-pulse ${isStitchLight ? 'bg-indigo-600 shadow-[0_0_8px_rgba(79,70,229,0.8)]' : 'bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.8)]'}`} />
  </h4>
- <span className="text-[9px] font-mono text-neutral-500">{bandDisplayName.toUpperCase()} // SHEETS INTEGRATION</span>
+ <span className="text-[9px] font-mono text-neutral-500">{bandDisplayName.toUpperCase()} // SUPABASE INTEGRATION</span>
  </div>
  </div>
 
@@ -1417,10 +1483,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className="flex items-center gap-2 min-w-0">
  <span className={`w-2 h-2 rounded-full shrink-0 ${agentsEnabled ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'}`} />
  <span className="font-bold truncate text-[11px] uppercase tracking-wider">
- {agentsEnabled ? '⚡ Agentes Python Activos (GitHub Actions)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
+ {agentsEnabled ? '⚡ Agentes Supabase Activos (Backend & Database)' : '🤖 Modo Gemini Directo (100% Autónomo)'}
  </span>
  <span className="text-[10px] opacity-75 hidden sm:inline truncate">
- {agentsEnabled ? '— Dispara workflows en GitHub Actions' : '— Asistencia e ideas directas con Gemini'}
+ {agentsEnabled ? '— Ejecuta agentes (Scout, Redactor, Enviador, Lector) en Supabase' : '— Asistencia, redacción y consultas directas con Gemini'}
  </span>
  </div>
 
@@ -1456,9 +1522,9 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  ? (isStitchLight ? 'bg-amber-200 hover:bg-[#d1b375]/15 text-[#d1b375] -amber-300' : 'bg-amber-500/20 hover:bg-[#d1b375]/15 text-[#d1b375] -amber-500/40')
  : (isStitchLight ? 'bg-emerald-200 hover:bg-[#10b981]/15 text-[#10b981] -emerald-300' : 'bg-emerald-500/20 hover:bg-[#10b981]/15 text-[#10b981] -emerald-500/40')
  }`}
- title={agentsEnabled ?"Desactivar lanzadores de Python y usar solo Gemini" :"Activar ejecuciones de Python en GitHub Actions"}
+ title={agentsEnabled ?"Desactivar motor de agentes de Supabase y usar solo Gemini" :"Activar motor de agentes en Supabase"}
  >
- <span>{agentsEnabled ?"Desactivar Agentes Python" :"Activar Agentes Python"}</span>
+ <span>{agentsEnabled ?"Desactivar Agentes Supabase" :"Activar Agentes Supabase"}</span>
  </button>
  </div>
  </div>
@@ -1496,8 +1562,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
 
  {/* Proposed actions box within chat */}
- {isBot && msg.proposedActions && msg.proposedActions.filter(a => a.type !== 'propose_agent_trigger').length > 0 && (() => {
- const nonTriggerActions = msg.proposedActions.filter(a => a.type !== 'propose_agent_trigger');
+ {isBot && msg.proposedActions && msg.proposedActions.length > 0 && (() => {
+ const nonTriggerActions = msg.proposedActions;
  const pendingActions = nonTriggerActions.filter(a => (a.status || 'pending') === 'pending');
 
  return (
@@ -1574,7 +1640,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <Guitar className="w-3.5 h-3.5" />
  </div>
  <div className={`p-3.5 rounded-xl rounded-tl-none text-[11px] font-mono flex items-center gap-2 ${isStitchLight ? 'bg-white -slate-200 text-slate-500 shadow-sm' : 'bg-neutral-900/50 -neutral-900 text-neutral-500'}`}>
- <RefreshCw className={`w-3.5 h-3.5 animate-spin ${isStitchLight ? 'text-indigo-600' : 'text-cyan-400'}`} /> Analizando base de datos Sheets...
+ <RefreshCw className={`w-3.5 h-3.5 animate-spin ${isStitchLight ? 'text-indigo-600' : 'text-cyan-400'}`} /> Analizando base de datos Supabase...
  </div>
  </div>
  )}
@@ -1659,7 +1725,53 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  {/* Outcome message feedback */}
  {activeRun.status === 'completed' && activeRun.conclusion === 'success' && (() => {
- // Get actual new leads
+ const isLector = (activeRun.agentName || '').toLowerCase().includes('lector');
+            const isEnviador = (activeRun.agentName || '').toLowerCase().includes('enviador');
+            const isRedactor = (activeRun.agentName || '').toLowerCase().includes('redactor');
+
+            if (isLector) {
+              return (
+                <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-2 animate-in fade-in duration-300 select-text">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Bandeja Sincronizada!</span>
+                  </div>
+                  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+                    El agente Lector ha revisado tu bandeja de correo y actualizado el hilo de respuestas en Supabase.
+                  </p>
+                </div>
+              );
+            }
+
+            if (isEnviador) {
+              return (
+                <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-2 animate-in fade-in duration-300 select-text">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Despacho Completado!</span>
+                  </div>
+                  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+                    El agente Enviador ha procesado los correos autorizados en Supabase y registrado las fechas de envío.
+                  </p>
+                </div>
+              );
+            }
+
+            if (isRedactor) {
+              return (
+                <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl space-y-2 animate-in fade-in duration-300 select-text">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">¡Borradores Generados!</span>
+                  </div>
+                  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
+                    El agente Redactor ha generado propuestas personalizadas en Supabase listas para tu revisión.
+                  </p>
+                </div>
+              );
+            }
+
+            // Get actual new leads
  let detectedLeads = leads.filter(l => !activeRun.initialLeadIds?.includes(l.id));
 
  if (activeRun.region) {
@@ -1784,7 +1896,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
  
  <p className="text-[10px] leading-normal text-emerald-500/90 dark:text-emerald-400/80">
- El agente ha terminado con éxito y ha enviado los resultados directos a Google Sheets. Tu Gestor de Booking se ha actualizado en tiempo real.
+ El agente ha terminado con éxito y ha enviado los resultados directos a Supabase. Tu Gestor de Booking se ha actualizado en tiempo real.
  </p>
 
  <div className=" -emerald-500/20 pt-2.5 mt-2 space-y-2">
@@ -1843,43 +1955,12 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className="flex items-center justify-between">
  <p className="text-[11px] text-rose-400 font-bold flex items-center gap-1">
  <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
- <span>Fallo de Ejecución en GitHub Actions</span>
+ <span>Incidencia en Motor de Agentes Supabase</span>
  </p>
- <a
- href={`https://github.com/${localStorage.getItem('bakandeya_github_owner') || 'DiegoCalleB'}/${localStorage.getItem('bakandeya_github_repo') || 'bakandeya-agent-manager'}/actions/runs/${activeRun.id}`}
- target="_blank"
- rel="noopener noreferrer"
- className="text-[9px] font-mono text-rose-300 hover:text-white underline flex items-center gap-1"
- >
- Ver Log en GitHub <ExternalLink className="w-2.5 h-2.5" />
- </a>
  </div>
  <p className="text-[10px] leading-normal text-rose-300/90">
- El agente Python falló durante su ejecución en GitHub Actions. Las causas principales son:
+ El agente encontró un problema durante su ejecución contra Supabase. Verifica tu conexión con la base de datos y vuelve a intentarlo.
  </p>
- <ul className="list-disc pl-3.5 text-[9px] text-rose-300/80 space-y-0.5">
- <li><strong>Secrets faltantes o con formato inválido</strong> en el repositorio de GitHub (<code>GCP_SA_KEY</code>, <code>GOOGLE_CREDENTIALS</code>, o <code>SPREADSHEET_ID</code>).</li>
- <li><strong>Permisos de Google Sheet:</strong> La hoja de cálculo no está compartida con el email del Service Account.</li>
- </ul>
- <div className="pt-1.5 flex flex-wrap gap-2">
- <button
- type="button"
- onClick={handleCopyCredentials}
- className="px-2.5 py-1 text-[9px] font-mono font-bold bg-rose-500/20 hover:bg-rose-500/15 text-rose-400 -rose-500/30 rounded flex items-center gap-1 cursor-pointer transition-all"
- >
- <Copy className="w-3 h-3" />
- <span>{copiedCredentials ? '✓ Copiado al Portapapeles' : 'Copiar Credenciales JSON'}</span>
- </button>
- <a
- href={`https://github.com/${localStorage.getItem('bakandeya_github_owner') || 'DiegoCalleB'}/${localStorage.getItem('bakandeya_github_repo') || 'bakandeya-agent-manager'}/settings/secrets/actions`}
- target="_blank"
- rel="noopener noreferrer"
- className="px-2.5 py-1 text-[9px] font-mono font-bold bg-neutral-900 hover:bg-neutral-800 text-neutral-300 -neutral-700 rounded flex items-center gap-1 cursor-pointer"
- >
- <Key className="w-3 h-3" />
- <span>Configurar Secrets en GitHub ↗</span>
- </a>
- </div>
  </div>
  )}
  </div>

@@ -9,17 +9,21 @@ export interface BookingMetrics {
   aforoPromedio: number;
 }
 
-// Helper to normalize status strings from Excel or UI
+// Helper to normalize status strings from UI / DB to Option A canonical states
 export const normalizeStatus = (s: any): LeadStatus => {
   if (!s) return 'nuevo';
   const str = String(s).trim().toLowerCase();
-  if (str === 'nuevo' || str.includes('contactar') || str === 'new' || str === 'por_contactar') return 'nuevo';
-  if (str === 'pendiente_aprobacion' || str.includes('aprobar') || str === 'pendiente' || str === 'por_aprobar') return 'pendiente_aprobacion';
+  if (str.includes('confirm') || str.includes('cerrad') || str === 'concierto_confirmado' || str === 'bolo_cerrado') return 'confirmado';
+  if (str.includes('aplaz') || str.includes('pospuest') || str.includes('recontact') || str === 'otra_temporada') return 'aplazado';
+  if (str.includes('negocia') || str.includes('trato')) return 'negociando';
+  if (str === 'respondido' || str.includes('convers') || str.includes('respond')) return 'respondido';
+  if (str.includes('interesado') && !str.includes('no')) return 'negociando';
+  if (str.includes('enviado') || str.includes('contactad') || str === 'esperando_respuesta' || str.includes('esperando') || str === 'contactado') return 'esperando_respuesta';
+  if (str.includes('no') || str === 'no_interesado' || str.includes('rechaz') || str.includes('descart')) return 'no_interesado';
+  if (str === 'pendiente_aprobacion' || str.includes('por_aprobar') || str === 'pendiente') return 'pendiente_aprobacion';
+  if (str === 'aprobado_propuesta' || str.includes('aprobado_pitch')) return 'aprobado_propuesta';
+  if (str === 'aprobado_respuesta' || str.includes('aprobado_resp')) return 'aprobado_respuesta';
   if (str === 'aprobado' || str.includes('listo') || str === 'aprobados') return 'aprobado';
-  if (str === 'esperando_respuesta' || str.includes('enviado') || str.includes('esperando') || str === 'enviados') return 'esperando_respuesta';
-  if (str.includes('interesado') && !str.includes('no')) return 'interesado';
-  if (str.includes('negociando')) return 'negociando';
-  if (str.includes('no') || str === 'no_interesado' || str.includes('rechazado')) return 'no_interesado';
   return 'nuevo';
 };
 
@@ -66,7 +70,10 @@ export const VENUE_ADDRESS_DATABASE: Record<string, string> = {
   'joy eslava': 'Calle Arenal, 11, 28013 Madrid',
   'moby dick club': 'Avenida de Brasil, 5, 28020 Madrid',
   'viña rock': 'Recinto Ferial, 02600 Villarrobledo, Albacete',
-  'cabo de plata': 'Playa de la Hierbabuena, 11160 Barbate, Cádiz'
+  'cabo de plata': 'Playa de la Hierbabuena, 11160 Barbate, Cádiz',
+  'distrito 921': 'Plaza de San Martín, 4, 40001 Segovia',
+  '921 distrito musical': 'Plaza de San Martín, 4, 40001 Segovia',
+  'fundación don juan de borbón': 'Plaza de San Martín, 4, 40001 Segovia'
 };
 
 export function autoDetectVenueAddress(nombreSala: string, ciudad: string): string {
@@ -103,14 +110,19 @@ export function calculateBookingMetrics(leads: Lead[]): BookingMetrics {
 
   for (const lead of leads) {
     const estado = lead.estado || 'nuevo';
+    const norm = normalizeStatus(estado);
     leadsPorEstado[estado] = (leadsPorEstado[estado] || 0) + 1;
+    leadsPorEstado[norm] = (leadsPorEstado[norm] || 0) + 1;
+    if (estado.startsWith('aprobado')) {
+      leadsPorEstado['aprobado'] = (leadsPorEstado['aprobado'] || 0) + 1;
+    }
     sumAforo += lead.aforo || 0;
 
-    if (['interesado', 'negociando', 'aprobado', 'no_interesado'].includes(estado) || lead.fecha_ultima_respuesta) {
+    if (['negociando', 'respondido', 'no_interesado', 'confirmado', 'aplazado'].includes(norm) || lead.fecha_ultima_respuesta) {
       respondedCount++;
     }
 
-    if (estado === 'aprobado') {
+    if (norm === 'confirmado' || norm === 'negociando' || estado.startsWith('aprobado')) {
       convertedCount++;
     }
   }
@@ -148,7 +160,8 @@ export function filterLeads(
       (lead.contacto_nombre && lead.contacto_nombre.toLowerCase().includes(query)) ||
       (lead.email_contacto && lead.email_contacto.toLowerCase().includes(query));
 
-    const matchesStatus = statusFilter === 'todos' || lead.estado === statusFilter;
+    const normStatus = normalizeStatus(lead.estado);
+    const matchesStatus = statusFilter === 'todos' || normStatus === statusFilter || lead.estado === statusFilter;
     const matchesType = typeFilter === 'todos' || lead.tipo === typeFilter;
 
     return matchesSearch && matchesStatus && matchesType;

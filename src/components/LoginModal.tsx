@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { User as UserType } from '../types';
 import { googleSignIn } from '../utils/gmail';
+import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -859,16 +860,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 />
               </div>
 
-              <div className="relative flex items-center">
-                <Music className="w-4 h-4 text-[#f2ca50] absolute left-4 pointer-events-none" />
-                <input
-                  type="text"
-                  value={regBandName}
-                  onChange={(e) => setRegBandName(e.target.value)}
-                  placeholder="Nombre de la Banda / Artista"
-                  className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
-                  required
-                />
+              <div className="space-y-1">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-[11px] font-mono text-neutral-400">Proyecto Musical:</span>
+                  <BandNameStylerHelper
+                    value={regBandName}
+                    onChange={(styled) => setRegBandName(styled)}
+                  />
+                </div>
+                <div className="relative flex items-center">
+                  <Music className="w-4 h-4 text-[#f2ca50] absolute left-4 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={regBandName}
+                    onChange={(e) => setRegBandName(e.target.value)}
+                    placeholder="Nombre de la Banda / Artista (Ej: KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑)"
+                    className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner font-semibold"
+                    required
+                  />
+                </div>
               </div>
 
               <div className="relative flex items-center">

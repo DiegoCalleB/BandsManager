@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { INITIAL_SONGS, INITIAL_SETLISTS } from "../src/db_seed.js";
 
 let supabaseInstance: SupabaseClient | null = null;
 
@@ -27,11 +28,58 @@ export function getSupabase(): SupabaseClient {
 }
 
 // Helper normalization & transformation utilities
-function cleanBandId(bandId?: string): string {
-  if (!bandId) {
-    throw new Error("band_id es requerido para esta operación");
+export function normalizePlan(rawPlan?: string): 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
+  if (!rawPlan) return 'ensayo';
+  const clean = String(rawPlan).toLowerCase().trim();
+  if (clean === 'cabeza_de_cartel' || clean === 'cabeza de cartel' || clean === 'elite' || clean === 'manager360' || clean === 'pro_plus' || clean === '360' || clean === 'manager 360' || clean === 'elite 360') {
+    return 'cabeza_de_cartel';
   }
-  return bandId;
+  if (clean === 'de_gira' || clean === 'de gira' || clean === 'profesional' || clean === 'pro' || clean === 'consolidada' || clean === 'gira profesional' || clean === 'gira') {
+    return 'de_gira';
+  }
+  if (clean === 'local') {
+    return 'local';
+  }
+  if (clean === 'ensayo' || clean === 'emergente' || clean === 'gratis' || clean === 'free' || clean === 'basico') {
+    return 'ensayo';
+  }
+  return 'ensayo';
+}
+
+function cleanBandId(bandId?: string): string {
+  if (!bandId || typeof bandId !== "string" || !bandId.trim()) {
+    return "band-bakandeya";
+  }
+  return bandId.trim();
+}
+
+// Migration helper to ensure all bands and users in Supabase have the canonical 4 plans
+export async function dbMigrateAllPlansToNewTiers() {
+  try {
+    const sb = getSupabase();
+    // 1. Migrate registered_bands
+    const { data: bands } = await sb.from("registered_bands").select("id, band_id, plan");
+    if (bands && bands.length > 0) {
+      for (const b of bands) {
+        const norm = normalizePlan(b.plan);
+        if (b.plan !== norm) {
+          await sb.from("registered_bands").update({ plan: norm }).eq("id", b.id);
+        }
+      }
+    }
+    // 2. Migrate users
+    const { data: users } = await sb.from("users").select("id, plan");
+    if (users && users.length > 0) {
+      for (const u of users) {
+        const norm = normalizePlan(u.plan);
+        if (u.plan !== norm) {
+          await sb.from("users").update({ plan: norm }).eq("id", u.id);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Notice during dbMigrateAllPlansToNewTiers:", err);
+  }
 }
 
 // --- REGISTERED BANDS ---
@@ -50,7 +98,7 @@ export async function ensureRegisteredBandExists(bandId: string, nombreBanda?: s
         band_id: cleanId,
         nombre_banda: resolvedName,
         email: "contacto@banda.com",
-        plan: "pro",
+        plan: "ensayo",
         contacto_nombre: "Contacto",
         estado_cuenta: "activo"
       };
@@ -67,14 +115,15 @@ export async function dbGetRegisteredBands() {
   const sb = getSupabase();
   const { data, error } = await sb.from("registered_bands").select("*").order("created_at", { ascending: false });
   if (error) throw new Error(`Supabase Error (registered_bands): ${error.message}`);
-  return data || [];
+  return (data || []).map((b: any) => ({ ...b, plan: normalizePlan(b.plan) }));
 }
 
 export async function dbGetRegisteredBandById(bandId: string) {
   const sb = getSupabase();
   const { data, error } = await sb.from("registered_bands").select("*").eq("band_id", cleanBandId(bandId)).maybeSingle();
   if (error) throw new Error(`Supabase Error (registered_bands): ${error.message}`);
-  return data;
+  if (!data) return null;
+  return { ...data, plan: normalizePlan(data.plan) };
 }
 
 export async function dbUpsertRegisteredBand(band: any) {
@@ -85,7 +134,7 @@ export async function dbUpsertRegisteredBand(band: any) {
     user_id: band.user_id || band.userId || null,
     nombre_banda: band.nombre_banda || band.nombreBanda || band.bandName || "Banda",
     email: band.email || "",
-    plan: band.plan || "pro",
+    plan: normalizePlan(band.plan),
     contacto_nombre: band.contacto_nombre || band.contactoNombre || "",
     estilo_musical: band.estilo_musical || band.estiloMusical || "",
     localizacion: band.localizacion || "",
@@ -120,7 +169,9 @@ export async function dbGetUsers(bandId?: string) {
       bandName: u.band_name || u.bandName,
       avatarColor: u.avatar_color || u.avatarColor,
       passwordHash: u.password_hash || u.passwordHash,
-      googleOauth: u.google_oauth || u.googleOauth || {}
+      googleOauth: u.google_oauth || u.googleOauth || {},
+      main_band_id: u.main_band_id || u.mainBandId,
+      band_order: Array.isArray(u.band_order) ? u.band_order : (u.band_order ? JSON.parse(u.band_order) : undefined)
     }));
   }
 
@@ -182,10 +233,13 @@ export async function dbGetUserById(userId: string) {
   if (!data) return null;
   return {
     ...data,
+    plan: normalizePlan(data.plan),
     bandName: data.band_name || data.bandName,
     avatarColor: data.avatar_color || data.avatarColor,
     passwordHash: data.password_hash || data.passwordHash,
-    googleOauth: data.google_oauth || data.googleOauth || {}
+    googleOauth: data.google_oauth || data.googleOauth || {},
+    main_band_id: data.main_band_id || data.mainBandId,
+    band_order: Array.isArray(data.band_order) ? data.band_order : (data.band_order ? JSON.parse(data.band_order) : undefined)
   };
 }
 
@@ -194,12 +248,12 @@ export async function dbUpsertUser(user: any) {
   const targetBandId = cleanBandId(user.band_id || user.bandId);
   await ensureRegisteredBandExists(targetBandId, user.bandName || user.band_name);
 
-  const payload = {
+  const payload: any = {
     id: user.id || `user-${Date.now()}`,
     username: user.username || user.email,
     name: user.name || user.username || "Usuario",
     role: user.role || "member",
-    plan: user.plan || "emergente",
+    plan: normalizePlan(user.plan),
     band_name: user.bandName || user.band_name || "",
     band_id: targetBandId,
     email: user.email || user.username || "",
@@ -207,17 +261,40 @@ export async function dbUpsertUser(user: any) {
     avatar_color: user.avatarColor || user.avatar_color || "bg-amber-500",
     password_hash: user.passwordHash || user.password_hash || "",
     salt: user.salt || "",
-    google_oauth: user.googleOauth || user.google_oauth || {}
+    google_oauth: user.googleOauth || user.google_oauth || {},
+    main_band_id: user.main_band_id || user.mainBandId || null,
+    band_order: user.band_order || null
   };
 
   const { data, error } = await sb.from("users").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert user): ${error.message}`);
+  if (error) {
+    // If columns like band_order or main_band_id are not yet migrated in Supabase table schema, fallback gracefully
+    if (error.message && (error.message.includes('band_order') || error.message.includes('main_band_id'))) {
+      const fallbackPayload = { ...payload };
+      delete fallbackPayload.band_order;
+      delete fallbackPayload.main_band_id;
+      const { data: fbData, error: fbError } = await sb.from("users").upsert(fallbackPayload).select().single();
+      if (fbError) throw new Error(`Supabase Error (upsert user fallback): ${fbError.message}`);
+      return {
+        ...fbData,
+        bandName: fbData.band_name,
+        avatarColor: fbData.avatar_color,
+        passwordHash: fbData.password_hash,
+        googleOauth: fbData.google_oauth,
+        main_band_id: user.main_band_id,
+        band_order: user.band_order
+      };
+    }
+    throw new Error(`Supabase Error (upsert user): ${error.message}`);
+  }
   return {
     ...data,
     bandName: data.band_name,
     avatarColor: data.avatar_color,
     passwordHash: data.password_hash,
-    googleOauth: data.google_oauth
+    googleOauth: data.google_oauth,
+    main_band_id: data.main_band_id || user.main_band_id,
+    band_order: data.band_order || user.band_order
   };
 }
 
@@ -458,14 +535,13 @@ Bakandeya Agent Manager IA`,
   return leads;
 }
 
-export async function dbGetLeadById(id: string, bandId: string) {
+export async function dbGetLeadById(id: string, bandId?: string) {
   const sb = getSupabase();
-  const { data, error } = await sb
-    .from("leads")
-    .select("*")
-    .eq("id", id)
-    .eq("band_id", cleanBandId(bandId))
-    .maybeSingle();
+  let query = sb.from("leads").select("*").eq("id", id);
+  if (bandId && bandId.trim()) {
+    query = query.eq("band_id", cleanBandId(bandId));
+  }
+  const { data, error } = await query.maybeSingle();
 
   if (error) throw new Error(`Supabase Error (getLeadById): ${error.message}`);
   if (!data) return null;
@@ -725,13 +801,31 @@ export async function dbDeleteConcert(id: string, bandId: string) {
 // --- SONGS ---
 export async function dbGetSongs(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("songs")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("titulo", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
+  
+  if (!data || data.length === 0) {
+    for (const song of INITIAL_SONGS) {
+      await dbUpsertSong(song, cleanId).catch(() => {});
+    }
+    const { data: seededData } = await sb
+      .from("songs")
+      .select("*")
+      .eq("band_id", cleanId)
+      .order("titulo", { ascending: true });
+    return (seededData || []).map(s => ({
+      ...s,
+      audio_ideas: s.audio_ideas || [],
+      guia_sustituto: s.guia_sustituto || {}
+    }));
+  }
+
   return (data || []).map(s => ({
     ...s,
     audio_ideas: s.audio_ideas || [],
@@ -788,13 +882,30 @@ export async function dbDeleteSong(id: string, bandId: string) {
 // --- SETLISTS ---
 export async function dbGetSetlists(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("setlists")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("fecha_ultima_edicion", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
+  
+  if (!data || data.length === 0) {
+    for (const setlist of INITIAL_SETLISTS) {
+      await dbUpsertSetlist(setlist, cleanId).catch(() => {});
+    }
+    const { data: seededData } = await sb
+      .from("setlists")
+      .select("*")
+      .eq("band_id", cleanId)
+      .order("fecha_ultima_edicion", { ascending: false });
+    return (seededData || []).map(sl => ({
+      ...sl,
+      items: sl.items || []
+    }));
+  }
+
   return (data || []).map(sl => ({
     ...sl,
     items: sl.items || []
@@ -831,10 +942,19 @@ export async function dbDeleteSetlist(id: string, bandId: string) {
 // --- EPK CONFIGS ---
 export async function dbGetEpkConfig(bandId: string) {
   const sb = getSupabase();
+  const rawClean = (bandId || '').replace(/^(band|reg)-/, '');
+  const candidateIds = Array.from(new Set([
+    bandId,
+    `band-${rawClean}`,
+    `reg-${rawClean}`,
+    rawClean
+  ])).filter(Boolean);
+
   const { data, error } = await sb
     .from("epk_configs")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .in("band_id", candidateIds)
+    .limit(1)
     .maybeSingle();
 
   if (error) throw new Error(`Supabase Error (epk_configs): ${error.message}`);
@@ -1420,7 +1540,14 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
 // ----------------------------------------------------
 // BAND SCHEDULES (Smart Gate - Python agent triggers)
 // ----------------------------------------------------
-const inMemorySchedules: Record<string, { band_id: string; timezone: string; horas_lector: number[]; horas_enviador: number[] }> = {};
+const inMemorySchedules: Record<string, {
+  band_id: string;
+  timezone: string;
+  horas_lector: number[];
+  horas_enviador: number[];
+  dias_enviador: number[];
+  dias_lector: number[];
+}> = {};
 
 function getMemoryFallbackSchedule(cleanId: string) {
   if (inMemorySchedules[cleanId]) {
@@ -1429,8 +1556,10 @@ function getMemoryFallbackSchedule(cleanId: string) {
   return {
     band_id: cleanId,
     timezone: 'Europe/Madrid',
-    horas_lector: [],
-    horas_enviador: []
+    horas_lector: [8, 12, 16, 20],
+    horas_enviador: [9, 10, 11, 12, 13],
+    dias_enviador: [2, 3, 4], // Martes, Miércoles, Jueves (Recomendado Booking)
+    dias_lector: [1, 2, 3, 4, 5, 6, 7]
   };
 }
 
@@ -1456,8 +1585,10 @@ export async function dbGetBandSchedule(bandId: string) {
     const schedule = {
       band_id: data.band_id,
       timezone: data.timezone || 'Europe/Madrid',
-      horas_lector: Array.isArray(data.horas_lector) ? data.horas_lector.map((n: any) => Number(n)) : [],
-      horas_enviador: Array.isArray(data.horas_enviador) ? data.horas_enviador.map((n: any) => Number(n)) : []
+      horas_lector: Array.isArray(data.horas_lector) ? data.horas_lector.map((n: any) => Number(n)) : [8, 12, 16, 20],
+      horas_enviador: Array.isArray(data.horas_enviador) ? data.horas_enviador.map((n: any) => Number(n)) : [9, 10, 11, 12, 13],
+      dias_enviador: Array.isArray(data.dias_enviador) ? data.dias_enviador.map((n: any) => Number(n)) : [2, 3, 4],
+      dias_lector: Array.isArray(data.dias_lector) ? data.dias_lector.map((n: any) => Number(n)) : [1, 2, 3, 4, 5, 6, 7]
     };
     inMemorySchedules[cleanId] = schedule;
     return schedule;
@@ -1472,18 +1603,24 @@ export async function dbUpsertBandSchedule(schedule: {
   timezone: string;
   horas_lector: number[];
   horas_enviador: number[];
+  dias_enviador?: number[];
+  dias_lector?: number[];
 }) {
   const cleanId = schedule.band_id ? schedule.band_id.trim() : 'bakandeya';
   
   // Ensure integer arrays
   const horasLectorClean = (schedule.horas_lector || []).map((h) => Math.floor(Number(h))).filter((h) => !isNaN(h) && h >= 0 && h <= 23);
   const horasEnviadorClean = (schedule.horas_enviador || []).map((h) => Math.floor(Number(h))).filter((h) => !isNaN(h) && h >= 0 && h <= 23);
+  const diasEnviadorClean = (schedule.dias_enviador || [2, 3, 4]).map((d) => Math.floor(Number(d))).filter((d) => !isNaN(d) && d >= 1 && d <= 7);
+  const diasLectorClean = (schedule.dias_lector || [1, 2, 3, 4, 5, 6, 7]).map((d) => Math.floor(Number(d))).filter((d) => !isNaN(d) && d >= 1 && d <= 7);
 
   const payload = {
     band_id: cleanId,
     timezone: schedule.timezone || 'Europe/Madrid',
     horas_lector: horasLectorClean,
-    horas_enviador: horasEnviadorClean
+    horas_enviador: horasEnviadorClean,
+    dias_enviador: diasEnviadorClean,
+    dias_lector: diasLectorClean
   };
 
   inMemorySchedules[cleanId] = payload;

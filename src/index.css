@@ -178,3 +178,42 @@ html, body {
   box-shadow: 0 0 16px -2px rgba(16, 185, 129, 0.3);
 }
 
+/* --- GOOGLE TRANSLATE STYLING CLEANUP --- */
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-spinner-pos,
+.goog-te-gadget-icon,
+.goog-te-menu-value span,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+#google_translate_element {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+iframe.goog-te-banner-frame {
+  display: none !important;
+}
+
+/* Ensure notranslate elements keep original typography */
+.notranslate {
+  font-style: normal;
+}
+

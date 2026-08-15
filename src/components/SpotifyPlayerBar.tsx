@@ -338,7 +338,7 @@ export default function SpotifyPlayerBar({
                   )}
                 </div>
                 <div className="flex items-center gap-2 text-[11px] text-[#b3b3b3] font-mono mt-0.5 truncate">
-                  <span className="text-white font-medium">Bakandeya</span>
+                  <span className="text-white font-medium">{song.artista || 'Banda'}</span>
                   <span>•</span>
                   <span className="text-[#1db954] font-semibold">{song.tonalidad || 'Am'}</span>
                   <span>•</span>

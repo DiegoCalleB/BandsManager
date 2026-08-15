@@ -803,7 +803,7 @@ export default function Finanzas({
  Cualquier cambio que realices desde este panel de control se guardará localmente y se sincronizará automáticamente en la pestaña <strong>"finanzas"</strong> de Google Sheets.
  </p>
  <p className={textSub}>
- Los agentes inteligentes de Bakandeya leen este libro diario para optimizar ofertas de caché en salas o calcular presupuestos de giras de forma automatizada.
+ Los agentes inteligentes de BandManager.ai leen este libro diario para optimizar ofertas de caché en salas o calcular presupuestos de giras de forma automatizada.
  </p>
  </div>
  </div>
@@ -813,7 +813,7 @@ export default function Finanzas({
  <div className={`p-5 rounded-xl ${colors.card} ${cardBorder} space-y-6`}>
  <div>
  <h3 className={`text-sm font-bold font-display uppercase tracking-widest ${isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'}`}>Análisis de Gastos por Categoría</h3>
- <p className={`text-[10px] font-mono mt-0.5 ${textSub}`}>Proporciones totales liquidadas para cada categoría de costes operativos de Bakandeya</p>
+ <p className={`text-[10px] font-mono mt-0.5 ${textSub}`}>Proporciones totales liquidadas para cada categoría de costes operativos del proyecto</p>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

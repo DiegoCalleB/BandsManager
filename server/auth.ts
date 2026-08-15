@@ -1,5 +1,6 @@
 import express from "express";
 import crypto from "crypto";
+import { normalizePlan } from "./db.js";
 
 // Active sessions stored in memory and persisted
 export const ACTIVE_SESSIONS: Record<string, { userId: string; createdAt: number }> = {};
@@ -88,14 +89,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     }
   }
 
-  // Session recovery fallback if token was missing or memory/state session was cleared
-  if (!foundUser && state?.users && state.users.length > 0) {
-    foundUser = state.users.find((u: any) => u.id === 'user-jose' || u.id === 'user-diego' || u.role === 'leader') || state.users[0];
-    const effectiveToken = token || `session-${foundUser.id}`;
-    ACTIVE_SESSIONS[effectiveToken] = { userId: foundUser.id, createdAt: Date.now() };
-    if (state?.sessions) state.sessions[effectiveToken] = ACTIVE_SESSIONS[effectiveToken];
-  }
-
   if (!foundUser) return null;
 
   // Determine all allowed band IDs for this user
@@ -109,17 +102,17 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     allowedBandIds.add(`reg-${clean}`);
   };
 
+  const userEmail = (foundUser.email || foundUser.username || "").toLowerCase();
+
   if (foundUser.band_id) addBandIdAndVariants(foundUser.band_id);
 
   if (state?.userBands) {
     state.userBands.forEach((ub: any) => {
-      if (ub.user_id === foundUser.id && ub.band_id) {
+      if ((ub.user_id === foundUser.id || (userEmail && ub.email?.toLowerCase() === userEmail)) && ub.band_id) {
         addBandIdAndVariants(ub.band_id);
       }
     });
   }
-
-  const userEmail = (foundUser.email || foundUser.username || "").toLowerCase();
 
   if (state?.registeredBands) {
     state.registeredBands.forEach((rb: any) => {
@@ -203,6 +196,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     name: foundUser.name || activeBandName || foundUser.bandName,
     bandName: activeBandName,
     band_id: activeBandId,
+    plan: normalizePlan(bandObj?.plan || foundUser.plan || 'ensayo'),
     allowedBandIds: Array.from(allowedBandIds)
   };
 }

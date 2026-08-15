@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, InteractionLog } from '../../types';
+import { Lead, LeadStatus, LeadType, InteractionLog } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { LeadAvatar } from './LeadAvatar';
@@ -28,7 +28,9 @@ import {
   MessageSquare,
   RefreshCw,
   Loader2,
-  Upload
+  Upload,
+  Undo2,
+  RotateCcw
 } from 'lucide-react';
 
 interface VenueDetailPanelProps {
@@ -79,7 +81,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [toneRating, setToneRating] = useState<number>(0);
   const [contentRating, setContentRating] = useState<number>(0);
   const [feedbackComment, setFeedbackComment] = useState<string>('');
+  const [feedbackScope, setFeedbackScope] = useState<'este_pitch' | 'global'>('este_pitch');
   const [isRegeneratingPitch, setIsRegeneratingPitch] = useState(false);
+  const [isRevertingPitch, setIsRevertingPitch] = useState(false);
   const [feedbackSuccessMsg, setFeedbackSuccessMsg] = useState<string | null>(null);
   const [showFeedbackHistory, setShowFeedbackHistory] = useState(false);
 
@@ -105,21 +109,26 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     setIsRegeneratingPitch(true);
     setFeedbackSuccessMsg(null);
     try {
-      const token = localStorage.getItem('token') || '';
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        headers['x-auth-token'] = token;
+      }
       const res = await fetch(`/api/leads/${selectedLead.id}/regenerate-pitch`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
+        headers,
         body: JSON.stringify({
           tono_rating: toneRating || undefined,
           contenido_rating: contentRating || undefined,
-          comentario: feedbackComment || undefined
+          comentario: feedbackComment || undefined,
+          alcance: feedbackScope
         })
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({ success: false, error: 'Respuesta inválida del servidor' }));
       if (res.ok && data.success && data.newPitchText) {
         setEditedPitch(data.newPitchText);
         setIsEditingPitch(false);
@@ -138,16 +147,71 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setToneRating(0);
         setContentRating(0);
         setFeedbackComment('');
-        setFeedbackSuccessMsg('¡Pitch reescrito aplicando tus notas y registrado en la memoria de la IA!');
+        if (feedbackScope === 'global') {
+          setFeedbackSuccessMsg('¡Pitch reescrito! Aprendizaje guardado en la memoria global del Agente Redactor para futuros pitches.');
+        } else {
+          setFeedbackSuccessMsg('¡Pitch reescrito aplicando tus notas a esta sala en concreto!');
+        }
         setTimeout(() => setFeedbackSuccessMsg(null), 4500);
       } else {
         alert(data.error || 'No se pudo regenerar el pitch.');
       }
     } catch (err: any) {
       console.error('Error al regenerar pitch:', err);
-      alert('Error de conexión al reescribir el pitch con IA.');
+      alert(`Error de conexión al reescribir el pitch con IA: ${err.message || 'Verifica la conexión'}`);
     } finally {
       setIsRegeneratingPitch(false);
+    }
+  };
+
+  const handleRevertPitch = async (targetLogId?: string) => {
+    if (!selectedLead) return;
+    setIsRevertingPitch(true);
+    try {
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        headers['x-auth-token'] = token;
+      }
+      const res = await fetch(`/api/leads/${selectedLead.id}/revert-pitch`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ logId: targetLogId })
+      });
+
+      const data = await res.json().catch(() => ({ success: false, error: 'Respuesta inválida del servidor' }));
+      if (res.ok && data.success && data.restoredPitch !== undefined) {
+        const restored = data.restoredPitch;
+        setEditedPitch(restored);
+        setIsEditingPitch(false);
+        selectedLead.pitch_generado = restored;
+
+        const updatedHistory = (selectedLead.historial_feedback_pitch || []).map((item) => {
+          if (item.id === (data.revertedLogId || targetLogId || (selectedLead.historial_feedback_pitch?.[0]?.id))) {
+            return { ...item, deshecho: true };
+          }
+          return item;
+        });
+        selectedLead.historial_feedback_pitch = updatedHistory;
+
+        onUpdateLead(selectedLead.id, {
+          pitch_generado: restored,
+          historial_feedback_pitch: updatedHistory
+        });
+
+        setFeedbackSuccessMsg('↩️ Entrenamiento deshecho: Se ha restaurado el pitch anterior.');
+        setTimeout(() => setFeedbackSuccessMsg(null), 5000);
+      } else {
+        alert(data.error || 'No se pudo restaurar el pitch anterior.');
+      }
+    } catch (err) {
+      console.error('Error al deshacer entrenamiento del pitch:', err);
+      alert('Error de conexión al restaurar el pitch anterior.');
+    } finally {
+      setIsRevertingPitch(false);
     }
   };
 
@@ -160,6 +224,38 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   // Quick Copy status
   const [copiedPitch, setCopiedPitch] = useState(false);
   const [isSearchingLogo, setIsSearchingLogo] = useState(false);
+  const [isEnrichingLead, setIsEnrichingLead] = useState(false);
+  const [enrichStatusMsg, setEnrichStatusMsg] = useState<string | null>(null);
+
+  const handleEnrichLead = async () => {
+    if (!selectedLead?.id) return;
+    setIsEnrichingLead(true);
+    setEnrichStatusMsg('Investigando y completando datos oficiales sin inventar...');
+    try {
+      const res = await apiFetch('/api/leads/enrich-lead', {
+        method: 'POST',
+        body: JSON.stringify({
+          leadId: selectedLead.id,
+          force: true
+        })
+      });
+      if (res.success && res.lead) {
+        onUpdateLead(selectedLead.id, res.lead);
+        setEditedLeadInfo(res.lead);
+        setEnrichStatusMsg('✨ ¡Datos completados y verificados con éxito!');
+        setTimeout(() => setEnrichStatusMsg(null), 4000);
+      } else {
+        setEnrichStatusMsg(res.error || 'No se encontraron datos nuevos verificables.');
+        setTimeout(() => setEnrichStatusMsg(null), 4000);
+      }
+    } catch (err: any) {
+      console.error('Error enriqueciendo lead:', err);
+      setEnrichStatusMsg(err.message || 'Error al completar datos.');
+      setTimeout(() => setEnrichStatusMsg(null), 4000);
+    } finally {
+      setIsEnrichingLead(false);
+    }
+  };
 
   const handleAutoSearchLogo = async () => {
     const venueName = (editedLeadInfo.nombre_sala || selectedLead.nombre_sala || '').trim();
@@ -213,13 +309,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     onUpdateLead(selectedLead.id, { estado: newStatus });
   };
 
+  const isReplyStage = (selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0) || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
+
   const handleSavePitch = () => {
-    onUpdateLead(selectedLead.id, { pitch_generado: editedPitch, estado: 'aprobado' });
+    const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
+    onUpdateLead(selectedLead.id, { pitch_generado: editedPitch, estado: approvalState });
     setIsEditingPitch(false);
   };
 
   const handleApprovePitchDirectly = () => {
-    onUpdateLead(selectedLead.id, { estado: 'aprobado' });
+    const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
+    onUpdateLead(selectedLead.id, { estado: approvalState });
   };
 
   const handleAddInteractionLog = (e: React.FormEvent) => {
@@ -240,11 +340,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     const updatedLogs = [newLog, ...existingLogs];
 
     let newStatus = selectedLead.estado;
-    if (interactionResultado === 'Interesado' && selectedLead.estado !== 'interesado') {
-      newStatus = 'interesado';
-    } else if (interactionResultado === 'Acuerdo cerrado' && selectedLead.estado !== 'negociando') {
+    if (interactionResultado === 'Interesado') {
       newStatus = 'negociando';
-    } else if (interactionResultado === 'Rechazado' && selectedLead.estado !== 'no_interesado') {
+    } else if (interactionResultado === 'Acuerdo cerrado') {
+      newStatus = 'confirmado';
+    } else if (interactionResultado === 'Rechazado') {
       newStatus = 'no_interesado';
     }
 
@@ -287,7 +387,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             />
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-zinc-50">
+                <h3 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-zinc-50 notranslate" translate="no">
                   {selectedLead.nombre_sala}
                 </h3>
                 <VerifiedBadge isVerified={isLeadVerificado(selectedLead)} size="md" showLabel={true} />
@@ -335,43 +435,70 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           </div>
         </div>
 
-        {/* Lead Health / Temperature Badge & Quality Indicator */}
+        {/* Lead Health / Temperature Badge & Quality Indicator & Category Selector */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-zinc-800/80">
           <div className="flex flex-wrap items-center gap-2">
             <LeadHealthBadge lead={selectedLead} showDescription={true} size="md" />
             <ReliabilityBadge item={selectedLead} size="md" />
           </div>
 
-          {/* Status selector */}
-          <div className="flex items-center gap-1.5 bg-[#121110] px-2.5 py-1 rounded-xl border border-zinc-800">
-            <span className={`w-2 h-2 rounded-full ${getStatusDotColor(selectedLead.estado)}`} />
-            <select
-              value={normalizeStatus(selectedLead.estado)}
-              onChange={(e) => handleCorrectStatus(e.target.value as LeadStatus)}
-              className="text-xs font-sans font-bold text-zinc-100 bg-transparent cursor-pointer focus:outline-none"
-            >
-              <option value="nuevo" className="bg-zinc-900">
-                Por contactar (nuevo)
-              </option>
-              <option value="pendiente_aprobacion" className="bg-zinc-900">
-                Por aprobar (pendiente)
-              </option>
-              <option value="aprobado" className="bg-zinc-900">
-                Aprobado para envío
-              </option>
-              <option value="esperando_respuesta" className="bg-zinc-900">
-                Email enviado • esperando
-              </option>
-              <option value="interesado" className="bg-zinc-900">
-                Interesado
-              </option>
-              <option value="negociando" className="bg-zinc-900">
-                Negociando
-              </option>
-              <option value="no_interesado" className="bg-zinc-900">
-                No interesado
-              </option>
-            </select>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Category / Type Recategorizer */}
+            <div className="flex items-center gap-1.5 bg-[#121110] px-2.5 py-1 rounded-xl border border-amber-500/30">
+              <span className="text-[10px] text-amber-400 font-mono font-bold uppercase">Tipo:</span>
+              <select
+                value={String(selectedLead.tipo || 'sala').toLowerCase()}
+                onChange={(e) => {
+                  const newType = e.target.value as LeadType;
+                  onUpdateLead(selectedLead.id, { tipo: newType });
+                }}
+                className="text-xs font-sans font-bold text-amber-300 bg-transparent cursor-pointer focus:outline-none"
+                title="Cambiar categoría / tipo de este lead"
+              >
+                <option value="sala" className="bg-zinc-900 text-zinc-100">🏟️ Sala de Conciertos</option>
+                <option value="festival" className="bg-zinc-900 text-zinc-100">🎪 Festival</option>
+                <option value="ayuntamiento" className="bg-zinc-900 text-zinc-100">🏛️ Ayuntamiento / Fiestas</option>
+                <option value="discoteca" className="bg-zinc-900 text-zinc-100">🪩 Discoteca / Club</option>
+                <option value="grupo" className="bg-zinc-900 text-zinc-100">🎸 Grupo / Banda Aliada</option>
+                <option value="agencia" className="bg-zinc-900 text-zinc-100">💼 Agencia de Booking</option>
+                <option value="manager" className="bg-zinc-900 text-zinc-100">👔 Manager / Representante</option>
+                <option value="productora" className="bg-zinc-900 text-zinc-100">🎬 Productora de Eventos</option>
+                <option value="sello" className="bg-zinc-900 text-zinc-100">💿 Discográfica / Sello</option>
+                <option value="medio" className="bg-zinc-900 text-zinc-100">📻 Medio / Prensa / Radio</option>
+              </select>
+            </div>
+
+            {/* Status selector */}
+            <div className="flex items-center gap-1.5 bg-[#121110] px-2.5 py-1 rounded-xl border border-zinc-800">
+              <span className={`w-2 h-2 rounded-full ${getStatusDotColor(selectedLead.estado)}`} />
+              <select
+                value={normalizeStatus(selectedLead.estado)}
+                onChange={(e) => handleCorrectStatus(e.target.value as LeadStatus)}
+                className="text-xs font-sans font-bold text-zinc-100 bg-transparent cursor-pointer focus:outline-none"
+              >
+                <option value="nuevo" className="bg-zinc-900">
+                  Por contactar (nuevo)
+                </option>
+                <option value="esperando_respuesta" className="bg-zinc-900">
+                  Contactado (esperando respuesta)
+                </option>
+                <option value="respondido" className="bg-zinc-900">
+                  En conversación (ha respondido)
+                </option>
+                <option value="negociando" className="bg-zinc-900">
+                  En negociación
+                </option>
+                <option value="confirmado" className="bg-zinc-900">
+                  Concierto confirmado 🎉
+                </option>
+                <option value="aplazado" className="bg-zinc-900">
+                  Aplazado (recontactar luego) ⏳
+                </option>
+                <option value="no_interesado" className="bg-zinc-900">
+                  Descartado / No interesado
+                </option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -399,6 +526,71 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
             </a>
           ) : null}
         </div>
+
+        {/* Agent Workflow & Sub-status Banner (Option A 2-Dimensional Model) */}
+        {(() => {
+          const rawStatus = String(selectedLead.estado || '');
+          const isPending = rawStatus === 'pendiente_aprobacion' || (rawStatus === 'nuevo' && !!selectedLead.pitch_generado && !selectedLead.fecha_envio);
+          const isApproved = rawStatus.startsWith('aprobado');
+          const isSent = normalizeStatus(rawStatus) === 'esperando_respuesta';
+
+          if (isPending) {
+            return (
+              <div className="p-3 bg-amber-500/10 border border-amber-500/40 rounded-xl flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-amber-300">
+                      {isReplyStage ? '💬 Respuesta redactada por IA — Pendiente de aprobación' : '✉️ Pitch inicial redactado por IA — Pendiente de aprobación'}
+                    </p>
+                    <p className="text-[10px] text-zinc-400 truncate">
+                      {isReplyStage ? 'Revisa el borrador para responder a la sala y autorizar su envío.' : 'Revisa la propuesta inicial para autorizar al agente de envíos.'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleApprovePitchDirectly}
+                  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-lg shrink-0 flex items-center gap-1 cursor-pointer shadow-sm"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Aprobar</span>
+                </button>
+              </div>
+            );
+          }
+
+          if (isApproved) {
+            return (
+              <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-1" />
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-emerald-300">
+                    🚀 {rawStatus === 'aprobado_respuesta' ? 'Respuesta Aprobada' : 'Propuesta Aprobada'} — En cola del Agente Enviador
+                  </p>
+                  <p className="text-[10px] text-zinc-400">
+                    El agente despachará este correo respetando las normas de envío y rate-limiting.
+                  </p>
+                </div>
+              </div>
+            );
+          }
+
+          if (isSent) {
+            return (
+              <div className="p-2 bg-sky-500/10 border border-sky-500/25 rounded-xl flex items-center gap-2 text-xs text-sky-300">
+                <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0 ml-1" />
+                <span className="text-[11px] font-medium">
+                  📬 Email enviado el {selectedLead.fecha_envio || 'recientemente'} • Agente a la espera de respuesta de la sala
+                </span>
+              </div>
+            );
+          }
+
+          return null;
+        })()}
       </div>
 
       {/* CONTACT & LOCATION CARD */}
@@ -407,12 +599,30 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-zinc-400">
             Ficha de Contacto & Ubicación
           </p>
-          {selectedLead.email_contacto && (
-            <span className="text-xs text-amber-300 font-mono font-medium truncate max-w-[180px]">
-              {selectedLead.email_contacto}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {selectedLead.email_contacto && (
+              <span className="text-xs text-amber-300 font-mono font-medium truncate max-w-[160px] notranslate" translate="no">
+                {selectedLead.email_contacto}
+              </span>
+            )}
+            <button
+              onClick={handleEnrichLead}
+              disabled={isEnrichingLead}
+              className="px-2.5 py-1 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-[10px] rounded-lg font-bold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+              title="Scout Enriquecedor: Completa emails, webs y datos faltantes sin alucinaciones"
+            >
+              <Sparkles className={`w-3 h-3 text-amber-400 ${isEnrichingLead ? 'animate-spin' : ''}`} />
+              <span>{isEnrichingLead ? 'Completando...' : 'Scout Enriquecedor'}</span>
+            </button>
+          </div>
         </div>
+
+        {enrichStatusMsg && (
+          <div className="p-2 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-300 text-[11px] font-mono flex items-center gap-1.5 animate-fadeIn">
+            <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+            <span>{enrichStatusMsg}</span>
+          </div>
+        )}
 
         {selectedLead.direccion ? (
           <p className="text-xs font-sans font-bold text-zinc-100">{selectedLead.direccion}</p>
@@ -532,18 +742,44 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
 
               <div className="space-y-3 text-xs">
-                <div>
-                  <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
-                    Nombre Sala / Espacio
-                  </label>
-                  <input
-                    type="text"
-                    value={editedLeadInfo.nombre_sala || ''}
-                    onChange={(e) =>
-                      setEditedLeadInfo({ ...editedLeadInfo, nombre_sala: e.target.value })
-                    }
-                    className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none focus:border-amber-500"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+                      Nombre Sala / Espacio / Contacto
+                    </label>
+                    <input
+                      type="text"
+                      value={editedLeadInfo.nombre_sala || ''}
+                      onChange={(e) =>
+                        setEditedLeadInfo({ ...editedLeadInfo, nombre_sala: e.target.value })
+                      }
+                      className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase font-mono text-amber-400 font-bold mb-1">
+                      Tipo / Categoría de Lead
+                    </label>
+                    <select
+                      value={String(editedLeadInfo.tipo || 'sala').toLowerCase()}
+                      onChange={(e) =>
+                        setEditedLeadInfo({ ...editedLeadInfo, tipo: e.target.value as LeadType })
+                      }
+                      className="w-full p-2 rounded bg-zinc-900 border border-amber-500/50 text-amber-300 font-bold focus:outline-none focus:border-amber-400 cursor-pointer"
+                    >
+                      <option value="sala">🏟️ Sala de Conciertos</option>
+                      <option value="festival">🎪 Festival</option>
+                      <option value="ayuntamiento">🏛️ Ayuntamiento / Fiestas</option>
+                      <option value="discoteca">🪩 Discoteca / Club</option>
+                      <option value="grupo">🎸 Grupo / Banda Aliada</option>
+                      <option value="agencia">💼 Agencia de Booking</option>
+                      <option value="manager">👔 Manager / Representante</option>
+                      <option value="productora">🎬 Productora de Eventos</option>
+                      <option value="sello">💿 Discográfica / Sello</option>
+                      <option value="medio">📻 Medio / Prensa / Radio</option>
+                    </select>
+                  </div>
                 </div>
 
                 {/* Logo Selector */}
@@ -794,7 +1030,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <div className="bg-[#1A1918] rounded-xl p-4 space-y-3 border border-zinc-800">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold font-sans uppercase text-amber-400 tracking-wider">
-                Propuesta de Pitch Redactada
+                {isReplyStage ? '💬 Respuesta Redactada por IA' : '✉️ Propuesta de Pitch Redactada'}
               </span>
               <div className="flex items-center gap-1.5">
                 <button
@@ -813,7 +1049,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Aprobar Pitch</span>
+                    <span>{isReplyStage ? 'Aprobar Respuesta' : 'Aprobar Pitch'}</span>
                   </button>
                 ) : null}
               </div>
@@ -941,6 +1177,59 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 />
               </div>
 
+              {/* Scope Selector: Solo este pitch vs Memoria Global Futura */}
+              <div className="p-2.5 bg-black/50 rounded-xl border border-zinc-800/80 space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 font-mono block">
+                  🎯 Alcance del entrenamiento IA:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <label
+                    onClick={() => setFeedbackScope('este_pitch')}
+                    className={`p-2 rounded-lg border cursor-pointer flex items-start gap-2 transition-all ${
+                      feedbackScope === 'este_pitch'
+                        ? 'bg-amber-500/15 border-amber-500/60 text-amber-200'
+                        : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="feedbackScope"
+                      checked={feedbackScope === 'este_pitch'}
+                      onChange={() => setFeedbackScope('este_pitch')}
+                      className="mt-0.5 accent-amber-500 shrink-0"
+                    />
+                    <div className="text-[11px] leading-tight">
+                      <span className="font-bold text-zinc-100 block">Solo para este pitch</span>
+                      <span className="text-[10px] opacity-80">Ajuste puntual exclusivo para {selectedLead.nombre_sala}.</span>
+                    </div>
+                  </label>
+
+                  <label
+                    onClick={() => setFeedbackScope('global')}
+                    className={`p-2 rounded-lg border cursor-pointer flex items-start gap-2 transition-all ${
+                      feedbackScope === 'global'
+                        ? 'bg-amber-500/15 border-amber-500/60 text-amber-200'
+                        : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="feedbackScope"
+                      checked={feedbackScope === 'global'}
+                      onChange={() => setFeedbackScope('global')}
+                      className="mt-0.5 accent-amber-500 shrink-0"
+                    />
+                    <div className="text-[11px] leading-tight">
+                      <span className="font-bold text-amber-300 flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        Memoria general (Futuros pitches)
+                      </span>
+                      <span className="text-[10px] opacity-80">El Agente Redactor lo recordará como preferencia global.</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
               {/* Success Banner */}
               {feedbackSuccessMsg && (
                 <div className="p-2 bg-emerald-500/20 border border-emerald-500/40 rounded-lg text-emerald-300 text-xs font-medium flex items-center gap-2">
@@ -949,13 +1238,30 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               )}
 
-              {/* Action button */}
-              <div className="flex justify-end gap-2 pt-1">
+              {/* Action buttons */}
+              <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-2 pt-1">
+                {selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.some(l => !l.deshecho && l.pitch_previo) && (
+                  <button
+                    type="button"
+                    onClick={() => handleRevertPitch()}
+                    disabled={isRevertingPitch || isRegeneratingPitch}
+                    className="px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-amber-300 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer border border-amber-500/30 transition-all font-sans"
+                    title="Deshacer el último entrenamiento y restaurar la versión del pitch anterior"
+                  >
+                    {isRevertingPitch ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                    ) : (
+                      <Undo2 className="w-3.5 h-3.5 text-amber-400" />
+                    )}
+                    <span>Deshacer y volver al pitch anterior</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={handleRegeneratePitchWithFeedback}
-                  disabled={isRegeneratingPitch}
-                  className="w-full sm:w-auto px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
+                  disabled={isRegeneratingPitch || isRevertingPitch}
+                  className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
                 >
                   {isRegeneratingPitch ? (
                     <>
@@ -977,17 +1283,56 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <span className="text-[11px] font-bold text-amber-400 font-mono block uppercase">
                     Historial de Aprendizaje e Iteraciones IA
                   </span>
-                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                     {selectedLead.historial_feedback_pitch.map((log) => (
-                      <div key={log.id} className="p-2.5 bg-black/50 rounded-lg border border-zinc-800/80 text-[11px] space-y-1">
-                        <div className="flex justify-between text-zinc-400 text-[10px] font-mono">
+                      <div key={log.id} className={`p-2.5 rounded-lg border text-[11px] space-y-1.5 transition-all ${
+                        log.deshecho 
+                          ? 'bg-black/30 border-zinc-800/50 opacity-60' 
+                          : 'bg-black/50 border-zinc-800/80'
+                      }`}>
+                        <div className="flex items-center justify-between text-zinc-400 text-[10px] font-mono">
                           <span>{new Date(log.fecha).toLocaleString()}</span>
-                          <span>Tono: {log.tono_rating ? `${log.tono_rating}/5` : '-'} | Contenido: {log.contenido_rating ? `${log.contenido_rating}/5` : '-'}</span>
+                          <div className="flex items-center gap-2">
+                            {log.alcance === 'global' ? (
+                              <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded text-[9px] font-bold flex items-center gap-1">
+                                <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                                Memoria Global
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded text-[9px]">
+                                Solo este pitch
+                              </span>
+                            )}
+                            <span>Tono: {log.tono_rating ? `${log.tono_rating}/5` : '-'} | Contenido: {log.contenido_rating ? `${log.contenido_rating}/5` : '-'}</span>
+                            {log.deshecho && (
+                              <span className="px-1.5 py-0.5 bg-amber-950/60 text-amber-400 border border-amber-500/30 rounded text-[9px] font-bold">
+                                [Deshecho]
+                              </span>
+                            )}
+                          </div>
                         </div>
+
                         {log.comentario && (
                           <p className="text-amber-200/90 italic font-sans">
                             &ldquo;{log.comentario}&rdquo;
                           </p>
+                        )}
+
+                        {log.pitch_previo && !log.deshecho && (
+                          <div className="flex items-center justify-between pt-1 border-t border-zinc-800/60">
+                            <span className="text-[10px] text-zinc-400 font-mono truncate max-w-[220px]" title={log.pitch_previo}>
+                              Pitch previo: {log.pitch_previo.slice(0, 38)}...
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleRevertPitch(log.id)}
+                              disabled={isRevertingPitch}
+                              className="text-[10px] text-amber-400 hover:text-amber-300 font-mono underline flex items-center gap-1 cursor-pointer shrink-0"
+                            >
+                              <RotateCcw className="w-3 h-3" />
+                              Volver a este pitch anterior
+                            </button>
+                          </div>
                         )}
                       </div>
                     ))}

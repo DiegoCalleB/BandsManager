@@ -170,6 +170,19 @@ export function useAuth() {
     return data.user;
   }, [authToken, syncSessionCookie]);
 
+  const handleSetMainBand = useCallback(async (band_id: string) => {
+    const res = await api.setMainBand(band_id);
+    if (res.user) {
+      setCurrentUser(res.user);
+      localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
+    }
+    if (res.availableBands) {
+      setAvailableBands(res.availableBands);
+      localStorage.setItem('bakandeya_available_bands', JSON.stringify(res.availableBands));
+    }
+    return res.user;
+  }, []);
+
   const handleLogout = useCallback(async () => {
     if (authToken) {
       try {
@@ -200,6 +213,7 @@ export function useAuth() {
     setCurrentUser,
     handleLoginSuccess,
     handleSwitchBand,
+    handleSetMainBand,
     handleLogout
   };
 }

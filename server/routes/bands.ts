@@ -322,7 +322,7 @@ router.get("/bands/schedules/:bandId", async (req, res) => {
 
 router.post("/bands/schedules", async (req, res) => {
   try {
-    const { band_id, timezone, horas_lector, horas_enviador } = req.body;
+    const { band_id, timezone, horas_lector, horas_enviador, dias_enviador, dias_lector } = req.body;
     if (!band_id) {
       return res.status(400).json({ error: "band_id es requerido" });
     }
@@ -330,7 +330,9 @@ router.post("/bands/schedules", async (req, res) => {
       band_id,
       timezone: timezone || "Europe/Madrid",
       horas_lector: horas_lector || [],
-      horas_enviador: horas_enviador || []
+      horas_enviador: horas_enviador || [],
+      dias_enviador: dias_enviador || [],
+      dias_lector: dias_lector || []
     });
     res.json({ success: true, data: updated });
   } catch (err: any) {

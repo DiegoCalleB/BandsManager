@@ -348,11 +348,17 @@ export function ensureUniqueIdsInState(state: any): boolean {
   for (const colKey of collections) {
     if (Array.isArray(state[colKey])) {
       const originalLen = state[colKey].length;
+      const seenIds = new Set<string>();
       const seenKeys = new Set<string>();
       const cleanArray: any[] = [];
 
       state[colKey].forEach((item: any, idx: number) => {
         if (!item || typeof item !== 'object') return;
+
+        const itemId = item.id ? String(item.id).trim() : null;
+        if (itemId && seenIds.has(itemId)) {
+          return;
+        }
 
         let key = '';
         const bid = cleanBidStr(item.band_id || '');
@@ -417,6 +423,7 @@ export function ensureUniqueIdsInState(state: any): boolean {
 
         if (!seenKeys.has(key)) {
           seenKeys.add(key);
+          if (itemId) seenIds.add(itemId);
           cleanArray.push(item);
         }
       });

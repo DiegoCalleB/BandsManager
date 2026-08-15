@@ -78,6 +78,47 @@ export const api = {
     });
   },
 
+  async updateUser(id: string, updates: Partial<User>): Promise<User> {
+    return request<User>(`/api/users/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates)
+    });
+  },
+
+  async setMainBand(band_id: string): Promise<{ success: boolean; user: User; availableBands: any[] }> {
+    return request<{ success: boolean; user: User; availableBands: any[] }>('/api/users/set-main-band', {
+      method: 'POST',
+      body: JSON.stringify({ band_id })
+    });
+  },
+
+  async setBandOrder(band_order: string[]): Promise<{ success: boolean; user: User; availableBands: any[] }> {
+    return request<{ success: boolean; user: User; availableBands: any[] }>('/api/users/set-band-order', {
+      method: 'POST',
+      body: JSON.stringify({ band_order })
+    });
+  },
+
+  async createBand(data: {
+    bandName: string;
+    leaderName?: string;
+    contacto_nombre?: string;
+    plan?: string;
+    estilo_musical?: string;
+    localizacion?: string;
+  }): Promise<{ success: boolean; message: string; band_id: string; bandName: string; user: User; availableBands: any[] }> {
+    return request<{ success: boolean; message: string; band_id: string; bandName: string; user: User; availableBands: any[] }>('/api/users/create-band', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async leaveBand(bandId: string): Promise<{ success: boolean; message?: string; user?: User; availableBands?: any[] }> {
+    return request<{ success: boolean; message?: string; user?: User; availableBands?: any[] }>(`/api/users/leave-band/${encodeURIComponent(bandId)}`, {
+      method: 'DELETE'
+    });
+  },
+
   // State Fetching
   async getState(): Promise<{
     leads: Lead[];
@@ -270,7 +311,14 @@ export const api = {
     return request(`/api/bands/schedules/${encodeURIComponent(bandId)}`);
   },
 
-  async saveBandSchedule(schedule: { band_id: string; timezone: string; horas_lector: number[]; horas_enviador: number[] }): Promise<any> {
+  async saveBandSchedule(schedule: {
+    band_id: string;
+    timezone: string;
+    horas_lector: number[];
+    horas_enviador: number[];
+    dias_enviador?: number[];
+    dias_lector?: number[];
+  }): Promise<any> {
     return request('/api/bands/schedules', {
       method: 'POST',
       body: JSON.stringify(schedule)

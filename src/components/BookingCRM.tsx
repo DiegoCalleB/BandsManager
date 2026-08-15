@@ -7,12 +7,14 @@ import {
  Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, 
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
- Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench
+ Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet
 } from 'lucide-react';
 import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from '../utils/gmail';
 import { VenueMap } from './VenueMap';
 import { AddLeadModal } from './booking/AddLeadModal';
 import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
+import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
+import { ExcelImportModal } from './booking/ExcelImportModal';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
 import { LeadsTable } from './booking/LeadsTable';
@@ -68,6 +70,7 @@ export default function BookingCRM({
  currentUser,
  bandName
 }: BookingCRMProps) {
+ const effectiveBandName = bandName || 'Tu Banda';
  const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
  const [searchTerm, setSearchTerm] = useState('');
  const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
@@ -388,6 +391,8 @@ export default function BookingCRM({
 
  // New Lead / Medio Modal
  const [isPlacesExplorerOpen, setIsPlacesExplorerOpen] = useState(false);
+ const [isContactEnricherOpen, setIsContactEnricherOpen] = useState(false);
+ const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
  const [isAddingLeadModalOpen, setIsAddingLeadModalOpen] = useState(false);
  const [newLeadData, setNewLeadData] = useState({
  nombre_sala: '',
@@ -744,7 +749,7 @@ export default function BookingCRM({
  if (res.ok) {
  const data = await res.json();
  if (data.enrichedCount > 0) {
- setEnrichStatusMsg(`¡Éxito! Se han completado y guardado en Google Sheets ${data.enrichedCount} direcciones de salas/festivales.`);
+ setEnrichStatusMsg(`¡Éxito! Se han completado y guardado en Supabase ${data.enrichedCount} direcciones de salas/festivales.`);
  if (Array.isArray(data.leads)) {
  data.leads.forEach((updatedLead: Lead) => {
  if (updatedLead.direccion) {
@@ -782,86 +787,86 @@ Un saludo,
  const [aiGuidelinesSala, setAiGuidelinesSala] = useState('Escribe siempre en un tono enérgico, cercano pero muy respetuoso con los programadores de salas. Enfatiza que disponemos de un potente show con violín enérgico, loops en directo y percusión reciclada, y que aseguramos llenar el aforo gracias a nuestra campaña de promo local.');
 
  // Template states for Festivales
- const [subjectTemplateFestival, setSubjectTemplateFestival] = useState('Propuesta de Cartel / Booking Festival: Bakandeya (Balkan Ska & Electronic Live)');
+ const [subjectTemplateFestival, setSubjectTemplateFestival] = useState('Propuesta de Cartel / Booking Festival: {bandName} (Live Show)');
  const [bodyTemplateFestival, setBodyTemplateFestival] = useState(`Hola equipo de producción y booking de {{nombre_sala}},
 
-Escribimos de parte de Bakandeya para presentar la propuesta de nuestro show directo para la próxima edición de {{nombre_sala}} en {{ciudad}}.
+Escribimos de parte de {bandName} para presentar la propuesta de nuestro show directo para la próxima edición de {{nombre_sala}} en {{ciudad}}.
 
-Nuestra propuesta combina la fiesta explosiva del balkan-ska con violín virtuosístico, percusión y sintetizadores analógicos en tiempo real, ideal para escenarios principales de tarde/noche. Hemos formado parte de eventos de gran formato destacando por la conexión total con el público.
+Nuestra propuesta combina una fiesta explosiva con un directo de alta energía en tiempo real, ideal para escenarios principales de tarde/noche. Hemos formado parte de eventos de gran formato destacando por la conexión total con el público.
 
-Podéis ver nuestro dossier y directo aquí: https://youtube.com/bakandeya_live
+Podéis ver nuestro dossier y directo aquí: {enlace_videos}
 
 Quedamos a vuestra disposición para enviar rider técnico y caché de contratación.
 
 Un saludo atento,
-Bakandeya Agent Manager IA`);
- const [aiGuidelinesFestival, setAiGuidelinesFestival] = useState('Tono muy profesional, conciso y enfocado a directores artísticos y jefes de producción de festivales. Destaca la capacidad de mantener el ritmo alto en un escenario de festival, la brevedad del cambio de línea técnico y el valor diferencial del violín solista con electrónica.');
+{bandName} Agent Manager IA`);
+ const [aiGuidelinesFestival, setAiGuidelinesFestival] = useState('Tono muy profesional, conciso y enfocado a directores artísticos y jefes de producción de festivales. Destaca la capacidad de mantener el ritmo alto en un escenario de festival, la brevedad del cambio de línea técnico y el valor diferencial del show directo.');
 
  // Template states for Discotecas / Clubs
- const [subjectTemplateDiscoteca, setSubjectTemplateDiscoteca] = useState('Propuesta Live Show / Session Nocturna: Bakandeya (Electro-Balkan Live Set)');
+ const [subjectTemplateDiscoteca, setSubjectTemplateDiscoteca] = useState('Propuesta Live Show / Session Nocturna: {bandName} (Live Set)');
  const [bodyTemplateDiscoteca, setBodyTemplateDiscoteca] = useState(`Hola equipo de programación de {{nombre_sala}},
 
-Os contactamos desde Bakandeya para proponer una noche diferente en {{ciudad}}: un Live Performance & Clubbing Set de alta intensidad que fusiona ritmos electro-balkan, violín distorsionado en directo, loops analógicos y percusión.
+Os contactamos desde {bandName} para proponer una noche diferente en {{ciudad}}: un Live Performance & Clubbing Set de alta intensidad que fusiona ritmos bailables, instrumentos en directo y bases de potencia.
 
 Nuestro formato está diseñado para horarios nocturnos en club/discoteca, manteniendo la pista encendida con bpm progresivos sin perder la energía orgánica de la música en vivo.
 
-Vídeo promocional y sesión en directo: https://youtube.com/bakandeya_live
+Vídeo promocional y sesión en directo: {enlace_videos}
 
 ¿Tenéis fechas libres para incorporar un set en vivo en vuestra programación nocturna?
 
 Saludos cordiales,
-Bakandeya Agent Manager IA`);
- const [aiGuidelinesDiscoteca, setAiGuidelinesDiscoteca] = useState('Tono moderno, enfocado a clubes y discotecas de noche. Resalta que no somos un grupo acústico tradicional, sino un Live Set electrónico con violín e impulsos bailables ideales para horario de clubbing o sesiones de madrugada.');
+{bandName} Agent Manager IA`);
+ const [aiGuidelinesDiscoteca, setAiGuidelinesDiscoteca] = useState('Tono moderno, enfocado a clubes y discotecas de noche. Resalta que no somos un grupo acústico tradicional, sino un Live Set electrónico con impulsos bailables ideales para horario de clubbing o sesiones de madrugada.');
 
  // Template states for Medios de Comunicación & Prensa
- const [subjectTemplateMedio, setSubjectTemplateMedio] = useState('[Nota de Prensa / Dossier] Bakandeya presenta su nuevo videoclip y gira 2026');
+ const [subjectTemplateMedio, setSubjectTemplateMedio] = useState('[Nota de Prensa / Dossier] {bandName} presenta su nuevo videoclip y gira');
  const [bodyTemplateMedio, setBodyTemplateMedio] = useState(`Hola equipo de redacción de {{nombre_sala}},
 
-Nos ponemos en contacto desde Bakandeya, proyecto independiente de fusión balkan-ska, roots reggae, violín enérgico y electrónica analógica.
+Nos ponemos en contacto desde {bandName}, proyecto independiente con propuesta enérgica y sonido propio.
 
-Les remitimos nuestro último comunicado de prensa y dossier promocional con motivo del lanzamiento de nuestro nuevo videoclip y la gira de conciertos 2026. Nos encantaría enviarles el tema en calidad broadcast para sonar en su programa/radio, o ponernos a su disposición para entrevistas, acústicos en directo o reseñas.
+Les remitimos nuestro último comunicado de prensa y dossier promocional con motivo del lanzamiento de nuestro nuevo videoclip y la gira de conciertos. Nos encantaría enviarles el tema en calidad broadcast para sonar en su programa/radio, o ponernos a su disposición para entrevistas, acústicos en directo o reseñas.
 
-Dossier y videoclip oficial: https://youtube.com/bakandeya_live
+Dossier y videoclip oficial: {enlace_videos}
 Material en alta resolución (fotos, bio y audio): {{website}}
 
 Muchas gracias por su apoyo a la difusión de la música independiente,
-Bakandeya Agent Manager IA`);
- const [aiGuidelinesMedio, setAiGuidelinesMedio] = useState('Tono periodístico, profesional y directo para medios de comunicación (Radio 3, podcasts, prensa escrita, blogs). Dirígete al redactor, locutor o equipo de redacción de prensa. Destaca la nota de prensa, la fusión sonora única (violín, loops y electrónica) y la disponibilidad para entrevistas, acústicos en estudio o reseñas. IMPORTANTE: No pidas fechas de conciertos ni taquillas, ya que se trata de un medio de difusión y prensa.');
+{bandName} Agent Manager IA`);
+ const [aiGuidelinesMedio, setAiGuidelinesMedio] = useState('Tono periodístico, profesional y directo para medios de comunicación (radio, podcasts, prensa escrita, blogs). Dirígete al redactor, locutor o equipo de redacción de prensa. Destaca la nota de prensa, la propuesta sonora y la disponibilidad para entrevistas, acústicos en estudio o reseñas.');
 
  // Template states for Grupos & Bandas (Co-Booking)
- const [subjectTemplateGrupo, setSubjectTemplateGrupo] = useState('Propuesta de concierto compartido e intercambio de fechas: Bakandeya x {{nombre_sala}}');
+ const [subjectTemplateGrupo, setSubjectTemplateGrupo] = useState('Propuesta de concierto compartido e intercambio de fechas: {bandName} x {{nombre_sala}}');
  const [bodyTemplateGrupo, setBodyTemplateGrupo] = useState(`¡Buenas chavales de {{nombre_sala}}!
 
-Os escribimos desde Bakandeya, banda de balkan-ska, violín enérgico y electrónica de Madrid/Sevilla. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
+Os escribimos desde {bandName}. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
 
 Queremos proponer un INTERCAMBIO DE FECHAS / CO-BOOKING para esta temporada:
-1. Os invitamos a tocar con nosotros en nuestra ciudad (Madrid/Sevilla) compartiendo escenario y taquilla.
+1. Os invitamos a tocar con nosotros en nuestra ciudad compartiendo escenario y taquilla.
 2. Vosotros nos invitáis a tocar en {{ciudad}} en vuestro espacio habitual.
 
 Así aseguramos llenar las dos salas sumando ambos públicos y compartimos gastos de viaje y backline.
 
-Podéis escuchar lo que hacemos aquí: https://youtube.com/bakandeya_live
+Podéis escuchar lo que hacemos aquí: {enlace_videos}
 
 ¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos llamada esta semana?
 
 ¡Un abrazo!
-Bakandeya Agent Manager IA`);
+{bandName} Agent Manager IA`);
  const [aiGuidelinesGrupo, setAiGuidelinesGrupo] = useState('Tono de músico a músico: cercano, colega, directo y colaborativo. Propón claramente la estrategia de ganar-ganar (date swap), compartir público local, compartir backline y abaratar gastos de furgoneta.');
 
  // Template states for Managements & Agencias
- const [subjectTemplateManagement, setSubjectTemplateManagement] = useState('Propuesta de colaboración / Roster: Bakandeya (Balkan-Ska Electro-Live)');
+ const [subjectTemplateManagement, setSubjectTemplateManagement] = useState('Propuesta de colaboración / Roster: {bandName} (Live Show)');
  const [bodyTemplateManagement, setBodyTemplateManagement] = useState(`Estimado equipo de {{nombre_sala}},
 
-Nos dirigimos a vuestra agencia para presentar la propuesta artística de Bakandeya con vista a posibles colaboraciones, coproducciones o inclusión en vuestro catálogo de booking para giras y festivales 2026.
+Nos dirigimos a vuestra agencia para presentar la propuesta artística de {bandName} con vista a posibles colaboraciones, coproducciones o inclusión en vuestro catálogo de booking para giras y festivales.
 
-Bakandeya es un proyecto consolidado que fusiona balkan-ska, reggae, violín solista y sintetizadores analógicos. Destacamos por una logística ágil (cuarteto compacto sin sección de vientos), alta rentabilidad en venta de entradas y un directo arrollador probado en salas y festivales.
+{bandName} es un proyecto consolidado de alta energía. Destacamos por una logística ágil, alta rentabilidad en venta de entradas y un directo arrollador probado en salas y festivales.
 
-Dossier corporativo y resumen en vídeo: https://youtube.com/bakandeya_live
+Dossier corporativo y resumen en vídeo: {enlace_videos}
 
 Estaríamos encantados de agendar una breve reunión telefónica para valorar posibles sinergias.
 
 Atentamente,
-Bakandeya Agent Manager IA`);
+{bandName} Agent Manager IA`);
  const [aiGuidelinesManagement, setAiGuidelinesManagement] = useState('Tono ejecutivo-musical profesional para mánagers, agencias y agentes de booking. Destaca la profesionalidad técnica, el atractivo comercial, la sencillez logística del cuarteto y los datos positivos de aforo.');
 
  // Selected template category in Editor
@@ -1030,44 +1035,59 @@ Bakandeya Agent Manager IA`);
  };
 
  // Filter leads by active section tab ('salas' vs 'medios' vs 'grupos')
- const sectionLeads = leads.filter(lead => {
- const norm = normalizeType(lead.tipo);
- if (sectionTab === 'medios') return norm === 'medio';
- if (sectionTab === 'grupos') return norm === 'grupo';
- return norm !== 'medio' && norm !== 'grupo';
- });
+ const sectionLeads = useMemo(() => {
+   const seen = new Set<string>();
+   return (leads || []).filter(lead => {
+     if (!lead) return false;
+     const leadKey = lead.id ? String(lead.id).trim() : null;
+     if (leadKey && seen.has(leadKey)) return false;
+     if (leadKey) seen.add(leadKey);
 
- const filteredLeads = sectionLeads.filter(lead => {
- const matchesSearch = lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) || 
- lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase()) ||
- lead.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
- (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
- const normSt = normalizeStatus(lead.estado);
- const matchesStatus = statusFilter === 'todos' || 
- normSt === statusFilter || 
- (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
- const matchesMedioType = (l: Lead, filter: string): boolean => {
- if (!filter || filter === 'todos') return true;
- const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
- if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
- if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
- if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
- if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
- if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
- return true;
- };
+     const norm = normalizeType(lead.tipo);
+     if (sectionTab === 'medios') return norm === 'medio';
+     if (sectionTab === 'grupos') return norm === 'grupo';
+     return norm !== 'medio' && norm !== 'grupo';
+   });
+ }, [leads, sectionTab]);
 
- const matchesType = typeFilter === 'todos'
- ? true
- : sectionTab === 'medios'
- ? matchesMedioType(lead, typeFilter)
- : normalizeType(lead.tipo) === typeFilter;
- const matchesCity = !selectedCityFilter || 
- lead.ciudad.toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
- lead.region.toLowerCase().includes(selectedCityFilter.toLowerCase());
-  const matchesCapacity = !minCapacityFilter || (lead.aforo >= minCapacityFilter);
-  return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
- });
+ const filteredLeads = useMemo(() => {
+   const seen = new Set<string>();
+   return sectionLeads.filter((lead, idx) => {
+     const leadKey = lead.id ? String(lead.id).trim() : `lead-${idx}`;
+     if (seen.has(leadKey)) return false;
+     seen.add(leadKey);
+
+     const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+       (lead.ciudad || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+       (lead.region || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+       (lead.email_contacto && lead.email_contacto.toLowerCase().includes(searchTerm.toLowerCase()));
+     const normSt = normalizeStatus(lead.estado);
+     const matchesStatus = statusFilter === 'todos' || 
+       normSt === statusFilter || 
+       (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
+     const matchesMedioType = (l: Lead, filter: string): boolean => {
+       if (!filter || filter === 'todos') return true;
+       const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
+       if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
+       if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
+       if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
+       if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
+       if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
+       return true;
+     };
+
+     const matchesType = typeFilter === 'todos'
+       ? true
+       : sectionTab === 'medios'
+       ? matchesMedioType(lead, typeFilter)
+       : normalizeType(lead.tipo) === typeFilter;
+     const matchesCity = !selectedCityFilter || 
+       (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
+       (lead.region || '').toLowerCase().includes(selectedCityFilter.toLowerCase());
+     const matchesCapacity = !minCapacityFilter || ((lead.aforo || 0) >= minCapacityFilter);
+     return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
+   });
+ }, [sectionLeads, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, sectionTab]);
 
  const handleModalScrape = async () => {
  if (!newLeadData.nombre_sala.trim()) {
@@ -1270,8 +1290,8 @@ Bakandeya Agent Manager IA`);
  fuente: 'Alta Manual CRM',
  estado: 'nuevo',
  pitch_generado: newLeadData.pitch_generado || (sectionTab === 'medios' 
- ? `Asunto: Nota de Prensa: Bakandeya presenta su directo de balkan-ska\n\nEstimada redacción / equipo de ${newLeadData.nombre_sala},\n\nOs remitimos la información del grupo Bakandeya, con electrónica analógica, violín y ritmos balkan...`
- : `Asunto: Propuesta de concierto: Bakandeya en ${newLeadData.nombre_sala}\n\nHola equipo de booking,\n\nSomos la banda Bakandeya...`),
+ ? `Asunto: Nota de Prensa: ${effectiveBandName} presenta su directo\n\nEstimada redacción / equipo de ${newLeadData.nombre_sala},\n\nOs remitimos la información de la propuesta musical de ${effectiveBandName}...`
+ : `Asunto: Propuesta de concierto: ${effectiveBandName} en ${newLeadData.nombre_sala}\n\nHola equipo de booking,\n\nSomos la banda ${effectiveBandName}...`),
  notas: newLeadData.notas || `Añadido desde la sección ${sectionTab === 'medios' ? 'Medios' : 'Salas'} el ${new Date().toISOString().split('T')[0]}`
  };
 
@@ -1288,13 +1308,18 @@ Bakandeya Agent Manager IA`);
  const getStatusDotColor = (status: LeadStatus | string) => {
  const norm = normalizeStatus(status);
  switch (norm) {
- case 'nuevo': return 'bg-stone-400';
- case 'pendiente_aprobacion': return 'bg-[#d1b375]/15';
- case 'aprobado': return 'bg-[#10b981]/15';
- case 'esperando_respuesta': return 'bg-sky-500/15';
- case 'interesado': return 'bg-[#10b981]/15';
- case 'negociando': return 'bg-sky-500/15';
+ case 'nuevo': return 'bg-amber-400';
+ case 'esperando_respuesta':
+ case 'enviado': return 'bg-sky-400';
+ case 'respondido': return 'bg-indigo-400';
+ case 'negociando': return 'bg-purple-400';
+ case 'confirmado': return 'bg-emerald-400';
+ case 'aplazado': return 'bg-yellow-500';
  case 'no_interesado': return 'bg-neutral-500';
+ case 'pendiente_aprobacion': return 'bg-amber-400';
+ case 'aprobado':
+ case 'aprobado_propuesta':
+ case 'aprobado_respuesta': return 'bg-emerald-400';
  default: return 'bg-stone-400';
  }
  };
@@ -1302,13 +1327,18 @@ Bakandeya Agent Manager IA`);
  const getStatusBadgeClass = (status: LeadStatus | string) => {
  const norm = normalizeStatus(status);
  switch (norm) {
- case 'nuevo': return isStitchLight ? 'bg-slate-100 text-slate-700' : 'bg-stone-500/10 text-stone-300';
- case 'pendiente_aprobacion': return isStitchLight ? 'bg-[#d1b375]/15 text-[#d1b375]' : 'bg-[#d1b375]/15 text-[#d1b375]';
- case 'aprobado': return isStitchLight ? (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]') : 'bg-[#10b981]/15/20 text-[#10b981]/80';
- case 'esperando_respuesta': return isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400';
- case 'interesado': return isStitchLight ? (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]') : 'bg-[#10b981]/15/20 text-[#10b981]';
- case 'negociando': return isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400';
- case 'no_interesado': return isStitchLight ? 'bg-slate-100 text-slate-500' : 'bg-neutral-800/60 text-neutral-400';
+ case 'nuevo': return isStitchLight ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30';
+ case 'esperando_respuesta':
+ case 'enviado': return isStitchLight ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-sky-500/15 text-sky-300 border border-sky-500/30';
+ case 'respondido': return isStitchLight ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30';
+ case 'negociando': return isStitchLight ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-purple-500/15 text-purple-300 border border-purple-500/30';
+ case 'confirmado': return isStitchLight ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-300' : 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40';
+ case 'aplazado': return isStitchLight ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-yellow-500/15 text-yellow-300 border border-yellow-500/30';
+ case 'no_interesado': return isStitchLight ? 'bg-slate-100 text-slate-500 border border-slate-200' : 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/50';
+ case 'pendiente_aprobacion': return isStitchLight ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-amber-500/15 text-amber-400 border border-amber-500/40';
+ case 'aprobado':
+ case 'aprobado_propuesta':
+ case 'aprobado_respuesta': return isStitchLight ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/40';
  default: return isStitchLight ? 'bg-slate-50 text-slate-500' : 'bg-neutral-800/60 text-neutral-400';
  }
  };
@@ -1316,14 +1346,19 @@ Bakandeya Agent Manager IA`);
  const getStatusLabel = (status: LeadStatus | string) => {
  const norm = normalizeStatus(status);
  switch (norm) {
- case 'nuevo': return 'Por Contactar';
- case 'pendiente_aprobacion': return 'Por Aprobar';
- case 'aprobado': return 'Aprobado';
- case 'esperando_respuesta': return 'Email Enviado';
- case 'interesado': return 'Interesado';
+ case 'nuevo': return 'Por contactar';
+ case 'esperando_respuesta':
+ case 'enviado': return 'Contactado';
+ case 'respondido': return 'En conversación';
  case 'negociando': return 'Negociando';
- case 'no_interesado': return 'No interesado';
- default: return String(status).toUpperCase();
+ case 'confirmado': return 'Confirmado 🎉';
+ case 'aplazado': return 'Aplazado ⏳';
+ case 'no_interesado': return 'Descartado';
+ case 'pendiente_aprobacion': return 'Borrador por aprobar';
+ case 'aprobado':
+ case 'aprobado_propuesta':
+ case 'aprobado_respuesta': return 'En cola de envío';
+ default: return String(status);
  }
  };
 
@@ -1338,7 +1373,7 @@ Bakandeya Agent Manager IA`);
  // Automatically switch to emails tab for negotiating or interested leads, else info
  setActiveTab(lead.estado === 'negociando' || lead.estado === 'interesado' ? 'emails' : 'info');
  setManualEmailBody('');
- setManualEmailSubject(lead.hilo_emails && lead.hilo_emails.length > 0 ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}` : 'Propuesta de concierto: Bakandeya');
+ setManualEmailSubject(lead.hilo_emails && lead.hilo_emails.length > 0 ? `RE: ${lead.hilo_emails[lead.hilo_emails.length - 1].asunto}` : `Propuesta de concierto: ${effectiveBandName}`);
  setManualEmailStatus('');
 
  setTimeout(() => {
@@ -1383,7 +1418,7 @@ Bakandeya Agent Manager IA`);
  fecha: fechaStr,
  remitente: 'banda' as const,
  remitente_nombre: manualEmailSender,
- asunto: manualEmailSubject || 'Contacto directo de Bakandeya',
+ asunto: manualEmailSubject || `Contacto directo de ${effectiveBandName}`,
  mensaje: manualEmailBody
  };
 
@@ -1434,17 +1469,17 @@ Bakandeya Agent Manager IA`);
  simBody = 'Hola, gracias por pasarnos los detalles. El caché de 4.500€ entra en vuestros rangos para el escenario de Mestizaje. El slot de las 18:30 del viernes está libre. Confirmadnos si vuestro rider técnico incluye los sintetizadores listos para línea balanceada o si necesitáis cajas DI adicionales del festival. ¡Cerremos trato!';
  } else if (selectedLead.id === 'lead-6' || lowercaseName.includes('razzmatazz')) {
  simSender = 'Xavi (Booking Razzmatazz)';
- simBody = 'Buenas, nos parece perfecto el acuerdo de taquilla al 80/20 con un mínimo de 150 entradas garantizadas. La fecha del sábado 5 de Diciembre queda reservada para Bakandeya. Decidme a qué email enviamos el borrador del contrato de sala. ¡Un saludo!';
+ simBody = `Buenas, nos parece perfecto el acuerdo de taquilla al 80/20 con un mínimo de 150 entradas garantizadas. La fecha del sábado 5 de Diciembre queda reservada para ${effectiveBandName}. Decidme a qué email enviamos el borrador del contrato de sala. ¡Un saludo!`;
  } else {
  simSender = `Programador (${selectedLead.nombre_sala})`;
- simBody = `Hola equipo de Bakandeya, gracias por la propuesta. Nos gusta mucho vuestro directo y el tema de balkan-ska con sintetizadores analógicos. Para otoño tenemos el calendario casi cerrado, pero nos queda un hueco el sábado 28 de Noviembre. Iríamos a taquilla 70/30 a vuestro favor con entradas a 10€. ¿Os cuadra la fecha?`;
+ simBody = `Hola equipo de ${effectiveBandName}, gracias por la propuesta. Nos gusta mucho vuestra propuesta en directo. Para otoño tenemos el calendario casi cerrado, pero nos queda un hueco el sábado 28 de Noviembre. Iríamos a taquilla 70/30 a vuestro favor con entradas a 10€. ¿Os cuadra la fecha?`;
  }
 
  const now = new Date();
  const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
  const subject = selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0 
  ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}` 
- : `Re: Propuesta de concierto - Bakandeya`;
+ : `Re: Propuesta de concierto - ${effectiveBandName}`;
 
  const newMsg = {
  id: `em-sim-${Date.now()}`,
@@ -1626,10 +1661,13 @@ Bakandeya Agent Manager IA`);
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('/api/templates', {
-          headers: token ? { Authorization: `Bearer ${token}` } : {}
-        });
+        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+          headers['x-auth-token'] = token;
+        }
+        const res = await fetch('/api/templates', { headers });
         const data = await res.json();
         if (res.ok && data.success && data.templates) {
           const t = data.templates;
@@ -1674,13 +1712,17 @@ Bakandeya Agent Manager IA`);
  const handleSaveTemplates = async () => {
    const activeData = getActiveTemplateData();
    try {
-     const token = localStorage.getItem('token');
+     const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+     const headers: Record<string, string> = {
+       'Content-Type': 'application/json'
+     };
+     if (token) {
+       headers['Authorization'] = `Bearer ${token}`;
+       headers['x-auth-token'] = token;
+     }
      const res = await fetch('/api/templates/save', {
        method: 'POST',
-       headers: {
-         'Content-Type': 'application/json',
-         ...(token ? { Authorization: `Bearer ${token}` } : {})
-       },
+       headers,
        body: JSON.stringify({
          category: templateTab,
          subject: activeData.subject,
@@ -1693,7 +1735,7 @@ Bakandeya Agent Manager IA`);
      });
      const data = await res.json();
      if (res.ok && data.success) {
-       setOptimizationFeedbackMsg(`✅ Plantilla y Pautas para [${activeData.title}] guardadas en Memoria IA, Google Sheets (tab plantillas_pautas_ia) y PROMPTS_AGENTES_IA.md.`);
+       setOptimizationFeedbackMsg(`✅ Plantilla y Pautas para [${activeData.title}] guardadas en Memoria IA, Supabase (tab plantillas_pautas_ia) y PROMPTS_AGENTES_IA.md.`);
        setTemplateCustomInstruction('');
        setTemplateToneRating(0);
        setTemplateContentRating(0);
@@ -1770,6 +1812,47 @@ Bakandeya Agent Manager IA`);
         </button>
 
         <button
+          id="open-places-explorer-btn"
+          type="button"
+          onClick={() => setIsPlacesExplorerOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-xs active:scale-95 cursor-pointer transition-all"
+          title="Buscar nuevas salas en cualquier ciudad con IA y Google Places"
+        >
+          <Search className="w-3.5 h-3.5 text-[#f2ca50]" />
+          <span className="hidden sm:inline">Buscar Nuevas Salas</span>
+          <span className="sm:hidden">Buscar</span>
+        </button>
+
+        <button
+          id="open-excel-import-btn"
+          type="button"
+          onClick={() => setIsExcelImportOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 shadow-xs active:scale-95 cursor-pointer transition-all"
+          title="Subir archivo Excel o CSV con tus salas, bandas y contactos"
+        >
+          <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="hidden sm:inline">Importar Excel / CSV</span>
+          <span className="sm:hidden">Excel</span>
+        </button>
+
+        <button
+          id="open-contact-enricher-btn"
+          type="button"
+          onClick={() => setIsContactEnricherOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 border border-indigo-500/40 shadow-xs active:scale-95 cursor-pointer transition-all"
+          title="Ejecutar el Agente Enriquecedor de Contactos para extraer y verificar emails en la web"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+          <span className="hidden sm:inline">Agente Enriquecedor</span>
+          <span className="sm:hidden">Enriquecer</span>
+          {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 text-[10px] font-mono font-bold">
+              {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
+            </span>
+          )}
+        </button>
+
+        <button
           id="open-tools-btn"
           type="button"
           onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
@@ -1836,7 +1919,37 @@ Bakandeya Agent Manager IA`);
           >
             <span className="flex items-center gap-2">
               <Search className="w-4 h-4" />
-              Buscador Google Places & Emails IA
+              Scout Descubridor (Buscar Nuevos Leads)
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsExcelImportOpen(true);
+              setIsMobileToolsOpen(false);
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+          >
+            <span className="flex items-center gap-2">
+              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+              Importar Excel / CSV (Bandas y Salas)
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsContactEnricherOpen(true);
+              setIsMobileToolsOpen(false);
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-900/60 to-purple-900/60 hover:from-indigo-900/80 hover:to-purple-900/80 text-indigo-200 border border-indigo-500/40 transition-all cursor-pointer shadow-sm active:scale-98"
+          >
+            <span className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-400" />
+              Agente Enriquecedor de Contactos ({leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length} sin email)
             </span>
             <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
           </button>
@@ -1884,7 +1997,7 @@ Bakandeya Agent Manager IA`);
               const url = URL.createObjectURL(blob);
               const link = document.createElement("a");
               link.setAttribute("href", url);
-              link.setAttribute("download", `Bakandeya_Aprobados_${new Date().toISOString().slice(0, 10)}.csv`);
+              link.setAttribute("download", `${(effectiveBandName || 'Banda').replace(/\s+/g, '_')}_Aprobados_${new Date().toISOString().slice(0, 10)}.csv`);
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
@@ -2336,14 +2449,20 @@ Bakandeya Agent Manager IA`);
     {([
       { key: 'todos', label: 'Todos' },
       { key: 'nuevo', label: 'Por contactar' },
-      { key: 'pendiente_aprobacion', label: 'Por aprobar' },
-      { key: 'aprobado', label: 'Aprobados' },
-      { key: 'esperando_respuesta', label: 'Enviados' },
-      { key: 'interesado', label: 'Interesados' },
+      { key: 'esperando_respuesta', label: 'Contactados' },
+      { key: 'respondido', label: 'En conversación' },
       { key: 'negociando', label: 'Negociando' },
-      { key: 'no_interesado', label: 'No interesados' }
+      { key: 'confirmado', label: 'Confirmados 🎉' },
+      { key: 'aplazado', label: 'Aplazados ⏳' },
+      { key: 'no_interesado', label: 'Descartados' }
     ] as const).map(tab => {
-      const count = tab.key === 'todos' ? sectionLeads.length : sectionLeads.filter(l => normalizeStatus(l.estado) === tab.key).length;
+      const count = tab.key === 'todos' 
+        ? sectionLeads.length 
+        : sectionLeads.filter(l => {
+            const norm = normalizeStatus(l.estado);
+            if (tab.key === 'esperando_respuesta') return norm === 'esperando_respuesta' || norm === 'enviado';
+            return norm === tab.key;
+          }).length;
       const isSelected = statusFilter === tab.key;
 
       return (
@@ -2720,7 +2839,7 @@ Bakandeya Agent Manager IA`);
  </div>
  
  <div className={`text-[10px] leading-relaxed font-sans ${textSub}`}>
- Cuando el agente de Python <strong>"Redactor"</strong> corre, lee estas plantillas y pautas, las mezcla con los detalles del contacto capturado por el <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado para que lo revises en esta misma pantalla.
+ Cuando el agente de Supabase <strong>"Redactor"</strong> corre, lee estas plantillas y pautas, las mezcla con los detalles del contacto capturado por el <strong>"Scout"</strong> (aforo, ubicación, género, redes) y genera un borrador adaptado para que lo revises en esta misma pantalla.
  </div>
 
  {testPromptResult ? (
@@ -2821,7 +2940,7 @@ Bakandeya Agent Manager IA`);
  </div>
 
  <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
- Módulo de Modelado AI de Bakandeya Systems v2.4. Powered by Gemini.
+ Módulo de Modelado AI de BandManager.ai. Powered by Gemini.
  </div>
  </div>
  </div>
@@ -2880,17 +2999,36 @@ Bakandeya Agent Manager IA`);
     isOpen={isPlacesExplorerOpen}
     isStitchLight={isStitchLight}
     onClose={() => setIsPlacesExplorerOpen(false)}
-    onImportLeads={(importedLeads) => {
-      importedLeads.forEach(l => {
-        if (onAddLead) onAddLead(l);
-      });
+    onImportLeads={() => {
+      window.dispatchEvent(new CustomEvent('app-data-updated'));
     }}
+  />
+
+  <ExcelImportModal
+    isOpen={isExcelImportOpen}
+    isStitchLight={isStitchLight}
+    existingLeads={leads}
+    onClose={() => setIsExcelImportOpen(false)}
+    onSuccess={(importedLeads, updatedCount) => {
+      window.dispatchEvent(new CustomEvent('app-data-updated'));
+      if (importedLeads.length > 0 && onAddLead) {
+        importedLeads.forEach(l => onAddLead(l));
+      }
+    }}
+  />
+
+  <CRMContactEnricherModal
+    isOpen={isContactEnricherOpen}
+    onClose={() => setIsContactEnricherOpen(false)}
+    leads={leads}
+    onUpdateLead={onUpdateLead}
+    isStitchLight={isStitchLight}
   />
 
   <AgentAutonomySettingsModal
     isOpen={isAgentConfigOpen}
     onClose={() => setIsAgentConfigOpen(false)}
-    bandName={bandName || 'Bakandeya'}
+    bandName={effectiveBandName || 'Tu Banda'}
     bandId={currentBandId || currentUser?.band_id || 'band-bakandeya'}
     currentUser={currentUser}
     isStitchLight={isStitchLight}
