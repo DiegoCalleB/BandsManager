@@ -124,7 +124,38 @@ export function useAuth() {
   }, [isLoggedIn, authToken, refreshSession]);
 
   const handleLoginSuccess = useCallback((user: User, token: string, bandsList?: any[]) => {
-    setCurrentUser(user);
+    // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login
+    const preferredBandId =
+      user.main_band_id ||
+      (Array.isArray(user.band_order) && user.band_order.length > 0 ? user.band_order[0] : null) ||
+      user.band_id ||
+      'band-bakandeya';
+
+    const normalizedBandId = preferredBandId.startsWith('band-') ? preferredBandId : (preferredBandId === 'bakandeya' ? 'band-bakandeya' : `band-${preferredBandId}`);
+
+    const resolvedUser: User = {
+      ...user,
+      band_id: normalizedBandId,
+      main_band_id: user.main_band_id || normalizedBandId
+    };
+
+    // If availableBands list is provided, synchronize band name & plan with the active main band
+    if (bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
+      const cleanPref = normalizedBandId.replace(/^(band|reg)-/, '');
+      const match = bandsList.find((b: any) =>
+        b.band_id === normalizedBandId || b.id === normalizedBandId ||
+        (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanPref) ||
+        (b.id && b.id.replace(/^(band|reg)-/, '') === cleanPref)
+      );
+      if (match) {
+        resolvedUser.bandName = match.bandName || match.nombre_banda || match.name || resolvedUser.bandName;
+        if (match.plan) {
+          resolvedUser.plan = match.plan;
+        }
+      }
+    }
+
+    setCurrentUser(resolvedUser);
     setAuthToken(token);
     syncSessionCookie(token);
     if (bandsList) {
@@ -132,7 +163,7 @@ export function useAuth() {
       localStorage.setItem('bakandeya_available_bands', JSON.stringify(bandsList));
     }
     localStorage.setItem('bakandeya_token', token);
-    localStorage.setItem('bakandeya_user', JSON.stringify(user));
+    localStorage.setItem('bakandeya_user', JSON.stringify(resolvedUser));
     localStorage.setItem('bakandeya_remember_me', 'true');
     localStorage.setItem('bakandeya_logged_in', 'true');
     setIsLoggedIn(true);
