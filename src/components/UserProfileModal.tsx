@@ -56,6 +56,27 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor || '#10b981');
  const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id || 'band-bakandeya');
  const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl || '');
+
+ useEffect(() => {
+   if (currentUser) {
+     setName(currentUser.name || '');
+     setInstrument(currentUser.instrument || '');
+     setAvatarColor(currentUser.avatarColor || '#10b981');
+     setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || 'band-bakandeya');
+   }
+ }, [currentUser]);
+
+ useEffect(() => {
+   if (availableBands) {
+     setLocalAvailableBands(availableBands);
+   }
+ }, [availableBands]);
+
+ useEffect(() => {
+   if (epkConfig?.logoUrl) {
+     setBandLogoUrl(epkConfig.logoUrl);
+   }
+ }, [epkConfig?.logoUrl]);
  const [logoImgError, setLogoImgError] = useState(false);
  const [uploadingLogo, setUploadingLogo] = useState(false);
  const [showUpgradeModal, setShowUpgradeModal] = useState(false);

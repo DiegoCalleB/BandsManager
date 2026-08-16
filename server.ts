@@ -49,6 +49,7 @@ import repertorioRouter from "./server/routes/repertorio.js";
 import epkFansRouter from "./server/routes/epk_fans.js";
 import uploadRouter from "./server/routes/upload.js";
 import concertToAlbumRouter from "./server/routes/concert_to_album.js";
+import billingRouter from "./server/routes/billing.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -72,6 +73,7 @@ app.use("/api", agentRouter);
 app.use("/api", reelsRouter);
 app.use("/api", repertorioRouter);
 app.use("/api", epkFansRouter);
+app.use("/api", billingRouter);
 app.use("/api/concert-to-album", concertToAlbumRouter);
 app.use("/api/upload", uploadRouter);
 app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));

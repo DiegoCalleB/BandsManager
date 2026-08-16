@@ -9,19 +9,10 @@ import {
   Star,
   Layers,
   Building2,
-  Radio,
-  Users,
-  Truck,
   Video,
   Coins,
   Bot,
-  Heart,
-  FileSpreadsheet,
-  HelpCircle,
-  ArrowRight,
-  Info,
-  Guitar,
-  Clock,
+  Truck,
   DownloadCloud,
   ChevronDown,
   ChevronUp,
@@ -29,9 +20,11 @@ import {
   PackageCheck,
   Palette,
   Printer,
-  Home
+  Home,
+  Info
 } from 'lucide-react';
 import { ThemeColors } from '../types';
+import { CheckoutButton } from './CheckoutButton';
 
 interface PlanesProps {
   colors?: ThemeColors;
@@ -75,20 +68,16 @@ const PLANS_DATA: PlanCardData[] = [
     creditsSub: 'Pitches básicos y consultas IA',
     ctaText: 'Empezar gratis',
     ctaVariant: 'secondary',
-    // No stickerGift (incentivo de subida)
     features: [
-      { text: '1 banda o proyecto', included: true },
-      { text: '10 salas en base de datos', included: true },
-      { text: 'Calendario de ensayos y bolos', included: true },
-      { text: 'Repertorio y setlists', included: true },
-      { text: 'Metrónomo y Afinador WebAudio', included: true },
-      { text: 'Dossier EPK básico', included: true },
-      { text: 'Exportación a CSV', included: true },
+      { text: '20 créditos IA / mes', included: true },
+      { text: '10 salas', included: true },
+      { text: 'Calendario', included: true },
+      { text: 'Repertorio', included: true },
+      { text: 'EPK básico', included: true },
+      { text: 'Exportar a CSV', included: true },
       { text: 'Medios y prensa musical', included: false },
       { text: 'Captación de fans con QR', included: false },
-      { text: 'Reels & Social Center', included: false },
-      { text: 'Agente Mánager IA autónomo', included: false },
-      { text: 'Tour Manager & Logística', included: false }
+      { text: 'Agente Mánager IA', included: false }
     ]
   },
   {
@@ -105,23 +94,20 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: 'Elegir Local',
     ctaVariant: 'silver',
     stickerGift: {
-      qty: '250 pegatinas',
-      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
-      tag: '250 uds gratis'
+      qty: '50 pegatinas de tu banda gratis',
+      description: 'Pack de pegatinas de vinilo gratis con tu suscripción',
+      tag: '50 uds gratis'
     },
     features: [
-      { text: '1 banda o proyecto', included: true },
-      { text: '50 salas de conciertos', included: true },
-      { text: '20 medios y radios musicales', included: true },
-      { text: 'Hasta 100 fans registrados', included: true },
-      { text: 'Dossier EPK interactivo completo', included: true },
-      { text: '5 clips de Reels / mes con IA', included: true, highlight: true },
-      { text: 'Soporte prioritario por email', included: true },
-      { text: 'Exportación a CSV y PDF', included: true },
-      { text: 'Tour Manager & Rutas de viaje', included: false },
-      { text: 'Agente Mánager en batch', included: false },
-      { text: 'Control financiero & Merchandising', included: false },
-      { text: 'Acceso a red de bandas y swap', included: false }
+      { text: '150 créditos IA / mes', included: true },
+      { text: '50 salas', included: true },
+      { text: '20 medios', included: true },
+      { text: '100 fans', included: true },
+      { text: 'EPK completo', included: true },
+      { text: '5 clips Reels/mes', included: true, highlight: true },
+      { text: 'Soporte por email', included: true },
+      { text: 'Tour Manager & Rutas', included: false },
+      { text: 'Agente Mánager en batch', included: false }
     ]
   },
   {
@@ -139,23 +125,20 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: 'Probar 30 días gratis',
     ctaVariant: 'gold',
     stickerGift: {
-      qty: '500 pegatinas',
-      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
-      tag: '500 uds gratis'
+      qty: '100 pegatinas de tu banda gratis',
+      description: 'Pack de pegatinas de vinilo gratis con tu suscripción',
+      tag: '100 uds gratis'
     },
     features: [
-      { text: 'Salas y festivales ilimitados', included: true, highlight: true },
-      { text: 'Medios y prensa ilimitados', included: true },
-      { text: 'Base de fans ilimitada', included: true },
-      { text: 'Tour Manager & Cálculo de rutas y dietas', included: true, highlight: true },
-      { text: '30 clips Reels / mes con guión IA', included: true },
-      { text: 'Agente Mánager en batch (Human-in-the-loop)', included: true, highlight: true },
-      { text: 'Módulo de Finanzas & Balances', included: true },
-      { text: 'Diseño IA de Merchandising (5/mes)', included: true },
-      { text: 'Grupos & Agencias aliadas para bolos compartidos', included: true },
-      { text: 'Dossier EPK Pro con reproductor y descargas', included: true },
-      { text: 'Soporte prioritario WhatsApp / Chat', included: true },
-      { text: 'Uso de API Key propia (opcional)', included: false }
+      { text: '800 créditos IA / mes', included: true, highlight: true },
+      { text: 'Salas y medios ilimitados', included: true, highlight: true },
+      { text: 'Fans ilimitados', included: true },
+      { text: 'Tour Manager', included: true, highlight: true },
+      { text: '30 clips Reels/mes', included: true },
+      { text: 'Agente Mánager en batch', included: true, highlight: true },
+      { text: 'Finanzas', included: true },
+      { text: 'Diseño de merchan (5/mes)', included: true },
+      { text: 'Grupos y Agencias', included: true }
     ]
   },
   {
@@ -172,23 +155,19 @@ const PLANS_DATA: PlanCardData[] = [
     ctaText: 'Elegir Cabeza de Cartel',
     ctaVariant: 'emerald',
     stickerGift: {
-      qty: '1.000 pegatinas + entrega prioritaria',
-      description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
-      tag: '1.000 uds + Envío Express'
+      qty: '200 pegatinas + entrega prioritaria',
+      description: 'Pack de pegatinas de vinilo con envío express gratis',
+      tag: '200 uds + Envío Express'
     },
     features: [
-      { text: 'Hasta 5 bandas gestionadas en paralelo', included: true, highlight: true },
-      { text: 'Todo ilimitado sin restricciones de volumen', included: true },
+      { text: '2.500 créditos IA / mes', included: true, highlight: true },
+      { text: 'Todo ilimitado', included: true, highlight: true },
       { text: 'Agente Mánager autónomo multi-agente', included: true, highlight: true },
-      { text: 'Módulo de Royalties & Reparto de porcentajes', included: true },
-      { text: 'Gestión de Stock físico de Merchandising', included: true },
-      { text: 'Dominio propio personalizado para EPK y Fans', included: true },
-      { text: 'Usar tu propia API Key (Gemini/OpenAI)', included: true, highlight: true },
-      { text: 'Despacho automático sincronizado con CRM', included: true },
-      { text: 'Soporte VIP 24/7 con mánager dedicado', included: true },
-      { text: 'Acceso anticipado a funciones beta', included: true },
-      { text: 'Exportación completa y backups automáticos', included: true },
-      { text: 'Multi-usuario con roles de banda y mánager', included: true }
+      { text: 'Royalties y reparto', included: true },
+      { text: 'Stock de merchandising', included: true },
+      { text: 'Dominio propio', included: true },
+      { text: 'Usar tu propia API key', included: true, highlight: true },
+      { text: 'Soporte VIP', included: true }
     ]
   }
 ];
@@ -212,28 +191,21 @@ const COMPARISON_TABLE: ComparisonSection[] = [
     icon: Layers,
     items: [
       {
-        name: 'Bandas o proyectos simultáneos',
-        ensayo: '1 banda',
-        local: '1 banda',
-        de_gira: '1 banda (ampliable)',
-        cabeza_de_cartel: 'Hasta 5 bandas'
+        name: 'Proyectos simultáneos',
+        ensayo: '1 proyecto',
+        local: '1 proyecto',
+        de_gira: '1 proyecto (ampliable)',
+        cabeza_de_cartel: 'Hasta 5 proyectos'
       },
       {
-        name: 'Miembros de banda por proyecto',
-        ensayo: 'Ilimitados',
-        local: 'Ilimitados',
-        de_gira: 'Ilimitados',
-        cabeza_de_cartel: 'Ilimitados'
-      },
-      {
-        name: 'Exportación de datos (CSV / PDF / JSON)',
+        name: 'Exportación de datos (CSV / PDF)',
         ensayo: 'CSV básico',
         local: 'CSV y PDF',
         de_gira: 'Completa sin límites',
         cabeza_de_cartel: 'Backups automáticos + Todo'
       },
       {
-        name: 'Dominio personalizado (tupropiaweb.com)',
+        name: 'Dominio propio personalizado',
         ensayo: false,
         local: false,
         de_gira: false,
@@ -253,21 +225,21 @@ const COMPARISON_TABLE: ComparisonSection[] = [
         cabeza_de_cartel: '2.500 créditos'
       },
       {
-        name: 'Redacción de pitches de booking personalizados',
+        name: 'Redacción de pitches de booking',
         ensayo: 'Básico (manual)',
         local: 'IA Avanzada',
-        de_gira: 'IA Adaptada al género + tono',
+        de_gira: 'IA Adaptada al género',
         cabeza_de_cartel: 'IA Ultracontextual multi-estilo'
       },
       {
-        name: 'Agente Mánager (Chatbot con Function Calling)',
+        name: 'Agente Mánager (Chatbot Inteligente)',
         ensayo: false,
         local: 'Consultas básicas',
-        de_gira: 'Acciones y batch completo',
+        de_gira: 'Acciones en batch',
         cabeza_de_cartel: 'Autónomo multi-agente'
       },
       {
-        name: 'Uso de tu propia API Key de IA',
+        name: 'Usar tu propia API Key',
         ensayo: false,
         local: false,
         de_gira: false,
@@ -280,32 +252,25 @@ const COMPARISON_TABLE: ComparisonSection[] = [
     icon: Building2,
     items: [
       {
-        name: 'Base de salas y promotores',
+        name: 'Base de salas de conciertos',
         ensayo: '10 salas',
         local: '50 salas',
         de_gira: 'Ilimitadas',
         cabeza_de_cartel: 'Ilimitadas'
       },
       {
-        name: 'Medios de prensa, radios y playlists',
+        name: 'Medios de prensa y radios',
         ensayo: false,
-        local: '20 contactos',
+        local: '20 medios',
         de_gira: 'Ilimitados',
         cabeza_de_cartel: 'Ilimitados'
       },
       {
-        name: 'Grupos & Agencias aliadas (intercambio de bolos)',
+        name: 'Grupos y Agencias aliadas',
         ensayo: false,
         local: false,
         de_gira: true,
         cabeza_de_cartel: true
-      },
-      {
-        name: 'Pipeline Kanban en 2 dimensiones (CRM + IA)',
-        ensayo: '1 columna',
-        local: 'Embudo completo',
-        de_gira: 'Embudo completo + Aprobaciones',
-        cabeza_de_cartel: 'Embudo 360 + Automatizaciones'
       }
     ]
   },
@@ -314,32 +279,25 @@ const COMPARISON_TABLE: ComparisonSection[] = [
     icon: Truck,
     items: [
       {
-        name: 'Calendario unificado de ensayos y conciertos',
+        name: 'Calendario unificado',
         ensayo: true,
         local: true,
         de_gira: true,
         cabeza_de_cartel: true
       },
       {
-        name: 'Tour Manager & Hoja de ruta por ciudades',
+        name: 'Tour Manager & Rutas',
         ensayo: false,
         local: false,
         de_gira: true,
         cabeza_de_cartel: true
       },
       {
-        name: 'Cálculo automático de kilometraje, gasolina y dietas',
+        name: 'Cálculo de kilometraje y dietas',
         ensayo: false,
         local: false,
         de_gira: true,
         cabeza_de_cartel: true
-      },
-      {
-        name: 'Checklist de equipo, furgoneta y prueba de sonido',
-        ensayo: 'Básico',
-        local: 'Básico',
-        de_gira: 'Interactiva en vivo',
-        cabeza_de_cartel: 'Interactiva en vivo + Roles'
       }
     ]
   },
@@ -348,32 +306,25 @@ const COMPARISON_TABLE: ComparisonSection[] = [
     icon: Video,
     items: [
       {
-        name: 'Dossier de prensa interactivo (EPK público)',
-        ensayo: 'Versión reducida',
-        local: 'Completo con Spotify',
-        de_gira: 'Pro con Rider y Prensa',
+        name: 'Dossier EPK interactivo',
+        ensayo: 'Básico',
+        local: 'Completo',
+        de_gira: 'Pro con reproductor',
         cabeza_de_cartel: 'Pro sin marca de agua'
       },
       {
-        name: 'Captación de Fans mediante QR en bolos',
+        name: 'Captación de fans mediante QR',
         ensayo: false,
-        local: 'Hasta 100 fans',
-        de_gira: 'Fans ilimitados',
-        cabeza_de_cartel: 'Fans ilimitados + Segmentación'
+        local: '100 fans',
+        de_gira: 'Ilimitados',
+        cabeza_de_cartel: 'Ilimitados + Segmentación'
       },
       {
-        name: 'Reels & Social Center (Guiones virales IA)',
+        name: 'Clips Reels/mes con IA',
         ensayo: false,
         local: '5 clips/mes',
         de_gira: '30 clips/mes',
         cabeza_de_cartel: 'Ilimitados'
-      },
-      {
-        name: 'Metrónomo WebAudio Pro & Afinador Cromático',
-        ensayo: true,
-        local: true,
-        de_gira: true,
-        cabeza_de_cartel: true
       }
     ]
   },
@@ -382,28 +333,28 @@ const COMPARISON_TABLE: ComparisonSection[] = [
     icon: Coins,
     items: [
       {
-        name: 'Control de gastos, ingresos y márgenes de bolo',
+        name: 'Control de finanzas y bolos',
         ensayo: false,
         local: false,
         de_gira: true,
         cabeza_de_cartel: true
       },
       {
-        name: 'Generador de mockups de Merchandising con IA',
+        name: 'Diseño de merchandising (IA)',
         ensayo: false,
         local: false,
         de_gira: '5 diseños/mes',
         cabeza_de_cartel: 'Ilimitados'
       },
       {
-        name: 'Control de stock físico de merchan y tallas',
+        name: 'Stock de merchandising',
         ensayo: false,
         local: false,
         de_gira: false,
         cabeza_de_cartel: true
       },
       {
-        name: 'Reparto automático de cachés y royalties entre miembros',
+        name: 'Royalties y reparto de cachés',
         ensayo: false,
         local: false,
         de_gira: false,
@@ -415,6 +366,7 @@ const COMPARISON_TABLE: ComparisonSection[] = [
 
 export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigateToModule }) => {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     'Gestión de Bandas y Proyectos': true,
     'Inteligencia Artificial y Agentes': true,
@@ -448,9 +400,38 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
     setExpandedSections(allCollapsed);
   };
 
+  const handleSubscribe = async (planId: string) => {
+    if (planId === 'ensayo') {
+      if (onSelectPlan) onSelectPlan(planId);
+      return;
+    }
+    try {
+      setLoadingPlan(planId);
+      const res = await fetch('/api/billing/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planId,
+          billingInterval: billingPeriod,
+          userEmail: 'diego.delacalleb@gmail.com'
+        })
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Error al iniciar la pasarela de pago con Stripe');
+      }
+    } catch (err: any) {
+      alert('Error de red al conectar con Stripe: ' + err.message);
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
-      {/* 1. Top Trial Banner */}
+      {/* 1. Banner superior */}
       {showBanner && (
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-emerald-500/20 border border-amber-400/30 p-4 sm:p-5 text-zinc-100 shadow-lg shadow-black/40">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -461,9 +442,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
               <div>
                 <p className="text-sm sm:text-base font-bold text-zinc-100 flex items-center justify-center sm:justify-start gap-2">
                   <span>30 días gratis del plan De Gira. Sin tarjeta.</span>
-                  <span className="hidden md:inline-flex px-2 py-0.5 rounded-full bg-amber-400 text-black text-[10px] font-black uppercase font-mono tracking-wider">
-                    Oferta de Lanzamiento
-                  </span>
                 </p>
                 <p className="text-xs text-neutral-400 mt-0.5">
                   Desbloquea el Booking IA ilimitado, Tour Manager y la suite completa durante un mes completo.
@@ -477,7 +455,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
-                <ArrowRight className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
@@ -492,11 +469,11 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
         </div>
       )}
 
-      {/* 2. Header & Toggle */}
+      {/* 2. Header & Toggle Mensual / Anual */}
       <div className="flex flex-col items-center text-center space-y-4 pt-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-mono font-bold uppercase tracking-widest">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>Suscripciones & Inversión de Banda</span>
+          <span>Planes & Suscripciones</span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-zinc-100 uppercase">
@@ -507,7 +484,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
           Desde tus primeros ensayos hasta giras nacionales. Elige el ritmo de automatización y créditos de inteligencia artificial que tu proyecto necesita.
         </p>
 
-        {/* Monthly / Annual Toggle Switch */}
+        {/* Toggle Mensual / Anual con badge "-20% · 2 meses gratis" */}
         <div className="pt-4 flex flex-col sm:flex-row items-center gap-3">
           <div className="inline-flex p-1.5 rounded-2xl bg-[#181716] border border-[#2c2a28] shadow-inner">
             <button
@@ -519,7 +496,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                   : 'text-neutral-400 hover:text-zinc-200'
               }`}
             >
-              Facturación Mensual
+              Mensual
             </button>
             <button
               type="button"
@@ -530,7 +507,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                   : 'text-neutral-400 hover:text-zinc-200'
               }`}
             >
-              <span>Facturación Anual</span>
+              <span>Anual</span>
               <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-extrabold ${
                 billingPeriod === 'annual'
                   ? 'bg-black text-amber-300'
@@ -543,47 +520,12 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
         </div>
       </div>
 
-      {/* 3. Hardcoded Sample Credit Consumption Widget (Preview) */}
-      <div className="p-4 rounded-2xl bg-[#141312] border border-[#262422] flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
-            <Zap className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-neutral-300">
-                Tu Consumo de Créditos IA
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-800 text-neutral-400 border border-neutral-700">
-                Visualización de muestra
-              </span>
-            </div>
-            <p className="text-xs text-neutral-400">
-              Se recargan automáticamente al inicio de cada ciclo de facturación.
-            </p>
-          </div>
-        </div>
-
-        <div className="w-full md:w-80 flex flex-col gap-1.5">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-amber-400 font-bold">340 / 800 créditos</span>
-            <span className="text-neutral-400">42% consumido</span>
-          </div>
-          <div className="w-full h-2.5 rounded-full bg-neutral-900 border border-neutral-800 overflow-hidden">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 shadow-sm shadow-amber-400/50"
-              style={{ width: '42.5%' }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Pricing Cards Grid (4 Cards Row) */}
+      {/* 3. 4 Cards en fila (apiladas en móvil) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch pt-2">
         {PLANS_DATA.map((plan) => {
           const isAnnual = billingPeriod === 'annual';
           const priceDisplay = isAnnual ? plan.annualPrice : plan.monthlyPrice;
-          const periodSuffix = isAnnual ? '€ / año' : '€ / mes';
+          const periodSuffix = isAnnual ? '€/año' : '€/mes';
 
           const getBadgeStyle = (type: PlanCardData['badgeType']) => {
             switch (type) {
@@ -658,7 +600,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
 
                   {isAnnual && plan.annualPrice > 0 && (
                     <p className="text-[11px] font-mono text-emerald-400 mt-1">
-                      Equivalente a {plan.annualEquivalentMonthly.toFixed(2).replace('.', ',')}€/mes (pago anual único)
+                      Equivalente a {plan.annualEquivalentMonthly.toFixed(2).replace('.', ',')}€/mes
                     </p>
                   )}
                   {isAnnual && plan.annualPrice === 0 && (
@@ -685,7 +627,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                   </div>
                 </div>
 
-                {/* 🎁 Welcome Gift: Physical Sticker Pack Badge / Mini-card */}
+                {/* 🎁 Sticker Gift */}
                 {plan.stickerGift ? (
                   <div className={`p-3 rounded-2xl border transition-all relative overflow-hidden ${
                     plan.isPopular
@@ -715,7 +657,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                           }`}>
                             {plan.stickerGift.tag}
                           </span>
-                          <span className="text-[9px] font-mono text-neutral-400 uppercase">Regalo Físico</span>
+                          <span className="text-[9px] font-mono text-neutral-400 uppercase">Regalo</span>
                         </div>
                         <p className="text-[11px] font-bold text-zinc-100 leading-snug">
                           🎁 {plan.stickerGift.qty}
@@ -732,14 +674,14 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                       <Gift className="w-3.5 h-3.5 text-neutral-600" />
                       <span className="text-[10px] font-mono">Pack de pegatinas de bienvenida</span>
                     </div>
-                    <span className="text-[10px] font-mono font-bold text-neutral-600 uppercase">Solo planes de pago</span>
+                    <span className="text-[10px] font-mono font-bold text-neutral-600 uppercase">Solo pago</span>
                   </div>
                 )}
 
                 {/* Feature List */}
                 <div className="pt-2 space-y-2.5">
                   <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                    Incluido en el plan:
+                    Características:
                   </p>
                   <ul className="space-y-2">
                     {plan.features.map((feat, idx) => (
@@ -772,133 +714,20 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
 
               {/* CTA Button */}
               <div className="pt-6 mt-4 border-t border-[#262422]">
-                <button
-                  type="button"
-                  className={`w-full py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-98 flex items-center justify-center gap-2 ${getCtaStyle(
-                    plan.ctaVariant
-                  )}`}
+                <CheckoutButton
+                  planId={plan.id}
+                  billingInterval={billingPeriod}
+                  className={`text-xs uppercase tracking-wider ${getCtaStyle(plan.ctaVariant)}`}
                 >
                   <span>{plan.ctaText}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </CheckoutButton>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* 4.5. Bloque Explicativo del Regalo de Bienvenida: Pack de Pegatinas Físicas */}
-      <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#1c1813] via-[#141210] to-[#0f0e0d] border-2 border-amber-500/40 shadow-2xl relative overflow-hidden">
-        {/* Glow ambient background effect */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-        
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Text & Steps Column */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-mono font-bold uppercase tracking-wider">
-                <Gift className="w-3.5 h-3.5 text-amber-400" />
-                <span>Regalo Exclusivo de Bienvenida</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-display uppercase tracking-tight text-zinc-100">
-                Tu primer merchan, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200">invitamos nosotros</span>
-              </h2>
-              <p className="text-sm text-neutral-300 leading-relaxed max-w-xl">
-                Al suscribirte a cualquier plan de pago (<span className="text-amber-300 font-bold">Local</span>, <span className="text-amber-300 font-bold">De Gira</span> o <span className="text-emerald-300 font-bold">Cabeza de Cartel</span>), te enviamos a casa un pack de pegatinas vinílicas troqueladas de alta resistencia para tu banda.
-              </p>
-            </div>
-
-            {/* 3 Steps */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-[#141312]/90 border border-amber-500/20 flex flex-col gap-2">
-                <div className="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-300 border border-amber-400/30 flex items-center justify-center font-mono font-black text-sm">
-                  1
-                </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-200">
-                  <Palette className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Diseña</span>
-                </div>
-                <p className="text-[11px] text-neutral-400 leading-relaxed">
-                  Diseña tus pegatinas en el módulo Merchan (logo, portada de disco, QR a tu Instagram).
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[#141312]/90 border border-amber-500/20 flex flex-col gap-2">
-                <div className="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-300 border border-amber-400/30 flex items-center justify-center font-mono font-black text-sm">
-                  2
-                </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-200">
-                  <Printer className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Imprimimos</span>
-                </div>
-                <p className="text-[11px] text-neutral-400 leading-relaxed">
-                  Nosotros las mandamos a imprimir en vinilo mate resistente a exteriores e instrumentos.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[#141312]/90 border border-amber-500/20 flex flex-col gap-2">
-                <div className="w-9 h-9 rounded-xl bg-amber-400/15 text-amber-300 border border-amber-400/30 flex items-center justify-center font-mono font-black text-sm">
-                  3
-                </div>
-                <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-200">
-                  <Home className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Recibe</span>
-                </div>
-                <p className="text-[11px] text-neutral-400 leading-relaxed">
-                  Las recibes en casa, listas para repartir y pegar en tu próximo bolo o festival.
-                </p>
-              </div>
-            </div>
-
-            {/* Footnote */}
-            <p className="text-[11px] font-mono text-neutral-400 flex items-center gap-1.5 pt-1">
-              <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>* Válido una vez por banda, con la primera suscripción de pago. Envío solo a España.</span>
-            </p>
-          </div>
-
-          {/* Visual Sticker Mockup Column */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-sm aspect-square rounded-2xl bg-gradient-to-br from-[#181614] to-[#0c0b0a] border border-amber-500/30 p-6 flex flex-col items-center justify-center shadow-inner group">
-              {/* Floating stickers visual composition */}
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56">
-                {/* Sticker 1: Logo Vinyl Die-cut */}
-                <div className="absolute top-2 left-2 w-32 h-32 rounded-2xl bg-neutral-900 border-4 border-white shadow-2xl p-3 flex flex-col items-center justify-center transform -rotate-12 group-hover:-rotate-6 transition-transform duration-300 z-10">
-                  <div className="w-12 h-12 rounded-xl bg-amber-400 text-black font-black flex items-center justify-center text-xl font-display mb-1 shadow-md">
-                    BK
-                  </div>
-                  <span className="text-[10px] font-black font-display text-white uppercase tracking-wider">BAKANDEYA</span>
-                  <span className="text-[8px] font-mono text-amber-400 font-bold">Rock Band Oficial</span>
-                </div>
-
-                {/* Sticker 2: Round QR Sticker */}
-                <div className="absolute bottom-2 right-2 w-28 h-28 rounded-full bg-amber-400 text-black border-4 border-white shadow-2xl p-2.5 flex flex-col items-center justify-center transform rotate-12 group-hover:rotate-6 transition-transform duration-300 z-20">
-                  <div className="w-10 h-10 bg-black p-1 rounded-md flex items-center justify-center mb-0.5">
-                    <div className="w-full h-full bg-white rounded-xs flex items-center justify-center text-[7px] font-mono font-bold text-black">
-                      QR
-                    </div>
-                  </div>
-                  <span className="text-[8px] font-black uppercase tracking-tight text-center leading-tight">Escucha en Spotify</span>
-                </div>
-
-                {/* Sticker 3: Badge Tour */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1.5 rounded-full bg-emerald-500 text-black border-2 border-white shadow-xl flex items-center gap-1.5 font-black text-[10px] uppercase font-mono tracking-wider transform -rotate-3 z-30">
-                  <Gift className="w-3.5 h-3.5 stroke-[3]" />
-                  <span>Vinilo Troquelado</span>
-                </div>
-              </div>
-
-              {/* Tag beneath mockup */}
-              <div className="mt-4 flex items-center gap-2 text-xs font-mono text-amber-300/90 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-                <PackageCheck className="w-3.5 h-3.5 text-amber-400" />
-                <span>Hasta 1.000 pegatinas de vinilo de alta calidad</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 5. Complete Comparison Table */}
+      {/* 4. Complete Comparison Table */}
       <div className="pt-8 space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-2 border-b border-[#262422]">
           <div className="text-center sm:text-left">
@@ -976,7 +805,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                           key={rIdx}
                           className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 p-4 items-center hover:bg-[#181716]/80 transition-colors"
                         >
-                          {/* Feature Name & Description */}
                           <div className="lg:col-span-4 space-y-0.5">
                             <p className="text-xs sm:text-sm font-semibold text-zinc-200">{row.name}</p>
                             {row.description && (
@@ -984,7 +812,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                             )}
                           </div>
 
-                          {/* Ensayo */}
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
                             <span className="lg:hidden text-[10px] font-mono text-neutral-500">Ensayo:</span>
                             {typeof row.ensayo === 'boolean' ? (
@@ -998,7 +825,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                             )}
                           </div>
 
-                          {/* Local */}
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
                             <span className="lg:hidden text-[10px] font-mono text-neutral-500">Local:</span>
                             {typeof row.local === 'boolean' ? (
@@ -1012,7 +838,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                             )}
                           </div>
 
-                          {/* De Gira */}
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs bg-amber-500/5 lg:bg-transparent p-2 lg:p-0 rounded-lg">
                             <span className="lg:hidden text-[10px] font-mono text-amber-400 font-bold">De Gira (⭐):</span>
                             {typeof row.de_gira === 'boolean' ? (
@@ -1028,7 +853,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                             )}
                           </div>
 
-                          {/* Cabeza de Cartel */}
                           <div className="lg:col-span-2 flex items-center justify-between lg:justify-center text-xs">
                             <span className="lg:hidden text-[10px] font-mono text-emerald-400 font-bold">Cabeza de Cartel:</span>
                             {typeof row.cabeza_de_cartel === 'boolean' ? (
@@ -1051,33 +875,6 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
               );
             })}
           </div>
-        </div>
-      </div>
-
-      {/* 6. Bottom Notice / Guarantees */}
-      <div className="p-6 rounded-3xl bg-[#141312] border border-[#262422] flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left shadow-lg">
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="text-sm sm:text-base font-bold text-zinc-100">
-              Tus datos son siempre tuyos
-            </h4>
-            <p className="text-xs text-neutral-400 mt-0.5">
-              Puedes exportar tus salas, canciones, repertorios y fans en cualquier momento, incluso en el plan gratuito. Sin permanencia ni letra pequeña.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 shrink-0">
-          <button
-            type="button"
-            className="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-xs font-mono font-bold text-neutral-300 flex items-center gap-2 cursor-pointer transition-colors"
-          >
-            <DownloadCloud className="w-4 h-4 text-amber-400" />
-            <span>Exportación Libre</span>
-          </button>
         </div>
       </div>
     </div>
