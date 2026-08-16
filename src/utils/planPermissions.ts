@@ -116,7 +116,7 @@ export const PLANS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', 
 };
 
 export function normalizePlan(rawPlan?: string): 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
-  if (!rawPlan) return 'de_gira';
+  if (!rawPlan) return 'ensayo';
   const clean = rawPlan.toLowerCase().trim();
   
   if (clean === 'cabeza_de_cartel' || clean === 'cabeza de cartel' || clean === 'elite' || clean === 'manager360' || clean === 'pro_plus' || clean === '360' || clean === 'manager 360' || clean === 'elite 360') {
@@ -132,7 +132,7 @@ export function normalizePlan(rawPlan?: string): 'ensayo' | 'local' | 'de_gira' 
     return 'ensayo';
   }
   
-  return 'de_gira';
+  return 'ensayo';
 }
 
 export function getPlanDefinition(rawPlan?: string): PlanDefinition {
@@ -161,12 +161,106 @@ export function getPlanChangeType(currentPlan?: string, targetPlan?: string): 'c
   return targetLevel > currLevel ? 'upgrade' : 'downgrade';
 }
 
-export function hasModuleAccess(rawPlan: string | undefined, moduleId: string, isAdmin?: boolean): boolean {
-  // Admins or Cabeza de cartel users get access to everything
-  if (isAdmin) return true;
+export interface PlanLimits {
+  maxLeads: number;
+  maxPressContacts: number;
+  maxBands: number;
+  maxSongs: number;
+  maxFans: number;
+  monthlyCredits: number;
+}
+
+export const PLAN_LIMITS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+  ensayo: {
+    maxLeads: 10,
+    maxPressContacts: 0,
+    maxBands: 1,
+    maxSongs: 5,
+    maxFans: 10,
+    monthlyCredits: 100
+  },
+  local: {
+    maxLeads: 50,
+    maxPressContacts: 10,
+    maxBands: 1,
+    maxSongs: 20,
+    maxFans: 100,
+    monthlyCredits: 300
+  },
+  de_gira: {
+    maxLeads: Infinity,
+    maxPressContacts: Infinity,
+    maxBands: 1,
+    maxSongs: Infinity,
+    maxFans: Infinity,
+    monthlyCredits: 800
+  },
+  cabeza_de_cartel: {
+    maxLeads: Infinity,
+    maxPressContacts: Infinity,
+    maxBands: 5,
+    maxSongs: Infinity,
+    maxFans: Infinity,
+    monthlyCredits: 2500
+  }
+};
+
+export function getPlanLimits(rawPlan?: string): PlanLimits {
+  const norm = normalizePlan(rawPlan);
+  return PLAN_LIMITS[norm] || PLAN_LIMITS.ensayo;
+}
+
+export function checkRecordLimit(
+  rawPlan: string | undefined,
+  recordType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands',
+  currentCount: number
+): { allowed: boolean; max: number; current: number; message?: string } {
+  const limits = getPlanLimits(rawPlan);
+  let max = Infinity;
+  let typeLabel = 'registros';
+
+  if (recordType === 'leads') {
+    max = limits.maxLeads;
+    typeLabel = 'salas';
+  } else if (recordType === 'medios') {
+    max = limits.maxPressContacts;
+    typeLabel = 'contactos de medios';
+  } else if (recordType === 'fans') {
+    max = limits.maxFans;
+    typeLabel = 'fans';
+  } else if (recordType === 'songs') {
+    max = limits.maxSongs;
+    typeLabel = 'canciones';
+  } else if (recordType === 'bands') {
+    max = limits.maxBands;
+    typeLabel = 'bandas';
+  }
+
+  if (currentCount >= max) {
+    return {
+      allowed: false,
+      max,
+      current: currentCount,
+      message: `Tienes ${currentCount} ${typeLabel} y el plan contratado (${getPlanDefinition(rawPlan).name}) permite un máximo de ${max}. Puedes seguir consultando y editando tus datos existentes, pero necesitas mejorar el plan para añadir nuevos registros.`
+    };
+  }
+
+  return { allowed: true, max, current: currentCount };
+}
+
+export function hasModuleAccess(rawPlan: string | undefined, moduleId: string): boolean {
   const norm = normalizePlan(rawPlan);
   if (norm === 'cabeza_de_cartel') return true;
 
   const planDef = PLANS[norm];
-  return planDef ? planDef.allowedModules.includes(moduleId) : true;
+  return planDef ? planDef.allowedModules.includes(moduleId) : false;
 }
+
+export function getRequiredPlanForModule(moduleId: string): 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
+  if (PLANS.ensayo.allowedModules.includes(moduleId)) return 'ensayo';
+  if (PLANS.local.allowedModules.includes(moduleId)) return 'local';
+  if (PLANS.de_gira.allowedModules.includes(moduleId)) return 'de_gira';
+  return 'cabeza_de_cartel';
+}
+
+

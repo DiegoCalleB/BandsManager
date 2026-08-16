@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { User as UserType } from '../types';
 import { googleSignIn } from '../utils/gmail';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
@@ -289,14 +289,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     }, 500);
   };
 
-  const handlePlanSelect = async (planKey: 'emergente' | 'profesional' | 'manager360') => {
+  const handlePlanSelect = async (planKey: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string) => {
     setLoading(true);
     setError(null);
 
-    const planNamesMap = {
-      emergente: 'Banda Emergente (Gratis)',
-      profesional: 'Gira Profesional (29€/mes)',
-      manager360: 'Manager 360 (79€/mes)'
+    const planNamesMap: Record<string, string> = {
+      ensayo: 'Ensayo (Gratis)',
+      local: 'Local (12€/mes)',
+      de_gira: 'De Gira (29€/mes)',
+      cabeza_de_cartel: 'Cabeza de Cartel (79€/mes)'
     };
 
     try {
@@ -482,7 +483,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   return (
     <div className="fixed inset-0 z-50 p-4 bg-[#09090b] text-neutral-100 overflow-y-auto animate-in fade-in duration-300">
       <div className="min-h-full flex items-center justify-center py-6 md:py-8">
-        <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-5xl' : 'max-w-sm space-y-5'}`}>
+        <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-6xl' : 'max-w-sm space-y-5'}`}>
         
         {/* Soft Golden Background Ambient Glow */}
         <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#f2ca50]/5 rounded-full blur-[100px] pointer-events-none" />
@@ -1142,71 +1143,89 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             ========================================= */}
         {view === 'plans' && (
           <div className="w-full animate-in zoom-in-95 duration-500 py-6">
-            <div className="text-center mb-8 space-y-3">
-              <h1 className="text-3xl md:text-4xl font-bold text-neutral-100 tracking-tight">
+            <div className="text-center mb-6 space-y-3">
+              <div className="flex items-center justify-between max-w-5xl mx-auto px-2">
+                <button
+                  type="button"
+                  onClick={() => setView('register')}
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#131317] hover:bg-[#1c1c24] border border-neutral-800 text-xs font-semibold text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Volver al registro</span>
+                </button>
+                <div className="hidden sm:block text-xs text-neutral-500 font-mono">
+                  Paso 2 de 2: Elige tu suscripción
+                </div>
+              </div>
+
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-100 tracking-tight">
                 Elige el plan para <span className="text-[#f2ca50]">{regBandName || 'tu Banda'}</span>
               </h1>
-              <p className="text-neutral-400 max-w-xl mx-auto text-sm sm:text-base">
-                Sube de nivel tu carrera musical. Puedes cambiar de plan en cualquier momento.
+              <p className="text-neutral-400 max-w-xl mx-auto text-xs sm:text-sm">
+                Impulsa tu carrera musical. Podrás actualizar o cancelar tu plan en cualquier momento.
               </p>
 
               {/* FILTER BUTTONS BY CATEGORY */}
-              <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
                 <button 
                   type="button"
                   onClick={() => setFeatureCategory('all')} 
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'all' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'all' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
                 >
                   Todas las funciones
                 </button>
                 <button 
                   type="button"
                   onClick={() => setFeatureCategory('booking')} 
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'booking' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'booking' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
                 >
                   🎯 Booking & Salas
                 </button>
                 <button 
                   type="button"
                   onClick={() => setFeatureCategory('media')} 
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'media' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'media' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
                 >
                   📱 Redes, EPK & Fans
                 </button>
                 <button 
                   type="button"
                   onClick={() => setFeatureCategory('finance')} 
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'finance' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${featureCategory === 'finance' ? 'bg-[#f2ca50] text-neutral-950 shadow-md shadow-[#f2ca50]/20' : 'bg-[#131317] text-neutral-400 hover:text-white border border-neutral-800'}`}
                 >
                   💼 Finanzas & Agentes 360
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
               
-              {/* PLAN 1: EMERGENTE */}
-              <div className="bg-[#131317]/50 border border-neutral-800/50 rounded-3xl p-8 flex flex-col hover:border-neutral-700 transition-colors">
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-neutral-200">Banda Emergente</h3>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-white">0€</span>
-                    <span className="text-xs text-neutral-500 font-medium">/ para siempre</span>
+              {/* PLAN 1: ENSAYO (Gratis) */}
+              <div className="bg-[#131317]/80 border border-neutral-800/80 rounded-3xl p-5 flex flex-col hover:border-neutral-700 transition-colors">
+                <div className="mb-4">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-neutral-800 text-neutral-400 border border-neutral-700">Gratis</span>
                   </div>
-                  <p className="text-sm text-neutral-500 mt-2 h-10">Proyectos que están empezando a organizarse.</p>
+                  <h3 className="text-lg font-bold text-neutral-200">Ensayo</h3>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-black text-white">0€</span>
+                    <span className="text-[11px] text-neutral-500 font-medium">/ para siempre</span>
+                  </div>
+                  <p className="text-xs text-neutral-400 mt-1 min-h-[32px]">Proyectos noveles que están empezando a organizarse.</p>
                 </div>
                 
-                <ul className="space-y-4 mb-8 flex-1">
+                <ul className="space-y-2.5 mb-6 flex-1 text-xs">
                   {[
-                    { text: 'CRM Básico de Salas', cat: 'booking' },
-                    { text: 'Booking manual (hasta 5)', cat: 'booking' },
-                    { text: 'EPK Público', cat: 'media' },
-                    { text: 'Gestión de Repertorio', cat: 'media' }
+                    { text: '1 banda o proyecto activo', cat: 'all' },
+                    { text: '10 salas en base de datos', cat: 'booking' },
+                    { text: 'Dossier de Prensa Interactivo (EPK)', cat: 'media' },
+                    { text: 'Gestión de Repertorio & Letras', cat: 'media' },
+                    { text: 'Afinador & Metrónomo WebAudio', cat: 'media' }
                   ].map((f, i) => {
                     const isHighlighted = featureCategory === 'all' || featureCategory === f.cat;
                     return (
-                      <li key={i} className={`flex items-start gap-3 text-sm transition-opacity duration-200 ${isHighlighted ? 'text-neutral-300 opacity-100' : 'text-neutral-600 opacity-40'}`}>
-                        <Check className={`w-5 h-5 shrink-0 ${isHighlighted ? 'text-neutral-400' : 'text-neutral-700'}`} />
+                      <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-neutral-300 opacity-100' : 'text-neutral-600 opacity-40'}`}>
+                        <Check className={`w-4 h-4 shrink-0 mt-0.5 ${isHighlighted ? 'text-neutral-400' : 'text-neutral-700'}`} />
                         <span className={isHighlighted && featureCategory !== 'all' ? 'font-bold text-[#f2ca50]' : ''}>{f.text}</span>
                       </li>
                     );
@@ -1215,43 +1234,46 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <button 
                   type="button"
-                  onClick={() => handlePlanSelect('emergente')}
+                  onClick={() => handlePlanSelect('ensayo')}
                   disabled={loading}
-                  className="w-full py-3.5 rounded-2xl bg-neutral-800 hover:bg-neutral-700 text-white font-medium text-sm transition-colors cursor-pointer"
+                  className="w-full py-2.5 rounded-2xl bg-neutral-800 hover:bg-neutral-700 text-white font-medium text-xs transition-colors cursor-pointer border border-neutral-700"
                 >
                   Empezar gratis
                 </button>
               </div>
 
-              {/* PLAN 2: GIRA PROFESIONAL (Destacado) */}
-              <div className="bg-[#1a1a24] border-2 border-[#f2ca50] rounded-3xl p-8 flex flex-col relative shadow-[0_0_40px_rgba(242,202,80,0.15)]">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#f2ca50] text-neutral-950 text-xs font-bold uppercase tracking-wider py-1 px-4 rounded-full flex items-center gap-1 shadow-md">
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  Más Popular
-                </div>
-                
-                <div className="mb-6 mt-2">
-                  <h3 className="text-xl font-bold text-[#f2ca50]">Gira Profesional</h3>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-white">29€</span>
-                    <span className="text-neutral-400">/ mes</span>
+              {/* PLAN 2: LOCAL (12€) */}
+              <div className="bg-[#131317]/80 border border-slate-700/80 rounded-3xl p-5 flex flex-col hover:border-slate-500 transition-colors">
+                <div className="mb-4">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-600/40">Iniciación</span>
                   </div>
-                  <p className="text-sm text-neutral-400 mt-2 h-10">Bandas activas que buscan automatización e IA.</p>
+                  <h3 className="text-lg font-bold text-slate-200">Local</h3>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-black text-white">12€</span>
+                    <span className="text-[11px] text-neutral-400">/ mes</span>
+                  </div>
+                  <p className="text-xs text-neutral-400 mt-1 min-h-[32px]">Bandas en activo que buscan arrancar su booking.</p>
+                </div>
+
+                <div className="mb-3 px-2.5 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-1.5 text-[10px] font-mono text-amber-300 font-bold">
+                  <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+                  <span>🎁 250 pegatinas gratis</span>
                 </div>
                 
-                <ul className="space-y-4 mb-8 flex-1">
+                <ul className="space-y-2.5 mb-6 flex-1 text-xs">
                   {[
-                    { text: 'Booking IA Autónomo Ilimitado', cat: 'booking' },
-                    { text: 'Buscador Inteligente de Salas', cat: 'booking' },
-                    { text: 'Planificador de Redes', cat: 'media' },
-                    { text: 'Estudio de Letras IA', cat: 'media' },
-                    { text: 'Rutas de Gira', cat: 'booking' },
-                    { text: 'QR de Fans', cat: 'media' }
+                    { text: '1 banda o proyecto', cat: 'all' },
+                    { text: '50 salas de conciertos', cat: 'booking' },
+                    { text: '10 contactos prensa & medios', cat: 'booking' },
+                    { text: 'Planificador Redes & Reels', cat: 'media' },
+                    { text: 'QR & Captura Base de Fans', cat: 'media' },
+                    { text: 'Asistente IA de Redacción', cat: 'booking' }
                   ].map((f, i) => {
                     const isHighlighted = featureCategory === 'all' || featureCategory === f.cat;
                     return (
-                      <li key={i} className={`flex items-start gap-3 text-sm transition-opacity duration-200 ${isHighlighted ? 'text-neutral-200 opacity-100' : 'text-neutral-600 opacity-40'}`}>
-                        <Zap className={`w-5 h-5 shrink-0 ${isHighlighted ? 'text-[#f2ca50]' : 'text-neutral-700'}`} />
+                      <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-neutral-200 opacity-100' : 'text-neutral-600 opacity-40'}`}>
+                        <Zap className={`w-4 h-4 shrink-0 mt-0.5 ${isHighlighted ? 'text-slate-300' : 'text-neutral-700'}`} />
                         <span className={isHighlighted && featureCategory !== 'all' ? 'font-bold text-[#f2ca50]' : ''}>{f.text}</span>
                       </li>
                     );
@@ -1260,39 +1282,48 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <button 
                   type="button"
-                  onClick={() => handlePlanSelect('profesional')}
+                  onClick={() => handlePlanSelect('local')}
                   disabled={loading}
-                  className="w-full py-3.5 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-sm transition-colors cursor-pointer shadow-lg shadow-[#f2ca50]/20 flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs transition-colors cursor-pointer border border-slate-600/40"
                 >
-                  Seleccionar Profesional
-                  <ArrowRight className="w-4 h-4" />
+                  Seleccionar Local
                 </button>
               </div>
 
-              {/* PLAN 3: MANAGER 360 */}
-              <div className="bg-[#131317]/50 border border-neutral-800/50 rounded-3xl p-8 flex flex-col hover:border-neutral-700 transition-colors">
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-neutral-200">Manager 360</h3>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-white">79€</span>
-                    <span className="text-neutral-400">/ mes</span>
-                  </div>
-                  <p className="text-sm text-neutral-500 mt-2 h-10">Control total para proyectos profesionales y agencias.</p>
+              {/* PLAN 3: DE GIRA (29€ - Destacado) */}
+              <div className="bg-[#181610] border-2 border-[#f2ca50] rounded-3xl p-5 flex flex-col relative shadow-[0_0_30px_rgba(242,202,80,0.15)]">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#f2ca50] text-neutral-950 text-[10px] font-bold uppercase tracking-wider py-0.5 px-3 rounded-full flex items-center gap-1 shadow-md">
+                  <Star className="w-3 h-3 fill-current" />
+                  Más Popular
                 </div>
                 
-                <ul className="space-y-4 mb-8 flex-1">
+                <div className="mb-4 mt-1">
+                  <h3 className="text-lg font-bold text-[#f2ca50]">De Gira</h3>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-black text-white">29€</span>
+                    <span className="text-[11px] text-neutral-300">/ mes</span>
+                  </div>
+                  <p className="text-xs text-neutral-300 mt-1 min-h-[32px]">Para bandas que tocan con frecuencia y automatizan todo.</p>
+                </div>
+
+                <div className="mb-3 px-2.5 py-1 rounded-xl bg-[#f2ca50]/15 border border-[#f2ca50]/40 flex items-center gap-1.5 text-[10px] font-mono text-[#f2ca50] font-bold">
+                  <Sparkles className="w-3 h-3 text-[#f2ca50] shrink-0" />
+                  <span>🎁 500 pegatinas gratis</span>
+                </div>
+                
+                <ul className="space-y-2.5 mb-6 flex-1 text-xs">
                   {[
-                    { text: 'Todo lo de Profesional', cat: 'all' },
-                    { text: 'Finanzas Avanzadas', cat: 'finance' },
-                    { text: 'Analítica de Merchandising', cat: 'finance' },
-                    { text: 'IA Multi-Agente', cat: 'finance' },
-                    { text: 'Dominio Web Personalizado', cat: 'media' },
-                    { text: 'Soporte VIP', cat: 'finance' }
+                    { text: 'Salas & Festivales ilimitados', cat: 'booking' },
+                    { text: 'Medios y prensa ilimitados', cat: 'booking' },
+                    { text: 'Agentes IA Scout, Redactor & Lector', cat: 'booking' },
+                    { text: 'Rutas de Gira & Tour Logistics', cat: 'booking' },
+                    { text: 'Calculadora de dietas & km', cat: 'booking' },
+                    { text: 'Dossier EPK con dominio propio', cat: 'media' }
                   ].map((f, i) => {
                     const isHighlighted = featureCategory === 'all' || featureCategory === f.cat;
                     return (
-                      <li key={i} className={`flex items-start gap-3 text-sm transition-opacity duration-200 ${isHighlighted ? 'text-neutral-300 opacity-100' : 'text-neutral-600 opacity-40'}`}>
-                        <Shield className={`w-5 h-5 shrink-0 ${isHighlighted ? 'text-indigo-400' : 'text-neutral-700'}`} />
+                      <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-neutral-100 opacity-100' : 'text-neutral-600 opacity-40'}`}>
+                        <Zap className={`w-4 h-4 shrink-0 mt-0.5 ${isHighlighted ? 'text-[#f2ca50]' : 'text-neutral-700'}`} />
                         <span className={isHighlighted && featureCategory !== 'all' ? 'font-bold text-[#f2ca50]' : ''}>{f.text}</span>
                       </li>
                     );
@@ -1301,9 +1332,56 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
                 <button 
                   type="button"
-                  onClick={() => handlePlanSelect('manager360')}
+                  onClick={() => handlePlanSelect('de_gira')}
                   disabled={loading}
-                  className="w-full py-3.5 rounded-2xl bg-neutral-800 hover:bg-neutral-700 text-white font-medium text-sm transition-colors cursor-pointer"
+                  className="w-full py-2.5 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-xs transition-colors cursor-pointer shadow-lg shadow-[#f2ca50]/20 flex items-center justify-center gap-1.5"
+                >
+                  <span>Elegir De Gira</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {/* PLAN 4: CABEZA DE CARTEL (79€) */}
+              <div className="bg-[#151413] border border-emerald-800/80 rounded-3xl p-5 flex flex-col hover:border-emerald-600 transition-colors">
+                <div className="mb-4">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-600/40">Élite 360</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-emerald-300">Cabeza de Cartel</h3>
+                  <div className="mt-1 flex items-baseline gap-1">
+                    <span className="text-2xl sm:text-3xl font-black text-white">79€</span>
+                    <span className="text-[11px] text-neutral-400">/ mes</span>
+                  </div>
+                  <p className="text-xs text-neutral-400 mt-1 min-h-[32px]">Control total para proyectos profesionales y agencias.</p>
+                </div>
+
+                <div className="mb-3 px-2.5 py-1 rounded-xl bg-emerald-950/50 border border-emerald-600/40 flex items-center gap-1.5 text-[10px] font-mono text-emerald-300 font-bold">
+                  <Sparkles className="w-3 h-3 text-emerald-400 shrink-0" />
+                  <span>🎁 1.000 pegatinas + Express</span>
+                </div>
+                
+                <ul className="space-y-2.5 mb-6 flex-1 text-xs">
+                  {[
+                    { text: 'Hasta 5 bandas multi-proyecto', cat: 'all' },
+                    { text: 'Finanzas & Balances Pro', cat: 'finance' },
+                    { text: 'Taller Merchan & Inventario', cat: 'finance' },
+                    { text: 'IA Multi-Agente & Soporte VIP', cat: 'finance' }
+                  ].map((f, i) => {
+                    const isHighlighted = featureCategory === 'all' || featureCategory === f.cat;
+                    return (
+                      <li key={i} className={`flex items-start gap-2 transition-opacity duration-200 ${isHighlighted ? 'text-neutral-300 opacity-100' : 'text-neutral-600 opacity-40'}`}>
+                        <Shield className={`w-4 h-4 shrink-0 mt-0.5 ${isHighlighted ? 'text-emerald-400' : 'text-neutral-700'}`} />
+                        <span className={isHighlighted && featureCategory !== 'all' ? 'font-bold text-[#f2ca50]' : ''}>{f.text}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <button 
+                  type="button"
+                  onClick={() => handlePlanSelect('cabeza_de_cartel')}
+                  disabled={loading}
+                  className="w-full py-2.5 rounded-2xl bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 font-semibold text-xs border border-emerald-600/40 transition-colors cursor-pointer"
                 >
                   Seleccionar 360
                 </button>

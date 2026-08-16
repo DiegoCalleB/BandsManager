@@ -11,20 +11,102 @@ const DB_NAME = 'BakandeyaAudioDB';
 const STORE_NAME = 'audio_files';
 const DB_VERSION = 1;
 
+let cachedDb: IDBDatabase | null = null;
+
 function openAudioDB(): Promise<IDBDatabase> {
+  if (cachedDb) {
+    try {
+      // Check if connection is still usable
+      const tx = cachedDb.transaction(STORE_NAME, 'readonly');
+      tx.abort();
+      return Promise.resolve(cachedDb);
+    } catch {
+      cachedDb = null;
+    }
+  }
+
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME);
+    try {
+      if (typeof indexedDB === 'undefined') {
+        reject(new Error('IndexedDB is not supported'));
+        return;
       }
-    };
 
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains(STORE_NAME)) {
+          db.createObjectStore(STORE_NAME);
+        }
+      };
+
+      request.onsuccess = () => {
+        const db = request.result;
+        cachedDb = db;
+
+        db.onclose = () => {
+          cachedDb = null;
+        };
+
+        db.onversionchange = () => {
+          try {
+            db.close();
+          } catch {
+            // ignore
+          }
+          cachedDb = null;
+        };
+
+        resolve(db);
+      };
+
+      request.onerror = () => {
+        cachedDb = null;
+        reject(request.error || new Error('Failed to open IndexedDB'));
+      };
+
+      request.onblocked = () => {
+        cachedDb = null;
+      };
+    } catch (err) {
+      cachedDb = null;
+      reject(err);
+    }
   });
+}
+
+/**
+ * Execute an IDB operation with automatic retry if the database was closing
+ */
+async function executeIDBOperation<T>(
+  mode: IDBTransactionMode,
+  op: (store: IDBObjectStore) => Promise<T>
+): Promise<T> {
+  let attempts = 0;
+  while (attempts < 2) {
+    attempts++;
+    try {
+      const db = await openAudioDB();
+      const tx = db.transaction(STORE_NAME, mode);
+      const store = tx.objectStore(STORE_NAME);
+      return await op(store);
+    } catch (err: any) {
+      cachedDb = null;
+      const isClosingErr = err && (
+        err.name === 'InvalidStateError' || 
+        String(err.message || '').toLowerCase().includes('closing') ||
+        String(err.message || '').toLowerCase().includes('closed')
+      );
+      if (isClosingErr && attempts < 2) {
+        // Wait a tick and retry with fresh connection
+        await new Promise(r => setTimeout(r, 50));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error('IndexedDB operation failed after retry');
 }
 
 /**
@@ -32,17 +114,15 @@ function openAudioDB(): Promise<IDBDatabase> {
  */
 export async function saveAudioToStorage(id: string, audioData: string | Blob): Promise<string> {
   try {
-    const db = await openAudioDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readwrite');
-      const store = tx.objectStore(STORE_NAME);
-      const req = store.put(audioData, id);
-
-      req.onsuccess = () => resolve(id);
-      req.onerror = () => reject(req.error);
+    return await executeIDBOperation('readwrite', (store) => {
+      return new Promise((resolve, reject) => {
+        const req = store.put(audioData, id);
+        req.onsuccess = () => resolve(id);
+        req.onerror = () => reject(req.error || new Error('Failed to put item in IndexedDB'));
+      });
     });
   } catch (err) {
-    console.error('Error saving audio to IndexedDB:', err);
+    console.warn('Error saving audio to IndexedDB, fallback required:', err);
     throw err;
   }
 }
@@ -52,31 +132,29 @@ export async function saveAudioToStorage(id: string, audioData: string | Blob): 
  */
 export async function getAudioFromStorage(id: string): Promise<string | null> {
   try {
-    const db = await openAudioDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readonly');
-      const store = tx.objectStore(STORE_NAME);
-      const req = store.get(id);
-
-      req.onsuccess = () => {
-        const val = req.result;
-        if (!val) {
-          resolve(null);
-          return;
-        }
-        if (typeof val === 'string') {
-          resolve(val);
-        } else if (val instanceof Blob) {
-          const objectUrl = URL.createObjectURL(val);
-          resolve(objectUrl);
-        } else {
-          resolve(null);
-        }
-      };
-      req.onerror = () => reject(req.error);
+    return await executeIDBOperation('readonly', (store) => {
+      return new Promise((resolve, reject) => {
+        const req = store.get(id);
+        req.onsuccess = () => {
+          const val = req.result;
+          if (!val) {
+            resolve(null);
+            return;
+          }
+          if (typeof val === 'string') {
+            resolve(val);
+          } else if (val instanceof Blob) {
+            const objectUrl = URL.createObjectURL(val);
+            resolve(objectUrl);
+          } else {
+            resolve(null);
+          }
+        };
+        req.onerror = () => reject(req.error || new Error('Failed to get item from IndexedDB'));
+      });
     });
   } catch (err) {
-    console.error('Error getting audio from IndexedDB:', err);
+    console.warn('Error getting audio from IndexedDB:', err);
     return null;
   }
 }

@@ -292,6 +292,46 @@ export interface SocialMetric {
   youtube: number;
   spotify?: number;
   notas: string;
+  
+  // Métricas avanzadas de Spotify
+  spotify_monthly_listeners?: number;
+  spotify_followers?: number;
+  spotify_popularity?: number; // 0 a 100
+  
+  // Métricas avanzadas de YouTube
+  youtube_subscribers?: number;
+  youtube_total_views?: number;
+  youtube_video_count?: number;
+  
+  // Métricas avanzadas de Instagram
+  instagram_followers?: number;
+  instagram_following?: number;
+  instagram_posts_count?: number;
+  instagram_engagement_rate?: number;
+  
+  // Métricas avanzadas de TikTok
+  tiktok_followers?: number;
+  tiktok_total_likes?: number;
+  tiktok_video_count?: number;
+  
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SocialContentItem {
+  id: string;
+  band_id: string;
+  platform: 'youtube' | 'instagram' | 'tiktok' | 'spotify';
+  external_id: string;
+  title: string;
+  url?: string;
+  thumbnail_url?: string;
+  published_at?: string;
+  views?: number;
+  likes?: number;
+  comments?: number;
+  shares?: number;
+  last_scraped_at?: string;
 }
 
 export type UserRole = 'leader' | 'member';
@@ -518,6 +558,8 @@ export interface RegisteredBand {
   aforo_promedio?: number;
   estado_cuenta?: 'activo' | 'prueba' | 'cancelado' | string;
   notas?: string;
+  radar_enabled?: boolean;
+  last_social_radar_at?: string;
 }
 
 export interface BandSchedule {

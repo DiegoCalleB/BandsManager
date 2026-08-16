@@ -21,13 +21,26 @@ import {
   Palette,
   Printer,
   Home,
-  Info
+  Info,
+  ExternalLink,
+  CreditCard,
+  AlertTriangle,
+  Calendar,
+  ArrowRight,
+  Lock,
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
-import { ThemeColors } from '../types';
+import { ThemeColors, User } from '../types';
 import { CheckoutButton } from './CheckoutButton';
+import { api } from '../services/api';
+import { normalizePlan, getPlanTierLevel, getPlanDefinition } from '../utils/planPermissions';
 
 interface PlanesProps {
   colors?: ThemeColors;
+  currentUser?: User;
+  activeBandName?: string;
+  currentBandPlan?: string;
   onSelectPlan?: (planId: string) => void;
   onNavigateToModule?: (moduleId: string) => void;
 }
@@ -364,9 +377,11 @@ const COMPARISON_TABLE: ComparisonSection[] = [
   }
 ];
 
-export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigateToModule }) => {
+export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandName, currentBandPlan, onSelectPlan, onNavigateToModule }) => {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false);
+  const [portalError, setPortalError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     'Gestión de Bandas y Proyectos': true,
     'Inteligencia Artificial y Agentes': true,
@@ -376,6 +391,30 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
     'Finanzas, Merchandising & Royalties': false
   });
   const [showBanner, setShowBanner] = useState(true);
+
+  const currentPlan = normalizePlan(currentBandPlan || currentUser?.plan || 'ensayo');
+  const currentTierLevel = getPlanTierLevel(currentPlan);
+
+  const handleOpenCustomerPortal = async () => {
+    setIsOpeningPortal(true);
+    setPortalError(null);
+    try {
+      const res = await api.createPortalSession({
+        userEmail: currentUser?.email || 'diego.delacalleb@gmail.com',
+        bandId: currentUser?.band_id || 'band-bakandeya',
+        returnUrl: window.location.href
+      });
+      if (res.success && res.url) {
+        window.location.href = res.url;
+      } else {
+        setPortalError(res.error || 'No se pudo abrir el portal de Stripe.');
+      }
+    } catch (err: any) {
+      setPortalError(err.message || 'Error al conectar con Stripe Customer Portal');
+    } finally {
+      setIsOpeningPortal(false);
+    }
+  };
 
   const toggleSection = (title: string) => {
     setExpandedSections((prev) => ({
@@ -400,39 +439,122 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
     setExpandedSections(allCollapsed);
   };
 
-  const handleSubscribe = async (planId: string) => {
-    if (planId === 'ensayo') {
-      if (onSelectPlan) onSelectPlan(planId);
-      return;
-    }
-    try {
-      setLoadingPlan(planId);
-      const res = await fetch('/api/billing/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          planId,
-          billingInterval: billingPeriod,
-          userEmail: 'diego.delacalleb@gmail.com'
-        })
-      });
-      const data = await res.json();
-      if (data.success && data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.error || 'Error al iniciar la pasarela de pago con Stripe');
-      }
-    } catch (err: any) {
-      alert('Error de red al conectar con Stripe: ' + err.message);
-    } finally {
-      setLoadingPlan(null);
-    }
-  };
-
   return (
     <div className="w-full max-w-7xl mx-auto space-y-8 pb-16 font-sans">
+      {/* Pending Payment Alert */}
+      {currentUser?.estado_suscripcion === 'pago_pendiente' && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-rose-500/15 border-2 border-rose-500/50 text-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="p-2.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 shrink-0">
+              <AlertTriangle className="w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <p className="text-sm sm:text-base font-bold text-rose-100">
+                Problema con el cobro de tu suscripción
+              </p>
+              <p className="text-xs text-rose-300/90 mt-0.5">
+                Stripe no pudo procesar tu último pago. Actualiza tu método de pago para evitar la interrupción de tus servicios y créditos agénticos.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleOpenCustomerPortal}
+            disabled={isOpeningPortal}
+            className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-rose-600/30 shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
+            <span>Actualizar tarjeta en Stripe</span>
+          </button>
+        </div>
+      )}
+
+      {/* Scheduled Downgrade Notice Banner */}
+      {currentUser?.plan_pendiente && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 shrink-0">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm sm:text-base font-bold text-amber-100 flex items-center gap-2">
+                <span>Cambio de plan programado:</span>
+                <span className="uppercase text-amber-400 font-mono underline decoration-amber-500/60">
+                  {currentUser.plan_pendiente.replace('_', ' ')}
+                </span>
+              </p>
+              <p className="text-xs text-amber-300/90 mt-0.5">
+                Tu plan actual <strong className="text-white uppercase font-mono">{currentPlan.replace('_', ' ')}</strong> seguirá 100% activo hasta el final de tu ciclo de facturación
+                {currentUser.fecha_cambio_plan ? ` (${new Date(currentUser.fecha_cambio_plan).toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })})` : ''}.
+                Ninguno de tus datos creados será eliminado jamás.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleOpenCustomerPortal}
+            disabled={isOpeningPortal}
+            className="px-4 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-amber-300 font-bold text-xs uppercase tracking-wider border border-amber-500/30 transition-all shadow-md shrink-0 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            {isOpeningPortal ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
+            <span>Gestionar en Portal</span>
+          </button>
+        </div>
+      )}
+
+      {/* Stripe Customer Portal Floating / Top Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-2xl bg-[#141312] border border-[#2c2a28]">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 shrink-0">
+            <ShieldCheck className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs font-mono text-neutral-400">Plan activo:</span>
+              <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 border border-amber-400/40 text-xs font-mono font-bold uppercase">
+                {currentPlan.replace('_', ' ')}
+              </span>
+              {activeBandName && (
+                <span className="text-xs text-neutral-400 font-mono">
+                  • Proyecto: <strong className="text-zinc-200">{activeBandName}</strong>
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-neutral-500 mt-0.5">
+              Tus pagos, facturas, tarjetas y cancelaciones se gestionan de forma 100% segura con Stripe.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleOpenCustomerPortal}
+          disabled={isOpeningPortal}
+          className="w-full sm:w-auto px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-zinc-100 text-xs font-bold font-mono uppercase tracking-wider transition-all border border-neutral-700 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+        >
+          {isOpeningPortal ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+              <span>Abriendo Stripe...</span>
+            </>
+          ) : (
+            <>
+              <CreditCard className="w-4 h-4 text-amber-400" />
+              <span>Portal de Clientes Stripe</span>
+              <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+            </>
+          )}
+        </button>
+      </div>
+
+      {portalError && (
+        <p className="text-xs text-rose-400 font-mono bg-rose-500/10 p-3 rounded-xl border border-rose-500/20">
+          {portalError}
+        </p>
+      )}
+
       {/* 1. Banner superior */}
-      {showBanner && (
+      {showBanner && currentPlan === 'ensayo' && (
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-emerald-500/20 border border-amber-400/30 p-4 sm:p-5 text-zinc-100 shadow-lg shadow-black/40">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3.5 text-center sm:text-left">
@@ -441,7 +563,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
               </div>
               <div>
                 <p className="text-sm sm:text-base font-bold text-zinc-100 flex items-center justify-center sm:justify-start gap-2">
-                  <span>30 días gratis del plan De Gira. Sin tarjeta.</span>
+                  <span>30 días gratis del plan De Gira. Sin compromiso.</span>
                 </p>
                 <p className="text-xs text-neutral-400 mt-0.5">
                   Desbloquea el Booking IA ilimitado, Tour Manager y la suite completa durante un mes completo.
@@ -452,6 +574,10 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
             <div className="flex items-center gap-2.5 shrink-0">
               <button
                 type="button"
+                onClick={() => {
+                  const deGiraBtn = document.getElementById('btn-plan-de_gira');
+                  if (deGiraBtn) deGiraBtn.scrollIntoView({ behavior: 'smooth' });
+                }}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <span>Probar Ahora</span>
@@ -713,14 +839,55 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
               </div>
 
               {/* CTA Button */}
-              <div className="pt-6 mt-4 border-t border-[#262422]">
-                <CheckoutButton
-                  planId={plan.id}
-                  billingInterval={billingPeriod}
-                  className={`text-xs uppercase tracking-wider ${getCtaStyle(plan.ctaVariant)}`}
-                >
-                  <span>{plan.ctaText}</span>
-                </CheckoutButton>
+              <div id={`btn-plan-${plan.id}`} className="pt-6 mt-4 border-t border-[#262422]">
+                {plan.id === currentPlan ? (
+                  <div className="space-y-2">
+                    <div className="w-full py-2.5 px-4 rounded-xl bg-amber-400/15 border border-amber-400/40 text-amber-300 font-bold text-xs font-mono uppercase text-center flex items-center justify-center gap-1.5 shadow-sm">
+                      <Check className="w-4 h-4 stroke-[3]" />
+                      <span>Tu Plan Actual</span>
+                    </div>
+                    {plan.id !== 'ensayo' && (
+                      <button
+                        type="button"
+                        onClick={handleOpenCustomerPortal}
+                        disabled={isOpeningPortal}
+                        className="w-full py-2 px-3 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        <CreditCard className="w-3.5 h-3.5" />
+                        <span>Gestionar en Stripe</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+                ) : getPlanTierLevel(plan.id) > currentTierLevel ? (
+                  <CheckoutButton
+                    planId={plan.id}
+                    billingInterval={billingPeriod}
+                    bandId={currentUser?.band_id}
+                    userEmail={currentUser?.email}
+                    className={`text-xs uppercase tracking-wider ${getCtaStyle(plan.ctaVariant)}`}
+                  >
+                    <span className="flex items-center justify-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Mejorar a {plan.name}</span>
+                    </span>
+                  </CheckoutButton>
+                ) : (
+                  <div className="space-y-1.5">
+                    <button
+                      type="button"
+                      onClick={handleOpenCustomerPortal}
+                      disabled={isOpeningPortal}
+                      className="w-full py-3 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 text-xs font-bold font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+                      <span>Bajar a {plan.name}</span>
+                    </button>
+                    <p className="text-[10px] text-neutral-500 font-mono text-center leading-tight">
+                      Efectivo al fin de ciclo en Stripe Portal
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -874,6 +1041,55 @@ export const Planes: React.FC<PlanesProps> = ({ colors, onSelectPlan, onNavigate
                 </div>
               );
             })}
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Transparencia, Upgrades/Downgrades y Degradación No Destructiva */}
+      <div className="rounded-3xl p-6 sm:p-8 bg-[#141312] border border-[#262422] space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold font-display uppercase tracking-wide text-zinc-100">
+              Garantía BandManager.ai: Política de Planes y Datos Protegidos
+            </h3>
+            <p className="text-xs text-neutral-400">
+              Transparencia total para bandas independientes sin letra pequeña.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          <div className="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+            <div className="flex items-center gap-2 text-amber-300 font-mono font-bold text-xs">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Upgrades Inmediatos</span>
+            </div>
+            <p className="text-xs text-neutral-400 leading-relaxed">
+              Si mejoras de plan, se activa al instante. Stripe prorratea automáticamente los días no disfrutados y recibes de inmediato la cuota completa de créditos IA y nuevos módulos.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+            <div className="flex items-center gap-2 text-sky-300 font-mono font-bold text-xs">
+              <Lock className="w-4 h-4 text-sky-400" />
+              <span>Cero Borrado de Datos</span>
+            </div>
+            <p className="text-xs text-neutral-400 leading-relaxed">
+              Al bajar de plan o cancelar, <strong className="text-zinc-200">NUNCA eliminamos tus salas, medios, fans, canciones o giras</strong>. Todo tu histórico sigue visible y editable. Únicamente se pausa la creación de nuevos registros si superas el cupo del nuevo plan.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-neutral-900/60 border border-neutral-800 space-y-2">
+            <div className="flex items-center gap-2 text-emerald-300 font-mono font-bold text-xs">
+              <Gift className="w-4 h-4 text-emerald-400" />
+              <span>Pegatinas y Regalos Tuyos</span>
+            </div>
+            <p className="text-xs text-neutral-400 leading-relaxed">
+              Los packs de pegatinas de vinilo de alta resistencia ya entregados son propiedad de tu banda para siempre. Sin devoluciones ni cargos adicionales.
+            </p>
           </div>
         </div>
       </div>

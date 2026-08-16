@@ -27,8 +27,9 @@ import { FontSelectorModal } from './components/FontSelectorModal';
 import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
 import { BandSwitcherModal } from './components/BandSwitcherModal';
+import { PlanLimitModal } from './components/PlanLimitModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
-import { hasModuleAccess, getPlanDefinition } from './utils/planPermissions';
+import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
 import { useLanguage } from './context/LanguageContext';
 import { 
   Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
@@ -47,6 +48,7 @@ export default function App() {
     isAdmin,
     availableBands,
     setCurrentUser,
+    refreshSession,
     handleLoginSuccess,
     handleSwitchBand,
     handleSetMainBand,
@@ -95,6 +97,84 @@ export default function App() {
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
 
+  const currentActiveBandId = currentUser?.band_id || 'band-bakandeya';
+  const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
+  const currentActiveBandName = currentUser?.bandName || currentUser?.name || 'BAKANDEYA';
+  const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
+    ? epkConfig.logoUrl
+    : ((currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
+       (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : ''));
+
+  const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
+    if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
+      return true;
+    }
+    if (!id1 && !id2) return true;
+    if (!id1 || !id2) return false;
+    if (id1 === id2) return true;
+    const clean1 = id1.replace(/^(band|reg)-/, "").replace(/-\d+$/, "").trim().toLowerCase();
+    const clean2 = id2.replace(/^(band|reg)-/, "").replace(/-\d+$/, "").trim().toLowerCase();
+    if (clean1 === clean2) return true;
+    if (clean1 && clean2 && (clean1.includes(clean2) || clean2.includes(clean1))) return true;
+    return false;
+  };
+
+  const currentActiveBandPlan = React.useMemo(() => {
+    if (availableBands && Array.isArray(availableBands) && availableBands.length > 0) {
+      const match = availableBands.find((b: any) =>
+        isSameBand(b.band_id || b.id, currentActiveBandId, b.bandName || b.nombre_banda || b.name, currentActiveBandName)
+      );
+      if (match && match.plan) {
+        return normalizePlan(match.plan);
+      }
+    }
+    return normalizePlan(currentUser?.plan || 'ensayo');
+  }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
+
+  // Soft Limit Modal State
+  const [planLimitModal, setPlanLimitModal] = useState<{
+    isOpen: boolean;
+    resourceType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands';
+    currentCount: number;
+  }>({
+    isOpen: false,
+    resourceType: 'leads',
+    currentCount: 0
+  });
+
+  // Guarded Handlers respecting Band Contracted Plan Limits
+  const handleAddLeadWithLimitCheck = async (newLead: Partial<Lead>) => {
+    const isMedio = newLead.tipo === 'medio' || String(newLead.tipo || '').toLowerCase().includes('prensa') || String(newLead.tipo || '').toLowerCase().includes('radio');
+    const currentCount = isMedio
+      ? leads.filter(l => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
+      : leads.filter(l => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
+
+    const limitCheck = checkRecordLimit(currentActiveBandPlan, isMedio ? 'medios' : 'leads', currentCount);
+    if (!limitCheck.allowed) {
+      setPlanLimitModal({
+        isOpen: true,
+        resourceType: isMedio ? 'medios' : 'leads',
+        currentCount
+      });
+      return;
+    }
+    return handleAddLead(newLead);
+  };
+
+  const handleAddFanWithLimitCheck = async (fanData: any) => {
+    const currentCount = fans.length;
+    const limitCheck = checkRecordLimit(currentActiveBandPlan, 'fans', currentCount);
+    if (!limitCheck.allowed) {
+      setPlanLimitModal({
+        isOpen: true,
+        resourceType: 'fans',
+        currentCount
+      });
+      return;
+    }
+    return handleAddFan(fanData);
+  };
+
   // Active View State mapping directly to the Stitch Design doc
   const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
   const [bookingOptions, setBookingOptions] = useState<{
@@ -115,11 +195,17 @@ export default function App() {
       selectedDate?: string;
     }
   ) => {
-    if (!hasModuleAccess(currentUser?.plan, view, isAdmin)) {
-      setShowUserProfileModal(true);
+    if (!hasModuleAccess(currentActiveBandPlan, view)) {
+      if (view === 'finanzas' && !isAdmin) {
+        setShowUserProfileModal(true);
+        return;
+      }
+      setCurrentView(view);
+      setIsMobileMenuOpen(false);
       return;
     }
     setCurrentView(view);
+    setIsMobileMenuOpen(false);
     if (options) {
       setBookingOptions(options);
     } else if (view === 'medios') {
@@ -217,25 +303,48 @@ export default function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
     const planParam = urlParams.get('plan');
+    const bandParam = urlParams.get('band');
 
     if (paymentStatus === 'success') {
       const planName = planParam ? planParam.toUpperCase().replace('_', ' ') : 'PRO';
-      alert(`🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`);
       
-      // Update local storage user if present
-      const stored = localStorage.getItem('bakandeya_user');
-      if (stored && planParam) {
-        try {
-          const userObj = JSON.parse(stored);
-          userObj.plan = planParam;
-          localStorage.setItem('bakandeya_user', JSON.stringify(userObj));
-          setCurrentUser(userObj);
-        } catch (e) {}
+      // Clean URL params immediately
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      // Confirm to backend and update Supabase & memory state
+      const targetBand = bandParam || currentUser?.band_id;
+      const targetEmail = currentUser?.email;
+
+      if (planParam) {
+        api.confirmPaymentSuccess({
+          planId: planParam,
+          bandId: targetBand,
+          userEmail: targetEmail
+        }).then(() => {
+          refreshSession();
+          fetchState();
+        }).catch((err) => {
+          console.warn('Error confirming payment with backend:', err);
+          refreshSession();
+          fetchState();
+        });
+
+        // Update local storage user if present
+        const stored = localStorage.getItem('bakandeya_user');
+        if (stored) {
+          try {
+            const userObj = JSON.parse(stored);
+            userObj.plan = planParam;
+            localStorage.setItem('bakandeya_user', JSON.stringify(userObj));
+            setCurrentUser(userObj);
+          } catch (e) {}
+        }
+      } else {
+        refreshSession();
+        fetchState();
       }
 
-      // Clean URL params without reloading
-      window.history.replaceState({}, document.title, window.location.pathname);
-      refreshData();
+      alert(`🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`);
     } else if (paymentStatus === 'cancelled') {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -258,29 +367,6 @@ export default function App() {
  setShowGithubSettings(false);
  alert('¡Configuración de GitHub guardada con éxito! Ahora el chatbot y los disparadores usarán estas credenciales de forma segura.');
  };
-
-  const currentActiveBandId = currentUser?.band_id || 'band-bakandeya';
-  const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
-  const currentActiveBandName = currentUser?.bandName || currentUser?.name || 'BAKANDEYA';
-  const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
-    ? epkConfig.logoUrl
-    : ((currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
-       (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : ''));
-
-  const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
-    if (name1 && name2 && name1.trim().toLowerCase() === name2.trim().toLowerCase()) {
-      return true;
-    }
-    if (!id1 && !id2) return true;
-    if (!id1 || !id2) return false;
-    if (id1 === id2) return true;
-    const clean1 = id1.replace(/^(band|reg)-/, "").replace(/-\d+$/, "").trim().toLowerCase();
-    const clean2 = id2.replace(/^(band|reg)-/, "").replace(/-\d+$/, "").trim().toLowerCase();
-    if (clean1 === clean2) return true;
-    if (clean1 && clean2 && (clean1.includes(clean2) || clean2.includes(clean1))) return true;
-    return false;
-  };
-
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter(c => {
       if (!c.band_id && !c.bandName) return isSameBand(currentActiveBandId, "band-bakandeya", "", currentActiveBandName);
@@ -366,7 +452,7 @@ export default function App() {
     title="Plan actual. Clic para gestionar suscripción (Upgrade / Downgrade)"
    >
     <Sparkles className="w-2 h-2 text-amber-400" />
-    <span>{getPlanDefinition(currentUser?.plan).name}</span>
+    <span>{getPlanDefinition(currentActiveBandPlan).name}</span>
    </button>
   </div>
  </div>
@@ -416,6 +502,7 @@ export default function App() {
  ];
  })().map((item) => {
  const isSelected = currentView === item.id;
+ const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
  return (
  <button
@@ -424,18 +511,25 @@ export default function App() {
  className={`flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-mono font-medium whitespace-nowrap shrink-0 transition-all duration-150 cursor-pointer active:scale-95 ${
  isSelected
  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-xs'
+ : !isAllowed
+ ? 'bg-[#151413] text-neutral-500 border border-[#22211F]/60 hover:bg-[#1a1918]'
  : 'bg-[#1A1918] text-neutral-300 border border-[#22211F] hover:bg-[#22211F] hover:text-white'
  }`}
  >
- <IconComp className={`w-4 h-4 shrink-0 ${isSelected ? 'text-amber-400' : 'text-neutral-400'}`} />
+ <IconComp className={`w-4 h-4 shrink-0 ${isSelected ? 'text-amber-400' : !isAllowed ? 'text-neutral-500' : 'text-neutral-400'}`} />
  <span>{item.label}</span>
- {item.badge !== undefined && item.badge !== 0 && item.badge !== "0" && (
+ {!isAllowed ? (
+   <span className="flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
+     <Lock className="w-2.5 h-2.5" />
+     <span>Plan</span>
+   </span>
+ ) : item.badge !== undefined && item.badge !== 0 && item.badge !== "0" ? (
  <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
  isSelected ? 'bg-amber-500/30 text-amber-200' : 'bg-[#2b2927] text-zinc-400'
  }`}>
  {item.badge}
  </span>
- )}
+ ) : null}
  </button>
  );
  })}
@@ -520,7 +614,7 @@ export default function App() {
  ];
  })().map((item) => {
  const isSelected = currentView === item.id;
- const isAllowed = hasModuleAccess(currentUser?.plan, item.id, isAdmin);
+ const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
  return (
  <button
@@ -577,12 +671,12 @@ export default function App() {
      <button
        onClick={() => { setShowTunerModal(true); setIsMobileMenuOpen(false); }}
        className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-300 transition-all cursor-pointer text-left active:scale-95"
-       title="Abrir Afinador de Guitarra y Bajo"
+       title="Abrir Afinador de Guitarra, Bajo y Ukelele"
      >
        <Guitar className="w-4 h-4 text-emerald-400 shrink-0" />
        <div className="flex flex-col min-w-0">
          <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-         <span className="text-[9px] text-emerald-400/70 font-mono truncate">Guitar & Bass</span>
+         <span className="text-[9px] text-emerald-400/70 font-mono truncate">Guitar, Bass & Uke</span>
        </div>
      </button>
    </div>
@@ -707,7 +801,7 @@ export default function App() {
   </div>
   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300 border border-amber-400/30 shadow-sm">
    <Sparkles className="w-2.5 h-2.5 text-amber-400" />
-   {getPlanDefinition(currentUser?.plan).name}
+   {getPlanDefinition(currentActiveBandPlan).name}
   </span>
   </div>
  </div>
@@ -765,7 +859,7 @@ export default function App() {
  <IconComp className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isSelected ? 'text-amber-400 scale-110' : 'text-neutral-400'}`} />
  <span className="whitespace-nowrap">{item.label}</span>
  </div>
- {!hasModuleAccess(currentUser?.plan, item.id, isAdmin) ? (
+ {!hasModuleAccess(currentActiveBandPlan, item.id) ? (
  <span className="flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
  <Lock className="w-3 h-3" />
  <span>Plan</span>
@@ -803,40 +897,55 @@ export default function App() {
      <button
        onClick={() => setShowTunerModal(true)}
        className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all cursor-pointer text-left active:scale-95 group"
-       title="Abrir Afinador de Guitarra y Bajo"
+       title="Abrir Afinador de Guitarra, Bajo y Ukelele"
      >
        <div className="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
          <Guitar className="w-3.5 h-3.5" />
        </div>
        <div className="flex flex-col min-w-0">
          <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-         <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar & Bass</span>
+         <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar, Bass & Uke</span>
        </div>
      </button>
    </div>
  </div>
 
  {/* Sidebar AI Credits Widget */}
- <div 
-   onClick={() => handleNavigate('planes')}
-   className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
-   title="Ver consumo de créditos IA y planes"
- >
-   <div className="flex items-center justify-between gap-1 mb-1.5">
-     <div className="flex items-center gap-1.5">
-       <Zap className="w-3 h-3 text-amber-400 animate-pulse" />
-       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+ {(() => {
+   const userPlan = currentActiveBandPlan;
+   const pDef = getPlanDefinition(userPlan);
+   const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
+   const estimatedUsed = Math.min(totalCredits, Math.max(12, (leads.length * 2) + posts.length));
+   const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
+
+   return (
+     <div 
+       onClick={() => handleNavigate('planes')}
+       className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
+       title="Ver consumo de créditos IA y planes"
+     >
+       <div className="flex items-center justify-between gap-1 mb-1.5">
+         <div className="flex items-center gap-1.5">
+           <Zap className="w-3 h-3 text-amber-400 animate-pulse" />
+           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+         </div>
+         <span className="text-[10px] font-mono font-bold text-amber-300">{estimatedUsed} / {totalCredits}</span>
+       </div>
+       <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
+         <div 
+           className={`h-full rounded-full transition-all duration-500 ${
+             pct > 85 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : 'bg-gradient-to-r from-amber-400 to-amber-500'
+           }`} 
+           style={{ width: `${pct}%` }} 
+         />
+       </div>
+       <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+         <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
+         <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
+       </div>
      </div>
-     <span className="text-[10px] font-mono font-bold text-amber-300">340 / 800</span>
-   </div>
-   <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
-     <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 shadow-xs" style={{ width: '42.5%' }} />
-   </div>
-   <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
-     <span>Plan De Gira</span>
-     <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
-   </div>
- </div>
+   );
+ })()}
 
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">
@@ -927,7 +1036,7 @@ export default function App() {
  leads={leads} 
  colors={colors}
  onUpdateLead={handleUpdateLead}
- onAddLead={handleAddLead}
+ onAddLead={handleAddLeadWithLimitCheck}
  metrics={metrics}
  concerts={concerts}
  rehearsals={rehearsals}
@@ -948,7 +1057,7 @@ export default function App() {
  leads={leads} 
  colors={colors}
  onUpdateLead={handleUpdateLead}
- onAddLead={handleAddLead}
+ onAddLead={handleAddLeadWithLimitCheck}
  onDeleteLead={handleDeleteLead}
  epkConfig={epkConfig}
  onUpdateEpkConfig={handleUpdateEpkConfig}
@@ -964,7 +1073,7 @@ export default function App() {
  <BandCRM 
  colors={colors}
  leads={leads}
- onAddLead={handleAddLead}
+ onAddLead={handleAddLeadWithLimitCheck}
  onUpdateLead={handleUpdateLead}
  currentBandId={currentUser?.band_id || 'band-bakandeya'}
  />
@@ -1028,7 +1137,7 @@ export default function App() {
             fans={fans}
             concerts={activeBandConcerts}
             epkConfig={epkConfig}
-            onAddFan={handleAddFan}
+            onAddFan={handleAddFanWithLimitCheck}
             onDeleteFan={handleDeleteFan}
             onUpdateIncentive={handleUpdateIncentive}
             onUpdateEpkConfig={handleUpdateEpkConfig}
@@ -1044,7 +1153,7 @@ export default function App() {
               tours={tours}
               concerts={activeBandConcerts}
               leads={leads}
-              onAddLead={handleAddLead}
+              onAddLead={handleAddLeadWithLimitCheck}
               onDeleteLead={handleDeleteLead}
               onSaveTour={handleSaveTour}
               onDeleteTour={handleDeleteTour}
@@ -1092,7 +1201,7 @@ export default function App() {
         concerts={concerts}
         epkConfig={epkConfig}
         onUpdateLead={handleUpdateLead}
-        onCreateLead={handleAddLead}
+        onCreateLead={handleAddLeadWithLimitCheck}
         onAddRehearsal={handleAddRehearsal}
         onAddConcert={handleAddConcert}
         isFloating={false}
@@ -1107,6 +1216,9 @@ export default function App() {
   {currentView === 'planes' && (
     <Planes
       colors={colors}
+      currentUser={currentUser}
+      activeBandName={currentActiveBandName}
+      currentBandPlan={currentActiveBandPlan}
       onNavigateToModule={handleNavigate}
     />
   )}
@@ -1538,7 +1650,7 @@ export default function App() {
        concerts={concerts}
        epkConfig={epkConfig}
        onUpdateLead={handleUpdateLead}
-       onCreateLead={handleAddLead}
+       onCreateLead={handleAddLeadWithLimitCheck}
        onAddRehearsal={handleAddRehearsal}
        onAddConcert={handleAddConcert}
        isFloating={true}
@@ -1619,6 +1731,21 @@ export default function App() {
   onOpenRegisterBand={() => handleNavigate('bandas')}
  />
 
+  {/* Soft Limits Upgrade Modal */}
+  <PlanLimitModal
+    isOpen={planLimitModal.isOpen}
+    onClose={() => setPlanLimitModal(prev => ({ ...prev, isOpen: false }))}
+    onNavigateToPlanes={() => {
+      setPlanLimitModal(prev => ({ ...prev, isOpen: false }));
+      handleNavigate('planes');
+    }}
+    currentUser={currentUser}
+    activeBandName={currentActiveBandName}
+    resourceType={planLimitModal.resourceType}
+    currentCount={planLimitModal.currentCount}
+  />
+
  </div>
  );
 }
+

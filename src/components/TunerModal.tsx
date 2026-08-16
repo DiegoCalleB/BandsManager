@@ -20,7 +20,8 @@ export interface PresetString {
 export interface TunerPreset {
   id: string;
   name: string;
-  category: 'guitar' | 'bass';
+  category: 'guitar' | 'bass' | 'ukulele';
+  description?: string;
   strings: PresetString[];
 }
 
@@ -29,8 +30,9 @@ export const TunerPresets: TunerPreset[] = [
     id: 'guitar_std',
     name: 'Guitarra Estándar (E A D G B E)',
     category: 'guitar',
+    description: '6 cuerdas estándar (Mi, La, Re, Sol, Si, Mi)',
     strings: [
-      { note: 'E', octave: 2, freq: 82.41, label: '6ª cuerdas - E2 (Grave)' },
+      { note: 'E', octave: 2, freq: 82.41, label: '6ª cuerda - E2 (Grave)' },
       { note: 'A', octave: 2, freq: 110.00, label: '5ª cuerda - A2' },
       { note: 'D', octave: 3, freq: 146.83, label: '4ª cuerda - D3' },
       { note: 'G', octave: 3, freq: 196.00, label: '3ª cuerda - G3' },
@@ -42,6 +44,7 @@ export const TunerPresets: TunerPreset[] = [
     id: 'guitar_dropd',
     name: 'Guitarra Drop D (D A D G B E)',
     category: 'guitar',
+    description: 'Afinación en Re grave para rock y metal',
     strings: [
       { note: 'D', octave: 2, freq: 73.42, label: '6ª cuerda - D2 (Drop D)' },
       { note: 'A', octave: 2, freq: 110.00, label: '5ª cuerda - A2' },
@@ -52,9 +55,73 @@ export const TunerPresets: TunerPreset[] = [
     ]
   },
   {
+    id: 'guitar_7',
+    name: 'Guitarra 7 Cuerdas (B E A D G B E)',
+    category: 'guitar',
+    description: 'Guitarra de rango extendido con Si grave',
+    strings: [
+      { note: 'B', octave: 1, freq: 61.74, label: '7ª cuerda - B1' },
+      { note: 'E', octave: 2, freq: 82.41, label: '6ª cuerda - E2' },
+      { note: 'A', octave: 2, freq: 110.00, label: '5ª cuerda - A2' },
+      { note: 'D', octave: 3, freq: 146.83, label: '4ª cuerda - D3' },
+      { note: 'G', octave: 3, freq: 196.00, label: '3ª cuerda - G3' },
+      { note: 'B', octave: 3, freq: 246.94, label: '2ª cuerda - B3' },
+      { note: 'E', octave: 4, freq: 329.63, label: '1ª cuerda - E4' },
+    ]
+  },
+  {
+    id: 'ukulele_std',
+    name: 'Ukelele Estándar / High-G (G C E A)',
+    category: 'ukulele',
+    description: 'Afinación reentrante tradicional (Soprano, Concierto, Tenor)',
+    strings: [
+      { note: 'G', octave: 4, freq: 392.00, label: '4ª cuerda - G4 (Sol agudo / High-G)' },
+      { note: 'C', octave: 4, freq: 261.63, label: '3ª cuerda - C4 (Do)' },
+      { note: 'E', octave: 4, freq: 329.63, label: '2ª cuerda - E4 (Mi)' },
+      { note: 'A', octave: 4, freq: 440.00, label: '1ª cuerda - A4 (La)' },
+    ]
+  },
+  {
+    id: 'ukulele_lowg',
+    name: 'Ukelele Low-G (G C E A - Sol Grave)',
+    category: 'ukulele',
+    description: 'Sol grave en 4ª cuerda, ideal para melodías y fingerpicking',
+    strings: [
+      { note: 'G', octave: 3, freq: 196.00, label: '4ª cuerda - G3 (Sol grave / Low-G)' },
+      { note: 'C', octave: 4, freq: 261.63, label: '3ª cuerda - C4 (Do)' },
+      { note: 'E', octave: 4, freq: 329.63, label: '2ª cuerda - E4 (Mi)' },
+      { note: 'A', octave: 4, freq: 440.00, label: '1ª cuerda - A4 (La)' },
+    ]
+  },
+  {
+    id: 'ukulele_baritone',
+    name: 'Ukelele Barítono (D G B E)',
+    category: 'ukulele',
+    description: 'Afinación estándar del ukelele barítono (Re, Sol, Si, Mi)',
+    strings: [
+      { note: 'D', octave: 3, freq: 146.83, label: '4ª cuerda - D3 (Re)' },
+      { note: 'G', octave: 3, freq: 196.00, label: '3ª cuerda - G3 (Sol)' },
+      { note: 'B', octave: 3, freq: 246.94, label: '2ª cuerda - B3 (Si)' },
+      { note: 'E', octave: 4, freq: 329.63, label: '1ª cuerda - E4 (Mi)' },
+    ]
+  },
+  {
+    id: 'ukulele_d',
+    name: 'Ukelele Afinación en D (A D F# B)',
+    category: 'ukulele',
+    description: 'Afinación hawaiana tradicional un tono más aguda',
+    strings: [
+      { note: 'A', octave: 4, freq: 440.00, label: '4ª cuerda - A4 (La)' },
+      { note: 'D', octave: 4, freq: 293.66, label: '3ª cuerda - D4 (Re)' },
+      { note: 'F#', octave: 4, freq: 369.99, label: '2ª cuerda - F#4 (Fa#)' },
+      { note: 'B', octave: 4, freq: 493.88, label: '1ª cuerda - B4 (Si)' },
+    ]
+  },
+  {
     id: 'bass_4',
     name: 'Bajo Eléctrico 4 Cuerdas (E A D G)',
     category: 'bass',
+    description: '4 cuerdas estándar (Mi, La, Re, Sol)',
     strings: [
       { note: 'E', octave: 1, freq: 41.20, label: '4ª cuerda - E1 (Grave)' },
       { note: 'A', octave: 1, freq: 55.00, label: '3ª cuerda - A1' },
@@ -66,26 +133,13 @@ export const TunerPresets: TunerPreset[] = [
     id: 'bass_5',
     name: 'Bajo Eléctrico 5 Cuerdas (B E A D G)',
     category: 'bass',
+    description: '5 cuerdas con Si super grave adicional',
     strings: [
       { note: 'B', octave: 0, freq: 30.87, label: '5ª cuerda - B0 (Super Grave)' },
       { note: 'E', octave: 1, freq: 41.20, label: '4ª cuerda - E1' },
       { note: 'A', octave: 1, freq: 55.00, label: '3ª cuerda - A1' },
       { note: 'D', octave: 2, freq: 73.42, label: '2ª cuerda - D2' },
       { note: 'G', octave: 2, freq: 98.00, label: '1ª cuerda - G2' },
-    ]
-  },
-  {
-    id: 'guitar_7',
-    name: 'Guitarra 7 Cuerdas (B E A D G B E)',
-    category: 'guitar',
-    strings: [
-      { note: 'B', octave: 1, freq: 61.74, label: '7ª cuerda - B1' },
-      { note: 'E', octave: 2, freq: 82.41, label: '6ª cuerda - E2' },
-      { note: 'A', octave: 2, freq: 110.00, label: '5ª cuerda - A2' },
-      { note: 'D', octave: 3, freq: 146.83, label: '4ª cuerda - D3' },
-      { note: 'G', octave: 3, freq: 196.00, label: '3ª cuerda - G3' },
-      { note: 'B', octave: 3, freq: 246.94, label: '2ª cuerda - B3' },
-      { note: 'E', octave: 4, freq: 329.63, label: '1ª cuerda - E4' },
     ]
   }
 ];
@@ -163,6 +217,7 @@ function autoCorrelate(buf: Float32Array, sampleRate: number): number {
 
 export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   const [selectedPresetId, setSelectedPresetId] = useState<string>('guitar_std');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'guitar' | 'ukulele' | 'bass'>('all');
   const [selectedStringIndex, setSelectedStringIndex] = useState<number | null>(null);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [pitch, setPitch] = useState<{
@@ -185,6 +240,10 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   const toneOscRef = useRef<OscillatorNode | null>(null);
 
   const currentPreset = TunerPresets.find(p => p.id === selectedPresetId) || TunerPresets[0];
+
+  const filteredPresets = selectedCategory === 'all' 
+    ? TunerPresets 
+    : TunerPresets.filter(p => p.category === selectedCategory);
 
   // Start Mic Listening
   const startTuner = async () => {
@@ -338,7 +397,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
             </div>
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                Afinador Pro Guitarra & Bajo
+                Afinador Pro Guitarra, Bajo & Ukelele
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                   Precision Autocorrelation
                 </span>
@@ -361,29 +420,86 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
         {/* Content Body */}
         <div className="p-5 space-y-5 overflow-y-auto custom-scrollbar flex-1">
           
-          {/* Preset Selector Tabs */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 text-emerald-400" />
-              Instrumento y Afinación:
-            </label>
+          {/* Instrument Filter & Preset Selector */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-semibold text-neutral-300 flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5 text-emerald-400" />
+                Instrumento y Afinación:
+              </label>
+
+              {/* Instrument Category Filter Tabs */}
+              <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10 text-[10px]">
+                {(['all', 'guitar', 'ukulele', 'bass'] as const).map((cat) => {
+                  const labels = {
+                    all: 'Todos',
+                    guitar: 'Guitarra',
+                    ukulele: 'Ukelele',
+                    bass: 'Bajo'
+                  };
+                  const isCatSelected = selectedCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        // If current preset not in filtered category, switch to the first preset of category
+                        if (cat !== 'all' && currentPreset.category !== cat) {
+                          const firstInCat = TunerPresets.find(p => p.category === cat);
+                          if (firstInCat) {
+                            setSelectedPresetId(firstInCat.id);
+                            setSelectedStringIndex(null);
+                          }
+                        }
+                      }}
+                      className={`px-2 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                        isCatSelected
+                          ? 'bg-emerald-500 text-zinc-950 shadow-xs'
+                          : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      {labels[cat]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {TunerPresets.map(p => (
+              {filteredPresets.map(p => (
                 <button
                   key={p.id}
                   onClick={() => {
                     setSelectedPresetId(p.id);
                     setSelectedStringIndex(null);
                   }}
-                  className={`p-2.5 rounded-xl text-left border text-xs font-medium transition-all cursor-pointer flex items-center justify-between ${
+                  className={`p-2.5 rounded-xl text-left border text-xs font-medium transition-all cursor-pointer flex items-start justify-between gap-2 ${
                     selectedPresetId === p.id
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 font-bold shadow-sm'
                       : 'bg-white/5 text-neutral-300 border-white/5 hover:bg-white/10'
                   }`}
                 >
-                  <span className="truncate">{p.name}</span>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="truncate">{p.name}</span>
+                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-mono shrink-0 uppercase ${
+                        p.category === 'ukulele'
+                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                          : p.category === 'bass'
+                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                          : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                      }`}>
+                        {p.category === 'ukulele' ? 'Uke' : p.category === 'bass' ? 'Bajo' : 'Guitar'}
+                      </span>
+                    </div>
+                    {p.description && (
+                      <span className="text-[10px] text-neutral-400 font-normal truncate mt-0.5">
+                        {p.description}
+                      </span>
+                    )}
+                  </div>
                   {selectedPresetId === p.id && (
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0 ml-1" />
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   )}
                 </button>
               ))}
@@ -542,7 +658,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
         {/* Footer */}
         <div className="p-3.5 border-t border-white/10 bg-white/5 flex items-center justify-between text-[11px] text-neutral-400 shrink-0">
-          <span>Soporta afinación de Guitarra eléctrica, acústica y Bajo eléctrico.</span>
+          <span>Soporta afinación de Guitarra eléctrica/acústica, Bajo y Ukelele (Soprano, Concierto, Tenor y Barítono).</span>
           <button
             onClick={() => {
               stopTuner();
