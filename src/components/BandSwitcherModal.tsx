@@ -214,15 +214,35 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         if (res.user) {
           localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
         }
+        if (onSwitchBand && res.band_id) {
+          await onSwitchBand(res.band_id);
+        }
+
+        // If paid plan, redirect to Stripe Checkout!
+        if (planKey !== 'ensayo' && res.band_id) {
+          try {
+            await api.startCheckout({
+              planId: planKey,
+              billingInterval: 'monthly',
+              bandId: res.band_id,
+              userEmail: currentUser?.email || 'diego.delacalleb@gmail.com'
+            });
+            setShowCreateBandModal(false);
+            setCreateBandStep(1);
+            setIsCreatingBand(false);
+            setCreatingPlanKey(null);
+            return;
+          } catch (stripeErr: any) {
+            console.error('Error initiating Stripe checkout on band creation:', stripeErr);
+          }
+        }
+
         setSuccessMessage(`¡Proyecto "${newBandName.trim()}" creado y configurado correctamente!`);
         setShowCreateBandModal(false);
         setCreateBandStep(1);
         setNewBandName('');
         setNewBandStyle('');
         
-        if (onSwitchBand && res.band_id) {
-          await onSwitchBand(res.band_id);
-        }
         if (onRefreshData) await onRefreshData();
         setTimeout(() => {
           window.location.reload();
@@ -1222,6 +1242,20 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                               }
                               try {
                                 const targetBandId = targetBand.band_id || currentUser?.band_id;
+
+                                // If it's a paid plan, initiate Stripe Checkout session!
+                                if (plan.id !== 'ensayo') {
+                                  await api.startCheckout({
+                                    planId: plan.id,
+                                    billingInterval: 'monthly',
+                                    bandId: targetBandId,
+                                    userEmail: currentUser?.email || 'diego.delacalleb@gmail.com'
+                                  });
+                                  setShowUpgradeModal(false);
+                                  return;
+                                }
+
+                                // Free plan (ensayo)
                                 if (currentUser?.id) {
                                   await api.updateUser(currentUser.id, { plan: plan.id, band_id: targetBandId } as any);
                                 }

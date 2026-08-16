@@ -212,6 +212,35 @@ export default function App() {
     };
   }, []);
 
+  // Handle Stripe Payment Redirect
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    const planParam = urlParams.get('plan');
+
+    if (paymentStatus === 'success') {
+      const planName = planParam ? planParam.toUpperCase().replace('_', ' ') : 'PRO';
+      alert(`🎉 ¡Suscripción completada con éxito! Tu banda ahora cuenta con el Plan ${planName} activado.`);
+      
+      // Update local storage user if present
+      const stored = localStorage.getItem('bakandeya_user');
+      if (stored && planParam) {
+        try {
+          const userObj = JSON.parse(stored);
+          userObj.plan = planParam;
+          localStorage.setItem('bakandeya_user', JSON.stringify(userObj));
+          setCurrentUser(userObj);
+        } catch (e) {}
+      }
+
+      // Clean URL params without reloading
+      window.history.replaceState({}, document.title, window.location.pathname);
+      refreshData();
+    } else if (paymentStatus === 'cancelled') {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const colors: ThemeColors = THEMES[currentTheme] || THEMES.indie_velvet;
 
   // Persist Theme Selection

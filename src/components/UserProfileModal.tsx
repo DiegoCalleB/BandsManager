@@ -173,6 +173,25 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
        if (res.band_id) {
          setSelectedMainBandId(res.band_id);
        }
+
+       // Redirect to Stripe Checkout for paid plans
+       if (createBandPlan && (createBandPlan as string) !== 'ensayo' && res.band_id) {
+         try {
+           await api.startCheckout({
+             planId: createBandPlan,
+             billingInterval: 'monthly',
+             bandId: res.band_id,
+             userEmail: currentUser.email || 'diego.delacalleb@gmail.com'
+           });
+           setShowCreateBandSection(false);
+           setCreateBandName('');
+           setCreateBandStyle('');
+           return;
+         } catch (stripeErr) {
+           console.error('Error initiating Stripe checkout on create band in profile:', stripeErr);
+         }
+       }
+
        setSuccessMsg(`¡Proyecto "${createBandName.trim()}" creado y configurado con éxito!`);
        setShowCreateBandSection(false);
        setCreateBandName('');
@@ -1188,6 +1207,17 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  type="button"
  onClick={async () => {
                             try {
+                              if (plan.id !== 'ensayo') {
+                                await api.startCheckout({
+                                  planId: plan.id,
+                                  billingInterval: 'monthly',
+                                  bandId: currentUser.band_id || 'default',
+                                  userEmail: currentUser.email || 'diego.delacalleb@gmail.com'
+                                });
+                                setShowUpgradeModal(false);
+                                return;
+                              }
+
                               if (currentUser?.id) {
                                 await api.updateUser(currentUser.id, { plan: plan.id, band_id: currentUser.band_id } as any);
                               }
@@ -1196,9 +1226,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               if (onUpdateUser) onUpdateUser(updatedUser as User);
                               setShowUpgradeModal(false);
                               alert(`¡Plan de suscripción cambiado con éxito a ${plan.name}! Módulos activados.`);
-                            } catch (e) {
+                            } catch (e: any) {
  console.error('Error al cambiar plan:', e);
- alert('No se pudo cambiar el plan. Reintenta en unos instantes.');
+ alert(e?.message || 'No se pudo cambiar el plan. Reintenta en unos instantes.');
  }
  }}
  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold font-mono text-xs transition-all shadow-md shadow-amber-500/20 hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"

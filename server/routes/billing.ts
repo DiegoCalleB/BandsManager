@@ -21,9 +21,13 @@ router.post("/billing/create-checkout-session", async (req, res) => {
       return res.status(400).json({ success: false, error: "Plan ID is required" });
     }
 
-    const stripe = getStripe();
+    // Normalize plan aliases
+    let normalizedPlan = planId.toLowerCase().trim();
+    if (normalizedPlan === "emergente") normalizedPlan = "local";
+    if (normalizedPlan === "profesional") normalizedPlan = "de_gira";
+    if (normalizedPlan === "elite" || normalizedPlan === "manager360") normalizedPlan = "cabeza_de_cartel";
 
-    if (planId === "ensayo") {
+    if (normalizedPlan === "ensayo") {
       return res.json({ success: true, free: true, message: "Plan gratuito activado" });
     }
 
@@ -33,15 +37,35 @@ router.post("/billing/create-checkout-session", async (req, res) => {
       cabeza_de_cartel: { monthly: 7900, annual: 75800, name: "Plan CABEZA DE CARTEL - BandManager.ai" }
     };
 
-    const planInfo = planPrices[planId];
+    const planInfo = planPrices[normalizedPlan];
     if (!planInfo) {
-      return res.status(400).json({ success: false, error: "Plan no válido" });
+      return res.status(400).json({ success: false, error: `Plan "${planId}" no válido para suscripción.` });
     }
+
+    const stripe = getStripe();
 
     const unitAmount = billingInterval === "annual" ? planInfo.annual : planInfo.monthly;
     const interval = billingInterval === "annual" ? "year" : "month";
 
-    const host = req.headers.origin || process.env.APP_URL || "http://localhost:3000";
+    // Determine valid host for return URLs
+    let host = req.body.originUrl || req.headers.origin;
+    if (!host || host === "null") {
+      if (req.headers.referer) {
+        try {
+          host = new URL(req.headers.referer).origin;
+        } catch (e) {}
+      }
+    }
+    if (!host || host === "null") {
+      const forwardedProto = req.headers["x-forwarded-proto"] || "https";
+      const forwardedHost = req.headers["x-forwarded-host"] || req.headers.host;
+      if (forwardedHost) {
+        host = `${forwardedProto}://${forwardedHost}`;
+      }
+    }
+    if (!host || host === "null" || !host.startsWith("http")) {
+      host = process.env.APP_URL || "https://ais-dev-qpqrrrbweq7pv4iyd5qrcd-283957839721.europe-west1.run.app";
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -49,8 +73,9 @@ router.post("/billing/create-checkout-session", async (req, res) => {
       customer_email: userEmail || undefined,
       metadata: {
         bandId: bandId || "default",
-        planId,
-        billingInterval
+        planId: normalizedPlan,
+        billingInterval,
+        userEmail: userEmail || ""
       },
       line_items: [
         {
@@ -58,7 +83,7 @@ router.post("/billing/create-checkout-session", async (req, res) => {
             currency: "eur",
             product_data: {
               name: planInfo.name,
-              description: `Suscripción ${billingInterval === "annual" ? "Anual" : "Mensual"} para BandManager.ai (Modo Test)`
+              description: `Suscripción ${billingInterval === "annual" ? "Anual" : "Mensual"} para BandManager.ai`
             },
             unit_amount: unitAmount,
             recurring: {
@@ -68,7 +93,7 @@ router.post("/billing/create-checkout-session", async (req, res) => {
           quantity: 1
         }
       ],
-      success_url: `${host}/?payment=success&plan=${planId}`,
+      success_url: `${host}/?payment=success&plan=${normalizedPlan}&band=${bandId || ''}`,
       cancel_url: `${host}/?payment=cancelled`
     });
 
@@ -80,18 +105,19 @@ router.post("/billing/create-checkout-session", async (req, res) => {
 });
 
 // Stripe Webhook handler
-router.post("/billing/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+router.post("/billing/webhook", async (req, res) => {
   const sig = req.headers["stripe-signature"];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   let event: Stripe.Event;
 
   try {
+    const rawBody = (req as any).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
     if (webhookSecret && sig) {
       const stripe = getStripe();
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
     } else {
-      event = JSON.parse(req.body.toString());
+      event = typeof req.body === 'object' && !Buffer.isBuffer(req.body) ? req.body : JSON.parse(req.body.toString());
     }
   } catch (err: any) {
     console.error(`Webhook signature verification failed: ${err.message}`);
@@ -103,14 +129,20 @@ router.post("/billing/webhook", express.raw({ type: "application/json" }), async
       const session = event.data.object as Stripe.Checkout.Session;
       const bandId = session.metadata?.bandId;
       const planId = session.metadata?.planId;
-      console.log(`[Stripe Webhook] Payment successful for session ${session.id}`, { bandId, planId });
+      const customerEmail = session.customer_email || session.metadata?.userEmail;
+      console.log(`[Stripe Webhook] Payment successful for session ${session.id}`, { bandId, planId, customerEmail });
 
       if (bandId && planId) {
         try {
           const sb = getSupabase();
           // Update registered_bands plan in Supabase
-          await sb.from("registered_bands").update({ plan: planId }).eq("band_id", bandId);
-          console.log(`[Stripe Webhook] Successfully updated band ${bandId} plan to ${planId} in Supabase`);
+          if (bandId !== 'default') {
+            await sb.from("registered_bands").update({ plan: planId }).eq("band_id", bandId);
+          }
+          if (customerEmail) {
+            await sb.from("users").update({ plan: planId }).eq("email", customerEmail);
+          }
+          console.log(`[Stripe Webhook] Successfully updated band ${bandId} and user ${customerEmail} plan to ${planId} in Supabase`);
         } catch (dbErr) {
           console.error("[Stripe Webhook] Error updating band plan in Supabase:", dbErr);
         }

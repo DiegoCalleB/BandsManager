@@ -15,8 +15,8 @@ interface CheckoutButtonProps {
 export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   planId,
   billingInterval = 'monthly',
-  bandId = 'default',
-  userEmail = 'diego.delacalleb@gmail.com',
+  bandId,
+  userEmail,
   className = '',
   children,
   colors
@@ -34,30 +34,33 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
       setIsLoading(true);
       setErrorMessage(null);
 
-      const response = await fetch('/api/billing/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          planId,
-          billingInterval,
-          bandId,
-          userEmail,
-        }),
+      // Determine effective user email and bandId
+      let effectiveEmail = userEmail;
+      let effectiveBandId = bandId;
+
+      if (!effectiveEmail || !effectiveBandId) {
+        try {
+          const storedUser = localStorage.getItem('bakandeya_user');
+          if (storedUser) {
+            const parsed = JSON.parse(storedUser);
+            if (!effectiveEmail && parsed.email) effectiveEmail = parsed.email;
+            if (!effectiveBandId && parsed.band_id) effectiveBandId = parsed.band_id;
+          }
+          if (!effectiveBandId) {
+            const activeBandId = localStorage.getItem('bakandeya_active_band_id');
+            if (activeBandId) effectiveBandId = activeBandId;
+          }
+        } catch (e) {
+          // ignore parsing error
+        }
+      }
+
+      await api.startCheckout({
+        planId,
+        billingInterval,
+        bandId: effectiveBandId || 'default',
+        userEmail: effectiveEmail || 'diego.delacalleb@gmail.com',
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Error al conectar con la pasarela de pago');
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error('No se recibió la URL de redirección de Stripe');
-      }
     } catch (error: any) {
       console.error('Checkout error:', error);
       setErrorMessage(error.message || 'Error desconocido al procesar el pago');

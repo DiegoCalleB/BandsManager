@@ -119,6 +119,52 @@ export const api = {
     });
   },
 
+  // Billing & Stripe Checkout
+  async createCheckoutSession(data: {
+    planId: string;
+    billingInterval?: 'monthly' | 'annual';
+    bandId?: string;
+    userEmail?: string;
+  }): Promise<{ success: boolean; url?: string; free?: boolean; message?: string; error?: string }> {
+    return request('/api/billing/create-checkout-session', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...data,
+        originUrl: typeof window !== 'undefined' ? window.location.origin : undefined
+      })
+    });
+  },
+
+  async startCheckout(options: {
+    planId: string;
+    billingInterval?: 'monthly' | 'annual';
+    bandId?: string;
+    userEmail?: string;
+  }): Promise<{ success: boolean; url?: string; free?: boolean; message?: string }> {
+    const res = await this.createCheckoutSession(options);
+    if (res.free) {
+      return res;
+    }
+    if (res.success && res.url) {
+      try {
+        if (typeof window !== 'undefined' && window.top && window.top !== window.self) {
+          const win = window.open(res.url, '_blank');
+          if (!win || win.closed || typeof win.closed === 'undefined') {
+            window.location.href = res.url;
+          }
+        } else if (typeof window !== 'undefined') {
+          window.location.href = res.url;
+        }
+      } catch (e) {
+        if (typeof window !== 'undefined') {
+          window.location.href = res.url;
+        }
+      }
+      return res;
+    }
+    throw new Error(res.error || 'Error al conectar con la pasarela de pago');
+  },
+
   // State Fetching
   async getState(): Promise<{
     leads: Lead[];
