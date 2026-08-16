@@ -51,12 +51,13 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
 
   const getPlanForBand = (bid: string, fallbackPlan?: string) => {
     if (!bid) return normalizePlan(fallbackPlan || 'ensayo');
-    const cleanId = bid.replace(/^(band|reg)-/, '');
-    const regBand = (state.registeredBands || []).find((b: any) =>
-      b.band_id === bid || b.id === bid ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanId) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === cleanId)
-    );
+    const cleanId = bid.replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const regBand = (state.registeredBands || []).find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
+      return b.band_id === bid || b.id === bid || bBid === cleanId || bId === cleanId || (cleanId.length > 1 && bName === cleanId);
+    });
     return normalizePlan(regBand?.plan || fallbackPlan || 'ensayo');
   };
 
@@ -74,20 +75,23 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
     if (seenCleanBandIds.has(cleanId)) return;
     seenCleanBandIds.add(cleanId);
 
-    const bandInfo = (state.registeredBands || []).find((b: any) =>
-      b.band_id === ub.band_id || b.id === ub.band_id ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanId) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === cleanId)
-    );
+    const cleanCheck = cleanId.toLowerCase().trim();
+    const bandInfo = (state.registeredBands || []).find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
+      return b.band_id === ub.band_id || b.id === ub.band_id || bBid === cleanCheck || bId === cleanCheck || (cleanCheck.length > 1 && bName === cleanCheck);
+    });
     const formattedFallback = cleanId ? cleanId.charAt(0).toUpperCase() + cleanId.slice(1) : "Banda";
     const bandName = bandInfo?.nombre_banda || (ub.band_id === targetUser.band_id ? targetUser.bandName : null) || formattedFallback;
+    const resolvedPlan = normalizePlan(bandInfo?.plan || getPlanForBand(ub.band_id, ub.band_id === targetUser.band_id ? targetUser.plan : 'ensayo'));
     availableBands.push({
       band_id: ub.band_id,
       bandName,
       nombre_banda: bandName,
       role: ub.role || "member",
       userId: targetUser.id,
-      plan: getPlanForBand(ub.band_id, targetUser.band_id === ub.band_id ? targetUser.plan : 'ensayo'),
+      plan: resolvedPlan,
       logoUrl: getLogoForBand(ub.band_id, bandName),
       is_main: cleanId === mainClean
     });
@@ -150,7 +154,7 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
       bandName: bName,
       role: targetUser.role || "leader",
       userId: targetUser.id,
-      plan: getPlanForBand(currentBid, targetUser.plan || 'ensayo'),
+      plan: getPlanForBand(currentBid, 'ensayo'),
       logoUrl: getLogoForBand(currentBid, bName),
       is_main: cleanCurrent === mainClean
     });
@@ -933,7 +937,7 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
 });
 
 // Verify current session
-router.get("/auth/me", (req, res) => {
+router.get("/auth/me", async (req, res) => {
   const authHeader = req.headers.authorization;
   let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
 
@@ -943,6 +947,17 @@ router.get("/auth/me", (req, res) => {
   }
 
   const state = loadState();
+
+  // Refresh registered bands from Supabase if possible so plans are real-time
+  try {
+    const freshRegBands = await dbGetRegisteredBands();
+    if (Array.isArray(freshRegBands) && freshRegBands.length > 0) {
+      state.registeredBands = freshRegBands;
+    }
+  } catch (e) {
+    // Non-blocking fallback to state.registeredBands
+  }
+
   let session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
   let user = session ? state.users.find((u: any) => u.id === session.userId) : null;
 
@@ -979,14 +994,15 @@ router.get("/auth/me", (req, res) => {
 
   // Sync active band plan
   if (user.band_id && state.registeredBands) {
-    const cleanCurrent = user.band_id.replace(/^(band|reg)-/, '');
-    const regBand = state.registeredBands.find(
-      (b: any) => b.band_id === user.band_id || b.id === user.band_id ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanCurrent) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === cleanCurrent)
-    );
+    const cleanCurrent = user.band_id.replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const regBand = state.registeredBands.find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
+      return b.band_id === user.band_id || b.id === user.band_id || bBid === cleanCurrent || bId === cleanCurrent || (cleanCurrent.length > 1 && bName === cleanCurrent);
+    });
     if (regBand && regBand.plan) {
-      user.plan = regBand.plan;
+      user.plan = normalizePlan(regBand.plan);
     }
   }
 
@@ -998,7 +1014,7 @@ router.get("/auth/me", (req, res) => {
 });
 
 // Switch Active Band
-router.post("/auth/switch-band", (req, res) => {
+router.post("/auth/switch-band", async (req, res) => {
   const authHeader = req.headers.authorization;
   let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
 
@@ -1008,6 +1024,17 @@ router.post("/auth/switch-band", (req, res) => {
   }
 
   const state = loadState();
+
+  // Refresh registered bands from Supabase if possible
+  try {
+    const freshRegBands = await dbGetRegisteredBands();
+    if (Array.isArray(freshRegBands) && freshRegBands.length > 0) {
+      state.registeredBands = freshRegBands;
+    }
+  } catch (e) {
+    // Non-blocking
+  }
+
   let session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
   let currentUser = session ? state.users.find((u: any) => u.id === session.userId) : null;
 
@@ -1061,15 +1088,18 @@ router.post("/auth/switch-band", (req, res) => {
     targetUser = legacyTargetUser;
   }
   
-  const bandInfo = (state.registeredBands || []).find(
-    (b: any) => b.band_id === band_id || b.id === band_id ||
-    (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand) ||
-    (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTargetBand)
-  ) || (state.bands || []).find(
-    (b: any) => b.band_id === band_id || b.id === band_id ||
-    (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand) ||
-    (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTargetBand)
-  );
+  const cleanCheck = cleanTargetBand.toLowerCase().trim();
+  const bandInfo = (state.registeredBands || []).find((b: any) => {
+    const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
+    return b.band_id === band_id || b.id === band_id || bBid === cleanCheck || bId === cleanCheck || (cleanCheck.length > 1 && bName === cleanCheck);
+  }) || (state.bands || []).find((b: any) => {
+    const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
+    return b.band_id === band_id || b.id === band_id || bBid === cleanCheck || bId === cleanCheck || (cleanCheck.length > 1 && bName === cleanCheck);
+  });
 
   const resolvedName = bandInfo ? (bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name) : (cleanTargetBand === 'bakandeya' ? 'BAKANDEYA' : targetUser.bandName || 'Banda');
   const resolvedPlan = normalizePlan(bandInfo?.plan || targetUser.plan || 'ensayo');
@@ -1723,12 +1753,14 @@ router.put("/users/:id", requireAuth, async (req, res) => {
 
     if (targetBandId) {
       const cleanTarget = targetBandId.replace(/^(band|reg)-/, '');
+      const cleanCheck = cleanTarget.toLowerCase().trim();
       if (!state.registeredBands) state.registeredBands = [];
-      let regBand = state.registeredBands.find((b: any) =>
-        b.band_id === targetBandId || b.id === targetBandId ||
-        (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanTarget) ||
-        (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTarget)
-      );
+      let regBand = state.registeredBands.find((b: any) => {
+        const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+        const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+        const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
+        return b.band_id === targetBandId || b.id === targetBandId || bBid === cleanCheck || bId === cleanCheck || (cleanCheck.length > 1 && bName === cleanCheck);
+      });
       const normPlan = normalizePlan(plan);
       if (!regBand) {
         regBand = {

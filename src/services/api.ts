@@ -165,6 +165,44 @@ export const api = {
     throw new Error(res.error || 'Error al conectar con la pasarela de pago');
   },
 
+  async consumeCredits(data: {
+    bandId?: string;
+    userEmail?: string;
+    creditsAmount?: number;
+    featureName?: string;
+  }): Promise<{
+    success: boolean;
+    exhausted?: boolean;
+    creditos_usados?: number;
+    creditos_periodo?: number;
+    creditos_restantes?: number;
+    error?: string;
+  }> {
+    return request('/api/billing/consume-credits', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async getCreditsStatus(params?: {
+    bandId?: string;
+    userEmail?: string;
+  }): Promise<{
+    success: boolean;
+    plan: string;
+    creditos_usados: number;
+    creditos_periodo: number;
+    creditos_restantes: number;
+    estado_suscripcion: string;
+    plan_pendiente?: string | null;
+    fecha_cambio_plan?: string | null;
+  }> {
+    const query = new URLSearchParams();
+    if (params?.bandId) query.set('bandId', params.bandId);
+    if (params?.userEmail) query.set('userEmail', params.userEmail);
+    return request(`/api/billing/credits-status?${query.toString()}`);
+  },
+
   // State Fetching
   async getState(): Promise<{
     leads: Lead[];
@@ -301,6 +339,18 @@ export const api = {
     });
   },
 
+  async getSocialContentItems(platform?: string): Promise<any[]> {
+    const url = platform ? `/api/metrics/content-items?platform=${platform}` : '/api/metrics/content-items';
+    const res = await request(url);
+    return res?.items || [];
+  },
+
+  async triggerRadarScan(): Promise<any> {
+    return request('/api/metrics/cron-snapshot-all', {
+      method: 'POST'
+    });
+  },
+
   // Payments / Finanzas
   async createPayment(payment: Payment): Promise<Payment> {
     return request('/api/payments', {
@@ -383,5 +433,43 @@ export const api = {
     return request(`/api/fans/${id}`, {
       method: 'DELETE'
     });
+  },
+
+  // Billing
+  async confirmPaymentSuccess(data: { planId: string; bandId?: string; userEmail?: string }): Promise<any> {
+    return request('/api/billing/confirm-success', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async createPortalSession(data: {
+    userEmail?: string;
+    bandId?: string;
+    returnUrl?: string;
+  }): Promise<{ success: boolean; url?: string; error?: string }> {
+    return request('/api/billing/create-portal-session', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  // Instagram Meta Graph API & OAuth
+  async getInstagramStatus(): Promise<{ success: boolean; connected: boolean; method?: string; account?: any; error?: string }> {
+    return request('/api/metrics/instagram/status');
+  },
+
+  async connectInstagramToken(accessToken: string): Promise<{ success: boolean; message: string; account?: any }> {
+    return request('/api/metrics/instagram/connect', {
+      method: 'POST',
+      body: JSON.stringify({ accessToken })
+    });
+  },
+
+  async disconnectInstagram(): Promise<{ success: boolean; message: string }> {
+    return request('/api/metrics/instagram/disconnect', {
+      method: 'POST'
+    });
   }
 };
+

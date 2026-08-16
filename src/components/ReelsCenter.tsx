@@ -631,42 +631,34 @@ export default function ReelsCenter({
  setIsScanningMetrics(true);
  setMetricSuccess('');
  try {
- const res = await fetch('/api/metrics/real', {
+ const resData = await apiFetch<any>('/api/metrics/real', {
  method: 'POST',
  headers: { 'Content-Type': 'application/json' }
  });
- const resData = await res.json();
- if (res.ok && resData.success) {
- const { data } = resData;
- setMetricInsta(data.instagramFollowers.toString());
- setMetricTiktok(data.tiktokFollowers.toString());
- setMetricYoutube(data.youtubeSubscribers.toString());
- setMetricNotes(`Sincronización automática de redes reales. Spotify Oyentes: ${data.spotifyListeners || 150}`);
+ if (resData && resData.success) {
+ const { data, metric } = resData;
+ if (data) {
+ setMetricInsta(data.instagramFollowers?.toString() || '0');
+ setMetricTiktok(data.tiktokFollowers?.toString() || '0');
+ setMetricYoutube(data.youtubeSubscribers?.toString() || '0');
+ setMetricNotes(`Radar Scan. Spotify: ${data.spotifyListeners || 0}`);
  if (data.videos && data.videos.length > 0) {
  setRealVideos(data.videos);
  }
-
- if (onAddMetric) {
- const todayStr = new Date().toISOString().split('T')[0];
- await onAddMetric({
- id: `scan-${Date.now()}`,
- fecha: todayStr,
- instagram: data.instagramFollowers || 0,
- tiktok: data.tiktokFollowers || 0,
- youtube: data.youtubeSubscribers || 0,
- spotify: data.spotifyListeners || 150,
- notas: `Escaneo automático multicanal en directo (@bakandeya)`
- });
  }
 
- setMetricSuccess(`✓ Sincronización en directo realizada desde perfiles oficiales (IG: ${data.instagramFollowers}, TK: ${data.tiktokFollowers}, YT: ${data.youtubeSubscribers}, Spotify: ${data.spotifyListeners || 150}).`);
+ if (onAddMetric && metric) {
+ await onAddMetric(metric);
+ }
+
+ setMetricSuccess(`✓ Sincronización en directo realizada desde perfiles oficiales (IG: ${data?.instagramFollowers ?? 0}, TK: ${data?.tiktokFollowers ?? 0}, YT: ${data?.youtubeSubscribers ?? 0}, Spotify: ${data?.spotifyListeners ?? 0}).`);
  setTimeout(() => setMetricSuccess(''), 6000);
  } else {
- alert(resData.error || 'Error al escanear datos reales.');
+ alert(resData?.error || 'Error al escanear datos reales.');
  }
- } catch (err) {
+ } catch (err: any) {
  console.error(err);
- alert('Error de conexión al escanear redes reales.');
+ alert(err?.message || 'Error de conexión al escanear redes reales.');
  } finally {
  setIsScanningMetrics(false);
  }

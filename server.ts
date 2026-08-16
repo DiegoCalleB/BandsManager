@@ -34,6 +34,7 @@ import {
 } from "./server/sheets.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase } from "./server/db.js";
+import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 
 import usersRouter from "./server/routes/users.js";
 import postsRouter from "./server/routes/posts.js";
@@ -590,6 +591,8 @@ async function startServer() {
 
   const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Bakandeya Virtual Manager server running on http://localhost:${PORT}`);
+    // Start background autonomous Social Radar Agent
+    startSocialRadarScheduler();
   });
 
   server.on("error", (err: any) => {

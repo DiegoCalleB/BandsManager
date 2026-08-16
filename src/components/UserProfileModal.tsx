@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, HardDrive, Unlink, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2 } from 'lucide-react';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, HardDrive, Unlink, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar } from 'lucide-react';
 import { User, ThemeName, GoogleOAuthConfig } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
@@ -1138,6 +1138,70 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+  {currentUser?.estado_suscripcion === 'pago_pendiente' && (
+    <div className="p-3.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2">
+        <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+        <span>Pago pendiente. Actualiza tu método de pago para mantener tus funciones.</span>
+      </div>
+      <button
+        type="button"
+        onClick={async () => {
+          try {
+            const res = await api.createPortalSession({
+              userEmail: currentUser.email || 'diego.delacalleb@gmail.com',
+              bandId: currentUser.band_id || 'band-bakandeya',
+              returnUrl: window.location.href
+            });
+            if (res.success && res.url) window.location.href = res.url;
+          } catch (e) {}
+        }}
+        className="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white font-mono font-bold text-[10px] rounded-lg transition-all cursor-pointer whitespace-nowrap"
+      >
+        Actualizar Tarjeta
+      </button>
+    </div>
+  )}
+
+  {currentUser?.plan_pendiente && (
+    <div className="p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs flex items-center gap-2.5">
+      <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+      <span>
+        Cambio programado a <strong className="uppercase font-mono text-amber-300">{currentUser.plan_pendiente.replace('_', ' ')}</strong> al finalizar el ciclo.
+      </span>
+    </div>
+  )}
+
+  <div className="flex items-center justify-between gap-2 p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
+    <div className="flex items-center gap-2">
+      <CreditCard className="w-4 h-4 text-amber-400 shrink-0" />
+      <span className="text-xs text-neutral-300 font-mono">Facturación & Tarjetas en Stripe:</span>
+    </div>
+    <button
+      type="button"
+      onClick={async () => {
+        try {
+          const res = await api.createPortalSession({
+            userEmail: currentUser.email || 'diego.delacalleb@gmail.com',
+            bandId: currentUser.band_id || 'band-bakandeya',
+            returnUrl: window.location.href
+          });
+          if (res.success && res.url) {
+            window.location.href = res.url;
+          } else {
+            alert(res.error || 'No se pudo abrir el portal de Stripe');
+          }
+        } catch (err: any) {
+          alert('Error al conectar con Stripe: ' + err.message);
+        }
+      }}
+      className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-amber-300 text-xs font-mono font-bold transition-all border border-amber-500/20 flex items-center gap-1.5 cursor-pointer"
+    >
+      <span>Portal de Stripe</span>
+      <ExternalLink className="w-3 h-3" />
+    </button>
+  </div>
+
  <p className="text-xs text-neutral-300 leading-relaxed">
  Tu proyecto tiene actualmente activo el <strong className="text-amber-300">{currentPlanDef.name}</strong>. Puedes cambiar de plan al instante haciendo clic en el botón de la opción que desees:
  </p>

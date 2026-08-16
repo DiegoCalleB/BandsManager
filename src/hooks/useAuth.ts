@@ -242,6 +242,7 @@ export function useAuth() {
     isAdmin,
     availableBands,
     setCurrentUser,
+    refreshSession,
     handleLoginSuccess,
     handleSwitchBand,
     handleSetMainBand,
