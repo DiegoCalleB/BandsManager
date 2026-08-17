@@ -573,47 +573,159 @@ router.get("/metrics/content-items", requireAuth, async (req, res) => {
   }
 });
 
-// --- INSTAGRAM META GRAPH API & OAUTH ENDPOINTS ---
+// --- INSTAGRAM PLATFORM INSIGHTS API (Official Meta Documentation) ---
+// https://developers.facebook.com/documentation/instagram-platform/insights
 
-// Check Instagram connection status for the band
+// Helper to fetch live insights for an Instagram Business / Creator Account
+async function fetchInstagramInsightsData(igUserId: string, token: string) {
+  const insightsResult: any = {
+    account: null,
+    insights: {
+      reach: 0,
+      impressions: 0,
+      profile_views: 0,
+      accounts_engaged: 0,
+      total_interactions: 0,
+      follower_count: 0
+    },
+    media: []
+  };
+
+  // 1. Fetch User Profile Info
+  try {
+    const userRes = await fetch(
+      `https://graph.facebook.com/v19.0/${igUserId}?fields=id,username,name,profile_picture_url,followers_count,follows_count,media_count,biography,website&access_token=${token}`,
+      { signal: AbortSignal.timeout(6000) }
+    ).catch(() => null);
+
+    if (userRes && userRes.ok) {
+      insightsResult.account = await userRes.json();
+    }
+  } catch (e) {
+    console.warn("[InstagramInsights] user fetch err:", e);
+  }
+
+  // 2. Fetch Account-level Insights (Reach, Impressions, Profile Views, Engaged Accounts)
+  try {
+    // Try total_value or day period metrics supported by Instagram Platform Insights API
+    const metricsParam = "reach,impressions,profile_views,accounts_engaged,total_interactions";
+    const insightsRes = await fetch(
+      `https://graph.facebook.com/v19.0/${igUserId}/insights?metric=${metricsParam}&period=day&metric_type=total_value&access_token=${token}`,
+      { signal: AbortSignal.timeout(7000) }
+    ).catch(() => null);
+
+    if (insightsRes && insightsRes.ok) {
+      const data = await insightsRes.json();
+      if (Array.isArray(data?.data)) {
+        for (const item of data.data) {
+          const val = item.total_value?.value ?? (item.values?.[0]?.value || 0);
+          if (item.name === "reach") insightsResult.insights.reach = Number(val);
+          if (item.name === "impressions") insightsResult.insights.impressions = Number(val);
+          if (item.name === "profile_views") insightsResult.insights.profile_views = Number(val);
+          if (item.name === "accounts_engaged") insightsResult.insights.accounts_engaged = Number(val);
+          if (item.name === "total_interactions") insightsResult.insights.total_interactions = Number(val);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("[InstagramInsights] account insights err:", e);
+  }
+
+  // 3. Fetch Media & Reels Insights
+  try {
+    const mediaRes = await fetch(
+      `https://graph.facebook.com/v19.0/${igUserId}/media?fields=id,caption,media_type,media_product_type,media_url,permalink,thumbnail_url,timestamp,like_count,comments_count&limit=12&access_token=${token}`,
+      { signal: AbortSignal.timeout(7000) }
+    ).catch(() => null);
+
+    if (mediaRes && mediaRes.ok) {
+      const mediaData = await mediaRes.json();
+      const mediaList = mediaData?.data || [];
+
+      for (const m of mediaList) {
+        let mediaInsights: any = {};
+        // Fetch media-specific insights (Reels plays, reach, saved, shares, total_interactions)
+        try {
+          const isReel = m.media_product_type === "REELS" || m.media_type === "VIDEO";
+          const mediaMetricParam = isReel 
+            ? "reach,plays,saved,shares,total_interactions" 
+            : "reach,impressions,saved,shares,total_interactions";
+
+          const mInsRes = await fetch(
+            `https://graph.facebook.com/v19.0/${m.id}/insights?metric=${mediaMetricParam}&access_token=${token}`,
+            { signal: AbortSignal.timeout(4000) }
+          ).catch(() => null);
+
+          if (mInsRes && mInsRes.ok) {
+            const mInsData = await mInsRes.json();
+            if (Array.isArray(mInsData?.data)) {
+              for (const mi of mInsData.data) {
+                const val = mi.values?.[0]?.value ?? mi.value ?? 0;
+                mediaInsights[mi.name] = Number(val);
+              }
+            }
+          }
+        } catch {}
+
+        insightsResult.media.push({
+          id: m.id,
+          title: m.caption ? (m.caption.length > 75 ? m.caption.substring(0, 75) + "..." : m.caption) : "Reel / Post Oficial",
+          type: m.media_product_type === "REELS" ? "REEL" : m.media_type,
+          url: m.permalink,
+          thumbnail: m.thumbnail_url || m.media_url,
+          timestamp: m.timestamp,
+          likes: m.like_count || 0,
+          comments: m.comments_count || 0,
+          plays: mediaInsights.plays || mediaInsights.video_views || 0,
+          reach: mediaInsights.reach || 0,
+          shares: mediaInsights.shares || 0,
+          saved: mediaInsights.saved || 0
+        });
+      }
+    }
+  } catch (e) {
+    console.warn("[InstagramInsights] media fetch err:", e);
+  }
+
+  return insightsResult;
+}
+
+// Get Instagram connection status and live insights
 router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
   try {
     const userBandId = (req as any).user?.band_id || "band-bakandeya";
     const epk = await dbGetEpkConfig(userBandId).catch(() => null);
     const token = epk?.enlacesRedes?.instagram_access_token || process.env.INSTAGRAM_ACCESS_TOKEN || process.env.META_GRAPH_TOKEN;
+    const igAccountId = epk?.enlacesRedes?.instagram_account_id;
 
     if (!token) {
       return res.json({
         success: true,
         connected: false,
         method: "scraping_fallback",
+        docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
+        requiredPermissions: ["instagram_basic", "instagram_manage_insights", "pages_show_list", "pages_read_engagement"],
         message: "Sin token oficial de Meta Graph API configurado. El radar opera en modo scraping de alta resiliencia."
       });
     }
 
-    // Validate token live against Instagram Graph API
-    const igRes = await fetch(
-      `https://graph.instagram.com/v19.0/me?fields=id,username,followers_count,media_count,name&access_token=${token}`,
-      { signal: AbortSignal.timeout(6000) }
-    ).catch(() => null);
-
-    if (igRes && igRes.ok) {
-      const igData = await igRes.json();
-      return res.json({
-        success: true,
-        connected: true,
-        method: "meta_graph_api_official",
-        account: {
-          id: igData.id,
-          username: igData.username,
-          name: igData.name || igData.username,
-          followers_count: igData.followers_count,
-          media_count: igData.media_count
-        }
-      });
+    // 1. If we have a stored business account id, fetch directly
+    if (igAccountId) {
+      const data = await fetchInstagramInsightsData(igAccountId, token);
+      if (data.account) {
+        return res.json({
+          success: true,
+          connected: true,
+          method: "meta_platform_insights_api",
+          docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
+          account: data.account,
+          insights: data.insights,
+          media: data.media
+        });
+      }
     }
 
-    // Try Facebook Graph API fallback (for Business/Creator accounts linked to a FB Page)
+    // 2. Discover via Meta Pages / Instagram Business Account
     const fbRes = await fetch(
       `https://graph.facebook.com/v19.0/me/accounts?fields=instagram_business_account{id,username,followers_count,media_count,name}&access_token=${token}`,
       { signal: AbortSignal.timeout(6000) }
@@ -624,26 +736,48 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
       const pageWithIg = fbData?.data?.find((p: any) => p.instagram_business_account);
       if (pageWithIg?.instagram_business_account) {
         const igAcc = pageWithIg.instagram_business_account;
+        const data = await fetchInstagramInsightsData(igAcc.id, token);
         return res.json({
           success: true,
           connected: true,
-          method: "meta_business_graph_api",
-          account: {
-            id: igAcc.id,
-            username: igAcc.username,
-            name: igAcc.name || igAcc.username,
-            followers_count: igAcc.followers_count,
-            media_count: igAcc.media_count
-          }
+          method: "meta_platform_insights_api",
+          docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
+          account: data.account || igAcc,
+          insights: data.insights,
+          media: data.media
         });
       }
+    }
+
+    // 3. Fallback: Instagram Basic Display me endpoint
+    const igRes = await fetch(
+      `https://graph.instagram.com/v19.0/me?fields=id,username,followers_count,media_count,name&access_token=${token}`,
+      { signal: AbortSignal.timeout(6000) }
+    ).catch(() => null);
+
+    if (igRes && igRes.ok) {
+      const igData = await igRes.json();
+      return res.json({
+        success: true,
+        connected: true,
+        method: "instagram_basic_api",
+        docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
+        account: {
+          id: igData.id,
+          username: igData.username,
+          name: igData.name || igData.username,
+          followers_count: igData.followers_count,
+          media_count: igData.media_count
+        }
+      });
     }
 
     return res.json({
       success: true,
       connected: false,
       method: "expired_or_invalid_token",
-      error: "El token de Instagram ha expirado o no tiene los permisos requeridos (user_profile, instagram_basic)."
+      docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
+      error: "El token de Instagram ha expirado o no tiene los permisos requeridos (instagram_manage_insights, instagram_basic, pages_read_engagement)."
     });
   } catch (err: any) {
     console.error("Error checking Instagram connection status:", err);
@@ -651,7 +785,7 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
   }
 });
 
-// Connect Instagram account using User Access Token / Long-lived Token
+// Connect Instagram account using User Access Token / Long-lived Token with Instagram Platform Insights permissions
 router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
   try {
     const userBandId = (req as any).user?.band_id || "band-bakandeya";
@@ -663,56 +797,59 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
 
     const cleanToken = accessToken.trim();
 
-    // 1. Verify token with Instagram Basic Display / Graph API
+    // 1. Try discovering Business Account with Insights first (Meta Graph API / Instagram Platform Insights)
     let verifiedAccount: any = null;
-    let authSource = "instagram_basic";
+    let authSource = "meta_platform_insights_api";
 
-    const igRes = await fetch(
-      `https://graph.instagram.com/v19.0/me?fields=id,username,followers_count,media_count,name&access_token=${cleanToken}`,
+    const fbRes = await fetch(
+      `https://graph.facebook.com/v19.0/me/accounts?fields=instagram_business_account{id,username,followers_count,media_count,name}&access_token=${cleanToken}`,
       { signal: AbortSignal.timeout(8000) }
     ).catch(() => null);
 
-    if (igRes && igRes.ok) {
-      const igData = await igRes.json();
-      verifiedAccount = {
-        id: igData.id,
-        username: igData.username,
-        name: igData.name || igData.username,
-        followers_count: igData.followers_count !== undefined ? Number(igData.followers_count) : null,
-        media_count: igData.media_count !== undefined ? Number(igData.media_count) : null
-      };
-    } else {
-      // Try Facebook Graph API for Meta Business Page linked accounts
-      const fbRes = await fetch(
-        `https://graph.facebook.com/v19.0/me/accounts?fields=instagram_business_account{id,username,followers_count,media_count,name}&access_token=${cleanToken}`,
+    if (fbRes && fbRes.ok) {
+      const fbData = await fbRes.json();
+      const pageWithIg = fbData?.data?.find((p: any) => p.instagram_business_account);
+      if (pageWithIg?.instagram_business_account) {
+        const igAcc = pageWithIg.instagram_business_account;
+        verifiedAccount = {
+          id: igAcc.id,
+          username: igAcc.username,
+          name: igAcc.name || igAcc.username,
+          followers_count: igAcc.followers_count !== undefined ? Number(igAcc.followers_count) : null,
+          media_count: igAcc.media_count !== undefined ? Number(igAcc.media_count) : null
+        };
+      }
+    }
+
+    // 2. Direct Instagram / Graph user fallback
+    if (!verifiedAccount) {
+      const igRes = await fetch(
+        `https://graph.instagram.com/v19.0/me?fields=id,username,followers_count,media_count,name&access_token=${cleanToken}`,
         { signal: AbortSignal.timeout(8000) }
       ).catch(() => null);
 
-      if (fbRes && fbRes.ok) {
-        const fbData = await fbRes.json();
-        const pageWithIg = fbData?.data?.find((p: any) => p.instagram_business_account);
-        if (pageWithIg?.instagram_business_account) {
-          const igAcc = pageWithIg.instagram_business_account;
-          authSource = "meta_business";
-          verifiedAccount = {
-            id: igAcc.id,
-            username: igAcc.username,
-            name: igAcc.name || igAcc.username,
-            followers_count: igAcc.followers_count !== undefined ? Number(igAcc.followers_count) : null,
-            media_count: igAcc.media_count !== undefined ? Number(igAcc.media_count) : null
-          };
-        }
+      if (igRes && igRes.ok) {
+        const igData = await igRes.json();
+        authSource = "instagram_basic_api";
+        verifiedAccount = {
+          id: igData.id,
+          username: igData.username,
+          name: igData.name || igData.username,
+          followers_count: igData.followers_count !== undefined ? Number(igData.followers_count) : null,
+          media_count: igData.media_count !== undefined ? Number(igData.media_count) : null
+        };
       }
     }
 
     if (!verifiedAccount) {
       return res.status(400).json({
         success: false,
-        error: "No se pudo validar el token con Meta Graph API. Asegúrate de que el token sea válido y tenga permisos 'user_profile' e 'instagram_basic'."
+        docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
+        error: "No se pudo validar el token con Meta Graph API. Asegúrate de que el token sea válido y cuente con los permisos de Insights ('instagram_manage_insights', 'instagram_basic', 'pages_read_engagement')."
       });
     }
 
-    // 2. Persist in Supabase under epk_configs
+    // 3. Persist in Supabase under epk_configs
     const epk = await dbGetEpkConfig(userBandId).catch(() => null) || {};
     const updatedRedes = {
       ...(epk.enlacesRedes || {}),
@@ -727,7 +864,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
       enlacesRedes: updatedRedes
     });
 
-    // 3. Update current social metric in Supabase if followers were returned
+    // 4. Update current social metric in Supabase if followers were returned
     if (verifiedAccount.followers_count !== null) {
       const today = new Date().toISOString().split("T")[0];
       const existing = await dbGetSocialMetrics(userBandId).catch(() => []);
@@ -740,7 +877,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
         tiktok: currentToday.tiktok || 0,
         youtube: currentToday.youtube || 0,
         spotify: currentToday.spotify || 0,
-        notas: `Meta Graph API Oficial (@${verifiedAccount.username})`,
+        notas: `Instagram Platform Insights API Oficial (@${verifiedAccount.username})`,
         instagram_followers: verifiedAccount.followers_count,
         instagram_posts_count: verifiedAccount.media_count || currentToday.instagram_posts_count || 0
       };
@@ -750,13 +887,14 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
 
     res.json({
       success: true,
-      message: `¡Cuenta @${verifiedAccount.username} conectada con éxito mediante Meta Graph API!`,
+      message: `¡Cuenta @${verifiedAccount.username} conectada con éxito mediante Instagram Platform Insights API!`,
       account: verifiedAccount,
-      authSource
+      authSource,
+      docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights"
     });
   } catch (err: any) {
     console.error("Error connecting Instagram token:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al conectar con Instagram" });
+    res.status(500).json({ success: false, error: err?.message || "Error al conectar con Instagram Insights" });
   }
 });
 
@@ -780,6 +918,297 @@ router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
     res.json({ success: true, message: "Token de Instagram desconectado. El sistema volverá al modo scraping autónomo." });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err?.message });
+  }
+});
+
+// --- SCAN SOCIAL MEDIA SCREENSHOT WITH GEMINI MULTIMODAL VISION ---
+router.post("/metrics/scan-screenshot", requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id || "band-bakandeya";
+    const { image, mimeType = "image/jpeg", autoSave = true } = req.body;
+
+    if (!image) {
+      return res.status(400).json({ success: false, error: "No se proporcionó ninguna captura de pantalla para escanear." });
+    }
+
+    const ai = getAiClient();
+    if (!ai) {
+      return res.status(500).json({ success: false, error: "Servicio de IA (Gemini API) no disponible en el servidor." });
+    }
+
+    // Clean base64 string
+    let base64Data = image;
+    let detectedMime = mimeType;
+    if (typeof image === "string" && image.includes(",")) {
+      const parts = image.split(",");
+      const meta = parts[0];
+      base64Data = parts[1];
+      const match = meta.match(/data:([^;]+);base64/);
+      if (match && match[1]) {
+        detectedMime = match[1];
+      }
+    }
+
+    const prompt = `Eres el Agente de Visión y Analítica Social de BandManager.ai.
+Analiza con precisión milimétrica esta captura de pantalla de un teléfono móvil o panel web correspondiente a un perfil o estadísticas de una red social (Instagram, TikTok, Spotify for Artists, YouTube Studio, o Facebook).
+
+Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válido con esta estructura:
+{
+  "platform": "instagram" | "tiktok" | "youtube" | "spotify" | "facebook" | "otra",
+  "account_handle": "nombre de usuario con @ si es visible, ej: @bakandeya" o null,
+  "account_name": "nombre visible de la cuenta o banda" o null,
+  "followers": número entero de seguidores, suscriptores o oyentes mensuales (ej: 1573, o si pone 1.5K pon 1500) o null,
+  "following": número entero de cuentas seguidas o null,
+  "posts_count": número de publicaciones / vídeos detectados o null,
+  "reach": cuentas alcanzadas en el período mostrado o null,
+  "impressions": impresiones totales mostradas o null,
+  "profile_views": visitas al perfil detectadas o null,
+  "engagement_rate": porcentaje de interacción si figura o null,
+  "plays_or_views": reproducciones totales de reels/vídeos/canciones si aparecen o null,
+  "confidence": "high" | "medium" | "low",
+  "detected_date": "YYYY-MM-DD" o null,
+  "summary": "Resumen conciso en 1 frase de lo extraído (ej: 'Perfil de Instagram de @bakandeya con 1.573 seguidores y 67 posts')"
+}`;
+
+    const response = await generateContentWithFallback(ai, {
+      preferredModel: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: prompt },
+            {
+              inlineData: {
+                mimeType: detectedMime,
+                data: base64Data
+              }
+            }
+          ]
+        }
+      ],
+      config: {
+        responseMimeType: "application/json",
+        temperature: 0.1
+      }
+    });
+
+    const responseText = response.text || "{}";
+    let extractedData: any = {};
+    try {
+      extractedData = JSON.parse(responseText.replace(/```json/g, "").replace(/```/g, "").trim());
+    } catch {
+      extractedData = { summary: responseText, confidence: "low" };
+    }
+
+    let savedMetric: any = null;
+    if (autoSave && extractedData.platform && extractedData.followers !== undefined && extractedData.followers !== null) {
+      const today = extractedData.detected_date || new Date().toISOString().split("T")[0];
+      const existing = await dbGetSocialMetrics(userBandId).catch(() => []);
+      const currentToday = existing.find((m: any) => m.fecha === today) || {};
+
+      const platformKey = extractedData.platform === "instagram" ? "instagram" :
+                          extractedData.platform === "tiktok" ? "tiktok" :
+                          extractedData.platform === "youtube" ? "youtube" :
+                          extractedData.platform === "spotify" ? "spotify" : "instagram";
+
+      const numFollowers = parseInt(String(extractedData.followers).replace(/[^0-9]/g, ""), 10) || 0;
+
+      const newEntry: SocialMetric = {
+        id: currentToday.id || `metric-${Date.now()}`,
+        fecha: today,
+        instagram: platformKey === "instagram" ? numFollowers : (currentToday.instagram || 0),
+        tiktok: platformKey === "tiktok" ? numFollowers : (currentToday.tiktok || 0),
+        youtube: platformKey === "youtube" ? numFollowers : (currentToday.youtube || 0),
+        spotify: platformKey === "spotify" ? numFollowers : (currentToday.spotify || 0),
+        notas: `Escaneado por Visión IA Gemini desde captura (${extractedData.summary || extractedData.platform})`,
+        instagram_followers: platformKey === "instagram" ? numFollowers : currentToday.instagram_followers,
+        instagram_posts_count: extractedData.posts_count ? parseInt(String(extractedData.posts_count), 10) : currentToday.instagram_posts_count
+      };
+
+      await dbUpsertSocialMetric(newEntry, userBandId).catch(() => null);
+      savedMetric = newEntry;
+    }
+
+    res.json({
+      success: true,
+      data: extractedData,
+      savedToSupabase: !!savedMetric,
+      metric: savedMetric
+    });
+  } catch (err: any) {
+    console.error("Error scanning screenshot with Gemini Vision:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al analizar la captura con Visión IA" });
+  }
+});
+
+// AI Social Growth Plan Generator (Gemini Powered)
+router.post("/generate-growth-plan", async (req, res) => {
+  try {
+    const { bandName, metrics, epkConfig, horizonDays = 30, customFocus } = req.body || {};
+    const ai = getAiClient();
+
+    const igCount = metrics?.instagram_followers || metrics?.instagram || 0;
+    const tkCount = metrics?.tiktok_followers || metrics?.tiktok || 0;
+    const ytCount = metrics?.youtube_subscribers || metrics?.youtube || 0;
+    const spCount = metrics?.spotify_monthly_listeners || metrics?.spotify || 0;
+    const hasSpotify = Boolean(epkConfig?.enlaces_redes?.spotify || spCount > 0);
+
+    if (!ai) {
+      return res.status(503).json({
+        success: false,
+        error: "Servicio de Inteligencia Artificial Gemini no configurado en el servidor."
+      });
+    }
+
+    const prompt = `Eres el mejor estratega de Marketing Musical Digital, Growth Hacking y A&R para bandas y músicos independientes en la industria musical actual.
+
+TU MISIÓN:
+Diseñar un Plan Estratégico de Crecimiento personalizado, táctico y sin clichés genéricos de marketing tradicional. Las recomendaciones DEBEN estar estrictamente pensadas para grupos de música / músicos en activo, adaptadas a su tipo de perfil musical, volumen de seguidores y métricas de visualizaciones actuales.
+
+DATOS ESPECÍFICOS DE LA BANDA / PROYECTO MUSICAL:
+- Nombre de la Banda / Artista: ${bandName || 'Bakandeya'}
+- Género y Estilo Musical: ${epkConfig?.genero || 'Indie Rock / Rock Alternativo / Balkan-Ska'}
+- Localización / Escena: ${epkConfig?.contactoBooking?.nombre ? 'Escena de directos en España' : 'España'}
+- Audiencia y Métricas Actuales:
+  * Instagram: ${igCount.toLocaleString()} seguidores (Reels & Stories para captar público a bolos)
+  * TikTok: ${tkCount.toLocaleString()} seguidores (Descubrimiento algorítmico y viralización de audios)
+  * YouTube: ${ytCount.toLocaleString()} suscriptores ${metrics?.youtube_total_views ? `· ${metrics.youtube_total_views.toLocaleString()} visualizaciones totales` : ''} (Videoclips 4K, sesiones acústicas y Shorts)
+  * Spotify: ${hasSpotify ? `${spCount.toLocaleString()} oyentes mensuales` : 'Sin perfil público activo todavía (fase previa de distribución)'}
+- Horizonte Temporal de Planificación: ${horizonDays} días
+${customFocus ? `- Hito / Enfoque prioritario indicado por el grupo: "${customFocus}"` : ''}
+
+REGLAS DE ADAPTACIÓN SEGÚN EL TAMAÑO DE SEGUIDORES Y VISUALIZACIONES:
+1. SI TIENEN MENOS DE 1.000 SEGUIDORES (Fase Debut / Tracción Local):
+   - Foco absoluto en crear los primeros 100 «Superfans» y llenar conciertos de 50-100 personas.
+   - Acciones de contenido crudo (ensayos con buen audio, anécdotas de furgoneta, deconstrucción de riffs).
+   - Nada de invertir fortunas en videoclips faraónicos: priorizar vídeos verticales de alta energía grabados con móvil y buen micro.
+   - En Spotify: Pre-Saves, Pitch a listas editoriales con 4 semanas de antelación y campañas de singles en cascada.
+
+2. SI TIENEN ENTRE 1.000 Y 10.000 SEGUIDORES (Fase de Crecimiento & Gira en Salas):
+   - Foco en resolver fugas del embudo: convertir visualizaciones virales en oyentes de Spotify y entradas vendidas.
+   - Colaboraciones con otras bandas de la escena (Co-Authors en Instagram) y Canal de Difusión VIP.
+   - Campañas de retención (Save Rate > 12% en Spotify para activar Release Radar y Radio de Artista).
+
+3. SI TIENEN MÁS DE 10.000 SEGUIDORES (Fase de Escalado & Festivales):
+   - Foco en directos multicámara en YouTube, documentales de fin de gira, preventa de merchandising de autor y posicionamiento en festivales.
+
+Devuelve ÚNICAMENTE un JSON estrictamente válido con este esquema exacto:
+{
+  "bandName": "${bandName || 'Bakandeya'}",
+  "horizonDays": ${horizonDays},
+  "executiveSummary": "Resumen ejecutivo directo, motivador y 100% enfocado a músicos (2-3 frases)...",
+  "overallPillars": [
+    { "pillar": "Directo y Escenario (Llenar Conciertos)", "description": "Cómo mostrar la energía en vivo para vender entradas...", "weightPercentage": 40 },
+    { "pillar": "Humanización y Superfans", "description": "Ensayos, carretera y conexión emocional con el oyente...", "weightPercentage": 35 },
+    { "pillar": "Lanzamientos Musicales y Streaming", "description": "Estrategia de singles en cascada y playlists...", "weightPercentage": 25 }
+  ],
+  "weeklyBlueprint": [
+    { "day": "Lunes", "focus": "...", "recommendedPlatform": "tiktok", "contentAction": "...", "optimalPostingTime": "16:00h" },
+    { "day": "Martes", "focus": "...", "recommendedPlatform": "instagram", "contentAction": "...", "optimalPostingTime": "20:00h" },
+    { "day": "Miércoles", "focus": "...", "recommendedPlatform": "instagram", "contentAction": "...", "optimalPostingTime": "14:00h" },
+    { "day": "Jueves", "focus": "...", "recommendedPlatform": "youtube", "contentAction": "...", "optimalPostingTime": "18:30h" },
+    { "day": "Viernes", "focus": "...", "recommendedPlatform": "todas", "contentAction": "...", "optimalPostingTime": "19:30h" },
+    { "day": "Sábado", "focus": "...", "recommendedPlatform": "instagram", "contentAction": "...", "optimalPostingTime": "22:30h" },
+    { "day": "Domingo", "focus": "...", "recommendedPlatform": "instagram", "contentAction": "...", "optimalPostingTime": "20:30h" }
+  ],
+  "channels": [
+    {
+      "platform": "instagram",
+      "name": "Instagram",
+      "currentMetricsSummary": "...",
+      "growthStage": "...",
+      "primaryObjective": "...",
+      "coreStrategy": "...",
+      "hookFormulas": ["gancho 1 para músicos", "gancho 2 para músicos", "gancho 3", "gancho 4"],
+      "recommendedSchedule": "...",
+      "actionItems": [
+        { "id": "ig-ai-1", "title": "...", "description": "...", "impact": "critico", "difficulty": "fácil", "frequency": "semanal", "kpiTarget": "..." },
+        { "id": "ig-ai-2", "title": "...", "description": "...", "impact": "alto", "difficulty": "medio", "frequency": "diario", "kpiTarget": "..." },
+        { "id": "ig-ai-3", "title": "...", "description": "...", "impact": "alto", "difficulty": "fácil", "frequency": "puntual", "kpiTarget": "..." }
+      ],
+      "donts": ["error común en músicos 1", "error común en músicos 2"],
+      "viralConcepts": [
+        { "title": "...", "concept": "...", "hook": "...", "callToAction": "..." },
+        { "title": "...", "concept": "...", "hook": "...", "callToAction": "..." }
+      ]
+    },
+    {
+      "platform": "tiktok",
+      "name": "TikTok",
+      "currentMetricsSummary": "...",
+      "growthStage": "...",
+      "primaryObjective": "...",
+      "coreStrategy": "...",
+      "hookFormulas": ["gancho 1 para músicos", "gancho 2 para músicos", "gancho 3"],
+      "recommendedSchedule": "...",
+      "actionItems": [
+        { "id": "tk-ai-1", "title": "...", "description": "...", "impact": "critico", "difficulty": "fácil", "frequency": "semanal", "kpiTarget": "..." },
+        { "id": "tk-ai-2", "title": "...", "description": "...", "impact": "alto", "difficulty": "medio", "frequency": "diario", "kpiTarget": "..." }
+      ],
+      "donts": ["error 1", "error 2"],
+      "viralConcepts": [
+        { "title": "...", "concept": "...", "hook": "...", "callToAction": "..." }
+      ]
+    },
+    {
+      "platform": "youtube",
+      "name": "YouTube",
+      "currentMetricsSummary": "...",
+      "growthStage": "...",
+      "primaryObjective": "...",
+      "coreStrategy": "...",
+      "hookFormulas": ["gancho 1", "gancho 2"],
+      "recommendedSchedule": "...",
+      "actionItems": [
+        { "id": "yt-ai-1", "title": "...", "description": "...", "impact": "alto", "difficulty": "medio", "frequency": "semanal", "kpiTarget": "..." },
+        { "id": "yt-ai-2", "title": "...", "description": "...", "impact": "critico", "difficulty": "fácil", "frequency": "semanal", "kpiTarget": "..." }
+      ],
+      "donts": ["error 1", "error 2"],
+      "viralConcepts": [
+        { "title": "...", "concept": "...", "hook": "...", "callToAction": "..." }
+      ]
+    },
+    {
+      "platform": "spotify",
+      "name": "Spotify & Streaming",
+      "currentMetricsSummary": "...",
+      "growthStage": "...",
+      "primaryObjective": "...",
+      "coreStrategy": "...",
+      "hookFormulas": ["gancho 1", "gancho 2"],
+      "recommendedSchedule": "...",
+      "actionItems": [
+        { "id": "sp-ai-1", "title": "...", "description": "...", "impact": "critico", "difficulty": "medio", "frequency": "mensual", "kpiTarget": "..." },
+        { "id": "sp-ai-2", "title": "...", "description": "...", "impact": "alto", "difficulty": "fácil", "frequency": "puntual", "kpiTarget": "..." }
+      ],
+      "donts": ["error 1", "error 2"],
+      "viralConcepts": [
+        { "title": "...", "concept": "...", "hook": "...", "callToAction": "..." }
+      ]
+    }
+  ]
+}`;
+
+    const response = await generateContentWithFallback(ai, {
+      preferredModel: "gemini-3.7-flash",
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: "application/json",
+        temperature: 0.4
+      }
+    });
+
+    const text = response.text || "{}";
+    const plan = JSON.parse(text.replace(/```json/g, "").replace(/```/g, "").trim());
+    plan.generatedAt = new Date().toISOString();
+
+    res.json({
+      success: true,
+      data: plan
+    });
+  } catch (err: any) {
+    console.error("Error generating social growth plan:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de crecimiento con Gemini" });
   }
 });
 

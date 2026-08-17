@@ -421,6 +421,14 @@ export interface SongSubstituteGuide {
   instrumentosClave?: string;
 }
 
+export interface MemberSongNote {
+  userId?: string;
+  memberName: string;
+  instrument?: string;
+  nota: string;
+  updatedAt?: string;
+}
+
 export interface Song {
   id: string;
   band_id?: string;
@@ -444,6 +452,9 @@ export interface Song {
   esVersionCovers?: boolean;
   enlaceAcordes?: string; // Link to drive/chords/partitura
   notasInternas?: string;
+  notasRepertorio?: string; // General notes for repertoire/print
+  notasMiembros?: Record<string, string>; // member ID or member Name -> note text
+  notasPorMiembro?: MemberSongNote[];
   audioPrincipalUrl?: string; // Demo / Master audio file
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format

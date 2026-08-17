@@ -400,7 +400,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
     setPortalError(null);
     try {
       const res = await api.createPortalSession({
-        userEmail: currentUser?.email || 'diego.delacalleb@gmail.com',
+        userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com',
         bandId: currentUser?.band_id || 'band-bakandeya',
         returnUrl: window.location.href
       });

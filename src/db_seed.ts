@@ -925,6 +925,30 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     contenido: 'Subida del videoclip del directo en Málaga "Violín y Ritmo (En Vivo desde Trinchera)". Miniatura de alta resolución con el violín solista en primer plano y luces rojas de backstage.',
     estado: 'aprobado',
     responsable: 'Diego'
+  },
+  {
+    id: 'post-1783933046058',
+    fecha: '2026-07-16 20:30',
+    plataforma: 'Instagram',
+    contenido: '¡Así cerramos cada encuentro! 🎺✨ La energía en el escenario es innegociable. ¿Nos vemos en el próximo concierto? ¡Déjanos tu ciudad en comentarios! #Bakandeya #SkaBocado #LiveMusic #FiestaBalcánica',
+    estado: 'aprobado',
+    responsable: 'Diego'
+  },
+  {
+    id: 'post-1783938497260',
+    fecha: '2026-07-16 20:30',
+    plataforma: 'Instagram',
+    contenido: 'Cuando el ska se junta con los metales del este... ¡explota la cabeza! 🤯 Siente el poder del bajo y dinos: ¿del 1 al 10 cuánto te apetece bailar esto hoy? 👇🎉 #Bakandeya #SkaFusión #BajoPoderoso #MusicaIndie #FestaMajor #ConciertosEspaña',
+    estado: 'aprobado',
+    responsable: 'Diego'
+  },
+  {
+    id: 'post-1785533630241',
+    fecha: '2026-08-01 20:30',
+    plataforma: 'Instagram',
+    contenido: 'Imposible quedarse quieto cuando el ritmo de BAKANDEYA acelera. 🚀 Violín virtuoso, percusión reciclada y una base de guitarra y bajo arrolladora. 🔊 ¡Sube el volumen!',
+    estado: 'aprobado',
+    responsable: 'Jon'
   }
 ];
 
@@ -1044,29 +1068,65 @@ export const INITIAL_MESSAGES: Message[] = [
 export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
   {
     id: 'metric-1',
-    fecha: '2026-05-01',
-    instagram: 290,
-    tiktok: 110,
-    youtube: 15,
-    spotify: 85,
+    fecha: '2025-03-01',
+    instagram: 0,
+    tiktok: 0,
+    youtube: 0,
+    spotify: 0,
     notas: 'Inicio de la monitorización de campaña de primavera.'
+  },
+  {
+    id: 'met-2-1786104842629',
+    fecha: '2025-06-01',
+    instagram: 40,
+    tiktok: 10,
+    youtube: 5,
+    spotify: 0,
+    notas: 'Lanzamiento de primeras maquetas en redes.'
+  },
+  {
+    id: 'met-3-1786104842629',
+    fecha: '2025-07-01',
+    instagram: 90,
+    tiktok: 30,
+    youtube: 9,
+    spotify: 0,
+    notas: 'Primeros ensayos y adelantos acústicos.'
+  },
+  {
+    id: 'met-4-1786104842629',
+    fecha: '2025-09-01',
+    instagram: 120,
+    tiktok: 50,
+    youtube: 15,
+    spotify: 0,
+    notas: 'Campaña de presentación del proyecto Bakandeya.'
+  },
+  {
+    id: 'met-5-1786104842629',
+    fecha: '2025-12-01',
+    instagram: 200,
+    tiktok: 70,
+    youtube: 22,
+    spotify: 0,
+    notas: 'Cierre de año con primeros directos en salas.'
   },
   {
     id: 'metric-2',
     fecha: '2026-05-15',
-    instagram: 310,
-    tiktok: 135,
-    youtube: 18,
-    spotify: 92,
+    instagram: 300,
+    tiktok: 100,
+    youtube: 25,
+    spotify: 0,
     notas: 'Lanzamiento del EPK digital de la banda.'
   },
   {
     id: 'metric-3',
     fecha: '2026-06-01',
-    instagram: 340,
-    tiktok: 165,
-    youtube: 22,
-    spotify: 105,
+    instagram: 600,
+    tiktok: 125,
+    youtube: 28,
+    spotify: 0,
     notas: 'Anuncio de la participación en el Cabo de Plata.'
   },
   {
@@ -1075,7 +1135,7 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
     instagram: 800,
     tiktok: 150,
     youtube: 30,
-    spotify: 120,
+    spotify: 0,
     notas: 'Campaña publicitaria del directo en Trinchera Málaga.'
   },
   {
@@ -1084,7 +1144,7 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
     instagram: 1100,
     tiktok: 200,
     youtube: 32,
-    spotify: 135,
+    spotify: 0,
     notas: 'Post del Sold Out en Málaga tuvo impacto orgánico en TikTok.'
   },
   {
@@ -1092,8 +1152,8 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
     fecha: '2026-07-12',
     instagram: 1348,
     tiktok: 252,
-    youtube: 38,
-    spotify: 142,
+    youtube: 35,
+    spotify: 0,
     notas: 'Registro previo a la actuación del Cabo de Plata.'
   },
   {
@@ -1102,8 +1162,17 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
     instagram: 1385,
     tiktok: 253,
     youtube: 42,
-    spotify: 150,
-    notas: 'Escaneo oficial verificado de redes sociales.'
+    spotify: 0,
+    notas: 'Registro previo a la actuación del Cabo de Plata.'
+  },
+  {
+    id: 'met-12-1786524550418',
+    fecha: '2026-08-10',
+    instagram: 1539,
+    tiktok: 292,
+    youtube: 43,
+    spotify: 0,
+    notas: 'Crecimiento orgánico tras festival de verano.'
   }
 ];
 
@@ -1111,6 +1180,7 @@ export const INITIAL_USERS = [
   {
     id: 'user-diego',
     username: 'diego',
+    email: 'diego.delacalleb@gmail.com',
     name: 'Diego',
     role: 'leader' as const,
     instrument: 'Mánager / Booking (Oficina)',
@@ -1121,6 +1191,7 @@ export const INITIAL_USERS = [
   {
     id: 'user-jose',
     username: 'jose',
+    email: 'jose@bakandeya.com',
     name: 'Jose',
     role: 'leader' as const,
     instrument: 'Percusión, Showman y Admin',
@@ -1131,6 +1202,7 @@ export const INITIAL_USERS = [
   {
     id: 'user-jon',
     username: 'jon',
+    email: 'jon@bakandeya.com',
     name: 'Jon',
     role: 'member' as const,
     instrument: 'Cantante, Loops y Percusión',
@@ -1141,6 +1213,7 @@ export const INITIAL_USERS = [
   {
     id: 'user-elyar',
     username: 'elyar',
+    email: 'elyar@bakandeya.com',
     name: 'Elyar',
     role: 'member' as const,
     instrument: 'Handpan y Percusión',
@@ -1151,6 +1224,7 @@ export const INITIAL_USERS = [
   {
     id: 'user-raul',
     username: 'raul',
+    email: 'raul@bakandeya.com',
     name: 'Raúl',
     role: 'member' as const,
     instrument: 'Violín',

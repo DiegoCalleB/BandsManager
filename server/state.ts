@@ -96,6 +96,39 @@ const INITIAL_FANS = [
     conciertoOrigenNombre: "16 Toneladas (Valencia)",
     fechaCaptura: "2026-04-02",
     consentimientoRGPD: true
+  },
+  {
+    id: "fan-3",
+    nombre: "Elena Morales",
+    email: "elena.morales.sevilla@gmail.com",
+    ciudad: "Sevilla",
+    comoConocio: "Concierto Sala Malandar",
+    conciertoOrigenId: "cnc-3",
+    conciertoOrigenNombre: "Sala Malandar (Sevilla)",
+    fechaCaptura: "2026-04-18",
+    consentimientoRGPD: true
+  },
+  {
+    id: "fan-4",
+    nombre: "Marc Soler",
+    email: "marc.soler.bcn@gmail.com",
+    ciudad: "Barcelona",
+    comoConocio: "Directo Sala Apolo",
+    conciertoOrigenId: "lead-1",
+    conciertoOrigenNombre: "Sala Apolo (Barcelona)",
+    fechaCaptura: "2026-05-02",
+    consentimientoRGPD: true
+  },
+  {
+    id: "fan-5",
+    nombre: "Sara Navarro",
+    email: "sara.navarro.ska@gmail.com",
+    ciudad: "Granada",
+    comoConocio: "Sala El Tren",
+    conciertoOrigenId: "lead-3",
+    conciertoOrigenNombre: "Sala El Tren (Granada)",
+    fechaCaptura: "2026-05-10",
+    consentimientoRGPD: true
   }
 ];
 

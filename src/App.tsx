@@ -1144,6 +1144,12 @@ export default function App() {
             currentBandId={currentActiveBandId}
             currentBandName={currentActiveBandName}
             currentBandLogo={currentActiveBandLogo}
+            metrics={metrics}
+            onAddMetric={handleAddMetric}
+            onUpdateMetric={handleUpdateMetric}
+            onDeleteMetric={handleDeleteMetric}
+            colors={colors}
+            isStitchLight={currentTheme === 'stitch_light'}
           />
         )}
         {currentView === 'giras' && (

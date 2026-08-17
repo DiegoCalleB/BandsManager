@@ -181,7 +181,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
              planId: createBandPlan,
              billingInterval: 'monthly',
              bandId: res.band_id,
-             userEmail: currentUser.email || 'diego.delacalleb@gmail.com'
+             userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com'
            });
            setShowCreateBandSection(false);
            setCreateBandName('');
@@ -1276,7 +1276,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                   planId: plan.id,
                                   billingInterval: 'monthly',
                                   bandId: currentUser.band_id || 'default',
-                                  userEmail: currentUser.email || 'diego.delacalleb@gmail.com'
+                                  userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com'
                                 });
                                 setShowUpgradeModal(false);
                                 return;

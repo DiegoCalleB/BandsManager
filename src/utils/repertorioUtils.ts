@@ -120,3 +120,91 @@ export function sortSongs<T extends SongLike>(
 
   return order === 'desc' ? sorted.reverse() : sorted;
 }
+
+export interface BandMemberOption {
+  id: string;
+  name: string;
+  instrument: string;
+  avatarColor?: string;
+}
+
+export const DEFAULT_BAND_MEMBERS: BandMemberOption[] = [
+  { id: 'usr-diego', name: 'Diego', instrument: 'Trompeta / Voz', avatarColor: '#10b981' },
+  { id: 'usr-filgue', name: 'Filgue', instrument: 'Batería / Beatbox', avatarColor: '#3b82f6' },
+  { id: 'usr-jon', name: 'Jon', instrument: 'Guitarra / Sintes', avatarColor: '#f59e0b' },
+  { id: 'usr-jose', name: 'Jose', instrument: 'Bajo / Coros', avatarColor: '#8b5cf6' },
+  { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Vientos', avatarColor: '#ec4899' }
+];
+
+/**
+ * Returns clean band member list from users or fallback defaults, plus any custom members found in song notes
+ */
+export function resolveBandMembers(users?: any[], extraNotes?: Record<string, string>): BandMemberOption[] {
+  const memberMap = new Map<string, BandMemberOption>();
+
+  // 1. If users array provided with valid members
+  if (Array.isArray(users) && users.length > 0) {
+    users.forEach(u => {
+      const name = u.name || u.nombre || u.username || 'Músico';
+      const id = u.id || `usr-${name.toLowerCase().replace(/\s+/g, '-')}`;
+      const instrument = u.instrument || u.instrumento || u.role || 'Instrumento';
+      memberMap.set(name.toLowerCase(), {
+        id,
+        name,
+        instrument,
+        avatarColor: u.avatarColor || '#6366f1'
+      });
+    });
+  }
+
+  // 2. If no members or fewer than 2, enrich with default Bakandeya members
+  if (memberMap.size === 0) {
+    DEFAULT_BAND_MEMBERS.forEach(m => {
+      memberMap.set(m.name.toLowerCase(), m);
+    });
+  }
+
+  // 3. If there are custom keys in extraNotes that aren't yet in memberMap, add them
+  if (extraNotes) {
+    Object.keys(extraNotes).forEach(key => {
+      const cleanKey = key.trim();
+      if (!cleanKey) return;
+      const lower = cleanKey.toLowerCase();
+      if (!memberMap.has(lower)) {
+        // Could be an ID or name
+        memberMap.set(lower, {
+          id: `custom-${cleanKey}`,
+          name: cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1),
+          instrument: 'Músico / Invitado',
+          avatarColor: '#14b8a6'
+        });
+      }
+    });
+  }
+
+  return Array.from(memberMap.values());
+}
+
+/**
+ * Retrieves the specific note for a member on a given song
+ */
+export function getSongMemberNote(song?: any, memberKey?: string, memberName?: string): string {
+  if (!song) return '';
+  const notesMap = song.notasMiembros || song.notas_miembros || {};
+
+  if (memberKey && notesMap[memberKey]) return notesMap[memberKey];
+  if (memberName && notesMap[memberName]) return notesMap[memberName];
+  if (memberName && notesMap[memberName.toLowerCase()]) return notesMap[memberName.toLowerCase()];
+
+  // Check in notasPorMiembro array if exists
+  if (Array.isArray(song.notasPorMiembro)) {
+    const found = song.notasPorMiembro.find((n: any) => 
+      (memberKey && n.userId === memberKey) || 
+      (memberName && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase())
+    );
+    if (found && found.nota) return found.nota;
+  }
+
+  return '';
+}
+
