@@ -28,7 +28,6 @@ import {
   getYouTubeId, 
   getStartTimeInSeconds 
 } from '../utils/reelsUtils';
-import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
 export type { ReelCard, HighlightClip, OptimalTime };
@@ -78,8 +77,8 @@ export default function ReelsCenter({
  onUpdateMetric,
  onDeleteMetric
 }: ReelsCenterProps) {
- // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor) vs 'metrics'
- const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer' | 'metrics'>('pipeline');
+  // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
+  const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
 
  // Bakandeya Tone Analysis State
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
@@ -1057,21 +1056,6 @@ export default function ReelsCenter({
  >
  <Sparkles className="w-3.5 h-3.5" /> Analizador de Vídeos AI
  </button>
- <button
- id="tab-btn-metrics"
- onClick={() => setActiveTab('metrics')}
- className={`px-5 py-2.5 font-mono text-[10px] tracking-widest uppercase transition-all duration-300 rounded-xl flex items-center gap-1.5 cursor-pointer ${
- activeTab === 'metrics'
- ? isStitchLight
- ? 'bg-indigo-600 text-white font-black shadow-md'
- : 'bg-[#f2ca50] text-[#3c2f00] font-black shadow-md shadow-[#f2ca50]/10'
- : isStitchLight
- ? 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 -slate-200 bg-white'
- : 'text-neutral-400 hover:text-white hover:bg-[#1c1b1b]/50 -neutral-900'
- }`}
- >
- <TrendingUp className="w-3.5 h-3.5" /> Seguidores e Impacto
- </button>
  </div>
 
  <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
@@ -1331,7 +1315,7 @@ export default function ReelsCenter({
  </div>
  </div>
  </div>
- ) : activeTab === 'analyzer' ? (
+ ) : (
  /* TAB 2: BRAND NEW AI VIDEO HIGHLIGHT EXTRACTOR */
  <div className="space-y-6">
  
@@ -1986,22 +1970,7 @@ export default function ReelsCenter({
  </div>
 
  </div>
- ) : (
- /* TAB 3: SEGUIDORES E IMPACTO PANEL */
- <ReelsMetricsView
- colors={colors}
- isStitchLight={isStitchLight}
- metrics={metrics}
- onAddMetric={onAddMetric}
- onUpdateMetric={onUpdateMetric}
- onDeleteMetric={onDeleteMetric}
- onScanRealMetrics={handleScanRealMetrics}
- onSyncMetrics={handleSyncMetricsTab}
- isScanningMetrics={isScanningMetrics}
- isSyncingMetrics={isSyncingMetrics}
- />
  )}
-
 
  </div>
 
@@ -2026,112 +1995,7 @@ export default function ReelsCenter({
  <span className={`w-2 h-2 rounded-full ${isStitchLight ? 'bg-slate-300' : 'bg-neutral-900'}`} />
  </div>
 
- {activeTab === 'metrics' ? (
- /* High fidelity Mobile Analytics Preview */
- <div className="absolute inset-0 z-10 flex flex-col justify-between p-4 pt-10 pb-4">
- <div className="flex justify-between items-center z-10">
- <span className={`text-[9px] font-mono tracking-wider font-bold ${
- isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'
- }`}>
- KPIs AUDIENCIA
- </span>
- <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-[#10b981]/15 text-[#10b981] font-bold">
- ACTIVO
- </span>
- </div>
-
- <div className="flex-1 flex flex-col justify-center items-center py-4 space-y-5 text-center">
- <div className="space-y-1">
- <span className="text-[8px] font-mono text-neutral-400 uppercase tracking-widest block">Audiencia Social</span>
- <span className="text-3xl font-black font-display tracking-tight text-white block">
- {(() => {
- const sorted = [...metrics].sort((a,b) => a.fecha.localeCompare(b.fecha));
- const latest = sorted[sorted.length - 1];
- const total = latest ? latest.instagram + latest.tiktok + latest.youtube : 0;
- return total.toLocaleString();
- })()}
- </span>
- <span className="text-[8px] font-mono text-emerald-400 block font-bold flex items-center justify-center gap-0.5">
- <TrendingUp className="w-3 h-3 inline" /> +
- {(() => {
- const sorted = [...metrics].sort((a,b) => a.fecha.localeCompare(b.fecha));
- const latest = sorted[sorted.length - 1];
- const oldest = sorted[0];
- if (latest && oldest) {
- const diff = (latest.instagram + latest.tiktok + latest.youtube) - (oldest.instagram + oldest.tiktok + oldest.youtube);
- return diff.toLocaleString();
- }
- return"0";
- })()} desde inicio
- </span>
- </div>
-
- {/* Breakdown List */}
- <div className="w-full space-y-2 px-1">
- {/* Instagram */}
- <div className="flex items-center justify-between p-2 bg-neutral-900/60 rounded-xl -neutral-800">
- <div className="flex items-center gap-2">
- <span className="w-6 h-6 rounded-lg bg-pink-500/10 flex items-center justify-center">
- <Instagram className="w-3.5 h-3.5 text-pink-500" />
- </span>
- <span className="text-[9px] font-mono text-neutral-300 font-bold">Instagram</span>
- </div>
- <span className="text-[10px] font-mono text-white font-bold">
- {(() => {
- const sorted = [...metrics].sort((a,b) => a.fecha.localeCompare(b.fecha));
- const latest = sorted[sorted.length - 1];
- return latest ? latest.instagram.toLocaleString() : '0';
- })()}
- </span>
- </div>
-
- {/* TikTok */}
- <div className="flex items-center justify-between p-2 bg-neutral-900/60 rounded-xl -neutral-800">
- <div className="flex items-center gap-2">
- <span className="w-6 h-6 rounded-lg bg-cyan-500/10 flex items-center justify-center">
- <Video className="w-3.5 h-3.5 text-cyan-400" />
- </span>
- <span className="text-[9px] font-mono text-neutral-300 font-bold">TikTok</span>
- </div>
- <span className="text-[10px] font-mono text-white font-bold">
- {(() => {
- const sorted = [...metrics].sort((a,b) => a.fecha.localeCompare(b.fecha));
- const latest = sorted[sorted.length - 1];
- return latest ? latest.tiktok.toLocaleString() : '0';
- })()}
- </span>
- </div>
-
- {/* YouTube */}
- <div className="flex items-center justify-between p-2 bg-neutral-900/60 rounded-xl -neutral-800">
- <div className="flex items-center gap-2">
- <span className="w-6 h-6 rounded-lg bg-red-500/10 flex items-center justify-center">
- <Youtube className="w-3.5 h-3.5 text-red-500" />
- </span>
- <span className="text-[9px] font-mono text-neutral-300 font-bold">YouTube</span>
- </div>
- <span className="text-[10px] font-mono text-white font-bold">
- {(() => {
- const sorted = [...metrics].sort((a,b) => a.fecha.localeCompare(b.fecha));
- const latest = sorted[sorted.length - 1];
- return latest ? latest.youtube.toLocaleString() : '0';
- })()}
- </span>
- </div>
- </div>
- </div>
-
- <div className="z-10 text-center space-y-1">
- <span className="text-[8px] font-mono text-neutral-500 block">Sincronizado con</span>
- <span className={`text-[8px] font-mono font-bold tracking-widest uppercase block ${
- isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'
- }`}>
- Google Sheets Live
- </span>
- </div>
- </div>
- ) : (
- /* Dynamic Video Mockup Content with Analog Synth pattern as background */
+ {/* Dynamic Video Mockup Content with Analog Synth pattern as background */}
  <div className="absolute inset-0 z-10 flex flex-col justify-between p-3 pt-8 pb-3 relative">
  
  {/* Background Decorative Pattern representing video overlay */}
@@ -2405,10 +2269,6 @@ export default function ReelsCenter({
  <span className="animate-marquee whitespace-nowrap">Bakandeya - Balkan Brass Intro 2026</span>
  </div>
  </div>
-
- </div>
- )}
- </div>
  </div>
 
  {/* Simulated Upload Status Queue */}
@@ -2446,6 +2306,10 @@ export default function ReelsCenter({
  <span>Todo sincronizado</span>
  </div>
  )}
+ </div>
+
+ </div>
+
  </div>
 
  </div>

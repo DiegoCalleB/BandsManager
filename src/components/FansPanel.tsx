@@ -2,12 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles, 
   Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
-  Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle
+  Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
+  Gift, Tag, Music, Save, CheckCircle2
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import * as XLSX from 'xlsx';
-import { Fan, Concert, EPKConfig } from '../types';
+import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { ReelsMetricsView } from './reels/ReelsMetricsView';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -20,6 +22,16 @@ interface FansPanelProps {
   currentBandId?: string;
   currentBandName?: string;
   currentBandLogo?: string;
+  metrics?: SocialMetric[];
+  onAddMetric?: (metric: SocialMetric) => Promise<void>;
+  onUpdateMetric?: (id: string, updatedFields: Partial<SocialMetric>) => Promise<void>;
+  onDeleteMetric?: (id: string) => Promise<void>;
+  onScanRealMetrics?: () => Promise<void>;
+  onSyncMetrics?: () => Promise<void>;
+  isScanningMetrics?: boolean;
+  isSyncingMetrics?: boolean;
+  colors?: ThemeColors;
+  isStitchLight?: boolean;
 }
 
 const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
@@ -34,12 +46,22 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   onUpdateEpkConfig,
   currentBandId,
   currentBandName,
-  currentBandLogo
+  currentBandLogo,
+  metrics = [],
+  onAddMetric,
+  onUpdateMetric,
+  onDeleteMetric,
+  onScanRealMetrics,
+  onSyncMetrics,
+  isScanningMetrics,
+  isSyncingMetrics,
+  colors,
+  isStitchLight
 }) => {
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
   const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'fans' | 'qr'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'fans' | 'qr' | 'metrics'>('dashboard');
   const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOrigen, setFilterOrigen] = useState<string>('');
@@ -105,6 +127,24 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     codigoDescuento: "BAKANDEYA-FAN-10"
   });
   const [savedIncentive, setSavedIncentive] = useState(false);
+
+  useEffect(() => {
+    if (epkConfig?.incentivoFans) {
+      setIncentivo(epkConfig.incentivoFans);
+    }
+  }, [epkConfig?.incentivoFans]);
+
+  const handleSaveIncentive = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (onUpdateIncentive) {
+      onUpdateIncentive(incentivo);
+    }
+    if (onUpdateEpkConfig) {
+      onUpdateEpkConfig({ incentivoFans: incentivo });
+    }
+    setSavedIncentive(true);
+    setTimeout(() => setSavedIncentive(false), 2500);
+  };
 
   // Manual Add Modal State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -410,24 +450,31 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex overflow-x-auto border-b border-slate-800 hide-scrollbar">
+      <div className="flex overflow-x-auto border-b border-slate-800 hide-scrollbar gap-1">
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <Heart className="w-4 h-4" /> Dashboard
+          <Heart className="w-4 h-4 text-amber-500" /> 1. Dashboard & Analítica
         </button>
         <button
           onClick={() => setActiveTab('fans')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer ${activeTab === 'fans' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <Users className="w-4 h-4" /> Base de Datos ({fans.length})
+          <Users className="w-4 h-4 text-amber-500" /> 2. Base de Datos & CRM ({fans.length})
         </button>
         <button
           onClick={() => setActiveTab('qr')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer ${activeTab === 'qr' ? 'border-amber-500 text-amber-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'qr' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <QrCode className="w-4 h-4" /> Generador de QR
+          <QrCode className="w-4 h-4 text-amber-500" /> 3. Captura en Vivo & QR
+        </button>
+        <button
+          id="tab-btn-fans-metrics"
+          onClick={() => setActiveTab('metrics')}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'metrics' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+        >
+          <TrendingUp className="w-4 h-4 text-amber-500" /> 4. Redes Sociales & Streaming
         </button>
       </div>
 
@@ -910,20 +957,133 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       )}
 
       {activeTab === 'qr' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="space-y-2 border-b border-slate-800 pb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <QrCode className="w-5 h-5 text-amber-400" /> Generador de QR para Eventos
-                </h3>
-                <p className="text-xs text-slate-400 font-mono">
-                  Selecciona un concierto para personalizar la landing page. Imprime o muestra este QR en la mesa de merchan o proyéctalo.
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-8">
+          <div className="space-y-2 border-b border-slate-800 pb-5">
+            <h3 className="text-xl font-black text-white flex items-center gap-2 font-display">
+              <QrCode className="w-6 h-6 text-amber-400" /> Captura en Directo: Generador de QR & Campañas
+            </h3>
+            <p className="text-xs text-slate-400 font-mono">
+              Configura tu recompensa exclusiva para fans, genera carteles con código QR para proyectar o colocar en el stand de merchandising y capta datos con consentimiento RGPD.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Columna Izquierda: Configuración por pasos (7 cols) */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Paso 1: Concierto o Campaña */}
+              <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">1</span>
+                    Vincular a Concierto o Campaña
+                  </label>
+                  {selectedConcertId && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedConcertId('')}
+                      className="text-[10px] font-mono text-slate-400 hover:text-amber-300 underline cursor-pointer"
+                    >
+                      Usar QR Genérico
+                    </button>
+                  )}
+                </div>
+                <select
+                  value={selectedConcertId}
+                  onChange={e => setSelectedConcertId(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                >
+                  <option value="">-- Campaña General / QR Genérico de la Banda --</option>
+                  {concerts.map(c => (
+                    <option key={c.id} value={c.id}>
+                      📅 {c.fecha} — {c.sala} ({c.ciudad})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-slate-500 font-mono">
+                  {selectedConcert 
+                    ? `Los fans que escaneen se registrarán con origen: "${selectedConcert.sala} (${selectedConcert.ciudad})"`
+                    : 'Los fans que escaneen se registrarán con origen: "Campaña General / Redes"'}
                 </p>
               </div>
 
-              <div className="space-y-3 bg-slate-950/80 p-4 rounded-xl border border-slate-800/80">
-                <label className="text-xs font-bold text-amber-300 uppercase font-mono tracking-wider block">1. Dominio Base del Enlace</label>
+              {/* Paso 2: Incentivo / Recompensa al Fan */}
+              <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">2</span>
+                    <Gift className="w-4 h-4 text-amber-400" />
+                    Recompensa / Incentivo para el Fan
+                  </label>
+                  {savedIncentive && (
+                    <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-400 font-mono">
+                  Ofrece algo de valor al fan tras registrarse (un tema en directo exclusivo o descuento de merchan) para disparar la tasa de escaneos.
+                </p>
+
+                <div className="space-y-3 pt-1">
+                  <div>
+                    <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Mensaje de Bienvenida / Agradecimiento:
+                    </label>
+                    <input
+                      type="text"
+                      value={incentivo.mensajeAgradecimiento}
+                      onChange={e => setIncentivo(prev => ({ ...prev, mensajeAgradecimiento: e.target.value }))}
+                      placeholder="¡Muchas gracias por unirte a la familia de la banda!"
+                      className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                        <Music className="w-3.5 h-3.5 text-amber-500" /> Enlace de Descarga (Tema inédito/directo):
+                      </label>
+                      <input
+                        type="url"
+                        value={incentivo.enlaceDescarga}
+                        onChange={e => setIncentivo(prev => ({ ...prev, enlaceDescarga: e.target.value }))}
+                        placeholder="https://..."
+                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                        <Tag className="w-3.5 h-3.5 text-amber-500" /> Código Cupón Merchandising:
+                      </label>
+                      <input
+                        type="text"
+                        value={incentivo.codigoDescuento}
+                        onChange={e => setIncentivo(prev => ({ ...prev, codigoDescuento: e.target.value.toUpperCase() }))}
+                        placeholder="BAKANDEYA-FAN-10"
+                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-amber-300 font-bold outline-none font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="button"
+                      onClick={() => handleSaveIncentive()}
+                      className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Save className="w-3.5 h-3.5" /> Guardar Incentivo
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Paso 3: Ruta Limpia y Dominio */}
+              <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">3</span>
+                  Ruta Limpia y Dominio Base
+                </label>
+
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <button
                     type="button"
@@ -935,7 +1095,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }`}
                   >
                     <span>🌐 Dominio Web Oficial</span>
-                    <span className="text-[10px] text-slate-400 font-normal">Para impresiones/carteles (ej. bands-manager.up.railway.app)</span>
+                    <span className="text-[10px] text-slate-400 font-normal">Para impresiones/carteles</span>
                   </button>
                   <button
                     type="button"
@@ -947,13 +1107,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     }`}
                   >
                     <span>🧪 Servidor Dev</span>
-                    <span className="text-[10px] text-slate-400 font-normal">Para pruebas directas en este visor</span>
+                    <span className="text-[10px] text-slate-400 font-normal">Para pruebas en visor actual</span>
                   </button>
                 </div>
 
                 {useCustomDomain && (
-                  <div className="space-y-1 pt-1">
-                    <label className="text-[11px] font-mono text-slate-400">Web / Dominio del Proyecto:</label>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-mono text-slate-400">Dominio del Proyecto:</label>
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-mono text-slate-500 bg-slate-900 px-3 py-2.5 rounded-lg border border-slate-800">https://</span>
                       <input
@@ -966,134 +1126,153 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     </div>
                   </div>
                 )}
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-amber-300 uppercase font-mono tracking-wider">2. Vincular a Concierto (Opcional)</label>
-                <select
-                  value={selectedConcertId}
-                  onChange={e => setSelectedConcertId(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
-                >
-                  <option value="">-- QR Genérico (Sin concierto asociado) --</option>
-                  {concerts.map(c => (
-                    <option key={c.id} value={c.id}>
-                      {c.fecha} — {c.sala} ({c.ciudad})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-amber-300 uppercase font-mono tracking-wider">3. Ruta Limpia y Slug (URL Amigable)</label>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center bg-slate-950 rounded-xl border border-slate-800 px-2 shrink-0">
-                    <span className="text-[11px] font-mono text-slate-500">/</span>
+                <div className="space-y-1 pt-1">
+                  <label className="text-[11px] font-mono text-slate-400">Slug personalizado:</label>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center bg-slate-900 rounded-xl border border-slate-800 px-2.5 shrink-0">
+                      <span className="text-[11px] font-mono text-slate-500">/</span>
+                      <input
+                        type="text"
+                        value={routePrefix}
+                        onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
+                        className="w-16 bg-transparent text-amber-400 text-xs font-mono py-2.5 font-bold outline-none"
+                        placeholder="unete"
+                      />
+                      <span className="text-[11px] font-mono text-slate-500">/</span>
+                    </div>
                     <input
                       type="text"
-                      value={routePrefix}
-                      onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-                      className="w-16 bg-transparent text-amber-400 text-xs font-mono py-3 font-bold outline-none"
-                      placeholder="unete"
+                      value={customSlug}
+                      onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''))}
+                      placeholder="ej. madrid-sala-siroco"
+                      className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
                     />
-                    <span className="text-[11px] font-mono text-slate-500">/</span>
                   </div>
-                  <input
-                    type="text"
-                    value={customSlug}
-                    onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''))}
-                    placeholder="ej. madrid-sala-siroco"
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
-                  />
                 </div>
-                <p className="text-[10px] text-slate-400 font-mono">Genera direcciones legibles y atractivas como <span className="text-amber-400 font-bold">/unete/madrid-siroco</span> o <span className="text-amber-400 font-bold">/unete</span>.</p>
-              </div>
 
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-amber-400 uppercase font-mono tracking-widest text-[10px]">URL Destino que tendrá el QR:</span>
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-amber-400 uppercase font-mono tracking-widest text-[10px]">URL Destino Final del QR:</span>
+                    <button
+                      type="button"
+                      onClick={handleCopyQrUrl}
+                      className="text-[10px] text-amber-400 hover:underline font-mono"
+                    >
+                      {copiedQrUrl ? '¡Copiado!' : 'Copiar URL'}
+                    </button>
+                  </div>
+                  <p className="font-mono text-amber-300 font-bold break-all bg-slate-950 p-2 rounded-lg border border-slate-800 text-[11px]">
+                    {qrConcertUrl}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Columna Derecha: Previsualizador del Flyer / Cartel QR (5 cols) */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center space-y-4 flex flex-col items-center justify-center">
+                <div className="w-full flex items-center justify-between border-b border-slate-800/80 pb-3">
+                  <span className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">4</span>
+                    Cartel & Código QR con Logo
+                  </span>
+                  <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Alta Resolución</span>
+                </div>
+
+                <div id="qr-code-svg-container" className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-500 inline-block relative my-2">
+                  <QRCode value={qrConcertUrl} size={210} level="H" />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    {effectiveBandLogo ? (
+                      <div className="w-14 h-14 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
+                        <img 
+                          src={effectiveBandLogo} 
+                          alt={`Logo ${effectiveBandName}`} 
+                          className="w-full h-full object-contain rounded-lg" 
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-12 h-12 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center border-2 border-slate-950 shadow-xl">
+                        <Users className="w-6 h-6" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="text-center space-y-1">
+                  <h4 className="font-black text-white font-display text-lg uppercase tracking-wider">
+                    {selectedConcert ? `${selectedConcert.sala}` : `Únete a ${effectiveBandName}`}
+                  </h4>
+                  <p className="text-xs text-slate-400 font-mono">
+                    {selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : 'Escanea para conseguir tema exclusivo y descuentos'}
+                  </p>
+                </div>
+
+                {/* Botones de Acción Inmediata */}
+                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800 w-full">
                   <button
                     type="button"
-                    onClick={handleCopyQrUrl}
-                    className="text-[10px] text-amber-400 hover:underline font-mono"
+                    onClick={handlePrintQr}
+                    className="py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
                   >
-                    {copiedQrUrl ? '¡Copiado!' : 'Copiar URL'}
+                    <Printer className="w-4 h-4" /> Imprimir
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleShareWhatsApp}
+                    className="py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
+                  >
+                    <MessageCircle className="w-4 h-4" /> WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleShareNative}
+                    className="py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
+                  >
+                    <Share2 className="w-4 h-4" /> {copiedQrUrl ? '¡Copiado!' : 'Compartir'}
                   </button>
                 </div>
-                <p className="font-mono text-amber-300 font-bold break-all bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-[11px]">
-                  {qrConcertUrl}
-                </p>
-                <p className="text-[10px] text-slate-400 leading-relaxed pt-1">
-                  💡 <strong className="text-slate-300">¿Por qué aparecía la URL previa larga?</strong> La URL <code className="text-amber-400/80">ais-dev-...run.app</code> es la dirección técnica interna del contenedor de pruebas en la nube. Con la opción de <strong>Dominio Web Oficial</strong> activada, el QR impreso en tus carteles llevará tu dominio limpio (<strong className="text-slate-200">bands-manager.up.railway.app/unete</strong>).
-                </p>
               </div>
 
               <a
                 href={qrConcertUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold font-mono text-xs uppercase tracking-widest rounded-xl border border-slate-700 flex items-center justify-center gap-2 transition"
+                className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-slate-700 flex items-center justify-center gap-2 transition shadow-md"
               >
-                <ExternalLink className="w-4 h-4" /> Probar Vista de Captura de Fan
+                <ExternalLink className="w-4 h-4" /> Probar Landing de Captura en Vivo
               </a>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center space-y-4 flex flex-col items-center justify-center">
-              <div id="qr-code-svg-container" className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-500 inline-block relative">
-                <QRCode value={qrConcertUrl} size={220} level="H" />
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  {effectiveBandLogo ? (
-                    <div className="w-16 h-16 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
-                      <img 
-                        src={effectiveBandLogo} 
-                        alt={`Logo ${effectiveBandName}`} 
-                        className="w-full h-full object-contain rounded-lg" 
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-12 h-12 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center border-2 border-slate-950 shadow-xl">
-                      <Users className="w-6 h-6" />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="text-center space-y-1 mt-2">
-                <h4 className="font-black text-white font-display text-lg uppercase tracking-wider">
-                  {selectedConcert ? `${selectedConcert.sala}` : `Únete a ${effectiveBandName}`}
-                </h4>
-                <p className="text-xs text-slate-400 font-mono">Escanea para no perder el contacto</p>
-              </div>
-
-              {/* Action Buttons for Print & Share */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mt-4 pt-4 border-t border-slate-800 w-full">
-                <button
-                  type="button"
-                  onClick={handlePrintQr}
-                  className="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center gap-1.5 transition cursor-pointer shadow-lg"
-                >
-                  <Printer className="w-4 h-4" /> Imprimir
-                </button>
-                <button
-                  type="button"
-                  onClick={handleShareWhatsApp}
-                  className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center gap-1.5 transition cursor-pointer shadow-lg"
-                >
-                  <MessageCircle className="w-4 h-4" /> WhatsApp
-                </button>
-                <button
-                  type="button"
-                  onClick={handleShareNative}
-                  className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer shadow-lg"
-                >
-                  <Share2 className="w-4 h-4" /> {copiedQrUrl ? '¡Copiado!' : 'Compartir'}
-                </button>
-              </div>
             </div>
           </div>
         </div>
       )}
 
 
+
+      {activeTab === 'metrics' && (
+        <div className="space-y-6">
+          <ReelsMetricsView
+            colors={colors || {
+              bg: 'bg-slate-900',
+              card: 'bg-slate-900 border border-slate-800 rounded-2xl',
+              text: 'text-white',
+              accent: 'text-amber-400',
+              border: 'border-slate-800'
+            }}
+            isStitchLight={isStitchLight}
+            metrics={metrics || []}
+            epkConfig={epkConfig}
+            currentBandName={effectiveBandName}
+            onAddMetric={onAddMetric}
+            onUpdateMetric={onUpdateMetric}
+            onDeleteMetric={onDeleteMetric}
+            onScanRealMetrics={onScanRealMetrics}
+            onSyncMetrics={onSyncMetrics}
+            isScanningMetrics={isScanningMetrics}
+            isSyncingMetrics={isSyncingMetrics}
+          />
+        </div>
+      )}
 
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">

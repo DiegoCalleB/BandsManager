@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, Disc3, CheckCircle2, Music } from 'lucide-react';
+import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 
 interface SongModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface SongModalProps {
   albumsList?: string[];
   defaultAlbum?: string;
   defaultAlbumForNewSong?: string;
+  bandMembers?: BandMemberOption[];
 }
 
 export function SongModal({
@@ -24,10 +26,12 @@ export function SongModal({
   albumsList = [],
   defaultAlbum = '',
   defaultAlbumForNewSong = '',
+  bandMembers = []
 }: SongModalProps) {
   if (!isOpen) return null;
 
   const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
+  const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);
 
   const [minutos, setMinutos] = useState<number>(() =>
     editingSong ? Math.floor(editingSong.duracionSegundos / 60) : 3
@@ -48,7 +52,24 @@ export function SongModal({
   const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl || '');
   const [audioFileName, setAudioFileName] = useState<string>('');
 
+  // Member notes state
+  const [showMemberNotesSection, setShowMemberNotesSection] = useState<boolean>(true);
+  const [memberNotesState, setMemberNotesState] = useState<Record<string, string>>(() => {
+    const initial: Record<string, string> = {};
+    resolvedMembers.forEach(m => {
+      initial[m.name.toLowerCase()] = getSongMemberNote(editingSong, m.id, m.name);
+    });
+    return initial;
+  });
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleMemberNoteChange = (name: string, text: string) => {
+    setMemberNotesState(prev => ({
+      ...prev,
+      [name.toLowerCase()]: text
+    }));
+  };
 
   const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -324,6 +345,79 @@ export function SongModal({
                 }`}
                 placeholder="ej. Intro solo con viento, estribillo fuerte..."
               />
+            </div>
+
+            {/* Notas para Repertorio por Miembro de la Banda */}
+            <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
+            
+            <div className={`rounded-xl border transition-all overflow-hidden ${
+              isStitchLight ? 'bg-slate-50 border-slate-300' : 'bg-neutral-900/90 border-neutral-800'
+            }`}>
+              <button
+                type="button"
+                onClick={() => setShowMemberNotesSection(p => !p)}
+                className={`w-full p-3 flex items-center justify-between font-mono text-xs font-bold uppercase transition-colors cursor-pointer ${
+                  isStitchLight ? 'hover:bg-slate-100 text-slate-900' : 'hover:bg-neutral-800 text-[#1db954]'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span>Notas para Repertorio por Miembro ({resolvedMembers.length})</span>
+                </div>
+                {showMemberNotesSection ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+
+              {showMemberNotesSection && (
+                <div className="p-3 pt-0 space-y-3 border-t border-white/5">
+                  <p className="text-[10px] text-neutral-400 font-sans mt-2">
+                    Añade notas personalizadas para cada músico. Se imprimirán bajo esta canción en la hoja individual de cada miembro:
+                  </p>
+
+                  <div>
+                    <label className="block text-neutral-400 text-[10px] mb-1 font-mono">
+                      📌 Nota General de Repertorio
+                    </label>
+                    <input
+                      name="notasRepertorio"
+                      type="text"
+                      defaultValue={editingSong?.notasRepertorio || ''}
+                      placeholder="ej. Entrar directos sin intro..."
+                      className={`w-full p-2 rounded-lg focus:outline-none border text-xs ${
+                        isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+                      }`}
+                    />
+                  </div>
+
+                  <div className="space-y-2.5 pt-1">
+                    {resolvedMembers.map((member) => {
+                      const memberKey = member.name.toLowerCase();
+                      return (
+                        <div key={member.id || member.name} className="space-y-1">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="font-bold text-white flex items-center gap-1.5">
+                              <span
+                                className="w-2 h-2 rounded-full inline-block"
+                                style={{ backgroundColor: member.avatarColor || '#6366f1' }}
+                              />
+                              {member.name}
+                              <span className="text-neutral-400 font-normal">({member.instrument})</span>
+                            </span>
+                          </div>
+                          <input
+                            type="text"
+                            value={memberNotesState[memberKey] || ''}
+                            onChange={(e) => handleMemberNoteChange(member.name, e.target.value)}
+                            placeholder={`Notas específicas para ${member.name} (${member.instrument})...`}
+                            className={`w-full p-2 rounded-lg focus:outline-none border text-xs ${
+                              isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+                            }`}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

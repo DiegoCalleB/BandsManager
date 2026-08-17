@@ -11,6 +11,10 @@ export interface StudioAudioStreamOptions {
 }
 
 export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOptions): Promise<MediaStream> => {
+  if (!navigator?.mediaDevices?.getUserMedia) {
+    throw new Error("El entorno o navegador no dispone de soporte para captura de audio/micrófono.");
+  }
+
   // Default to echo cancellation and noise suppression ON for multitrack overdubbing to prevent speaker bleed and room hiss
   const useEchoCancellation = options?.echoCancellation ?? true;
   const useNoiseSuppression = options?.noiseSuppression ?? true;
@@ -28,7 +32,16 @@ export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOption
     return await navigator.mediaDevices.getUserMedia({
       audio: audioConstraints
     });
-  } catch (err) {
+  } catch (err: any) {
+    const isPermissionError = 
+      err?.name === 'NotAllowedError' || 
+      err?.name === 'PermissionDeniedError' || 
+      String(err?.message || '').toLowerCase().includes('permission denied');
+
+    if (isPermissionError) {
+      throw new Error("Permiso de micrófono denegado por el usuario o navegador.");
+    }
+
     console.warn("Audio constraints rejected, falling back to standard audio stream:", err);
     return await navigator.mediaDevices.getUserMedia({ audio: true });
   }

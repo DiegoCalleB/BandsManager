@@ -8,7 +8,7 @@ import {
  Sparkles, Sliders, CheckCircle2, ChevronRight, HelpCircle, Eye, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
- ChevronUp, ChevronDown, ListPlus
+  ChevronUp, ChevronDown, ListPlus, Users
 } from 'lucide-react';
 import SongStudioModal from './SongStudioModal';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
@@ -21,6 +21,7 @@ import { AssignSetlistModal } from './repertorio/AssignSetlistModal';
 import { SongModal } from './repertorio/SongModal';
 import { SetlistModal } from './repertorio/SetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
+import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { FavoritosGeneralesView } from './repertorio/FavoritosGeneralesView';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
@@ -380,6 +381,7 @@ export default function RepertorioSetlists({
 
  // Chords Viewer Modal State
  const [activeChordsSong, setActiveChordsSong] = useState<Song | null>(null);
+  const [activeMemberNotesSong, setActiveMemberNotesSong] = useState<Song | null>(null);
 
  // Spotify Music Player State
  const [activePlayerSong, setActivePlayerSong] = useState<Song | null>(null);
@@ -755,9 +757,9 @@ export default function RepertorioSetlists({
  showItemTimerRef.current = setInterval(() => {
  setRecordingShowItemSecs(s => s + 1);
  }, 1000);
- } catch (err) {
- console.error('Microphone access error:', err);
- alert('No se pudo acceder al micrófono. Por favor, aprueba los permisos de audio en tu navegador.');
+ } catch (err: any) {
+ console.warn('Microphone access warning:', err?.message || err);
+ alert('No se pudo acceder al micrófono (' + (err?.message || 'permisos denegados') + '). Por favor, comprueba los permisos de audio en tu navegador.');
  }
  };
 
@@ -915,6 +917,16 @@ export default function RepertorioSetlists({
  const esVersionCovers = formData.get('esVersionCovers') === 'on';
  const enlaceAcordes = formData.get('enlaceAcordes') as string;
  const notasInternas = formData.get('notasInternas') as string;
+  const notasRepertorio = (formData.get('notasRepertorio') as string) || '';
+  const notasMiembrosJson = formData.get('notasMiembrosJson') as string;
+  let notasMiembros: Record<string, string> = editingSong?.notasMiembros || {};
+  if (notasMiembrosJson) {
+    try {
+      notasMiembros = JSON.parse(notasMiembrosJson);
+    } catch {
+      // ignore
+    }
+  }
  let audioPrincipalUrl = (formData.get('audioPrincipalUrl') as string) || editingSong?.audioPrincipalUrl || '';
  let portadaUrl = (formData.get('portadaUrl') as string) || editingSong?.portadaUrl || '';
 
@@ -952,6 +964,8 @@ export default function RepertorioSetlists({
  esVersionCovers,
  enlaceAcordes,
  notasInternas,
+  notasRepertorio,
+  notasMiembros,
  audioPrincipalUrl,
  portadaUrl
  };
@@ -982,6 +996,8 @@ export default function RepertorioSetlists({
  esVersionCovers,
  enlaceAcordes,
  notasInternas,
+  notasRepertorio,
+  notasMiembros,
  audioPrincipalUrl,
  portadaUrl
  };
@@ -2522,6 +2538,21 @@ export default function RepertorioSetlists({
  <span>Acordes</span>
  </button>
 
+  <button
+    type="button"
+    onClick={() => setActiveMemberNotesSong(s)}
+    className="px-2.5 py-1 bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-300 rounded-lg text-xs font-mono font-bold flex items-center gap-1 cursor-pointer transition-all shadow-sm"
+    title="Gestionar Notas para Repertorio por Miembro de la Banda"
+  >
+    <Users className="w-3.5 h-3.5 text-emerald-400" />
+    <span>Notas Miembros</span>
+    {s.notasMiembros && Object.keys(s.notasMiembros).length > 0 && (
+      <span className="px-1.5 py-0.5 bg-emerald-500/40 text-white rounded-full text-[9px]">
+        {Object.keys(s.notasMiembros).length}
+      </span>
+    )}
+  </button>
+
  {s.enlaceAcordes && (
  <a
  href={s.enlaceAcordes}
@@ -2627,6 +2658,14 @@ export default function RepertorioSetlists({
  {/* MODAL: ADD / EDIT SONG */}
  <SongModal
    isOpen={showSongModal}
+    bandMembers={[
+      { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
+      { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
+      { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
+      { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
+      { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
+      { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
+    ]}
    editingSong={editingSong}
    defaultAlbumForNewSong={defaultAlbumForNewSong}
    albumsList={albumsList}
@@ -2635,227 +2674,6 @@ export default function RepertorioSetlists({
    onClose={() => setShowSongModal(false)}
    onSave={handleSaveSong}
  />
- {false && showSongModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
- <div className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border border-neutral-800 ${colors.card}`}>
- <div className="flex justify-between items-center pb-3">
- <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
- {editingSong ? 'Editar Canción' : 'Añadir Nueva Canción al Catálogo'}
- </h3>
- <button onClick={() => setShowSongModal(false)} className="text-neutral-400 hover:text-white">
- <X className="w-4 h-4" />
- </button>
- </div>
-
- <form onSubmit={handleSaveSong} className="space-y-3 text-[10px] font-mono flex flex-col flex-1 overflow-hidden">
- <div className="space-y-3 overflow-y-auto pr-1 flex-1 pb-2">
- <div>
- <label className="block text-neutral-400 mb-1">Título de la Canción *</label>
- <input
- name="titulo"
- type="text"
- required
- defaultValue={editingSong?.titulo || ''}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- placeholder="ej. Brisa y Cacharros"
- />
- </div>
-
- <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
- <div>
- <label className="block text-neutral-400 mb-1">Tonalidad *</label>
- <input
- name="tonalidad"
- type="text"
- required
- defaultValue={editingSong?.tonalidad || 'Am'}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- placeholder="ej. Am / G"
- />
- </div>
-
- <div>
- <label className="block text-neutral-400 mb-1">BPM</label>
- <input
- name="bpm"
- type="number"
- defaultValue={editingSong?.bpm || 120}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
-
- <div>
- <label className="block text-neutral-400 mb-1">Duración (mm:ss)</label>
- <input
- name="duracion"
- type="text"
- defaultValue={editingSong?.duracion || '3:30'}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- placeholder="3:30"
- />
- </div>
- </div>
-
- <div className="grid grid-cols-2 gap-3">
- <div>
- <label className="block text-neutral-400 mb-1">Álbum / EP / Disco</label>
- <input
- name="albumDisco"
- type="text"
- defaultValue={editingSong?.albumDisco || 'Álbum Debut (2025)'}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
-
- <div>
- <label className="block text-neutral-400 mb-1">Afinación</label>
- <input
- name="afinacion"
- type="text"
- defaultValue={editingSong?.afinacion || 'E Standard'}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
- </div>
-
- <div>
- <label className="block text-neutral-400 mb-1">Estado del Tema</label>
- <select
- name="estadoTema"
- defaultValue={editingSong?.estadoTema || 'listo'}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="listo">Listo para Directo</option>
- <option value="ensayando">Ensayando</option>
- <option value="componiendo">Componiendo</option>
- <option value="descartado">Descartado</option>
-          </select>
- </div>
-
- <div>
- <label className="block text-neutral-400 mb-1">Enlace a Partitura / Acordes (Google Drive / Ultimate Guitar)</label>
- <input
- name="enlaceAcordes"
- type="url"
- defaultValue={editingSong?.enlaceAcordes || ''}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- placeholder="https://drive.google.com/..."
- />
- </div>
-
- {/* Audio Principal Definitivo Upload & Drive Link */}
- <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-2">
-   <label className="block text-amber-300 font-bold mb-1 flex items-center gap-1.5">
-     <Volume2 className="w-3.5 h-3.5" />
-     Audio Principal / Maqueta Definitiva del Tema
-   </label>
-
-   <div>
-     <span className="text-[9px] text-neutral-400 block mb-1">Opción A: Pegar Enlace Compartido de Google Drive o URL de Audio:</span>
-     <input
-       name="audioPrincipalUrl"
-       type="text"
-       defaultValue={editingSong?.audioPrincipalUrl || ''}
-       className={`w-full p-2.5 rounded-lg focus:outline-none text-xs font-mono border border-neutral-800 ${
-         isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-white'
-       }`}
-       placeholder="ej. https://drive.google.com/file/d/1ABC.../view"
-     />
-   </div>
-
-   <div>
-     <span className="text-[9px] text-neutral-400 block mb-1">Opción B: Subir Archivo de Audio (MP3, WAV, M4A, OGG):</span>
-     <input
-       name="audioFile"
-       type="file"
-       accept="audio/*"
-       className="w-full text-[10px] text-neutral-300 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-500 file:text-zinc-950 hover:file:bg-amber-400 cursor-pointer"
-     />
-   </div>
- </div>
-
- <div>
-	{/* Portada / Imagen de la Canción o Álbum */}
-	<div className="p-3 rounded-xl border border-[#1db954]/30 bg-[#1db954]/5 space-y-2">
-		<label className="block text-[#1ed760] font-bold mb-1 flex items-center gap-1.5 text-xs">
-			<Camera className="w-4 h-4" />
-			Portada / Imagen de la Canción o Álbum
-		</label>
-
-		<div>
-			<span className="text-[9px] text-neutral-400 block mb-1">Opción A: Pegar URL de la portada (JPG, PNG, WebP):</span>
-			<input
-				name="portadaUrl"
-				type="url"
-				defaultValue={editingSong?.portadaUrl || ''}
-				className={`w-full p-2.5 rounded-lg focus:outline-none text-xs font-mono border border-neutral-800 ${
-					isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-white'
-				}`}
-				placeholder="https://.../portada.jpg"
-			/>
-		</div>
-
-		<div>
-			<span className="text-[9px] text-neutral-400 block mb-1">Opción B: Subir Imagen desde el Móvil o Galería:</span>
-			<input
-				name="portadaFile"
-				type="file"
-				accept="image/*"
-				className="w-full text-[10px] text-neutral-300 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-[#1db954] file:text-black hover:file:bg-[#1ed760] cursor-pointer"
-			/>
-		</div>
-	</div>
-
- <label className="block text-neutral-400 mb-1">Notas Internas & Estructura</label>
- <textarea
- name="notasInternas"
- rows={2}
- defaultValue={editingSong?.notasInternas || ''}
- className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- placeholder="ej. Intro solo con viento, estribillo fuerte..."
- />
- </div>
- </div>
-
- <div className="pt-3 border-t border-neutral-800 flex justify-end gap-2 shrink-0 bg-transparent">
- <button
- type="button"
- onClick={() => setShowSongModal(false)}
- className="px-3 py-2 rounded-xl text-xs text-neutral-300 hover:bg-neutral-800 transition-colors font-semibold cursor-pointer"
- >
- Cancelar
- </button>
- <button
- type="submit"
- className={`px-4 py-2 rounded-xl text-xs font-bold transition-transform active:scale-95 cursor-pointer shadow-lg ${
- isStitchLight ? 'bg-sky-500 text-white' : 'bg-[#f2ca50] hover:bg-[#e0b840] text-zinc-950'
- }`}
- >
- Guardar Canción
- </button>
- </div>
- </form>
- </div>
- </div>
- )}
 
   {/* MODAL: ASSIGN SETLIST TO CONCERT OR REHEARSAL */}
   <AssignSetlistModal
@@ -3099,12 +2917,23 @@ export default function RepertorioSetlists({
 
       {/* PDF Preview Modal */}
       <PdfExportModal
+        bandMembers={[
+          { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
+          { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
+          { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
+          { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
+          { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
+          { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
+        ]}
+        bandLogoUrl="/logo_bakandeya_bueno_sin_fondo.png"
         isOpen={showPdfPreview}
         activeSetlist={activeSetlist}
         activeSetlistMetrics={activeSetlistMetrics}
         songs={songs}
         isStitchLight={isStitchLight}
         onClose={() => setShowPdfPreview(false)}
+        bandName={bName}
+        onUpdateSong={handleUpdateSongFromStudio}
       />
 
  {activeStudioSong && (
@@ -3164,6 +2993,26 @@ export default function RepertorioSetlists({
   />
 )}
   {/* CHORDS AND SUBSTITUTE GUIDE VIEWER MODAL */}
+
+  {/* MEMBER NOTES MODAL */}
+  {activeMemberNotesSong && (
+    <MemberNotesModal
+      isOpen={Boolean(activeMemberNotesSong)}
+      song={activeMemberNotesSong}
+      colors={colors}
+      isStitchLight={isStitchLight}
+      bandMembers={[
+        { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
+        { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
+        { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
+        { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
+        { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
+        { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
+      ]}
+      onClose={() => setActiveMemberNotesSong(null)}
+      onSaveSongNotes={handleUpdateSongFromStudio}
+    />
+  )}
   {activeChordsSong && (
     <SongChordsViewerModal
       song={activeChordsSong}

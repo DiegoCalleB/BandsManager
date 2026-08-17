@@ -1144,14 +1144,14 @@ export default function SongStudioModal({
           setIsUploading(false);
         }
       };
-    } catch (err) {
+    } catch (err: any) {
       setIsRecordingTrack(false);
       setRecordingTrackIdeaId(null);
       if (trackRecordingTimerRef.current) {
         clearInterval(trackRecordingTimerRef.current);
       }
-      alert("No se pudo acceder al micrófono para grabar la pista.");
-      console.error(err);
+      console.warn("Microphone access for overdub not available:", err?.message || err);
+      alert("No se pudo acceder al micrófono para grabar la pista (" + (err?.message || "comprueba los permisos del navegador") + ").");
     }
   };
 
@@ -1323,9 +1323,9 @@ export default function SongStudioModal({
       recordingTimerRef.current = setInterval(() => {
         setRecordingTime(prev => prev + 1);
       }, 1000);
-    } catch (err) {
-      alert("No se pudo acceder al micrófono.");
-      console.error(err);
+    } catch (err: any) {
+      console.warn("Microphone capture warning:", err?.message || err);
+      alert("No se pudo acceder al micrófono (" + (err?.message || "comprueba los permisos del navegador") + ").");
     }
   };
 

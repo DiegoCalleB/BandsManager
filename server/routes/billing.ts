@@ -47,6 +47,39 @@ async function isEventProcessed(eventId: string): Promise<boolean> {
 }
 
 // Find registered band helper
+export function isValidEmail(email?: string): boolean {
+  if (!email || typeof email !== 'string') return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
+  if (userEmail && isValidEmail(userEmail)) {
+    return userEmail.trim().toLowerCase();
+  }
+  try {
+    const state = loadState();
+    if (userEmail && state.users && Array.isArray(state.users)) {
+      const matchedUser = state.users.find((u: any) => 
+        (u.id === userEmail || u.username?.toLowerCase() === userEmail.toLowerCase() || u.email?.toLowerCase() === userEmail.toLowerCase()) &&
+        isValidEmail(u.email)
+      );
+      if (matchedUser?.email && isValidEmail(matchedUser.email)) {
+        return matchedUser.email.trim().toLowerCase();
+      }
+    }
+    if (bandId) {
+      const cleanBandId = bandId.replace(/^(band|reg)-/, '').toLowerCase();
+      const bandConfig = state.epkConfigsByBand?.[cleanBandId] || (cleanBandId === 'bakandeya' ? state.epkConfig : null);
+      if (bandConfig?.contactoBooking?.email && isValidEmail(bandConfig.contactoBooking.email)) {
+        return bandConfig.contactoBooking.email.trim().toLowerCase();
+      }
+    }
+  } catch (err) {
+    // Ignore lookup errors
+  }
+  return undefined;
+}
+
 function findBandInState(state: any, bandId?: string, customerEmail?: string) {
   if (!state.registeredBands) state.registeredBands = [];
   const cleanBandId = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
@@ -434,12 +467,17 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     const interval = billingInterval === "annual" ? "year" : "month";
     const host = getOriginHost(req);
 
-    // Look up or create Customer in Stripe
+    // Look up or create Customer in Stripe safely
     let customerId: string | undefined;
-    if (userEmail) {
-      const existingCustomers = await stripe.customers.list({ email: userEmail, limit: 1 });
-      if (existingCustomers.data.length > 0) {
-        customerId = existingCustomers.data[0].id;
+    const cleanEmail = resolveValidEmail(userEmail, bandId);
+    if (cleanEmail) {
+      try {
+        const existingCustomers = await stripe.customers.list({ email: cleanEmail, limit: 1 });
+        if (existingCustomers.data.length > 0) {
+          customerId = existingCustomers.data[0].id;
+        }
+      } catch (err: any) {
+        console.warn("[Billing] Could not lookup existing customer by email in Stripe:", err?.message || err);
       }
     }
 
@@ -468,19 +506,19 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
       payment_method_types: ["card"],
       mode: "subscription",
       customer: customerId,
-      customer_email: customerId ? undefined : userEmail || undefined,
+      customer_email: customerId ? undefined : (cleanEmail || undefined),
       metadata: {
         bandId: bandId || "default",
         planId: normalizedPlan,
         billingInterval,
-        userEmail: userEmail || ""
+        userEmail: userEmail || cleanEmail || ""
       },
       subscription_data: {
         metadata: {
           bandId: bandId || "default",
           planId: normalizedPlan,
           billingInterval,
-          userEmail: userEmail || ""
+          userEmail: userEmail || cleanEmail || ""
         }
       },
       line_items: [lineItem],
@@ -511,17 +549,22 @@ router.post(["/billing/create-portal-session", "/stripe/create-portal-session"],
       customerId = foundBand.stripe_customer_id;
     }
 
-    // Otherwise lookup by email
-    if (!customerId && userEmail) {
-      const customers = await stripe.customers.list({ email: userEmail, limit: 1 });
-      if (customers.data.length > 0) {
-        customerId = customers.data[0].id;
-      } else {
-        const newCustomer = await stripe.customers.create({
-          email: userEmail,
-          metadata: { bandId: bandId || "default" }
-        });
-        customerId = newCustomer.id;
+    // Otherwise lookup by email safely
+    const cleanEmail = resolveValidEmail(userEmail, bandId);
+    if (!customerId && cleanEmail) {
+      try {
+        const customers = await stripe.customers.list({ email: cleanEmail, limit: 1 });
+        if (customers.data.length > 0) {
+          customerId = customers.data[0].id;
+        } else {
+          const newCustomer = await stripe.customers.create({
+            email: cleanEmail,
+            metadata: { bandId: bandId || "default", userEmail: userEmail || "" }
+          });
+          customerId = newCustomer.id;
+        }
+      } catch (err: any) {
+        console.warn("[Billing] Could not create/lookup customer for portal:", err?.message || err);
       }
     }
 

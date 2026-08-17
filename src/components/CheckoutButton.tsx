@@ -59,7 +59,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         planId,
         billingInterval,
         bandId: effectiveBandId || 'default',
-        userEmail: effectiveEmail || 'diego.delacalleb@gmail.com',
+        userEmail: (effectiveEmail && effectiveEmail.includes('@')) ? effectiveEmail : 'diego.delacalleb@gmail.com',
       });
     } catch (error: any) {
       console.error('Checkout error:', error);

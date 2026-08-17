@@ -470,6 +470,28 @@ export const api = {
     return request('/api/metrics/instagram/disconnect', {
       method: 'POST'
     });
+  },
+
+  // Screenshot scanner with Gemini Multimodal Vision
+  async scanMetricsScreenshot(image: string, mimeType?: string, autoSave: boolean = true): Promise<{ success: boolean; data?: any; savedToSupabase?: boolean; metric?: any; error?: string }> {
+    return request('/api/metrics/scan-screenshot', {
+      method: 'POST',
+      body: JSON.stringify({ image, mimeType, autoSave })
+    });
+  },
+
+  // AI Growth Plan & Multiplatform Recommendations
+  async generateSocialGrowthPlan(data: {
+    bandName: string;
+    metrics: any;
+    epkConfig?: any;
+    horizonDays?: number;
+    customFocus?: string;
+  }): Promise<{ success: boolean; data?: any; error?: string }> {
+    return request('/api/metrics/generate-growth-plan', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
   }
 };
 

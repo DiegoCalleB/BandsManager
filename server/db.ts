@@ -821,6 +821,9 @@ export async function dbGetSongs(bandId: string) {
       .order("titulo", { ascending: true });
     return (seededData || []).map(s => ({
       ...s,
+      notasRepertorio: s.notas_repertorio || s.notasRepertorio || "",
+      notasMiembros: s.notas_miembros || s.notasMiembros || {},
+      notasPorMiembro: s.notas_por_miembro || s.notasPorMiembro || [],
       audio_ideas: s.audio_ideas || [],
       guia_sustituto: s.guia_sustituto || {}
     }));
@@ -828,6 +831,9 @@ export async function dbGetSongs(bandId: string) {
 
   return (data || []).map(s => ({
     ...s,
+    notasRepertorio: s.notas_repertorio || s.notasRepertorio || "",
+    notasMiembros: s.notas_miembros || s.notasMiembros || {},
+    notasPorMiembro: s.notas_por_miembro || s.notasPorMiembro || [],
     audio_ideas: s.audio_ideas || [],
     guia_sustituto: s.guia_sustituto || {}
   }));
@@ -838,7 +844,7 @@ export async function dbUpsertSong(song: any, bandId: string) {
   const targetBandId = cleanBandId(song.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload = {
+  const payload: any = {
     id: song.id || `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     band_id: targetBandId,
     titulo: song.titulo || "Nueva Canción",
@@ -861,15 +867,38 @@ export async function dbUpsertSong(song: any, bandId: string) {
     es_version_covers: Boolean(song.es_version_covers ?? song.esVersionCovers),
     enlace_acordes: song.enlace_acordes || song.enlaceAcordes || "",
     notas_internas: song.notas_internas || song.notasInternas || "",
+    notas_repertorio: song.notas_repertorio || song.notasRepertorio || "",
+    notas_miembros: song.notas_miembros || song.notasMiembros || {},
+    notas_por_miembro: song.notas_por_miembro || song.notasPorMiembro || [],
     audio_principal_url: song.audio_principal_url || song.audioPrincipalUrl || "",
     audio_ideas: song.audio_ideas || song.audioIdeas || [],
     cifrado_texto: song.cifrado_texto || song.cifradoTexto || "",
     guia_sustituto: song.guia_sustituto || song.guiaSustituto || {}
   };
 
-  const { data, error } = await sb.from("songs").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert song): ${error.message}`);
-  return data;
+  let { data, error } = await sb.from("songs").upsert(payload).select().single();
+  if (error && error.message && (
+    error.message.toLowerCase().includes("notas_miembros") ||
+    error.message.toLowerCase().includes("notas_por_miembro") ||
+    error.message.toLowerCase().includes("notas_repertorio")
+  )) {
+    const fallbackPayload = { ...payload };
+    delete fallbackPayload.notas_miembros;
+    delete fallbackPayload.notas_por_miembro;
+    delete fallbackPayload.notas_repertorio;
+    const retry = await sb.from("songs").upsert(fallbackPayload).select().single();
+    if (retry.error) throw new Error(`Supabase Error (upsert song fallback): ${retry.error.message}`);
+    data = retry.data;
+    error = null;
+  } else if (error) {
+    throw new Error(`Supabase Error (upsert song): ${error.message}`);
+  }
+  return {
+    ...data,
+    notasRepertorio: payload.notas_repertorio,
+    notasMiembros: payload.notas_miembros,
+    notasPorMiembro: payload.notas_por_miembro
+  };
 }
 
 export async function dbDeleteSong(id: string, bandId: string) {
@@ -1188,29 +1217,43 @@ export async function dbDeletePayment(id: string, bandId: string) {
 // --- SOCIAL METRICS ---
 export async function dbGetSocialMetrics(bandId: string) {
   const sb = getSupabase();
+  const target = cleanBandId(bandId);
+  const alternate = target.startsWith('band-') ? target.replace(/^band-/, '') : `band-${target}`;
+  const bandIds = Array.from(new Set([target, alternate, target.toLowerCase(), alternate.toLowerCase()]));
+
   const { data, error } = await sb
     .from("social_metrics")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .in("band_id", bandIds)
     .order("fecha", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (social_metrics): ${error.message}`);
-  return (data || []).map((m: any) => ({
-    ...m,
-    spotify_monthly_listeners: Number(m.spotify_monthly_listeners || 0),
-    spotify_followers: Number(m.spotify_followers || 0),
-    spotify_popularity: Number(m.spotify_popularity || 0),
-    youtube_subscribers: Number(m.youtube_subscribers || 0),
-    youtube_total_views: Number(m.youtube_total_views || 0),
-    youtube_video_count: Number(m.youtube_video_count || 0),
-    instagram_followers: Number(m.instagram_followers || 0),
-    instagram_following: Number(m.instagram_following || 0),
-    instagram_posts_count: Number(m.instagram_posts_count || 0),
-    instagram_engagement_rate: Number(m.instagram_engagement_rate || 0),
-    tiktok_followers: Number(m.tiktok_followers || 0),
-    tiktok_total_likes: Number(m.tiktok_total_likes || 0),
-    tiktok_video_count: Number(m.tiktok_video_count || 0)
-  }));
+  return (data || []).map((m: any) => {
+    const ig = Number(m.instagram ?? m.instagram_followers ?? 0);
+    const tk = Number(m.tiktok ?? m.tiktok_followers ?? 0);
+    const yt = Number(m.youtube ?? m.youtube_subscribers ?? 0);
+    const sp = Number(m.spotify ?? m.spotify_monthly_listeners ?? 0);
+    return {
+      ...m,
+      instagram: ig,
+      tiktok: tk,
+      youtube: yt,
+      spotify: sp,
+      spotify_monthly_listeners: Number(m.spotify_monthly_listeners || sp),
+      spotify_followers: Number(m.spotify_followers || 0),
+      spotify_popularity: Number(m.spotify_popularity || 0),
+      youtube_subscribers: Number(m.youtube_subscribers || yt),
+      youtube_total_views: Number(m.youtube_total_views || 0),
+      youtube_video_count: Number(m.youtube_video_count || 0),
+      instagram_followers: Number(m.instagram_followers || ig),
+      instagram_following: Number(m.instagram_following || 0),
+      instagram_posts_count: Number(m.instagram_posts_count || 0),
+      instagram_engagement_rate: Number(m.instagram_engagement_rate || 0),
+      tiktok_followers: Number(m.tiktok_followers || tk),
+      tiktok_total_likes: Number(m.tiktok_total_likes || 0),
+      tiktok_video_count: Number(m.tiktok_video_count || 0)
+    };
+  });
 }
 
 export async function dbUpsertSocialMetric(metric: any, bandId: string) {

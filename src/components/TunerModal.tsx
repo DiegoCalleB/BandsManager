@@ -249,6 +249,11 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   const startTuner = async () => {
     setMicError(null);
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setMicError("Tu navegador o entorno no soporta captura de micrófono. Puedes usar los Tonos de Referencia con sintetizador para afinar de oído.");
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: false,
@@ -258,7 +263,12 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       });
       mediaStreamRef.current = stream;
 
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) {
+        setMicError("El navegador no soporta Web Audio API.");
+        return;
+      }
+      const audioCtx = new AudioCtx();
       if (audioCtx.state === 'suspended') {
         await audioCtx.resume();
       }
@@ -273,8 +283,17 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       setIsListening(true);
       updatePitchLoop();
     } catch (err: any) {
-      console.error("Microphone error:", err);
-      setMicError("No se pudo acceder al micrófono. Por favor permite el acceso al audio.");
+      console.warn("Microphone access warning:", err?.message || err);
+      const isPermissionDenied = 
+        err?.name === 'NotAllowedError' || 
+        err?.name === 'PermissionDeniedError' || 
+        String(err?.message || '').toLowerCase().includes('permission denied');
+
+      if (isPermissionDenied) {
+        setMicError("Permiso de micrófono no concedido. Puedes habilitar el micrófono en el icono de permisos del navegador o pulsar abajo en las cuerdas para afinar con el sintetizador.");
+      } else {
+        setMicError("No se pudo iniciar el micrófono (" + (err?.message || "dispositivo no disponible") + "). Puedes usar los Tonos de Referencia.");
+      }
       setIsListening(false);
     }
   };
@@ -605,9 +624,33 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
             </button>
 
             {micError && (
-              <p className="text-[11px] font-mono text-rose-400 mt-2 text-center bg-rose-500/10 p-2 rounded-lg border border-rose-500/20 w-full">
-                {micError}
-              </p>
+              <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 w-full text-left space-y-2">
+                <div className="flex items-start gap-2 text-amber-300 text-xs font-mono">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
+                  <p className="leading-snug">{micError}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-amber-500/20">
+                  <button
+                    onClick={() => {
+                      if (currentPreset.strings[0]) {
+                        setSelectedStringIndex(0);
+                        togglePlayReferenceTone(currentPreset.strings[0].freq);
+                      }
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-amber-500 text-zinc-950 font-bold text-[10px] font-mono hover:bg-amber-400 transition-colors flex items-center gap-1 cursor-pointer"
+                  >
+                    <Volume2 className="w-3 h-3" />
+                    Afinar con Sintetizador ({currentPreset.strings[0]?.note})
+                  </button>
+                  <button
+                    onClick={startTuner}
+                    className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-mono text-[10px] transition-colors flex items-center gap-1 cursor-pointer"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    Reintentar micrófono
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 

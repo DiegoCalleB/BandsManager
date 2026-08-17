@@ -225,7 +225,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
               planId: planKey,
               billingInterval: 'monthly',
               bandId: res.band_id,
-              userEmail: currentUser?.email || 'diego.delacalleb@gmail.com'
+              userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com'
             });
             setShowCreateBandModal(false);
             setCreateBandStep(1);
@@ -1249,7 +1249,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                     planId: plan.id,
                                     billingInterval: 'monthly',
                                     bandId: targetBandId,
-                                    userEmail: currentUser?.email || 'diego.delacalleb@gmail.com'
+                                    userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com'
                                   });
                                   setShowUpgradeModal(false);
                                   return;
