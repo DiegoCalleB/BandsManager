@@ -7,6 +7,7 @@ import { AddLeadModal } from './dashboard/AddLeadModal';
 import { ProfileCompletenessCard } from './dashboard/ProfileCompletenessCard';
 import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
 import { 
@@ -1591,25 +1592,38 @@ export default function Dashboard({
 
  </div>
 
- {/* 5. SECCIÓN COMPACTA: ESTADO DE SINCRONIZACIÓN Y CANALES DEDICADOS */}
+ {/* 5. SECCIÓN PRINCIPAL: EVOLUCIÓN DE REDES SOCIALES & BASE DE FANS EN BBDD */}
+ <div className="w-full">
+   <SocialAndFansGrowthChart 
+     metrics={metrics}
+     fans={fans}
+     epkConfig={epkConfig}
+     colors={colors}
+     isStitchLight={isStitchLight}
+     bandName={activeBandName}
+     onNavigate={onNavigate}
+   />
+ </div>
+
+ {/* 6. SECCIÓN COMPACTA: ESTADO DE SINCRONIZACIÓN Y CANALES DEDICADOS */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
  
- {/* Google Sheets Sync Status */}
+ {/* Supabase Database Persistence Status */}
  <div className={`${colors.card} p-5 flex flex-col justify-between `}>
  <div className="space-y-2">
  <div className={`flex items-center gap-1.5 ${colors.accent}`}>
  <Database className="w-4 h-4" />
- <span className="text-[10px] font-mono uppercase tracking-widest font-bold">Google Sheets Data Sync</span>
+ <span className="text-[10px] font-mono uppercase tracking-widest font-bold">Supabase PostgreSQL Data Sync</span>
  </div>
- <h3 className={`text-lg font-display font-black uppercase tracking-wide ${textTitle}`}>LIVE SYNCED</h3>
+ <h3 className={`text-lg font-display font-black uppercase tracking-wide ${textTitle}`}>BBDD LIVE SYNCED</h3>
  
  <div className={`text-[10px] font-mono space-y-2 ${textSub}`}>
- <div>Total Contactos en Hoja: <span className={`${textTitle} font-bold`}>{leads.length}</span></div>
+ <div>Total Contactos en BBDD: <span className={`${textTitle} font-bold`}>{leads.length}</span></div>
  
  <div className="flex flex-wrap gap-2 pt-1">
  <button
  onClick={() => onNavigate && onNavigate('booking')}
- className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[#d1b375]/15 hover:bg-[#d1b375]/15 text-[#d1b375] text-[10px] font-bold transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[#d1b375]/15 hover:bg-[#d1b375]/25 text-[#d1b375] text-[10px] font-bold transition-all cursor-pointer"
  >
  <Building2 className="w-3 h-3 text-[#d1b375] shrink-0" />
  <span>{leads.length - mediosCount} Salas & Festivales</span>
@@ -1617,7 +1631,7 @@ export default function Dashboard({
 
  <button
  onClick={() => onNavigate && onNavigate('medios')}
- className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/15 text-rose-400 text-[10px] font-bold transition-all cursor-pointer"
+ className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-[10px] font-bold transition-all cursor-pointer"
  >
  <Radio className="w-3 h-3 text-rose-400 shrink-0" />
  <span>{mediosCount} Medios & Prensa</span>
@@ -1633,68 +1647,57 @@ export default function Dashboard({
  className={`w-full mt-4 py-2 text-[10px] font-mono rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-40 ${
  isStitchLight 
  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' 
- : 'bg-[#1A1918] hover:bg-neutral-800 hover:-[#99907c]/40 text-neutral-200'
+ : 'bg-[#1A1918] hover:bg-neutral-800 hover:text-white text-neutral-200'
  }`}
  >
  <RefreshCw className={`w-3.5 h-3.5 ${syncLoading ? 'animate-spin' : ''}`} />
- <span>{syncLoading ? 'Sincronizando con Google Sheets...' : 'Forzar Sincronización'}</span>
+ <span>{syncLoading ? 'Sincronizando con Supabase...' : 'Forzar Sincronización BBDD'}</span>
  </button>
  </div>
 
- {/* Audience Growth Metrics */}
+ {/* Audience & Fanbase Direct Access Card */}
  <div className={`${colors.card} p-5 flex flex-col justify-between `}>
- <div className="space-y-2">
+ <div className="space-y-3">
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-1.5 text-neutral-400">
- <Activity className="w-4 h-4 text-[#10b981]" />
- <span className={`text-[10px] font-mono uppercase tracking-widest font-bold ${textSub}`}>Audiencia en Redes & Canales</span>
+ <Heart className="w-4 h-4 text-amber-400 fill-amber-400/20" />
+ <span className={`text-[10px] font-mono uppercase tracking-widest font-bold ${textSub}`}>Comunidad de Fans & Redes</span>
  </div>
- <span className={`text-[10px] font-mono ${textMuted}`}>Datos Reales</span>
+ <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+ <ShieldCheck className="w-3 h-3" /> 100% RGPD
+ </span>
  </div>
- 
- {/* Custom SVG Bar Chart */}
- <div className="h-16 flex items-end justify-between gap-3 pt-2">
- {(() => {
- const sorted = [...metrics].sort((a,b) => a.fecha.localeCompare(b.fecha));
- const latest = sorted[sorted.length - 1] || { youtube: 1210, instagram: 2150, tiktok: 3850 };
- const spVal = 150; // Real Spotify monthly listeners
- const maxVal = Math.max(latest.youtube, latest.instagram, latest.tiktok, spVal, 100);
- 
- const getPct = (val: number) => {
- return `${Math.max((val / maxVal) * 100, 15)}%`;
- };
 
- const formatVal = (val: number) => {
- if (val >= 1000) {
- return `${(val / 1000).toFixed(1)}k`;
- }
- return val.toString();
- };
-
- const items = [
- { name: 'YT', value: formatVal(latest.youtube), height: getPct(latest.youtube), color: isStitchLight ? 'bg-slate-300' : 'bg-neutral-700' },
- { name: 'IG', value: formatVal(latest.instagram), height: getPct(latest.instagram), color: isStitchLight ? 'bg-sky-500/15' : 'bg-[#ffb596]' },
- { name: 'SP', value: formatVal(spVal), height: getPct(spVal), color: isStitchLight ? 'bg-sky-500/15' : 'bg-zinc-100' },
- { name: 'TK', value: formatVal(latest.tiktok), height: getPct(latest.tiktok), color: isStitchLight ? 'bg-sky-500/15' : 'bg-zinc-100' },
- ];
-
- return items.map(bar => (
- <div key={bar.name} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
- <span className={`text-[10px] font-mono font-bold ${textMuted}`}>{bar.value}</span>
- <div 
- className={`w-full ${bar.color} rounded-sm transition-all duration-500`} 
- style={{ height: bar.height }} 
- />
- <span className={`text-[10px] font-mono font-bold ${textSub}`}>{bar.name}</span>
+ <div className="grid grid-cols-2 gap-2 pt-1">
+ <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-100/70 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+ <span className={`text-[9px] font-mono block ${textMuted}`}>Total Fans Registrados</span>
+ <span className="text-xl font-display font-black text-amber-400">{fans.length}</span>
  </div>
- ));
- })()}
+ <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-100/70 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+ <span className={`text-[9px] font-mono block ${textMuted}`}>Vía Formulario Únete</span>
+ <span className="text-xl font-display font-black text-amber-300">
+ {fans.filter(f => {
+   const src = (f.comoConocio || '').toLowerCase();
+   return src.includes('unete') || src.includes('únete') || src.includes('web') || src.includes('formulario') || src.includes('landing') || !src;
+ }).length}
+ </span>
  </div>
  </div>
 
- <div className={`text-[10px] font-mono uppercase tracking-wider text-right self-end mt-4 ${textMuted}`}>
- Actualizado automáticamente
+ <div className={`text-[10px] font-mono ${textSub}`}>
+ <span>Localidades con presencia: </span>
+ <span className="text-amber-400 font-bold">{new Set(fans.map(f => f.ciudad).filter(Boolean)).size} ciudades</span>
  </div>
+ </div>
+
+ <button
+ type="button"
+ onClick={() => onNavigate && onNavigate('fans')}
+ className="w-full mt-4 py-2 text-[10px] font-mono rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 font-bold"
+ >
+ <Users className="w-3.5 h-3.5" />
+ <span>Abrir Panel Completo de Seguidores y Redes</span>
+ </button>
  </div>
 
  </div>

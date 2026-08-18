@@ -1,6 +1,7 @@
 import React from 'react';
 import { LeadType } from '../../types';
 import { Plus, X } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface AddLeadModalProps {
   isOpen: boolean;
@@ -52,8 +53,9 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="bg-[#1c1b1b] rounded-xl w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className="bg-[#1c1b1b] rounded-xl w-full max-w-lg overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-200 my-auto max-h-[90vh] overflow-y-auto">
         <div className="p-4 flex justify-between items-center bg-[#1A1918]">
           <h3 className="text-sm font-bold font-display uppercase tracking-widest text-zinc-100 flex items-center gap-1.5">
             <Plus className="w-4 h-4" /> Agregar Nueva Sala a la Hoja
@@ -202,5 +204,6 @@ export const AddLeadModal: React.FC<AddLeadModalProps> = ({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 };

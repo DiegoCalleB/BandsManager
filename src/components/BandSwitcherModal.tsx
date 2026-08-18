@@ -6,6 +6,7 @@ import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
 import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
+import { ModalPortal } from './common/ModalPortal';
 
 interface BandSwitcherModalProps {
   isOpen: boolean;
@@ -450,12 +451,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
-      {/* Background ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
+        {/* Background ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Main Container */}
-      <div className="relative w-full max-w-4xl bg-[#121110] border border-[#2b2927] rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 md:p-10 text-center">
+        {/* Main Container */}
+        <div className="relative w-full max-w-4xl bg-[#121110] border border-[#2b2927] rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 md:p-10 text-center my-auto max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -1297,5 +1299,6 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         );
       })()}
     </div>
+    </ModalPortal>
   );
 };

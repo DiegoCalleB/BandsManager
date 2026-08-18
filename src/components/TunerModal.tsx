@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Mic, MicOff, Volume2, VolumeX, Guitar, Zap, Radio, Check, RefreshCw } from 'lucide-react';
 import { ThemeColors } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface TunerModalProps {
   isOpen: boolean;
@@ -405,8 +406,9 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
   const isTunedIn = pitch && Math.abs(pitch.cents) <= 5;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-gradient-to-b from-zinc-900 via-neutral-950 to-black border border-emerald-500/30 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col max-h-[92vh]">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div className="bg-gradient-to-b from-zinc-900 via-neutral-950 to-black border border-emerald-500/30 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl shadow-emerald-500/10 flex flex-col my-auto max-h-[92vh]">
         
         {/* Header */}
         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-white/5 shrink-0">
@@ -716,5 +718,6 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
       </div>
     </div>
+    </ModalPortal>
   );
 }

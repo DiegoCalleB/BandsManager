@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Song, ThemeColors } from '../../types';
-import { Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles } from 'lucide-react';
+import { Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users } from 'lucide-react';
 import { AlbumCover } from '../AlbumCover';
 import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
 import { apiFetch } from '../../utils/api';
@@ -20,6 +20,7 @@ interface DiscografiaViewProps {
   onRequestDeleteAlbum?: (albumName: string, songCount: number) => void;
   onEditAlbum?: (albumName: string) => void;
   onCreateAlbum?: () => void;
+  onOpenMemberNotes?: (song: Song) => void;
 }
 
 const formatTotalDuration = (songs: Song[]): string => {
@@ -563,6 +564,22 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                           {/* Actions Column */}
                           <div className="col-span-2 flex items-center justify-end gap-1">
+                            {/* Member Notes Button */}
+                            {onOpenMemberNotes && (
+                              <button
+                                type="button"
+                                onClick={() => onOpenMemberNotes(s)}
+                                className={`p-1 rounded-lg transition-all cursor-pointer ${
+                                  s.notasMiembros && Object.values(s.notasMiembros).some(v => typeof v === 'string' ? v.trim().length > 0 : Boolean(v?.general || v?.intro || v?.verso || v?.estribillo || v?.puente || v?.outro))
+                                    ? 'text-amber-400 hover:text-amber-300 bg-amber-500/20'
+                                    : 'text-zinc-500 hover:text-amber-400 hover:bg-white/10'
+                                }`}
+                                title="Editar notas por miembro de la banda"
+                              >
+                                <Users className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
                             {/* Reorder Buttons */}
                             <div className="flex flex-col opacity-0 group-hover/track:opacity-100 transition-opacity">
                               <button

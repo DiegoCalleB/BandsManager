@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trash2, FolderMinus, X } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface ConfirmDeleteAlbumData {
   albumName: string;
@@ -22,9 +23,10 @@ export function ConfirmDeleteAlbumModal({
   if (!data) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-neutral-900 border border-rose-500/40 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-white">
-        <div className="flex items-start justify-between gap-3">
+    <ModalPortal isOpen={!!data} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className="bg-neutral-900 border border-rose-500/40 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-white my-auto max-h-[90vh] overflow-y-auto">
+          <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 shrink-0">
               <Trash2 className="w-6 h-6" />
@@ -98,5 +100,6 @@ export function ConfirmDeleteAlbumModal({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

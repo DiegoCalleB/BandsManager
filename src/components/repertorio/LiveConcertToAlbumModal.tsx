@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface TrackCutItem {
   index: number;
@@ -1028,14 +1029,15 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div
-        className={`relative w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden border ${
-          isStitchLight
-            ? 'bg-white text-slate-900 border-slate-200'
-            : 'bg-slate-900 text-slate-100 border-slate-800'
-        } max-h-[92vh] flex flex-col`}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain">
+        <div
+          className={`relative w-full max-w-5xl my-auto rounded-2xl shadow-2xl overflow-hidden border ${
+            isStitchLight
+              ? 'bg-white text-slate-900 border-slate-200'
+              : 'bg-slate-900 text-slate-100 border-slate-800'
+          } max-h-[92vh] flex flex-col`}
+        >
         {/* Modal Header */}
         <div
           className={`p-6 border-b flex items-start justify-between ${
@@ -2156,5 +2158,6 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Mail, Phone, Copy, Briefcase, MessageCircle, ExternalLink, Calendar } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 
 interface FansLandingProps {
@@ -19,6 +19,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     email: '',
     ciudad: '',
     comoConocio: '',
+    cancionFavorita: '',
+    mensaje: '',
+    instagram: '',
     consentimiento: false,
   });
   
@@ -34,6 +37,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [bandName, setBandName] = useState<string>('Banda');
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(undefined);
+  const [contactoBooking, setContactoBooking] = useState<{
+    nombre?: string;
+    email?: string;
+    telefono?: string;
+  } | null>(null);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedPhone, setCopiedPhone] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
@@ -83,6 +93,15 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
     }
 
+    // Default booking fallback for Bakandeya if needed
+    if (cleanId === 'bakandeya') {
+      setContactoBooking({
+        nombre: 'Diego de la Calle / Mánager Bakandeya',
+        email: 'diego.delacalleb@gmail.com',
+        telefono: '+34 612 345 678'
+      });
+    }
+
     // 2. Fetch public EPK details for this specific band
     fetch(`/api/public/epk?band_id=${encodeURIComponent(targetBandId)}`)
       .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
@@ -97,6 +116,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           }
           if (data.epkConfig?.enlacesRedes) {
             setSocialLinks(data.epkConfig.enlacesRedes);
+          }
+          if (data.epkConfig?.contactoBooking) {
+            setContactoBooking(data.epkConfig.contactoBooking);
           }
         }
       })
@@ -156,6 +178,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           email: formData.email,
           ciudad: formData.ciudad,
           comoConocio: formData.comoConocio,
+          cancionFavorita: formData.cancionFavorita,
+          mensaje: formData.mensaje,
+          instagram: formData.instagram,
           conciertoOrigenId: concertId,
           conciertoOrigenNombre: concertName,
           consentimientoRGPD: formData.consentimiento
@@ -235,6 +260,57 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 variant="grid" 
                 title="📱 Síguenos en nuestras plataformas" 
               />
+            </div>
+          )}
+
+          {/* Booking / Contrataciones in Success View */}
+          {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
+            <div className="pt-4 border-t border-neutral-800 text-left">
+              <div className="p-4 rounded-xl bg-neutral-950 border border-amber-500/30 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
+                    <Briefcase className="w-3.5 h-3.5 text-amber-400" /> Contrataciones & Booking
+                  </div>
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                    Directo
+                  </span>
+                </div>
+                <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
+                  ¿Organizas un evento, sala o festival? Contáctanos:
+                </p>
+                <div className="space-y-1.5 pt-1">
+                  {contactoBooking.email && (
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-900 border border-neutral-800">
+                      <a 
+                        href={`mailto:${contactoBooking.email}?subject=Contratación%20y%20Booking%20-%20${encodeURIComponent(bandName)}`}
+                        className="flex items-center gap-2 text-xs font-mono text-amber-300 hover:text-amber-200 truncate flex-1"
+                      >
+                        <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span className="truncate">{contactoBooking.email}</span>
+                      </a>
+                    </div>
+                  )}
+                  {contactoBooking.telefono && (
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-900 border border-neutral-800">
+                      <a 
+                        href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
+                        className="flex items-center gap-2 text-xs font-mono text-emerald-300 hover:text-emerald-200 truncate flex-1"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <span className="truncate">{contactoBooking.telefono}</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=Hola,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20a%20${encodeURIComponent(bandName)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 rounded border border-emerald-500/30 flex items-center gap-1 shrink-0 ml-2"
+                      >
+                        <MessageCircle className="w-3 h-3" /> WhatsApp
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
           
@@ -401,6 +477,39 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </select>
             </div>
             
+            <div>
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">¿Tu canción favorita de {bandName}? (Opcional)</label>
+              <input 
+                type="text" 
+                value={formData.cancionFavorita}
+                onChange={e => setFormData({...formData, cancionFavorita: e.target.value})}
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
+                placeholder="Ej: La Noche Entera, Balada..."
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Usuario de Instagram (Opcional)</label>
+              <input 
+                type="text" 
+                value={formData.instagram}
+                onChange={e => setFormData({...formData, instagram: e.target.value})}
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
+                placeholder="@tu_usuario"
+              />
+            </div>
+
+            <div>
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Mensaje o saludo para el Muro del Fan Club (Opcional)</label>
+              <textarea 
+                rows={2}
+                value={formData.mensaje}
+                onChange={e => setFormData({...formData, mensaje: e.target.value})}
+                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors resize-none"
+                placeholder="Déjale un saludo o dedicatoria a la banda..."
+              />
+            </div>
+
             <div className="pt-2 pb-1">
               <label className="flex items-start gap-3 cursor-pointer group p-3 bg-neutral-950/50 rounded-xl border border-neutral-800 hover:border-neutral-700 transition-colors">
                 <div className="relative flex items-center justify-center mt-0.5">
@@ -422,7 +531,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <button 
               type="submit"
               disabled={loading}
-              className="w-full py-4 mt-1 bg-gradient-to-r from-[#f2ca50] to-[#e0a820] hover:from-[#ffe088] hover:to-[#f2ca50] text-[#121111] font-black text-sm uppercase tracking-widest font-mono rounded-xl shadow-[0_0_20px_rgba(242,202,80,0.15)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
+              className="w-full py-4 mt-1 bg-gradient-to-r from-[#f2ca50] to-[#e0a820] hover:from-[#ffe088] hover:to-[#f2ca50] text-[#121111] font-black text-sm uppercase tracking-widest font-mono rounded-xl shadow-[0_0_20px_rgba(242,202,80,0.15)] transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none cursor-pointer"
             >
               {loading ? (
                 <>
@@ -448,6 +557,101 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </div>
             )}
           </form>
+        )}
+
+        {/* Sección Destacada de Contrataciones & Booking Directo */}
+        {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
+          <div className="pt-5 border-t border-neutral-800 space-y-3">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-neutral-950 via-neutral-900 to-amber-950/30 border border-amber-500/30 shadow-lg space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-amber-400">
+                  <Briefcase className="w-4 h-4 text-amber-400" />
+                  <span className="text-xs font-mono font-black uppercase tracking-wider">
+                    Contrataciones & Booking
+                  </span>
+                </div>
+                <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">
+                  Directo
+                </span>
+              </div>
+
+              <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
+                ¿Quieres contratar a <strong className="text-white">{bandName}</strong> para tu sala, festival o evento privado? Contacta directamente:
+              </p>
+
+              <div className="space-y-2 pt-1">
+                {contactoBooking.email && (
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-500/40 transition-colors">
+                    <a 
+                      href={`mailto:${contactoBooking.email}?subject=Contratación%20y%20Booking%20-%20${encodeURIComponent(bandName)}`}
+                      className="flex items-center gap-2.5 text-xs font-mono text-amber-300 hover:text-amber-200 transition-colors truncate flex-1 font-bold"
+                      title="Enviar correo de contratación"
+                    >
+                      <Mail className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span className="truncate">{contactoBooking.email}</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(contactoBooking.email || '');
+                        setCopiedEmail(true);
+                        setTimeout(() => setCopiedEmail(false), 2000);
+                      }}
+                      className="px-2 py-1 ml-2 text-[10px] font-mono text-neutral-400 hover:text-white bg-neutral-900 hover:bg-neutral-800 rounded border border-neutral-700 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                      title="Copiar email de contratación"
+                    >
+                      {copiedEmail ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedEmail ? 'Copiado' : 'Copiar'}</span>
+                    </button>
+                  </div>
+                )}
+
+                {contactoBooking.telefono && (
+                  <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-emerald-500/40 transition-colors">
+                    <a 
+                      href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
+                      className="flex items-center gap-2.5 text-xs font-mono text-emerald-300 hover:text-emerald-200 transition-colors truncate flex-1 font-bold"
+                      title="Llamar para contratación"
+                    >
+                      <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="truncate">{contactoBooking.telefono}</span>
+                    </a>
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      <a
+                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=Hola,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20a%20${encodeURIComponent(bandName)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded border border-emerald-500/30 transition-colors flex items-center gap-1 font-bold"
+                        title="Escribir por WhatsApp para contratación"
+                      >
+                        <MessageCircle className="w-3 h-3 text-emerald-400" />
+                        <span>WhatsApp</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(contactoBooking.telefono || '');
+                          setCopiedPhone(true);
+                          setTimeout(() => setCopiedPhone(false), 2000);
+                        }}
+                        className="px-2 py-1 text-[10px] font-mono text-neutral-400 hover:text-white bg-neutral-900 hover:bg-neutral-800 rounded border border-neutral-700 transition-colors flex items-center gap-1 cursor-pointer"
+                        title="Copiar teléfono"
+                      >
+                        {copiedPhone ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                        <span>{copiedPhone ? 'Copiado' : 'Copiar'}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {contactoBooking.nombre && (
+                  <p className="text-[10px] font-mono text-neutral-400 pt-0.5 text-right">
+                    Contacto: <span className="text-neutral-200 font-bold">{contactoBooking.nombre}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
         )}
 
       </div>

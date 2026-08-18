@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface SongModalProps {
   isOpen: boolean;
@@ -96,8 +97,9 @@ export function SongModal({
   const finalAlbumValue = selectedAlbum === '__CUSTOM__' ? customAlbumInput : selectedAlbum;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border border-neutral-800 ${colors.card}`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border border-neutral-800 ${colors.card}`}>
         <div className="flex justify-between items-center pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
             <Music className="w-5 h-5 text-[#1db954]" />
@@ -439,6 +441,7 @@ export function SongModal({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 }
 

@@ -90,6 +90,7 @@ export default function App() {
     handleSaveTour,
     handleDeleteTour,
     handleAddFan,
+    handleUpdateFan,
     handleDeleteFan,
     handleUpdateIncentive
   } = useAppData(isLoggedIn, currentUser?.band_id);
@@ -493,7 +494,7 @@ export default function App() {
  { id: 'bandas', label: t('nav.bandas', 'Bandas'), icon: Users },
  { id: 'giras', label: t('nav.giras', 'Giras'), icon: Truck },
  { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
- { id: 'fans', label: t('nav.fans', 'Base de Fans'), icon: Heart },
+ { id: 'fans', label: t('nav.fans', 'Seguidores y Redes'), icon: Users },
  { id: 'reels', label: t('nav.reels', 'Reels'), icon: Video },
  { id: 'repertorio', label: t('nav.repertorio', 'Temas'), icon: Disc3 },
  { id: 'chat', label: t('nav.chat', 'Agente AI'), icon: Guitar },
@@ -605,7 +606,7 @@ export default function App() {
   })() },
  { id: 'giras', label: t('nav.giras', 'Tour Manager'), icon: Truck },
  { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
- { id: 'fans', label: t('nav.fans', 'Base de Fans'), icon: Heart },
+ { id: 'fans', label: t('nav.fans', 'Seguidores y Redes'), icon: Users },
  { id: 'reels', label: t('nav.reels', 'Reels Center'), icon: Video },
  { id: 'repertorio', label: t('nav.repertorio', 'Repertorio'), icon: Disc3 },
  { id: 'chat', label: t('nav.chat', 'Agente Mánager'), icon: Guitar },
@@ -833,7 +834,7 @@ export default function App() {
   })() },
  { id: 'giras', label: t('nav.giras', 'Tour Manager'), icon: Truck },
  { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
- { id: 'fans', label: t('nav.fans', 'Base de Fans'), icon: Heart },
+ { id: 'fans', label: t('nav.fans', 'Seguidores y Redes'), icon: Users },
  { id: 'reels', label: t('nav.reels', 'Reels Center'), icon: Video },
  { id: 'repertorio', label: t('nav.repertorio', 'Repertorio'), icon: Disc3 },
  { id: 'chat', label: t('nav.chat', 'Agente Mánager'), icon: Guitar },
@@ -1138,6 +1139,7 @@ export default function App() {
             concerts={activeBandConcerts}
             epkConfig={epkConfig}
             onAddFan={handleAddFanWithLimitCheck}
+            onUpdateFan={handleUpdateFan}
             onDeleteFan={handleDeleteFan}
             onUpdateIncentive={handleUpdateIncentive}
             onUpdateEpkConfig={handleUpdateEpkConfig}

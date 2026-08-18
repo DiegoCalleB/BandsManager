@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Building2, Radio, Sparkles, Loader2, Upload, Search } from 'lucide-react';
 import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface NewLeadDataState {
   nombre_sala: string;
@@ -89,12 +90,13 @@ export function AddLeadModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div
-        className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto ${
-          isStitchLight ? 'bg-white text-slate-800' : 'bg-[#18181b] text-[#e5e2e1]'
-        }`}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+        <div
+          className={`w-full max-w-lg p-5 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
+            isStitchLight ? 'bg-white text-slate-800' : 'bg-[#18181b] text-[#e5e2e1]'
+          }`}
+        >
         <div className="flex items-center justify-between pb-3">
           <div className="flex items-center gap-2">
             {sectionTab === 'medios' ? (
@@ -473,5 +475,6 @@ export function AddLeadModal({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 }

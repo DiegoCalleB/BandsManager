@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
 import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface ToneAnalysisData {
   nombre_entidad?: string;
@@ -50,10 +51,11 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
-        isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
-      }`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+          isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
+        }`}>
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-neutral-500/10">
           <div className="flex items-center gap-2.5">
@@ -241,5 +243,6 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 };

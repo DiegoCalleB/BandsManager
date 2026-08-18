@@ -429,6 +429,13 @@ export const api = {
     });
   },
 
+  async updateFan(id: string, updatedFields: Partial<Fan>): Promise<{ success: boolean; fan: Fan }> {
+    return request(`/api/fans/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updatedFields)
+    });
+  },
+
   async deleteFan(id: string): Promise<void> {
     return request(`/api/fans/${id}`, {
       method: 'DELETE'

@@ -7,6 +7,7 @@ import {
 import { Setlist, Song, ThemeColors } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 import { MemberNotesModal } from './MemberNotesModal';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface PdfExportModalProps {
   isOpen: boolean;
@@ -566,12 +567,13 @@ export function PdfExportModal({
   const isCurrentMaster = currentPreviewMember?.id === 'master';
 
   return (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-50 animate-in fade-in duration-200">
-      <div
-        className={`w-full max-w-7xl max-h-[96vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden border ${
-          isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-950 border-neutral-800'
-        }`}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
+        <div
+          className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-2xl shadow-2xl overflow-hidden border ${
+            isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-950 border-neutral-800'
+          }`}
+        >
         {/* Modal Top Header */}
         <div
           className={`p-3.5 sm:px-6 flex flex-wrap items-center justify-between gap-3 border-b shrink-0 ${
@@ -1088,5 +1090,6 @@ export function PdfExportModal({
         />
       )}
     </div>
+    </ModalPortal>
   );
 }

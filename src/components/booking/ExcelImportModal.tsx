@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Lead, LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -491,12 +492,13 @@ export function ExcelImportModal({
   const duplicatesCount = parsedRows.filter(r => r.isDuplicate).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div
-        className={`relative w-full max-w-5xl max-h-[92vh] flex flex-col rounded-2xl border shadow-2xl overflow-hidden ${
-          isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#141414] border-zinc-800 text-zinc-100'
-        }`}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div
+          className={`relative w-full max-w-5xl max-h-[92vh] my-auto flex flex-col rounded-2xl border shadow-2xl overflow-hidden ${
+            isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#141414] border-zinc-800 text-zinc-100'
+          }`}
+        >
         {/* MODAL HEADER */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-gradient-to-r from-emerald-950/30 via-zinc-900/50 to-amber-950/20">
           <div className="flex items-center gap-3">
@@ -1117,5 +1119,6 @@ export function ExcelImportModal({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

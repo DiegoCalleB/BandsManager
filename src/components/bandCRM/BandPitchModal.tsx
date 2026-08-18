@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
 import { Repeat, X, Check, Copy, MessageCircle, Send } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface BandPitchModalProps {
   isOpen: boolean;
@@ -38,10 +39,11 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
   const pitchText = customPitchText || generatePitchText(band);
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
-        isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
-      }`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-2xl rounded-2xl p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
+          isStitchLight ? 'bg-white text-slate-800' : 'bg-[#1c1b1b] text-neutral-100'
+        }`}>
         <div className="flex items-center justify-between pb-3">
           <div className="flex items-center gap-2">
             <Repeat className="w-5 h-5 text-sky-400" />
@@ -152,5 +154,6 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

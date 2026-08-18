@@ -3,6 +3,7 @@ import {
   FileText, Copy, Check, X, Sparkles, Send, Radio, Building2, 
   RefreshCw, MessageSquareCode, HelpCircle 
 } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface EmailTemplatesModalProps {
   isOpen: boolean;
@@ -119,8 +120,9 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="bg-[#181716] border border-amber-500/30 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className="bg-[#181716] border border-amber-500/30 rounded-2xl w-full max-w-3xl my-auto max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
         
         {/* Modal Header */}
         <div className="p-5 bg-[#141312] border-b border-neutral-800 flex items-center justify-between">
@@ -244,5 +246,6 @@ export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

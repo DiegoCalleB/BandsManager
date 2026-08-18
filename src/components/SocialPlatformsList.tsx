@@ -140,6 +140,21 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
   }
 };
 
+// Orden de prioridad explícito solicitado para los enlaces públicos:
+// 1º Instagram, 2º YouTube, 3º Spotify, 4º TikTok, 5º Facebook, y después el resto
+export const PLATFORM_PRIORITY_ORDER: string[] = [
+  'instagram',
+  'youtube',
+  'spotify',
+  'tiktok',
+  'facebook',
+  'twitter',
+  'appleMusic',
+  'bandcamp',
+  'website',
+  'whatsapp'
+];
+
 export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
   links,
   variant = 'grid',
@@ -148,7 +163,16 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
 }) => {
   if (!links) return null;
 
-  const validEntries = Object.entries(links).filter(([_, url]) => url && url.trim() !== '');
+  // Filtrar estrictamente solo aquellas redes que tengan una URL válida y rellena
+  const validEntries = Object.entries(links)
+    .filter(([_, url]) => url && typeof url === 'string' && url.trim() !== '')
+    .sort(([keyA], [keyB]) => {
+      const indexA = PLATFORM_PRIORITY_ORDER.indexOf(keyA);
+      const indexB = PLATFORM_PRIORITY_ORDER.indexOf(keyB);
+      const weightA = indexA === -1 ? 999 : indexA;
+      const weightB = indexB === -1 ? 999 : indexB;
+      return weightA - weightB;
+    });
 
   if (validEntries.length === 0) return null;
 

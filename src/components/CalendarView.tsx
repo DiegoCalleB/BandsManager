@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Rehearsal, Concert, ThemeColors } from '../types';
 import DirectionsCard from './DirectionsCard';
 import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket } from 'lucide-react';
+import { ModalPortal } from './common/ModalPortal';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -1888,8 +1889,9 @@ export default function CalendarView({
 
  {/* CREATE REHEARSAL MODAL */}
  {showCreateModal === 'rehearsal' && (
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
- <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative ${
+ <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
+ <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
  }`}>
  <button
@@ -2062,12 +2064,14 @@ export default function CalendarView({
  </form>
  </div>
  </div>
+ </ModalPortal>
  )}
 
  {/* CREATE CONCERT MODAL */}
  {showCreateModal === 'concert' && (
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
- <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto ${
+ <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
+ <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
  isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
  }`}>
  <button
@@ -2298,6 +2302,7 @@ export default function CalendarView({
  </form>
  </div>
  </div>
+ </ModalPortal>
  )}
 
  </div>

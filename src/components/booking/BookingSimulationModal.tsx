@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lead, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { Bot, Sparkles, X, Play, CheckCircle2 } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface BookingSimulationModalProps {
   colors: ThemeColors;
@@ -78,11 +79,12 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-      <div
-        className="relative w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-        style={{ backgroundColor: colors.card, borderColor: colors.border }}
-      >
+    <ModalPortal isOpen={true} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in">
+        <div
+          className="relative w-full max-w-2xl my-auto rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          style={{ backgroundColor: colors.card, borderColor: colors.border }}
+        >
         <div
           className="p-5 border-b flex items-center justify-between"
           style={{ borderColor: colors.border }}
@@ -222,5 +224,6 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

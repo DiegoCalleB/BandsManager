@@ -1,6 +1,7 @@
 import React from 'react';
 import { Type, Check, X, Sparkles, SlidersHorizontal, Info } from 'lucide-react';
 import { FONT_PRESETS, FontPresetKey, applyFontPreset, getStoredFontPreset } from '../utils/typography';
+import { ModalPortal } from './common/ModalPortal';
 
 interface FontSelectorModalProps {
  onClose: () => void;
@@ -16,9 +17,10 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  onSelectFont,
 }) => {
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+ <ModalPortal isOpen={true} onClose={onClose}>
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
  <div 
- className={`w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] ${
+ className={`w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[85vh] ${
  isStitchLight 
  ? 'bg-white -slate-200 text-slate-800' 
  : 'bg-neutral-900 -neutral-800 text-neutral-100'
@@ -159,5 +161,6 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
  </div>
  </div>
  </div>
+ </ModalPortal>
  );
 };

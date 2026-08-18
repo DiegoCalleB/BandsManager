@@ -3,6 +3,7 @@ import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Z
 import { User as UserType } from '../types';
 import { googleSignIn } from '../utils/gmail';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
+import { ModalPortal } from './common/ModalPortal';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -481,8 +482,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   );
 
   return (
-    <div className="fixed inset-0 z-50 p-4 bg-[#09090b] text-neutral-100 overflow-y-auto animate-in fade-in duration-300">
-      <div className="min-h-full flex items-center justify-center py-6 md:py-8">
+    <ModalPortal isOpen={true}>
+      <div className="fixed inset-0 z-[9999] p-4 bg-[#09090b] text-neutral-100 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+        <div className="min-h-full flex items-center justify-center py-6 md:py-8">
         <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-6xl' : 'max-w-sm space-y-5'}`}>
         
         {/* Soft Golden Background Ambient Glow */}
@@ -1396,5 +1398,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

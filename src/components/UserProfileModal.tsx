@@ -8,6 +8,7 @@ import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
 import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
+import { ModalPortal } from './common/ModalPortal';
 
 interface UserProfileModalProps {
  currentUser: User;
@@ -392,14 +393,15 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  };
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
- <div 
- className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col ${
- isStitchLight 
- ? 'bg-white -slate-200 text-slate-800' 
- : 'bg-neutral-900 -neutral-800 text-neutral-100'
- }`}
- >
+  <ModalPortal isOpen={true} onClose={onClose}>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+      <div 
+        className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
+          isStitchLight 
+            ? 'bg-white -slate-200 text-slate-800' 
+            : 'bg-neutral-900 -neutral-800 text-neutral-100'
+        }`}
+      >
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
  isStitchLight ? '-slate-200 bg-slate-50' : '-neutral-800 bg-neutral-950/60'
@@ -1115,8 +1117,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
  {/* Upgrade Plan Modal */}
  {showUpgradeModal && (
- <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 text-left">
- <div className={`w-full max-w-lg rounded-2xl shadow-2xl border overflow-hidden flex flex-col ${
+ <ModalPortal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)}>
+ <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200 text-left">
+ <div className={`w-full max-w-lg rounded-2xl shadow-2xl border overflow-hidden flex flex-col my-auto max-h-[90vh] ${
  isStitchLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-neutral-900 border-amber-500/30 text-neutral-100'
  }`}>
  <div className="px-6 py-4 bg-gradient-to-r from-amber-950/60 via-neutral-900 to-neutral-950 border-b border-amber-500/20 flex justify-between items-center">
@@ -1331,7 +1334,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
  </div>
+ </ModalPortal>
  )}
  </div>
+ </ModalPortal>
  );
 };
