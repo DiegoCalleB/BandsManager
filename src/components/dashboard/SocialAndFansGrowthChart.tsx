@@ -26,20 +26,60 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
   bandName = 'Bakandeya',
   onNavigate
 }) => {
-  // Channel visibility state
+  // Detection of configured / active networks (only display networks that have a profile entered or metrics registered)
+  const hasInstagram = useMemo(() => {
+    return Boolean(
+      (epkConfig?.enlacesRedes?.instagram && epkConfig.enlacesRedes.instagram.trim().length > 0) ||
+      metrics.some(m => (m.instagram_followers && m.instagram_followers > 0) || (m.instagram && m.instagram > 0))
+    );
+  }, [epkConfig?.enlacesRedes?.instagram, metrics]);
+
+  const hasTikTok = useMemo(() => {
+    return Boolean(
+      (epkConfig?.enlacesRedes?.tiktok && epkConfig.enlacesRedes.tiktok.trim().length > 0) ||
+      metrics.some(m => (m.tiktok_followers && m.tiktok_followers > 0) || (m.tiktok && m.tiktok > 0))
+    );
+  }, [epkConfig?.enlacesRedes?.tiktok, metrics]);
+
+  const hasYouTube = useMemo(() => {
+    return Boolean(
+      (epkConfig?.enlacesRedes?.youtube && epkConfig.enlacesRedes.youtube.trim().length > 0) ||
+      metrics.some(m => (m.youtube_subscribers && m.youtube_subscribers > 0) || (m.youtube && m.youtube > 0))
+    );
+  }, [epkConfig?.enlacesRedes?.youtube, metrics]);
+
+  const hasSpotify = useMemo(() => {
+    return Boolean(
+      (epkConfig?.enlacesRedes?.spotify && epkConfig.enlacesRedes.spotify.trim().length > 0) ||
+      metrics.some(m => (m.spotify_monthly_listeners && m.spotify_monthly_listeners > 0) || (m.spotify && m.spotify > 0))
+    );
+  }, [epkConfig?.enlacesRedes?.spotify, metrics]);
+
+  // Channel visibility state initialized dynamically to only show configured channels
   const [selectedChannels, setSelectedChannels] = useState<{
     instagram: boolean;
     tiktok: boolean;
     youtube: boolean;
     spotify: boolean;
     fans: boolean;
-  }>({
-    instagram: true,
-    tiktok: true,
-    youtube: true,
-    spotify: true,
+  }>(() => ({
+    instagram: hasInstagram,
+    tiktok: hasTikTok,
+    youtube: hasYouTube,
+    spotify: hasSpotify,
     fans: true,
-  });
+  }));
+
+  // Sync selected channels when configured profiles change
+  React.useEffect(() => {
+    setSelectedChannels({
+      instagram: hasInstagram,
+      tiktok: hasTikTok,
+      youtube: hasYouTube,
+      spotify: hasSpotify,
+      fans: true,
+    });
+  }, [hasInstagram, hasTikTok, hasYouTube, hasSpotify]);
 
   // Calculate fan statistics from database
   const totalFans = fans.length;
@@ -115,11 +155,11 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
   const latestMetric = sortedMetrics[sortedMetrics.length - 1] || null;
 
-  // Real or default counts
-  const countInstagram = Number(latestMetric?.instagram_followers || latestMetric?.instagram || 2150);
-  const countTikTok = Number(latestMetric?.tiktok_followers || latestMetric?.tiktok || 3850);
-  const countYouTube = Number(latestMetric?.youtube_subscribers || latestMetric?.youtube || 1210);
-  const countSpotify = Number(latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 150);
+  // Real or default counts (only use demo baseline if platform is configured or has recorded data)
+  const countInstagram = Number(latestMetric?.instagram_followers || latestMetric?.instagram || (hasInstagram ? 2150 : 0));
+  const countTikTok = Number(latestMetric?.tiktok_followers || latestMetric?.tiktok || (hasTikTok ? 3850 : 0));
+  const countYouTube = Number(latestMetric?.youtube_subscribers || latestMetric?.youtube || (hasYouTube ? 1210 : 0));
+  const countSpotify = Number(latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || (hasSpotify ? 150 : 0));
 
   // Growth Chart Timeline Data Generation (Combining Metrics & Fans from Database)
   const chartTimelineData = useMemo(() => {
@@ -209,10 +249,10 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
 
   const selectAllChannels = () => {
     setSelectedChannels({
-      instagram: true,
-      tiktok: true,
-      youtube: true,
-      spotify: true,
+      instagram: hasInstagram,
+      tiktok: hasTikTok,
+      youtube: hasYouTube,
+      spotify: hasSpotify,
       fans: true,
     });
   };
@@ -287,100 +327,108 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
       {/* 5 KPI Metric Cards Bar (Instagram, TikTok, YouTube, Spotify, and Fans Registrados) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
         {/* Card 1: Instagram */}
-        <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
-          isStitchLight 
-            ? 'bg-white border-pink-200 shadow-xs' 
-            : 'bg-neutral-900/60 border-pink-950/40'
-        }`}>
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-pink-400 flex items-center gap-1">
-              <Instagram className="w-3.5 h-3.5 text-pink-500" /> Instagram
-            </span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-300 font-mono">
-              Seguidores
-            </span>
-          </div>
-          <div className="my-1.5">
-            <div className="text-xl font-display font-black text-white">
-              {countInstagram.toLocaleString()}
+        {hasInstagram && (
+          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+            isStitchLight 
+              ? 'bg-white border-pink-200 shadow-xs' 
+              : 'bg-neutral-900/60 border-pink-950/40'
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-pink-400 flex items-center gap-1">
+                <Instagram className="w-3.5 h-3.5 text-pink-500" /> Instagram
+              </span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-300 font-mono">
+                Seguidores
+              </span>
             </div>
-            <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
-              <span>{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` : 'Audiencia activa'}</span>
+            <div className="my-1.5">
+              <div className="text-xl font-display font-black text-white">
+                {countInstagram.toLocaleString()}
+              </div>
+              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+                <span>{latestMetric?.instagram_engagement_rate ? `${latestMetric.instagram_engagement_rate}% ER` : 'Audiencia activa'}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Card 2: TikTok */}
-        <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
-          isStitchLight 
-            ? 'bg-white border-cyan-200 shadow-xs' 
-            : 'bg-neutral-900/60 border-cyan-950/40'
-        }`}>
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 flex items-center gap-1">
-              <Video className="w-3.5 h-3.5 text-cyan-400" /> TikTok
-            </span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-mono">
-              Comunidad
-            </span>
-          </div>
-          <div className="my-1.5">
-            <div className="text-xl font-display font-black text-white">
-              {countTikTok.toLocaleString()}
+        {hasTikTok && (
+          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+            isStitchLight 
+              ? 'bg-white border-cyan-200 shadow-xs' 
+              : 'bg-neutral-900/60 border-cyan-950/40'
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-cyan-400 flex items-center gap-1">
+                <Video className="w-3.5 h-3.5 text-cyan-400" /> TikTok
+              </span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 font-mono">
+                Comunidad
+              </span>
             </div>
-            <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
-              <span>{latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` : 'Contenido viral'}</span>
+            <div className="my-1.5">
+              <div className="text-xl font-display font-black text-white">
+                {countTikTok.toLocaleString()}
+              </div>
+              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+                <span>{latestMetric?.tiktok_total_likes ? `${(latestMetric.tiktok_total_likes / 1000).toFixed(1)}k likes` : 'Contenido viral'}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Card 3: YouTube */}
-        <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
-          isStitchLight 
-            ? 'bg-white border-red-200 shadow-xs' 
-            : 'bg-neutral-900/60 border-red-950/40'
-        }`}>
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-red-400 flex items-center gap-1">
-              <Youtube className="w-3.5 h-3.5 text-red-500" /> YouTube
-            </span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-300 font-mono">
-              Suscriptores
-            </span>
-          </div>
-          <div className="my-1.5">
-            <div className="text-xl font-display font-black text-white">
-              {countYouTube.toLocaleString()}
+        {hasYouTube && (
+          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+            isStitchLight 
+              ? 'bg-white border-red-200 shadow-xs' 
+              : 'bg-neutral-900/60 border-red-950/40'
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-red-400 flex items-center gap-1">
+                <Youtube className="w-3.5 h-3.5 text-red-500" /> YouTube
+              </span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-300 font-mono">
+                Suscriptores
+              </span>
             </div>
-            <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
-              <span>{latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` : 'Canal oficial'}</span>
+            <div className="my-1.5">
+              <div className="text-xl font-display font-black text-white">
+                {countYouTube.toLocaleString()}
+              </div>
+              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+                <span>{latestMetric?.youtube_total_views ? `${(latestMetric.youtube_total_views / 1000).toFixed(1)}k views` : 'Canal oficial'}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Card 4: Spotify */}
-        <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
-          isStitchLight 
-            ? 'bg-white border-emerald-200 shadow-xs' 
-            : 'bg-neutral-900/60 border-emerald-950/40'
-        }`}>
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
-              <Music2 className="w-3.5 h-3.5 text-emerald-500" /> Spotify
-            </span>
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-mono">
-              Oyentes/mes
-            </span>
-          </div>
-          <div className="my-1.5">
-            <div className="text-xl font-display font-black text-white">
-              {countSpotify.toLocaleString()}
+        {hasSpotify && (
+          <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all ${
+            isStitchLight 
+              ? 'bg-white border-emerald-200 shadow-xs' 
+              : 'bg-neutral-900/60 border-emerald-950/40'
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-emerald-400 flex items-center gap-1">
+                <Music2 className="w-3.5 h-3.5 text-emerald-500" /> Spotify
+              </span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-mono">
+                Oyentes/mes
+              </span>
             </div>
-            <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
-              <span>{latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` : 'Streaming mensual'}</span>
+            <div className="my-1.5">
+              <div className="text-xl font-display font-black text-white">
+                {countSpotify.toLocaleString()}
+              </div>
+              <div className="text-[9px] font-mono text-neutral-400 flex items-center gap-1 mt-0.5">
+                <span>{latestMetric?.spotify_followers ? `${latestMetric.spotify_followers} seguidores` : 'Streaming mensual'}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Card 5: Fans Registrados en Base de Datos (Formulario Únete) */}
         <div className={`p-3 rounded-xl border flex flex-col justify-between transition-all col-span-2 sm:col-span-1 ${
@@ -420,128 +468,136 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
           </span>
 
           {/* Instagram Chip */}
-          <div className={`flex items-center rounded-lg border transition-all ${
-            selectedChannels.instagram
-              ? isStitchLight
-                ? 'bg-pink-50 border-pink-300 text-pink-700'
-                : 'bg-pink-950/30 border-pink-500/40 text-pink-300'
-              : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
-          }`}>
-            <button
-              type="button"
-              onClick={() => toggleChannel('instagram')}
-              className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
-            >
-              <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ? 'bg-pink-500 animate-pulse' : 'bg-neutral-600'}`}></span>
-              <Instagram className="w-3 h-3 text-pink-500" />
-              <span>Instagram</span>
-              <span className="text-[9px] px-1 py-0.2 rounded bg-pink-500/15 font-mono font-bold">
-                {countInstagram.toLocaleString()}
-              </span>
-              {selectedChannels.instagram ? <Eye className="w-3 h-3 text-pink-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
-            </button>
-            <button
-              type="button"
-              onClick={() => selectOnlyChannel('instagram')}
-              className="px-1.5 py-1 text-[8px] font-mono border-l border-pink-500/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
-              title="Aislar sólo Instagram"
-            >
-              Solo
-            </button>
-          </div>
+          {hasInstagram && (
+            <div className={`flex items-center rounded-lg border transition-all ${
+              selectedChannels.instagram
+                ? isStitchLight
+                  ? 'bg-pink-50 border-pink-300 text-pink-700'
+                  : 'bg-pink-950/30 border-pink-500/40 text-pink-300'
+                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+            }`}>
+              <button
+                type="button"
+                onClick={() => toggleChannel('instagram')}
+                className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+              >
+                <span className={`w-2 h-2 rounded-full ${selectedChannels.instagram ? 'bg-pink-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+                <Instagram className="w-3 h-3 text-pink-500" />
+                <span>Instagram</span>
+                <span className="text-[9px] px-1 py-0.2 rounded bg-pink-500/15 font-mono font-bold">
+                  {countInstagram.toLocaleString()}
+                </span>
+                {selectedChannels.instagram ? <Eye className="w-3 h-3 text-pink-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => selectOnlyChannel('instagram')}
+                className="px-1.5 py-1 text-[8px] font-mono border-l border-pink-500/20 hover:bg-pink-500/20 text-pink-400 cursor-pointer"
+                title="Aislar sólo Instagram"
+              >
+                Solo
+              </button>
+            </div>
+          )}
 
           {/* TikTok Chip */}
-          <div className={`flex items-center rounded-lg border transition-all ${
-            selectedChannels.tiktok
-              ? isStitchLight
-                ? 'bg-cyan-50 border-cyan-300 text-cyan-700'
-                : 'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
-              : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
-          }`}>
-            <button
-              type="button"
-              onClick={() => toggleChannel('tiktok')}
-              className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
-            >
-              <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ? 'bg-cyan-400 animate-pulse' : 'bg-neutral-600'}`}></span>
-              <Video className="w-3 h-3 text-cyan-400" />
-              <span>TikTok</span>
-              <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/15 font-mono font-bold">
-                {countTikTok.toLocaleString()}
-              </span>
-              {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-cyan-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
-            </button>
-            <button
-              type="button"
-              onClick={() => selectOnlyChannel('tiktok')}
-              className="px-1.5 py-1 text-[8px] font-mono border-l border-cyan-500/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
-              title="Aislar sólo TikTok"
-            >
-              Solo
-            </button>
-          </div>
+          {hasTikTok && (
+            <div className={`flex items-center rounded-lg border transition-all ${
+              selectedChannels.tiktok
+                ? isStitchLight
+                  ? 'bg-cyan-50 border-cyan-300 text-cyan-700'
+                  : 'bg-cyan-950/30 border-cyan-500/40 text-cyan-300'
+                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+            }`}>
+              <button
+                type="button"
+                onClick={() => toggleChannel('tiktok')}
+                className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+              >
+                <span className={`w-2 h-2 rounded-full ${selectedChannels.tiktok ? 'bg-cyan-400 animate-pulse' : 'bg-neutral-600'}`}></span>
+                <Video className="w-3 h-3 text-cyan-400" />
+                <span>TikTok</span>
+                <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/15 font-mono font-bold">
+                  {countTikTok.toLocaleString()}
+                </span>
+                {selectedChannels.tiktok ? <Eye className="w-3 h-3 text-cyan-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => selectOnlyChannel('tiktok')}
+                className="px-1.5 py-1 text-[8px] font-mono border-l border-cyan-500/20 hover:bg-cyan-500/20 text-cyan-400 cursor-pointer"
+                title="Aislar sólo TikTok"
+              >
+                Solo
+              </button>
+            </div>
+          )}
 
           {/* YouTube Chip */}
-          <div className={`flex items-center rounded-lg border transition-all ${
-            selectedChannels.youtube
-              ? isStitchLight
-                ? 'bg-red-50 border-red-300 text-red-700'
-                : 'bg-red-950/30 border-red-500/40 text-red-300'
-              : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
-          }`}>
-            <button
-              type="button"
-              onClick={() => toggleChannel('youtube')}
-              className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
-            >
-              <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ? 'bg-red-500 animate-pulse' : 'bg-neutral-600'}`}></span>
-              <Youtube className="w-3 h-3 text-red-500" />
-              <span>YouTube</span>
-              <span className="text-[9px] px-1 py-0.2 rounded bg-red-500/15 font-mono font-bold">
-                {countYouTube.toLocaleString()}
-              </span>
-              {selectedChannels.youtube ? <Eye className="w-3 h-3 text-red-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
-            </button>
-            <button
-              type="button"
-              onClick={() => selectOnlyChannel('youtube')}
-              className="px-1.5 py-1 text-[8px] font-mono border-l border-red-500/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
-              title="Aislar sólo YouTube"
-            >
-              Solo
-            </button>
-          </div>
+          {hasYouTube && (
+            <div className={`flex items-center rounded-lg border transition-all ${
+              selectedChannels.youtube
+                ? isStitchLight
+                  ? 'bg-red-50 border-red-300 text-red-700'
+                  : 'bg-red-950/30 border-red-500/40 text-red-300'
+                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+            }`}>
+              <button
+                type="button"
+                onClick={() => toggleChannel('youtube')}
+                className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+              >
+                <span className={`w-2 h-2 rounded-full ${selectedChannels.youtube ? 'bg-red-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+                <Youtube className="w-3 h-3 text-red-500" />
+                <span>YouTube</span>
+                <span className="text-[9px] px-1 py-0.2 rounded bg-red-500/15 font-mono font-bold">
+                  {countYouTube.toLocaleString()}
+                </span>
+                {selectedChannels.youtube ? <Eye className="w-3 h-3 text-red-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => selectOnlyChannel('youtube')}
+                className="px-1.5 py-1 text-[8px] font-mono border-l border-red-500/20 hover:bg-red-500/20 text-red-400 cursor-pointer"
+                title="Aislar sólo YouTube"
+              >
+                Solo
+              </button>
+            </div>
+          )}
 
           {/* Spotify Chip */}
-          <div className={`flex items-center rounded-lg border transition-all ${
-            selectedChannels.spotify
-              ? isStitchLight
-                ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
-                : 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
-              : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
-          }`}>
-            <button
-              type="button"
-              onClick={() => toggleChannel('spotify')}
-              className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
-            >
-              <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ? 'bg-emerald-500 animate-pulse' : 'bg-neutral-600'}`}></span>
-              <Music2 className="w-3 h-3 text-emerald-500" />
-              <span>Spotify</span>
-              <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/15 font-mono font-bold">
-                {countSpotify.toLocaleString()}
-              </span>
-              {selectedChannels.spotify ? <Eye className="w-3 h-3 text-emerald-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
-            </button>
-            <button
-              type="button"
-              onClick={() => selectOnlyChannel('spotify')}
-              className="px-1.5 py-1 text-[8px] font-mono border-l border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
-              title="Aislar sólo Spotify"
-            >
-              Solo
-            </button>
-          </div>
+          {hasSpotify && (
+            <div className={`flex items-center rounded-lg border transition-all ${
+              selectedChannels.spotify
+                ? isStitchLight
+                  ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                  : 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300'
+                : 'bg-neutral-900/30 border-neutral-800 text-neutral-500 opacity-60'
+            }`}>
+              <button
+                type="button"
+                onClick={() => toggleChannel('spotify')}
+                className="px-2 py-1 flex items-center gap-1.5 text-[10px] font-mono font-medium cursor-pointer"
+              >
+                <span className={`w-2 h-2 rounded-full ${selectedChannels.spotify ? 'bg-emerald-500 animate-pulse' : 'bg-neutral-600'}`}></span>
+                <Music2 className="w-3 h-3 text-emerald-500" />
+                <span>Spotify</span>
+                <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-500/15 font-mono font-bold">
+                  {countSpotify.toLocaleString()}
+                </span>
+                {selectedChannels.spotify ? <Eye className="w-3 h-3 text-emerald-400" /> : <EyeOff className="w-3 h-3 text-neutral-500" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => selectOnlyChannel('spotify')}
+                className="px-1.5 py-1 text-[8px] font-mono border-l border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 cursor-pointer"
+                title="Aislar sólo Spotify"
+              >
+                Solo
+              </button>
+            </div>
+          )}
 
           {/* Fans Registrados (BD / Únete) Chip */}
           <div className={`flex items-center rounded-lg border transition-all ${

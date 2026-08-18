@@ -229,8 +229,9 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
         {validEntries.map(([key, url], index) => {
           const isOddCount = validEntries.length % 2 !== 0;
           const isFirstItem = index === 0;
-          // Si el total de redes es impar, el primer botón (ej: Instagram) ocupa todo el ancho de la fila
-          const fullWidthClass = (isOddCount && isFirstItem) ? 'col-span-2 sm:col-span-3' : '';
+          const isFullWidth = isOddCount && isFirstItem;
+          // Si el total de redes es impar, el primer botón (ej: Instagram) ocupa todo el ancho y centra su contenido con icono a la derecha
+          const fullWidthClass = isFullWidth ? 'col-span-2 sm:col-span-3 justify-center relative' : 'justify-between';
 
           const config = PLATFORM_CONFIG[key] || {
             label: key,
@@ -247,13 +248,13 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+              className={`flex items-center p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
             >
               <div className="flex items-center gap-2.5">
                 <IconComp className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
-                <span>{config.label}</span>
+                <span className={isFullWidth ? "text-sm font-black tracking-wide" : ""}>{config.label}</span>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+              <ExternalLink className={`w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all ${isFullWidth ? 'absolute right-3.5' : ''}`} />
             </a>
           );
         })}
