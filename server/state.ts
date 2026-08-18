@@ -56,7 +56,7 @@ const DEFAULT_EPK_CONFIG = {
     twitter: "https://x.com/bakandeya_band"
   },
   contactoBooking: {
-    nombre: "Diego de la Calle / Mánager Bakandeya",
+    nombre: "Booking & Management Bakandeya",
     email: "diego.delacalleb@gmail.com",
     telefono: "+34 612 345 678"
   },
