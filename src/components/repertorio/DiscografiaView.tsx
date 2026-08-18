@@ -13,6 +13,7 @@ interface DiscografiaViewProps {
   isStitchLight: boolean;
   bandName?: string;
   setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
+  setSetlists?: React.Dispatch<React.SetStateAction<any[]>>;
   toggleFavoriteSong: (id: string) => void;
   activePlayerSong?: Song | null;
   isPlayerPlaying?: boolean;
@@ -55,6 +56,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   isStitchLight,
   bandName,
   setSongs,
+  setSetlists,
   toggleFavoriteSong,
   activePlayerSong,
   isPlayerPlaying = false,
@@ -648,10 +650,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
       <LiveConcertToAlbumModal
         isOpen={isLiveConcertModalOpen}
         onClose={() => setIsLiveConcertModalOpen(false)}
-        bandName="Nuestra Banda"
+        bandName={bandName || "Nuestra Banda"}
         colors={colors}
         isStitchLight={isStitchLight}
         onSaveAlbumToCatalog={handleSaveLiveConcertAlbum}
+        onSaveSetlist={(newSetlist) => {
+          if (setSetlists) {
+            setSetlists((prev: any[]) => [newSetlist, ...(Array.isArray(prev) ? prev : [])]);
+          }
+        }}
       />
     </div>
   );

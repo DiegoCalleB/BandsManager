@@ -69,6 +69,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOrigen, setFilterOrigen] = useState<string>('');
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
+  const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>('');
   const [selectedConcertId, setSelectedConcertId] = useState<string>('');
 
   // Configurable City Tabs state (synced with DB epkConfig.ciudadesConfig)
@@ -175,9 +176,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         ? (f.ciudad && f.ciudad.toLowerCase().includes(selectedCityFilter.toLowerCase()))
         : true;
 
-      return matchQuery && matchFilter && matchCity;
+      const matchNivel = selectedNivelFilter
+        ? (f.nivelFan === selectedNivelFilter)
+        : true;
+
+      return matchQuery && matchFilter && matchCity && matchNivel;
     });
-  }, [fans, searchQuery, filterOrigen, selectedCityFilter]);
+  }, [fans, searchQuery, filterOrigen, selectedCityFilter, selectedNivelFilter]);
 
   // Analytics Data - Channel of Origin (robust categorization)
   const originData = useMemo(() => {
@@ -759,6 +764,19 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                     <option key={c.id} value={c.id}>Concierto: {c.name}</option>
                   ))}
                   <option value="Otros">Redes Sociales / Amigos / Otros</option>
+                </select>
+              </div>
+              <div className="relative w-full sm:w-48">
+                <select
+                  value={selectedNivelFilter}
+                  onChange={e => setSelectedNivelFilter(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-white outline-none font-mono cursor-pointer"
+                >
+                  <option value="">Todos los niveles</option>
+                  <option value="superfan">🔥 Superfan</option>
+                  <option value="fundador">🌟 Fan Fundador</option>
+                  <option value="fiel">🎸 Fan Fiel</option>
+                  <option value="backstage">🎟️ VIP Backstage</option>
                 </select>
               </div>
             </div>

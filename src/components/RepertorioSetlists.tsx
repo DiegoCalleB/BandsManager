@@ -301,10 +301,13 @@ export default function RepertorioSetlists({
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'configuracion' | 'discografia'>('setlists');
 
  // Songs Repertoire State
-  // Songs Repertoire State
   const [songs, setSongs] = useState<Song[]>(() => {
     try {
-      localStorage.removeItem('bakandeya_songs_catalog');
+      const saved = localStorage.getItem('bakandeya_songs_catalog') || localStorage.getItem('bakandeya_songs');
+      const parsed = saved ? JSON.parse(saved) : [];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
       return DEFAULT_SONGS;
     } catch {
       return DEFAULT_SONGS;
@@ -2830,7 +2833,9 @@ export default function RepertorioSetlists({
      albumsList={albumsList}
      colors={colors}
      isStitchLight={isStitchLight}
+     bandName={bName}
      setSongs={setSongs}
+     setSetlists={setSetlists}
      toggleFavoriteSong={handleToggleFavorite}
      activePlayerSong={activePlayerSong}
      isPlayerPlaying={isPlayerPlaying}

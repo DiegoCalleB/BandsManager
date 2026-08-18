@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Rehearsal, Concert, ThemeColors } from '../types';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio } from 'lucide-react';
 import { ModalPortal } from './common/ModalPortal';
 
 interface CalendarViewProps {
@@ -138,6 +138,9 @@ export default function CalendarView({
 
  // Form state for selected band when creating rehearsal/concert
  const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] = useState(activeBandId);
+ const [showSyncModal, setShowSyncModal] = useState(false);
+ const [syncScope, setSyncScope] = useState<'all' | 'active'>('all');
+ const [copiedFeed, setCopiedFeed] = useState(false);
 
  // Effective band members list for Convocatoria filtered by target band of the event
  const defaultMembers = React.useMemo(() => [
@@ -178,14 +181,28 @@ export default function CalendarView({
 
  // Filter helper by Convocatoria (Banda Completa vs Convocatoria Parcial)
  const matchesConvocatoria = React.useCallback((evt: Concert | Rehearsal) => {
- if (evt.convocatoria_tipo === 'parcial' && evt.convocados_ids && evt.convocados_ids.length > 0) {
- if (currentUser?.id) {
- const isSummoned = evt.convocados_ids.includes(currentUser.id);
- const isLeader = currentUser.role === 'leader';
- return isSummoned || isLeader;
- }
- }
- return true; // 'completa' or omitted -> visible to all
+  if (evt.convocatoria_tipo === 'parcial' && evt.convocados_ids && evt.convocados_ids.length > 0) {
+    if (currentUser) {
+      const uId = currentUser.id;
+      const uEmail = (currentUser.email || '').toLowerCase().trim();
+      const uUsername = (currentUser.username || '').toLowerCase().trim();
+      
+      const isSummoned = evt.convocados_ids.some(id => {
+        if (!id) return false;
+        if (id === uId) return true;
+        // Also check if id format contains username/email or part of user id
+        const cleanEvtId = id.toLowerCase().trim();
+        if (uEmail && cleanEvtId === uEmail) return true;
+        if (uUsername && cleanEvtId === uUsername) return true;
+        if (uId && (cleanEvtId.includes(uId) || uId.includes(cleanEvtId))) return true;
+        return false;
+      });
+
+      const isLeader = currentUser.role === 'leader';
+      return isSummoned || isLeader;
+    }
+  }
+  return true; // 'completa' or omitted -> visible to all
  }, [currentUser]);
 
  // Filtered concerts & rehearsals depending on filterBandMode and Convocatoria
@@ -577,20 +594,24 @@ export default function CalendarView({
 
  // Fetch server logistics state on mount
  useEffect(() => {
- fetch('/api/logistics')
- .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
- .then(data => {
- if (data) {
- if (data.runOfShow && Object.keys(data.runOfShow).length > 0) {
- setAllRunOfShow(prev => ({ ...prev, ...data.runOfShow }));
- }
- if (data.gearChecklists && Object.keys(data.gearChecklists).length > 0) {
- setAllGear(prev => ({ ...prev, ...data.gearChecklists }));
- }
- }
- })
- .catch(err => console.error("Error loading server logistics:", err));
- }, []);
+   const token = localStorage.getItem('auth_token') || '';
+   const headers: Record<string, string> = {};
+   if (token) headers['Authorization'] = `Bearer ${token}`;
+
+   fetch(`/api/logistics?band_id=${encodeURIComponent(currentBandId || 'band-bakandeya')}`, { headers })
+     .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
+     .then(data => {
+       if (data) {
+         if (data.runOfShow && Object.keys(data.runOfShow).length > 0) {
+           setAllRunOfShow(prev => ({ ...prev, ...data.runOfShow }));
+         }
+         if (data.gearChecklists && Object.keys(data.gearChecklists).length > 0) {
+           setAllGear(prev => ({ ...prev, ...data.gearChecklists }));
+         }
+       }
+     })
+     .catch(err => console.warn("Notice: using local logistics state:", err));
+ }, [currentBandId]);
 
  // Sync helpers to post server state
  const saveRunOfShowToServer = (dateKey: string, items: RunOfShowItem[]) => {
@@ -1027,6 +1048,20 @@ export default function CalendarView({
         >
           <Plus className="w-3.5 h-3.5" />
           <span>+ Concierto</span>
+        </button>
+
+        <button
+          id="export-ics-btn"
+          onClick={() => setShowSyncModal(true)}
+          className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
+            isStitchLight
+              ? "bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300/80"
+              : "bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-500/30"
+          }`}
+          title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
+        >
+          <Radio className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+          <span>Sincronizar Calendario</span>
         </button>
 
         <span className={`hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold ${
@@ -2300,6 +2335,199 @@ export default function CalendarView({
  </button>
  </div>
  </form>
+ </div>
+ </div>
+ </ModalPortal>
+ )}
+
+ {/* Modal de Sincronización Automática con Google Calendar / Apple iCal */}
+ {showSyncModal && (
+ <ModalPortal>
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
+ <div className={`relative w-full max-w-xl rounded-2xl border p-6 shadow-2xl ${
+ isStitchLight ? "bg-white border-slate-200 text-slate-900" : "bg-neutral-900 border-amber-500/30 text-white shadow-amber-500/10"
+ }`}>
+ <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-white/10">
+ <div className="flex items-center gap-3">
+ <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
+ <Radio className="w-5 h-5 animate-pulse" />
+ </div>
+ <div>
+ <h3 className="text-base font-bold font-display uppercase tracking-wider text-amber-400">
+ Sincronización Automática en Tiempo Real
+ </h3>
+ <p className="text-xs text-neutral-400">
+ Conciertos y ensayos siempre actualizados en tu móvil sin descargar archivos cada vez
+ </p>
+ </div>
+ </div>
+ <button
+ onClick={() => setShowSyncModal(false)}
+ className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ >
+ ✕
+ </button>
+ </div>
+
+ <div className="space-y-4 text-xs">
+ <div className={`p-3.5 rounded-xl border ${
+ isStitchLight ? "bg-amber-50 border-amber-200 text-slate-800" : "bg-amber-950/30 border-amber-500/30 text-amber-200"
+ }`}>
+ <p className="font-semibold mb-1 flex items-center gap-1.5">
+ <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+ ¿Cómo funciona la sincronización automática?
+ </p>
+ <p className="text-[11px] opacity-90 leading-relaxed">
+ Al suscribirte mediante la URL en vivo (feed webcal), tu app de calendario (Google Calendar, Apple Calendar en iPhone/Mac o Outlook) consultará automáticamente a BandManager. Cuando crees o actualices un bolo o ensayo en BandManager, aparecerá en tu calendario personal sin que tengas que volver a descargar nada.
+ </p>
+ </div>
+
+ {isMultiBandUser && (
+ <div className="p-3 rounded-xl bg-black/40 border border-white/10 space-y-2">
+ <label className="block text-[11px] font-mono uppercase tracking-wider text-amber-400 font-bold">
+ ¿Qué bandas quieres incluir en tu agenda?
+ </label>
+ <div className="grid grid-cols-2 gap-2">
+ <button
+ type="button"
+ onClick={() => setSyncScope('all')}
+ className={`px-3 py-2 rounded-lg text-left transition-all border cursor-pointer ${
+ syncScope === 'all'
+ ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold'
+ : isStitchLight
+ ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
+ : 'bg-neutral-800 border-neutral-700 text-neutral-400 hover:bg-neutral-750'
+ }`}
+ >
+ <div className="flex items-center gap-1.5 text-xs font-bold mb-0.5">
+ <Users className="w-3.5 h-3.5 text-amber-400" />
+ <span>Todas mis Bandas</span>
+ </div>
+ <p className="text-[10px] opacity-75 leading-tight">
+ {effectiveBandsList.map(b => b.bandName).join(' + ')}
+ </p>
+ </button>
+
+ <button
+ type="button"
+ onClick={() => setSyncScope('active')}
+ className={`px-3 py-2 rounded-lg text-left transition-all border cursor-pointer ${
+ syncScope === 'active'
+ ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold'
+ : isStitchLight
+ ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
+ : 'bg-neutral-800 border-neutral-700 text-neutral-400 hover:bg-neutral-750'
+ }`}
+ >
+ <div className="flex items-center gap-1.5 text-xs font-bold mb-0.5">
+ <Music className="w-3.5 h-3.5 text-amber-400" />
+ <span>Solo {activeBandName}</span>
+ </div>
+ <p className="text-[10px] opacity-75 leading-tight">
+ Únicamente eventos de {activeBandName}
+ </p>
+ </button>
+ </div>
+ </div>
+ )}
+
+ <div>
+ <label className="block text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1.5 font-bold">
+ URL de Suscripción en Tiempo Real:
+ </label>
+ <div className="flex items-center gap-2">
+ <input
+ type="text"
+ readOnly
+ value={`${window.location.origin}/api/calendar.ics?band_id=${encodeURIComponent(
+ syncScope === 'all' && effectiveBandsList.length > 1
+ ? effectiveBandsList.map(b => b.band_id).join(',')
+ : activeBandId || 'band-bakandeya'
+ )}`}
+ className={`flex-1 px-3 py-2 text-xs font-mono rounded-lg border outline-none select-all ${
+ isStitchLight ? "bg-slate-100 border-slate-300 text-slate-900" : "bg-neutral-950 border-neutral-700 text-amber-300"
+ }`}
+ />
+ <button
+ onClick={() => {
+ const url = `${window.location.origin}/api/calendar.ics?band_id=${encodeURIComponent(
+ syncScope === 'all' && effectiveBandsList.length > 1
+ ? effectiveBandsList.map(b => b.band_id).join(',')
+ : activeBandId || 'band-bakandeya'
+ )}`;
+ navigator.clipboard.writeText(url);
+ setCopiedFeed(true);
+ setTimeout(() => setCopiedFeed(false), 2500);
+ }}
+ className={`px-3 py-2 rounded-lg font-mono font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
+ copiedFeed
+ ? "bg-emerald-600 text-white"
+ : "bg-amber-500 hover:bg-amber-400 text-neutral-950"
+ }`}
+ >
+ {copiedFeed ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+ <span>{copiedFeed ? "¡Copiado!" : "Copiar URL"}</span>
+ </button>
+ </div>
+ </div>
+
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+ <a
+ href={`https://calendar.google.com/calendar/r/settings/addbyurl?cid=${encodeURIComponent(
+ `${window.location.origin}/api/calendar.ics?band_id=${encodeURIComponent(
+ syncScope === 'all' && effectiveBandsList.length > 1
+ ? effectiveBandsList.map(b => b.band_id).join(',')
+ : activeBandId || 'band-bakandeya'
+ )}`
+ )}`}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-md active:scale-95"
+ >
+ <ExternalLink className="w-4 h-4" />
+ <span>Añadir a Google Calendar</span>
+ </a>
+
+ <a
+ href={`webcal://${window.location.host}/api/calendar.ics?band_id=${encodeURIComponent(
+ syncScope === 'all' && effectiveBandsList.length > 1
+ ? effectiveBandsList.map(b => b.band_id).join(',')
+ : activeBandId || 'band-bakandeya'
+ )}`}
+ className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-100 border border-neutral-600 font-bold transition-all shadow-md active:scale-95"
+ >
+ <Radio className="w-4 h-4 text-emerald-400" />
+ <span>Suscribir en iPhone / Mac</span>
+ </a>
+ </div>
+
+ <div className="p-3 rounded-xl bg-neutral-950/60 border border-white/5 space-y-1.5 text-[11px] text-neutral-300">
+ <p className="font-bold text-neutral-200">Pasos en Google Calendar (1 minuto):</p>
+ <ol className="list-decimal list-inside space-y-1 text-neutral-400">
+ <li>Haz clic en el botón azul <strong>"Añadir a Google Calendar"</strong> de arriba.</li>
+ <li>Si lo añades manualmente: ve a <em>"Otros calendarios" (+)</em> ➔ <strong>"Desde URL"</strong> en Google Calendar.</li>
+ <li>Pega la URL de suscripción y confirma.</li>
+ <li>¡Listo! Google Calendar sincronizará los cambios automáticamente.</li>
+ </ol>
+ </div>
+ </div>
+
+ <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
+ <a
+ href={`/api/calendar.ics?band_id=${encodeURIComponent(activeBandId || 'band-bakandeya')}`}
+ download={`calendar-${activeBandId || 'band'}.ics`}
+ className="text-[11px] font-mono text-neutral-400 hover:text-amber-300 underline flex items-center gap-1"
+ >
+ <Download className="w-3 h-3" />
+ <span>O si prefieres, descargar archivo .ics puntual</span>
+ </a>
+ <button
+ onClick={() => setShowSyncModal(false)}
+ className="px-4 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-xs font-bold text-white transition-colors cursor-pointer"
+ >
+ Cerrar
+ </button>
+ </div>
  </div>
  </div>
  </ModalPortal>

@@ -670,13 +670,20 @@ export async function dbCheckDeletedBand(nombreBanda: string, bandId: string) {
 }
 
 // --- REHEARSALS ---
-export async function dbGetRehearsals(bandId: string) {
+export async function dbGetRehearsals(bandId: string | string[]) {
   const sb = getSupabase();
-  const { data, error } = await sb
-    .from("rehearsals")
-    .select("*")
-    .eq("band_id", cleanBandId(bandId))
-    .order("fecha", { ascending: true });
+  let query = sb.from("rehearsals").select("*");
+  if (Array.isArray(bandId)) {
+    const cleanIds = bandId.map(id => cleanBandId(id)).filter(Boolean);
+    if (cleanIds.length === 1) {
+      query = query.eq("band_id", cleanIds[0]);
+    } else if (cleanIds.length > 1) {
+      query = query.in("band_id", cleanIds);
+    }
+  } else {
+    query = query.eq("band_id", cleanBandId(bandId));
+  }
+  const { data, error } = await query.order("fecha", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (rehearsals): ${error.message}`);
   return (data || []).map(r => ({
@@ -721,13 +728,20 @@ export async function dbDeleteRehearsal(id: string, bandId: string) {
 }
 
 // --- CONCERTS ---
-export async function dbGetConcerts(bandId: string) {
+export async function dbGetConcerts(bandId: string | string[]) {
   const sb = getSupabase();
-  const { data, error } = await sb
-    .from("concerts")
-    .select("*")
-    .eq("band_id", cleanBandId(bandId))
-    .order("fecha", { ascending: true });
+  let query = sb.from("concerts").select("*");
+  if (Array.isArray(bandId)) {
+    const cleanIds = bandId.map(id => cleanBandId(id)).filter(Boolean);
+    if (cleanIds.length === 1) {
+      query = query.eq("band_id", cleanIds[0]);
+    } else if (cleanIds.length > 1) {
+      query = query.in("band_id", cleanIds);
+    }
+  } else {
+    query = query.eq("band_id", cleanBandId(bandId));
+  }
+  const { data, error } = await query.order("fecha", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (concerts): ${error.message}`);
   return (data || []).map(c => ({
@@ -849,8 +863,8 @@ export async function dbUpsertSong(song: any, bandId: string) {
     band_id: targetBandId,
     titulo: song.titulo || "Nueva Canción",
     duracion: song.duracion || "03:30",
-    duracion_segundos: Number(song.duracion_segundos || song.duracionSegundos || 210),
-    duracion_minutos: Number(song.duracion_minutos || song.duracionMinutos || 3),
+    duracion_segundos: Math.round(Number(song.duracion_segundos || song.duracionSegundos || 210)),
+    duracion_minutos: Math.round(Number(song.duracion_minutos || song.duracionMinutos || 3)),
     tonalidad: song.tonalidad || "Mim",
     bpm: Number(song.bpm || 120),
     afinacion: song.afinacion || "Estándar E",
@@ -1590,6 +1604,32 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
   const cleanId = cleanBandId(bandId || "band-bakandeya");
   await ensureRegisteredBandExists(cleanId, user?.bandName || user?.band_name);
 
+  // Determine all bands relevant to this user (for multi-band calendar view)
+  const userBandIds = new Set<string>();
+  userBandIds.add(cleanId);
+  if (user) {
+    if (user.band_id) userBandIds.add(cleanBandId(user.band_id));
+    if (user.main_band_id) userBandIds.add(cleanBandId(user.main_band_id));
+    if (Array.isArray(user.allowedBandIds)) {
+      user.allowedBandIds.forEach((b: string) => userBandIds.add(cleanBandId(b)));
+    }
+  }
+
+  // Also query userBands relations from Supabase for this user
+  if (user?.id) {
+    try {
+      const sb = getSupabase();
+      const { data: uBands } = await sb.from("user_bands").select("band_id").eq("user_id", user.id);
+      if (uBands && Array.isArray(uBands)) {
+        uBands.forEach((ub: any) => {
+          if (ub.band_id) userBandIds.add(cleanBandId(ub.band_id));
+        });
+      }
+    } catch (_) {}
+  }
+
+  const allRelevantBandIds = Array.from(userBandIds);
+
   const [
     leads,
     rehearsals,
@@ -1610,8 +1650,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     bands
   ] = await Promise.all([
     dbGetLeads(cleanId).catch(() => []),
-    dbGetRehearsals(cleanId).catch(() => []),
-    dbGetConcerts(cleanId).catch(() => []),
+    dbGetRehearsals(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
+    dbGetConcerts(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
     dbGetSongs(cleanId).catch(() => []),
     dbGetSetlists(cleanId).catch(() => []),
     dbGetEpkConfig(cleanId).catch(() => null),

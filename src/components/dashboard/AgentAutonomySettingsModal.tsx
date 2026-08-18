@@ -79,6 +79,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'audit_logs'>('autonomy');
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [loadingAuditLogs, setLoadingAuditLogs] = useState<boolean>(false);
+  const [auditAgentFilter, setAuditAgentFilter] = useState<string>('all');
 
   // Cargar logs de auditoría
   const loadAuditLogs = async () => {
@@ -94,6 +95,30 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     } finally {
       setLoadingAuditLogs(false);
     }
+  };
+
+  const handleExportAuditLogsCSV = () => {
+    if (!auditLogs || auditLogs.length === 0) return;
+    const headers = ['Fecha', 'Agente', 'Motor', 'Disparado Por', 'Email Usuario', 'Estado', 'Mensaje', 'Conteo Afectados', 'Duración (ms)'];
+    const rows = auditLogs.map(l => [
+      `"${new Date(l.created_at).toLocaleString('es-ES')}"`,
+      `"${l.agente || ''}"`,
+      `"${l.motor || ''}"`,
+      `"${l.disparado_por_tipo || ''}"`,
+      `"${l.usuario_email || l.usuario_id || ''}"`,
+      `"${l.estado || ''}"`,
+      `"${(l.mensaje || '').replace(/"/g, '""')}"`,
+      l.conteo_afectados || 0,
+      l.duracion_ms || 0
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `auditoria_agentes_${bandId}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
@@ -1573,7 +1598,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
           {/* TAB 5: AUDITORÍA & TRAZABILIDAD */}
           {activeTab === 'audit_logs' && (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" /> Registro de Auditoría de Ejecución de Agentes
@@ -1582,15 +1607,52 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                     Trazabilidad de qué usuario o proceso disparó cada agente, duración y salas impactadas en Supabase.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={loadAuditLogs}
-                  disabled={loadingAuditLogs}
-                  className="px-2.5 py-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-neutral-300 text-xs font-mono flex items-center gap-1.5 cursor-pointer"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ? 'animate-spin' : ''}`} />
-                  <span>Refrescar</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleExportAuditLogsCSV}
+                    disabled={auditLogs.length === 0}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    title="Descargar historial de auditoría en formato CSV"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Exportar CSV</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={loadAuditLogs}
+                    disabled={loadingAuditLogs}
+                    className="px-2.5 py-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-neutral-300 text-xs font-mono flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${loadingAuditLogs ? 'animate-spin' : ''}`} />
+                    <span>Refrescar</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Filtros por Agente */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-mono">
+                <span className="text-neutral-400 text-[10px] uppercase font-bold mr-1">Filtrar:</span>
+                {[
+                  { id: 'all', label: 'Todos' },
+                  { id: 'scout', label: 'Scout' },
+                  { id: 'redactor', label: 'Redactor' },
+                  { id: 'enviador', label: 'Enviador' },
+                  { id: 'lector', label: 'Lector' }
+                ].map(f => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setAuditAgentFilter(f.id)}
+                    className={`px-2.5 py-0.5 rounded-full border transition-all cursor-pointer font-bold ${
+                      auditAgentFilter === f.id
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-xs'
+                        : 'bg-neutral-900/60 text-neutral-400 border-neutral-800 hover:text-neutral-200'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
               </div>
 
               {loadingAuditLogs ? (
@@ -1605,7 +1667,9 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                 </div>
               ) : (
                 <div className="space-y-2.5 max-h-[48vh] overflow-y-auto pr-1">
-                  {auditLogs.map((log) => {
+                  {auditLogs
+                    .filter(l => auditAgentFilter === 'all' || (l.agente || '').toLowerCase().includes(auditAgentFilter))
+                    .map((log) => {
                     const isSuccess = log.estado === 'success';
                     const isError = log.estado === 'error';
                     const affectedCount = log.conteo_afectados || (log.leads_afectados ? log.leads_afectados.length : 0);
