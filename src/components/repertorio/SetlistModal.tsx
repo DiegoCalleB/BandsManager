@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface SetlistModalProps {
   isOpen: boolean;
@@ -50,8 +51,9 @@ export function SetlistModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm">
-      <div className={`w-full max-w-md p-5 rounded-2xl shadow-2xl border border-neutral-800 ${colors.card} text-white`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-md p-5 rounded-2xl shadow-2xl border border-neutral-800 ${colors.card} text-white my-auto max-h-[90vh] overflow-y-auto`}>
         <div className="flex justify-between items-center pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
             <Layers className="w-5 h-5 text-[#f2ca50]" />
@@ -126,5 +128,6 @@ export function SetlistModal({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 }

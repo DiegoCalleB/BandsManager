@@ -252,6 +252,17 @@ export interface Fan {
   conciertoOrigenNombre?: string;
   fechaCaptura: string;
   consentimientoRGPD: boolean;
+  mensaje?: string;
+  cancionFavorita?: string;
+  instagram?: string;
+  avatarUrl?: string;
+  nivelFan?: 'fundador' | 'superfan' | 'backstage' | 'fiel';
+  reacciones?: {
+    likes?: number;
+    fire?: number;
+    applause?: number;
+    guitars?: number;
+  };
 }
 
 export interface SocialPost {

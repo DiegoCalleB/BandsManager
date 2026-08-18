@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface AssignSongsToAlbumModalProps {
   isOpen: boolean;
@@ -81,8 +82,9 @@ export function AssignSongsToAlbumModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl my-auto max-h-[92vh] flex flex-col border border-neutral-800 ${colors.card} text-white`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl my-auto max-h-[92vh] flex flex-col border border-neutral-800 ${colors.card} text-white`}>
         <div className="flex justify-between items-center pb-3 border-b border-white/10">
           <div className="flex items-center gap-2">
             <Disc3 className="w-5 h-5 text-[#1db954]" />
@@ -263,6 +265,7 @@ export function AssignSongsToAlbumModal({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 }
 

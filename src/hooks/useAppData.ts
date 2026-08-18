@@ -283,6 +283,16 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     }
   };
 
+  const handleUpdateFan = async (id: string, updatedFields: Partial<Fan>) => {
+    setFans(prev => prev.map(f => f.id === id ? { ...f, ...updatedFields } : f));
+    try {
+      await api.updateFan(id, updatedFields);
+    } catch (e) {
+      console.error('Error updating fan:', e);
+      fetchState();
+    }
+  };
+
   const handleDeleteFan = async (id: string) => {
     setFans(prev => prev.filter(f => f.id !== id));
     try {
@@ -337,6 +347,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     handleSaveTour,
     handleDeleteTour,
     handleAddFan,
+    handleUpdateFan,
     handleDeleteFan,
     handleUpdateIncentive
   };

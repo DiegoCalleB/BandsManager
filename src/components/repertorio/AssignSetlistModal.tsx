@@ -1,6 +1,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { ThemeColors, Setlist, Concert, Rehearsal } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface AssignSetlistModalProps {
   assigningSetlist: Setlist | null;
@@ -28,8 +29,9 @@ export function AssignSetlistModal({
   if (!assigningSetlist) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className={`w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl ${colors.card}`}>
+    <ModalPortal isOpen={!!assigningSetlist} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-md p-5 rounded-2xl space-y-4 shadow-2xl my-auto max-h-[90vh] overflow-y-auto ${colors.card}`}>
         <div className="flex justify-between items-center pb-3">
           <h3 className={`text-sm font-bold font-mono uppercase ${colors.text}`}>
             Asignar Repertorio a Concierto / Ensayo
@@ -125,5 +127,6 @@ export function AssignSetlistModal({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

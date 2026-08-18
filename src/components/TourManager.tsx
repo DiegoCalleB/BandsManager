@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead } from '../types';
 import { calculateVehiclesFuelCost } from '../utils/tourUtils';
+import { ModalPortal } from './common/ModalPortal';
 import { 
   Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign, 
   Activity, TrendingUp, Calculator, Users, CheckSquare, Square, 
@@ -750,8 +751,9 @@ export default function TourManager({
 
       {/* Modal Formulario de Gira */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className={`w-full max-w-4xl rounded-2xl ${colors.bg} border border-white/10 shadow-2xl flex flex-col max-h-[90vh]`}>
+        <ModalPortal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain">
+            <div className={`w-full max-w-4xl rounded-2xl ${colors.bg} border border-white/10 shadow-2xl flex flex-col my-auto max-h-[90vh]`}>
             {/* Modal Header */}
             <div className="p-4 sm:p-6 border-b border-white/10 flex justify-between items-center bg-black/40 shrink-0">
               <div>
@@ -1312,45 +1314,48 @@ export default function TourManager({
             </div>
           </div>
         </div>
-      )}
+      </ModalPortal>
+    )}
 
       {/* Modal Confirm Deletion */}
       {tourToDelete && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className={`w-full max-w-md rounded-2xl ${colors.card} border border-rose-500/30 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150`}>
-            <div className="flex items-center gap-3 text-rose-400">
-              <div className="p-3 rounded-full bg-rose-500/10 border border-rose-500/20 shrink-0">
-                <Trash2 className="w-6 h-6" />
+        <ModalPortal isOpen={!!tourToDelete} onClose={() => setTourToDelete(null)}>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+            <div className={`w-full max-w-md rounded-2xl ${colors.card} border border-rose-500/30 p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150 my-auto`}>
+              <div className="flex items-center gap-3 text-rose-400">
+                <div className="p-3 rounded-full bg-rose-500/10 border border-rose-500/20 shrink-0">
+                  <Trash2 className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-white font-display">¿Eliminar esta gira?</h3>
+                  <p className="text-xs text-neutral-400 mt-0.5">Esta acción eliminará la gira y no se puede deshacer.</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-bold text-lg text-white font-display">¿Eliminar esta gira?</h3>
-                <p className="text-xs text-neutral-400 mt-0.5">Esta acción eliminará la gira y no se puede deshacer.</p>
+
+              <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-sm text-neutral-200">
+                Gira: <strong className="text-white">{tourToDelete.name}</strong>
               </div>
-            </div>
 
-            <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-sm text-neutral-200">
-              Gira: <strong className="text-white">{tourToDelete.name}</strong>
-            </div>
-
-            <div className="flex justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setTourToDelete(null)}
-                className="px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors cursor-pointer"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={confirmDelete}
-                className="px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 hover:bg-rose-500 text-white shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
-              >
-                <Trash2 className="w-4 h-4" />
-                Sí, Eliminar Gira
-              </button>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setTourToDelete(null)}
+                  className="px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-neutral-800 hover:bg-neutral-700 text-neutral-300 transition-colors cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider bg-rose-600 hover:bg-rose-500 text-white shadow-md active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Sí, Eliminar Gira
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
     </div>

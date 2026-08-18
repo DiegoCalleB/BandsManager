@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from 'lucide-react';
 import { Song, ThemeColors } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface MetronomeModalProps {
   isOpen: boolean;
@@ -189,8 +190,9 @@ export function MetronomeModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-gradient-to-b from-zinc-900 to-black border border-amber-500/30 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl shadow-amber-500/10">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div className="bg-gradient-to-b from-zinc-900 to-black border border-amber-500/30 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl shadow-amber-500/10 my-auto max-h-[90vh] overflow-y-auto">
         
         {/* Header */}
         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-white/5">
@@ -425,5 +427,6 @@ export function MetronomeModal({
 
       </div>
     </div>
+    </ModalPortal>
   );
 }

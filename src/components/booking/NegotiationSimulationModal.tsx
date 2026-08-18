@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, X, Building, Users, Loader2, Check } from 'lucide-react';
 import { Lead } from '../../types';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface PredefinedScenario {
   key: string;
@@ -68,12 +69,13 @@ export function NegotiationSimulationModal({
   if (!isOpen || !selectedLead) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div
-        className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto ${
-          isStitchLight ? 'bg-white text-slate-800' : 'bg-[#18181b] text-[#e5e2e1]'
-        }`}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+        <div
+          className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto my-auto ${
+            isStitchLight ? 'bg-white text-slate-800' : 'bg-[#18181b] text-[#e5e2e1]'
+          }`}
+        >
         <div className="flex justify-between items-start border-b border-neutral-200 dark:border-neutral-800 pb-3">
           <div>
             <div className="flex items-center gap-2">
@@ -309,5 +311,6 @@ export function NegotiationSimulationModal({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

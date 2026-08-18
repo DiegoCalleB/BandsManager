@@ -272,6 +272,29 @@ router.post("/fans", requireAuth, async (req, res) => {
   }
 });
 
+// Update Fan (Authenticated)
+router.patch("/fans/:id", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = (req as any).user?.band_id;
+    const updates = req.body;
+
+    const state = loadState();
+    if (!state.fans) state.fans = [];
+    const index = state.fans.findIndex((f: Fan) => f.id === id);
+    if (index !== -1) {
+      state.fans[index] = { ...state.fans[index], ...updates };
+      await dbUpsertFan(state.fans[index], userBandId);
+      saveState(state);
+      return res.json({ success: true, fan: state.fans[index] });
+    }
+    res.status(404).json({ error: "Fan no encontrado" });
+  } catch (err: any) {
+    console.error("Error updating fan:", err);
+    res.status(500).json({ error: err?.message || "Error al actualizar fan." });
+  }
+});
+
 // Delete Fan (Authenticated)
 router.delete("/fans/:id", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
@@ -289,7 +312,19 @@ router.delete("/fans/:id", requireAuth, async (req, res) => {
 // Public Fan Capture Endpoint (No Auth required - QR Code Submission)
 router.post("/public/fans", async (req, res) => {
   try {
-    const { nombre, email, ciudad, comoConocio, conciertoOrigenId, conciertoOrigenNombre, consentimientoRGPD, band_id } = req.body;
+    const { 
+      nombre, 
+      email, 
+      ciudad, 
+      comoConocio, 
+      conciertoOrigenId, 
+      conciertoOrigenNombre, 
+      consentimientoRGPD, 
+      band_id,
+      mensaje,
+      cancionFavorita,
+      instagram
+    } = req.body;
     const targetBandId = (req.query.band_id as string) || (req.query.band as string) || band_id || BAKANDEYA_BAND_ID;
 
     if (!nombre || !email) {
@@ -299,6 +334,10 @@ router.post("/public/fans", async (req, res) => {
     if (!consentimientoRGPD) {
       return res.status(400).json({ error: "Es obligatorio aceptar la casilla de consentimiento de privacidad RGPD para registrarte." });
     }
+
+    const defaultLevel = conciertoOrigenId || (comoConocio && comoConocio.toLowerCase().includes('concierto'))
+      ? 'superfan'
+      : 'fiel';
 
     const newFan: Fan & { band_id?: string } = {
       id: `fan-${Date.now()}`,
@@ -310,7 +349,12 @@ router.post("/public/fans", async (req, res) => {
       conciertoOrigenId: conciertoOrigenId ? String(conciertoOrigenId).trim() : undefined,
       conciertoOrigenNombre: conciertoOrigenNombre ? String(conciertoOrigenNombre).trim() : undefined,
       fechaCaptura: new Date().toISOString().split("T")[0],
-      consentimientoRGPD: true
+      consentimientoRGPD: true,
+      mensaje: mensaje ? String(mensaje).trim() : undefined,
+      cancionFavorita: cancionFavorita ? String(cancionFavorita).trim() : undefined,
+      instagram: instagram ? String(instagram).trim().replace(/^@/, '') : undefined,
+      nivelFan: defaultLevel,
+      reacciones: { likes: 1, fire: 0, applause: 0, guitars: 0 }
     };
 
     const saved = await dbUpsertFan(newFan, targetBandId);

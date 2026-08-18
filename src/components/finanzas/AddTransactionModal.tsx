@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ThemeColors, Payment } from '../../types';
 import { X, Plus } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -53,11 +54,12 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div
-        id="add-transaction-modal"
-        className="w-full max-w-md rounded-2xl border p-6 shadow-2xl relative"
-        style={{
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fadeIn">
+        <div
+          id="add-transaction-modal"
+          className="w-full max-w-md rounded-2xl border p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto"
+          style={{
           backgroundColor: colors.card,
           borderColor: colors.border,
           color: colors.text,
@@ -212,5 +214,6 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
         </form>
       </div>
     </div>
+    </ModalPortal>
   );
 };

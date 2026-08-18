@@ -4,6 +4,7 @@ import { Lead } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { uploadFileToServer } from '../../utils/audioStorage';
 import { LeadAvatar } from './LeadAvatar';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface ChangeLeadImageModalProps {
   lead: Lead | null;
@@ -126,17 +127,18 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn overflow-y-auto"
-      onClick={(e) => {
-        e.stopPropagation();
-        onClose();
-      }}
-    >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div 
-        className="bg-[#181716] border border-zinc-800 rounded-2xl w-full max-w-md p-5 shadow-2xl relative text-zinc-100 flex flex-col gap-4 animate-scaleUp my-8"
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn overflow-y-auto overscroll-contain"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
       >
+        <div 
+          className="bg-[#181716] border border-zinc-800 rounded-2xl w-full max-w-md p-5 shadow-2xl relative text-zinc-100 flex flex-col gap-4 animate-scaleUp my-auto max-h-[90vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -273,5 +275,6 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

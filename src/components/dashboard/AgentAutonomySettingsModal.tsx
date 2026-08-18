@@ -8,6 +8,7 @@ import {
 import { api } from '../../services/api';
 import { BandSchedule } from '../../types';
 import { initAuth, googleSignIn, logout } from '../../utils/gmail';
+import { ModalPortal } from '../common/ModalPortal';
 
 export type DispatchAutonomyLevel = 'draft_only' | 'scheduled_window' | 'autonomous_first_contact';
 export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'advanced_negotiation';
@@ -388,12 +389,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-hidden">
-      <div className={`border rounded-2xl w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
-        isStitchLight 
-          ? 'bg-white border-slate-200 text-slate-900' 
-          : 'bg-[#181716] border-amber-500/30 text-zinc-100'
-      }`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
+        <div className={`border rounded-2xl w-full max-w-4xl max-h-[88vh] md:max-h-[85vh] overflow-hidden shadow-2xl flex flex-col my-auto animate-in zoom-in-95 duration-200 ${
+          isStitchLight 
+            ? 'bg-white border-slate-200 text-slate-900' 
+            : 'bg-[#181716] border-amber-500/30 text-zinc-100'
+        }`}>
         
         {/* Modal Header */}
         <div className={`p-4 sm:p-5 border-b flex items-center justify-between shrink-0 ${
@@ -1744,5 +1746,6 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
       </div>
     </div>
+    </ModalPortal>
   );
 };

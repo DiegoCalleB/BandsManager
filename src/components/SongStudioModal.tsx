@@ -9,6 +9,7 @@ import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import WaveformTrack from './WaveformTrack';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
+import { ModalPortal } from './common/ModalPortal';
 import { formatSongShareText, formatSongIdeaShareText } from '../utils/shareUtils';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
@@ -1627,10 +1628,11 @@ export default function SongStudioModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col ${
-        isStitchLight ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-[#0f0f15] border-zinc-800 text-zinc-100'
-      }`}>
+    <ModalPortal isOpen={true} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col ${
+          isStitchLight ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-[#0f0f15] border-zinc-800 text-zinc-100'
+        }`}>
         
         {/* Header Bar */}
         <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-white/5">
@@ -3308,5 +3310,6 @@ export default function SongStudioModal({
         itemType={shareModalData.itemType}
       />
     </div>
+    </ModalPortal>
   );
 }

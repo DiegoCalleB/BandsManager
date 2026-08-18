@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lead } from '../../types';
 import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface CRMContactEnricherModalProps {
   isOpen: boolean;
@@ -74,10 +75,11 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className={`relative w-full max-w-lg rounded-2xl shadow-2xl border p-6 overflow-hidden ${
-        isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-neutral-900 border-neutral-800 text-neutral-100'
-      }`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div className={`relative w-full max-w-lg my-auto rounded-2xl shadow-2xl border p-6 overflow-hidden ${
+          isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-neutral-900 border-neutral-800 text-neutral-100'
+        }`}>
         <div className="flex items-center justify-between pb-4 border-b border-neutral-800">
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
@@ -162,5 +164,6 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

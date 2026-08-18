@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Lead, LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
+import { ModalPortal } from '../common/ModalPortal';
 
 export interface PlaceResult {
   place_id: string;
@@ -465,14 +466,15 @@ export function GooglePlacesExplorerModal({
   const emailsFoundCount = places.filter(p => p.email_contacto && p.email_contacto.trim() !== '').length;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md overflow-y-auto pt-2 pb-24 sm:py-6 animate-fadeIn">
-      <div
-        className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-2xl shadow-2xl overflow-hidden border ${
-          isStitchLight
-            ? 'bg-white text-slate-800 border-slate-200'
-            : 'bg-[#18181b] text-[#e5e2e1] border-zinc-800'
-        }`}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-start sm:items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md overflow-y-auto overscroll-contain pt-2 pb-24 sm:py-6 animate-fadeIn">
+        <div
+          className={`w-full max-w-4xl max-h-[92dvh] sm:max-h-[90vh] my-auto flex flex-col rounded-2xl shadow-2xl overflow-hidden border ${
+            isStitchLight
+              ? 'bg-white text-slate-800 border-slate-200'
+              : 'bg-[#18181b] text-[#e5e2e1] border-zinc-800'
+          }`}
+        >
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-zinc-800 flex items-center justify-between shrink-0 bg-zinc-900/60">
           <div className="flex items-center gap-3">
@@ -1029,5 +1031,6 @@ export function GooglePlacesExplorerModal({
         )}
       </div>
     </div>
+    </ModalPortal>
   );
 }

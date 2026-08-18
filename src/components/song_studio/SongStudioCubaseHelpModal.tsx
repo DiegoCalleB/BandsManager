@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Keyboard } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface SongStudioCubaseHelpModalProps {
   onClose: () => void;
@@ -7,8 +8,9 @@ interface SongStudioCubaseHelpModalProps {
 
 export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-[#12111d] border border-purple-500/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-zinc-100 relative">
+    <ModalPortal isOpen={true} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain">
+        <div className="bg-[#12111d] border border-purple-500/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 text-zinc-100 relative my-auto max-h-[90vh] overflow-y-auto">
         <button
           type="button"
           onClick={onClose}
@@ -134,5 +136,6 @@ export const SongStudioCubaseHelpModal: React.FC<SongStudioCubaseHelpModalProps>
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

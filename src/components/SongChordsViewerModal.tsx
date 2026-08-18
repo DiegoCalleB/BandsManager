@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { Song, SongSubstituteGuide } from '../types';
 import { ShareModal } from './ShareModal';
+import { ModalPortal } from './common/ModalPortal';
 import { formatSongShareText } from '../utils/shareUtils';
 import {
   processChordText,
@@ -186,8 +187,9 @@ export function SongChordsViewerModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[90] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4">
-      <div className="bg-neutral-900 border border-neutral-700/80 rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white">
+    <ModalPortal isOpen={true} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
+        <div className="bg-neutral-900 border border-neutral-700/80 rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
         
         {/* MODAL HEADER */}
         <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-purple-950/40 p-4 border-b border-neutral-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
@@ -683,6 +685,7 @@ export function SongChordsViewerModal({
         itemType="song"
       />
     </div>
+    </ModalPortal>
   );
 }
 

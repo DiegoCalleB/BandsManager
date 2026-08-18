@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from 'lucide-react';
 import { User, UserRole } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface UserManagementModalProps {
  currentUser: User;
@@ -249,14 +250,15 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  };
 
  return (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
- <div 
- className={`w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${
- isStitchLight 
- ? 'bg-white -slate-200 text-slate-800' 
- : 'bg-neutral-900 -neutral-800 text-neutral-100'
- }`}
- >
+  <ModalPortal isOpen={true} onClose={onClose}>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain animate-in fade-in duration-300">
+      <div 
+        className={`w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[90vh] ${
+          isStitchLight 
+            ? 'bg-white -slate-200 text-slate-800' 
+            : 'bg-neutral-900 -neutral-800 text-neutral-100'
+        }`}
+      >
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
  isStitchLight ? '-slate-200 bg-slate-50' : '-neutral-800 bg-neutral-950/60'
@@ -694,5 +696,6 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </div>
  </div>
  </div>
+ </ModalPortal>
  );
 };

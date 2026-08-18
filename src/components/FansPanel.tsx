@@ -3,13 +3,14 @@ import {
   Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles, 
   Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
   Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
-  Gift, Tag, Music, Save, CheckCircle2
+  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import * as XLSX from 'xlsx';
 import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ReelsMetricsView } from './reels/ReelsMetricsView';
+import { FansCommunityView } from './fans/FansCommunityView';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -17,6 +18,7 @@ interface FansPanelProps {
   epkConfig: EPKConfig;
   onAddFan: (fan: Fan) => void;
   onDeleteFan: (id: string) => void;
+  onUpdateFan?: (id: string, updates: Partial<Fan>) => void;
   onUpdateIncentive?: (newIncentive: EPKConfig['incentivoFans']) => void;
   onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
   currentBandId?: string;
@@ -42,6 +44,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   epkConfig,
   onAddFan,
   onDeleteFan,
+  onUpdateFan,
   onUpdateIncentive,
   onUpdateEpkConfig,
   currentBandId,
@@ -61,8 +64,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
   const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'fans' | 'qr' | 'metrics'>('dashboard');
-  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
+  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>('metrics');
+  const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>('feed');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOrigen, setFilterOrigen] = useState<string>('');
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
@@ -152,6 +155,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [newEmail, setNewEmail] = useState('');
   const [newCiudad, setNewCiudad] = useState('');
   const [newOrigen, setNewOrigen] = useState('Manual');
+  const [newCancionFavorita, setNewCancionFavorita] = useState('');
+  const [newInstagram, setNewInstagram] = useState('');
+  const [newMensaje, setNewMensaje] = useState('');
+  const [newNivel, setNewNivel] = useState<'fiel' | 'superfan' | 'fundador' | 'backstage'>('fiel');
 
   const filteredFans = useMemo(() => {
     return fans.filter(f => {
@@ -281,12 +288,24 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       email: newEmail.trim(),
       ciudad: newCiudad.trim() || undefined,
       comoConocio: newOrigen,
+      cancionFavorita: newCancionFavorita.trim() || undefined,
+      instagram: newInstagram.trim().replace(/^@/, '') || undefined,
+      mensaje: newMensaje.trim() || undefined,
+      nivelFan: newNivel,
+      reacciones: { likes: 1, fire: 0, applause: 0, guitars: 0 },
       fechaCaptura: new Date().toISOString().split('T')[0],
       consentimientoRGPD: true
     };
     onAddFan(fan);
     setShowAddModal(false);
-    setNewNombre(''); setNewEmail(''); setNewCiudad(''); setNewOrigen('Manual');
+    setNewNombre(''); 
+    setNewEmail(''); 
+    setNewCiudad(''); 
+    setNewOrigen('Manual');
+    setNewCancionFavorita('');
+    setNewInstagram('');
+    setNewMensaje('');
+    setNewNivel('fiel');
   };
 
 
@@ -420,11 +439,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <div>
           <h2 className="text-2xl font-black text-white font-display flex items-center gap-3">
-            <Heart className="w-8 h-8 text-amber-500" />
-            Captura & Fidelización de Fans
+            <TrendingUp className="w-8 h-8 text-amber-500" />
+            Seguidores & Redes
           </h2>
           <p className="text-slate-400 font-mono text-sm mt-1">
-            Captura datos de fans en directos o redes, cumple RGPD y mantén el contacto directo.
+            Métricas de redes sociales y streaming en tiempo real, comunidad de fans interactiva, fidelización y captura en directo.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -452,29 +471,29 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       {/* Tabs */}
       <div className="flex overflow-x-auto border-b border-slate-800 hide-scrollbar gap-1">
         <button
-          onClick={() => setActiveTab('dashboard')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          id="tab-btn-fans-metrics"
+          onClick={() => setActiveTab('metrics')}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'metrics' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <Heart className="w-4 h-4 text-amber-500" /> 1. Dashboard & Analítica
-        </button>
-        <button
-          onClick={() => setActiveTab('fans')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
-        >
-          <Users className="w-4 h-4 text-amber-500" /> 2. Base de Datos & CRM ({fans.length})
+          <TrendingUp className="w-4 h-4 text-amber-500" /> 1. Seguimiento & Métricas de Redes
         </button>
         <button
           onClick={() => setActiveTab('qr')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'qr' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <QrCode className="w-4 h-4 text-amber-500" /> 3. Captura en Vivo & QR
+          <QrCode className="w-4 h-4 text-amber-500" /> 2. Captura en Vivo & QR
         </button>
         <button
-          id="tab-btn-fans-metrics"
-          onClick={() => setActiveTab('metrics')}
-          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'metrics' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+          onClick={() => setActiveTab('dashboard')}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <TrendingUp className="w-4 h-4 text-amber-500" /> 4. Redes Sociales & Streaming
+          <Heart className="w-4 h-4 text-amber-500" /> 3. Dashboard & Analítica
+        </button>
+        <button
+          onClick={() => setActiveTab('fans')}
+          className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+        >
+          <Users className="w-4 h-4 text-amber-500" /> 4. Comunidad & Red Social ({fans.length})
         </button>
       </div>
 
@@ -749,6 +768,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="flex items-center gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800">
                 <button
                   type="button"
+                  onClick={() => setViewMode('feed')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewMode === 'feed' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
+                  }`}
+                  title="Muro Social & Comunidad"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Muro Social</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => setViewMode('grid')}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                     viewMode === 'grid' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'
@@ -767,7 +797,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   title="Vista en Detalles / Tabla"
                 >
                   <List className="w-3.5 h-3.5" />
-                  <span>Detalles</span>
+                  <span>Tabla CRM</span>
                 </button>
                 <button
                   type="button"
@@ -787,6 +817,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </span>
             </div>
           </div>
+
+          {viewMode === 'feed' && (
+            <FansCommunityView
+              fans={filteredFans}
+              concerts={concerts}
+              effectiveBandName={effectiveBandName}
+              effectiveBandLogo={effectiveBandLogo}
+              colors={colors}
+              isStitchLight={isStitchLight}
+              onUpdateFan={onUpdateFan}
+              onDeleteFan={onDeleteFan}
+              onOpenAddModal={() => setShowAddModal(true)}
+              selectedCityFilter={selectedCityFilter}
+            />
+          )}
 
           {viewMode === 'grid' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1270,45 +1315,131 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             onSyncMetrics={onSyncMetrics}
             isScanningMetrics={isScanningMetrics}
             isSyncingMetrics={isSyncingMetrics}
+            fans={fans}
           />
         </div>
       )}
 
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
-            <h3 className="text-lg font-black text-white font-display uppercase tracking-widest border-b border-slate-800 pb-3">Añadir Fan Manual</h3>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="text-lg font-black text-white font-display uppercase tracking-widest flex items-center gap-2">
+                <Users className="w-5 h-5 text-amber-500" />
+                Registrar Fan / Seguidor Manual
+              </h3>
+              <button 
+                type="button" 
+                onClick={() => setShowAddModal(false)}
+                className="text-slate-400 hover:text-white p-1"
+              >
+                ✕
+              </button>
+            </div>
             <form onSubmit={handleManualAddSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nombre *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Nombre completo o alias"
+                    value={newNombre}
+                    onChange={e => setNewNombre(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Email *</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="email@ejemplo.com"
+                    value={newEmail}
+                    onChange={e => setNewEmail(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Ciudad</label>
+                  <input
+                    type="text"
+                    placeholder="Ej: Madrid, Sevilla..."
+                    value={newCiudad}
+                    onChange={e => setNewCiudad(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Origen / Canal</label>
+                  <select
+                    value={newOrigen}
+                    onChange={e => setNewOrigen(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  >
+                    <option value="Manual">Registro Manual</option>
+                    <option value="Concierto Directo">Concierto / Directo</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="TikTok">TikTok</option>
+                    <option value="Spotify">Spotify / Streaming</option>
+                    <option value="Web Oficial">Web Oficial / QR</option>
+                    <option value="Recomendación">Recomendación / Amigo</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nivel Fan</label>
+                  <select
+                    value={newNivel}
+                    onChange={e => setNewNivel(e.target.value as any)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  >
+                    <option value="fiel">🎵 Oyente Fiel</option>
+                    <option value="superfan">🔥 Superfan Directos</option>
+                    <option value="fundador">🌟 Fan Fundador</option>
+                    <option value="backstage">🎸 Backstage VIP</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Instagram (Opcional)</label>
+                  <input
+                    type="text"
+                    placeholder="@usuario"
+                    value={newInstagram}
+                    onChange={e => setNewInstagram(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Nombre *</label>
+                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Canción Favorita (Opcional)</label>
                 <input
                   type="text"
-                  required
-                  value={newNombre}
-                  onChange={e => setNewNombre(e.target.value)}
+                  placeholder="Ej: La Noche Entera, Balada..."
+                  value={newCancionFavorita}
+                  onChange={e => setNewCancionFavorita(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
                 />
               </div>
+
               <div>
-                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Email *</label>
-                <input
-                  type="email"
-                  required
-                  value={newEmail}
-                  onChange={e => setNewEmail(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
+                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Mensaje / Dedicatoria para el Muro (Opcional)</label>
+                <textarea
+                  rows={2}
+                  placeholder="Dedicatoria o saludo que aparecerá en el muro de la comunidad..."
+                  value={newMensaje}
+                  onChange={e => setNewMensaje(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-sans resize-none"
                 />
               </div>
-              <div>
-                <label className="text-[10px] font-bold text-amber-500 uppercase font-mono tracking-widest mb-1.5 block">Ciudad</label>
-                <input
-                  type="text"
-                  value={newCiudad}
-                  onChange={e => setNewCiudad(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
-                />
-              </div>
-              <div className="pt-2 flex justify-end gap-3">
+
+              <div className="pt-2 flex justify-end gap-3 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
@@ -1318,9 +1449,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-amber-500 text-slate-950 font-mono text-xs font-black uppercase tracking-widest rounded-xl shadow-lg transition hover:bg-amber-400 cursor-pointer"
+                  className="px-5 py-2.5 bg-amber-500 text-slate-950 font-mono text-xs font-black uppercase tracking-widest rounded-xl shadow-lg transition hover:bg-amber-400 cursor-pointer flex items-center gap-1.5"
                 >
-                  Guardar
+                  <Plus className="w-4 h-4" /> Guardar Fan
                 </button>
               </div>
             </form>

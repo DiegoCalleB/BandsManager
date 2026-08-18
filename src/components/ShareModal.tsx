@@ -8,9 +8,10 @@ import {
   shareViaWhatsApp, 
   shareViaWebShare, 
   copyToClipboard, 
-  shareViaEmail,
+  shareViaEmail, 
   SharePayload 
 } from '../utils/shareUtils';
+import { ModalPortal } from './common/ModalPortal';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -87,11 +88,12 @@ export function ShareModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4 animate-fadeIn">
-      <div 
-        className="w-full max-w-xl rounded-2xl bg-[#141820] border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-white"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto overscroll-contain animate-fadeIn">
+        <div 
+          className="w-full max-w-xl rounded-2xl bg-[#141820] border border-white/10 shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh] text-white"
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-white/[0.02]">
           <div className="flex items-center gap-3">
@@ -234,5 +236,6 @@ export function ShareModal({
 
       </div>
     </div>
+    </ModalPortal>
   );
 }

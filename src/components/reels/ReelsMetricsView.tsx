@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ThemeColors, SocialMetric, SocialContentItem, EPKConfig } from '../../types';
+import { ThemeColors, SocialMetric, SocialContentItem, EPKConfig, Fan } from '../../types';
 import { 
   TrendingUp, Instagram, Youtube, Video, Plus, Table, Edit, Trash2, ChevronRight, RefreshCw, Radio, Music2, Eye, EyeOff, ThumbsUp, Layers, CheckCircle2, Globe, BarChart3, ArrowUpRight,
-  ShieldCheck, Key, ExternalLink, AlertCircle, X, Unlink, Sparkles, Check, Camera, UploadCloud, ScanLine, FileText, SlidersHorizontal, Compass, Target, Calendar
+  ShieldCheck, Key, ExternalLink, AlertCircle, X, Unlink, Sparkles, Check, Camera, UploadCloud, ScanLine, FileText, SlidersHorizontal, Compass, Target, Calendar, Heart
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { api } from '../../services/api';
@@ -22,6 +22,7 @@ interface ReelsMetricsViewProps {
   onSyncMetrics?: () => Promise<void>;
   isScanningMetrics?: boolean;
   isSyncingMetrics?: boolean;
+  fans?: Fan[];
 }
 
 export function ReelsMetricsView({
@@ -36,7 +37,8 @@ export function ReelsMetricsView({
   onScanRealMetrics,
   onSyncMetrics,
   isScanningMetrics = false,
-  isSyncingMetrics = false
+  isSyncingMetrics = false,
+  fans = []
 }: ReelsMetricsViewProps) {
   const [metricDate, setMetricDate] = useState(new Date().toISOString().split('T')[0]);
   
@@ -355,6 +357,12 @@ export function ReelsMetricsView({
     }
   };
 
+  const fansTotalCount = fans.length;
+  const uneteFansCount = fans.filter(f => {
+    const src = (f.comoConocio || '').toLowerCase();
+    return src.includes('unete') || src.includes('únete') || src.includes('web') || src.includes('formulario') || src.includes('landing') || !src;
+  }).length;
+
   const sortedMetrics = React.useMemo(() => {
     if (!metrics || metrics.length === 0) return [];
     const mapByDate = new Map<string, SocialMetric>();
@@ -365,6 +373,7 @@ export function ReelsMetricsView({
       const tk = Number(m.tiktok ?? m.tiktok_followers ?? 0);
       const yt = Number(m.youtube ?? m.youtube_subscribers ?? 0);
       const sp = Number(m.spotify ?? m.spotify_monthly_listeners ?? 0);
+      const fn = Number((m as any).fans ?? fansTotalCount);
       
       const existing = mapByDate.get(m.fecha);
       if (!existing) {
@@ -374,11 +383,12 @@ export function ReelsMetricsView({
           tiktok: tk,
           youtube: yt,
           spotify: sp,
+          fans: fn,
           instagram_followers: Number(m.instagram_followers || ig),
           tiktok_followers: Number(m.tiktok_followers || tk),
           youtube_subscribers: Number(m.youtube_subscribers || yt),
           spotify_monthly_listeners: Number(m.spotify_monthly_listeners || sp)
-        });
+        } as any);
       } else {
         mapByDate.set(m.fecha, {
           ...existing,
@@ -387,15 +397,16 @@ export function ReelsMetricsView({
           tiktok: Math.max(Number(existing.tiktok || 0), tk),
           youtube: Math.max(Number(existing.youtube || 0), yt),
           spotify: Math.max(Number(existing.spotify || 0), sp),
+          fans: Math.max(Number((existing as any).fans || 0), fn),
           instagram_followers: Math.max(Number(existing.instagram_followers || 0), Number(m.instagram_followers || ig)),
           tiktok_followers: Math.max(Number(existing.tiktok_followers || 0), Number(m.tiktok_followers || tk)),
           youtube_subscribers: Math.max(Number(existing.youtube_subscribers || 0), Number(m.youtube_subscribers || yt)),
           spotify_monthly_listeners: Math.max(Number(existing.spotify_monthly_listeners || 0), Number(m.spotify_monthly_listeners || sp))
-        });
+        } as any);
       }
     }
     return Array.from(mapByDate.values()).sort((a, b) => a.fecha.localeCompare(b.fecha));
-  }, [metrics]);
+  }, [metrics, fansTotalCount]);
 
   const latestMetric = sortedMetrics[sortedMetrics.length - 1];
   const oldestMetric = sortedMetrics[0];
@@ -425,32 +436,37 @@ export function ReelsMetricsView({
     metrics.some(m => (m.spotify_monthly_listeners && m.spotify_monthly_listeners > 0) || (m.spotify && m.spotify > 0))
   );
 
+  const hasFans = Boolean(fansTotalCount > 0 || fans.length > 0);
+
   // User selected channels to display and rescale the chart
   const [selectedChannels, setSelectedChannels] = useState<{
     instagram: boolean;
     tiktok: boolean;
     youtube: boolean;
     spotify: boolean;
+    fans: boolean;
   }>({
     instagram: true,
     tiktok: true,
     youtube: true,
     spotify: true,
+    fans: true,
   });
 
-  const toggleChannel = (channel: 'instagram' | 'tiktok' | 'youtube' | 'spotify') => {
+  const toggleChannel = (channel: 'instagram' | 'tiktok' | 'youtube' | 'spotify' | 'fans') => {
     setSelectedChannels(prev => ({
       ...prev,
       [channel]: !prev[channel]
     }));
   };
 
-  const selectOnlyChannel = (channel: 'instagram' | 'tiktok' | 'youtube' | 'spotify') => {
+  const selectOnlyChannel = (channel: 'instagram' | 'tiktok' | 'youtube' | 'spotify' | 'fans') => {
     setSelectedChannels({
       instagram: channel === 'instagram',
       tiktok: channel === 'tiktok',
       youtube: channel === 'youtube',
       spotify: channel === 'spotify',
+      fans: channel === 'fans',
     });
   };
 
@@ -460,6 +476,7 @@ export function ReelsMetricsView({
       tiktok: true,
       youtube: true,
       spotify: true,
+      fans: true,
     });
   };
 
@@ -479,9 +496,12 @@ export function ReelsMetricsView({
       if (selectedChannels.spotify && hasSpotify) {
         max = Math.max(max, Number(m.spotify || m.spotify_monthly_listeners || 0));
       }
+      if (selectedChannels.fans && hasFans) {
+        max = Math.max(max, Number((m as any).fans || fansTotalCount));
+      }
     }
     return max;
-  }, [sortedMetrics, selectedChannels, hasInstagram, hasTikTok, hasYouTube, hasSpotify]);
+  }, [sortedMetrics, selectedChannels, hasInstagram, hasTikTok, hasYouTube, hasSpotify, hasFans, fansTotalCount]);
 
   const yAxisDomain = React.useMemo(() => {
     if (maxVisibleValue <= 0) return [0, 10];
@@ -491,8 +511,8 @@ export function ReelsMetricsView({
     return [0, Math.ceil(maxVisibleValue * 1.1)];
   }, [maxVisibleValue]);
 
-  const activeCount = [hasInstagram, hasTikTok, hasYouTube, hasSpotify].filter(Boolean).length;
-  const gridColsClass = activeCount === 1 ? 'grid-cols-1' : activeCount === 2 ? 'grid-cols-1 sm:grid-cols-2' : activeCount === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+  const activeCount = [hasInstagram, hasTikTok, hasYouTube, hasSpotify, hasFans].filter(Boolean).length;
+  const gridColsClass = activeCount === 1 ? 'grid-cols-1' : activeCount === 2 ? 'grid-cols-1 sm:grid-cols-2' : activeCount === 3 ? 'grid-cols-1 sm:grid-cols-3' : activeCount === 4 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5';
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -820,6 +840,32 @@ export function ReelsMetricsView({
                   ? `${(((latestMetric.spotify_monthly_listeners || latestMetric.spotify || 0) / latestMetric.spotify_followers)).toFixed(1)}x`
                   : '--'}
               </b></span>
+            </div>
+          </div>
+        )}
+
+        {/* Fans Registrados (BBDD / Formulario Únete) Card */}
+        {hasFans && (
+          <div className={`p-4 rounded-xl border flex flex-col justify-between space-y-3 ${
+            isStitchLight ? 'bg-amber-50/50 border-amber-200 shadow-sm' : 'bg-neutral-900/40 border-amber-900/30'
+          }`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1.5">
+                <Heart className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" /> Fans Registrados
+              </span>
+              <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                100% RGPD
+              </span>
+            </div>
+            <div>
+              <div className="text-2xl font-black font-display tracking-tight text-amber-400">
+                {fansTotalCount.toLocaleString()}
+              </div>
+              <div className="text-[9px] font-mono text-neutral-400 mt-0.5">Contactos en Base de Datos</div>
+            </div>
+            <div className="pt-2 border-t border-amber-500/10 flex justify-between text-[9px] font-mono text-neutral-400">
+              <span>Formulario Únete: <b className="text-amber-300">{uneteFansCount}</b></span>
+              <span>Ciudades: <b className="text-white">{new Set(fans.map(f => f.ciudad).filter(Boolean)).size}</b></span>
             </div>
           </div>
         )}

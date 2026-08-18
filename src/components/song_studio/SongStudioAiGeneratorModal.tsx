@@ -1,5 +1,6 @@
 import React from 'react';
 import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface SongStudioAiGeneratorModalProps {
   showGenModalForIdea: string | null;
@@ -41,8 +42,9 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
   if (!showGenModalForIdea) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg rounded-2xl border border-purple-500/40 bg-zinc-950 p-6 space-y-5 text-white shadow-2xl">
+    <ModalPortal isOpen={!!showGenModalForIdea} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        <div className="w-full max-w-lg rounded-2xl border border-purple-500/40 bg-zinc-950 p-6 space-y-5 text-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-purple-600/30 text-purple-400 border border-purple-500/40 flex items-center justify-center">
@@ -201,5 +203,6 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };

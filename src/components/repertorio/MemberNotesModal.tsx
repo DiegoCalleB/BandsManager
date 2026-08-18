@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Users, Save, Plus, Music, Sparkles, Check } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { ModalPortal } from '../common/ModalPortal';
 
 interface MemberNotesModalProps {
   isOpen: boolean;
@@ -104,10 +105,11 @@ export function MemberNotesModal({
   const allMembersToDisplay = [...resolvedMembers, ...customMembers];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
-      <div className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
-        isStitchLight ? 'bg-white border-slate-200' : 'bg-[#121111] border-neutral-800'
-      }`}>
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
+        <div className={`w-full max-w-2xl p-5 rounded-2xl shadow-2xl my-auto max-h-[90vh] flex flex-col overflow-hidden border ${
+          isStitchLight ? 'bg-white border-slate-200' : 'bg-[#121111] border-neutral-800'
+        }`}>
         {/* Header */}
         <div className="flex justify-between items-center pb-3 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2.5">
@@ -312,5 +314,6 @@ export function MemberNotesModal({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 }

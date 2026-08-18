@@ -3,6 +3,7 @@ import { ShieldCheck, Sparkles, X, Lock, Check, ExternalLink, ArrowRight } from 
 import { PlanDefinition, getPlanDefinition, normalizePlan, getPlanLimits } from '../utils/planPermissions';
 import { CheckoutButton } from './CheckoutButton';
 import { User } from '../types';
+import { ModalPortal } from './common/ModalPortal';
 
 interface PlanLimitModalProps {
   isOpen: boolean;
@@ -42,8 +43,9 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
   const targetPlanDef = getPlanDefinition(info.suggestedPlan);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-lg rounded-3xl bg-[#141312] border border-[#333130] p-6 sm:p-8 shadow-2xl space-y-6 text-zinc-100 font-sans">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain animate-fade-in">
+        <div className="relative w-full max-w-lg rounded-3xl bg-[#141312] border border-[#333130] p-6 sm:p-8 shadow-2xl space-y-6 text-zinc-100 font-sans my-auto max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -143,5 +145,6 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
         </div>
       </div>
     </div>
+    </ModalPortal>
   );
 };
