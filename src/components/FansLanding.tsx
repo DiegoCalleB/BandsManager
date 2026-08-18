@@ -347,9 +347,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           )}
           <div className="space-y-1">
             <h1 className="text-3xl font-black text-white font-display uppercase tracking-widest drop-shadow-md">
-              Únete a {bandName}!
+              Únete a {bandName}
             </h1>
-            <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">Oficial Fan Club</p>
+            <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">Canal Oficial</p>
           </div>
           <p className="text-neutral-400 text-xs font-mono leading-relaxed pt-2">
             {isConcertLink ? (
@@ -419,7 +419,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           </div>
         )}
 
-        {/* Tab 2: Formulario Fan Club */}
+        {/* Tab 2: Formulario de Registro */}
         {activeTab === 'form' && (
           <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in">
             {error && (
@@ -500,7 +500,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Mensaje o saludo para el Muro del Fan Club (Opcional)</label>
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Mensaje o saludo para la banda (Opcional)</label>
               <textarea 
                 rows={2}
                 value={formData.mensaje}
@@ -539,7 +539,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   Registrando...
                 </>
               ) : (
-                'Unirme al Fan Club'
+                `Únete a ${bandName}`
               )}
             </button>
 
@@ -670,7 +670,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
             
             <div className="text-xs text-neutral-300 font-mono space-y-3 leading-relaxed">
-              <p><strong className="text-white">1. Responsable del tratamiento:</strong> {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu alta en nuestro club de fans ("{bandName}") e informarte sobre próximos conciertos, lanzamientos y novedades musicales.</p>
+              <p><strong className="text-white">1. Responsable del tratamiento:</strong> {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.</p>
               
               <p><strong className="text-white">2. Legitimación:</strong> El tratamiento de tus datos se basa en tu <span className="text-amber-400">consentimiento explícito</span> al marcar la casilla de aceptación y enviar el formulario.</p>
               
