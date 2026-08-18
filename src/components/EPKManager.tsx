@@ -20,40 +20,49 @@ interface EPKManagerProps {
 }
 
 const DEFAULT_EPK_CONFIG: EPKConfig = {
-  biografia: 'Propuesta musical en directo.',
-  logoUrl: '',
+  biografia: 'Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
+  logoUrl: '/logo_bakandeya.jpg',
   dossierPdfUrl: '',
   dossierPdfName: '',
   dossierTextoExtra: '',
-  bandPhotos: [],
-  temasDestacadosIds: [],
+  bandPhotos: ['/logo_bakandeya.jpg'],
+  temasDestacadosIds: ['s-1', 's-2', 's-3'],
   contactoBooking: {
-    nombre: 'Booking & Management',
-    email: '',
-    telefono: ''
+    nombre: 'Diego de la Calle / Mánager Bakandeya',
+    email: 'diego.delacalleb@gmail.com',
+    telefono: '+34 612 345 678'
   },
-  riderTecnico: 'Rider técnico por definir.',
+  riderTecnico: '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para sección de metales (2 x SM57 / clip condenser)\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
   enlacesRedes: {
-    spotify: '',
-    youtube: '',
-    instagram: '',
-    tiktok: '',
-    appleMusic: '',
-    bandcamp: '',
-    website: '',
-    whatsapp: '',
-    facebook: '',
-    twitter: ''
+    spotify: 'https://open.spotify.com/artist/bakandeya',
+    youtube: 'https://youtube.com/@bakandeya_oficial',
+    instagram: 'https://instagram.com/bakandeya_oficial',
+    tiktok: 'https://tiktok.com/@bakandeya_oficial',
+    appleMusic: 'https://music.apple.com/artist/bakandeya',
+    bandcamp: 'https://bakandeya.bandcamp.com',
+    website: 'https://bands-manager.up.railway.app',
+    whatsapp: '+34612345678',
+    facebook: 'https://facebook.com/bakandeyaoficial',
+    twitter: 'https://x.com/bakandeya_band'
   },
   firmaEmail: {
-    nombreRemitente: 'Booking & Management Team',
-    cargo: 'Booking & Management',
-    telefono: '',
-    email: '',
-    textoPie: 'Directo en vivo',
+    nombreRemitente: 'Diego de la Calle',
+    cargo: 'Booking & Management | Bakandeya',
+    telefono: '+34 612 345 678',
+    email: 'diego.delacalleb@gmail.com',
+    textoPie: 'Bakandeya — Música en directo, mestizaje y ska-rock',
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
-    redesSociales: {}
+    redesSociales: {
+      spotify: 'https://open.spotify.com/artist/bakandeya',
+      youtube: 'https://youtube.com/@bakandeya_oficial',
+      instagram: 'https://instagram.com/bakandeya_oficial',
+      tiktok: 'https://tiktok.com/@bakandeya_oficial',
+      appleMusic: 'https://music.apple.com/artist/bakandeya',
+      bandcamp: 'https://bakandeya.bandcamp.com',
+      website: 'https://bands-manager.up.railway.app',
+      whatsapp: '+34612345678'
+    }
   }
 };
 
@@ -106,19 +115,32 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         ...(epkConfig.firmaEmail?.redesSociales || {}),
         ...(epkConfig.enlacesRedes || {})
       };
+      const mergedContacto = {
+        ...DEFAULT_EPK_CONFIG.contactoBooking,
+        ...(epkConfig.contactoBooking || {})
+      };
+      const mergedFirma = {
+        ...DEFAULT_EPK_CONFIG.firmaEmail,
+        ...(epkConfig.firmaEmail || {}),
+        redesSociales: mergedRedes
+      };
+      if (!mergedFirma.telefono && mergedContacto.telefono) {
+        mergedFirma.telefono = mergedContacto.telefono;
+      }
+      if (!mergedFirma.email && mergedContacto.email) {
+        mergedFirma.email = mergedContacto.email;
+      }
+
       setConfig(prev => ({
         ...prev,
         ...epkConfig,
+        logoUrl: epkConfig.logoUrl || prev.logoUrl || (isBakandeya ? '/logo_bakandeya.jpg' : ''),
+        contactoBooking: mergedContacto,
         enlacesRedes: mergedRedes,
-        firmaEmail: {
-          ...DEFAULT_EPK_CONFIG.firmaEmail,
-          ...prev.firmaEmail,
-          ...(epkConfig.firmaEmail || {}),
-          redesSociales: mergedRedes
-        }
+        firmaEmail: mergedFirma
       }));
     }
-  }, [epkConfig]);
+  }, [epkConfig, isBakandeya]);
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [copiedPublicUrl, setCopiedPublicUrl] = useState(false);

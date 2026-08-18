@@ -48,7 +48,12 @@ const DEFAULT_EPK_CONFIG = {
     youtube: "https://youtube.com/@bakandeya_oficial",
     instagram: "https://instagram.com/bakandeya_oficial",
     tiktok: "https://tiktok.com/@bakandeya_oficial",
-    website: "https://bands-manager.up.railway.app"
+    appleMusic: "https://music.apple.com/artist/bakandeya",
+    bandcamp: "https://bakandeya.bandcamp.com",
+    website: "https://bands-manager.up.railway.app",
+    whatsapp: "+34612345678",
+    facebook: "https://facebook.com/bakandeyaoficial",
+    twitter: "https://x.com/bakandeya_band"
   },
   contactoBooking: {
     nombre: "Diego de la Calle / Mánager Bakandeya",
@@ -61,7 +66,26 @@ const DEFAULT_EPK_CONFIG = {
     enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
     codigoDescuento: "BAKANDEYA-FAN-10"
   },
-  ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"]
+  ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"],
+  firmaEmail: {
+    nombreRemitente: "Diego de la Calle",
+    cargo: "Booking & Management | Bakandeya",
+    telefono: "+34 612 345 678",
+    email: "diego.delacalleb@gmail.com",
+    textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+    incluirIconosRedes: true,
+    adjuntarDossierPorDefecto: true,
+    redesSociales: {
+      spotify: "https://open.spotify.com/artist/bakandeya",
+      youtube: "https://youtube.com/@bakandeya_oficial",
+      instagram: "https://instagram.com/bakandeya_oficial",
+      tiktok: "https://tiktok.com/@bakandeya_oficial",
+      appleMusic: "https://music.apple.com/artist/bakandeya",
+      bandcamp: "https://bakandeya.bandcamp.com",
+      website: "https://bands-manager.up.railway.app",
+      whatsapp: "+34612345678"
+    }
+  }
 };
 
 export const DEFAULT_AUTONOMY_CONFIG = {
@@ -635,13 +659,26 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
   if (!existing) {
     if (cleanId === 'bakandeya') {
       existing = state.epkConfig || DEFAULT_EPK_CONFIG;
+      // Ensure complete default networks, signature and contact if missing in existing object
+      existing.enlacesRedes = { ...DEFAULT_EPK_CONFIG.enlacesRedes, ...(existing.enlacesRedes || {}) };
+      existing.contactoBooking = { ...DEFAULT_EPK_CONFIG.contactoBooking, ...(existing.contactoBooking || {}) };
+      existing.firmaEmail = { ...DEFAULT_EPK_CONFIG.firmaEmail, ...(existing.firmaEmail || {}) };
+      if (!existing.firmaEmail.telefono) existing.firmaEmail.telefono = DEFAULT_EPK_CONFIG.contactoBooking.telefono;
+      if (!existing.firmaEmail.email) existing.firmaEmail.email = DEFAULT_EPK_CONFIG.contactoBooking.email;
     } else {
       existing = getDefaultEpkConfig(bandName, email);
     }
+  } else if (cleanId === 'bakandeya') {
+    // Fill in any empty fields in existing bakandeya config
+    existing.enlacesRedes = { ...DEFAULT_EPK_CONFIG.enlacesRedes, ...(existing.enlacesRedes || {}) };
+    existing.contactoBooking = { ...DEFAULT_EPK_CONFIG.contactoBooking, ...(existing.contactoBooking || {}) };
+    existing.firmaEmail = { ...DEFAULT_EPK_CONFIG.firmaEmail, ...(existing.firmaEmail || {}) };
+    if (!existing.firmaEmail.telefono) existing.firmaEmail.telefono = DEFAULT_EPK_CONFIG.contactoBooking.telefono;
+    if (!existing.firmaEmail.email) existing.firmaEmail.email = DEFAULT_EPK_CONFIG.contactoBooking.email;
   }
 
   // Ensure logoUrl fallback if missing or empty
-  if (!existing.logoUrl || existing.logoUrl.trim() === '') {
+  if (!existing.logoUrl || existing.logoUrl.trim() === '' || existing.logoUrl.includes('sin_fondo')) {
     const regBand = (state.registeredBands || []).find((b: any) =>
       b.band_id === bandId || b.id === bandId ||
       (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanId) ||
@@ -652,7 +689,7 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
     } else if (regBand?.imagen_url && regBand.imagen_url.trim().length > 0) {
       existing.logoUrl = regBand.imagen_url;
     } else if (cleanId === 'bakandeya') {
-      existing.logoUrl = '/logo_bakandeya_bueno_sin_fondo.png';
+      existing.logoUrl = '/logo_bakandeya.jpg';
     }
   }
 
