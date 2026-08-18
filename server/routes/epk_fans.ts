@@ -200,20 +200,49 @@ router.get("/public/epk", async (req, res) => {
     const today = new Date().toISOString().split("T")[0];
     const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
 
+    // Default official links for Bakandeya fallback
+    const BAKANDEYA_DEFAULT_SOCIALS = {
+      instagram: "https://instagram.com/bakandeya_oficial",
+      spotify: "https://open.spotify.com/artist/bakandeya",
+      youtube: "https://youtube.com/@bakandeya_oficial",
+      tiktok: "https://tiktok.com/@bakandeya_oficial",
+      website: "https://bands-manager.up.railway.app"
+    };
+
     // Filter out bakandeya default logo if this is not bakandeya
     let logoUrl = epkConfig?.logoUrl || regBand?.logo_url || regBand?.imagen_url || null;
     if (logoUrl && String(logoUrl).includes('bakandeya') && cleanBandId !== 'bakandeya') {
       logoUrl = null;
+    } else if (!logoUrl && cleanBandId === 'bakandeya') {
+      logoUrl = '/logo_bakandeya.jpg';
+    }
+
+    // Ensure social links are present
+    let enlacesRedes = epkConfig?.enlacesRedes || {};
+    if (cleanBandId === 'bakandeya') {
+      enlacesRedes = {
+        ...BAKANDEYA_DEFAULT_SOCIALS,
+        ...(enlacesRedes || {})
+      };
+    } else if (regBand) {
+      if (regBand.instagram && !enlacesRedes.instagram) enlacesRedes.instagram = regBand.instagram.startsWith('http') ? regBand.instagram : `https://instagram.com/${regBand.instagram.replace(/^@/, '')}`;
+      if (regBand.spotify_youtube && !enlacesRedes.spotify && !enlacesRedes.youtube) {
+        if (regBand.spotify_youtube.includes('spotify')) enlacesRedes.spotify = regBand.spotify_youtube;
+        else if (regBand.spotify_youtube.includes('youtube')) enlacesRedes.youtube = regBand.spotify_youtube;
+      }
     }
 
     const cleanEpkConfig = {
       ...epkConfig,
       logoUrl,
+      enlacesRedes,
       contactoBooking: {
         ...(epkConfig?.contactoBooking || {}),
         nombre: (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) 
           ? epkConfig.contactoBooking.nombre 
-          : (cleanBandId === 'bakandeya' ? 'Bakandeya' : bandName)
+          : (cleanBandId === 'bakandeya' ? 'Diego de la Calle / Mánager Bakandeya' : bandName),
+        email: epkConfig?.contactoBooking?.email || (cleanBandId === 'bakandeya' ? 'diego.delacalleb@gmail.com' : (regBand?.email || '')),
+        telefono: epkConfig?.contactoBooking?.telefono || (cleanBandId === 'bakandeya' ? '+34 612 345 678' : (regBand?.telefono || ''))
       }
     };
 

@@ -33,15 +33,27 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [isConcertLink, setIsConcertLink] = useState(false);
   
+  const DEFAULT_BAKANDEYA_SOCIALS: SocialLinks = {
+    instagram: "https://instagram.com/bakandeya_oficial",
+    spotify: "https://open.spotify.com/artist/bakandeya",
+    youtube: "https://youtube.com/@bakandeya_oficial",
+    tiktok: "https://tiktok.com/@bakandeya_oficial",
+    website: "https://bands-manager.up.railway.app"
+  };
+
   const [resolvedBandId, setResolvedBandId] = useState<string>('band-bakandeya');
-  const [bandName, setBandName] = useState<string>('Banda');
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(undefined);
+  const [bandName, setBandName] = useState<string>('Bakandeya');
+  const [logoUrl, setLogoUrl] = useState<string | null>('/logo_bakandeya.jpg');
+  const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(DEFAULT_BAKANDEYA_SOCIALS);
   const [contactoBooking, setContactoBooking] = useState<{
     nombre?: string;
     email?: string;
     telefono?: string;
-  } | null>(null);
+  } | null>({
+    nombre: 'Diego de la Calle / Mánager Bakandeya',
+    email: 'diego.delacalleb@gmail.com',
+    telefono: '+34 612 345 678'
+  });
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -73,33 +85,31 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     setResolvedBandId(targetBandId);
 
     // Initial fallback name & logo
-    if (queryBand) {
-      const formatted = cleanId === 'bakandeya' ? 'Bakandeya' : cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    if (cleanId === 'bakandeya') {
+      setBandName('Bakandeya');
+      setLogoUrl('/logo_bakandeya.jpg');
+      setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
+      setContactoBooking({
+        nombre: 'Diego de la Calle / Mánager Bakandeya',
+        email: 'diego.delacalleb@gmail.com',
+        telefono: '+34 612 345 678'
+      });
+    } else if (queryBand) {
+      const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       setBandName(formatted);
       setLogoUrl(null);
-    } else if (initialBandName && (cleanId === 'bakandeya' || !initialBandName.toLowerCase().includes('bakandeya'))) {
+      setSocialLinks(undefined);
+      setContactoBooking(null);
+    } else if (initialBandName && !initialBandName.toLowerCase().includes('bakandeya')) {
       setBandName(initialBandName);
       if (initialBandLogo) setLogoUrl(initialBandLogo);
     } else if (storedBandName && cleanId !== 'bakandeya') {
       setBandName(storedBandName);
       if (storedBandLogo) setLogoUrl(storedBandLogo);
     } else {
-      const formatted = cleanId === 'bakandeya' ? 'Bakandeya' : cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       setBandName(formatted);
-      if (cleanId === 'bakandeya') {
-        setLogoUrl('/logo_bakandeya_bueno_sin_fondo.png');
-      } else {
-        setLogoUrl(null);
-      }
-    }
-
-    // Default booking fallback for Bakandeya if needed
-    if (cleanId === 'bakandeya') {
-      setContactoBooking({
-        nombre: 'Diego de la Calle / Mánager Bakandeya',
-        email: 'diego.delacalleb@gmail.com',
-        telefono: '+34 612 345 678'
-      });
+      setLogoUrl(null);
     }
 
     // 2. Fetch public EPK details for this specific band
@@ -111,12 +121,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           if (data.logoUrl || data.epkConfig?.logoUrl) {
             setLogoUrl(data.logoUrl || data.epkConfig.logoUrl);
             setImgError(false);
-          } else if (cleanId !== 'bakandeya') {
+          } else if (cleanId === 'bakandeya') {
+            setLogoUrl('/logo_bakandeya.jpg');
+            setImgError(false);
+          } else {
             setLogoUrl(null);
           }
-          if (data.epkConfig?.enlacesRedes) {
+          
+          if (data.epkConfig?.enlacesRedes && Object.keys(data.epkConfig.enlacesRedes).length > 0) {
             setSocialLinks(data.epkConfig.enlacesRedes);
+          } else if (cleanId === 'bakandeya') {
+            setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
           }
+
           if (data.epkConfig?.contactoBooking) {
             setContactoBooking(data.epkConfig.contactoBooking);
           }
