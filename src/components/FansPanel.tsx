@@ -340,7 +340,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     ? (cleanPrefix ? `/${cleanPrefix}/${cleanSlugVal}` : `/${cleanSlugVal}`)
     : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
 
-  const bandQueryParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(currentBandId || cleanBandId)}` : '';
+  const bandQueryParam = currentBandId ? `?band=${encodeURIComponent(currentBandId)}` : (cleanBandId ? `?band=${encodeURIComponent(cleanBandId)}` : '');
   const qrConcertUrl = `${rawDomain}${pathFormatted}${bandQueryParam}`;
 
   const copyLink = () => {

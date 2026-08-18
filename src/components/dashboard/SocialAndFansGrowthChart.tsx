@@ -14,6 +14,7 @@ interface SocialAndFansGrowthChartProps {
   colors?: ThemeColors;
   isStitchLight?: boolean;
   bandName?: string;
+  bandId?: string;
   onNavigate?: (view: any, options?: any) => void;
 }
 
@@ -24,6 +25,7 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
   colors,
   isStitchLight = false,
   bandName = 'Bakandeya',
+  bandId,
   onNavigate
 }) => {
   // Detection of configured / active networks (only display networks that have a profile entered or metrics registered)
@@ -808,7 +810,9 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
           </span>
           <span>•</span>
           <span className="text-neutral-400">
-            Landing pública: <a href="/unete" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-0.5">/unete <ExternalLink className="w-2.5 h-2.5" /></a>
+            Landing pública: <a href={bandId ? `/unete?band=${encodeURIComponent(bandId)}` : '/unete'} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-0.5">
+              {bandId ? `/unete?band=${bandId.replace(/^(band|reg)-/, '')}` : '/unete'} <ExternalLink className="w-2.5 h-2.5" />
+            </a>
           </span>
         </div>
 
