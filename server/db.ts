@@ -1683,17 +1683,65 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     messages: [],
     runOfShow,
     gearChecklists,
-    epkConfig: epkConfig || {
+    epkConfig: epkConfig || (cleanId === 'bakandeya' ? {
+      biografia: "Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos con sección de metales potente y letras combativas pero festivas. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
+      logoUrl: "/logo_bakandeya.jpg",
+      bandPhotos: ["/logo_bakandeya.jpg"],
+      riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para sección de metales (2 x SM57 / clip condenser)\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)",
+      enlacesRedes: {
+        spotify: "https://open.spotify.com/artist/bakandeya",
+        youtube: "https://youtube.com/@bakandeya_oficial",
+        instagram: "https://instagram.com/bakandeya_oficial",
+        tiktok: "https://tiktok.com/@bakandeya_oficial",
+        appleMusic: "https://music.apple.com/artist/bakandeya",
+        bandcamp: "https://bakandeya.bandcamp.com",
+        website: "https://bands-manager.up.railway.app",
+        whatsapp: "+34612345678",
+        facebook: "https://facebook.com/bakandeyaoficial",
+        twitter: "https://x.com/bakandeya_band"
+      },
+      contactoBooking: {
+        nombre: "Diego de la Calle / Mánager Bakandeya",
+        email: "diego.delacalleb@gmail.com",
+        telefono: "+34 612 345 678"
+      },
+      firmaEmail: {
+        nombreRemitente: "Diego de la Calle",
+        cargo: "Booking & Management | Bakandeya",
+        telefono: "+34 612 345 678",
+        email: "diego.delacalleb@gmail.com",
+        textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+        incluirIconosRedes: true,
+        adjuntarDossierPorDefecto: true,
+        redesSociales: {
+          spotify: "https://open.spotify.com/artist/bakandeya",
+          youtube: "https://youtube.com/@bakandeya_oficial",
+          instagram: "https://instagram.com/bakandeya_oficial",
+          tiktok: "https://tiktok.com/@bakandeya_oficial",
+          appleMusic: "https://music.apple.com/artist/bakandeya",
+          bandcamp: "https://bakandeya.bandcamp.com",
+          website: "https://bands-manager.up.railway.app",
+          whatsapp: "+34612345678"
+        }
+      },
+      temasDestacadosIds: ["s-1", "s-2", "s-3"],
+      incentivoFans: {
+        mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
+        enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
+        codigoDescuento: "BAKANDEYA-FAN-10"
+      },
+      ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"]
+    } : {
       biografia: "",
-      logoUrl: cleanId === 'bakandeya' ? "/logo_bakandeya.jpg" : "",
-      bandPhotos: cleanId === 'bakandeya' ? ["/logo_bakandeya.jpg"] : [],
+      logoUrl: "",
+      bandPhotos: [],
       riderTecnico: "",
       enlacesRedes: {},
       contactoBooking: {},
       temasDestacadosIds: [],
       incentivoFans: {},
       ciudadesConfig: []
-    },
+    }),
     autonomyConfig: autonomyConfig || {
       dispatchLevel: "draft_only",
       negotiationDepth: "filter_conditions",
