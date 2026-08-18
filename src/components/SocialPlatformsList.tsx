@@ -226,7 +226,12 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-        {validEntries.map(([key, url]) => {
+        {validEntries.map(([key, url], index) => {
+          const isOddCount = validEntries.length % 2 !== 0;
+          const isFirstItem = index === 0;
+          // Si el total de redes es impar, el primer botón (ej: Instagram) ocupa todo el ancho de la fila
+          const fullWidthClass = (isOddCount && isFirstItem) ? 'col-span-2 sm:col-span-3' : '';
+
           const config = PLATFORM_CONFIG[key] || {
             label: key,
             colorClass: 'text-slate-300',
@@ -242,7 +247,7 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+              className={`flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
             >
               <div className="flex items-center gap-2.5">
                 <IconComp className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
