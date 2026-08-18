@@ -225,13 +225,24 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+      {/* Cuadrícula adaptativa: si son 1 o 2 elementos se adapta simétricamente sin crear columnas vacías; si son 3 con el primero destacado en full width, o cuadrícula regular */}
+      <div className={`grid gap-2.5 ${
+        validEntries.length === 1 
+          ? 'grid-cols-1' 
+          : validEntries.length === 2 
+            ? 'grid-cols-2' 
+            : validEntries.length === 3 
+              ? 'grid-cols-2' 
+              : 'grid-cols-2 sm:grid-cols-3'
+      }`}>
         {validEntries.map(([key, url], index) => {
-          const isOddCount = validEntries.length % 2 !== 0;
+          const isOddThree = validEntries.length === 3;
           const isFirstItem = index === 0;
-          const isFullWidth = isOddCount && isFirstItem;
-          // Si el total de redes es impar, el primer botón (ej: Instagram) ocupa todo el ancho y centra su contenido con icono a la derecha
-          const fullWidthClass = isFullWidth ? 'col-span-2 sm:col-span-3 justify-center relative' : 'justify-between';
+          const isFullWidth = isOddThree && isFirstItem;
+          // Si son 3 redes (ej: Instagram destacado arriba, YouTube y TikTok abajo), el primero ocupa las 2 columnas y los otros 2 se reparten 1 columna cada uno al 50%
+          const fullWidthClass = isFullWidth 
+            ? 'col-span-2 justify-center relative' 
+            : 'justify-between';
 
           const config = PLATFORM_CONFIG[key] || {
             label: key,

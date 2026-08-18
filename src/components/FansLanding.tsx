@@ -351,18 +351,26 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </h1>
             <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">Canal Oficial</p>
           </div>
-          <p className="text-neutral-400 text-xs font-mono leading-relaxed pt-2">
+          <div className="pt-2 space-y-2">
             {isConcertLink ? (
-              <span className="text-emerald-400 font-bold block mb-2 px-3 py-1 bg-emerald-400/10 rounded-full inline-block">
-                ¡Gracias por venir al concierto{concertName ? ` de ${concertName}` : ''}! 🎸
-              </span>
+              <div>
+                <span className="text-emerald-400 font-bold px-3.5 py-1.5 bg-emerald-400/10 border border-emerald-400/20 rounded-full inline-flex items-center gap-1.5 text-xs">
+                  <span>¡Gracias por venir al concierto{concertName ? ` de ${concertName}` : ''}!</span>
+                  <span>🎸</span>
+                </span>
+              </div>
             ) : (
-              <span className="text-amber-400 font-bold block mb-2 px-3 py-1 bg-amber-400/10 rounded-full inline-block">
-                ¡Gracias por tu apoyo! 🎶
-              </span>
+              <div>
+                <span className="text-amber-400 font-bold px-3.5 py-1.5 bg-amber-400/10 border border-amber-400/20 rounded-full inline-flex items-center gap-1.5 text-xs">
+                  <span>¡Gracias por tu apoyo!</span>
+                  <span>🎶</span>
+                </span>
+              </div>
             )} 
-            Apóyanos como prefieras: <strong className="text-white">síguenos directamente en tus redes favoritas</strong> o <strong className="text-white">recibe información en tu correo</strong>.
-          </p>
+            <p className="text-neutral-400 text-xs font-mono leading-relaxed max-w-sm mx-auto">
+              Apóyanos como prefieras: <strong className="text-white">síguenos directamente en tus redes favoritas</strong> o <strong className="text-white">recibe información en tu correo</strong>.
+            </p>
+          </div>
         </div>
 
         {/* Dual Tab Mode Switcher */}
