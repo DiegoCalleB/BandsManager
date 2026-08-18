@@ -1288,14 +1288,15 @@ export default function Dashboard({
  {/* 5. SECCIÓN PRINCIPAL: EVOLUCIÓN DE REDES SOCIALES & BASE DE FANS EN BBDD */}
  <div className="w-full">
    <SocialAndFansGrowthChart 
-     metrics={metrics}
-     fans={fans}
-     epkConfig={epkConfig}
-     colors={colors}
-     isStitchLight={isStitchLight}
-     bandName={activeBandName}
-     onNavigate={onNavigate}
-   />
+      metrics={metrics}
+      fans={fans}
+      epkConfig={epkConfig}
+      colors={colors}
+      isStitchLight={isStitchLight}
+      bandName={activeBandName}
+      bandId={currentBandId}
+      onNavigate={onNavigate}
+    />
  </div>
 
  {/* 6. SECCIÓN COMPACTA: ESTADO DE SINCRONIZACIÓN Y CANALES DEDICADOS */}
