@@ -127,49 +127,72 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
 
 // Get logistics
 router.get("/logistics", async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const queryBandId = (req.query.band_id as string) || (req.query.band as string);
+  const userBandId = (req as any).user?.band_id || queryBandId || "band-bakandeya";
   try {
     const runOfShow = await dbGetRunOfShow(userBandId);
     const gearChecklists = await dbGetGearChecklists(userBandId);
-    res.json({ runOfShow, gearChecklists });
+    res.json({ runOfShow: runOfShow || {}, gearChecklists: gearChecklists || {} });
   } catch (err) {
-    const state = loadState();
-    res.json({
-      runOfShow: state.runOfShow || {},
-      gearChecklists: state.gearChecklists || {}
-    });
+    try {
+      const state = loadState();
+      res.json({
+        runOfShow: state.runOfShow || {},
+        gearChecklists: state.gearChecklists || {}
+      });
+    } catch {
+      res.json({ runOfShow: {}, gearChecklists: {} });
+    }
   }
 });
 
 // Update/set run of show for a date
-router.post("/logistics/runofshow", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+router.post("/logistics/runofshow", async (req, res) => {
+  const queryBandId = (req.query.band_id as string) || (req.body.band_id as string);
+  const userBandId = (req as any).user?.band_id || queryBandId || "band-bakandeya";
   const { dateKey, items } = req.body;
   if (!dateKey || !Array.isArray(items)) {
     return res.status(400).json({ error: "dateKey and items array required" });
   }
-  await dbSyncRunOfShowForDate(dateKey, items, userBandId);
+  try {
+    await dbSyncRunOfShowForDate(dateKey, items, userBandId);
+  } catch (err) {
+    console.warn("Could not sync run of show with Supabase:", err);
+  }
 
-  const state = loadState();
-  if (!state.runOfShow) state.runOfShow = {};
-  state.runOfShow[dateKey] = items;
-  saveState(state);
+  try {
+    const state = loadState();
+    if (!state.runOfShow) state.runOfShow = {};
+    state.runOfShow[dateKey] = items;
+    saveState(state);
+  } catch (err) {
+    console.warn("Could not save run of show to local state:", err);
+  }
   res.json({ success: true, dateKey, items });
 });
 
 // Update/set gear checklist for a date
-router.post("/logistics/gear", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+router.post("/logistics/gear", async (req, res) => {
+  const queryBandId = (req.query.band_id as string) || (req.body.band_id as string);
+  const userBandId = (req as any).user?.band_id || queryBandId || "band-bakandeya";
   const { dateKey, items } = req.body;
   if (!dateKey || !Array.isArray(items)) {
     return res.status(400).json({ error: "dateKey and items array required" });
   }
-  await dbSyncGearChecklistForDate(dateKey, items, userBandId);
+  try {
+    await dbSyncGearChecklistForDate(dateKey, items, userBandId);
+  } catch (err) {
+    console.warn("Could not sync gear with Supabase:", err);
+  }
 
-  const state = loadState();
-  if (!state.gearChecklists) state.gearChecklists = {};
-  state.gearChecklists[dateKey] = items;
-  saveState(state);
+  try {
+    const state = loadState();
+    if (!state.gearChecklists) state.gearChecklists = {};
+    state.gearChecklists[dateKey] = items;
+    saveState(state);
+  } catch (err) {
+    console.warn("Could not save gear to local state:", err);
+  }
   res.json({ success: true, dateKey, items });
 });
 
@@ -247,6 +270,100 @@ router.post("/messages", requireAuth, (req, res) => {
   state.messages.push(newMessage);
   saveState(state);
   res.json({ success: true, message: newMessage });
+});
+
+// Export Band Calendar as standard iCalendar (.ics) feed
+router.get("/calendar.ics", async (req, res) => {
+  try {
+    const bandIdQuery = (req.query.band_id as string) || (req.query.band as string) || "band-bakandeya";
+    const userQuery = (req.query.user_id as string) || "";
+    
+    let bandIds: string[] = [];
+    if (bandIdQuery.includes(",")) {
+      bandIds = bandIdQuery.split(",").map(b => b.trim()).filter(Boolean);
+    } else {
+      bandIds = [bandIdQuery];
+    }
+
+    const concerts = await dbGetConcerts(bandIds.length > 1 ? bandIds : bandIds[0]);
+    const rehearsals = await dbGetRehearsals(bandIds.length > 1 ? bandIds : bandIds[0]);
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const formatIcsDate = (dateStr: string, isAllDay = true) => {
+      const clean = dateStr.replace(/[^0-9]/g, "");
+      if (clean.length === 8) {
+        return clean;
+      }
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) {
+        return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+      }
+      return clean;
+    };
+
+    const calTitle = bandIds.length > 1 ? "BandManager - Mis Bandas" : `BandManager - ${bandIds[0].replace(/^band-/, "").toUpperCase()}`;
+
+    let ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//BandManager.ai//ES",
+      `X-WR-CALNAME:${calTitle}`,
+      "X-WR-CALDESC:Sincronización automática de conciertos y ensayos de BandManager.ai",
+      "X-PUBLISHED-TTL:PT1H",
+      "REFRESH-INTERVAL;VALUE=DURATION:PT1H",
+      "CALSCALE:GREGORIAN",
+      "METHOD:PUBLISH"
+    ];
+
+    // Add Concerts
+    concerts.forEach((c: any) => {
+      const start = (c.fecha || "").replace(/[^0-9]/g, "").slice(0, 8);
+      if (!start) return;
+      const bTag = c.band_name || (c.band_id ? c.band_id.replace(/^band-/, '').toUpperCase() : '');
+      const prefix = bTag ? `[${bTag}] ` : '';
+      ics.push(
+        "BEGIN:VEVENT",
+        `UID:concert-${c.id}@bandmanager.ai`,
+        `DTSTAMP:${formatIcsDate(new Date().toISOString(), false)}`,
+        `DTSTART;VALUE=DATE:${start}`,
+        `SUMMARY:🎸 ${prefix}Concierto: ${c.sala || "Directo"} (${c.ciudad || "Ciudad"})`,
+        `DESCRIPTION:Banda: ${bTag || "Principal"}\\nCaché: ${c.cache || 0}€ | Aforo: ${c.aforo_total || 0} | Estado pago: ${c.estado_pago || "pendiente"}\\nNotas: ${(c.notas || "").replace(/\n/g, "\\n")}`,
+        `LOCATION:${c.sala || ""}, ${c.ciudad || ""}`,
+        "STATUS:CONFIRMED",
+        "END:VEVENT"
+      );
+    });
+
+    // Add Rehearsals
+    rehearsals.forEach((r: any) => {
+      const start = (r.fecha || "").replace(/[^0-9]/g, "").slice(0, 8);
+      if (!start) return;
+      const bTag = r.band_id ? r.band_id.replace(/^band-/, '').toUpperCase() : '';
+      const prefix = bTag ? `[${bTag}] ` : '';
+      ics.push(
+        "BEGIN:VEVENT",
+        `UID:rehearsal-${r.id}@bandmanager.ai`,
+        `DTSTAMP:${formatIcsDate(new Date().toISOString(), false)}`,
+        `DTSTART;VALUE=DATE:${start}`,
+        `SUMMARY:🥁 ${prefix}Ensayo: ${r.lugar || "Local de Ensayo"}`,
+        `DESCRIPTION:Objetivos: ${(r.objetivo || "Ensayo general").replace(/\n/g, "\\n")}`,
+        `LOCATION:${r.lugar || "Local"}`,
+        "STATUS:CONFIRMED",
+        "END:VEVENT"
+      );
+    });
+
+    ics.push("END:VCALENDAR");
+
+    const content = ics.join("\r\n");
+    res.setHeader("Content-Type", "text/calendar; charset=utf-8");
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Content-Disposition", `inline; filename="calendar-${bandIds.join('-')}.ics"`);
+    res.send(content);
+  } catch (err: any) {
+    console.error("Error generating .ics feed:", err);
+    res.status(500).send("Error generando archivo de calendario");
+  }
 });
 
 export default router;

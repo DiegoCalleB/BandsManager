@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Song, Setlist, SetlistItem } from '../../types';
 import { 
-  Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart
+  Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart,
+  Activity, Footprints, Zap
 } from 'lucide-react';
 import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from '../RepertorioSetlists';
 
@@ -70,6 +71,42 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
     : null;
   const isCurrentSongFavorited = currentStageSong?.favoritoGeneral || false;
   const stageProgressPct = stageItemDuration > 0 ? Math.min(100, (stageCurrentTime / stageItemDuration) * 100) : 0;
+
+  // Visual metronome state based on active track BPM
+  const currentBpm = Number(currentStageSong?.bpm) || 120;
+  const [metronomeTick, setMetronomeTick] = useState(false);
+  const [showPedalShortcuts, setShowPedalShortcuts] = useState(false);
+
+  useEffect(() => {
+    if (!stageIsPlaying || !currentBpm || currentBpm <= 0) return;
+    const intervalMs = (60 / currentBpm) * 1000;
+    const interval = setInterval(() => {
+      setMetronomeTick(prev => !prev);
+    }, intervalMs / 2);
+    return () => clearInterval(interval);
+  }, [stageIsPlaying, currentBpm]);
+
+  // Bluetooth Pedal / Keyboard Shortcuts (PageDown = Next, PageUp = Prev, Space = Play/Pause)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Avoid triggering when user is typing in an input or textarea
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === 'PageDown' || e.key === 'ArrowRight' || e.key === ']') {
+        e.preventDefault();
+        handleStageNext();
+      } else if (e.key === 'PageUp' || e.key === 'ArrowLeft' || e.key === '[') {
+        e.preventDefault();
+        handleStagePrev();
+      } else if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        toggleStagePlayPause();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleStageNext, handleStagePrev, toggleStagePlayPause]);
 
   return (
     <div className="p-4 sm:p-6 rounded-2xl bg-black space-y-6 text-white shadow-2xl">
@@ -163,10 +200,17 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 </div>
 
                 {currentStageSong && (
-                  <div className="text-xs font-mono text-zinc-400 flex items-center gap-2 mt-0.5">
-                    <span>{currentStageSong.tonalidad || 'Am'}</span>
+                  <div className="text-xs font-mono text-zinc-400 flex items-center gap-2 mt-0.5 flex-wrap">
+                    <span className="font-bold text-white">{currentStageSong.tonalidad || 'Am'}</span>
                     <span>•</span>
-                    <span>{currentStageSong.bpm || 120} BPM</span>
+                    <span className="flex items-center gap-1.5 font-bold text-amber-300">
+                      <span className={`w-2 h-2 rounded-full transition-all duration-75 ${
+                        stageIsPlaying 
+                          ? (metronomeTick ? 'bg-amber-400 scale-125 shadow-[0_0_8px_#f59e0b]' : 'bg-amber-950 scale-90')
+                          : 'bg-zinc-600'
+                      }`} />
+                      {currentStageSong.bpm || 120} BPM
+                    </span>
                     {currentStageSong.afinacion && (
                       <>
                         <span>•</span>
@@ -176,6 +220,21 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   </div>
                 )}
               </div>
+
+              {/* Bluetooth Pedal Indicator & Info */}
+              <button
+                type="button"
+                onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
+                className={`p-2 rounded-xl border text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
+                  showPedalShortcuts
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : 'bg-neutral-900 hover:bg-neutral-800 text-zinc-400 border-zinc-700'
+                }`}
+                title="Atajos de teclado / Pedal Bluetooth para pasar canciones sin manos"
+              >
+                <Footprints className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Pedal</span>
+              </button>
 
               {/* Heart Favorite Button (Spotify Style) */}
               {currentStageSong && (
@@ -301,6 +360,30 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               />
             </div>
           </div>
+
+          {/* Bluetooth Pedal / Foot Controller Helper Banner */}
+          {showPedalShortcuts && (
+            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-mono space-y-2 animate-fadeIn">
+              <div className="flex items-center justify-between font-bold text-amber-300">
+                <span className="flex items-center gap-1.5">
+                  <Footprints className="w-4 h-4 text-amber-400" />
+                  <span>Compatibilidad con Pedal Bluetooth / Controlador de Pie (AirTurn, PageFlip, Donner, iRig):</span>
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300">Activo</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                <div className="p-2 rounded-lg bg-black/60 border border-amber-500/20">
+                  <span className="font-bold text-white">🦶 Pista Siguiente:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">PageDown</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">→</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">]</code>
+                </div>
+                <div className="p-2 rounded-lg bg-black/60 border border-amber-500/20">
+                  <span className="font-bold text-white">🦶 Pista Anterior:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">PageUp</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">←</code> / <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">[</code>
+                </div>
+                <div className="p-2 rounded-lg bg-black/60 border border-amber-500/20">
+                  <span className="font-bold text-white">🦶 Play / Pausa:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">Barra Espaciadora</code>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

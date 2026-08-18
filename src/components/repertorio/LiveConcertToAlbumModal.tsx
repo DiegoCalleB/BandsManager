@@ -25,6 +25,7 @@ interface LiveConcertToAlbumModalProps {
   colors: ThemeColors;
   isStitchLight: boolean;
   onSaveAlbumToCatalog: (albumTitle: string, tracks: TrackCutItem[]) => void;
+  onSaveSetlist?: (newSetlist: any) => void;
 }
 
 const formatSeconds = (totalSecs: number): string => {
@@ -61,6 +62,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   colors,
   isStitchLight,
   onSaveAlbumToCatalog,
+  onSaveSetlist,
 }) => {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -992,31 +994,53 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
     if (!trackListToUse || trackListToUse.length === 0) return;
 
     const setlistTitle = `Directo: ${albumTitle || 'Concierto en Vivo'}`;
-    const setlistItems = trackListToUse.map((t) => ({
-      id: `item_${Date.now()}_${t.index}`,
-      tipoItem: t.type === 'musica' ? 'cancion' : 'chapa',
+    const setlistItems = trackListToUse.map((t, idx) => ({
+      id: `i_live_${Date.now()}_${idx}`,
+      tipoItem: t.type === 'musica' ? 'cancion' : 'intro_tema',
       tituloCustom: t.title,
-      notas: t.speechTranscription || (t.type === 'musica' ? `Tonalidad: ${t.tonalidad || 'Mim'} | BPM: ${t.bpm || 120}` : ''),
-      duracionEstimadaMin: Math.max(1, Math.round(t.duration / 60)),
+      notaTema: t.speechTranscription || (t.type === 'musica' ? `Tonalidad: ${t.tonalidad || 'Mim'} | BPM: ${t.bpm || 120}` : ''),
+      duracionEstimadaMinutos: Math.max(1, Math.round(t.duration / 60)),
+      duracionEstimadaSegundos: t.duration || 180,
     }));
+
+    const totalMinutos = setlistItems.reduce((acc, it) => acc + (it.duracionEstimadaMinutos || 3), 0);
 
     const newSetlist = {
       id: `setlist_${Date.now()}`,
       nombre: setlistTitle,
-      fecha: new Date().toISOString().split('T')[0],
-      lugar: 'Concierto Grabado en Directo',
+      descripcion: `Setlist generado automáticamente a partir del audio en directo de ${albumTitle || 'Concierto en Vivo'}`,
+      tipoFormato: 'directo',
+      duracionTotalEstimadaMinutos: totalMinutos,
+      fechaCreacion: new Date().toISOString().split('T')[0],
+      fechaUltimaEdicion: new Date().toISOString().split('T')[0],
       items: setlistItems,
-      version: 1,
     };
 
     try {
-      const stored = localStorage.getItem('app_setlists');
-      const setlists = stored ? JSON.parse(stored) : [];
-      const updated = [newSetlist, ...setlists];
-      localStorage.setItem('app_setlists', JSON.stringify(updated));
+      if (onSaveSetlist) {
+        onSaveSetlist(newSetlist);
+      } else {
+        const stored = localStorage.getItem('bakandeya_setlists_data') || localStorage.getItem('bakandeya_setlists');
+        const setlists = stored ? JSON.parse(stored) : [];
+        const updated = [newSetlist, ...(Array.isArray(setlists) ? setlists : [])];
+        localStorage.setItem('bakandeya_setlists_data', JSON.stringify(updated));
+        localStorage.setItem('bakandeya_setlists', JSON.stringify(updated));
+      }
+
+      // Persist to Supabase Backend
+      const token = localStorage.getItem('bakandeya_token');
+      fetch('/api/setlists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(newSetlist)
+      }).catch(err => console.warn('Could not persist direct setlist to Supabase API:', err));
+
       alert(`¡Setlist "${setlistTitle}" creado con éxito en tu Gestor de Repertorio/Setlists!`);
     } catch (err) {
-      console.warn('Error saving setlist to localStorage:', err);
+      console.warn('Error saving setlist:', err);
       alert('Error al guardar el setlist.');
     }
   };
