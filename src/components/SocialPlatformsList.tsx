@@ -141,7 +141,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
 };
 
 // Orden de prioridad explícito solicitado para los enlaces públicos:
-// 1º Instagram, 2º YouTube, 3º Spotify, 4º TikTok, 5º Facebook, y después el resto
+// 1º Instagram, 2º YouTube, 3º Spotify, 4º TikTok, 5º Facebook, y después el resto (WhatsApp excluido de redes)
 export const PLATFORM_PRIORITY_ORDER: string[] = [
   'instagram',
   'youtube',
@@ -151,8 +151,7 @@ export const PLATFORM_PRIORITY_ORDER: string[] = [
   'twitter',
   'appleMusic',
   'bandcamp',
-  'website',
-  'whatsapp'
+  'website'
 ];
 
 export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
@@ -163,9 +162,9 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
 }) => {
   if (!links) return null;
 
-  // Filtrar estrictamente solo aquellas redes que tengan una URL válida y rellena
+  // Filtrar estrictamente solo aquellas redes que tengan una URL válida, rellena y NO sean WhatsApp (WhatsApp solo para contacto directo)
   const validEntries = Object.entries(links)
-    .filter(([_, url]) => url && typeof url === 'string' && url.trim() !== '')
+    .filter(([key, url]) => key !== 'whatsapp' && url && typeof url === 'string' && url.trim() !== '')
     .sort(([keyA], [keyB]) => {
       const indexA = PLATFORM_PRIORITY_ORDER.indexOf(keyA);
       const indexB = PLATFORM_PRIORITY_ORDER.indexOf(keyB);
