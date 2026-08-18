@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Mail, Phone, Copy, Briefcase, MessageCircle, ExternalLink, Calendar } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle, Copy } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 
 interface FansLandingProps {
@@ -46,11 +46,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [logoUrl, setLogoUrl] = useState<string | null>('/logo_bakandeya.jpg');
   const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(DEFAULT_BAKANDEYA_SOCIALS);
   const [contactoBooking, setContactoBooking] = useState<{
-    nombre?: string;
     email?: string;
     telefono?: string;
   } | null>({
-    nombre: 'Diego de la Calle / Mánager Bakandeya',
     email: 'diego.delacalleb@gmail.com',
     telefono: '+34 612 345 678'
   });
@@ -90,7 +88,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setLogoUrl('/logo_bakandeya.jpg');
       setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
       setContactoBooking({
-        nombre: 'Diego de la Calle / Mánager Bakandeya',
         email: 'diego.delacalleb@gmail.com',
         telefono: '+34 612 345 678'
       });
@@ -135,7 +132,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           }
 
           if (data.epkConfig?.contactoBooking) {
-            setContactoBooking(data.epkConfig.contactoBooking);
+            setContactoBooking({
+              email: data.epkConfig.contactoBooking.email,
+              telefono: data.epkConfig.contactoBooking.telefono
+            });
           }
         }
       })
@@ -608,7 +608,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 {contactoBooking.email && (
                   <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-500/40 transition-colors">
                     <a 
-                      href={`mailto:${contactoBooking.email}?subject=Contratación%20y%20Booking%20-%20${encodeURIComponent(bandName)}`}
+                      href={`mailto:${contactoBooking.email}?subject=Contrataci%C3%B3n%20y%20Booking%20-%20${encodeURIComponent(bandName)}`}
                       className="flex items-center gap-2.5 text-xs font-mono text-amber-300 hover:text-amber-200 transition-colors truncate flex-1 font-bold"
                       title="Enviar correo de contratación"
                     >
@@ -667,12 +667,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       </button>
                     </div>
                   </div>
-                )}
-
-                {contactoBooking.nombre && (
-                  <p className="text-[10px] font-mono text-neutral-400 pt-0.5 text-right">
-                    Contacto: <span className="text-neutral-200 font-bold">{contactoBooking.nombre}</span>
-                  </p>
                 )}
               </div>
             </div>

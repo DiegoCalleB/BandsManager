@@ -28,7 +28,7 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
   bandPhotos: ['/logo_bakandeya.jpg'],
   temasDestacadosIds: ['s-1', 's-2', 's-3'],
   contactoBooking: {
-    nombre: 'Diego de la Calle / Mánager Bakandeya',
+    nombre: 'Booking & Management Bakandeya',
     email: 'diego.delacalleb@gmail.com',
     telefono: '+34 612 345 678'
   },
