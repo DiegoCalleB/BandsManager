@@ -240,7 +240,7 @@ router.get("/public/epk", async (req, res) => {
         ...(epkConfig?.contactoBooking || {}),
         nombre: (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) 
           ? epkConfig.contactoBooking.nombre 
-          : (cleanBandId === 'bakandeya' ? 'Diego de la Calle / Mánager Bakandeya' : bandName),
+          : (cleanBandId === 'bakandeya' ? 'Booking & Management Bakandeya' : bandName),
         email: epkConfig?.contactoBooking?.email || (cleanBandId === 'bakandeya' ? 'diego.delacalleb@gmail.com' : (regBand?.email || '')),
         telefono: epkConfig?.contactoBooking?.telefono || (cleanBandId === 'bakandeya' ? '+34 612 345 678' : (regBand?.telefono || ''))
       }
