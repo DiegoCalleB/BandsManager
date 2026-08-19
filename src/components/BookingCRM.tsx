@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig, InteractionLog, SavedFilter } from '../types';
+import { Lead, LeadStatus, LeadType, ThemeColors, EPKConfig } from '../types';
 import DirectionsCard from './DirectionsCard';
 import { apiFetch } from '../utils/api';
 import { uploadFileToServer } from '../utils/audioStorage';
+import { useSavedFilters } from '../hooks/useSavedFilters';
+import { useCityChips } from '../hooks/useCityChips';
+import { useInteractionLog } from '../hooks/useInteractionLog';
 import { 
  Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, 
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
@@ -72,8 +75,23 @@ export default function BookingCRM({
 }: BookingCRMProps) {
  const effectiveBandName = bandName || 'Tu Banda';
  const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
- const [searchTerm, setSearchTerm] = useState('');
- const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
+ const {
+   searchTerm, setSearchTerm,
+   statusFilter, setStatusFilter,
+   typeFilter, setTypeFilter,
+   selectedCityFilter, setSelectedCityFilter,
+   minCapacityFilter, setMinCapacityFilter,
+   onlyFavoritesFilter, setOnlyFavoritesFilter,
+   onlyVerifiedFilter, setOnlyVerifiedFilter,
+   savedFilters,
+   isSavingFilterOpen, setIsSavingFilterOpen,
+   newFilterName, setNewFilterName,
+   activeSavedFilterId, setActiveSavedFilterId,
+   handleApplySavedFilter,
+   handleSaveCurrentFilter,
+   handleDeleteSavedFilter,
+   handleClearAllFilters,
+ } = useSavedFilters(sectionTab, setSectionTab, initialStatusFilter);
  const [mediaTypeFilter, setMediaTypeFilter] = useState<'televisión' | 'radio' | 'redes' | 'managements' | 'todos'>('todos');
  const [isAgentConfigOpen, setIsAgentConfigOpen] = useState(false);
  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
@@ -84,12 +102,6 @@ export default function BookingCRM({
  setSectionTab(initialSection);
  }
  }, [initialSection]);
-
- useEffect(() => {
- if (initialStatusFilter !== undefined) {
- setStatusFilter(initialStatusFilter);
- }
- }, [initialStatusFilter]);
 
  useEffect(() => {
  if (initialSelectedLeadId) {
@@ -105,260 +117,30 @@ export default function BookingCRM({
  }
  }, [initialSelectedLeadId, leads]);
 
- const [typeFilter, setTypeFilter] = useState<LeadType | 'todos'>('todos');
  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
- const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
- 
- // Custom City Chips state (persisted per band/user session)
- const [customCityChips, setCustomCityChips] = useState<string[]>(() => {
-   if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
-     return epkConfig.ciudadesConfig;
-   }
-   try {
-     const saved = localStorage.getItem('bakandeya_custom_cities');
-     return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
-   } catch {
-     return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
-   }
- });
-
- useEffect(() => {
-   if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
-     setCustomCityChips(epkConfig.ciudadesConfig);
-   }
- }, [epkConfig?.ciudadesConfig]);
- const [isAddingCityChip, setIsAddingCityChip] = useState(false);
- const [newCityInput, setNewCityInput] = useState('');
-
-  // --- SAVED FILTERS & QUICK SEARCH PRESETS STATE ---
-  const DEFAULT_PRESET_FILTERS: SavedFilter[] = [
-    {
-      id: 'preset-bcn-300',
-      nombre: 'Salas Cataluña / BCN (Aforo > 300) pendientes',
-      sectionTab: 'salas',
-      selectedCityFilter: 'Barcelona',
-      statusFilter: 'nuevo',
-      minCapacityFilter: 300
-    },
-    {
-      id: 'preset-festivales-pendientes',
-      nombre: 'Festivales pendientes de respuesta',
-      sectionTab: 'salas',
-      typeFilter: 'festival',
-      statusFilter: 'esperando_respuesta'
-    },
-    {
-      id: 'preset-prensa-madrid',
-      nombre: 'Medios y prensa en Madrid',
-      sectionTab: 'medios',
-      selectedCityFilter: 'Madrid',
-      typeFilter: 'medio'
-    },
-    {
-      id: 'preset-interesados-negociando',
-      nombre: 'Salas interesadas / Negociando',
-      sectionTab: 'salas',
-      statusFilter: 'interesado'
-    }
-  ];
-
-  const [savedFilters, setSavedFilters] = useState<SavedFilter[]>(() => {
-    try {
-      const saved = localStorage.getItem('bakandeya_saved_crm_filters');
-      return saved ? JSON.parse(saved) : DEFAULT_PRESET_FILTERS;
-    } catch {
-      return DEFAULT_PRESET_FILTERS;
-    }
-  });
-
-  const [minCapacityFilter, setMinCapacityFilter] = useState<number>(0);
-  const [onlyFavoritesFilter, setOnlyFavoritesFilter] = useState<boolean>(false);
-  const [onlyVerifiedFilter, setOnlyVerifiedFilter] = useState<boolean>(false);
-  const [isSavingFilterOpen, setIsSavingFilterOpen] = useState<boolean>(false);
-  const [newFilterName, setNewFilterName] = useState<string>('');
-  const [activeSavedFilterId, setActiveSavedFilterId] = useState<string | null>(null);
-
-  // --- BITÁCORA DE CONTACTO (LLAMADAS & WHATSAPP) STATE ---
-  const [interactionType, setInteractionType] = useState<'Llamada' | 'WhatsApp' | 'Email' | 'Reunión' | 'Otro'>('Llamada');
-  const [interactionNotes, setInteractionNotes] = useState<string>('');
-  const [interactionResultado, setInteractionResultado] = useState<'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado'>('Seguimiento pendiente');
-  const [interactionAutor, setInteractionAutor] = useState<string>('Diego / Filgue');
-
-  const handleApplySavedFilter = (sf: SavedFilter) => {
-    setActiveSavedFilterId(sf.id);
-    if (sf.sectionTab) setSectionTab(sf.sectionTab);
-    setSearchTerm(sf.searchTerm || '');
-    setSelectedCityFilter(sf.selectedCityFilter || '');
-    setStatusFilter(sf.statusFilter || 'todos');
-    setTypeFilter(sf.typeFilter || 'todos');
-    setMinCapacityFilter(sf.minCapacityFilter || 0);
-  };
-
-  const handleSaveCurrentFilter = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newFilterName.trim()) return;
-
-    const newSf: SavedFilter = {
-      id: `filter-${Date.now()}`,
-      nombre: newFilterName.trim(),
-      sectionTab,
-      searchTerm,
-      selectedCityFilter,
-      statusFilter,
-      typeFilter,
-      minCapacityFilter
-    };
-
-    const updated = [newSf, ...savedFilters];
-    setSavedFilters(updated);
-    try {
-      localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
-    } catch (err) {
-      console.error(err);
-    }
-
-    setActiveSavedFilterId(newSf.id);
-    setNewFilterName('');
-    setIsSavingFilterOpen(false);
-  };
-
-  const handleDeleteSavedFilter = (filterId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const updated = savedFilters.filter(f => f.id !== filterId);
-    setSavedFilters(updated);
-    try {
-      localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
-    } catch (err) {
-      console.error(err);
-    }
-    if (activeSavedFilterId === filterId) {
-      setActiveSavedFilterId(null);
-    }
-  };
-
-  const handleClearAllFilters = () => {
-    setSearchTerm('');
-    setSelectedCityFilter('');
-    setStatusFilter('todos');
-    setTypeFilter('todos');
-    setMinCapacityFilter(0);
-    setOnlyFavoritesFilter(false);
-    setOnlyVerifiedFilter(false);
-    setActiveSavedFilterId(null);
-  };
-
-  const handleAddInteractionLog = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedLead || !interactionNotes.trim()) return;
-
-    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
-    const newLog: InteractionLog = {
-      id: `log-${Date.now()}`,
-      fecha: nowStr,
-      tipo: interactionType,
-      autor: interactionAutor,
-      notas: interactionNotes.trim(),
-      resultado: interactionResultado
-    };
-
-    const existingLogs = selectedLead.historial_contacto || [];
-    const updatedLogs = [newLog, ...existingLogs];
-
-    let newStatus = selectedLead.estado;
-    if (interactionResultado === 'Interesado' && selectedLead.estado !== 'interesado') {
-      newStatus = 'interesado';
-    } else if (interactionResultado === 'Acuerdo cerrado' && selectedLead.estado !== 'negociando') {
-      newStatus = 'negociando';
-    } else if (interactionResultado === 'Rechazado' && selectedLead.estado !== 'no_interesado') {
-      newStatus = 'no_interesado';
-    }
-
-    onUpdateLead(selectedLead.id, {
-      historial_contacto: updatedLogs,
-      estado: newStatus,
-      fecha_ultima_respuesta: new Date().toISOString().slice(0, 10)
-    });
-
-    setSelectedLead(prev => prev ? {
-      ...prev,
-      historial_contacto: updatedLogs,
-      estado: newStatus,
-      fecha_ultima_respuesta: new Date().toISOString().slice(0, 10)
-    } : null);
-
-    setInteractionNotes('');
-  };
-
-  const handleDeleteInteractionLog = (logId: string) => {
-    if (!selectedLead || !selectedLead.historial_contacto) return;
-    const updated = selectedLead.historial_contacto.filter(l => l.id !== logId);
-    onUpdateLead(selectedLead.id, { historial_contacto: updated });
-    setSelectedLead(prev => prev ? { ...prev, historial_contacto: updated } : null);
-  };
-
- // Dynamically extract top cities present in active leads
- const activeLeadsForSection = useMemo(() => {
- return leads.filter(l => sectionTab === 'medios' ? normalizeType(l.tipo) === 'medio' : normalizeType(l.tipo) !== 'medio');
- }, [leads, sectionTab]);
-
- const cityCounts = useMemo(() => {
- const counts: Record<string, number> = {};
- activeLeadsForSection.forEach(l => {
- const cityRaw = (l.ciudad || '').trim();
- if (cityRaw) {
- const mainCity = cityRaw.split(/[\(\-\/]/)[0].trim();
- if (mainCity) {
- counts[mainCity] = (counts[mainCity] || 0) + 1;
- }
- }
- });
- return counts;
- }, [activeLeadsForSection]);
-
- const topDynamicCities = useMemo(() => {
- return Object.entries(cityCounts)
- .sort((a, b) => Number(b[1]) - Number(a[1]))
- .slice(0, 7)
- .map(([cityName]) => cityName);
- }, [cityCounts]);
-
- const displayCityChips = useMemo(() => {
- const list = [...new Set([...customCityChips, ...topDynamicCities])];
- return list;
- }, [topDynamicCities, customCityChips]);
-
- const handleAddCustomCity = (e?: React.FormEvent) => {
- if (e) e.preventDefault();
- if (!newCityInput.trim()) return;
- const formatted = newCityInput.trim();
- if (!customCityChips.includes(formatted)) {
- const updated = [...customCityChips, formatted];
- setCustomCityChips(updated);
- try { localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated)); } catch {}
- if (onUpdateEpkConfig) {
- onUpdateEpkConfig({ ciudadesConfig: updated });
- }
- }
- setSelectedCityFilter(formatted);
- setNewCityInput('');
- setIsAddingCityChip(false);
- };
-
- const handleRemoveCustomCity = (cityToRemove: string, e: React.MouseEvent) => {
- e.stopPropagation();
- const updated = customCityChips.filter(c => c !== cityToRemove);
- setCustomCityChips(updated);
- try { localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated)); } catch {}
- if (selectedCityFilter === cityToRemove) {
- setSelectedCityFilter('');
- }
- if (onUpdateEpkConfig) {
- onUpdateEpkConfig({ ciudadesConfig: updated });
- }
- };
 
  const interventionPanelRef = React.useRef<HTMLDivElement>(null);
  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+
+ const {
+   customCityChips,
+   isAddingCityChip, setIsAddingCityChip,
+   newCityInput, setNewCityInput,
+   activeLeadsForSection,
+   cityCounts,
+   displayCityChips,
+   handleAddCustomCity,
+   handleRemoveCustomCity,
+ } = useCityChips(leads, sectionTab, epkConfig, onUpdateEpkConfig, selectedCityFilter, setSelectedCityFilter);
+
+ const {
+   interactionType, setInteractionType,
+   interactionNotes, setInteractionNotes,
+   interactionResultado, setInteractionResultado,
+   interactionAutor, setInteractionAutor,
+   handleAddInteractionLog,
+   handleDeleteInteractionLog,
+ } = useInteractionLog(selectedLead, setSelectedLead, onUpdateLead);
 
  // Keep selectedLead synchronized with the latest leads prop data
  useEffect(() => {
@@ -1992,7 +1774,7 @@ Bakandeya Agent Manager IA`);
                 `"${(l.pitch_generado || '').replace(/"/g, '""')}"`,
                 `"${(l.notas || '').replace(/"/g, '""')}"`
               ]);
-              const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+              const csvContent = "﻿" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
               const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
               const url = URL.createObjectURL(blob);
               const link = document.createElement("a");
