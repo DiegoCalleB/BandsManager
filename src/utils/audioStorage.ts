@@ -206,16 +206,40 @@ export async function uploadFileToServer(
   const opts = typeof options === 'string' ? { bandId: options } : (options || {});
 
   try {
+    const authHeaders = getAuthHeaders() as Record<string, string>;
+    const formData = new FormData();
+    formData.append('file', file);
+    if (opts.bandId) formData.append('bandId', opts.bandId);
+    if (opts.category) formData.append('category', opts.category);
+    if (opts.folder) formData.append('folder', opts.folder);
+
+    const headers: Record<string, string> = { ...authHeaders };
+    if (opts.bandId) headers['x-band-id'] = opts.bandId;
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.url) return data.url;
+    } else {
+      console.warn(`/api/upload returned status ${response.status}, trying fallback`);
+    }
+  } catch (formDataErr) {
+    console.warn("FormData upload failed, trying base64 fallback:", formDataErr);
+  }
+
+  try {
     const base64 = await fileToBase64(file);
-    
     const authHeaders = getAuthHeaders() as Record<string, string>;
     const headers: Record<string, string> = {
       ...authHeaders,
       'Content-Type': 'application/json'
     };
-    if (opts.bandId) {
-      headers['x-band-id'] = opts.bandId;
-    }
+    if (opts.bandId) headers['x-band-id'] = opts.bandId;
 
     const response = await fetch('/api/upload', {
       method: 'POST',
@@ -231,8 +255,6 @@ export async function uploadFileToServer(
     if (response.ok) {
       const data = await response.json();
       if (data && data.url) return data.url;
-    } else {
-      console.warn(`/api/upload returned status ${response.status}, falling back to local storage`);
     }
   } catch (err) {
     console.warn("Server upload failed, falling back to local storage:", err);

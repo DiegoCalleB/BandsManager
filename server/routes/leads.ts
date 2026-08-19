@@ -2,13 +2,24 @@ import express from "express";
 import { Lead } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { dbGetLeads, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbCheckDeletedLead } from "../db.js";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, getAvailableAIProviders, generateUnifiedAI, generateMultiModelProposals } from "../ai.js";
 import { autoEnrichLead } from "../auto_enrichment.js";
 import { safeParseJson } from "../utils.js";
 import { ensureCategoryTemplatesInState, updatePromptsMarkdownFile } from "../promptsManager.js";
 import { syncCategoryTemplatesToSheet } from "../sheets.js";
 
 const router = express.Router();
+
+// GET available AI providers and model statuses
+router.get("/ai/providers", requireAuth, async (req, res) => {
+  try {
+    const providers = getAvailableAIProviders();
+    res.json({ success: true, providers });
+  } catch (err: any) {
+    console.error("Error fetching AI providers:", err);
+    res.status(500).json({ error: "Error al obtener proveedores de IA" });
+  }
+});
 
 // Re-align headers (no-op compatibility)
 router.post("/leads/realign-headers", requireAuth, async (req, res) => {
@@ -1167,11 +1178,83 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
   }
 });
 
+// POST /api/leads/:id/generate-multi-pitch (Human-in-the-Loop A/B/C Multi-Model Generation)
+router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { comentario, tono_rating, contenido_rating, providers } = req.body;
+
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
+    const state = loadState();
+    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    if (!lead) {
+      try {
+        lead = await dbGetLeadById(id, userBandId);
+        if (lead) state.leads.push(lead);
+      } catch (dbErr) {
+        console.warn("Could not fetch lead by ID from Supabase:", dbErr);
+      }
+    }
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Sala no encontrada." });
+    }
+
+    const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
+    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
+    const cleanId = (userBandId || 'bakandeya').replace(/^(band|reg)-/, '');
+    const isBakandeya = cleanId === 'bakandeya';
+    const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+    const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
+    const website = bandConfig?.website || registeredBand?.spotify_youtube || '';
+
+    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const feedbackDetails: string[] = [];
+    if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
+    if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
+    if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas del mánager: "${comentario.trim()}"`);
+
+    const systemPrompt = `Eres el Agente Redactor y Director de Comunicación IA de la banda "${bandName}".
+INFORMACIÓN Y ADN DE LA BANDA:
+- Nombre: ${bandName}
+- Propuesta artística y directo: ${bandBio || "Banda independiente de música en directo muy bailable y enérgica"}
+- Enlaces y material promocional: ${website || "Dossier y música oficial"}
+
+ENTRENAMIENTO PREVIO Y HISTORIAL DE PREFERENCIAS DEL MÁNAGER:
+${globalMemory}
+
+REGLAS ESTRICTAS DE REDACCIÓN:
+1. Escribe en castellano natural de España (estilo mundillo musical: cercano, profesional y con pasión por el directo).
+2. Adapta el mensaje al tipo de recinto ("${lead.nombre_sala}", Ciudad: ${lead.ciudad || 'España'}, Aforo: ${lead.aforo || 'N/D'}).
+3. Cero fórmulas clichés artificiales de IA. Destaca la energía del directo y la facilidad logística.
+4. Devuelve ÚNICAMENTE el cuerpo del correo redactado listo para enviar (sin asuntos ni metadatos extra).`;
+
+    const prompt = `Redacta una propuesta de concierto para la sala "${lead.nombre_sala}" en ${lead.ciudad || 'España'} (Tipo: ${lead.tipo || 'sala'}).
+${feedbackDetails.length > 0 ? `\nINSTRUCCIONES ADICIONALES DEL MÁNAGER:\n${feedbackDetails.join('\n')}` : ''}
+${lead.pitch_generado ? `\n(Versión previa de referencia si aplica: "${lead.pitch_generado.substring(0, 150)}...")` : ''}`;
+
+    const proposals = await generateMultiModelProposals({
+      prompt,
+      systemPrompt,
+      providers: providers || ["gemini", "deepseek", "claude"]
+    });
+
+    res.json({
+      success: true,
+      leadId: lead.id,
+      leadName: lead.nombre_sala,
+      proposals
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/:id/generate-multi-pitch:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al generar propuestas multi-IA." });
+  }
+});
+
 // Regenerate pitch taking user feedback and comments into account to train AI
 router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { tono_rating, contenido_rating, comentario, alcance } = req.body;
+    const { tono_rating, contenido_rating, comentario, alcance, provider, modelName } = req.body;
 
     const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
     const state = loadState();
@@ -1197,7 +1280,6 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
 
     const previousPitch = lead.pitch_generado || "";
-    const ai = getAiClient();
 
     let newPitchText = "";
     let isSimulated = false;
@@ -1235,15 +1317,17 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
 4. Escribe en castellano natural de España, sin sonar a plantilla robótica ni spam.
 5. Devuelve ÚNICAMENTE el texto final redactado del nuevo pitch, sin asuntos, encabezados ni metadatos.`;
 
-    if (ai) {
-      try {
-        const response = await generateContentWithFallback(ai, { contents: prompt });
-        if (response && response.text) {
-          newPitchText = response.text.trim();
-        }
-      } catch (aiErr: any) {
-        console.warn("Fallo Gemini al regenerar pitch, utilizando fallback:", aiErr.message);
+    try {
+      const unifiedRes = await generateUnifiedAI({
+        prompt,
+        provider: provider || "gemini",
+        modelName: modelName
+      });
+      if (unifiedRes && unifiedRes.text) {
+        newPitchText = unifiedRes.text.trim();
       }
+    } catch (aiErr: any) {
+      console.warn(`Fallo ${provider || 'AI'} al regenerar pitch, utilizando fallback:`, aiErr.message);
     }
 
     if (!newPitchText) {

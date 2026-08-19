@@ -487,6 +487,88 @@ export const api = {
     });
   },
 
+  // AI Multi-Model & Pitch Generation
+  async getAIProviders(): Promise<{
+    success: boolean;
+    providers: Array<{
+      id: string;
+      name: string;
+      shortName: string;
+      model: string;
+      tagline: string;
+      description: string;
+      icon: string;
+      configured: boolean;
+      tier: string;
+      badge?: string;
+      pricing?: {
+        inputPer1MUsd: number;
+        outputPer1MUsd: number;
+        costPer1000Eur: string;
+        rank: string;
+      };
+    }>;
+  }> {
+    return request('/api/ai/providers');
+  },
+
+  async generateMultiPitch(leadId: string, data?: {
+    comentario?: string;
+    tono_rating?: number;
+    contenido_rating?: number;
+    providers?: string[];
+  }): Promise<{
+    success: boolean;
+    leadId: string;
+    leadName: string;
+    proposals: Array<{
+      provider: string;
+      modelName: string;
+      text: string;
+      fallbackText?: string;
+      status: 'success' | 'error';
+      durationMs: number;
+      error?: string;
+      costEstimate?: {
+        inputTokens: number;
+        outputTokens: number;
+        totalTokens: number;
+        ratePer1MInputUsd: number;
+        ratePer1MOutputUsd: number;
+        costUsd: number;
+        costEur: number;
+        costEurFormatted: string;
+        costPer100EurFormatted: string;
+        costPer1000EurFormatted: string;
+      };
+    }>;
+  }> {
+    return request(`/api/leads/${leadId}/generate-multi-pitch`, {
+      method: 'POST',
+      body: JSON.stringify(data || {})
+    });
+  },
+
+  async regeneratePitch(leadId: string, data: {
+    comentario?: string;
+    tono_rating?: number;
+    contenido_rating?: number;
+    alcance?: 'este_pitch' | 'global';
+    provider?: string;
+    modelName?: string;
+  }): Promise<{
+    success: boolean;
+    lead: Lead;
+    newPitchText: string;
+    feedbackLog?: any;
+    simulated?: boolean;
+  }> {
+    return request(`/api/leads/${leadId}/regenerate-pitch`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
   // AI Growth Plan & Multiplatform Recommendations
   async generateSocialGrowthPlan(data: {
     bandName: string;

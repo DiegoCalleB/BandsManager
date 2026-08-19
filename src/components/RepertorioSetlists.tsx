@@ -26,6 +26,7 @@ import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { FavoritosGeneralesView } from './repertorio/FavoritosGeneralesView';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
+import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { 
@@ -378,6 +379,7 @@ export default function RepertorioSetlists({
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
+ const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
  const [editingSong, setEditingSong] = useState<Song | null>(null);
 
  // Studio Ideas Modal State
@@ -2843,6 +2845,8 @@ export default function RepertorioSetlists({
      onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
      onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
      onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
+     onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
+     onOpenChords={(song) => setActiveChordsSong(song)}
    />
  )}
 
@@ -3267,6 +3271,19 @@ export default function RepertorioSetlists({
     subtitle={shareModalData.subtitle}
     initialText={shareModalData.text}
     itemType={shareModalData.itemType}
+  />
+
+  {/* SPOTIFY DISCOGRAPHY IMPORT MODAL */}
+  <SpotifyDiscographyModal
+    isOpen={isSpotifyModalOpen}
+    onClose={() => setIsSpotifyModalOpen(false)}
+    bandName={bName}
+    existingSongs={songs}
+    colors={colors}
+    isStitchLight={isStitchLight}
+    onSongsImported={(updatedSongs) => {
+      setSongs(updatedSongs);
+    }}
   />
 </div>
  );

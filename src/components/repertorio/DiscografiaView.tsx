@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Song, ThemeColors } from '../../types';
-import { Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users } from 'lucide-react';
+import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText } from 'lucide-react';
 import { AlbumCover } from '../AlbumCover';
 import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
 import { apiFetch } from '../../utils/api';
 import { LiveConcertToAlbumModal, TrackCutItem } from './LiveConcertToAlbumModal';
+import { SpotifyDiscographyModal } from './SpotifyDiscographyModal';
+import { BulkAlbumAudioUploaderModal } from './BulkAlbumAudioUploaderModal';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -22,6 +24,7 @@ interface DiscografiaViewProps {
   onEditAlbum?: (albumName: string) => void;
   onCreateAlbum?: () => void;
   onOpenMemberNotes?: (song: Song) => void;
+  onOpenChords?: (song: Song) => void;
 }
 
 const formatTotalDuration = (songs: Song[]): string => {
@@ -64,10 +67,14 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   onRequestDeleteAlbum,
   onEditAlbum,
   onCreateAlbum,
+  onOpenMemberNotes,
+  onOpenChords,
 }) => {
   const [activeFilterTab, setActiveFilterTab] = useState<'todos' | 'albumes' | 'singles'>('todos');
   const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>({});
   const [isLiveConcertModalOpen, setIsLiveConcertModalOpen] = useState(false);
+  const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
+  const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{ name: string; songs: Song[] } | null>(null);
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -277,6 +284,26 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
           <button
             type="button"
+            onClick={() => setBulkUploadAlbum({ name: '', songs: [] })}
+            className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
+            title="Crear un disco directamente arrastrando archivos de audio MP3 o WAV de tu ordenador"
+          >
+            <FolderUp className="w-4 h-4" />
+            <span>Subir Disco (MP3/WAV)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsSpotifyModalOpen(true)}
+            className="px-4 py-2 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl shadow-[#1db954]/20 transition-all hover:scale-105 active:scale-95"
+            title="Conectar con Spotify para importar la discografía completa de la banda"
+          >
+            <Disc className="w-4 h-4" />
+            <span>🟢 Traer de Spotify</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setIsLiveConcertModalOpen(true)}
             className="px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
             title="Crear un disco automáticamente a partir del vídeo/audio de un concierto en vivo"
@@ -432,6 +459,23 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     </button>
                   )}
 
+                  {/* Bulk Audio Master Uploader Button */}
+                  {sortedAlbumSongs.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-medium font-mono flex items-center gap-1.5 transition-all cursor-pointer border ${
+                        isStitchLight
+                          ? 'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100'
+                          : 'bg-[#1db954]/15 border-[#1db954]/30 text-[#1ed760] hover:bg-[#1db954]/25 hover:text-white'
+                      }`}
+                      title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
+                    >
+                      <FolderUp className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Subir Audios Completos</span>
+                    </button>
+                  )}
+
                   {onRequestDeleteAlbum && album !== 'Singles / Sin Disco' && (
                     <button
                       type="button"
@@ -566,6 +610,18 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
                           {/* Actions Column */}
                           <div className="col-span-2 flex items-center justify-end gap-1">
+                            {/* Chords & Harmony (LaCuerda) Button */}
+                            {onOpenChords && (
+                              <button
+                                type="button"
+                                onClick={() => onOpenChords(s)}
+                                className="p-1 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                                title="Ver cifrado de acordes, armonía y letra (estilo LaCuerda.net)"
+                              >
+                                <FileText className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
                             {/* Member Notes Button */}
                             {onOpenMemberNotes && (
                               <button
@@ -660,6 +716,57 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           }
         }}
       />
+
+      {/* Spotify Discography Importer Modal */}
+      <SpotifyDiscographyModal
+        isOpen={isSpotifyModalOpen}
+        onClose={() => setIsSpotifyModalOpen(false)}
+        bandName={bandName || "Bakandeya"}
+        existingSongs={songs}
+        colors={colors}
+        isStitchLight={isStitchLight}
+        onSongsImported={(updatedSongs) => {
+          setSongs(updatedSongs);
+        }}
+      />
+
+      {/* Bulk Album Audio Master Uploader Modal */}
+      {bulkUploadAlbum && (
+        <BulkAlbumAudioUploaderModal
+          isOpen={Boolean(bulkUploadAlbum)}
+          onClose={() => setBulkUploadAlbum(null)}
+          albumName={bulkUploadAlbum.name}
+          albumSongs={bulkUploadAlbum.songs}
+          colors={colors}
+          isStitchLight={isStitchLight}
+          bandId={bandName || "bakandeya"}
+          onSaveUpdatedSongs={(updatedAlbumSongs, newAlbumName) => {
+            const existingIds = new Set(songs.map((s) => s.id));
+            const updatedMap = new Map<string, Song>();
+            const newlyCreated: Song[] = [];
+
+            updatedAlbumSongs.forEach((s) => {
+              if (existingIds.has(s.id)) {
+                updatedMap.set(s.id, s);
+              } else {
+                newlyCreated.push(s);
+              }
+            });
+
+            const mergedSongs = [
+              ...songs.map((s) => updatedMap.get(s.id) || s),
+              ...newlyCreated,
+            ];
+
+            setSongs(mergedSongs);
+            saveSongsToLocalStorageSafely(mergedSongs);
+
+            if (newAlbumName) {
+              setExpandedAlbums((prev) => ({ ...prev, [newAlbumName]: true }));
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

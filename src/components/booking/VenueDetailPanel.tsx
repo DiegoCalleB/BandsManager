@@ -8,6 +8,7 @@ import { FavoriteButton } from '../common/FavoriteButton';
 import { isLeadVerificado } from '../../utils/leadReliability';
 import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
+import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
 import {
   Edit3,
   X,
@@ -30,7 +31,8 @@ import {
   Loader2,
   Upload,
   Undo2,
-  RotateCcw
+  RotateCcw,
+  Layers
 } from 'lucide-react';
 
 interface VenueDetailPanelProps {
@@ -86,6 +88,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [isRevertingPitch, setIsRevertingPitch] = useState(false);
   const [feedbackSuccessMsg, setFeedbackSuccessMsg] = useState<string | null>(null);
   const [showFeedbackHistory, setShowFeedbackHistory] = useState(false);
+  const [showMultiModelModal, setShowMultiModelModal] = useState(false);
+  const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek' | 'claude'>('gemini');
 
   // Clean helper for values like #ERROR!
   const cleanVal = (val?: string) => {
@@ -105,9 +109,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     });
   }, [selectedLead.id, selectedLead.pitch_generado, selectedLead.imagen_url, selectedLead.icono]);
 
-  const handleRegeneratePitchWithFeedback = async () => {
+  const handleRegeneratePitchWithFeedback = async (targetProvider?: 'gemini' | 'deepseek' | 'claude') => {
     setIsRegeneratingPitch(true);
     setFeedbackSuccessMsg(null);
+    const providerToUse = targetProvider || selectedAiModel;
     try {
       const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
       const headers: Record<string, string> = {
@@ -124,7 +129,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           tono_rating: toneRating || undefined,
           contenido_rating: contentRating || undefined,
           comentario: feedbackComment || undefined,
-          alcance: feedbackScope
+          alcance: feedbackScope,
+          provider: providerToUse
         })
       });
 
@@ -147,10 +153,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setToneRating(0);
         setContentRating(0);
         setFeedbackComment('');
+        const modelLabel = providerToUse === 'claude' ? 'Claude 3.5 Haiku' : providerToUse === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
         if (feedbackScope === 'global') {
-          setFeedbackSuccessMsg('¡Pitch reescrito! Aprendizaje guardado en la memoria global del Agente Redactor para futuros pitches.');
+          setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel}! Aprendizaje guardado en la memoria global.`);
         } else {
-          setFeedbackSuccessMsg('¡Pitch reescrito aplicando tus notas a esta sala en concreto!');
+          setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel} aplicando tus notas a esta sala!`);
         }
         setTimeout(() => setFeedbackSuccessMsg(null), 4500);
       } else {
@@ -1028,11 +1035,21 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           {/* Pitch Generator Section */}
           <div className="bg-[#1A1918] rounded-xl p-4 space-y-3 border border-zinc-800">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <span className="text-xs font-bold font-sans uppercase text-amber-400 tracking-wider">
                 {isReplyStage ? '💬 Respuesta Redactada por IA' : '✉️ Propuesta de Pitch Redactada'}
               </span>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setShowMultiModelModal(true)}
+                  className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 via-sky-500/20 to-emerald-500/20 hover:from-amber-500/30 hover:to-emerald-500/30 border border-amber-500/40 rounded text-[11px] text-amber-300 font-bold flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
+                  title="Compara en paralelo propuestas generadas por DeepSeek V3 y Gemini Flash"
+                >
+                  <Layers className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Comparador A/B (DeepSeek vs Gemini) 🚀</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={handleCopyPitch}
@@ -1238,6 +1255,40 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 </div>
               )}
 
+              {/* Model selection pills for single-click regenerate */}
+              <div className="flex items-center justify-between flex-wrap gap-2 p-2 bg-black/40 rounded-xl border border-zinc-800">
+                <span className="text-[10px] font-mono text-zinc-400 font-bold uppercase">
+                  🤖 Motor de Redacción & Coste:
+                </span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {[
+                    { id: 'deepseek' as const, name: 'DeepSeek V3 (Recomendado)', cost: '~0,00014 €', icon: '🚀' },
+                    { id: 'gemini' as const, name: 'Gemini Flash (Free Tier)', cost: '~0,00018 €', icon: '⚡' }
+                  ].map(m => {
+                    const isSelected = selectedAiModel === m.id;
+                    return (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => setSelectedAiModel(m.id)}
+                        className={`px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                          isSelected
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-sm'
+                            : 'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:border-zinc-700'
+                        }`}
+                        title={`Coste aproximado por pitch: ${m.cost}`}
+                      >
+                        <span>{m.icon}</span>
+                        <span>{m.name}</span>
+                        <span className="font-mono text-[9px] text-emerald-400 bg-black/40 px-1 py-0.2 rounded border border-emerald-500/20">
+                          {m.cost}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Action buttons */}
               <div className="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-2 pt-1">
                 {selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.some(l => !l.deshecho && l.pitch_previo) && (
@@ -1259,19 +1310,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
                 <button
                   type="button"
-                  onClick={handleRegeneratePitchWithFeedback}
+                  onClick={() => handleRegeneratePitchWithFeedback()}
                   disabled={isRegeneratingPitch || isRevertingPitch}
                   className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-bold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all font-sans"
                 >
                   {isRegeneratingPitch ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Entrenando IA y reescribiendo pitch...</span>
+                      <span>Entrenando {selectedAiModel === 'claude' ? 'Claude' : selectedAiModel === 'deepseek' ? 'DeepSeek' : 'Gemini'}...</span>
                     </>
                   ) : (
                     <>
                       <RefreshCw className="w-4 h-4" />
-                      <span>Reescribir Pitch con IA + Entrenar</span>
+                      <span>Reescribir con {selectedAiModel === 'claude' ? 'Claude Haiku' : selectedAiModel === 'deepseek' ? 'DeepSeek V3' : 'Gemini Flash'}</span>
                     </>
                   )}
                 </button>
@@ -1553,6 +1604,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           </div>
         </div>
       )}
+
+      {/* Multi-Model Parallel Pitch Comparator Modal (A/B/C Testing) */}
+      <MultiModelPitchComparatorModal
+        isOpen={showMultiModelModal}
+        onClose={() => setShowMultiModelModal(false)}
+        lead={selectedLead}
+        isStitchLight={isStitchLight}
+        onSelectProposal={(text, providerName) => {
+          setEditedPitch(text);
+          selectedLead.pitch_generado = text;
+          onUpdateLead(selectedLead.id, { pitch_generado: text });
+          const label = providerName === 'claude' ? 'Claude 3.5 Haiku' : providerName === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
+          setFeedbackSuccessMsg(`¡Propuesta de ${label} seleccionada y aplicada a la sala!`);
+          setTimeout(() => setFeedbackSuccessMsg(null), 5000);
+        }}
+      />
     </div>
   );
 };

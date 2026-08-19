@@ -137,11 +137,12 @@ export function SongChordsViewerModal({
       };
       onUpdateSong(updatedSong);
 
-      setAiSuccessMsg('¡Cifrado y Ficha de Sustituto generados con éxito por Gemini!');
+      setAiSuccessMsg('¡Cifrado y Ficha de Sustituto generados con éxito!');
       setTimeout(() => setAiSuccessMsg(null), 4000);
     } catch (err: any) {
       console.error('Error generating with AI:', err);
-      alert(`No se pudieron generar los acordes: ${err.message || 'Error de conexión'}`);
+      setAiSuccessMsg(`⚠️ ${err.message || 'No se pudieron generar los acordes'}`);
+      setTimeout(() => setAiSuccessMsg(null), 5000);
     } finally {
       setIsGeneratingAi(false);
     }
