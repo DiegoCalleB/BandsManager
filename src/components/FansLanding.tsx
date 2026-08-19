@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle, Copy } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 
 interface FansLandingProps {
@@ -52,8 +52,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     email: 'diego.delacalleb@gmail.com',
     telefono: '+34 612 345 678'
   });
-  const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
@@ -615,19 +613,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       <Mail className="w-4 h-4 text-amber-400 shrink-0" />
                       <span className="truncate">{contactoBooking.email}</span>
                     </a>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(contactoBooking.email || '');
-                        setCopiedEmail(true);
-                        setTimeout(() => setCopiedEmail(false), 2000);
-                      }}
-                      className="px-2 py-1 ml-2 text-[10px] font-mono text-neutral-400 hover:text-white bg-neutral-900 hover:bg-neutral-800 rounded border border-neutral-700 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
-                      title="Copiar email de contratación"
-                    >
-                      {copiedEmail ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                      <span>{copiedEmail ? 'Copiado' : 'Copiar'}</span>
-                    </button>
                   </div>
                 )}
 
@@ -641,30 +626,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span className="truncate">{contactoBooking.telefono}</span>
                     </a>
-                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                    <div className="flex items-center shrink-0 ml-2">
                       <a
                         href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=Hola,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20a%20${encodeURIComponent(bandName)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-2 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded border border-emerald-500/30 transition-colors flex items-center gap-1 font-bold"
+                        className="px-2.5 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded border border-emerald-500/30 transition-colors flex items-center gap-1.5 font-bold"
                         title="Escribir por WhatsApp para contratación"
                       >
-                        <MessageCircle className="w-3 h-3 text-emerald-400" />
+                        <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
                         <span>WhatsApp</span>
                       </a>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(contactoBooking.telefono || '');
-                          setCopiedPhone(true);
-                          setTimeout(() => setCopiedPhone(false), 2000);
-                        }}
-                        className="px-2 py-1 text-[10px] font-mono text-neutral-400 hover:text-white bg-neutral-900 hover:bg-neutral-800 rounded border border-neutral-700 transition-colors flex items-center gap-1 cursor-pointer"
-                        title="Copiar teléfono"
-                      >
-                        {copiedPhone ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                        <span>{copiedPhone ? 'Copiado' : 'Copiar'}</span>
-                      </button>
                     </div>
                   </div>
                 )}
