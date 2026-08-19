@@ -73,3 +73,8 @@ export function safeParseJson(text: string): any {
   }
 }
 
+export function cleanBandId(bandId?: string): string {
+  if (!bandId || typeof bandId !== "string") return "bakandeya";
+  return bandId.toLowerCase().trim();
+}
+
