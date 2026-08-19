@@ -1,2 +1,1 @@
-one backslash: ﻿
-two backslashes: \\uFEFF
+target one backslash: ﻿
