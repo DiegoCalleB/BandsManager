@@ -597,14 +597,15 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
   let event: Stripe.Event;
 
+  if (!webhookSecret) {
+    console.error("[Stripe Webhook] STRIPE_WEBHOOK_SECRET no está configurado. Rechazando evento sin verificar.");
+    return res.status(500).send("Webhook Error: STRIPE_WEBHOOK_SECRET no configurado");
+  }
+
   try {
     const rawBody = (req as any).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
-    if (webhookSecret && sig) {
-      const stripe = getStripe();
-      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-    } else {
-      event = typeof req.body === 'object' && !Buffer.isBuffer(req.body) ? req.body : JSON.parse(req.body.toString());
-    }
+    const stripe = getStripe();
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err: any) {
     console.error(`[Stripe Webhook] Signature verification failed: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -793,4 +794,3 @@ router.post("/billing/webhook", handleWebhook);
 router.post("/stripe/webhook", handleWebhook);
 
 export default router;
-
