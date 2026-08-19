@@ -961,14 +961,6 @@ router.get("/auth/me", async (req, res) => {
   let session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
   let user = session ? state.users.find((u: any) => u.id === session.userId) : null;
 
-  if (!user && token) {
-    user = state.users.find((u: any) =>
-      u.id === token ||
-      (u.email && u.email.toLowerCase() === token.toLowerCase()) ||
-      (u.username && u.username.toLowerCase() === token.toLowerCase())
-    );
-  }
-
   if (!user) {
     return res.status(401).json({ error: "Sesión no iniciada o expirada" });
   }
@@ -1037,14 +1029,6 @@ router.post("/auth/switch-band", async (req, res) => {
 
   let session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
   let currentUser = session ? state.users.find((u: any) => u.id === session.userId) : null;
-
-  if (!currentUser && token) {
-    currentUser = state.users.find((u: any) =>
-      u.id === token ||
-      (u.email && u.email.toLowerCase() === token.toLowerCase()) ||
-      (u.username && u.username.toLowerCase() === token.toLowerCase())
-    );
-  }
 
   if (!currentUser) {
     return res.status(401).json({ error: "Sesión no válida o expirada" });
