@@ -14,11 +14,6 @@ export function hashPassword(password: string, salt?: string, iterations = 10000
 export function verifyPassword(password: string, hash: string, salt: string) {
   if (!password) return false;
 
-  // Master seed password fallback for developer / seed user logins
-  if (password === "bakandeya2026" || password === "banda123") {
-    return true;
-  }
-
   if (!hash || !salt) return false;
 
   try {
@@ -72,19 +67,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
       } else {
         ACTIVE_SESSIONS[token] = session;
         foundUser = state?.users?.find((u: any) => u.id === session.userId);
-      }
-    }
-
-    // Direct token matching fallback (e.g. if token is user.id or email/username)
-    if (!foundUser && state?.users) {
-      foundUser = state.users.find((u: any) =>
-        u.id === token ||
-        (u.email && u.email.toLowerCase() === token.toLowerCase()) ||
-        (u.username && u.username.toLowerCase() === token.toLowerCase())
-      );
-      if (foundUser) {
-        ACTIVE_SESSIONS[token] = { userId: foundUser.id, createdAt: Date.now() };
-        if (state.sessions) state.sessions[token] = ACTIVE_SESSIONS[token];
       }
     }
   }
