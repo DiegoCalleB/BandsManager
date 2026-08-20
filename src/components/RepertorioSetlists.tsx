@@ -14,7 +14,8 @@ import {
 import SongStudioModal from './SongStudioModal';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
-import { formatSongShareText, formatSetlistShareText } from '../utils/shareUtils';
+import { useShareModal } from '../hooks/useShareModal';
+import { useCatalogFilters } from '../hooks/useCatalogFilters';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
 import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
 import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
@@ -337,45 +338,21 @@ export default function RepertorioSetlists({
 
  const activeSetlist = useMemo(() => setlists.find(s => s.id === activeSetlistId) || setlists[0] || null, [setlists, activeSetlistId]);
 
- const [shareModalData, setShareModalData] = useState<{
-   isOpen: boolean;
-   title: string;
-   subtitle?: string;
-   text: string;
-   itemType: 'song' | 'setlist';
- }>({
-   isOpen: false,
-   title: '',
-   text: '',
-   itemType: 'setlist'
- });
-
- const handleShareSetlist = (setlist: Setlist) => {
-   const songsMap: Record<string, Song> = Object.fromEntries(songs.map(s => [s.id, s]));
-   setShareModalData({
-     isOpen: true,
-     title: setlist.nombre,
-     subtitle: `Repertorio (${setlist.items.length} elementos) para WhatsApp`,
-     text: formatSetlistShareText(setlist, songsMap, bName),
-     itemType: 'setlist'
-   });
- };
-
- const handleShareSong = (song: Song) => {
-   setShareModalData({
-     isOpen: true,
-     title: song.titulo,
-     subtitle: 'Compartir canción por WhatsApp',
-     text: formatSongShareText(song, { includeChords: true, includeGuide: true }),
-     itemType: 'song'
-   });
- };
+ const {
+   shareModalData, setShareModalData,
+   handleShareSetlist,
+   handleShareSong,
+ } = useShareModal(songs, bName);
 
  // Filter States for Catalog
-  const [groupByAlbum, setGroupByAlbum] = useState(false);
- const [catalogSearch, setCatalogSearch] = useState('');
- const [catalogAlbumFilter, setCatalogAlbumFilter] = useState<string>('todos');
- const [catalogStatusFilter, setCatalogStatusFilter] = useState<string>('todos');
+ const {
+   groupByAlbum, setGroupByAlbum,
+   catalogSearch, setCatalogSearch,
+   catalogAlbumFilter, setCatalogAlbumFilter,
+   catalogStatusFilter, setCatalogStatusFilter,
+   albumsList,
+   filteredSongs,
+ } = useCatalogFilters(songs);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -813,35 +790,6 @@ export default function RepertorioSetlists({
  };
 
 
-
- // Unique album list for filter dropdown
- const albumsList = useMemo(() => {
- if (!Array.isArray(songs)) return ['todos', 'Singles / Sin Disco'];
- const safe = songs.filter((s): s is Song => Boolean(s && typeof s === 'object' && s.id));
- const list = safe
- .map((s) => s.albumDisco || s.album)
- .filter((a): a is string => Boolean(a && typeof a === 'string'));
- const albumSet = new Set(list);
- if (safe.some((s) => !s.albumDisco && !s.album) || albumSet.size === 0) {
- albumSet.add('Singles / Sin Disco');
- }
- return ['todos', ...Array.from(albumSet)];
- }, [songs]);
-
- // Filtered catalog songs
- const filteredSongs = useMemo(() => {
- return songs.filter(s => {
- const matchSearch = catalogSearch === '' || 
- s.titulo.toLowerCase().includes(catalogSearch.toLowerCase()) ||
- (s.tonalidad && s.tonalidad.toLowerCase().includes(catalogSearch.toLowerCase())) ||
- (s.notasInternas && s.notasInternas.toLowerCase().includes(catalogSearch.toLowerCase()));
-
- const matchAlbum = catalogAlbumFilter === 'todos' || s.albumDisco === catalogAlbumFilter;
- const matchStatus = catalogStatusFilter === 'todos' || s.estadoTema === catalogStatusFilter;
-
- return matchSearch && matchAlbum && matchStatus;
- });
- }, [songs, catalogSearch, catalogAlbumFilter, catalogStatusFilter]);
 
  // Helper to parse"mm:ss" to seconds
  const parseMmSsToSeconds = (timeStr: string): number => {
