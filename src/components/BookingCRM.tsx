@@ -1774,7 +1774,7 @@ Bakandeya Agent Manager IA`);
                 `"${(l.pitch_generado || '').replace(/"/g, '""')}"`,
                 `"${(l.notas || '').replace(/"/g, '""')}"`
               ]);
-              const csvContent = "\\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+              const csvContent = "﻿" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
               const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
               const url = URL.createObjectURL(blob);
               const link = document.createElement("a");
