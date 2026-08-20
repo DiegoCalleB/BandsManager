@@ -63,6 +63,9 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   useEffect(() => {
     if (isLoggedIn) {
+      // Evita que el EPK de la banda anterior quede visible/editable mientras
+      // se cargan los datos de la nueva banda tras un cambio de banda activa.
+      setEpkConfig({});
       fetchState();
     }
   }, [isLoggedIn, bandId, fetchState]);
