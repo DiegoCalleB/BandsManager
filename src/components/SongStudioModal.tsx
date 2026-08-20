@@ -11,6 +11,7 @@ import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
 import { useStudioShareModal } from '../hooks/useStudioShareModal';
+import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
@@ -159,16 +160,6 @@ export default function SongStudioModal({
     return () => { isMounted = false; };
   }, [song]);
 
-  // --- ACCOMPANIMENT GENERATOR STATE ---
-  const [showGenModalForIdea, setShowGenModalForIdea] = useState<SongAudioIdea | null>(null);
-  const [genBpm, setGenBpm] = useState<number>(song.bpm || 120);
-  const [genKey, setGenKey] = useState<string>(song.tonalidad || 'Do');
-  const [genDuration, setGenDuration] = useState<number>(30);
-  const [includeDrums, setIncludeDrums] = useState<boolean>(true);
-  const [includeBass, setIncludeBass] = useState<boolean>(true);
-  const [drumStyle, setDrumStyle] = useState<'rock' | 'pop' | 'funk' | 'reggae'>('rock');
-  const [isGeneratingAccompaniment, setIsGeneratingAccompaniment] = useState<boolean>(false);
-
   // --- NEW IDEA AI BASE GENERATION STATE ---
   const [genAiOnNewIdea, setGenAiOnNewIdea] = useState<boolean>(false);
   const [newIdeaBpm, setNewIdeaBpm] = useState<number>(song.bpm || 120);
@@ -197,47 +188,6 @@ export default function SongStudioModal({
     description: string;
     onConfirm: () => void;
   } | null>(null);
-
-  const handleGenerateAccompaniment = async () => {
-    if (!showGenModalForIdea) return;
-    try {
-      setIsGeneratingAccompaniment(true);
-
-      const wavBlob = await generateAccompanimentAudioBlob({
-        bpm: genBpm,
-        durationSecs: genDuration,
-        keyName: genKey,
-        includeDrums,
-        includeBass,
-        drumPattern: drumStyle
-      });
-
-      const fileName = `sugerencia-${drumStyle}-${genKey}-${Date.now()}.wav`;
-      const file = new File([wavBlob], fileName, { type: 'audio/wav' });
-
-      const serverUrl = await uploadFileToServer(file);
-
-      let trackLabel = 'Ref IA: Batería y Bajo';
-      if (includeDrums && includeBass) trackLabel = `🥁🎸 Ref AI (${drumStyle.toUpperCase()} - ${genKey})`;
-      else if (includeDrums) trackLabel = `🥁 Ref AI: Batería (${drumStyle.toUpperCase()})`;
-      else if (includeBass) trackLabel = `🎸 Ref AI: Bajo Tónica (${genKey})`;
-
-      saveNewTrackToIdea(
-        showGenModalForIdea, 
-        serverUrl, 
-        trackLabel, 
-        includeDrums && includeBass ? 'Batería + Bajo (AI)' : includeDrums ? 'Batería (AI)' : 'Bajo (AI)'
-      );
-
-      setShowGenModalForIdea(null);
-      alert(`¡Acompañamiento sintetizado con éxito! Se ha agregado al mezclador multipista como "${trackLabel}". Sincronizado a ${genBpm} BPM.`);
-    } catch (err) {
-      console.error("Error al generar acompañamiento:", err);
-      alert("Error al sintetizar el acompañamiento de referencia.");
-    } finally {
-      setIsGeneratingAccompaniment(false);
-    }
-  };
 
   // Comment input state
   const [commentTextMap, setCommentTextMap] = useState<Record<string, string>>({});
@@ -1235,6 +1185,18 @@ export default function SongStudioModal({
     setNewTrackInstrument('');
     setSelectedTrackFile(null);
   };
+
+  const {
+    showGenModalForIdea, setShowGenModalForIdea,
+    genBpm, setGenBpm,
+    genKey, setGenKey,
+    genDuration, setGenDuration,
+    includeDrums, setIncludeDrums,
+    includeBass, setIncludeBass,
+    drumStyle, setDrumStyle,
+    isGeneratingAccompaniment,
+    handleGenerateAccompaniment,
+  } = useAccompanimentGenerator(song, saveNewTrackToIdea);
 
   // --- CREATE NEW MAIN IDEA FORM ---
   const startRecording = async () => {
