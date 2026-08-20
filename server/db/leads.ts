@@ -1,4 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetLeads(bandId: string) {
   const sb = getSupabase();
@@ -18,7 +19,7 @@ export async function dbGetLeads(bandId: string) {
 
   if (leads.length === 0 && (cleanId === 'band-bakandeya' || cleanId === 'bakandeya')) {
     try {
-      const { INITIAL_LEADS } = await import("../src/db_seed.js");
+      const { INITIAL_LEADS } = await import("../../src/db_seed.js");
       const seededLeads = INITIAL_LEADS.map(l => ({
         ...l,
         id: `${cleanId}-${l.id}`,
