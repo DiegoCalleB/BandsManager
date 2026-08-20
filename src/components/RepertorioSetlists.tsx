@@ -17,6 +17,7 @@ import { ShareModal } from './ShareModal';
 import { useShareModal } from '../hooks/useShareModal';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
 import { useStagePlayer } from '../hooks/useStagePlayer';
+import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
 import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
 import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
@@ -383,6 +384,14 @@ export default function RepertorioSetlists({
    handleStageAudioEnded,
  } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
 
+ const {
+   activePlayerSong, setActivePlayerSong,
+   playerAutoPlay,
+   playSignal,
+   isPlayerPlaying, setIsPlayerPlaying,
+   handleSelectPlayerSong,
+ } = useAudioPlayer();
+
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
  const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
@@ -401,41 +410,6 @@ export default function RepertorioSetlists({
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
-
- // Spotify Music Player State
- const [activePlayerSong, setActivePlayerSong] = useState<Song | null>(null);
- const [playerAutoPlay, setPlayerAutoPlay] = useState<boolean>(false);
- const [playSignal, setPlaySignal] = useState<number>(0);
- const [isPlayerPlaying, setIsPlayerPlaying] = useState<boolean>(false);
-
- const handleSelectPlayerSong = (song: Song | null, autoPlay = false) => {
-   if (!song) {
-     setActivePlayerSong(null);
-     setPlayerAutoPlay(false);
-     setIsPlayerPlaying(false);
-     return;
-   }
-
-   if (activePlayerSong?.id === song.id) {
-     if (autoPlay) {
-       if (isPlayerPlaying) {
-         setPlayerAutoPlay(false);
-         setIsPlayerPlaying(false);
-       } else {
-         setPlayerAutoPlay(true);
-         setPlaySignal(Date.now());
-       }
-     } else {
-       setPlayerAutoPlay(false);
-     }
-   } else {
-     setActivePlayerSong(song);
-     setPlayerAutoPlay(autoPlay);
-     if (autoPlay) {
-       setPlaySignal(Date.now());
-     }
-   }
- };
 
  // Deletion Confirmation Modal State
  const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
