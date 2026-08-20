@@ -882,8 +882,13 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
 
   return res.json({
     success: true,
-    message: `Código de verificación enviado a ${maskedEmail}`,
-    emailMasked: maskedEmail
+    // TODO: el envío real por email todavía no está integrado (no hay proveedor
+    // de email configurado) - se devuelve el código directamente en la respuesta
+    // para que el frontend lo muestre en pantalla, en vez de prometer un envío
+    // que nunca llega.
+    message: `Código de verificación generado para ${maskedEmail}`,
+    emailMasked: maskedEmail,
+    code
   });
 });
 
