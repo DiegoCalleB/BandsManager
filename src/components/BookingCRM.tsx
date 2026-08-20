@@ -7,13 +7,14 @@ import { useSavedFilters } from '../hooks/useSavedFilters';
 import { useCityChips } from '../hooks/useCityChips';
 import { useInteractionLog } from '../hooks/useInteractionLog';
 import { useEmailTemplates, TemplateCategory } from '../hooks/useEmailTemplates';
+import { useGmailIntegration } from '../hooks/useGmailIntegration';
+import { useNegotiationSimulation } from '../hooks/useNegotiationSimulation';
 import { 
  Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, 
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
  Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet
 } from 'lucide-react';
-import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from '../utils/gmail';
 import { VenueMap } from './VenueMap';
 import { AddLeadModal } from './booking/AddLeadModal';
 import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
@@ -154,6 +155,14 @@ export default function BookingCRM({
    handleSaveTemplates,
  } = useEmailTemplates();
 
+ const {
+   gmailUser, gmailToken,
+   isSyncingGmail, gmailStatusMsg,
+   handleGmailLogin,
+   handleGmailLogout,
+   handleSyncGmailForLead,
+ } = useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
+
  // Keep selectedLead synchronized with the latest leads prop data
  useEffect(() => {
    if (selectedLead) {
@@ -244,11 +253,6 @@ export default function BookingCRM({
  const [scrapedDataForLead, setScrapedDataForLead] = useState<any | null>(null);
  const [scrapingLeadError, setScrapingLeadError] = useState<string | null>(null);
 
- // Gmail integration states
- const [gmailUser, setGmailUser] = useState<any>(null);
- const [gmailToken, setGmailToken] = useState<string | null>(null);
- const [isSyncingGmail, setIsSyncingGmail] = useState(false);
- const [gmailStatusMsg, setGmailStatusMsg] = useState('');
 
  // Email thread and manual dispatch states
  const [activeTab, setActiveTab] = useState<'info' | 'emails'>('info');
@@ -257,276 +261,25 @@ export default function BookingCRM({
  const [manualEmailSender, setManualEmailSender] = useState('Bakandeya Agent Manager IA');
  const [manualEmailStatus, setManualEmailStatus] = useState('');
 
- // Advanced Simulation States
- const [isSimulatingAvanzado, setIsSimulatingAvanzado] = useState(false);
- const [simulationRole, setSimulationRole] = useState<'sala' | 'banda'>('sala');
- const [simulationScenario, setSimulationScenario] = useState('taquilla');
- const [simulationCustomInstruction, setSimulationCustomInstruction] = useState('');
- const [simulationSenderName, setSimulationSenderName] = useState('Programación');
- const [simulationSubject, setSimulationSubject] = useState('');
- const [simulationMessage, setSimulationMessage] = useState('');
- const [isGeneratingSimulation, setIsGeneratingSimulation] = useState(false);
- const [simulationGenerated, setSimulationGenerated] = useState(false);
 
- const PREDEFINED_SCENARIOS = {
- sala: [
- { key: 'taquilla', label: 'Interés y reparto de taquilla (70/30 o similar)', defaultInstruction: 'La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.' },
- { key: 'rider', label: 'Exigencias de Rider Técnico y horarios', defaultInstruction: 'La sala está interesada pero exige revisar detalladamente el rider de violín, percusión y sintetizadores analógicos, y pregunta por la hora de montaje de Bakandeya.' },
- { key: 'lleno', label: 'Rechazo amable por calendario lleno', defaultInstruction: 'La sala felicita a la banda por su dossier pero explica que tiene el calendario de otoño cerrado. Ofrece dejar el contacto para la gira de primavera.' },
- { key: 'contrato', label: 'Aceptación final y petición de datos fiscales', defaultInstruction: 'La sala confirma la fecha sugerida en el pitch, acepta las condiciones de la banda y solicita los datos fiscales (CIF, dirección, representante) para redactar el contrato oficial.' },
- { key: 'custom', label: 'Instrucción libre personalizada...', defaultInstruction: '' }
- ],
- banda: [
- { key: 'contrapropuesta', label: 'Contrapropuesta de fecha (Fin de semana) y co-organización', defaultInstruction: 'Bakandeya Agent Manager IA responde sugiriendo cambiar un concierto propuesto en miércoles a un viernes o sábado de noviembre, y sugiere compartir cartel con una banda local para asegurar aforo.' },
- { key: 'aceptacion_rider', label: 'Aceptación de condiciones y especificación de sintetizadores', defaultInstruction: 'Diego (guitarra) responde aceptando el reparto de taquilla propuesto y especifica que los sintetizadores analógicos van listos en dos líneas estéreo balanceadas.' },
- { key: 'cache_minimo', label: 'Solicitud de caché o mínimo garantizado para cubrir furgoneta', defaultInstruction: 'Filgue (bajo) responde explicando de forma amigable que al viajar desde Madrid/Sevilla necesitan un mínimo garantizado de 300€ para cubrir gastos de gasolina y viaje.' },
- { key: 'custom', label: 'Instrucción libre personalizada...', defaultInstruction: '' }
- ]
- };
+ const {
+   isSimulatingAvanzado, setIsSimulatingAvanzado,
+   simulationRole,
+   simulationScenario,
+   simulationCustomInstruction, setSimulationCustomInstruction,
+   simulationSenderName, setSimulationSenderName,
+   simulationSubject, setSimulationSubject,
+   simulationMessage, setSimulationMessage,
+   isGeneratingSimulation,
+   simulationGenerated,
+   PREDEFINED_SCENARIOS,
+   handleRoleChange,
+   handleScenarioChange,
+   handleOpenAdvancedSimulation,
+   handleGenerateSimulationEmail,
+   handleCommitSimulation,
+ } = useNegotiationSimulation(selectedLead, setSelectedLead, onUpdateLead, setManualEmailStatus);
 
- const handleRoleChange = (role: 'sala' | 'banda') => {
- setSimulationRole(role);
- setSimulationGenerated(false);
- setSimulationMessage('');
- 
- if (role === 'sala') {
- setSimulationSenderName(selectedLead ? `Programador de ${selectedLead.nombre_sala}` : 'Programación');
- setSimulationScenario('taquilla');
- setSimulationSubject(selectedLead?.hilo_emails && selectedLead.hilo_emails.length > 0
- ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya');
- setSimulationCustomInstruction('La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.');
- } else {
- setSimulationSenderName('Bakandeya Agent Manager IA');
- setSimulationScenario('contrapropuesta');
- setSimulationSubject(selectedLead?.hilo_emails && selectedLead.hilo_emails.length > 0
- ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya');
- setSimulationCustomInstruction('Bakandeya Agent Manager IA responde sugiriendo cambiar un concierto propuesto en miércoles a un viernes o sábado de noviembre, y sugiere compartir cartel con una banda local para asegurar aforo.');
- }
- };
-
- const handleScenarioChange = (scenarioKey: string) => {
- setSimulationScenario(scenarioKey);
- setSimulationGenerated(false);
- setSimulationMessage('');
- 
- const scenarios = simulationRole === 'sala' ? PREDEFINED_SCENARIOS.sala : PREDEFINED_SCENARIOS.banda;
- const found = scenarios.find(s => s.key === scenarioKey);
- if (found) {
- setSimulationCustomInstruction(found.defaultInstruction);
- }
- };
-
- const handleOpenAdvancedSimulation = () => {
- if (!selectedLead) return;
- setIsSimulatingAvanzado(true);
- setSimulationGenerated(false);
- setSimulationMessage('');
- 
- setSimulationRole('sala');
- setSimulationScenario('taquilla');
- setSimulationSenderName(`Programador de ${selectedLead.nombre_sala}`);
- setSimulationSubject(selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0
- ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya');
- setSimulationCustomInstruction('La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.');
- };
-
- const handleGenerateSimulationEmail = async () => {
- if (!selectedLead) return;
- setIsGeneratingSimulation(true);
- try {
- const res = await apiFetch('/api/generate-simulated-email', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({
- leadId: selectedLead.id,
- role: simulationRole,
- scenario: simulationScenario,
- customInstruction: simulationCustomInstruction,
- senderName: simulationSenderName
- })
- });
- if (res.ok) {
- const data = await res.json();
- setSimulationMessage(data.message);
- setSimulationGenerated(true);
- } else {
- alert('Error al generar la simulación.');
- }
- } catch (err) {
- console.error(err);
- alert('Error de conexión al generar la simulación.');
- } finally {
- setIsGeneratingSimulation(false);
- }
- };
-
- const handleCommitSimulation = () => {
- if (!selectedLead || !simulationMessage) return;
-
- const now = new Date();
- const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
- const newMsg = {
- id: `em-sim-${Date.now()}`,
- fecha: fechaStr,
- remitente: simulationRole,
- remitente_nombre: simulationSenderName,
- asunto: simulationSubject || 'Re: Propuesta de concierto - Bakandeya',
- mensaje: simulationMessage
- };
-
- const currentHilo = selectedLead.hilo_emails || [];
- const nuevoHilo = [...currentHilo, newMsg];
- 
- let nuevoEstado = selectedLead.estado;
- if (simulationRole === 'sala') {
- const lowerMsg = simulationMessage.toLowerCase();
- if (lowerMsg.includes('cerrado') || lowerMsg.includes('lo siento') || lowerMsg.includes('lleno')) {
- // No cambia de estado a negociando si es un rechazo claro
- } else {
- nuevoEstado = 'negociando';
- }
- } else {
- if (selectedLead.estado === 'nuevo' || selectedLead.estado === 'pendiente_aprobacion' || selectedLead.estado === 'aprobado') {
- nuevoEstado = 'esperando_respuesta';
- }
- }
-
- const today = new Date().toISOString().split('T')[0];
- const roleLabel = simulationRole === 'sala' ? 'sala' : 'banda';
- const nuevaNota = `*** [${today}] Correo de simulación de ${roleLabel} (${simulationSenderName}) ***\n` + (selectedLead.notas || '');
-
- onUpdateLead(selectedLead.id, {
- hilo_emails: nuevoHilo,
- estado: nuevoEstado,
- notas: nuevaNota,
- fecha_ultima_respuesta: today
- });
-
- setSelectedLead(prev => prev ? {
- ...prev,
- hilo_emails: nuevoHilo,
- estado: nuevoEstado,
- notas: nuevaNota,
- fecha_ultima_respuesta: today
- } : null);
-
- setIsSimulatingAvanzado(false);
- setManualEmailStatus(`¡Simulación completada! Correo de ${simulationRole === 'sala' ? 'sala' : 'banda'} registrado y sincronizado.`);
- setTimeout(() => {
- setManualEmailStatus('');
- }, 5000);
- };
-
- // Initialize Auth listeners
- React.useEffect(() => {
- const unsubscribe = initAuth(
- (user, token) => {
- setGmailUser(user);
- setGmailToken(token);
- },
- () => {
- setGmailUser(null);
- setGmailToken(null);
- }
- );
- return () => unsubscribe();
- }, []);
-
- const handleGmailLogin = async () => {
- try {
- setGmailStatusMsg('Conectando con Google...');
- const result = await googleSignIn();
- if (result) {
- setGmailUser(result.user);
- setGmailToken(result.accessToken);
- setGmailStatusMsg('Google conectado correctamente.');
- setTimeout(() => setGmailStatusMsg(''), 3000);
- }
- } catch (err: any) {
- console.error('Error logging in with Google:', err);
- const isIframeEnv = window.self !== window.top;
- if (
- err?.code === 'auth/popup-closed-by-user' || 
- err?.message?.includes('popup-closed-by-user') || 
- err?.message?.includes('closed-by-user') ||
- isIframeEnv
- ) {
- setGmailStatusMsg(
- '⚠️ Restricción de Iframe: El navegador bloqueó o cerró el popup de Google. ' + 
- 'Para poder conectar tu cuenta, haz clic en el botón"Abrir en pestaña nueva" ' + 
- 'que ves abajo o en la barra de AI Studio.'
- );
- } else {
- setGmailStatusMsg('No se pudo conectar: ' + (err.message || String(err)));
- }
- }
- };
-
- const handleGmailLogout = async () => {
- await logout();
- setGmailUser(null);
- setGmailToken(null);
- setGmailStatusMsg('Conexión de Google cerrada.');
- setTimeout(() => setGmailStatusMsg(''), 3000);
- };
-
- const handleSyncGmailForLead = async () => {
- if (!selectedLead || !gmailToken) return;
- setIsSyncingGmail(true);
- setGmailStatusMsg('Buscando correos de este contacto en tu Gmail...');
- try {
- const email = selectedLead.email_contacto;
- if (!email) {
- throw new Error('Este contacto no tiene dirección de email registrada.');
- }
- 
- const fetchedMsgs = await fetchGmailThreadsForEmail(email, gmailToken);
- 
- if (fetchedMsgs.length === 0) {
- setGmailStatusMsg('No se encontraron correos de este contacto en Gmail.');
- setIsSyncingGmail(false);
- setTimeout(() => setGmailStatusMsg(''), 4000);
- return;
- }
-
- // Merge fetched messages with existing ones
- const currentHilo = selectedLead.hilo_emails || [];
- const mergedHilo = [...currentHilo];
- 
- let addedCount = 0;
- for (const newMsg of fetchedMsgs) {
- if (!mergedHilo.some(m => m.id === newMsg.id || (m.fecha === newMsg.fecha && m.mensaje === newMsg.mensaje))) {
- mergedHilo.push(newMsg);
- addedCount++;
- }
- }
-
- // Sort by date ascending
- mergedHilo.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
-
- // Update lead
- onUpdateLead(selectedLead.id, {
- hilo_emails: mergedHilo
- });
-
- setSelectedLead(prev => prev ? {
- ...prev,
- hilo_emails: mergedHilo
- } : null);
-
- setGmailStatusMsg(`¡Sincronización completada! Se añadieron ${addedCount} correos nuevos de Gmail.`);
- setTimeout(() => setGmailStatusMsg(''), 5000);
- } catch (err: any) {
- console.error('Error during Gmail sync:', err);
- setGmailStatusMsg('Error al sincronizar con Gmail: ' + (err.message || String(err)));
- } finally {
- setIsSyncingGmail(false);
- }
- };
 
  // Bulk enrich addresses for all venues & festivals
  const [isEnrichingAddresses, setIsEnrichingAddresses] = useState(false);
