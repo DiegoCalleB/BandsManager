@@ -1124,10 +1124,11 @@ export default function App() {
  )}
         {currentView === 'epk' && (
           <ErrorBoundary fallbackTitle="EPK / Dossier Promocional">
-            <EPKManager 
-              epkConfig={epkConfig} 
+            <EPKManager
+              key={currentUser?.band_id || 'band-bakandeya'}
+              epkConfig={epkConfig}
               onSave={handleUpdateEpkConfig}
-              colors={colors} 
+              colors={colors}
               currentTheme={currentTheme}
               currentUser={currentUser}
             />
