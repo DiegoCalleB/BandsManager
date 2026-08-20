@@ -3,7 +3,7 @@ import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConf
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
 import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
-import { Song, SongAudioIdea, AudioTrack, AudioComment, ThemeColors } from '../types';
+import { Song, SongAudioIdea, AudioTrack, ThemeColors } from '../types';
 import { uploadFileToServer, resolveAudioUrl } from '../utils/audioStorage';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import WaveformTrack from './WaveformTrack';
@@ -12,6 +12,7 @@ import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
 import { useStudioShareModal } from '../hooks/useStudioShareModal';
 import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
+import { useIdeaComments } from '../hooks/useIdeaComments';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
@@ -84,6 +85,12 @@ export default function SongStudioModal({
   const [currentTimeMap, setCurrentTimeMap] = useState<Record<string, number>>({});
   const [durationMap, setDurationMap] = useState<Record<string, number>>({});
   const [loopConfigMap, setLoopConfigMap] = useState<Record<string, { enabled: boolean; start: number; end: number }>>({});
+
+  const {
+    commentTextMap, setCommentTextMap,
+    commentTimeTagMap, setCommentTimeTagMap,
+    handleAddComment,
+  } = useIdeaComments(song, onUpdateSong, currentUsername, currentTimeMap);
   
   // Audio upload / new idea form state
   const [showAddIdea, setShowAddIdea] = useState(false);
@@ -189,9 +196,6 @@ export default function SongStudioModal({
     onConfirm: () => void;
   } | null>(null);
 
-  // Comment input state
-  const [commentTextMap, setCommentTextMap] = useState<Record<string, string>>({});
-  const [commentTimeTagMap, setCommentTimeTagMap] = useState<Record<string, number | null>>({});
 
   // Audio elements refs map for multitrack: trackAudioRefs.current[trackId]
   const trackAudioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
@@ -1470,37 +1474,6 @@ export default function SongStudioModal({
     });
 
     onUpdateSong({ ...song, audioIdeas: updatedIdeas });
-  };
-
-  // Add Comment
-  const handleAddComment = (idea: SongAudioIdea) => {
-    const text = commentTextMap[idea.id];
-    if (!text || !text.trim()) return;
-
-    const timeTag = commentTimeTagMap[idea.id] !== undefined ? commentTimeTagMap[idea.id] : undefined;
-
-    const newComment: AudioComment = {
-      id: `comment-${Date.now()}`,
-      autor: currentUsername,
-      timestampSegundos: timeTag ?? Math.floor(currentTimeMap[idea.id] || 0),
-      texto: text.trim(),
-      fecha: 'Ahora'
-    };
-
-    const updatedIdeas = (song.audioIdeas || []).map(i => {
-      if (i.id === idea.id) {
-        return {
-          ...i,
-          comentarios: [...(i.comentarios || []), newComment]
-        };
-      }
-      return i;
-    });
-
-    onUpdateSong({ ...song, audioIdeas: updatedIdeas });
-
-    setCommentTextMap(prev => ({ ...prev, [idea.id]: '' }));
-    setCommentTimeTagMap(prev => ({ ...prev, [idea.id]: null }));
   };
 
   // Delete whole idea
