@@ -711,7 +711,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 </div>
 
                 <p className="text-[11px] text-neutral-400 px-1 leading-tight">
-                  ⚡ Se enviará un código seguro de 6 dígitos de verificación inmediata para restablecer tu contraseña.
+                  ⚡ Se generará un código de verificación de 6 dígitos, que aparecerá aquí mismo en pantalla para restablecer tu contraseña.
                 </p>
 
                 <button
@@ -725,7 +725,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       <span>Generando código...</span>
                     </span>
                   ) : (
-                    <span>Continuar y Recibir Código</span>
+                    <span>Continuar y Generar Código</span>
                   )}
                 </button>
               </form>
