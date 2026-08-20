@@ -150,7 +150,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
   const [isUploadingRider, setIsUploadingRider] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const bandQueryParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(activeBandId)}` : '';
   const rawEpkBase = typeof window !== 'undefined' 
@@ -165,6 +164,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     try {
       const payload: EPKConfig = {
         ...config,
+        bandId: activeBandId,
         firmaEmail: {
           ...(config.firmaEmail || {}),
           redesSociales: { ...(config.enlacesRedes || {}) }
@@ -185,28 +185,34 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     }
   };
 
+  const persistEpkUpdate = async (updated: EPKConfig) => {
+    const withBand = { ...updated, bandId: activeBandId };
+    await api.updateEpkConfig(withBand);
+    setConfig(withBand);
+    if (onSave) onSave(withBand);
+  };
+
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsUploadingLogo(true);
-    setUploadError(null);
+    setSaveError(null);
     try {
       const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'logo' });
-      const updated = { ...config, logoUrl: url };
-      setConfig(updated);
-      if (onSave) onSave(updated);
-      await api.updateEpkConfig(updated);
+      await persistEpkUpdate({ ...config, logoUrl: url });
     } catch (err: any) {
       console.error("Error uploading logo:", err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
         if (ev.target?.result) {
           const url = ev.target!.result as string;
-          const updated = { ...config, logoUrl: url };
-          setConfig(updated);
-          if (onSave) onSave(updated);
-          await api.updateEpkConfig(updated);
+          try {
+            await persistEpkUpdate({ ...config, logoUrl: url });
+          } catch (fallbackErr: any) {
+            console.error("Error saving logo fallback:", fallbackErr);
+            setSaveError(fallbackErr?.message || "No se pudo subir el logo. Inténtalo de nuevo.");
+          }
         }
       };
       reader.readAsDataURL(file);
@@ -220,35 +226,34 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     if (!file) return;
 
     setIsUploadingDossier(true);
-    setUploadError(null);
+    setSaveError(null);
     try {
       const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'dossier' });
-      const updated = { 
-        ...config, 
+      await persistEpkUpdate({
+        ...config,
         dossierPdfUrl: url,
         dossierPdfName: file.name,
         dossierDocumentUrl: url,
         dossierDocumentName: file.name
-      };
-      setConfig(updated);
-      if (onSave) onSave(updated);
-      await api.updateEpkConfig(updated);
+      });
     } catch (err: any) {
       console.error("Error uploading dossier:", err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
         if (ev.target?.result) {
           const url = ev.target!.result as string;
-          const updated = { 
-            ...config, 
-            dossierPdfUrl: url,
-            dossierPdfName: file.name,
-            dossierDocumentUrl: url,
-            dossierDocumentName: file.name
-          };
-          setConfig(updated);
-          if (onSave) onSave(updated);
-          await api.updateEpkConfig(updated);
+          try {
+            await persistEpkUpdate({
+              ...config,
+              dossierPdfUrl: url,
+              dossierPdfName: file.name,
+              dossierDocumentUrl: url,
+              dossierDocumentName: file.name
+            });
+          } catch (fallbackErr: any) {
+            console.error("Error saving dossier fallback:", fallbackErr);
+            setSaveError(fallbackErr?.message || "No se pudo subir el dossier. Inténtalo de nuevo.");
+          }
         }
       };
       reader.readAsDataURL(file);
@@ -262,30 +267,29 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     if (!file) return;
 
     setIsUploadingRider(true);
-    setUploadError(null);
+    setSaveError(null);
     try {
       const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'rider' });
-      const updated = { 
-        ...config, 
+      await persistEpkUpdate({
+        ...config,
         riderPdfUrl: url,
         riderPdfName: file.name
-      };
-      setConfig(updated);
-      if (onSave) onSave(updated);
-      await api.updateEpkConfig(updated);
+      });
     } catch (err: any) {
       console.error("Error uploading rider:", err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
         if (ev.target?.result) {
-          const updated = { 
-            ...config, 
-            riderPdfUrl: ev.target!.result as string,
-            riderPdfName: file.name
-          };
-          setConfig(updated);
-          if (onSave) onSave(updated);
-          await api.updateEpkConfig(updated);
+          try {
+            await persistEpkUpdate({
+              ...config,
+              riderPdfUrl: ev.target!.result as string,
+              riderPdfName: file.name
+            });
+          } catch (fallbackErr: any) {
+            console.error("Error saving rider fallback:", fallbackErr);
+            setSaveError(fallbackErr?.message || "No se pudo subir el rider. Inténtalo de nuevo.");
+          }
         }
       };
       reader.readAsDataURL(file);
