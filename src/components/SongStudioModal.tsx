@@ -10,7 +10,7 @@ import WaveformTrack from './WaveformTrack';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
-import { formatSongShareText, formatSongIdeaShareText } from '../utils/shareUtils';
+import { useStudioShareModal } from '../hooks/useStudioShareModal';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
@@ -73,38 +73,12 @@ export default function SongStudioModal({
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
   const [showChordsModal, setShowChordsModal] = useState<boolean>(false);
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
-  const [shareModalData, setShareModalData] = useState<{
-    isOpen: boolean;
-    title: string;
-    subtitle?: string;
-    text: string;
-    itemType: 'song' | 'idea';
-  }>({
-    isOpen: false,
-    title: '',
-    text: '',
-    itemType: 'song'
-  });
+  const {
+    shareModalData, setShareModalData,
+    handleShareSong,
+    handleShareIdea,
+  } = useStudioShareModal(song);
 
-  const handleShareSong = () => {
-    setShareModalData({
-      isOpen: true,
-      title: song.titulo,
-      subtitle: 'Compartir canción por WhatsApp',
-      text: formatSongShareText(song, { includeChords: true, includeGuide: true }),
-      itemType: 'song'
-    });
-  };
-
-  const handleShareIdea = (idea: SongAudioIdea) => {
-    setShareModalData({
-      isOpen: true,
-      title: `${song.titulo} - Idea: ${idea.titulo}`,
-      subtitle: `Idea de audio (${idea.seccion}) de ${idea.subidoPor}`,
-      text: formatSongIdeaShareText(song, idea),
-      itemType: 'idea'
-    });
-  };
   const [playingIdeaId, setPlayingIdeaId] = useState<string | null>(null);
   const [currentTimeMap, setCurrentTimeMap] = useState<Record<string, number>>({});
   const [durationMap, setDurationMap] = useState<Record<string, number>>({});
