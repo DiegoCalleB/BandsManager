@@ -1,5 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
+let supabaseInstance: SupabaseClient | undefined;
+
 export function getSupabase(): SupabaseClient {
   if (supabaseInstance) return supabaseInstance;
 
