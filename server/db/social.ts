@@ -1,4 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetSocialPosts(bandId: string) {
   const sb = getSupabase();
