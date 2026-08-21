@@ -6,7 +6,7 @@
 
 import { getSupabase } from "../db.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
-import { enviarEmail, EmailAgentError } from "./emailAgentClient.js";
+import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 
 export async function logAgentExecution(logData: {
   band_id: string;
@@ -50,6 +50,12 @@ export interface EnviadorResult {
   message: string;
   results: any[];
 }
+
+// Modo de trabajo del Agente Enviador. Por defecto 'draft': deja el email como borrador en la
+// bandeja de la banda en vez de enviarlo, para poder revisar redacción y formato antes de que
+// llegue a una sala real. Enviar de verdad exige poner AGENT_EMAIL_MODE=send explícitamente -
+// si la variable falta o está mal escrita, NO se envía nada (seguro por defecto).
+const ENVIO_REAL = (process.env.AGENT_EMAIL_MODE || "draft").toLowerCase().trim() === "send";
 
 // Despacha los leads aprobados de una banda por email real (SMTP, cualquier proveedor). A
 // diferencia de las implementaciones anteriores de este mismo agente (Node nativo con Resend,
@@ -118,6 +124,28 @@ export async function runEnviadorAgent(opts: {
     }
 
     try {
+      const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+
+      if (!ENVIO_REAL) {
+        // Modo borrador: se deja el email en la bandeja de la banda para revisión humana. El
+        // lead NO pasa a 'contactado' (nadie ha contactado con nadie todavía) ni se apunta nada
+        // en lead_messages (no hay mensaje enviado en el hilo) ni se toca fecha_envio. Pero sí
+        // cambia de estado, porque si se quedara en 'aprobado_*' el scheduler crearía un
+        // borrador duplicado en cada pasada.
+        const { draftPath } = await crearBorrador(opts.bandId, {
+          to: emailContacto,
+          subject: asunto,
+          body: pitch,
+          inReplyTo: lead.thread_id || undefined
+        });
+
+        const draftNote = `*** [${dateTag}] BORRADOR creado en '${draftPath}' para ${emailContacto} por el Agente Enviador - NO se ha enviado, revísalo y envíalo a mano ***\n` + (lead.notas || "");
+        await sb.from("leads").update({ estado: "borrador_creado", notas: draftNote }).eq("id", lead.id);
+
+        results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: "borrador_creado", carpeta_borradores: draftPath, status: "borrador" });
+        continue;
+      }
+
       await enviarEmail(opts.bandId, {
         to: emailContacto,
         subject: asunto,
@@ -126,7 +154,6 @@ export async function runEnviadorAgent(opts: {
       });
 
       const nextState = isRespuesta ? "negociando" : "contactado";
-      const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
       const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto} por el Agente Enviador (email real) ***\n` + (lead.notas || "");
 
       await sb.from("leads").update({ estado: nextState, fecha_envio: nowIso, notas: newNote }).eq("id", lead.id);
@@ -152,11 +179,13 @@ export async function runEnviadorAgent(opts: {
     }
   }
 
-  const sentCount = results.filter((r) => r.status === "enviado").length;
+  const sentCount = results.filter((r) => r.status === "enviado" || r.status === "borrador").length;
   const errorCount = results.filter((r) => r.status === "error").length;
   const successMsg = sentCount > 0
-    ? `Agente Enviador: ${sentCount} propuesta(s) despachada(s) por email real${errorCount > 0 ? `, ${errorCount} con error` : ""}.`
-    : `Agente Enviador: no se pudo despachar ninguna propuesta (${errorCount} error(es)).`;
+    ? ENVIO_REAL
+      ? `Agente Enviador: ${sentCount} propuesta(s) despachada(s) por email real${errorCount > 0 ? `, ${errorCount} con error` : ""}.`
+      : `Agente Enviador (modo borrador): ${sentCount} borrador(es) creado(s) en la bandeja de la banda, pendientes de revisar y enviar a mano${errorCount > 0 ? `, ${errorCount} con error` : ""}. No se ha enviado ningún email.`
+    : `Agente Enviador: no se pudo ${ENVIO_REAL ? "despachar" : "preparar"} ninguna propuesta (${errorCount} error(es)).`;
 
   await logAgentExecution({
     band_id: opts.bandId,
@@ -170,7 +199,7 @@ export async function runEnviadorAgent(opts: {
     leads_afectados: results,
     conteo_afectados: sentCount,
     duracion_ms: Date.now() - startTime,
-    detalles: { band_name: bandName }
+    detalles: { band_name: bandName, modo_email: ENVIO_REAL ? "send" : "draft" }
   });
 
   return { success: sentCount > 0 || errorCount === 0, dispatchedCount: sentCount, message: successMsg, results };
