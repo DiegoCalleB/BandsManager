@@ -592,3 +592,18 @@ export interface BandSchedule {
   updated_at?: string;
 }
 
+// app_password nunca viaja en la respuesta del GET - ver toSafeEmailAccountResponse en
+// server/db/emailAccounts.ts. Este tipo describe justo esa forma "segura".
+export interface BandEmailAccountStatus {
+  connected: boolean;
+  band_id?: string;
+  provider?: 'gmail' | 'outlook' | 'other';
+  email?: string;
+  smtp_host?: string;
+  smtp_port?: number;
+  smtp_secure?: boolean;
+  imap_host?: string;
+  imap_port?: number;
+  updated_at?: string;
+}
+
