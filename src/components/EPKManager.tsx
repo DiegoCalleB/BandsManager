@@ -723,6 +723,9 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             <p className="text-xs text-slate-400 leading-relaxed">
               Escribe o pega aquí cualquier detalle relevante de la banda (trayectoria, integrantes, estilo, rango de caché orientativo, requerimientos de escenario, prensa, enlaces extra, etc.). Toda esta información estará almacenada y el Chatbot y los Agentes la usarán para personalizar las propuestas comerciales enviadas a las salas.
             </p>
+            <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 border border-amber-500/20 rounded-lg px-3 py-2">
+              ⚠ Este texto NO se muestra en la página pública del EPK - es solo para uso interno del chatbot y los agentes. Puede ser largo. El subtítulo corto que sí ven las salas se edita en "Firma de Email y Redes" → "Lema / Pie de Firma".
+            </p>
 
             <div className="space-y-1.5">
               <textarea
@@ -1337,6 +1340,9 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-300">Lema / Pie de Firma</label>
+              <p className="text-[11px] text-slate-500">
+                Una frase corta (tagline). Sale al pie de los emails y también como subtítulo grande en la cabecera de vuestra página pública de EPK.
+              </p>
               <input
                 type="text"
                 value={config.firmaEmail?.textoPie || ''}
