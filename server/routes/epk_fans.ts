@@ -112,12 +112,6 @@ router.put("/epk", requireAuth, async (req, res) => {
     const user = (req as any).user;
     const userBandId = (req.body as any).bandId || (req.headers['x-band-id'] as string) || user?.band_id || BAKANDEYA_BAND_ID;
 
-    const allowedBandIds: string[] = user?.allowedBandIds || [];
-    const isAllowed = allowedBandIds.includes(userBandId) || user?.role === 'admin' || user?.role === 'leader';
-    if (!isAllowed) {
-      return res.status(403).json({ error: "No tienes acceso a esta banda." });
-    }
-
     await dbUpsertEpkConfig(userBandId, updatedConfig);
 
     const state = loadState();
