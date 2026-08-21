@@ -560,7 +560,7 @@ export default function CalendarView({
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.success) {
-        setSyncSuccessMessage(data.message || 'Conciertos sincronizados con éxito en Google Sheets.');
+        setSyncSuccessMessage(data.message || 'Conciertos sincronizados con éxito.');
         // clear after 6 seconds
         setTimeout(() => setSyncSuccessMessage(''), 6000);
       } else {
@@ -568,7 +568,7 @@ export default function CalendarView({
       }
     } catch (error) {
       console.error('Error synchronizing concerts:', error);
-      setSyncErrorMessage('Error de conexión con el servidor de Google Sheets.');
+      setSyncErrorMessage('Error de conexión con el servidor.');
     } finally {
       setIsSyncingConcerts(false);
     }

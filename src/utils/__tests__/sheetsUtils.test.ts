@@ -48,7 +48,7 @@ describe('sheetsUtils', () => {
       const result = validateLeadConcurrency(mockLead, 'pendiente_aprobacion');
       expect(result.isConflict).toBe(true);
       expect(result.message).toContain('Sala Caracol');
-      expect(result.message).toContain('cambió de estado en Google Sheets');
+      expect(result.message).toContain('cambió de estado');
     });
   });
 
