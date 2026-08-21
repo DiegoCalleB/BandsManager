@@ -3,7 +3,6 @@ import { loadState, saveState, requireAuth } from "../../state.js";
 import { getAiClient, generateContentWithFallback } from "../../ai.js";
 import { safeParseJson } from "../../utils.js";
 import { ensureCategoryTemplatesInState, updatePromptsMarkdownFile } from "../../promptsManager.js";
-import { syncCategoryTemplatesToSheet } from "../../sheets.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 
 const router = express.Router();
@@ -56,14 +55,9 @@ router.post("/templates/save", requireAuth, async (req, res) => {
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
     updatePromptsMarkdownFile(state.categoryTemplates, globalMemory);
 
-    // Sync to Google Sheets
-    syncCategoryTemplatesToSheet("band-bakandeya", state.categoryTemplates).catch(err => {
-      console.warn("Background sheet sync notice:", err);
-    });
-
     res.json({
       success: true,
-      message: "Plantilla y Pautas guardadas correctamente en la Memoria IA, PROMPTS_AGENTES_IA.md y Google Sheets.",
+      message: "Plantilla y Pautas guardadas correctamente en la Memoria IA y PROMPTS_AGENTES_IA.md.",
       templates: state.categoryTemplates
     });
   } catch (error: any) {
@@ -195,11 +189,6 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
 
       // Refresh PROMPTS_AGENTES_IA.md
       updatePromptsMarkdownFile(state.categoryTemplates, globalMemory);
-
-      // Sync to Google Sheets
-      syncCategoryTemplatesToSheet("band-bakandeya", state.categoryTemplates).catch(err => {
-        console.warn("Background sheet sync notice:", err);
-      });
     }
 
     res.json({

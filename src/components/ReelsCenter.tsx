@@ -128,7 +128,7 @@ export default function ReelsCenter({
  });
  const data = await res.json();
  if (res.ok && data.success) {
- setSyncSuccessMessage(data.message || 'Publicaciones y Reels sincronizados con éxito en Google Sheets.');
+ setSyncSuccessMessage(data.message || 'Publicaciones y Reels sincronizados con éxito.');
  // clear after 6 seconds
  setTimeout(() => setSyncSuccessMessage(''), 6000);
  } else {
@@ -136,7 +136,7 @@ export default function ReelsCenter({
  }
  } catch (error) {
  console.error('Error synchronizing reels:', error);
- setSyncErrorMessage('Error de conexión con el servidor de Google Sheets.');
+ setSyncErrorMessage('Error de conexión con el servidor.');
  } finally {
  setIsSyncingReels(false);
  }
@@ -613,7 +613,7 @@ export default function ReelsCenter({
  });
  const data = await res.json();
  if (res.ok && data.success) {
- setMetricSuccess('✓ Sincronizado con Google Sheets con éxito.');
+ setMetricSuccess('✓ Sincronizado con éxito.');
  setTimeout(() => setMetricSuccess(''), 4000);
  } else {
  alert(data.error || 'Error al sincronizar seguidores.');
@@ -986,7 +986,7 @@ export default function ReelsCenter({
  ? 'bg-indigo-600 hover:bg-indigo-700 text-white -indigo-600 shadow-sm shadow-indigo-100'
  : 'bg-[#f2ca50]/10 hover:bg-[#f2ca50]/20 text-[#f2ca50] -[#f2ca50]/30 shadow-md'
  }`}
- title="Sincronizar todas las publicaciones de redes sociales en Google Sheets (Excel)"
+ title="Sincronizar todas las publicaciones de redes sociales"
  >
  <RefreshCw className={`w-3 h-3 ${isSyncingReels ? 'animate-spin' : ''}`} />
  {isSyncingReels ? 'Sincronizando...' : 'Actualizar en Excel'}
