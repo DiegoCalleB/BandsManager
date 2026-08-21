@@ -235,7 +235,15 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 { label: 'Músicos en escena', valor: datos.numMusicos ? String(datos.numMusicos) : '' },
-                { label: 'Duración del directo', valor: datos.duracionDirecto || '' },
+                {
+                  label: 'Duración del directo',
+                  // El editor ahora guarda solo el número (la unidad "min" es fija en la UI),
+                  // pero datos antiguos podían llevar texto libre tipo "75 min" - si ya trae
+                  // letras se deja tal cual, para no acabar mostrando "75 min min".
+                  valor: datos.duracionDirecto
+                    ? (/[a-zA-Z]/.test(String(datos.duracionDirecto)) ? String(datos.duracionDirecto) : `${datos.duracionDirecto} min`)
+                    : ''
+                },
                 { label: 'Ciudad base', valor: datos.ciudadBase || '' },
                 { label: 'Formatos', valor: datos.formatos || '' }
               ].filter(d => d.valor).map(d => (
@@ -316,6 +324,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <div>
                     <h4 className="font-bold text-white text-sm leading-tight">{m.nombre}</h4>
                     {m.rol && <p className="text-xs text-amber-400/90 mt-0.5">{m.rol}</p>}
+                    {m.bio && <p className="text-[11px] text-slate-500 mt-1 leading-snug">{m.bio}</p>}
                   </div>
                 </div>
               ))}
