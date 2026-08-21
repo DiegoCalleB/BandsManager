@@ -197,7 +197,7 @@ DROP POLICY IF EXISTS "Allow All Deletes band-media" ON storage.objects;
 CREATE POLICY "Allow All Deletes band-media" ON storage.objects FOR DELETE USING (bucket_id = 'band-media');
 
 -- Motor de agentes de booking consolidado en Node (server/services/agentScheduler.ts,
--- server/services/gmailAgentClient.ts) - ver supabase_schema.sql para el comentario completo.
+-- server/services/emailAgentClient.ts) - ver supabase_schema.sql para el comentario completo.
 CREATE TABLE IF NOT EXISTS public.agent_schedule_state (
   job_name TEXT PRIMARY KEY,
   last_run_at TIMESTAMPTZ
@@ -206,12 +206,23 @@ ALTER TABLE public.agent_schedule_state ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.agent_schedule_state;
 CREATE POLICY "Permitir acceso total al backend" ON public.agent_schedule_state FOR ALL USING (true);
 
-CREATE TABLE IF NOT EXISTS public.band_gmail_tokens (
+-- Sustituye a band_gmail_tokens (OAuth específico de Gmail, retirado en favor de SMTP/IMAP
+-- genérico para soportar Outlook y cualquier otro proveedor). band_gmail_tokens nunca llegó a
+-- poblarse en producción, así que no hace falta migrar datos.
+DROP TABLE IF EXISTS public.band_gmail_tokens;
+
+CREATE TABLE IF NOT EXISTS public.band_email_accounts (
   band_id TEXT PRIMARY KEY REFERENCES public.registered_bands(band_id) ON DELETE CASCADE,
-  refresh_token TEXT NOT NULL,
-  email_conectado TEXT,
+  provider TEXT NOT NULL DEFAULT 'other',
+  email TEXT NOT NULL,
+  app_password TEXT NOT NULL,
+  smtp_host TEXT NOT NULL,
+  smtp_port INTEGER NOT NULL,
+  smtp_secure BOOLEAN NOT NULL DEFAULT true,
+  imap_host TEXT NOT NULL,
+  imap_port INTEGER NOT NULL DEFAULT 993,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-ALTER TABLE public.band_gmail_tokens ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.band_gmail_tokens;
-CREATE POLICY "Permitir acceso total al backend" ON public.band_gmail_tokens FOR ALL USING (true);
+ALTER TABLE public.band_email_accounts ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.band_email_accounts;
+CREATE POLICY "Permitir acceso total al backend" ON public.band_email_accounts FOR ALL USING (true);

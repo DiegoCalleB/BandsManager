@@ -17,4 +17,4 @@ export * from "./db/sync.js";
 export * from "./db/schedule.js";
 export * from "./db/webhooks.js";
 export * from "./db/agentSchedule.js";
-export * from "./db/gmailTokens.js";
+export * from "./db/emailAccounts.js";

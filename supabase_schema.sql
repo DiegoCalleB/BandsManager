@@ -479,18 +479,28 @@ CREATE TABLE IF NOT EXISTS agent_schedule_state (
 ALTER TABLE agent_schedule_state ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON agent_schedule_state FOR ALL USING (true);
 
--- Token OAuth de Gmail por banda para envío/lectura desatendidos (Agente Enviador/Lector).
--- Cada banda conecta su propia cuenta de Gmail una vez (flujo OAuth local, igual que en el
--- repo Python) - nunca un buzón compartido entre bandas. email_conectado se usa para
--- verificar que la cuenta realmente conectada coincide con el email oficial de la banda en
--- su EPK antes de enviar nada (si no coincide, el Enviador falla explícito y no manda).
-CREATE TABLE IF NOT EXISTS band_gmail_tokens (
+-- Cuenta de email por banda para envío/lectura desatendidos (Agente Enviador/Lector), vía
+-- SMTP (envío) e IMAP (lectura) - protocolos estándar que soportan Gmail, Outlook, Yahoo o
+-- cualquier dominio propio, en vez de atarse a la API específica de un solo proveedor. Cada
+-- banda conecta su propia cuenta con una contraseña de aplicación (nunca un buzón compartido
+-- entre bandas). email se usa para verificar que la cuenta configurada coincide con el email
+-- oficial de la banda en su EPK antes de enviar nada (si no coincide, el Enviador falla
+-- explícito y no manda).
+DROP TABLE IF EXISTS band_gmail_tokens;
+
+CREATE TABLE IF NOT EXISTS band_email_accounts (
   band_id TEXT PRIMARY KEY REFERENCES registered_bands(band_id) ON DELETE CASCADE,
-  refresh_token TEXT NOT NULL,
-  email_conectado TEXT,
+  provider TEXT NOT NULL DEFAULT 'other', -- 'gmail' | 'outlook' | 'other'
+  email TEXT NOT NULL,
+  app_password TEXT NOT NULL,
+  smtp_host TEXT NOT NULL,
+  smtp_port INTEGER NOT NULL,
+  smtp_secure BOOLEAN NOT NULL DEFAULT true,
+  imap_host TEXT NOT NULL,
+  imap_port INTEGER NOT NULL DEFAULT 993,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-ALTER TABLE band_gmail_tokens ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Permitir acceso total al backend" ON band_gmail_tokens FOR ALL USING (true);
+ALTER TABLE band_email_accounts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON band_email_accounts FOR ALL USING (true);
 
