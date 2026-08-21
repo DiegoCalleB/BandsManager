@@ -79,3 +79,15 @@ export async function dbUpsertBandEmailAccount(account: {
 
   return data || payload;
 }
+
+// app_password es una credencial de escritura, no de lectura: ninguna ruta HTTP debe
+// devolverla nunca, ni en el GET ni haciendo eco del POST. Función pura y exportada aparte
+// (en vez de repetir el destructuring en cada ruta) para poder verificarlo con un test
+// unitario sin necesidad de montar Express.
+export function toSafeEmailAccountResponse(account: BandEmailAccount | null): { connected: boolean; [key: string]: any } {
+  if (!account) {
+    return { connected: false };
+  }
+  const { app_password, ...safe } = account;
+  return { connected: true, ...safe };
+}
