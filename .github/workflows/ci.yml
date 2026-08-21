@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'claude/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: |
+          set +e
+          npx tsc --noEmit > /tmp/tsc_output.txt 2>&1
+          set -e
+          cat /tmp/tsc_output.txt
+
+          TOTAL=$(grep -cE "error TS" /tmp/tsc_output.txt || true)
+          CRASH=$(grep -cE "error TS(2304|2551|2552)" /tmp/tsc_output.txt || true)
+          echo "Total errores tsc: $TOTAL"
+          echo "Errores de clase 'revienta al usarlo' (TS2304/TS2551/TS2552): $CRASH"
+
+          # Tolerancia cero para nombres no declarados / imports que faltan /
+          # métodos inexistentes: esto son ReferenceError/TypeError garantizados
+          # en cuanto se ejecute esa ruta de código, no solo avisos de tipos.
+          if [ "$CRASH" -gt 0 ]; then
+            echo "::error::Hay $CRASH errores de tipo 'Cannot find name' - revientan en producción, no son solo avisos de tipos. Revisa el log de arriba."
+            exit 1
+          fi
+
+          # Ratchet: no dejar que la deuda de tipos general crezca respecto al
+          # baseline conocido (2026-08-21). Baja este número cuando arregles
+          # avisos existentes; nunca lo subas sin justificar por qué.
+          BASELINE=118
+          if [ "$TOTAL" -gt "$BASELINE" ]; then
+            echo "::error::El total de errores de tsc ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear."
+            exit 1
+          fi
+
+      - name: Build check (bundle con esbuild)
+        run: npm run lint
+
+      - name: Tests
+        run: npm test

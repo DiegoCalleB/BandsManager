@@ -112,8 +112,14 @@ export function calculateBookingMetrics(leads: Lead[]): BookingMetrics {
     const estado = lead.estado || 'nuevo';
     const norm = normalizeStatus(estado);
     leadsPorEstado[estado] = (leadsPorEstado[estado] || 0) + 1;
-    leadsPorEstado[norm] = (leadsPorEstado[norm] || 0) + 1;
-    if (estado.startsWith('aprobado')) {
+    // Solo sumar también bajo la clave normalizada si es distinta de la cruda;
+    // si no, un lead con estado exactamente 'aprobado' se contaba 2-3 veces
+    // bajo la misma clave (raw + norm + el rollup de abajo), inflando la
+    // tarjeta "Aprobados" del dashboard (BookingMetricsCards.tsx).
+    if (norm !== estado) {
+      leadsPorEstado[norm] = (leadsPorEstado[norm] || 0) + 1;
+    }
+    if (estado.startsWith('aprobado') && estado !== 'aprobado') {
       leadsPorEstado['aprobado'] = (leadsPorEstado['aprobado'] || 0) + 1;
     }
     sumAforo += lead.aforo || 0;
