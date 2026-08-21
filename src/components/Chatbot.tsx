@@ -271,33 +271,6 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  initialLeadIds?: string[];
  } | null>(null);
 
- const [copiedCredentials, setCopiedCredentials] = useState(false);
-
- const handleCopyCredentials = async () => {
- try {
- const token = localStorage.getItem('bakandeya_token');
- const headers: Record<string, string> = {};
- if (token) {
- headers['Authorization'] = `Bearer ${token}`;
- headers['x-auth-token'] = token;
- }
- const res = await fetch('/api/github-secrets-helper', { headers });
- if (res.ok) {
- const data = await res.json();
- if (data.serviceAccountJson) {
- await navigator.clipboard.writeText(data.serviceAccountJson);
- setCopiedCredentials(true);
- setTimeout(() => setCopiedCredentials(false), 3000);
- return;
- }
- }
- alert("No se pudieron obtener las credenciales JSON del servidor.");
- } catch (e) {
- console.error("Error al copiar credenciales:", e);
- alert("Error al copiar las credenciales.");
- }
- };
-
  useEffect(() => {
  if (!activeRun || activeRun.status === 'completed' || activeRun.status === 'error') return;
 

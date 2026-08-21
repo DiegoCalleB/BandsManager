@@ -6,27 +6,6 @@ import { dbUpsertLead, getSupabase } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 
-function parsePrivateKey(rawKey?: string): string | null {
-  if (!rawKey) return null;
-  let key = rawKey.trim();
-  if (key.includes("{") && key.includes("}")) {
-    try {
-      const startIdx = key.indexOf("{");
-      const endIdx = key.lastIndexOf("}") + 1;
-      const parsed = JSON.parse(key.substring(startIdx, endIdx));
-      if (parsed.private_key) key = parsed.private_key;
-    } catch (_) {}
-  }
-  if (key.startsWith('"') && key.endsWith('"')) {
-    key = key.substring(1, key.length - 1);
-  }
-  key = key.replace(/\\n/g, "\n");
-  if (!key.includes("BEGIN PRIVATE KEY")) {
-    return null;
-  }
-  return key;
-}
-
 const router = express.Router();
 
 function normalizeAgentName(name: string): string {
@@ -716,69 +695,6 @@ router.get("/agent-runs/:runId/jobs", async (req, res) => {
       error: `Error al consultar trabajos del agente: ${err.message}`
     });
   }
-});
-
-// GET /api/github-secrets-helper - Provide formatted credentials JSON for GitHub Repository Secrets
-router.get("/github-secrets-helper", requireCronOrAuth, (req, res) => {
-  let email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || process.env.SERVICE_ACCOUNT_EMAIL || "bakandeya-sheets@bakandeya-management.iam.gserviceaccount.com";
-  const spreadsheetId = process.env.SPREADSHEET_ID || "1tsHUosgn1VQMvlRxe6LBJgAq7vtysXPrfWviik026-I";
-  const rawKey = process.env.GOOGLE_PRIVATE_KEY || process.env.PRIVATE_KEY || "";
-
-  let serviceAccountJson = "";
-  const possibleJsonCreds = [
-    process.env.GCP_SA_KEY,
-    process.env.GOOGLE_SERVICE_ACCOUNT_JSON,
-    process.env.GOOGLE_CREDENTIALS,
-    process.env.GOOGLE_SHEETS_CREDENTIALS,
-    process.env.GOOGLE_APPLICATION_CREDENTIALS,
-    process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON,
-  ];
-
-  for (const rawVal of possibleJsonCreds) {
-    if (rawVal && rawVal.trim().length > 0) {
-      try {
-        let str = rawVal.trim();
-        if (!str.startsWith("{") && str.length > 100 && !str.includes(" ")) {
-          try {
-            const decoded = Buffer.from(str, "base64").toString("utf-8");
-            if (decoded.includes("{") && decoded.includes("private_key")) {
-              str = decoded;
-            }
-          } catch (_) {}
-        }
-        const parsed = JSON.parse(str);
-        if (parsed.private_key && parsed.client_email) {
-          serviceAccountJson = JSON.stringify(parsed, null, 2);
-          email = parsed.client_email;
-          break;
-        }
-      } catch (_) {}
-    }
-  }
-
-  if (!serviceAccountJson) {
-    const parsedKey = parsePrivateKey(rawKey);
-    if (parsedKey) {
-      serviceAccountJson = JSON.stringify({
-        type: "service_account",
-        project_id: "bakandeya-management",
-        private_key_id: "bakandeya-key-01",
-        private_key: parsedKey,
-        client_email: email,
-        client_id: "109823746592837465928",
-        auth_uri: "https://accounts.google.com/o/oauth2/auth",
-        token_uri: "https://oauth2.googleapis.com/token",
-        auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs"
-      }, null, 2);
-    }
-  }
-
-  res.json({
-    configured: !!serviceAccountJson,
-    spreadsheetId,
-    clientEmail: email,
-    serviceAccountJson
-  });
 });
 
 // Reset database to initial seeds (Admin only)

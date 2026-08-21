@@ -34,7 +34,7 @@ import { useLanguage } from './context/LanguageContext';
 import { 
   Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
   Table, FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
-  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, FileSpreadsheet, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Sliders
+  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Sliders
 } from 'lucide-react';
 
 export default function App() {
@@ -265,29 +265,6 @@ export default function App() {
   const [githubOwner, setGithubOwner] = useState(() => localStorage.getItem('bakandeya_github_owner') || 'DiegoCalleB');
   const [githubRepo, setGithubRepo] = useState(() => localStorage.getItem('bakandeya_github_repo') || 'bakandeya-agent-manager');
   const [githubRef, setGithubRef] = useState(() => localStorage.getItem('bakandeya_github_ref') || 'main');
-
-  // Google Sheets check state
-  const [showSheetsModal, setShowSheetsModal] = useState(false);
-  const [sheetsLoading, setSheetsLoading] = useState(false);
-  const [sheetsStatus, setSheetsStatus] = useState<any>(null);
-
-  const checkGoogleSheets = async () => {
-    setSheetsLoading(true);
-    setShowSheetsModal(true);
-    setSheetsStatus(null);
-    try {
-      const data = await api.checkSheets();
-      setSheetsStatus(data);
-    } catch (error) {
-      console.error("Error verifying Google Sheets:", error);
-      setSheetsStatus({
-        configured: false,
-        error: "No se pudo comunicar con el servidor para verificar las hojas de cálculo."
-      });
-    } finally {
-      setSheetsLoading(false);
-    }
-  };
 
   useEffect(() => {
     const handleRefUpdate = () => {
@@ -1430,165 +1407,6 @@ export default function App() {
  colors={colors}
  currentTheme={currentTheme}
  />
- </div>
- </div>
- )}
-
- {/* Google Sheets Verification Modal */}
- {showSheetsModal && (
- <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
- <div className={`w-full max-w-md rounded-2xl p-6 space-y-6 shadow-2xl relative overflow-hidden ${
- currentTheme === 'stitch_light' 
- ? 'bg-white border-slate-200 text-slate-800' 
- : 'bg-[#121111] border-neutral-800 text-neutral-100'
- }`}>
- <div className="flex items-start justify-between">
- <div className="space-y-1">
- <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-bold bg-emerald-400/20/10 border-[#73c991]/20/20 text-[#73c991]/20">
- <FileSpreadsheet className="w-3 h-3" /> Estado Google Sheets
- </div>
- <h3 className={`text-lg font-black tracking-wider uppercase font-display ${
- currentTheme === 'stitch_light' ? 'text-slate-900' : 'text-neutral-100'
- }`}>Verificar Conexión</h3>
- </div>
- <button 
- onClick={() => setShowSheetsModal(false)}
- className={`p-1 rounded-lg transition-colors active:scale-95 ${
- currentTheme === 'stitch_light'
- ? 'hover:bg-slate-100 text-slate-400 hover:text-slate-600'
- : 'hover:bg-neutral-800 text-neutral-500 hover:text-neutral-300'
- }`}
- >
- <X className="w-5 h-5" />
- </button>
- </div>
-
- {sheetsLoading ? (
- <div className="flex flex-col items-center justify-center py-8 gap-3">
- <RefreshCw className="w-8 h-8 animate-spin text-[#73c991]/20" />
- <p className="text-xs font-mono text-neutral-400">Consultando hojas en Google Sheets...</p>
- </div>
- ) : sheetsStatus ? (
- <div className="space-y-4">
- {!sheetsStatus.configured ? (
- <div className="p-3.5 bg-rose-500/10 border-rose-500/20 rounded-xl space-y-2">
- <p className="text-xs font-bold text-rose-300 font-mono">⚠️ No Configurado</p>
- <p className="text-[11px] leading-relaxed text-rose-300 font-mono">
- {sheetsStatus.error ||"Las variables de credenciales de Google o SPREADSHEET_ID no están presentes en el entorno."}
- </p>
- </div>
- ) : sheetsStatus.error ? (
- <div className="p-3.5 bg-rose-500/10 border-rose-500/20 rounded-xl space-y-2">
- <p className="text-xs font-bold text-rose-300 font-mono">⚠️ Error de Autenticación</p>
- <p className="text-[11px] leading-relaxed text-rose-300 font-mono">
- {sheetsStatus.error}
- </p>
- <p className="text-[9px] leading-normal text-neutral-500 font-mono pt-1">
- Comprueba que el archivo de credenciales de Google Service Account sea válido, y que hayas compartido tu hoja con el email de tu Service Account con permisos de"Editor".
- </p>
- </div>
- ) : (
- <div className="space-y-4 font-mono">
- <div className={`p-3 rounded-xl text-[10px] ${
- currentTheme === 'stitch_light' ? 'bg-slate-50 border-slate-200' : 'bg-neutral-950 border-neutral-800'
- }`}>
- <p className="text-neutral-500 uppercase tracking-widest text-[9px] mb-1">ID del Spreadsheet</p>
- <p className="font-mono text-neutral-400 truncate">{sheetsStatus.spreadsheetId}</p>
- </div>
-
- <div className="space-y-2">
- <div className="flex items-center justify-between">
- <p className="text-neutral-500 uppercase tracking-widest text-[9px]">Pestañas Requeridas en Google Sheets</p>
- <a 
- href="/api/export-excel" 
- download="band_data.xlsx"
- className="inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 transition-all cursor-pointer"
- >
- <FileSpreadsheet className="w-3 h-3" /> Descargar Excel (.xlsx)
- </a>
- </div>
- 
- <div className="space-y-1.5 max-h-[280px] overflow-y-auto pr-1">
- {[
- { key: 'registro_bandas', name: 'registro_bandas', desc: 'Registro de nuevas bandas SaaS (columna band_id)' },
- { key: 'usuarios', name: 'usuarios', desc: 'Tabla oficial de usuarios, roles y accesos (columna band_id)' },
- { key: 'leads', name: 'leads', desc: 'Directorio de salas, medios y contactos' },
- { key: 'bandas', name: 'bandas', desc: 'Bandas amigas y red co-booking' },
- { key: 'canciones', name: 'canciones', desc: 'Catálogo de temas y repertorio' },
- { key: 'repertorios', name: 'repertorios', desc: 'Setlists y listas de canciones' },
- { key: 'fans', name: 'fans', desc: 'Base de fans y tribu' },
- { key: 'tours', name: 'tours', desc: 'Giras y logística de ruta' },
- { key: 'conciertos', name: 'conciertos', desc: 'Historial de conciertos' },
- { key: 'ensayos', name: 'ensayos', desc: 'Historial de ensayos' },
- { key: 'finanzas', name: 'finanzas', desc: 'Registro de ingresos y gastos' }
- ].map(tab => {
- const exists = sheetsStatus.status[tab.key];
- const wasCreated = (sheetsStatus.created || []).includes(tab.key);
-
- return (
- <div 
- key={tab.key}
- className={`flex items-center justify-between p-2.5 rounded-xl ${
- exists 
- ? 'bg-emerald-400/20/5 border-[#73c991]/20/10' 
- : 'bg-rose-500/5 border-rose-500/10'
- }`}
- >
- <div className="min-w-0">
- <p className="text-xs font-bold text-neutral-300 flex items-center gap-1.5">
- <span>{tab.name}</span>
- {wasCreated && (
- <span className="text-[8px] font-bold text-[#f2ca50] bg-[#f2ca50]/10 px-1.5 py-0.5 rounded border-[#f2ca50]/20">
- ¡CREADA!
- </span>
- )}
- </p>
- <p className="text-[9px] text-neutral-500 leading-none mt-1">{tab.desc}</p>
- </div>
-
- <span className={`text-[10px] font-bold px-2 py-0.5 rounded font-mono ${
- exists 
- ? 'bg-emerald-400/20/10 text-[#73c991]/20 border-[#73c991]/20/20' 
- : 'bg-rose-500/15 text-rose-400 border-rose-500/20'
- }`}>
- {exists ? 'Conectado' : 'Faltante'}
- </span>
- </div>
- );
- })}
- </div>
- </div>
-
- <p className="text-[9px] leading-relaxed text-neutral-500 text-center italic pt-2">
- Todas las acciones de guardar ensayos y conciertos sincronizan automáticamente de forma directa a sus correspondientes pestañas.
- </p>
- </div>
- )}
-
- <div className="flex gap-2.5 pt-2">
- <button
- onClick={checkGoogleSheets}
- className={`flex-1 py-2 font-mono text-xs font-bold rounded-lg transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] text-center ${
- currentTheme === 'stitch_light'
- ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
- : 'bg-neutral-900 border-neutral-800 text-neutral-300 hover:bg-neutral-800'
- }`}
- >
- Volver a comprobar
- </button>
- <button
- onClick={() => setShowSheetsModal(false)}
- className={`flex-1 py-2 font-mono text-xs font-bold rounded-lg transition-all cursor-pointer text-center hover:scale-[1.02] active:scale-[0.98] ${
- currentTheme === 'stitch_light'
- ? 'bg-indigo-600 text-white hover:bg-indigo-700'
- : 'bg-emerald-400/20 text-neutral-950 font-black hover:bg-emerald-400/20'
- }`}
- >
- Cerrar panel
- </button>
- </div>
- </div>
- ) : null}
  </div>
  </div>
  )}
