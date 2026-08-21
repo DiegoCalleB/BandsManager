@@ -12,8 +12,9 @@ export type LeadStatus =
   | 'interesado' 
   | 'pendiente_aprobacion' 
   | 'aprobado' 
-  | 'aprobado_propuesta' 
-  | 'aprobado_respuesta';
+  | 'aprobado_propuesta'
+  | 'aprobado_respuesta'
+  | 'borrador_creado';
 
 export type LeadType = 'sala' | 'festival' | 'ayuntamiento' | 'grupo' | 'productora' | 'medio' | 'discoteca' | 'agencia' | 'manager' | 'sello';
 

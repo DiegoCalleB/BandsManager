@@ -10,6 +10,7 @@
 // enviar se verifica que esa cuenta coincide con el email oficial de la banda.
 
 import nodemailer from "nodemailer";
+import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { ImapFlow } from "imapflow";
 import { getSupabase } from "../db/core.js";
 import { dbGetBandEmailAccount, BandEmailAccount } from "../db/emailAccounts.js";
@@ -82,6 +83,61 @@ export async function enviarEmail(bandId: string, params: { to: string; subject:
     return { messageId: info.messageId };
   } catch (err: any) {
     throw new EmailAgentError(`No se pudo enviar el email para '${bandId}': ${err.message || err}`, "api_error");
+  }
+}
+
+// Deja el email como BORRADOR en la bandeja de la banda en vez de enviarlo, para que una
+// persona lo revise (redacción, formato) y decida si lo manda a mano. Es el comportamiento por
+// defecto del Agente Enviador mientras el sistema está en pruebas - ver AGENT_EMAIL_MODE en
+// agentEngine.ts.
+//
+// SMTP no tiene borradores (son un concepto de IMAP), así que se construye el mensaje RFC822 con
+// MailComposer y se sube con IMAP APPEND. La carpeta de borradores NO se puede hardcodear: en
+// Gmail en español es '[Gmail]/Borradores' y en Outlook 'Drafts', así que se localiza por el
+// atributo especial '\Drafts' que ImapFlow ya resuelve incluso con nombres traducidos.
+export async function crearBorrador(bandId: string, params: { to: string; subject: string; body: string; inReplyTo?: string }): Promise<{ draftPath: string }> {
+  const account = await getAccount(bandId);
+  const identidad = await verificarIdentidadEmail(bandId);
+  if (!identidad.ok) {
+    throw new EmailAgentError(
+      `La cuenta de email conectada para '${bandId}' (${identidad.emailConectado || "ninguna"}) no coincide con el email oficial de la banda (${identidad.emailOficial || "sin configurar"}). No se ha creado ningún borrador.`,
+      "identity_mismatch"
+    );
+  }
+
+  const raw = await new MailComposer({
+    from: account.email,
+    to: params.to,
+    subject: params.subject,
+    text: params.body,
+    inReplyTo: params.inReplyTo,
+    references: params.inReplyTo
+  }).compile().build();
+
+  const client = new ImapFlow({
+    host: account.imap_host,
+    port: account.imap_port,
+    secure: true,
+    auth: { user: account.email, pass: account.app_password },
+    logger: false
+  });
+
+  try {
+    await client.connect();
+
+    const mailboxes = await client.list();
+    const drafts = (mailboxes || []).find((mb: any) => mb.specialUse === "\\Drafts");
+    if (!drafts) {
+      throw new Error("no se encontró la carpeta de borradores (\\Drafts) en la cuenta");
+    }
+
+    await client.append(drafts.path, raw, ["\\Draft"]);
+    await client.logout();
+    return { draftPath: drafts.path };
+  } catch (err: any) {
+    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    // Nunca se cae hacia atrás a enviar: si no se pudo dejar el borrador, no ha salido nada.
+    throw new EmailAgentError(`No se pudo crear el borrador para '${bandId}': ${err.message || err}`, "api_error");
   }
 }
 

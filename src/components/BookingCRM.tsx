@@ -643,6 +643,7 @@ export default function BookingCRM({
  case 'aprobado':
  case 'aprobado_propuesta':
  case 'aprobado_respuesta': return 'bg-emerald-400';
+ case 'borrador_creado': return 'bg-cyan-400';
  default: return 'bg-stone-400';
  }
  };
@@ -662,6 +663,7 @@ export default function BookingCRM({
  case 'aprobado':
  case 'aprobado_propuesta':
  case 'aprobado_respuesta': return isStitchLight ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/40';
+ case 'borrador_creado': return isStitchLight ? 'bg-cyan-50 text-cyan-700 border border-cyan-300' : 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40';
  default: return isStitchLight ? 'bg-slate-50 text-slate-500' : 'bg-neutral-800/60 text-neutral-400';
  }
  };
@@ -681,6 +683,7 @@ export default function BookingCRM({
  case 'aprobado':
  case 'aprobado_propuesta':
  case 'aprobado_respuesta': return 'En cola de envío';
+ case 'borrador_creado': return 'Borrador en tu email 📝';
  default: return String(status);
  }
  };
