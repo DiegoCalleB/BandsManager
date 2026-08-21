@@ -238,6 +238,9 @@ CREATE TABLE IF NOT EXISTS fans (
     concierto_origen_nombre TEXT,
     fecha_captura TEXT,
     consentimiento_rgpd BOOLEAN DEFAULT TRUE,
+    mensaje TEXT DEFAULT '',
+    cancion_favorita TEXT DEFAULT '',
+    instagram TEXT DEFAULT '',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

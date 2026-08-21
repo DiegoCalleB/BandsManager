@@ -347,9 +347,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     ? (cleanPrefix ? `/${cleanPrefix}/${cleanSlugVal}` : `/${cleanSlugVal}`)
     : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
 
-  const bandQueryParam = currentBandId ? `?band=${encodeURIComponent(currentBandId)}` : (cleanBandId ? `?band=${encodeURIComponent(cleanBandId)}` : '');
-  const langQueryParam = qrLanguage === DEFAULT_FAN_FORM_LANGUAGE ? '' : `${bandQueryParam ? '&' : '?'}lang=${qrLanguage}`;
-  const qrConcertUrl = `${rawDomain}${pathFormatted}${bandQueryParam}${langQueryParam}`;
+  const qrQueryParams: string[] = [];
+  if (currentBandId) qrQueryParams.push(`band=${encodeURIComponent(currentBandId)}`);
+  else if (cleanBandId) qrQueryParams.push(`band=${encodeURIComponent(cleanBandId)}`);
+  if (qrLanguage !== DEFAULT_FAN_FORM_LANGUAGE) qrQueryParams.push(`lang=${qrLanguage}`);
+  if (selectedConcert) {
+    // Permite que /api/public/fans guarde el concierto de origen real (concierto_origen_id)
+    // en vez de depender solo del slug de la URL para adivinar el nombre.
+    qrQueryParams.push(`concertId=${encodeURIComponent(selectedConcert.id)}`);
+    qrQueryParams.push(`concertName=${encodeURIComponent(`${selectedConcert.sala} (${selectedConcert.ciudad})`)}`);
+  }
+  const qrConcertUrl = `${rawDomain}${pathFormatted}${qrQueryParams.length ? `?${qrQueryParams.join('&')}` : ''}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(qrConcertUrl);
