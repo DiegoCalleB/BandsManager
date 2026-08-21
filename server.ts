@@ -44,6 +44,18 @@ import spotifyRouter from "./server/routes/spotify.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+// Red de seguridad: en Node 22, una promesa rechazada sin capturar (p. ej. un
+// fallo de Supabase dentro de un handler async sin try/catch) tumba TODO el
+// proceso por defecto -> caída del servidor para TODAS las bandas, no solo
+// para esa petición. Auditoría 2026-08-21: varios routers (bands.ts, posts.ts
+// y probablemente otros) tienen handlers async sin try/catch alrededor de
+// llamadas a Supabase. Loguear y seguir vivo es mucho mejor que un outage
+// total por un solo request fallido; la petición concreta que falló seguirá
+// sin responder, pero el resto de la app sigue funcionando.
+process.on("unhandledRejection", (reason) => {
+  console.error("[unhandledRejection] Promesa rechazada sin capturar:", reason);
+});
+
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 

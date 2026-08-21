@@ -94,46 +94,61 @@ router.post("/bands", requireAuth, async (req, res) => {
   if (!newBand.band_id) {
     newBand.band_id = userBandId;
   }
-  const saved = await dbUpsertBandContact(newBand, userBandId);
-  const state = loadState();
-  state.bands = state.bands || [];
-  const idx = state.bands.findIndex((b: any) => b.id === saved.id);
-  if (idx !== -1) {
-    state.bands[idx] = saved;
-  } else {
-    state.bands.push(saved);
+  try {
+    const saved = await dbUpsertBandContact(newBand, userBandId);
+    const state = loadState();
+    state.bands = state.bands || [];
+    const idx = state.bands.findIndex((b: any) => b.id === saved.id);
+    if (idx !== -1) {
+      state.bands[idx] = saved;
+    } else {
+      state.bands.push(saved);
+    }
+    saveState(state);
+
+    autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
+
+    res.json(saved);
+  } catch (err: any) {
+    console.error("Error creating band contact:", err);
+    res.status(500).json({ error: err.message || String(err) });
   }
-  saveState(state);
-
-  autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
-
-  res.json(saved);
 });
 
 router.put("/bands/:id", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   const { id } = req.params;
   const updatedBand = { ...req.body, id };
-  const saved = await dbUpsertBandContact(updatedBand, userBandId);
-  const state = loadState();
-  state.bands = state.bands || [];
-  state.bands = state.bands.map((b: any) => b.id === id ? saved : b);
-  saveState(state);
+  try {
+    const saved = await dbUpsertBandContact(updatedBand, userBandId);
+    const state = loadState();
+    state.bands = state.bands || [];
+    state.bands = state.bands.map((b: any) => b.id === id ? saved : b);
+    saveState(state);
 
-  autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
+    autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
 
-  res.json(saved);
+    res.json(saved);
+  } catch (err: any) {
+    console.error("Error updating band contact:", err);
+    res.status(500).json({ error: err.message || String(err) });
+  }
 });
 
 router.delete("/bands/:id", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   const { id } = req.params;
-  await dbDeleteBandContact(id, userBandId);
-  const state = loadState();
-  state.bands = state.bands || [];
-  state.bands = state.bands.filter((b: any) => b.id !== id);
-  saveState(state);
-  res.json({ success: true });
+  try {
+    await dbDeleteBandContact(id, userBandId);
+    const state = loadState();
+    state.bands = state.bands || [];
+    state.bands = state.bands.filter((b: any) => b.id !== id);
+    saveState(state);
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error("Error deleting band contact:", err);
+    res.status(500).json({ error: err.message || String(err) });
+  }
 });
 
 router.post("/bands/sync", requireAuth, async (req, res) => {
@@ -142,16 +157,21 @@ router.post("/bands/sync", requireAuth, async (req, res) => {
   if (!Array.isArray(bands)) {
     return res.status(400).json({ error: "Invalid data format." });
   }
-  
-  for (const band of bands) {
-    await dbUpsertBandContact(band, userBandId);
+
+  try {
+    for (const band of bands) {
+      await dbUpsertBandContact(band, userBandId);
+    }
+
+    const state = loadState();
+    state.bands = bands;
+    saveState(state);
+
+    res.json({ success: true, count: bands.length });
+  } catch (err: any) {
+    console.error("Error syncing bands:", err);
+    res.status(500).json({ error: err.message || String(err) });
   }
-
-  const state = loadState();
-  state.bands = bands;
-  saveState(state);
-
-  res.json({ success: true, count: bands.length });
 });
 
 router.post("/bands/ai-lookup", requireAuth, async (req, res) => {
