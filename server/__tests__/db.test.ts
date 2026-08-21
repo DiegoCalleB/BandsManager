@@ -27,6 +27,11 @@ import { dbDeleteUserFromBand } from '../db';
 describe('dbDeleteUserFromBand', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // getSupabase() exige URL+key no vacíos antes de llamar a createClient
+    // (que ya está mockeado arriba) - sin esto el test falla en CI/local sin
+    // un .env real, aunque createClient nunca use estos valores de verdad.
+    vi.stubEnv('SUPABASE_URL', 'https://test.supabase.co');
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'eyJtest');
   });
 
   it('should call supabase delete on user_bands and update registered_bands', async () => {
