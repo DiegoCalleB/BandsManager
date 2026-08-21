@@ -156,7 +156,6 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleDeleteBand = async (id: string) => {
-    setBands(prev => prev.filter(b => b.id !== id));
     try {
       await api.deleteBand(id);
     } catch (e) {

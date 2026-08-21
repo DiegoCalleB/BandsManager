@@ -3,7 +3,7 @@ import {
   Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles, 
   Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
   Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
-  ChevronRight, Volume2, Music, CheckSquare, Square, Unlink, HardDrive, AtSign, UserCheck
+  ChevronRight, Volume2, Music, CheckSquare, Square, Unlink, HardDrive, AtSign, UserCheck, Download
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { BandSchedule } from '../../types';
@@ -265,7 +265,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
         // 2. Fetch Band Data to prefill email if missing
         try {
-          const appState = await api.getAppData().catch(() => null);
+          const appState = await api.getState().catch(() => null);
           if (isMounted && appState?.bands) {
             const currentBandObj = appState.bands.find(b => b.id === targetBand) || appState.bands[0];
             if (currentBandObj) {
