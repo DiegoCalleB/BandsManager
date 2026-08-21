@@ -348,7 +348,7 @@ export default function CalendarView({
  const [concCache, setConcCache] = useState('1200');
  const [concAforo, setConcAforo] = useState('300');
  const [concContrato, setConcContrato] = useState(true);
- const [concEstadoPago, setConcEstadoPago] = useState<'pendiente' | 'cobrado' | 'parcial'>('pendiente');
+ const [concEstadoPago, setConcEstadoPago] = useState<'pendiente' | 'pagado' | 'anticipo'>('pendiente');
  const [concTipo, setConcTipo] = useState<'propio' | 'festival' | 'privado'>('propio');
  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
  const [concIdioma, setConcIdioma] = useState('');
@@ -2257,8 +2257,8 @@ export default function CalendarView({
  }`}
  >
  <option value="pendiente">Pendiente</option>
- <option value="parcial">Anticipo / Parcial</option>
- <option value="cobrado">Cobrado 100%</option>
+ <option value="anticipo">Anticipo / Parcial</option>
+ <option value="pagado">Cobrado 100%</option>
  </select>
  </div>
  </div>
@@ -2516,8 +2516,8 @@ export default function CalendarView({
  }`}
  >
  <option value="pendiente">Pendiente</option>
- <option value="parcial">Anticipo / Parcial</option>
- <option value="cobrado">Cobrado 100%</option>
+ <option value="anticipo">Anticipo / Parcial</option>
+ <option value="pagado">Cobrado 100%</option>
  </select>
  </div>
  </div>
