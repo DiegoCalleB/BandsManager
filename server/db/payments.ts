@@ -1,5 +1,4 @@
 import { getSupabase, cleanBandId } from "./core.js";
-import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetPayments(bandId: string) {
   const sb = getSupabase();
