@@ -169,10 +169,27 @@ router.post("/chat", async (req, res) => {
           });
         }
       } else if (lowerMsg.includes("reggae") || lowerMsg.includes("ska")) {
-        const count = state.leads.filter((l: Lead) => l.genero.toLowerCase().includes("reggae") || l.genero.toLowerCase().includes("ska")).length;
+        const userBandId = userReq?.band_id || BAKANDEYA_BAND_ID;
+        const matchBandLocal = (item: any) => {
+          if (!item) return false;
+          const bid = item.band_id || item.bandId;
+          if (bid) return bid === userBandId;
+          return userBandId === BAKANDEYA_BAND_ID || userBandId === 'reg-bakandeya';
+        };
+        const count = state.leads.filter(matchBandLocal).filter((l: Lead) => (l.genero || "").toLowerCase().includes("reggae") || (l.genero || "").toLowerCase().includes("ska")).length;
         reply += `Tienes actualmente **${count} salas** especializadas en Ska/Reggae en la base de datos (por ejemplo, *Kafe Antzokia* en Bilbao, *Sala El Tren* en Granada y *Viña Rock*).`;
       } else {
-        reply += `Entendido. Como tu Manager Virtual de ${userReq?.bandName || 'tu banda'}, monitorizo la hoja de cálculo y puedo disparar tus agentes. Tienes:\n- **${state.leads.length} salas** en total\n- **${state.rehearsals.filter((r: Rehearsal) => r.estado === 'programado').length} ensayos programados**\n- **${state.concerts.filter((c: Concert) => c.fecha >= '2026-07-09').length} próximos conciertos**\n\n¿Quieres que revisemos los correos de presentación, agendemos un ensayo o lancemos un agente como el **Scout**?`;
+        const userBandId = userReq?.band_id || BAKANDEYA_BAND_ID;
+        const matchBandLocal = (item: any) => {
+          if (!item) return false;
+          const bid = item.band_id || item.bandId;
+          if (bid) return bid === userBandId;
+          return userBandId === BAKANDEYA_BAND_ID || userBandId === 'reg-bakandeya';
+        };
+        const totalLeads = state.leads.filter(matchBandLocal).length;
+        const rehearsalsCount = (state.rehearsals || []).filter(matchBandLocal).filter((r: Rehearsal) => r.estado === 'programado').length;
+        const concertsCount = (state.concerts || []).filter(matchBandLocal).filter((c: Concert) => c.fecha >= '2026-07-09').length;
+        reply += `Entendido. Como tu Manager Virtual de ${userReq?.bandName || 'tu banda'}, monitorizo la base de datos y puedo disparar tus agentes. Tienes:\n- **${totalLeads} salas** en total\n- **${rehearsalsCount} ensayos programados**\n- **${concertsCount} próximos conciertos**\n\n¿Quieres que revisemos los correos de presentación, agendemos un ensayo o lancemos un agente como el **Scout**?`;
       }
       
       res.json({ text: reply, proposedActions });
@@ -247,17 +264,17 @@ router.post("/chat", async (req, res) => {
     const bandIdForEpk = userReq?.band_id || BAKANDEYA_BAND_ID;
     const epkConfigData = getEpkConfigForBand(state, bandIdForEpk, userReq?.bandName || 'Bakandeya', userReq?.email);
     stateSummary.epkConfig = epkConfigData;
-    stateSummary.globalPitchFeedback = getGlobalPitchFeedbackSummary(state.leads);
+    stateSummary.globalPitchFeedback = getGlobalPitchFeedbackSummary(state.leads.filter(matchBand));
 
     if (isLeader) {
-      stateSummary.payments = state.payments;
+      stateSummary.payments = (state.payments || []).filter(matchBand);
     }
 
     const targetBandName = userReq?.bandName || epkConfigData?.nombre_banda || 'Bakandeya';
     const cleanBandId = bandIdForEpk.replace(/^(band|reg)-/, '');
     const isBakandeyaBand = cleanBandId === 'bakandeya' || targetBandName.toLowerCase().includes('bakandeya');
 
-    const globalPitchFeedbackText = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const globalPitchFeedbackText = formatGlobalPitchFeedbackForPrompt(state.leads.filter(matchBand));
 
     const specificDossierBlock = isBakandeyaBand ? `
 DOSSIER COMPLETO E INFORMACIÓN INTERNA DE LA BANDA BAKANDEYA:

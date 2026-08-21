@@ -305,7 +305,7 @@ router.get("/metrics", requireAuth, async (req, res) => {
     res.json(dbMetrics);
   } catch (err) {
     const state = loadState();
-    res.json(state.metrics || []);
+    res.json((state.metrics || []).filter((m: any) => m.band_id === userBandId || m.bandId === userBandId));
   }
 });
 

@@ -312,7 +312,7 @@ export async function resolveAudioUrl(url: string): Promise<string> {
  * to IndexedDB first and keeping lightweight references in localStorage,
  * preventing 'Setting the value exceeded the quota' errors.
  */
-export async function saveSongsToLocalStorageSafely(songs: any[]): Promise<void> {
+export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: string): Promise<void> {
   if (!songs || !Array.isArray(songs)) return;
 
   try {
@@ -393,7 +393,17 @@ export async function saveSongsToLocalStorageSafely(songs: any[]): Promise<void>
       })
     );
 
-    localStorage.setItem('bakandeya_songs_catalog', JSON.stringify(sanitizedSongs));
+    const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+    const isBakandeya = clean === 'bakandeya';
+    const finalSongs = isBakandeya ? sanitizedSongs : sanitizedSongs.filter((s: any) => {
+      const sId = (s?.id || '').toLowerCase();
+      return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
+    });
+    const key = `band_songs_${clean || 'default'}`;
+    localStorage.setItem(key, JSON.stringify(finalSongs));
+    if (isBakandeya || !clean) {
+      localStorage.setItem('bakandeya_songs_catalog', JSON.stringify(sanitizedSongs));
+    }
   } catch (e) {
     console.warn('Could not save songs catalog to localStorage:', e);
   }
@@ -403,7 +413,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[]): Promise<void>
  * Safely saves the setlists array to localStorage by moving large speech audio data URLs
  * to IndexedDB.
  */
-export async function saveSetlistsToLocalStorageSafely(setlists: any[]): Promise<void> {
+export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?: string): Promise<void> {
   if (!setlists || !Array.isArray(setlists)) return;
 
   try {
@@ -435,7 +445,17 @@ export async function saveSetlistsToLocalStorageSafely(setlists: any[]): Promise
       })
     );
 
-    localStorage.setItem('bakandeya_setlists', JSON.stringify(sanitizedSetlists));
+    const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+    const isBakandeya = clean === 'bakandeya';
+    const finalSetlists = isBakandeya ? sanitizedSetlists : sanitizedSetlists.filter((sl: any) => {
+      const slId = (sl?.id || '').toLowerCase();
+      return slId !== 'setlist-1' && slId !== 'setlist-2';
+    });
+    const key = `band_setlists_${clean || 'default'}`;
+    localStorage.setItem(key, JSON.stringify(finalSetlists));
+    if (isBakandeya || !clean) {
+      localStorage.setItem('bakandeya_setlists', JSON.stringify(sanitizedSetlists));
+    }
   } catch (e) {
     console.warn('Could not save setlists to localStorage:', e);
   }
