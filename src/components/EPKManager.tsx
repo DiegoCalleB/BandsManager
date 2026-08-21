@@ -129,12 +129,19 @@ const UNIFIED_PLATFORMS = [
   { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' }
 ];
 
-export const EPKManager: React.FC<EPKManagerProps> = ({ 
-  epkConfig, 
-  songs = [], 
+export const EPKManager: React.FC<EPKManagerProps> = ({
+  epkConfig,
+  songs: songsProp,
   onSave,
   currentUser
 }) => {
+  // App.tsx monta este componente sin pasarle 'songs', así que el selector de temas
+  // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
+  // por prop, se piden al backend igual que hace RepertorioSetlists.
+  const [songsCargadas, setSongsCargadas] = useState<Song[]>([]);
+  const [errorSongs, setErrorSongs] = useState<string | null>(null);
+  const songs: Song[] = songsProp && songsProp.length > 0 ? songsProp : songsCargadas;
+
   const activeBandId = currentUser?.band_id || 'band-bakandeya';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
   const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
@@ -157,6 +164,21 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       }
     };
   });
+
+  React.useEffect(() => {
+    if (songsProp && songsProp.length > 0) return;
+    let cancelado = false;
+    setErrorSongs(null);
+    api.getSongs()
+      .then(data => {
+        if (!cancelado && Array.isArray(data?.songs)) setSongsCargadas(data.songs);
+      })
+      .catch(err => {
+        console.warn('No se pudo cargar el repertorio para el EPK:', err);
+        if (!cancelado) setErrorSongs('No se pudo cargar tu repertorio. Recarga la página o inténtalo en unos minutos.');
+      });
+    return () => { cancelado = true; };
+  }, [songsProp, activeBandId]);
 
   React.useEffect(() => {
     if (epkConfig) {
@@ -946,6 +968,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             <p className="text-xs text-slate-400">
               Marca las canciones que quieres mostrar en primera línea a los programadores de salas:
             </p>
+            {/* Sin esto, un fallo de carga o un repertorio vacío se veían igual: un hueco en
+                blanco, sin ninguna pista de qué estaba pasando. */}
+            {songs.length === 0 && (
+              <div className={`rounded-xl border p-4 text-xs ${errorSongs ? 'border-red-500/40 bg-red-500/10 text-red-300' : 'border-slate-800 bg-slate-950 text-slate-400'}`}>
+                {errorSongs || 'Todavía no hay canciones en tu repertorio. Añádelas en la sección "Repertorio" y volverán a aparecer aquí para poder destacarlas.'}
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {songs.map(song => {
                 const isSelected = config.temasDestacadosIds?.includes(song.id);
