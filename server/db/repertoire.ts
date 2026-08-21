@@ -1,5 +1,4 @@
 import { getSupabase, cleanBandId } from "./core.js";
-import { ensureRegisteredBandExists } from "./bands.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 

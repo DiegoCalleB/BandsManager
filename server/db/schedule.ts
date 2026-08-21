@@ -1,7 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
 
-const inMemorySchedules: Record<string, any> = {};
-
 function getMemoryFallbackSchedule(cleanId: string) {
   if (inMemorySchedules[cleanId]) {
     return inMemorySchedules[cleanId];

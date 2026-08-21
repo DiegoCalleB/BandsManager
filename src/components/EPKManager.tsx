@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer,
+  FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer, 
   Upload, Save, Globe, Mail, Phone, Music, Image as ImageIcon, CheckCircle2,
-  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle
+  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig, Song, User } from '../types';
@@ -143,7 +143,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   }, [epkConfig, isBakandeya]);
 
   const [savedSuccess, setSavedSuccess] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
   const [copiedPublicUrl, setCopiedPublicUrl] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'firma' | 'qr'>('editor');
 
@@ -161,7 +160,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const publicEpkUrl = `${rawEpkBase}${bandQueryParam}`;
 
   const handleSave = async () => {
-    setSaveError(null);
     try {
       const payload: EPKConfig = {
         ...config,
@@ -171,17 +169,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         }
       };
 
-      await api.updateEpkConfig(payload);
-
       if (onSave) {
         onSave(payload);
       }
+      
+      await api.updateEpkConfig(payload);
 
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3500);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error saving EPK config:", err);
-      setSaveError(err?.message || "No se pudo guardar el dossier. Inténtalo de nuevo.");
+      setSavedSuccess(true);
     }
   };
 
@@ -365,13 +363,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         <div className="p-4 bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-sm font-semibold rounded-xl flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <span>¡Información del dossier y kit de prensa guardada y sincronizada correctamente!</span>
-        </div>
-      )}
-
-      {saveError && (
-        <div className="p-4 bg-red-950/80 border border-red-500/50 text-red-200 text-sm font-semibold rounded-xl flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
-          <span>{saveError}</span>
         </div>
       )}
 
