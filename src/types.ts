@@ -177,6 +177,7 @@ export interface Concert {
   convocados_nombres?: string[];
   giraId?: string;
   giraNombre?: string;
+  idioma?: string;
 }
 
 export interface EmailSignatureConfig {

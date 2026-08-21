@@ -25,7 +25,8 @@ export async function dbGetConcerts(bandId: string | string[]) {
     convocados_ids: c.convocados_ids || c.convocadosIds || [],
     convocados_nombres: c.convocados_nombres || c.convocadosNombres || [],
     giraId: c.gira_id || c.giraId || undefined,
-    giraNombre: c.gira_nombre || c.giraNombre || undefined
+    giraNombre: c.gira_nombre || c.giraNombre || undefined,
+    idioma: c.idioma || undefined
   }));
 }
 
@@ -56,14 +57,16 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     convocados_ids: concert.convocados_ids || concert.convocadosIds || [],
     convocados_nombres: concert.convocados_nombres || concert.convocadosNombres || [],
     gira_id: concert.gira_id || concert.giraId || null,
-    gira_nombre: concert.gira_nombre || concert.giraNombre || null
+    gira_nombre: concert.gira_nombre || concert.giraNombre || null,
+    idioma: concert.idioma || ""
   };
 
   let { data, error } = await sb.from("concerts").upsert(payload).select().single();
-  if (error && (error.message.includes("gira_id") || error.message.includes("gira_nombre"))) {
+  if (error && (error.message.includes("gira_id") || error.message.includes("gira_nombre") || error.message.includes("idioma"))) {
     const fallback = { ...payload };
     delete fallback.gira_id;
     delete fallback.gira_nombre;
+    delete fallback.idioma;
     const retry = await sb.from("concerts").upsert(fallback).select().single();
     if (retry.error) throw new Error(`Supabase Error (upsert concert): ${retry.error.message}`);
     data = retry.data;
@@ -74,7 +77,8 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   return {
     ...data,
     giraId: concert.giraId || concert.gira_id,
-    giraNombre: concert.giraNombre || concert.gira_nombre
+    giraNombre: concert.giraNombre || concert.gira_nombre,
+    idioma: data?.idioma || concert.idioma
   };
 }
 
