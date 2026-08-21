@@ -216,6 +216,7 @@ export const api = {
     fans: Fan[];
     epkConfig: EPKConfig;
     tours?: Tour[];
+    bands?: any[];
   }> {
     return request('/api/state');
   },

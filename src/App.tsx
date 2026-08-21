@@ -34,7 +34,7 @@ import { useLanguage } from './context/LanguageContext';
 import { 
   Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
   Table, FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
-  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, FileSpreadsheet, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap
+  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, FileSpreadsheet, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Sliders
 } from 'lucide-react';
 
 export default function App() {

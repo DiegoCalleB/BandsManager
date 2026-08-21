@@ -157,7 +157,7 @@ export function formatEmailWithSignatureAndDossier(params: {
   const lowerBody = bodyContent.toLowerCase();
   const hasEmbeddedName = lowerBody.includes(remitenteNombre.toLowerCase()) || lowerBody.includes('diego de la calle');
 
-  const resolvedBandId = epkConfig?.band_id || (resolvedBandName.toLowerCase().includes('bakandeya') ? 'band-bakandeya' : resolvedBandName.toLowerCase().replace(/\s+/g, '-'));
+  const resolvedBandId = epkConfig?.bandId || (resolvedBandName.toLowerCase().includes('bakandeya') ? 'band-bakandeya' : resolvedBandName.toLowerCase().replace(/\s+/g, '-'));
   const cleanBandId = resolvedBandId.replace(/^(band|reg)-/, '').toLowerCase();
   const bandParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(resolvedBandId.startsWith('band-') ? resolvedBandId : `band-${cleanBandId}`)}` : '';
   const webEpkUrl = `https://bands-manager.up.railway.app/epk${bandParam}`;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Mic, MicOff, Volume2, VolumeX, Guitar, Zap, Radio, Check, RefreshCw } from 'lucide-react';
+import { X, Mic, MicOff, Volume2, VolumeX, Guitar, Zap, Radio, Check, RefreshCw, AlertCircle } from 'lucide-react';
 import { ThemeColors } from '../types';
 import { ModalPortal } from './common/ModalPortal';
 

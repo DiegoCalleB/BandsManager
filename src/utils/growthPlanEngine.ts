@@ -63,7 +63,7 @@ export function getDeterministicGrowthPlan(
   const ytSubs = latestMetric?.youtube_subscribers || latestMetric?.youtube || 0;
   const ytViews = latestMetric?.youtube_total_views || 0;
   const spCount = latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0;
-  const hasSpotifyProfile = Boolean(epkConfig?.enlaces_redes?.spotify || spCount > 0);
+  const hasSpotifyProfile = Boolean(epkConfig?.enlacesRedes?.spotify || spCount > 0);
 
   const archetype = detectBandProfileArchetype(latestMetric);
   const tier = archetype.tier;
