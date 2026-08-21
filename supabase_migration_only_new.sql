@@ -164,6 +164,11 @@ ALTER TABLE public.epk_configs
     ADD COLUMN IF NOT EXISTS rider_pdf_url TEXT DEFAULT '',
     ADD COLUMN IF NOT EXISTS rider_pdf_name TEXT DEFAULT '';
 
+ALTER TABLE public.fans
+    ADD COLUMN IF NOT EXISTS mensaje TEXT DEFAULT '',
+    ADD COLUMN IF NOT EXISTS cancion_favorita TEXT DEFAULT '',
+    ADD COLUMN IF NOT EXISTS instagram TEXT DEFAULT '';
+
 -- 3. BUCKET DE SUPABASE STORAGE PARA SUBIDAS DE ARCHIVOS (MEDIA)
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 VALUES (
