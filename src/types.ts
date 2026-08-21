@@ -168,7 +168,10 @@ export interface Concert {
   contrato_firmado: boolean;
   estado_pago: 'pendiente' | 'pagado' | 'anticipo';
   notas: string;
-  tipo: 'sala' | 'festival' | 'ayuntamiento';
+  // 'sala'/'ayuntamiento' los usan el scout/chatbot (mismas categorías que Lead.tipo);
+  // 'propio'/'privado' los usa el alta manual desde el calendario. Se aceptan ambos
+  // convenios a la vez porque ya conviven datos reales con uno y otro.
+  tipo: 'sala' | 'festival' | 'ayuntamiento' | 'propio' | 'privado';
   setlistId?: string;
   gastosDetalle?: ConcertExpenseBreakdown;
   gastosEstimadosTipicos?: number;
