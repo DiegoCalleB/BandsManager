@@ -329,7 +329,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
 // --------------------------------------------------
 // BAND SCHEDULES (Smart Gate - Python agent config)
 // --------------------------------------------------
-router.get("/bands/schedules/:bandId", async (req, res) => {
+router.get("/bands/schedules/:bandId", requireAuth, async (req, res) => {
   try {
     const { bandId } = req.params;
     const schedule = await dbGetBandSchedule(bandId);
@@ -340,7 +340,7 @@ router.get("/bands/schedules/:bandId", async (req, res) => {
   }
 });
 
-router.post("/bands/schedules", async (req, res) => {
+router.post("/bands/schedules", requireAuth, async (req, res) => {
   try {
     const { band_id, timezone, horas_lector, horas_enviador, dias_enviador, dias_lector } = req.body;
     if (!band_id) {
