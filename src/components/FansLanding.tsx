@@ -1,12 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
+import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
+import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
+import { renderBold } from '../utils/richText';
 
 interface FansLandingProps {
   currentBandId?: string;
   currentBandName?: string;
   currentBandLogo?: string;
 }
+
+const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (lang: FanFormLanguage) => void }> = ({ language, onChange }) => (
+  <div className="flex items-center justify-center gap-1.5">
+    {FAN_FORM_LANGUAGES.map(l => (
+      <button
+        key={l.code}
+        type="button"
+        onClick={() => onChange(l.code)}
+        title={l.label}
+        className={`w-8 h-8 rounded-lg text-base flex items-center justify-center border transition-all ${
+          language === l.code
+            ? 'bg-amber-500/15 border-amber-500/50 shadow-inner'
+            : 'bg-neutral-950 border-neutral-800 hover:border-neutral-700 opacity-70 hover:opacity-100'
+        }`}
+      >
+        {l.flag}
+      </button>
+    ))}
+  </div>
+);
 
 export const FansLanding: React.FC<FansLandingProps> = ({
   currentBandId: initialBandId,
@@ -32,7 +55,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [concertName, setConcertName] = useState('');
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [isConcertLink, setIsConcertLink] = useState(false);
-  
+  const [language, setLanguage] = useFanFormLanguage();
+  const dict = FAN_FORM_TRANSLATIONS[language];
+  const t = (key: keyof typeof dict, vars?: Record<string, string | undefined>) =>
+    vars ? interpolate(dict[key], vars) : dict[key];
+
   const DEFAULT_BAKANDEYA_SOCIALS: SocialLinks = {
     instagram: "https://instagram.com/bakandeya_oficial",
     spotify: "https://open.spotify.com/artist/bakandeya",
@@ -176,7 +203,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.nombre || !formData.email || !formData.consentimiento) {
-      setError("Por favor, rellena los campos obligatorios y acepta la política.");
+      setError(t('errorRequiredFields'));
       return;
     }
     
@@ -203,7 +230,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       });
       
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Error al registrarte.');
+      if (!res.ok) throw new Error(data.error || t('errorGenericSignup'));
       
       setSuccessData(data);
     } catch (err: any) {
@@ -224,40 +251,42 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-500/20 shadow-inner">
             <Heart className="w-10 h-10 text-amber-500" />
           </div>
-          
+
+          <FanFormLanguageSwitcher language={language} onChange={setLanguage} />
+
           <div className="space-y-2">
             <h2 className="text-2xl font-black text-white font-display uppercase tracking-widest flex items-center justify-center gap-2">
-              <PartyPopper className="w-6 h-6 text-amber-400" /> 
-              ¡Bienvenido a {bandName}!
+              <PartyPopper className="w-6 h-6 text-amber-400" />
+              {t('welcomeTitle', { bandName })}
             </h2>
             <p className="text-neutral-300 font-mono text-sm leading-relaxed max-w-xs mx-auto">
-              {successData.alreadyRegistered 
-                ? successData.message 
-                : (incentivo.mensajeAgradecimiento || `¡Registro completado! Nos alegramos de que formes parte de la familia de ${bandName}.`)}
+              {successData.alreadyRegistered
+                ? successData.message
+                : (incentivo.mensajeAgradecimiento || t('registeredDefaultMessage', { bandName }))}
             </p>
           </div>
 
           {(incentivo.enlaceDescarga || incentivo.codigoDescuento) && (
             <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 mt-6 space-y-4">
-              <h3 className="text-amber-500 font-black uppercase tracking-widest text-xs font-mono">Tus Beneficios</h3>
-              
+              <h3 className="text-amber-500 font-black uppercase tracking-widest text-xs font-mono">{t('benefitsTitle')}</h3>
+
               {incentivo.enlaceDescarga && (
                 <div className="pt-2">
-                  <a 
+                  <a
                     href={incentivo.enlaceDescarga}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-col items-center justify-center gap-2 w-full p-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 rounded-lg text-white font-mono text-xs transition-colors"
                   >
                     <Download className="w-5 h-5 text-amber-400" />
-                    <span className="font-bold">Descargar Contenido Exclusivo</span>
+                    <span className="font-bold">{t('downloadExclusive')}</span>
                   </a>
                 </div>
               )}
-              
+
               {incentivo.codigoDescuento && (
                 <div className="pt-2">
-                  <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold mb-1">Código Promocional de Merch</p>
+                  <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold mb-1">{t('merchCode')}</p>
                   <div className="flex items-center justify-center gap-2 p-3 bg-neutral-900 border border-neutral-700 border-dashed rounded-lg">
                     <Tag className="w-4 h-4 text-emerald-400" />
                     <span className="font-mono text-emerald-400 font-bold tracking-widest">{incentivo.codigoDescuento}</span>
@@ -270,10 +299,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {/* Official Social Links in Success View */}
           {socialLinks && Object.values(socialLinks).some(Boolean) && (
             <div className="pt-2 border-t border-neutral-800">
-              <SocialPlatformsList 
-                links={socialLinks} 
-                variant="grid" 
-                title="📱 Síguenos en nuestras plataformas" 
+              <SocialPlatformsList
+                links={socialLinks}
+                variant="grid"
+                title={t('followUsPlatforms')}
               />
             </div>
           )}
@@ -284,20 +313,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <div className="p-4 rounded-xl bg-neutral-950 border border-amber-500/30 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
-                    <Briefcase className="w-3.5 h-3.5 text-amber-400" /> Contrataciones & Booking
+                    <Briefcase className="w-3.5 h-3.5 text-amber-400" /> {t('bookingTitle')}
                   </div>
                   <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                    Directo
+                    {t('bookingBadgeLive')}
                   </span>
                 </div>
                 <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
-                  ¿Organizas un evento, sala o festival? Contáctanos:
+                  {renderBold(t('bookingQuestion', { bandName }))}
                 </p>
                 <div className="space-y-1.5 pt-1">
                   {contactoBooking.email && (
                     <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                      <a 
-                        href={`mailto:${contactoBooking.email}?subject=Contratación%20y%20Booking%20-%20${encodeURIComponent(bandName)}`}
+                      <a
+                        href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
                         className="flex items-center gap-2 text-xs font-mono text-amber-300 hover:text-amber-200 truncate flex-1"
                       >
                         <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -307,7 +336,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   )}
                   {contactoBooking.telefono && (
                     <div className="flex items-center justify-between p-2 rounded-lg bg-neutral-900 border border-neutral-800">
-                      <a 
+                      <a
                         href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
                         className="flex items-center gap-2 text-xs font-mono text-emerald-300 hover:text-emerald-200 truncate flex-1"
                       >
@@ -315,7 +344,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         <span className="truncate">{contactoBooking.telefono}</span>
                       </a>
                       <a
-                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=Hola,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20a%20${encodeURIComponent(bandName)}`}
+                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 rounded border border-emerald-500/30 flex items-center gap-1 shrink-0 ml-2"
@@ -328,10 +357,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </div>
             </div>
           )}
-          
+
           <div className="pt-2">
             <a href="/" className="text-xs font-mono text-neutral-500 hover:text-amber-500 underline transition-colors">
-              Volver al inicio
+              {t('backHome')}
             </a>
           </div>
         </div>
@@ -362,29 +391,28 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           )}
           <div className="space-y-1">
             <h1 className="text-3xl font-black text-white font-display uppercase tracking-widest drop-shadow-md">
-              Únete a {bandName}
+              {t('joinTitle', { bandName })}
             </h1>
-            <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">Canal Oficial</p>
+            <p className="text-amber-500/80 text-[10px] font-mono uppercase tracking-widest font-bold">{t('officialChannel')}</p>
           </div>
           <div className="pt-2 space-y-2">
             {isConcertLink ? (
               <div>
                 <span className="text-emerald-400 font-bold px-3.5 py-1.5 bg-emerald-400/10 border border-emerald-400/20 rounded-full inline-flex items-center gap-1.5 text-xs">
-                  <span>¡Gracias por venir al concierto{concertName ? ` de ${concertName}` : ''}!</span>
-                  <span>🎸</span>
+                  <span>{concertName ? t('thanksConcertWithName', { concertName }) : t('thanksConcertGeneric')}</span>
                 </span>
               </div>
             ) : (
               <div>
                 <span className="text-amber-400 font-bold px-3.5 py-1.5 bg-amber-400/10 border border-amber-400/20 rounded-full inline-flex items-center gap-1.5 text-xs">
-                  <span>¡Gracias por tu apoyo!</span>
-                  <span>🎶</span>
+                  <span>{t('thanksSupport')}</span>
                 </span>
               </div>
-            )} 
+            )}
             <p className="text-neutral-400 text-xs font-mono leading-relaxed max-w-sm mx-auto">
-              Apóyanos como prefieras: <strong className="text-white">síguenos directamente en tus redes favoritas</strong> o <strong className="text-white">recibe información en tu correo</strong>.
+              {renderBold(t('supportIntro'))}
             </p>
+            <FanFormLanguageSwitcher language={language} onChange={setLanguage} />
           </div>
         </div>
 
@@ -399,18 +427,18 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 : 'text-neutral-400 hover:text-white'
             }`}
           >
-            <span>📱 Síguenos en Redes</span>
+            <span>{t('tabFollow')}</span>
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={() => setActiveTab('form')}
             className={`flex-1 py-2.5 px-3 rounded-xl font-bold transition-all text-center flex items-center justify-center gap-2 ${
-              activeTab === 'form' 
-                ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-neutral-950 shadow-lg shadow-amber-500/20 font-black' 
+              activeTab === 'form'
+                ? 'bg-gradient-to-r from-amber-500 to-amber-400 text-neutral-950 shadow-lg shadow-amber-500/20 font-black'
                 : 'text-neutral-400 hover:text-white'
             }`}
           >
-            <span>✉️ Recibir Novedades</span>
+            <span>{t('tabJoin')}</span>
           </button>
         </div>
 
@@ -418,16 +446,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         {activeTab === 'redes' && (
           <div className="space-y-4 animate-fade-in pt-1">
             <div className="p-3.5 bg-neutral-950/80 rounded-xl border border-neutral-800 text-center space-y-1">
-              <p className="text-xs font-bold text-amber-400">⚡ ¡Ayúdanos a crecer!</p>
+              <p className="text-xs font-bold text-amber-400">{t('followHelpTitle')}</p>
               <p className="text-[11px] text-neutral-400 font-mono leading-relaxed">
-                Elige tu plataforma preferida y <strong className="text-white">síguenos</strong>. ¡Es la mejor forma de apoyar la música independiente!
+                {renderBold(t('followHelpBody'))}
               </p>
             </div>
 
-            <SocialPlatformsList 
-              links={socialLinks || {}} 
-              variant="grid" 
-              showTitle={false} 
+            <SocialPlatformsList
+              links={socialLinks || {}}
+              variant="grid"
+              showTitle={false}
             />
 
             <div className="pt-2 text-center">
@@ -436,7 +464,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 onClick={() => setActiveTab('form')}
                 className="text-xs font-mono text-amber-400/90 hover:text-amber-300 underline font-bold transition-colors"
               >
-                ✨ ¿Quieres info directa en tu correo? Apúntate aquí →
+                {t('followCTA')}
               </button>
             </div>
           </div>
@@ -452,20 +480,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             )}
             
             <div>
-              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">Nombre *</label>
-              <input 
-                type="text" 
+              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelName')}</label>
+              <input
+                type="text"
                 required
                 value={formData.nombre}
                 onChange={e => setFormData({...formData, nombre: e.target.value})}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder="Tu nombre completo"
+                placeholder={t('placeholderName')}
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">Email *</label>
-              <input 
-                type="email" 
+              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelEmail')}</label>
+              <input
+                type="email"
                 required
                 value={formData.email}
                 onChange={e => setFormData({...formData, email: e.target.value})}
@@ -474,70 +502,70 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Ciudad (Opcional)</label>
-              <input 
-                type="text" 
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelCity')}</label>
+              <input
+                type="text"
                 value={formData.ciudad}
                 onChange={e => setFormData({...formData, ciudad: e.target.value})}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder="¿De dónde nos escuchas?"
+                placeholder={t('placeholderCity')}
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">¿Cómo nos conociste? *</label>
-              <select 
+              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelHowFound')}</label>
+              <select
                 required
                 value={formData.comoConocio}
                 onChange={e => setFormData({...formData, comoConocio: e.target.value})}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors appearance-none"
               >
-                <option value="">Selecciona una opción...</option>
-                <option value="Concierto">En un concierto</option>
-                <option value="Redes Sociales">Por Instagram / TikTok / Redes</option>
-                <option value="Amigo">Por recomendación de un amigo</option>
-                <option value="Spotify">Descubrimiento en Spotify / Streaming</option>
-                <option value="Otro">Otro</option>
+                <option value="">{t('optionSelect')}</option>
+                <option value="Concierto">{t('optionConcert')}</option>
+                <option value="Redes Sociales">{t('optionSocial')}</option>
+                <option value="Amigo">{t('optionFriend')}</option>
+                <option value="Spotify">{t('optionSpotify')}</option>
+                <option value="Otro">{t('optionOther')}</option>
               </select>
             </div>
-            
+
             <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">¿Tu canción favorita de {bandName}? (Opcional)</label>
-              <input 
-                type="text" 
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelFavSong', { bandName })}</label>
+              <input
+                type="text"
                 value={formData.cancionFavorita}
                 onChange={e => setFormData({...formData, cancionFavorita: e.target.value})}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder="Ej: La Noche Entera, Balada..."
+                placeholder={t('placeholderFavSong')}
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Usuario de Instagram (Opcional)</label>
-              <input 
-                type="text" 
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelInstagram')}</label>
+              <input
+                type="text"
                 value={formData.instagram}
                 onChange={e => setFormData({...formData, instagram: e.target.value})}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder="@tu_usuario"
+                placeholder={t('placeholderInstagram')}
               />
             </div>
 
             <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">Mensaje o saludo para la banda (Opcional)</label>
-              <textarea 
+              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelMessage')}</label>
+              <textarea
                 rows={2}
                 value={formData.mensaje}
                 onChange={e => setFormData({...formData, mensaje: e.target.value})}
                 className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors resize-none"
-                placeholder="Déjale un saludo o dedicatoria a la banda..."
+                placeholder={t('placeholderMessage')}
               />
             </div>
 
             <div className="pt-2 pb-1">
               <label className="flex items-start gap-3 cursor-pointer group p-3 bg-neutral-950/50 rounded-xl border border-neutral-800 hover:border-neutral-700 transition-colors">
                 <div className="relative flex items-center justify-center mt-0.5">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     required
                     checked={formData.consentimiento}
                     onChange={e => setFormData({...formData, consentimiento: e.target.checked})}
@@ -546,7 +574,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   <Check className="w-3.5 h-3.5 text-neutral-900 absolute pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" strokeWidth={4} />
                 </div>
                 <span className="text-[10px] text-neutral-400 font-mono leading-relaxed group-hover:text-neutral-300 transition-colors pt-0.5">
-                  He leído y acepto la <button type="button" onClick={() => setShowPrivacyModal(true)} className="text-amber-400 underline hover:text-amber-300 font-bold inline">política de privacidad</button>, y doy mi <strong className="text-neutral-200">consentimiento explícito</strong> para que la banda guarde mis datos y me envíe novedades.
+                  {t('consentPrefix')}<button type="button" onClick={() => setShowPrivacyModal(true)} className="text-amber-400 underline hover:text-amber-300 font-bold inline">{t('consentPrivacyLink')}</button>{t('consentMiddle')}<strong className="text-neutral-200">{t('consentExplicit')}</strong>{t('consentSuffix')}
                 </span>
               </label>
             </div>
@@ -559,10 +587,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Registrando...
+                  {t('submitting')}
                 </>
               ) : (
-                `Únete a ${bandName}`
+                t('submitJoin', { bandName })
               )}
             </button>
 
@@ -570,12 +598,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {socialLinks && Object.values(socialLinks).some(Boolean) && (
               <div className="pt-4 border-t border-neutral-800 space-y-2">
                 <p className="text-[11px] font-bold text-neutral-400 font-mono text-center uppercase tracking-wider">
-                  O síguenos en redes
+                  {t('followUsAlso')}
                 </p>
-                <SocialPlatformsList 
-                  links={socialLinks} 
-                  variant="pills" 
-                  showTitle={false} 
+                <SocialPlatformsList
+                  links={socialLinks}
+                  variant="pills"
+                  showTitle={false}
                 />
               </div>
             )}
@@ -590,25 +618,24 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <div className="flex items-center gap-2 text-amber-400">
                   <Briefcase className="w-4 h-4 text-amber-400" />
                   <span className="text-xs font-mono font-black uppercase tracking-wider">
-                    Contrataciones & Booking
+                    {t('bookingTitle')}
                   </span>
                 </div>
                 <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold">
-                  Directo
+                  {t('bookingBadgeLive')}
                 </span>
               </div>
 
               <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
-                ¿Quieres contratar a <strong className="text-white">{bandName}</strong> para tu sala, festival o evento privado? Contacta directamente:
+                {renderBold(t('bookingQuestion', { bandName }))}
               </p>
 
               <div className="space-y-2 pt-1">
                 {contactoBooking.email && (
                   <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-500/40 transition-colors">
-                    <a 
-                      href={`mailto:${contactoBooking.email}?subject=Contrataci%C3%B3n%20y%20Booking%20-%20${encodeURIComponent(bandName)}`}
+                    <a
+                      href={`mailto:${contactoBooking.email}?subject=${encodeURIComponent(t('bookingEmailSubject', { bandName }))}`}
                       className="flex items-center gap-2.5 text-xs font-mono text-amber-300 hover:text-amber-200 transition-colors truncate flex-1 font-bold"
-                      title="Enviar correo de contratación"
                     >
                       <Mail className="w-4 h-4 text-amber-400 shrink-0" />
                       <span className="truncate">{contactoBooking.email}</span>
@@ -618,21 +645,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
                 {contactoBooking.telefono && (
                   <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-emerald-500/40 transition-colors">
-                    <a 
+                    <a
                       href={`tel:${contactoBooking.telefono.replace(/\s+/g, '')}`}
                       className="flex items-center gap-2.5 text-xs font-mono text-emerald-300 hover:text-emerald-200 transition-colors truncate flex-1 font-bold"
-                      title="Llamar para contratación"
                     >
                       <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span className="truncate">{contactoBooking.telefono}</span>
                     </a>
                     <div className="flex items-center shrink-0 ml-2">
                       <a
-                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=Hola,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20para%20contratar%20a%20${encodeURIComponent(bandName)}`}
+                        href={`https://wa.me/${contactoBooking.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(t('bookingWhatsappText', { bandName }))}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-2.5 py-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/60 hover:bg-emerald-950 rounded border border-emerald-500/30 transition-colors flex items-center gap-1.5 font-bold"
-                        title="Escribir por WhatsApp para contratación"
                       >
                         <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
                         <span>WhatsApp</span>
@@ -653,29 +678,26 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="max-w-lg w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-neutral-800 pb-4">
               <div className="flex items-center gap-2 text-amber-500 font-mono font-bold text-sm uppercase tracking-wider">
-                <Shield className="w-5 h-5" /> Política de Privacidad y RGPD
+                <Shield className="w-5 h-5" /> {t('privacyModalTitle')}
               </div>
               <button onClick={() => setShowPrivacyModal(false)} className="text-neutral-400 hover:text-white p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="text-xs text-neutral-300 font-mono space-y-3 leading-relaxed">
-              <p><strong className="text-white">1. Responsable del tratamiento:</strong> {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.</p>
-              
-              <p><strong className="text-white">2. Legitimación:</strong> El tratamiento de tus datos se basa en tu <span className="text-amber-400">consentimiento explícito</span> al marcar la casilla de aceptación y enviar el formulario.</p>
-              
-              <p><strong className="text-white">3. Destinatarios:</strong> Los datos se almacenan de forma segura para uso exclusivo de {bandName} en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.</p>
-              
-              <p><strong className="text-white">4. Derechos:</strong> Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.</p>
+              <p>{renderBold(t('privacyPara1', { bandName }))}</p>
+              <p>{renderBold(t('privacyPara2', { bandName }))}</p>
+              <p>{renderBold(t('privacyPara3', { bandName }))}</p>
+              <p>{renderBold(t('privacyPara4', { bandName }))}</p>
             </div>
 
             <div className="pt-4 border-t border-neutral-800 text-right">
-              <button 
+              <button
                 onClick={() => setShowPrivacyModal(false)}
                 className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl transition-colors"
               >
-                Entendido
+                {t('understood')}
               </button>
             </div>
           </div>

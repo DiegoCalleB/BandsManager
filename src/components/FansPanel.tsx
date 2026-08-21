@@ -11,6 +11,7 @@ import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { FansCommunityView } from './fans/FansCommunityView';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE } from '../i18n/fansTranslations';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -323,6 +324,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     : 'bands-manager.up.railway.app';
   const [customDomain, setCustomDomain] = useState(defaultDomain);
   const [routePrefix, setRoutePrefix] = useState('unete');
+  const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(DEFAULT_FAN_FORM_LANGUAGE);
 
   useEffect(() => {
     if (selectedConcert) {
@@ -346,7 +348,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     : (cleanPrefix ? `/${cleanPrefix}` : '/unete');
 
   const bandQueryParam = currentBandId ? `?band=${encodeURIComponent(currentBandId)}` : (cleanBandId ? `?band=${encodeURIComponent(cleanBandId)}` : '');
-  const qrConcertUrl = `${rawDomain}${pathFormatted}${bandQueryParam}`;
+  const langQueryParam = qrLanguage === DEFAULT_FAN_FORM_LANGUAGE ? '' : `${bandQueryParam ? '&' : '?'}lang=${qrLanguage}`;
+  const qrConcertUrl = `${rawDomain}${pathFormatted}${bandQueryParam}${langQueryParam}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(qrConcertUrl);
@@ -1212,6 +1215,30 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-1 pt-1">
+                  <label className="text-[11px] font-mono text-slate-400">Idioma del formulario para este enlace:</label>
+                  <div className="flex items-center gap-2">
+                    {FAN_FORM_LANGUAGES.map(l => (
+                      <button
+                        key={l.code}
+                        type="button"
+                        onClick={() => setQrLanguage(l.code)}
+                        className={`flex-1 py-2 px-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
+                          qrLanguage === l.code
+                            ? 'bg-amber-500/15 border-amber-500/50 text-amber-300'
+                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                        }`}
+                      >
+                        <span>{l.flag}</span>
+                        <span>{l.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] font-mono text-slate-500">
+                    El formulario se abrirá en este idioma por defecto; quien lo escanee siempre podrá cambiarlo a mano.
+                  </p>
                 </div>
 
                 <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs space-y-1.5">
