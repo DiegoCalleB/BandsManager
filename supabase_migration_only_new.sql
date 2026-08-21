@@ -195,3 +195,23 @@ CREATE POLICY "Allow All Updates band-media" ON storage.objects FOR UPDATE USING
 
 DROP POLICY IF EXISTS "Allow All Deletes band-media" ON storage.objects;
 CREATE POLICY "Allow All Deletes band-media" ON storage.objects FOR DELETE USING (bucket_id = 'band-media');
+
+-- Motor de agentes de booking consolidado en Node (server/services/agentScheduler.ts,
+-- server/services/gmailAgentClient.ts) - ver supabase_schema.sql para el comentario completo.
+CREATE TABLE IF NOT EXISTS public.agent_schedule_state (
+  job_name TEXT PRIMARY KEY,
+  last_run_at TIMESTAMPTZ
+);
+ALTER TABLE public.agent_schedule_state ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.agent_schedule_state;
+CREATE POLICY "Permitir acceso total al backend" ON public.agent_schedule_state FOR ALL USING (true);
+
+CREATE TABLE IF NOT EXISTS public.band_gmail_tokens (
+  band_id TEXT PRIMARY KEY REFERENCES public.registered_bands(band_id) ON DELETE CASCADE,
+  refresh_token TEXT NOT NULL,
+  email_conectado TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.band_gmail_tokens ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.band_gmail_tokens;
+CREATE POLICY "Permitir acceso total al backend" ON public.band_gmail_tokens FOR ALL USING (true);

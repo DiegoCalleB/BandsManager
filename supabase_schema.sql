@@ -464,3 +464,33 @@ ALTER TABLE tours ADD COLUMN IF NOT EXISTS sincronizar_finanzas BOOLEAN DEFAULT 
 ALTER TABLE concerts ADD COLUMN IF NOT EXISTS gira_id TEXT;
 ALTER TABLE concerts ADD COLUMN IF NOT EXISTS gira_nombre TEXT;
 
+-- Motor de agentes de booking consolidado en Node (server/services/agentScheduler.ts,
+-- server/services/gmailAgentClient.ts) - sustituye a las implementaciones en Python/GitHub
+-- Actions, Node nativo con Resend y las Edge Functions de Supabase, ver server/routes/agent.ts.
+
+-- Última ejecución de cada job del scheduler interno, para evitar doble-disparo en cada
+-- redeploy de Railway (el proceso Node se reinicia en cada deploy; sin esto, un scheduler
+-- basado solo en memoria dispararía otra vez el job del día aunque ya hubiera corrido).
+CREATE TABLE IF NOT EXISTS agent_schedule_state (
+  job_name TEXT PRIMARY KEY,
+  last_run_at TIMESTAMPTZ
+);
+
+ALTER TABLE agent_schedule_state ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON agent_schedule_state FOR ALL USING (true);
+
+-- Token OAuth de Gmail por banda para envío/lectura desatendidos (Agente Enviador/Lector).
+-- Cada banda conecta su propia cuenta de Gmail una vez (flujo OAuth local, igual que en el
+-- repo Python) - nunca un buzón compartido entre bandas. email_conectado se usa para
+-- verificar que la cuenta realmente conectada coincide con el email oficial de la banda en
+-- su EPK antes de enviar nada (si no coincide, el Enviador falla explícito y no manda).
+CREATE TABLE IF NOT EXISTS band_gmail_tokens (
+  band_id TEXT PRIMARY KEY REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  refresh_token TEXT NOT NULL,
+  email_conectado TEXT,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE band_gmail_tokens ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON band_gmail_tokens FOR ALL USING (true);
+
