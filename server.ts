@@ -8,6 +8,7 @@ import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase } from "./server/db.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
+import { startAgentScheduler } from "./server/services/agentScheduler.js";
 
 import usersRouter from "./server/routes/users.js";
 import postsRouter from "./server/routes/posts.js";
@@ -430,6 +431,8 @@ async function startServer() {
     console.log(`Bakandeya Virtual Manager server running on http://localhost:${PORT}`);
     // Start background autonomous Social Radar Agent
     startSocialRadarScheduler();
+    // Start booking agents scheduler (Enviador/Lector, ver server/services/agentScheduler.ts)
+    startAgentScheduler();
   });
 
   server.on("error", (err: any) => {
