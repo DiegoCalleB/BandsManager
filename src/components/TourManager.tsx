@@ -73,8 +73,8 @@ export default function TourManager({
   // Default members list fallback
   const availableMembers = React.useMemo(() => {
     if (bandUsers && bandUsers.length > 0) {
-      return bandUsers.map(u => ({
-        id: u.id,
+      return bandUsers.map((u, idx) => ({
+        id: u.id || `member-${idx}-${u.name || u.username}`,
         name: u.name || u.username || 'Músico',
         role: u.role || 'Miembro',
         instrument: u.instrument || (u.role === 'leader' ? 'Líder / Músico' : 'Músico')
@@ -692,7 +692,7 @@ export default function TourManager({
                           <span className="text-[10px] text-neutral-500 italic">Sin paradas configuradas</span>
                         ) : (
                           tour.stops.slice(0, 4).map((stop, idx) => (
-                            <div key={stop.id} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-black/20 border border-white/5">
+                            <div key={`tour-${tour.id || index}-stop-${stop.id || idx}-${idx}`} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-black/20 border border-white/5">
                               <div className="flex items-center gap-2 min-w-0">
                                 <span className="text-sky-400 font-mono text-xs font-bold">{idx + 1}.</span>
                                 <span className="font-bold truncate text-slate-100 text-xs sm:text-sm">{stop.ciudad || 'Por determinar'}</span>
@@ -714,10 +714,11 @@ export default function TourManager({
                     </div>
                   </div>
 
-                  {/* Acciones de Sincronización */}
+                      {/* Acciones de Sincronización */}
                   <div className="pt-4 mt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <button
+                        type="button"
                         onClick={() => handleVolcarEnFinanzas(tour)}
                         className="px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
                         title="Registra los cachés y gastos logísticos calculados en el libro diario de Finanzas"
@@ -728,6 +729,7 @@ export default function TourManager({
 
                       {onNavigate && (
                         <button
+                          type="button"
                           onClick={() => onNavigate('calendario', { selectedDate: tour.fechaInicio })}
                           className="px-2.5 py-1.5 rounded-lg text-[11px] font-mono font-bold uppercase tracking-wider bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 transition-all flex items-center gap-1.5 cursor-pointer"
                           title="Abrir agenda y ver paradas de la gira en el calendario"
@@ -994,7 +996,7 @@ export default function TourManager({
                               >
                                 <option value="" disabled>-- Seleccionar Modelo --</option>
                                 {VEHICLE_PRESETS.map((p, idx) => (
-                                  <option key={idx} value={p.label}>{p.label}</option>
+                                  <option key={`veh-preset-${p.name}-${idx}`} value={p.label}>{p.label}</option>
                                 ))}
                               </select>
                             </div>
@@ -1061,7 +1063,7 @@ export default function TourManager({
                         </span>
                         <div className="text-[11px] text-neutral-400">
                           {formVehiculos.map((v, i) => (
-                            <span key={i} className="inline-block mr-2">
+                            <span key={`veh-fleet-summary-${v.id || i}-${i}`} className="inline-block mr-2">
                               • {v.nombre || `Vehículo ${i+1}`}: {v.consumoL100km} {v.tipoCombustible === 'electrico' ? 'kWh' : 'L'}/100km @ {v.precioCarburanteEUR || 1.55}€ (≈ {(((Number(v.consumoL100km) || 0) * (Number(v.precioCarburanteEUR) || 1.55))).toFixed(2)}€/100km)
                             </span>
                           ))}
@@ -1105,7 +1107,7 @@ export default function TourManager({
                       </div>
                     ) : (
                       formStops.map((stop, idx) => (
-                        <div key={stop.id} className="p-4 rounded-xl bg-neutral-900/60 border border-white/10 relative group">
+                        <div key={stop.id || `form-stop-${idx}`} className="p-4 rounded-xl bg-neutral-900/60 border border-white/10 relative group">
                           <button
                             type="button"
                             onClick={() => removeStop(idx)}
@@ -1124,8 +1126,8 @@ export default function TourManager({
                                 className="ml-auto text-[10px] bg-black/50 border border-sky-500/30 text-sky-300 p-1 rounded focus:outline-none cursor-pointer"
                               >
                                 <option value="" disabled>-- Cargar desde Salas BD --</option>
-                                {leads.map(lead => (
-                                  <option key={lead.id} value={lead.id}>
+                                {leads.map((lead, lIdx) => (
+                                  <option key={`lead-opt-${lead.id || lIdx}-${lIdx}`} value={lead.id || lead.nombre_sala}>
                                     {lead.nombre_sala} ({lead.ciudad})
                                   </option>
                                 ))}
