@@ -412,7 +412,7 @@ Bakandeya Agent Manager IA`);
   return {
     templateTab, setTemplateTab,
     testPromptResult, isTestingPrompt,
-    isOptimizingTemplate, optimizationFeedbackMsg,
+    isOptimizingTemplate, optimizationFeedbackMsg, setOptimizationFeedbackMsg,
     templateCustomInstruction, setTemplateCustomInstruction,
     templateToneRating, setTemplateToneRating,
     templateContentRating, setTemplateContentRating,

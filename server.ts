@@ -12,7 +12,13 @@ import {
   parsePrivateKey,
   fetchLeadsFromSheet,
   ensureAutonomiaSheet,
-  syncAllTabsWithBakandeya
+  syncAllTabsWithBakandeya,
+  ensureTemasYSetlistsSheets,
+  ensureFansSheet,
+  ensureBandasSheet,
+  ensureToursSheet,
+  ensureRegistroBandasSheet,
+  ensureUsuariosSheet
 } from "./server/sheets.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase } from "./server/db.js";
