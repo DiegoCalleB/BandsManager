@@ -293,10 +293,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       const uploadedUrl = await uploadFileToServer(file, { bandId, category: 'logo' });
       const clean = cleanBandId(bandId);
 
-      // Persist to EPK endpoint
+      // Persist to EPK and upload-logo endpoints
       const authHeaders = getAuthHeaders() as Record<string, string>;
-      await fetch('/api/epk', {
-        method: 'PUT',
+      await fetch('/api/users/upload-logo', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...authHeaders,
@@ -311,7 +311,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       setCustomLogos(prev => ({ ...prev, [clean]: uploadedUrl }));
 
       if (isSameBandId(bandId, currentActiveBandId) && onUpdateEpkConfig) {
-        await onUpdateEpkConfig({ ...epkConfig, logoUrl: uploadedUrl });
+        await onUpdateEpkConfig({ ...epkConfig, logoUrl: uploadedUrl, bandId });
       }
 
       if (onRefreshData) {

@@ -13,6 +13,7 @@ import {
   dbGetRegisteredBands,
   dbUpsertRegisteredBand,
   dbDeleteRegisteredBand,
+  dbUpsertEpkConfig,
   normalizePlan,
   dbMigrateAllPlansToNewTiers
 } from "../db.js";
@@ -1255,6 +1256,59 @@ router.post(['/set-band-order', '/users/set-band-order'], requireAuth, async (re
   } catch (err: any) {
     console.error('Error setting band order:', err);
     res.status(500).json({ error: err.message || 'Error al guardar el orden de bandas' });
+  }
+});
+
+// Upload / Update Band Logo
+router.post(['/upload-logo', '/users/upload-logo', '/bands/upload-logo', '/bands/logo'], requireAuth, async (req, res) => {
+  try {
+    const { bandId, logoUrl } = req.body;
+    const targetBandId = bandId || (req.headers['x-band-id'] as string) || (req as any).user?.band_id || BAKANDEYA_BAND_ID;
+    
+    if (!logoUrl || typeof logoUrl !== 'string' || !logoUrl.trim()) {
+      return res.status(400).json({ error: 'logoUrl es requerido' });
+    }
+
+    const cleanTarget = targetBandId.replace(/^(band|reg)-/, '');
+    const state = loadState();
+
+    // 1. Update in Supabase
+    await dbUpsertEpkConfig(targetBandId, { logoUrl: logoUrl.trim() });
+
+    // 2. Update local state registeredBands
+    if (!state.registeredBands) state.registeredBands = [];
+    let foundReg = false;
+    state.registeredBands.forEach((b: any) => {
+      const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
+      if (bClean === cleanTarget || b.band_id === targetBandId || b.id === targetBandId) {
+        b.logo_url = logoUrl.trim();
+        b.imagen_url = logoUrl.trim();
+        foundReg = true;
+      }
+    });
+
+    // 3. Update epkConfigsByBand in local state
+    if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
+    const possibleKeys = [targetBandId, cleanTarget, `band-${cleanTarget}`, `reg-${cleanTarget}`];
+    possibleKeys.forEach(k => {
+      if (state.epkConfigsByBand[k]) {
+        state.epkConfigsByBand[k].logoUrl = logoUrl.trim();
+      } else {
+        state.epkConfigsByBand[k] = { logoUrl: logoUrl.trim() };
+      }
+    });
+
+    if (cleanTarget === 'bakandeya') {
+      if (!state.epkConfig) state.epkConfig = {};
+      state.epkConfig.logoUrl = logoUrl.trim();
+    }
+
+    saveState(state);
+
+    res.json({ success: true, bandId: targetBandId, logoUrl: logoUrl.trim() });
+  } catch (err: any) {
+    console.error('Error updating band logo:', err);
+    res.status(500).json({ error: err.message || 'Error al actualizar el logotipo de la banda' });
   }
 });
 

@@ -86,9 +86,13 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   // REST API UPDATE OPERATIONS
   const handleUpdateEpkConfig = async (newConfig: any) => {
-    setEpkConfig(newConfig);
+    setEpkConfig(prev => ({ ...prev, ...newConfig }));
     try {
-      await api.updateEpkConfig(newConfig);
+      const payload = {
+        ...newConfig,
+        bandId: newConfig?.bandId || bandId || 'band-bakandeya'
+      };
+      await api.updateEpkConfig(payload);
     } catch (e) {
       console.error('Error updating EPK config:', e);
     }

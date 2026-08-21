@@ -226,17 +226,20 @@ export const api = {
   },
 
   // EPK
-  async updateEpkConfig(newConfig: Partial<EPKConfig>): Promise<EPKConfig> {
+  async updateEpkConfig(newConfig: Partial<EPKConfig> & { bandId?: string }): Promise<EPKConfig> {
+    const targetBandId = newConfig.bandId;
     return request('/api/epk', {
       method: 'PUT',
+      headers: targetBandId ? { 'x-band-id': targetBandId } : undefined,
       body: JSON.stringify(newConfig)
     });
   },
 
-  async updateIncentive(incentivoFans: NonNullable<EPKConfig['incentivoFans']>): Promise<{ ok: boolean }> {
+  async updateIncentive(incentivoFans: NonNullable<EPKConfig['incentivoFans']>, bandId?: string): Promise<{ ok: boolean }> {
     return request('/api/epk', {
       method: 'PUT',
-      body: JSON.stringify({ incentivoFans })
+      headers: bandId ? { 'x-band-id': bandId } : undefined,
+      body: JSON.stringify({ incentivoFans, bandId })
     });
   },
 
