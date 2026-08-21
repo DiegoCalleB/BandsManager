@@ -23,17 +23,24 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
   const { id } = req.params;
   const updated: Partial<SocialPost> = req.body;
   const merged = { ...updated, id };
-  const saved = await dbUpsertSocialPost(merged, userBandId);
 
-  const state = loadState();
-  const idx = state.posts.findIndex((p: SocialPost) => p.id === id);
-  if (idx !== -1) {
-    state.posts[idx] = saved as any;
-  } else {
-    state.posts.push(saved as any);
+  let saved: any;
+  try {
+    saved = await dbUpsertSocialPost(merged, userBandId);
+
+    const state = loadState();
+    const idx = state.posts.findIndex((p: SocialPost) => p.id === id);
+    if (idx !== -1) {
+      state.posts[idx] = saved as any;
+    } else {
+      state.posts.push(saved as any);
+    }
+    saveState(state);
+  } catch (err: any) {
+    console.error("Error updating social post:", err);
+    return res.status(500).json({ error: err.message || String(err) });
   }
-  saveState(state);
-  
+
   let webhookTriggered = false;
   let webhookError = null;
   if (updated.estado === "publicado" && process.env.PUBLISH_WEBHOOK_URL) {
@@ -58,7 +65,7 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
       webhookError = err.message || String(err);
     }
   }
-  
+
   res.json({ success: true, post: saved, webhookTriggered, webhookError });
 });
 
@@ -66,26 +73,36 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
 router.post("/posts", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   const newPost: SocialPost = req.body;
-  const saved = await dbUpsertSocialPost(newPost, userBandId);
+  try {
+    const saved = await dbUpsertSocialPost(newPost, userBandId);
 
-  const state = loadState();
-  state.posts.push(saved as any);
-  saveState(state);
-  
-  res.json({ success: true, post: saved });
+    const state = loadState();
+    state.posts.push(saved as any);
+    saveState(state);
+
+    res.json({ success: true, post: saved });
+  } catch (err: any) {
+    console.error("Error creating social post:", err);
+    res.status(500).json({ error: err.message || String(err) });
+  }
 });
 
 // Delete social post
 router.delete("/posts/:id", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   const { id } = req.params;
-  await dbDeleteSocialPost(id, userBandId);
+  try {
+    await dbDeleteSocialPost(id, userBandId);
 
-  const state = loadState();
-  state.posts = state.posts.filter((p: SocialPost) => p.id !== id);
-  saveState(state);
+    const state = loadState();
+    state.posts = state.posts.filter((p: SocialPost) => p.id !== id);
+    saveState(state);
 
-  res.json({ success: true });
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error("Error deleting social post:", err);
+    res.status(500).json({ error: err.message || String(err) });
+  }
 });
 
 // Sync all social posts with Supabase
