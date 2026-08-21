@@ -244,7 +244,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const incentivo = successData.incentivo || {};
     
     return (
-      <div className="min-h-screen bg-[#121111] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#121111] flex items-start justify-center p-4 pt-8 sm:items-center sm:pt-4">
         <div className="max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600" />
           
@@ -369,7 +369,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#121111] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#121111] flex items-start justify-center p-4 pt-8 sm:items-center sm:pt-4">
       <div className="max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-neutral-800 to-neutral-700" />
         
