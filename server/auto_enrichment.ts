@@ -1,6 +1,7 @@
 import { getAiClient, generateContentWithFallback } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState } from "./state.js";
+import { detectPitchLanguage } from "./utils/leadLanguage.js";
 
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
@@ -273,10 +274,12 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
 
     const client = getAiClient();
     if (client) {
+      const languageHint = detectPitchLanguage(lead);
       const promptPitch = `Eres el Agente Redactor e Inteligencia Artificial de Booking de la banda "${bandName}" (${bandBio ? bandBio : 'banda de música en directo'}).
 Redacta un correo de pitch inicial muy profesional, fresco y atractivo para presentar a la banda y proponer un concierto en la sala, festival o medio: "${lead.nombre_sala}" ubicado en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}, Género habitual: ${lead.genero || "N/D"}).
 ${bandBio ? `Destaca su propuesta artística: ${bandBio}.` : `Destaca su propuesta de música en directo.`}
-Escribe en castellano natural de España, sin sonar a plantilla robótica.
+${languageHint.instruction}
+No suenes a plantilla robótica.
 Devuelve ÚNICAMENTE el texto final redactado del pitch, sin asuntos, encabezados ni metadatos.`;
 
       try {
