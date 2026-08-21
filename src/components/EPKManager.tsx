@@ -202,7 +202,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
   const [isUploadingRider, setIsUploadingRider] = useState(false);
 
-  const bandQueryParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(activeBandId)}` : '';
+  // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
+  // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
+  // defecto del servidor para resolver de qué banda es el dossier.
+  const bandQueryParam = `?band=${encodeURIComponent(activeBandId || 'band-bakandeya')}`;
   const rawEpkBase = typeof window !== 'undefined' 
     ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
         ? 'https://bands-manager.up.railway.app/epk' 

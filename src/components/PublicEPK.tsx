@@ -71,8 +71,39 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "");
 
-  const songs: Song[] = epkData?.highlightedSongs || [];
+  // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
+  // resto de la app usa camelCase. Sin normalizar, 'albumDisco' salía undefined y caía al
+  // literal "Sencillo", y el audio real que ya está subido no se reproducía nunca.
+  const songs: any[] = (epkData?.highlightedSongs || []).map((s: any) => ({
+    ...s,
+    albumDisco: s.albumDisco ?? s.album_disco ?? s.album,
+    audioPrincipalUrl: s.audioPrincipalUrl ?? s.audio_principal_url,
+    portadaUrl: s.portadaUrl ?? s.portada_url
+  }));
   const concerts: Concert[] = epkData?.upcomingConcerts || [];
+
+  // Datos de un vistazo para quien programa: lo que decide si sigue leyendo o cierra.
+  const generosDestacados = Array.from(
+    new Set(songs.map((s: any) => s.genero).filter(Boolean))
+  ).slice(0, 4);
+  const temasConAudio = songs.filter((s: any) => s.audioPrincipalUrl);
+
+  // Un enlace de artista/álbum de Spotify se puede incrustar cambiando la ruta por /embed/.
+  // Se exigen los 22 caracteres del ID real: si no, un enlace de relleno como
+  // '/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
+  const spotifyEmbedUrl = (() => {
+    const raw = config.enlacesRedes?.spotify || "";
+    const match = raw.match(/open\.spotify\.com\/(artist|album|track|playlist)\/([A-Za-z0-9]{22})/);
+    return match ? `https://open.spotify.com/embed/${match[1]}/${match[2]}` : null;
+  })();
+
+  // Solo se puede incrustar un VÍDEO concreto, no un canal: si el enlace es de canal (@handle
+  // o /c/), se deja como enlace normal en vez de meter un iframe roto.
+  const youtubeEmbedUrl = (() => {
+    const raw = config.enlacesRedes?.youtube || "";
+    const match = raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+  })();
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950 print:bg-white print:text-black">
@@ -143,6 +174,28 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
                 {config.biografia ? (config.biografia.length > 200 ? `${config.biografia.slice(0, 180)}...` : config.biografia) : 'Dossier oficial y propuesta artística en directo.'}
               </p>
+
+              {/* Datos de un vistazo: lo que un programador quiere saber en 5 segundos antes
+                  de decidir si sigue leyendo. Cada dato solo aparece si existe de verdad. */}
+              {(generosDestacados.length > 0 || temasConAudio.length > 0 || (config.ciudadesConfig?.length || 0) > 0) && (
+                <div className="pt-3 flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  {generosDestacados.map((g: any) => (
+                    <span key={g} className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200 text-xs font-semibold">
+                      {g}
+                    </span>
+                  ))}
+                  {temasConAudio.length > 0 && (
+                    <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5">
+                      <Music className="w-3 h-3" /> {temasConAudio.length} tema{temasConAudio.length === 1 ? '' : 's'} para escuchar
+                    </span>
+                  )}
+                  {(config.ciudadesConfig?.length || 0) > 0 && (
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3 text-amber-500/80" /> {config.ciudadesConfig!.slice(0, 3).join(' · ')}
+                    </span>
+                  )}
+                </div>
+              )}
 
               {/* Quick links bar */}
               <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3 print:hidden">
@@ -215,26 +268,40 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <Disc className="w-5 h-5" /> Temas Destacados / Repertorio Principal
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {songs.map(song => (
-                <div key={song.id} className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between hover:border-amber-500/40 transition">
-                  <div className="space-y-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-bold text-white text-base">{song.titulo}</h4>
-                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 uppercase">
-                        {song.tonalidad || '4/4'}
-                      </span>
+              {songs.map((song: any) => {
+                const sonando = playingSongId === song.id;
+                return (
+                  <div key={song.id} className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between gap-3 hover:border-amber-500/40 transition">
+                    <div className="space-y-1">
+                      <h4 className="font-bold text-white text-base leading-tight">{song.titulo}</h4>
+                      {/* Nada de BPM/tonalidad/notas internas: son datos de ensayo, no le dicen
+                          nada a quien programa y ensucian la página (salían como "N/A"). */}
+                      <p className="text-xs text-slate-400">
+                        {[song.albumDisco, song.genero, song.duracion].filter(Boolean).join(' • ')}
+                      </p>
                     </div>
-                    <p className="text-xs text-slate-400">
-                      {song.albumDisco || 'Sencillo'} • {song.duracion} • {song.bpm} BPM
-                    </p>
+                    {song.audioPrincipalUrl && (
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => setPlayingSongId(sonando ? null : song.id)}
+                          className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-lg transition ${sonando ? 'bg-amber-400 text-slate-950' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25'}`}
+                        >
+                          {sonando ? <><Pause className="w-3.5 h-3.5" /> Sonando</> : <><Play className="w-3.5 h-3.5" /> Escuchar</>}
+                        </button>
+                        {sonando && (
+                          <audio
+                            src={song.audioPrincipalUrl}
+                            controls
+                            autoPlay
+                            onEnded={() => setPlayingSongId(null)}
+                            className="w-full h-9"
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {song.notasInternas && (
-                    <p className="text-xs text-slate-500 italic mt-2 line-clamp-2">
-                      "{song.notasInternas}"
-                    </p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -261,7 +328,42 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </section>
         )}
 
-        {/* TECHNICAL RIDER */}
+        {/* ESCUCHA Y VÍDEO - lo que de verdad decide a quien programa un directo */}
+        {(spotifyEmbedUrl || youtubeEmbedUrl) && (
+          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:hidden">
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Music className="w-5 h-5" /> Escúchanos y Míranos en Directo
+            </h2>
+            <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+              {youtubeEmbedUrl && (
+                <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
+                  <iframe
+                    src={youtubeEmbedUrl}
+                    title={`${bandName} en directo`}
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                    className="w-full h-full"
+                  />
+                </div>
+              )}
+              {spotifyEmbedUrl && (
+                <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
+                  <iframe
+                    src={spotifyEmbedUrl}
+                    title={`${bandName} en Spotify`}
+                    allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    className="w-full h-[352px]"
+                  />
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* TECHNICAL RIDER - oculto si no hay nada que enseñar (antes salía una caja vacía) */}
+        {(config.riderTecnico?.trim() || config.riderPdfUrl) && (
         <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
@@ -278,21 +380,26 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <Download className="w-3.5 h-3.5" /> {config.riderPdfName || 'Descargar PDF Rider'}
                 </a>
               )}
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(config.riderTecnico);
-                  alert("¡Rider técnico copiado al portapapeles!");
-                }}
-                className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 transition"
-              >
-                <Copy className="w-3.5 h-3.5" /> Copiar Texto
-              </button>
+              {config.riderTecnico?.trim() && (
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(config.riderTecnico);
+                    alert("¡Rider técnico copiado al portapapeles!");
+                  }}
+                  className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 transition"
+                >
+                  <Copy className="w-3.5 h-3.5" /> Copiar Texto
+                </button>
+              )}
             </div>
           </div>
-          <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-300 text-sm font-mono whitespace-pre-line leading-relaxed">
-            {config.riderTecnico}
-          </div>
+          {config.riderTecnico?.trim() && (
+            <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-300 text-sm font-mono whitespace-pre-line leading-relaxed">
+              {config.riderTecnico}
+            </div>
+          )}
         </section>
+        )}
 
         {/* UPCOMING SHOWS */}
         {concerts.length > 0 && (
