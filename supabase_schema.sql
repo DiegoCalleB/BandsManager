@@ -224,6 +224,10 @@ CREATE TABLE IF NOT EXISTS epk_configs (
     incentivo_fans JSONB DEFAULT '{}'::jsonb,
     ciudades_config JSONB DEFAULT '[]'::jsonb,
     firma_email JSONB DEFAULT '{}'::jsonb,
+    -- Contenido del EPK público orientado a contratación (ver src/components/PublicEPK.tsx)
+    miembros JSONB DEFAULT '[]'::jsonb,
+    videos JSONB DEFAULT '[]'::jsonb,
+    datos_contratacion JSONB DEFAULT '{}'::jsonb,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

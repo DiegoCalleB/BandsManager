@@ -163,7 +163,12 @@ ALTER TABLE public.epk_configs
     ADD COLUMN IF NOT EXISTS dossier_document_name TEXT DEFAULT '',
     ADD COLUMN IF NOT EXISTS dossier_texto_extra TEXT DEFAULT '',
     ADD COLUMN IF NOT EXISTS rider_pdf_url TEXT DEFAULT '',
-    ADD COLUMN IF NOT EXISTS rider_pdf_name TEXT DEFAULT '';
+    ADD COLUMN IF NOT EXISTS rider_pdf_name TEXT DEFAULT '',
+    -- Contenido del EPK público orientado a contratación: formación con fotos, vídeos de
+    -- directo y datos duros (nº de músicos, duración del directo, ciudad base...).
+    ADD COLUMN IF NOT EXISTS miembros JSONB DEFAULT '[]'::jsonb,
+    ADD COLUMN IF NOT EXISTS videos JSONB DEFAULT '[]'::jsonb,
+    ADD COLUMN IF NOT EXISTS datos_contratacion JSONB DEFAULT '{}'::jsonb;
 
 ALTER TABLE public.fans
     ADD COLUMN IF NOT EXISTS mensaje TEXT DEFAULT '',
