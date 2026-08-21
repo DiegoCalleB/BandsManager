@@ -5,6 +5,7 @@ import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, ge
 import { dbUpsertLead, getSupabase } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
+import { runEnviadorAgent, logAgentExecution } from "../services/agentEngine.js";
 
 const router = express.Router();
 
@@ -18,15 +19,10 @@ function normalizeAgentName(name: string): string {
   return norm;
 }
 
-// Trigger agents (Supabase Edge / Python Dispatcher / GitHub Actions)
+// Trigger agents (motor consolidado en Node, ver server/services/agentEngine.ts)
 router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
   const { agentName, params } = req.body;
-  const pat = (req.headers["x-github-pat"] as string) || process.env.GITHUB_PAT;
-  const owner = (req.headers["x-github-owner"] as string) || process.env.GITHUB_REPO_OWNER || "DiegoCalleB";
-  const repo = (req.headers["x-github-repo"] as string) || process.env.GITHUB_REPO_NAME || "bakandeya-agent-manager";
-  const rawRef = (req.headers["x-github-ref"] as string) || params?.ref || process.env.GITHUB_REF;
-  const ref = rawRef && rawRef.trim() !== "" ? rawRef : "master";
-  
+
   if (!agentName) {
     return res.status(400).json({ error: "Falta el nombre del agente." });
   }
@@ -74,198 +70,49 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
     }
   };
 
-  // --- EJECUCIÓN NATIVA SUPABASE PARA EL AGENTE ENVIADOR ---
+  // --- AGENTE ENVIADOR (Gmail real por banda, ver server/services/agentEngine.ts) ---
   if (normalizedAgentName === "enviador" || params?.engine === "supabase") {
+    const user = (req as any).user;
+    const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
+    const userEmail = user?.email || (req.headers["x-user-email"] as string) || undefined;
+    const userId = user?.id || undefined;
+    const triggerType = params?.trigger_type || (user ? "usuario_manual" : "chatbot");
+
     try {
-      const sb = getSupabase();
-      const user = (req as any).user;
-      const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
-      const userEmail = user?.email || (req.headers["x-user-email"] as string) || "diego.delacalleb@gmail.com";
-      const userId = user?.id || "user-diego";
-      const triggerType = params?.trigger_type || (user ? "usuario_manual" : "chatbot");
-
-      // 1. Obtener leads pendientes de envío en Supabase
-      let query = sb.from("leads").select("*").in("estado", ["aprobado_propuesta", "aprobado", "aprobado_respuesta"]);
-      if (params?.id || params?.lead_id) {
-        const specificId = params.id || params.lead_id;
-        query = sb.from("leads").select("*").eq("id", specificId);
-      }
-
-      const { data: approvedLeads, error: fetchErr } = await query;
-      if (fetchErr) {
-        throw fetchErr;
-      }
-
-      if (!approvedLeads || approvedLeads.length === 0) {
-        const emptyMsg = "No se encontraron propuestas o respuestas en cola ('aprobado_propuesta' / 'aprobado_respuesta') pendientes de despacho en Supabase.";
-        await logExecution({
-          band_id: targetBandId,
-          agente: "enviador",
-          motor: "supabase_edge",
-          disparado_por_tipo: triggerType,
-          usuario_id: userId,
-          usuario_email: userEmail,
-          estado: "warning",
-          mensaje: emptyMsg,
-          leads_afectados: [],
-          conteo_afectados: 0,
-          detalles: { params }
-        });
-
-        return res.json({
-          success: true,
-          agent: "Enviador",
-          engine: "Supabase Edge & Realtime",
-          dispatchedCount: 0,
-          message: emptyMsg,
-          results: []
-        });
-      }
-
-      // Obtener datos de la banda para el remitente
-      let bandName = "Bakandeya";
-      try {
-        const { data: bandData } = await sb.from("registered_bands").select("nombre_banda, email").eq("band_id", targetBandId).maybeSingle();
-        if (bandData?.nombre_banda) bandName = bandData.nombre_banda;
-      } catch (e) {
-        // fallback
-      }
-
-      const resendApiKey = process.env.RESEND_API_KEY || "";
-      const results: any[] = [];
-      const nowIso = new Date().toISOString();
-
-      for (const lead of approvedLeads) {
-        const emailContacto = lead.email_contacto || lead.email;
-        const pitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
-        const isRespuesta = lead.estado === "aprobado_respuesta";
-        const asunto = isRespuesta 
-          ? `Re: Concierto ${bandName} en ${lead.nombre_sala}`
-          : `Propuesta de concierto: ${bandName} en ${lead.nombre_sala}`;
-
-        let emailSent = false;
-        let errorMsg = "";
-
-        if (resendApiKey && emailContacto) {
-          try {
-            const emailRes = await fetch("https://api.resend.com/emails", {
-              method: "POST",
-              headers: {
-                "Authorization": `Bearer ${resendApiKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                from: `${bandName} Booking <booking@bandmanager.ai>`,
-                to: [emailContacto],
-                subject: asunto,
-                text: pitch,
-              }),
-            });
-            if (emailRes.ok) {
-              emailSent = true;
-            } else {
-              const errData = await emailRes.json().catch(() => ({}));
-              errorMsg = errData.message || "Error al enviar email";
-            }
-          } catch (e: any) {
-            errorMsg = e.message;
-          }
-        } else {
-          // Despacho seguro en Supabase
-          console.log(`[SUPABASE ENVIADOR] Despacho realizado para ${lead.nombre_sala} (${emailContacto})`);
-          emailSent = true;
-        }
-
-        if (emailSent) {
-          const nextState = isRespuesta ? "negociando" : "contactado";
-          const dateTag = new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-          const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto || 'sala'} por el Agente Enviador (Supabase Engine) ***\n` + (lead.notas || '');
-
-          await sb.from("leads").update({
-            estado: nextState,
-            fecha_envio: nowIso,
-            notas: newNote
-          }).eq("id", lead.id);
-
-          // Registrar en lead_messages
-          try {
-            await sb.from("lead_messages").insert({
-              id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-              lead_id: lead.id,
-              band_id: lead.band_id || targetBandId,
-              remitente: "banda",
-              remitente_nombre: `${bandName} Booking`,
-              asunto: asunto,
-              mensaje: pitch,
-              fecha: nowIso
-            });
-          } catch (msgErr) {
-            console.warn("Notice saving to lead_messages:", msgErr);
-          }
-
-          results.push({
-            id: lead.id,
-            nombre_sala: lead.nombre_sala,
-            email_contacto: emailContacto,
-            estado_anterior: lead.estado,
-            estado_nuevo: nextState,
-            fecha_envio: nowIso,
-            status: "enviado"
-          });
-        } else {
-          results.push({
-            id: lead.id,
-            nombre_sala: lead.nombre_sala,
-            status: "error",
-            error: errorMsg
-          });
-        }
-      }
-
-      const sentCount = results.filter(r => r.status === "enviado").length;
-      const successMsg = `¡Agente Enviador ejecutado con éxito en Supabase! Se han despachado ${sentCount} propuesta(s). Los registros se han actualizado en Supabase a 'contactado'/'negociando'.`;
-
-      // Registrar auditoría de éxito
-      await logExecution({
-        band_id: targetBandId,
-        agente: "enviador",
-        motor: "supabase_edge",
-        disparado_por_tipo: triggerType,
-        usuario_id: userId,
-        usuario_email: userEmail,
-        estado: sentCount > 0 ? "success" : "warning",
-        mensaje: successMsg,
-        leads_afectados: results,
-        conteo_afectados: sentCount,
-        detalles: { params, band_name: bandName }
+      const result = await runEnviadorAgent({
+        bandId: targetBandId,
+        triggerType,
+        userId,
+        userEmail,
+        leadId: params?.id || params?.lead_id
       });
 
       return res.json({
-        success: true,
+        success: result.success,
         agent: "Enviador",
-        engine: "Supabase Edge & Realtime",
-        dispatchedCount: sentCount,
-        message: successMsg,
-        results
+        engine: "Gmail (Node Agent Engine)",
+        dispatchedCount: result.dispatchedCount,
+        message: result.message,
+        results: result.results
       });
     } catch (err: any) {
-      console.error("Error al ejecutar el Agente Enviador en Supabase:", err);
-      const user = (req as any).user;
-      await logExecution({
-        band_id: params?.band_id || user?.band_id || BAKANDEYA_BAND_ID,
+      console.error("Error al ejecutar el Agente Enviador:", err);
+      await logAgentExecution({
+        band_id: targetBandId,
         agente: "enviador",
-        motor: "supabase_edge",
-        disparado_por_tipo: params?.trigger_type || "usuario_manual",
-        usuario_id: user?.id,
-        usuario_email: user?.email,
+        motor: "node_gmail_engine",
+        disparado_por_tipo: triggerType,
+        usuario_id: userId,
+        usuario_email: userEmail,
         estado: "error",
-        mensaje: `Error al ejecutar el Agente Enviador en Supabase: ${err.message}`,
+        mensaje: `Error al ejecutar el Agente Enviador: ${err.message}`,
+        duracion_ms: 0,
         detalles: { error: err.stack, params }
       });
 
       return res.status(500).json({
         success: false,
-        error: `Error al ejecutar el Agente Enviador en Supabase: ${err.message}`
+        error: `Error al ejecutar el Agente Enviador: ${err.message}`
       });
     }
   }
@@ -588,6 +435,36 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
     engine: "Supabase Native Agent Engine",
     message: `¡Agente '${displayAgentName}' ejecutado correctamente en Supabase!`
   });
+});
+
+// POST /api/internal/agents/responder-hilo - disparado por el trigger de Postgres
+// tr_enviar_respuesta_lead (ver supabase_schema.sql) en cuanto un lead pasa a
+// 'aprobado_respuesta', sin esperar al siguiente tick del scheduler. Protegido con el mismo
+// mecanismo X-Cron-Secret que ya usa requireCronOrAuth para otras llamadas internas.
+router.post("/internal/agents/responder-hilo", requireCronOrAuth, async (req, res) => {
+  const { lead_id } = req.body || {};
+  if (!lead_id) {
+    return res.status(400).json({ error: "Falta lead_id." });
+  }
+
+  try {
+    const sb = getSupabase();
+    const { data: lead } = await sb.from("leads").select("band_id").eq("id", lead_id).maybeSingle();
+    if (!lead?.band_id) {
+      return res.status(404).json({ error: `Lead '${lead_id}' no encontrado o sin band_id.` });
+    }
+
+    const result = await runEnviadorAgent({
+      bandId: lead.band_id,
+      triggerType: "postgres_trigger",
+      leadId: lead_id
+    });
+
+    return res.json({ success: result.success, dispatchedCount: result.dispatchedCount, message: result.message, results: result.results });
+  } catch (err: any) {
+    console.error("Error en responder-hilo interno:", err);
+    return res.status(500).json({ success: false, error: err.message || "Error interno" });
+  }
 });
 
 // GET /api/agent-runs - Get latest agent execution runs (Supabase Logs & Engine)
