@@ -759,12 +759,22 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-300">Biografía de Presentación</label>
+              <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-400 space-y-1.5">
+                <p className="text-slate-300 font-semibold">Escribid UN texto de banda, no la trayectoria de cada uno por separado (eso va en "Formación de la Banda", más abajo, con su foto).</p>
+                <p>Un programador de sala lee esto en 15 segundos antes de decidir si sigue mirando. En este orden:</p>
+                <ol className="list-decimal list-inside space-y-0.5 pl-1">
+                  <li>Qué sois y cómo sonáis, en una frase (vuestro género, lo que os hace distintos).</li>
+                  <li>Qué pasa en vuestro directo - lo que ve y siente el público.</li>
+                  <li>Por qué sois una apuesta segura - trayectoria en UNA frase (giras, festivales, con quién habéis compartido escenario), no cuatro biografías.</li>
+                </ol>
+                <p>Máximo 150 palabras. Nada de adjetivos que podría decir cualquier banda ("energética", "diversa") - mejor lo concreto que os distingue.</p>
+              </div>
               <textarea
                 rows={6}
                 value={config.biografia}
                 onChange={e => setConfig({ ...config, biografia: e.target.value })}
-                placeholder="Escribe la biografía oficial de la banda..."
-                className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed"
+                placeholder={"Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica]."}
+                className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed placeholder:text-slate-600"
               />
               <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
                 <span>Mínimo 80 caracteres para completar el perfil</span>
@@ -1030,23 +1040,53 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               Lo que un programador pregunta siempre antes de contestar. Cuanto más claro, menos correos de ida y vuelta.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {([
-                { campo: 'numMusicos', label: 'Nº de músicos en escena', ph: '4', tipo: 'number' },
-                { campo: 'duracionDirecto', label: 'Duración del directo', ph: '75 min', tipo: 'text' },
-                { campo: 'ciudadBase', label: 'Ciudad base', ph: 'Madrid', tipo: 'text' },
-                { campo: 'formatos', label: 'Formatos disponibles', ph: 'Banda completa / Acústico a dúo', tipo: 'text' }
-              ] as const).map(f => (
-                <div key={f.campo}>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">{f.label}</label>
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Nº de músicos en escena</label>
+                <input
+                  type="number"
+                  value={config.datosContratacion?.numMusicos ?? ''}
+                  onChange={e => editarDatoContratacion('numMusicos', e.target.value)}
+                  placeholder="4"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Duración del directo</label>
+                {/* La unidad va fija en la interfaz, no en lo que escribe el usuario - así el
+                    dossier nunca puede enseñar un "75" a secas sin decir de qué es. */}
+                <div className="flex items-center bg-slate-950 border border-slate-800 rounded-lg focus-within:border-amber-500">
                   <input
-                    type={f.tipo}
-                    value={(config.datosContratacion as any)?.[f.campo] ?? ''}
-                    onChange={e => editarDatoContratacion(f.campo as keyof DatosContratacion, e.target.value)}
-                    placeholder={f.ph}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                    type="number"
+                    value={config.datosContratacion?.duracionDirecto ?? ''}
+                    onChange={e => editarDatoContratacion('duracionDirecto', e.target.value)}
+                    placeholder="75"
+                    className="w-full bg-transparent px-3 py-2 text-sm text-white outline-none"
                   />
+                  <span className="pr-3 text-xs text-slate-500 font-semibold">min</span>
                 </div>
-              ))}
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Ciudad base</label>
+                <input
+                  type="text"
+                  value={config.datosContratacion?.ciudadBase ?? ''}
+                  onChange={e => editarDatoContratacion('ciudadBase', e.target.value)}
+                  placeholder="Madrid"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">De dónde salís de gira - ayuda a estimar el desplazamiento.</p>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Formatos disponibles</label>
+                <input
+                  type="text"
+                  value={config.datosContratacion?.formatos ?? ''}
+                  onChange={e => editarDatoContratacion('formatos', e.target.value)}
+                  placeholder="Banda completa / Acústico a dúo"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Si podéis tocar en más de un formato (completo, reducido, acústico), decidlo aquí - a veces cierra un bolo que en formato completo no encajaba.</p>
+              </div>
             </div>
             <div>
               <label className="text-xs font-semibold text-slate-300 block mb-1">Necesidades de escenario (resumen corto)</label>
@@ -1057,6 +1097,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
               />
+              <p className="text-[11px] text-slate-500 mt-1">Una frase, no el rider entero (eso va en la sección de Rider Técnico) - solo lo mínimo para que la sala sepa si os puede acoger.</p>
             </div>
           </div>
 
@@ -1122,9 +1163,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 + Añadir miembro
               </button>
             </div>
-            <p className="text-xs text-slate-400">
-              Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre e instrumento de cada miembro.
-            </p>
+            <div className="text-xs text-slate-400 space-y-1">
+              <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre e instrumento de cada miembro - una foto distinta para cada uno, a ser posible del escenario o un primer plano suyo (no vale repetir la misma foto de grupo en todos).</p>
+              <p>Aquí es donde va la trayectoria individual (giras, colaboraciones, otros proyectos) - la Biografía de arriba es solo del conjunto.</p>
+            </div>
             {miembros.length === 0 && (
               <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
                 Todavía no has añadido a nadie. Añade a los integrantes con su foto para que el dossier tenga cara.
@@ -1171,6 +1213,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
+                  <textarea
+                    rows={2}
+                    value={m.bio || ''}
+                    onChange={e => editarMiembro(m.id, { bio: e.target.value })}
+                    placeholder="Trayectoria breve (opcional): giras, colaboraciones, otros proyectos..."
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:border-amber-500 outline-none placeholder:text-slate-600"
+                  />
                 </div>
               ))}
             </div>
