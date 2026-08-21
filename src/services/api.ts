@@ -401,6 +401,11 @@ export const api = {
     return request<{ registeredBands: any[] }>('/api/registered-bands');
   },
 
+  // Repertorio de la banda activa (lo resuelve el header x-band-id de getAuthHeaders)
+  async getSongs(): Promise<{ songs: any[] }> {
+    return request<{ songs: any[] }>('/api/songs');
+  },
+
   // Schedules (Smart Gate)
   async getBandSchedule(bandId: string): Promise<any> {
     return request(`/api/bands/schedules/${encodeURIComponent(bandId)}`);
