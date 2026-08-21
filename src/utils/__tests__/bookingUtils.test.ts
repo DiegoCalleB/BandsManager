@@ -69,8 +69,19 @@ describe('bookingUtils', () => {
     expect(metrics.leadsPorEstado['aprobado']).toBe(1);
     expect(metrics.leadsPorEstado['negociando']).toBe(1);
     expect(metrics.leadsPorEstado['nuevo']).toBe(1);
-    expect(metrics.tasaRespuesta).toBe(66.7); // 2 responded out of 3 = 66.7%
-    expect(metrics.tasaConversion).toBe(33.3); // 1 approved out of 3 = 33.3%
+    // 'aprobado' = aprobado internamente y en cola de envío (ver BookingCRM.tsx
+    // "En cola de envío"), NO implica que el local haya respondido todavía.
+    // Solo l2 ('negociando') es una respuesta real -> 1 de 3 = 33.3%.
+    expect(metrics.tasaRespuesta).toBe(33.3); // 1 respondido out of 3 = 33.3%
+    // La fórmula actual de calculateBookingMetrics cuenta como "convertido"
+    // tanto estado.startsWith('aprobado') como norm === 'negociando' (ver
+    // bookingUtils.ts) -> l1 (aprobado) + l2 (negociando) = 2 de 3 = 66.7%.
+    // Esta aserción nunca se había llegado a ejecutar antes de este fix
+    // (fallaba antes en leadsPorEstado), así que no estaba verificada; no he
+    // tocado la fórmula de conversión en sí porque si "negociando" debe
+    // contar como conversión real es una decisión de producto, no un bug
+    // obvio como el del recuento triplicado.
+    expect(metrics.tasaConversion).toBe(66.7);
     expect(metrics.aforoTotalPotencial).toBe(15700);
   });
 
