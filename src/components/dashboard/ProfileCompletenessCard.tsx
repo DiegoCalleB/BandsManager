@@ -41,6 +41,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasScheduleConfigured, setHasScheduleConfigured] = useState(false);
+  const [hasEmailAccountConnected, setHasEmailAccountConnected] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -58,6 +59,21 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       }
     };
     checkSchedule();
+    return () => { isMounted = false; };
+  }, [currentUser]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const checkEmailAccount = async () => {
+      try {
+        const bandId = currentUser?.band_id || 'bakandeya';
+        const account = await api.getBandEmailAccount(bandId);
+        if (isMounted) setHasEmailAccountConnected(Boolean(account?.connected));
+      } catch {
+        if (isMounted) setHasEmailAccountConnected(false);
+      }
+    };
+    checkEmailAccount();
     return () => { isMounted = false; };
   }, [currentUser]);
 
@@ -112,7 +128,6 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
     const hasAgenda = concerts.length > 0 || rehearsals.length > 0;
     const hasMetrics = metrics.length > 0;
     const hasFans = fans.length > 0 || Boolean(epkConfig?.incentivoFans?.enlaceDescarga || epkConfig?.incentivoFans?.codigoDescuento);
-    const hasGoogleOAuth = Boolean(currentUser?.googleOAuth?.connected);
 
     return [
       {
@@ -161,13 +176,13 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         agentImpact: 'Sincroniza la zona horaria y ventanas de lectura/envío para los motores de agentes en Supabase.'
       },
       {
-        id: 'google_oauth',
-        title: 'Conexión Google OAuth',
-        completed: hasGoogleOAuth,
+        id: 'email_account',
+        title: 'Cuenta de Email Conectada',
+        completed: hasEmailAccountConnected,
         weight: 10,
         view: 'profile',
-        missingLabel: 'Conectar Gmail',
-        agentImpact: 'Permite a los agentes redactar y consultar directamente la bandeja de entrada de tu correo.'
+        missingLabel: 'Conectar Email',
+        agentImpact: 'Permite al Agente Enviador/Lector mandar propuestas y leer respuestas reales desde tu propia bandeja (Gmail, Outlook o cualquier proveedor).'
       },
       {
         id: 'repertorio',
@@ -197,7 +212,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         agentImpact: 'El agente utiliza tus seguidores y escuchas en Spotify como argumento de venta de entradas.'
       }
     ];
-  }, [epkConfig, leads, storedSongsCount, concerts, rehearsals, metrics, fans, hasScheduleConfigured, currentUser]);
+  }, [epkConfig, leads, storedSongsCount, concerts, rehearsals, metrics, fans, hasScheduleConfigured, hasEmailAccountConnected, currentUser]);
 
   const totalCompletedWeight = pillars.reduce((acc, p) => p.completed ? acc + p.weight : acc, 0);
   const totalPossibleWeight = pillars.reduce((acc, p) => acc + p.weight, 0);
