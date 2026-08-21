@@ -623,8 +623,8 @@ async function handleWebhook(req: express.Request, res: express.Response) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const bandId = session.metadata?.bandId || (session.subscription_data as any)?.metadata?.bandId;
-        const planId = session.metadata?.planId || (session.subscription_data as any)?.metadata?.planId;
+        const bandId = session.metadata?.bandId || (session as any).subscription_data?.metadata?.bandId;
+        const planId = session.metadata?.planId || (session as any).subscription_data?.metadata?.planId;
         const customerEmail = session.customer_email || session.metadata?.userEmail;
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
@@ -676,7 +676,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const bandId = invoice.metadata?.bandId || (invoice.subscription_details as any)?.metadata?.bandId;
+        const bandId = invoice.metadata?.bandId || (invoice as any).subscription_details?.metadata?.bandId;
         const customerEmail = invoice.customer_email || invoice.metadata?.userEmail;
 
         await handleInvoicePaid(bandId || '', customerEmail, invoice);
@@ -685,7 +685,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        const bandId = invoice.metadata?.bandId || (invoice.subscription_details as any)?.metadata?.bandId;
+        const bandId = invoice.metadata?.bandId || (invoice as any).subscription_details?.metadata?.bandId;
         const customerEmail = invoice.customer_email || invoice.metadata?.userEmail;
 
         await handlePaymentFailed(bandId || '', customerEmail);
