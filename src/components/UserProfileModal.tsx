@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, HardDrive, Unlink, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar } from 'lucide-react';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, HardDrive, Unlink, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot } from 'lucide-react';
 import { User, ThemeName, GoogleOAuthConfig } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
@@ -9,6 +9,8 @@ import { api, getAuthHeaders } from '../services/api';
 import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 import { ModalPortal } from './common/ModalPortal';
+import { BandScheduleConfig } from './BandScheduleConfig';
+import { EmailAccountConfig } from './EmailAccountConfig';
 
 interface UserProfileModalProps {
  currentUser: User;
@@ -82,6 +84,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [uploadingLogo, setUploadingLogo] = useState(false);
  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
  const [showAppearance, setShowAppearance] = useState(false);
+ const [showAgentConfig, setShowAgentConfig] = useState(false);
  
  const currentPlanDef = getPlanDefinition(currentUser.plan);
  const isHighestPlan = currentPlanDef.id === 'cabeza_de_cartel';
@@ -992,6 +995,33 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
  </div>
  )}
+
+ {/* Collapsible Agent Configuration (Horarios + Cuenta de Email) */}
+ <div className="pt-3 border-t border-neutral-800/80">
+ <button
+ type="button"
+ onClick={() => setShowAgentConfig(!showAgentConfig)}
+ className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+ isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+ }`}
+ >
+ <div className="flex items-center gap-2">
+ <Bot className="w-4 h-4 text-amber-400" />
+ <span className="text-xs font-mono font-semibold">Configuración de Agentes IA (Horarios y Cuenta de Email)</span>
+ </div>
+ <div className="flex items-center gap-1 text-[11px] font-mono text-neutral-400">
+ <span>{showAgentConfig ? 'Ocultar' : 'Configurar'}</span>
+ <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showAgentConfig ? 'rotate-180 text-amber-400' : ''}`} />
+ </div>
+ </button>
+
+ {showAgentConfig && (
+ <div className="mt-3 space-y-4 animate-in fade-in duration-200">
+ <BandScheduleConfig bandId={currentUser.band_id || 'band-bakandeya'} isStitchLight={isStitchLight} />
+ <EmailAccountConfig bandId={currentUser.band_id || 'band-bakandeya'} isStitchLight={isStitchLight} />
+ </div>
+ )}
+ </div>
 
  <div className="pt-2 -neutral-800/80 space-y-3">
  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400">

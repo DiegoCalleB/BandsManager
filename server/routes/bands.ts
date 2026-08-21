@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 
@@ -358,6 +358,44 @@ router.post("/bands/schedules", async (req, res) => {
   } catch (err: any) {
     console.error("Error saving band schedule:", err);
     res.status(500).json({ error: "Error al guardar el horario de la banda" });
+  }
+});
+
+// --------------------------------------------------
+// BAND EMAIL ACCOUNT (SMTP/IMAP para Enviador/Lector, ver server/services/emailAgentClient.ts)
+// --------------------------------------------------
+router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
+  try {
+    const { bandId } = req.params;
+    const account = await dbGetBandEmailAccount(bandId);
+    res.json(toSafeEmailAccountResponse(account));
+  } catch (err: any) {
+    console.error("Error fetching band email account:", err);
+    res.status(500).json({ error: "Error al obtener la cuenta de email de la banda" });
+  }
+});
+
+router.post("/bands/email-account", requireAuth, async (req, res) => {
+  try {
+    const { band_id, provider, email, app_password, smtp_host, smtp_port, smtp_secure, imap_host, imap_port } = req.body;
+    if (!band_id || !email || !app_password || !smtp_host || !smtp_port || !imap_host) {
+      return res.status(400).json({ error: "band_id, email, app_password, smtp_host, smtp_port e imap_host son requeridos" });
+    }
+    const saved = await dbUpsertBandEmailAccount({
+      band_id,
+      provider: provider || "other",
+      email,
+      app_password,
+      smtp_host,
+      smtp_port: Number(smtp_port),
+      smtp_secure: smtp_secure ?? true,
+      imap_host,
+      imap_port: imap_port ? Number(imap_port) : 993
+    });
+    res.json({ success: true, data: toSafeEmailAccountResponse(saved) });
+  } catch (err: any) {
+    console.error("Error saving band email account:", err);
+    res.status(500).json({ error: "Error al guardar la cuenta de email de la banda" });
   }
 });
 

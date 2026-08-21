@@ -420,6 +420,28 @@ export const api = {
     });
   },
 
+  // Cuenta de email de la banda (SMTP/IMAP para el Agente Enviador/Lector)
+  async getBandEmailAccount(bandId: string): Promise<any> {
+    return request(`/api/bands/email-account/${encodeURIComponent(bandId)}`);
+  },
+
+  async saveBandEmailAccount(account: {
+    band_id: string;
+    provider: 'gmail' | 'outlook' | 'other';
+    email: string;
+    app_password: string;
+    smtp_host: string;
+    smtp_port: number;
+    smtp_secure?: boolean;
+    imap_host: string;
+    imap_port?: number;
+  }): Promise<any> {
+    return request('/api/bands/email-account', {
+      method: 'POST',
+      body: JSON.stringify(account)
+    });
+  },
+
   // Fans
   async createFan(fan: Fan): Promise<Fan> {
     return request('/api/fans', {
