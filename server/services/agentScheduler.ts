@@ -9,7 +9,7 @@
 
 import { dbGetRegisteredBands, dbGetBandSchedule } from "../db.js";
 import { dbGetAgentLastRun, dbSetAgentLastRun } from "../db/agentSchedule.js";
-import { leerNoLeidos, GmailAgentError } from "./gmailAgentClient.js";
+import { leerNoLeidos, EmailAgentError } from "./emailAgentClient.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
 
 const TICK_MS = 60 * 1000;
@@ -95,7 +95,7 @@ async function tick() {
         await logAgentExecution({
           band_id: bandId,
           agente: "lector",
-          motor: "node_gmail_engine",
+          motor: "node_email_engine",
           disparado_por_tipo: "scheduler",
           estado: "success",
           mensaje: `Agente Lector: ${mensajes.length} mensaje(s) no leído(s) en la bandeja de ${bandId}.`,
@@ -104,14 +104,14 @@ async function tick() {
           detalles: { mensajes }
         });
       } catch (e: any) {
-        const sinToken = e instanceof GmailAgentError && e.code === "no_token";
-        // Sin Gmail conectado para esta banda no es un error a auditar en cada tick - es
-        // simplemente que la banda no lo ha configurado todavía.
-        if (sinToken) return;
+        const sinCuenta = e instanceof EmailAgentError && e.code === "no_token";
+        // Sin cuenta de email conectada para esta banda no es un error a auditar en cada tick
+        // - es simplemente que la banda no lo ha configurado todavía.
+        if (sinCuenta) return;
         await logAgentExecution({
           band_id: bandId,
           agente: "lector",
-          motor: "node_gmail_engine",
+          motor: "node_email_engine",
           disparado_por_tipo: "scheduler",
           estado: "error",
           mensaje: `Agente Lector: error leyendo la bandeja de ${bandId}: ${e.message || e}`,

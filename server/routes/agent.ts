@@ -70,7 +70,7 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
     }
   };
 
-  // --- AGENTE ENVIADOR (Gmail real por banda, ver server/services/agentEngine.ts) ---
+  // --- AGENTE ENVIADOR (email real por banda vía SMTP, ver server/services/agentEngine.ts) ---
   if (normalizedAgentName === "enviador" || params?.engine === "supabase") {
     const user = (req as any).user;
     const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
@@ -90,7 +90,7 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
       return res.json({
         success: result.success,
         agent: "Enviador",
-        engine: "Gmail (Node Agent Engine)",
+        engine: "Email (Node Agent Engine)",
         dispatchedCount: result.dispatchedCount,
         message: result.message,
         results: result.results
@@ -100,7 +100,7 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
       await logAgentExecution({
         band_id: targetBandId,
         agente: "enviador",
-        motor: "node_gmail_engine",
+        motor: "node_email_engine",
         disparado_por_tipo: triggerType,
         usuario_id: userId,
         usuario_email: userEmail,
