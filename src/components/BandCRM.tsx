@@ -898,7 +898,7 @@ Bakandeya Agent Manager IA & Músicos`;
  <span>Registro de Nuevas Bandas Clientes (registro_bandas)</span>
  </h3>
  <p className="text-xs text-neutral-400 font-mono mt-0.5">
- Pestaña oficial de Google Sheets <span className="text-emerald-400 font-bold">registro_bandas</span> con la columna <span className="text-amber-300 font-bold">band_id</span> situándose en la extrema derecha.
+ Tabla oficial de Supabase <span className="text-emerald-400 font-bold">registro_bandas</span> con la columna <span className="text-amber-300 font-bold">band_id</span> situándose en la extrema derecha.
  </p>
  </div>
  <div className="flex items-center gap-2 shrink-0">
@@ -939,7 +939,7 @@ Bakandeya Agent Manager IA & Músicos`;
  {registeredBands.length === 0 ? (
  <tr>
  <td colSpan={9} className="p-8 text-center text-neutral-500 italic">
- {isLoadingRegBands ? 'Cargando bandas registradas de Google Sheets...' : 'No hay registros en la pestaña registro_bandas aún.'}
+ {isLoadingRegBands ? 'Cargando bandas registradas...' : 'No hay registros en registro_bandas aún.'}
  </td>
  </tr>
  ) : (

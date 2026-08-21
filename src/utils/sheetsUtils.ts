@@ -1,4 +1,4 @@
-// Google Sheets & Lead workflow domain rules
+// Lead workflow domain rules
 
 import { Lead, LeadStatus } from '../types';
 
@@ -31,7 +31,7 @@ export function isValidStatusTransition(currentStatus: LeadStatus, targetStatus:
 }
 
 /**
- * Concurrency check: returns error message if lead status in Sheets has changed parallelly
+ * Concurrency check: returns error message if lead status in the database has changed in parallel
  */
 export function validateLeadConcurrency(
   leadInDatabase: Lead,
@@ -40,7 +40,7 @@ export function validateLeadConcurrency(
   if (expectedStatus && leadInDatabase.estado !== expectedStatus) {
     return {
       isConflict: true,
-      message: `El lead "${leadInDatabase.nombre_sala}" cambió de estado en Google Sheets (de '${expectedStatus}' a '${leadInDatabase.estado}') antes de tu guardado.`
+      message: `El lead "${leadInDatabase.nombre_sala}" cambió de estado (de '${expectedStatus}' a '${leadInDatabase.estado}') antes de tu guardado.`
     };
   }
   return { isConflict: false };

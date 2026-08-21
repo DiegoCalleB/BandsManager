@@ -1,4 +1,4 @@
-import { Lead, Rehearsal, Concert, SocialPost, Payment, SocialMetric, Fan, User, Tour, EPKConfig, Message, GoogleSheetsStatus } from '../types';
+import { Lead, Rehearsal, Concert, SocialPost, Payment, SocialMetric, Fan, User, Tour, EPKConfig, Message } from '../types';
 
 export class ApiError extends Error {
   status: number;
@@ -41,7 +41,7 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
   if (response.status === 409) {
     const errorData = await response.json().catch(() => ({}));
     throw new ApiError(
-      errorData.error || 'Conflicto de sincronización con Google Sheets. Los datos han cambiado en paralelo.',
+      errorData.error || 'Conflicto de sincronización. Los datos han cambiado en paralelo.',
       409,
       errorData
     );
@@ -219,11 +219,6 @@ export const api = {
     bands?: any[];
   }> {
     return request('/api/state');
-  },
-
-  // Google Sheets Verification
-  async checkSheets(): Promise<GoogleSheetsStatus> {
-    return request('/api/check-sheets');
   },
 
   // EPK

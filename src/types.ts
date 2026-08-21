@@ -384,13 +384,6 @@ export interface UserWithHash extends User {
   salt: string;
 }
 
-export interface GoogleSheetsStatus {
-  configured: boolean;
-  spreadsheetId?: string;
-  tabs?: string[];
-  error?: string;
-}
-
 export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz';
 
 export interface AudioComment {

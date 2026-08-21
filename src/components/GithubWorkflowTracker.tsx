@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
  Github, Activity, CheckCircle, AlertCircle, RefreshCw, 
- ChevronDown, ChevronUp, ExternalLink, Clock, User, Terminal, AlertTriangle, Copy, Key
+ ChevronDown, ChevronUp, ExternalLink, Clock, User, Terminal, AlertTriangle
 } from 'lucide-react';
 import { ThemeColors } from '../types';
 
@@ -60,32 +60,6 @@ export default function GithubWorkflowTracker({
  const [jobsData, setJobsData] = useState<Record<string | number, Job[]>>({});
  const [loadingJobs, setLoadingJobs] = useState<Record<string | number, boolean>>({});
  const [isDemo, setIsDemo] = useState<boolean>(false);
- const [copiedCredentials, setCopiedCredentials] = useState(false);
-
- const handleCopyCredentials = async () => {
- try {
- const token = localStorage.getItem('bakandeya_token');
- const headers: Record<string, string> = {};
- if (token) {
- headers['Authorization'] = `Bearer ${token}`;
- headers['x-auth-token'] = token;
- }
- const res = await fetch('/api/github-secrets-helper', { headers });
- if (res.ok) {
- const data = await res.json();
- if (data.serviceAccountJson) {
- await navigator.clipboard.writeText(data.serviceAccountJson);
- setCopiedCredentials(true);
- setTimeout(() => setCopiedCredentials(false), 3000);
- return;
- }
- }
- alert("No se pudieron obtener las credenciales JSON del servidor.");
- } catch (e) {
- console.error("Error al copiar credenciales:", e);
- alert("Error al copiar las credenciales.");
- }
- };
 
  const isStitchLight = false;
 
@@ -434,19 +408,6 @@ export default function GithubWorkflowTracker({
  MODO SIMULADOR
  </span>
  )}
- <button
- type="button"
- onClick={handleCopyCredentials}
- className={`px-2 py-1 rounded-lg text-[9px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer ${
- isStitchLight
- ? 'bg-slate-100 hover:bg-slate-200 -slate-200 text-slate-700'
- : 'bg-neutral-900 hover:bg-neutral-800 -neutral-800 text-neutral-300'
- }`}
- title="Copiar credenciales Service Account JSON para GitHub Secrets"
- >
- <Copy className="w-3 h-3 text-[#f2ca50]" />
- <span>{copiedCredentials ? '✓ Copiado' : 'Copiar Secrets JSON'}</span>
- </button>
  <button
  type="button"
  onClick={fetchWorkflowRuns}

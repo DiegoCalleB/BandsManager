@@ -71,14 +71,14 @@ export default function Finanzas({
  });
  const data = await res.json();
  if (res.ok && data.success) {
- setSyncSuccess(data.message || 'Finanzas sincronizadas con éxito en Google Sheets.');
+ setSyncSuccess(data.message || 'Finanzas sincronizadas con éxito.');
  setTimeout(() => setSyncSuccess(''), 6000);
  } else {
  setSyncError(data.error || 'Error al intentar sincronizar las finanzas.');
  }
  } catch (error) {
  console.error('Error synchronizing finances:', error);
- setSyncError('Error de conexión con el servidor de Google Sheets.');
+ setSyncError('Error de conexión con el servidor.');
  } finally {
  setIsSyncing(false);
  }
@@ -160,7 +160,7 @@ export default function Finanzas({
  ? 'bg-indigo-600 hover:bg-indigo-700 text-white -indigo-600 shadow-sm shadow-indigo-100'
  : 'bg-[#f2ca50]/10 hover:bg-[#f2ca50]/20 text-[#f2ca50] -[#f2ca50]/30 shadow-md'
  }`}
- title="Sincronizar todas las transacciones financieras en Google Sheets (Excel)"
+ title="Sincronizar todas las transacciones financieras"
  >
  <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} />
  {isSyncing ? 'Sincronizando...' : 'Actualizar en Excel'}
@@ -800,7 +800,7 @@ export default function Finanzas({
  <strong className="font-mono uppercase tracking-wider">Libro en Excel</strong>
  </div>
  <p className={textSub}>
- Cualquier cambio que realices desde este panel de control se guardará localmente y se sincronizará automáticamente en la pestaña <strong>"finanzas"</strong> de Google Sheets.
+ Cualquier cambio que realices desde este panel de control se guardará automáticamente en Supabase.
  </p>
  <p className={textSub}>
  Los agentes inteligentes de BandManager.ai leen este libro diario para optimizar ofertas de caché en salas o calcular presupuestos de giras de forma automatizada.
