@@ -183,7 +183,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 {bandName}
               </h1>
               <p className="text-amber-300 font-medium text-lg sm:text-xl">
-                {config.dossierTextoExtra || (isBakandeya ? "Ska-Rock, Mestizaje & Ritmos Latinos en Vivo" : `${bandName} en Directo`)}
+                {/* Subtítulo corto de la cabecera: usa el Lema/Pie de Firma (firmaEmail.textoPie),
+                    NUNCA el texto largo para agentes de IA (dossierTextoExtra) - antes usaba ese
+                    segundo campo, y al no avisar que también era público, un texto largo pensado
+                    solo para el chatbot acababa mostrado como titular gigante en la home. */}
+                {config.firmaEmail?.textoPie || (isBakandeya ? "Ska-Rock, Mestizaje & Ritmos Latinos en Vivo" : `${bandName} en Directo`)}
               </p>
               <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
                 {config.biografia ? (config.biografia.length > 200 ? `${config.biografia.slice(0, 180)}...` : config.biografia) : 'Dossier oficial y propuesta artística en directo.'}
