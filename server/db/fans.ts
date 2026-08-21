@@ -16,7 +16,10 @@ export async function dbGetFans(bandId: string) {
     conciertoOrigenId: f.concierto_origen_id,
     conciertoOrigenNombre: f.concierto_origen_nombre,
     fechaCaptura: f.fecha_captura,
-    consentimientoRGPD: f.consentimiento_rgpd
+    consentimientoRGPD: f.consentimiento_rgpd,
+    mensaje: f.mensaje,
+    cancionFavorita: f.cancion_favorita,
+    instagram: f.instagram
   }));
 }
 
@@ -25,7 +28,7 @@ export async function dbUpsertFan(fan: any, bandId: string) {
   const targetBandId = cleanBandId(fan.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload = {
+  const payload: any = {
     id: fan.id || `fan-${Date.now()}`,
     band_id: targetBandId,
     nombre: fan.nombre || "",
@@ -35,12 +38,40 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     concierto_origen_id: fan.conciertoOrigenId || fan.concierto_origen_id || null,
     concierto_origen_nombre: fan.conciertoOrigenNombre || fan.concierto_origen_nombre || "",
     fecha_captura: fan.fechaCaptura || fan.fecha_captura || new Date().toISOString().split("T")[0],
-    consentimiento_rgpd: Boolean(fan.consentimientoRGPD ?? fan.consentimiento_rgpd ?? true)
+    consentimiento_rgpd: Boolean(fan.consentimientoRGPD ?? fan.consentimiento_rgpd ?? true),
+    mensaje: fan.mensaje || "",
+    cancion_favorita: fan.cancionFavorita || fan.cancion_favorita || "",
+    instagram: fan.instagram || ""
   };
 
-  const { data, error } = await sb.from("fans").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert fan): ${error.message}`);
-  return data;
+  let { data, error } = await sb.from("fans").upsert(payload).select().single();
+
+  // Reintenta sin las columnas nuevas si el esquema remoto de Supabase aún
+  // no tiene la migración aplicada (ver supabase_migration_only_new.sql).
+  if (error && error.message && (
+    error.message.toLowerCase().includes("mensaje") ||
+    error.message.toLowerCase().includes("cancion_favorita") ||
+    error.message.toLowerCase().includes("instagram")
+  )) {
+    console.warn("Reintentando upsert de fan sin campos no presentes en el esquema remoto (mensaje/cancion_favorita/instagram)...");
+    const fallbackPayload = { ...payload };
+    delete fallbackPayload.mensaje;
+    delete fallbackPayload.cancion_favorita;
+    delete fallbackPayload.instagram;
+    const retry = await sb.from("fans").upsert(fallbackPayload).select().single();
+    if (retry.error) throw new Error(`Supabase Error (upsert fan fallback): ${retry.error.message}`);
+    data = retry.data;
+    error = null;
+  } else if (error) {
+    throw new Error(`Supabase Error (upsert fan): ${error.message}`);
+  }
+
+  return {
+    ...data,
+    mensaje: data?.mensaje ?? fan.mensaje,
+    cancionFavorita: data?.cancion_favorita ?? fan.cancionFavorita,
+    instagram: data?.instagram ?? fan.instagram
+  };
 }
 
 export async function dbDeleteFan(id: string, bandId: string) {
