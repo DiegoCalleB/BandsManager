@@ -1,6 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 
-import { dbGetRegisteredBands, ensureRegisteredBandExists } from "./bands.js";
+import { dbGetRegisteredBands } from "./bands.js";
 import { dbGetUsers } from "./users.js";
 import { dbGetBandContacts } from "./contacts.js";
 import { dbGetLeads } from "./leads.js";
