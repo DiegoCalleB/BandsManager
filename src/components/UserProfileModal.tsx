@@ -101,16 +101,16 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
    const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
    setBandLogoUrl(url);
 
-   const updatedEpk = { ...epkConfig, logoUrl: url };
-   if (onUpdateEpkConfig) {
-    await onUpdateEpkConfig(updatedEpk);
-   } else {
-    const authHeaders = getAuthHeaders() as Record<string, string>;
-    await fetch('/api/epk', {
-     method: 'PUT',
-     headers: { 'Content-Type': 'application/json', ...authHeaders },
+   const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
+   const authHeaders = getAuthHeaders() as Record<string, string>;
+   await fetch('/api/users/upload-logo', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json', ...authHeaders, 'x-band-id': userBandId },
      body: JSON.stringify({ logoUrl: url, bandId: userBandId })
-    });
+   });
+
+   if (onUpdateEpkConfig) {
+     await onUpdateEpkConfig(updatedEpk);
    }
    if (onRefreshData) onRefreshData();
    setSuccessMsg('¡Logo del proyecto actualizado con éxito!');
