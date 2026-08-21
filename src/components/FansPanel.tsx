@@ -11,7 +11,7 @@ import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { FansCommunityView } from './fans/FansCommunityView';
-import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE } from '../i18n/fansTranslations';
+import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -330,6 +330,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     if (selectedConcert) {
       const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`.toLowerCase().replace(/[^a-z0-9]/g, '-');
       setCustomSlug(defaultSlug);
+      // Precarga el idioma guardado en el concierto; el manager siempre puede cambiarlo a mano abajo.
+      setQrLanguage(isFanFormLanguage(selectedConcert.idioma) ? selectedConcert.idioma : DEFAULT_FAN_FORM_LANGUAGE);
     } else {
       setCustomSlug('');
     }
