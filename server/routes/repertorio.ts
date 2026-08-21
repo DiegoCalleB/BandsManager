@@ -14,19 +14,31 @@ import {
 
 const router = express.Router();
 
+function getTargetBandId(req: express.Request): string {
+  const user = (req as any).user;
+  const userBandId = user?.band_id;
+  const headerBandId = (req.headers["x-band-id"] || req.headers["x-active-band-id"] || req.query.band_id) as string | undefined;
+  
+  if (headerBandId && typeof headerBandId === "string" && headerBandId.trim() && user) {
+    const cleanHeader = headerBandId.trim();
+    const cleanNoPrefix = cleanHeader.replace(/^(band|reg)-/, "");
+    const allowed = Array.isArray(user.allowedBandIds) ? user.allowedBandIds : [];
+    const isAllowed = user.role === "admin" || allowed.some((b: string) => b === cleanHeader || b.replace(/^(band|reg)-/, "") === cleanNoPrefix);
+    if (isAllowed) return cleanHeader;
+  }
+  
+  return userBandId || "band-bakandeya";
+}
+
 // GET all songs
 router.get("/songs", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const songs = await dbGetSongs(userBandId);
-    const state = loadState();
-    state.songs = songs as any;
-    saveState(state);
     res.json({ success: true, songs });
   } catch (err: any) {
     console.error("Error fetching songs:", err);
-    const state = loadState();
-    res.json({ success: true, songs: state.songs || [] });
+    res.status(500).json({ error: "Error al obtener canciones", songs: [] });
   }
 });
 
@@ -37,7 +49,7 @@ router.post("/songs", requireAuth, async (req, res) => {
     if (!newSong.titulo) {
       return res.status(400).json({ error: "El título del tema es obligatorio." });
     }
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     if (!(newSong as any).band_id) {
       (newSong as any).band_id = userBandId;
     }
@@ -46,12 +58,6 @@ router.post("/songs", requireAuth, async (req, res) => {
     }
     
     const saved = await dbUpsertSong(newSong, userBandId);
-
-    const state = loadState();
-    if (!state.songs) state.songs = [];
-    state.songs.push(saved as any);
-    saveState(state);
-
     res.json({ success: true, song: saved });
   } catch (err: any) {
     console.error("Error creating song:", err);
@@ -63,20 +69,10 @@ router.post("/songs", requireAuth, async (req, res) => {
 router.put("/songs/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const updatedFields: Partial<Song> = req.body;
-    const merged = { ...updatedFields, id };
+    const merged = { ...updatedFields, id, band_id: userBandId };
     const saved = await dbUpsertSong(merged, userBandId);
-
-    const state = loadState();
-    if (!state.songs) state.songs = [];
-    const index = state.songs.findIndex((s: Song) => s.id === id);
-    if (index !== -1) {
-      state.songs[index] = saved as any;
-    } else {
-      state.songs.push(saved as any);
-    }
-    saveState(state);
 
     res.json({ success: true, song: saved });
   } catch (err: any) {
@@ -89,22 +85,8 @@ router.put("/songs/:id", requireAuth, async (req, res) => {
 router.delete("/songs/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     await dbDeleteSong(id, userBandId);
-
-    const state = loadState();
-    if (!state.songs) state.songs = [];
-    state.songs = state.songs.filter((s: Song) => s.id !== id);
-    
-    // Also clean up items in setlists referencing this song
-    if (state.setlists) {
-      state.setlists = state.setlists.map((sl: Setlist) => ({
-        ...sl,
-        items: sl.items.filter((item) => item.songId !== id)
-      }));
-    }
-
-    saveState(state);
 
     res.json({ success: true, id });
   } catch (err: any) {
@@ -116,17 +98,12 @@ router.delete("/songs/:id", requireAuth, async (req, res) => {
 // GET all setlists
 router.get("/setlists", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const setlists = await dbGetSetlists(userBandId);
-    const state = loadState();
-    state.setlists = setlists as any;
-    saveState(state);
-
     res.json({ success: true, setlists });
   } catch (err: any) {
     console.error("Error fetching setlists:", err);
-    const state = loadState();
-    res.json({ success: true, setlists: state.setlists || [] });
+    res.status(500).json({ error: "Error al obtener repertorios", setlists: [] });
   }
 });
 
@@ -137,7 +114,7 @@ router.post("/setlists", requireAuth, async (req, res) => {
     if (!newSetlist.nombre) {
       return res.status(400).json({ error: "El nombre del repertorio es obligatorio." });
     }
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     if (!(newSetlist as any).band_id) {
       (newSetlist as any).band_id = userBandId;
     }
@@ -150,12 +127,6 @@ router.post("/setlists", requireAuth, async (req, res) => {
     newSetlist.fechaUltimaEdicion = today;
 
     const saved = await dbUpsertSetlist(newSetlist, userBandId);
-
-    const state = loadState();
-    if (!state.setlists) state.setlists = [];
-    state.setlists.push(saved as any);
-    saveState(state);
-
     res.json({ success: true, setlist: saved });
   } catch (err: any) {
     console.error("Error creating setlist:", err);
@@ -167,23 +138,12 @@ router.post("/setlists", requireAuth, async (req, res) => {
 router.put("/setlists/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const updatedFields: Partial<Setlist> = req.body;
     const today = new Date().toISOString().split('T')[0];
-    const merged = { ...updatedFields, id, fechaUltimaEdicion: today };
+    const merged = { ...updatedFields, id, band_id: userBandId, fechaUltimaEdicion: today };
 
     const saved = await dbUpsertSetlist(merged, userBandId);
-
-    const state = loadState();
-    if (!state.setlists) state.setlists = [];
-    const index = state.setlists.findIndex((s: Setlist) => s.id === id);
-    if (index !== -1) {
-      state.setlists[index] = saved as any;
-    } else {
-      state.setlists.push(saved as any);
-    }
-    saveState(state);
-
     res.json({ success: true, setlist: saved });
   } catch (err: any) {
     console.error("Error updating setlist:", err);
@@ -195,21 +155,8 @@ router.put("/setlists/:id", requireAuth, async (req, res) => {
 router.delete("/setlists/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     await dbDeleteSetlist(id, userBandId);
-
-    const state = loadState();
-    if (!state.setlists) state.setlists = [];
-    state.setlists = state.setlists.filter((s: Setlist) => s.id !== id);
-
-    if (state.concerts) {
-      state.concerts = state.concerts.map((c: any) => c.setlistId === id ? { ...c, setlistId: undefined } : c);
-    }
-    if (state.rehearsals) {
-      state.rehearsals = state.rehearsals.map((r: any) => r.setlistId === id ? { ...r, setlistId: undefined } : r);
-    }
-
-    saveState(state);
 
     res.json({ success: true, id });
   } catch (err: any) {

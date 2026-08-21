@@ -13,7 +13,7 @@ router.get("/posts", requireAuth, async (req, res) => {
     res.json(posts);
   } catch (err) {
     const state = loadState();
-    res.json(state.posts || []);
+    res.json((state.posts || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
   }
 });
 

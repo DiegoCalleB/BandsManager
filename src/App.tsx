@@ -1088,10 +1088,12 @@ export default function App() {
  )}
  {currentView === 'repertorio' && (
  <RepertorioSetlists 
+ key={currentUser?.band_id || 'band-bakandeya'}
  colors={colors}
  concerts={activeBandConcerts}
  rehearsals={activeBandRehearsals}
  bandName={currentActiveBandName}
+ bandId={currentUser?.band_id || 'band-bakandeya'}
  onUpdateConcert={handleUpdateConcert}
  onUpdateRehearsal={handleUpdateRehearsal}
  />

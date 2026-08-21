@@ -16,7 +16,7 @@ export const toursController = {
       res.json({ tours });
     } catch (error: any) {
       const state = loadState();
-      res.json({ tours: state.tours || [] });
+      res.json({ tours: (state.tours || []).filter((t: any) => t.band_id === userBandId || t.bandId === userBandId) });
     }
   },
 

@@ -42,6 +42,7 @@ interface RepertorioSetlistsProps {
  concerts: Concert[];
  rehearsals: Rehearsal[];
  bandName?: string;
+ bandId?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
 }
@@ -293,6 +294,7 @@ export default function RepertorioSetlists({
  concerts,
  rehearsals,
  bandName,
+ bandId,
  onUpdateConcert,
  onUpdateRehearsal
 }: RepertorioSetlistsProps) {
@@ -300,38 +302,75 @@ export default function RepertorioSetlists({
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName || 'Tu Banda';
 
+ const cleanBand = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+ const isBakandeya = cleanBand === 'bakandeya';
+
+ // Helper to filter out template songs for non-Bakandeya bands
+ const sanitizeBandSongs = React.useCallback((rawList: Song[]): Song[] => {
+   if (!Array.isArray(rawList)) return [];
+   if (isBakandeya) return rawList;
+   return rawList.filter(s => {
+     if (!s || typeof s !== 'object') return false;
+     const sId = (s.id || '').toLowerCase();
+     if (sId.startsWith('song-cm-') || /^song-[1-8]$/.test(sId) || sId.startsWith('live_song_')) {
+       return false;
+     }
+     return true;
+   });
+ }, [isBakandeya]);
+
+ const sanitizeBandSetlists = React.useCallback((rawList: Setlist[]): Setlist[] => {
+   if (!Array.isArray(rawList)) return [];
+   if (isBakandeya) return rawList;
+   return rawList.filter(sl => {
+     if (!sl || typeof sl !== 'object') return false;
+     const slId = (sl.id || '').toLowerCase();
+     if (slId === 'setlist-1' || slId === 'setlist-2') return false;
+     return true;
+   });
+ }, [isBakandeya]);
+
  // Navigation tab inside module
-  const [showPdfPreview, setShowPdfPreview] = useState(false);
+ const [showPdfPreview, setShowPdfPreview] = useState(false);
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'configuracion' | 'discografia'>('setlists');
 
  // Songs Repertoire State
-  const [songs, setSongs] = useState<Song[]>(() => {
-    try {
-      const saved = localStorage.getItem('bakandeya_songs_catalog') || localStorage.getItem('bakandeya_songs');
-      const parsed = saved ? JSON.parse(saved) : [];
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
-      }
-      return DEFAULT_SONGS;
-    } catch {
-      return DEFAULT_SONGS;
-    }
-  });
+ const [songs, setSongs] = useState<Song[]>(() => {
+   try {
+     const key = `band_songs_${cleanBand || 'default'}`;
+     const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+     const parsed = saved ? JSON.parse(saved) : [];
+     const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((s: any) => {
+       const sId = (s?.id || '').toLowerCase();
+       return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
+     }) : []);
+     if (sanitized.length > 0) {
+       return sanitized;
+     }
+     return isBakandeya ? DEFAULT_SONGS : [];
+   } catch {
+     return isBakandeya ? DEFAULT_SONGS : [];
+   }
+ });
 
  // Setlists State
-  // Setlists State
-  const [setlists, setSetlists] = useState<Setlist[]>(() => {
-    try {
-      const saved = localStorage.getItem('bakandeya_setlists_data');
-      let parsed = saved ? JSON.parse(saved) : [];
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        return DEFAULT_SETLISTS;
-      }
-      return parsed;
-    } catch {
-      return DEFAULT_SETLISTS;
-    }
-  });
+ const [setlists, setSetlists] = useState<Setlist[]>(() => {
+   try {
+     const key = `band_setlists_${cleanBand || 'default'}`;
+     const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
+     let parsed = saved ? JSON.parse(saved) : [];
+     const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((sl: any) => {
+       const slId = (sl?.id || '').toLowerCase();
+       return slId !== 'setlist-1' && slId !== 'setlist-2';
+     }) : []);
+     if (sanitized.length > 0) {
+       return sanitized;
+     }
+     return isBakandeya ? DEFAULT_SETLISTS : [];
+   } catch {
+     return isBakandeya ? DEFAULT_SETLISTS : [];
+   }
+ });
 
  // Selected Active Setlist ID
  const [activeSetlistId, setActiveSetlistId] = useState<string>(() => {
@@ -504,58 +543,83 @@ export default function RepertorioSetlists({
  const token = localStorage.getItem('bakandeya_token');
  return {
  'Content-Type': 'application/json',
- ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+ ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+ ...(bandId ? { 'x-band-id': bandId } : {})
  };
  };
 
  useEffect(() => {
- const fetchRepertorio = async () => {
- try {
- const [resSongs, resSetlists] = await Promise.all([
- fetch('/api/songs', { headers: getHeaders() }),
- fetch('/api/setlists', { headers: getHeaders() })
- ]);
+  let isCancelled = false;
+  // On bandId change, immediately reset and load the clean cache for this band
+  const keyS = `band_songs_${cleanBand || 'default'}`;
+  const keySt = `band_setlists_${cleanBand || 'default'}`;
+  try {
+    const savedS = localStorage.getItem(keyS) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
+    const parsedS = savedS ? JSON.parse(savedS) : [];
+    const sanitizedS = sanitizeBandSongs(parsedS);
+    setSongs(sanitizedS.length > 0 ? sanitizedS : (isBakandeya ? DEFAULT_SONGS : []));
 
- if (resSongs.ok) {
- const dataS = await resSongs.json();
- if (dataS.songs && Array.isArray(dataS.songs)) {
- let fetchedSongs = dataS.songs;
- if (fetchedSongs.length === 0) {
- fetchedSongs = DEFAULT_SONGS;
- } else {
- const existingIds = new Set(fetchedSongs.map((s: Song) => s.id));
- const existingTitles = new Set(fetchedSongs.map((s: Song) => s.titulo.toLowerCase()));
- for (const defSong of DEFAULT_SONGS) {
- if (!existingIds.has(defSong.id) && !existingTitles.has(defSong.titulo.toLowerCase())) {
- fetchedSongs.push(defSong);
- }
- }
- }
- setSongs(fetchedSongs);
- }
- }
+    const savedSt = localStorage.getItem(keySt) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
+    const parsedSt = savedSt ? JSON.parse(savedSt) : [];
+    const sanitizedSt = sanitizeBandSetlists(parsedSt);
+    setSetlists(sanitizedSt.length > 0 ? sanitizedSt : (isBakandeya ? DEFAULT_SETLISTS : []));
+    if (sanitizedSt.length > 0) {
+      setActiveSetlistId(sanitizedSt[0].id);
+    } else {
+      setActiveSetlistId('');
+    }
+  } catch {
+    setSongs(isBakandeya ? DEFAULT_SONGS : []);
+    setSetlists(isBakandeya ? DEFAULT_SETLISTS : []);
+  }
 
- if (resSetlists.ok) {
- const dataSt = await resSetlists.json();
- if (dataSt.setlists && Array.isArray(dataSt.setlists)) {
- setSetlists(dataSt.setlists);
- }
- }
- } catch (err) {
- console.warn('Unable to load repertorio from server API, using cached state:', err);
- }
- };
+  const fetchRepertorio = async () => {
+    try {
+      const [resSongs, resSetlists] = await Promise.all([
+        fetch('/api/songs', { headers: getHeaders() }),
+        fetch('/api/setlists', { headers: getHeaders() })
+      ]);
 
- fetchRepertorio();
- }, []);
+      if (isCancelled) return;
+
+      if (resSongs.ok) {
+        const dataS = await resSongs.json();
+        if (dataS.songs && Array.isArray(dataS.songs)) {
+          const sanitized = sanitizeBandSongs(dataS.songs);
+          setSongs(sanitized);
+        }
+      }
+
+      if (resSetlists.ok) {
+        const dataSt = await resSetlists.json();
+        if (dataSt.setlists && Array.isArray(dataSt.setlists)) {
+          const sanitized = sanitizeBandSetlists(dataSt.setlists);
+          setSetlists(sanitized);
+          if (sanitized.length > 0) {
+            setActiveSetlistId(prev => sanitized.some((s: any) => s.id === prev) ? prev : sanitized[0].id);
+          } else {
+            setActiveSetlistId('');
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Unable to load repertorio from server API, using cached state:', err);
+    }
+  };
+
+  fetchRepertorio();
+  return () => {
+    isCancelled = true;
+  };
+ }, [bandId, cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists]);
 
  useEffect(() => {
- saveSongsToLocalStorageSafely(songs);
- }, [songs]);
+ saveSongsToLocalStorageSafely(songs, bandId);
+ }, [songs, bandId]);
 
  useEffect(() => {
- saveSetlistsToLocalStorageSafely(setlists);
- }, [setlists]);
+ saveSetlistsToLocalStorageSafely(setlists, bandId);
+ }, [setlists, bandId]);
 
 
 
@@ -1066,10 +1130,6 @@ export default function RepertorioSetlists({
  };
 
  const handleDeleteSetlist = (stId: string) => {
- if (setlists.length <= 1) {
- alert('Debes mantener al menos un repertorio guardado.');
- return;
- }
  const st = setlists.find(s => s.id === stId);
  setConfirmDeleteModal({
  title: 'Eliminar Repertorio',
@@ -1078,7 +1138,7 @@ export default function RepertorioSetlists({
  const remaining = setlists.filter(s => s.id !== stId);
  setSetlists(remaining);
  if (activeSetlistId === stId) {
- setActiveSetlistId(remaining[0].id);
+ setActiveSetlistId(remaining[0]?.id || '');
  }
 
  fetch(`/api/setlists/${stId}`, {
