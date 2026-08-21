@@ -1237,6 +1237,7 @@ export const INITIAL_USERS = [
 export const INITIAL_SONGS = [
   {
     id: 'song-cm-1',
+    band_id: 'band-bakandeya',
     titulo: 'Intro (Live Casa México)',
     duracion: '1:30',
     duracionSegundos: 90,
@@ -1250,6 +1251,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-cm-2',
+    band_id: 'band-bakandeya',
     titulo: 'Tema1 (Live Casa México)',
     duracion: '3:45',
     duracionSegundos: 225,
@@ -1262,6 +1264,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-cm-3',
+    band_id: 'band-bakandeya',
     titulo: 'Reggae Rock Style',
     duracion: '4:10',
     duracionSegundos: 250,
@@ -1274,6 +1277,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-cm-4',
+    band_id: 'band-bakandeya',
     titulo: 'Ska',
     duracion: '3:20',
     duracionSegundos: 200,
@@ -1286,6 +1290,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-cm-5',
+    band_id: 'band-bakandeya',
     titulo: 'Llorona',
     duracion: '4:30',
     duracionSegundos: 270,
@@ -1298,6 +1303,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-1',
+    band_id: 'band-bakandeya',
     titulo: 'Brisa y Cacharros',
     duracion: '3:30',
     duracionSegundos: 210,
@@ -1312,6 +1318,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-2',
+    band_id: 'band-bakandeya',
     titulo: 'Fuego en la Sala',
     duracion: '4:12',
     duracionSegundos: 252,
@@ -1325,6 +1332,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-3',
+    band_id: 'band-bakandeya',
     titulo: 'Noches de Garaje',
     duracion: '3:45',
     duracionSegundos: 225,
@@ -1338,6 +1346,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-4',
+    band_id: 'band-bakandeya',
     titulo: 'Ska del Norte',
     duracion: '3:15',
     duracionSegundos: 195,
@@ -1351,6 +1360,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-5',
+    band_id: 'band-bakandeya',
     titulo: 'Canto a la Sombra',
     duracion: '5:10',
     duracionSegundos: 310,
@@ -1364,6 +1374,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-6',
+    band_id: 'band-bakandeya',
     titulo: 'Gira Sin Fin',
     duracion: '4:05',
     duracionSegundos: 245,
@@ -1376,6 +1387,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-7',
+    band_id: 'band-bakandeya',
     titulo: 'Mánager Fantasma',
     duracion: '3:50',
     duracionSegundos: 230,
@@ -1389,6 +1401,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: 'song-8',
+    band_id: 'band-bakandeya',
     titulo: 'Maldita Dulzura (Cover)',
     duracion: '3:40',
     duracionSegundos: 220,
@@ -1405,6 +1418,7 @@ export const INITIAL_SONGS = [
 export const INITIAL_SETLISTS = [
   {
     id: 'setlist-1',
+    band_id: 'band-bakandeya',
     nombre: 'Festival Directo Caña 45 min',
     descripcion: 'Repertorio de máxima energía para festivales y horarios reducidos',
     tipoFormato: 'festival',
@@ -1424,6 +1438,7 @@ export const INITIAL_SETLISTS = [
   },
   {
     id: 'setlist-2',
+    band_id: 'band-bakandeya',
     nombre: 'Concierto Sala Larga 75 min',
     descripcion: 'Setlist completo con temas del disco, covers y bloque acústico',
     tipoFormato: 'sala_larga',

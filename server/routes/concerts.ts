@@ -129,9 +129,8 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
 });
 
 // Get logistics
-router.get("/logistics", async (req, res) => {
-  const queryBandId = (req.query.band_id as string) || (req.query.band as string);
-  const userBandId = (req as any).user?.band_id || queryBandId || "band-bakandeya";
+router.get("/logistics", requireAuth, async (req, res) => {
+  const userBandId = (req as any).user?.band_id || "band-bakandeya";
   try {
     const runOfShow = await dbGetRunOfShow(userBandId);
     const gearChecklists = await dbGetGearChecklists(userBandId);
@@ -150,9 +149,8 @@ router.get("/logistics", async (req, res) => {
 });
 
 // Update/set run of show for a date
-router.post("/logistics/runofshow", async (req, res) => {
-  const queryBandId = (req.query.band_id as string) || (req.body.band_id as string);
-  const userBandId = (req as any).user?.band_id || queryBandId || "band-bakandeya";
+router.post("/logistics/runofshow", requireAuth, async (req, res) => {
+  const userBandId = (req as any).user?.band_id || "band-bakandeya";
   const { dateKey, items } = req.body;
   if (!dateKey || !Array.isArray(items)) {
     return res.status(400).json({ error: "dateKey and items array required" });
@@ -175,9 +173,8 @@ router.post("/logistics/runofshow", async (req, res) => {
 });
 
 // Update/set gear checklist for a date
-router.post("/logistics/gear", async (req, res) => {
-  const queryBandId = (req.query.band_id as string) || (req.body.band_id as string);
-  const userBandId = (req as any).user?.band_id || queryBandId || "band-bakandeya";
+router.post("/logistics/gear", requireAuth, async (req, res) => {
+  const userBandId = (req as any).user?.band_id || "band-bakandeya";
   const { dateKey, items } = req.body;
   if (!dateKey || !Array.isArray(items)) {
     return res.status(400).json({ error: "dateKey and items array required" });
@@ -207,7 +204,7 @@ router.get("/payments", requireAuth, requireLeader, async (req, res) => {
     res.json(dbPayments);
   } catch (err) {
     const state = loadState();
-    res.json(state.payments || []);
+    res.json((state.payments || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
   }
 });
 
@@ -305,15 +302,15 @@ router.get("/calendar.ics", async (req, res) => {
     if (!concerts || concerts.length === 0) {
       const state = loadState();
       concerts = (state.concerts || []).filter((c: any) => {
-        if (!c.band_id || c.band_id === "band-bakandeya") return true;
-        return bandIds.some(b => b === c.band_id || b.replace(/^band-/, "") === (c.band_id || "").replace(/^band-/, ""));
+        const cBid = c.band_id || (bandIds.some(b => b === "band-bakandeya" || b === "bakandeya") ? "band-bakandeya" : "");
+        return bandIds.some(b => b === cBid || b.replace(/^band-/, "") === (cBid || "").replace(/^band-/, ""));
       });
     }
     if (!rehearsals || rehearsals.length === 0) {
       const state = loadState();
       rehearsals = (state.rehearsals || []).filter((r: any) => {
-        if (!r.band_id || r.band_id === "band-bakandeya") return true;
-        return bandIds.some(b => b === r.band_id || b.replace(/^band-/, "") === (r.band_id || "").replace(/^band-/, ""));
+        const rBid = r.band_id || (bandIds.some(b => b === "band-bakandeya" || b === "bakandeya") ? "band-bakandeya" : "");
+        return bandIds.some(b => b === rBid || b.replace(/^band-/, "") === (rBid || "").replace(/^band-/, ""));
       });
     }
 
