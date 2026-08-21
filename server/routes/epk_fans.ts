@@ -8,7 +8,9 @@ import {
   dbUpsertEpkConfig,
   dbGetFans,
   dbUpsertFan,
-  dbDeleteFan
+  dbDeleteFan,
+  dbGetSongs,
+  dbGetConcerts
 } from "../db.js";
 
 const router = express.Router();
@@ -187,15 +189,35 @@ router.get("/public/epk", async (req, res) => {
       bandName = cleanBandId === 'bakandeya' ? 'Bakandeya' : (cleanBandId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
     }
 
-    const songs = (state.songs || []).filter((s: any) => {
-      const sBand = (s.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
-      return sBand === cleanBandId || (!s.band_id && cleanBandId === 'bakandeya');
-    });
+    // La fuente de verdad de temas y conciertos es Supabase, igual que para el epkConfig de
+    // arriba. Antes esto solo miraba state.songs/state.concerts (el JSON local), y como el
+    // contenedor de Railway es efímero, el EPK público salía SIN canciones aunque la banda las
+    // tuviera cargadas en la app. El estado local queda como respaldo si Supabase falla.
+    let songs: any[] = [];
+    try {
+      songs = await dbGetSongs(reqBandId);
+    } catch (e) {
+      console.warn("EPK público: no se pudieron leer los temas de Supabase, usando estado local:", e);
+    }
+    if (!songs || songs.length === 0) {
+      songs = (state.songs || []).filter((s: any) => {
+        const sBand = (s.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
+        return sBand === cleanBandId || (!s.band_id && cleanBandId === 'bakandeya');
+      });
+    }
 
-    const concerts = (state.concerts || []).filter((c: any) => {
-      const cBand = (c.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
-      return cBand === cleanBandId || (!c.band_id && cleanBandId === 'bakandeya');
-    });
+    let concerts: any[] = [];
+    try {
+      concerts = await dbGetConcerts(reqBandId);
+    } catch (e) {
+      console.warn("EPK público: no se pudieron leer los conciertos de Supabase, usando estado local:", e);
+    }
+    if (!concerts || concerts.length === 0) {
+      concerts = (state.concerts || []).filter((c: any) => {
+        const cBand = (c.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
+        return cBand === cleanBandId || (!c.band_id && cleanBandId === 'bakandeya');
+      });
+    }
 
     // Filter highlighted songs
     const highlightedSongs = epkConfig?.temasDestacadosIds?.length > 0
