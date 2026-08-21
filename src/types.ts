@@ -206,9 +206,40 @@ export interface EmailSignatureConfig {
   };
 }
 
+// Miembro de la banda con su foto, para la sección de formación del EPK. Quien programa
+// quiere ver caras y saber cuánta gente sube al escenario (afecta a caché y logística).
+export interface BandMember {
+  id: string;
+  nombre: string;
+  rol: string;
+  fotoUrl?: string;
+  bio?: string;
+}
+
+// Vídeo de directo. Es el material que más pesa en la decisión de contratar, así que el EPK
+// permite elegir varios y marcar cuál se enseña primero.
+export interface EPKVideo {
+  id: string;
+  titulo: string;
+  url: string;
+  destacado?: boolean;
+}
+
+// Datos duros de contratación: lo que un programador pregunta siempre antes de responder.
+export interface DatosContratacion {
+  numMusicos?: number;
+  duracionDirecto?: string;
+  ciudadBase?: string;
+  formatos?: string;
+  necesidadesEscenario?: string;
+}
+
 export interface EPKConfig {
   bandId?: string;
   biografia: string;
+  miembros?: BandMember[];
+  videos?: EPKVideo[];
+  datosContratacion?: DatosContratacion;
   logoUrl: string;
   dossierPdfUrl?: string;
   dossierPdfName?: string;

@@ -19,10 +19,14 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   bandName?: string;
   contactEmail?: string;
   phone?: string;
+  bandId?: string;
 }): string {
   const band = params?.bandName || 'Bakandeya';
   const email = params?.contactEmail || 'bakandeya@gmail.com';
   const phone = params?.phone || '+34 652 938 521';
+  // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id.
+  const bandIdPdf = params?.bandId || 'band-bakandeya';
+  const epkUrlPdf = `https://bands-manager.up.railway.app/epk?band=${encodeURIComponent(bandIdPdf)}`;
 
   const header = '%PDF-1.4\n';
   const obj1 = '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n';
@@ -59,7 +63,7 @@ export function buildBakandeyaDossierPdfBase64(params?: {
     '0 -18 Td',
     '(- Repertorio, audios de estudio y videos de directo en alta calidad) Tj',
     '0 -30 Td',
-    '(Kit de Prensa Completo (EPK): https://bands-manager.up.railway.app/epk) Tj',
+    `(Kit de Prensa Completo (EPK): ${epkUrlPdf}) Tj`,
     'ET',
   ];
 
@@ -159,7 +163,10 @@ export function formatEmailWithSignatureAndDossier(params: {
 
   const resolvedBandId = epkConfig?.bandId || (resolvedBandName.toLowerCase().includes('bakandeya') ? 'band-bakandeya' : resolvedBandName.toLowerCase().replace(/\s+/g, '-'));
   const cleanBandId = resolvedBandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const bandParam = cleanBandId && cleanBandId !== 'bakandeya' ? `?band=${encodeURIComponent(resolvedBandId.startsWith('band-') ? resolvedBandId : `band-${cleanBandId}`)}` : '';
+  // El band_id va SIEMPRE, también para Bakandeya: este es el enlace que viaja en la firma de
+  // los pitches, así que no puede depender del valor por defecto del servidor para saber de
+  // qué banda es el dossier.
+  const bandParam = `?band=${encodeURIComponent(resolvedBandId.startsWith('band-') ? resolvedBandId : `band-${cleanBandId}`)}`;
   const webEpkUrl = `https://bands-manager.up.railway.app/epk${bandParam}`;
   const effectiveEpkLink = webEpkUrl;
 
