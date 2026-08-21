@@ -353,6 +353,34 @@ export default function CalendarView({
  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
  const [concIdioma, setConcIdioma] = useState('');
 
+ // Ficha del concierto: ver / editar un concierto ya creado
+ const [viewingConcert, setViewingConcert] = useState<Concert | null>(null);
+ const [editDraft, setEditDraft] = useState<Concert | null>(null);
+
+ useEffect(() => {
+ setEditDraft(viewingConcert ? { ...viewingConcert } : null);
+ }, [viewingConcert]);
+
+ const handleSaveConcertEdit = (e: React.FormEvent) => {
+ e.preventDefault();
+ if (!viewingConcert || !editDraft) return;
+ onUpdateConcert(viewingConcert.id, {
+ ciudad: editDraft.ciudad.trim() || 'Madrid',
+ sala: editDraft.sala.trim() || 'Sala Directo',
+ fecha: editDraft.fecha,
+ cache: Number(editDraft.cache) || 0,
+ aforo_total: Number(editDraft.aforo_total) || 0,
+ contrato_firmado: editDraft.contrato_firmado,
+ estado_pago: editDraft.estado_pago,
+ tipo: editDraft.tipo,
+ notas: editDraft.notas?.trim() || '',
+ idioma: editDraft.idioma || undefined
+ });
+ setViewingConcert(null);
+ setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
+ setTimeout(() => setSyncSuccessMessage(''), 5000);
+ };
+
  const currentYear = viewDate.getFullYear();
  const currentMonth = viewDate.getMonth(); // 0 to 11
 
@@ -948,12 +976,13 @@ export default function CalendarView({
  return (
  <div
  key={e.id || idx}
+ onClick={isConc ? (evt) => { evt.stopPropagation(); setViewingConcert(e as Concert); } : undefined}
  className={`text-[8px] font-mono font-extrabold px-1 py-[1px] rounded border truncate w-full text-center leading-tight ${
  isConc
- ? 'bg-amber-500/25 text-amber-200 border-amber-500/50'
+ ? 'bg-amber-500/25 text-amber-200 border-amber-500/50 cursor-pointer hover:bg-amber-500/40'
  : 'bg-emerald-500/25 text-emerald-200 border-emerald-500/50'
  }`}
- title={`${bName}: ${isConc ? 'Concierto' : 'Ensayo'}`}
+ title={`${bName}: ${isConc ? 'Concierto (clic para ver/editar ficha)' : 'Ensayo'}`}
  >
  {bName}
  </div>
@@ -975,12 +1004,13 @@ export default function CalendarView({
  return (
  <span
  key={e.id || idx}
+ onClick={isConc ? (evt) => { evt.stopPropagation(); setViewingConcert(e as Concert); } : undefined}
  className={`text-[7px] font-mono font-black px-1 py-[0.5px] rounded border leading-none truncate max-w-[28px] ${
  isConc
- ? 'bg-amber-500/30 text-amber-200 border-amber-500/60'
+ ? 'bg-amber-500/30 text-amber-200 border-amber-500/60 cursor-pointer'
  : 'bg-emerald-500/30 text-emerald-200 border-emerald-500/60'
  }`}
- title={`${bName}: ${isConc ? 'Concierto' : 'Ensayo'}`}
+ title={`${bName}: ${isConc ? 'Concierto (toca para ver/editar ficha)' : 'Ensayo'}`}
  >
  {bName.slice(0, 3).toUpperCase()}
  </span>
@@ -1417,6 +1447,19 @@ export default function CalendarView({
  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  </div>
+ {selectedEventDetails.type === 'concert' && selectedConcert && (
+ <button
+ type="button"
+ onClick={() => setViewingConcert(selectedConcert)}
+ className={`shrink-0 self-start px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer ${
+ isStitchLight
+ ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+ : 'bg-neutral-900 border-neutral-700 text-neutral-200 hover:bg-neutral-800'
+ }`}
+ >
+ ✎ Editar Ficha
+ </button>
+ )}
  </div>
 
  {/* Core Info */}
@@ -2351,6 +2394,190 @@ export default function CalendarView({
  }`}
  >
  Guardar Concierto
+ </button>
+ </div>
+ </form>
+ </div>
+ </div>
+ </ModalPortal>
+ )}
+
+ {/* EDIT CONCERT MODAL (Ficha del Concierto) */}
+ {viewingConcert && editDraft && (
+ <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
+ <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+ <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+ isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
+ }`}>
+ <button
+ onClick={() => setViewingConcert(null)}
+ className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+ >
+ ✕
+ </button>
+ <div className="flex items-center gap-2 mb-4">
+ <span className="p-2 rounded-lg bg-[#d1b375]/15 text-[#d1b375]">
+ <Sparkles className="w-5 h-5" />
+ </span>
+ <div>
+ <h3 className="font-bold text-base font-display">Ficha del Concierto</h3>
+ <p className="text-[10px] font-mono text-neutral-400">{viewingConcert.sala} · {viewingConcert.ciudad}</p>
+ </div>
+ </div>
+
+ <form onSubmit={handleSaveConcertEdit} className="space-y-3.5">
+ <div className="grid grid-cols-2 gap-3">
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Ciudad</label>
+ <input
+ type="text"
+ value={editDraft.ciudad}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, ciudad: e.target.value } : prev)}
+ required
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Sala / Evento</label>
+ <input
+ type="text"
+ value={editDraft.sala}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, sala: e.target.value } : prev)}
+ required
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Fecha</label>
+ <input
+ type="date"
+ value={editDraft.fecha}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, fecha: e.target.value } : prev)}
+ required
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+
+ <div className="grid grid-cols-2 gap-3">
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Caché (€)</label>
+ <input
+ type="number"
+ value={editDraft.cache}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, cache: Number(e.target.value) } : prev)}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Aforo Máximo</label>
+ <input
+ type="number"
+ value={editDraft.aforo_total}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, aforo_total: Number(e.target.value) } : prev)}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ </div>
+
+ <div className="grid grid-cols-2 gap-3">
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Tipo de Evento</label>
+ <select
+ value={editDraft.tipo}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, tipo: e.target.value as any } : prev)}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ >
+ <option value="propio">Concierto Propio</option>
+ <option value="festival">Festival / Macroevento</option>
+ <option value="privado">Evento Privado / Boda</option>
+ </select>
+ </div>
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Estado de Pago</label>
+ <select
+ value={editDraft.estado_pago}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, estado_pago: e.target.value as any } : prev)}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ >
+ <option value="pendiente">Pendiente</option>
+ <option value="parcial">Anticipo / Parcial</option>
+ <option value="cobrado">Cobrado 100%</option>
+ </select>
+ </div>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Idioma del formulario "Únete" (QR de fans)</label>
+ <select
+ value={editDraft.idioma || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, idioma: e.target.value } : prev)}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ >
+ <option value="">Español (por defecto)</option>
+ {FAN_FORM_LANGUAGES.filter(l => l.code !== 'es').map(l => (
+ <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
+ ))}
+ </select>
+ </div>
+
+ <div className="flex items-center gap-2 py-1">
+ <input
+ type="checkbox"
+ id="editContrato"
+ checked={editDraft.contrato_firmado}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, contrato_firmado: e.target.checked } : prev)}
+ className="rounded text-[#d1b375] focus:ring-0 w-4 h-4 cursor-pointer"
+ />
+ <label htmlFor="editContrato" className="text-[10px] font-mono cursor-pointer select-none">
+ Contrato firmado y verificado
+ </label>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Cláusulas Técnicas</label>
+ <textarea
+ value={editDraft.notas}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, notas: e.target.value } : prev)}
+ rows={2}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+
+ <div className="pt-2 flex justify-end gap-2">
+ <button
+ type="button"
+ onClick={() => setViewingConcert(null)}
+ className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+ >
+ Cancelar
+ </button>
+ <button
+ type="submit"
+ className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg transition-all cursor-pointer shadow-md ${
+ isStitchLight ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-[#d1b375] hover:bg-[#e2c486] text-stone-950 font-bold shadow-amber-500/20'
+ }`}
+ >
+ Guardar Cambios
  </button>
  </div>
  </form>
