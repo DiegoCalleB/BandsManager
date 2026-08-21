@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, CreditCard, Loader2 } from 'lucide-react';
 import { ThemeColors } from '../types';
+import { api } from '../services/api';
 
 interface CheckoutButtonProps {
   planId: string;
