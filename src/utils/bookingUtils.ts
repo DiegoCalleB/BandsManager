@@ -20,6 +20,10 @@ export const normalizeStatus = (s: any): LeadStatus => {
   if (str.includes('interesado') && !str.includes('no')) return 'negociando';
   if (str.includes('enviado') || str.includes('contactad') || str === 'esperando_respuesta' || str.includes('esperando') || str === 'contactado') return 'esperando_respuesta';
   if (str.includes('no') || str === 'no_interesado' || str.includes('rechaz') || str.includes('descart')) return 'no_interesado';
+  // Borrador ya creado en la bandeja de la banda por el Agente Enviador en modo 'draft': el
+  // pitch está aprobado y escrito, pero NO se ha enviado nada todavía. Distinto de
+  // 'pendiente_aprobacion' (pitch aún sin aprobar) y de 'aprobado' (en cola de envío).
+  if (str === 'borrador_creado' || str.includes('borrador_cre')) return 'borrador_creado';
   if (str === 'pendiente_aprobacion' || str.includes('por_aprobar') || str === 'pendiente') return 'pendiente_aprobacion';
   if (str === 'aprobado_propuesta' || str.includes('aprobado_pitch')) return 'aprobado_propuesta';
   if (str === 'aprobado_respuesta' || str.includes('aprobado_resp')) return 'aprobado_respuesta';
