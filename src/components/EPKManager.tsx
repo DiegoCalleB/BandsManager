@@ -66,6 +66,56 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
   }
 };
 
+// Base vacía para cualquier banda que NO sea Bakandeya: los datos de
+// Bakandeya de arriba son solo su semilla de ejemplo, nunca deben usarse
+// como fallback para rellenar el dossier de una banda nueva o distinta.
+const EMPTY_EPK_CONFIG: EPKConfig = {
+  biografia: '',
+  logoUrl: '',
+  dossierPdfUrl: '',
+  dossierPdfName: '',
+  dossierTextoExtra: '',
+  bandPhotos: [],
+  temasDestacadosIds: [],
+  contactoBooking: {
+    nombre: '',
+    email: '',
+    telefono: ''
+  },
+  riderTecnico: '',
+  enlacesRedes: {
+    spotify: '',
+    youtube: '',
+    instagram: '',
+    tiktok: '',
+    appleMusic: '',
+    bandcamp: '',
+    website: '',
+    whatsapp: '',
+    facebook: '',
+    twitter: ''
+  },
+  firmaEmail: {
+    nombreRemitente: '',
+    cargo: '',
+    telefono: '',
+    email: '',
+    textoPie: '',
+    incluirIconosRedes: true,
+    adjuntarDossierPorDefecto: true,
+    redesSociales: {
+      spotify: '',
+      youtube: '',
+      instagram: '',
+      tiktok: '',
+      appleMusic: '',
+      bandcamp: '',
+      website: '',
+      whatsapp: ''
+    }
+  }
+};
+
 const UNIFIED_PLATFORMS = [
   { key: 'spotify', label: 'Spotify', icon: '🟢', placeholder: 'https://open.spotify.com/artist/...' },
   { key: 'instagram', label: 'Instagram', icon: '📸', placeholder: 'https://instagram.com/...' },
@@ -88,19 +138,20 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const activeBandId = currentUser?.band_id || 'band-bakandeya';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
   const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
-  
+  const baseDefaults = isBakandeya ? DEFAULT_EPK_CONFIG : EMPTY_EPK_CONFIG;
+
   const [config, setConfig] = useState<EPKConfig>(() => {
     const initialRedes = {
-      ...DEFAULT_EPK_CONFIG.enlacesRedes,
+      ...baseDefaults.enlacesRedes,
       ...(epkConfig?.firmaEmail?.redesSociales || {}),
       ...(epkConfig?.enlacesRedes || {})
     };
     return {
-      ...DEFAULT_EPK_CONFIG,
+      ...baseDefaults,
       ...(epkConfig || {}),
       enlacesRedes: initialRedes,
       firmaEmail: {
-        ...DEFAULT_EPK_CONFIG.firmaEmail,
+        ...baseDefaults.firmaEmail,
         ...(epkConfig?.firmaEmail || {}),
         redesSociales: initialRedes
       }
@@ -110,17 +161,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   React.useEffect(() => {
     if (epkConfig) {
       const mergedRedes = {
-        ...DEFAULT_EPK_CONFIG.enlacesRedes,
+        ...baseDefaults.enlacesRedes,
         ...(config.enlacesRedes || {}),
         ...(epkConfig.firmaEmail?.redesSociales || {}),
         ...(epkConfig.enlacesRedes || {})
       };
       const mergedContacto = {
-        ...DEFAULT_EPK_CONFIG.contactoBooking,
+        ...baseDefaults.contactoBooking,
         ...(epkConfig.contactoBooking || {})
       };
       const mergedFirma = {
-        ...DEFAULT_EPK_CONFIG.firmaEmail,
+        ...baseDefaults.firmaEmail,
         ...(epkConfig.firmaEmail || {}),
         redesSociales: mergedRedes
       };
