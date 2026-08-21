@@ -3,6 +3,7 @@ import { Rehearsal, Concert, ThemeColors } from '../types';
 import DirectionsCard from './DirectionsCard';
 import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio } from 'lucide-react';
 import { ModalPortal } from './common/ModalPortal';
+import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -350,6 +351,7 @@ export default function CalendarView({
  const [concEstadoPago, setConcEstadoPago] = useState<'pendiente' | 'cobrado' | 'parcial'>('pendiente');
  const [concTipo, setConcTipo] = useState<'propio' | 'festival' | 'privado'>('propio');
  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
+ const [concIdioma, setConcIdioma] = useState('');
 
  const currentYear = viewDate.getFullYear();
  const currentMonth = viewDate.getMonth(); // 0 to 11
@@ -507,7 +509,8 @@ export default function CalendarView({
  bandName: targetBand.bandName,
  convocatoria_tipo: convocatoriaTipo,
  convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
- convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map(m => m.name) : undefined
+ convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map(m => m.name) : undefined,
+ idioma: concIdioma || undefined
  };
 
  if (onAddConcert) {
@@ -2215,6 +2218,22 @@ export default function CalendarView({
  <option value="cobrado">Cobrado 100%</option>
  </select>
  </div>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Idioma del formulario "Únete" (QR de fans)</label>
+ <select
+ value={concIdioma}
+ onChange={(e) => setConcIdioma(e.target.value)}
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ >
+ <option value="">Español (por defecto)</option>
+ {FAN_FORM_LANGUAGES.filter(l => l.code !== 'es').map(l => (
+ <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
+ ))}
+ </select>
  </div>
 
   {isMultiBandUser && (
