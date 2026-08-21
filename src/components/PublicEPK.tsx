@@ -99,11 +99,25 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   // Solo se puede incrustar un VÍDEO concreto, no un canal: si el enlace es de canal (@handle
   // o /c/), se deja como enlace normal en vez de meter un iframe roto.
-  const youtubeEmbedUrl = (() => {
-    const raw = config.enlacesRedes?.youtube || "";
-    const match = raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
-    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
-  })();
+  const aEmbed = (raw: string): string | null => {
+    const yt = (raw || "").match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+    if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+    const vimeo = (raw || "").match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+    return null;
+  };
+
+  const youtubeEmbedUrl = aEmbed(config.enlacesRedes?.youtube || "");
+
+  // Vídeos elegidos a mano en el gestor del EPK. El destacado va primero y en grande.
+  const videos = (config.videos || []).filter(v => v?.url && aEmbed(v.url));
+  const videoPrincipal = videos.find(v => v.destacado) || videos[0] || null;
+  const videosSecundarios = videos.filter(v => v !== videoPrincipal);
+  const miembros = (config.miembros || []).filter(m => m?.nombre || m?.fotoUrl);
+  const datos = config.datosContratacion || {};
+  const hayDatosContratacion = Boolean(
+    datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario
+  );
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950 print:bg-white print:text-black">
@@ -211,6 +225,104 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </div>
           </div>
         </header>
+
+        {/* DATOS DUROS DE CONTRATACIÓN - responde las preguntas de siempre sin otro email */}
+        {hayDatosContratacion && (
+          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <FileText className="w-5 h-5" /> Datos para Contratación
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { label: 'Músicos en escena', valor: datos.numMusicos ? String(datos.numMusicos) : '' },
+                { label: 'Duración del directo', valor: datos.duracionDirecto || '' },
+                { label: 'Ciudad base', valor: datos.ciudadBase || '' },
+                { label: 'Formatos', valor: datos.formatos || '' }
+              ].filter(d => d.valor).map(d => (
+                <div key={d.label} className="bg-slate-950 border border-slate-800 rounded-xl p-4">
+                  <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{d.label}</p>
+                  <p className="text-white font-bold mt-1 text-sm">{d.valor}</p>
+                </div>
+              ))}
+            </div>
+            {datos.necesidadesEscenario && (
+              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
+                <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Necesidades de escenario</p>
+                <p className="text-slate-300 text-sm mt-1">{datos.necesidadesEscenario}</p>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* VÍDEOS DE DIRECTO - lo primero que mira quien contrata: cómo suena y cómo se ve */}
+        {videoPrincipal && (
+          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:hidden">
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Play className="w-5 h-5" /> Vídeo en Directo
+            </h2>
+            <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
+              <iframe
+                src={aEmbed(videoPrincipal.url)!}
+                title={videoPrincipal.titulo || `${bandName} en directo`}
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                loading="lazy"
+                className="w-full h-full"
+              />
+            </div>
+            {videoPrincipal.titulo && (
+              <p className="text-sm text-slate-300 font-medium">{videoPrincipal.titulo}</p>
+            )}
+            {videosSecundarios.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {videosSecundarios.map(v => (
+                  <div key={v.id} className="space-y-2">
+                    <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
+                      <iframe
+                        src={aEmbed(v.url)!}
+                        title={v.titulo || `${bandName} en directo`}
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                        allowFullScreen
+                        loading="lazy"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    {v.titulo && <p className="text-xs text-slate-400">{v.titulo}</p>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* FORMACIÓN - caras y quién sube al escenario */}
+        {miembros.length > 0 && (
+          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
+            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Sparkles className="w-5 h-5" /> La Banda
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {miembros.map(m => (
+                <div key={m.id} className="text-center space-y-2">
+                  <div className="aspect-square rounded-2xl overflow-hidden border border-slate-800 bg-slate-950">
+                    {m.fotoUrl ? (
+                      <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-2xl font-black text-slate-700">
+                        {(m.nombre || '?').charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm leading-tight">{m.nombre}</h4>
+                    {m.rol && <p className="text-xs text-amber-400/90 mt-0.5">{m.rol}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
 
         {/* 2-COLUMN LAYOUT FOR BIO & CONTACT */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">

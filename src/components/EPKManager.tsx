@@ -5,7 +5,7 @@ import {
   FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
-import { EPKConfig, Song, User } from '../types';
+import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { api } from '../services/api';
 import { googleSignIn, auth } from '../utils/gmail';
@@ -223,6 +223,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
   const [isUploadingRider, setIsUploadingRider] = useState(false);
+  const [subiendoFotoMiembro, setSubiendoFotoMiembro] = useState<string | null>(null);
 
   // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
   // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
@@ -378,6 +379,66 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     navigator.clipboard.writeText(publicEpkUrl);
     setCopiedPublicUrl(true);
     setTimeout(() => setCopiedPublicUrl(false), 2000);
+  };
+
+  // --- Formación de la banda (miembros con foto) ---
+  const miembros: BandMember[] = config.miembros || [];
+
+  const actualizarMiembros = (nuevos: BandMember[]) => setConfig({ ...config, miembros: nuevos });
+
+  const anadirMiembro = () => {
+    actualizarMiembros([...miembros, { id: `m-${Date.now()}`, nombre: '', rol: '' }]);
+  };
+
+  const editarMiembro = (id: string, campos: Partial<BandMember>) => {
+    actualizarMiembros(miembros.map(m => (m.id === id ? { ...m, ...campos } : m)));
+  };
+
+  const quitarMiembro = (id: string) => actualizarMiembros(miembros.filter(m => m.id !== id));
+
+  const subirFotoMiembro = async (id: string, file: File) => {
+    setSubiendoFotoMiembro(id);
+    setSaveError(null);
+    try {
+      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'miembros' });
+      editarMiembro(id, { fotoUrl: url });
+    } catch (err: any) {
+      console.error('Error subiendo foto de miembro:', err);
+      setSaveError(err?.message || 'No se pudo subir la foto. Inténtalo de nuevo.');
+    } finally {
+      setSubiendoFotoMiembro(null);
+    }
+  };
+
+  // --- Vídeos de directo ---
+  const videos: EPKVideo[] = config.videos || [];
+
+  const actualizarVideos = (nuevos: EPKVideo[]) => setConfig({ ...config, videos: nuevos });
+
+  const anadirVideo = () => {
+    // El primero que se añade queda destacado por defecto: es el que se ve grande arriba.
+    actualizarVideos([...videos, { id: `v-${Date.now()}`, titulo: '', url: '', destacado: videos.length === 0 }]);
+  };
+
+  const editarVideo = (id: string, campos: Partial<EPKVideo>) => {
+    actualizarVideos(videos.map(v => (v.id === id ? { ...v, ...campos } : v)));
+  };
+
+  const quitarVideo = (id: string) => {
+    const restantes = videos.filter(v => v.id !== id);
+    // Si se borra el destacado, asciende el primero que quede para no dejar el EPK sin vídeo principal.
+    if (restantes.length > 0 && !restantes.some(v => v.destacado)) restantes[0].destacado = true;
+    actualizarVideos(restantes);
+  };
+
+  const destacarVideo = (id: string) => {
+    actualizarVideos(videos.map(v => ({ ...v, destacado: v.id === id })));
+  };
+
+  const editarDatoContratacion = (campo: keyof DatosContratacion, valor: string) => {
+    const datos = { ...(config.datosContratacion || {}) } as any;
+    datos[campo] = campo === 'numMusicos' ? (valor === '' ? undefined : Number(valor)) : valor;
+    setConfig({ ...config, datosContratacion: datos });
   };
 
   const toggleHighlightedSong = (songId: string) => {
@@ -957,6 +1018,161 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* DATOS DE CONTRATACIÓN */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Info className="w-5 h-5" /> Datos de Contratación
+            </h3>
+            <p className="text-xs text-slate-400">
+              Lo que un programador pregunta siempre antes de contestar. Cuanto más claro, menos correos de ida y vuelta.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {([
+                { campo: 'numMusicos', label: 'Nº de músicos en escena', ph: '4', tipo: 'number' },
+                { campo: 'duracionDirecto', label: 'Duración del directo', ph: '75 min', tipo: 'text' },
+                { campo: 'ciudadBase', label: 'Ciudad base', ph: 'Madrid', tipo: 'text' },
+                { campo: 'formatos', label: 'Formatos disponibles', ph: 'Banda completa / Acústico a dúo', tipo: 'text' }
+              ] as const).map(f => (
+                <div key={f.campo}>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">{f.label}</label>
+                  <input
+                    type={f.tipo}
+                    value={(config.datosContratacion as any)?.[f.campo] ?? ''}
+                    onChange={e => editarDatoContratacion(f.campo as keyof DatosContratacion, e.target.value)}
+                    placeholder={f.ph}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">Necesidades de escenario (resumen corto)</label>
+              <input
+                type="text"
+                value={config.datosContratacion?.necesidadesEscenario || ''}
+                onChange={e => editarDatoContratacion('necesidadesEscenario', e.target.value)}
+                placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+              />
+            </div>
+          </div>
+
+          {/* VÍDEOS DE DIRECTO */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <Share2 className="w-5 h-5" /> Vídeos de Directo
+              </h3>
+              <button onClick={anadirVideo} className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition">
+                + Añadir vídeo
+              </button>
+            </div>
+            <p className="text-xs text-slate-400">
+              Pega enlaces de YouTube o Vimeo. El vídeo marcado con la estrella se muestra grande arriba del todo: que sea el mejor que tengáis.
+            </p>
+            {videos.length === 0 && (
+              <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+                Todavía no hay vídeos. Es el material que más pesa en la decisión de contratar — añade al menos uno de directo.
+              </div>
+            )}
+            <div className="space-y-3">
+              {videos.map(v => (
+                <div key={v.id} className={`rounded-xl border p-3 space-y-2 ${v.destacado ? 'border-amber-500/60 bg-amber-500/5' : 'border-slate-800 bg-slate-950'}`}>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => destacarVideo(v.id)}
+                      title={v.destacado ? 'Vídeo principal' : 'Marcar como principal'}
+                      className={`shrink-0 w-8 h-8 rounded-lg border flex items-center justify-center text-sm transition ${v.destacado ? 'bg-amber-500 text-slate-950 border-amber-500' : 'border-slate-700 text-slate-500 hover:text-amber-300'}`}
+                    >
+                      ★
+                    </button>
+                    <input
+                      type="text"
+                      value={v.titulo}
+                      onChange={e => editarVideo(v.id, { titulo: e.target.value })}
+                      placeholder="Título (ej. Directo en Sala Caracol, 2026)"
+                      className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
+                    />
+                    <button onClick={() => quitarVideo(v.id)} className="shrink-0 p-2 text-slate-500 hover:text-red-400 transition" title="Quitar vídeo">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <input
+                    type="url"
+                    value={v.url}
+                    onChange={e => editarVideo(v.id, { url: e.target.value })}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-white focus:border-amber-500 outline-none"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* FORMACIÓN / MIEMBROS */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <ImageIcon className="w-5 h-5" /> Formación de la Banda
+              </h3>
+              <button onClick={anadirMiembro} className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition">
+                + Añadir miembro
+              </button>
+            </div>
+            <p className="text-xs text-slate-400">
+              Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre e instrumento de cada miembro.
+            </p>
+            {miembros.length === 0 && (
+              <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+                Todavía no has añadido a nadie. Añade a los integrantes con su foto para que el dossier tenga cara.
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {miembros.map(m => (
+                <div key={m.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3 space-y-2">
+                  <div className="flex items-start gap-3">
+                    <label className="shrink-0 cursor-pointer group" title="Subir foto">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center">
+                        {subiendoFotoMiembro === m.id ? (
+                          <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
+                        ) : m.fotoUrl ? (
+                          <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
+                        ) : (
+                          <Upload className="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition" />
+                        )}
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={e => { const f = e.target.files?.[0]; if (f) subirFotoMiembro(m.id, f); e.target.value = ''; }}
+                      />
+                    </label>
+                    <div className="flex-1 space-y-2">
+                      <input
+                        type="text"
+                        value={m.nombre}
+                        onChange={e => editarMiembro(m.id, { nombre: e.target.value })}
+                        placeholder="Nombre"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-white focus:border-amber-500 outline-none"
+                      />
+                      <input
+                        type="text"
+                        value={m.rol}
+                        onChange={e => editarMiembro(m.id, { rol: e.target.value })}
+                        placeholder="Voz, guitarra, percusión..."
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:border-amber-500 outline-none"
+                      />
+                    </div>
+                    <button onClick={() => quitarMiembro(m.id)} className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 transition" title="Quitar miembro">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
