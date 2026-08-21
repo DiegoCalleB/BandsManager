@@ -132,7 +132,8 @@ ALTER TABLE public.concerts
     ADD COLUMN IF NOT EXISTS gastos_estimados_tipicos NUMERIC DEFAULT 0,
     ADD COLUMN IF NOT EXISTS convocatoria_tipo TEXT DEFAULT 'completa',
     ADD COLUMN IF NOT EXISTS convocados_ids JSONB DEFAULT '[]'::jsonb,
-    ADD COLUMN IF NOT EXISTS convocados_nombres JSONB DEFAULT '[]'::jsonb;
+    ADD COLUMN IF NOT EXISTS convocados_nombres JSONB DEFAULT '[]'::jsonb,
+    ADD COLUMN IF NOT EXISTS idioma TEXT DEFAULT '';
 
 ALTER TABLE public.rehearsals
     ADD COLUMN IF NOT EXISTS convocatoria_tipo TEXT DEFAULT 'completa',
