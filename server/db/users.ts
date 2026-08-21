@@ -1,5 +1,4 @@
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
-import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetUsers(bandId?: string) {
   const sb = getSupabase();
