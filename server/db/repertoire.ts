@@ -70,27 +70,22 @@ export function mapSongRecord(s: any) {
 
 export async function dbGetSongs(bandId: string) {
   const sb = getSupabase();
-  const cleanId = cleanBandId(bandId);
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([
+    rawClean,
+    noPrefix,
+    `band-${noPrefix}`,
+    `reg-${noPrefix}`
+  ])).filter(Boolean);
+
   const { data, error } = await sb
     .from("songs")
     .select("*")
-    .eq("band_id", cleanId)
+    .in("band_id", candidateIds)
     .order("titulo", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
-  
-  if (!data || data.length === 0) {
-    for (const song of INITIAL_SONGS) {
-      await dbUpsertSong(song, cleanId).catch(() => {});
-    }
-    const { data: seededData } = await sb
-      .from("songs")
-      .select("*")
-      .eq("band_id", cleanId)
-      .order("titulo", { ascending: true });
-    return (seededData || []).map(mapSongRecord);
-  }
-
   return (data || []).map(mapSongRecord);
 }
 
@@ -161,30 +156,22 @@ export async function dbDeleteSong(id: string, bandId: string) {
 // --- SETLISTS ---
 export async function dbGetSetlists(bandId: string) {
   const sb = getSupabase();
-  const cleanId = cleanBandId(bandId);
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([
+    rawClean,
+    noPrefix,
+    `band-${noPrefix}`,
+    `reg-${noPrefix}`
+  ])).filter(Boolean);
+
   const { data, error } = await sb
     .from("setlists")
     .select("*")
-    .eq("band_id", cleanId)
+    .in("band_id", candidateIds)
     .order("fecha_ultima_edicion", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
-  
-  if (!data || data.length === 0) {
-    for (const setlist of INITIAL_SETLISTS) {
-      await dbUpsertSetlist(setlist, cleanId).catch(() => {});
-    }
-    const { data: seededData } = await sb
-      .from("setlists")
-      .select("*")
-      .eq("band_id", cleanId)
-      .order("fecha_ultima_edicion", { ascending: false });
-    return (seededData || []).map(sl => ({
-      ...sl,
-      items: sl.items || []
-    }));
-  }
-
   return (data || []).map(sl => ({
     ...sl,
     items: sl.items || []

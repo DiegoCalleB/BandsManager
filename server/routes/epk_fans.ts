@@ -278,7 +278,7 @@ router.get("/fans", requireAuth, async (req, res) => {
     res.json(fans);
   } catch (err) {
     const state = loadState();
-    res.json(state.fans || []);
+    res.json((state.fans || []).filter((f: any) => f.band_id === userBandId || f.bandId === userBandId));
   }
 });
 

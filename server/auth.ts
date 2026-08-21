@@ -127,7 +127,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   let activeBandId = foundUser.band_id;
 
-  // Allow active band override if user belongs to requested band or is admin/leader
+  // Allow active band override if user belongs to requested band or is platform superadmin
   if (requestedBandId && typeof requestedBandId === 'string' && requestedBandId.trim()) {
     const cleanRequested = requestedBandId.trim();
     const cleanNoPrefix = cleanRequested.replace(/^(band|reg)-/, '');
@@ -136,8 +136,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
       allowedBandIds.has(cleanNoPrefix) ||
       allowedBandIds.has(`band-${cleanNoPrefix}`) ||
       allowedBandIds.has(`reg-${cleanNoPrefix}`) ||
-      foundUser.role === 'admin' ||
-      foundUser.role === 'leader'
+      foundUser.role === 'admin'
     ) {
       activeBandId = cleanRequested;
     }

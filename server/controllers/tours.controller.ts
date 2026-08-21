@@ -5,8 +5,9 @@ import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
 
 export const toursController = {
   async getTours(req: Request, res: Response) {
+    // Declarado fuera del try para que el catch de fallback también pueda filtrar por banda.
+    const userBandId = (req as any).user?.band_id || 'band-bakandeya';
     try {
-      const userBandId = (req as any).user?.band_id || 'band-bakandeya';
       const tours = await dbGetTours(userBandId);
 
       const state = loadState();
@@ -16,7 +17,7 @@ export const toursController = {
       res.json({ tours });
     } catch (error: any) {
       const state = loadState();
-      res.json({ tours: state.tours || [] });
+      res.json({ tours: (state.tours || []).filter((t: any) => t.band_id === userBandId || t.bandId === userBandId) });
     }
   },
 
