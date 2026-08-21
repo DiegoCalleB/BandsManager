@@ -202,7 +202,6 @@ export interface EmailSignatureConfig {
 }
 
 export interface EPKConfig {
-  bandId?: string;
   biografia: string;
   logoUrl: string;
   dossierPdfUrl?: string;
