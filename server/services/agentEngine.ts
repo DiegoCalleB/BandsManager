@@ -6,7 +6,7 @@
 
 import { getSupabase } from "../db.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
-import { enviarEmail, GmailAgentError } from "./gmailAgentClient.js";
+import { enviarEmail, EmailAgentError } from "./emailAgentClient.js";
 
 export async function logAgentExecution(logData: {
   band_id: string;
@@ -51,10 +51,11 @@ export interface EnviadorResult {
   results: any[];
 }
 
-// Despacha los leads aprobados de una banda por Gmail real. A diferencia de las
-// implementaciones anteriores de este mismo agente (Node nativo con Resend, Edge Function
-// despachador-propuestas), NUNCA marca un lead como enviado sin haber enviado el email de
-// verdad: si la banda no tiene Gmail conectado o la identidad no coincide con su EPK, falla
+// Despacha los leads aprobados de una banda por email real (SMTP, cualquier proveedor). A
+// diferencia de las implementaciones anteriores de este mismo agente (Node nativo con Resend,
+// Edge Function despachador-propuestas), NUNCA marca un lead como enviado sin haber enviado el
+// email de verdad: si la banda no tiene cuenta de email conectada o la identidad no coincide
+// con su EPK, falla
 // explícito y no toca el estado del lead.
 export async function runEnviadorAgent(opts: {
   bandId: string;
@@ -83,7 +84,7 @@ export async function runEnviadorAgent(opts: {
     await logAgentExecution({
       band_id: opts.bandId,
       agente: "enviador",
-      motor: "node_gmail_engine",
+      motor: "node_email_engine",
       disparado_por_tipo: opts.triggerType,
       usuario_id: opts.userId,
       usuario_email: opts.userEmail,
@@ -126,7 +127,7 @@ export async function runEnviadorAgent(opts: {
 
       const nextState = isRespuesta ? "negociando" : "contactado";
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
-      const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto} por el Agente Enviador (Gmail real) ***\n` + (lead.notas || "");
+      const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto} por el Agente Enviador (email real) ***\n` + (lead.notas || "");
 
       await sb.from("leads").update({ estado: nextState, fecha_envio: nowIso, notas: newNote }).eq("id", lead.id);
 
@@ -143,7 +144,7 @@ export async function runEnviadorAgent(opts: {
 
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: nextState, fecha_envio: nowIso, status: "enviado" });
     } catch (err: any) {
-      const isIdentityIssue = err instanceof GmailAgentError && (err.code === "no_token" || err.code === "identity_mismatch");
+      const isIdentityIssue = err instanceof EmailAgentError && (err.code === "no_token" || err.code === "identity_mismatch");
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: err.message || String(err) });
       // Si el problema es de identidad/token, es el mismo para toda la banda: no tiene
       // sentido reintentar con el resto de leads de este lote.
@@ -154,13 +155,13 @@ export async function runEnviadorAgent(opts: {
   const sentCount = results.filter((r) => r.status === "enviado").length;
   const errorCount = results.filter((r) => r.status === "error").length;
   const successMsg = sentCount > 0
-    ? `Agente Enviador: ${sentCount} propuesta(s) despachada(s) por Gmail real${errorCount > 0 ? `, ${errorCount} con error` : ""}.`
+    ? `Agente Enviador: ${sentCount} propuesta(s) despachada(s) por email real${errorCount > 0 ? `, ${errorCount} con error` : ""}.`
     : `Agente Enviador: no se pudo despachar ninguna propuesta (${errorCount} error(es)).`;
 
   await logAgentExecution({
     band_id: opts.bandId,
     agente: "enviador",
-    motor: "node_gmail_engine",
+    motor: "node_email_engine",
     disparado_por_tipo: opts.triggerType,
     usuario_id: opts.userId,
     usuario_email: opts.userEmail,
