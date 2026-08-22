@@ -96,6 +96,16 @@ export function SongModal({
 
   const finalAlbumValue = selectedAlbum === '__CUSTOM__' ? customAlbumInput : selectedAlbum;
 
+  // La energía se almacena como número (1-10). Mapeamos el valor guardado al tramo
+  // más cercano de los tres que ofrece el selector.
+  const energiaDefault = (() => {
+    const raw = Number(editingSong?.energia);
+    if (!editingSong || !Number.isFinite(raw) || raw <= 0) return '9';
+    if (raw <= 4) return '3';
+    if (raw <= 7) return '6';
+    return '9';
+  })();
+
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain">
@@ -293,16 +303,16 @@ export function SongModal({
               <div>
                 <label className="block text-neutral-400 mb-1">Estado de Madurez</label>
                 <select
-                  name="estado"
-                  defaultValue={editingSong?.estado || 'listo_directo'}
+                  name="estadoTema"
+                  defaultValue={editingSong?.estadoTema || 'listo'}
                   className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
                     isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                   }`}
                 >
-                  <option value="listo_directo">⚡ Listo para Directo</option>
-                  <option value="en_ensayo">🎸 En Ensayo / Montaje</option>
-                  <option value="idea_borrador">💡 Idea / En Composición</option>
-                  <option value="descartada">📦 Descartada / Archivo</option>
+                  <option value="listo">⚡ Listo para Directo</option>
+                  <option value="ensayando">🎸 En Ensayo / Montaje</option>
+                  <option value="componiendo">💡 Idea / En Composición</option>
+                  <option value="descartado">📦 Descartada / Archivo</option>
                 </select>
               </div>
             </div>
@@ -310,19 +320,36 @@ export function SongModal({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-neutral-400 mb-1">Energía / Intensidad</label>
+                {/* La energía se guarda como número (1-10) en la BD, así que el selector
+                    emite números en vez de etiquetas de texto. */}
                 <select
                   name="energia"
-                  defaultValue={editingSong?.energia || 'alta'}
+                  defaultValue={energiaDefault}
                   className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
                     isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                   }`}
                 >
-                  <option value="alta">🔥 Alta (Traca / Caña)</option>
-                  <option value="media">⚡ Media (Groove / Ritmo)</option>
-                  <option value="balada">🌙 Balada / Acústica</option>
+                  <option value="9">🔥 Alta (Traca / Caña)</option>
+                  <option value="6">⚡ Media (Groove / Ritmo)</option>
+                  <option value="3">🌙 Balada / Acústica</option>
                 </select>
               </div>
 
+              <div>
+                <label className="block text-neutral-400 mb-1">Voz Principal</label>
+                <input
+                  name="cantantePrincipal"
+                  type="text"
+                  defaultValue={editingSong?.cantantePrincipal || ''}
+                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
+                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
+                  }`}
+                  placeholder="ej. Diego"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-neutral-400 mb-1">Afinación Instrumentos</label>
                 <input
@@ -333,6 +360,19 @@ export function SongModal({
                     isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                   }`}
                   placeholder="ej. Drop D, Eb Standard"
+                />
+              </div>
+
+              <div>
+                <label className="block text-neutral-400 mb-1">Enlace a Partitura / Acordes</label>
+                <input
+                  name="enlaceAcordes"
+                  type="url"
+                  defaultValue={editingSong?.enlaceAcordes || ''}
+                  className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
+                    isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
+                  }`}
+                  placeholder="https://drive.google.com/..."
                 />
               </div>
             </div>

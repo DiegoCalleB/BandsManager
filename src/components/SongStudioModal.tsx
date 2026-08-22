@@ -2657,7 +2657,9 @@ export default function SongStudioModal({
                               {/* Right Panel: Waveform */}
                               <div className="flex-1 min-w-0 flex items-center justify-center p-1 relative min-h-[48px] bg-black/20 rounded">
                                 <WaveformTrack 
-                                  ref={(el) => (trackAudioRefs.current[tr.id] = el as HTMLAudioElement)}
+                                  // Sin retorno implícito: en React 19 lo que devuelve un ref
+                                  // callback se trata como función de limpieza y reventaría al desmontar.
+                                  ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
                                   audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
                                   color={isSolo ? '#f59e0b' : (isMuted ? '#52525b' : '#818cf8')}
                                   masterDuration={duration || 30}

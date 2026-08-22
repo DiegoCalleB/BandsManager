@@ -156,6 +156,7 @@ ALTER TABLE public.songs
 ALTER TABLE public.epk_configs
     ADD COLUMN IF NOT EXISTS firma_email JSONB DEFAULT '{}'::jsonb,
     ADD COLUMN IF NOT EXISTS incentivo_fans JSONB DEFAULT '{}'::jsonb,
+    ADD COLUMN IF NOT EXISTS donacion_revolut JSONB DEFAULT '{}'::jsonb,
     ADD COLUMN IF NOT EXISTS ciudades_config JSONB DEFAULT '[]'::jsonb,
     ADD COLUMN IF NOT EXISTS dossier_pdf_url TEXT DEFAULT '',
     ADD COLUMN IF NOT EXISTS dossier_pdf_name TEXT DEFAULT '',
