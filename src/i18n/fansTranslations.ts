@@ -69,6 +69,15 @@ type FanFormDict = {
   downloadExclusive: string;
   merchCode: string;
   followUsPlatforms: string;
+  economicSupportTitle: string; // {bandName}
+  economicSupportSubtitle: string;
+  revolutButton: string;
+  revolutCopied: string;
+  revolutHandle: string;
+  revolutSuccessPrompt: string; // {bandName}
+  revolutStepTitle: string;
+  revolutBadge: string;
+  revolutSecureDirect: string;
   privacyModalTitle: string;
   privacyPara1: string; // {bandName} x2
   privacyPara2: string;
@@ -129,6 +138,15 @@ const es: FanFormDict = {
   downloadExclusive: 'Descargar Contenido Exclusivo',
   merchCode: 'Código Promocional de Merch',
   followUsPlatforms: '📱 Síguenos en nuestras plataformas',
+  economicSupportTitle: 'Colabora con {bandName} con una aportación económica',
+  economicSupportSubtitle: 'Tu aportación voluntaria nos ayuda a financiar nuevas grabaciones, furgoneta de gira, cuerdas e instrumentos y producir merchandising independiente.',
+  revolutButton: 'Aportar con Revolut',
+  revolutCopied: '¡Enlace de Revolut copiado!',
+  revolutHandle: 'revolut.me/{tag}',
+  revolutSuccessPrompt: '¿Quieres dar un paso más y apoyar a la banda?',
+  revolutStepTitle: 'Colaboración Económica & Donaciones',
+  revolutBadge: 'Aportación Voluntaria',
+  revolutSecureDirect: 'Pago seguro directo a la banda sin comisiones',
   privacyModalTitle: 'Política de Privacidad y RGPD',
   privacyPara1: '**1. Responsable del tratamiento:** {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.',
   privacyPara2: '**2. Legitimación:** El tratamiento de tus datos se basa en tu consentimiento explícito al marcar la casilla de aceptación y enviar el formulario.',
@@ -189,6 +207,15 @@ const en: FanFormDict = {
   downloadExclusive: 'Download Exclusive Content',
   merchCode: 'Merch Promo Code',
   followUsPlatforms: '📱 Follow us on our platforms',
+  economicSupportTitle: 'Support {bandName} with a financial contribution',
+  economicSupportSubtitle: 'Your direct support helps us fund new studio recordings, tour van expenses, instruments and produce independent merch.',
+  revolutButton: 'Contribute via Revolut',
+  revolutCopied: 'Revolut link copied!',
+  revolutHandle: 'revolut.me/{tag}',
+  revolutSuccessPrompt: 'Want to take a step further and support the band?',
+  revolutStepTitle: 'Financial Support & Tips',
+  revolutBadge: 'Voluntary Tip',
+  revolutSecureDirect: 'Secure direct payment to the band with zero middleman fees',
   privacyModalTitle: 'Privacy Policy & GDPR',
   privacyPara1: '**1. Data controller:** {bandName} (music band). The data provided through this QR code and form will be used solely to manage your sign-up with {bandName} and to inform you about upcoming concerts, releases and music news.',
   privacyPara2: '**2. Legal basis:** The processing of your data is based on your explicit consent when checking the acceptance box and submitting the form.',
@@ -249,6 +276,15 @@ const it: FanFormDict = {
   downloadExclusive: 'Scarica Contenuto Esclusivo',
   merchCode: 'Codice Promozionale Merch',
   followUsPlatforms: '📱 Seguici sulle nostre piattaforme',
+  economicSupportTitle: 'Collabora con {bandName} con un contributo economico',
+  economicSupportSubtitle: 'Il tuo supporto diretto ci aiuta a finanziare nuove registrazioni in studio, spese del furgone del tour, strumenti e produrre merchandising indipendente.',
+  revolutButton: 'Contribuisci con Revolut',
+  revolutCopied: 'Link Revolut copiato!',
+  revolutHandle: 'revolut.me/{tag}',
+  revolutSuccessPrompt: 'Vuoi fare un passo in più e sostenere la band?',
+  revolutStepTitle: 'Supporto Economico & Donazioni',
+  revolutBadge: 'Donazione Volontaria',
+  revolutSecureDirect: 'Pagamento sicuro diretto alla band senza commissioni',
   privacyModalTitle: 'Informativa Privacy e GDPR',
   privacyPara1: '**1. Titolare del trattamento:** {bandName} (band musicale). I dati forniti tramite questo codice QR e il modulo saranno trattati esclusivamente per gestire la tua registrazione con {bandName} e per informarti su prossimi concerti, uscite e novità musicali.',
   privacyPara2: '**2. Base giuridica:** Il trattamento dei tuoi dati si basa sul tuo consenso esplicito, espresso selezionando la casella di accettazione e inviando il modulo.',
