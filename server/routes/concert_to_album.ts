@@ -5,7 +5,7 @@ import { exec, spawn } from "child_process";
 import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from "../ai.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { getSupabaseClient, getBucketName } from "./upload.js";
 
@@ -532,6 +532,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
           }
 
           const response = await generateContentWithFallback(aiClient, {
+        timeoutMs: TIMEOUT_IA_LARGO_MS,
             contents,
             preferredModel: "gemini-3.6-flash",
           });
@@ -989,6 +990,7 @@ REQUISITOS OBLIGATORIOS:
     let transText = "¡Hola a todos los que estáis aquí esta noche! ¿Cómo estamos? ¡Qué energía se siente en el sur!";
     try {
       const response = await generateContentWithFallback(aiClient, {
+        timeoutMs: TIMEOUT_IA_LARGO_MS,
         contents,
         preferredModel: "gemini-3.6-flash",
       });
@@ -1078,6 +1080,7 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
 }
 `;
         const response = await generateContentWithFallback(aiClient, {
+        timeoutMs: TIMEOUT_IA_LARGO_MS,
           contents: prompt,
           preferredModel: "gemini-3.6-flash",
         });
@@ -1194,6 +1197,7 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 
     try {
       const response = await generateContentWithFallback(aiClient, {
+        timeoutMs: TIMEOUT_IA_LARGO_MS,
         contents,
         preferredModel: "gemini-3.6-flash",
       });

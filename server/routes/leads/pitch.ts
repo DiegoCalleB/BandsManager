@@ -152,7 +152,10 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
       const unifiedRes = await generateUnifiedAI({
         prompt,
         provider: provider || "gemini",
-        modelName: modelName
+        modelName: modelName,
+        // Esta ruta SÍ escribe pitches: el generador local es un último recurso legítimo aquí,
+        // y el resultado pasa por aprobación humana antes de enviarse.
+        permitirPitchLocal: true
       });
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();
