@@ -3,7 +3,7 @@ import {
   Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles, 
   Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
   Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
-  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram
+  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import * as XLSX from 'xlsx';
@@ -12,6 +12,8 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { FansCommunityView } from './fans/FansCommunityView';
 import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
+import { QrExportModal } from './QrExportModal';
+import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -133,11 +135,24 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   });
   const [savedIncentive, setSavedIncentive] = useState(false);
 
+  // Revolut Donation state
+  const [revolutConfig, setRevolutConfig] = useState(epkConfig?.donacionRevolut || {
+    habilitado: true,
+    revolutTag: "bakandeya",
+    revolutUrl: "https://revolut.me/bakandeya",
+    titulo: "Colabora con una aportación económica",
+    descripcion: "Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
+  });
+  const [savedRevolut, setSavedRevolut] = useState(false);
+
   useEffect(() => {
     if (epkConfig?.incentivoFans) {
       setIncentivo(epkConfig.incentivoFans);
     }
-  }, [epkConfig?.incentivoFans]);
+    if (epkConfig?.donacionRevolut) {
+      setRevolutConfig(epkConfig.donacionRevolut);
+    }
+  }, [epkConfig?.incentivoFans, epkConfig?.donacionRevolut]);
 
   const handleSaveIncentive = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -149,6 +164,29 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     }
     setSavedIncentive(true);
     setTimeout(() => setSavedIncentive(false), 2500);
+  };
+
+  const handleSaveRevolut = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (onUpdateEpkConfig) {
+      const cleanTag = (revolutConfig.revolutTag || '').replace(/^@/, '').replace(/^revolut\.me\//, '').trim();
+      const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
+      const updated = {
+        ...revolutConfig,
+        revolutTag: cleanTag,
+        revolutUrl: generatedUrl
+      };
+      setRevolutConfig(updated);
+      onUpdateEpkConfig({ 
+        donacionRevolut: updated,
+        enlacesRedes: {
+          ...(epkConfig?.enlacesRedes || {}),
+          revolut: generatedUrl
+        }
+      });
+    }
+    setSavedRevolut(true);
+    setTimeout(() => setSavedRevolut(false), 2500);
   };
 
   // Manual Add Modal State
@@ -396,60 +434,56 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     }
   };
 
+  const [showQrExportModal, setShowQrExportModal] = useState(false);
+  const [isExportingDirect, setIsExportingDirect] = useState(false);
+
+  const handleDownloadSvg = async () => {
+    setIsExportingDirect(true);
+    try {
+      const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
+      await downloadQrAsSvg({
+        svgElementId: 'qr-code-svg-container',
+        filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-vectorial`,
+        logoUrl: effectiveBandLogo
+      });
+    } catch (err) {
+      console.error('Error al descargar SVG:', err);
+    } finally {
+      setIsExportingDirect(false);
+    }
+  };
+
+  const handleDownloadPng4k = async () => {
+    setIsExportingDirect(true);
+    try {
+      const concertTitle = selectedConcert ? `${selectedConcert.sala}` : effectiveBandName;
+      await downloadQrAsHighResPng({
+        svgElementId: 'qr-code-svg-container',
+        filename: `qr-${effectiveBandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${concertTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}-4k`,
+        template: 'qr-only',
+        logoUrl: effectiveBandLogo
+      });
+    } catch (err) {
+      console.error('Error al descargar PNG 4K:', err);
+    } finally {
+      setIsExportingDirect(false);
+    }
+  };
+
   const handlePrintQr = () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-    const concertTitle = selectedConcert ? `${selectedConcert.sala} — ${selectedConcert.ciudad} (${selectedConcert.fecha})` : effectiveBandName;
+    const concertTitle = selectedConcert ? selectedConcert.sala : undefined;
+    const dateCity = selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined;
     
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>QR Código - ${concertTitle}</title>
-          <style>
-            * { box-sizing: border-box; margin: 0; padding: 0; }
-            body { font-family: system-ui, -apple-system, sans-serif; text-align: center; padding: 40px; background: #fff; color: #111; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-            .card { width: 100%; max-width: 480px; margin: 0 auto; border: 6px solid #f59e0b; border-radius: 28px; padding: 40px 32px; box-shadow: 0 15px 40px rgba(0,0,0,0.12); background: #ffffff; }
-            .header-logo { height: 95px; width: auto; max-width: 280px; margin: 0 auto 16px auto; display: block; object-fit: contain; }
-            h1 { font-size: 22px; font-weight: 900; margin: 12px 0 8px 0; color: #111; text-transform: uppercase; letter-spacing: 0.5px; }
-            p.desc { font-size: 14px; color: #475569; margin-bottom: 24px; font-weight: 500; line-height: 1.4; }
-            .url { font-size: 12px; color: #475569; margin-top: 24px; word-break: break-all; font-family: monospace; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-weight: 600; }
-            
-            .qr-box { position: relative; display: inline-block; padding: 16px; background: #ffffff; border-radius: 20px; border: 4px solid #f59e0b; }
-            .qr-center-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-            .badge-logo { width: 68px; height: 68px; background: #ffffff; border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 3px solid #ffffff; box-shadow: 0 4px 14px rgba(0,0,0,0.18); padding: 4px; }
-            .badge-logo img { width: 100%; height: 100%; object-fit: contain; }
-          </style>
-        </head>
-        <body>
-          <div class="card">
-            ${effectiveBandLogo ? `<img src="${effectiveBandLogo}" class="header-logo" alt="${effectiveBandName}" />` : ''}
-            <h1>${concertTitle}</h1>
-            <p class="desc">Escanea este código QR para unirte a la comunidad de ${effectiveBandName}, recibir contenido exclusivo y no perder el contacto.</p>
-            <div class="qr-box">
-              <div id="print-qr-svg"></div>
-              ${effectiveBandLogo ? `
-              <div class="qr-center-overlay">
-                <div class="badge-logo">
-                  <img src="${effectiveBandLogo}" alt="Logo" />
-                </div>
-              </div>` : ''}
-            </div>
-            <div class="url">${qrConcertUrl}</div>
-          </div>
-          <script>
-            setTimeout(() => {
-              const mainQrSvg = window.opener.document.querySelector('#qr-code-svg-container svg');
-              if (mainQrSvg) {
-                document.getElementById('print-qr-svg').appendChild(mainQrSvg.cloneNode(true));
-              }
-              window.print();
-            }, 400);
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+    printHighQualityFlyer({
+      svgElementId: 'qr-code-svg-container',
+      bandName: effectiveBandName,
+      concertTitle,
+      dateCity,
+      url: qrConcertUrl,
+      logoUrl: effectiveBandLogo,
+      ctaText: '¡ESCANEA CON LA CÁMARA DE TU MÓVIL!',
+      subtitle: `Únete a la comunidad oficial de ${effectiveBandName} para acceder a canciones inéditas, sorpresas exclusivas y descuentos en merchandising.`
+    });
   };
 
   return (
@@ -1153,10 +1187,97 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </div>
               </div>
 
-              {/* Paso 3: Ruta Limpia y Dominio */}
+              {/* Paso 3: Apoyo Económico y Donaciones con Revolut */}
+              <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-sky-500 text-slate-950 flex items-center justify-center text-[10px] font-black">3</span>
+                    <Heart className="w-4 h-4 text-sky-400" />
+                    Colaboración Económica & Donaciones (Revolut Pay)
+                  </label>
+                  {savedRevolut && (
+                    <span className="text-[11px] font-mono text-sky-400 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-400 font-mono">
+                  Permite a tus fans y asistentes al concierto realizar aportaciones voluntarias directas mediante Revolut (revolut.me), sin intermediarios ni comisiones abusivas.
+                </p>
+
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center justify-between p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                    <div className="space-y-0.5">
+                      <span className="text-xs font-bold text-white font-mono">Mostrar tarjeta de donación Revolut</span>
+                      <p className="text-[10px] text-slate-400 font-mono">Aparecerá en el formulario público y en la pantalla de confirmación</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={revolutConfig.habilitado !== false}
+                      onChange={e => setRevolutConfig(prev => ({ ...prev, habilitado: e.target.checked }))}
+                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                        <span className="text-sky-400 font-bold font-mono">@</span> Revtag o Usuario de Revolut:
+                      </label>
+                      <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-sky-500 rounded-xl px-2.5">
+                        <span className="text-[11px] text-slate-500 font-mono">revolut.me/</span>
+                        <input
+                          type="text"
+                          value={revolutConfig.revolutTag || ''}
+                          onChange={e => setRevolutConfig(prev => ({ ...prev, revolutTag: e.target.value.replace(/^@/, '').replace(/^revolut\.me\//, '') }))}
+                          placeholder="bakandeya"
+                          className="w-full bg-transparent p-2 text-xs text-sky-300 font-bold outline-none font-mono"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                        <Sparkles className="w-3.5 h-3.5 text-sky-400" /> Título de la tarjeta:
+                      </label>
+                      <input
+                        type="text"
+                        value={revolutConfig.titulo || ''}
+                        onChange={e => setRevolutConfig(prev => ({ ...prev, titulo: e.target.value }))}
+                        placeholder="Colabora con una aportación económica"
+                        className="w-full bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl p-2.5 text-xs text-white outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                      Descripción del destino de los fondos:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={revolutConfig.descripcion || ''}
+                      onChange={e => setRevolutConfig(prev => ({ ...prev, descripcion: e.target.value }))}
+                      placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
+                      className="w-full bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl p-2.5 text-xs text-white outline-none resize-none"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="button"
+                      onClick={() => handleSaveRevolut()}
+                      className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Save className="w-3.5 h-3.5" /> Guardar Donación Revolut
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Paso 4: Ruta Limpia y Dominio */}
               <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
                 <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">3</span>
+                  <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">4</span>
                   Ruta Limpia y Dominio Base
                 </label>
 
@@ -1277,7 +1398,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center space-y-4 flex flex-col items-center justify-center">
                 <div className="w-full flex items-center justify-between border-b border-slate-800/80 pb-3">
                   <span className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">4</span>
+                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">5</span>
                     Cartel & Código QR con Logo
                   </span>
                   <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Alta Resolución</span>
@@ -1311,42 +1432,104 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   </p>
                 </div>
 
-                {/* Botones de Acción Inmediata */}
-                <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800 w-full">
-                  <button
-                    type="button"
-                    onClick={handlePrintQr}
-                    className="py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
-                  >
-                    <Printer className="w-4 h-4" /> Imprimir
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleShareWhatsApp}
-                    className="py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
-                  >
-                    <MessageCircle className="w-4 h-4" /> WhatsApp
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleShareNative}
-                    className="py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
-                  >
-                    <Share2 className="w-4 h-4" /> {copiedQrUrl ? '¡Copiado!' : 'Compartir'}
-                  </button>
+                {/* Panel de Descargas en Máxima Calidad & Acciones */}
+                <div className="space-y-2.5 pt-3 border-t border-slate-800 w-full">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                    <span className="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      Descarga & Imprenta HD:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowQrExportModal(true)}
+                      className="text-amber-400 hover:text-amber-300 underline font-bold cursor-pointer"
+                    >
+                      Más formatos...
+                    </button>
+                  </div>
+
+                  {/* Fila 1: Botones de Descarga en Máxima Calidad */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={handlePrintQr}
+                      className="py-2.5 px-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
+                      title="Imprimir Cartel A4 o Guardar en PDF de alta calidad"
+                    >
+                      <Printer className="w-4 h-4" /> Cartel A4
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadSvg}
+                      disabled={isExportingDirect}
+                      className="py-2.5 px-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-amber-500/30 flex items-center justify-center gap-1.5 transition cursor-pointer shadow"
+                      title="Descargar SVG Vectorial (Resolución infinita para imprenta)"
+                    >
+                      <FileCode className="w-4 h-4" /> Vector SVG
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadPng4k}
+                      disabled={isExportingDirect}
+                      className="py-2.5 px-2 bg-slate-900 hover:bg-slate-800 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer shadow col-span-2 sm:col-span-1"
+                      title="Descargar PNG Ultra HD (3000x3000px a 300 DPI)"
+                    >
+                      <Download className="w-4 h-4 text-purple-400" /> PNG 4K
+                    </button>
+                  </div>
+
+                  {/* Fila 2: Difusión & Redes */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={handleShareWhatsApp}
+                      className="py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow"
+                    >
+                      <MessageCircle className="w-4 h-4" /> WhatsApp
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleShareNative}
+                      className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer shadow"
+                    >
+                      <Share2 className="w-4 h-4 text-amber-400" /> {copiedQrUrl ? '¡Copiado!' : 'Compartir'}
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              <a
-                href={qrConcertUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-slate-700 flex items-center justify-center gap-2 transition shadow-md"
-              >
-                <ExternalLink className="w-4 h-4" /> Probar Landing de Captura en Vivo
-              </a>
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => setShowQrExportModal(true)}
+                  className="w-full py-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-amber-500/40 flex items-center justify-center gap-2 transition shadow-sm cursor-pointer"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-400" /> Opciones de Cartelería & Exportación HD
+                </button>
+
+                <a
+                  href={qrConcertUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-slate-700 flex items-center justify-center gap-2 transition shadow-md"
+                >
+                  <ExternalLink className="w-4 h-4 text-amber-400" /> Probar Landing de Captura en Vivo
+                </a>
+              </div>
             </div>
           </div>
+
+          {/* Modal de Exportación Avanzada de QR */}
+          <QrExportModal
+            isOpen={showQrExportModal}
+            onClose={() => setShowQrExportModal(false)}
+            svgElementId="qr-code-svg-container"
+            bandName={effectiveBandName}
+            concertTitle={selectedConcert ? selectedConcert.sala : undefined}
+            dateCity={selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : undefined}
+            url={qrConcertUrl}
+            logoUrl={effectiveBandLogo}
+          />
         </div>
       )}
 
