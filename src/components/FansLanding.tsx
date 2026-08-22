@@ -256,66 +256,53 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     if (!revolutUrl || donacionRevolut?.habilitado === false) return null;
 
     return (
-      <div className={`pt-4 border-t border-neutral-800 space-y-3 ${isSuccessScreen ? 'text-left' : ''}`}>
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-neutral-950 via-slate-950 to-sky-950/40 border border-sky-500/30 shadow-lg space-y-3 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-28 h-28 bg-sky-500/10 rounded-full blur-2xl pointer-events-none" />
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sky-400">
-              <div className="w-6 h-6 rounded-lg bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-300 font-black text-xs">
-                R
-              </div>
-              <span className="text-xs font-mono font-black uppercase tracking-wider text-sky-300">
-                {isSuccessScreen ? t('revolutSuccessPrompt', { bandName }) : (donacionRevolut?.titulo || t('economicSupportTitle', { bandName }))}
-              </span>
+      <div className={`pt-3 border-t border-neutral-800/80 ${isSuccessScreen ? 'text-left' : ''}`}>
+        <div className="p-3 rounded-xl bg-gradient-to-r from-neutral-950 via-slate-950 to-neutral-900 border border-slate-800 hover:border-slate-700 transition shadow-md flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center shrink-0 shadow-sm p-1.5">
+              <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+              </svg>
             </div>
-            <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1">
-              <Heart className="w-2.5 h-2.5 text-pink-400 fill-pink-400" />
-              {t('revolutBadge')}
-            </span>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-mono font-bold text-white truncate">
+                  {donacionRevolut?.titulo || t('economicSupportTitle', { bandName })}
+                </span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold shrink-0">
+                  {t('revolutBadge')}
+                </span>
+              </div>
+              <p className="text-[10px] font-mono text-neutral-400 truncate">
+                {revolutDisplay}
+              </p>
+            </div>
           </div>
 
-          <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
-            {renderBold(donacionRevolut?.descripcion || t('economicSupportSubtitle'))}
-          </p>
-
-          <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <a
               href={revolutUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 py-2.5 px-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-neutral-950 font-black font-mono text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+              className="py-1.5 px-3 bg-white hover:bg-neutral-200 text-black font-bold font-mono text-xs rounded-lg shadow flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
             >
-              <svg className="w-4 h-4 fill-neutral-950 shrink-0" viewBox="0 0 24 24">
-                <path d="M17.485 0C19.98 0 22 2.02 22 4.515c0 2.213-1.597 4.053-3.705 4.445l3.86 11.393a1.472 1.472 0 0 1-1.397 1.947 1.472 1.472 0 0 1-1.392-.996L15.68 10.32h-4.204v10.518a1.476 1.476 0 0 1-1.476 1.476 1.476 1.476 0 0 1-1.476-1.476V1.476A1.476 1.476 0 0 1 10 0h7.485zm-.088 2.952H11.476v4.417h5.921c.905 0 1.65-.745 1.65-1.65 0-1.528-1.077-2.767-2.65-2.767zM4.476 8.852a1.476 1.476 0 0 1 1.476 1.476v10.496a1.476 1.476 0 0 1-1.476 1.476 1.476 1.476 0 0 1-1.476-1.476V10.328a1.476 1.476 0 0 1 1.476-1.476z"/>
-              </svg>
-              <span className="truncate">{t('revolutButton')} • {revolutDisplay}</span>
-              <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+              <span>{t('revolutButton')}</span>
+              <ExternalLink className="w-3 h-3" />
             </a>
 
             <button
               type="button"
               onClick={handleCopyRevolut}
-              title="Copiar enlace de Revolut"
-              className="py-2.5 px-3 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white font-mono text-xs rounded-xl border border-neutral-700 flex items-center justify-center gap-1.5 transition cursor-pointer shrink-0"
+              title={t('revolutCopied')}
+              className="p-2 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white rounded-lg border border-neutral-700 transition cursor-pointer"
             >
               {copiedRevolut ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-[10px] text-emerald-400 font-bold">Copiado</span>
-                </>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
               ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 text-sky-400" />
-                  <span className="text-[10px]">Copiar</span>
-                </>
+                <Copy className="w-3.5 h-3.5 text-neutral-300" />
               )}
             </button>
           </div>
-
-          <p className="text-[9px] font-mono text-neutral-400 text-center pt-0.5">
-            🛡️ {t('revolutSecureDirect')}
-          </p>
         </div>
       </div>
     );
