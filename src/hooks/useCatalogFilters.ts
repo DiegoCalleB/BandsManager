@@ -23,10 +23,12 @@ export function useCatalogFilters(songs: Song[]) {
  // Filtered catalog songs
  const filteredSongs = useMemo(() => {
  const filtered = songs.filter(s => {
+ const query = catalogSearch.toLowerCase();
  const matchSearch = catalogSearch === '' ||
- s.titulo.toLowerCase().includes(catalogSearch.toLowerCase()) ||
- (s.tonalidad && s.tonalidad.toLowerCase().includes(catalogSearch.toLowerCase())) ||
- (s.notasInternas && s.notasInternas.toLowerCase().includes(catalogSearch.toLowerCase()));
+ s.titulo.toLowerCase().includes(query) ||
+ (s.tonalidad && s.tonalidad.toLowerCase().includes(query)) ||
+ (s.cantantePrincipal && s.cantantePrincipal.toLowerCase().includes(query)) ||
+ (s.notasInternas && s.notasInternas.toLowerCase().includes(query));
 
  const matchAlbum = catalogAlbumFilter === 'todos' || s.albumDisco === catalogAlbumFilter;
  const matchStatus = catalogStatusFilter === 'todos'

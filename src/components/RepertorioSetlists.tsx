@@ -36,6 +36,7 @@ import {
  uploadFileToServer, parseGoogleDriveAudioUrl, isGoogleDriveUrl, 
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
 } from '../utils/audioStorage';
+import { calculateSetlistStats } from '../utils/repertorioUtils';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -724,43 +725,20 @@ export default function RepertorioSetlists({
  return '0 min';
  };
 
- // Calculate active setlist metrics
+ // Calculate active setlist metrics (delegated to the shared, unit-tested helper)
  const activeSetlistMetrics = useMemo(() => {
  if (!activeSetlist) return { totalSeconds: 0, formattedTime: '0 min', songCount: 0, eventCount: 0, blockCount: 0, avgBpm: 0 };
- let totalSec = 0;
- let songCount = 0;
- let eventCount = 0;
- let blockCount = 0;
- let bpmSum = 0;
- let bpmCount = 0;
 
- activeSetlist.items.forEach(item => {
- if (item.tipoItem === 'cancion' && item.songId) {
- const songObj = songs.find(s => s.id === item.songId);
- if (songObj) {
- totalSec += songObj.duracionSegundos || parseMmSsToSeconds(songObj.duracion);
- songCount++;
- if (songObj.bpm) {
- bpmSum += songObj.bpm;
- bpmCount++;
- }
- }
- } else if (item.tipoItem === 'bloque_header') {
- blockCount++;
- } else {
- eventCount++;
- const itemSec = item.duracionEstimadaSegundos ?? ((item.duracionEstimadaMinutos || 0) * 60);
- totalSec += itemSec;
- }
- });
+ const songMap = new Map(songs.map(s => [s.id, s]));
+ const stats = calculateSetlistStats(activeSetlist.items, songMap);
 
  return {
- totalSeconds: totalSec,
- formattedTime: formatSecondsToMinutes(totalSec),
- songCount,
- eventCount,
- blockCount,
- avgBpm: bpmCount > 0 ? Math.round(bpmSum / bpmCount) : 0
+ totalSeconds: stats.totalDurationSeconds,
+ formattedTime: formatSecondsToMinutes(stats.totalDurationSeconds),
+ songCount: stats.songCount,
+ eventCount: stats.eventCount,
+ blockCount: stats.blockCount,
+ avgBpm: stats.averageBpm
  };
  }, [activeSetlist, songs]);
 
@@ -807,14 +785,24 @@ export default function RepertorioSetlists({
  e.preventDefault();
  const formData = new FormData(e.currentTarget);
  const titulo = formData.get('titulo') as string;
- const duracion = (formData.get('duracion') as string) || '3:30';
+ // La duración se introduce (y se autodetecta del audio) en dos campos separados, min y seg.
+ const duracionMin = parseInt(formData.get('duracionMin') as string, 10) || 0;
+ const duracionSeg = parseInt(formData.get('duracionSeg') as string, 10) || 0;
+ const duracionSegundos = duracionMin * 60 + duracionSeg;
+ const duracion = formatSecondsToMmSs(duracionSegundos);
  const tonalidad = (formData.get('tonalidad') as string) || 'Am';
  const bpm = parseInt(formData.get('bpm') as string, 10) || 120;
  const afinacion = formData.get('afinacion') as string;
  const albumDisco = formData.get('albumDisco') as string;
- const estadoTema = (formData.get('estadoTema') as any) || 'listo';
- const esVersionCovers = formData.get('esVersionCovers') === 'on';
- const enlaceAcordes = formData.get('enlaceAcordes') as string;
+ const genero = (formData.get('genero') as string) || '';
+ const tipo = (formData.get('tipo') as string) || 'propio';
+ const energia = parseInt(formData.get('energia') as string, 10) || 5;
+ const cantantePrincipal = (formData.get('cantantePrincipal') as string) || '';
+ const estadoTema = (formData.get('estadoTema') as Song['estadoTema']) || 'listo';
+ // "Cover / Versión" en el selector de tipo es la única fuente de este flag: evitamos
+ // tener dos controles distintos que signifiquen lo mismo.
+ const esVersionCovers = tipo === 'cover';
+ const enlaceAcordes = (formData.get('enlaceAcordes') as string) || '';
  const notasInternas = formData.get('notasInternas') as string;
   const notasRepertorio = (formData.get('notasRepertorio') as string) || '';
   const notasMiembrosJson = formData.get('notasMiembrosJson') as string;
@@ -848,8 +836,6 @@ export default function RepertorioSetlists({
    }
  }
 
- const duracionSegundos = parseMmSsToSeconds(duracion);
-
  if (editingSong) {
  const updatedSong: Song = {
  ...editingSong,
@@ -860,6 +846,10 @@ export default function RepertorioSetlists({
  bpm,
  afinacion,
  albumDisco,
+ genero,
+ tipo,
+ energia,
+ cantantePrincipal,
  estadoTema,
  esVersionCovers,
  enlaceAcordes,
@@ -893,6 +883,10 @@ export default function RepertorioSetlists({
  bpm,
  afinacion,
  albumDisco,
+ genero,
+ tipo,
+ energia,
+ cantantePrincipal,
  estadoTema,
  esVersionCovers,
  enlaceAcordes,
@@ -1121,7 +1115,7 @@ export default function RepertorioSetlists({
    id?: string;
    nombre: string;
    descripcion: string;
-   tipoFormato: 'festival' | 'sala_larga' | 'acustico';
+   tipoFormato: Setlist['tipoFormato'];
  }) => {
    if (setlistData.id) {
      setSetlists((prev) =>
@@ -2039,11 +2033,8 @@ export default function RepertorioSetlists({
  if (!song) return null;
 
  // Check if this song has member notes
- const memberNotesCount = song.notasMiembros 
-   ? Object.values(song.notasMiembros).filter(v => {
-       if (typeof v === 'string') return v.trim().length > 0;
-       return Boolean(v?.general || v?.intro || v?.verso || v?.estribillo || v?.puente || v?.outro);
-     }).length 
+ const memberNotesCount = song.notasMiembros
+   ? Object.values(song.notasMiembros).filter(v => typeof v === 'string' && v.trim().length > 0).length
    : 0;
 
  return (
