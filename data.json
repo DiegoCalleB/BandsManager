@@ -2,7 +2,7 @@
   "registeredBands": [
     {
       "id": "reg-bakandeya",
-      "band_id": "bakandeya",
+      "band_id": "band-bakandeya",
       "user_id": null,
       "fecha_registro": "2026-08-17T10:54:25.997577+00:00",
       "nombre_banda": "Bakandeya",
@@ -178,7 +178,7 @@
     {
       "id": "reg-band-repercusion-2",
       "band_id": "band-repercusion-2",
-      "user_id": null,
+      "user_id": "user-diegolimado-repercusion",
       "fecha_registro": "2026-08-13T10:17:44.298661+00:00",
       "nombre_banda": "Repercusion",
       "email": "contacto@banda.com",
@@ -253,7 +253,7 @@
     {
       "id": "reg-band-limando-2",
       "band_id": "band-limando-2",
-      "user_id": null,
+      "user_id": "user-anibal-limando-2",
       "fecha_registro": "2026-08-12T10:16:34.762987+00:00",
       "nombre_banda": "Limando",
       "email": "contacto@banda.com",
@@ -302,7 +302,7 @@
     }
   ],
   "epkConfig": {
-    "biografia": "es un músico y actor español. Ha estado\nhaciendo música callejera y actuando en espectáculos de\ncomedia durante toda su adolescencia y carrera\nprofesional. Trabajó durante 5 años en Al Tran Tran Impro,\nuna compañía de teatro musical de improvisación y luego\nformó Swingdigentes, una compañía de música, danza y\ncomedia que ha actuado en 25 países alrededor del mundo.\nDesde entonces, ha actuado con Cirque du Soleil y otros\nespectáculos de circo.\nActualmente forma parte de Stomp, una compañía\n\ninternacional de percusión.\n\nes un multi-percusionista , turco-Iraní\nafincado en Madrid, España. Estudió en Tabriz (Irán) en la\nescuela de música del Maestro Eyyub Pashang, y se\nespecializó en el Nagara, tocando música folklórica de\nAzerbaiyán, así como también Darbuka y Daf.\nPosteriormente en el 2021 empezó a estudiar el Handpan,\ninstrumento con el que ha viajado para participar en varios\nfestivales en España y Europa.\nDesde el 2022 ha compartido escenario con prestigiosos\nmúsicos como Taylan Polat (flamenco-fusión) en la sala\nTempo (Madrid, España), Al-maram en el festival de música Al-Mutamid (Música árabe)\n(Lago y Leira, Portugal), Cardamom trio en el festival de polirritmia (Valencia), y en el\nfestival de handpan Singading en Barcelona, Festival de Gumad en Madrid, entre otros.\n\nes un músico y actor vasco. Toda la vida dedicada\na la música y subiéndose a escenarios mediante diferentes\ndisciplinas artísticas. Quince años dando conciertos con banda\npropia (JarelBabel) como cantante y guitarrista, con tres\ndiscos a las espaldas. Como solista y beatboxer también tiene\nsus temas y ha dado conciertos tanto en escenarios como en la\ncalle. Estuvo dos años como acróbata y dando espectáculos de\ncapoeira en las islas griegas. También haciendo espectáculos\ncon San Bahia Brazil Show. Compositor para proyectos\nespecíficos de publicidad y de teatro. Profesor de rap en centros penitenciarios y\ndiseñador de proyectos de educación mediante el arte con jóvenes en exclusión social.\nActualmente es percusionista en la compañía Toompak de percusión y teatro, una\ncompañía que actúa por todo el mundo.\n\nes un violinista mexicano. Trabajó como arreglista\ne intérprete en El Teatro de la Memoria en México y ha sido\nmúsico de sesión. Ha colaborado en directo con la pianista y\ncompositora Deborah Silberer, Santiago Vokram, Runa Llena\n(Festival Crisis Rock Guadalajara), Burdhel (Festival del\nEquinoccio en Teotihuacán), El Sombrero del Abuelo,\nConcierto Homenaje a Café Tacvba en la CME, con la\ncompañía de teatro La Líquida, etc. Su vida musical tuvo un\nparón de años para cursar sus estudios en Historia, publicar una\nnovela (La taberna de las ánimas) y trabajar en gestión cultural\ny organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro\nmusical y un pequeño proyecto personal (Frenopático).",
+    "biografia": "Bakandeya es electrobasureo: percusión reciclada, ska, mestizaje y ritmos balcánicos tocados en directo. Cuatro músicos que no vienen del local de ensayo sino de la calle —de la música callejera, del teatro y del circo— y que traen esa forma de tocar al escenario: sin cuarta pared, buscando al público desde el primer compás.\n\nDetrás de cada instrumento hay una trayectoria larga y de escenario grande: Stomp y Cirque du Soleil, la compañía de percusión y teatro Toompak, quince años de conciertos con banda propia, percusión folklórica de Azerbaiyán y handpan por festivales de España y Europa, y violín de arreglista y músico de sesión. Esa mezcla es la que da el sonido: instrumentos construidos con material recuperado conviviendo con cuerda, voz y beatbox.\n\nDesde 2025 Bakandeya lleva ese directo a festivales de música callejera.",
     "logoUrl": "/logo_bakandeya.jpg",
     "bandPhotos": [
       "/logo_bakandeya.jpg"
@@ -388,7 +388,33 @@
     },
     "updated_at": "2026-08-12T09:55:12.367277+00:00",
     "riderPdfUrl": "",
-    "riderPdfName": ""
+    "riderPdfName": "",
+    "miembros": [
+      {
+        "id": "miembro-jose",
+        "nombre": "José Filgueira",
+        "rol": "Percusión reciclada",
+        "bio": "José Filgueira es un músico y actor español. Ha estado haciendo música callejera y actuando en espectáculos de comedia durante toda su adolescencia y carrera profesional. Trabajó durante 5 años en Al Tran Tran Impro, una compañía de teatro musical de improvisación, y luego formó Swingdigentes, una compañía de música, danza y comedia que ha actuado en 25 países alrededor del mundo. Desde entonces ha actuado con Cirque du Soleil y otros espectáculos de circo. Actualmente forma parte de Stomp, una compañía internacional de percusión."
+      },
+      {
+        "id": "miembro-elyar",
+        "nombre": "Elyar Pashang",
+        "rol": "Percusión: nagara, darbuka, daf y handpan",
+        "bio": "Elyar Pashang es un multi-percusionista turco-iraní afincado en Madrid, España. Estudió en Tabriz (Irán) en la escuela de música del Maestro Eyyub Pashang, y se especializó en el nagara, tocando música folklórica de Azerbaiyán, así como darbuka y daf. Posteriormente, en 2021, empezó a estudiar el handpan, instrumento con el que ha viajado para participar en varios festivales en España y Europa. Desde 2022 ha compartido escenario con músicos como Taylan Polat (flamenco-fusión) en la sala Tempo (Madrid), Al-maram en el festival de música árabe Al-Mutamid (Lago y Leira, Portugal) y Cardamom trio en el festival de polirritmia (Valencia), además del festival de handpan Singading en Barcelona y el festival Gumad en Madrid, entre otros."
+      },
+      {
+        "id": "miembro-jon",
+        "nombre": "Jon Quel",
+        "rol": "Voz, guitarra y beatbox",
+        "bio": "Jon Quel es un músico y actor vasco. Toda la vida dedicada a la música y subiéndose a escenarios mediante diferentes disciplinas artísticas. Quince años dando conciertos con banda propia (JarelBabel) como cantante y guitarrista, con tres discos a las espaldas. Como solista y beatboxer también tiene sus temas y ha dado conciertos tanto en escenarios como en la calle. Estuvo dos años como acróbata y dando espectáculos de capoeira en las islas griegas, y también haciendo espectáculos con San Bahia Brazil Show. Compositor para proyectos específicos de publicidad y de teatro, profesor de rap en centros penitenciarios y diseñador de proyectos de educación mediante el arte con jóvenes en exclusión social. Actualmente es percusionista en la compañía Toompak de percusión y teatro, que actúa por todo el mundo."
+      },
+      {
+        "id": "miembro-raul",
+        "nombre": "Raúl Pérez",
+        "rol": "Violín",
+        "bio": "Raúl Pérez es un violinista mexicano. Trabajó como arreglista e intérprete en El Teatro de la Memoria en México y ha sido músico de sesión. Ha colaborado en directo con la pianista y compositora Deborah Silberer, Santiago Vokram, Runa Llena (Festival Crisis Rock Guadalajara), Burdhel (Festival del Equinoccio en Teotihuacán), El Sombrero del Abuelo, el Concierto Homenaje a Café Tacvba en la CME y la compañía de teatro La Líquida, entre otros. Su vida musical tuvo un parón de años para cursar sus estudios en Historia, publicar una novela (La taberna de las ánimas) y trabajar en gestión cultural y organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro musical y en un pequeño proyecto personal (Frenopático)."
+      }
+    ]
   },
   "fans": [
     {
@@ -5635,7 +5661,7 @@
   ],
   "epkConfigsByBand": {
     "band-bakandeya": {
-      "biografia": "es un músico y actor español. Ha estado\nhaciendo música callejera y actuando en espectáculos de\ncomedia durante toda su adolescencia y carrera\nprofesional. Trabajó durante 5 años en Al Tran Tran Impro,\nuna compañía de teatro musical de improvisación y luego\nformó Swingdigentes, una compañía de música, danza y\ncomedia que ha actuado en 25 países alrededor del mundo.\nDesde entonces, ha actuado con Cirque du Soleil y otros\nespectáculos de circo.\nActualmente forma parte de Stomp, una compañía\n\ninternacional de percusión.\n\nes un multi-percusionista , turco-Iraní\nafincado en Madrid, España. Estudió en Tabriz (Irán) en la\nescuela de música del Maestro Eyyub Pashang, y se\nespecializó en el Nagara, tocando música folklórica de\nAzerbaiyán, así como también Darbuka y Daf.\nPosteriormente en el 2021 empezó a estudiar el Handpan,\ninstrumento con el que ha viajado para participar en varios\nfestivales en España y Europa.\nDesde el 2022 ha compartido escenario con prestigiosos\nmúsicos como Taylan Polat (flamenco-fusión) en la sala\nTempo (Madrid, España), Al-maram en el festival de música Al-Mutamid (Música árabe)\n(Lago y Leira, Portugal), Cardamom trio en el festival de polirritmia (Valencia), y en el\nfestival de handpan Singading en Barcelona, Festival de Gumad en Madrid, entre otros.\n\nes un músico y actor vasco. Toda la vida dedicada\na la música y subiéndose a escenarios mediante diferentes\ndisciplinas artísticas. Quince años dando conciertos con banda\npropia (JarelBabel) como cantante y guitarrista, con tres\ndiscos a las espaldas. Como solista y beatboxer también tiene\nsus temas y ha dado conciertos tanto en escenarios como en la\ncalle. Estuvo dos años como acróbata y dando espectáculos de\ncapoeira en las islas griegas. También haciendo espectáculos\ncon San Bahia Brazil Show. Compositor para proyectos\nespecíficos de publicidad y de teatro. Profesor de rap en centros penitenciarios y\ndiseñador de proyectos de educación mediante el arte con jóvenes en exclusión social.\nActualmente es percusionista en la compañía Toompak de percusión y teatro, una\ncompañía que actúa por todo el mundo.\n\nes un violinista mexicano. Trabajó como arreglista\ne intérprete en El Teatro de la Memoria en México y ha sido\nmúsico de sesión. Ha colaborado en directo con la pianista y\ncompositora Deborah Silberer, Santiago Vokram, Runa Llena\n(Festival Crisis Rock Guadalajara), Burdhel (Festival del\nEquinoccio en Teotihuacán), El Sombrero del Abuelo,\nConcierto Homenaje a Café Tacvba en la CME, con la\ncompañía de teatro La Líquida, etc. Su vida musical tuvo un\nparón de años para cursar sus estudios en Historia, publicar una\nnovela (La taberna de las ánimas) y trabajar en gestión cultural\ny organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro\nmusical y un pequeño proyecto personal (Frenopático).",
+      "biografia": "Bakandeya es electrobasureo: percusión reciclada, ska, mestizaje y ritmos balcánicos tocados en directo. Cuatro músicos que no vienen del local de ensayo sino de la calle —de la música callejera, del teatro y del circo— y que traen esa forma de tocar al escenario: sin cuarta pared, buscando al público desde el primer compás.\n\nDetrás de cada instrumento hay una trayectoria larga y de escenario grande: Stomp y Cirque du Soleil, la compañía de percusión y teatro Toompak, quince años de conciertos con banda propia, percusión folklórica de Azerbaiyán y handpan por festivales de España y Europa, y violín de arreglista y músico de sesión. Esa mezcla es la que da el sonido: instrumentos construidos con material recuperado conviviendo con cuerda, voz y beatbox.\n\nDesde 2025 Bakandeya lleva ese directo a festivales de música callejera.",
       "logoUrl": "/logo_bakandeya.jpg",
       "bandPhotos": [
         "/logo_bakandeya.jpg"
@@ -5721,10 +5747,36 @@
       },
       "updated_at": "2026-08-12T09:55:12.367277+00:00",
       "riderPdfUrl": "",
-      "riderPdfName": ""
+      "riderPdfName": "",
+      "miembros": [
+        {
+          "id": "miembro-jose",
+          "nombre": "José Filgueira",
+          "rol": "Percusión reciclada",
+          "bio": "José Filgueira es un músico y actor español. Ha estado haciendo música callejera y actuando en espectáculos de comedia durante toda su adolescencia y carrera profesional. Trabajó durante 5 años en Al Tran Tran Impro, una compañía de teatro musical de improvisación, y luego formó Swingdigentes, una compañía de música, danza y comedia que ha actuado en 25 países alrededor del mundo. Desde entonces ha actuado con Cirque du Soleil y otros espectáculos de circo. Actualmente forma parte de Stomp, una compañía internacional de percusión."
+        },
+        {
+          "id": "miembro-elyar",
+          "nombre": "Elyar Pashang",
+          "rol": "Percusión: nagara, darbuka, daf y handpan",
+          "bio": "Elyar Pashang es un multi-percusionista turco-iraní afincado en Madrid, España. Estudió en Tabriz (Irán) en la escuela de música del Maestro Eyyub Pashang, y se especializó en el nagara, tocando música folklórica de Azerbaiyán, así como darbuka y daf. Posteriormente, en 2021, empezó a estudiar el handpan, instrumento con el que ha viajado para participar en varios festivales en España y Europa. Desde 2022 ha compartido escenario con músicos como Taylan Polat (flamenco-fusión) en la sala Tempo (Madrid), Al-maram en el festival de música árabe Al-Mutamid (Lago y Leira, Portugal) y Cardamom trio en el festival de polirritmia (Valencia), además del festival de handpan Singading en Barcelona y el festival Gumad en Madrid, entre otros."
+        },
+        {
+          "id": "miembro-jon",
+          "nombre": "Jon Quel",
+          "rol": "Voz, guitarra y beatbox",
+          "bio": "Jon Quel es un músico y actor vasco. Toda la vida dedicada a la música y subiéndose a escenarios mediante diferentes disciplinas artísticas. Quince años dando conciertos con banda propia (JarelBabel) como cantante y guitarrista, con tres discos a las espaldas. Como solista y beatboxer también tiene sus temas y ha dado conciertos tanto en escenarios como en la calle. Estuvo dos años como acróbata y dando espectáculos de capoeira en las islas griegas, y también haciendo espectáculos con San Bahia Brazil Show. Compositor para proyectos específicos de publicidad y de teatro, profesor de rap en centros penitenciarios y diseñador de proyectos de educación mediante el arte con jóvenes en exclusión social. Actualmente es percusionista en la compañía Toompak de percusión y teatro, que actúa por todo el mundo."
+        },
+        {
+          "id": "miembro-raul",
+          "nombre": "Raúl Pérez",
+          "rol": "Violín",
+          "bio": "Raúl Pérez es un violinista mexicano. Trabajó como arreglista e intérprete en El Teatro de la Memoria en México y ha sido músico de sesión. Ha colaborado en directo con la pianista y compositora Deborah Silberer, Santiago Vokram, Runa Llena (Festival Crisis Rock Guadalajara), Burdhel (Festival del Equinoccio en Teotihuacán), El Sombrero del Abuelo, el Concierto Homenaje a Café Tacvba en la CME y la compañía de teatro La Líquida, entre otros. Su vida musical tuvo un parón de años para cursar sus estudios en Historia, publicar una novela (La taberna de las ánimas) y trabajar en gestión cultural y organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro musical y en un pequeño proyecto personal (Frenopático)."
+        }
+      ]
     },
     "bakandeya": {
-      "biografia": "es un músico y actor español. Ha estado\nhaciendo música callejera y actuando en espectáculos de\ncomedia durante toda su adolescencia y carrera\nprofesional. Trabajó durante 5 años en Al Tran Tran Impro,\nuna compañía de teatro musical de improvisación y luego\nformó Swingdigentes, una compañía de música, danza y\ncomedia que ha actuado en 25 países alrededor del mundo.\nDesde entonces, ha actuado con Cirque du Soleil y otros\nespectáculos de circo.\nActualmente forma parte de Stomp, una compañía\n\ninternacional de percusión.\n\nes un multi-percusionista , turco-Iraní\nafincado en Madrid, España. Estudió en Tabriz (Irán) en la\nescuela de música del Maestro Eyyub Pashang, y se\nespecializó en el Nagara, tocando música folklórica de\nAzerbaiyán, así como también Darbuka y Daf.\nPosteriormente en el 2021 empezó a estudiar el Handpan,\ninstrumento con el que ha viajado para participar en varios\nfestivales en España y Europa.\nDesde el 2022 ha compartido escenario con prestigiosos\nmúsicos como Taylan Polat (flamenco-fusión) en la sala\nTempo (Madrid, España), Al-maram en el festival de música Al-Mutamid (Música árabe)\n(Lago y Leira, Portugal), Cardamom trio en el festival de polirritmia (Valencia), y en el\nfestival de handpan Singading en Barcelona, Festival de Gumad en Madrid, entre otros.\n\nes un músico y actor vasco. Toda la vida dedicada\na la música y subiéndose a escenarios mediante diferentes\ndisciplinas artísticas. Quince años dando conciertos con banda\npropia (JarelBabel) como cantante y guitarrista, con tres\ndiscos a las espaldas. Como solista y beatboxer también tiene\nsus temas y ha dado conciertos tanto en escenarios como en la\ncalle. Estuvo dos años como acróbata y dando espectáculos de\ncapoeira en las islas griegas. También haciendo espectáculos\ncon San Bahia Brazil Show. Compositor para proyectos\nespecíficos de publicidad y de teatro. Profesor de rap en centros penitenciarios y\ndiseñador de proyectos de educación mediante el arte con jóvenes en exclusión social.\nActualmente es percusionista en la compañía Toompak de percusión y teatro, una\ncompañía que actúa por todo el mundo.\n\nes un violinista mexicano. Trabajó como arreglista\ne intérprete en El Teatro de la Memoria en México y ha sido\nmúsico de sesión. Ha colaborado en directo con la pianista y\ncompositora Deborah Silberer, Santiago Vokram, Runa Llena\n(Festival Crisis Rock Guadalajara), Burdhel (Festival del\nEquinoccio en Teotihuacán), El Sombrero del Abuelo,\nConcierto Homenaje a Café Tacvba en la CME, con la\ncompañía de teatro La Líquida, etc. Su vida musical tuvo un\nparón de años para cursar sus estudios en Historia, publicar una\nnovela (La taberna de las ánimas) y trabajar en gestión cultural\ny organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro\nmusical y un pequeño proyecto personal (Frenopático).",
+      "biografia": "Bakandeya es electrobasureo: percusión reciclada, ska, mestizaje y ritmos balcánicos tocados en directo. Cuatro músicos que no vienen del local de ensayo sino de la calle —de la música callejera, del teatro y del circo— y que traen esa forma de tocar al escenario: sin cuarta pared, buscando al público desde el primer compás.\n\nDetrás de cada instrumento hay una trayectoria larga y de escenario grande: Stomp y Cirque du Soleil, la compañía de percusión y teatro Toompak, quince años de conciertos con banda propia, percusión folklórica de Azerbaiyán y handpan por festivales de España y Europa, y violín de arreglista y músico de sesión. Esa mezcla es la que da el sonido: instrumentos construidos con material recuperado conviviendo con cuerda, voz y beatbox.\n\nDesde 2025 Bakandeya lleva ese directo a festivales de música callejera.",
       "logoUrl": "/logo_bakandeya.jpg",
       "bandPhotos": [
         "/logo_bakandeya.jpg"
@@ -5810,10 +5862,36 @@
       },
       "updated_at": "2026-08-12T09:55:12.367277+00:00",
       "riderPdfUrl": "",
-      "riderPdfName": ""
+      "riderPdfName": "",
+      "miembros": [
+        {
+          "id": "miembro-jose",
+          "nombre": "José Filgueira",
+          "rol": "Percusión reciclada",
+          "bio": "José Filgueira es un músico y actor español. Ha estado haciendo música callejera y actuando en espectáculos de comedia durante toda su adolescencia y carrera profesional. Trabajó durante 5 años en Al Tran Tran Impro, una compañía de teatro musical de improvisación, y luego formó Swingdigentes, una compañía de música, danza y comedia que ha actuado en 25 países alrededor del mundo. Desde entonces ha actuado con Cirque du Soleil y otros espectáculos de circo. Actualmente forma parte de Stomp, una compañía internacional de percusión."
+        },
+        {
+          "id": "miembro-elyar",
+          "nombre": "Elyar Pashang",
+          "rol": "Percusión: nagara, darbuka, daf y handpan",
+          "bio": "Elyar Pashang es un multi-percusionista turco-iraní afincado en Madrid, España. Estudió en Tabriz (Irán) en la escuela de música del Maestro Eyyub Pashang, y se especializó en el nagara, tocando música folklórica de Azerbaiyán, así como darbuka y daf. Posteriormente, en 2021, empezó a estudiar el handpan, instrumento con el que ha viajado para participar en varios festivales en España y Europa. Desde 2022 ha compartido escenario con músicos como Taylan Polat (flamenco-fusión) en la sala Tempo (Madrid), Al-maram en el festival de música árabe Al-Mutamid (Lago y Leira, Portugal) y Cardamom trio en el festival de polirritmia (Valencia), además del festival de handpan Singading en Barcelona y el festival Gumad en Madrid, entre otros."
+        },
+        {
+          "id": "miembro-jon",
+          "nombre": "Jon Quel",
+          "rol": "Voz, guitarra y beatbox",
+          "bio": "Jon Quel es un músico y actor vasco. Toda la vida dedicada a la música y subiéndose a escenarios mediante diferentes disciplinas artísticas. Quince años dando conciertos con banda propia (JarelBabel) como cantante y guitarrista, con tres discos a las espaldas. Como solista y beatboxer también tiene sus temas y ha dado conciertos tanto en escenarios como en la calle. Estuvo dos años como acróbata y dando espectáculos de capoeira en las islas griegas, y también haciendo espectáculos con San Bahia Brazil Show. Compositor para proyectos específicos de publicidad y de teatro, profesor de rap en centros penitenciarios y diseñador de proyectos de educación mediante el arte con jóvenes en exclusión social. Actualmente es percusionista en la compañía Toompak de percusión y teatro, que actúa por todo el mundo."
+        },
+        {
+          "id": "miembro-raul",
+          "nombre": "Raúl Pérez",
+          "rol": "Violín",
+          "bio": "Raúl Pérez es un violinista mexicano. Trabajó como arreglista e intérprete en El Teatro de la Memoria en México y ha sido músico de sesión. Ha colaborado en directo con la pianista y compositora Deborah Silberer, Santiago Vokram, Runa Llena (Festival Crisis Rock Guadalajara), Burdhel (Festival del Equinoccio en Teotihuacán), El Sombrero del Abuelo, el Concierto Homenaje a Café Tacvba en la CME y la compañía de teatro La Líquida, entre otros. Su vida musical tuvo un parón de años para cursar sus estudios en Historia, publicar una novela (La taberna de las ánimas) y trabajar en gestión cultural y organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro musical y en un pequeño proyecto personal (Frenopático)."
+        }
+      ]
     },
     "reg-bakandeya": {
-      "biografia": "es un músico y actor español. Ha estado\nhaciendo música callejera y actuando en espectáculos de\ncomedia durante toda su adolescencia y carrera\nprofesional. Trabajó durante 5 años en Al Tran Tran Impro,\nuna compañía de teatro musical de improvisación y luego\nformó Swingdigentes, una compañía de música, danza y\ncomedia que ha actuado en 25 países alrededor del mundo.\nDesde entonces, ha actuado con Cirque du Soleil y otros\nespectáculos de circo.\nActualmente forma parte de Stomp, una compañía\n\ninternacional de percusión.\n\nes un multi-percusionista , turco-Iraní\nafincado en Madrid, España. Estudió en Tabriz (Irán) en la\nescuela de música del Maestro Eyyub Pashang, y se\nespecializó en el Nagara, tocando música folklórica de\nAzerbaiyán, así como también Darbuka y Daf.\nPosteriormente en el 2021 empezó a estudiar el Handpan,\ninstrumento con el que ha viajado para participar en varios\nfestivales en España y Europa.\nDesde el 2022 ha compartido escenario con prestigiosos\nmúsicos como Taylan Polat (flamenco-fusión) en la sala\nTempo (Madrid, España), Al-maram en el festival de música Al-Mutamid (Música árabe)\n(Lago y Leira, Portugal), Cardamom trio en el festival de polirritmia (Valencia), y en el\nfestival de handpan Singading en Barcelona, Festival de Gumad en Madrid, entre otros.\n\nes un músico y actor vasco. Toda la vida dedicada\na la música y subiéndose a escenarios mediante diferentes\ndisciplinas artísticas. Quince años dando conciertos con banda\npropia (JarelBabel) como cantante y guitarrista, con tres\ndiscos a las espaldas. Como solista y beatboxer también tiene\nsus temas y ha dado conciertos tanto en escenarios como en la\ncalle. Estuvo dos años como acróbata y dando espectáculos de\ncapoeira en las islas griegas. También haciendo espectáculos\ncon San Bahia Brazil Show. Compositor para proyectos\nespecíficos de publicidad y de teatro. Profesor de rap en centros penitenciarios y\ndiseñador de proyectos de educación mediante el arte con jóvenes en exclusión social.\nActualmente es percusionista en la compañía Toompak de percusión y teatro, una\ncompañía que actúa por todo el mundo.\n\nes un violinista mexicano. Trabajó como arreglista\ne intérprete en El Teatro de la Memoria en México y ha sido\nmúsico de sesión. Ha colaborado en directo con la pianista y\ncompositora Deborah Silberer, Santiago Vokram, Runa Llena\n(Festival Crisis Rock Guadalajara), Burdhel (Festival del\nEquinoccio en Teotihuacán), El Sombrero del Abuelo,\nConcierto Homenaje a Café Tacvba en la CME, con la\ncompañía de teatro La Líquida, etc. Su vida musical tuvo un\nparón de años para cursar sus estudios en Historia, publicar una\nnovela (La taberna de las ánimas) y trabajar en gestión cultural\ny organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro\nmusical y un pequeño proyecto personal (Frenopático).",
+      "biografia": "Bakandeya es electrobasureo: percusión reciclada, ska, mestizaje y ritmos balcánicos tocados en directo. Cuatro músicos que no vienen del local de ensayo sino de la calle —de la música callejera, del teatro y del circo— y que traen esa forma de tocar al escenario: sin cuarta pared, buscando al público desde el primer compás.\n\nDetrás de cada instrumento hay una trayectoria larga y de escenario grande: Stomp y Cirque du Soleil, la compañía de percusión y teatro Toompak, quince años de conciertos con banda propia, percusión folklórica de Azerbaiyán y handpan por festivales de España y Europa, y violín de arreglista y músico de sesión. Esa mezcla es la que da el sonido: instrumentos construidos con material recuperado conviviendo con cuerda, voz y beatbox.\n\nDesde 2025 Bakandeya lleva ese directo a festivales de música callejera.",
       "logoUrl": "/logo_bakandeya.jpg",
       "bandPhotos": [
         "/logo_bakandeya.jpg"
@@ -5899,7 +5977,33 @@
       },
       "updated_at": "2026-08-12T09:55:12.367277+00:00",
       "riderPdfUrl": "",
-      "riderPdfName": ""
+      "riderPdfName": "",
+      "miembros": [
+        {
+          "id": "miembro-jose",
+          "nombre": "José Filgueira",
+          "rol": "Percusión reciclada",
+          "bio": "José Filgueira es un músico y actor español. Ha estado haciendo música callejera y actuando en espectáculos de comedia durante toda su adolescencia y carrera profesional. Trabajó durante 5 años en Al Tran Tran Impro, una compañía de teatro musical de improvisación, y luego formó Swingdigentes, una compañía de música, danza y comedia que ha actuado en 25 países alrededor del mundo. Desde entonces ha actuado con Cirque du Soleil y otros espectáculos de circo. Actualmente forma parte de Stomp, una compañía internacional de percusión."
+        },
+        {
+          "id": "miembro-elyar",
+          "nombre": "Elyar Pashang",
+          "rol": "Percusión: nagara, darbuka, daf y handpan",
+          "bio": "Elyar Pashang es un multi-percusionista turco-iraní afincado en Madrid, España. Estudió en Tabriz (Irán) en la escuela de música del Maestro Eyyub Pashang, y se especializó en el nagara, tocando música folklórica de Azerbaiyán, así como darbuka y daf. Posteriormente, en 2021, empezó a estudiar el handpan, instrumento con el que ha viajado para participar en varios festivales en España y Europa. Desde 2022 ha compartido escenario con músicos como Taylan Polat (flamenco-fusión) en la sala Tempo (Madrid), Al-maram en el festival de música árabe Al-Mutamid (Lago y Leira, Portugal) y Cardamom trio en el festival de polirritmia (Valencia), además del festival de handpan Singading en Barcelona y el festival Gumad en Madrid, entre otros."
+        },
+        {
+          "id": "miembro-jon",
+          "nombre": "Jon Quel",
+          "rol": "Voz, guitarra y beatbox",
+          "bio": "Jon Quel es un músico y actor vasco. Toda la vida dedicada a la música y subiéndose a escenarios mediante diferentes disciplinas artísticas. Quince años dando conciertos con banda propia (JarelBabel) como cantante y guitarrista, con tres discos a las espaldas. Como solista y beatboxer también tiene sus temas y ha dado conciertos tanto en escenarios como en la calle. Estuvo dos años como acróbata y dando espectáculos de capoeira en las islas griegas, y también haciendo espectáculos con San Bahia Brazil Show. Compositor para proyectos específicos de publicidad y de teatro, profesor de rap en centros penitenciarios y diseñador de proyectos de educación mediante el arte con jóvenes en exclusión social. Actualmente es percusionista en la compañía Toompak de percusión y teatro, que actúa por todo el mundo."
+        },
+        {
+          "id": "miembro-raul",
+          "nombre": "Raúl Pérez",
+          "rol": "Violín",
+          "bio": "Raúl Pérez es un violinista mexicano. Trabajó como arreglista e intérprete en El Teatro de la Memoria en México y ha sido músico de sesión. Ha colaborado en directo con la pianista y compositora Deborah Silberer, Santiago Vokram, Runa Llena (Festival Crisis Rock Guadalajara), Burdhel (Festival del Equinoccio en Teotihuacán), El Sombrero del Abuelo, el Concierto Homenaje a Café Tacvba en la CME y la compañía de teatro La Líquida, entre otros. Su vida musical tuvo un parón de años para cursar sus estudios en Historia, publicar una novela (La taberna de las ánimas) y trabajar en gestión cultural y organización de eventos. Actualmente trabaja en el arreglo de dos obras de teatro musical y en un pequeño proyecto personal (Frenopático)."
+        }
+      ]
     },
     "band-repercusion-2": {
       "biografia": "Repercusion es una propuesta musical en directo.",
