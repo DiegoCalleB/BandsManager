@@ -1779,7 +1779,11 @@ router.put("/users/:id", requireAuth, async (req, res) => {
     const loggedUserEmail = (loggedUser.email || loggedUser.username || '').toLowerCase();
     const cleanTargetCheck = targetBandId ? targetBandId.replace(/^(band|reg)-/, '') : '';
     
-    const isGlobalLeader = loggedUser.role === 'leader' || loggedUser.role === 'admin';
+    // Antes esto era `role === 'leader' || role === 'admin'`, y como en esta app todos los
+    // usuarios reales son 'leader', anulaba las dos comprobaciones correctas de más abajo:
+    // cualquiera podía cambiar el plan de suscripción de cualquier banda. El único escape
+    // global legítimo es el admin de la plataforma.
+    const isPlatformAdmin = loggedUser.role === 'admin';
     const isBandLeaderInUserBands = (state.userBands || []).some((ub: any) =>
       (ub.user_id === loggedUser.id || (loggedUserEmail && ub.email?.toLowerCase() === loggedUserEmail)) &&
       ub.band_id && ub.band_id.replace(/^(band|reg)-/, '') === cleanTargetCheck &&
@@ -1790,8 +1794,8 @@ router.put("/users/:id", requireAuth, async (req, res) => {
       ((b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanTargetCheck) || (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTargetCheck))
     );
 
-    if (!isGlobalLeader && !isBandLeaderInUserBands && !isBandOwner) {
-      return res.status(403).json({ error: "Sólo los administradores o líderes de la banda pueden cambiar el plan de suscripción." });
+    if (!isPlatformAdmin && !isBandLeaderInUserBands && !isBandOwner) {
+      return res.status(403).json({ error: "Sólo el propietario o un líder de esa banda pueden cambiar su plan de suscripción." });
     }
 
     if (targetBandId) {
