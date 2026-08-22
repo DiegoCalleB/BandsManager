@@ -798,7 +798,8 @@ router.post("/process", async (req, res) => {
 });
 
 // Helper to extract audio snippet buffer or file path for direct preview and Gemini multimodal listening
-async function getAudioSnippetPath(params: {
+// Exported for reuse by other routes (e.g. repertorio.ts) that need to feed real audio to Gemini.
+export async function getAudioSnippetPath(params: {
   url?: string;
   sourceFilePath?: string;
   audioUrl?: string;
@@ -928,6 +929,33 @@ async function getAudioSnippetPath(params: {
   }
 }
 
+// Helper to build Gemini multimodal contents (inline base64 audio + prompt), falling back to
+// text-only prompt when no real audio snippet could be resolved. Shared by every route below
+// that asks Gemini to listen to a real recording, plus repertorio.ts's chord generator.
+export function buildAudioOrTextContents(
+  snippetPath: string | null | undefined,
+  promptText: string,
+  fallbackNote: string
+): any {
+  if (snippetPath && fs.existsSync(snippetPath)) {
+    try {
+      const audioBuffer = fs.readFileSync(snippetPath);
+      return [
+        {
+          inlineData: {
+            mimeType: "audio/mp3",
+            data: audioBuffer.toString("base64"),
+          },
+        },
+        { text: promptText },
+      ];
+    } catch {
+      return promptText + `\n(Nota: ${fallbackNote})`;
+    }
+  }
+  return promptText + `\n(Nota: ${fallbackNote})`;
+}
+
 // 3. TRANSCRIBE SPEECH ROUTE USING GEMINI MULTIMODAL AUDIO
 router.post("/transcribe-speech", async (req, res) => {
   try {
@@ -953,25 +981,11 @@ REQUISITOS OBLIGATORIOS:
 4. Responde únicamente con el texto limpio de la transcripción en español.
 `;
 
-    let contents: any;
-    if (snippetPath && fs.existsSync(snippetPath)) {
-      try {
-        const audioBuffer = fs.readFileSync(snippetPath);
-        contents = [
-          {
-            inlineData: {
-              mimeType: "audio/mp3",
-              data: audioBuffer.toString("base64"),
-            },
-          },
-          { text: promptText },
-        ];
-      } catch {
-        contents = promptText + "\n(Nota: Audio local no disponible, generando por contexto analítico).";
-      }
-    } else {
-      contents = promptText + "\n(Nota: Audio de YouTube protegido por restricciones de streaming, generando transcripción artística profesional basada en el título y contexto de la banda).";
-    }
+    const contents = buildAudioOrTextContents(
+      snippetPath,
+      promptText,
+      "Audio no disponible localmente, generando transcripción artística basada en el título y contexto de la banda."
+    );
 
     let transText = "¡Hola a todos los que estáis aquí esta noche! ¿Cómo estamos? ¡Qué energía se siente en el sur!";
     try {
@@ -1171,25 +1185,11 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 }
 `;
 
-    let contents: any;
-    if (snippetPath && fs.existsSync(snippetPath)) {
-      try {
-        const audioBuffer = fs.readFileSync(snippetPath);
-        contents = [
-          {
-            inlineData: {
-              mimeType: "audio/mp3",
-              data: audioBuffer.toString("base64"),
-            },
-          },
-          { text: promptText },
-        ];
-      } catch {
-        contents = promptText + "\n(Nota: Audio local no disponible, generando por contexto analítico).";
-      }
-    } else {
-      contents = promptText + "\n(Nota: Audio de YouTube protegido, genera el cifrado de acordes y letra profesional en directo estilo Bakandeya para esta canción).";
-    }
+    const contents = buildAudioOrTextContents(
+      snippetPath,
+      promptText,
+      "Audio no disponible localmente, genera el cifrado de acordes y letra profesional en directo estilo Bakandeya para esta canción."
+    );
 
     let tonalidad = "Mim / Em";
     let bpm = 125;

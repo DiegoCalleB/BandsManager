@@ -3,6 +3,7 @@ import { Song, Setlist } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
 import {
   dbGetSongs,
   dbUpsertSong,
@@ -154,7 +155,7 @@ router.delete("/setlists/:id", requireAuth, async (req, res) => {
 // POST generate AI chord sheet and substitute guide
 router.post("/generate-song-chords", requireAuth, async (req, res) => {
   try {
-    const { songId, titulo, tonalidad, bpm, afinacion, notasInternas, esVersionCovers, artista } = req.body;
+    const { songId, titulo, tonalidad, bpm, afinacion, notasInternas, esVersionCovers, artista, audioUrl } = req.body;
 
     if (!titulo) {
       return res.status(400).json({ error: "El título de la canción es requerido." });
@@ -166,6 +167,10 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     if (aiClient) {
       try {
+        const audioInstructions = audioUrl
+          ? `Tienes adjunto el audio REAL de la canción. Escúchalo con máxima atención y transcribe la LETRA EXACTA cantada y los ACORDES REALES que suenan (no los inventes). Si el audio no permite distinguir alguna parte con certeza, indícalo con [?] en vez de inventar.`
+          : `No se dispone del audio de la canción, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
+
         const prompt = `Eres un músico profesional, transcriptor y arreglista. Genera el cifrado de acordes con letra completo al estilo LaCuerda.net / Ultimate Guitar para la siguiente canción:
 Título: "${titulo}"
 ${artista ? `Artista/Banda: "${artista}"` : ''}
@@ -174,6 +179,8 @@ ${bpm ? `Tempo (BPM): ${bpm}` : ''}
 ${afinacion ? `Afinación: "${afinacion}"` : ''}
 ${notasInternas ? `Notas internas del grupo: "${notasInternas}"` : ''}
 ${esVersionCovers ? `Tipo: Versión / Cover` : `Tipo: Canción Original`}
+
+${audioInstructions}
 
 Requisitos estrictos del formato cifradoTexto:
 1. Utiliza acordes estándar en notación española o internacional (ej. Do, Re, Mim, Sol, Lam, Fa#m o C, D, Em, G, Am, F#m).
@@ -195,8 +202,24 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
   }
 }`;
 
+        let contents: any = [{ role: 'user', parts: [{ text: prompt }] }];
+
+        if (audioUrl) {
+          const snippetPath = await getAudioSnippetPath({ audioUrl });
+          const audioContents = buildAudioOrTextContents(
+            snippetPath,
+            prompt,
+            "Audio no disponible en el servidor, genera la mejor propuesta posible a partir del título y contexto."
+          );
+          // buildAudioOrTextContents returns either a multimodal array or a plain string fallback;
+          // normalize both into the { role, parts } shape generateContentWithFallback expects.
+          contents = Array.isArray(audioContents)
+            ? [{ role: 'user', parts: audioContents }]
+            : [{ role: 'user', parts: [{ text: audioContents }] }];
+        }
+
         const aiRes = await generateContentWithFallback(aiClient, {
-          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          contents,
           config: {
             responseMimeType: "application/json"
           }
