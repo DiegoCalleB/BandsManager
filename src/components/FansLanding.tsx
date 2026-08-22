@@ -253,30 +253,53 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       : t('economicSupportTitle', { bandName });
 
     return (
-      <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : 'pt-1'}>
+      <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : 'pt-1.5'}>
         <a
           href={revolutUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full p-3.5 rounded-xl bg-neutral-950/90 hover:bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition flex items-center justify-between gap-3 group cursor-pointer shadow-sm text-left"
+          className="relative group block w-full p-3.5 rounded-2xl bg-gradient-to-r from-slate-950 via-neutral-900 to-slate-950 border-2 border-sky-500/50 hover:border-sky-400 transition-all duration-300 shadow-[0_0_18px_rgba(14,165,233,0.18)] hover:shadow-[0_0_26px_rgba(14,165,233,0.35)] cursor-pointer overflow-hidden text-left"
         >
-          <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center shrink-0 p-1.5 shadow-sm group-hover:scale-105 transition-transform">
-              <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-              </svg>
+          {/* Micro-animación: haz de luz sutil en hover */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-400/15 to-transparent -translate-x-full group-hover:translate-x-full duration-1000 transition-transform pointer-events-none" />
+
+          <div className="flex items-center justify-between gap-3 relative z-10">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="relative shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                    <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                  </svg>
+                </div>
+                {/* Micro-animación de pulso continuo (ping dot) */}
+                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-80"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-400 border-2 border-neutral-950"></span>
+                </span>
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-xs sm:text-sm font-mono font-bold text-white group-hover:text-sky-200 transition leading-snug">
+                    {title}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[10px] font-mono text-sky-400 font-semibold">
+                    {revolutDisplay}
+                  </span>
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-0.5 shrink-0">
+                    <Heart className="w-2.5 h-2.5 text-pink-400 fill-pink-400 animate-pulse" />
+                    Revolut
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs sm:text-sm font-mono font-bold text-neutral-200 group-hover:text-white transition leading-snug">
-                {title}
-              </p>
-              <p className="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-400 truncate mt-0.5">
-                {revolutDisplay}
-              </p>
+
+            <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center text-sky-300 group-hover:bg-sky-500 group-hover:text-black group-hover:border-sky-400 transition-all duration-300 shrink-0 shadow-sm">
+              <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </div>
           </div>
-
-          <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-white transition shrink-0" />
         </a>
       </div>
     );
