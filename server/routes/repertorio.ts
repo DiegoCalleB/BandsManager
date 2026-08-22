@@ -164,10 +164,21 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
     const aiClient = getAiClient();
     let generatedChords: string | null = null;
     let generatedGuide: any = null;
+    // Si el cifrado se obtuvo escuchando la grabación o es una propuesta a partir del título.
+    let usedRealAudio = false;
 
     if (aiClient) {
       try {
-        const audioInstructions = audioUrl
+        // Resolvemos el audio ANTES de escribir el prompt: solo si hay una pista real
+        // podemos pedirle a la IA que transcriba lo que suena. Sin esto el prompt le diría
+        // "tienes el audio adjunto" aunque no se le mande nada, invitándole a inventar.
+        // allowSyntheticFallback:false evita que nos devuelva un tono de prueba.
+        const snippetPath = audioUrl
+          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false })
+          : null;
+        const tieneAudioReal = Boolean(snippetPath);
+
+        const audioInstructions = tieneAudioReal
           ? `Tienes adjunto el audio REAL de la canción. Escúchalo con máxima atención y transcribe la LETRA EXACTA cantada y los ACORDES REALES que suenan (no los inventes). Si el audio no permite distinguir alguna parte con certeza, indícalo con [?] en vez de inventar.`
           : `No se dispone del audio de la canción, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
 
@@ -204,8 +215,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
 
         let contents: any = [{ role: 'user', parts: [{ text: prompt }] }];
 
-        if (audioUrl) {
-          const snippetPath = await getAudioSnippetPath({ audioUrl });
+        if (tieneAudioReal) {
           const audioContents = buildAudioOrTextContents(
             snippetPath,
             prompt,
@@ -230,6 +240,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
         if (parsed && parsed.cifradoTexto) {
           generatedChords = parsed.cifradoTexto;
           generatedGuide = parsed.guiaSustituto;
+          usedRealAudio = tieneAudioReal;
         }
       } catch (aiErr: any) {
         console.warn("[Gemini API] Could not generate chords via AI, using harmonic engine fallback:", aiErr?.message || aiErr);
@@ -286,25 +297,53 @@ Final con parada seca al compás 4 en [${rootChord}].`;
       };
     }
 
-    // Persist to database/state if songId provided
+    // Persistimos el cifrado en la canción. Las canciones nuevas se crean directamente en
+    // Supabase (POST /songs no pasa por loadState), así que buscarlas solo en el estado en
+    // fichero dejaba sin guardar justo el caso más común: el análisis automático al subir
+    // audio. Leemos la canción de BD y guardamos el registro COMPLETO: dbUpsertSong
+    // reconstruye la fila con valores por defecto, así que un upsert parcial borraría
+    // título, duración y tonalidad.
+    let persisted = false;
     if (songId) {
-      const userBandId = (req as any).user?.band_id;
-      const state = loadState();
-      if (state.songs) {
-        const songIndex = state.songs.findIndex((s: Song) => s.id === songId);
+      const userBandId = getTargetBandId(req);
+      try {
+        const songs = await dbGetSongs(userBandId);
+        const song = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+        if (song) {
+          await dbUpsertSong(
+            { ...song, cifradoTexto: generatedChords, guiaSustituto: generatedGuide },
+            userBandId
+          );
+          persisted = true;
+        } else {
+          console.warn(`[generate-song-chords] Canción ${songId} no encontrada en BD; no se persiste el cifrado.`);
+        }
+      } catch (dbErr: any) {
+        console.error("[generate-song-chords] Error al persistir el cifrado:", dbErr?.message || dbErr);
+      }
+
+      // Mantenemos sincronizado el estado en fichero cuando esta banda lo usa.
+      try {
+        const state = loadState();
+        const songIndex = state.songs?.findIndex((s: Song) => s.id === songId) ?? -1;
         if (songIndex !== -1) {
           state.songs[songIndex].cifradoTexto = generatedChords;
           state.songs[songIndex].guiaSustituto = generatedGuide;
           saveState(state);
-          dbUpsertSong(state.songs[songIndex], userBandId).catch((e: any) => console.error(e));
         }
+      } catch (stateErr: any) {
+        console.warn("[generate-song-chords] No se pudo actualizar el estado local:", stateErr?.message || stateErr);
       }
     }
 
     res.json({
       success: true,
       cifradoTexto: generatedChords,
-      guiaSustituto: generatedGuide
+      guiaSustituto: generatedGuide,
+      // El cliente necesita saber si esto quedó guardado en servidor o solo vive en su copia local.
+      persisted,
+      // Y si los acordes salen de escuchar el audio real o de una propuesta a partir del título.
+      fromRealAudio: usedRealAudio
     });
   } catch (err: any) {
     console.error("Error in generate-song-chords:", err);

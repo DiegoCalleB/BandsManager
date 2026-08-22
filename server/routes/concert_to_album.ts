@@ -806,8 +806,12 @@ export async function getAudioSnippetPath(params: {
   start?: number;
   end?: number;
   trackIndex?: number;
+  // El flujo de conciertos necesita SIEMPRE un fichero para que el reproductor de la UI
+  // funcione, aunque sea un tono de prueba. Para transcribir con IA eso es contraproducente
+  // (la IA "oiría" un pitido y se inventaría los acordes), así que ahí se desactiva.
+  allowSyntheticFallback?: boolean;
 }): Promise<string | null> {
-  const { url, sourceFilePath, audioUrl, start = 0, end = 30, trackIndex = 1 } = params;
+  const { url, sourceFilePath, audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true } = params;
   const tempDir = path.join(process.cwd(), "public", "uploads", "temp");
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
@@ -912,6 +916,11 @@ export async function getAudioSnippetPath(params: {
   }
 
   // Fallback: If snippetPath was not successfully generated, create an audible test tone / melody sample so UI and audio player work with sound
+  if (!allowSyntheticFallback) {
+    console.warn("[Snippet Helper] No real audio available and synthetic fallback disabled; returning null.");
+    return null;
+  }
+
   try {
     const fallbackSnippet = path.join(tempDir, `fallback_snippet_${Date.now()}.mp3`);
     await execAsync(`"${ffmpegStatic}" -f lavfi -i "sine=frequency=440:duration=10" -c:a libmp3lame -q:a 4 "${fallbackSnippet}"`);
