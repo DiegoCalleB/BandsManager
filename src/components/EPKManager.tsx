@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer,
   Upload, Save, Globe, Mail, Phone, Music, Image as ImageIcon, CheckCircle2,
-  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages
+  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
@@ -1041,6 +1041,123 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT */}
+          <div className="bg-slate-900 border border-sky-500/30 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <h3 className="text-lg font-bold text-sky-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones con Revolut
+            </h3>
+            <p className="text-xs text-slate-400">
+              Permite a tus fans y asistentes al concierto hacer una aportación voluntaria directa por Revolut (revolut.me), sin intermediarios. Se muestra en el formulario público "Únete" y en la pantalla de confirmación.
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              {/* Campos de configuración */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+                  <div className="space-y-0.5 pr-3">
+                    <span className="text-xs font-bold text-white">Mostrar tarjeta de donación Revolut</span>
+                    <p className="text-[10px] text-slate-400">Desactívala si todavía no tienes cuenta de Revolut Business</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={config.donacionRevolut?.habilitado !== false}
+                    onChange={e => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, habilitado: e.target.checked } })}
+                    className="w-4 h-4 accent-sky-500 rounded cursor-pointer shrink-0"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300">Revtag o Usuario de Revolut</label>
+                  <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 focus-within:border-sky-500 rounded-xl px-3">
+                    <span className="text-[11px] text-slate-500 font-mono">revolut.me/</span>
+                    <input
+                      type="text"
+                      value={config.donacionRevolut?.revolutTag || ''}
+                      onChange={e => {
+                        const cleanTag = e.target.value.replace(/^@/, '').replace(/^revolut\.me\//, '').trim();
+                        const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
+                        setConfig(prev => ({
+                          ...prev,
+                          donacionRevolut: { ...prev.donacionRevolut, revolutTag: cleanTag, revolutUrl: generatedUrl },
+                          enlacesRedes: { ...(prev.enlacesRedes || {}), revolut: generatedUrl }
+                        }));
+                      }}
+                      placeholder="tubanda"
+                      className="w-full bg-transparent py-2 text-xs text-sky-300 font-bold outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300">Título de la tarjeta</label>
+                  <input
+                    type="text"
+                    value={config.donacionRevolut?.titulo || ''}
+                    onChange={e => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, titulo: e.target.value } })}
+                    placeholder="Colabora con una aportación económica"
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300">Descripción del destino de los fondos</label>
+                  <textarea
+                    rows={2}
+                    value={config.donacionRevolut?.descripcion || ''}
+                    onChange={e => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, descripcion: e.target.value } })}
+                    placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none resize-none"
+                  />
+                </div>
+                <p className="text-[10px] text-slate-500">Se guarda junto al resto del dossier con el botón "Guardar Cambios" de arriba.</p>
+              </div>
+
+              {/* Vista previa en vivo, igual a como la ve un fan */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">Así se verá para tus fans</span>
+                {config.donacionRevolut?.habilitado === false ? (
+                  <div className="p-4 rounded-2xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
+                    Tarjeta desactivada: no se mostrará en "Únete"
+                  </div>
+                ) : (
+                  <div className="relative p-3.5 rounded-2xl bg-gradient-to-r from-slate-950 via-neutral-900 to-slate-950 border-2 border-sky-500/50 shadow-[0_0_18px_rgba(14,165,233,0.18)] overflow-hidden">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shadow-md shrink-0">
+                          <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                            <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                          </svg>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-mono font-bold text-white leading-snug">
+                            {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                            <span className="text-[10px] font-mono text-sky-400 font-semibold">
+                              revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}
+                            </span>
+                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-0.5 shrink-0">
+                              <Heart className="w-2.5 h-2.5 text-pink-400 fill-pink-400" />
+                              Aportación Voluntaria
+                            </span>
+                          </div>
+                          {config.donacionRevolut?.descripcion && (
+                            <p className="text-[10px] text-neutral-400 font-mono leading-relaxed mt-1.5 line-clamp-2">
+                              {config.donacionRevolut.descripcion}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center text-sky-300 shrink-0 self-start">
+                        <ExternalLink className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
