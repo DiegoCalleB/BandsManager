@@ -1,4 +1,5 @@
 import { EPKConfig, Lead } from '../types';
+import { EpkLanguage, DEFAULT_EPK_LANGUAGE, idiomaEpkParaLead } from '../i18n/epkTranslations';
 
 export interface EmailAttachment {
   filename: string;
@@ -20,13 +21,17 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   contactEmail?: string;
   phone?: string;
   bandId?: string;
+  lang?: EpkLanguage;
 }): string {
   const band = params?.bandName || 'Bakandeya';
   const email = params?.contactEmail || 'bakandeya@gmail.com';
   const phone = params?.phone || '+34 652 938 521';
   // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id.
   const bandIdPdf = params?.bandId || 'band-bakandeya';
-  const epkUrlPdf = `https://bands-manager.up.railway.app/epk?band=${encodeURIComponent(bandIdPdf)}`;
+  // El idioma viaja con el enlace: el EPK abre directamente en la versión que le toca al
+  // destinatario en vez de obligarle a buscar el selector.
+  const langPdf = params?.lang || DEFAULT_EPK_LANGUAGE;
+  const epkUrlPdf = `https://bands-manager.up.railway.app/epk?band=${encodeURIComponent(bandIdPdf)}&lang=${langPdf}`;
 
   const header = '%PDF-1.4\n';
   const obj1 = '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n';
@@ -167,7 +172,11 @@ export function formatEmailWithSignatureAndDossier(params: {
   // los pitches, así que no puede depender del valor por defecto del servidor para saber de
   // qué banda es el dossier.
   const bandParam = `?band=${encodeURIComponent(resolvedBandId.startsWith('band-') ? resolvedBandId : `band-${cleanBandId}`)}`;
-  const webEpkUrl = `https://bands-manager.up.railway.app/epk${bandParam}`;
+  // ...y el idioma también: el agente ya escribe el pitch en el idioma del lead
+  // (server/utils/leadLanguage.ts), así que el enlace del dossier tiene que ir a juego. Hasta
+  // ahora un programador de Londres recibía un correo en inglés y una página en español.
+  const epkLang = idiomaEpkParaLead(lead);
+  const webEpkUrl = `https://bands-manager.up.railway.app/epk${bandParam}&lang=${epkLang}`;
   const effectiveEpkLink = webEpkUrl;
 
   const signatureLinksHtml = [

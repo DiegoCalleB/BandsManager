@@ -3,6 +3,8 @@
 // estructurado, así que se busca el nombre del país como texto libre).
 // Por defecto español, ya que la mayoría de la cartera de la banda es en España.
 
+import { KEYWORDS_ANGLOFONOS } from '../../src/i18n/epkTranslations.js';
+
 interface LeadLocationLike {
   direccion?: string;
   ciudad?: string;
@@ -21,11 +23,13 @@ const COUNTRY_LANGUAGE_MAP: { keywords: string[]; code: string; name: string }[]
   { keywords: ['francia', 'france'], code: 'fr', name: 'francés' },
   { keywords: ['portugal'], code: 'pt', name: 'portugués' },
   { keywords: ['alemania', 'germany', 'deutschland'], code: 'de', name: 'alemán' },
-  { keywords: ['reino unido', 'united kingdom', 'inglaterra', 'england', 'scotland', 'wales'], code: 'en', name: 'inglés' },
   { keywords: ['países bajos', 'holanda', 'netherlands'], code: 'nl', name: 'neerlandés' },
   { keywords: ['bélgica', 'belgium'], code: 'fr', name: 'francés' },
   { keywords: ['suiza', 'switzerland'], code: 'de', name: 'alemán' },
-  { keywords: ['estados unidos', 'united states', ' usa', 'u.s.a.'], code: 'en', name: 'inglés' },
+  // Reino Unido, Irlanda y EE.UU. compartían resultado en dos entradas distintas: ahora salen
+  // de la MISMA lista que decide a qué idioma del EPK apunta el enlace del pitch
+  // (src/i18n/epkTranslations.ts), para que el correo y el dossier no se contradigan.
+  { keywords: KEYWORDS_ANGLOFONOS, code: 'en', name: 'inglés' },
 ];
 
 const SPANISH_HINT: PitchLanguageHint = {
