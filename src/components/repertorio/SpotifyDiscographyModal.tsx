@@ -391,7 +391,10 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-display font-black tracking-tight">{artistProfile.name}</h3>
-                    <ShieldCheck className="w-4 h-4 text-[#1db954]" title="Artista verificado en Spotify" />
+                    {/* El title va en el contenedor: como atributo suelto de un SVG no llega a mostrarse. */}
+                    <span title="Artista verificado en Spotify" className="inline-flex">
+                      <ShieldCheck className="w-4 h-4 text-[#1db954]" />
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-xs font-mono opacity-75 mt-0.5 flex-wrap">
                     <span>{artistProfile.followers?.toLocaleString()} seguidores</span>
