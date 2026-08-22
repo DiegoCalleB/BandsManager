@@ -9,7 +9,7 @@ interface SetlistModalProps {
   colors: ThemeColors;
   isStitchLight: boolean;
   onClose: () => void;
-  onSave: (setlistData: { id?: string; nombre: string; descripcion: string; tipoFormato: 'festival' | 'sala_larga' | 'acustico' }) => void;
+  onSave: (setlistData: { id?: string; nombre: string; descripcion: string; tipoFormato: Setlist['tipoFormato'] }) => void;
 }
 
 export function SetlistModal({
@@ -24,7 +24,7 @@ export function SetlistModal({
 
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [tipoFormato, setTipoFormato] = useState<'festival' | 'sala_larga' | 'acustico'>('festival');
+  const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');
 
   useEffect(() => {
     if (setlistToEdit) {
@@ -93,6 +93,8 @@ export function SetlistModal({
               <option value="festival">🔥 Festival (45-60m Caña Directa)</option>
               <option value="sala_larga">🎸 Sala / Show Largo (90-120m)</option>
               <option value="acustico">🌙 Acústico / Intimo</option>
+              <option value="ensayo">🥁 Ensayo / Local</option>
+              <option value="otro">📋 Otro</option>
             </select>
           </div>
 

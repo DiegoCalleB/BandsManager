@@ -1,9 +1,11 @@
 import React from 'react';
 import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { SongAudioIdea } from '../../types';
 
 interface SongStudioAiGeneratorModalProps {
-  showGenModalForIdea: string | null;
+  // Solo se usa como "hay idea seleccionada o no", pero el estado real es la idea completa.
+  showGenModalForIdea: SongAudioIdea | null;
   onClose: () => void;
   genBpm: number;
   setGenBpm: (bpm: number) => void;
