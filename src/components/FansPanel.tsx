@@ -37,6 +37,7 @@ interface FansPanelProps {
   isSyncingMetrics?: boolean;
   colors?: ThemeColors;
   isStitchLight?: boolean;
+  onNavigate?: (view: 'epk') => void;
 }
 
 const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
@@ -62,7 +63,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   isScanningMetrics,
   isSyncingMetrics,
   colors,
-  isStitchLight
+  isStitchLight,
+  onNavigate
 }) => {
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
@@ -135,24 +137,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   });
   const [savedIncentive, setSavedIncentive] = useState(false);
 
-  // Revolut Donation state
-  const [revolutConfig, setRevolutConfig] = useState(epkConfig?.donacionRevolut || {
-    habilitado: true,
-    revolutTag: "bakandeya",
-    revolutUrl: "https://revolut.me/bakandeya",
-    titulo: "Colabora con una aportación económica",
-    descripcion: "Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
-  });
-  const [savedRevolut, setSavedRevolut] = useState(false);
-
   useEffect(() => {
     if (epkConfig?.incentivoFans) {
       setIncentivo(epkConfig.incentivoFans);
     }
-    if (epkConfig?.donacionRevolut) {
-      setRevolutConfig(epkConfig.donacionRevolut);
-    }
-  }, [epkConfig?.incentivoFans, epkConfig?.donacionRevolut]);
+  }, [epkConfig?.incentivoFans]);
 
   const handleSaveIncentive = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -164,29 +153,6 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     }
     setSavedIncentive(true);
     setTimeout(() => setSavedIncentive(false), 2500);
-  };
-
-  const handleSaveRevolut = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (onUpdateEpkConfig) {
-      const cleanTag = (revolutConfig.revolutTag || '').replace(/^@/, '').replace(/^revolut\.me\//, '').trim();
-      const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
-      const updated = {
-        ...revolutConfig,
-        revolutTag: cleanTag,
-        revolutUrl: generatedUrl
-      };
-      setRevolutConfig(updated);
-      onUpdateEpkConfig({ 
-        donacionRevolut: updated,
-        enlacesRedes: {
-          ...(epkConfig?.enlacesRedes || {}),
-          revolut: generatedUrl
-        }
-      });
-    }
-    setSavedRevolut(true);
-    setTimeout(() => setSavedRevolut(false), 2500);
   };
 
   // Manual Add Modal State
@@ -1187,97 +1153,31 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 </div>
               </div>
 
-              {/* Paso 3: Apoyo Económico y Donaciones con Revolut */}
-              <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-sky-500 text-slate-950 flex items-center justify-center text-[10px] font-black">3</span>
-                    <Heart className="w-4 h-4 text-sky-400" />
-                    Colaboración Económica & Donaciones (Revolut Pay)
-                  </label>
-                  {savedRevolut && (
-                    <span className="text-[11px] font-mono text-sky-400 flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
-                    </span>
-                  )}
-                </div>
+              {/* Apoyo Económico / Revolut: se configura ahora desde el Dossier EPK, fuente única
+                  del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
+              <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-3">
+                <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-sky-400" />
+                  Colaboración Económica & Donaciones (Revolut Pay)
+                </label>
                 <p className="text-[11px] text-slate-400 font-mono">
-                  Permite a tus fans y asistentes al concierto realizar aportaciones voluntarias directas mediante Revolut (revolut.me), sin intermediarios ni comisiones abusivas.
+                  {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
+                    ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
+                    : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, sin intermediarios.'}
                 </p>
-
-                <div className="space-y-3 pt-1">
-                  <div className="flex items-center justify-between p-3 bg-slate-900 border border-slate-800 rounded-xl">
-                    <div className="space-y-0.5">
-                      <span className="text-xs font-bold text-white font-mono">Mostrar tarjeta de donación Revolut</span>
-                      <p className="text-[10px] text-slate-400 font-mono">Aparecerá en el formulario público y en la pantalla de confirmación</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={revolutConfig.habilitado !== false}
-                      onChange={e => setRevolutConfig(prev => ({ ...prev, habilitado: e.target.checked }))}
-                      className="w-4 h-4 accent-sky-500 rounded cursor-pointer"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                        <span className="text-sky-400 font-bold font-mono">@</span> Revtag o Usuario de Revolut:
-                      </label>
-                      <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-sky-500 rounded-xl px-2.5">
-                        <span className="text-[11px] text-slate-500 font-mono">revolut.me/</span>
-                        <input
-                          type="text"
-                          value={revolutConfig.revolutTag || ''}
-                          onChange={e => setRevolutConfig(prev => ({ ...prev, revolutTag: e.target.value.replace(/^@/, '').replace(/^revolut\.me\//, '') }))}
-                          placeholder="bakandeya"
-                          className="w-full bg-transparent p-2 text-xs text-sky-300 font-bold outline-none font-mono"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                        <Sparkles className="w-3.5 h-3.5 text-sky-400" /> Título de la tarjeta:
-                      </label>
-                      <input
-                        type="text"
-                        value={revolutConfig.titulo || ''}
-                        onChange={e => setRevolutConfig(prev => ({ ...prev, titulo: e.target.value }))}
-                        placeholder="Colabora con una aportación económica"
-                        className="w-full bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl p-2.5 text-xs text-white outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                      Descripción del destino de los fondos:
-                    </label>
-                    <textarea
-                      rows={2}
-                      value={revolutConfig.descripcion || ''}
-                      onChange={e => setRevolutConfig(prev => ({ ...prev, descripcion: e.target.value }))}
-                      placeholder="Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
-                      className="w-full bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl p-2.5 text-xs text-white outline-none resize-none"
-                    />
-                  </div>
-
-                  <div className="flex justify-end pt-1">
-                    <button
-                      type="button"
-                      onClick={() => handleSaveRevolut()}
-                      className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Save className="w-3.5 h-3.5" /> Guardar Donación Revolut
-                    </button>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => onNavigate?.('epk')}
+                  className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" /> Configurar en el Dossier EPK
+                </button>
               </div>
 
               {/* Paso 4: Ruta Limpia y Dominio */}
               <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
                 <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">4</span>
+                  <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">3</span>
                   Ruta Limpia y Dominio Base
                 </label>
 
