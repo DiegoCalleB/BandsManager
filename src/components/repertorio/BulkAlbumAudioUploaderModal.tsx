@@ -43,7 +43,7 @@ interface UploadMatchItem {
   fileSizeFormatted: string;
   durationSeconds: number;
   matchedSongId: string | null; // null if unassigned or if creating new
-  status: 'idle' | 'uploading' | 'success' | 'error';
+  status: 'idle' | 'uploading' | 'transcribing' | 'success' | 'error';
   uploadedUrl?: string;
   errorMsg?: string;
 }
@@ -407,8 +407,27 @@ export function BulkAlbumAudioUploaderModal({
 
           if (postRes.ok) {
             const savedData = await postRes.json();
-            newlyCreatedSongs.push(savedData?.song || newSong);
+            const savedSong = savedData?.song || newSong;
+            newlyCreatedSongs.push(savedSong);
             successCount++;
+            setItems((prev) =>
+              prev.map((it, idx) => (idx === i ? { ...it, status: 'transcribing', uploadedUrl } : it))
+            );
+            try {
+              await fetch('/api/generate-song-chords', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                  songId: savedSong.id,
+                  titulo: savedSong.titulo,
+                  tonalidad: savedSong.tonalidad,
+                  bpm: savedSong.bpm,
+                  audioUrl: uploadedUrl
+                })
+              });
+            } catch (chordErr) {
+              console.warn('No se pudieron analizar los acordes de', savedSong.titulo, chordErr);
+            }
             setItems((prev) =>
               prev.map((it, idx) => (idx === i ? { ...it, status: 'success', uploadedUrl } : it))
             );
@@ -452,6 +471,24 @@ export function BulkAlbumAudioUploaderModal({
               const finalSaved = savedData?.song || updatedSong;
               updatedSongsMap.set(finalSaved.id, finalSaved);
               successCount++;
+              setItems((prev) =>
+                prev.map((it, idx) => (idx === i ? { ...it, status: 'transcribing', uploadedUrl } : it))
+              );
+              try {
+                await fetch('/api/generate-song-chords', {
+                  method: 'POST',
+                  headers,
+                  body: JSON.stringify({
+                    songId: finalSaved.id,
+                    titulo: finalSaved.titulo,
+                    tonalidad: finalSaved.tonalidad,
+                    bpm: finalSaved.bpm,
+                    audioUrl: uploadedUrl
+                  })
+                });
+              } catch (chordErr) {
+                console.warn('No se pudieron analizar los acordes de', finalSaved.titulo, chordErr);
+              }
               setItems((prev) =>
                 prev.map((it, idx) => (idx === i ? { ...it, status: 'success', uploadedUrl } : it))
               );
@@ -770,6 +807,11 @@ export function BulkAlbumAudioUploaderModal({
                               <RefreshCw className="w-4 h-4 animate-spin" />
                             </span>
                           )}
+                          {item.status === 'transcribing' && (
+                            <span className="p-1 text-purple-400" title="Analizando letra y acordes con IA...">
+                              <RefreshCw className="w-4 h-4 animate-spin" />
+                            </span>
+                          )}
                         </div>
                       )}
 
@@ -784,6 +826,11 @@ export function BulkAlbumAudioUploaderModal({
                           {item.status === 'uploading' && (
                             <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[11px] font-mono flex items-center gap-1">
                               <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Subiendo
+                            </span>
+                          )}
+                          {item.status === 'transcribing' && (
+                            <span className="px-2 py-1 rounded bg-purple-500/10 text-purple-300 text-[11px] font-mono flex items-center gap-1">
+                              <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Analizando acordes (IA)
                             </span>
                           )}
                         </div>

@@ -113,7 +113,7 @@ export function SongModal({
         </div>
 
         <form onSubmit={onSave} className="space-y-3 text-[10px] font-mono flex flex-col flex-1 overflow-hidden pt-3">
-          <input type="hidden" name="audioUrl" value={audioFileUrl} />
+          <input type="hidden" name="audioPrincipalUrl" value={audioFileName ? '' : audioFileUrl} />
           <input type="hidden" name="albumDisco" value={finalAlbumValue} />
 
           <div className="space-y-3 overflow-y-auto pr-1 flex-1 pb-2">
@@ -136,6 +136,7 @@ export function SongModal({
               </div>
               <input
                 ref={fileInputRef}
+                name="audioFile"
                 type="file"
                 accept="audio/*"
                 onChange={handleAudioFileChange}
