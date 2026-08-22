@@ -5,6 +5,7 @@
 // banda) - una sola implementación real, sin duplicar lógica entre los dos disparadores.
 
 import { getSupabase } from "../db.js";
+import { esEmailValido } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 
@@ -118,8 +119,17 @@ export async function runEnviadorAgent(opts: {
       ? `Re: Concierto ${bandName} en ${lead.nombre_sala}`
       : `Propuesta de concierto: ${bandName} en ${lead.nombre_sala}`;
 
-    if (!emailContacto) {
-      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: "El lead no tiene email de contacto." });
+    // Última línea de defensa. Antes solo comprobaba que no fuera vacío, así que un "n/a",
+    // un "-" o un espacio en blanco llegaban hasta nodemailer.
+    if (!esEmailValido(emailContacto)) {
+      results.push({
+        id: lead.id,
+        nombre_sala: lead.nombre_sala,
+        status: "error",
+        error: emailContacto
+          ? `El email de contacto no es válido ("${emailContacto}"). No se ha enviado nada.`
+          : "El lead no tiene email de contacto. No se ha enviado nada."
+      });
       continue;
     }
 

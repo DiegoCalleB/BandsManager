@@ -1,4 +1,5 @@
 import express from "express";
+import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeads, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbCheckDeletedLead } from "../../db.js";
@@ -63,6 +64,16 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
     
     const existing = await dbGetLeadById(id, userBandId);
     const merged = { ...(existing || {}), ...updatedFields, id };
+
+    // Regla del proyecto que hasta ahora no estaba en el código: un lead no puede entrar en la
+    // cola de envío sin un email de contacto válido. Antes esto no se notaba porque el Scout
+    // inventaba los emails que no conocía; ahora los huecos son reales y visibles. Salta aquí,
+    // al aprobar, y no en silencio dentro del Enviador media hora después.
+    const guarda = puedeEntrarEnColaDeEnvio(existing, updatedFields);
+    if (!guarda.ok) {
+      return res.status(400).json({ error: guarda.motivo, codigo: "email_contacto_invalido" });
+    }
+
     const saved = await dbUpsertLead(merged, userBandId);
 
     // Fire autoEnrichLead in background so request returns instantly
