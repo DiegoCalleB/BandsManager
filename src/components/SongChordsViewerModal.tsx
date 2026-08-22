@@ -116,7 +116,8 @@ export function SongChordsViewerModal({
           afinacion: song.afinacion,
           notasInternas: song.notasInternas,
           esVersionCovers: song.esVersionCovers,
-          artista: song.albumDisco
+          artista: song.albumDisco,
+          audioUrl: song.audioPrincipalUrl || undefined
         })
       });
 
@@ -245,7 +246,7 @@ export function SongChordsViewerModal({
               onClick={handleGenerateWithAi}
               disabled={isGeneratingAi}
               className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-purple-950/50 disabled:opacity-50"
-              title="Generar cifrado y guía con IA"
+              title={song.audioPrincipalUrl ? 'Reanalizar escuchando el audio real de la canción' : 'Generar cifrado y guía con IA (sin audio disponible)'}
             >
               <Wand2 className={`w-4 h-4 text-purple-200 ${isGeneratingAi ? 'animate-spin' : ''}`} />
               <span>{isGeneratingAi ? 'Generando...' : 'IA Cifrado'}</span>
