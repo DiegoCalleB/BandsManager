@@ -48,11 +48,19 @@ export function formatSecondsToMmSs(totalSeconds: number): string {
 export function calculateSetlistStats(
   items: SetlistItemLike[],
   songMap: Map<string, SongLike> | Record<string, SongLike>
-): { totalDurationSeconds: number; averageBpm: number; songCount: number } {
+): {
+  totalDurationSeconds: number;
+  averageBpm: number;
+  songCount: number;
+  eventCount: number;
+  blockCount: number;
+} {
   let totalDurationSeconds = 0;
   let bpmSum = 0;
   let bpmCount = 0;
   let songCount = 0;
+  let eventCount = 0;
+  let blockCount = 0;
 
   const getSong = (id: string) => {
     if (songMap instanceof Map) return songMap.get(id);
@@ -71,8 +79,12 @@ export function calculateSetlistStats(
           bpmCount++;
         }
       }
+    } else if (item.tipoItem === 'bloque_header') {
+      // Section headers organise the show but take no stage time of their own
+      blockCount++;
     } else {
       // Non-song item (intro, presentation, break)
+      eventCount++;
       const itemSecs = item.duracionEstimadaSegundos ?? ((item.duracionEstimadaMinutos || 0) * 60);
       totalDurationSeconds += itemSecs;
     }
@@ -81,7 +93,9 @@ export function calculateSetlistStats(
   return {
     totalDurationSeconds,
     averageBpm: bpmCount > 0 ? Math.round(bpmSum / bpmCount) : 0,
-    songCount
+    songCount,
+    eventCount,
+    blockCount
   };
 }
 

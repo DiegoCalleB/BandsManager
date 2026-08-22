@@ -628,7 +628,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                                 type="button"
                                 onClick={() => onOpenMemberNotes(s)}
                                 className={`p-1 rounded-lg transition-all cursor-pointer ${
-                                  s.notasMiembros && Object.values(s.notasMiembros).some(v => typeof v === 'string' ? v.trim().length > 0 : Boolean(v?.general || v?.intro || v?.verso || v?.estribillo || v?.puente || v?.outro))
+                                  s.notasMiembros && Object.values(s.notasMiembros).some(v => typeof v === 'string' && v.trim().length > 0)
                                     ? 'text-amber-400 hover:text-amber-300 bg-amber-500/20'
                                     : 'text-zinc-500 hover:text-amber-400 hover:bg-white/10'
                                 }`}
