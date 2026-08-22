@@ -1229,13 +1229,16 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
                 <div className="space-y-1 pt-1">
                   <label className="text-[11px] font-mono text-slate-400">Idioma del formulario para este enlace:</label>
-                  <div className="flex items-center gap-2">
+                  {/* grid en vez de flex de una sola fila: con 4+ idiomas (español, inglés,
+                      italiano, checo) un flex sin wrap se salía de la pantalla en móvil en
+                      vez de pasar a una segunda fila. */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {FAN_FORM_LANGUAGES.map(l => (
                       <button
                         key={l.code}
                         type="button"
                         onClick={() => setQrLanguage(l.code)}
-                        className={`flex-1 py-2 px-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
+                        className={`py-2 px-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
                           qrLanguage === l.code
                             ? 'bg-amber-500/15 border-amber-500/50 text-amber-300'
                             : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
