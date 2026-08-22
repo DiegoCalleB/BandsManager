@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle, Copy } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
@@ -92,7 +92,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     titulo: 'Colabora con Bakandeya con una aportación económica',
     descripcion: 'Tu aportación directa nos ayuda a financiar nuevas grabaciones, furgoneta de gira y producir nuevo merchandising independiente.'
   });
-  const [copiedRevolut, setCopiedRevolut] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
@@ -216,12 +215,13 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       slug = pathParts[0];
     }
 
+    // Solo asumimos "vengo de un concierto" cuando el enlace realmente identifica uno
+    // (slug de concierto o parámetros concertId/concertName en la URL). Un enlace genérico
+    // (/unete, /fans, bio de Instagram...) no debe precontestar "¿Cómo nos conociste?" ni
+    // mostrar el mensaje de "gracias por venir al concierto".
     if (slug && slug !== 'directo') {
       const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       setConcertName(formattedName);
-      setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
-      setIsConcertLink(true);
-    } else {
       setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
       setIsConcertLink(true);
     }
@@ -229,10 +229,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const params = new URLSearchParams(window.location.search);
     const cid = params.get('concertId');
     const cname = params.get('concertName');
-    
+
     if (cid) setConcertId(cid);
     if (cname) {
       setConcertName(cname);
+      setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
       setIsConcertLink(true);
     }
   }, []);
@@ -248,9 +249,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const renderRevolutCard = (isSuccessScreen = false) => {
     if (!revolutUrl || donacionRevolut?.habilitado === false) return null;
 
-    const title = isSuccessScreen 
+    const defaultTitle = isSuccessScreen
       ? t('revolutSuccessPrompt', { bandName })
       : t('economicSupportTitle', { bandName });
+    const title = donacionRevolut?.titulo || defaultTitle;
+    const description = donacionRevolut?.descripcion || t('economicSupportSubtitle');
 
     return (
       <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : 'pt-1.5'}>
@@ -284,21 +287,33 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     {title}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 mt-0.5">
+                <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                   <span className="text-[10px] font-mono text-sky-400 font-semibold">
                     {revolutDisplay}
                   </span>
                   <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-0.5 shrink-0">
                     <Heart className="w-2.5 h-2.5 text-pink-400 fill-pink-400 animate-pulse" />
-                    Revolut
+                    {t('revolutBadge')}
                   </span>
                 </div>
+                {description && (
+                  <p className="text-[10px] text-neutral-400 font-mono leading-relaxed mt-1.5 line-clamp-2 group-hover:text-neutral-300 transition-colors">
+                    {description}
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center text-sky-300 group-hover:bg-sky-500 group-hover:text-black group-hover:border-sky-400 transition-all duration-300 shrink-0 shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center text-sky-300 group-hover:bg-sky-500 group-hover:text-black group-hover:border-sky-400 transition-all duration-300 shrink-0 shadow-sm self-start">
               <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </div>
+          </div>
+
+          <div className="relative z-10 flex items-center gap-1.5 mt-2.5 pt-2 border-t border-white/5">
+            <Shield className="w-3 h-3 text-sky-500/70 shrink-0" />
+            <span className="text-[9px] font-mono text-neutral-500 group-hover:text-neutral-400 transition-colors">
+              {t('revolutSecureDirect')}
+            </span>
           </div>
         </a>
       </div>

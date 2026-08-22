@@ -1132,6 +1132,7 @@ export default function App() {
             onDeleteMetric={handleDeleteMetric}
             colors={colors}
             isStitchLight={currentTheme === 'stitch_light'}
+            onNavigate={handleNavigate}
           />
         )}
         {currentView === 'giras' && (
