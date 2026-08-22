@@ -22,18 +22,33 @@ export function useCatalogFilters(songs: Song[]) {
 
  // Filtered catalog songs
  const filteredSongs = useMemo(() => {
- return songs.filter(s => {
- const matchSearch = catalogSearch === '' || 
+ const filtered = songs.filter(s => {
+ const matchSearch = catalogSearch === '' ||
  s.titulo.toLowerCase().includes(catalogSearch.toLowerCase()) ||
  (s.tonalidad && s.tonalidad.toLowerCase().includes(catalogSearch.toLowerCase())) ||
  (s.notasInternas && s.notasInternas.toLowerCase().includes(catalogSearch.toLowerCase()));
 
  const matchAlbum = catalogAlbumFilter === 'todos' || s.albumDisco === catalogAlbumFilter;
- const matchStatus = catalogStatusFilter === 'todos' || s.estadoTema === catalogStatusFilter;
+ const matchStatus = catalogStatusFilter === 'todos'
+ || (catalogStatusFilter === 'favoritos' ? Boolean(s.favoritoGeneral) : s.estadoTema === catalogStatusFilter);
 
  return matchSearch && matchAlbum && matchStatus;
  });
- }, [songs, catalogSearch, catalogAlbumFilter, catalogStatusFilter]);
+
+ if (!groupByAlbum) return filtered;
+
+ // Group visually by album: sort by album name (Singles last), then by track order within it
+ return [...filtered].sort((a, b) => {
+ const albumA = a.albumDisco || a.album || '';
+ const albumB = b.albumDisco || b.album || '';
+ if (albumA !== albumB) {
+ if (!albumA) return 1;
+ if (!albumB) return -1;
+ return albumA.localeCompare(albumB);
+ }
+ return (a.ordenAlbum ?? 0) - (b.ordenAlbum ?? 0);
+ });
+ }, [songs, catalogSearch, catalogAlbumFilter, catalogStatusFilter, groupByAlbum]);
 
   return {
     groupByAlbum, setGroupByAlbum,
