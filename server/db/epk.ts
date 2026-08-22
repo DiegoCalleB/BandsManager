@@ -204,7 +204,28 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     traducciones: mergedTraducciones
   };
 
-  const { data, error } = await sb.from("epk_configs").upsert(payload).select().single();
+  let data: any = null;
+  let error: any = null;
+
+  const currentPayload: Record<string, any> = { ...payload };
+  const res = await sb.from("epk_configs").upsert(currentPayload).select().single();
+  data = res.data;
+  error = res.error;
+
+  // Si la base de datos de Supabase aún no tiene alguna columna nueva (p. ej. 'traducciones' o 'miembros'),
+  // reintentamos quitando la columna no existente para evitar que falle el guardado general.
+  if (error && error.message && error.message.includes("Could not find the '") && error.message.includes("' column of 'epk_configs'")) {
+    const match = error.message.match(/Could not find the '([^']+)' column of 'epk_configs'/);
+    if (match && match[1] && currentPayload[match[1]] !== undefined) {
+      const missingCol = match[1];
+      console.warn(`[EPK] Columna '${missingCol}' no encontrada en Supabase epk_configs. Reintentando sin ella. Ejecuta la migración SQL.`);
+      delete currentPayload[missingCol];
+      const retryRes = await sb.from("epk_configs").upsert(currentPayload).select().single();
+      data = retryRes.data;
+      error = retryRes.error;
+    }
+  }
+
   if (error) throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);
 
   // Also sync logo into registered_bands table
