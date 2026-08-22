@@ -1,7 +1,7 @@
 import express from "express";
 import Stripe from "stripe";
 import { getSupabase, dbUpsertRegisteredBand, normalizePlan, dbIsWebhookEventProcessed, dbRecordWebhookEvent } from "../db.js";
-import { loadState, saveState } from "../state.js";
+import { loadState, saveState, requireAuth } from "../state.js";
 
 const router = express.Router();
 
@@ -46,11 +46,11 @@ async function isEventProcessed(eventId: string): Promise<boolean> {
   return dbChecked;
 }
 
-// Find registered band helper
-export function isValidEmail(email?: string): boolean {
-  if (!email || typeof email !== 'string') return false;
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-}
+// La implementación vive en server/utils/email.ts para que no haya dos criterios distintos
+// de "email válido" en el repo. Se reexporta porque este módulo ya la exportaba.
+export { isValidEmail } from "../utils/email.js";
+import { isValidEmail } from "../utils/email.js";
+import { puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 
 export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
   if (userEmail && isValidEmail(userEmail)) {
@@ -708,10 +708,17 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 }
 
 // 5. Check & Consume AI Credits endpoint
-router.post(["/billing/consume-credits", "/stripe/consume-credits"], async (req, res) => {
+// requireAuth: esta ruta GASTA créditos de una banda. Sin sesión, cualquiera podía agotarlos.
+router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth, async (req, res) => {
   try {
     const { bandId, userEmail, creditsAmount = 1, featureName = "AI Task" } = req.body;
     const amount = Math.max(1, Number(creditsAmount) || 1);
+
+    // Y no basta con estar logueado: gastar créditos de OTRA banda tiene que fallar de cara.
+    const solicitada = bandaSolicitada(req);
+    if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a esta banda." });
+    }
 
     const state = loadState();
     const { band: foundBand, cleanBandId } = findBandInState(state, bandId, userEmail);
@@ -762,7 +769,9 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], async (req,
 });
 
 // 6. Get Credits Status endpoint
-router.get(["/billing/credits-status", "/stripe/credits-status"], async (req, res) => {
+// requireAuth: sin él, cualquiera consultaba el plan y el consumo de créditos de cualquier
+// banda pasando ?bandId=.
+router.get(["/billing/credits-status", "/stripe/credits-status"], requireAuth, async (req, res) => {
   try {
     const bandId = req.query.bandId as string;
     const userEmail = req.query.userEmail as string;
