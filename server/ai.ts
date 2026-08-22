@@ -2,6 +2,13 @@ import { GoogleGenAI } from "@google/genai";
 
 export const GEMINI_MODEL = "gemini-3.7-flash";
 
+// Ninguna llamada a un proveedor de IA tenía timeout, mientras el resto del repo sí usa el
+// patrón (server/routes/bands.ts, server/routes/leads/enrichment.ts). Una petición colgada
+// dejaba colgado el cron o la ruta que la hizo, sin límite.
+export const TIMEOUT_IA_MS = 60_000;
+/** Las llamadas multimodales con audio (concert_to_album) necesitan bastante más margen. */
+export const TIMEOUT_IA_LARGO_MS = 300_000;
+
 export const FALLBACK_MODELS = [
   "gemini-3.7-flash",
   "gemini-flash-latest",
@@ -176,6 +183,15 @@ export async function generateContentWithFallback(
     contents: any;
     config?: any;
     preferredModel?: string;
+    /**
+     * Permite caer en generateSmartLocalPitchFallback si se agotan TODOS los proveedores.
+     * Por defecto false, y con motivo: ese generador solo sabe escribir un pitch de booking en
+     * español. Devolvérselo a quien pedía acordes, una clasificación de la bandeja o un JSON de
+     * emails es peor que fallar, porque el fallo es silencioso y parece una respuesta buena.
+     * Solo lo activan las rutas que de verdad escriben pitches.
+     */
+    permitirPitchLocal?: boolean;
+    timeoutMs?: number;
   }
 ) {
   const modelsToTry = params.preferredModel 
@@ -190,7 +206,12 @@ export async function generateContentWithFallback(
       const response = await client.models.generateContent({
         model: modelName,
         contents: params.contents,
-        ...(params.config ? { config: params.config } : {})
+        config: {
+          ...(params.config || {}),
+          // El SDK acepta abortSignal dentro de GenerateContentConfig, junto a temperature y
+          // responseMimeType. Sin esto una petición colgada no terminaba nunca.
+          abortSignal: params.config?.abortSignal ?? AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS)
+        }
       });
       if (response) {
         console.log(`[Gemini API] ¡Éxito con modelo: ${modelName}!`);
@@ -207,7 +228,7 @@ export async function generateContentWithFallback(
   if (promptText && getDeepSeekKey()) {
     try {
       console.log("[AI Engine] Activando failover automático a DeepSeek V3 por fallo/cuota en Gemini...");
-      const text = await callDeepSeek({ prompt: promptText, temperature: params.config?.temperature });
+      const text = await callDeepSeek({ prompt: promptText, temperature: params.config?.temperature, timeoutMs: params.timeoutMs });
       if (text) {
         return {
           text,
@@ -222,7 +243,7 @@ export async function generateContentWithFallback(
   if (promptText && getAnthropicKey()) {
     try {
       console.log("[AI Engine] Activando failover automático a Claude 3.5 Haiku por fallo/cuota en Gemini...");
-      const text = await callAnthropic({ prompt: promptText, temperature: params.config?.temperature });
+      const text = await callAnthropic({ prompt: promptText, temperature: params.config?.temperature, timeoutMs: params.timeoutMs });
       if (text) {
         return {
           text,
@@ -234,13 +255,21 @@ export async function generateContentWithFallback(
     }
   }
 
-  // Graceful Local Generator Fallback when all cloud providers have exhausted balances
-  console.log("[AI Engine] Activando generador local inteligente ante agotamiento de créditos en todas las APIs...");
-  const fallbackText = generateSmartLocalPitchFallback({ prompt: promptText });
-  return {
-    text: fallbackText,
-    candidates: [{ content: { parts: [{ text: fallbackText }] } }]
-  };
+  // Último recurso: el generador local. Solo para quien lo pide explícitamente (rutas de
+  // pitches). Para todo lo demás es mejor fallar de cara que devolver un pitch de booking a
+  // quien esperaba acordes, una clasificación o un JSON.
+  if (params.permitirPitchLocal) {
+    console.log("[AI Engine] Activando generador local de pitches ante agotamiento de créditos en todas las APIs...");
+    const fallbackText = generateSmartLocalPitchFallback({ prompt: promptText });
+    return {
+      text: fallbackText,
+      candidates: [{ content: { parts: [{ text: fallbackText }] } }]
+    };
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas.");
 }
 
 export function generateSmartLocalPitchFallback(params: {
@@ -355,6 +384,7 @@ export async function callDeepSeek(params: {
   model?: string;
   temperature?: number;
   maxTokens?: number;
+  timeoutMs?: number;
 }): Promise<string> {
   const apiKey = getDeepSeekKey();
   if (!apiKey) {
@@ -371,6 +401,7 @@ export async function callDeepSeek(params: {
 
   const res = await fetch("https://api.deepseek.com/chat/completions", {
     method: "POST",
+    signal: AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`
@@ -400,6 +431,7 @@ export async function callAnthropic(params: {
   model?: string;
   temperature?: number;
   maxTokens?: number;
+  timeoutMs?: number;
 }): Promise<string> {
   const apiKey = getAnthropicKey();
   if (!apiKey) {
@@ -420,6 +452,7 @@ export async function callAnthropic(params: {
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
+    signal: AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS),
     headers: {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
@@ -451,6 +484,9 @@ export async function generateUnifiedAI(params: {
   temperature?: number;
   maxTokens?: number;
   allowFallback?: boolean;
+  /** Ver generateContentWithFallback: el generador local solo sabe escribir pitches. */
+  permitirPitchLocal?: boolean;
+  timeoutMs?: number;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -461,7 +497,8 @@ export async function generateUnifiedAI(params: {
       systemPrompt: params.systemPrompt,
       model: params.modelName || "deepseek-chat",
       temperature: params.temperature,
-      maxTokens: params.maxTokens
+      maxTokens: params.maxTokens,
+      timeoutMs: params.timeoutMs
     });
     return { text, provider: "deepseek", modelName: params.modelName || "deepseek-chat" };
   }
@@ -472,7 +509,8 @@ export async function generateUnifiedAI(params: {
       systemPrompt: params.systemPrompt,
       model: params.modelName || "claude-3-5-haiku-20241022",
       temperature: params.temperature,
-      maxTokens: params.maxTokens
+      maxTokens: params.maxTokens,
+      timeoutMs: params.timeoutMs
     });
     return { text, provider: "claude", modelName: params.modelName || "claude-3-5-haiku-20241022" };
   }
@@ -488,6 +526,7 @@ export async function generateUnifiedAI(params: {
       const res = await generateContentWithFallback(client, {
         contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
         preferredModel: params.modelName || GEMINI_MODEL,
+        timeoutMs: params.timeoutMs,
         config: {
           temperature: params.temperature ?? 0.7
         }
@@ -537,9 +576,9 @@ export async function generateUnifiedAI(params: {
     }
   }
 
-  // Fallback to local expert engine if all cloud models are exhausted
-  if (allowFallback) {
-    console.log("[AI Engine] Fallback a motor local inteligente...");
+  // Fallback al generador local de pitches, solo si quien llama lo ha pedido explícitamente.
+  if (allowFallback && params.permitirPitchLocal) {
+    console.log("[AI Engine] Fallback a generador local de pitches...");
     const localText = generateSmartLocalPitchFallback({
       prompt: params.prompt,
       systemPrompt: params.systemPrompt,
