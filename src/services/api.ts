@@ -231,6 +231,25 @@ export const api = {
     });
   },
 
+  /**
+   * Pide a la IA un borrador de traducción del contenido del EPK a otro idioma. Gasta tokens:
+   * UNA llamada por pulsación. El servidor no vuelve a llamar al modelo si el texto original
+   * no ha cambiado desde la última traducción, salvo que se pase forzar: true.
+   */
+  async traducirEpk(params: { idioma: string; bandId?: string; forzar?: boolean }): Promise<{
+    success: boolean;
+    idioma: string;
+    traduccion: NonNullable<EPKConfig['traducciones']>[string];
+    yaEstabaAlDia?: boolean;
+    mensaje?: string;
+  }> {
+    return request('/api/epk/traducir', {
+      method: 'POST',
+      headers: params.bandId ? { 'x-band-id': params.bandId } : undefined,
+      body: JSON.stringify(params)
+    });
+  },
+
   async updateIncentive(incentivoFans: NonNullable<EPKConfig['incentivoFans']>, bandId?: string): Promise<{ ok: boolean }> {
     return request('/api/epk', {
       method: 'PUT',

@@ -168,7 +168,9 @@ ALTER TABLE public.epk_configs
     -- directo y datos duros (nº de músicos, duración del directo, ciudad base...).
     ADD COLUMN IF NOT EXISTS miembros JSONB DEFAULT '[]'::jsonb,
     ADD COLUMN IF NOT EXISTS videos JSONB DEFAULT '[]'::jsonb,
-    ADD COLUMN IF NOT EXISTS datos_contratacion JSONB DEFAULT '{}'::jsonb;
+    ADD COLUMN IF NOT EXISTS datos_contratacion JSONB DEFAULT '{}'::jsonb,
+    -- EPK multiidioma: versiones traducidas del contenido de la banda, por código de idioma.
+    ADD COLUMN IF NOT EXISTS traducciones JSONB DEFAULT '{}'::jsonb;
 
 ALTER TABLE public.fans
     ADD COLUMN IF NOT EXISTS mensaje TEXT DEFAULT '',

@@ -8,6 +8,7 @@ import { SocialPlatformsList } from './SocialPlatformsList';
 import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict } from '../i18n/epkTranslations';
 import { interpolate } from '../i18n/fansTranslations';
 import { useEpkLanguage } from '../hooks/useEpkLanguage';
+import { resolverContenidoEpk } from '../utils/epkTraducciones';
 
 interface PublicEPKProps {
   initialData?: {
@@ -122,6 +123,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   // que hace que esto lea como la web real de una banda en directo y no como una tarjeta de
   // dashboard - sin foto real, cae al degradado de siempre.
   const fotoPortada = (config.bandPhotos || []).find(p => p && p !== displayLogo) || null;
+  // Contenido escrito por la banda, resuelto al idioma elegido. Si falta la traducción de un
+  // campo concreto, ese campo cae al español: una traducción a medias se lee mezclada, que es
+  // mucho mejor que dejar huecos en blanco en un dossier de contratación.
+  const contenido = resolverContenidoEpk(config, language);
   const datos = config.datosContratacion || {};
   const hayDatosContratacion = Boolean(
     datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario
@@ -218,7 +223,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 NUNCA el texto largo para agentes de IA (dossierTextoExtra) - antes usaba ese
                 segundo campo, y al no avisar que también era público, un texto largo pensado
                 solo para el chatbot acababa mostrado como titular gigante en la home. */}
-            {config.firmaEmail?.textoPie || (isBakandeya ? t('lemaPorDefectoBakandeya') : t('lemaPorDefecto'))}
+            {contenido.textoPie || (isBakandeya ? t('lemaPorDefectoBakandeya') : t('lemaPorDefecto'))}
           </p>
 
           {config.enlacesRedes && (
@@ -246,12 +251,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   // El editor ahora guarda solo el número (la unidad "min" es fija en la UI),
                   // pero datos antiguos podían llevar texto libre tipo "75 min" - si ya trae
                   // letras se deja tal cual, para no acabar mostrando "75 min min".
-                  valor: datos.duracionDirecto
-                    ? (/[a-zA-Z]/.test(String(datos.duracionDirecto)) ? String(datos.duracionDirecto) : `${datos.duracionDirecto} ${t('unidadMinutos')}`)
+                  valor: contenido.dato('duracionDirecto')
+                    ? (/[a-zA-Z]/.test(contenido.dato('duracionDirecto')) ? contenido.dato('duracionDirecto') : `${contenido.dato('duracionDirecto')} ${t('unidadMinutos')}`)
                     : ''
                 },
                 { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
-                { label: t('etiquetaFormatos'), valor: datos.formatos || '' }
+                { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
               ].filter(d => d.valor).map(d => (
                 <div key={d.label} className="bg-slate-950 border border-slate-800 rounded-xl p-4">
                   <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{d.label}</p>
@@ -259,10 +264,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 </div>
               ))}
             </div>
-            {datos.necesidadesEscenario && (
+            {contenido.dato('necesidadesEscenario') && (
               <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
                 <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('etiquetaNecesidades')}</p>
-                <p className="text-slate-300 text-sm mt-1">{datos.necesidadesEscenario}</p>
+                <p className="text-slate-300 text-sm mt-1">{contenido.dato('necesidadesEscenario')}</p>
               </div>
             )}
           </section>
@@ -277,15 +282,15 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
               <iframe
                 src={aEmbed(videoPrincipal.url)!}
-                title={videoPrincipal.titulo || t('tituloVideoPorDefecto')}
+                title={contenido.tituloVideo(videoPrincipal) || t('tituloVideoPorDefecto')}
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
                 loading="lazy"
                 className="w-full h-full"
               />
             </div>
-            {videoPrincipal.titulo && (
-              <p className="text-sm text-slate-300 font-medium">{videoPrincipal.titulo}</p>
+            {contenido.tituloVideo(videoPrincipal) && (
+              <p className="text-sm text-slate-300 font-medium">{contenido.tituloVideo(videoPrincipal)}</p>
             )}
             {videosSecundarios.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -294,14 +299,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                     <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
                       <iframe
                         src={aEmbed(v.url)!}
-                        title={v.titulo || t('tituloVideoPorDefecto')}
+                        title={contenido.tituloVideo(v) || t('tituloVideoPorDefecto')}
                         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                         allowFullScreen
                         loading="lazy"
                         className="w-full h-full"
                       />
                     </div>
-                    {v.titulo && <p className="text-xs text-slate-400">{v.titulo}</p>}
+                    {contenido.tituloVideo(v) && <p className="text-xs text-slate-400">{contenido.tituloVideo(v)}</p>}
                   </div>
                 ))}
               </div>
@@ -329,8 +334,8 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   </div>
                   <div>
                     <h4 className="font-bold text-white text-sm leading-tight">{m.nombre}</h4>
-                    {m.rol && <p className="text-xs text-amber-400/90 mt-0.5">{m.rol}</p>}
-                    {m.bio && <p className="text-[11px] text-slate-500 mt-1 leading-snug">{m.bio}</p>}
+                    {contenido.rolMiembro(m) && <p className="text-xs text-amber-400/90 mt-0.5">{contenido.rolMiembro(m)}</p>}
+                    {contenido.bioMiembro(m) && <p className="text-[11px] text-slate-500 mt-1 leading-snug">{contenido.bioMiembro(m)}</p>}
                   </div>
                 </div>
               ))}
@@ -347,7 +352,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               {t('seccionBio')}
             </h2>
             <div className="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3">
-              {config.biografia}
+              {contenido.biografia}
             </div>
           </section>
 
@@ -522,7 +527,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         )}
 
         {/* TECHNICAL RIDER - oculto si no hay nada que enseñar (antes salía una caja vacía) */}
-        {(config.riderTecnico?.trim() || config.riderPdfUrl) && (
+        {(contenido.riderTecnico.trim() || config.riderPdfUrl) && (
         <section className="mb-16 space-y-6 print:mb-8">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
@@ -539,10 +544,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <Download className="w-3.5 h-3.5" /> {config.riderPdfName || t('descargarRider')}
                 </a>
               )}
-              {config.riderTecnico?.trim() && (
+              {contenido.riderTecnico.trim() && (
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(config.riderTecnico);
+                    navigator.clipboard.writeText(contenido.riderTecnico);
                     alert(t('riderCopiado'));
                   }}
                   className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 transition"
@@ -552,9 +557,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               )}
             </div>
           </div>
-          {config.riderTecnico?.trim() && (
+          {contenido.riderTecnico.trim() && (
             <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-300 text-sm font-mono whitespace-pre-line leading-relaxed">
-              {config.riderTecnico}
+              {contenido.riderTecnico}
             </div>
           )}
         </section>
