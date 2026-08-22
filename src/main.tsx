@@ -12,13 +12,21 @@ import './index.css';
 // página existía pero era inalcanzable y el enlace acababa en "Entrar a mi cuenta".
 const esRutaPublicaEpk = typeof window !== 'undefined' && /^\/epk\/?$/.test(window.location.pathname);
 
+// El EPK se monta FUERA de LanguageProvider a propósito: ese provider inyecta el widget de
+// Google Translate, que traduce a nivel de DOM y destroza nombres propios y jerga ("Bakandeya",
+// "Electrobasureo"). En un documento cuyo único trabajo es parecer profesional eso no vale, y
+// además pelearía con el selector de idioma propio de la página (ver useEpkLanguage). PublicEPK
+// no usa useLanguage() en ningún sitio, así que no necesita el contexto para nada.
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <LanguageProvider>
-        {esRutaPublicaEpk ? <PublicEPK /> : <App />}
-      </LanguageProvider>
+      {esRutaPublicaEpk ? (
+        <PublicEPK />
+      ) : (
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      )}
     </ErrorBoundary>
   </StrictMode>,
 );
-
