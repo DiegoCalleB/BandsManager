@@ -228,6 +228,9 @@ CREATE TABLE IF NOT EXISTS epk_configs (
     miembros JSONB DEFAULT '[]'::jsonb,
     videos JSONB DEFAULT '[]'::jsonb,
     datos_contratacion JSONB DEFAULT '{}'::jsonb,
+    -- Versiones en otros idiomas del contenido que escribe la banda (biografía, lema, bios de
+    -- los miembros...). Clave = código de idioma; ver EPKTranslations en src/types.ts.
+    traducciones JSONB DEFAULT '{}'::jsonb,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

@@ -276,7 +276,35 @@ export interface EPKConfig {
   };
   ciudadesConfig?: string[];
   firmaEmail?: EmailSignatureConfig;
+  traducciones?: EPKTranslations;
 }
+
+// Versiones en otros idiomas del contenido que escribe la banda, para el EPK público
+// (/epk?band=...&lang=en). Solo prosa: nombres de personas, emails, teléfonos, URLs, números
+// y títulos de canciones NO se traducen nunca.
+//
+// Los miembros y los vídeos van indexados por su id, NUNCA por posición: reordenar o borrar
+// un miembro no puede descolocar las traducciones del resto.
+export interface EPKContenidoTraducido {
+  biografia?: string;
+  textoPie?: string;
+  riderTecnico?: string;
+  miembros?: Record<string, { rol?: string; bio?: string }>;
+  videos?: Record<string, { titulo?: string }>;
+  datosContratacion?: {
+    duracionDirecto?: string;
+    formatos?: string;
+    necesidadesEscenario?: string;
+  };
+  /** Huella del texto original con el que se generó esta traducción, para detectar que se ha quedado vieja. */
+  _fuenteHash?: string;
+  _traducidoEn?: string;
+  /** true en cuanto la banda edita la traducción a mano desde el gestor del EPK. */
+  _revisadoAMano?: boolean;
+}
+
+/** Clave = código de idioma ('en', y los que se añadan). El español es siempre el original. */
+export type EPKTranslations = Record<string, EPKContenidoTraducido>;
 
 export interface Fan {
   id: string;

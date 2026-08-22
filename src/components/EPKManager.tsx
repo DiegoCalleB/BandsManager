@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { 
   FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer,
   Upload, Save, Globe, Mail, Phone, Music, Image as ImageIcon, CheckCircle2,
-  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle
+  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
+import { EPK_LANGUAGES } from '../i18n/epkTranslations';
+import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
 import { api } from '../services/api';
 import { googleSignIn, auth } from '../utils/gmail';
 
@@ -225,6 +227,9 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [isUploadingRider, setIsUploadingRider] = useState(false);
   const [subiendoFotoMiembro, setSubiendoFotoMiembro] = useState<string | null>(null);
   const [subiendoGaleria, setSubiendoGaleria] = useState(false);
+  const [traduciendo, setTraduciendo] = useState<string | null>(null);
+  const [errorTraduccion, setErrorTraduccion] = useState<string | null>(null);
+  const [avisoTraduccion, setAvisoTraduccion] = useState<string | null>(null);
 
   // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
   // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
@@ -464,6 +469,65 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     const datos = { ...(config.datosContratacion || {}) } as any;
     datos[campo] = campo === 'numMusicos' ? (valor === '' ? undefined : Number(valor)) : valor;
     setConfig({ ...config, datosContratacion: datos });
+  };
+
+  // --- EPK multiidioma -------------------------------------------------------------------
+  // Idiomas a los que se puede traducir (todos menos el original, que es el español).
+  const idiomasDestino = EPK_LANGUAGES.filter(l => l.code !== IDIOMA_ORIGEN);
+
+  /**
+   * Pide a la IA un borrador de traducción. GASTA TOKENS: una llamada por pulsación. El
+   * servidor no vuelve a llamar al modelo si el texto original no ha cambiado desde la última
+   * traducción, así que un doble clic no cuesta nada.
+   */
+  const traducirConIA = async (idioma: string) => {
+    setTraduciendo(idioma);
+    setErrorTraduccion(null);
+    setAvisoTraduccion(null);
+    try {
+      // Se guarda primero: el servidor traduce lo que hay guardado, no lo que tienes en
+      // pantalla sin guardar. Sin esto, traducir justo después de reescribir la biografía
+      // devolvía la traducción del texto viejo.
+      await api.updateEpkConfig({ ...config, bandId: activeBandId });
+      const res = await api.traducirEpk({ idioma, bandId: activeBandId });
+      setConfig(prev => ({
+        ...prev,
+        traducciones: { ...(prev.traducciones || {}), [idioma]: res.traduccion }
+      }));
+      if (res.yaEstabaAlDia) {
+        setAvisoTraduccion(res.mensaje || 'La traducción ya estaba al día: no se ha gastado ninguna llamada a la IA.');
+      }
+    } catch (err: any) {
+      setErrorTraduccion(err?.message || 'No se pudo traducir el EPK.');
+    } finally {
+      setTraduciendo(null);
+    }
+  };
+
+  /** Edición a mano de la traducción. Marca _revisadoAMano para saber que ya pasó por un humano. */
+  const editarTraduccion = (idioma: string, campo: 'biografia' | 'textoPie' | 'riderTecnico', valor: string) => {
+    setConfig(prev => ({
+      ...prev,
+      traducciones: {
+        ...(prev.traducciones || {}),
+        [idioma]: { ...(prev.traducciones?.[idioma] || {}), [campo]: valor, _revisadoAMano: true }
+      }
+    }));
+  };
+
+  const editarTraduccionMiembro = (idioma: string, miembroId: string, campo: 'rol' | 'bio', valor: string) => {
+    setConfig(prev => {
+      const traduccion = prev.traducciones?.[idioma] || {};
+      const miembrosTraducidos = { ...(traduccion.miembros || {}) };
+      miembrosTraducidos[miembroId] = { ...(miembrosTraducidos[miembroId] || {}), [campo]: valor };
+      return {
+        ...prev,
+        traducciones: {
+          ...(prev.traducciones || {}),
+          [idioma]: { ...traduccion, miembros: miembrosTraducidos, _revisadoAMano: true }
+        }
+      };
+    });
   };
 
   const toggleHighlightedSong = (songId: string) => {
@@ -1293,6 +1357,166 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* EPK MULTIIDIOMA - borrador de la IA + repaso humano */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <Languages className="w-5 h-5" /> Versiones del EPK en otros idiomas
+            </h3>
+            <div className="text-xs text-slate-400 space-y-1">
+              <p>Las etiquetas de la página (secciones, botones, "Músicos en escena"...) ya están traducidas. Aquí se traduce lo que escribís vosotros: biografía, lema y las bios de los miembros.</p>
+              <p><strong className="text-slate-300">Gasta tokens solo al pulsar el botón</strong>, una llamada por idioma. Nunca al visitar la página: lo que ve un programador es siempre texto ya guardado.</p>
+              <p>La IA hace el borrador; repásalo abajo antes de dejarlo publicado. No traduce nombres propios (ni "Bakandeya", ni "Electrobasureo", ni nombres de personas o salas).</p>
+            </div>
+
+            {errorTraduccion && (
+              <div className="rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 p-3 text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" /> <span>{errorTraduccion}</span>
+              </div>
+            )}
+            {avisoTraduccion && (
+              <div className="rounded-xl border border-sky-500/40 bg-sky-500/10 text-sky-300 p-3 text-xs flex items-start gap-2">
+                <Info className="w-4 h-4 shrink-0 mt-0.5" /> <span>{avisoTraduccion}</span>
+              </div>
+            )}
+
+            {idiomasDestino.map(idioma => {
+              const traduccion = config.traducciones?.[idioma.code];
+              const hayTraduccion = tieneTraduccion(config, idioma.code);
+              const desactualizada = traduccionDesactualizada(config, idioma.code);
+              const estaTraduciendo = traduciendo === idioma.code;
+
+              return (
+                <div key={idioma.code} className="border border-slate-800 rounded-xl p-4 bg-slate-950 space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg" aria-hidden="true">{idioma.flag}</span>
+                      <span className="font-bold text-white text-sm">{idioma.label}</span>
+                      {hayTraduccion && !desactualizada && (
+                        <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                          Al día
+                        </span>
+                      )}
+                      {traduccion?._revisadoAMano && (
+                        <span className="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                          Repasado a mano
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {hayTraduccion && (
+                        <a
+                          href={`${publicEpkUrl}&lang=${idioma.code}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 transition"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> Ver página
+                        </a>
+                      )}
+                      <button
+                        onClick={() => traducirConIA(idioma.code)}
+                        disabled={estaTraduciendo}
+                        className="text-xs bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition"
+                      >
+                        {estaTraduciendo
+                          ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Traduciendo...</>
+                          : <><Sparkles className="w-3.5 h-3.5" /> {hayTraduccion ? 'Volver a traducir' : 'Traducir con IA'}</>}
+                      </button>
+                    </div>
+                  </div>
+
+                  {desactualizada && (
+                    <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 p-3 text-xs flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <span>
+                        Has cambiado el texto en español desde la última traducción, así que esta versión se ha quedado vieja.
+                        La página la sigue mostrando (mejor eso que enseñarle español a quien no lo lee), pero conviene volver a traducir.
+                      </span>
+                    </div>
+                  )}
+
+                  {!hayTraduccion && !estaTraduciendo && (
+                    <p className="text-xs text-slate-500">
+                      Todavía no hay versión en {idioma.label}. La página en <code className="text-slate-400">?lang={idioma.code}</code> muestra
+                      las etiquetas traducidas y vuestros textos en español hasta que la generes.
+                    </p>
+                  )}
+
+                  {hayTraduccion && (
+                    <div className="space-y-4">
+                      {[
+                        { campo: 'biografia' as const, etiqueta: 'Biografía', original: config.biografia, filas: 6 },
+                        { campo: 'textoPie' as const, etiqueta: 'Lema (subtítulo de la cabecera)', original: config.firmaEmail?.textoPie, filas: 2 },
+                        { campo: 'riderTecnico' as const, etiqueta: 'Rider técnico', original: config.riderTecnico, filas: 4 },
+                      ].filter(f => (f.original || '').trim()).map(f => (
+                        <div key={f.campo} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1.5">
+                              {f.etiqueta} — español (original)
+                            </label>
+                            <div className="w-full bg-slate-900/60 border border-slate-800 rounded-lg p-3 text-xs text-slate-500 whitespace-pre-line max-h-40 overflow-y-auto">
+                              {f.original}
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-[10px] uppercase tracking-wider text-amber-500/80 font-semibold mb-1.5">
+                              {f.etiqueta} — {idioma.label}
+                            </label>
+                            <textarea
+                              value={traduccion?.[f.campo] || ''}
+                              onChange={e => editarTraduccion(idioma.code, f.campo, e.target.value)}
+                              rows={f.filas}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-white focus:border-amber-500 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                      ))}
+
+                      {miembros.filter(m => (m.rol || '').trim() || (m.bio || '').trim()).length > 0 && (
+                        <div className="space-y-3 pt-2 border-t border-slate-800">
+                          <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Formación</p>
+                          {miembros.filter(m => (m.rol || '').trim() || (m.bio || '').trim()).map(m => (
+                            <div key={m.id} className="bg-slate-900/60 border border-slate-800 rounded-lg p-3 space-y-2">
+                              <p className="text-xs font-bold text-white">{m.nombre || 'Sin nombre'}</p>
+                              {(m.rol || '').trim() && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  <div className="text-[11px] text-slate-500 pt-1.5">{m.rol}</div>
+                                  <input
+                                    type="text"
+                                    value={traduccion?.miembros?.[m.id]?.rol || ''}
+                                    onChange={e => editarTraduccionMiembro(idioma.code, m.id, 'rol', e.target.value)}
+                                    placeholder={`Instrumento en ${idioma.label}`}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-amber-500 focus:outline-none"
+                                  />
+                                </div>
+                              )}
+                              {(m.bio || '').trim() && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  <div className="text-[11px] text-slate-500">{m.bio}</div>
+                                  <textarea
+                                    value={traduccion?.miembros?.[m.id]?.bio || ''}
+                                    onChange={e => editarTraduccionMiembro(idioma.code, m.id, 'bio', e.target.value)}
+                                    rows={3}
+                                    placeholder={`Trayectoria en ${idioma.label}`}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:border-amber-500 focus:outline-none"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <p className="text-[11px] text-slate-500">
+                        Los cambios que hagas aquí se guardan con el botón "Guardar" de siempre, al final de la página.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* FEATURED SONGS SELECTOR */}
