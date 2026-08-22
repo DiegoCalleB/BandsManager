@@ -205,7 +205,9 @@ Instrucciones:
 - Respeta las preferencias globales de estilo y tono aprendidas en la memoria del mánager.
 Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el usuario.`;
 
-            const resp = await generateContentWithFallback(ai, { contents: prompt });
+            // El Redactor escribe pitches: aquí el generador local sí tiene sentido como
+            // último recurso (y el lead se queda en 'pendiente_aprobacion' para revisión).
+            const resp = await generateContentWithFallback(ai, { contents: prompt, permitirPitchLocal: true });
             generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
           } catch (err) {
             console.warn("AI fallback for pitch generation:", err);
