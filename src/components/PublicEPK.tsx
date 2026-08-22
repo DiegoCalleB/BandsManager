@@ -5,6 +5,9 @@ import {
 } from 'lucide-react';
 import { EPKConfig, Song, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
+import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict } from '../i18n/epkTranslations';
+import { interpolate } from '../i18n/fansTranslations';
+import { useEpkLanguage } from '../hooks/useEpkLanguage';
 
 interface PublicEPKProps {
   initialData?: {
@@ -20,6 +23,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const galeriaScrollRef = React.useRef<HTMLDivElement>(null);
+  const [language, setLanguage] = useEpkLanguage();
 
   useEffect(() => {
     if (!initialData) {
@@ -47,23 +51,29 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     window.print();
   };
 
+  const dict = EPK_TRANSLATIONS[language];
+  const bandName = epkData?.bandName || epkData?.registeredBand?.nombre_banda || dict.bandaPorDefecto;
+  const isBakandeya = (epkData?.bandId || '').includes('bakandeya') || bandName.toLowerCase().includes('bakandeya');
+
+  // Etiquetas fijas de la interfaz. El nombre de la banda y el año siempre están disponibles
+  // como variables, así que cualquier cadena del diccionario puede usar {bandName} y {year}.
+  const t = (clave: keyof EpkDict, vars?: Record<string, string | undefined>) =>
+    interpolate(dict[clave], { bandName, year: String(new Date().getFullYear()), ...vars });
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6">
         <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-amber-400 font-medium">Cargando Kit de Prensa...</p>
+        <p className="text-amber-400 font-medium">{t('cargando')}</p>
       </div>
     );
   }
 
-  const bandName = epkData?.bandName || epkData?.registeredBand?.nombre_banda || "Banda";
-  const isBakandeya = (epkData?.bandId || '').includes('bakandeya') || bandName.toLowerCase().includes('bakandeya');
-
   const config: EPKConfig = epkData?.epkConfig || {
-    biografia: isBakandeya ? "Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos..." : `${bandName} — Propuesta musical en directo.`,
+    biografia: isBakandeya ? t('bioPorDefectoBakandeya') : t('bioPorDefecto'),
     logoUrl: isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "",
     bandPhotos: [],
-    riderTecnico: "PA y microfonía profesional de directo...",
+    riderTecnico: t('riderPorDefecto'),
     enlacesRedes: {},
     contactoBooking: { nombre: bandName, email: "", telefono: "" },
     temasDestacadosIds: []
@@ -123,29 +133,52 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
       <div className="fixed top-0 left-0 right-0 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden">
         <div className="flex items-center gap-3">
           {displayLogo ? (
-            <img src={displayLogo} alt={`Logo ${bandName}`} className="w-8 h-8 rounded-full object-cover border border-amber-500/50" />
+            <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover border border-amber-500/50" />
           ) : (
             <div className="w-8 h-8 rounded-full bg-slate-800 border border-amber-500/50 flex items-center justify-center text-amber-400 font-bold text-xs">
               {bandName.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="font-bold text-amber-400 tracking-wide text-sm sm:text-base">{bandName} — EPK / Press Kit</span>
+          {/* En móvil solo el nombre: con el selector de idioma al lado, "— EPK / Press Kit"
+              partía el título en tres líneas y descuadraba la barra. */}
+          <span className="font-bold text-amber-400 tracking-wide text-sm sm:text-base whitespace-nowrap">
+            <span className="sm:hidden">{bandName}</span>
+            <span className="hidden sm:inline">{t('insigniaCabecera')}</span>
+          </span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Selector de idioma. Cambiarlo reescribe ?lang= en la URL (ver useEpkLanguage):
+              este enlace se reenvía por correo entre programadores, así que el idioma tiene
+              que viajar con él. Dos botones diminutos para no competir con el resto. */}
+          <div className="flex items-center gap-0.5 bg-slate-800 border border-slate-700 rounded-lg p-0.5" role="group" aria-label={t('selectorIdioma')}>
+            {EPK_LANGUAGES.map(l => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => setLanguage(l.code)}
+                aria-pressed={language === l.code}
+                title={l.label}
+                className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-700'}`}
+              >
+                <span aria-hidden="true">{l.flag}</span>
+                <span className="hidden sm:inline ml-1 uppercase">{l.code}</span>
+              </button>
+            ))}
+          </div>
           <button
             onClick={handleCopyLink}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium rounded-lg border border-slate-700 transition"
           >
             {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-amber-400" />}
-            <span>{copiedLink ? '¡Enlace Copiado!' : 'Compartir'}</span>
+            <span>{copiedLink ? t('enlaceCopiado') : t('compartir')}</span>
           </button>
           <button
             onClick={handlePrintPDF}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-lg transition shadow-md"
           >
             <Printer className="w-4 h-4" />
-            <span className="hidden sm:inline">Descargar PDF / Imprimir</span>
-            <span className="sm:hidden">PDF</span>
+            <span className="hidden sm:inline">{t('imprimirLargo')}</span>
+            <span className="sm:hidden">{t('imprimirCorto')}</span>
           </button>
         </div>
       </div>
@@ -168,7 +201,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           {displayLogo && (
             <img
               src={displayLogo}
-              alt={`Logo Oficial ${bandName}`}
+              alt={t('logoOficialAlt')}
               className={`rounded-xl object-cover shadow-2xl mb-7 ${fotoPortada ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'}`}
             />
           )}
@@ -185,7 +218,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 NUNCA el texto largo para agentes de IA (dossierTextoExtra) - antes usaba ese
                 segundo campo, y al no avisar que también era público, un texto largo pensado
                 solo para el chatbot acababa mostrado como titular gigante en la home. */}
-            {config.firmaEmail?.textoPie || (isBakandeya ? "Ska-Rock, Mestizaje & Ritmos Latinos en Vivo" : `${bandName} en Directo`)}
+            {config.firmaEmail?.textoPie || (isBakandeya ? t('lemaPorDefectoBakandeya') : t('lemaPorDefecto'))}
           </p>
 
           {config.enlacesRedes && (
@@ -203,22 +236,22 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {hayDatosContratacion && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Datos para Contratación
+              {t('seccionDatos')}
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: 'Músicos en escena', valor: datos.numMusicos ? String(datos.numMusicos) : '' },
+                { label: t('etiquetaMusicos'), valor: datos.numMusicos ? String(datos.numMusicos) : '' },
                 {
-                  label: 'Duración del directo',
+                  label: t('etiquetaDuracion'),
                   // El editor ahora guarda solo el número (la unidad "min" es fija en la UI),
                   // pero datos antiguos podían llevar texto libre tipo "75 min" - si ya trae
                   // letras se deja tal cual, para no acabar mostrando "75 min min".
                   valor: datos.duracionDirecto
-                    ? (/[a-zA-Z]/.test(String(datos.duracionDirecto)) ? String(datos.duracionDirecto) : `${datos.duracionDirecto} min`)
+                    ? (/[a-zA-Z]/.test(String(datos.duracionDirecto)) ? String(datos.duracionDirecto) : `${datos.duracionDirecto} ${t('unidadMinutos')}`)
                     : ''
                 },
-                { label: 'Ciudad base', valor: datos.ciudadBase || '' },
-                { label: 'Formatos', valor: datos.formatos || '' }
+                { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
+                { label: t('etiquetaFormatos'), valor: datos.formatos || '' }
               ].filter(d => d.valor).map(d => (
                 <div key={d.label} className="bg-slate-950 border border-slate-800 rounded-xl p-4">
                   <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{d.label}</p>
@@ -228,7 +261,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </div>
             {datos.necesidadesEscenario && (
               <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
-                <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Necesidades de escenario</p>
+                <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('etiquetaNecesidades')}</p>
                 <p className="text-slate-300 text-sm mt-1">{datos.necesidadesEscenario}</p>
               </div>
             )}
@@ -239,12 +272,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {videoPrincipal && (
           <section className="mb-16 space-y-6 print:hidden">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Vídeo en Directo
+              {t('seccionVideo')}
             </h2>
             <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
               <iframe
                 src={aEmbed(videoPrincipal.url)!}
-                title={videoPrincipal.titulo || `${bandName} en directo`}
+                title={videoPrincipal.titulo || t('tituloVideoPorDefecto')}
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
                 loading="lazy"
@@ -261,7 +294,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                     <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
                       <iframe
                         src={aEmbed(v.url)!}
-                        title={v.titulo || `${bandName} en directo`}
+                        title={v.titulo || t('tituloVideoPorDefecto')}
                         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                         allowFullScreen
                         loading="lazy"
@@ -280,7 +313,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {miembros.length > 0 && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              La Banda
+              {t('seccionBanda')}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {miembros.map(m => (
@@ -311,7 +344,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           {/* BIOGRAPHY (2 Cols) */}
           <section className="lg:col-span-2 space-y-6">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Biografía & Propuesta Musical
+              {t('seccionBio')}
             </h2>
             <div className="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3">
               {config.biografia}
@@ -322,16 +355,16 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <section className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 space-y-5 flex flex-col justify-between print:border-amber-400 print:bg-white print:text-black">
             <div className="space-y-3">
               <h3 className="text-lg font-bold text-amber-400 print:text-black flex items-center gap-2">
-                <Mail className="w-5 h-5" /> Contacto de Booking
+                <Mail className="w-5 h-5" /> {t('contactoTitulo')}
               </h3>
               <p className="text-xs text-slate-400 print:text-slate-600">
-                Atención directa a programadores de salas, comisiones de fiestas y festivales:
+                {t('contactoSubtitulo')}
               </p>
 
               <div className="space-y-2.5 pt-2 text-sm">
                 <div className="flex items-center gap-2.5 text-slate-200 print:text-black font-medium">
                   <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-                  <span>{config.contactoBooking?.nombre || `Mánager ${bandName}`}</span>
+                  <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-amber-300 print:text-black font-mono">
                   <Mail className="w-4 h-4 shrink-0 text-amber-400" />
@@ -346,10 +379,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
             <div className="pt-4 border-t border-amber-500/20 print:border-slate-300">
               <a
-                href={`mailto:${config.contactoBooking?.email}?subject=Contratación%20${encodeURIComponent(bandName)}%20${new Date().getFullYear()}`}
+                href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t('asuntoContratacion'))}`}
                 className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition print:hidden"
               >
-                <Mail className="w-4 h-4" /> Solicitar Caché & Disponibilidad
+                <Mail className="w-4 h-4" /> {t('ctaCache')}
               </a>
             </div>
           </section>
@@ -359,7 +392,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {songs.length > 0 && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Temas Destacados / Repertorio Principal
+              {t('seccionTemas')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {songs.map((song: any) => {
@@ -380,7 +413,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                           onClick={() => setPlayingSongId(sonando ? null : song.id)}
                           className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-lg transition ${sonando ? 'bg-amber-400 text-slate-950' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25'}`}
                         >
-                          {sonando ? <><Pause className="w-3.5 h-3.5" /> Sonando</> : <><Play className="w-3.5 h-3.5" /> Escuchar</>}
+                          {sonando ? <><Pause className="w-3.5 h-3.5" /> {t('sonando')}</> : <><Play className="w-3.5 h-3.5" /> {t('escuchar')}</>}
                         </button>
                         {sonando && (
                           <audio
@@ -405,7 +438,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {((config.bandPhotos && config.bandPhotos.length > 0) || displayLogo) && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Galería de Imagen & Prensa
+              {t('seccionGaleria')}
             </h2>
             <div className="relative group/carrusel">
               <div
@@ -414,9 +447,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               >
                 {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
                   <div key={idx} className="group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                    <img src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                    <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
-                      <span className="text-xs font-semibold text-white">Foto Promocional #{idx + 1}</span>
+                      <span className="text-xs font-semibold text-white">{t('fotoPromocional', { n: String(idx + 1) })}</span>
                       <a href={photoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
@@ -427,7 +460,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               {/* Print: la galería sí se imprime, pero como cuadrícula normal (el scroll no existe en papel). */}
               <div className="hidden print:grid print:grid-cols-2 print:gap-4">
                 {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
-                  <img key={idx} src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full aspect-video object-cover rounded-xl border border-slate-800" />
+                  <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-xl border border-slate-800" />
                 ))}
               </div>
               {(config.bandPhotos?.length || 0) > 1 && (
@@ -435,7 +468,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <button
                     type="button"
                     onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
-                    aria-label="Foto anterior"
+                    aria-label={t('fotoAnterior')}
                     className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/80 border border-slate-700 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
                   >
                     ‹
@@ -443,7 +476,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   <button
                     type="button"
                     onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
-                    aria-label="Foto siguiente"
+                    aria-label={t('fotoSiguiente')}
                     className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/80 border border-slate-700 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
                   >
                     ›
@@ -458,14 +491,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {(spotifyEmbedUrl || youtubeEmbedUrl) && (
           <section className="mb-16 space-y-6 print:hidden">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Escúchanos y Míranos en Directo
+              {t('seccionEscucha')}
             </h2>
             <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
               {youtubeEmbedUrl && (
                 <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
                   <iframe
                     src={youtubeEmbedUrl}
-                    title={`${bandName} en directo`}
+                    title={t('tituloVideoPorDefecto')}
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     loading="lazy"
@@ -477,7 +510,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
                   <iframe
                     src={spotifyEmbedUrl}
-                    title={`${bandName} en Spotify`}
+                    title={t('tituloSpotify')}
                     allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                     loading="lazy"
                     className="w-full h-[352px]"
@@ -493,7 +526,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         <section className="mb-16 space-y-6 print:mb-8">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Rider Técnico
+              {t('seccionRider')}
             </h2>
             <div className="flex items-center gap-2 print:hidden">
               {config.riderPdfUrl && (
@@ -503,18 +536,18 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   rel="noopener noreferrer"
                   className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow"
                 >
-                  <Download className="w-3.5 h-3.5" /> {config.riderPdfName || 'Descargar PDF Rider'}
+                  <Download className="w-3.5 h-3.5" /> {config.riderPdfName || t('descargarRider')}
                 </a>
               )}
               {config.riderTecnico?.trim() && (
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(config.riderTecnico);
-                    alert("¡Rider técnico copiado al portapapeles!");
+                    alert(t('riderCopiado'));
                   }}
                   className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 transition"
                 >
-                  <Copy className="w-3.5 h-3.5" /> Copiar Texto
+                  <Copy className="w-3.5 h-3.5" /> {t('copiarTexto')}
                 </button>
               )}
             </div>
@@ -531,7 +564,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {concerts.length > 0 && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              Próximas Fechas de Gira
+              {t('seccionFechas')}
             </h2>
             <div className="space-y-2.5">
               {concerts.map(c => (
@@ -565,10 +598,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 text-xs font-bold rounded-full transition print:hidden"
             >
-              <Download className="w-3.5 h-3.5" /> {config.dossierPdfName || 'Descargar Dossier en PDF'}
+              <Download className="w-3.5 h-3.5" /> {config.dossierPdfName || t('descargarDossier')}
             </a>
           )}
-          <p>© {new Date().getFullYear()} {bandName} — Todos los derechos reservados. Kit de prensa generado por BandManager.ai</p>
+          <p>{t('pieDerechos')}</p>
         </footer>
       </div>
     </div>
