@@ -19,6 +19,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(!initialData);
   const [copiedLink, setCopiedLink] = useState(false);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
+  const galeriaScrollRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!initialData) {
@@ -399,24 +400,56 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </section>
         )}
 
-        {/* BAND PHOTOS & GALLERY */}
+        {/* BAND PHOTOS & GALLERY - carrete horizontal con scroll-snap nativo (swipe en móvil,
+            arrastre/rueda en escritorio) en vez de una rejilla estática. Sin librería nueva. */}
         {((config.bandPhotos && config.bandPhotos.length > 0) || displayLogo) && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
               Galería de Imagen & Prensa
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
-                <div key={idx} className="group relative rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                  <img src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition p-4 flex items-end justify-between">
-                    <span className="text-xs font-semibold text-white">Foto Promocional #{idx + 1}</span>
-                    <a href={photoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+            <div className="relative group/carrusel">
+              <div
+                ref={galeriaScrollRef}
+                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
+              >
+                {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
+                  <div key={idx} className="group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
+                    <img src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
+                      <span className="text-xs font-semibold text-white">Foto Promocional #{idx + 1}</span>
+                      <a href={photoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              {/* Print: la galería sí se imprime, pero como cuadrícula normal (el scroll no existe en papel). */}
+              <div className="hidden print:grid print:grid-cols-2 print:gap-4">
+                {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
+                  <img key={idx} src={photoUrl} alt={`Foto oficial ${idx + 1}`} className="w-full aspect-video object-cover rounded-xl border border-slate-800" />
+                ))}
+              </div>
+              {(config.bandPhotos?.length || 0) > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
+                    aria-label="Foto anterior"
+                    className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/80 border border-slate-700 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
+                    aria-label="Foto siguiente"
+                    className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/80 border border-slate-700 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
             </div>
           </section>
         )}
