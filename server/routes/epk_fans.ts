@@ -12,6 +12,16 @@ import {
   dbGetSongs,
   dbGetConcerts
 } from "../db.js";
+import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { safeParseJson } from "../utils.js";
+import {
+  recopilarTextosTraducibles,
+  hayAlgoQueTraducir,
+  calcularHashFuente,
+  CLAVES_DATOS_TRADUCIBLES,
+  IDIOMA_ORIGEN
+} from "../../src/utils/epkTraducciones.js";
+import { EPK_LANGUAGES } from "../../src/i18n/epkTranslations.js";
 
 const router = express.Router();
 
@@ -143,6 +153,178 @@ router.put("/epk", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error updating EPK config:", err);
     res.status(500).json({ error: err?.message || "Error al actualizar la configuración del EPK." });
+  }
+});
+
+// Traduce el contenido del EPK a otro idioma con IA (borrador para que lo repase la banda).
+//
+// Coste: UNA llamada al modelo por pulsación, con todos los textos en un solo prompt. Nunca se
+// traduce al abrir la página pública — eso sería gasto ilimitado y latencia en una página que
+// abre gente de fuera. Lo que sirve /public/epk es siempre texto ya guardado.
+router.post("/epk/traducir", requireAuth, async (req, res) => {
+  try {
+    const user = (req as any).user;
+    const bandId = (req.body?.bandId as string) || (req.headers['x-band-id'] as string) || user?.band_id || BAKANDEYA_BAND_ID;
+    const idioma = String(req.body?.idioma || req.body?.lang || '').trim();
+    const forzar = Boolean(req.body?.forzar ?? req.body?.force);
+
+    // Mismo control de acceso que PUT /epk: traducir escribe en el EPK de una banda.
+    const allowedBandIds: string[] = user?.allowedBandIds || [];
+    const isAllowed = allowedBandIds.includes(bandId) || user?.role === 'admin' || user?.role === 'leader';
+    if (!isAllowed) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
+    }
+
+    const idiomasDestino = EPK_LANGUAGES.filter(l => l.code !== IDIOMA_ORIGEN).map(l => l.code);
+    if (!idiomasDestino.includes(idioma as any)) {
+      return res.status(400).json({ error: `Idioma no soportado: "${idioma}". Disponibles: ${idiomasDestino.join(', ')}.` });
+    }
+    const nombreIdioma = EPK_LANGUAGES.find(l => l.code === idioma)?.label || idioma;
+
+    let config: any = null;
+    try {
+      config = await dbGetEpkConfig(bandId);
+    } catch (e) {
+      // Sin Supabase se cae al estado local, igual que el resto de rutas del EPK.
+    }
+    if (!config) {
+      const state = loadState();
+      config = getEpkConfigForBand(state, bandId, user?.bandName || user?.name || 'Tu Banda', user?.email);
+    }
+
+    const textos = recopilarTextosTraducibles(config);
+    if (!hayAlgoQueTraducir(textos)) {
+      return res.status(400).json({ error: "No hay contenido que traducir todavía: rellena al menos la biografía del EPK." });
+    }
+
+    // Guardarraíl de coste: si el texto original no ha cambiado desde la última traducción, no
+    // se vuelve a llamar al modelo. Evita gastar por un doble clic o por volver a la pestaña.
+    const hashActual = calcularHashFuente(config);
+    const traduccionPrevia = config?.traducciones?.[idioma];
+    if (!forzar && traduccionPrevia?._fuenteHash === hashActual) {
+      return res.json({
+        success: true,
+        idioma,
+        traduccion: traduccionPrevia,
+        yaEstabaAlDia: true,
+        mensaje: "La traducción ya está al día con el texto actual; no se ha llamado a la IA."
+      });
+    }
+
+    const ai = getAiClient();
+    if (!ai) {
+      return res.status(503).json({ error: "No hay ninguna clave de IA configurada en el servidor (GEMINI_API_KEY)." });
+    }
+
+    const systemPrompt = [
+      `Eres un traductor profesional especializado en material de promoción musical y dossieres de contratación (EPK).`,
+      `Traduce del español a ${nombreIdioma} el contenido que te paso.`,
+      `REGLAS INNEGOCIABLES:`,
+      `1. NO traduzcas nombres propios: nombre de la banda, nombres de personas, nombres de salas o festivales, títulos de canciones, ni términos inventados por la banda (por ejemplo "Electrobasureo").`,
+      `2. NO inventes datos, fechas, cifras, premios ni méritos que no estén en el original. Si algo no está, no está.`,
+      `3. Mantén el registro y la longitud aproximada de cada texto. Es un documento de contratación: profesional, directo, sin florituras de marketing.`,
+      `4. Los términos técnicos del sector (rider, backline, headliner, setlist, PA, monitores) usa la forma habitual en ${nombreIdioma}.`,
+      `5. Devuelve EXCLUSIVAMENTE un objeto JSON con la estructura pedida. Nada de texto antes o después, ni explicaciones.`,
+      `6. Si un campo del original viene vacío, devuélvelo como cadena vacía "".`
+    ].join('\n');
+
+    const prompt = [
+      `Traduce a ${nombreIdioma} los campos de este JSON y devuelve un JSON con EXACTAMENTE la misma forma y las mismas claves e ids.`,
+      ``,
+      `Los objetos de "miembros" y "videos" se identifican por su "id": conserva cada id tal cual, no los reordenes ni los inventes.`,
+      `En "datosContratacion", "duracionDirecto" suele ser solo un número (minutos): si lo es, devuélvelo igual sin añadir unidades.`,
+      ``,
+      `CONTENIDO ORIGINAL (español):`,
+      JSON.stringify(textos, null, 2)
+    ].join('\n');
+
+    const respuesta = await generateContentWithFallback(ai, {
+      contents: `${systemPrompt}\n\n---\n${prompt}`,
+      config: {
+        temperature: 0.3,
+        responseMimeType: "application/json"
+      }
+    });
+
+    const textoRespuesta = respuesta?.text || respuesta?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const crudo = safeParseJson(textoRespuesta);
+
+    // GUARDARRAÍL CRÍTICO: la cadena de fallbacks de ai.ts termina en un motor local que
+    // devuelve una PLANTILLA DE PITCH EN ESPAÑOL disfrazada de respuesta del modelo. Si eso se
+    // guardara como "traducción al inglés" sería un desastre silencioso. Por eso no se
+    // persiste nada que no parsee como el objeto esperado.
+    if (!crudo || typeof crudo !== 'object' || Array.isArray(crudo)) {
+      console.warn("[EPK traducir] La IA no devolvió un JSON utilizable. Primeros 200 caracteres:", String(textoRespuesta).slice(0, 200));
+      return res.status(502).json({ error: "La IA no devolvió una traducción válida. No se ha guardado nada; vuelve a intentarlo." });
+    }
+
+    const texto = (v: any): string => (typeof v === 'string' ? v : '');
+
+    const miembrosTraducidos: Record<string, { rol?: string; bio?: string }> = {};
+    const listaMiembros = Array.isArray(crudo.miembros) ? crudo.miembros : [];
+    for (const m of listaMiembros) {
+      // Solo se aceptan ids que existían en el original: si el modelo se inventa uno, se ignora.
+      if (m?.id && textos.miembros.some(o => o.id === m.id)) {
+        miembrosTraducidos[m.id] = { rol: texto(m.rol), bio: texto(m.bio) };
+      }
+    }
+
+    const videosTraducidos: Record<string, { titulo?: string }> = {};
+    const listaVideos = Array.isArray(crudo.videos) ? crudo.videos : [];
+    for (const v of listaVideos) {
+      if (v?.id && textos.videos.some(o => o.id === v.id)) {
+        videosTraducidos[v.id] = { titulo: texto(v.titulo) };
+      }
+    }
+
+    const datosTraducidos: Record<string, string> = {};
+    for (const clave of CLAVES_DATOS_TRADUCIBLES) {
+      datosTraducidos[clave] = texto(crudo.datosContratacion?.[clave]);
+    }
+
+    const traduccion = {
+      biografia: texto(crudo.biografia),
+      textoPie: texto(crudo.textoPie),
+      riderTecnico: texto(crudo.riderTecnico),
+      miembros: miembrosTraducidos,
+      videos: videosTraducidos,
+      datosContratacion: datosTraducidos,
+      _fuenteHash: hashActual,
+      _traducidoEn: new Date().toISOString(),
+      _revisadoAMano: false
+    };
+
+    // Segundo filtro: si de todo el contenido no ha salido ni una línea, algo fue mal y no
+    // merece la pena pisar una traducción anterior que sí servía.
+    const hayContenido = Boolean(
+      traduccion.biografia.trim() || traduccion.textoPie.trim() || traduccion.riderTecnico.trim() ||
+      Object.keys(miembrosTraducidos).length || Object.keys(videosTraducidos).length
+    );
+    if (!hayContenido) {
+      return res.status(502).json({ error: "La IA devolvió una traducción vacía. No se ha guardado nada; vuelve a intentarlo." });
+    }
+
+    const traduccionesActualizadas = { ...(config?.traducciones || {}), [idioma]: traduccion };
+    await dbUpsertEpkConfig(bandId, { traducciones: traduccionesActualizadas });
+
+    // Espejo en el estado local, igual que hace PUT /epk.
+    const state = loadState();
+    const cleanBandId = bandId.replace(/^(band|reg)-/, '');
+    for (const k of [bandId, cleanBandId, `band-${cleanBandId}`, `reg-${cleanBandId}`]) {
+      if (state.epkConfigsByBand?.[k]) {
+        state.epkConfigsByBand[k] = { ...state.epkConfigsByBand[k], traducciones: traduccionesActualizadas };
+      }
+    }
+    if (cleanBandId === 'bakandeya' && state.epkConfig) {
+      state.epkConfig = { ...state.epkConfig, traducciones: traduccionesActualizadas };
+    }
+    saveState(state);
+
+    console.log(`[EPK traducir] ${bandId} -> ${idioma} (hash ${hashActual})`);
+    res.json({ success: true, idioma, traduccion });
+  } catch (err: any) {
+    console.error("Error traduciendo el EPK:", err);
+    res.status(500).json({ error: err?.message || "Error al traducir el EPK." });
   }
 });
 

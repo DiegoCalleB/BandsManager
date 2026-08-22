@@ -133,7 +133,8 @@ export async function dbGetEpkConfig(bandId: string) {
     temasDestacadosIds: data.temas_destacados_ids || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.temas_destacados_ids : []),
     incentivoFans: data.incentivo_fans || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.incentivo_fans : {}),
     ciudadesConfig: data.ciudades_config || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
-    firmaEmail: mergedFirma
+    firmaEmail: mergedFirma,
+    traducciones: data.traducciones || {}
   };
 }
 
@@ -169,6 +170,13 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   const providedIncentivo = config.incentivoFans || config.incentivo_fans || {};
   const mergedIncentivo = { ...existingIncentivo, ...providedIncentivo };
 
+  // Las traducciones se mezclan POR IDIOMA: guardar la versión inglesa no puede borrar de un
+  // plumazo la francesa el día que existan. Dentro de cada idioma sí se reemplaza entero, que
+  // es lo que manda el gestor del EPK cuando la banda guarda su repaso.
+  const existingTraducciones = existing?.traducciones || {};
+  const providedTraducciones = config.traducciones || {};
+  const mergedTraducciones = { ...existingTraducciones, ...providedTraducciones };
+
   const newLogoUrl = (config.logoUrl !== undefined ? config.logoUrl : (config.logo_url !== undefined ? config.logo_url : existing?.logoUrl)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.logo_url : "");
 
   const payload = {
@@ -192,7 +200,8 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     temas_destacados_ids: (config.temasDestacadosIds !== undefined ? config.temasDestacadosIds : (config.temas_destacados_ids !== undefined ? config.temas_destacados_ids : existing?.temasDestacadosIds)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.temas_destacados_ids : []),
     incentivo_fans: mergedIncentivo,
     ciudades_config: (config.ciudadesConfig !== undefined ? config.ciudadesConfig : (config.ciudades_config !== undefined ? config.ciudades_config : existing?.ciudadesConfig)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
-    firma_email: mergedFirma
+    firma_email: mergedFirma,
+    traducciones: mergedTraducciones
   };
 
   const { data, error } = await sb.from("epk_configs").upsert(payload).select().single();
