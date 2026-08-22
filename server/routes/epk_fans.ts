@@ -22,6 +22,7 @@ import {
   IDIOMA_ORIGEN
 } from "../../src/utils/epkTraducciones.js";
 import { EPK_LANGUAGES } from "../../src/i18n/epkTranslations.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -97,10 +98,12 @@ router.put("/autonomy", requireAuth, async (req, res) => {
   }
 });
 
-// Get EPK Config (Authenticated)
-router.get("/epk", async (req, res) => {
+// Get EPK Config. Lleva requireAuth: sin él, cualquiera podía leer el EPK de cualquier banda
+// pasando ?bandId= — con su email y teléfono de booking, su firma y su configuración. El EPK
+// que sí debe ser público se sirve por GET /public/epk, más abajo, y va recortado.
+router.get("/epk", requireAuth, async (req, res) => {
   const user = (req as any).user;
-  const userBandId = (req.query.bandId as string) || (req.headers['x-band-id'] as string) || user?.band_id || BAKANDEYA_BAND_ID;
+  const userBandId = getTargetBandId(req);
   const userBandName = user?.bandName || user?.name || 'Tu Banda';
   
   try {
@@ -122,13 +125,16 @@ router.put("/epk", requireAuth, async (req, res) => {
   try {
     const updatedConfig: Partial<EPKConfig> = req.body;
     const user = (req as any).user;
-    const userBandId = (req.body as any).bandId || (req.headers['x-band-id'] as string) || user?.band_id || BAKANDEYA_BAND_ID;
-
-    const allowedBandIds: string[] = user?.allowedBandIds || [];
-    const isAllowed = allowedBandIds.includes(userBandId) || user?.role === 'admin' || user?.role === 'leader';
-    if (!isAllowed) {
+    // Antes se cogía req.body.bandId a pelo y se aprobaba con `|| role === 'leader'`, que en
+    // esta app son todos los usuarios reales: cualquiera podía escribir el EPK de otra banda.
+    // En una escritura no vale con degradar a la banda propia: si la petición pide una banda
+    // concreta y no es tuya, hay que rechazarla. Degradar en silencio significaría guardar el
+    // contenido destinado a otra banda dentro de la tuya.
+    const solicitada = bandaSolicitada(req);
+    if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
       return res.status(403).json({ error: "No tienes acceso a esta banda." });
     }
+    const userBandId = getTargetBandId(req);
 
     await dbUpsertEpkConfig(userBandId, updatedConfig);
 
@@ -164,16 +170,15 @@ router.put("/epk", requireAuth, async (req, res) => {
 router.post("/epk/traducir", requireAuth, async (req, res) => {
   try {
     const user = (req as any).user;
-    const bandId = (req.body?.bandId as string) || (req.headers['x-band-id'] as string) || user?.band_id || BAKANDEYA_BAND_ID;
-    const idioma = String(req.body?.idioma || req.body?.lang || '').trim();
-    const forzar = Boolean(req.body?.forzar ?? req.body?.force);
-
-    // Mismo control de acceso que PUT /epk: traducir escribe en el EPK de una banda.
-    const allowedBandIds: string[] = user?.allowedBandIds || [];
-    const isAllowed = allowedBandIds.includes(bandId) || user?.role === 'admin' || user?.role === 'leader';
-    if (!isAllowed) {
+    // Mismo control de acceso que PUT /epk: traducir escribe en el EPK de una banda (y además
+    // gasta tokens, así que no puede dispararlo alguien sobre una banda que no es suya).
+    const solicitada = bandaSolicitada(req);
+    if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
       return res.status(403).json({ error: "No tienes acceso a esta banda." });
     }
+    const bandId = getTargetBandId(req);
+    const idioma = String(req.body?.idioma || req.body?.lang || '').trim();
+    const forzar = Boolean(req.body?.forzar ?? req.body?.force);
 
     const idiomasDestino = EPK_LANGUAGES.filter(l => l.code !== IDIOMA_ORIGEN).map(l => l.code);
     if (!idiomasDestino.includes(idioma as any)) {

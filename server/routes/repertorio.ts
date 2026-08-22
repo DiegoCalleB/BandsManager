@@ -13,23 +13,9 @@ import {
   dbDeleteSetlist
 } from "../db.js";
 
-const router = express.Router();
+import { getTargetBandId } from "../utils/bandAccess.js";
 
-function getTargetBandId(req: express.Request): string {
-  const user = (req as any).user;
-  const userBandId = user?.band_id;
-  const headerBandId = (req.headers["x-band-id"] || req.headers["x-active-band-id"] || req.query.band_id) as string | undefined;
-  
-  if (headerBandId && typeof headerBandId === "string" && headerBandId.trim() && user) {
-    const cleanHeader = headerBandId.trim();
-    const cleanNoPrefix = cleanHeader.replace(/^(band|reg)-/, "");
-    const allowed = Array.isArray(user.allowedBandIds) ? user.allowedBandIds : [];
-    const isAllowed = user.role === "admin" || allowed.some((b: string) => b === cleanHeader || b.replace(/^(band|reg)-/, "") === cleanNoPrefix);
-    if (isAllowed) return cleanHeader;
-  }
-  
-  return userBandId || "band-bakandeya";
-}
+const router = express.Router();
 
 // GET all songs
 router.get("/songs", requireAuth, async (req, res) => {
