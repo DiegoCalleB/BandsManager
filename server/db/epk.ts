@@ -29,6 +29,13 @@ const BAKANDEYA_DEFAULT_EPK = {
     enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
     codigoDescuento: "BAKANDEYA-FAN-10"
   },
+  donacion_revolut: {
+    habilitado: true,
+    revolutTag: "bakandeya",
+    revolutUrl: "https://revolut.me/bakandeya",
+    titulo: "Colabora con una aportación económica",
+    descripcion: "Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
+  },
   ciudades_config: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"],
   firma_email: {
     nombreRemitente: "Diego de la Calle",
@@ -113,6 +120,22 @@ export async function dbGetEpkConfig(bandId: string) {
     resolvedLogo = BAKANDEYA_DEFAULT_EPK.logo_url;
   }
 
+  // Si donacion_revolut viene en la tabla (o en enlaces_redes/incentivo), extraerlo
+  let resolvedDonacionRevolut = data.donacion_revolut || null;
+  if (!resolvedDonacionRevolut && data.enlaces_redes?.revolut) {
+    const rawRev = data.enlaces_redes.revolut;
+    const revUrl = rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`;
+    resolvedDonacionRevolut = {
+      habilitado: true,
+      revolutTag: rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, ''),
+      revolutUrl: revUrl,
+      titulo: 'Colabora con una aportación económica',
+      descripcion: ''
+    };
+  } else if (!resolvedDonacionRevolut && isBakandeya) {
+    resolvedDonacionRevolut = BAKANDEYA_DEFAULT_EPK.donacion_revolut;
+  }
+
   return {
     ...data,
     logoUrl: resolvedLogo,
@@ -132,6 +155,7 @@ export async function dbGetEpkConfig(bandId: string) {
     contactoBooking: data.contacto_booking || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.contacto_booking : {}),
     temasDestacadosIds: data.temas_destacados_ids || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.temas_destacados_ids : []),
     incentivoFans: data.incentivo_fans || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.incentivo_fans : {}),
+    donacionRevolut: resolvedDonacionRevolut,
     ciudadesConfig: data.ciudades_config || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
     firmaEmail: mergedFirma,
     traducciones: data.traducciones || {}
@@ -170,6 +194,10 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   const providedIncentivo = config.incentivoFans || config.incentivo_fans || {};
   const mergedIncentivo = { ...existingIncentivo, ...providedIncentivo };
 
+  const existingRevolut = existing?.donacionRevolut || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.donacion_revolut : {});
+  const providedRevolut = config.donacionRevolut || config.donacion_revolut || {};
+  const mergedRevolut = { ...existingRevolut, ...providedRevolut };
+
   // Las traducciones se mezclan POR IDIOMA: guardar la versión inglesa no puede borrar de un
   // plumazo la francesa el día que existan. Dentro de cada idioma sí se reemplaza entero, que
   // es lo que manda el gestor del EPK cuando la banda guarda su repaso.
@@ -199,6 +227,7 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     contacto_booking: mergedContacto,
     temas_destacados_ids: (config.temasDestacadosIds !== undefined ? config.temasDestacadosIds : (config.temas_destacados_ids !== undefined ? config.temas_destacados_ids : existing?.temasDestacadosIds)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.temas_destacados_ids : []),
     incentivo_fans: mergedIncentivo,
+    donacion_revolut: mergedRevolut,
     ciudades_config: (config.ciudadesConfig !== undefined ? config.ciudadesConfig : (config.ciudades_config !== undefined ? config.ciudades_config : existing?.ciudadesConfig)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
     firma_email: mergedFirma,
     traducciones: mergedTraducciones
@@ -212,9 +241,9 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
   data = res.data;
   error = res.error;
 
-  // Si la base de datos de Supabase aún no tiene alguna columna nueva (p. ej. 'traducciones' o 'miembros'),
-  // reintentamos quitando la columna no existente para evitar que falle el guardado general.
-  if (error && error.message && error.message.includes("Could not find the '") && error.message.includes("' column of 'epk_configs'")) {
+  // Si la base de datos de Supabase aún no tiene alguna columna nueva (p. ej. 'donacion_revolut', 'traducciones' o 'miembros'),
+  // reintentamos quitando las columnas no existentes en bucle para evitar que falle el guardado general.
+  while (error && error.message && error.message.includes("Could not find the '") && error.message.includes("' column of 'epk_configs'")) {
     const match = error.message.match(/Could not find the '([^']+)' column of 'epk_configs'/);
     if (match && match[1] && currentPayload[match[1]] !== undefined) {
       const missingCol = match[1];
@@ -223,6 +252,8 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
       const retryRes = await sb.from("epk_configs").upsert(currentPayload).select().single();
       data = retryRes.data;
       error = retryRes.error;
+    } else {
+      break;
     }
   }
 
