@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, Phone, ExternalLink } from 'lucide-react';
+import { Globe, Phone } from 'lucide-react';
 
 export interface SocialLinks {
   spotify?: string;
@@ -19,7 +19,12 @@ interface SocialPlatformsListProps {
   links?: SocialLinks;
   variant?: 'grid' | 'pills' | 'compact';
   title?: string;
+  subtitle?: string;
   showTitle?: boolean;
+  language?: string;
+  onPlatformClick?: (platform: string, url: string) => void;
+  clickCounts?: Record<string, number>;
+  showClickCounts?: boolean;
 }
 
 export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
@@ -170,9 +175,32 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
   links,
   variant = 'grid',
   title = 'Síguenos en nuestras plataformas',
-  showTitle = true
+  subtitle,
+  showTitle = true,
+  language = 'es',
+  onPlatformClick,
+  clickCounts,
+  showClickCounts = false
 }) => {
   if (!links) return null;
+
+  const getWebsiteLabel = () => {
+    switch (language) {
+      case 'en': return 'Website';
+      case 'it': return 'Sito Web';
+      case 'cs': return 'Oficiální web';
+      default: return 'Sitio Web';
+    }
+  };
+
+  const getDefaultSubtitle = () => {
+    switch (language) {
+      case 'en': return 'Join our community and listen to our live music';
+      case 'it': return 'Unisciti alla nostra community e ascolta la nostra musica dal vivo';
+      case 'cs': return 'Připoj se k naší komunitě a poslouchej naši hudbu';
+      default: return 'Únete a nuestra comunidad y escucha nuestra música en directo';
+    }
+  };
 
   // Filtrar estrictamente solo aquellas redes que tengan una URL válida, rellena y NO sean WhatsApp (WhatsApp solo para contacto directo)
   const validEntries = Object.entries(links)
@@ -198,13 +226,15 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
         <div className="flex flex-wrap items-center justify-center gap-2">
           {validEntries.map(([key, url]) => {
             const config = PLATFORM_CONFIG[key] || {
-              label: key,
+              label: key === 'website' ? getWebsiteLabel() : key,
               colorClass: 'text-slate-300',
               bgClass: 'bg-slate-800',
               borderClass: 'border-slate-700',
               hoverClass: 'hover:bg-slate-700'
             };
+            const label = key === 'website' ? getWebsiteLabel() : config.label;
             const IconComp = SocialIcons[key] || Globe;
+            const count = clickCounts?.[key.toLowerCase()];
 
             return (
               <a
@@ -212,10 +242,16 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => onPlatformClick?.(key, url)}
                 className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all duration-200 shadow-sm ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
               >
-                <IconComp className="w-4 h-4" />
-                <span>{config.label}</span>
+                <IconComp className="w-4 h-4 shrink-0" />
+                <span>{label}</span>
+                {showClickCounts && typeof count === 'number' && count > 0 && (
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-neutral-300 border border-white/10">
+                    {count}
+                  </span>
+                )}
               </a>
             );
           })}
@@ -232,12 +268,12 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
             {title}
           </p>
           <p className="text-[11px] text-slate-400 mt-0.5">
-            Únete a nuestra comunidad y escucha nuestra música en directo
+            {subtitle || getDefaultSubtitle()}
           </p>
         </div>
       )}
 
-      {/* Cuadrícula adaptativa: si son 1 o 2 elementos se adapta simétricamente sin crear columnas vacías; si son 3 con el primero destacado en full width, o cuadrícula regular */}
+      {/* Cuadrícula adaptativa */}
       <div className={`grid gap-2.5 ${
         validEntries.length === 1 
           ? 'grid-cols-1' 
@@ -251,19 +287,18 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
           const isOddThree = validEntries.length === 3;
           const isFirstItem = index === 0;
           const isFullWidth = isOddThree && isFirstItem;
-          // Si son 3 redes (ej: Instagram destacado arriba, YouTube y TikTok abajo), el primero ocupa las 2 columnas y los otros 2 se reparten 1 columna cada uno al 50%
-          const fullWidthClass = isFullWidth 
-            ? 'col-span-2 justify-center relative' 
-            : 'justify-between';
+          const fullWidthClass = isFullWidth ? 'col-span-2' : '';
 
           const config = PLATFORM_CONFIG[key] || {
-            label: key,
+            label: key === 'website' ? getWebsiteLabel() : key,
             colorClass: 'text-slate-300',
             bgClass: 'bg-slate-800',
             borderClass: 'border-slate-700',
             hoverClass: 'hover:bg-slate-700'
           };
+          const label = key === 'website' ? getWebsiteLabel() : config.label;
           const IconComp = SocialIcons[key] || Globe;
+          const count = clickCounts?.[key.toLowerCase()];
 
           return (
             <a
@@ -271,13 +306,16 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
+              onClick={() => onPlatformClick?.(key, url)}
+              className={`flex items-center justify-center gap-2.5 p-3 rounded-xl border text-xs font-bold transition-all duration-200 shadow-md group ${fullWidthClass} ${config.bgClass} ${config.borderClass} ${config.colorClass} ${config.hoverClass}`}
             >
-              <div className="flex items-center gap-2.5">
-                <IconComp className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
-                <span className={isFullWidth ? "text-sm font-black tracking-wide" : ""}>{config.label}</span>
-              </div>
-              <ExternalLink className={`w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all ${isFullWidth ? 'absolute right-3.5' : ''}`} />
+              <IconComp className="w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+              <span className={isFullWidth ? "text-sm font-black tracking-wide" : "truncate"}>{label}</span>
+              {showClickCounts && typeof count === 'number' && count > 0 && (
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-black/40 text-neutral-300 border border-white/10 shrink-0 ml-auto">
+                  {count}
+                </span>
+              )}
             </a>
           );
         })}

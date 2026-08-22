@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer,
   Upload, Save, Globe, Mail, Phone, Music, Image as ImageIcon, CheckCircle2,
-  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart
+  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart, Eye
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
@@ -11,6 +11,7 @@ import { EPK_LANGUAGES } from '../i18n/epkTranslations';
 import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
 import { api } from '../services/api';
 import { googleSignIn, auth } from '../utils/gmail';
+import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 
 interface EPKManagerProps {
   epkConfig?: EPKConfig;
@@ -220,6 +221,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [copiedPublicUrl, setCopiedPublicUrl] = useState(false);
+  const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'firma' | 'qr'>('editor');
 
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
@@ -1118,38 +1120,45 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
               {/* Vista previa en vivo, igual a como la ve un fan */}
               <div className="space-y-2">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">Así se verá para tus fans</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">Así se verá para tus fans</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowFansPreviewModal(true)}
+                    className="text-[11px] font-mono text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
+                    title="Abrir simulador interactivo del formulario Únete"
+                  >
+                    <Eye className="w-3.5 h-3.5" /> Previsualizar Formulario Únete
+                  </button>
+                </div>
                 {config.donacionRevolut?.habilitado === false ? (
                   <div className="p-4 rounded-xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
                     Tarjeta desactivada: no se mostrará en "Únete"
                   </div>
                 ) : (
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-sky-950/40 via-neutral-900 to-sky-950/40 border border-sky-500/35 shadow-sm">
-                    <div className="flex items-center justify-between gap-2.5">
-                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                        <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow-sm">
-                          <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                            <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-                          </svg>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-bold text-sky-100 truncate">
-                              {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
-                            </span>
-                            <span className="text-[10px] font-mono text-sky-400/80 truncate hidden xs:inline">
-                              revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}
-                            </span>
-                          </div>
-                          {config.donacionRevolut?.descripcion && (
-                            <p className="text-[10px] text-neutral-400 font-mono line-clamp-1 mt-0.5 leading-tight">
-                              {config.donacionRevolut.descripcion}
-                            </p>
-                          )}
-                        </div>
+                  <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-br from-sky-950/50 via-neutral-900/90 to-sky-950/30 border border-sky-500/35 shadow-md">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shrink-0 shadow-md mt-0.5">
+                        <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                          <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                        </svg>
                       </div>
-                      <div className="w-6 h-6 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 shrink-0">
-                        <ExternalLink className="w-3.5 h-3.5" />
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-xs sm:text-sm font-mono font-bold text-sky-100 leading-snug break-words">
+                            {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
+                          </span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 whitespace-nowrap">
+                            Revolut
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-neutral-300/90 font-mono leading-relaxed break-words">
+                          {config.donacionRevolut?.descripcion || 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
+                        </p>
+                        <div className="pt-0.5 flex items-center gap-1 text-[10px] font-mono text-sky-400">
+                          <span className="opacity-75">🔗</span>
+                          <span>revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2002,6 +2011,16 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           </div>
         </div>
       )}
+
+      {/* Modal Simulador / Vista Previa In-App del Formulario Únete */}
+      <FansLandingPreviewModal
+        isOpen={showFansPreviewModal}
+        onClose={() => setShowFansPreviewModal(false)}
+        currentBandId={activeBandId}
+        currentBandName={currentUser?.bandName || config.contactoBooking?.nombre || (isBakandeya ? 'Bakandeya' : 'Tu Banda')}
+        currentBandLogo={config.logoUrl}
+        epkConfig={config}
+      />
     </div>
   );
 };

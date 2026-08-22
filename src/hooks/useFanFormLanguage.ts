@@ -21,7 +21,12 @@ function detectInitialFanFormLanguage(): FanFormLanguage {
   return DEFAULT_FAN_FORM_LANGUAGE;
 }
 
-export function useFanFormLanguage(): [FanFormLanguage, (lang: FanFormLanguage) => void] {
-  const [language, setLanguage] = useState<FanFormLanguage>(detectInitialFanFormLanguage);
+export function useFanFormLanguage(overrideLang?: FanFormLanguage): [FanFormLanguage, (lang: FanFormLanguage) => void] {
+  const [language, setLanguage] = useState<FanFormLanguage>(() => {
+    if (overrideLang && isFanFormLanguage(overrideLang)) {
+      return overrideLang;
+    }
+    return detectInitialFanFormLanguage();
+  });
   return [language, setLanguage];
 }
