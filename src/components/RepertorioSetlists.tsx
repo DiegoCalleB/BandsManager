@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
- Disc3, Music, Plus, Settings, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy, 
+ Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
  Sparkles, Sliders, CheckCircle2, ChevronRight, HelpCircle, Eye, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
@@ -24,9 +24,9 @@ import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
 import { AssignSetlistModal } from './repertorio/AssignSetlistModal';
 import { SongModal } from './repertorio/SongModal';
 import { SetlistModal } from './repertorio/SetlistModal';
+import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
-import { FavoritosGeneralesView } from './repertorio/FavoritosGeneralesView';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -332,7 +332,7 @@ export default function RepertorioSetlists({
 
  // Navigation tab inside module
  const [showPdfPreview, setShowPdfPreview] = useState(false);
- const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'configuracion' | 'discografia'>('setlists');
+ const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
 
  // Songs Repertoire State
  const [songs, setSongs] = useState<Song[]>(() => {
@@ -460,7 +460,10 @@ export default function RepertorioSetlists({
  const [deleteAlbumData, setDeleteAlbumData] = useState<ConfirmDeleteAlbumData | null>(null);
  const [assignSongsModalData, setAssignSongsModalData] = useState<{ isOpen: boolean; albumName: string } | null>(null);
  const [setlistModalData, setSetlistModalData] = useState<{ isOpen: boolean; setlistToEdit: Setlist | null } | null>(null);
+ const [isAddSongsModalOpen, setIsAddSongsModalOpen] = useState(false);
+ const [statusBanner, setStatusBanner] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
  const [defaultAlbumForNewSong, setDefaultAlbumForNewSong] = useState<string>('');
+ const [selectedCatalogIds, setSelectedCatalogIds] = useState<Set<string>>(new Set());
 
  const sortedSongsByAlbumAndOrder = useMemo(() => {
    return [...songs].sort((a, b) => {
@@ -761,6 +764,44 @@ export default function RepertorioSetlists({
  };
  }, [activeSetlist, songs]);
 
+ // Ask the backend to listen to a song's real audio and auto-fill its lyrics/chords (cifradoTexto).
+ // Fires in the background after a song is saved with a new audio file, no extra click needed.
+ const runAutoChordAnalysis = async (song: Song) => {
+   if (!song.audioPrincipalUrl) return;
+   setStatusBanner({ text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`, type: 'loading' });
+   try {
+     const res = await fetch('/api/generate-song-chords', {
+       method: 'POST',
+       headers: getHeaders(),
+       body: JSON.stringify({
+         songId: song.id,
+         titulo: song.titulo,
+         tonalidad: song.tonalidad,
+         bpm: song.bpm,
+         afinacion: song.afinacion,
+         esVersionCovers: song.esVersionCovers,
+         audioUrl: song.audioPrincipalUrl
+       })
+     });
+     const data = await res.json();
+     if (res.ok && data?.cifradoTexto) {
+       setSongs(prev => {
+         const next = prev.map(s => s.id === song.id ? { ...s, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto } : s);
+         saveSongsToLocalStorageSafely(next);
+         return next;
+       });
+       setStatusBanner({ text: `✓ Letra y acordes de "${song.titulo}" listos`, type: 'success' });
+     } else {
+       setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
+     }
+   } catch (err) {
+     console.error('Error auto-generating chords from audio:', err);
+     setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
+   } finally {
+     setTimeout(() => setStatusBanner(null), 4000);
+   }
+ };
+
  // Handle Add/Edit Song Form Submit
  const handleSaveSong = async (e: React.FormEvent<HTMLFormElement>) => {
  e.preventDefault();
@@ -789,7 +830,8 @@ export default function RepertorioSetlists({
  let portadaUrl = (formData.get('portadaUrl') as string) || editingSong?.portadaUrl || '';
 
  const audioFile = formData.get('audioFile') as File;
- if (audioFile && audioFile.size > 0) {
+ const hasNewAudio = Boolean(audioFile && audioFile.size > 0);
+ if (hasNewAudio) {
    try {
      audioPrincipalUrl = await uploadFileToServer(audioFile);
    } catch (err) {
@@ -840,6 +882,7 @@ export default function RepertorioSetlists({
  headers: getHeaders(),
  body: JSON.stringify(updatedSong)
  }).catch(err => console.error('Error updating song on server:', err));
+ if (hasNewAudio) runAutoChordAnalysis(updatedSong);
  } else {
  const newSong: Song = {
  id: `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -869,6 +912,7 @@ export default function RepertorioSetlists({
  headers: getHeaders(),
  body: JSON.stringify(newSong)
  }).catch(err => console.error('Error creating song on server:', err));
+ if (hasNewAudio) runAutoChordAnalysis(newSong);
  }
 
  setShowSongModal(false);
@@ -893,6 +937,54 @@ export default function RepertorioSetlists({
  }).catch(err => console.error('Error deleting song on server:', err));
  }
  });
+ };
+
+ // Catalog multi-select: lets the user act on several songs at once instead of one by one
+ const toggleCatalogSelect = (songId: string) => {
+   setSelectedCatalogIds(prev => {
+     const next = new Set(prev);
+     if (next.has(songId)) next.delete(songId);
+     else next.add(songId);
+     return next;
+   });
+ };
+
+ const clearCatalogSelection = () => setSelectedCatalogIds(new Set());
+
+ const handleBulkDeleteSongs = (songIds: string[]) => {
+   if (songIds.length === 0) return;
+   setConfirmDeleteModal({
+     title: 'Eliminar Canciones Seleccionadas',
+     description: `¿Seguro que deseas eliminar ${songIds.length} canciones del catálogo del grupo? Se quitarán también de los repertorios donde aparezcan.`,
+     onConfirm: () => {
+       const idsSet = new Set(songIds);
+       setSongs(prev => prev.filter(s => !idsSet.has(s.id)));
+       setSetlists(prev => prev.map(st => ({
+         ...st,
+         items: st.items.filter(it => !it.songId || !idsSet.has(it.songId))
+       })));
+       songIds.forEach(songId => {
+         fetch(`/api/songs/${songId}`, {
+           method: 'DELETE',
+           headers: getHeaders()
+         }).catch(err => console.error('Error deleting song on server:', err));
+       });
+       clearCatalogSelection();
+     }
+   });
+ };
+
+ const handleBulkAddSelectedToSetlist = (songIds: string[]) => {
+   if (songIds.length === 0) return;
+   if (!activeSetlist) {
+     setStatusBanner({ text: 'Selecciona o crea primero un repertorio en la pestaña "Setlists & Directos" para añadir estas canciones.', type: 'error' });
+     setTimeout(() => setStatusBanner(null), 5000);
+     return;
+   }
+   handleAddMultipleSongsToSetlist(songIds);
+   setStatusBanner({ text: `✓ ${songIds.length} canciones añadidas a "${activeSetlist.nombre}"`, type: 'success' });
+   setTimeout(() => setStatusBanner(null), 4000);
+   clearCatalogSelection();
  };
 
  const handleToggleFavorite = (songId: string) => {
@@ -1265,6 +1357,45 @@ export default function RepertorioSetlists({
   setSelectedSetlistItemId(newItem.id);
  };
 
+ // Add several catalog songs to the active setlist in a single action/save
+ const handleAddMultipleSongsToSetlist = (songIds: string[]) => {
+  if (!activeSetlist || songIds.length === 0) return;
+
+  const newSongItems: SetlistItem[] = songIds.map(songId => ({
+   id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+   tipoItem: 'cancion',
+   songId
+  }));
+
+  const targetRefId = selectedSetlistItemId;
+  let newItems: SetlistItem[];
+  if (targetRefId) {
+    const idx = activeSetlist.items.findIndex(it => it.id === targetRefId);
+    if (idx !== -1) {
+      newItems = [...activeSetlist.items];
+      newItems.splice(idx + 1, 0, ...newSongItems);
+    } else {
+      newItems = [...activeSetlist.items, ...newSongItems];
+    }
+  } else {
+    newItems = [...activeSetlist.items, ...newSongItems];
+  }
+
+  const updatedSetlist: Setlist = {
+   ...activeSetlist,
+   fechaUltimaEdicion: new Date().toISOString().split('T')[0],
+   items: newItems
+  };
+
+  setSetlists(prev => {
+    const next = prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st);
+    saveSetlistsToLocalStorageSafely(next);
+    return next;
+  });
+  syncSetlistToBackend(updatedSetlist);
+  setSelectedSetlistItemId(newSongItems[newSongItems.length - 1].id);
+ };
+
  const handleSaveShowItem = (itemData: Partial<SetlistItem>) => {
   if (!activeSetlist) return;
 
@@ -1581,19 +1712,6 @@ export default function RepertorioSetlists({
  <Eye className="w-4 h-4" />
  <span>Modo Escenario ({activeSetlist ? activeSetlist.items.length : 0})</span>
  </button>
-
- <button
- id="tab-configuracion"
- onClick={() => setActiveTab('configuracion')}
- className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'configuracion'
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
- }`}
- >
- <Settings className="w-4 h-4" />
- <span>Configuración</span>
- </button>
  </div>
 </div>
 
@@ -1835,6 +1953,15 @@ export default function RepertorioSetlists({
    );
  })}
  </select>
+
+ <button
+ onClick={() => setIsAddSongsModalOpen(true)}
+ className="px-2.5 py-1.5 text-[10px] font-mono rounded-lg bg-[#1db954]/20 text-[#1db954] border border-[#1db954]/40 hover:bg-[#1db954]/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
+ title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
+ >
+ <ListPlus className="w-3.5 h-3.5" />
+ <span>Añadir Varias Canciones</span>
+ </button>
 
  <button
  onClick={() => handleAddItemToSetlist(undefined, 'bloque_header', '⚡ Bloque Nuevo')}
@@ -2429,12 +2556,63 @@ export default function RepertorioSetlists({
   </div>
   </div>
 
+  {/* BULK ACTIONS BAR (appears once at least one catalog song is checked) */}
+  {selectedCatalogIds.size > 0 && (
+    <div className={`p-3 rounded-2xl flex flex-wrap items-center justify-between gap-3 border ${
+      isStitchLight ? 'bg-indigo-50 border-indigo-200' : 'bg-[#1db954]/10 border-[#1db954]/30'
+    }`}>
+      <span className="text-xs font-mono font-bold text-[#1db954]">
+        {selectedCatalogIds.size} canciones seleccionadas
+      </span>
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          type="button"
+          onClick={() => handleBulkAddSelectedToSetlist(Array.from(selectedCatalogIds))}
+          className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-[#1db954] hover:bg-[#1ed760] text-black cursor-pointer transition-all flex items-center gap-1.5"
+        >
+          <ListPlus className="w-3.5 h-3.5" />
+          <span>Añadir a Repertorio…</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
+          className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          <span>Eliminar Seleccionadas</span>
+        </button>
+        <button
+          type="button"
+          onClick={clearCatalogSelection}
+          className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-neutral-300 cursor-pointer transition-all"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  )}
+
   {/* SPOTIFY TRACKLIST TABLE */}
   <div className="rounded-2xl overflow-hidden bg-[#121212] border border-zinc-800/80 shadow-2xl">
     <div className="overflow-x-auto">
       <table className="w-full min-w-[700px] text-left border-collapse">
  <thead>
  <tr className="border-b border-zinc-800/80 text-[11px] font-mono uppercase tracking-wider text-zinc-400 bg-black/40">
+ <th className="py-3 px-3 w-8 text-center">
+   <input
+     type="checkbox"
+     checked={filteredSongs.length > 0 && filteredSongs.every(s => selectedCatalogIds.has(s.id))}
+     onChange={(e) => {
+       if (e.target.checked) {
+         setSelectedCatalogIds(new Set(filteredSongs.map(s => s.id)));
+       } else {
+         clearCatalogSelection();
+       }
+     }}
+     className="w-3.5 h-3.5 cursor-pointer accent-[#1db954]"
+     title="Seleccionar todo lo filtrado"
+   />
+ </th>
  <th className="py-3 px-4 w-12 text-center">#</th>
  <th className="py-3 px-4">TÍTULO Y TEMA</th>
  <th className="py-3 px-4">ÁLBUM / ESTADO</th>
@@ -2446,7 +2624,7 @@ export default function RepertorioSetlists({
  <tbody className="divide-y divide-zinc-800/60 text-xs font-mono">
  {filteredSongs.length === 0 ? (
  <tr>
- <td colSpan={6} className="text-center py-12 text-zinc-500 font-mono text-xs">
+ <td colSpan={7} className="text-center py-12 text-zinc-500 font-mono text-xs">
  No se encontraron canciones con los filtros seleccionados.
  </td>
  </tr>
@@ -2454,16 +2632,39 @@ export default function RepertorioSetlists({
  filteredSongs.map((s, idx) => {
  const isPlayingCurrent = activePlayerSong?.id === s.id;
  const isDrive = isGoogleDriveUrl(s.audioPrincipalUrl || '');
+ const isSelected = selectedCatalogIds.has(s.id);
+
+ const albumLabel = s.albumDisco || s.album || 'Singles / Sin Disco';
+ const prevAlbumLabel = idx > 0 ? (filteredSongs[idx - 1].albumDisco || filteredSongs[idx - 1].album || 'Singles / Sin Disco') : null;
+ const showAlbumHeader = groupByAlbum && albumLabel !== prevAlbumLabel;
 
  return (
+ <React.Fragment key={`${s.id}-${idx}`}>
+ {showAlbumHeader && (
+   <tr className="bg-black/60">
+     <td colSpan={7} className="py-2 px-4 text-[10px] font-mono font-bold uppercase tracking-wider text-[#f2ca50]">
+       💿 {albumLabel}
+     </td>
+   </tr>
+ )}
  <tr
- key={`${s.id}-${idx}`}
  className={`group transition-all duration-150 cursor-pointer ${
-   isPlayingCurrent 
-     ? 'bg-[#1db954]/10 text-white' 
+   isPlayingCurrent
+     ? 'bg-[#1db954]/10 text-white'
+     : isSelected
+     ? 'bg-[#1db954]/5 text-zinc-200'
      : 'hover:bg-zinc-900/80 text-zinc-300'
  }`}
  >
+ {/* Column 0: Bulk-select Checkbox */}
+ <td className="py-3.5 px-3 text-center" onClick={(e) => e.stopPropagation()}>
+   <input
+     type="checkbox"
+     checked={isSelected}
+     onChange={() => toggleCatalogSelect(s.id)}
+     className="w-3.5 h-3.5 cursor-pointer accent-[#1db954]"
+   />
+ </td>
  {/* Column 1: Track Number / Play Button */}
  <td className="py-3.5 px-4 text-center font-bold text-zinc-500">
  <button
@@ -2659,6 +2860,7 @@ export default function RepertorioSetlists({
  </div>
  </td>
  </tr>
+ </React.Fragment>
  );
  })
  )}
@@ -3031,14 +3233,6 @@ export default function RepertorioSetlists({
  />
  )}
 
-{activeTab === 'configuracion' && (
-  <FavoritosGeneralesView
-    songs={songs}
-    colors={colors}
-    isStitchLight={isStitchLight}
-    onUpdateSong={handleUpdateSongFromStudio}
-  />
-)}
 {assignSongsModalData && assignSongsModalData.isOpen && (
   <AssignSongsToAlbumModal
     isOpen={assignSongsModalData.isOpen}
@@ -3059,6 +3253,18 @@ export default function RepertorioSetlists({
     isStitchLight={isStitchLight}
     onClose={() => setSetlistModalData(null)}
     onSave={handleSaveSetlistModal}
+  />
+)}
+
+{isAddSongsModalOpen && activeSetlist && (
+  <AddSongsToSetlistModal
+    isOpen={isAddSongsModalOpen}
+    songs={songs}
+    existingSongIds={activeSetlist.items.map(it => it.songId).filter((id): id is string => Boolean(id))}
+    colors={colors}
+    isStitchLight={isStitchLight}
+    onClose={() => setIsAddSongsModalOpen(false)}
+    onAddSongs={handleAddMultipleSongsToSetlist}
   />
 )}
   {/* CHORDS AND SUBSTITUTE GUIDE VIEWER MODAL */}
@@ -3126,6 +3332,24 @@ export default function RepertorioSetlists({
       setSongs(updatedSongs);
     }}
   />
+
+  {/* LIGHTWEIGHT AI CHORDS/LYRICS ANALYSIS STATUS BANNER */}
+  {statusBanner && (
+    <div
+      className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-2xl text-xs font-mono max-w-sm ${
+        statusBanner.type === 'success'
+          ? 'bg-emerald-950 border-emerald-700/60 text-emerald-100'
+          : statusBanner.type === 'error'
+          ? 'bg-rose-950 border-rose-700/60 text-rose-100'
+          : 'bg-neutral-900 border-neutral-700 text-neutral-100'
+      }`}
+    >
+      {statusBanner.type === 'loading' && (
+        <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin shrink-0" />
+      )}
+      <span>{statusBanner.text}</span>
+    </div>
+  )}
 </div>
  );
 }
