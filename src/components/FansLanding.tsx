@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle, Copy } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
@@ -79,6 +79,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     email: 'diego.delacalleb@gmail.com',
     telefono: '+34 612 345 678'
   });
+  const [donacionRevolut, setDonacionRevolut] = useState<{
+    habilitado?: boolean;
+    revolutTag?: string;
+    revolutUrl?: string;
+    titulo?: string;
+    descripcion?: string;
+  } | null>({
+    habilitado: true,
+    revolutTag: 'bakandeya',
+    revolutUrl: 'https://revolut.me/bakandeya',
+    titulo: 'Colabora con Bakandeya con una aportación económica',
+    descripcion: 'Tu aportación directa nos ayuda a financiar nuevas grabaciones, furgoneta de gira y producir nuevo merchandising independiente.'
+  });
+  const [copiedRevolut, setCopiedRevolut] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
@@ -162,6 +176,29 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               telefono: data.epkConfig.contactoBooking.telefono
             });
           }
+
+          if (data.epkConfig?.donacionRevolut) {
+            setDonacionRevolut(data.epkConfig.donacionRevolut);
+          } else if (cleanId === 'bakandeya') {
+            setDonacionRevolut({
+              habilitado: true,
+              revolutTag: 'bakandeya',
+              revolutUrl: 'https://revolut.me/bakandeya',
+              titulo: 'Colabora con Bakandeya con una aportación económica',
+              descripcion: 'Tu aportación directa nos ayuda a financiar nuevas grabaciones, furgoneta de gira y producir nuevo merchandising independiente.'
+            });
+          } else if (data.epkConfig?.enlacesRedes?.revolut) {
+            const rawRev = data.epkConfig.enlacesRedes.revolut;
+            const revUrl = rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`;
+            setDonacionRevolut({
+              habilitado: true,
+              revolutUrl: revUrl,
+              revolutTag: rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, ''),
+              titulo: `Colabora con ${data.bandName || bandName} con una aportación económica`
+            });
+          } else {
+            setDonacionRevolut(null);
+          }
         }
       })
       .catch(err => {
@@ -199,6 +236,74 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setIsConcertLink(true);
     }
   }, []);
+
+  const revolutUrl = donacionRevolut?.revolutUrl 
+    || (donacionRevolut?.revolutTag ? (donacionRevolut.revolutTag.startsWith('http') ? donacionRevolut.revolutTag : `https://revolut.me/${donacionRevolut.revolutTag.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
+    || (socialLinks?.revolut ? (socialLinks.revolut.startsWith('http') ? socialLinks.revolut : `https://revolut.me/${socialLinks.revolut.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
+    || (resolvedBandId.includes('bakandeya') ? 'https://revolut.me/bakandeya' : '');
+
+  const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const revolutDisplay = rawHandle || 'revolut.me/bakandeya';
+
+  const renderRevolutCard = (isSuccessScreen = false) => {
+    if (!revolutUrl || donacionRevolut?.habilitado === false) return null;
+
+    const title = isSuccessScreen 
+      ? t('revolutSuccessPrompt', { bandName })
+      : t('economicSupportTitle', { bandName });
+
+    return (
+      <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : 'pt-1.5'}>
+        <a
+          href={revolutUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative group block w-full p-3.5 rounded-2xl bg-gradient-to-r from-slate-950 via-neutral-900 to-slate-950 border-2 border-sky-500/50 hover:border-sky-400 transition-all duration-300 shadow-[0_0_18px_rgba(14,165,233,0.18)] hover:shadow-[0_0_26px_rgba(14,165,233,0.35)] cursor-pointer overflow-hidden text-left"
+        >
+          {/* Micro-animación: haz de luz sutil en hover */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-400/15 to-transparent -translate-x-full group-hover:translate-x-full duration-1000 transition-transform pointer-events-none" />
+
+          <div className="flex items-center justify-between gap-3 relative z-10">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className="relative shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                    <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                  </svg>
+                </div>
+                {/* Micro-animación de pulso continuo (ping dot) */}
+                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-80"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-400 border-2 border-neutral-950"></span>
+                </span>
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <p className="text-xs sm:text-sm font-mono font-bold text-white group-hover:text-sky-200 transition leading-snug">
+                    {title}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[10px] font-mono text-sky-400 font-semibold">
+                    {revolutDisplay}
+                  </span>
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-0.5 shrink-0">
+                    <Heart className="w-2.5 h-2.5 text-pink-400 fill-pink-400 animate-pulse" />
+                    Revolut
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center text-sky-300 group-hover:bg-sky-500 group-hover:text-black group-hover:border-sky-400 transition-all duration-300 shrink-0 shadow-sm">
+              <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            </div>
+          </div>
+        </a>
+      </div>
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -306,6 +411,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
             </div>
           )}
+
+          {/* Revolut Support in Success View */}
+          {renderRevolutCard(true)}
 
           {/* Booking / Contrataciones in Success View */}
           {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
@@ -444,7 +552,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Tab 1: Redes Sociales */}
         {activeTab === 'redes' && (
-          <div className="space-y-4 animate-fade-in pt-1">
+          <div className="space-y-3.5 animate-fade-in pt-1">
             <div className="p-3.5 bg-neutral-950/80 rounded-xl border border-neutral-800 text-center space-y-1">
               <p className="text-xs font-bold text-amber-400">{t('followHelpTitle')}</p>
               <p className="text-[11px] text-neutral-400 font-mono leading-relaxed">
@@ -458,7 +566,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               showTitle={false}
             />
 
-            <div className="pt-2 text-center">
+            {/* Aportación Económica / Revolut debajo de links de redes */}
+            {renderRevolutCard(false)}
+
+            <div className="pt-1 text-center">
               <button
                 type="button"
                 onClick={() => setActiveTab('form')}
