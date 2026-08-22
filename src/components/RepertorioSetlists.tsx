@@ -746,6 +746,19 @@ export default function RepertorioSetlists({
  // Fires in the background after a song is saved with a new audio file, no extra click needed.
  const runAutoChordAnalysis = async (song: Song) => {
    if (!song.audioPrincipalUrl) return;
+
+   // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
+   // el servidor no puede descargar ese audio, así que analizarlo daría un cifrado inventado
+   // a partir del título. Mejor decirlo que fingir que se ha transcrito la grabación.
+   if (!/^https?:\/\//i.test(song.audioPrincipalUrl) && !song.audioPrincipalUrl.startsWith('/')) {
+     setStatusBanner({
+       text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
+       type: 'error'
+     });
+     setTimeout(() => setStatusBanner(null), 6000);
+     return;
+   }
+
    setStatusBanner({ text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`, type: 'loading' });
    try {
      const res = await fetch('/api/generate-song-chords', {
@@ -763,12 +776,29 @@ export default function RepertorioSetlists({
      });
      const data = await res.json();
      if (res.ok && data?.cifradoTexto) {
+       const updatedSong = { ...song, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto };
        setSongs(prev => {
          const next = prev.map(s => s.id === song.id ? { ...s, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto } : s);
          saveSongsToLocalStorageSafely(next);
          return next;
        });
-       setStatusBanner({ text: `✓ Letra y acordes de "${song.titulo}" listos`, type: 'success' });
+
+       // Si el servidor no pudo guardarlo, lo persistimos nosotros por la vía normal para que
+       // el cifrado no se quede solo en esta pestaña y se pierda al recargar.
+       if (!data.persisted) {
+         fetch(`/api/songs/${encodeURIComponent(song.id)}`, {
+           method: 'PUT',
+           headers: getHeaders(),
+           body: JSON.stringify(updatedSong)
+         }).catch(err => console.error('Error persisting generated chords:', err));
+       }
+
+       setStatusBanner({
+         text: data.fromRealAudio
+           ? `✓ Letra y acordes de "${song.titulo}" transcritos del audio`
+           : `✓ Cifrado propuesto para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
+         type: 'success'
+       });
      } else {
        setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
      }
