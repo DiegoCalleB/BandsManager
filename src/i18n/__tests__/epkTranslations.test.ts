@@ -13,8 +13,7 @@ describe('epkTranslations', () => {
     for (const l of EPK_LANGUAGES) {
       expect(EPK_TRANSLATIONS[l.code], `falta el diccionario de ${l.code}`).toBeDefined();
     }
-    // Y al revés: ningún diccionario suelto sin entrada en el selector, que es el fallo que
-    // ya arrastra fansTranslations (tiene un bloque de más que nadie referencia).
+    // Y al revés: ningún diccionario suelto sin entrada en el selector.
     expect(Object.keys(EPK_TRANSLATIONS).sort()).toEqual(EPK_LANGUAGES.map(l => l.code).sort());
   });
 

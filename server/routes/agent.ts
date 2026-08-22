@@ -1,5 +1,6 @@
 import express from "express";
 import { getRegionForCity } from "../../src/constants/regions.js";
+import { prepararLeadsDescubiertos } from "../utils/scoutLeads.js";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES } from "../../src/db_seed.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand, BAKANDEYA_BAND_ID } from "../state.js";
 import { dbUpsertLead, getSupabase } from "../db.js";
@@ -211,13 +212,23 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           }
         }
 
+        // Si la IA no respondió se usa una plantilla genérica. No pasa nada (la sala sí es
+        // real y hay revisión humana antes de enviar), pero quien revisa tiene que saber que
+        // esto NO lo ha escrito la IA con el contexto del lead.
+        let pitchEsPlantilla = false;
         if (!generatedPitch) {
+          pitchEsPlantilla = true;
           generatedPitch = `Hola equipo de ${lead.nombre_sala},\n\nOs escribimos desde ${bandInfo} porque estamos cerrando fechas para nuestra próxima gira y nos encantaría presentar nuestro directo en vuestra sala.\n\nContamos con un repertorio dinámico y gran puesta en escena. Podéis consultar nuestro Dossier EPK y material en directo. ¿Tendríais disponibilidad para los próximos meses?\n\n¡Un cordial saludo!\nEquipo de Booking`;
         }
 
+        const notaPlantilla = pitchEsPlantilla
+          ? `${lead.notas ? lead.notas + ' | ' : ''}[${new Date().toISOString().slice(0, 10)}] Pitch de PLANTILLA: la IA no respondió, revísalo y reescríbelo antes de aprobar.`
+          : undefined;
+
         await sb.from("leads").update({
           pitch_generado: generatedPitch,
-          estado: "pendiente_aprobacion"
+          estado: "pendiente_aprobacion",
+          ...(notaPlantilla ? { notas: notaPlantilla } : {})
         }).eq("id", lead.id);
 
         results.push({
@@ -275,7 +286,13 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       if (ai) {
         try {
           const prompt = `Actúa como el Agente Scout Descubridor de salas y recintos musicales.
-Busca y extrae entre 2 y 4 salas de conciertos, teatros, festivales o recintos musicales reales o altamente verosímiles para la ciudad/región: "${targetLoc}". Tipo: "${tipo}".
+Busca y extrae entre 2 y 4 salas de conciertos, teatros, festivales o recintos musicales que EXISTAN DE VERDAD en la ciudad/región: "${targetLoc}". Tipo: "${tipo}".
+
+REGLAS INNEGOCIABLES:
+1. Solo recintos REALES que puedas identificar por su nombre propio. NO inventes ni completes con nombres verosímiles: un recinto que no existe hace que la banda escriba a una dirección falsa.
+2. NO inventes emails, teléfonos, webs ni cuentas de Instagram. Si no conoces el dato con certeza, devuelve la cadena vacía "" en ese campo. Un hueco vacío es correcto; un dato inventado no.
+3. Si no conoces ningún recinto real de esa zona, devuelve un array vacío []. Es una respuesta válida y preferible a rellenar.
+4. El aforo, si no lo sabes, déjalo en 0.
 
 Devuelve estrictamente un array JSON con esta estructura exacta:
 [
@@ -307,40 +324,57 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
         }
       }
 
-      if (!discoveredLeads || !Array.isArray(discoveredLeads) || discoveredLeads.length === 0) {
-        const capLoc = targetLoc.charAt(0).toUpperCase() + targetLoc.slice(1);
-        discoveredLeads = [
-          {
-            nombre_sala: `Sala Directo & Conciertos ${capLoc}`,
-            ciudad: capLoc,
-            region: capLoc,
-            aforo: 450,
-            genero: "Música en Directo / Mestizaje",
-            tipo: tipo || "sala",
-            email_contacto: `programacion@directo${capLoc.toLowerCase().replace(/[^a-z0-9]/g, '')}.es`,
-            telefono: "+34 912 34 56 78",
-            instagram: `@directo_${capLoc.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
-            website: "",
-            notas: `Descubierto automáticamente por el Agente Scout para ${capLoc}.`
-          }
-        ];
+      // Antes, si la IA fallaba o no devolvía nada, aquí se FABRICABA una sala con nombre,
+      // email y teléfono inventados y se insertaba en Supabase marcada como "descubierta
+      // automáticamente". De ahí pasaba a estado 'nuevo', el Redactor le escribía un pitch real
+      // y acababa en un correo a una dirección que no existe. Ya no: si no hay nada real que
+      // guardar, no se guarda nada y se dice claramente.
+      const leadsValidos = prepararLeadsDescubiertos(discoveredLeads, targetLoc, tipo || "sala");
+
+      if (leadsValidos.length === 0) {
+        const avisoMsg = `El Agente Scout no ha podido descubrir recintos verificables en ${targetLoc}. No se ha creado ningún lead: es preferible no tener nada a tener un contacto inventado.`;
+        await logExecution({
+          band_id: targetBandId,
+          agente: "scout",
+          motor: "supabase_edge",
+          disparado_por_tipo: triggerType,
+          usuario_id: userId,
+          usuario_email: userEmail,
+          estado: "warning",
+          mensaje: avisoMsg,
+          leads_afectados: [],
+          conteo_afectados: 0,
+          detalles: { params, targetLoc, motivo: ai ? "la IA no devolvió recintos utilizables" : "no hay ninguna clave de IA configurada" }
+        });
+        return res.json({
+          success: true,
+          agent: "Scout",
+          engine: "Supabase Native Agent Engine",
+          message: avisoMsg,
+          results: []
+        });
       }
+
+      discoveredLeads = leadsValidos;
 
       const results: any[] = [];
       for (const raw of discoveredLeads) {
         const newLead = {
           id: `lead-scout-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           band_id: targetBandId,
+          // Ya viene validado y normalizado por prepararLeadsDescubiertos: sin nombres de
+          // relleno y sin contacto inventado (los huecos se quedan vacíos a propósito, para
+          // que los rellene el enriquecimiento posterior o una persona, con datos reales).
           nombre_sala: raw.nombre_sala,
-          ciudad: raw.ciudad || targetLoc,
-          region: raw.region || targetLoc,
-          aforo: Number(raw.aforo) || 300,
-          genero: raw.genero || "Música en Directo",
-          tipo: raw.tipo || tipo || "sala",
-          email_contacto: raw.email_contacto || "",
-          telefono: raw.telefono || "",
-          instagram: raw.instagram || "",
-          website: raw.website || "",
+          ciudad: raw.ciudad,
+          region: raw.region,
+          aforo: raw.aforo,
+          genero: raw.genero,
+          tipo: raw.tipo,
+          email_contacto: raw.email_contacto,
+          telefono: raw.telefono,
+          instagram: raw.instagram,
+          website: raw.website,
           fuente: `Agente Scout: ${targetLoc}`,
           estado: "nuevo",
           pitch_generado: "",
