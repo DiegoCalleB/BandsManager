@@ -1120,40 +1120,36 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               <div className="space-y-2">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">Así se verá para tus fans</span>
                 {config.donacionRevolut?.habilitado === false ? (
-                  <div className="p-4 rounded-2xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
+                  <div className="p-4 rounded-xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
                     Tarjeta desactivada: no se mostrará en "Únete"
                   </div>
                 ) : (
-                  <div className="relative p-3.5 rounded-2xl bg-gradient-to-r from-slate-950 via-neutral-900 to-slate-950 border-2 border-sky-500/50 shadow-[0_0_18px_rgba(14,165,233,0.18)] overflow-hidden">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shadow-md shrink-0">
+                  <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-sky-950/40 via-neutral-900 to-sky-950/40 border border-sky-500/35 shadow-sm">
+                    <div className="flex items-center justify-between gap-2.5">
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow-sm">
                           <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
                             <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
                           </svg>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs font-mono font-bold text-white leading-snug">
-                            {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
-                          </p>
-                          <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                            <span className="text-[10px] font-mono text-sky-400 font-semibold">
-                              revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono font-bold text-sky-100 truncate">
+                              {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
                             </span>
-                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-0.5 shrink-0">
-                              <Heart className="w-2.5 h-2.5 text-pink-400 fill-pink-400" />
-                              Aportación Voluntaria
+                            <span className="text-[10px] font-mono text-sky-400/80 truncate hidden xs:inline">
+                              revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}
                             </span>
                           </div>
                           {config.donacionRevolut?.descripcion && (
-                            <p className="text-[10px] text-neutral-400 font-mono leading-relaxed mt-1.5 line-clamp-2">
+                            <p className="text-[10px] text-neutral-400 font-mono line-clamp-1 mt-0.5 leading-tight">
                               {config.donacionRevolut.descripcion}
                             </p>
                           )}
                         </div>
                       </div>
-                      <div className="w-8 h-8 rounded-xl bg-sky-500/15 border border-sky-500/40 flex items-center justify-center text-sky-300 shrink-0 self-start">
-                        <ExternalLink className="w-4 h-4" />
+                      <div className="w-6 h-6 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 shrink-0">
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </div>
                     </div>
                   </div>

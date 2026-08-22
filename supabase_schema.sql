@@ -222,6 +222,7 @@ CREATE TABLE IF NOT EXISTS epk_configs (
     contacto_booking JSONB DEFAULT '{}'::jsonb,
     temas_destacados_ids JSONB DEFAULT '[]'::jsonb,
     incentivo_fans JSONB DEFAULT '{}'::jsonb,
+    donacion_revolut JSONB DEFAULT '{}'::jsonb,
     ciudades_config JSONB DEFAULT '[]'::jsonb,
     firma_email JSONB DEFAULT '{}'::jsonb,
     -- Contenido del EPK público orientado a contratación (ver src/components/PublicEPK.tsx)
