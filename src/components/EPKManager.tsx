@@ -224,6 +224,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
   const [isUploadingRider, setIsUploadingRider] = useState(false);
   const [subiendoFotoMiembro, setSubiendoFotoMiembro] = useState<string | null>(null);
+  const [subiendoGaleria, setSubiendoGaleria] = useState(false);
 
   // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
   // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
@@ -373,6 +374,30 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     } finally {
       setIsUploadingRider(false);
     }
+  };
+
+  // Galería de Imagen & Prensa (config.bandPhotos) - hasta ahora este campo existía en el
+  // modelo de datos y en la página pública, pero el editor nunca tuvo ningún control para
+  // subir o quitar fotos, así que siempre estaba vacío y la galería pública caía en su
+  // fallback (mostrar solo el logo).
+  const subirFotosGaleria = async (files: FileList) => {
+    setSubiendoGaleria(true);
+    setSaveError(null);
+    try {
+      const urls = await Promise.all(
+        Array.from(files).map(file => uploadFileToServer(file, { bandId: activeBandId, category: 'galeria' }))
+      );
+      setConfig(prev => ({ ...prev, bandPhotos: [...(prev.bandPhotos || []), ...urls] }));
+    } catch (err: any) {
+      console.error('Error subiendo fotos de galería:', err);
+      setSaveError(err?.message || 'No se pudieron subir una o varias fotos. Inténtalo de nuevo.');
+    } finally {
+      setSubiendoGaleria(false);
+    }
+  };
+
+  const quitarFotoGaleria = (url: string) => {
+    setConfig(prev => ({ ...prev, bandPhotos: (prev.bandPhotos || []).filter(p => p !== url) }));
   };
 
   const handleCopyUrl = () => {
@@ -607,6 +632,48 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* GALERÍA DE IMAGEN & PRENSA */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <ImageIcon className="w-5 h-5" /> Galería de Imagen &amp; Prensa
+            </h3>
+            <p className="text-xs text-slate-400">
+              Fotos reales de directo o de sesión de prensa (no el logo, no las fotos de cada miembro de Formación). Es lo primero que ve alguien que nunca os ha visto tocar - sin fotos aquí, la galería del EPK público solo enseña el logo.
+            </p>
+            <label className={`cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs inline-flex items-center justify-center gap-2 transition shadow-md ${subiendoGaleria ? 'opacity-70 pointer-events-none' : ''}`}>
+              {subiendoGaleria ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+              <span>{subiendoGaleria ? 'Subiendo fotos...' : '+ Subir fotos (puedes elegir varias a la vez)'}</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                disabled={subiendoGaleria}
+                onChange={e => { const files = e.target.files; if (files && files.length > 0) subirFotosGaleria(files); e.target.value = ''; }}
+              />
+            </label>
+            {(config.bandPhotos || []).length === 0 ? (
+              <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+                Todavía no hay fotos de directo o prensa.
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {(config.bandPhotos || []).map((url, idx) => (
+                  <div key={url + idx} className="group relative aspect-video rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
+                    <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" loading="lazy" />
+                    <button
+                      onClick={() => quitarFotoGaleria(url)}
+                      className="absolute top-1.5 right-1.5 p-1.5 bg-slate-950/80 text-slate-300 hover:text-red-400 rounded-lg border border-slate-700 opacity-0 group-hover:opacity-100 transition"
+                      title="Quitar foto"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* DOSSIER EN PDF O DOCUMENTO */}

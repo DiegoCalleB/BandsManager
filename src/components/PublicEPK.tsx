@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Download, Share2, Music, ExternalLink, FileText, Sparkles, 
-  Copy, Check, Printer, Mail, Phone, Calendar, MapPin, Play, Pause,
-  Instagram, Youtube, Disc
+import {
+  Download, Share2, ExternalLink,
+  Copy, Check, Printer, Mail, Phone, MapPin, Play, Pause
 } from 'lucide-react';
 import { EPKConfig, Song, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
@@ -82,12 +81,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   }));
   const concerts: Concert[] = epkData?.upcomingConcerts || [];
 
-  // Datos de un vistazo para quien programa: lo que decide si sigue leyendo o cierra.
-  const generosDestacados = Array.from(
-    new Set(songs.map((s: any) => s.genero).filter(Boolean))
-  ).slice(0, 4);
-  const temasConAudio = songs.filter((s: any) => s.audioPrincipalUrl);
-
   // Un enlace de artista/álbum de Spotify se puede incrustar cambiando la ruta por /embed/.
   // Se exigen los 22 caracteres del ID real: si no, un enlace de relleno como
   // '/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
@@ -114,6 +107,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const videoPrincipal = videos.find(v => v.destacado) || videos[0] || null;
   const videosSecundarios = videos.filter(v => v !== videoPrincipal);
   const miembros = (config.miembros || []).filter(m => m?.nombre || m?.fotoUrl);
+  // Foto de portada del hero: la primera de la Galería de Imagen & Prensa, si existe. Es lo
+  // que hace que esto lea como la web real de una banda en directo y no como una tarjeta de
+  // dashboard - sin foto real, cae al degradado de siempre.
+  const fotoPortada = (config.bandPhotos || []).find(p => p && p !== displayLogo) || null;
   const datos = config.datosContratacion || {};
   const hayDatosContratacion = Boolean(
     datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario
@@ -152,89 +149,60 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
       </div>
 
+      {/* HERO a sangre completa. Una web de banda abre con una imagen que ocupa la pantalla,
+          no con una tarjeta redondeada dentro de una rejilla - ese formato de tarjeta era lo
+          que hacía que la página leyera como un panel de control. La biografía y los datos de
+          contratación tienen su propia sección debajo, así que aquí no se repite nada. */}
+      <header className="relative w-full overflow-hidden print:border-none print:bg-none">
+        {fotoPortada ? (
+          <>
+            <img src={fotoPortada} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover print:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/50 print:hidden" />
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-amber-950/30 print:hidden" />
+        )}
+
+        <div className={`relative max-w-5xl mx-auto px-6 flex flex-col items-center text-center justify-end ${fotoPortada ? 'min-h-[78vh] pt-32 pb-16' : 'min-h-[62vh] pt-32 pb-14'}`}>
+          {displayLogo && (
+            <img
+              src={displayLogo}
+              alt={`Logo Oficial ${bandName}`}
+              className={`rounded-xl object-cover shadow-2xl mb-7 ${fotoPortada ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-24 h-24 sm:w-28 sm:h-28'}`}
+            />
+          )}
+
+          <h1
+            className="text-white uppercase leading-[0.88] tracking-tight text-[15vw] sm:text-[7rem] lg:text-[9rem]"
+            style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
+          >
+            {bandName}
+          </h1>
+
+          <p className="mt-6 text-amber-300 text-base sm:text-xl max-w-2xl leading-snug">
+            {/* Subtítulo corto de la cabecera: usa el Lema/Pie de Firma (firmaEmail.textoPie),
+                NUNCA el texto largo para agentes de IA (dossierTextoExtra) - antes usaba ese
+                segundo campo, y al no avisar que también era público, un texto largo pensado
+                solo para el chatbot acababa mostrado como titular gigante en la home. */}
+            {config.firmaEmail?.textoPie || (isBakandeya ? "Ska-Rock, Mestizaje & Ritmos Latinos en Vivo" : `${bandName} en Directo`)}
+          </p>
+
+          {config.enlacesRedes && (
+            <div className="mt-8 print:hidden">
+              <SocialPlatformsList links={config.enlacesRedes} variant="pills" showTitle={false} />
+            </div>
+          )}
+        </div>
+      </header>
+
       {/* Main Container */}
-      <div className="max-w-5xl mx-auto px-4 pt-24 pb-16 print:p-0 print:pt-4">
-        {/* HERO SECTION */}
-        <header className="relative rounded-2xl overflow-hidden border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/40 p-6 sm:p-10 mb-8 print:border-none print:p-0 print:bg-none">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <div className="relative shrink-0">
-              {displayLogo ? (
-                <img
-                  src={displayLogo}
-                  alt={`Logo Oficial ${bandName}`}
-                  className="w-40 h-40 sm:w-48 sm:h-48 rounded-2xl object-cover border-2 border-amber-500/60 shadow-2xl shadow-amber-500/10"
-                />
-              ) : (
-                <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-2xl bg-slate-900 border-2 border-slate-700 flex flex-col items-center justify-center text-amber-400 p-4">
-                  <Music className="w-12 h-12 mb-2 opacity-80" />
-                  <span className="font-bold text-center text-sm">{bandName}</span>
-                </div>
-              )}
-              <span className="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 text-xs font-black uppercase px-2.5 py-1 rounded-full shadow-md">
-                Directo
-              </span>
-            </div>
-
-            <div className="text-center md:text-left space-y-3 flex-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" /> Kit de Prensa Oficial {new Date().getFullYear()}
-              </div>
-              <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                {bandName}
-              </h1>
-              <p className="text-amber-300 font-medium text-lg sm:text-xl">
-                {/* Subtítulo corto de la cabecera: usa el Lema/Pie de Firma (firmaEmail.textoPie),
-                    NUNCA el texto largo para agentes de IA (dossierTextoExtra) - antes usaba ese
-                    segundo campo, y al no avisar que también era público, un texto largo pensado
-                    solo para el chatbot acababa mostrado como titular gigante en la home. */}
-                {config.firmaEmail?.textoPie || (isBakandeya ? "Ska-Rock, Mestizaje & Ritmos Latinos en Vivo" : `${bandName} en Directo`)}
-              </p>
-              <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
-                {config.biografia ? (config.biografia.length > 200 ? `${config.biografia.slice(0, 180)}...` : config.biografia) : 'Dossier oficial y propuesta artística en directo.'}
-              </p>
-
-              {/* Datos de un vistazo: lo que un programador quiere saber en 5 segundos antes
-                  de decidir si sigue leyendo. Cada dato solo aparece si existe de verdad. */}
-              {(generosDestacados.length > 0 || temasConAudio.length > 0 || (config.ciudadesConfig?.length || 0) > 0) && (
-                <div className="pt-3 flex flex-wrap items-center justify-center md:justify-start gap-2">
-                  {generosDestacados.map((g: any) => (
-                    <span key={g} className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-200 text-xs font-semibold">
-                      {g}
-                    </span>
-                  ))}
-                  {temasConAudio.length > 0 && (
-                    <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-1.5">
-                      <Music className="w-3 h-3" /> {temasConAudio.length} tema{temasConAudio.length === 1 ? '' : 's'} para escuchar
-                    </span>
-                  )}
-                  {(config.ciudadesConfig?.length || 0) > 0 && (
-                    <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-amber-500/80" /> {config.ciudadesConfig!.slice(0, 3).join(' · ')}
-                    </span>
-                  )}
-                </div>
-              )}
-
-              {/* Quick links bar */}
-              <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3 print:hidden">
-                {config.enlacesRedes && (
-                  <SocialPlatformsList links={config.enlacesRedes} variant="pills" showTitle={false} />
-                )}
-                {config.dossierPdfUrl && (
-                  <a href={config.dossierPdfUrl} target="_blank" rel="noopener noreferrer" className="px-3.5 py-1.5 bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30 text-xs font-bold rounded-full flex items-center gap-1.5 transition shadow-sm">
-                    <Download className="w-3.5 h-3.5" /> {config.dossierPdfName || 'Dossier PDF'}
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        </header>
+      <div className="max-w-5xl mx-auto px-4 pt-14 pb-16 print:p-0 print:pt-4">
 
         {/* DATOS DUROS DE CONTRATACIÓN - responde las preguntas de siempre sin otro email */}
         {hayDatosContratacion && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <FileText className="w-5 h-5" /> Datos para Contratación
+          <section className="mb-16 space-y-6 print:mb-8">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Datos para Contratación
             </h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
@@ -268,9 +236,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* VÍDEOS DE DIRECTO - lo primero que mira quien contrata: cómo suena y cómo se ve */}
         {videoPrincipal && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:hidden">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Play className="w-5 h-5" /> Vídeo en Directo
+          <section className="mb-16 space-y-6 print:hidden">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Vídeo en Directo
             </h2>
             <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
               <iframe
@@ -309,9 +277,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* FORMACIÓN - caras y quién sube al escenario */}
         {miembros.length > 0 && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Sparkles className="w-5 h-5" /> La Banda
+          <section className="mb-16 space-y-6 print:mb-8">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              La Banda
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {miembros.map(m => (
@@ -340,9 +308,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         {/* 2-COLUMN LAYOUT FOR BIO & CONTACT */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* BIOGRAPHY (2 Cols) */}
-          <section className="lg:col-span-2 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-4 print:border-none print:p-0">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <FileText className="w-5 h-5" /> Biografía & Propuesta Musical
+          <section className="lg:col-span-2 space-y-6">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Biografía & Propuesta Musical
             </h2>
             <div className="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3">
               {config.biografia}
@@ -388,9 +356,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* FEATURED TRACKS / AUDIO PREVIEW */}
         {songs.length > 0 && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Disc className="w-5 h-5" /> Temas Destacados / Repertorio Principal
+          <section className="mb-16 space-y-6 print:mb-8">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Temas Destacados / Repertorio Principal
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {songs.map((song: any) => {
@@ -433,9 +401,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* BAND PHOTOS & GALLERY */}
         {((config.bandPhotos && config.bandPhotos.length > 0) || displayLogo) && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Sparkles className="w-5 h-5" /> Galería de Imagen & Prensa
+          <section className="mb-16 space-y-6 print:mb-8">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Galería de Imagen & Prensa
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
@@ -455,9 +423,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* ESCUCHA Y VÍDEO - lo que de verdad decide a quien programa un directo */}
         {(spotifyEmbedUrl || youtubeEmbedUrl) && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:hidden">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Music className="w-5 h-5" /> Escúchanos y Míranos en Directo
+          <section className="mb-16 space-y-6 print:hidden">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Escúchanos y Míranos en Directo
             </h2>
             <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
               {youtubeEmbedUrl && (
@@ -489,10 +457,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* TECHNICAL RIDER - oculto si no hay nada que enseñar (antes salía una caja vacía) */}
         {(config.riderTecnico?.trim() || config.riderPdfUrl) && (
-        <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
+        <section className="mb-16 space-y-6 print:mb-8">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
-              <FileText className="w-5 h-5" /> Rider Técnico
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Rider Técnico
             </h2>
             <div className="flex items-center gap-2 print:hidden">
               {config.riderPdfUrl && (
@@ -528,9 +496,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* UPCOMING SHOWS */}
         {concerts.length > 0 && (
-          <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8 mb-8 space-y-4 print:border-none print:p-0">
-            <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Calendar className="w-5 h-5" /> Próximas Fechas de Gira
+          <section className="mb-16 space-y-6 print:mb-8">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              Próximas Fechas de Gira
             </h2>
             <div className="space-y-2.5">
               {concerts.map(c => (
@@ -556,7 +524,17 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         )}
 
         {/* FOOTER */}
-        <footer className="text-center text-xs text-slate-500 space-y-2 pt-6 border-t border-slate-800 print:text-black">
+        <footer className="text-center text-xs text-slate-500 space-y-4 pt-6 border-t border-slate-800 print:text-black">
+          {config.dossierPdfUrl && (
+            <a
+              href={config.dossierPdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 text-xs font-bold rounded-full transition print:hidden"
+            >
+              <Download className="w-3.5 h-3.5" /> {config.dossierPdfName || 'Descargar Dossier en PDF'}
+            </a>
+          )}
           <p>© {new Date().getFullYear()} {bandName} — Todos los derechos reservados. Kit de prensa generado por BandManager.ai</p>
         </footer>
       </div>
