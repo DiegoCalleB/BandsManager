@@ -66,6 +66,13 @@ const DEFAULT_EPK_CONFIG = {
     enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
     codigoDescuento: "BAKANDEYA-FAN-10"
   },
+  donacionRevolut: {
+    habilitado: true,
+    revolutTag: "bakandeya",
+    revolutUrl: "https://revolut.me/bakandeya",
+    titulo: "Colabora con Bakandeya con una aportación económica",
+    descripcion: "Tu apoyo directo y voluntario nos permite financiar gastos de furgoneta de gira, grabación de nuevos sencillos en estudio y material independiente sin intermediarios."
+  },
   ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"],
   firmaEmail: {
     nombreRemitente: "Diego de la Calle",
