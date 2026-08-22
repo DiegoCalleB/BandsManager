@@ -1,8 +1,8 @@
 // Traducciones del formulario público "Únete" (FansLanding.tsx).
-// Idiomas soportados hoy: español, inglés, italiano. Añadir uno nuevo es
+// Idiomas soportados hoy: español, inglés, italiano, checo. Añadir uno nuevo es
 // solo añadir una entrada más aquí y en FAN_FORM_LANGUAGES.
 
-export type FanFormLanguage = 'es' | 'en' | 'it';
+export type FanFormLanguage = 'es' | 'en' | 'it' | 'cs';
 
 export const DEFAULT_FAN_FORM_LANGUAGE: FanFormLanguage = 'es';
 
@@ -10,6 +10,7 @@ export const FAN_FORM_LANGUAGES: { code: FanFormLanguage; label: string; flag: s
   { code: 'es', label: 'Español', flag: '🇪🇸' },
   { code: 'en', label: 'English', flag: '🇬🇧' },
   { code: 'it', label: 'Italiano', flag: '🇮🇹' },
+  { code: 'cs', label: 'Čeština', flag: '🇨🇿' },
 ];
 
 export function isFanFormLanguage(value: string | null | undefined): value is FanFormLanguage {
@@ -256,7 +257,67 @@ const it: FanFormDict = {
   understood: 'Capito',
 };
 
-export const FAN_FORM_TRANSLATIONS: Record<FanFormLanguage, FanFormDict> = { es, en, it };
+const cs: FanFormDict = {
+  officialChannel: 'Oficiální kanál',
+  joinTitle: 'Připoj se k {bandName}',
+  thanksConcertWithName: 'Díky, že jsi přišel/přišla na koncert {concertName}! 🎸',
+  thanksConcertGeneric: 'Díky, že jsi přišel/přišla na koncert! 🎸',
+  thanksSupport: 'Díky za tvou podporu! 🎶',
+  supportIntro: 'Podpoř nás, jak chceš: **sleduj nás na oblíbené sociální síti** nebo **dostávej novinky e-mailem**.',
+  tabFollow: '📱 Sleduj nás',
+  tabJoin: '✉️ Chci novinky',
+  followHelpTitle: '⚡ Pomoz nám růst!',
+  followHelpBody: 'Vyber si oblíbenou platformu a **sleduj nás**. Je to nejlepší způsob, jak podpořit nezávislou hudbu!',
+  followCTA: '✨ Chceš novinky přímo do e-mailu? Přihlas se zde →',
+  errorRequiredFields: 'Vyplň prosím povinná pole a přijmi zásady ochrany osobních údajů.',
+  errorGenericSignup: 'Při registraci došlo k chybě.',
+  labelName: 'Jméno *',
+  placeholderName: 'Tvoje celé jméno',
+  labelEmail: 'E-mail *',
+  labelCity: 'Město (volitelné)',
+  placeholderCity: 'Odkud nás posloucháš?',
+  labelHowFound: 'Jak jsi nás poznal/poznala? *',
+  optionSelect: 'Vyber možnost...',
+  optionConcert: 'Na koncertě',
+  optionSocial: 'Instagram / TikTok / Sociální sítě',
+  optionFriend: 'Doporučil/a mi to kamarád/ka',
+  optionSpotify: 'Objevil/a jsem na Spotify / streamování',
+  optionOther: 'Jiné',
+  labelFavSong: 'Tvoje oblíbená písnička od {bandName}? (volitelné)',
+  placeholderFavSong: 'Např.: La Noche Entera, Balada...',
+  labelInstagram: 'Uživatelské jméno na Instagramu (volitelné)',
+  placeholderInstagram: '@tvuj_ucet',
+  labelMessage: 'Vzkaz nebo pozdrav pro kapelu (volitelné)',
+  placeholderMessage: 'Nech kapele vzkaz nebo věnování...',
+  consentPrefix: 'Přečetl/a jsem si a souhlasím se ',
+  consentPrivacyLink: 'zásadami ochrany osobních údajů',
+  consentMiddle: ' a dávám svůj ',
+  consentExplicit: 'výslovný souhlas',
+  consentSuffix: ' s tím, aby kapela uchovávala moje údaje a posílala mi novinky.',
+  submitJoin: 'Připoj se k {bandName}',
+  submitting: 'Registruji tě...',
+  followUsAlso: 'Nebo nás sleduj na sociálních sítích',
+  bookingTitle: 'Booking & Vystoupení',
+  bookingBadgeLive: 'Naživo',
+  bookingQuestion: 'Chceš si objednat **{bandName}** do svého klubu, na festival nebo na soukromou akci? Kontaktuj nás přímo:',
+  bookingEmailSubject: 'Poptávka na booking - {bandName}',
+  bookingWhatsappText: 'Ahoj, chtěl/a bych informace o objednání kapely {bandName}',
+  backHome: 'Zpět na hlavní stránku',
+  welcomeTitle: 'Vítej u {bandName}!',
+  registeredDefaultMessage: 'Registrace dokončena! Jsme rádi, že jsi součástí rodiny {bandName}.',
+  benefitsTitle: 'Tvoje výhody',
+  downloadExclusive: 'Stáhnout exkluzivní obsah',
+  merchCode: 'Slevový kód na merch',
+  followUsPlatforms: '📱 Sleduj nás na našich platformách',
+  privacyModalTitle: 'Zásady ochrany osobních údajů a GDPR',
+  privacyPara1: '**1. Správce údajů:** {bandName} (hudební kapela). Údaje poskytnuté prostřednictvím tohoto QR kódu a formuláře budou zpracovány výhradně za účelem správy tvé registrace u {bandName} a informování o nadcházejících koncertech, vydáních a hudebních novinkách.',
+  privacyPara2: '**2. Právní základ:** Zpracování tvých údajů je založeno na tvém výslovném souhlasu vyjádřeném zaškrtnutím políčka a odesláním formuláře.',
+  privacyPara3: '**3. Příjemci:** Údaje jsou bezpečně uloženy pro výhradní použití {bandName} při správě fanouškovské základny. Nebudou předány třetím stranám s výjimkou zákonné povinnosti.',
+  privacyPara4: '**4. Tvá práva:** Kdykoli můžeš uplatnit svá práva na přístup, opravu, výmaz a přenositelnost údajů, a to napsáním na náš kontaktní e-mail nebo uvedením v kterémkoli z našich informačních e-mailů.',
+  understood: 'Rozumím',
+};
+
+export const FAN_FORM_TRANSLATIONS: Record<FanFormLanguage, FanFormDict> = { es, en, it, cs };
 
 /** Sustituye {token} por su valor. Los tokens que faltan se dejan tal cual. */
 export function interpolate(template: string, vars: Record<string, string | undefined>): string {
