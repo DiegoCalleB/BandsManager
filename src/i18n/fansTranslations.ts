@@ -84,6 +84,20 @@ type FanFormDict = {
   privacyPara3: string; // {bandName}
   privacyPara4: string;
   understood: string;
+  interactiveSimulation: string;
+  backToForm: string;
+  previewModalTitle: string;
+  previewMobile: string;
+  previewDesktop: string;
+  previewTabForm: string;
+  previewTabSuccess: string;
+  previewLanguageLabel: string;
+  previewConcertLabel: string;
+  previewGeneralConcert: string;
+  previewReset: string;
+  previewClose: string;
+  previewProductionSyncBadge: string;
+  previewDisclaimer: string;
 };
 
 const es: FanFormDict = {
@@ -153,6 +167,20 @@ const es: FanFormDict = {
   privacyPara3: '**3. Destinatarios:** Los datos se almacenan de forma segura para uso exclusivo de {bandName} en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.',
   privacyPara4: '**4. Derechos:** Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.',
   understood: 'Entendido',
+  interactiveSimulation: 'Simulación Interactiva',
+  backToForm: 'Volver al Formulario',
+  previewModalTitle: 'Simulador del Formulario "Únete"',
+  previewMobile: 'Móvil',
+  previewDesktop: 'Escritorio',
+  previewTabForm: 'Formulario',
+  previewTabSuccess: 'Éxito / Gracias',
+  previewLanguageLabel: 'Idioma',
+  previewConcertLabel: 'Concierto simulado',
+  previewGeneralConcert: '🌐 Modo General (Sin bolo)',
+  previewReset: 'Reiniciar',
+  previewClose: 'Cerrar',
+  previewProductionSyncBadge: 'Sincronizado con Dossier',
+  previewDisclaimer: 'Previsualización interactiva en tiempo real. Los cambios en el Dossier se reflejan al instante.',
 };
 
 const en: FanFormDict = {
@@ -222,6 +250,20 @@ const en: FanFormDict = {
   privacyPara3: '**3. Recipients:** Data is stored securely for the exclusive use of {bandName} in managing its fan base. It will not be shared with third parties except where legally required.',
   privacyPara4: '**4. Your rights:** You can exercise your rights of access, rectification, erasure and portability at any time by writing to our contact email or by requesting it in any of our newsletters.',
   understood: 'Got it',
+  interactiveSimulation: 'Interactive Simulation',
+  backToForm: 'Back to Form',
+  previewModalTitle: '"Join" Form Simulator',
+  previewMobile: 'Mobile',
+  previewDesktop: 'Desktop',
+  previewTabForm: 'Form',
+  previewTabSuccess: 'Success / Thanks',
+  previewLanguageLabel: 'Language',
+  previewConcertLabel: 'Simulated Concert',
+  previewGeneralConcert: '🌐 General Mode (No gig)',
+  previewReset: 'Reset',
+  previewClose: 'Close',
+  previewProductionSyncBadge: 'Synced with EPK',
+  previewDisclaimer: 'Real-time interactive preview. Changes in the EPK are reflected instantly.',
 };
 
 const it: FanFormDict = {
@@ -291,6 +333,20 @@ const it: FanFormDict = {
   privacyPara3: '**3. Destinatari:** I dati sono conservati in modo sicuro per uso esclusivo di {bandName} nella gestione della propria base fan. Non saranno condivisi con terzi salvo obbligo di legge.',
   privacyPara4: '**4. Diritti:** Puoi esercitare in qualsiasi momento i tuoi diritti di accesso, rettifica, cancellazione e portabilità scrivendo alla nostra email di contatto o richiedendolo in una qualsiasi delle nostre email informative.',
   understood: 'Capito',
+  interactiveSimulation: 'Simulazione Interattiva',
+  backToForm: 'Torna al Modulo',
+  previewModalTitle: 'Simulatore del Modulo "Unisciti"',
+  previewMobile: 'Mobile',
+  previewDesktop: 'Desktop',
+  previewTabForm: 'Modulo',
+  previewTabSuccess: 'Successo / Grazie',
+  previewLanguageLabel: 'Lingua',
+  previewConcertLabel: 'Concerto simulato',
+  previewGeneralConcert: '🌐 Modalità Generale (Senza concerto)',
+  previewReset: 'Reimposta',
+  previewClose: 'Chiudi',
+  previewProductionSyncBadge: 'Sincronizzato con Dossier',
+  previewDisclaimer: 'Anteprima interattiva in tempo reale. Le modifiche nel Dossier si riflettono all\'istante.',
 };
 
 const cs: FanFormDict = {
@@ -360,6 +416,20 @@ const cs: FanFormDict = {
   privacyPara3: '**3. Příjemci:** Údaje jsou bezpečně uloženy pro výhradní použití {bandName} při správě fanouškovské základny. Nebudou předány třetím stranám s výjimkou zákonné povinnosti.',
   privacyPara4: '**4. Tvá práva:** Kdykoli můžeš uplatnit svá práva na přístup, opravu, výmaz a přenositelnost údajů, a to napsáním na náš kontaktní e-mail nebo uvedením v kterémkoli z našich informačních e-mailů.',
   understood: 'Rozumím',
+  interactiveSimulation: 'Interaktivní simulace',
+  backToForm: 'Zpět na formulář',
+  previewModalTitle: 'Simulátor formuláře "Připoj se"',
+  previewMobile: 'Mobil',
+  previewDesktop: 'Desktop',
+  previewTabForm: 'Formulář',
+  previewTabSuccess: 'Úspěch / Poděkování',
+  previewLanguageLabel: 'Jazyk',
+  previewConcertLabel: 'Simulovaný koncert',
+  previewGeneralConcert: '🌐 Obecný režim (Bez koncertu)',
+  previewReset: 'Resetovat',
+  previewClose: 'Zavřít',
+  previewProductionSyncBadge: 'Synchronizováno s Dossier',
+  previewDisclaimer: 'Interaktivní náhled v reálném čase. Změny v Dossier se okamžitě projeví.',
 };
 
 export const FAN_FORM_TRANSLATIONS: Record<FanFormLanguage, FanFormDict> = { es, en, it, cs };
