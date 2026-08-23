@@ -426,18 +426,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400 animate-heartbeat" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
-                  {label}
-                </h3>
-                <span className="flex items-center gap-1 text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
-                  <span className="relative flex w-1.5 h-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
-                  </span>
-                  {t('directBadge')}
-                </span>
-              </div>
+              <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
+                {label}
+              </h3>
               <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
                 {descText}
               </p>
