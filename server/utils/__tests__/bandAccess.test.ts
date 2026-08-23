@@ -66,8 +66,10 @@ describe('getTargetBandId', () => {
     expect(getTargetBandId(req)).toBe('reg-bakandeya');
   });
 
-  it('sin usuario cae al valor por defecto', () => {
-    expect(getTargetBandId(peticion({ headers: { 'x-band-id': 'band-la-vanda' } }))).toBe('band-bakandeya');
+  it('sin usuario, falla en vez de caer en la banda insignia', () => {
+    // Antes devolvía "band-bakandeya" en silencio. Todos los llamadores están detrás de
+    // requireAuth, así que llegar aquí sin usuario es un bug del llamador, no un caso a tolerar.
+    expect(() => getTargetBandId(peticion({ headers: { 'x-band-id': 'band-la-vanda' } }))).toThrow();
   });
 });
 
@@ -124,7 +126,12 @@ describe('bandaDelAgente', () => {
     // requireCronOrAuth deja pasar al planificador sin sesión: ahí el band_id es de fiar porque
     // la cabecera X-Cron-Secret ya se ha validado antes de llegar aquí.
     expect(bandaDelAgente(peticion(), { band_id: 'band-la-vanda' })).toBe('band-la-vanda');
-    expect(bandaDelAgente(peticion(), {})).toBe('band-bakandeya');
+  });
+
+  it('sin usuario y sin params.band_id, falla en vez de caer en la banda insignia', () => {
+    // Antes devolvía "band-bakandeya" en silencio: un job del planificador que se olvidara de
+    // mandar el band_id acababa disparando el agente sobre la banda insignia sin avisar.
+    expect(bandaDelAgente(peticion(), {})).toBeNull();
   });
 
   it('un band_id que no es texto se ignora', () => {

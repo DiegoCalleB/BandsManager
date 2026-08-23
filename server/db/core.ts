@@ -45,9 +45,15 @@ export function normalizePlan(rawPlan?: string): 'ensayo' | 'local' | 'de_gira' 
   return 'ensayo';
 }
 
+// Filtro de tenant para TODAS las queries de Supabase en server/db/*.ts. Antes, si a esta
+// función llegaba un bandId vacío, devolvía "band-bakandeya" en silencio: un bug o una ruta
+// nueva que se olvidara de pasar el bandId no fallaba, leía o escribía en los datos de la banda
+// insignia sin que nadie se enterase. Mejor fallar alto: los llamadores de este módulo ya reciben
+// el bandId del usuario autenticado (nunca vacío tras el fix de auth.ts), así que un bandId vacío
+// aquí es siempre un bug del llamador, no un caso a tolerar.
 export function cleanBandId(bandId?: string): string {
   if (!bandId || typeof bandId !== "string" || !bandId.trim()) {
-    return "band-bakandeya";
+    throw new Error("cleanBandId: se requiere un band_id válido; no hay banda por defecto.");
   }
   return bandId.trim();
 }

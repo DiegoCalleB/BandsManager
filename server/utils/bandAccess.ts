@@ -37,7 +37,13 @@ export function getTargetBandId(req: express.Request): string {
     if (isAllowed) return cleanHeader;
   }
 
-  return userBandId || "band-bakandeya";
+  // Todos los llamadores están detrás de requireAuth, así que userBandId nunca debería faltar:
+  // getUserFromRequest ya devuelve null (sesión inválida) cuando no hay banda activa. Si algún
+  // día llega aquí sin ella, mejor un 500 explícito que heredar en silencio la banda insignia.
+  if (!userBandId) {
+    throw new Error("getTargetBandId: no hay banda activa en la sesión.");
+  }
+  return userBandId;
 }
 
 /**
@@ -85,9 +91,12 @@ export function bandaDelAgente(req: express.Request, params: any): string | null
   const user = (req as any).user;
   const pedida = typeof params?.band_id === "string" ? params.band_id.trim() : "";
 
-  if (!user) return pedida || "band-bakandeya";
+  // Sin usuario (llamada de cron) y sin params.band_id: antes esto caía en band-bakandeya, así
+  // que un job del planificador que se olvidara de mandar el band_id acababa disparando el
+  // agente sobre la banda insignia en vez de fallar. Sin banda explícita, null.
+  if (!user) return pedida || null;
   if (pedida && !puedeEscribirEnBanda(req, pedida)) return null;
-  return pedida || user.band_id || "band-bakandeya";
+  return pedida || user.band_id || null;
 }
 
 /** ¿Apuntan las dos cadenas a la misma banda, con o sin el prefijo band-/reg-? */
