@@ -5,8 +5,12 @@ import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
 
 export const toursController = {
   async getTours(req: Request, res: Response) {
-    // Declarado fuera del try para que el catch de fallback también pueda filtrar por banda.
-    const userBandId = (req as any).user?.band_id || 'band-bakandeya';
+    // Las 4 rutas de este controller están detrás de requireAuth, así que band_id nunca debería
+    // faltar; si falta es un bug de sesión, no un caso a tolerar cayendo en band-bakandeya.
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     try {
       const tours = await dbGetTours(userBandId);
 
@@ -22,9 +26,12 @@ export const toursController = {
   },
 
   async createTour(req: Request, res: Response) {
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     try {
       const newTour: Tour = req.body;
-      const userBandId = (req as any).user?.band_id || 'band-bakandeya';
       if (!(newTour as any).band_id) {
         (newTour as any).band_id = userBandId;
       }
@@ -42,9 +49,12 @@ export const toursController = {
   },
 
   async updateTour(req: Request, res: Response) {
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     try {
       const { id } = req.params;
-      const userBandId = (req as any).user?.band_id || 'band-bakandeya';
       const updatedTour: Tour = { ...req.body, id };
       const saved = await dbUpsertTour(updatedTour, userBandId);
 
@@ -60,9 +70,12 @@ export const toursController = {
   },
 
   async deleteTour(req: Request, res: Response) {
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     try {
       const { id } = req.params;
-      const userBandId = (req as any).user?.band_id || 'band-bakandeya';
       await dbDeleteTour(id, userBandId);
 
       const state = loadState();

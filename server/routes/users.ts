@@ -1612,8 +1612,11 @@ router.post("/users/associate", requireAuth, requireLeader, async (req, res) => 
       return res.status(400).json({ error: "El email del músico es requerido" });
     }
 
+    const targetBandId = (req as any).user?.band_id;
+    if (!targetBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const state = loadState();
-    const targetBandId = (req as any).user?.band_id || "band-bakandeya";
     const cleanSearch = email.trim().toLowerCase();
 
     const targetUser = state.users.find((u: any) => 
@@ -1671,8 +1674,11 @@ router.post("/users/associate", requireAuth, requireLeader, async (req, res) => 
 
 // Get all band users (without password hashes)
 router.get("/users", requireAuth, async (req, res) => {
+  const bandId = (req as any).user?.band_id;
+  if (!bandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   const state = loadState();
-  const bandId = (req as any).user?.band_id || "band-bakandeya";
 
   if (!state.userBands) state.userBands = [];
   const bandUserIds = new Set(
@@ -1895,7 +1901,9 @@ router.put("/users/:id", requireAuth, async (req, res) => {
   // Security guard: Only leaders can change the role property.
   if (role !== undefined) {
     if (loggedUser.role === 'leader') {
-      const targetBandId = (req as any).user?.band_id || "band-bakandeya";
+      // loggedUser ya viene validado por requireAuth más arriba en este mismo handler: band_id
+      // nunca falta aquí, así que no hace falta (ni conviene) un valor por defecto.
+      const targetBandId = loggedUser.band_id;
       if (!state.userBands) state.userBands = [];
       const userBand = state.userBands.find((ub: any) => ub.user_id === id && ub.band_id === targetBandId);
       if (userBand) {
@@ -1935,8 +1943,11 @@ router.put("/users/:id", requireAuth, async (req, res) => {
 // Delete user (Leader operation)
 router.delete("/users/:id", requireAuth, requireLeader, async (req, res) => {
   const { id } = req.params;
+  const targetBandId = (req as any).user?.band_id;
+  if (!targetBandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   const state = loadState();
-  const targetBandId = (req as any).user?.band_id || "band-bakandeya";
   const cleanTarget = targetBandId.replace(/^(band|reg)-/, '');
 
   if (!state.userBands) state.userBands = [];

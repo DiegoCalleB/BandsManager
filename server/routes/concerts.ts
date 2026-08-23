@@ -156,7 +156,10 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
 
 // Get logistics
 router.get("/logistics", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id || "band-bakandeya";
+  const userBandId = (req as any).user?.band_id;
+  if (!userBandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   try {
     const runOfShow = await dbGetRunOfShow(userBandId);
     const gearChecklists = await dbGetGearChecklists(userBandId);
@@ -176,7 +179,10 @@ router.get("/logistics", requireAuth, async (req, res) => {
 
 // Update/set run of show for a date
 router.post("/logistics/runofshow", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id || "band-bakandeya";
+  const userBandId = (req as any).user?.band_id;
+  if (!userBandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   const { dateKey, items } = req.body;
   if (!dateKey || !Array.isArray(items)) {
     return res.status(400).json({ error: "dateKey and items array required" });
@@ -200,7 +206,10 @@ router.post("/logistics/runofshow", requireAuth, async (req, res) => {
 
 // Update/set gear checklist for a date
 router.post("/logistics/gear", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id || "band-bakandeya";
+  const userBandId = (req as any).user?.band_id;
+  if (!userBandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   const { dateKey, items } = req.body;
   if (!dateKey || !Array.isArray(items)) {
     return res.status(400).json({ error: "dateKey and items array required" });
