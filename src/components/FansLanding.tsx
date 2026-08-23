@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink, BookOpen } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink, BookOpen, ChevronRight } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
@@ -883,28 +883,32 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               showClickCounts={true}
             />
 
-            {/* Acceso al EPK/Dossier público, antes de pedir apoyo económico */}
+            {/* Acceso al EPK/Dossier público, antes de pedir apoyo económico. Deliberadamente sin
+                la palabra "EPK" ni un botón con texto: para un fan es jerga de la industria, así
+                que el título+subtítulo+flecha ya comunican "entra a saber más" por sí solos. */}
             <a
               href={epkUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick('epk', epkUrl, 'redes')}
-              className="group relative flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800/90 hover:border-amber-500/50 transition-all duration-300 shadow-xl text-left cursor-pointer active:scale-[0.99]"
+              className="group relative flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-neutral-900 via-neutral-900/95 to-neutral-950 border border-neutral-800 hover:border-amber-500/50 transition-all duration-300 shadow-xl hover:shadow-amber-500/5 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                <BookOpen className="w-4 h-4" />
+              <div
+                className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-amber-500/10 blur-2xl group-hover:bg-amber-500/20 transition-colors duration-500"
+                aria-hidden="true"
+              />
+              <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/25 to-rose-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                <BookOpen className="w-5 h-5" />
               </div>
-              <div className="min-w-0 flex-1">
-                <span className="text-xs sm:text-sm font-bold text-white group-hover:text-amber-300 transition block truncate">
+              <div className="relative min-w-0 flex-1">
+                <span className="text-sm font-bold text-white group-hover:text-amber-300 transition block truncate tracking-tight">
                   {t('epkCardTitle')}
                 </span>
-                <span className="text-[10px] text-neutral-400 font-mono block truncate">
+                <span className="text-[11px] text-neutral-400 font-mono block truncate mt-0.5">
                   {t('epkCardSubtitle')}
                 </span>
               </div>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white/10 group-hover:bg-amber-500/20 text-white shrink-0 border border-white/20 flex items-center gap-1 transition">
-                {t('epkCardButton')} <ExternalLink className="w-3 h-3" />
-              </span>
+              <ChevronRight className="relative w-5 h-5 text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0" />
             </a>
 
             {/* Aportación Económica / Revolut debajo de links de redes */}
