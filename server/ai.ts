@@ -45,11 +45,6 @@ export function getDeepSeekKey(): string | null {
   return key && key.trim().length > 5 ? key.trim() : null;
 }
 
-export function getAnthropicKey(): string | null {
-  const key = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
-  return key && key.trim().length > 5 ? key.trim() : null;
-}
-
 export const AI_PRICING_TABLE: Record<string, { inputPer1M: number; outputPer1M: number; name: string }> = {
   gemini: {
     name: "Gemini 3.7 Flash",
@@ -60,11 +55,6 @@ export const AI_PRICING_TABLE: Record<string, { inputPer1M: number; outputPer1M:
     name: "DeepSeek V3",
     inputPer1M: 0.14, // $0.14 / 1M tokens
     outputPer1M: 0.28  // $0.28 / 1M tokens
-  },
-  claude: {
-    name: "Claude 3.5 Haiku",
-    inputPer1M: 0.80, // $0.80 / 1M tokens
-    outputPer1M: 4.00  // $4.00 / 1M tokens
   }
 };
 
@@ -223,7 +213,7 @@ export async function generateContentWithFallback(
     }
   }
 
-  // Automatic Failover to DeepSeek or Claude if Gemini quota/spending cap is exhausted
+  // Automatic Failover to DeepSeek if Gemini quota/spending cap is exhausted
   const promptText = extractTextFromContents(params.contents);
   if (promptText && getDeepSeekKey()) {
     try {
@@ -237,21 +227,6 @@ export async function generateContentWithFallback(
       }
     } catch (dsErr: any) {
       console.warn("[AI Engine] Falló también fallback a DeepSeek:", dsErr.message);
-    }
-  }
-
-  if (promptText && getAnthropicKey()) {
-    try {
-      console.log("[AI Engine] Activando failover automático a Claude 3.5 Haiku por fallo/cuota en Gemini...");
-      const text = await callAnthropic({ prompt: promptText, temperature: params.config?.temperature, timeoutMs: params.timeoutMs });
-      if (text) {
-        return {
-          text,
-          candidates: [{ content: { parts: [{ text }] } }]
-        };
-      }
-    } catch (clErr: any) {
-      console.warn("[AI Engine] Falló también fallback a Claude:", clErr.message);
     }
   }
 
@@ -335,27 +310,6 @@ Equipo de Booking & Management — ${bandName}
 contacto@bakandeya.com`;
   }
 
-  if (params.provider === "claude") {
-    return `Estimado equipo de programación de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
-
-Es un placer saludaros. Os escribimos con mucha ilusión en nombre de ${bandName}, siguiendo muy de cerca la gran labor que hacéis por la música en directo en vuestra sala.
-
-Nos encontramos trazando la nueva etapa de conciertos de la banda y sería todo un honor poder compartir nuestro directo con vuestro público en ${salaNombre}. Nuestra propuesta combina una puesta en escena cuidada con gran interacción y energía.
-
-Os compartimos nuestros enlaces clave para que podáis valorar el proyecto:
-• Música oficial: https://open.spotify.com
-• Vídeo del directo: https://youtube.com
-• EPK interactivo y fotos en alta: https://bandmanager.ai/epk
-
-Estamos totalmente abiertos a adaptarnos a vuestras fechas disponibles y condiciones de producción habituales.
-
-Muchísimas gracias de antemano por vuestra atención y por seguir apoyando la música independiente.
-
-Un abrazo muy fuerte,
-Booking & Producción — ${bandName}
-contacto@bakandeya.com`;
-  }
-
   // Default Gemini / General template
   return `Hola, equipo de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
 
@@ -424,62 +378,11 @@ export async function callDeepSeek(params: {
   return text.trim();
 }
 
-// Anthropic Claude Messages API integration
-export async function callAnthropic(params: {
-  prompt: string;
-  systemPrompt?: string;
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-  timeoutMs?: number;
-}): Promise<string> {
-  const apiKey = getAnthropicKey();
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY no configurada.");
-  }
-
-  const model = params.model || "claude-3-5-haiku-20241022";
-  const body: any = {
-    model,
-    max_tokens: params.maxTokens ?? 1500,
-    temperature: params.temperature ?? 0.7,
-    messages: [{ role: "user", content: params.prompt }]
-  };
-
-  if (params.systemPrompt) {
-    body.system = params.systemPrompt;
-  }
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    signal: AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS),
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Anthropic Claude API error (${res.status}): ${errText}`);
-  }
-
-  const data: any = await res.json();
-  const content = data?.content;
-  if (Array.isArray(content) && content.length > 0) {
-    const textPart = content.find((c: any) => c.type === "text");
-    return (textPart?.text || content[0].text || "").trim();
-  }
-  return "";
-}
-
 // Unified Multi-Model Execution Engine
 export async function generateUnifiedAI(params: {
   prompt: string;
   systemPrompt?: string;
-  provider?: "gemini" | "deepseek" | "claude" | string;
+  provider?: "gemini" | "deepseek" | string;
   modelName?: string;
   temperature?: number;
   maxTokens?: number;
@@ -501,18 +404,6 @@ export async function generateUnifiedAI(params: {
       timeoutMs: params.timeoutMs
     });
     return { text, provider: "deepseek", modelName: params.modelName || "deepseek-chat" };
-  }
-
-  if (provider === "claude") {
-    const text = await callAnthropic({
-      prompt: params.prompt,
-      systemPrompt: params.systemPrompt,
-      model: params.modelName || "claude-3-5-haiku-20241022",
-      temperature: params.temperature,
-      maxTokens: params.maxTokens,
-      timeoutMs: params.timeoutMs
-    });
-    return { text, provider: "claude", modelName: params.modelName || "claude-3-5-haiku-20241022" };
   }
 
   // Default Gemini
@@ -557,22 +448,6 @@ export async function generateUnifiedAI(params: {
       return { text, provider: "deepseek", modelName: "deepseek-chat (fallback)", fallbackFrom: "gemini" };
     } catch (dsErr: any) {
       console.warn("[AI Engine] Fallback a DeepSeek falló:", dsErr.message);
-    }
-  }
-
-  // Fallback to Claude if DeepSeek is also unavailable or failed
-  if (allowFallback && getAnthropicKey()) {
-    try {
-      console.log("[AI Engine] Fallback automático a Claude 3.5 Haiku...");
-      const text = await callAnthropic({
-        prompt: params.prompt,
-        systemPrompt: params.systemPrompt,
-        temperature: params.temperature,
-        maxTokens: params.maxTokens
-      });
-      return { text, provider: "claude", modelName: "claude-3-5-haiku-20241022 (fallback)", fallbackFrom: "gemini" };
-    } catch (clErr: any) {
-      console.warn("[AI Engine] Fallback a Claude falló:", clErr.message);
     }
   }
 
@@ -632,8 +507,6 @@ export async function generateMultiModelProposals(params: {
           cleanErrMsg = "Límite mensual de gasto alcanzado en Google AI Studio (Error 429). Puedes gestionarlo en ai.studio/billing";
         } else if (cleanErrMsg.includes("402") || cleanErrMsg.includes("Insufficient Balance") || cleanErrMsg.includes("insufficient balance")) {
           cleanErrMsg = "Saldo de créditos agotado en cuenta DeepSeek (Error 402). Por favor recarga saldo en platform.deepseek.com";
-        } else if (cleanErrMsg.includes("400") || cleanErrMsg.includes("credit balance is too low") || cleanErrMsg.includes("invalid_request_error")) {
-          cleanErrMsg = "Saldo insuficiente en cuenta Anthropic Claude (Error 400). Por favor añade créditos en console.anthropic.com";
         }
 
         const fullInputText = (params.systemPrompt || "") + "\n" + (params.prompt || "");
