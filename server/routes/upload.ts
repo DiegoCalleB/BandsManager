@@ -5,6 +5,25 @@ import crypto from "crypto";
 import multer from "multer";
 import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+
+/**
+ * Sub-carpeta pedida por el cliente, saneada. Cuelga siempre de la carpeta de la banda: se
+ * limpia tramo a tramo para que no haya forma de subir de nivel ni de saltar a otra rama.
+ */
+export function subcarpetaSegura(folder: unknown): string {
+  if (typeof folder !== "string") return "";
+  return folder
+    .split("/")
+    .map((tramo) => tramo.trim())
+    // Los tramos de subir de nivel se descartan ANTES de limpiar caracteres: si no, ".." se
+    // convierte en "--" y pasa el filtro como si fuera un nombre de carpeta cualquiera.
+    .filter((tramo) => tramo && tramo !== "." && tramo !== "..")
+    .map((tramo) => tramo.toLowerCase().replace(/[^a-z0-9_-]/g, "-"))
+    .filter((tramo) => tramo.replace(/-/g, ""))
+    .slice(0, 4)
+    .join("/");
+}
 
 const router = express.Router();
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
@@ -67,7 +86,9 @@ export function getBucketName() {
   return envBucket;
 }
 
-router.get("/test-supabase", async (req, res) => {
+// requireAuth: este diagnóstico sube un fichero al bucket y devuelve el nombre del bucket y el
+// detalle del error de Supabase si falla. No es algo que deba contestar a cualquiera.
+router.get("/test-supabase", requireAuth, async (req, res) => {
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.json({ success: false, message: "No se pudo inicializar el cliente de Supabase (faltan claves)." });
@@ -115,7 +136,12 @@ router.post("/", requireAuth, uploadMiddleware.single("file"), async (req: any, 
     let mimeType = "application/octet-stream";
     let buffer: Buffer | null = null;
 
-    const { bandId, category, folder, filename: bodyFilename, base64 } = req.body || {};
+    const { category, folder, filename: bodyFilename, base64 } = req.body || {};
+
+    const bandaPedida = bandaSolicitada(req);
+    if (bandaPedida && !puedeEscribirEnBanda(req, bandaPedida)) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
+    }
 
     if (req.file) {
       // Direct binary disk streaming via Multer (handles large 1GB+ files cleanly without memory overload)
@@ -147,15 +173,15 @@ router.post("/", requireAuth, uploadMiddleware.single("file"), async (req: any, 
     if (supabase) {
       try {
         const bucketName = getBucketName();
-        const targetBand = bandId || (req as any).user?.band_id || req.headers['x-band-id'] || 'general';
-        let subPath = "bandas/general";
-        if (folder) {
-          subPath = folder.replace(/^\/+|\/+$/g, '');
-        } else {
-          const cleanBandId = String(targetBand).toLowerCase().replace(/[^a-z0-9_-]/g, '-');
-          const cleanCategory = category ? String(category).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'general';
-          subPath = `bandas/${cleanBandId}/${cleanCategory}`;
-        }
+        // La banda salía del body o de la cabecera sin validar, así que se podían dejar ficheros
+        // en la carpeta de otra banda. Y el `folder` del cliente se usaba TAL CUAL como ruta
+        // dentro del bucket, con upsert activado: valía para escribir en cualquier rama, encima
+        // de los ficheros de quien fuera. Ahora todo cuelga de la carpeta de la banda propia.
+        const targetBand = getTargetBandId(req);
+        const cleanBandId = String(targetBand).toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+        const cleanCategory = category ? String(category).toLowerCase().replace(/[^a-z0-9_-]/g, '-') : 'general';
+        const rama = subcarpetaSegura(folder) || cleanCategory;
+        const subPath = `bandas/${cleanBandId}/${rama}`;
         
         const storagePath = `${subPath}/${uniqueName}`;
         const fileContent = buffer || fs.readFileSync(filePath);

@@ -12,7 +12,10 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
     const { id } = req.params;
     const { comentario, tono_rating, contenido_rating, providers } = req.body;
 
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const state = loadState();
     let lead = state.leads.find((l: any) => String(l.id) === String(id));
     if (!lead) {
@@ -86,7 +89,10 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     const { id } = req.params;
     const { tono_rating, contenido_rating, comentario, alcance, provider, modelName } = req.body;
 
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const state = loadState();
     let lead = state.leads.find((l: any) => String(l.id) === String(id));
     if (!lead) {
@@ -228,7 +234,10 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
     const { id } = req.params;
     const { logId } = req.body;
 
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || 'band-bakandeya';
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const state = loadState();
     let lead = state.leads.find((l: any) => String(l.id) === String(id));
     if (!lead) {

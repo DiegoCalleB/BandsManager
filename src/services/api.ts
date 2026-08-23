@@ -318,6 +318,12 @@ export const api = {
     });
   },
 
+  async deleteRehearsal(id: string): Promise<void> {
+    return request(`/api/rehearsals/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
   // Concerts
   async createConcert(concert: Concert): Promise<Concert> {
     return request('/api/concerts', {
@@ -330,6 +336,12 @@ export const api = {
     return request(`/api/concerts/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields)
+    });
+  },
+
+  async deleteConcert(id: string): Promise<void> {
+    return request(`/api/concerts/${id}`, {
+      method: 'DELETE'
     });
   },
 
@@ -500,7 +512,15 @@ export const api = {
   },
 
   // Billing
-  async confirmPaymentSuccess(data: { planId: string; bandId?: string; userEmail?: string }): Promise<any> {
+  // La URL del feed .ics la firma el servidor, así que no se puede montar en el cliente.
+  async getCalendarFeedUrl(bandIds: string): Promise<{ success?: boolean; path?: string; error?: string }> {
+    return request(`/api/calendar-feed-url?band_id=${encodeURIComponent(bandIds)}`);
+  },
+
+  // sessionId: el servidor ya no se cree el plan que le mandemos, lo comprueba contra Stripe
+  // con esta sesión de Checkout. Sin ella la confirmación se rechaza y el alta queda en manos
+  // del webhook, que es quien manda de todas formas.
+  async confirmPaymentSuccess(data: { sessionId: string; bandId?: string }): Promise<any> {
     return request('/api/billing/confirm-success', {
       method: 'POST',
       body: JSON.stringify(data)
