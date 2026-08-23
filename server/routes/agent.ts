@@ -2,9 +2,9 @@ import express from "express";
 import { getRegionForCity } from "../../src/constants/regions.js";
 import { prepararLeadsDescubiertos } from "../utils/scoutLeads.js";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES } from "../../src/db_seed.js";
-import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand, BAKANDEYA_BAND_ID } from "../state.js";
+import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand, getEpkConfigForBand, BAKANDEYA_BAND_ID } from "../state.js";
 import { dbUpsertLead, getSupabase } from "../db.js";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, buildPitchLinksFromEpkConfig } from "../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { runEnviadorAgent, logAgentExecution } from "../services/agentEngine.js";
 
@@ -182,6 +182,7 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
       const ai = getAiClient();
       const state = loadState();
       const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+      const pitchLinks = buildPitchLinksFromEpkConfig(getEpkConfigForBand(state, targetBandId, bandInfo), targetBandId);
 
       for (const lead of leadsToDraft) {
         let generatedPitch = "";
@@ -207,7 +208,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
 
             // El Redactor escribe pitches: aquí el generador local sí tiene sentido como
             // último recurso (y el lead se queda en 'pendiente_aprobacion' para revisión).
-            const resp = await generateContentWithFallback(ai, { contents: prompt, permitirPitchLocal: true });
+            const resp = await generateContentWithFallback(ai, { contents: prompt, permitirPitchLocal: true, links: pitchLinks });
             generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
           } catch (err) {
             console.warn("AI fallback for pitch generation:", err);
