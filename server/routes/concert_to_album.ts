@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { exec, spawn } from "child_process";
+import { execFile, spawn } from "child_process";
 import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
@@ -51,13 +51,67 @@ if (ffmpegStatic) {
 }
 
 const router = express.Router();
-const execAsync = (cmd: string, opts: any = {}) =>
+
+/**
+ * Ejecuta un binario con sus argumentos SIN pasar por el shell.
+ *
+ * Antes esto era `exec()` con la orden montada como texto: la URL de YouTube y el
+ * `sourceFilePath` venían del body y se interpolaban entre comillas dobles, así que un valor con
+ * una comilla y un `;` (o un `$(...)`) se salía de la cadena y ejecutaba lo que quisiera en el
+ * servidor. Con execFile y un array de argumentos no hay cadena que romper: el valor llega al
+ * proceso tal cual, por raro que sea.
+ */
+const ejecutar = (binario: string, args: string[], opts: any = {}) =>
   new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
-    exec(cmd, opts, (err, stdout, stderr) => {
+    execFile(binario, args, opts, (err, stdout, stderr) => {
       if (err) return reject(err);
       resolve({ stdout: stdout.toString(), stderr: stderr.toString() });
     });
   });
+
+/** Las banderas anti-bot de yt-dlp, que estaban copiadas en cuatro sitios. */
+function banderasAntiBot(): string[] {
+  return [
+    ...banderasDeCookies(),
+    "--extractor-args", "youtube:player_client=android,web,mweb,ios",
+    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "--no-check-certificates"
+  ];
+}
+
+/**
+ * URL de vídeo utilizable. Además de rechazar lo que no sea http(s) (un `file://` haría que
+ * yt-dlp leyera del disco del servidor), evita que una URL que empiece por guión se cuele como
+ * una bandera más de yt-dlp ahora que los argumentos van sueltos.
+ */
+export function urlDeVideoValida(url: unknown): string | null {
+  if (typeof url !== "string" || !url.trim()) return null;
+  const limpia = url.trim();
+  try {
+    const parsed = new URL(limpia);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+  } catch {
+    return null;
+  }
+  return limpia;
+}
+
+/**
+ * Ruta local de un fichero fuente, confinada a public/.
+ *
+ * El `sourceFilePath` llegaba del body y se usaba tal cual: valía cualquier ruta absoluta del
+ * servidor, y como estas rutas devuelven el trozo de audio o su transcripción, servía para
+ * leerse ficheros que no son de nadie. Solo se aceptan los que están bajo public/, que es donde
+ * viven las subidas y los temporales.
+ */
+export function rutaFuenteSegura(rutaPedida: unknown): string | null {
+  if (typeof rutaPedida !== "string" || !rutaPedida.trim()) return null;
+  const raiz = path.resolve(process.cwd(), "public");
+  const resuelta = path.resolve(raiz, rutaPedida.trim());
+  const dentro = resuelta === raiz || resuelta.startsWith(raiz + path.sep);
+  if (!dentro) return null;
+  return resuelta;
+}
 
 interface TrackItem {
   index: number;
@@ -76,17 +130,19 @@ interface TrackItem {
 
 const COOKIES_FILE = path.join(process.cwd(), "data", "youtube_cookies.txt");
 
-function getYoutubeCookieFlags(): string {
+function banderasDeCookies(): string[] {
   try {
     if (fs.existsSync(COOKIES_FILE) && fs.statSync(COOKIES_FILE).size > 10) {
-      return `--cookies "${COOKIES_FILE}"`;
+      return ["--cookies", COOKIES_FILE];
     }
   } catch {}
-  return "";
+  return [];
 }
 
 // Routes for YouTube Cookies Management
-router.get("/cookies-status", (req, res) => {
+// requireAuth en las tres: el fichero de cookies guarda la sesión de YouTube con la que el
+// servidor descarga vídeos. Abiertas, cualquiera podía sobrescribirlo con las suyas o borrarlo.
+router.get("/cookies-status", requireAuth, (req, res) => {
   try {
     if (fs.existsSync(COOKIES_FILE)) {
       const stats = fs.statSync(COOKIES_FILE);
@@ -102,7 +158,7 @@ router.get("/cookies-status", (req, res) => {
   }
 });
 
-router.post("/save-cookies", (req, res) => {
+router.post("/save-cookies", requireAuth, (req, res) => {
   try {
     const { cookiesText } = req.body;
     if (!cookiesText || typeof cookiesText !== "string" || cookiesText.trim().length < 5) {
@@ -125,7 +181,7 @@ router.post("/save-cookies", (req, res) => {
   }
 });
 
-router.post("/delete-cookies", (req, res) => {
+router.post("/delete-cookies", requireAuth, (req, res) => {
   try {
     if (fs.existsSync(COOKIES_FILE)) {
       fs.unlinkSync(COOKIES_FILE);
@@ -306,9 +362,17 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
 }
 
 // 1. ANALYZE CONCERT ROUTE
-router.post("/analyze", async (req, res) => {
+// requireAuth: descarga vídeo, gasta CPU y llama a la IA. Abierta era trabajo pesado gratis
+// para cualquiera que diera con la URL.
+router.post("/analyze", requireAuth, async (req, res) => {
   try {
-    const { url, sourceFilePath, useAi, transcribeFirst, bandName } = req.body;
+    const { url, useAi, transcribeFirst, bandName } = req.body;
+    const urlVideo = urlDeVideoValida(url);
+    const ficheroFuente = rutaFuenteSegura(req.body.sourceFilePath);
+    if (req.body.sourceFilePath && !ficheroFuente) {
+      return res.status(400).json({ error: "La ruta del fichero fuente no es válida." });
+    }
+    const sourceFilePath = ficheroFuente || "";
     let videoTitle = "Concierto en Directo";
     let videoDuration = 3600; // default 1 hour if unknown
     let rawDescription = "";
@@ -323,12 +387,10 @@ router.post("/analyze", async (req, res) => {
     let sourceMediaToAnalyze = sourceFilePath || "";
     let youtubeBlocked = false;
 
-    if (url && (url.includes("youtube.com") || url.includes("youtu.be"))) {
-      console.log(`[Concert Analyzer] Investigating YouTube metadata with yt-dlp for: ${url}`);
-      const cookieFlag = getYoutubeCookieFlags();
-      const antiBotFlags = `${cookieFlag} --extractor-args "youtube:player_client=android,web,mweb,ios" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" --no-check-certificates`;
+    if (urlVideo && (urlVideo.includes("youtube.com") || urlVideo.includes("youtu.be"))) {
+      console.log(`[Concert Analyzer] Investigating YouTube metadata with yt-dlp for: ${urlVideo}`);
       try {
-        const { stdout } = await execAsync(`"${ytDlpBinaryPath}" ${antiBotFlags} --dump-json --skip-download "${url}"`);
+        const { stdout } = await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "--dump-json", "--skip-download", urlVideo]);
         const metadata = JSON.parse(stdout);
         videoTitle = metadata.title || videoTitle;
         videoDuration = metadata.duration || videoDuration;
@@ -338,7 +400,7 @@ router.post("/analyze", async (req, res) => {
         console.warn(`[Concert Analyzer] yt-dlp metadata dump notice: YouTube bot check active. Using web scraper fallback...`);
         youtubeBlocked = true;
         try {
-          const scraped = await scrapeYoutubeMetadata(url);
+          const scraped = await scrapeYoutubeMetadata(urlVideo);
           videoTitle = scraped.title || videoTitle;
           rawDescription = scraped.description || rawDescription;
         } catch (scrapeErr: any) {
@@ -377,16 +439,14 @@ router.post("/analyze", async (req, res) => {
       let mediaForSilence = sourceMediaToAnalyze;
 
       // If YouTube URL and no local file, download audio first for silence detection
-      if (!mediaForSilence && url) {
+      if (!mediaForSilence && urlVideo) {
         const tempAudioDir = path.join(process.cwd(), "public", "uploads", "temp");
         if (!fs.existsSync(tempAudioDir)) fs.mkdirSync(tempAudioDir, { recursive: true });
         mediaForSilence = path.join(tempAudioDir, `analysis_${Date.now()}.mp3`);
 
         console.log(`[Concert Analyzer] Downloading temporary audio for silence detection...`);
         try {
-          const cookieFlag = getYoutubeCookieFlags();
-          const antiBotFlags = `${cookieFlag} --extractor-args "youtube:player_client=android,web,mweb,ios" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" --no-check-certificates`;
-          await execAsync(`"${ytDlpBinaryPath}" ${antiBotFlags} -x --audio-format mp3 -o "${mediaForSilence}" "${url}"`);
+          await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-x", "--audio-format", "mp3", "-o", mediaForSilence, urlVideo]);
         } catch (dlErr: any) {
           console.log(`[Concert Analyzer] yt-dlp quick audio download notice (using fallback).`);
         }
@@ -604,9 +664,16 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
 });
 
 // 2. SLICE & GENERATE ALBUM ROUTE
-router.post("/process", async (req, res) => {
+// requireAuth: igual que /analyze, descarga y trocea vídeo en el servidor.
+router.post("/process", requireAuth, async (req, res) => {
   try {
-    const { url, sourceFilePath, tracks, albumTitle, artist } = req.body;
+    const { tracks, albumTitle, artist } = req.body;
+    const urlVideo = urlDeVideoValida(req.body.url);
+    const ficheroFuente = rutaFuenteSegura(req.body.sourceFilePath);
+    if (req.body.sourceFilePath && !ficheroFuente) {
+      return res.status(400).json({ error: "La ruta del fichero fuente no es válida." });
+    }
+    const sourceFilePath = ficheroFuente || "";
 
     if (!tracks || !Array.isArray(tracks) || tracks.length === 0) {
       return res.status(400).json({ error: "Debe proporcionar una lista de pistas válida para trocear." });
@@ -626,13 +693,11 @@ router.post("/process", async (req, res) => {
     let localMasterMedia = sourceFilePath || "";
 
     // If source is YouTube, try to download high quality master audio/video first
-    if (!localMasterMedia && url) {
+    if (!localMasterMedia && urlVideo) {
       const tempMaster = path.join(outputDir, "master_concert.mp4");
       console.log(`[Concert Slicer] Attempting master download from YouTube...`);
-      const cookieFlag = getYoutubeCookieFlags();
-      const antiBotFlags = `${cookieFlag} --extractor-args "youtube:player_client=android,web,mweb,ios" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" --no-check-certificates`;
       try {
-        await execAsync(`"${ytDlpBinaryPath}" ${antiBotFlags} -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" -o "${tempMaster}" "${url}"`, { timeout: 60000 });
+        await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best", "-o", tempMaster, urlVideo], { timeout: 60000 });
         if (fs.existsSync(tempMaster) && fs.statSync(tempMaster).size > 0) {
           localMasterMedia = tempMaster;
         }
@@ -640,7 +705,7 @@ router.post("/process", async (req, res) => {
         console.log(`[Concert Slicer] Video download notice, trying audio extraction instead.`);
         const tempAudioMaster = path.join(outputDir, "master_concert.mp3");
         try {
-          await execAsync(`"${ytDlpBinaryPath}" ${antiBotFlags} -x --audio-format mp3 -o "${tempAudioMaster}" "${url}"`, { timeout: 60000 });
+          await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-x", "--audio-format", "mp3", "-o", tempAudioMaster, urlVideo], { timeout: 60000 });
           if (fs.existsSync(tempAudioMaster) && fs.statSync(tempAudioMaster).size > 0) {
             localMasterMedia = tempAudioMaster;
           }
@@ -656,7 +721,7 @@ router.post("/process", async (req, res) => {
       const maxEnd = Math.max(...tracks.map((t: any) => t.end || 0), 120);
       console.log(`[Concert Slicer] Synthesizing master audio placeholder (${maxEnd}s) with FFmpeg...`);
       try {
-        await execAsync(`"${ffmpegStatic}" -f lavfi -i "sine=frequency=330:duration=${Math.ceil(maxEnd)}" -c:a libmp3lame -q:a 4 "${fallbackMaster}"`);
+        await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", `sine=frequency=330:duration=${Math.ceil(maxEnd)}`, "-c:a", "libmp3lame", "-q:a", "4", fallbackMaster]);
         localMasterMedia = fallbackMaster;
       } catch (synthErr: any) {
         console.warn("[Concert Slicer] Fallback synth notice:", synthErr.message);
@@ -682,7 +747,7 @@ router.post("/process", async (req, res) => {
       // FFmpeg slice to MP3
       console.log(`[Concert Slicer] Cutting Track ${track.index}: "${track.title}" (${startTime}s to ${track.end}s)...`);
       try {
-        await execAsync(`"${ffmpegStatic}" -y -ss ${startTime} -i "${localMasterMedia}" -t ${duration} -vn -c:a libmp3lame -q:a 2 "${mp3Path}"`);
+        await ejecutar(ffmpegStatic!, ["-y", "-ss", String(startTime), "-i", localMasterMedia, "-t", String(duration), "-vn", "-c:a", "libmp3lame", "-q:a", "2", mp3Path]);
       } catch (ffErr: any) {
         console.warn(`[Concert Slicer] FFmpeg slice error on track ${track.index}:`, ffErr.message);
       }
@@ -811,20 +876,25 @@ export async function getAudioSnippetPath(params: {
   // (la IA "oiría" un pitido y se inventaría los acordes), así que ahí se desactiva.
   allowSyntheticFallback?: boolean;
 }): Promise<string | null> {
-  const { url, sourceFilePath, audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true } = params;
+  const { audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true } = params;
+  // Las tres entradas que vienen del cliente se normalizan aquí, que es por donde pasan las
+  // cuatro rutas que usan este helper: así no hay que acordarse de validarlas en cada una.
+  const urlVideo = urlDeVideoValida(params.url);
+  const ficheroFuente = rutaFuenteSegura(params.sourceFilePath);
   const tempDir = path.join(process.cwd(), "public", "uploads", "temp");
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
   // 1. If audioUrl is already a local file or remote URL
   if (audioUrl && typeof audioUrl === "string") {
-    if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
-      const tempHash = Buffer.from(audioUrl).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
+    const audioRemoto = urlDeVideoValida(audioUrl);
+    if (audioRemoto) {
+      const tempHash = Buffer.from(audioRemoto).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
       const remoteTemp = path.join(tempDir, `remote_${tempHash}.mp3`);
       if (fs.existsSync(remoteTemp) && fs.statSync(remoteTemp).size > 0) {
         return remoteTemp;
       }
       try {
-        const resp = await fetch(audioUrl);
+        const resp = await fetch(audioRemoto);
         if (resp.ok) {
           const arrayBuffer = await resp.arrayBuffer();
           fs.writeFileSync(remoteTemp, Buffer.from(arrayBuffer));
@@ -834,23 +904,24 @@ export async function getAudioSnippetPath(params: {
         console.warn("[Snippet Helper] Failed to fetch remote audioUrl:", err.message);
       }
     } else {
-      const relativeClean = audioUrl.startsWith("/") ? audioUrl.slice(1) : audioUrl;
-      const localPath = path.join(process.cwd(), "public", relativeClean);
-      if (fs.existsSync(localPath) && fs.statSync(localPath).size > 0) {
+      // Ruta local: se resuelve contra public/ y se comprueba que no se sale de ahí, que con un
+      // audioUrl del tipo ../../ era justo lo que pasaba.
+      const localPath = rutaFuenteSegura(audioUrl.startsWith("/") ? audioUrl.slice(1) : audioUrl);
+      if (localPath && fs.existsSync(localPath) && fs.statSync(localPath).size > 0) {
         return localPath;
       }
     }
   }
 
   // 2. If sourceFilePath exists on disk
-  if (sourceFilePath && fs.existsSync(sourceFilePath)) {
+  if (ficheroFuente && fs.existsSync(ficheroFuente)) {
     const startTime = Math.max(0, parseFloat(String(start)) || 0);
     const duration = Math.max(1, (parseFloat(String(end)) - startTime) || 30);
     const snippetFilename = `snippet_${trackIndex}_${Math.round(startTime)}_${Math.round(duration)}_${Date.now()}.mp3`;
     const snippetPath = path.join(tempDir, snippetFilename);
 
     try {
-      await execAsync(`"${ffmpegStatic}" -y -ss ${startTime} -i "${sourceFilePath}" -t ${duration} -vn -c:a libmp3lame -q:a 4 "${snippetPath}"`);
+      await ejecutar(ffmpegStatic!, ["-y", "-ss", String(startTime), "-i", ficheroFuente, "-t", String(duration), "-vn", "-c:a", "libmp3lame", "-q:a", "4", snippetPath]);
       if (fs.existsSync(snippetPath) && fs.statSync(snippetPath).size > 0) {
         return snippetPath;
       }
@@ -860,12 +931,11 @@ export async function getAudioSnippetPath(params: {
   }
 
   // 3. If YouTube / Web URL is provided
-  if (url) {
+  if (urlVideo) {
     let ytDlpBinaryPath = path.join(process.cwd(), "bin", "yt-dlp");
     if (!fs.existsSync(ytDlpBinaryPath)) ytDlpBinaryPath = "yt-dlp";
 
-    const cookieFlag = getYoutubeCookieFlags();
-    const antiBotFlags = `${cookieFlag} --extractor-args "youtube:player_client=android,web,mweb,ios" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" --no-check-certificates`;
+
 
     const startTime = Math.max(0, parseFloat(String(start)) || 0);
     const duration = Math.max(1, (parseFloat(String(end)) - startTime) || 30);
@@ -874,14 +944,14 @@ export async function getAudioSnippetPath(params: {
 
     // Try A: Direct Stream URL via yt-dlp -g
     try {
-      console.log(`[Snippet Helper] Fetching direct stream URL with yt-dlp for: ${url}`);
-      const { stdout } = await execAsync(`"${ytDlpBinaryPath}" ${antiBotFlags} -g -f "ba/b/bestaudio/best" "${url}"`);
+      console.log(`[Snippet Helper] Fetching direct stream URL with yt-dlp for: ${urlVideo}`);
+      const { stdout } = await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-g", "-f", "ba/b/bestaudio/best", urlVideo]);
       const streamUrls = stdout.trim().split("\n");
       const directStreamUrl = streamUrls[0];
 
       if (directStreamUrl && directStreamUrl.startsWith("http")) {
         console.log(`[Snippet Helper] Slicing stream directly with FFmpeg...`);
-        await execAsync(`"${ffmpegStatic}" -y -ss ${startTime} -i "${directStreamUrl}" -t ${duration} -vn -c:a libmp3lame -q:a 4 "${snippetPath}"`);
+        await ejecutar(ffmpegStatic!, ["-y", "-ss", String(startTime), "-i", directStreamUrl, "-t", String(duration), "-vn", "-c:a", "libmp3lame", "-q:a", "4", snippetPath]);
         if (fs.existsSync(snippetPath) && fs.statSync(snippetPath).size > 0) {
           return snippetPath;
         }
@@ -891,13 +961,13 @@ export async function getAudioSnippetPath(params: {
     }
 
     // Try B: Cached master or yt-dlp audio download with --ffmpeg-location
-    const urlHash = Buffer.from(url).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
+    const urlHash = Buffer.from(urlVideo).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
     const cachedMaster = path.join(tempDir, `master_${urlHash}.mp3`);
 
     if (!fs.existsSync(cachedMaster)) {
       console.log(`[Snippet Helper] Downloading master audio for fallback...`);
       try {
-        await execAsync(`"${ytDlpBinaryPath}" ${antiBotFlags} --ffmpeg-location "${ffmpegStatic}" -x --audio-format mp3 -o "${cachedMaster}" "${url}"`);
+        await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "--ffmpeg-location", String(ffmpegStatic), "-x", "--audio-format", "mp3", "-o", cachedMaster, urlVideo]);
       } catch (dlErr: any) {
         console.log("[Snippet Helper] Master download notice (using fallback).");
       }
@@ -905,7 +975,7 @@ export async function getAudioSnippetPath(params: {
 
     if (fs.existsSync(cachedMaster)) {
       try {
-        await execAsync(`"${ffmpegStatic}" -y -ss ${startTime} -i "${cachedMaster}" -t ${duration} -vn -c:a libmp3lame -q:a 4 "${snippetPath}"`);
+        await ejecutar(ffmpegStatic!, ["-y", "-ss", String(startTime), "-i", cachedMaster, "-t", String(duration), "-vn", "-c:a", "libmp3lame", "-q:a", "4", snippetPath]);
         if (fs.existsSync(snippetPath) && fs.statSync(snippetPath).size > 0) {
           return snippetPath;
         }
@@ -923,14 +993,14 @@ export async function getAudioSnippetPath(params: {
 
   try {
     const fallbackSnippet = path.join(tempDir, `fallback_snippet_${Date.now()}.mp3`);
-    await execAsync(`"${ffmpegStatic}" -f lavfi -i "sine=frequency=440:duration=10" -c:a libmp3lame -q:a 4 "${fallbackSnippet}"`);
+    await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "sine=frequency=440:duration=10", "-c:a", "libmp3lame", "-q:a", "4", fallbackSnippet]);
     if (fs.existsSync(fallbackSnippet) && fs.statSync(fallbackSnippet).size > 0) {
       return fallbackSnippet;
     }
   } catch {
     try {
       const fallbackSnippet = path.join(tempDir, `fallback_snippet_${Date.now()}.mp3`);
-      await execAsync(`"${ffmpegStatic}" -f lavfi -i anullsrc=r=44100:cl=mono -t 5 -q:a 9 -acodec libmp3lame "${fallbackSnippet}"`);
+      await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono", "-t", "5", "-q:a", "9", "-acodec", "libmp3lame", fallbackSnippet]);
       if (fs.existsSync(fallbackSnippet)) {
         return fallbackSnippet;
       }
@@ -966,7 +1036,9 @@ export function buildAudioOrTextContents(
 }
 
 // 3. TRANSCRIBE SPEECH ROUTE USING GEMINI MULTIMODAL AUDIO
-router.post("/transcribe-speech", async (req, res) => {
+// requireAuth en las cuatro que quedaban: todas mandan audio del servidor a la IA o gastan
+// ffmpeg, y todas aceptan sourceFilePath/audioUrl del body.
+router.post("/transcribe-speech", requireAuth, async (req, res) => {
   try {
     const { trackTitle, audioUrl, url, sourceFilePath, start, end, trackIndex, promptContext } = req.body;
     const aiClient = getAiClient();
@@ -1021,7 +1093,7 @@ REQUISITOS OBLIGATORIOS:
 });
 
 // 4. PREVIEW SNIPPET ROUTE (Quick slice of any track item for instant listening in editor table)
-router.post("/preview-snippet", async (req, res) => {
+router.post("/preview-snippet", requireAuth, async (req, res) => {
   try {
     const { url, sourceFilePath, audioUrl, start, end, trackIndex } = req.body;
     const snippetPath = await getAudioSnippetPath({ url, sourceFilePath, audioUrl, start, end, trackIndex });
@@ -1049,7 +1121,7 @@ router.post("/preview-snippet", async (req, res) => {
 });
 
 // 5. AUTO-CLASSIFY TRACKS ROUTE (Identify Song vs Dialogue automatically)
-router.post("/classify-tracks", async (req, res) => {
+router.post("/classify-tracks", requireAuth, async (req, res) => {
   try {
     const { tracks, bandName, albumTitle, useAi } = req.body;
 
@@ -1155,7 +1227,7 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
 });
 
 // 6. TRANSCRIBE SONG LYRICS & CHORDS ROUTE USING GEMINI MULTIMODAL AUDIO
-router.post("/transcribe-song", async (req, res) => {
+router.post("/transcribe-song", requireAuth, async (req, res) => {
   try {
     const { title, artist, duration, speechTranscription, audioUrl, url, sourceFilePath, start, end, trackIndex } = req.body;
 
@@ -1237,12 +1309,12 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 });
 
 // Endpoint to generate/load instant demo audio when YouTube is blocked by bot check
-router.post("/demo-audio", async (req, res) => {
+router.post("/demo-audio", requireAuth, async (req, res) => {
   try {
     const tempDir = path.join(process.cwd(), "public", "uploads", "temp");
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
     const demoPath = path.join(tempDir, `demo_concert_${Date.now()}.mp3`);
-    await execAsync(`"${ffmpegStatic}" -f lavfi -i "sine=frequency=440:duration=60" -c:a libmp3lame -q:a 4 "${demoPath}"`);
+    await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "sine=frequency=440:duration=60", "-c:a", "libmp3lame", "-q:a", "4", demoPath]);
     res.json({ success: true, filePath: demoPath });
   } catch (err: any) {
     res.status(500).json({ error: err.message });

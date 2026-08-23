@@ -183,6 +183,24 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
   return availableBands;
 }
 import { loginRateLimiter } from "../middleware/rateLimiter.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+
+/**
+ * ¿Comparte este usuario alguna banda con quien hace la petición?
+ *
+ * Las rutas que buscan al usuario por id lo hacen sobre state.users entero, que es la lista de
+ * TODA la plataforma. Sin esta comprobación, el id de alguien de otra banda bastaba para
+ * editarlo (y en /users/:id, para ponerle una contraseña nueva).
+ */
+function compartenBanda(state: any, usuarioObjetivo: any, req: express.Request): boolean {
+  if (!usuarioObjetivo) return false;
+  const bandas = new Set<string>();
+  if (usuarioObjetivo.band_id) bandas.add(usuarioObjetivo.band_id);
+  (state.userBands || []).forEach((ub: any) => {
+    if (ub.user_id === usuarioObjetivo.id && ub.band_id) bandas.add(ub.band_id);
+  });
+  return Array.from(bandas).some((b) => puedeEscribirEnBanda(req, b));
+}
 import { generateUniqueSlugId, slugify } from "../utils/slug.js";
 
 const router = express.Router();
@@ -399,7 +417,9 @@ router.all("/sync-bakandeya", async (req, res) => {
 });
 
 // Check invitation for activating added members
-router.post("/auth/check-invitation", async (req, res) => {
+// loginRateLimiter: es una ruta abierta que responde por email, o sea un comprobador de si un
+// correo está registrado. Con el límite, al menos no se puede repasar una lista entera.
+router.post("/auth/check-invitation", loginRateLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).json({ error: "El correo electrónico es requerido." });
@@ -412,9 +432,12 @@ router.post("/auth/check-invitation", async (req, res) => {
     (u: any) => (u.email && u.email.toLowerCase() === cleanEmail) || u.username.toLowerCase() === cleanEmail
   );
 
-  if (!user) {
+  // Solo se contesta por invitaciones sin estrenar. Antes contestaba por cualquier usuario
+  // registrado y devolvía su nombre, su usuario y las bandas a las que pertenece, que es más de
+  // lo que hace falta para activar una cuenta y bastante de lo que hace falta para suplantarla.
+  if (!user || !user.activacion_pendiente) {
     return res.status(404).json({
-      error: "No se ha encontrado ninguna invitación o registro para este correo. Pide al director de tu banda que te agregue primero en el apartado de Miembros."
+      error: "No se ha encontrado ninguna invitación pendiente para este correo. Pide al director de tu banda que te agregue primero en el apartado de Miembros."
     });
   }
 
@@ -441,7 +464,7 @@ router.post("/auth/check-invitation", async (req, res) => {
 });
 
 // Activate added member (set password & username)
-router.post("/auth/activate-member", async (req, res) => {
+router.post("/auth/activate-member", loginRateLimiter, async (req, res) => {
   const { email, username, name, password } = req.body;
 
   if (!email || !username || !name || !password) {
@@ -458,6 +481,15 @@ router.post("/auth/activate-member", async (req, res) => {
 
   if (!user) {
     return res.status(404).json({ error: "Usuario no encontrado para activación." });
+  }
+
+  // Solo se activa lo que está sin activar. Esta ruta sobrescribe la contraseña de la cuenta y
+  // devuelve una sesión abierta, y no comprobaba nada más que el email: bastaba con saber el de
+  // cualquiera (el del director de la banda, por ejemplo) para quedarse con su cuenta.
+  if (!user.activacion_pendiente) {
+    return res.status(409).json({
+      error: "Esta cuenta ya está activada. Si has olvidado tu contraseña, usa la opción de recuperarla en la pantalla de acceso."
+    });
   }
 
   // Check if chosen username is already taken by a different user
@@ -477,6 +509,7 @@ router.post("/auth/activate-member", async (req, res) => {
   user.email = cleanEmail;
   user.passwordHash = hash;
   user.salt = salt;
+  delete user.activacion_pendiente;
 
   // Generate session token
   const token = crypto.randomBytes(32).toString("hex");
@@ -945,7 +978,7 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
 // Verify current session
 router.get("/auth/me", async (req, res) => {
   const authHeader = req.headers.authorization;
-  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
+  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string);
 
   if (!token && req.headers.cookie) {
     const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
@@ -1014,7 +1047,7 @@ router.get("/auth/me", async (req, res) => {
 // Switch Active Band
 router.post("/auth/switch-band", async (req, res) => {
   const authHeader = req.headers.authorization;
-  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
+  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string);
 
   if (!token && req.headers.cookie) {
     const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
@@ -1262,8 +1295,14 @@ router.post(['/set-band-order', '/users/set-band-order'], requireAuth, async (re
 // Upload / Update Band Logo
 router.post(['/upload-logo', '/users/upload-logo', '/bands/upload-logo', '/bands/logo'], requireAuth, async (req, res) => {
   try {
-    const { bandId, logoUrl } = req.body;
-    const targetBandId = bandId || (req.headers['x-band-id'] as string) || (req as any).user?.band_id || BAKANDEYA_BAND_ID;
+    const { logoUrl } = req.body;
+    // La banda salía del body o de la cabecera sin mirarla, así que se le cambiaba el logo del
+    // EPK a la banda que se quisiera.
+    const solicitada = bandaSolicitada(req);
+    if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
+      return res.status(403).json({ error: 'No tienes acceso a esta banda.' });
+    }
+    const targetBandId = getTargetBandId(req);
     
     if (!logoUrl || typeof logoUrl !== 'string' || !logoUrl.trim()) {
       return res.status(400).json({ error: 'logoUrl es requerido' });
@@ -1573,8 +1612,11 @@ router.post("/users/associate", requireAuth, requireLeader, async (req, res) => 
       return res.status(400).json({ error: "El email del músico es requerido" });
     }
 
+    const targetBandId = (req as any).user?.band_id;
+    if (!targetBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const state = loadState();
-    const targetBandId = (req as any).user?.band_id || "band-bakandeya";
     const cleanSearch = email.trim().toLowerCase();
 
     const targetUser = state.users.find((u: any) => 
@@ -1632,8 +1674,11 @@ router.post("/users/associate", requireAuth, requireLeader, async (req, res) => 
 
 // Get all band users (without password hashes)
 router.get("/users", requireAuth, async (req, res) => {
+  const bandId = (req as any).user?.band_id;
+  if (!bandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   const state = loadState();
-  const bandId = (req as any).user?.band_id || "band-bakandeya";
 
   if (!state.userBands) state.userBands = [];
   const bandUserIds = new Set(
@@ -1662,7 +1707,7 @@ router.get("/users", requireAuth, async (req, res) => {
 
 // Create new user (Leader operation)
 router.post("/users", requireAuth, requireLeader, async (req, res) => {
-  const { username, name, password, role, instrument, avatarColor, email, band_id } = req.body;
+  const { username, name, password, role, instrument, avatarColor, email } = req.body;
 
   if (!username || !name || !password) {
     return res.status(400).json({ error: "Nombre de usuario, nombre real y contraseña son requeridos" });
@@ -1671,7 +1716,13 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
   const state = loadState();
   const cleanUsername = username.trim().toLowerCase();
   const cleanEmail = email ? email.trim().toLowerCase() : cleanUsername;
-  const targetBandId = band_id || (req as any).user?.band_id || "band-bakandeya";
+  // Dar de alta a alguien en la banda de otro no es un despiste que se pueda arreglar por
+  // dentro: el band_id venía del body sin validar.
+  const solicitada = bandaSolicitada(req);
+  if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
+    return res.status(403).json({ error: "No tienes acceso a esta banda." });
+  }
+  const targetBandId = getTargetBandId(req);
 
   // Check if a user with this email or username already exists
   const existingUser = state.users.find(
@@ -1726,6 +1777,11 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
     passwordHash: hash,
     salt: salt,
     band_id: targetBandId,
+    // La cuenta la crea el director con una contraseña provisional y el miembro la termina de
+    // activar poniendo la suya en /auth/activate-member. Esta marca es lo que distingue "cuenta
+    // recién invitada" de "cuenta ya en uso": sin ella, esa ruta valía para cambiarle la
+    // contraseña a cualquiera con solo saber su email.
+    activacion_pendiente: true,
     createdAt: new Date().toISOString()
   };
 
@@ -1771,6 +1827,15 @@ router.put("/users/:id", requireAuth, async (req, res) => {
   }
 
   const user = state.users[userIndex];
+
+  // El id se busca sobre state.users, que es la lista de toda la plataforma, y el permiso de
+  // arriba se conforma con ser 'leader' —que en esta app lo es casi todo el mundo en su propia
+  // banda—. Es decir: con el id de alguien de otra banda se le cambiaba el nombre, el rol y,
+  // más abajo, la contraseña. Editar a otro exige compartir banda con él.
+  if (loggedUser.id !== id && !compartenBanda(state, user, req)) {
+    return res.status(403).json({ error: "Acceso denegado. Ese usuario no pertenece a tu banda." });
+  }
+
   if (name) user.name = name.trim();
   if (googleOAuth !== undefined) user.googleOAuth = googleOAuth;
 
@@ -1836,7 +1901,9 @@ router.put("/users/:id", requireAuth, async (req, res) => {
   // Security guard: Only leaders can change the role property.
   if (role !== undefined) {
     if (loggedUser.role === 'leader') {
-      const targetBandId = (req as any).user?.band_id || "band-bakandeya";
+      // loggedUser ya viene validado por requireAuth más arriba en este mismo handler: band_id
+      // nunca falta aquí, así que no hace falta (ni conviene) un valor por defecto.
+      const targetBandId = loggedUser.band_id;
       if (!state.userBands) state.userBands = [];
       const userBand = state.userBands.find((ub: any) => ub.user_id === id && ub.band_id === targetBandId);
       if (userBand) {
@@ -1876,8 +1943,11 @@ router.put("/users/:id", requireAuth, async (req, res) => {
 // Delete user (Leader operation)
 router.delete("/users/:id", requireAuth, requireLeader, async (req, res) => {
   const { id } = req.params;
+  const targetBandId = (req as any).user?.band_id;
+  if (!targetBandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   const state = loadState();
-  const targetBandId = (req as any).user?.band_id || "band-bakandeya";
   const cleanTarget = targetBandId.replace(/^(band|reg)-/, '');
 
   if (!state.userBands) state.userBands = [];

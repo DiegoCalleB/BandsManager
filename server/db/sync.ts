@@ -16,7 +16,7 @@ import { dbGetTours } from "./tours.js";
 import { dbGetRunOfShow, dbGetGearChecklists } from "./production.js";
 
 export async function loadStateFromSupabase(bandId: string, user?: any) {
-  const cleanId = cleanBandId(bandId || "band-bakandeya");
+  const cleanId = cleanBandId(bandId);
   await ensureRegisteredBandExists(cleanId, user?.bandName || user?.band_name);
 
   // Determine all bands relevant to this user (for multi-band calendar view)

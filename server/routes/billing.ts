@@ -50,7 +50,7 @@ async function isEventProcessed(eventId: string): Promise<boolean> {
 // de "email válido" en el repo. Se reexporta porque este módulo ya la exportaba.
 export { isValidEmail } from "../utils/email.js";
 import { isValidEmail } from "../utils/email.js";
-import { puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+import { bandaFacturableDelUsuario, mismaBanda } from "../utils/bandAccess.js";
 
 export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
   if (userEmail && isValidEmail(userEmail)) {
@@ -419,15 +419,88 @@ function getOriginHost(req: express.Request): string {
   return host;
 }
 
-// 1. Confirm Payment Success endpoint called by client on return from Stripe Checkout
-router.post(["/billing/confirm-success", "/stripe/confirm-success"], async (req, res) => {
+/**
+ * A dónde vuelve el usuario al salir del portal de Stripe. El `returnUrl` del body se aceptaba
+ * tal cual, así que servía para colgar una redirección a un dominio ajeno de una URL de Stripe
+ * legítima. Solo se admite si apunta al mismo origen que ya sirve la app.
+ */
+function urlDeVueltaSegura(req: express.Request, returnUrl?: unknown): string {
+  const origen = getOriginHost(req);
+  if (typeof returnUrl !== "string" || !returnUrl) return origen;
   try {
-    const { planId, bandId, userEmail } = req.body;
-    if (!planId) {
-      return res.status(400).json({ success: false, error: "planId is required" });
+    const destino = new URL(returnUrl);
+    if (destino.origin === new URL(origen).origin) return returnUrl;
+  } catch (e) {
+    // URL no parseable: se ignora y se vuelve al origen conocido.
+  }
+  return origen;
+}
+
+// 1. Confirm Payment Success endpoint called by client on return from Stripe Checkout
+//
+// Quien da de alta el plan de verdad es el webhook firmado por Stripe; esta ruta solo adelanta
+// ese mismo resultado para que el usuario no tenga que esperar al webhook. Antes se fiaba del
+// body: un POST con {planId:'cabeza_de_cartel', bandId:'la-que-sea'} y sin sesión regalaba el
+// plan de pago a cualquier banda. Ahora el plan y la banda salen de la sesión de Checkout que
+// Stripe confirma como pagada, no de lo que diga el cliente.
+router.post(["/billing/confirm-success", "/stripe/confirm-success"], requireAuth, async (req, res) => {
+  try {
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
     }
 
-    const result = await applyPlanUpgrade(bandId || '', planId, userEmail);
+    const sessionId = (req.body?.sessionId || req.body?.session_id) as string | undefined;
+    if (!sessionId || typeof sessionId !== "string") {
+      return res.status(400).json({
+        success: false,
+        error: "Falta el identificador de la sesión de pago de Stripe.",
+        pendiente_webhook: true
+      });
+    }
+
+    const stripe = getStripe();
+    let session: Stripe.Checkout.Session;
+    try {
+      session = await stripe.checkout.sessions.retrieve(sessionId);
+    } catch (err: any) {
+      console.warn("[Billing] Sesión de Checkout no recuperable:", err?.message || err);
+      return res.status(404).json({ success: false, error: "Sesión de pago no encontrada en Stripe." });
+    }
+
+    if (session.payment_status !== "paid" && session.status !== "complete") {
+      return res.status(402).json({ success: false, error: "La sesión de pago todavía no consta como pagada." });
+    }
+
+    // La sesión tiene que ser de esta banda. Las creadas por esta misma API llevan el bandId ya
+    // validado en los metadatos; para las antiguas (bandId 'default' o vacío) vale que el email
+    // que pagó sea el del usuario que ahora confirma.
+    const bandaDeLaSesion = session.metadata?.bandId || "";
+    const emailDeLaSesion = (
+      session.customer_email ||
+      session.customer_details?.email ||
+      session.metadata?.userEmail ||
+      ""
+    ).toLowerCase().trim();
+    const emailUsuario = (banda.email || "").toLowerCase().trim();
+
+    const esSuya = bandaDeLaSesion && bandaDeLaSesion !== "default"
+      ? mismaBanda(bandaDeLaSesion, banda.bandId)
+      : Boolean(emailUsuario) && emailDeLaSesion === emailUsuario;
+
+    if (!esSuya) {
+      return res.status(403).json({ success: false, error: "Esa sesión de pago no pertenece a tu banda." });
+    }
+
+    const planId = session.metadata?.planId;
+    if (!planId) {
+      return res.status(400).json({ success: false, error: "La sesión de pago no indica ningún plan." });
+    }
+
+    const result = await applyPlanUpgrade(banda.bandId, planId, emailDeLaSesion || banda.email, {
+      stripeCustomerId: (session.customer as string) || undefined,
+      stripeSubscriptionId: (session.subscription as string) || undefined
+    });
     return res.json(result);
   } catch (err: any) {
     console.error("Error in /billing/confirm-success:", err);
@@ -436,18 +509,29 @@ router.post(["/billing/confirm-success", "/stripe/confirm-success"], async (req,
 });
 
 // 2. Create Checkout Session
-router.post(["/billing/create-checkout-session", "/stripe/create-checkout-session"], async (req, res) => {
+//
+// requireAuth: además de crear la sesión de pago, con planId 'ensayo' esta ruta CANCELA la
+// suscripción. Estando abierta, un POST anónimo con el bandId de otro bastaba para tirarle el
+// plan de pago a plan gratuito. La banda y el email salen ahora de la sesión.
+router.post(["/billing/create-checkout-session", "/stripe/create-checkout-session"], requireAuth, async (req, res) => {
   try {
-    const { planId, billingInterval = "monthly", bandId, userEmail } = req.body;
+    const { planId, billingInterval = "monthly" } = req.body;
 
     if (!planId) {
       return res.status(400).json({ success: false, error: "Plan ID is required" });
     }
 
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
+    }
+    const bandId = banda.bandId;
+    const userEmail = banda.email;
+
     const normalizedPlan = normalizePlan(planId);
 
     if (normalizedPlan === "ensayo") {
-      await applyPlanCancellation(bandId || '', userEmail);
+      await applyPlanCancellation(bandId, userEmail);
       return res.json({ success: true, free: true, message: "Plan Ensayo gratuito activado" });
     }
 
@@ -522,7 +606,9 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
         }
       },
       line_items: [lineItem],
-      success_url: `${host}/?payment=success&plan=${normalizedPlan}&band=${bandId || ''}`,
+      // session_id: es lo que luego permite a /billing/confirm-success comprobar contra Stripe
+      // que este pago existe y está cobrado, en vez de creerse el plan que mande el cliente.
+      success_url: `${host}/?payment=success&plan=${normalizedPlan}&band=${bandId || ''}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${host}/?payment=cancelled`
     });
 
@@ -534,11 +620,23 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
 });
 
 // 3. Create Stripe Customer Portal Session (delegated subscription, payment method & invoice management)
-router.post(["/billing/create-portal-session", "/stripe/create-portal-session"], async (req, res) => {
+//
+// El portal de Stripe deja ver facturas, cambiar el método de pago y cancelar la suscripción.
+// Esta ruta buscaba el cliente por el `userEmail` del body y sin pedir sesión: con el email de
+// otra persona devolvía una URL a SU portal de facturación. Ahora exige sesión y el cliente de
+// Stripe se resuelve desde la banda del usuario autenticado.
+router.post(["/billing/create-portal-session", "/stripe/create-portal-session"], requireAuth, async (req, res) => {
   try {
-    const { userEmail, bandId, returnUrl } = req.body;
+    const { returnUrl } = req.body;
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
+    }
+    const bandId = banda.bandId;
+    const userEmail = banda.email;
+
     const stripe = getStripe();
-    const host = returnUrl || getOriginHost(req);
+    const host = urlDeVueltaSegura(req, returnUrl);
 
     let customerId: string | undefined;
 
@@ -711,17 +809,20 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 // requireAuth: esta ruta GASTA créditos de una banda. Sin sesión, cualquiera podía agotarlos.
 router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth, async (req, res) => {
   try {
-    const { bandId, userEmail, creditsAmount = 1, featureName = "AI Task" } = req.body;
+    const { creditsAmount = 1, featureName = "AI Task" } = req.body;
     const amount = Math.max(1, Number(creditsAmount) || 1);
 
     // Y no basta con estar logueado: gastar créditos de OTRA banda tiene que fallar de cara.
-    const solicitada = bandaSolicitada(req);
-    if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
+    // El email tampoco puede venir del body, porque `findBandInState` busca por él y mandar el
+    // de otra banda bastaba para gastarle a ella los créditos aunque el bandId fuese el propio.
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
       return res.status(403).json({ success: false, error: "No tienes acceso a esta banda." });
     }
+    const bandId = banda.bandId;
 
     const state = loadState();
-    const { band: foundBand, cleanBandId } = findBandInState(state, bandId, userEmail);
+    const { band: foundBand, cleanBandId } = findBandInState(state, bandId, banda.email);
 
     const plan = normalizePlan(foundBand?.plan || 'ensayo');
     const totalCredits = foundBand?.creditos_periodo || PLAN_CREDITS[plan] || 100;
@@ -770,14 +871,18 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth
 
 // 6. Get Credits Status endpoint
 // requireAuth: sin él, cualquiera consultaba el plan y el consumo de créditos de cualquier
-// banda pasando ?bandId=.
+// banda pasando ?bandId=. Y con la sesión sola no bastaba: como la banda seguía saliendo del
+// query (y `findBandInState` busca también por email), un usuario cualquiera leía el plan y el
+// gasto de la banda de al lado. La banda sale ahora de la sesión.
 router.get(["/billing/credits-status", "/stripe/credits-status"], requireAuth, async (req, res) => {
   try {
-    const bandId = req.query.bandId as string;
-    const userEmail = req.query.userEmail as string;
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
+    }
 
     const state = loadState();
-    const { band: foundBand } = findBandInState(state, bandId, userEmail);
+    const { band: foundBand } = findBandInState(state, banda.bandId, banda.email);
 
     const plan = normalizePlan(foundBand?.plan || 'ensayo');
     const totalCredits = foundBand?.creditos_periodo || PLAN_CREDITS[plan] || 100;

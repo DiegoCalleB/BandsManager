@@ -132,6 +132,28 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     }
   };
 
+  const handleDeleteRehearsal = async (id: string) => {
+    const previous = rehearsals;
+    setRehearsals(prev => prev.filter(r => r.id !== id));
+    try {
+      await api.deleteRehearsal(id);
+    } catch (e) {
+      console.error('Error deleting rehearsal, reverting:', e);
+      setRehearsals(previous);
+    }
+  };
+
+  const handleDeleteConcert = async (id: string) => {
+    const previous = concerts;
+    setConcerts(prev => prev.filter(c => c.id !== id));
+    try {
+      await api.deleteConcert(id);
+    } catch (e) {
+      console.error('Error deleting concert, reverting:', e);
+      setConcerts(previous);
+    }
+  };
+
   const handleAddLead = async (newLead: Lead) => {
     setLeads(prev => dedupeById([...prev.filter(l => l.id !== newLead.id), newLead]));
     try {
@@ -338,6 +360,8 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     handleUpdateLead,
     handleUpdateRehearsal,
     handleUpdateConcert,
+    handleDeleteRehearsal,
+    handleDeleteConcert,
     handleAddLead,
     handleDeleteLead,
     handleDeleteBand,

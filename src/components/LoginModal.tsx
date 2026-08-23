@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { User as UserType } from '../types';
 import { googleSignIn } from '../utils/gmail';
+import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 import { ModalPortal } from './common/ModalPortal';
 
@@ -130,7 +131,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       if (data.token) {
         localStorage.setItem('bakandeya_token', data.token);
-        document.cookie = `bakandeya_token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
+        guardarCookieDeSesion(data.token);
       }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
@@ -177,7 +178,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       if (data.token) {
         localStorage.setItem('bakandeya_token', data.token);
-        document.cookie = `bakandeya_token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
+        guardarCookieDeSesion(data.token);
       }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
@@ -322,7 +323,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       if (data.token) {
         localStorage.setItem('bakandeya_token', data.token);
-        document.cookie = `bakandeya_token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
+        guardarCookieDeSesion(data.token);
       }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
@@ -379,7 +380,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.token) {
           localStorage.setItem('bakandeya_token', data.token);
-          document.cookie = `bakandeya_token=${data.token}; path=/; max-age=2592000; SameSite=Lax`;
+          guardarCookieDeSesion(data.token);
           onLoginSuccess(data.user, data.token, data.availableBands);
           return;
         }
