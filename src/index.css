@@ -230,42 +230,60 @@ iframe.goog-te-banner-frame {
   font-style: normal;
 }
 
-@keyframes revolut-glow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(0, 117, 255, 0.2), inset 0 0 10px rgba(0, 117, 255, 0.05);
-    border-color: rgba(0, 117, 255, 0.4);
+/* Tarjeta de donación (Revolut/PayPal): micro-animaciones sutiles para llamar la atención sin
+   ruido — nada de urgencia falsa, solo movimiento suave que invita a mirar dos veces. Un único
+   tono ámbar compartido entre ambos botones para que se sienta un solo sistema, en vez de un
+   azul de marca compitiendo con el negro minimalista que ya lleva el botón de Revolut. */
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+  60%, 100% { transform: scale(1); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 3.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes donate-cta-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50% { box-shadow: 0 0 16px 1px rgba(245, 158, 11, 0.3); }
+}
+
+.animate-donate-cta-glow {
+  animation: donate-cta-glow 3.6s ease-in-out infinite;
+}
+
+@keyframes donate-sheen {
+  0% { transform: translateX(-120%) rotate(20deg); }
+  35%, 100% { transform: translateX(320%) rotate(20deg); }
+}
+
+.animate-donate-sheen {
+  animation: donate-sheen 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Ligero desfase en el segundo botón (PayPal) para que ambas tarjetas no respiren/brillen
+   exactamente a la vez — se siente menos mecánico. */
+.animate-donate-cta-glow-delayed {
+  animation: donate-cta-glow 3.6s ease-in-out infinite;
+  animation-delay: 1.4s;
+}
+
+.animate-donate-sheen-delayed {
+  animation: donate-sheen 5.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 2.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-heartbeat,
+  .animate-donate-cta-glow,
+  .animate-donate-cta-glow-delayed,
+  .animate-donate-sheen,
+  .animate-donate-sheen-delayed {
+    animation: none;
   }
-  50% {
-    box-shadow: 0 0 25px rgba(0, 117, 255, 0.45), inset 0 0 15px rgba(0, 117, 255, 0.12);
-    border-color: rgba(0, 117, 255, 0.8);
-  }
-}
-
-.animate-revolut-glow {
-  animation: revolut-glow 3s ease-in-out infinite;
-}
-
-@keyframes revolut-sheen {
-  0% { transform: translateX(-100%) rotate(25deg); }
-  35%, 100% { transform: translateX(250%) rotate(25deg); }
-}
-
-.animate-revolut-sheen {
-  animation: revolut-sheen 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes paypal-glow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(0, 112, 186, 0.22), inset 0 0 10px rgba(0, 112, 186, 0.06);
-    border-color: rgba(0, 112, 186, 0.45);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(0, 112, 186, 0.5), inset 0 0 15px rgba(0, 112, 186, 0.15);
-    border-color: rgba(0, 112, 186, 0.9);
-  }
-}
-
-.animate-paypal-glow {
-  animation: paypal-glow 3s ease-in-out infinite;
 }
 

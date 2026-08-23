@@ -1,25 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Lead, LeadStatus, Rehearsal, Concert, SocialPost, Payment, Message, ThemeName, ThemeColors, SocialMetric, User, Fan } from './types';
 import { THEMES } from './utils/theme';
 import { useAuth } from './hooks/useAuth';
 import { useAppData } from './hooks/useAppData';
 import { api } from './services/api';
 import Dashboard from './components/Dashboard';
-import BookingCRM from './components/BookingCRM';
-import BandCRM from './components/BandCRM';
-import CalendarView from './components/CalendarView';
-import ReelsCenter from './components/ReelsCenter';
-import Finanzas from './components/Finanzas';
-import TourManager from './components/TourManager';
-import RepertorioSetlists from './components/RepertorioSetlists';
-import Merchan from './components/Merchan';
-import Chatbot from './components/Chatbot';
-import GithubWorkflowTracker from './components/GithubWorkflowTracker';
-import EPKManager from './components/EPKManager';
 import ErrorBoundary from './components/ErrorBoundary';
-import FansPanel from './components/FansPanel';
-import FansLanding from './components/FansLanding';
-import Planes from './components/Planes';
+// Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
+// metía en el mismo bundle inicial el CRM, calendario, reels, repertorio, etc. — un fan que
+// solo quiere donar por Revolut/PayPal pagaba el peso entero de todo el panel interno.
+const BookingCRM = lazy(() => import('./components/BookingCRM'));
+const BandCRM = lazy(() => import('./components/BandCRM'));
+const CalendarView = lazy(() => import('./components/CalendarView'));
+const ReelsCenter = lazy(() => import('./components/ReelsCenter'));
+const Finanzas = lazy(() => import('./components/Finanzas'));
+const TourManager = lazy(() => import('./components/TourManager'));
+const RepertorioSetlists = lazy(() => import('./components/RepertorioSetlists'));
+const Merchan = lazy(() => import('./components/Merchan'));
+const Chatbot = lazy(() => import('./components/Chatbot'));
+const GithubWorkflowTracker = lazy(() => import('./components/GithubWorkflowTracker'));
+const EPKManager = lazy(() => import('./components/EPKManager'));
+const FansPanel = lazy(() => import('./components/FansPanel'));
+const FansLanding = lazy(() => import('./components/FansLanding'));
+const Planes = lazy(() => import('./components/Planes'));
 import { LoginModal } from './components/LoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
 import { UserProfileModal } from './components/UserProfileModal';
@@ -367,11 +370,13 @@ export default function App() {
 
   if (isFanRoute) {
     return (
-      <FansLanding 
-        currentBandId={currentActiveBandId} 
-        currentBandName={currentActiveBandName} 
-        currentBandLogo={currentActiveBandLogo} 
-      />
+      <Suspense fallback={<div className="min-h-screen bg-[#121111] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+        <FansLanding
+          currentBandId={currentActiveBandId}
+          currentBandName={currentActiveBandName}
+          currentBandLogo={currentActiveBandLogo}
+        />
+      </Suspense>
     );
   }
 
@@ -1008,10 +1013,14 @@ export default function App() {
  <p className="text-xs text-neutral-400 font-mono">Cargando base de datos Bakandeya...</p>
  </div>
  ) : (
- <>
+ <Suspense fallback={
+ <div className="flex flex-col items-center justify-center py-24 text-center gap-3">
+ <RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" />
+ </div>
+ }>
  {currentView === 'resumen' && (
- <Dashboard 
- leads={leads} 
+ <Dashboard
+ leads={leads}
  colors={colors}
  onUpdateLead={handleUpdateLead}
  onAddLead={handleAddLeadWithLimitCheck}
@@ -1211,7 +1220,7 @@ export default function App() {
       onNavigateToModule={handleNavigate}
     />
   )}
- </>
+ </Suspense>
  )}
  </div>
  </main>
@@ -1402,6 +1411,7 @@ export default function App() {
  </form>
 
  {/* Workflow Action runs and Agent activity tracker */}
+ <Suspense fallback={null}>
  <GithubWorkflowTracker
  githubPat={githubPat}
  githubOwner={githubOwner}
@@ -1410,6 +1420,7 @@ export default function App() {
  colors={colors}
  currentTheme={currentTheme}
  />
+ </Suspense>
  </div>
  </div>
  )}
@@ -1472,24 +1483,26 @@ export default function App() {
        isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
      }`}
    >
-     <Chatbot
-       key={`floating_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
-       colors={colors}
-       leads={leads}
-       rehearsals={rehearsals}
-       concerts={concerts}
-       epkConfig={epkConfig}
-       onUpdateLead={handleUpdateLead}
-       onCreateLead={handleAddLeadWithLimitCheck}
-       onAddRehearsal={handleAddRehearsal}
-       onAddConcert={handleAddConcert}
-       isFloating={true}
-       onClose={() => setIsFloatingChatOpen(false)}
-       userRole={currentUser?.role}
-       currentUser={currentUser}
-       activeBandName={currentActiveBandName}
-       onLoadingChange={handleChatLoadingChange}
-     />
+     <Suspense fallback={null}>
+       <Chatbot
+         key={`floating_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`}
+         colors={colors}
+         leads={leads}
+         rehearsals={rehearsals}
+         concerts={concerts}
+         epkConfig={epkConfig}
+         onUpdateLead={handleUpdateLead}
+         onCreateLead={handleAddLeadWithLimitCheck}
+         onAddRehearsal={handleAddRehearsal}
+         onAddConcert={handleAddConcert}
+         isFloating={true}
+         onClose={() => setIsFloatingChatOpen(false)}
+         userRole={currentUser?.role}
+         currentUser={currentUser}
+         activeBandName={currentActiveBandName}
+         onLoadingChange={handleChatLoadingChange}
+       />
+     </Suspense>
    </div>
  )}
 
