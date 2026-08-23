@@ -64,7 +64,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia si aplica: "${lead.pit
     const proposals = await generateMultiModelProposals({
       prompt,
       systemPrompt,
-      providers: providers || ["gemini", "deepseek", "claude"]
+      providers: providers || ["gemini", "deepseek"]
     });
 
     res.json({

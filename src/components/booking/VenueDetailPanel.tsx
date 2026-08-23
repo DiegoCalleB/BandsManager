@@ -89,7 +89,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [feedbackSuccessMsg, setFeedbackSuccessMsg] = useState<string | null>(null);
   const [showFeedbackHistory, setShowFeedbackHistory] = useState(false);
   const [showMultiModelModal, setShowMultiModelModal] = useState(false);
-  const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek' | 'claude'>('gemini');
+  const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek'>('gemini');
 
   // Clean helper for values like #ERROR!
   const cleanVal = (val?: string) => {
@@ -109,7 +109,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     });
   }, [selectedLead.id, selectedLead.pitch_generado, selectedLead.imagen_url, selectedLead.icono]);
 
-  const handleRegeneratePitchWithFeedback = async (targetProvider?: 'gemini' | 'deepseek' | 'claude') => {
+  const handleRegeneratePitchWithFeedback = async (targetProvider?: 'gemini' | 'deepseek') => {
     setIsRegeneratingPitch(true);
     setFeedbackSuccessMsg(null);
     const providerToUse = targetProvider || selectedAiModel;
@@ -153,7 +153,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setToneRating(0);
         setContentRating(0);
         setFeedbackComment('');
-        const modelLabel = providerToUse === 'claude' ? 'Claude 3.5 Haiku' : providerToUse === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
+        const modelLabel = providerToUse === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
         if (feedbackScope === 'global') {
           setFeedbackSuccessMsg(`¡Pitch reescrito con ${modelLabel}! Aprendizaje guardado en la memoria global.`);
         } else {
@@ -1317,12 +1317,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   {isRegeneratingPitch ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Entrenando {selectedAiModel === 'claude' ? 'Claude' : selectedAiModel === 'deepseek' ? 'DeepSeek' : 'Gemini'}...</span>
+                      <span>Entrenando {selectedAiModel === 'deepseek' ? 'DeepSeek' : 'Gemini'}...</span>
                     </>
                   ) : (
                     <>
                       <RefreshCw className="w-4 h-4" />
-                      <span>Reescribir con {selectedAiModel === 'claude' ? 'Claude Haiku' : selectedAiModel === 'deepseek' ? 'DeepSeek V3' : 'Gemini Flash'}</span>
+                      <span>Reescribir con {selectedAiModel === 'deepseek' ? 'DeepSeek V3' : 'Gemini Flash'}</span>
                     </>
                   )}
                 </button>
@@ -1615,7 +1615,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           setEditedPitch(text);
           selectedLead.pitch_generado = text;
           onUpdateLead(selectedLead.id, { pitch_generado: text });
-          const label = providerName === 'claude' ? 'Claude 3.5 Haiku' : providerName === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
+          const label = providerName === 'deepseek' ? 'DeepSeek V3' : 'Gemini 3.7 Flash';
           setFeedbackSuccessMsg(`¡Propuesta de ${label} seleccionada y aplicada a la sala!`);
           setTimeout(() => setFeedbackSuccessMsg(null), 5000);
         }}
