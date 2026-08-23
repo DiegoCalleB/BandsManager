@@ -163,21 +163,18 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
     if (found) return found.shortName;
     if (id === 'gemini') return 'Google Gemini';
     if (id === 'deepseek') return 'DeepSeek V3';
-    if (id === 'claude') return 'Claude 3.5 Haiku';
     return id.toUpperCase();
   };
 
   const getProviderIcon = (id: string) => {
     if (id === 'gemini') return '⚡';
     if (id === 'deepseek') return '🚀';
-    if (id === 'claude') return '✨';
     return '🤖';
   };
 
   const getProviderBadge = (id: string) => {
     if (id === 'gemini') return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
     if (id === 'deepseek') return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
-    if (id === 'claude') return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
     return 'bg-zinc-800 text-zinc-300 border-zinc-700';
   };
 
@@ -190,9 +187,6 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
     if (provider === 'deepseek') {
       rateIn = 0.14;
       rateOut = 0.28;
-    } else if (provider === 'claude') {
-      rateIn = 0.80;
-      rateOut = 4.00;
     }
     const costUsd = ((estInTokens / 1_000_000) * rateIn) + ((estOutTokens / 1_000_000) * rateOut);
     const costEur = costUsd / 1.08;
@@ -427,7 +421,6 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                 }
 
                 const isDeepSeek = prop.provider === 'deepseek';
-                const isClaude = prop.provider === 'claude';
                 const isGemini = prop.provider === 'gemini';
 
                 return (
@@ -449,7 +442,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                               {getProviderDisplayName(prop.provider)}
                             </span>
                             <span className={`text-[9px] px-1.5 py-0.5 rounded border font-mono font-semibold ${getProviderBadge(prop.provider)}`}>
-                              {isDeepSeek ? '🚀 Más Económico' : isGemini ? '⚡ Instantáneo' : '✨ Top Redactor'}
+                              {isDeepSeek ? '🚀 Más Económico' : '⚡ Instantáneo'}
                             </span>
                           </div>
                           <p className="text-[10px] text-zinc-400 font-mono">
@@ -490,11 +483,9 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
                           isDeepSeek
                             ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                            : isGemini
-                            ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                            : 'bg-purple-500/15 text-purple-300 border-purple-500/30'
+                            : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
                         }`}>
-                          {isDeepSeek ? '10x más barato' : isGemini ? 'Ultra rápido' : 'Premium'}
+                          {isDeepSeek ? '10x más barato' : 'Ultra rápido'}
                         </span>
                       </div>
                     </div>
@@ -531,9 +522,7 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
                       <div className="pt-2 border-t border-zinc-800/60 space-y-2">
                         <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono">
                           <span>{wordCount} palabras ({charCount} car.)</span>
-                          {isClaude ? (
-                            <span className="text-purple-300">Tono: Cálido y humano</span>
-                          ) : isDeepSeek ? (
+                          {isDeepSeek ? (
                             <span className="text-sky-300">Tono: Directo y comercial</span>
                           ) : (
                             <span className="text-amber-300">Tono: Ágil y contextual</span>
