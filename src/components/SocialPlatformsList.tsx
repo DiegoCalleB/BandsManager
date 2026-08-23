@@ -29,6 +29,26 @@ interface SocialPlatformsListProps {
   showClickCounts?: boolean;
 }
 
+export const PayPalLogo: React.FC<{ className?: string }> = ({ className = "w-full h-full" }) => (
+  <svg viewBox="0 0 32 32" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Front / Top-Left P (Dark Blue #003087) */}
+    <path
+      d="M21.9 8.2c-.3-1.6-1-2.8-2.2-3.7C18.3 3.4 16.5 3 14.1 3H6.8c-.8 0-1.5.6-1.6 1.4L1.7 26.6c-.1.7.4 1.4 1.1 1.4h5.6l1.4-9h2.9c4.8 0 8.5-2 9.4-7 0-.3.1-.6.1-.9.1-.6 0-1.3-.3-1.9z"
+      fill="#003087"
+    />
+    {/* Back / Bottom-Right P (Light Cyan Blue #0079C1) */}
+    <path
+      d="M27.2 13.8c-.8 4.7-4.3 6.9-9.1 6.9h-2.8c-.8 0-1.5.6-1.6 1.4l-1.6 10c-.1.7.4 1.4 1.1 1.4h4.8c.8 0 1.5-.6 1.6-1.4l1.3-8.1c.1-.8.8-1.4 1.6-1.4h.6c4.5 0 8-1.8 8.9-6.7.4-2.2.1-4-1-5.3-.4-.5-1-.9-1.7-1.2.2.4.3.9.2 1.4z"
+      fill="#0079C1"
+    />
+    {/* Overlap intersection (Deep Navy #002069) */}
+    <path
+      d="M24.7 15.2c-.9 5-4.6 7-9.4 7h-2.9l-1.4 9h2.7l1.6-10c.1-.8.8-1.4 1.6-1.4h2.8c4.8 0 8.3-2.2 9.1-6.9.1-.5 0-1-.2-1.4-.8 2.6-2.6 4.3-5.9 4.7z"
+      fill="#002069"
+    />
+  </svg>
+);
+
 export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
   spotify: ({ className = "w-5 h-5" }) => (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -75,11 +95,7 @@ export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
       <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
     </svg>
   ),
-  paypal: ({ className = "w-5 h-5" }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.82.88 4.965-.034.17-.075.342-.123.515-.845 4.282-3.711 5.76-7.388 5.76H9.98a.827.827 0 0 0-.816.7l-1.025 6.495-.063.392a.642.642 0 0 1-.633.541l-.367.159zm1.31-7.794h2.131c3.15 0 5.61-1.267 6.33-4.93.04-.202.073-.4.1-.595.36-1.823.11-3.24-.75-4.22-.84-.96-2.39-1.37-4.37-1.37H6.77L4.54 19.387h2.47l1.376-8.736a.827.827 0 0 1 .8-.708z"/>
-    </svg>
-  ),
+  paypal: ({ className = "w-5 h-5" }) => <PayPalLogo className={className} />,
   website: Globe,
   whatsapp: Phone
 };

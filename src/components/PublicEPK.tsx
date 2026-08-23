@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   Download, Share2, ExternalLink,
-  Copy, Check, Printer, Mail, Phone, MapPin, Play, Pause
+  Copy, Check, Printer, Mail, Phone, MapPin
 } from 'lucide-react';
-import { EPKConfig, Song, Concert } from '../types';
+import { EPKConfig, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
 import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict } from '../i18n/epkTranslations';
 import { interpolate } from '../i18n/fansTranslations';
@@ -13,7 +13,7 @@ import { resolverContenidoEpk } from '../utils/epkTraducciones';
 interface PublicEPKProps {
   initialData?: {
     epkConfig: EPKConfig;
-    highlightedSongs: Song[];
+    highlightedSongs?: any[];
     upcomingConcerts: Concert[];
   };
 }
@@ -22,7 +22,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const [epkData, setEpkData] = useState<any>(initialData || null);
   const [loading, setLoading] = useState(!initialData);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const galeriaScrollRef = React.useRef<HTMLDivElement>(null);
   const [language, setLanguage] = useEpkLanguage();
 
@@ -82,25 +81,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "");
 
-  // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
-  // resto de la app usa camelCase. Sin normalizar, 'albumDisco' salía undefined y caía al
-  // literal "Sencillo", y el audio real que ya está subido no se reproducía nunca.
-  const songs: any[] = (epkData?.highlightedSongs || []).map((s: any) => ({
-    ...s,
-    albumDisco: s.albumDisco ?? s.album_disco ?? s.album,
-    audioPrincipalUrl: s.audioPrincipalUrl ?? s.audio_principal_url,
-    portadaUrl: s.portadaUrl ?? s.portada_url
-  }));
   const concerts: Concert[] = epkData?.upcomingConcerts || [];
-
-  // Un enlace de artista/álbum de Spotify se puede incrustar cambiando la ruta por /embed/.
-  // Se exigen los 22 caracteres del ID real: si no, un enlace de relleno como
-  // '/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
-  const spotifyEmbedUrl = (() => {
-    const raw = config.enlacesRedes?.spotify || "";
-    const match = raw.match(/open\.spotify\.com\/(artist|album|track|playlist)\/([A-Za-z0-9]{22})/);
-    return match ? `https://open.spotify.com/embed/${match[1]}/${match[2]}` : null;
-  })();
 
   // Solo se puede incrustar un VÍDEO concreto, no un canal: si el enlace es de canal (@handle
   // o /c/), se deja como enlace normal en vez de meter un iframe roto.
@@ -111,8 +92,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
     return null;
   };
-
-  const youtubeEmbedUrl = aEmbed(config.enlacesRedes?.youtube || "");
 
   // Vídeos elegidos a mano en el gestor del EPK. El destacado va primero y en grande.
   const videos = (config.videos || []).filter(v => v?.url && aEmbed(v.url));
@@ -322,20 +301,26 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {miembros.map(m => (
-                <div key={m.id} className="text-center space-y-2">
-                  <div className="aspect-square rounded-2xl overflow-hidden border border-slate-800 bg-slate-950">
+                <div key={m.id} className="text-center space-y-2.5 p-3 rounded-2xl bg-slate-950/40 border border-slate-800/60 flex flex-col items-center">
+                  <div className="w-full aspect-square rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
                     {m.fotoUrl ? (
-                      <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
+                      <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" loading="lazy" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl font-black text-slate-700">
+                      <div className="w-full h-full flex items-center justify-center text-3xl font-black text-slate-700 bg-slate-900">
                         {(m.nombre || '?').charAt(0).toUpperCase()}
                       </div>
                     )}
                   </div>
-                  <div>
-                    <h4 className="font-bold text-white text-sm leading-tight">{m.nombre}</h4>
-                    {contenido.rolMiembro(m) && <p className="text-xs text-amber-400/90 mt-0.5">{contenido.rolMiembro(m)}</p>}
-                    {contenido.bioMiembro(m) && <p className="text-[11px] text-slate-500 mt-1 leading-snug">{contenido.bioMiembro(m)}</p>}
+                  <div className="w-full space-y-1">
+                    <h4 className="font-bold text-white text-sm sm:text-base leading-tight">{m.nombre}</h4>
+                    {contenido.rolMiembro(m) && (
+                      <p className="text-xs font-medium text-amber-400/90">{contenido.rolMiembro(m)}</p>
+                    )}
+                    {contenido.bioMiembro(m) && (
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed text-balance line-clamp-4">
+                        {contenido.bioMiembro(m)}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -393,51 +378,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </section>
         </div>
 
-        {/* FEATURED TRACKS / AUDIO PREVIEW */}
-        {songs.length > 0 && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionTemas')}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {songs.map((song: any) => {
-                const sonando = playingSongId === song.id;
-                return (
-                  <div key={song.id} className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between gap-3 hover:border-amber-500/40 transition">
-                    <div className="space-y-1">
-                      <h4 className="font-bold text-white text-base leading-tight">{song.titulo}</h4>
-                      {/* Nada de BPM/tonalidad/notas internas: son datos de ensayo, no le dicen
-                          nada a quien programa y ensucian la página (salían como "N/A"). */}
-                      <p className="text-xs text-slate-400">
-                        {[song.albumDisco, song.genero, song.duracion].filter(Boolean).join(' • ')}
-                      </p>
-                    </div>
-                    {song.audioPrincipalUrl && (
-                      <div className="space-y-2">
-                        <button
-                          onClick={() => setPlayingSongId(sonando ? null : song.id)}
-                          className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-lg transition ${sonando ? 'bg-amber-400 text-slate-950' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25'}`}
-                        >
-                          {sonando ? <><Pause className="w-3.5 h-3.5" /> {t('sonando')}</> : <><Play className="w-3.5 h-3.5" /> {t('escuchar')}</>}
-                        </button>
-                        {sonando && (
-                          <audio
-                            src={song.audioPrincipalUrl}
-                            controls
-                            autoPlay
-                            onEnded={() => setPlayingSongId(null)}
-                            className="w-full h-9"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
         {/* BAND PHOTOS & GALLERY - carrete horizontal con scroll-snap nativo (swipe en móvil,
             arrastre/rueda en escritorio) en vez de una rejilla estática. Sin librería nueva. */}
         {((config.bandPhotos && config.bandPhotos.length > 0) || displayLogo) && (
@@ -490,79 +430,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               )}
             </div>
           </section>
-        )}
-
-        {/* ESCUCHA Y VÍDEO - lo que de verdad decide a quien programa un directo */}
-        {(spotifyEmbedUrl || youtubeEmbedUrl) && (
-          <section className="mb-16 space-y-6 print:hidden">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionEscucha')}
-            </h2>
-            <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
-              {youtubeEmbedUrl && (
-                <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                  <iframe
-                    src={youtubeEmbedUrl}
-                    title={t('tituloVideoPorDefecto')}
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                    className="w-full h-full"
-                  />
-                </div>
-              )}
-              {spotifyEmbedUrl && (
-                <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
-                  <iframe
-                    src={spotifyEmbedUrl}
-                    title={t('tituloSpotify')}
-                    allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    className="w-full h-[352px]"
-                  />
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* TECHNICAL RIDER - oculto si no hay nada que enseñar (antes salía una caja vacía) */}
-        {(contenido.riderTecnico.trim() || config.riderPdfUrl) && (
-        <section className="mb-16 space-y-6 print:mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionRider')}
-            </h2>
-            <div className="flex items-center gap-2 print:hidden">
-              {config.riderPdfUrl && (
-                <a
-                  href={config.riderPdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow"
-                >
-                  <Download className="w-3.5 h-3.5" /> {config.riderPdfName || t('descargarRider')}
-                </a>
-              )}
-              {contenido.riderTecnico.trim() && (
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(contenido.riderTecnico);
-                    alert(t('riderCopiado'));
-                  }}
-                  className="text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1 transition"
-                >
-                  <Copy className="w-3.5 h-3.5" /> {t('copiarTexto')}
-                </button>
-              )}
-            </div>
-          </div>
-          {contenido.riderTecnico.trim() && (
-            <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-300 text-sm font-mono whitespace-pre-line leading-relaxed">
-              {contenido.riderTecnico}
-            </div>
-          )}
-        </section>
         )}
 
         {/* UPCOMING SHOWS */}

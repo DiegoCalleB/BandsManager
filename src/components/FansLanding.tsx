@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock, ExternalLink } from 'lucide-react';
-import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink } from 'lucide-react';
+import { SocialPlatformsList, SocialLinks, PayPalLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
 import { renderBold } from '../utils/richText';
@@ -374,15 +374,33 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const isSuccessScreen = contextType === 'success';
     const isFormScreen = contextType === 'form';
 
-    // Si el usuario configuró un título específico, usarlo fielmente; de lo contrario, usar la traducción según contexto
-    const label = donacionRevolut?.titulo?.trim() || (isSuccessScreen
-      ? t('revolutSuccessPrompt', { bandName })
-      : t('economicSupportTitle', { bandName }));
+    const isDefaultSpanishTitle = !donacionRevolut?.titulo ||
+      donacionRevolut.titulo.trim() === '' ||
+      donacionRevolut.titulo.trim() === 'Colabora con una aportación económica' ||
+      donacionRevolut.titulo.trim() === 'Colabora con la banda' ||
+      donacionRevolut.titulo.trim() === `Colabora con ${bandName}` ||
+      donacionRevolut.titulo.trim() === 'Colabora con Bakandeya';
 
-    // Si el usuario configuró una descripción específica, usarla fielmente; de lo contrario, usar el subtítulo traducido
-    const descText = donacionRevolut?.descripcion?.trim() || (isSuccessScreen
-      ? t('revolutSuccessPrompt', { bandName })
-      : t('economicSupportSubtitle'));
+    const isDefaultSpanishDesc = !donacionRevolut?.descripcion ||
+      donacionRevolut.descripcion.trim() === '' ||
+      donacionRevolut.descripcion.includes('financiar') ||
+      donacionRevolut.descripcion.includes('furgoneta') ||
+      donacionRevolut.descripcion.includes('grabaciones') ||
+      donacionRevolut.descripcion.includes('aportación directa nos ayuda');
+
+    // Si el usuario configuró un título personalizado y estamos en español, usarlo; si no, usar la traducción internacional
+    const label = (!isDefaultSpanishTitle && language === 'es' && donacionRevolut?.titulo?.trim())
+      ? donacionRevolut.titulo.trim()
+      : (isSuccessScreen
+        ? t('revolutSuccessPrompt', { bandName })
+        : t('economicSupportTitle', { bandName }));
+
+    // Si el usuario configuró una descripción personalizada y estamos en español, usarla; si no, usar el subtítulo traducido
+    const descText = (!isDefaultSpanishDesc && language === 'es' && donacionRevolut?.descripcion?.trim())
+      ? donacionRevolut.descripcion.trim()
+      : (isSuccessScreen
+        ? t('revolutSuccessPrompt', { bandName })
+        : t('economicSupportSubtitle'));
 
     const revolutClicks = clickCounts['revolut'] || 0;
     const paypalClicks = clickCounts['paypal'] || 0;
@@ -402,7 +420,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   {label}
                 </h3>
                 <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
-                  Directo
+                  {t('directBadge')}
                 </span>
               </div>
               <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
@@ -447,9 +465,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 hover:border-sky-300 transition-all duration-200 shadow-sm text-left active:scale-[0.98] cursor-pointer"
               >
                 <div className="w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
-                  <svg className="w-full h-full fill-[#003087]" viewBox="0 0 24 24">
-                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
-                  </svg>
+                  <PayPalLogo className="w-full h-full" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition block truncate">
@@ -482,14 +498,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                         <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
                       </svg>
                     ) : (
-                      <svg className="w-full h-full fill-[#003087]" viewBox="0 0 24 24">
-                        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
-                      </svg>
+                      <PayPalLogo className="w-full h-full" />
                     )}
                   </div>
                   <div className="min-w-0">
                     <span className="text-xs sm:text-sm font-bold block truncate text-white group-hover:text-amber-300 transition">
-                      {hasRevolut ? 'Aportar con Revolut Pay' : 'Aportar con PayPal'}
+                      {hasRevolut ? t('revolutButton') : t('paypalButton')}
                     </span>
                     <span className="text-[10px] text-neutral-400 font-mono block truncate">
                       {hasRevolut ? revolutDisplay : paypalDisplay}
@@ -497,7 +511,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   </div>
                 </div>
                 <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/10 group-hover:bg-white/20 text-white shrink-0 border border-white/20 flex items-center gap-1 transition">
-                  Abrir <ExternalLink className="w-3 h-3" />
+                  {t('openButton')} <ExternalLink className="w-3 h-3" />
                 </span>
               </a>
             </div>
@@ -506,12 +520,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {/* Pie de seguridad y métricas */}
           <div className="pt-2.5 flex items-center justify-between text-[10px] text-neutral-500">
             <span className="flex items-center gap-1">
-              <Lock className="w-3 h-3 text-neutral-500 shrink-0" />
-              <span>Pago seguro sin comisiones para la banda</span>
+              <LockIcon className="w-3 h-3 text-neutral-500 shrink-0" />
+              <span>{t('revolutSecureDirect')}</span>
             </span>
             {totalClicks > 0 && (
               <span className="text-[9px] font-mono text-neutral-500 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800">
-                {totalClicks} {totalClicks === 1 ? 'clic' : 'clics'}
+                {totalClicks} {totalClicks === 1 ? t('clickSingular') : t('clickPlural')}
               </span>
             )}
           </div>
