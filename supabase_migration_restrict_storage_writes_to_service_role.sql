@@ -1,5 +1,6 @@
 -- =========================================================================
 -- RESTRINGIR ESCRITURA DEL BUCKET band-media A LA SERVICE_ROLE KEY
+-- APLICADA EN PRODUCCIÓN (2026-08-23)
 -- =========================================================================
 -- Contexto: supabase_migration_only_new.sql dejó el bucket `band-media`
 -- (media pública del EPK/dossier) con cuatro políticas sobre
@@ -22,6 +23,15 @@
 -- REQUISITO PREVIO: el backend en Railway ya confirmado usando
 -- SUPABASE_SERVICE_ROLE_KEY (ver supabase_migration_restrict_rls_to_service_role.sql).
 -- Sin eso, esto le quita al backend la capacidad de subir media.
+--
+-- Confirmado antes de aplicar: producción tenía SEIS políticas sobre
+-- storage.objects mencionando band-media, no cuatro — dos SELECT
+-- ("Public Access band-media" y "Policies bucket mo5s98_0", esta última
+-- generada por el propio panel de Studio al crear el bucket, sin
+-- corresponder a ningún CREATE POLICY del repo) y cuatro de escritura
+-- ("Allow All Uploads/Updates/Deletes band-media" + "Policies bucket
+-- mo5s98_1" como el INSERT del panel). El DO block de abajo las cazó
+-- todas por buscar dinámicamente en pg_policies en vez de asumir nombres.
 -- =========================================================================
 
 DO $$
@@ -40,7 +50,9 @@ BEGIN
   END LOOP;
 END $$;
 
--- Verificación tras aplicar: debe quedar solo la política de SELECT.
+-- Verificación tras aplicar (comprobado en producción): quedan solo las
+-- dos políticas de SELECT ("Public Access band-media" y "Policies bucket
+-- mo5s98_0"), las cuatro de escritura han desaparecido.
 --
 -- SELECT policyname, cmd, roles
 -- FROM pg_policies
