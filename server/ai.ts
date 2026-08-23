@@ -182,6 +182,7 @@ export async function generateContentWithFallback(
      */
     permitirPitchLocal?: boolean;
     timeoutMs?: number;
+    links?: PitchLinks;
   }
 ) {
   const modelsToTry = params.preferredModel 
@@ -235,7 +236,7 @@ export async function generateContentWithFallback(
   // quien esperaba acordes, una clasificación o un JSON.
   if (params.permitirPitchLocal) {
     console.log("[AI Engine] Activando generador local de pitches ante agotamiento de créditos en todas las APIs...");
-    const fallbackText = generateSmartLocalPitchFallback({ prompt: promptText });
+    const fallbackText = generateSmartLocalPitchFallback({ prompt: promptText, links: params.links });
     return {
       text: fallbackText,
       candidates: [{ content: { parts: [{ text: fallbackText }] } }]
@@ -247,10 +248,49 @@ export async function generateContentWithFallback(
     : new Error("Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas.");
 }
 
+export interface PitchLinks {
+  spotify?: string;
+  youtube?: string;
+  epk?: string;
+}
+
+/**
+ * Enlaces reales de la banda (Spotify, YouTube, EPK público) a partir de su config, para que
+ * el generador local de pitches nunca tenga que inventarse una URL cuando la IA falla del
+ * todo. El EPK sí se puede construir siempre porque no depende de que la banda lo haya
+ * rellenado: es la misma ruta pública que ya usa EPKManager.tsx (/epk?band=...).
+ */
+export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): PitchLinks {
+  const links: PitchLinks = {};
+  if (bandConfig?.enlacesRedes?.spotify) links.spotify = bandConfig.enlacesRedes.spotify;
+  if (bandConfig?.enlacesRedes?.youtube) links.youtube = bandConfig.enlacesRedes.youtube;
+  if (bandId) {
+    const base = process.env.APP_URL || "https://bands-manager.up.railway.app";
+    links.epk = `${base}/epk?band=${encodeURIComponent(bandId)}`;
+  }
+  return links;
+}
+
+function formatPitchLinksBlock(
+  links: PitchLinks | undefined,
+  header: string,
+  labels: { spotify: string; youtube: string; epk: string }
+): string {
+  const lines: string[] = [];
+  if (links?.spotify) lines.push(`• ${labels.spotify}: ${links.spotify}`);
+  if (links?.youtube) lines.push(`• ${labels.youtube}: ${links.youtube}`);
+  if (links?.epk) lines.push(`• ${labels.epk}: ${links.epk}`);
+  // Sin enlaces reales, no se menciona la sección: es mejor omitirla que rellenarla con URLs
+  // inventadas que no llevan a ningún sitio.
+  if (lines.length === 0) return "";
+  return `\n\n${header}\n${lines.join("\n")}`;
+}
+
 export function generateSmartLocalPitchFallback(params: {
   prompt: string;
   systemPrompt?: string;
   provider?: string;
+  links?: PitchLinks;
 }): string {
   const text = `${params.systemPrompt || ""} ${params.prompt || ""}`;
 
@@ -292,12 +332,7 @@ export function generateSmartLocalPitchFallback(params: {
 
 Nos ponemos en contacto desde la oficina de ${bandName}. Hemos revisado vuestra línea artística y consideramos que nuestro directo encaja con el perfil de vuestra programación.
 
-Estamos cerrando las fechas de nuestra próxima gira y nos gustaría presentaros nuestra disponibilidad para tocar en ${salaNombre}.
-
-Enlaces de audio y vídeo en directo:
-• Escuchar en Spotify: https://open.spotify.com
-• Ver Directo en YouTube: https://youtube.com
-• Dossier de Prensa / EPK: https://bandmanager.ai/epk
+Estamos cerrando las fechas de nuestra próxima gira y nos gustaría presentaros nuestra disponibilidad para tocar en ${salaNombre}.${formatPitchLinksBlock(params.links, "Enlaces de audio y vídeo en directo:", { spotify: "Escuchar en Spotify", youtube: "Ver Directo en YouTube", epk: "Dossier de Prensa / EPK" })}
 
 Condiciones y propuesta técnica:
 • Formato: Concierto en sala${aforo ? ` (aforo ${aforo})` : ""}
@@ -315,12 +350,7 @@ contacto@bakandeya.com`;
 
 Os escribimos desde ${bandName}. Hemos estado siguiendo vuestra programación de conciertos y creemos que nuestra propuesta encaja a la perfección con la línea y el público de vuestra sala.
 
-Actualmente nos encontramos planificando las próximas fechas de gira y nos encantaría valorar opciones de calendario para presentar nuestro directo en ${salaNombre}.
-
-Aquí tenéis nuestros enlaces oficiales para escuchar el material y ver el directo:
-• Spotify / Streaming: https://open.spotify.com
-• Directo en YouTube: https://youtube.com
-• Dossier y Rider Técnico: https://bandmanager.ai/epk
+Actualmente nos encontramos planificando las próximas fechas de gira y nos encantaría valorar opciones de calendario para presentar nuestro directo en ${salaNombre}.${formatPitchLinksBlock(params.links, "Aquí tenéis nuestros enlaces oficiales para escuchar el material y ver el directo:", { spotify: "Spotify / Streaming", youtube: "Directo en YouTube", epk: "Dossier y Rider Técnico" })}
 
 Quedamos a vuestra entera disposición para comentar disponibilidad de fechas, condiciones de taquilla o caché y cualquier detalle técnico.
 
@@ -390,6 +420,8 @@ export async function generateUnifiedAI(params: {
   /** Ver generateContentWithFallback: el generador local solo sabe escribir pitches. */
   permitirPitchLocal?: boolean;
   timeoutMs?: number;
+  /** Enlaces reales de la banda para el generador local de pitches (ver PitchLinks). */
+  links?: PitchLinks;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -418,6 +450,11 @@ export async function generateUnifiedAI(params: {
         contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
         preferredModel: params.modelName || GEMINI_MODEL,
         timeoutMs: params.timeoutMs,
+        // OJO: sin permitirPitchLocal aquí a propósito. generateUnifiedAI ya tiene su propio
+        // escalón de fallback local (más abajo) tras intentar también DeepSeek explícitamente;
+        // activarlo en esta llamada interna haría que un fallo total de Gemini devolviera ya el
+        // texto de plantilla etiquetado como "gemini", saltándose el intento real a DeepSeek.
+        links: params.links,
         config: {
           temperature: params.temperature ?? 0.7
         }
@@ -457,7 +494,8 @@ export async function generateUnifiedAI(params: {
     const localText = generateSmartLocalPitchFallback({
       prompt: params.prompt,
       systemPrompt: params.systemPrompt,
-      provider
+      provider,
+      links: params.links
     });
     return {
       text: localText,
@@ -475,6 +513,7 @@ export async function generateMultiModelProposals(params: {
   prompt: string;
   systemPrompt?: string;
   providers?: string[];
+  links?: PitchLinks;
 }) {
   const providersToRun = params.providers && params.providers.length > 0
     ? params.providers
@@ -513,7 +552,8 @@ export async function generateMultiModelProposals(params: {
         const localDraft = generateSmartLocalPitchFallback({
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
-          provider: providerId
+          provider: providerId,
+          links: params.links
         });
         const costEstimate = calculatePitchCost(providerId, fullInputText, localDraft);
 
