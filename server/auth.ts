@@ -46,7 +46,10 @@ export function getSafeUsers(users: any[]) {
 // Extract user & role from incoming request with multi-band isolation validation
 export function getUserFromRequest(req: express.Request, loadStateFn: () => any): { id: string; role: string; username: string; email?: string; name?: string; bandName?: string; band_id?: string; allowedBandIds?: string[] } | null {
   const authHeader = req.headers.authorization;
-  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
+  // El token NO se acepta por la URL. Un `?token=` acaba en los logs del servidor, en el
+  // historial del navegador y en la cabecera Referer de cualquier recurso externo que cargue la
+  // página, y estas sesiones duran 30 días. Cabecera o cookie.
+  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string);
 
   if (!token && req.headers.cookie) {
     const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);

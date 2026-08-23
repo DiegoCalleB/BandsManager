@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '../types';
 import { api } from '../services/api';
+import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
 
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
@@ -33,9 +34,7 @@ export function useAuth() {
 
   // Set 30-day cookie helper
   const syncSessionCookie = useCallback((token: string) => {
-    try {
-      document.cookie = `bakandeya_token=${token}; max-age=${30 * 24 * 60 * 60}; path=/; SameSite=Lax`;
-    } catch (e) {}
+    guardarCookieDeSesion(token);
   }, []);
 
   // Silent session refresh function
@@ -83,7 +82,7 @@ export function useAuth() {
         localStorage.removeItem('bakandeya_logged_in');
         localStorage.removeItem('bakandeya_available_bands');
         try {
-          document.cookie = 'bakandeya_token=; max-age=0; path=/;';
+          borrarCookieDeSesion();
         } catch (e) {}
       }
     }
@@ -231,7 +230,7 @@ export function useAuth() {
     localStorage.removeItem('bakandeya_logged_in');
     localStorage.removeItem('bakandeya_available_bands');
     try {
-      document.cookie = 'bakandeya_token=; max-age=0; path=/;';
+      borrarCookieDeSesion();
     } catch (e) {}
   }, [authToken]);
 
