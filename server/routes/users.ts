@@ -399,7 +399,9 @@ router.all("/sync-bakandeya", async (req, res) => {
 });
 
 // Check invitation for activating added members
-router.post("/auth/check-invitation", async (req, res) => {
+// loginRateLimiter: es una ruta abierta que responde por email, o sea un comprobador de si un
+// correo está registrado. Con el límite, al menos no se puede repasar una lista entera.
+router.post("/auth/check-invitation", loginRateLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).json({ error: "El correo electrónico es requerido." });
@@ -412,9 +414,12 @@ router.post("/auth/check-invitation", async (req, res) => {
     (u: any) => (u.email && u.email.toLowerCase() === cleanEmail) || u.username.toLowerCase() === cleanEmail
   );
 
-  if (!user) {
+  // Solo se contesta por invitaciones sin estrenar. Antes contestaba por cualquier usuario
+  // registrado y devolvía su nombre, su usuario y las bandas a las que pertenece, que es más de
+  // lo que hace falta para activar una cuenta y bastante de lo que hace falta para suplantarla.
+  if (!user || !user.activacion_pendiente) {
     return res.status(404).json({
-      error: "No se ha encontrado ninguna invitación o registro para este correo. Pide al director de tu banda que te agregue primero en el apartado de Miembros."
+      error: "No se ha encontrado ninguna invitación pendiente para este correo. Pide al director de tu banda que te agregue primero en el apartado de Miembros."
     });
   }
 
@@ -441,7 +446,7 @@ router.post("/auth/check-invitation", async (req, res) => {
 });
 
 // Activate added member (set password & username)
-router.post("/auth/activate-member", async (req, res) => {
+router.post("/auth/activate-member", loginRateLimiter, async (req, res) => {
   const { email, username, name, password } = req.body;
 
   if (!email || !username || !name || !password) {
@@ -458,6 +463,15 @@ router.post("/auth/activate-member", async (req, res) => {
 
   if (!user) {
     return res.status(404).json({ error: "Usuario no encontrado para activación." });
+  }
+
+  // Solo se activa lo que está sin activar. Esta ruta sobrescribe la contraseña de la cuenta y
+  // devuelve una sesión abierta, y no comprobaba nada más que el email: bastaba con saber el de
+  // cualquiera (el del director de la banda, por ejemplo) para quedarse con su cuenta.
+  if (!user.activacion_pendiente) {
+    return res.status(409).json({
+      error: "Esta cuenta ya está activada. Si has olvidado tu contraseña, usa la opción de recuperarla en la pantalla de acceso."
+    });
   }
 
   // Check if chosen username is already taken by a different user
@@ -477,6 +491,7 @@ router.post("/auth/activate-member", async (req, res) => {
   user.email = cleanEmail;
   user.passwordHash = hash;
   user.salt = salt;
+  delete user.activacion_pendiente;
 
   // Generate session token
   const token = crypto.randomBytes(32).toString("hex");
@@ -1726,6 +1741,11 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
     passwordHash: hash,
     salt: salt,
     band_id: targetBandId,
+    // La cuenta la crea el director con una contraseña provisional y el miembro la termina de
+    // activar poniendo la suya en /auth/activate-member. Esta marca es lo que distingue "cuenta
+    // recién invitada" de "cuenta ya en uso": sin ella, esa ruta valía para cambiarle la
+    // contraseña a cualquiera con solo saber su email.
+    activacion_pendiente: true,
     createdAt: new Date().toISOString()
   };
 

@@ -113,9 +113,10 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     });
   }
 
-  if (allowedBandIds.size === 0) {
-    addBandIdAndVariants('band-bakandeya');
-  }
+  // Antes, un usuario sin ninguna banda asociada se quedaba con 'band-bakandeya' en la lista de
+  // permitidas. Eso venía de cuando la app era de una sola banda; hoy significa que cualquier
+  // cuenta a la que le falte su vínculo entra en la banda insignia y ve sus leads y sus
+  // finanzas. Sin banda no hay sesión válida: más abajo, un activeBandId vacío devuelve null.
 
   // Check requested active band from headers / query / body
   const requestedBandId = (
@@ -149,7 +150,12 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   const userBand = state?.userBands?.find((ub: any) =>
     ub.user_id === foundUser.id && ub.band_id && ub.band_id.replace(/^(band|reg)-/, '') === cleanActive
   );
-  const role = userBand?.role || foundUser.role || 'member';
+  // El rol es POR BANDA. El `|| foundUser.role` que había de repuesto se aplicaba también cuando
+  // el usuario sí tenía fila en userBands para otra banda pero no para esta, así que un leader
+  // de su propia banda se llevaba el rol de leader a una banda donde solo es miembro (y con él,
+  // finanzas y requireLeader). Solo se hereda el rol global cuando la banda activa es la suya.
+  const esSuBandaPrincipal = (foundUser.band_id || '').replace(/^(band|reg)-/, '') === cleanActive;
+  const role = userBand?.role || (esSuBandaPrincipal ? foundUser.role : null) || 'member';
 
   // Retrieve band name for this active band
   let activeBandName = foundUser.bandName;
