@@ -7,6 +7,7 @@ import { dbUpsertLead, getSupabase } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { runEnviadorAgent, logAgentExecution } from "../services/agentEngine.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaDelAgente } from "../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -27,6 +28,17 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
   if (!agentName) {
     return res.status(400).json({ error: "Falta el nombre del agente." });
   }
+
+  const usuarioDisparador = (req as any).user;
+  const targetBandId = bandaDelAgente(req, params);
+  if (!targetBandId) {
+    return res.status(403).json({ error: "No puedes lanzar agentes sobre otra banda." });
+  }
+  // Quién dispara sale de la sesión. Antes, sin usuario, se firmaba la auditoría con el email
+  // del dueño de la plataforma, que es justo lo contrario de lo que sirve un registro de auditoría.
+  const userEmail = usuarioDisparador?.email || usuarioDisparador?.username || "cron@sistema";
+  const userId = usuarioDisparador?.id || "sistema-cron";
+  const triggerType = params?.trigger_type || (usuarioDisparador ? "usuario_manual" : "cron");
 
   const normalizedAgentName = normalizeAgentName(agentName);
   const displayAgentName = normalizedAgentName.charAt(0).toUpperCase() + normalizedAgentName.slice(1);
@@ -73,11 +85,6 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
 
   // --- AGENTE ENVIADOR (email real por banda vía SMTP, ver server/services/agentEngine.ts) ---
   if (normalizedAgentName === "enviador" || params?.engine === "supabase") {
-    const user = (req as any).user;
-    const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
-    const userEmail = user?.email || (req.headers["x-user-email"] as string) || undefined;
-    const userId = user?.id || undefined;
-    const triggerType = params?.trigger_type || (user ? "usuario_manual" : "chatbot");
 
     try {
       const result = await runEnviadorAgent({
@@ -122,13 +129,11 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
   if (normalizedAgentName === "redactor") {
     try {
       const sb = getSupabase();
-      const user = (req as any).user;
-      const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
-      const userEmail = user?.email || (req.headers["x-user-email"] as string) || "diego.delacalleb@gmail.com";
-      const userId = user?.id || "user-diego";
-      const triggerType = params?.trigger_type || (user ? "usuario_manual" : "chatbot");
 
-      let query = sb.from("leads").select("*");
+      // El filtro por banda no es opcional: sin él, el Redactor leía los leads de TODAS las
+      // bandas y les escribía encima el pitch generado, incluido el lead suelto que llegara
+      // por params.id.
+      let query = sb.from("leads").select("*").eq("band_id", targetBandId);
       if (params?.id || params?.lead_id) {
         query = query.eq("id", params.id || params.lead_id);
       } else if (!params?.all && !params?.regenerate) {
@@ -274,11 +279,6 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
   if (normalizedAgentName === "scout" || normalizedAgentName === "scout_descubridor") {
     try {
       const sb = getSupabase();
-      const user = (req as any).user;
-      const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
-      const userEmail = user?.email || (req.headers["x-user-email"] as string) || "diego.delacalleb@gmail.com";
-      const userId = user?.id || "user-diego";
-      const triggerType = params?.trigger_type || (user ? "usuario_manual" : "chatbot");
 
       const targetLoc = params?.ciudad || params?.region || "Huelva";
       const tipo = params?.tipo || "sala";
@@ -420,16 +420,14 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
   if (normalizedAgentName === "lector" || normalizedAgentName === "lector_de_bandeja") {
     try {
       const sb = getSupabase();
-      const user = (req as any).user;
-      const targetBandId = params?.band_id || user?.band_id || BAKANDEYA_BAND_ID;
-      const userEmail = user?.email || (req.headers["x-user-email"] as string) || "diego.delacalleb@gmail.com";
-      const userId = user?.id || "user-diego";
-      const triggerType = params?.trigger_type || (user ? "usuario_manual" : "chatbot");
 
-      let query = sb.from("leads").select("*").in("estado", ["contactado", "esperando_respuesta"]);
-      if (params?.band_id) {
-        query = query.eq("band_id", params.band_id);
-      }
+      // Igual que en el Redactor: el filtro por banda pasa a ser incondicional. Cuando no venía
+      // params.band_id, el Lector repasaba los leads contactados de todas las bandas.
+      const query = sb
+        .from("leads")
+        .select("*")
+        .eq("band_id", targetBandId)
+        .in("estado", ["contactado", "esperando_respuesta"]);
       const { data: contactedLeads } = await query.limit(10);
 
       const results: any[] = [];
@@ -504,15 +502,21 @@ router.post("/internal/agents/responder-hilo", requireCronOrAuth, async (req, re
 });
 
 // GET /api/agent-runs - Get latest agent execution runs (Supabase Logs & Engine)
-router.get("/agent-runs", async (req, res) => {
+//
+// requireAuth y filtro incondicional por banda: la auditoría de agentes lleva a quién se ha
+// escrito y con qué mensaje. Sin sesión, el ?band_id= servía para leer la de cualquier banda y,
+// sin él, la consulta salía sin filtrar y devolvía la de TODAS.
+router.get("/agent-runs", requireAuth, async (req, res) => {
   const sb = getSupabase();
-  const bandId = (req.query.band_id as string) || (req as any).user?.band_id;
+  const bandId = getTargetBandId(req);
 
   try {
-    let query = sb.from("agent_execution_logs").select("*").order("created_at", { ascending: false }).limit(20);
-    if (bandId) {
-      query = query.eq("band_id", bandId);
-    }
+    const query = sb
+      .from("agent_execution_logs")
+      .select("*")
+      .eq("band_id", bandId)
+      .order("created_at", { ascending: false })
+      .limit(20);
     const { data: logs, error: dbError } = await query;
     if (dbError) {
       console.warn("Notice querying agent_execution_logs from Supabase:", dbError.message);
@@ -561,12 +565,19 @@ router.get("/agent-runs", async (req, res) => {
 });
 
 // GET /api/agent-runs/:runId/jobs
-router.get("/agent-runs/:runId/jobs", async (req, res) => {
+//
+// requireAuth y comprobación de la banda del registro: el id de una ejecución bastaba para
+// sacar el mensaje y el agente de la auditoría de otra banda.
+router.get("/agent-runs/:runId/jobs", requireAuth, async (req, res) => {
   const { runId } = req.params;
   try {
     const sb = getSupabase();
     const { data: log } = await sb.from("agent_execution_logs").select("*").eq("id", runId).maybeSingle();
-    
+
+    if (log && !puedeEscribirEnBanda(req, log.band_id)) {
+      return res.status(404).json({ success: false, error: "Ejecución no encontrada." });
+    }
+
     if (log) {
       const agentName = (log.agente || "Agente").toUpperCase();
       const isSuccess = log.estado !== "error";
@@ -631,14 +642,17 @@ router.post("/reset", requireAuth, requireLeader, (req, res) => {
 });
 
 // Obtener registros de auditoría de agentes
-router.get("/agent-logs", async (req, res) => {
+// Mismo agujero que /agent-runs: abierto, y sin band_id devolvía la auditoría de todas las bandas.
+router.get("/agent-logs", requireAuth, async (req, res) => {
   try {
     const sb = getSupabase();
-    const bandId = (req.query.band_id as string) || (req as any).user?.band_id;
-    let query = sb.from("agent_execution_logs").select("*").order("created_at", { ascending: false }).limit(50);
-    if (bandId) {
-      query = query.eq("band_id", bandId);
-    }
+    const bandId = getTargetBandId(req);
+    const query = sb
+      .from("agent_execution_logs")
+      .select("*")
+      .eq("band_id", bandId)
+      .order("created_at", { ascending: false })
+      .limit(50);
     const { data, error } = await query;
     if (error) throw error;
     res.json({ success: true, logs: data || [] });
@@ -649,14 +663,18 @@ router.get("/agent-logs", async (req, res) => {
 });
 
 // Guardar manualmente un registro de auditoría (ej: borrador en Gmail, acción de chatbot, etc.)
-router.post("/agent-logs", async (req, res) => {
+//
+// requireAuth: esto escribe en el registro de auditoría. Abierto, cualquiera metía entradas
+// falsas en la banda que quisiera y firmadas con el email que le apeteciera. Quién ha hecho la
+// acción sale de la sesión, no del body: si no, la auditoría no vale para auditar nada.
+router.post("/agent-logs", requireAuth, async (req, res) => {
   try {
     const sb = getSupabase();
     const user = (req as any).user;
     const body = req.body || {};
-    const bandId = body.band_id || user?.band_id || BAKANDEYA_BAND_ID;
-    const userEmail = body.usuario_email || user?.email || (req.headers["x-user-email"] as string) || "diego.delacalleb@gmail.com";
-    const userId = body.usuario_id || user?.id || "user-diego";
+    const bandId = getTargetBandId(req);
+    const userEmail = user?.email || user?.username || "";
+    const userId = user?.id || "";
 
     const logEntry = {
       id: body.id || `log-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
