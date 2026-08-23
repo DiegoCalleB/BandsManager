@@ -1,10 +1,30 @@
-import {StrictMode} from 'react';
+import {StrictMode, Suspense, lazy} from 'react';
 import {createRoot} from 'react-dom/client';
-import App from './App.tsx';
-import PublicEPK from './components/PublicEPK';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
+
+// App (todo el panel interno: CRM, calendario, reels, repertorio...) y PublicEPK (la única
+// ruta pública además de /fans) se cargan bajo demanda y por separado: quien abre /epk no
+// necesita descargar el panel interno, y viceversa.
+const App = lazy(() => import('./App.tsx'));
+const PublicEPK = lazy(() => import('./components/PublicEPK'));
+
+const LoadingFallback = () => (
+  <div style={{ minHeight: '100vh', background: '#121111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div
+      style={{
+        width: 32,
+        height: 32,
+        borderRadius: '9999px',
+        border: '3px solid rgba(242, 202, 80, 0.25)',
+        borderTopColor: '#f2ca50',
+        animation: 'spin 0.8s linear infinite'
+      }}
+    />
+    <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+  </div>
+);
 
 // /epk es la única ruta pública de la app: es el enlace que los agentes meten en los pitches,
 // así que lo abre gente de fuera (programadores de salas, prensa) que NO tiene cuenta. Se
@@ -20,13 +40,15 @@ const esRutaPublicaEpk = typeof window !== 'undefined' && /^\/epk\/?$/.test(wind
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      {esRutaPublicaEpk ? (
-        <PublicEPK />
-      ) : (
-        <LanguageProvider>
-          <App />
-        </LanguageProvider>
-      )}
+      <Suspense fallback={<LoadingFallback />}>
+        {esRutaPublicaEpk ? (
+          <PublicEPK />
+        ) : (
+          <LanguageProvider>
+            <App />
+          </LanguageProvider>
+        )}
+      </Suspense>
     </ErrorBoundary>
   </StrictMode>,
 );
