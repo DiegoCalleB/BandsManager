@@ -1502,11 +1502,11 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                       Breve descripción / Trayectoria (opcional)
                     </label>
                     <textarea
-                      rows={2}
+                      rows={3}
                       value={m.bio || ''}
                       onChange={e => editarMiembro(m.id, { bio: e.target.value })}
-                      placeholder="Breve descripción opcional: trayectoria, giras, estilo o proyectos paralelos..."
-                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-300 focus:border-amber-500 outline-none placeholder:text-slate-600 leading-relaxed"
+                      placeholder="Trayectoria o descripción: giras, formación musical, otros proyectos o rol en directo..."
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-amber-500 outline-none placeholder:text-slate-600 leading-relaxed"
                     />
                   </div>
                 </div>
