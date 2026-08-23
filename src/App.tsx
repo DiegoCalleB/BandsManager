@@ -282,22 +282,24 @@ export default function App() {
     const paymentStatus = urlParams.get('payment');
     const planParam = urlParams.get('plan');
     const bandParam = urlParams.get('band');
+    const sessionParam = urlParams.get('session_id');
 
     if (paymentStatus === 'success') {
       const planName = planParam ? planParam.toUpperCase().replace('_', ' ') : 'PRO';
-      
+
       // Clean URL params immediately
       window.history.replaceState({}, document.title, window.location.pathname);
 
       // Confirm to backend and update Supabase & memory state
       const targetBand = bandParam || currentUser?.band_id;
-      const targetEmail = currentUser?.email;
 
-      if (planParam) {
+      // El plan lo decide Stripe, no esta URL: le pasamos el id de la sesión de Checkout para
+      // que el servidor lo verifique. Sin él no hay nada que confirmar y basta con refrescar,
+      // que el webhook de Stripe ya habrá hecho (o hará) el alta.
+      if (sessionParam) {
         api.confirmPaymentSuccess({
-          planId: planParam,
-          bandId: targetBand,
-          userEmail: targetEmail
+          sessionId: sessionParam,
+          bandId: targetBand
         }).then(() => {
           refreshSession();
           fetchState();
@@ -306,17 +308,9 @@ export default function App() {
           refreshSession();
           fetchState();
         });
-
-        // Update local storage user if present
-        const stored = localStorage.getItem('bakandeya_user');
-        if (stored) {
-          try {
-            const userObj = JSON.parse(stored);
-            userObj.plan = planParam;
-            localStorage.setItem('bakandeya_user', JSON.stringify(userObj));
-            setCurrentUser(userObj);
-          } catch (e) {}
-        }
+        // El plan del usuario ya no se escribe aquí desde el `?plan=` de la URL: eso desbloqueaba
+        // en local la interfaz del plan de pago con solo visitar la dirección. Lo trae
+        // `refreshSession()` del servidor, que es quien sabe qué se ha pagado.
       } else {
         refreshSession();
         fetchState();

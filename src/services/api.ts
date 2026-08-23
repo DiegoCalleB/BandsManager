@@ -500,7 +500,10 @@ export const api = {
   },
 
   // Billing
-  async confirmPaymentSuccess(data: { planId: string; bandId?: string; userEmail?: string }): Promise<any> {
+  // sessionId: el servidor ya no se cree el plan que le mandemos, lo comprueba contra Stripe
+  // con esta sesión de Checkout. Sin ella la confirmación se rechaza y el alta queda en manos
+  // del webhook, que es quien manda de todas formas.
+  async confirmPaymentSuccess(data: { sessionId: string; bandId?: string }): Promise<any> {
     return request('/api/billing/confirm-success', {
       method: 'POST',
       body: JSON.stringify(data)

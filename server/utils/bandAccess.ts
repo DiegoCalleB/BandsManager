@@ -1,4 +1,5 @@
 import type express from "express";
+import { isValidEmail } from "./email.js";
 
 /**
  * Resuelve sobre qué banda opera una petición, respetando a qué bandas pertenece el usuario.
@@ -66,4 +67,38 @@ export function puedeEscribirEnBanda(req: express.Request, bandId: string): bool
   const limpio = (bandId || "").replace(/^(band|reg)-/, "");
   const allowed = Array.isArray(user.allowedBandIds) ? user.allowedBandIds : [];
   return allowed.some((b: string) => b === bandId || b.replace(/^(band|reg)-/, "") === limpio);
+}
+
+/** ¿Apuntan las dos cadenas a la misma banda, con o sin el prefijo band-/reg-? */
+export function mismaBanda(a?: string, b?: string): boolean {
+  const limpiar = (v?: string) => (v || "").trim().replace(/^(band|reg)-/, "").toLowerCase();
+  const la = limpiar(a);
+  return Boolean(la) && la === limpiar(b);
+}
+
+/**
+ * Banda y email sobre los que opera una petición sensible (facturación, suscripciones), o null
+ * si pide una banda ajena.
+ *
+ * La diferencia con `getTargetBandId` es que aquí NO se degrada a la banda propia: si la petición
+ * nombra una banda que no es suya, la ruta debe responder 403. En facturación, "he pedido la
+ * banda de otro" nunca es un despiste que se pueda corregir por dentro sin avisar.
+ *
+ * El email tampoco puede venir del cliente. La búsqueda de banda en facturación cae también por
+ * email, así que mandar el de otra persona bastaba para acabar operando sobre SU suscripción.
+ */
+export function bandaFacturableDelUsuario(req: express.Request): { bandId: string; email?: string } | null {
+  const user = (req as any).user;
+  if (!user) return null;
+
+  const pedida = bandaSolicitada(req);
+  if (pedida && !puedeEscribirEnBanda(req, pedida)) return null;
+
+  const bandId = pedida || user.band_id;
+  if (!bandId) return null;
+
+  const email = [user.email, user.username].find((v: unknown): v is string =>
+    typeof v === "string" && isValidEmail(v)
+  );
+  return { bandId, email };
 }
