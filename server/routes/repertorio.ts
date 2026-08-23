@@ -164,8 +164,10 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
     const aiClient = getAiClient();
     let generatedChords: string | null = null;
     let generatedGuide: any = null;
-    // Si el cifrado se obtuvo escuchando la grabación o es una propuesta a partir del título.
-    let usedRealAudio = false;
+    let esAproximado = false;
+    // De dónde sale de verdad el cifrado, para que el cliente nunca confunda una transcripción
+    // real, una propuesta honesta de la IA y la plantilla de relleno cuando todo lo demás falla.
+    let chordsSource: 'audio_real' | 'ia_sin_audio' | 'plantilla_generica' = 'plantilla_generica';
 
     if (aiClient) {
       try {
@@ -180,7 +182,9 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
         const audioInstructions = tieneAudioReal
           ? `Tienes adjunto el audio REAL de la canción. Escúchalo con máxima atención y transcribe la LETRA EXACTA cantada y los ACORDES REALES que suenan (no los inventes). Si el audio no permite distinguir alguna parte con certeza, indícalo con [?] en vez de inventar.`
-          : `No se dispone del audio de la canción, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
+          : esVersionCovers
+          ? `No se dispone del audio de esta versión/cover: dependes solo de lo que sepas de la canción original. Transcribe acordes como "acordes reales" ÚNICAMENTE si estás genuinamente seguro de ellos. Si no los recuerdas con confianza, NO te los inventes presentándolos como transcripción fiable: pon "esAproximado": true en el JSON de respuesta y antepón a cifradoTexto la línea "[⚠️ Progresión aproximada de memoria, no confirmada — verifica de oído antes de usarla en directo]".`
+          : `No se dispone del audio de la canción; es una composición original, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
 
         const prompt = `Eres un músico profesional, transcriptor y arreglista. Genera el cifrado de acordes con letra completo al estilo LaCuerda.net / Ultimate Guitar para la siguiente canción:
 Título: "${titulo}"
@@ -197,13 +201,14 @@ Requisitos estrictos del formato cifradoTexto:
 1. Utiliza acordes estándar en notación española o internacional (ej. Do, Re, Mim, Sol, Lam, Fa#m o C, D, Em, G, Am, F#m).
 2. Pon los acordes usando la notación inline [Acorde] justo delante de las palabras o sílabas donde cambian de armonía, o bien en la línea superior alineados con espacios.
 3. Estructura con secciones claras: [Intro], [Verso 1], [Estribillo], [Verso 2], [Puente], [Solo], [Outro].
-4. Si la canción es un tema conocido o cover, transcribe sus acordes reales. Si es un tema original, crea una progresión armónica profesional y letra acorde a la tonalidad ${tonalidad || 'Mim'}.
+4. Si la canción es un tema conocido o cover, transcribe sus acordes reales solo cuando estés seguro de ellos (ver instrucción anterior sobre "esAproximado"). Si es un tema original, crea una progresión armónica profesional y letra acorde a la tonalidad ${tonalidad || 'Mim'}.
 
 Genera también la Guia de Sustitución Rápida (guiaSustituto) para un músico de apoyo o sustituto de última hora.
 
 Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
 {
   "cifradoTexto": "[Intro]\\n[Mim]  [Do]  [Re]  [Mim]...",
+  "esAproximado": false,
   "guiaSustituto": {
     "estructura": "Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo -> Outro",
     "progresionClave": "Verso: Mim - Do | Estribillo: Sol - Re - Mim - Do",
@@ -240,7 +245,8 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
         if (parsed && parsed.cifradoTexto) {
           generatedChords = parsed.cifradoTexto;
           generatedGuide = parsed.guiaSustituto;
-          usedRealAudio = tieneAudioReal;
+          esAproximado = Boolean(parsed.esAproximado);
+          chordsSource = tieneAudioReal ? 'audio_real' : 'ia_sin_audio';
         }
       } catch (aiErr: any) {
         console.warn("[Gemini API] Could not generate chords via AI, using harmonic engine fallback:", aiErr?.message || aiErr);
@@ -342,8 +348,14 @@ Final con parada seca al compás 4 en [${rootChord}].`;
       guiaSustituto: generatedGuide,
       // El cliente necesita saber si esto quedó guardado en servidor o solo vive en su copia local.
       persisted,
-      // Y si los acordes salen de escuchar el audio real o de una propuesta a partir del título.
-      fromRealAudio: usedRealAudio
+      // De dónde sale de verdad el cifrado: transcripción de audio real, propuesta honesta de la
+      // IA sin audio, o la plantilla de relleno cuando ninguna IA respondió. El cliente no debe
+      // presentar estos tres casos como si fueran el mismo "cifrado propuesto".
+      chordsSource,
+      // Mantenido por compatibilidad con clientes existentes.
+      fromRealAudio: chordsSource === 'audio_real',
+      // Si la propia IA ha marcado el cifrado como no confirmado (cover sin audio, de memoria).
+      esAproximado
     });
   } catch (err: any) {
     console.error("Error in generate-song-chords:", err);
