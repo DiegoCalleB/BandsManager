@@ -978,7 +978,7 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
 // Verify current session
 router.get("/auth/me", async (req, res) => {
   const authHeader = req.headers.authorization;
-  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
+  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string);
 
   if (!token && req.headers.cookie) {
     const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
@@ -1047,7 +1047,7 @@ router.get("/auth/me", async (req, res) => {
 // Switch Active Band
 router.post("/auth/switch-band", async (req, res) => {
   const authHeader = req.headers.authorization;
-  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string || req.query.token as string);
+  let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string);
 
   if (!token && req.headers.cookie) {
     const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
