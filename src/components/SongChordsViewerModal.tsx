@@ -138,8 +138,19 @@ export function SongChordsViewerModal({
       };
       onUpdateSong(updatedSong);
 
-      setAiSuccessMsg('¡Cifrado y Ficha de Sustituto generados con éxito!');
-      setTimeout(() => setAiSuccessMsg(null), 4000);
+      // Igual que en el análisis automático: el mensaje debe distinguir una transcripción
+      // real, una propuesta honesta de la IA (aproximada o no) y la plantilla de relleno
+      // genérica cuando la IA falla del todo, en vez de llamar "éxito" a las tres por igual.
+      if (data.chordsSource === 'audio_real') {
+        setAiSuccessMsg('✓ Letra y acordes transcritos del audio real');
+      } else if (data.chordsSource === 'ia_sin_audio' && !data.esAproximado) {
+        setAiSuccessMsg('✓ Cifrado propuesto por IA a partir del título y la tonalidad');
+      } else if (data.chordsSource === 'ia_sin_audio' && data.esAproximado) {
+        setAiSuccessMsg('⚠️ Acordes aproximados de memoria, sin confirmar: verifícalos de oído');
+      } else {
+        setAiSuccessMsg('⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico, revísalo');
+      }
+      setTimeout(() => setAiSuccessMsg(null), 5000);
     } catch (err: any) {
       console.error('Error generating with AI:', err);
       setAiSuccessMsg(`⚠️ ${err.message || 'No se pudieron generar los acordes'}`);
@@ -430,12 +441,23 @@ export function SongChordsViewerModal({
 
         {/* AI SUCCESS NOTIFICATION BANNER */}
         {aiSuccessMsg && (
-          <div className="bg-emerald-950/80 border-b border-emerald-500/40 px-4 py-2 text-xs font-mono text-emerald-300 flex items-center justify-between animate-in fade-in">
+          <div
+            className={`border-b px-4 py-2 text-xs font-mono flex items-center justify-between animate-in fade-in ${
+              aiSuccessMsg.startsWith('⚠️')
+                ? 'bg-amber-950/80 border-amber-500/40 text-amber-300'
+                : 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
+            }`}
+          >
             <span className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+              <Sparkles className={`w-4 h-4 shrink-0 ${aiSuccessMsg.startsWith('⚠️') ? 'text-amber-400' : 'text-emerald-400'}`} />
               {aiSuccessMsg}
             </span>
-            <button onClick={() => setAiSuccessMsg(null)} className="text-emerald-400 hover:text-white">✕</button>
+            <button
+              onClick={() => setAiSuccessMsg(null)}
+              className={aiSuccessMsg.startsWith('⚠️') ? 'text-amber-400 hover:text-white' : 'text-emerald-400 hover:text-white'}
+            >
+              ✕
+            </button>
           </div>
         )}
 
