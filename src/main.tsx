@@ -17,6 +17,13 @@ const esRutaPublicaEpk = typeof window !== 'undefined' && /^\/epk\/?$/.test(wind
 // "Electrobasureo"). En un documento cuyo único trabajo es parecer profesional eso no vale, y
 // además pelearía con el selector de idioma propio de la página (ver useEpkLanguage). PublicEPK
 // no usa useLanguage() en ningún sitio, así que no necesita el contexto para nada.
+// PWA: solo en producción, para no interferir con el hot-reload del dev server ni con vitest.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
