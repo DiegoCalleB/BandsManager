@@ -299,31 +299,35 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
               {t('seccionBanda')}
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {miembros.map(m => (
-                <div key={m.id} className="text-center space-y-2.5 p-3 rounded-2xl bg-slate-950/40 border border-slate-800/60 flex flex-col items-center">
-                  <div className="w-full aspect-square rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
-                    {m.fotoUrl ? (
-                      <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" loading="lazy" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-3xl font-black text-slate-700 bg-slate-900">
-                        {(m.nombre || '?').charAt(0).toUpperCase()}
-                      </div>
-                    )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
+              {miembros.map(m => {
+                const bioTexto = contenido.bioMiembro(m);
+                const rolTexto = contenido.rolMiembro(m);
+                return (
+                  <div key={m.id} className="text-center p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col items-center justify-start h-full space-y-3 transition hover:border-slate-700">
+                    <div className="w-full max-w-[200px] aspect-square rounded-xl overflow-hidden border border-slate-800 bg-slate-950 shrink-0 mx-auto shadow-inner">
+                      {m.fotoUrl ? (
+                        <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-3xl font-black text-slate-700 bg-slate-900">
+                          {(m.nombre || '?').charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-full space-y-1.5 flex-1 flex flex-col justify-start">
+                      <h4 className="font-bold text-white text-base leading-snug">{m.nombre}</h4>
+                      {rolTexto && (
+                        <p className="text-xs font-semibold text-amber-400 tracking-wide">{rolTexto}</p>
+                      )}
+                      {bioTexto && (
+                        <div className="text-xs text-slate-300/90 pt-1 leading-relaxed whitespace-pre-line text-center break-words">
+                          {bioTexto}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="w-full space-y-1">
-                    <h4 className="font-bold text-white text-sm sm:text-base leading-tight">{m.nombre}</h4>
-                    {contenido.rolMiembro(m) && (
-                      <p className="text-xs font-medium text-amber-400/90">{contenido.rolMiembro(m)}</p>
-                    )}
-                    {contenido.bioMiembro(m) && (
-                      <p className="text-xs text-slate-400 mt-1 leading-relaxed text-balance line-clamp-4">
-                        {contenido.bioMiembro(m)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
