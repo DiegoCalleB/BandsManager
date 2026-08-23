@@ -69,9 +69,12 @@ type FanFormDict = {
   downloadExclusive: string;
   merchCode: string;
   followUsPlatforms: string;
+  epkCardTitle: string;
+  epkCardSubtitle: string;
+  epkCardButton: string;
+  epkSuccessLink: string; // {bandName}
   economicSupportTitle: string; // {bandName}
   economicSupportSubtitle: string;
-  directBadge: string;
   openButton: string;
   clickSingular: string;
   clickPlural: string;
@@ -163,9 +166,12 @@ const es: FanFormDict = {
   downloadExclusive: 'Descargar Contenido Exclusivo',
   merchCode: 'Código Promocional de Merch',
   followUsPlatforms: '📱 Síguenos en nuestras plataformas',
+  epkCardTitle: 'Conoce nuestra historia',
+  epkCardSubtitle: 'Biografía, fotos y vídeos en directo',
+  epkCardButton: 'Ver EPK',
+  epkSuccessLink: 'Ya eres parte de la familia — descubre más sobre {bandName}',
   economicSupportTitle: 'Colabora con una aportación económica',
   economicSupportSubtitle: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
-  directBadge: 'Directo',
   openButton: 'Abrir',
   clickSingular: 'clic',
   clickPlural: 'clics',
@@ -257,9 +263,12 @@ const en: FanFormDict = {
   downloadExclusive: 'Download Exclusive Content',
   merchCode: 'Merch Promo Code',
   followUsPlatforms: '📱 Follow us on our platforms',
+  epkCardTitle: 'Get to know us',
+  epkCardSubtitle: 'Bio, photos and live videos',
+  epkCardButton: 'View EPK',
+  epkSuccessLink: 'You are part of the family now — learn more about {bandName}',
   economicSupportTitle: 'Support {bandName}',
   economicSupportSubtitle: 'Your direct support helps us fund new studio recordings, tour expenses, and instruments.',
-  directBadge: 'Direct',
   openButton: 'Open',
   clickSingular: 'click',
   clickPlural: 'clicks',
@@ -351,9 +360,12 @@ const it: FanFormDict = {
   downloadExclusive: 'Scarica Contenuto Esclusivo',
   merchCode: 'Codice Promozionale Merch',
   followUsPlatforms: '📱 Seguici sulle nostre piattaforme',
+  epkCardTitle: 'Scopri la nostra storia',
+  epkCardSubtitle: 'Biografia, foto e video dal vivo',
+  epkCardButton: 'Vedi EPK',
+  epkSuccessLink: 'Ora fai parte della famiglia — scopri di più su {bandName}',
   economicSupportTitle: 'Sostieni {bandName}',
   economicSupportSubtitle: 'Il tuo supporto diretto ci aiuta a finanziare furgone da tour, registrazioni e strumenti.',
-  directBadge: 'Diretto',
   openButton: 'Apri',
   clickSingular: 'clic',
   clickPlural: 'clic',
@@ -445,9 +457,12 @@ const cs: FanFormDict = {
   downloadExclusive: 'Stáhnout exkluzivní obsah',
   merchCode: 'Slevový kód na merch',
   followUsPlatforms: '📱 Sleduj nás na našich platformách',
+  epkCardTitle: 'Poznej náš příběh',
+  epkCardSubtitle: 'Biografie, fotky a videa z koncertů',
+  epkCardButton: 'Zobrazit EPK',
+  epkSuccessLink: 'Teď jsi součástí rodiny — zjisti víc o {bandName}',
   economicSupportTitle: 'Podpoř {bandName}',
   economicSupportSubtitle: 'Tvoje dobrovolná podpora nám pomáhá přímo financovat dodávku na turné, nahrávání nových skladeb a nástroje.',
-  directBadge: 'Přímo',
   openButton: 'Otevřít',
   clickSingular: 'kliknutí',
   clickPlural: 'kliknutí',

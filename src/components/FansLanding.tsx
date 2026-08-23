@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink, BookOpen } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
@@ -363,6 +363,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const hasRevolut = Boolean(revolutUrl);
   const hasPaypal = Boolean(paypalUrl);
 
+  // El Dossier/EPK público, mismo patrón de URL que usa EPKManager.tsx: a diferencia de
+  // Revolut/PayPal, este enlace no depende de que la banda lo configure, siempre existe.
+  const epkUrl = (typeof window !== 'undefined'
+    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
+        ? 'https://bands-manager.up.railway.app/epk'
+        : `${window.location.origin}/epk`)
+    : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}`;
+
   const activeMethod: 'revolut' | 'paypal' = 
     (hasRevolut && hasPaypal)
       ? selectedPaymentMethod
@@ -418,18 +426,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400 animate-heartbeat" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
-                  {label}
-                </h3>
-                <span className="flex items-center gap-1 text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
-                  <span className="relative flex w-1.5 h-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
-                  </span>
-                  {t('directBadge')}
-                </span>
-              </div>
+              <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
+                {label}
+              </h3>
               <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
                 {descText}
               </p>
@@ -713,6 +712,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
+          {/* Enlace discreto al EPK/Dossier, ahora que ya se han unido */}
+          <div className="pt-1 text-center">
+            <a
+              href={epkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackClick('epk', epkUrl, 'success')}
+              className="text-xs font-mono text-amber-400/90 hover:text-amber-300 underline font-bold transition-colors inline-flex items-center gap-1"
+            >
+              {t('epkSuccessLink', { bandName })} <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+
           {/* Revolut Support in Success View */}
           {renderRevolutCard('success')}
 
@@ -870,6 +882,30 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               clickCounts={clickCounts}
               showClickCounts={true}
             />
+
+            {/* Acceso al EPK/Dossier público, antes de pedir apoyo económico */}
+            <a
+              href={epkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackClick('epk', epkUrl, 'redes')}
+              className="group relative flex items-center gap-3 p-3.5 rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800/90 hover:border-amber-500/50 transition-all duration-300 shadow-xl text-left cursor-pointer active:scale-[0.99]"
+            >
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <span className="text-xs sm:text-sm font-bold text-white group-hover:text-amber-300 transition block truncate">
+                  {t('epkCardTitle')}
+                </span>
+                <span className="text-[10px] text-neutral-400 font-mono block truncate">
+                  {t('epkCardSubtitle')}
+                </span>
+              </div>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white/10 group-hover:bg-amber-500/20 text-white shrink-0 border border-white/20 flex items-center gap-1 transition">
+                {t('epkCardButton')} <ExternalLink className="w-3 h-3" />
+              </span>
+            </a>
 
             {/* Aportación Económica / Revolut debajo de links de redes */}
             {renderRevolutCard('redes')}
