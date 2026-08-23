@@ -1,6 +1,8 @@
 import express from "express";
+import crypto from "crypto";
 import { Rehearsal, Concert, Payment, Message } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader } from "../state.js";
+import { puedeEscribirEnBanda } from "../utils/bandAccess.js";
 import {
   dbGetRehearsals,
   dbUpsertRehearsal,
@@ -18,6 +20,30 @@ import {
 } from "../db.js";
 
 const router = express.Router();
+
+/**
+ * Firma del feed de calendario para una banda (o una lista de bandas separada por comas).
+ *
+ * El feed .ics tiene que poder leerse SIN sesión, porque quien lo consume es Google Calendar o
+ * el calendario del móvil, que no saben iniciar sesión. Pero identificarlo solo por band_id
+ * significaba que probando identificadores se leían los conciertos y ensayos de cualquier banda.
+ * La URL lleva ahora una firma que solo el servidor sabe calcular.
+ *
+ * Es un HMAC, no un valor guardado: así la URL de cada banda es estable sin tocar el esquema, y
+ * se invalidan todas de golpe cambiando el secreto.
+ */
+export function firmaDeFeed(bandIds: string): string | null {
+  const secreto = process.env.CALENDAR_FEED_SECRET || process.env.CRON_SECRET;
+  if (!secreto) return null;
+  const normalizado = bandIds.split(",").map((b) => b.trim()).filter(Boolean).sort().join(",");
+  return crypto.createHmac("sha256", secreto).update(`calendario:${normalizado}`).digest("hex").slice(0, 32);
+}
+
+/** Comparación en tiempo constante, para no filtrar la firma a base de reintentos. */
+function firmaCoincide(esperada: string, recibida: unknown): boolean {
+  if (typeof recibida !== "string" || recibida.length !== esperada.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(esperada), Buffer.from(recibida));
+}
 
 // Update rehearsal
 router.put("/rehearsals/:id", requireAuth, async (req, res) => {
@@ -272,11 +298,50 @@ router.post("/messages", requireAuth, (req, res) => {
   res.json({ success: true, message: newMessage });
 });
 
+// Devuelve la URL firmada del feed para las bandas del usuario. Es lo que la aplicación
+// enseña para copiar o suscribirse: la firma no se calcula en el cliente.
+router.get("/calendar-feed-url", requireAuth, (req, res) => {
+  const pedidas = String(req.query.band_id || (req as any).user?.band_id || "")
+    .split(",")
+    .map((b) => b.trim())
+    .filter(Boolean);
+
+  if (pedidas.length === 0) {
+    return res.status(400).json({ error: "Falta la banda del calendario." });
+  }
+  const ajena = pedidas.find((b) => !puedeEscribirEnBanda(req, b));
+  if (ajena) {
+    return res.status(403).json({ error: "No tienes acceso a esa banda." });
+  }
+
+  const bandIds = pedidas.join(",");
+  const k = firmaDeFeed(bandIds);
+  if (!k) {
+    return res.status(503).json({
+      error: "El feed de calendario no está disponible: falta configurar CALENDAR_FEED_SECRET en el servidor."
+    });
+  }
+
+  return res.json({ success: true, path: `/api/calendar.ics?band_id=${encodeURIComponent(bandIds)}&k=${k}` });
+});
+
 // Export Band Calendar as standard iCalendar (.ics) feed
 router.get("/calendar.ics", async (req, res) => {
   try {
     const bandIdQuery = (req.query.band_id as string) || (req.query.band as string) || "band-bakandeya";
     const userQuery = (req.query.user_id as string) || "";
+
+    const firmaEsperada = firmaDeFeed(bandIdQuery);
+    if (!firmaEsperada) {
+      return res.status(503).type("text/plain").send(
+        "El feed de calendario no está disponible: falta configurar CALENDAR_FEED_SECRET en el servidor."
+      );
+    }
+    if (!firmaCoincide(firmaEsperada, req.query.k)) {
+      return res.status(403).type("text/plain").send(
+        "Enlace de calendario no válido. Vuelve a copiarlo desde la aplicación."
+      );
+    }
     
     let bandIds: string[] = [];
     if (bandIdQuery.includes(",")) {

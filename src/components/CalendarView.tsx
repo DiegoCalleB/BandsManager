@@ -3,6 +3,7 @@ import { Rehearsal, Concert, ThemeColors } from '../types';
 import DirectionsCard from './DirectionsCard';
 import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio } from 'lucide-react';
 import { ModalPortal } from './common/ModalPortal';
+import { api } from '../services/api';
 import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
 
 interface CalendarViewProps {
@@ -142,6 +143,40 @@ export default function CalendarView({
  const [showSyncModal, setShowSyncModal] = useState(false);
  const [syncScope, setSyncScope] = useState<'all' | 'active'>('all');
  const [copiedFeed, setCopiedFeed] = useState(false);
+ // La URL del feed .ics la firma el servidor: el enlace lleva una firma para que no baste con
+ // saber el band_id para leerse los conciertos y ensayos de una banda cualquiera.
+ const [rutaFeed, setRutaFeed] = useState<string | null>(null);
+ const [errorFeed, setErrorFeed] = useState<string | null>(null);
+
+ const bandasDelFeed = React.useMemo(
+   () =>
+     syncScope === 'all' && effectiveBandsList.length > 1
+       ? effectiveBandsList.map(b => b.band_id).join(',')
+       : activeBandId || '',
+   [syncScope, effectiveBandsList, activeBandId]
+ );
+
+ useEffect(() => {
+   if (!showSyncModal || !bandasDelFeed) return;
+   let cancelado = false;
+   setErrorFeed(null);
+   api
+     .getCalendarFeedUrl(bandasDelFeed)
+     .then(res => {
+       if (cancelado) return;
+       if (res.path) setRutaFeed(res.path);
+       else setErrorFeed(res.error || 'No se pudo generar el enlace del calendario.');
+     })
+     .catch((err: any) => {
+       if (!cancelado) setErrorFeed(err?.message || 'No se pudo generar el enlace del calendario.');
+     });
+   return () => {
+     cancelado = true;
+   };
+ }, [showSyncModal, bandasDelFeed]);
+
+ const urlFeedAbsoluta = rutaFeed ? `${window.location.origin}${rutaFeed}` : '';
+
 
  // Effective band members list for Convocatoria filtered by target band of the event
  const defaultMembers = React.useMemo(() => [
@@ -2685,23 +2720,15 @@ export default function CalendarView({
  <input
  type="text"
  readOnly
- value={`${window.location.origin}/api/calendar.ics?band_id=${encodeURIComponent(
- syncScope === 'all' && effectiveBandsList.length > 1
- ? effectiveBandsList.map(b => b.band_id).join(',')
- : activeBandId || 'band-bakandeya'
- )}`}
+ value={errorFeed || urlFeedAbsoluta || 'Generando enlace...'}
  className={`flex-1 px-3 py-2 text-xs font-mono rounded-lg border outline-none select-all ${
  isStitchLight ? "bg-slate-100 border-slate-300 text-slate-900" : "bg-neutral-950 border-neutral-700 text-amber-300"
  }`}
  />
  <button
  onClick={() => {
- const url = `${window.location.origin}/api/calendar.ics?band_id=${encodeURIComponent(
- syncScope === 'all' && effectiveBandsList.length > 1
- ? effectiveBandsList.map(b => b.band_id).join(',')
- : activeBandId || 'band-bakandeya'
- )}`;
- navigator.clipboard.writeText(url);
+ if (!urlFeedAbsoluta) return;
+ navigator.clipboard.writeText(urlFeedAbsoluta);
  setCopiedFeed(true);
  setTimeout(() => setCopiedFeed(false), 2500);
  }}
@@ -2719,13 +2746,7 @@ export default function CalendarView({
 
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
  <a
- href={`https://calendar.google.com/calendar/r/settings/addbyurl?cid=${encodeURIComponent(
- `${window.location.origin}/api/calendar.ics?band_id=${encodeURIComponent(
- syncScope === 'all' && effectiveBandsList.length > 1
- ? effectiveBandsList.map(b => b.band_id).join(',')
- : activeBandId || 'band-bakandeya'
- )}`
- )}`}
+ href={`https://calendar.google.com/calendar/r/settings/addbyurl?cid=${encodeURIComponent(urlFeedAbsoluta)}`}
  target="_blank"
  rel="noopener noreferrer"
  className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-md active:scale-95"
@@ -2735,11 +2756,7 @@ export default function CalendarView({
  </a>
 
  <a
- href={`webcal://${window.location.host}/api/calendar.ics?band_id=${encodeURIComponent(
- syncScope === 'all' && effectiveBandsList.length > 1
- ? effectiveBandsList.map(b => b.band_id).join(',')
- : activeBandId || 'band-bakandeya'
- )}`}
+ href={rutaFeed ? `webcal://${window.location.host}${rutaFeed}` : undefined}
  className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-100 border border-neutral-600 font-bold transition-all shadow-md active:scale-95"
  >
  <Radio className="w-4 h-4 text-emerald-400" />
@@ -2760,7 +2777,7 @@ export default function CalendarView({
 
  <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
  <a
- href={`/api/calendar.ics?band_id=${encodeURIComponent(activeBandId || 'band-bakandeya')}`}
+ href={rutaFeed || undefined}
  download={`calendar-${activeBandId || 'band'}.ics`}
  className="text-[11px] font-mono text-neutral-400 hover:text-amber-300 underline flex items-center gap-1"
  >

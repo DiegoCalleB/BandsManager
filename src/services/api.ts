@@ -500,6 +500,11 @@ export const api = {
   },
 
   // Billing
+  // La URL del feed .ics la firma el servidor, así que no se puede montar en el cliente.
+  async getCalendarFeedUrl(bandIds: string): Promise<{ success?: boolean; path?: string; error?: string }> {
+    return request(`/api/calendar-feed-url?band_id=${encodeURIComponent(bandIds)}`);
+  },
+
   // sessionId: el servidor ya no se cree el plan que le mandemos, lo comprueba contra Stripe
   // con esta sesión de Checkout. Sin ella la confirmación se rechaza y el alta queda en manos
   // del webhook, que es quien manda de todas formas.
