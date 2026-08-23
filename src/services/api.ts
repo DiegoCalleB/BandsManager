@@ -318,6 +318,12 @@ export const api = {
     });
   },
 
+  async deleteRehearsal(id: string): Promise<void> {
+    return request(`/api/rehearsals/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
   // Concerts
   async createConcert(concert: Concert): Promise<Concert> {
     return request('/api/concerts', {
@@ -330,6 +336,12 @@ export const api = {
     return request(`/api/concerts/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields)
+    });
+  },
+
+  async deleteConcert(id: string): Promise<void> {
+    return request(`/api/concerts/${id}`, {
+      method: 'DELETE'
     });
   },
 

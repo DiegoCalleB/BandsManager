@@ -12,6 +12,8 @@ interface CalendarViewProps {
  concerts: Concert[];
  onUpdateRehearsal: (id: string, updatedFields: Partial<Rehearsal>) => void;
  onUpdateConcert: (id: string, updatedFields: Partial<Concert>) => void;
+ onDeleteRehearsal?: (id: string) => void;
+ onDeleteConcert?: (id: string) => void;
  onAddRehearsal?: (rehearsal: Rehearsal) => void;
  onAddConcert?: (concert: Concert) => void;
  initialSelectedEventId?: string;
@@ -42,6 +44,8 @@ export default function CalendarView({
  concerts,
  onUpdateRehearsal,
  onUpdateConcert,
+ onDeleteRehearsal,
+ onDeleteConcert,
  onAddRehearsal,
  onAddConcert,
  initialSelectedEventId,
@@ -55,6 +59,10 @@ export default function CalendarView({
  const realToday = new Date();
  const [viewDate, setViewDate] = useState<Date>(() => new Date(realToday.getFullYear(), realToday.getMonth(), 1));
  const [selectedDate, setSelectedDate] = useState<Date>(() => realToday);
+ // Cuando un día tiene varios eventos (2 conciertos, o concierto + ensayo), este id dice cuál se
+ // ve en el panel de detalle. Sin esto, el panel siempre mostraba el primero del array y el resto
+ // era invisible salvo el pequeño acceso directo de "editar ficha" en las chapas del día.
+ const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
  // Band view filter state: 'active' (Solo la banda activa) vs 'all' (Todas las bandas asignadas)
  const [filterBandMode, setFilterBandMode] = useState<'active' | 'all'>('active');
@@ -307,6 +315,8 @@ export default function CalendarView({
  const dt = new Date(y, m, d);
  setSelectedDate(dt);
  setViewDate(new Date(y, m, 1));
+ // Si el día tenía más de un evento, ir directo al que se pidió en vez del primero.
+ setSelectedEventId(initialSelectedEventId);
  }
  }
  }
@@ -612,6 +622,20 @@ export default function CalendarView({
  // Dynamic state for per-date schedules and gear checklists with localStorage persistence
  const selectedDateKey = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
 
+ // Al cambiar de día, olvidar qué evento estaba elegido: si no, un día con un solo evento podía
+ // heredar el id de otro día y no encontrar coincidencia (se ve el primero, que es el
+ // comportamiento correcto, pero por accidente en vez de por diseño).
+ //
+ // El efecto de más arriba (initialSelectedEventId) también cambia selectedDate en el mismo golpe
+ // que fija selectedEventId, y los dos efectos se disparan por separado tras ese commit: sin el
+ // "prev === initialSelectedEventId", este reset ganaba la carrera y deshacía el deep-link justo
+ // después de fijarlo, así que un enlace a un evento concreto de un día con varios acababa
+ // mostrando el primero en vez del pedido.
+ useEffect(() => {
+ setSelectedEventId(prev => (initialSelectedEventId && prev === initialSelectedEventId) ? prev : null);
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [selectedDateKey]);
+
  const defaultInitialRunOfShow: Record<string, RunOfShowItem[]> = {
  '2026-07-23': [
  { id: 'ros-1', time: '17:00', activity: 'Llegada a la sala y descarga de bártulos', done: true },
@@ -835,22 +859,37 @@ export default function CalendarView({
 
  // Get current event for the selected day
  const selectedEvents = getEventsForDateStr(selectedDateKey);
- 
- const currentRehearsal = selectedEvents.rehearsals[0];
+
+ // Lista combinada del día, para el selector de eventos cuando hay más de uno (2 conciertos, o
+ // concierto + ensayo). El orden importa poco aquí: solo hace falta encontrar cuál es "el activo".
+ const dayEventsList: Array<{ kind: 'concert' | 'rehearsal'; id: string; label: string }> = [
+ ...selectedEvents.concerts.map(c => ({ kind: 'concert' as const, id: c.id, label: `Concierto: ${c.sala}` })),
+ ...selectedEvents.rehearsals.map(r => ({ kind: 'rehearsal' as const, id: r.id, label: `Ensayo: ${r.lugar.split(',')[0]}` })),
+ ];
+ const hasMultipleDayEvents = dayEventsList.length > 1;
+
+ // El evento activo es el que se eligió explícitamente (chip del selector, o deep-link por
+ // initialSelectedEventId) si sigue existiendo hoy; si no hay elección o no encaja, el primero
+ // del día, igual que el comportamiento de siempre cuando solo hay un evento.
+ const activeDayEventId = (selectedEventId && dayEventsList.some(e => e.id === selectedEventId))
+ ? selectedEventId
+ : dayEventsList[0]?.id;
+
+ const selectedConcert = selectedEvents.concerts.find(c => c.id === activeDayEventId);
+ const selectedRehearsal = selectedEvents.rehearsals.find(r => r.id === activeDayEventId);
+
+ const currentRehearsal = selectedRehearsal;
  const isGeneralRehearsal = currentRehearsal && (
- currentRehearsal.notas.toLowerCase().includes('general') || 
+ currentRehearsal.notas.toLowerCase().includes('general') ||
  currentRehearsal.lugar.toLowerCase().includes('general')
  );
  const rehearsalTypeLabel = isGeneralRehearsal ? 'Ensayo General' : 'Ensayo';
 
- const selectedEventTitle = selectedEvents.concerts.length > 0 
- ? `Concierto: ${selectedEvents.concerts[0].sala}` 
- : selectedEvents.rehearsals.length > 0 
- ? `${rehearsalTypeLabel}: ${selectedEvents.rehearsals[0].lugar.split(',')[0]}` 
+ const selectedEventTitle = selectedConcert
+ ? `Concierto: ${selectedConcert.sala}`
+ : selectedRehearsal
+ ? `${rehearsalTypeLabel}: ${selectedRehearsal.lugar.split(',')[0]}`
  : `Día Libre`;
-
- const selectedConcert = selectedEvents.concerts[0];
- const selectedRehearsal = selectedEvents.rehearsals[0];
 
  const availableSetlists = React.useMemo(() => {
  try {
@@ -1482,11 +1521,12 @@ export default function CalendarView({
  {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
  </p>
  </div>
+ <div className="flex flex-col gap-1.5 shrink-0 self-start">
  {selectedEventDetails.type === 'concert' && selectedConcert && (
  <button
  type="button"
  onClick={() => setViewingConcert(selectedConcert)}
- className={`shrink-0 self-start px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer ${
+ className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer ${
  isStitchLight
  ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
  : 'bg-neutral-900 border-neutral-700 text-neutral-200 hover:bg-neutral-800'
@@ -1495,7 +1535,62 @@ export default function CalendarView({
  ✎ Editar Ficha
  </button>
  )}
+ {selectedConcert && onDeleteConcert && (
+ <button
+ type="button"
+ onClick={() => {
+ if (window.confirm(`¿Eliminar el concierto en ${selectedConcert.sala}? Esta acción no se puede deshacer.`)) {
+ onDeleteConcert(selectedConcert.id);
+ }
+ }}
+ className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-red-950/40 border-red-500/40 text-red-300 hover:bg-red-900/50"
+ >
+ 🗑 Eliminar
+ </button>
+ )}
+ {selectedRehearsal && onDeleteRehearsal && (
+ <button
+ type="button"
+ onClick={() => {
+ if (window.confirm(`¿Eliminar este ensayo en ${selectedRehearsal.lugar}? Esta acción no se puede deshacer.`)) {
+ onDeleteRehearsal(selectedRehearsal.id);
+ }
+ }}
+ className="px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-red-950/40 border-red-500/40 text-red-300 hover:bg-red-900/50"
+ >
+ 🗑 Eliminar
+ </button>
+ )}
  </div>
+ </div>
+
+ {/* Selector de eventos: cuando el día tiene más de uno (2 conciertos, o concierto + ensayo),
+ el panel de arriba solo muestra uno a la vez. Estos chips dejan entrar a cada uno. */}
+ {hasMultipleDayEvents && (
+ <div className="flex flex-wrap gap-1.5 mb-4 -mt-2">
+ {dayEventsList.map(evt => {
+ const isActive = evt.id === activeDayEventId;
+ return (
+ <button
+ key={evt.id}
+ type="button"
+ onClick={() => setSelectedEventId(evt.id)}
+ className={`px-2 py-1 rounded-full text-[9px] font-mono font-bold border transition-colors cursor-pointer ${
+ isActive
+ ? (evt.kind === 'concert'
+ ? 'bg-amber-500/30 border-amber-400 text-amber-200'
+ : 'bg-emerald-500/30 border-emerald-400 text-emerald-200')
+ : (isStitchLight
+ ? 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+ : 'bg-neutral-900 border-neutral-700 text-neutral-400 hover:bg-neutral-800')
+ }`}
+ >
+ {evt.label}
+ </button>
+ );
+ })}
+ </div>
+ )}
 
  {/* Core Info */}
  <div className={`space-y-3 mb-6 rounded-lg p-3 ${
