@@ -1181,9 +1181,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         type="button"
         onClick={async () => {
           try {
+            // Sin email de repuesto: el que había era el del dueño de la plataforma y abría SU
+            // portal de facturación a quien no tuviera email. Lo resuelve el servidor.
             const res = await api.createPortalSession({
-              userEmail: currentUser.email || 'diego.delacalleb@gmail.com',
-              bandId: currentUser.band_id || 'band-bakandeya',
+              bandId: currentUser.band_id,
               returnUrl: window.location.href
             });
             if (res.success && res.url) window.location.href = res.url;
@@ -1215,8 +1216,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
       onClick={async () => {
         try {
           const res = await api.createPortalSession({
-            userEmail: currentUser.email || 'diego.delacalleb@gmail.com',
-            bandId: currentUser.band_id || 'band-bakandeya',
+            bandId: currentUser.band_id,
             returnUrl: window.location.href
           });
           if (res.success && res.url) {

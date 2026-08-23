@@ -399,9 +399,11 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
     setIsOpeningPortal(true);
     setPortalError(null);
     try {
+      // Sin email de repuesto: el que había mandaba el del dueño de la plataforma, así que
+      // cualquiera acababa abriendo SU portal de facturación. El servidor resuelve el cliente
+      // de Stripe a partir de la sesión.
       const res = await api.createPortalSession({
-        userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com',
-        bandId: currentUser?.band_id || 'band-bakandeya',
+        bandId: currentUser?.band_id,
         returnUrl: window.location.href
       });
       if (res.success && res.url) {

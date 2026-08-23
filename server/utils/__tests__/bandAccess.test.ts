@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from '../bandAccess';
+import {
+  getTargetBandId,
+  puedeEscribirEnBanda,
+  bandaSolicitada,
+  mismaBanda,
+  bandaFacturableDelUsuario,
+  bandaDelAgente,
+} from '../bandAccess';
 
 // Petición mínima con la forma que leen los helpers.
 const peticion = (opciones: {
@@ -59,8 +66,10 @@ describe('getTargetBandId', () => {
     expect(getTargetBandId(req)).toBe('reg-bakandeya');
   });
 
-  it('sin usuario cae al valor por defecto', () => {
-    expect(getTargetBandId(peticion({ headers: { 'x-band-id': 'band-la-vanda' } }))).toBe('band-bakandeya');
+  it('sin usuario, falla en vez de caer en la banda insignia', () => {
+    // Antes devolvía "band-bakandeya" en silencio. Todos los llamadores están detrás de
+    // requireAuth, así que llegar aquí sin usuario es un bug del llamador, no un caso a tolerar.
+    expect(() => getTargetBandId(peticion({ headers: { 'x-band-id': 'band-la-vanda' } }))).toThrow();
   });
 });
 
@@ -93,5 +102,104 @@ describe('puedeEscribirEnBanda', () => {
 
   it('sin usuario, no', () => {
     expect(puedeEscribirEnBanda(peticion(), 'band-bakandeya')).toBe(false);
+  });
+});
+
+describe('bandaDelAgente', () => {
+  it('sin params, la banda del usuario', () => {
+    expect(bandaDelAgente(peticion({ user: miembroDeBakandeya }), undefined)).toBe('band-bakandeya');
+  });
+
+  it('FALLA (null) si params pide una banda ajena', () => {
+    // El caso feo: con esto se lanzaba el Enviador de otra banda, que despacha sus correos
+    // aprobados desde su propia cuenta de SMTP.
+    const req = peticion({ user: miembroDeBakandeya });
+    expect(bandaDelAgente(req, { band_id: 'band-la-vanda' })).toBeNull();
+  });
+
+  it('acepta la banda propia pedida por params', () => {
+    const req = peticion({ user: miembroDeBakandeya });
+    expect(bandaDelAgente(req, { band_id: ' reg-bakandeya ' })).toBe('reg-bakandeya');
+  });
+
+  it('sin usuario (llamada de cron) manda el params.band_id', () => {
+    // requireCronOrAuth deja pasar al planificador sin sesión: ahí el band_id es de fiar porque
+    // la cabecera X-Cron-Secret ya se ha validado antes de llegar aquí.
+    expect(bandaDelAgente(peticion(), { band_id: 'band-la-vanda' })).toBe('band-la-vanda');
+  });
+
+  it('sin usuario y sin params.band_id, falla en vez de caer en la banda insignia', () => {
+    // Antes devolvía "band-bakandeya" en silencio: un job del planificador que se olvidara de
+    // mandar el band_id acababa disparando el agente sobre la banda insignia sin avisar.
+    expect(bandaDelAgente(peticion(), {})).toBeNull();
+  });
+
+  it('un band_id que no es texto se ignora', () => {
+    const req = peticion({ user: miembroDeBakandeya });
+    expect(bandaDelAgente(req, { band_id: { $ne: null } })).toBe('band-bakandeya');
+  });
+});
+
+describe('mismaBanda', () => {
+  it('ignora prefijos, mayúsculas y espacios', () => {
+    expect(mismaBanda('band-bakandeya', 'reg-BAKANDEYA')).toBe(true);
+    expect(mismaBanda('  bakandeya ', 'band-bakandeya')).toBe(true);
+  });
+
+  it('dos bandas distintas no son la misma', () => {
+    expect(mismaBanda('band-bakandeya', 'band-la-vanda')).toBe(false);
+  });
+
+  it('lo vacío no coincide con nada, ni consigo mismo', () => {
+    // Importa: se usa para comparar el bandId de una sesión de Stripe, y una sesión sin banda
+    // no puede colar como "sí, es la tuya".
+    expect(mismaBanda('', '')).toBe(false);
+    expect(mismaBanda(undefined, 'band-bakandeya')).toBe(false);
+    expect(mismaBanda('band-bakandeya', undefined)).toBe(false);
+  });
+});
+
+describe('bandaFacturableDelUsuario', () => {
+  const conEmail = { ...miembroDeBakandeya, email: 'bakandeya@ejemplo.com' };
+
+  it('sin banda pedida, factura a la banda del usuario', () => {
+    expect(bandaFacturableDelUsuario(peticion({ user: conEmail }))).toEqual({
+      bandId: 'band-bakandeya',
+      email: 'bakandeya@ejemplo.com',
+    });
+  });
+
+  it('FALLA (null) si se pide una banda ajena, en vez de degradar a la propia', () => {
+    // A diferencia de getTargetBandId: cobrar o cancelar en la banda equivocada no se arregla
+    // solo, así que la ruta tiene que responder 403.
+    for (const req of [
+      peticion({ user: conEmail, body: { bandId: 'band-la-vanda' } }),
+      peticion({ user: conEmail, query: { bandId: 'band-la-vanda' } }),
+      peticion({ user: conEmail, headers: { 'x-band-id': 'band-la-vanda' } }),
+    ]) {
+      expect(bandaFacturableDelUsuario(req)).toBeNull();
+    }
+  });
+
+  it('acepta una banda pedida que sí es suya', () => {
+    const req = peticion({ user: conEmail, body: { bandId: 'reg-bakandeya' } });
+    expect(bandaFacturableDelUsuario(req)?.bandId).toBe('reg-bakandeya');
+  });
+
+  it('IGNORA el email del body: el de la sesión es el único que cuenta', () => {
+    // Era la vía de entrada: la búsqueda de banda en facturación cae también por email, así que
+    // mandar el de otra persona acababa operando sobre SU suscripción.
+    const req = peticion({ user: conEmail, body: { userEmail: 'victima@ejemplo.com' } });
+    expect(bandaFacturableDelUsuario(req)?.email).toBe('bakandeya@ejemplo.com');
+  });
+
+  it('no devuelve email si el de la sesión no es un email de verdad', () => {
+    const req = peticion({ user: { ...miembroDeBakandeya, username: 'diego' } });
+    expect(bandaFacturableDelUsuario(req)).toEqual({ bandId: 'band-bakandeya', email: undefined });
+  });
+
+  it('sin usuario o sin banda, null', () => {
+    expect(bandaFacturableDelUsuario(peticion())).toBeNull();
+    expect(bandaFacturableDelUsuario(peticion({ user: { role: 'member', allowedBandIds: [] } }))).toBeNull();
   });
 });

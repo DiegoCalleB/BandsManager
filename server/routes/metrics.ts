@@ -383,7 +383,10 @@ import { executeSocialRadar, scrapeChannelMetrics } from "../services/socialRada
 
 // Fetch real-world social statistics of the active band from live networks / YouTube API
 router.post("/metrics/real", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id || "band-bakandeya";
+  const userBandId = (req as any).user?.band_id;
+  if (!userBandId) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
 
   try {
     const [band, epk] = await Promise.all([
@@ -564,7 +567,10 @@ router.all("/metrics/cron-snapshot-all", requireCronOrAuth, async (req, res) => 
 // Endpoint to fetch indexed social content items (videos, tracks, reels)
 router.get("/metrics/content-items", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || "band-bakandeya";
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const platform = req.query.platform as string | undefined;
     const items = await dbGetSocialContentItems(userBandId, platform);
     res.json({ success: true, items });
@@ -693,7 +699,10 @@ async function fetchInstagramInsightsData(igUserId: string, token: string) {
 // Get Instagram connection status and live insights
 router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || "band-bakandeya";
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const epk = await dbGetEpkConfig(userBandId).catch(() => null);
     const token = epk?.enlacesRedes?.instagram_access_token || process.env.INSTAGRAM_ACCESS_TOKEN || process.env.META_GRAPH_TOKEN;
     const igAccountId = epk?.enlacesRedes?.instagram_account_id;
@@ -788,7 +797,10 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
 // Connect Instagram account using User Access Token / Long-lived Token with Instagram Platform Insights permissions
 router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || "band-bakandeya";
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const { accessToken } = req.body;
 
     if (!accessToken || typeof accessToken !== "string" || accessToken.trim().length < 10) {
@@ -901,7 +913,10 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
 // Disconnect Instagram token
 router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || "band-bakandeya";
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const epk = await dbGetEpkConfig(userBandId).catch(() => null) || {};
     
     if (epk.enlacesRedes) {
@@ -924,7 +939,10 @@ router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
 // --- SCAN SOCIAL MEDIA SCREENSHOT WITH GEMINI MULTIMODAL VISION ---
 router.post("/metrics/scan-screenshot", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || "band-bakandeya";
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
     const { image, mimeType = "image/jpeg", autoSave = true } = req.body;
 
     if (!image) {
@@ -1042,7 +1060,9 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
 });
 
 // AI Social Growth Plan Generator (Gemini Powered)
-router.post("/generate-growth-plan", async (req, res) => {
+// requireAuth: era la única ruta de métricas sin sesión, y llama al modelo de IA con lo que le
+// manden. Abierta, es consumo de la cuenta de IA de la plataforma a cargo de quien pase por ahí.
+router.post("/generate-growth-plan", requireAuth, async (req, res) => {
   try {
     const { bandName, metrics, epkConfig, horizonDays = 30, customFocus } = req.body || {};
     const ai = getAiClient();
