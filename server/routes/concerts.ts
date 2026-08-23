@@ -6,8 +6,10 @@ import { puedeEscribirEnBanda } from "../utils/bandAccess.js";
 import {
   dbGetRehearsals,
   dbUpsertRehearsal,
+  dbDeleteRehearsal,
   dbGetConcerts,
   dbUpsertConcert,
+  dbDeleteConcert,
   dbGetPayments,
   dbUpsertPayment,
   dbGetRunOfShow,
@@ -88,6 +90,38 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
   }
 });
 
+// Delete rehearsal
+router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
+    const { id } = req.params;
+    const state = loadState();
+    const rehearsal = state.rehearsals.find((r: Rehearsal) => r.id === id);
+    if (!rehearsal) {
+      return res.status(404).json({ error: "Ensayo no encontrado." });
+    }
+    if (!puedeEscribirEnBanda(req, (rehearsal as any).band_id || userBandId)) {
+      return res.status(403).json({ error: "No puedes eliminar un ensayo de otra banda." });
+    }
+
+    try {
+      await dbDeleteRehearsal(id, (rehearsal as any).band_id || userBandId);
+    } catch (err) {
+      console.warn("No se pudo eliminar el ensayo en Supabase:", err);
+    }
+
+    state.rehearsals = state.rehearsals.filter((r: Rehearsal) => r.id !== id);
+    saveState(state);
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error("Error deleting rehearsal:", err);
+    res.status(500).json({ error: err?.message || "Error al eliminar ensayo." });
+  }
+});
+
 // Update concert
 router.put("/concerts/:id", requireAuth, async (req, res) => {
   try {
@@ -128,6 +162,38 @@ router.post("/concerts", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error creating concert:", err);
     res.status(500).json({ error: err?.message || "Error al crear concierto." });
+  }
+});
+
+// Delete concert
+router.delete("/concerts/:id", requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    }
+    const { id } = req.params;
+    const state = loadState();
+    const concert = state.concerts.find((c: Concert) => c.id === id);
+    if (!concert) {
+      return res.status(404).json({ error: "Concierto no encontrado." });
+    }
+    if (!puedeEscribirEnBanda(req, (concert as any).band_id || userBandId)) {
+      return res.status(403).json({ error: "No puedes eliminar un concierto de otra banda." });
+    }
+
+    try {
+      await dbDeleteConcert(id, (concert as any).band_id || userBandId);
+    } catch (err) {
+      console.warn("No se pudo eliminar el concierto en Supabase:", err);
+    }
+
+    state.concerts = state.concerts.filter((c: Concert) => c.id !== id);
+    saveState(state);
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error("Error deleting concert:", err);
+    res.status(500).json({ error: err?.message || "Error al eliminar concierto." });
   }
 });
 

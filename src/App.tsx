@@ -75,6 +75,8 @@ export default function App() {
     handleUpdateLead,
     handleUpdateRehearsal,
     handleUpdateConcert,
+    handleDeleteRehearsal,
+    handleDeleteConcert,
     handleAddLead,
     handleDeleteLead,
     handleDeleteBand,
@@ -1057,6 +1059,8 @@ export default function App() {
  concerts={concerts}
  onUpdateRehearsal={handleUpdateRehearsal}
  onUpdateConcert={handleUpdateConcert}
+ onDeleteRehearsal={handleDeleteRehearsal}
+ onDeleteConcert={handleDeleteConcert}
  onAddRehearsal={handleAddRehearsal}
  onAddConcert={handleAddConcert}
  initialSelectedEventId={bookingOptions.selectedEventId}
