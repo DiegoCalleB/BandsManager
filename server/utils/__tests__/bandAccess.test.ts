@@ -5,6 +5,7 @@ import {
   bandaSolicitada,
   mismaBanda,
   bandaFacturableDelUsuario,
+  bandaDelAgente,
 } from '../bandAccess';
 
 // Petición mínima con la forma que leen los helpers.
@@ -99,6 +100,36 @@ describe('puedeEscribirEnBanda', () => {
 
   it('sin usuario, no', () => {
     expect(puedeEscribirEnBanda(peticion(), 'band-bakandeya')).toBe(false);
+  });
+});
+
+describe('bandaDelAgente', () => {
+  it('sin params, la banda del usuario', () => {
+    expect(bandaDelAgente(peticion({ user: miembroDeBakandeya }), undefined)).toBe('band-bakandeya');
+  });
+
+  it('FALLA (null) si params pide una banda ajena', () => {
+    // El caso feo: con esto se lanzaba el Enviador de otra banda, que despacha sus correos
+    // aprobados desde su propia cuenta de SMTP.
+    const req = peticion({ user: miembroDeBakandeya });
+    expect(bandaDelAgente(req, { band_id: 'band-la-vanda' })).toBeNull();
+  });
+
+  it('acepta la banda propia pedida por params', () => {
+    const req = peticion({ user: miembroDeBakandeya });
+    expect(bandaDelAgente(req, { band_id: ' reg-bakandeya ' })).toBe('reg-bakandeya');
+  });
+
+  it('sin usuario (llamada de cron) manda el params.band_id', () => {
+    // requireCronOrAuth deja pasar al planificador sin sesión: ahí el band_id es de fiar porque
+    // la cabecera X-Cron-Secret ya se ha validado antes de llegar aquí.
+    expect(bandaDelAgente(peticion(), { band_id: 'band-la-vanda' })).toBe('band-la-vanda');
+    expect(bandaDelAgente(peticion(), {})).toBe('band-bakandeya');
+  });
+
+  it('un band_id que no es texto se ignora', () => {
+    const req = peticion({ user: miembroDeBakandeya });
+    expect(bandaDelAgente(req, { band_id: { $ne: null } })).toBe('band-bakandeya');
   });
 });
 

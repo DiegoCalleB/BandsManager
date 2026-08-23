@@ -69,6 +69,27 @@ export function puedeEscribirEnBanda(req: express.Request, bandId: string): bool
   return allowed.some((b: string) => b === bandId || b.replace(/^(band|reg)-/, "") === limpio);
 }
 
+/**
+ * Sobre qué banda actúa un agente disparado en /trigger-agent, o null si la petición pide una
+ * que no es suya.
+ *
+ * Esa ruta admite dos llamadores (requireCronOrAuth): con la cabecera X-Cron-Secret no hay
+ * usuario y manda el `params.band_id`, que lo pone el planificador; con sesión, en cambio, ese
+ * `params.band_id` venía del cliente y nadie lo miraba, así que bastaba mandar el de otra banda
+ * para lanzarle el Enviador y despachar SUS correos aprobados desde SU cuenta de SMTP.
+ *
+ * Va aparte de `bandaSolicitada` porque el band_id viaja anidado dentro de `params`, donde los
+ * helpers de arriba no miran.
+ */
+export function bandaDelAgente(req: express.Request, params: any): string | null {
+  const user = (req as any).user;
+  const pedida = typeof params?.band_id === "string" ? params.band_id.trim() : "";
+
+  if (!user) return pedida || "band-bakandeya";
+  if (pedida && !puedeEscribirEnBanda(req, pedida)) return null;
+  return pedida || user.band_id || "band-bakandeya";
+}
+
 /** ¿Apuntan las dos cadenas a la misma banda, con o sin el prefijo band-/reg-? */
 export function mismaBanda(a?: string, b?: string): boolean {
   const limpiar = (v?: string) => (v || "").trim().replace(/^(band|reg)-/, "").toLowerCase();
