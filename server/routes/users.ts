@@ -183,6 +183,24 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
   return availableBands;
 }
 import { loginRateLimiter } from "../middleware/rateLimiter.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+
+/**
+ * ¿Comparte este usuario alguna banda con quien hace la petición?
+ *
+ * Las rutas que buscan al usuario por id lo hacen sobre state.users entero, que es la lista de
+ * TODA la plataforma. Sin esta comprobación, el id de alguien de otra banda bastaba para
+ * editarlo (y en /users/:id, para ponerle una contraseña nueva).
+ */
+function compartenBanda(state: any, usuarioObjetivo: any, req: express.Request): boolean {
+  if (!usuarioObjetivo) return false;
+  const bandas = new Set<string>();
+  if (usuarioObjetivo.band_id) bandas.add(usuarioObjetivo.band_id);
+  (state.userBands || []).forEach((ub: any) => {
+    if (ub.user_id === usuarioObjetivo.id && ub.band_id) bandas.add(ub.band_id);
+  });
+  return Array.from(bandas).some((b) => puedeEscribirEnBanda(req, b));
+}
 import { generateUniqueSlugId, slugify } from "../utils/slug.js";
 
 const router = express.Router();
@@ -1277,8 +1295,14 @@ router.post(['/set-band-order', '/users/set-band-order'], requireAuth, async (re
 // Upload / Update Band Logo
 router.post(['/upload-logo', '/users/upload-logo', '/bands/upload-logo', '/bands/logo'], requireAuth, async (req, res) => {
   try {
-    const { bandId, logoUrl } = req.body;
-    const targetBandId = bandId || (req.headers['x-band-id'] as string) || (req as any).user?.band_id || BAKANDEYA_BAND_ID;
+    const { logoUrl } = req.body;
+    // La banda salía del body o de la cabecera sin mirarla, así que se le cambiaba el logo del
+    // EPK a la banda que se quisiera.
+    const solicitada = bandaSolicitada(req);
+    if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
+      return res.status(403).json({ error: 'No tienes acceso a esta banda.' });
+    }
+    const targetBandId = getTargetBandId(req);
     
     if (!logoUrl || typeof logoUrl !== 'string' || !logoUrl.trim()) {
       return res.status(400).json({ error: 'logoUrl es requerido' });
@@ -1677,7 +1701,7 @@ router.get("/users", requireAuth, async (req, res) => {
 
 // Create new user (Leader operation)
 router.post("/users", requireAuth, requireLeader, async (req, res) => {
-  const { username, name, password, role, instrument, avatarColor, email, band_id } = req.body;
+  const { username, name, password, role, instrument, avatarColor, email } = req.body;
 
   if (!username || !name || !password) {
     return res.status(400).json({ error: "Nombre de usuario, nombre real y contraseña son requeridos" });
@@ -1686,7 +1710,13 @@ router.post("/users", requireAuth, requireLeader, async (req, res) => {
   const state = loadState();
   const cleanUsername = username.trim().toLowerCase();
   const cleanEmail = email ? email.trim().toLowerCase() : cleanUsername;
-  const targetBandId = band_id || (req as any).user?.band_id || "band-bakandeya";
+  // Dar de alta a alguien en la banda de otro no es un despiste que se pueda arreglar por
+  // dentro: el band_id venía del body sin validar.
+  const solicitada = bandaSolicitada(req);
+  if (solicitada && !puedeEscribirEnBanda(req, solicitada)) {
+    return res.status(403).json({ error: "No tienes acceso a esta banda." });
+  }
+  const targetBandId = getTargetBandId(req);
 
   // Check if a user with this email or username already exists
   const existingUser = state.users.find(
@@ -1791,6 +1821,15 @@ router.put("/users/:id", requireAuth, async (req, res) => {
   }
 
   const user = state.users[userIndex];
+
+  // El id se busca sobre state.users, que es la lista de toda la plataforma, y el permiso de
+  // arriba se conforma con ser 'leader' —que en esta app lo es casi todo el mundo en su propia
+  // banda—. Es decir: con el id de alguien de otra banda se le cambiaba el nombre, el rol y,
+  // más abajo, la contraseña. Editar a otro exige compartir banda con él.
+  if (loggedUser.id !== id && !compartenBanda(state, user, req)) {
+    return res.status(403).json({ error: "Acceso denegado. Ese usuario no pertenece a tu banda." });
+  }
+
   if (name) user.name = name.trim();
   if (googleOAuth !== undefined) user.googleOAuth = googleOAuth;
 
