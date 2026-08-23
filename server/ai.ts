@@ -45,11 +45,6 @@ export function getDeepSeekKey(): string | null {
   return key && key.trim().length > 5 ? key.trim() : null;
 }
 
-export function getAnthropicKey(): string | null {
-  const key = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
-  return key && key.trim().length > 5 ? key.trim() : null;
-}
-
 export const AI_PRICING_TABLE: Record<string, { inputPer1M: number; outputPer1M: number; name: string }> = {
   gemini: {
     name: "Gemini 3.7 Flash",
@@ -60,11 +55,6 @@ export const AI_PRICING_TABLE: Record<string, { inputPer1M: number; outputPer1M:
     name: "DeepSeek V3",
     inputPer1M: 0.14, // $0.14 / 1M tokens
     outputPer1M: 0.28  // $0.28 / 1M tokens
-  },
-  claude: {
-    name: "Claude 3.5 Haiku",
-    inputPer1M: 0.80, // $0.80 / 1M tokens
-    outputPer1M: 4.00  // $4.00 / 1M tokens
   }
 };
 
@@ -192,6 +182,7 @@ export async function generateContentWithFallback(
      */
     permitirPitchLocal?: boolean;
     timeoutMs?: number;
+    links?: PitchLinks;
   }
 ) {
   const modelsToTry = params.preferredModel 
@@ -223,7 +214,7 @@ export async function generateContentWithFallback(
     }
   }
 
-  // Automatic Failover to DeepSeek or Claude if Gemini quota/spending cap is exhausted
+  // Automatic Failover to DeepSeek if Gemini quota/spending cap is exhausted
   const promptText = extractTextFromContents(params.contents);
   if (promptText && getDeepSeekKey()) {
     try {
@@ -240,27 +231,12 @@ export async function generateContentWithFallback(
     }
   }
 
-  if (promptText && getAnthropicKey()) {
-    try {
-      console.log("[AI Engine] Activando failover automático a Claude 3.5 Haiku por fallo/cuota en Gemini...");
-      const text = await callAnthropic({ prompt: promptText, temperature: params.config?.temperature, timeoutMs: params.timeoutMs });
-      if (text) {
-        return {
-          text,
-          candidates: [{ content: { parts: [{ text }] } }]
-        };
-      }
-    } catch (clErr: any) {
-      console.warn("[AI Engine] Falló también fallback a Claude:", clErr.message);
-    }
-  }
-
   // Último recurso: el generador local. Solo para quien lo pide explícitamente (rutas de
   // pitches). Para todo lo demás es mejor fallar de cara que devolver un pitch de booking a
   // quien esperaba acordes, una clasificación o un JSON.
   if (params.permitirPitchLocal) {
     console.log("[AI Engine] Activando generador local de pitches ante agotamiento de créditos en todas las APIs...");
-    const fallbackText = generateSmartLocalPitchFallback({ prompt: promptText });
+    const fallbackText = generateSmartLocalPitchFallback({ prompt: promptText, links: params.links });
     return {
       text: fallbackText,
       candidates: [{ content: { parts: [{ text: fallbackText }] } }]
@@ -272,10 +248,49 @@ export async function generateContentWithFallback(
     : new Error("Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas.");
 }
 
+export interface PitchLinks {
+  spotify?: string;
+  youtube?: string;
+  epk?: string;
+}
+
+/**
+ * Enlaces reales de la banda (Spotify, YouTube, EPK público) a partir de su config, para que
+ * el generador local de pitches nunca tenga que inventarse una URL cuando la IA falla del
+ * todo. El EPK sí se puede construir siempre porque no depende de que la banda lo haya
+ * rellenado: es la misma ruta pública que ya usa EPKManager.tsx (/epk?band=...).
+ */
+export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): PitchLinks {
+  const links: PitchLinks = {};
+  if (bandConfig?.enlacesRedes?.spotify) links.spotify = bandConfig.enlacesRedes.spotify;
+  if (bandConfig?.enlacesRedes?.youtube) links.youtube = bandConfig.enlacesRedes.youtube;
+  if (bandId) {
+    const base = process.env.APP_URL || "https://bands-manager.up.railway.app";
+    links.epk = `${base}/epk?band=${encodeURIComponent(bandId)}`;
+  }
+  return links;
+}
+
+function formatPitchLinksBlock(
+  links: PitchLinks | undefined,
+  header: string,
+  labels: { spotify: string; youtube: string; epk: string }
+): string {
+  const lines: string[] = [];
+  if (links?.spotify) lines.push(`• ${labels.spotify}: ${links.spotify}`);
+  if (links?.youtube) lines.push(`• ${labels.youtube}: ${links.youtube}`);
+  if (links?.epk) lines.push(`• ${labels.epk}: ${links.epk}`);
+  // Sin enlaces reales, no se menciona la sección: es mejor omitirla que rellenarla con URLs
+  // inventadas que no llevan a ningún sitio.
+  if (lines.length === 0) return "";
+  return `\n\n${header}\n${lines.join("\n")}`;
+}
+
 export function generateSmartLocalPitchFallback(params: {
   prompt: string;
   systemPrompt?: string;
   provider?: string;
+  links?: PitchLinks;
 }): string {
   const text = `${params.systemPrompt || ""} ${params.prompt || ""}`;
 
@@ -317,12 +332,7 @@ export function generateSmartLocalPitchFallback(params: {
 
 Nos ponemos en contacto desde la oficina de ${bandName}. Hemos revisado vuestra línea artística y consideramos que nuestro directo encaja con el perfil de vuestra programación.
 
-Estamos cerrando las fechas de nuestra próxima gira y nos gustaría presentaros nuestra disponibilidad para tocar en ${salaNombre}.
-
-Enlaces de audio y vídeo en directo:
-• Escuchar en Spotify: https://open.spotify.com
-• Ver Directo en YouTube: https://youtube.com
-• Dossier de Prensa / EPK: https://bandmanager.ai/epk
+Estamos cerrando las fechas de nuestra próxima gira y nos gustaría presentaros nuestra disponibilidad para tocar en ${salaNombre}.${formatPitchLinksBlock(params.links, "Enlaces de audio y vídeo en directo:", { spotify: "Escuchar en Spotify", youtube: "Ver Directo en YouTube", epk: "Dossier de Prensa / EPK" })}
 
 Condiciones y propuesta técnica:
 • Formato: Concierto en sala${aforo ? ` (aforo ${aforo})` : ""}
@@ -335,38 +345,12 @@ Equipo de Booking & Management — ${bandName}
 contacto@bakandeya.com`;
   }
 
-  if (params.provider === "claude") {
-    return `Estimado equipo de programación de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
-
-Es un placer saludaros. Os escribimos con mucha ilusión en nombre de ${bandName}, siguiendo muy de cerca la gran labor que hacéis por la música en directo en vuestra sala.
-
-Nos encontramos trazando la nueva etapa de conciertos de la banda y sería todo un honor poder compartir nuestro directo con vuestro público en ${salaNombre}. Nuestra propuesta combina una puesta en escena cuidada con gran interacción y energía.
-
-Os compartimos nuestros enlaces clave para que podáis valorar el proyecto:
-• Música oficial: https://open.spotify.com
-• Vídeo del directo: https://youtube.com
-• EPK interactivo y fotos en alta: https://bandmanager.ai/epk
-
-Estamos totalmente abiertos a adaptarnos a vuestras fechas disponibles y condiciones de producción habituales.
-
-Muchísimas gracias de antemano por vuestra atención y por seguir apoyando la música independiente.
-
-Un abrazo muy fuerte,
-Booking & Producción — ${bandName}
-contacto@bakandeya.com`;
-  }
-
   // Default Gemini / General template
   return `Hola, equipo de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
 
 Os escribimos desde ${bandName}. Hemos estado siguiendo vuestra programación de conciertos y creemos que nuestra propuesta encaja a la perfección con la línea y el público de vuestra sala.
 
-Actualmente nos encontramos planificando las próximas fechas de gira y nos encantaría valorar opciones de calendario para presentar nuestro directo en ${salaNombre}.
-
-Aquí tenéis nuestros enlaces oficiales para escuchar el material y ver el directo:
-• Spotify / Streaming: https://open.spotify.com
-• Directo en YouTube: https://youtube.com
-• Dossier y Rider Técnico: https://bandmanager.ai/epk
+Actualmente nos encontramos planificando las próximas fechas de gira y nos encantaría valorar opciones de calendario para presentar nuestro directo en ${salaNombre}.${formatPitchLinksBlock(params.links, "Aquí tenéis nuestros enlaces oficiales para escuchar el material y ver el directo:", { spotify: "Spotify / Streaming", youtube: "Directo en YouTube", epk: "Dossier y Rider Técnico" })}
 
 Quedamos a vuestra entera disposición para comentar disponibilidad de fechas, condiciones de taquilla o caché y cualquier detalle técnico.
 
@@ -424,62 +408,11 @@ export async function callDeepSeek(params: {
   return text.trim();
 }
 
-// Anthropic Claude Messages API integration
-export async function callAnthropic(params: {
-  prompt: string;
-  systemPrompt?: string;
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-  timeoutMs?: number;
-}): Promise<string> {
-  const apiKey = getAnthropicKey();
-  if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY no configurada.");
-  }
-
-  const model = params.model || "claude-3-5-haiku-20241022";
-  const body: any = {
-    model,
-    max_tokens: params.maxTokens ?? 1500,
-    temperature: params.temperature ?? 0.7,
-    messages: [{ role: "user", content: params.prompt }]
-  };
-
-  if (params.systemPrompt) {
-    body.system = params.systemPrompt;
-  }
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    signal: AbortSignal.timeout(params.timeoutMs ?? TIMEOUT_IA_MS),
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Anthropic Claude API error (${res.status}): ${errText}`);
-  }
-
-  const data: any = await res.json();
-  const content = data?.content;
-  if (Array.isArray(content) && content.length > 0) {
-    const textPart = content.find((c: any) => c.type === "text");
-    return (textPart?.text || content[0].text || "").trim();
-  }
-  return "";
-}
-
 // Unified Multi-Model Execution Engine
 export async function generateUnifiedAI(params: {
   prompt: string;
   systemPrompt?: string;
-  provider?: "gemini" | "deepseek" | "claude" | string;
+  provider?: "gemini" | "deepseek" | string;
   modelName?: string;
   temperature?: number;
   maxTokens?: number;
@@ -487,6 +420,8 @@ export async function generateUnifiedAI(params: {
   /** Ver generateContentWithFallback: el generador local solo sabe escribir pitches. */
   permitirPitchLocal?: boolean;
   timeoutMs?: number;
+  /** Enlaces reales de la banda para el generador local de pitches (ver PitchLinks). */
+  links?: PitchLinks;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -503,18 +438,6 @@ export async function generateUnifiedAI(params: {
     return { text, provider: "deepseek", modelName: params.modelName || "deepseek-chat" };
   }
 
-  if (provider === "claude") {
-    const text = await callAnthropic({
-      prompt: params.prompt,
-      systemPrompt: params.systemPrompt,
-      model: params.modelName || "claude-3-5-haiku-20241022",
-      temperature: params.temperature,
-      maxTokens: params.maxTokens,
-      timeoutMs: params.timeoutMs
-    });
-    return { text, provider: "claude", modelName: params.modelName || "claude-3-5-haiku-20241022" };
-  }
-
   // Default Gemini
   const client = getAiClient();
   if (client) {
@@ -527,6 +450,11 @@ export async function generateUnifiedAI(params: {
         contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
         preferredModel: params.modelName || GEMINI_MODEL,
         timeoutMs: params.timeoutMs,
+        // OJO: sin permitirPitchLocal aquí a propósito. generateUnifiedAI ya tiene su propio
+        // escalón de fallback local (más abajo) tras intentar también DeepSeek explícitamente;
+        // activarlo en esta llamada interna haría que un fallo total de Gemini devolviera ya el
+        // texto de plantilla etiquetado como "gemini", saltándose el intento real a DeepSeek.
+        links: params.links,
         config: {
           temperature: params.temperature ?? 0.7
         }
@@ -560,29 +488,14 @@ export async function generateUnifiedAI(params: {
     }
   }
 
-  // Fallback to Claude if DeepSeek is also unavailable or failed
-  if (allowFallback && getAnthropicKey()) {
-    try {
-      console.log("[AI Engine] Fallback automático a Claude 3.5 Haiku...");
-      const text = await callAnthropic({
-        prompt: params.prompt,
-        systemPrompt: params.systemPrompt,
-        temperature: params.temperature,
-        maxTokens: params.maxTokens
-      });
-      return { text, provider: "claude", modelName: "claude-3-5-haiku-20241022 (fallback)", fallbackFrom: "gemini" };
-    } catch (clErr: any) {
-      console.warn("[AI Engine] Fallback a Claude falló:", clErr.message);
-    }
-  }
-
   // Fallback al generador local de pitches, solo si quien llama lo ha pedido explícitamente.
   if (allowFallback && params.permitirPitchLocal) {
     console.log("[AI Engine] Fallback a generador local de pitches...");
     const localText = generateSmartLocalPitchFallback({
       prompt: params.prompt,
       systemPrompt: params.systemPrompt,
-      provider
+      provider,
+      links: params.links
     });
     return {
       text: localText,
@@ -600,6 +513,7 @@ export async function generateMultiModelProposals(params: {
   prompt: string;
   systemPrompt?: string;
   providers?: string[];
+  links?: PitchLinks;
 }) {
   const providersToRun = params.providers && params.providers.length > 0
     ? params.providers
@@ -632,15 +546,14 @@ export async function generateMultiModelProposals(params: {
           cleanErrMsg = "Límite mensual de gasto alcanzado en Google AI Studio (Error 429). Puedes gestionarlo en ai.studio/billing";
         } else if (cleanErrMsg.includes("402") || cleanErrMsg.includes("Insufficient Balance") || cleanErrMsg.includes("insufficient balance")) {
           cleanErrMsg = "Saldo de créditos agotado en cuenta DeepSeek (Error 402). Por favor recarga saldo en platform.deepseek.com";
-        } else if (cleanErrMsg.includes("400") || cleanErrMsg.includes("credit balance is too low") || cleanErrMsg.includes("invalid_request_error")) {
-          cleanErrMsg = "Saldo insuficiente en cuenta Anthropic Claude (Error 400). Por favor añade créditos en console.anthropic.com";
         }
 
         const fullInputText = (params.systemPrompt || "") + "\n" + (params.prompt || "");
         const localDraft = generateSmartLocalPitchFallback({
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
-          provider: providerId
+          provider: providerId,
+          links: params.links
         });
         const costEstimate = calculatePitchCost(providerId, fullInputText, localDraft);
 

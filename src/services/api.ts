@@ -258,6 +258,18 @@ export const api = {
     });
   },
 
+  async trackPublicClick(params: { band_id: string; platform: string; button_type?: string; context?: string }): Promise<{ success: boolean; count?: number }> {
+    return request('/api/public/track-click', {
+      method: 'POST',
+      body: JSON.stringify(params)
+    }).catch(() => ({ success: false }));
+  },
+
+  async getEpkClickStats(bandId?: string): Promise<{ success: boolean; clicks: Record<string, number | string> }> {
+    const q = bandId ? `?band_id=${encodeURIComponent(bandId)}` : '';
+    return request(`/api/epk/clicks${q}`).catch(() => ({ success: false, clicks: {} }));
+  },
+
   // Autonomy
   async getAutonomyConfig(): Promise<any> {
     return request('/api/autonomy');

@@ -164,12 +164,27 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
     const aiClient = getAiClient();
     let generatedChords: string | null = null;
     let generatedGuide: any = null;
+    let esAproximado = false;
+    // De dónde sale de verdad el cifrado, para que el cliente nunca confunda una transcripción
+    // real, una propuesta honesta de la IA y la plantilla de relleno cuando todo lo demás falla.
+    let chordsSource: 'audio_real' | 'ia_sin_audio' | 'plantilla_generica' = 'plantilla_generica';
 
     if (aiClient) {
       try {
-        const audioInstructions = audioUrl
+        // Resolvemos el audio ANTES de escribir el prompt: solo si hay una pista real
+        // podemos pedirle a la IA que transcriba lo que suena. Sin esto el prompt le diría
+        // "tienes el audio adjunto" aunque no se le mande nada, invitándole a inventar.
+        // allowSyntheticFallback:false evita que nos devuelva un tono de prueba.
+        const snippetPath = audioUrl
+          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false })
+          : null;
+        const tieneAudioReal = Boolean(snippetPath);
+
+        const audioInstructions = tieneAudioReal
           ? `Tienes adjunto el audio REAL de la canción. Escúchalo con máxima atención y transcribe la LETRA EXACTA cantada y los ACORDES REALES que suenan (no los inventes). Si el audio no permite distinguir alguna parte con certeza, indícalo con [?] en vez de inventar.`
-          : `No se dispone del audio de la canción, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
+          : esVersionCovers
+          ? `No se dispone del audio de esta versión/cover: dependes solo de lo que sepas de la canción original. Transcribe acordes como "acordes reales" ÚNICAMENTE si estás genuinamente seguro de ellos. Si no los recuerdas con confianza, NO te los inventes presentándolos como transcripción fiable: pon "esAproximado": true en el JSON de respuesta y antepón a cifradoTexto la línea "[⚠️ Progresión aproximada de memoria, no confirmada — verifica de oído antes de usarla en directo]".`
+          : `No se dispone del audio de la canción; es una composición original, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
 
         const prompt = `Eres un músico profesional, transcriptor y arreglista. Genera el cifrado de acordes con letra completo al estilo LaCuerda.net / Ultimate Guitar para la siguiente canción:
 Título: "${titulo}"
@@ -186,13 +201,14 @@ Requisitos estrictos del formato cifradoTexto:
 1. Utiliza acordes estándar en notación española o internacional (ej. Do, Re, Mim, Sol, Lam, Fa#m o C, D, Em, G, Am, F#m).
 2. Pon los acordes usando la notación inline [Acorde] justo delante de las palabras o sílabas donde cambian de armonía, o bien en la línea superior alineados con espacios.
 3. Estructura con secciones claras: [Intro], [Verso 1], [Estribillo], [Verso 2], [Puente], [Solo], [Outro].
-4. Si la canción es un tema conocido o cover, transcribe sus acordes reales. Si es un tema original, crea una progresión armónica profesional y letra acorde a la tonalidad ${tonalidad || 'Mim'}.
+4. Si la canción es un tema conocido o cover, transcribe sus acordes reales solo cuando estés seguro de ellos (ver instrucción anterior sobre "esAproximado"). Si es un tema original, crea una progresión armónica profesional y letra acorde a la tonalidad ${tonalidad || 'Mim'}.
 
 Genera también la Guia de Sustitución Rápida (guiaSustituto) para un músico de apoyo o sustituto de última hora.
 
 Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
 {
   "cifradoTexto": "[Intro]\\n[Mim]  [Do]  [Re]  [Mim]...",
+  "esAproximado": false,
   "guiaSustituto": {
     "estructura": "Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo -> Outro",
     "progresionClave": "Verso: Mim - Do | Estribillo: Sol - Re - Mim - Do",
@@ -204,8 +220,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
 
         let contents: any = [{ role: 'user', parts: [{ text: prompt }] }];
 
-        if (audioUrl) {
-          const snippetPath = await getAudioSnippetPath({ audioUrl });
+        if (tieneAudioReal) {
           const audioContents = buildAudioOrTextContents(
             snippetPath,
             prompt,
@@ -230,6 +245,8 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
         if (parsed && parsed.cifradoTexto) {
           generatedChords = parsed.cifradoTexto;
           generatedGuide = parsed.guiaSustituto;
+          esAproximado = Boolean(parsed.esAproximado);
+          chordsSource = tieneAudioReal ? 'audio_real' : 'ia_sin_audio';
         }
       } catch (aiErr: any) {
         console.warn("[Gemini API] Could not generate chords via AI, using harmonic engine fallback:", aiErr?.message || aiErr);
@@ -286,25 +303,59 @@ Final con parada seca al compás 4 en [${rootChord}].`;
       };
     }
 
-    // Persist to database/state if songId provided
+    // Persistimos el cifrado en la canción. Las canciones nuevas se crean directamente en
+    // Supabase (POST /songs no pasa por loadState), así que buscarlas solo en el estado en
+    // fichero dejaba sin guardar justo el caso más común: el análisis automático al subir
+    // audio. Leemos la canción de BD y guardamos el registro COMPLETO: dbUpsertSong
+    // reconstruye la fila con valores por defecto, así que un upsert parcial borraría
+    // título, duración y tonalidad.
+    let persisted = false;
     if (songId) {
-      const userBandId = (req as any).user?.band_id;
-      const state = loadState();
-      if (state.songs) {
-        const songIndex = state.songs.findIndex((s: Song) => s.id === songId);
+      const userBandId = getTargetBandId(req);
+      try {
+        const songs = await dbGetSongs(userBandId);
+        const song = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+        if (song) {
+          await dbUpsertSong(
+            { ...song, cifradoTexto: generatedChords, guiaSustituto: generatedGuide },
+            userBandId
+          );
+          persisted = true;
+        } else {
+          console.warn(`[generate-song-chords] Canción ${songId} no encontrada en BD; no se persiste el cifrado.`);
+        }
+      } catch (dbErr: any) {
+        console.error("[generate-song-chords] Error al persistir el cifrado:", dbErr?.message || dbErr);
+      }
+
+      // Mantenemos sincronizado el estado en fichero cuando esta banda lo usa.
+      try {
+        const state = loadState();
+        const songIndex = state.songs?.findIndex((s: Song) => s.id === songId) ?? -1;
         if (songIndex !== -1) {
           state.songs[songIndex].cifradoTexto = generatedChords;
           state.songs[songIndex].guiaSustituto = generatedGuide;
           saveState(state);
-          dbUpsertSong(state.songs[songIndex], userBandId).catch((e: any) => console.error(e));
         }
+      } catch (stateErr: any) {
+        console.warn("[generate-song-chords] No se pudo actualizar el estado local:", stateErr?.message || stateErr);
       }
     }
 
     res.json({
       success: true,
       cifradoTexto: generatedChords,
-      guiaSustituto: generatedGuide
+      guiaSustituto: generatedGuide,
+      // El cliente necesita saber si esto quedó guardado en servidor o solo vive en su copia local.
+      persisted,
+      // De dónde sale de verdad el cifrado: transcripción de audio real, propuesta honesta de la
+      // IA sin audio, o la plantilla de relleno cuando ninguna IA respondió. El cliente no debe
+      // presentar estos tres casos como si fueran el mismo "cifrado propuesto".
+      chordsSource,
+      // Mantenido por compatibilidad con clientes existentes.
+      fromRealAudio: chordsSource === 'audio_real',
+      // Si la propia IA ha marcado el cifrado como no confirmado (cover sin audio, de memoria).
+      esAproximado
     });
   } catch (err: any) {
     console.error("Error in generate-song-chords:", err);

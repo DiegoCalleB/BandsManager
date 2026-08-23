@@ -462,7 +462,7 @@ export default function RepertorioSetlists({
  const [assignSongsModalData, setAssignSongsModalData] = useState<{ isOpen: boolean; albumName: string } | null>(null);
  const [setlistModalData, setSetlistModalData] = useState<{ isOpen: boolean; setlistToEdit: Setlist | null } | null>(null);
  const [isAddSongsModalOpen, setIsAddSongsModalOpen] = useState(false);
- const [statusBanner, setStatusBanner] = useState<{ text: string; type: 'loading' | 'success' | 'error' } | null>(null);
+ const [statusBanner, setStatusBanner] = useState<{ text: string; type: 'loading' | 'success' | 'warning' | 'error' } | null>(null);
  const [defaultAlbumForNewSong, setDefaultAlbumForNewSong] = useState<string>('');
  const [selectedCatalogIds, setSelectedCatalogIds] = useState<Set<string>>(new Set());
 
@@ -746,6 +746,19 @@ export default function RepertorioSetlists({
  // Fires in the background after a song is saved with a new audio file, no extra click needed.
  const runAutoChordAnalysis = async (song: Song) => {
    if (!song.audioPrincipalUrl) return;
+
+   // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
+   // el servidor no puede descargar ese audio, así que analizarlo daría un cifrado inventado
+   // a partir del título. Mejor decirlo que fingir que se ha transcrito la grabación.
+   if (!/^https?:\/\//i.test(song.audioPrincipalUrl) && !song.audioPrincipalUrl.startsWith('/')) {
+     setStatusBanner({
+       text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
+       type: 'error'
+     });
+     setTimeout(() => setStatusBanner(null), 6000);
+     return;
+   }
+
    setStatusBanner({ text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`, type: 'loading' });
    try {
      const res = await fetch('/api/generate-song-chords', {
@@ -763,12 +776,47 @@ export default function RepertorioSetlists({
      });
      const data = await res.json();
      if (res.ok && data?.cifradoTexto) {
+       const updatedSong = { ...song, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto };
        setSongs(prev => {
          const next = prev.map(s => s.id === song.id ? { ...s, cifradoTexto: data.cifradoTexto, guiaSustituto: data.guiaSustituto } : s);
          saveSongsToLocalStorageSafely(next);
          return next;
        });
-       setStatusBanner({ text: `✓ Letra y acordes de "${song.titulo}" listos`, type: 'success' });
+
+       // Si el servidor no pudo guardarlo, lo persistimos nosotros por la vía normal para que
+       // el cifrado no se quede solo en esta pestaña y se pierda al recargar.
+       if (!data.persisted) {
+         fetch(`/api/songs/${encodeURIComponent(song.id)}`, {
+           method: 'PUT',
+           headers: getHeaders(),
+           body: JSON.stringify(updatedSong)
+         }).catch(err => console.error('Error persisting generated chords:', err));
+       }
+
+       // El backend distingue tres orígenes reales del cifrado para que este aviso nunca
+       // haga pasar una plantilla genérica de relleno (cuando la IA falla del todo) por
+       // una transcripción real o una propuesta honesta de la IA.
+       if (data.chordsSource === 'audio_real') {
+         setStatusBanner({
+           text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio`,
+           type: 'success'
+         });
+       } else if (data.chordsSource === 'ia_sin_audio' && !data.esAproximado) {
+         setStatusBanner({
+           text: `✓ Cifrado propuesto por IA para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
+           type: 'success'
+         });
+       } else if (data.chordsSource === 'ia_sin_audio' && data.esAproximado) {
+         setStatusBanner({
+           text: `⚠️ Acordes aproximados de "${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
+           type: 'warning'
+         });
+       } else {
+         setStatusBanner({
+           text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en "${song.titulo}", revísalo antes de usarlo`,
+           type: 'warning'
+         });
+       }
      } else {
        setStatusBanner({ text: `No se pudieron analizar los acordes de "${song.titulo}"`, type: 'error' });
      }
@@ -3332,6 +3380,8 @@ export default function RepertorioSetlists({
           ? 'bg-emerald-950 border-emerald-700/60 text-emerald-100'
           : statusBanner.type === 'error'
           ? 'bg-rose-950 border-rose-700/60 text-rose-100'
+          : statusBanner.type === 'warning'
+          ? 'bg-amber-950 border-amber-700/60 text-amber-100'
           : 'bg-neutral-900 border-neutral-700 text-neutral-100'
       }`}
     >

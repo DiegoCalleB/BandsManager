@@ -3,7 +3,7 @@ import {
   Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles, 
   Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
   Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
-  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers
+  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers, Eye
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import * as XLSX from 'xlsx';
@@ -13,6 +13,7 @@ import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { FansCommunityView } from './fans/FansCommunityView';
 import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFormLanguage } from '../i18n/fansTranslations';
 import { QrExportModal } from './QrExportModal';
+import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
 
 interface FansPanelProps {
@@ -401,6 +402,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   };
 
   const [showQrExportModal, setShowQrExportModal] = useState(false);
+  const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [isExportingDirect, setIsExportingDirect] = useState(false);
 
   const handleDownloadSvg = async () => {
@@ -465,6 +467,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <button 
+            type="button"
+            onClick={() => setShowFansPreviewModal(true)}
+            className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 text-amber-300 text-xs font-bold font-mono rounded-xl border border-amber-500/40 flex items-center gap-2 transition cursor-pointer shadow-sm"
+            title="Simular y ver el formulario público Únete dentro de la aplicación"
+          >
+            <Eye className="w-4 h-4 text-amber-400" /> Previsualizar Formulario
+          </button>
           <button 
             onClick={copyLink}
             className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold font-mono rounded-xl border border-slate-700 flex items-center gap-2 transition cursor-pointer"
@@ -1158,7 +1168,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-3">
                 <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
                   <Heart className="w-4 h-4 text-sky-400" />
-                  Colaboración Económica & Donaciones (Revolut Pay)
+                  Colaboración Económica & Donaciones (Revolut & PayPal)
                 </label>
                 <p className="text-[11px] text-slate-400 font-mono">
                   {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
@@ -1401,6 +1411,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="space-y-2">
                 <button
                   type="button"
+                  onClick={() => setShowFansPreviewModal(true)}
+                  className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black font-mono text-xs uppercase tracking-widest rounded-2xl shadow-xl flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <Eye className="w-4 h-4" /> Previsualizar Formulario Únete (Simulador en App)
+                </button>
+
+                <button
+                  type="button"
                   onClick={() => setShowQrExportModal(true)}
                   className="w-full py-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-amber-500/40 flex items-center justify-center gap-2 transition shadow-sm cursor-pointer"
                 >
@@ -1413,7 +1431,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   rel="noopener noreferrer"
                   className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-slate-700 flex items-center justify-center gap-2 transition shadow-md"
                 >
-                  <ExternalLink className="w-4 h-4 text-amber-400" /> Probar Landing de Captura en Vivo
+                  <ExternalLink className="w-4 h-4 text-amber-400" /> Abrir Landing en Pestaña Nueva
                 </a>
               </div>
             </div>
@@ -1599,6 +1617,19 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           </div>
         </div>
       )}
+
+      {/* Modal Simulador / Vista Previa In-App del Formulario Únete */}
+      <FansLandingPreviewModal
+        isOpen={showFansPreviewModal}
+        onClose={() => setShowFansPreviewModal(false)}
+        currentBandId={currentBandId}
+        currentBandName={effectiveBandName}
+        currentBandLogo={effectiveBandLogo}
+        epkConfig={epkConfig}
+        concerts={concerts}
+        initialConcertId={selectedConcertId}
+        initialLanguage={qrLanguage}
+      />
     </div>
   );
 };

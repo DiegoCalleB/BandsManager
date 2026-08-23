@@ -1,7 +1,7 @@
 import express from "express";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbUpsertLead } from "../../db.js";
-import { generateUnifiedAI, generateMultiModelProposals } from "../../ai.js";
+import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkConfig } from "../../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 
@@ -64,7 +64,8 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia si aplica: "${lead.pit
     const proposals = await generateMultiModelProposals({
       prompt,
       systemPrompt,
-      providers: providers || ["gemini", "deepseek", "claude"]
+      links: buildPitchLinksFromEpkConfig(bandConfig, userBandId),
+      providers: providers || ["gemini", "deepseek"]
     });
 
     res.json({
@@ -155,7 +156,8 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
         modelName: modelName,
         // Esta ruta SÍ escribe pitches: el generador local es un último recurso legítimo aquí,
         // y el resultado pasa por aprobación humana antes de enviarse.
-        permitirPitchLocal: true
+        permitirPitchLocal: true,
+        links: buildPitchLinksFromEpkConfig(bandConfig, userBandId)
       });
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();

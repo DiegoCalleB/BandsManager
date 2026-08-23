@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer,
   Upload, Save, Globe, Mail, Phone, Music, Image as ImageIcon, CheckCircle2,
-  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart
+  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart, Eye, Lock as LockIcon
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
@@ -11,6 +11,8 @@ import { EPK_LANGUAGES } from '../i18n/epkTranslations';
 import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
 import { api } from '../services/api';
 import { googleSignIn, auth } from '../utils/gmail';
+import { FansLandingPreviewModal } from './FansLandingPreviewModal';
+import { PayPalLogo } from './SocialPlatformsList';
 
 interface EPKManagerProps {
   epkConfig?: EPKConfig;
@@ -45,7 +47,19 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     website: 'https://bands-manager.up.railway.app',
     whatsapp: '+34612345678',
     facebook: 'https://facebook.com/bakandeyaoficial',
-    twitter: 'https://x.com/bakandeya_band'
+    twitter: 'https://x.com/bakandeya_band',
+    revolut: 'https://revolut.me/bakandeya',
+    paypal: 'https://paypal.me/bakandeya'
+  },
+  donacionRevolut: {
+    habilitado: true,
+    revolutTag: 'bakandeya',
+    revolutUrl: 'https://revolut.me/bakandeya',
+    paypalUser: 'bakandeya',
+    paypalUrl: 'https://paypal.me/bakandeya',
+    metodoPorDefecto: 'revolut',
+    titulo: 'Colabora con una aportación económica',
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
   },
   firmaEmail: {
     nombreRemitente: 'Diego de la Calle',
@@ -95,7 +109,19 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
     website: '',
     whatsapp: '',
     facebook: '',
-    twitter: ''
+    twitter: '',
+    revolut: '',
+    paypal: ''
+  },
+  donacionRevolut: {
+    habilitado: true,
+    revolutTag: '',
+    revolutUrl: '',
+    paypalUser: '',
+    paypalUrl: '',
+    metodoPorDefecto: 'revolut',
+    titulo: 'Colabora con una aportación económica',
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
   },
   firmaEmail: {
     nombreRemitente: '',
@@ -113,7 +139,9 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
       appleMusic: '',
       bandcamp: '',
       website: '',
-      whatsapp: ''
+      whatsapp: '',
+      revolut: '',
+      paypal: ''
     }
   }
 };
@@ -126,7 +154,6 @@ const UNIFIED_PLATFORMS = [
   { key: 'appleMusic', label: 'Apple Music', icon: '🍎', placeholder: 'https://music.apple.com/...' },
   { key: 'bandcamp', label: 'Bandcamp', icon: '⛺', placeholder: 'https://tubanda.bandcamp.com' },
   { key: 'website', label: 'Sitio Web Oficial', icon: '🌐', placeholder: 'https://www.tubanda.com' },
-  { key: 'whatsapp', label: 'WhatsApp', icon: '💬', placeholder: '+34600000000' },
   { key: 'facebook', label: 'Facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
   { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' }
 ];
@@ -220,7 +247,9 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [copiedPublicUrl, setCopiedPublicUrl] = useState(false);
+  const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'firma' | 'qr'>('editor');
+  const [previewDonationMethod, setPreviewDonationMethod] = useState<'revolut' | 'paypal'>('revolut');
 
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
@@ -1045,13 +1074,18 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             </div>
           </div>
 
-          {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT */}
+          {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT & PAYPAL */}
           <div className="bg-slate-900 border border-sky-500/30 rounded-2xl p-6 space-y-4 lg:col-span-2">
-            <h3 className="text-lg font-bold text-sky-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones con Revolut
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+              <h3 className="text-lg font-bold text-sky-400 flex items-center gap-2">
+                <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones (Revolut & PayPal)
+              </h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-full">
+                Crowdfunding & Micro-donaciones
+              </span>
+            </div>
             <p className="text-xs text-slate-400">
-              Permite a tus fans y asistentes al concierto hacer una aportación voluntaria directa por Revolut (revolut.me), sin intermediarios. Se muestra en el formulario público "Únete" y en la pantalla de confirmación.
+              Permite a tus fans y asistentes al concierto hacer una aportación voluntaria directa por <strong className="text-sky-300">Revolut</strong> (revolut.me) o <strong className="text-blue-400">PayPal</strong> (paypal.me), sin comisiones intermedias. Se muestra en el formulario público "Únete", en la pantalla de confirmación y en el Dossier EPK.
             </p>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -1059,8 +1093,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
                   <div className="space-y-0.5 pr-3">
-                    <span className="text-xs font-bold text-white">Mostrar tarjeta de donación Revolut</span>
-                    <p className="text-[10px] text-slate-400">Desactívala si todavía no tienes cuenta de Revolut Business</p>
+                    <span className="text-xs font-bold text-white">Mostrar tarjeta de donación (Revolut / PayPal)</span>
+                    <p className="text-[10px] text-slate-400">Activa o desactiva la opción de donación para tus fans</p>
                   </div>
                   <input
                     type="checkbox"
@@ -1070,25 +1104,97 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs font-semibold text-slate-300">Revtag o Usuario de Revolut</label>
-                  <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 focus-within:border-sky-500 rounded-xl px-3">
-                    <span className="text-[11px] text-slate-500 font-mono">revolut.me/</span>
-                    <input
-                      type="text"
-                      value={config.donacionRevolut?.revolutTag || ''}
-                      onChange={e => {
-                        const cleanTag = e.target.value.replace(/^@/, '').replace(/^revolut\.me\//, '').trim();
-                        const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
-                        setConfig(prev => ({
-                          ...prev,
-                          donacionRevolut: { ...prev.donacionRevolut, revolutTag: cleanTag, revolutUrl: generatedUrl },
-                          enlacesRedes: { ...(prev.enlacesRedes || {}), revolut: generatedUrl }
-                        }));
-                      }}
-                      placeholder="tubanda"
-                      className="w-full bg-transparent py-2 text-xs text-sky-300 font-bold outline-none font-mono"
-                    />
+                {/* Métodos de Pago: Revolut y PayPal */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Revolut */}
+                  <div className="p-3 bg-slate-950/80 border border-sky-500/20 rounded-xl space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-5 h-5 rounded-md bg-white text-black flex items-center justify-center p-0.5 shadow-sm">
+                        <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                          <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                        </svg>
+                      </div>
+                      <label className="text-xs font-semibold text-sky-200">Revolut (Revtag)</label>
+                    </div>
+                    <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-sky-500 rounded-lg px-2.5">
+                      <span className="text-[10px] text-slate-500 font-mono">revolut.me/</span>
+                      <input
+                        type="text"
+                        value={config.donacionRevolut?.revolutTag || ''}
+                        onChange={e => {
+                          const cleanTag = e.target.value.replace(/^@/, '').replace(/^https?:\/\/revolut\.me\//i, '').replace(/^revolut\.me\//i, '').trim();
+                          const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
+                          setConfig(prev => ({
+                            ...prev,
+                            donacionRevolut: { ...prev.donacionRevolut, revolutTag: cleanTag, revolutUrl: generatedUrl },
+                            enlacesRedes: { ...(prev.enlacesRedes || {}), revolut: generatedUrl }
+                          }));
+                        }}
+                        placeholder="tubanda"
+                        className="w-full bg-transparent py-1.5 text-xs text-sky-300 font-bold outline-none font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  {/* PayPal */}
+                  <div className="p-3 bg-slate-950/80 border border-blue-500/20 rounded-xl space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-5 h-5 rounded-md bg-[#003087] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
+                        <svg className="w-full h-full fill-white" viewBox="0 0 24 24">
+                          <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
+                        </svg>
+                      </div>
+                      <label className="text-xs font-semibold text-blue-200">PayPal (paypal.me)</label>
+                    </div>
+                    <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-blue-500 rounded-lg px-2.5">
+                      <span className="text-[10px] text-slate-500 font-mono">paypal.me/</span>
+                      <input
+                        type="text"
+                        value={config.donacionRevolut?.paypalUser || ''}
+                        onChange={e => {
+                          const cleanUser = e.target.value.replace(/^@/, '').replace(/^https?:\/\/paypal\.me\//i, '').replace(/^paypal\.me\//i, '').trim();
+                          const generatedUrl = cleanUser ? (cleanUser.startsWith('http') ? cleanUser : `https://paypal.me/${cleanUser}`) : '';
+                          setConfig(prev => ({
+                            ...prev,
+                            donacionRevolut: { ...prev.donacionRevolut, paypalUser: cleanUser, paypalUrl: generatedUrl },
+                            enlacesRedes: { ...(prev.enlacesRedes || {}), paypal: generatedUrl }
+                          }));
+                        }}
+                        placeholder="tubanda"
+                        className="w-full bg-transparent py-1.5 text-xs text-blue-300 font-bold outline-none font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Método por defecto */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-300">Método seleccionado por defecto</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'revolut' } })}
+                      className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition ${
+                        (config.donacionRevolut?.metodoPorDefecto || 'revolut') === 'revolut'
+                          ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
+                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+                      Revolut
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'paypal' } })}
+                      className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition ${
+                        config.donacionRevolut?.metodoPorDefecto === 'paypal'
+                          ? 'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
+                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                      PayPal
+                    </button>
                   </div>
                 </div>
 
@@ -1118,162 +1224,87 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
               {/* Vista previa en vivo, igual a como la ve un fan */}
               <div className="space-y-2">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">Así se verá para tus fans</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500">Así se verá para tus fans</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowFansPreviewModal(true)}
+                    className="text-[11px] font-mono text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1.5 cursor-pointer hover:underline transition"
+                    title="Abrir simulador interactivo del formulario Únete"
+                  >
+                    <Eye className="w-3.5 h-3.5" /> Previsualizar Formulario Únete
+                  </button>
+                </div>
                 {config.donacionRevolut?.habilitado === false ? (
                   <div className="p-4 rounded-xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
-                    Tarjeta desactivada: no se mostrará en "Únete"
+                    Tarjeta desactivada: no se mostrará en "Únete" ni en el Dossier
                   </div>
                 ) : (
-                  <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-sky-950/40 via-neutral-900 to-sky-950/40 border border-sky-500/35 shadow-sm">
-                    <div className="flex items-center justify-between gap-2.5">
-                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                        <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow-sm">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800 p-4 shadow-xl space-y-3">
+                    {/* Header: Icon + Title + Direct Badge */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                        <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
+                            {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
+                          </h3>
+                          <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
+                            Directo
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
+                          {config.donacionRevolut?.descripcion || 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Direct Branded Payment Buttons Preview */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {/* Revolut */}
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-neutral-950 border border-neutral-700/80 shadow-sm text-left">
+                        <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow">
                           <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
                             <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
                           </svg>
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono font-bold text-sky-100 truncate">
-                              {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
-                            </span>
-                            <span className="text-[10px] font-mono text-sky-400/80 truncate hidden xs:inline">
-                              revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}
-                            </span>
-                          </div>
-                          {config.donacionRevolut?.descripcion && (
-                            <p className="text-[10px] text-neutral-400 font-mono line-clamp-1 mt-0.5 leading-tight">
-                              {config.donacionRevolut.descripcion}
-                            </p>
-                          )}
+                          <span className="text-[11px] font-bold text-white block truncate">
+                            Revolut
+                          </span>
+                          <span className="text-[9px] text-neutral-400 font-mono block truncate">
+                            @{config.donacionRevolut?.revolutTag || 'tubanda'}
+                          </span>
                         </div>
                       </div>
-                      <div className="w-6 h-6 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 shrink-0">
-                        <ExternalLink className="w-3.5 h-3.5" />
+
+                      {/* PayPal */}
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] border border-sky-400/40 shadow-sm text-left">
+                        <div className="w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow">
+                          <PayPalLogo className="w-full h-full" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-[11px] font-bold text-white block truncate">
+                            PayPal
+                          </span>
+                          <span className="text-[9px] text-sky-200 font-mono block truncate">
+                            @{config.donacionRevolut?.paypalUser || 'tubanda'}
+                          </span>
+                        </div>
                       </div>
+                    </div>
+
+                    {/* Trust Line */}
+                    <div className="pt-1 flex items-center justify-between text-[10px] text-neutral-500">
+                      <span className="flex items-center gap-1">
+                        <LockIcon className="w-3 h-3 text-neutral-500 shrink-0" />
+                        <span>Pago seguro sin comisiones para la banda</span>
+                      </span>
                     </div>
                   </div>
                 )}
-              </div>
-            </div>
-          </div>
-
-          {/* RIDER TECNICO */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
-              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
-                <FileText className="w-5 h-5" /> Rider Técnico (Texto y Fichero PDF / Documento)
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
-                  (config.riderPdfUrl && config.riderPdfUrl.trim().length > 5) || 
-                  (config.riderTecnico && config.riderTecnico.trim().length >= 80 && !config.riderTecnico.toLowerCase().includes('por definir'))
-                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                    : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
-                }`}>
-                  {(config.riderPdfUrl && config.riderPdfUrl.trim().length > 5) || 
-                  (config.riderTecnico && config.riderTecnico.trim().length >= 80 && !config.riderTecnico.toLowerCase().includes('por definir'))
-                    ? '✓ Rider Listo'
-                    : 'Mínimo 80 caracteres o PDF'}
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
-                  Documentación Técnica
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* FICHERO DEL RIDER */}
-              <div className="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-                <label className="text-xs font-bold text-slate-300 flex items-center gap-2">
-                  <FileDown className="w-4 h-4 text-amber-400" /> Adjunto de Rider en PDF o Documento
-                </label>
-
-                {config.riderPdfUrl ? (
-                  <div className="p-3 bg-slate-900 border border-amber-500/40 rounded-lg space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="truncate">
-                        <p className="font-bold text-xs text-white truncate">{config.riderPdfName || 'Rider_Tecnico.pdf'}</p>
-                        <p className="text-[10px] text-amber-400 font-medium">Archivo subido</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setConfig({ ...config, riderPdfUrl: '', riderPdfName: '' })}
-                        className="p-1.5 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-lg border border-slate-700 transition"
-                        title="Eliminar fichero de rider"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
-                      <a
-                        href={config.riderPdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 py-1 px-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs rounded-lg flex items-center justify-center gap-1 transition"
-                      >
-                        <Download className="w-3.5 h-3.5" /> Descargar PDF Rider
-                      </a>
-                      <label className="cursor-pointer py-1 px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-lg border border-slate-700 flex items-center gap-1 transition">
-                        <Upload className="w-3.5 h-3.5 text-amber-400" /> Cambiar
-                        <input 
-                          type="file" 
-                          accept=".pdf,.doc,.docx,.txt" 
-                          onChange={handleRiderUpload} 
-                          className="hidden" 
-                          disabled={isUploadingRider}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4 bg-slate-900 border border-dashed border-slate-800 rounded-lg text-center space-y-2">
-                    <p className="text-xs text-slate-300">Sube aquí el PDF o Word del Rider Técnico completo:</p>
-                    <label className="inline-flex cursor-pointer bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs items-center gap-1.5 transition shadow">
-                      {isUploadingRider ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
-                      <span>{isUploadingRider ? 'Subiendo...' : 'Subir PDF de Rider'}</span>
-                      <input 
-                        type="file" 
-                        accept=".pdf,.doc,.docx,.txt" 
-                        onChange={handleRiderUpload} 
-                        className="hidden" 
-                        disabled={isUploadingRider}
-                      />
-                    </label>
-                  </div>
-                )}
-
-                <div className="space-y-1">
-                  <label className="text-[10px] text-slate-400 font-medium">O enlace externo al Rider (Drive/Dropbox):</label>
-                  <input
-                    type="text"
-                    value={config.riderPdfUrl || ''}
-                    onChange={e => setConfig({ ...config, riderPdfUrl: e.target.value, riderPdfName: e.target.value ? (config.riderPdfName || 'Enlace Rider PDF') : '' })}
-                    placeholder="https://drive.google.com/file/d/..."
-                    className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1 text-xs font-mono text-slate-200 outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* TEXTO RESUMIDO DEL RIDER */}
-              <div className="space-y-2 flex flex-col justify-between">
-                <div>
-                  <label className="text-xs font-bold text-slate-300">Resumen Ejecutivo del Rider (para email y salas)</label>
-                  <textarea
-                    rows={6}
-                    value={config.riderTecnico}
-                    onChange={e => setConfig({ ...config, riderTecnico: e.target.value })}
-                    placeholder="Especifica necesidades de PA, monitores, canales, micros, contra-rider, etc..."
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs sm:text-sm font-mono text-slate-200 outline-none leading-relaxed mt-1"
-                  />
-                </div>
-                <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
-                  <span>Mínimo 80 caracteres (si no hay PDF adjunto)</span>
-                  <span className={(config.riderTecnico || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
-                    {(config.riderTecnico || '').trim().length} / 80 min.
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -1344,7 +1375,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 placeholder="Escenario mínimo 5x4m, 4 tomas de corriente, PA con 8 canales"
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none"
               />
-              <p className="text-[11px] text-slate-500 mt-1">Una frase, no el rider entero (eso va en la sección de Rider Técnico) - solo lo mínimo para que la sala sepa si os puede acoger.</p>
+              <p className="text-[11px] text-slate-500 mt-1">Una frase concisa con las necesidades básicas de escenario para que la sala sepa si os puede acoger.</p>
             </div>
           </div>
 
@@ -1411,26 +1442,29 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               </button>
             </div>
             <div className="text-xs text-slate-400 space-y-1">
-              <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre e instrumento de cada miembro - una foto distinta para cada uno, a ser posible del escenario o un primer plano suyo (no vale repetir la misma foto de grupo en todos).</p>
-              <p>Aquí es donde va la trayectoria individual (giras, colaboraciones, otros proyectos) - la Biografía de arriba es solo del conjunto.</p>
+              <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre, instrumento y breve descripción de cada miembro (foto de primer plano o en directo, una distinta para cada integrante).</p>
+              <p>Puedes incluir una breve descripción o trayectoria individual opcional (giras, colaboraciones, otros proyectos, rol en directo) que complementa la biografía global de la banda.</p>
             </div>
             {miembros.length === 0 && (
               <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
-                Todavía no has añadido a nadie. Añade a los integrantes con su foto para que el dossier tenga cara.
+                Todavía no has añadido a nadie. Añade a los integrantes con su foto y descripción opcional para que el dossier tenga cara y cercanía.
               </div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {miembros.map(m => (
-                <div key={m.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3 space-y-2">
+                <div key={m.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3.5 space-y-2.5">
                   <div className="flex items-start gap-3">
-                    <label className="shrink-0 cursor-pointer group" title="Subir foto">
-                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center">
+                    <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center relative">
                         {subiendoFotoMiembro === m.id ? (
                           <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
                         ) : m.fotoUrl ? (
                           <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
                         ) : (
-                          <Upload className="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition" />
+                          <div className="flex flex-col items-center justify-center p-1 text-center">
+                            <Upload className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition mb-0.5" />
+                            <span className="text-[8px] text-slate-500 font-medium">Foto</span>
+                          </div>
                         )}
                       </div>
                       <input
@@ -1440,33 +1474,38 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                         onChange={e => { const f = e.target.files?.[0]; if (f) subirFotoMiembro(m.id, f); e.target.value = ''; }}
                       />
                     </label>
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-1.5">
                       <input
                         type="text"
                         value={m.nombre}
                         onChange={e => editarMiembro(m.id, { nombre: e.target.value })}
-                        placeholder="Nombre"
-                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-white focus:border-amber-500 outline-none"
+                        placeholder="Nombre del músico"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-sm font-semibold text-white focus:border-amber-500 outline-none"
                       />
                       <input
                         type="text"
                         value={m.rol}
                         onChange={e => editarMiembro(m.id, { rol: e.target.value })}
-                        placeholder="Voz, guitarra, percusión..."
-                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:border-amber-500 outline-none"
+                        placeholder="Instrumento / Rol (Voz, guitarra, metales...)"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-400/90 focus:border-amber-500 outline-none"
                       />
                     </div>
-                    <button onClick={() => quitarMiembro(m.id)} className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 transition" title="Quitar miembro">
+                    <button onClick={() => quitarMiembro(m.id)} className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 transition" title="Quitar músico">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                  <textarea
-                    rows={2}
-                    value={m.bio || ''}
-                    onChange={e => editarMiembro(m.id, { bio: e.target.value })}
-                    placeholder="Trayectoria breve (opcional): giras, colaboraciones, otros proyectos..."
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 focus:border-amber-500 outline-none placeholder:text-slate-600"
-                  />
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                      Breve descripción / Trayectoria (opcional)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={m.bio || ''}
+                      onChange={e => editarMiembro(m.id, { bio: e.target.value })}
+                      placeholder="Trayectoria o descripción: giras, formación musical, otros proyectos o rol en directo..."
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-amber-500 outline-none placeholder:text-slate-600 leading-relaxed"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -1562,7 +1601,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                       {[
                         { campo: 'biografia' as const, etiqueta: 'Biografía', original: config.biografia, filas: 6 },
                         { campo: 'textoPie' as const, etiqueta: 'Lema (subtítulo de la cabecera)', original: config.firmaEmail?.textoPie, filas: 2 },
-                        { campo: 'riderTecnico' as const, etiqueta: 'Rider técnico', original: config.riderTecnico, filas: 4 },
                       ].filter(f => (f.original || '').trim()).map(f => (
                         <div key={f.campo} className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                           <div>
@@ -1632,42 +1670,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             })}
           </div>
 
-          {/* FEATURED SONGS SELECTOR */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
-            <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Music className="w-5 h-5" /> Seleccionar Temas Destacados para el EPK
-            </h3>
-            <p className="text-xs text-slate-400">
-              Marca las canciones que quieres mostrar en primera línea a los programadores de salas:
-            </p>
-            {/* Sin esto, un fallo de carga o un repertorio vacío se veían igual: un hueco en
-                blanco, sin ninguna pista de qué estaba pasando. */}
-            {songs.length === 0 && (
-              <div className={`rounded-xl border p-4 text-xs ${errorSongs ? 'border-red-500/40 bg-red-500/10 text-red-300' : 'border-slate-800 bg-slate-950 text-slate-400'}`}>
-                {errorSongs || 'Todavía no hay canciones en tu repertorio. Añádelas en la sección "Repertorio" y volverán a aparecer aquí para poder destacarlas.'}
-              </div>
-            )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {songs.map(song => {
-                const isSelected = config.temasDestacadosIds?.includes(song.id);
-                return (
-                  <div
-                    key={song.id}
-                    onClick={() => toggleHighlightedSong(song.id)}
-                    className={`p-3 rounded-xl border cursor-pointer transition flex items-center justify-between ${isSelected ? 'bg-amber-500/15 border-amber-500 text-white' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'}`}
-                  >
-                    <div>
-                      <h5 className="font-bold text-xs text-white">{song.titulo}</h5>
-                      <p className="text-[10px] text-slate-400">{song.albumDisco || 'Sencillo'} • {song.duracion}</p>
-                    </div>
-                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center text-xs ${isSelected ? 'bg-amber-500 text-slate-950 border-amber-500 font-bold' : 'border-slate-700'}`}>
-                      {isSelected ? '✓' : ''}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
         </div>
       )}
 
@@ -2002,6 +2004,16 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           </div>
         </div>
       )}
+
+      {/* Modal Simulador / Vista Previa In-App del Formulario Únete */}
+      <FansLandingPreviewModal
+        isOpen={showFansPreviewModal}
+        onClose={() => setShowFansPreviewModal(false)}
+        currentBandId={activeBandId}
+        currentBandName={currentUser?.bandName || config.contactoBooking?.nombre || (isBakandeya ? 'Bakandeya' : 'Tu Banda')}
+        currentBandLogo={config.logoUrl}
+        epkConfig={config}
+      />
     </div>
   );
 };

@@ -406,10 +406,10 @@ router.get("/public/epk", async (req, res) => {
       });
     }
 
-    // Filter highlighted songs
-    const highlightedSongs = epkConfig?.temasDestacadosIds?.length > 0
+    // Filter highlighted songs - solo incluir temas si el usuario los ha seleccionado expresamente
+    const highlightedSongs = Array.isArray(epkConfig?.temasDestacadosIds) && epkConfig.temasDestacadosIds.length > 0
       ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
-      : songs.slice(0, 3);
+      : [];
 
     // Upcoming concerts
     const today = new Date().toISOString().split("T")[0];
@@ -622,6 +622,43 @@ router.post("/public/fans", async (req, res) => {
   } catch (err: any) {
     console.error("Error in public fan registration:", err);
     res.status(500).json({ error: "Error al procesar el registro de fan." });
+  }
+});
+
+// Click Tracking Endpoint for Fan Landing and EPK buttons (Revolut, Socials, Booking, Downloads)
+router.post("/public/track-click", async (req, res) => {
+  try {
+    const { band_id, platform, button_type, context } = req.body || {};
+    const targetBandId = (band_id || "band-bakandeya").toLowerCase();
+    const cleanKey = (platform || button_type || "unknown").toLowerCase();
+
+    const state = loadState();
+    if (!state.clickMetricsByBand) state.clickMetricsByBand = {};
+    if (!state.clickMetricsByBand[targetBandId]) state.clickMetricsByBand[targetBandId] = {};
+
+    const currentCount = state.clickMetricsByBand[targetBandId][cleanKey] || 0;
+    state.clickMetricsByBand[targetBandId][cleanKey] = currentCount + 1;
+    state.clickMetricsByBand[targetBandId][`${cleanKey}_last_at`] = new Date().toISOString();
+
+    saveState(state);
+
+    res.json({ success: true, count: currentCount + 1, platform: cleanKey });
+  } catch (err: any) {
+    console.error("Error tracking click:", err);
+    res.status(200).json({ success: false }); // Non-blocking
+  }
+});
+
+// Click Stats Endpoint (Authenticated or by BandId)
+router.get("/epk/clicks", async (req, res) => {
+  try {
+    const bandId = (req.query.band_id as string) || (req as any).user?.band_id || "band-bakandeya";
+    const targetBandId = bandId.toLowerCase();
+    const state = loadState();
+    const clicks = state.clickMetricsByBand?.[targetBandId] || {};
+    res.json({ success: true, clicks });
+  } catch (err: any) {
+    res.status(500).json({ error: "Error al obtener estadísticas de clicks." });
   }
 });
 

@@ -262,6 +262,7 @@ export interface EPKConfig {
     website?: string;
     whatsapp?: string;
     revolut?: string;
+    paypal?: string;
     [key: string]: string | undefined;
   };
   contactoBooking: {
@@ -274,6 +275,9 @@ export interface EPKConfig {
     habilitado?: boolean;
     revolutTag?: string;
     revolutUrl?: string;
+    paypalUser?: string;
+    paypalUrl?: string;
+    metodoPorDefecto?: 'revolut' | 'paypal';
     titulo?: string;
     descripcion?: string;
   };

@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, ExternalLink, Calendar, Briefcase, Mail, Phone, MessageCircle } from 'lucide-react';
-import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink } from 'lucide-react';
+import { SocialPlatformsList, SocialLinks, PayPalLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
 import { renderBold } from '../utils/richText';
 
-interface FansLandingProps {
+import { Concert, EPKConfig } from '../types';
+
+export interface FansLandingProps {
   currentBandId?: string;
   currentBandName?: string;
   currentBandLogo?: string;
+  isPreview?: boolean;
+  previewLanguage?: FanFormLanguage;
+  previewConfig?: Partial<EPKConfig>;
+  previewConcert?: Concert | null;
+  previewConcertName?: string;
+  previewView?: 'form' | 'success';
+  onClosePreview?: () => void;
 }
 
 const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (lang: FanFormLanguage) => void }> = ({ language, onChange }) => (
@@ -34,7 +43,14 @@ const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (
 export const FansLanding: React.FC<FansLandingProps> = ({
   currentBandId: initialBandId,
   currentBandName: initialBandName,
-  currentBandLogo: initialBandLogo
+  currentBandLogo: initialBandLogo,
+  isPreview = false,
+  previewLanguage,
+  previewConfig,
+  previewConcert,
+  previewConcertName,
+  previewView = 'form',
+  onClosePreview
 }) => {
   const [activeTab, setActiveTab] = useState<'redes' | 'form'>('redes');
   const [formData, setFormData] = useState({
@@ -54,8 +70,35 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [concertId, setConcertId] = useState('');
   const [concertName, setConcertName] = useState('');
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [isConcertLink, setIsConcertLink] = useState(false);
-  const [language, setLanguage] = useFanFormLanguage();
+  const [isConcertLink, setIsConcertLink] = useState(Boolean(previewConcert || previewConcertName));
+  const [language, setLanguage] = useFanFormLanguage(isPreview ? previewLanguage : undefined);
+
+  // Sincronizar idioma si se proporciona en modo preview
+  useEffect(() => {
+    if (isPreview && previewLanguage && previewLanguage !== language) {
+      setLanguage(previewLanguage);
+    }
+  }, [isPreview, previewLanguage]);
+
+  // Si se solicita previsualizar directamente la pantalla de éxito
+  useEffect(() => {
+    if (isPreview && previewView === 'success') {
+      const inc = previewConfig?.incentivoFans || {
+        mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!',
+        enlaceDescarga: 'https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3',
+        codigoDescuento: 'BAKANDEYA-FAN-10'
+      };
+      setSuccessData({
+        success: true,
+        message: inc.mensajeAgradecimiento || '¡Bienvenido a la comunidad!',
+        incentivo: inc,
+        isSimulated: true
+      });
+    } else if (isPreview && previewView === 'form') {
+      setSuccessData(null);
+    }
+  }, [isPreview, previewView, previewConfig]);
+
   const dict = FAN_FORM_TRANSLATIONS[language];
   const t = (key: keyof typeof dict, vars?: Record<string, string | undefined>) =>
     vars ? interpolate(dict[key], vars) : dict[key];
@@ -83,16 +126,73 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     habilitado?: boolean;
     revolutTag?: string;
     revolutUrl?: string;
+    paypalUser?: string;
+    paypalUrl?: string;
+    metodoPorDefecto?: 'revolut' | 'paypal';
     titulo?: string;
     descripcion?: string;
   } | null>({
     habilitado: true,
     revolutTag: 'bakandeya',
-    revolutUrl: 'https://revolut.me/bakandeya'
+    revolutUrl: 'https://revolut.me/bakandeya',
+    paypalUser: 'bakandeya',
+    paypalUrl: 'https://paypal.me/bakandeya',
+    metodoPorDefecto: 'revolut'
   });
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal'>('revolut');
   const [imgError, setImgError] = useState(false);
+  const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
+
+  const trackClick = (platform: string, url?: string, context?: string) => {
+    const key = platform.toLowerCase();
+    setClickCounts(prev => ({ ...prev, [key]: (prev[key] || 0) + 1 }));
+    try {
+      fetch('/api/public/track-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          band_id: resolvedBandId,
+          platform: key,
+          button_type: key,
+          context: context || (activeTab === 'form' ? 'form' : 'redes')
+        }),
+        keepalive: true
+      }).catch(() => {});
+    } catch {}
+  };
 
   useEffect(() => {
+    if (isPreview && previewConfig) {
+      if (initialBandName) setBandName(initialBandName);
+      if (initialBandLogo || previewConfig.logoUrl) {
+        setLogoUrl(initialBandLogo || previewConfig.logoUrl || null);
+      }
+      if (previewConfig.enlacesRedes && Object.keys(previewConfig.enlacesRedes).length > 0) {
+        setSocialLinks(previewConfig.enlacesRedes);
+      }
+      if (previewConfig.contactoBooking) {
+        setContactoBooking({
+          email: previewConfig.contactoBooking.email,
+          telefono: previewConfig.contactoBooking.telefono
+        });
+      }
+      if (previewConfig.donacionRevolut) {
+        setDonacionRevolut(previewConfig.donacionRevolut);
+        if (previewConfig.donacionRevolut.metodoPorDefecto) {
+          setSelectedPaymentMethod(previewConfig.donacionRevolut.metodoPorDefecto);
+        }
+      }
+      if (previewConcert) {
+        setConcertId(previewConcert.id);
+        setConcertName(`${previewConcert.sala} (${previewConcert.ciudad})`);
+        setIsConcertLink(true);
+      } else if (previewConcertName) {
+        setConcertName(previewConcertName);
+        setIsConcertLink(true);
+      }
+      return;
+    }
+
     // 1. Determine active band ID from URL, props or localStorage
     const params = new URLSearchParams(window.location.search);
     const queryBand = params.get('band_id') || params.get('band') || params.get('b');
@@ -176,19 +276,30 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           if (data.epkConfig?.donacionRevolut) {
             setDonacionRevolut(data.epkConfig.donacionRevolut);
+            if (data.epkConfig.donacionRevolut.metodoPorDefecto) {
+              setSelectedPaymentMethod(data.epkConfig.donacionRevolut.metodoPorDefecto);
+            }
           } else if (cleanId === 'bakandeya') {
             setDonacionRevolut({
               habilitado: true,
               revolutTag: 'bakandeya',
-              revolutUrl: 'https://revolut.me/bakandeya'
+              revolutUrl: 'https://revolut.me/bakandeya',
+              paypalUser: 'bakandeya',
+              paypalUrl: 'https://paypal.me/bakandeya',
+              metodoPorDefecto: 'revolut'
             });
-          } else if (data.epkConfig?.enlacesRedes?.revolut) {
+          } else if (data.epkConfig?.enlacesRedes?.revolut || data.epkConfig?.enlacesRedes?.paypal) {
             const rawRev = data.epkConfig.enlacesRedes.revolut;
-            const revUrl = rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`;
+            const revUrl = rawRev ? (rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : undefined;
+            const rawPay = data.epkConfig.enlacesRedes.paypal;
+            const payUrl = rawPay ? (rawPay.startsWith('http') ? rawPay : `https://paypal.me/${rawPay.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : undefined;
             setDonacionRevolut({
               habilitado: true,
               revolutUrl: revUrl,
-              revolutTag: rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, '')
+              revolutTag: rawRev ? rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, '') : undefined,
+              paypalUrl: payUrl,
+              paypalUser: rawPay ? rawPay.replace(/^https?:\/\//, '').replace(/^paypal\.me\//, '').replace(/^@/, '') : undefined,
+              metodoPorDefecto: revUrl ? 'revolut' : 'paypal'
             });
           } else {
             setDonacionRevolut(null);
@@ -238,56 +349,187 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     || (socialLinks?.revolut ? (socialLinks.revolut.startsWith('http') ? socialLinks.revolut : `https://revolut.me/${socialLinks.revolut.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
     || (resolvedBandId.includes('bakandeya') ? 'https://revolut.me/bakandeya' : '');
 
+  const paypalUrl = donacionRevolut?.paypalUrl
+    || (donacionRevolut?.paypalUser ? (donacionRevolut.paypalUser.startsWith('http') ? donacionRevolut.paypalUser : `https://paypal.me/${donacionRevolut.paypalUser.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
+    || (socialLinks?.paypal ? (socialLinks.paypal.startsWith('http') ? socialLinks.paypal : `https://paypal.me/${socialLinks.paypal.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
+    || (resolvedBandId.includes('bakandeya') ? 'https://paypal.me/bakandeya' : '');
+
   const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const revolutDisplay = rawHandle || 'revolut.me/bakandeya';
 
-  const renderRevolutCard = (isSuccessScreen = false) => {
-    if (!revolutUrl || donacionRevolut?.habilitado === false) return null;
+  const rawPaypalHandle = paypalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const paypalDisplay = rawPaypalHandle || 'paypal.me/bakandeya';
 
-    const defaultLabel = isSuccessScreen
-      ? t('revolutSuccessPrompt', { bandName })
-      : t('economicSupportTitle', { bandName });
+  const hasRevolut = Boolean(revolutUrl);
+  const hasPaypal = Boolean(paypalUrl);
 
-    // Priorizar título personalizado que el usuario haya escrito en el dossier (si existe y estamos en el formulario inicial)
-    const customTitle = donacionRevolut?.titulo && donacionRevolut.titulo.trim();
-    const label = (!isSuccessScreen && customTitle) ? customTitle : defaultLabel;
-    const customDesc = donacionRevolut?.descripcion && donacionRevolut.descripcion.trim();
+  const activeMethod: 'revolut' | 'paypal' = 
+    (hasRevolut && hasPaypal)
+      ? selectedPaymentMethod
+      : (hasPaypal ? 'paypal' : 'revolut');
+
+  const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
+    if ((!revolutUrl && !paypalUrl) || donacionRevolut?.habilitado === false) return null;
+
+    const isSuccessScreen = contextType === 'success';
+    const isFormScreen = contextType === 'form';
+
+    const isDefaultSpanishTitle = !donacionRevolut?.titulo ||
+      donacionRevolut.titulo.trim() === '' ||
+      donacionRevolut.titulo.trim() === 'Colabora con una aportación económica' ||
+      donacionRevolut.titulo.trim() === 'Colabora con la banda' ||
+      donacionRevolut.titulo.trim() === `Colabora con ${bandName}` ||
+      donacionRevolut.titulo.trim() === 'Colabora con Bakandeya';
+
+    const isDefaultSpanishDesc = !donacionRevolut?.descripcion ||
+      donacionRevolut.descripcion.trim() === '' ||
+      donacionRevolut.descripcion.includes('financiar') ||
+      donacionRevolut.descripcion.includes('furgoneta') ||
+      donacionRevolut.descripcion.includes('grabaciones') ||
+      donacionRevolut.descripcion.includes('aportación directa nos ayuda');
+
+    // Si el usuario configuró un título personalizado y estamos en español, usarlo; si no, usar la traducción internacional
+    const label = (!isDefaultSpanishTitle && language === 'es' && donacionRevolut?.titulo?.trim())
+      ? donacionRevolut.titulo.trim()
+      : (isSuccessScreen
+        ? t('revolutSuccessPrompt', { bandName })
+        : t('economicSupportTitle', { bandName }));
+
+    // Si el usuario configuró una descripción personalizada y estamos en español, usarla; si no, usar el subtítulo traducido
+    const descText = (!isDefaultSpanishDesc && language === 'es' && donacionRevolut?.descripcion?.trim())
+      ? donacionRevolut.descripcion.trim()
+      : (isSuccessScreen
+        ? t('revolutSuccessPrompt', { bandName })
+        : t('economicSupportSubtitle'));
+
+    const revolutClicks = clickCounts['revolut'] || 0;
+    const paypalClicks = clickCounts['paypal'] || 0;
+    const totalClicks = revolutClicks + paypalClicks;
 
     return (
-      <div className={isSuccessScreen ? 'pt-2.5 border-t border-neutral-800 text-left' : 'pt-1'}>
-        <a
-          href={revolutUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex items-center justify-between gap-2.5 w-full p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-sky-950/40 via-neutral-900 to-sky-950/40 border border-sky-500/35 hover:border-sky-400 transition-all duration-200 shadow-sm hover:shadow-[0_0_14px_rgba(14,165,233,0.2)] text-left cursor-pointer"
-        >
-          <div className="flex items-center gap-2.5 min-w-0 flex-1">
-            <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-              <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-              </svg>
+      <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : isFormScreen ? 'pt-2' : 'pt-1.5'}>
+        <div className="rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800/90 hover:border-neutral-700/80 p-3.5 sm:p-4 shadow-xl transition-all duration-300 text-left">
+          {/* Cabecera de la tarjeta: Icono + Título + Badge */}
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400" />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-sky-100 group-hover:text-white transition leading-none truncate">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
                   {label}
-                </span>
-                <span className="text-[10px] font-mono text-sky-400/80 truncate hidden xs:inline">
-                  {revolutDisplay}
+                </h3>
+                <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
+                  {t('directBadge')}
                 </span>
               </div>
-              {customDesc && !isSuccessScreen && (
-                <p className="text-[10px] text-neutral-400 font-mono line-clamp-1 mt-0.5 group-hover:text-neutral-300 transition leading-tight">
-                  {customDesc}
-                </p>
-              )}
+              <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
+                {descText}
+              </p>
             </div>
           </div>
 
-          <div className="w-6 h-6 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 group-hover:bg-sky-500 group-hover:text-black group-hover:border-sky-400 transition-all duration-200 shrink-0">
-            <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+          {/* Botones de Pago Directos */}
+          {hasRevolut && hasPaypal ? (
+            /* Dos botones directos en cuadrícula equilibrada */
+            <div className="grid grid-cols-2 gap-2 pt-3">
+              {/* Botón Revolut */}
+              <a
+                href={revolutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick('revolut', revolutUrl, contextType)}
+                className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/80 hover:border-neutral-500 transition-all duration-200 shadow-sm text-left active:scale-[0.98] cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
+                  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                    <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition block truncate">
+                    Revolut
+                  </span>
+                  <span className="text-[9px] text-neutral-400 font-mono block truncate group-hover:text-neutral-200">
+                    {revolutDisplay.replace(/^revolut\.me\//, '@')}
+                  </span>
+                </div>
+              </a>
+
+              {/* Botón PayPal */}
+              <a
+                href={paypalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick('paypal', paypalUrl, contextType)}
+                className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 hover:border-sky-300 transition-all duration-200 shadow-sm text-left active:scale-[0.98] cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
+                  <PayPalLogo className="w-full h-full" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition block truncate">
+                    PayPal
+                  </span>
+                  <span className="text-[9px] text-sky-200 font-mono block truncate group-hover:text-white">
+                    {paypalDisplay.replace(/^paypal\.me\//, '@')}
+                  </span>
+                </div>
+              </a>
+            </div>
+          ) : (
+            /* Botón Único de ancho completo */
+            <div className="pt-3">
+              <a
+                href={hasRevolut ? revolutUrl : paypalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick(hasRevolut ? 'revolut' : 'paypal', hasRevolut ? revolutUrl : paypalUrl, contextType)}
+                className={`group relative flex items-center justify-between gap-3 p-3 rounded-xl transition-all duration-200 shadow-md text-left active:scale-[0.99] cursor-pointer ${
+                  hasRevolut
+                    ? 'bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/80 hover:border-neutral-500 text-white'
+                    : 'bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
+                    {hasRevolut ? (
+                      <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                        <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                      </svg>
+                    ) : (
+                      <PayPalLogo className="w-full h-full" />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-xs sm:text-sm font-bold block truncate text-white group-hover:text-amber-300 transition">
+                      {hasRevolut ? t('revolutButton') : t('paypalButton')}
+                    </span>
+                    <span className="text-[10px] text-neutral-400 font-mono block truncate">
+                      {hasRevolut ? revolutDisplay : paypalDisplay}
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/10 group-hover:bg-white/20 text-white shrink-0 border border-white/20 flex items-center gap-1 transition">
+                  {t('openButton')} <ExternalLink className="w-3 h-3" />
+                </span>
+              </a>
+            </div>
+          )}
+
+          {/* Pie de seguridad y métricas */}
+          <div className="pt-2.5 flex items-center justify-between text-[10px] text-neutral-500">
+            <span className="flex items-center gap-1">
+              <LockIcon className="w-3 h-3 text-neutral-500 shrink-0" />
+              <span>{t('revolutSecureDirect')}</span>
+            </span>
+            {totalClicks > 0 && (
+              <span className="text-[9px] font-mono text-neutral-500 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800">
+                {totalClicks} {totalClicks === 1 ? t('clickSingular') : t('clickPlural')}
+              </span>
+            )}
           </div>
-        </a>
+        </div>
       </div>
     );
   };
@@ -301,6 +543,25 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     
     setLoading(true);
     setError('');
+
+    // En modo simulación / preview dentro de la app, simulamos el registro con éxito sin ensuciar la base de datos real
+    if (isPreview) {
+      setTimeout(() => {
+        setLoading(false);
+        const inc = previewConfig?.incentivoFans || {
+          mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!',
+          enlaceDescarga: 'https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3',
+          codigoDescuento: 'BAKANDEYA-FAN-10'
+        };
+        setSuccessData({
+          success: true,
+          message: inc.mensajeAgradecimiento || '¡Bienvenido a la comunidad!',
+          incentivo: inc,
+          isSimulated: true
+        });
+      }, 400);
+      return;
+    }
     
     try {
       const res = await fetch('/api/public/fans', {
@@ -336,10 +597,38 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const incentivo = successData.incentivo || {};
     
     return (
-      <div className="min-h-screen bg-[#121111] flex items-start justify-center p-4 pt-8 sm:items-center sm:pt-4">
-        <div className="max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden">
+      <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[#121111] flex items-start justify-center`}>
+        <div className={`max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl ${isPreview ? 'p-4 sm:p-6' : 'p-6 sm:p-8'} text-center space-y-5 shadow-2xl relative overflow-hidden`}>
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-amber-600" />
           
+          {isPreview && (
+            <div className="p-2 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-mono flex items-center justify-between gap-2">
+              <span className="flex items-center gap-1 font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                {t('interactiveSimulation')}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSuccessData(null);
+                  setFormData({
+                    nombre: '',
+                    email: '',
+                    ciudad: '',
+                    comoConocio: isConcertLink ? 'Concierto' : '',
+                    cancionFavorita: '',
+                    mensaje: '',
+                    instagram: '',
+                    consentimiento: false,
+                  });
+                }}
+                className="text-amber-400 hover:text-white underline font-bold"
+              >
+                {t('backToForm')}
+              </button>
+            </div>
+          )}
+
           <div className="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-500/20 shadow-inner">
             <Heart className="w-10 h-10 text-amber-500" />
           </div>
@@ -354,7 +643,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <p className="text-neutral-300 font-mono text-sm leading-relaxed max-w-xs mx-auto">
               {successData.alreadyRegistered
                 ? successData.message
-                : (incentivo.mensajeAgradecimiento || t('registeredDefaultMessage', { bandName }))}
+                : ((incentivo.mensajeAgradecimiento && language === 'es') || !t('registeredDefaultMessage', { bandName })
+                    ? (incentivo.mensajeAgradecimiento || t('registeredDefaultMessage', { bandName }))
+                    : t('registeredDefaultMessage', { bandName }))}
             </p>
           </div>
 
@@ -395,12 +686,16 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 links={socialLinks}
                 variant="grid"
                 title={t('followUsPlatforms')}
+                language={language}
+                onPlatformClick={(plat, url) => trackClick(plat, url, 'success')}
+                clickCounts={clickCounts}
+                showClickCounts={true}
               />
             </div>
           )}
 
           {/* Revolut Support in Success View */}
-          {renderRevolutCard(true)}
+          {renderRevolutCard('success')}
 
           {/* Booking / Contrataciones in Success View */}
           {contactoBooking && (contactoBooking.email || contactoBooking.telefono) && (
@@ -464,8 +759,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#121111] flex items-start justify-center p-4 pt-8 sm:items-center sm:pt-4">
-      <div className="max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
+    <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[#121111] flex items-start justify-center`}>
+      <div className={`max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl ${isPreview ? 'p-4 sm:p-6' : 'p-6 sm:p-8'} space-y-6 shadow-2xl relative overflow-hidden`}>
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-neutral-800 to-neutral-700" />
         
         <div className="text-center space-y-4 pt-2">
@@ -551,10 +846,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               links={socialLinks || {}}
               variant="grid"
               showTitle={false}
+              language={language}
+              onPlatformClick={(plat, url) => trackClick(plat, url, 'redes')}
+              clickCounts={clickCounts}
+              showClickCounts={true}
             />
 
             {/* Aportación Económica / Revolut debajo de links de redes */}
-            {renderRevolutCard(false)}
+            {renderRevolutCard('redes')}
 
             <div className="pt-1 text-center">
               <button
@@ -659,6 +958,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
             </div>
 
+            {/* Revolut Support also directly accessible inside the registration form */}
+            {renderRevolutCard('form')}
+
             <div className="pt-2 pb-1">
               <label className="flex items-start gap-3 cursor-pointer group p-3 bg-neutral-950/50 rounded-xl border border-neutral-800 hover:border-neutral-700 transition-colors">
                 <div className="relative flex items-center justify-center mt-0.5">
@@ -702,6 +1004,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                   links={socialLinks}
                   variant="pills"
                   showTitle={false}
+                  language={language}
+                  onPlatformClick={(plat, url) => trackClick(plat, url, 'form')}
+                  clickCounts={clickCounts}
+                  showClickCounts={true}
                 />
               </div>
             )}

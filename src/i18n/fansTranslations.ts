@@ -71,6 +71,10 @@ type FanFormDict = {
   followUsPlatforms: string;
   economicSupportTitle: string; // {bandName}
   economicSupportSubtitle: string;
+  directBadge: string;
+  openButton: string;
+  clickSingular: string;
+  clickPlural: string;
   revolutButton: string;
   revolutCopied: string;
   revolutHandle: string;
@@ -78,12 +82,33 @@ type FanFormDict = {
   revolutStepTitle: string;
   revolutBadge: string;
   revolutSecureDirect: string;
+  paypalButton: string;
+  paypalCopied: string;
+  paypalHandle: string;
+  paypalBadge: string;
+  payWithRevolut: string;
+  payWithPaypal: string;
+  selectPaymentMethod: string;
   privacyModalTitle: string;
   privacyPara1: string; // {bandName} x2
   privacyPara2: string;
   privacyPara3: string; // {bandName}
   privacyPara4: string;
   understood: string;
+  interactiveSimulation: string;
+  backToForm: string;
+  previewModalTitle: string;
+  previewMobile: string;
+  previewDesktop: string;
+  previewTabForm: string;
+  previewTabSuccess: string;
+  previewLanguageLabel: string;
+  previewConcertLabel: string;
+  previewGeneralConcert: string;
+  previewReset: string;
+  previewClose: string;
+  previewProductionSyncBadge: string;
+  previewDisclaimer: string;
 };
 
 const es: FanFormDict = {
@@ -138,21 +163,46 @@ const es: FanFormDict = {
   downloadExclusive: 'Descargar Contenido Exclusivo',
   merchCode: 'Código Promocional de Merch',
   followUsPlatforms: '📱 Síguenos en nuestras plataformas',
-  economicSupportTitle: 'Colabora con {bandName}',
-  economicSupportSubtitle: 'Tu aportación directa nos ayuda a financiar grabaciones, giras y merch independiente.',
+  economicSupportTitle: 'Colabora con una aportación económica',
+  economicSupportSubtitle: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
+  directBadge: 'Directo',
+  openButton: 'Abrir',
+  clickSingular: 'clic',
+  clickPlural: 'clics',
   revolutButton: 'Aportar con Revolut',
   revolutCopied: '¡Enlace de Revolut copiado!',
   revolutHandle: 'revolut.me/{tag}',
   revolutSuccessPrompt: '¿Quieres dar un paso más y apoyar a la banda?',
   revolutStepTitle: 'Colaboración Económica & Donaciones',
   revolutBadge: 'Aportación Voluntaria',
-  revolutSecureDirect: 'Pago seguro directo a la banda sin comisiones',
+  revolutSecureDirect: 'Pago seguro sin comisiones para la banda',
+  paypalButton: 'Aportar con PayPal',
+  paypalCopied: '¡Enlace de PayPal copiado!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Método de pago:',
   privacyModalTitle: 'Política de Privacidad y RGPD',
   privacyPara1: '**1. Responsable del tratamiento:** {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.',
   privacyPara2: '**2. Legitimación:** El tratamiento de tus datos se basa en tu consentimiento explícito al marcar la casilla de aceptación y enviar el formulario.',
   privacyPara3: '**3. Destinatarios:** Los datos se almacenan de forma segura para uso exclusivo de {bandName} en la gestión de su base de fans. No se cederán a terceros salvo obligación legal.',
   privacyPara4: '**4. Derechos:** Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.',
   understood: 'Entendido',
+  interactiveSimulation: 'Simulación Interactiva',
+  backToForm: 'Volver al Formulario',
+  previewModalTitle: 'Simulador del Formulario "Únete"',
+  previewMobile: 'Móvil',
+  previewDesktop: 'Escritorio',
+  previewTabForm: 'Formulario',
+  previewTabSuccess: 'Éxito / Gracias',
+  previewLanguageLabel: 'Idioma',
+  previewConcertLabel: 'Concierto simulado',
+  previewGeneralConcert: '🌐 Modo General (Sin bolo)',
+  previewReset: 'Reiniciar',
+  previewClose: 'Cerrar',
+  previewProductionSyncBadge: 'Sincronizado con Dossier',
+  previewDisclaimer: 'Previsualización interactiva en tiempo real. Los cambios en el Dossier se reflejan al instante.',
 };
 
 const en: FanFormDict = {
@@ -208,20 +258,45 @@ const en: FanFormDict = {
   merchCode: 'Merch Promo Code',
   followUsPlatforms: '📱 Follow us on our platforms',
   economicSupportTitle: 'Support {bandName}',
-  economicSupportSubtitle: 'Your direct support helps us fund new studio recordings, tour expenses, and merch.',
+  economicSupportSubtitle: 'Your direct support helps us fund new studio recordings, tour expenses, and instruments.',
+  directBadge: 'Direct',
+  openButton: 'Open',
+  clickSingular: 'click',
+  clickPlural: 'clicks',
   revolutButton: 'Contribute via Revolut',
   revolutCopied: 'Revolut link copied!',
   revolutHandle: 'revolut.me/{tag}',
   revolutSuccessPrompt: 'Want to take a step further and support the band?',
   revolutStepTitle: 'Financial Support & Tips',
   revolutBadge: 'Voluntary Tip',
-  revolutSecureDirect: 'Secure direct payment to the band with zero middleman fees',
+  revolutSecureDirect: 'Secure payment with zero fees for the band',
+  paypalButton: 'Contribute via PayPal',
+  paypalCopied: 'PayPal link copied!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Payment method:',
   privacyModalTitle: 'Privacy Policy & GDPR',
   privacyPara1: '**1. Data controller:** {bandName} (music band). The data provided through this QR code and form will be used solely to manage your sign-up with {bandName} and to inform you about upcoming concerts, releases and music news.',
   privacyPara2: '**2. Legal basis:** The processing of your data is based on your explicit consent when checking the acceptance box and submitting the form.',
   privacyPara3: '**3. Recipients:** Data is stored securely for the exclusive use of {bandName} in managing its fan base. It will not be shared with third parties except where legally required.',
   privacyPara4: '**4. Your rights:** You can exercise your rights of access, rectification, erasure and portability at any time by writing to our contact email or by requesting it in any of our newsletters.',
   understood: 'Got it',
+  interactiveSimulation: 'Interactive Simulation',
+  backToForm: 'Back to Form',
+  previewModalTitle: '"Join" Form Simulator',
+  previewMobile: 'Mobile',
+  previewDesktop: 'Desktop',
+  previewTabForm: 'Form',
+  previewTabSuccess: 'Success / Thanks',
+  previewLanguageLabel: 'Language',
+  previewConcertLabel: 'Simulated Concert',
+  previewGeneralConcert: '🌐 General Mode (No gig)',
+  previewReset: 'Reset',
+  previewClose: 'Close',
+  previewProductionSyncBadge: 'Synced with EPK',
+  previewDisclaimer: 'Real-time interactive preview. Changes in the EPK are reflected instantly.',
 };
 
 const it: FanFormDict = {
@@ -277,20 +352,45 @@ const it: FanFormDict = {
   merchCode: 'Codice Promozionale Merch',
   followUsPlatforms: '📱 Seguici sulle nostre piattaforme',
   economicSupportTitle: 'Sostieni {bandName}',
-  economicSupportSubtitle: 'Il tuo supporto diretto ci aiuta a finanziare registrazioni, tour e merch indipendente.',
+  economicSupportSubtitle: 'Il tuo supporto diretto ci aiuta a finanziare furgone da tour, registrazioni e strumenti.',
+  directBadge: 'Diretto',
+  openButton: 'Apri',
+  clickSingular: 'clic',
+  clickPlural: 'clic',
   revolutButton: 'Contribuisci con Revolut',
   revolutCopied: 'Link Revolut copiato!',
   revolutHandle: 'revolut.me/{tag}',
   revolutSuccessPrompt: 'Vuoi fare un passo in più e sostenere la band?',
   revolutStepTitle: 'Supporto Economico & Donazioni',
   revolutBadge: 'Donazione Volontaria',
-  revolutSecureDirect: 'Pagamento sicuro diretto alla band senza commissioni',
+  revolutSecureDirect: 'Pagamento sicuro senza commissioni per la band',
+  paypalButton: 'Contribuisci con PayPal',
+  paypalCopied: 'Link PayPal copiato!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Metodo di pagamento:',
   privacyModalTitle: 'Informativa Privacy e GDPR',
   privacyPara1: '**1. Titolare del trattamento:** {bandName} (band musicale). I dati forniti tramite questo codice QR e il modulo saranno trattati esclusivamente per gestire la tua registrazione con {bandName} e per informarti su prossimi concerti, uscite e novità musicali.',
   privacyPara2: '**2. Base giuridica:** Il trattamento dei tuoi dati si basa sul tuo consenso esplicito, espresso selezionando la casella di accettazione e inviando il modulo.',
   privacyPara3: '**3. Destinatari:** I dati sono conservati in modo sicuro per uso esclusivo di {bandName} nella gestione della propria base fan. Non saranno condivisi con terzi salvo obbligo di legge.',
   privacyPara4: '**4. Diritti:** Puoi esercitare in qualsiasi momento i tuoi diritti di accesso, rettifica, cancellazione e portabilità scrivendo alla nostra email di contatto o richiedendolo in una qualsiasi delle nostre email informative.',
   understood: 'Capito',
+  interactiveSimulation: 'Simulazione Interattiva',
+  backToForm: 'Torna al Modulo',
+  previewModalTitle: 'Simulatore del Modulo "Unisciti"',
+  previewMobile: 'Mobile',
+  previewDesktop: 'Desktop',
+  previewTabForm: 'Modulo',
+  previewTabSuccess: 'Successo / Grazie',
+  previewLanguageLabel: 'Lingua',
+  previewConcertLabel: 'Concerto simulato',
+  previewGeneralConcert: '🌐 Modalità Generale (Senza concerto)',
+  previewReset: 'Reimposta',
+  previewClose: 'Chiudi',
+  previewProductionSyncBadge: 'Sincronizzato con Dossier',
+  previewDisclaimer: 'Anteprima interattiva in tempo reale. Le modifiche nel Dossier si riflettono all\'istante.',
 };
 
 const cs: FanFormDict = {
@@ -346,20 +446,45 @@ const cs: FanFormDict = {
   merchCode: 'Slevový kód na merch',
   followUsPlatforms: '📱 Sleduj nás na našich platformách',
   economicSupportTitle: 'Podpoř {bandName}',
-  economicSupportSubtitle: 'Tvoje dobrovolná podpora nám pomáhá přímo financovat nahrávání ve studiu, dodávku na turné a provoz kapely.',
+  economicSupportSubtitle: 'Tvoje dobrovolná podpora nám pomáhá přímo financovat dodávku na turné, nahrávání nových skladeb a nástroje.',
+  directBadge: 'Přímo',
+  openButton: 'Otevřít',
+  clickSingular: 'kliknutí',
+  clickPlural: 'kliknutí',
   revolutButton: 'Přispět přes Revolut',
   revolutCopied: 'Odkaz na Revolut zkopírován!',
   revolutHandle: 'revolut.me/{tag}',
   revolutSuccessPrompt: 'Chceš kapelu ještě více podpořit?',
   revolutStepTitle: 'Finanční podpora a dary',
   revolutBadge: 'Revolut',
-  revolutSecureDirect: 'Přímá platba kapele bez poplatků',
+  revolutSecureDirect: 'Bezpečná platba kapele bez poplatků',
+  paypalButton: 'Přispět přes PayPal',
+  paypalCopied: 'Odkaz na PayPal zkopírován!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Platební metoda:',
   privacyModalTitle: 'Zásady ochrany osobních údajů a GDPR',
   privacyPara1: '**1. Správce údajů:** {bandName} (hudební kapela). Údaje poskytnuté prostřednictvím tohoto QR kódu a formuláře budou zpracovány výhradně za účelem správy tvé registrace u {bandName} a informování o nadcházejících koncertech, vydáních a hudebních novinkách.',
   privacyPara2: '**2. Právní základ:** Zpracování tvých údajů je založeno na tvém výslovném souhlasu vyjádřeném zaškrtnutím políčka a odesláním formuláře.',
   privacyPara3: '**3. Příjemci:** Údaje jsou bezpečně uloženy pro výhradní použití {bandName} při správě fanouškovské základny. Nebudou předány třetím stranám s výjimkou zákonné povinnosti.',
   privacyPara4: '**4. Tvá práva:** Kdykoli můžeš uplatnit svá práva na přístup, opravu, výmaz a přenositelnost údajů, a to napsáním na náš kontaktní e-mail nebo uvedením v kterémkoli z našich informačních e-mailů.',
   understood: 'Rozumím',
+  interactiveSimulation: 'Interaktivní simulace',
+  backToForm: 'Zpět na formulář',
+  previewModalTitle: 'Simulátor formuláře "Připoj se"',
+  previewMobile: 'Mobil',
+  previewDesktop: 'Desktop',
+  previewTabForm: 'Formulář',
+  previewTabSuccess: 'Úspěch / Poděkování',
+  previewLanguageLabel: 'Jazyk',
+  previewConcertLabel: 'Simulovaný koncert',
+  previewGeneralConcert: '🌐 Obecný režim (Bez koncertu)',
+  previewReset: 'Resetovat',
+  previewClose: 'Zavřít',
+  previewProductionSyncBadge: 'Synchronizováno s Dossier',
+  previewDisclaimer: 'Interaktivní náhled v reálném čase. Změny v Dossier se okamžitě projeví.',
 };
 
 export const FAN_FORM_TRANSLATIONS: Record<FanFormLanguage, FanFormDict> = { es, en, it, cs };
