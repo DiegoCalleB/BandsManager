@@ -1,18 +1,23 @@
 import express from "express";
 import { KNOWN_LOCATIONS, CANONICAL_LOCATION_MAP, getRegionForCity } from "../../src/constants/regions.js";
 import { Lead, Rehearsal, Concert } from "../../src/types.js";
-import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyConfigForBand, BAKANDEYA_BAND_ID } from "../state.js";
+import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyConfigForBand, requireAuth, BAKANDEYA_BAND_ID } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 
 const router = express.Router();
 
-router.post("/chat", async (req, res) => {
+// requireAuth: el chatbot responde con los leads, los ensayos, los conciertos y el EPK de la
+// banda. Sin sesión, `userReq` salía null y todo eso se contestaba sobre la banda por defecto a
+// quien preguntara.
+router.post("/chat", requireAuth, async (req, res) => {
   const { message, chatHistory, agentsEnabled: agentsEnabledBody, autonomyConfig } = req.body;
   const agentsEnabled = agentsEnabledBody !== false;
   const userReq = getUserFromRequestLocal(req);
-  const userRole = userReq ? userReq.role : (req.body.userRole || "member");
+  // El rol sale solo de la sesión. Con el `req.body.userRole` que había de repuesto bastaba
+  // mandar userRole:'leader' para saltarse el bloqueo de finanzas y que el bot soltara los cachés.
+  const userRole = userReq?.role || "member";
   const isLeader = userRole === "leader";
 
   const state = loadState();
@@ -558,7 +563,9 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
 });
 
 // AI Reels Copy Writer Endpoint
-router.post("/write-reels-copy", async (req, res) => {
+// requireAuth: llama al modelo de IA, y abierta era una pasarela gratis a la cuenta de la
+// plataforma para cualquiera que diera con la URL.
+router.post("/write-reels-copy", requireAuth, async (req, res) => {
   const { idea, style } = req.body;
   const client = getAiClient();
   

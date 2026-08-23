@@ -1042,7 +1042,9 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
 });
 
 // AI Social Growth Plan Generator (Gemini Powered)
-router.post("/generate-growth-plan", async (req, res) => {
+// requireAuth: era la única ruta de métricas sin sesión, y llama al modelo de IA con lo que le
+// manden. Abierta, es consumo de la cuenta de IA de la plataforma a cargo de quien pase por ahí.
+router.post("/generate-growth-plan", requireAuth, async (req, res) => {
   try {
     const { bandName, metrics, epkConfig, horizonDays = 30, customFocus } = req.body || {};
     const ai = getAiClient();

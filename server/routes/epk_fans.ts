@@ -27,10 +27,11 @@ import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils
 const router = express.Router();
 
 // Get Autonomy Config
-router.get("/autonomy", async (req, res) => {
-  const user = (req as any).user;
-  const userBandId = user?.band_id || BAKANDEYA_BAND_ID;
-  
+// requireAuth: sin sesión no había usuario del que sacar la banda, así que esta ruta abierta
+// devolvía a cualquiera la configuración de autonomía de la banda por defecto.
+router.get("/autonomy", requireAuth, async (req, res) => {
+  const userBandId = getTargetBandId(req);
+
   try {
     const dbAutonomy = await dbGetAutonomyConfig(userBandId);
     if (dbAutonomy) {
@@ -649,11 +650,12 @@ router.post("/public/track-click", async (req, res) => {
   }
 });
 
-// Click Stats Endpoint (Authenticated or by BandId)
-router.get("/epk/clicks", async (req, res) => {
+// Click Stats Endpoint
+// El "o por BandId" que ponía aquí era el agujero: sin sesión y con ?band_id= se leían las
+// analíticas de clicks del EPK de cualquier banda.
+router.get("/epk/clicks", requireAuth, async (req, res) => {
   try {
-    const bandId = (req.query.band_id as string) || (req as any).user?.band_id || "band-bakandeya";
-    const targetBandId = bandId.toLowerCase();
+    const targetBandId = getTargetBandId(req).toLowerCase();
     const state = loadState();
     const clicks = state.clickMetricsByBand?.[targetBandId] || {};
     res.json({ success: true, clicks });
