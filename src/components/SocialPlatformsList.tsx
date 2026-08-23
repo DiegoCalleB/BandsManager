@@ -165,7 +165,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
     hoverClass: 'hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-300'
   },
   revolut: {
-    label: 'Revolut Pay',
+    label: 'Revolut',
     colorClass: 'text-sky-300',
     bgClass: 'bg-sky-500/10',
     borderClass: 'border-sky-500/30',
@@ -188,7 +188,7 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
 };
 
 // Orden de prioridad explícito solicitado para los enlaces públicos:
-// 1º Instagram, 2º YouTube, 3º Spotify, 4º TikTok, 5º Facebook, y después el resto (WhatsApp excluido de redes)
+// 1º Instagram, 2º YouTube, 3º Spotify, 4º TikTok, 5º Facebook, y después el resto (WhatsApp, Revolut y PayPal excluidos de redes)
 export const PLATFORM_PRIORITY_ORDER: string[] = [
   'instagram',
   'youtube',
@@ -200,6 +200,9 @@ export const PLATFORM_PRIORITY_ORDER: string[] = [
   'bandcamp',
   'website'
 ];
+
+// Métodos de pago y mensajería privada que NO deben aparecer entre los enlaces de redes sociales
+const NON_SOCIAL_KEYS = new Set(['whatsapp', 'revolut', 'paypal']);
 
 export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
   links,
@@ -232,9 +235,9 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
     }
   };
 
-  // Filtrar estrictamente solo aquellas redes que tengan una URL válida, rellena y NO sean WhatsApp (WhatsApp solo para contacto directo)
+  // Filtrar estrictamente solo aquellas redes que tengan una URL válida, rellena y NO sean métodos de pago (Revolut, PayPal) ni WhatsApp
   const validEntries = Object.entries(links)
-    .filter(([key, url]) => key !== 'whatsapp' && url && typeof url === 'string' && url.trim() !== '')
+    .filter(([key, url]) => !NON_SOCIAL_KEYS.has(key.toLowerCase()) && url && typeof url === 'string' && url.trim() !== '')
     .sort(([keyA], [keyB]) => {
       const indexA = PLATFORM_PRIORITY_ORDER.indexOf(keyA);
       const indexB = PLATFORM_PRIORITY_ORDER.indexOf(keyB);

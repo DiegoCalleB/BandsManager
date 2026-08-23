@@ -154,9 +154,6 @@ const UNIFIED_PLATFORMS = [
   { key: 'appleMusic', label: 'Apple Music', icon: '🍎', placeholder: 'https://music.apple.com/...' },
   { key: 'bandcamp', label: 'Bandcamp', icon: '⛺', placeholder: 'https://tubanda.bandcamp.com' },
   { key: 'website', label: 'Sitio Web Oficial', icon: '🌐', placeholder: 'https://www.tubanda.com' },
-  { key: 'whatsapp', label: 'WhatsApp', icon: '💬', placeholder: '+34600000000' },
-  { key: 'revolut', label: 'Revolut Pay', icon: '💳', placeholder: 'https://revolut.me/tubanda' },
-  { key: 'paypal', label: 'PayPal', icon: '🅿️', placeholder: 'https://paypal.me/tubanda' },
   { key: 'facebook', label: 'Facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
   { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' }
 ];
@@ -1184,7 +1181,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                       }`}
                     >
                       <span className="w-2 h-2 rounded-full bg-sky-400"></span>
-                      Revolut Pay
+                      Revolut
                     </button>
                     <button
                       type="button"
@@ -1275,7 +1272,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                         </div>
                         <div className="min-w-0 flex-1">
                           <span className="text-[11px] font-bold text-white block truncate">
-                            Revolut Pay
+                            Revolut
                           </span>
                           <span className="text-[9px] text-neutral-400 font-mono block truncate">
                             @{config.donacionRevolut?.revolutTag || 'tubanda'}

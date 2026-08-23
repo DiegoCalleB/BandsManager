@@ -433,7 +433,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {hasRevolut && hasPaypal ? (
             /* Dos botones directos en cuadrícula equilibrada */
             <div className="grid grid-cols-2 gap-2 pt-3">
-              {/* Botón Revolut Pay */}
+              {/* Botón Revolut */}
               <a
                 href={revolutUrl}
                 target="_blank"
@@ -448,7 +448,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
                 <div className="min-w-0 flex-1">
                   <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition block truncate">
-                    Revolut Pay
+                    Revolut
                   </span>
                   <span className="text-[9px] text-neutral-400 font-mono block truncate group-hover:text-neutral-200">
                     {revolutDisplay.replace(/^revolut\.me\//, '@')}
