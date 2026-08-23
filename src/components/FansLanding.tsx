@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock, ExternalLink } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
@@ -126,13 +126,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     habilitado?: boolean;
     revolutTag?: string;
     revolutUrl?: string;
+    paypalUser?: string;
+    paypalUrl?: string;
+    metodoPorDefecto?: 'revolut' | 'paypal';
     titulo?: string;
     descripcion?: string;
   } | null>({
     habilitado: true,
     revolutTag: 'bakandeya',
-    revolutUrl: 'https://revolut.me/bakandeya'
+    revolutUrl: 'https://revolut.me/bakandeya',
+    paypalUser: 'bakandeya',
+    paypalUrl: 'https://paypal.me/bakandeya',
+    metodoPorDefecto: 'revolut'
   });
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal'>('revolut');
   const [imgError, setImgError] = useState(false);
   const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
 
@@ -171,6 +178,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
       if (previewConfig.donacionRevolut) {
         setDonacionRevolut(previewConfig.donacionRevolut);
+        if (previewConfig.donacionRevolut.metodoPorDefecto) {
+          setSelectedPaymentMethod(previewConfig.donacionRevolut.metodoPorDefecto);
+        }
       }
       if (previewConcert) {
         setConcertId(previewConcert.id);
@@ -266,19 +276,30 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           if (data.epkConfig?.donacionRevolut) {
             setDonacionRevolut(data.epkConfig.donacionRevolut);
+            if (data.epkConfig.donacionRevolut.metodoPorDefecto) {
+              setSelectedPaymentMethod(data.epkConfig.donacionRevolut.metodoPorDefecto);
+            }
           } else if (cleanId === 'bakandeya') {
             setDonacionRevolut({
               habilitado: true,
               revolutTag: 'bakandeya',
-              revolutUrl: 'https://revolut.me/bakandeya'
+              revolutUrl: 'https://revolut.me/bakandeya',
+              paypalUser: 'bakandeya',
+              paypalUrl: 'https://paypal.me/bakandeya',
+              metodoPorDefecto: 'revolut'
             });
-          } else if (data.epkConfig?.enlacesRedes?.revolut) {
+          } else if (data.epkConfig?.enlacesRedes?.revolut || data.epkConfig?.enlacesRedes?.paypal) {
             const rawRev = data.epkConfig.enlacesRedes.revolut;
-            const revUrl = rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`;
+            const revUrl = rawRev ? (rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : undefined;
+            const rawPay = data.epkConfig.enlacesRedes.paypal;
+            const payUrl = rawPay ? (rawPay.startsWith('http') ? rawPay : `https://paypal.me/${rawPay.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : undefined;
             setDonacionRevolut({
               habilitado: true,
               revolutUrl: revUrl,
-              revolutTag: rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, '')
+              revolutTag: rawRev ? rawRev.replace(/^https?:\/\//, '').replace(/^revolut\.me\//, '').replace(/^@/, '') : undefined,
+              paypalUrl: payUrl,
+              paypalUser: rawPay ? rawPay.replace(/^https?:\/\//, '').replace(/^paypal\.me\//, '').replace(/^@/, '') : undefined,
+              metodoPorDefecto: revUrl ? 'revolut' : 'paypal'
             });
           } else {
             setDonacionRevolut(null);
@@ -328,11 +349,27 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     || (socialLinks?.revolut ? (socialLinks.revolut.startsWith('http') ? socialLinks.revolut : `https://revolut.me/${socialLinks.revolut.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
     || (resolvedBandId.includes('bakandeya') ? 'https://revolut.me/bakandeya' : '');
 
+  const paypalUrl = donacionRevolut?.paypalUrl
+    || (donacionRevolut?.paypalUser ? (donacionRevolut.paypalUser.startsWith('http') ? donacionRevolut.paypalUser : `https://paypal.me/${donacionRevolut.paypalUser.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
+    || (socialLinks?.paypal ? (socialLinks.paypal.startsWith('http') ? socialLinks.paypal : `https://paypal.me/${socialLinks.paypal.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
+    || (resolvedBandId.includes('bakandeya') ? 'https://paypal.me/bakandeya' : '');
+
   const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const revolutDisplay = rawHandle || 'revolut.me/bakandeya';
 
+  const rawPaypalHandle = paypalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const paypalDisplay = rawPaypalHandle || 'paypal.me/bakandeya';
+
+  const hasRevolut = Boolean(revolutUrl);
+  const hasPaypal = Boolean(paypalUrl);
+
+  const activeMethod: 'revolut' | 'paypal' = 
+    (hasRevolut && hasPaypal)
+      ? selectedPaymentMethod
+      : (hasPaypal ? 'paypal' : 'revolut');
+
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
-    if (!revolutUrl || donacionRevolut?.habilitado === false) return null;
+    if ((!revolutUrl && !paypalUrl) || donacionRevolut?.habilitado === false) return null;
 
     const isSuccessScreen = contextType === 'success';
     const isFormScreen = contextType === 'form';
@@ -348,59 +385,137 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       : t('economicSupportSubtitle'));
 
     const revolutClicks = clickCounts['revolut'] || 0;
+    const paypalClicks = clickCounts['paypal'] || 0;
+    const totalClicks = revolutClicks + paypalClicks;
 
     return (
       <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : isFormScreen ? 'pt-2' : 'pt-1.5'}>
-        <a
-          href={revolutUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackClick('revolut', revolutUrl, contextType)}
-          className="group relative block w-full p-3 sm:p-3.5 rounded-2xl bg-neutral-900/90 border-2 border-[#0075ff]/60 hover:border-[#0075ff] transition-all duration-300 shadow-[0_0_15px_rgba(0,117,255,0.18)] hover:shadow-[0_0_24px_rgba(0,117,255,0.38)] text-left cursor-pointer active:scale-[0.99] overflow-hidden animate-revolut-glow"
-        >
-          {/* Micro-animación de destello sutil */}
-          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none animate-revolut-sheen" />
-
-          <div className="flex items-start gap-3 relative z-10">
-            {/* Logo Revolut */}
-            <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shrink-0 shadow-md mt-0.5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-              <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-              </svg>
+        <div className="rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800/90 hover:border-neutral-700/80 p-3.5 sm:p-4 shadow-xl transition-all duration-300 text-left">
+          {/* Cabecera de la tarjeta: Icono + Título + Badge */}
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400" />
             </div>
-
-            {/* Texto completo multilínea responsivo sin cortes */}
-            <div className="min-w-0 flex-1 space-y-1">
-              <div className="flex flex-wrap items-center justify-between gap-1.5">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs sm:text-sm font-mono font-bold text-white group-hover:text-[#60a5fa] transition leading-snug break-words">
-                    {label}
-                  </span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-[#0075ff]/20 text-[#60a5fa] border border-[#0075ff]/40 whitespace-nowrap font-bold">
-                    Revolut
-                  </span>
-                </div>
-
-                {revolutClicks > 0 && (
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 text-neutral-300 border border-neutral-700 shrink-0">
-                    {revolutClicks} {revolutClicks === 1 ? 'click' : 'clicks'}
-                  </span>
-                )}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
+                  {label}
+                </h3>
+                <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
+                  Directo
+                </span>
               </div>
-
-              {/* Subtítulo / Descripción completa sin cortes ni truncamiento */}
-              <p className="text-[11px] text-neutral-300 font-mono leading-relaxed break-words group-hover:text-neutral-100 transition">
+              <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
                 {descText}
               </p>
-
-              {/* Handle directo / revolut.me */}
-              <div className="pt-0.5 flex items-center gap-1.5 text-[10px] font-mono text-[#60a5fa]">
-                <span className="opacity-90">⚡</span>
-                <span className="hover:underline font-bold">{revolutDisplay}</span>
-              </div>
             </div>
           </div>
-        </a>
+
+          {/* Botones de Pago Directos */}
+          {hasRevolut && hasPaypal ? (
+            /* Dos botones directos en cuadrícula equilibrada */
+            <div className="grid grid-cols-2 gap-2 pt-3">
+              {/* Botón Revolut Pay */}
+              <a
+                href={revolutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick('revolut', revolutUrl, contextType)}
+                className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/80 hover:border-neutral-500 transition-all duration-200 shadow-sm text-left active:scale-[0.98] cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
+                  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                    <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition block truncate">
+                    Revolut Pay
+                  </span>
+                  <span className="text-[9px] text-neutral-400 font-mono block truncate group-hover:text-neutral-200">
+                    {revolutDisplay.replace(/^revolut\.me\//, '@')}
+                  </span>
+                </div>
+              </a>
+
+              {/* Botón PayPal */}
+              <a
+                href={paypalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick('paypal', paypalUrl, contextType)}
+                className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 hover:border-sky-300 transition-all duration-200 shadow-sm text-left active:scale-[0.98] cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
+                  <svg className="w-full h-full fill-[#003087]" viewBox="0 0 24 24">
+                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition block truncate">
+                    PayPal
+                  </span>
+                  <span className="text-[9px] text-sky-200 font-mono block truncate group-hover:text-white">
+                    {paypalDisplay.replace(/^paypal\.me\//, '@')}
+                  </span>
+                </div>
+              </a>
+            </div>
+          ) : (
+            /* Botón Único de ancho completo */
+            <div className="pt-3">
+              <a
+                href={hasRevolut ? revolutUrl : paypalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick(hasRevolut ? 'revolut' : 'paypal', hasRevolut ? revolutUrl : paypalUrl, contextType)}
+                className={`group relative flex items-center justify-between gap-3 p-3 rounded-xl transition-all duration-200 shadow-md text-left active:scale-[0.99] cursor-pointer ${
+                  hasRevolut
+                    ? 'bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/80 hover:border-neutral-500 text-white'
+                    : 'bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-105 transition-transform">
+                    {hasRevolut ? (
+                      <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                        <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                      </svg>
+                    ) : (
+                      <svg className="w-full h-full fill-[#003087]" viewBox="0 0 24 24">
+                        <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
+                      </svg>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-xs sm:text-sm font-bold block truncate text-white group-hover:text-amber-300 transition">
+                      {hasRevolut ? 'Aportar con Revolut Pay' : 'Aportar con PayPal'}
+                    </span>
+                    <span className="text-[10px] text-neutral-400 font-mono block truncate">
+                      {hasRevolut ? revolutDisplay : paypalDisplay}
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/10 group-hover:bg-white/20 text-white shrink-0 border border-white/20 flex items-center gap-1 transition">
+                  Abrir <ExternalLink className="w-3 h-3" />
+                </span>
+              </a>
+            </div>
+          )}
+
+          {/* Pie de seguridad y métricas */}
+          <div className="pt-2.5 flex items-center justify-between text-[10px] text-neutral-500">
+            <span className="flex items-center gap-1">
+              <Lock className="w-3 h-3 text-neutral-500 shrink-0" />
+              <span>Pago seguro sin comisiones para la banda</span>
+            </span>
+            {totalClicks > 0 && (
+              <span className="text-[9px] font-mono text-neutral-500 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800">
+                {totalClicks} {totalClicks === 1 ? 'clic' : 'clics'}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     );
   };

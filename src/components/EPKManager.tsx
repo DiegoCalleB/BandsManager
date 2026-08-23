@@ -46,7 +46,19 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     website: 'https://bands-manager.up.railway.app',
     whatsapp: '+34612345678',
     facebook: 'https://facebook.com/bakandeyaoficial',
-    twitter: 'https://x.com/bakandeya_band'
+    twitter: 'https://x.com/bakandeya_band',
+    revolut: 'https://revolut.me/bakandeya',
+    paypal: 'https://paypal.me/bakandeya'
+  },
+  donacionRevolut: {
+    habilitado: true,
+    revolutTag: 'bakandeya',
+    revolutUrl: 'https://revolut.me/bakandeya',
+    paypalUser: 'bakandeya',
+    paypalUrl: 'https://paypal.me/bakandeya',
+    metodoPorDefecto: 'revolut',
+    titulo: 'Colabora con una aportación económica',
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
   },
   firmaEmail: {
     nombreRemitente: 'Diego de la Calle',
@@ -96,7 +108,19 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
     website: '',
     whatsapp: '',
     facebook: '',
-    twitter: ''
+    twitter: '',
+    revolut: '',
+    paypal: ''
+  },
+  donacionRevolut: {
+    habilitado: true,
+    revolutTag: '',
+    revolutUrl: '',
+    paypalUser: '',
+    paypalUrl: '',
+    metodoPorDefecto: 'revolut',
+    titulo: 'Colabora con una aportación económica',
+    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
   },
   firmaEmail: {
     nombreRemitente: '',
@@ -114,7 +138,9 @@ const EMPTY_EPK_CONFIG: EPKConfig = {
       appleMusic: '',
       bandcamp: '',
       website: '',
-      whatsapp: ''
+      whatsapp: '',
+      revolut: '',
+      paypal: ''
     }
   }
 };
@@ -128,6 +154,8 @@ const UNIFIED_PLATFORMS = [
   { key: 'bandcamp', label: 'Bandcamp', icon: '⛺', placeholder: 'https://tubanda.bandcamp.com' },
   { key: 'website', label: 'Sitio Web Oficial', icon: '🌐', placeholder: 'https://www.tubanda.com' },
   { key: 'whatsapp', label: 'WhatsApp', icon: '💬', placeholder: '+34600000000' },
+  { key: 'revolut', label: 'Revolut Pay', icon: '💳', placeholder: 'https://revolut.me/tubanda' },
+  { key: 'paypal', label: 'PayPal', icon: '🅿️', placeholder: 'https://paypal.me/tubanda' },
   { key: 'facebook', label: 'Facebook', icon: '📘', placeholder: 'https://facebook.com/...' },
   { key: 'twitter', label: 'X / Twitter', icon: '🐦', placeholder: 'https://x.com/...' }
 ];
@@ -223,6 +251,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [copiedPublicUrl, setCopiedPublicUrl] = useState(false);
   const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'firma' | 'qr'>('editor');
+  const [previewDonationMethod, setPreviewDonationMethod] = useState<'revolut' | 'paypal'>('revolut');
 
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [isUploadingDossier, setIsUploadingDossier] = useState(false);
@@ -1047,13 +1076,18 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             </div>
           </div>
 
-          {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT */}
+          {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT & PAYPAL */}
           <div className="bg-slate-900 border border-sky-500/30 rounded-2xl p-6 space-y-4 lg:col-span-2">
-            <h3 className="text-lg font-bold text-sky-400 flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones con Revolut
-            </h3>
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+              <h3 className="text-lg font-bold text-sky-400 flex items-center gap-2">
+                <Heart className="w-5 h-5" /> Apoyo Económico & Donaciones (Revolut & PayPal)
+              </h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-full">
+                Crowdfunding & Micro-donaciones
+              </span>
+            </div>
             <p className="text-xs text-slate-400">
-              Permite a tus fans y asistentes al concierto hacer una aportación voluntaria directa por Revolut (revolut.me), sin intermediarios. Se muestra en el formulario público "Únete" y en la pantalla de confirmación.
+              Permite a tus fans y asistentes al concierto hacer una aportación voluntaria directa por <strong className="text-sky-300">Revolut</strong> (revolut.me) o <strong className="text-blue-400">PayPal</strong> (paypal.me), sin comisiones intermedias. Se muestra en el formulario público "Únete", en la pantalla de confirmación y en el Dossier EPK.
             </p>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -1061,8 +1095,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
                   <div className="space-y-0.5 pr-3">
-                    <span className="text-xs font-bold text-white">Mostrar tarjeta de donación Revolut</span>
-                    <p className="text-[10px] text-slate-400">Desactívala si todavía no tienes cuenta de Revolut Business</p>
+                    <span className="text-xs font-bold text-white">Mostrar tarjeta de donación (Revolut / PayPal)</span>
+                    <p className="text-[10px] text-slate-400">Activa o desactiva la opción de donación para tus fans</p>
                   </div>
                   <input
                     type="checkbox"
@@ -1072,25 +1106,97 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                   />
                 </div>
 
-                <div>
-                  <label className="text-xs font-semibold text-slate-300">Revtag o Usuario de Revolut</label>
-                  <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 focus-within:border-sky-500 rounded-xl px-3">
-                    <span className="text-[11px] text-slate-500 font-mono">revolut.me/</span>
-                    <input
-                      type="text"
-                      value={config.donacionRevolut?.revolutTag || ''}
-                      onChange={e => {
-                        const cleanTag = e.target.value.replace(/^@/, '').replace(/^revolut\.me\//, '').trim();
-                        const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
-                        setConfig(prev => ({
-                          ...prev,
-                          donacionRevolut: { ...prev.donacionRevolut, revolutTag: cleanTag, revolutUrl: generatedUrl },
-                          enlacesRedes: { ...(prev.enlacesRedes || {}), revolut: generatedUrl }
-                        }));
-                      }}
-                      placeholder="tubanda"
-                      className="w-full bg-transparent py-2 text-xs text-sky-300 font-bold outline-none font-mono"
-                    />
+                {/* Métodos de Pago: Revolut y PayPal */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Revolut */}
+                  <div className="p-3 bg-slate-950/80 border border-sky-500/20 rounded-xl space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-5 h-5 rounded-md bg-white text-black flex items-center justify-center p-0.5 shadow-sm">
+                        <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                          <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                        </svg>
+                      </div>
+                      <label className="text-xs font-semibold text-sky-200">Revolut (Revtag)</label>
+                    </div>
+                    <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-sky-500 rounded-lg px-2.5">
+                      <span className="text-[10px] text-slate-500 font-mono">revolut.me/</span>
+                      <input
+                        type="text"
+                        value={config.donacionRevolut?.revolutTag || ''}
+                        onChange={e => {
+                          const cleanTag = e.target.value.replace(/^@/, '').replace(/^https?:\/\/revolut\.me\//i, '').replace(/^revolut\.me\//i, '').trim();
+                          const generatedUrl = cleanTag ? (cleanTag.startsWith('http') ? cleanTag : `https://revolut.me/${cleanTag}`) : '';
+                          setConfig(prev => ({
+                            ...prev,
+                            donacionRevolut: { ...prev.donacionRevolut, revolutTag: cleanTag, revolutUrl: generatedUrl },
+                            enlacesRedes: { ...(prev.enlacesRedes || {}), revolut: generatedUrl }
+                          }));
+                        }}
+                        placeholder="tubanda"
+                        className="w-full bg-transparent py-1.5 text-xs text-sky-300 font-bold outline-none font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  {/* PayPal */}
+                  <div className="p-3 bg-slate-950/80 border border-blue-500/20 rounded-xl space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-5 h-5 rounded-md bg-[#003087] text-[#0079C1] flex items-center justify-center p-0.5 shadow-sm">
+                        <svg className="w-full h-full fill-white" viewBox="0 0 24 24">
+                          <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
+                        </svg>
+                      </div>
+                      <label className="text-xs font-semibold text-blue-200">PayPal (paypal.me)</label>
+                    </div>
+                    <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 focus-within:border-blue-500 rounded-lg px-2.5">
+                      <span className="text-[10px] text-slate-500 font-mono">paypal.me/</span>
+                      <input
+                        type="text"
+                        value={config.donacionRevolut?.paypalUser || ''}
+                        onChange={e => {
+                          const cleanUser = e.target.value.replace(/^@/, '').replace(/^https?:\/\/paypal\.me\//i, '').replace(/^paypal\.me\//i, '').trim();
+                          const generatedUrl = cleanUser ? (cleanUser.startsWith('http') ? cleanUser : `https://paypal.me/${cleanUser}`) : '';
+                          setConfig(prev => ({
+                            ...prev,
+                            donacionRevolut: { ...prev.donacionRevolut, paypalUser: cleanUser, paypalUrl: generatedUrl },
+                            enlacesRedes: { ...(prev.enlacesRedes || {}), paypal: generatedUrl }
+                          }));
+                        }}
+                        placeholder="tubanda"
+                        className="w-full bg-transparent py-1.5 text-xs text-blue-300 font-bold outline-none font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Método por defecto */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-300">Método seleccionado por defecto</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'revolut' } })}
+                      className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition ${
+                        (config.donacionRevolut?.metodoPorDefecto || 'revolut') === 'revolut'
+                          ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
+                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-sky-400"></span>
+                      Revolut Pay
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfig({ ...config, donacionRevolut: { ...config.donacionRevolut, metodoPorDefecto: 'paypal' } })}
+                      className={`p-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition ${
+                        config.donacionRevolut?.metodoPorDefecto === 'paypal'
+                          ? 'bg-blue-500/20 border-blue-500 text-blue-300 shadow-sm'
+                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                      PayPal
+                    </button>
                   </div>
                 </div>
 
@@ -1133,33 +1239,73 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 </div>
                 {config.donacionRevolut?.habilitado === false ? (
                   <div className="p-4 rounded-xl border border-dashed border-slate-700 text-center text-xs text-slate-500">
-                    Tarjeta desactivada: no se mostrará en "Únete"
+                    Tarjeta desactivada: no se mostrará en "Únete" ni en el Dossier
                   </div>
                 ) : (
-                  <div className="p-3 sm:p-3.5 rounded-2xl bg-gradient-to-br from-sky-950/50 via-neutral-900/90 to-sky-950/30 border border-sky-500/35 shadow-md">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800 p-4 shadow-xl space-y-3">
+                    {/* Header: Icon + Title + Direct Badge */}
                     <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shrink-0 shadow-md mt-0.5">
-                        <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                          <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-                        </svg>
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                        <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400" />
                       </div>
-                      <div className="min-w-0 flex-1 space-y-1">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="text-xs sm:text-sm font-mono font-bold text-sky-100 leading-snug break-words">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
                             {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
-                          </span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 whitespace-nowrap">
-                            Revolut
+                          </h3>
+                          <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shrink-0 uppercase tracking-wider">
+                            Directo
                           </span>
                         </div>
-                        <p className="text-[11px] text-neutral-300/90 font-mono leading-relaxed break-words">
+                        <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
                           {config.donacionRevolut?.descripcion || 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
                         </p>
-                        <div className="pt-0.5 flex items-center gap-1 text-[10px] font-mono text-sky-400">
-                          <span className="opacity-75">🔗</span>
-                          <span>revolut.me/{config.donacionRevolut?.revolutTag || 'tubanda'}</span>
+                      </div>
+                    </div>
+
+                    {/* Direct Branded Payment Buttons Preview */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {/* Revolut */}
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-neutral-950 border border-neutral-700/80 shadow-sm text-left">
+                        <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow">
+                          <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                            <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                          </svg>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-[11px] font-bold text-white block truncate">
+                            Revolut Pay
+                          </span>
+                          <span className="text-[9px] text-neutral-400 font-mono block truncate">
+                            @{config.donacionRevolut?.revolutTag || 'tubanda'}
+                          </span>
                         </div>
                       </div>
+
+                      {/* PayPal */}
+                      <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] border border-sky-400/40 shadow-sm text-left">
+                        <div className="w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow">
+                          <svg className="w-full h-full fill-[#003087]" viewBox="0 0 24 24">
+                            <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.292-.03.18-.066.362-.108.546-.723 3.662-2.915 5.534-6.52 5.534h-2.18c-.464 0-.858.34-.932.798l-1.344 8.357zm8.837-14.774c-.033-.217-.1-.41-.202-.577-.417-.684-1.464-.993-3.14-.993H7.818l-1.63 10.373h2.365c.463 0 .857-.34.931-.798l1.344-8.358h1.235c2.324 0 3.75-.98 4.25-2.914.07-.353.118-.748.14-1.133h-.54z"/>
+                          </svg>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-[11px] font-bold text-white block truncate">
+                            PayPal
+                          </span>
+                          <span className="text-[9px] text-sky-200 font-mono block truncate">
+                            @{config.donacionRevolut?.paypalUser || 'tubanda'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Trust Line */}
+                    <div className="pt-1 flex items-center justify-between text-[10px] text-neutral-500">
+                      <span className="flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-neutral-500 shrink-0" />
+                        <span>Pago seguro sin comisiones para la banda</span>
+                      </span>
                     </div>
                   </div>
                 )}

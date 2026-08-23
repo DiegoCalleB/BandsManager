@@ -78,6 +78,13 @@ type FanFormDict = {
   revolutStepTitle: string;
   revolutBadge: string;
   revolutSecureDirect: string;
+  paypalButton: string;
+  paypalCopied: string;
+  paypalHandle: string;
+  paypalBadge: string;
+  payWithRevolut: string;
+  payWithPaypal: string;
+  selectPaymentMethod: string;
   privacyModalTitle: string;
   privacyPara1: string; // {bandName} x2
   privacyPara2: string;
@@ -161,6 +168,13 @@ const es: FanFormDict = {
   revolutStepTitle: 'Colaboración Económica & Donaciones',
   revolutBadge: 'Aportación Voluntaria',
   revolutSecureDirect: 'Pago seguro directo a la banda sin comisiones',
+  paypalButton: 'Aportar con PayPal',
+  paypalCopied: '¡Enlace de PayPal copiado!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Método de pago:',
   privacyModalTitle: 'Política de Privacidad y RGPD',
   privacyPara1: '**1. Responsable del tratamiento:** {bandName} (Banda musical). Los datos facilitados a través de este código QR y formulario serán tratados con la única finalidad de gestionar tu registro con {bandName} e informarte sobre próximos conciertos, lanzamientos y novedades musicales.',
   privacyPara2: '**2. Legitimación:** El tratamiento de tus datos se basa en tu consentimiento explícito al marcar la casilla de aceptación y enviar el formulario.',
@@ -244,6 +258,13 @@ const en: FanFormDict = {
   revolutStepTitle: 'Financial Support & Tips',
   revolutBadge: 'Voluntary Tip',
   revolutSecureDirect: 'Secure direct payment to the band with zero middleman fees',
+  paypalButton: 'Contribute via PayPal',
+  paypalCopied: 'PayPal link copied!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Payment method:',
   privacyModalTitle: 'Privacy Policy & GDPR',
   privacyPara1: '**1. Data controller:** {bandName} (music band). The data provided through this QR code and form will be used solely to manage your sign-up with {bandName} and to inform you about upcoming concerts, releases and music news.',
   privacyPara2: '**2. Legal basis:** The processing of your data is based on your explicit consent when checking the acceptance box and submitting the form.',
@@ -327,6 +348,13 @@ const it: FanFormDict = {
   revolutStepTitle: 'Supporto Economico & Donazioni',
   revolutBadge: 'Donazione Volontaria',
   revolutSecureDirect: 'Pagamento sicuro diretto alla band senza commissioni',
+  paypalButton: 'Contribuisci con PayPal',
+  paypalCopied: 'Link PayPal copiato!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Metodo di pagamento:',
   privacyModalTitle: 'Informativa Privacy e GDPR',
   privacyPara1: '**1. Titolare del trattamento:** {bandName} (band musicale). I dati forniti tramite questo codice QR e il modulo saranno trattati esclusivamente per gestire la tua registrazione con {bandName} e per informarti su prossimi concerti, uscite e novità musicali.',
   privacyPara2: '**2. Base giuridica:** Il trattamento dei tuoi dati si basa sul tuo consenso esplicito, espresso selezionando la casella di accettazione e inviando il modulo.',
@@ -410,6 +438,13 @@ const cs: FanFormDict = {
   revolutStepTitle: 'Finanční podpora a dary',
   revolutBadge: 'Revolut',
   revolutSecureDirect: 'Přímá platba kapele bez poplatků',
+  paypalButton: 'Přispět přes PayPal',
+  paypalCopied: 'Odkaz na PayPal zkopírován!',
+  paypalHandle: 'paypal.me/{tag}',
+  paypalBadge: 'PayPal',
+  payWithRevolut: 'Revolut',
+  payWithPaypal: 'PayPal',
+  selectPaymentMethod: 'Platební metoda:',
   privacyModalTitle: 'Zásady ochrany osobních údajů a GDPR',
   privacyPara1: '**1. Správce údajů:** {bandName} (hudební kapela). Údaje poskytnuté prostřednictvím tohoto QR kódu a formuláře budou zpracovány výhradně za účelem správy tvé registrace u {bandName} a informování o nadcházejících koncertech, vydáních a hudebních novinkách.',
   privacyPara2: '**2. Právní základ:** Zpracování tvých údajů je založeno na tvém výslovném souhlasu vyjádřeném zaškrtnutím políčka a odesláním formuláře.',

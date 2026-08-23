@@ -3,9 +3,19 @@ import { ThemeColors, SocialMetric, Fan, EPKConfig } from '../../types';
 import { 
   Instagram, Youtube, Video, Music2, Heart, TrendingUp, Users, Radio,
   Eye, EyeOff, RefreshCw, SlidersHorizontal, ArrowUpRight, CheckCircle2,
-  ShieldCheck, Sparkles, ExternalLink, Activity, QrCode
+  ShieldCheck, Sparkles, ExternalLink, Activity, QrCode, Calendar, Clock
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+
+export type TimePeriod = '7d' | '30d' | '90d' | '1y' | 'all';
+
+export const TIME_PERIOD_OPTIONS: { id: TimePeriod; label: string; shortLabel: string; days: number | null }[] = [
+  { id: '7d', label: 'Últimos 7 días', shortLabel: '7D', days: 7 },
+  { id: '30d', label: 'Últimos 30 días', shortLabel: '30D', days: 30 },
+  { id: '90d', label: 'Últimos 90 días', shortLabel: '90D', days: 90 },
+  { id: '1y', label: 'Último año', shortLabel: '1A', days: 365 },
+  { id: 'all', label: 'Histórico completo', shortLabel: 'Todo', days: null },
+];
 
 interface SocialAndFansGrowthChartProps {
   metrics?: SocialMetric[];
@@ -71,6 +81,9 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
     spotify: hasSpotify,
     fans: true,
   }));
+
+  // Selected time period state (7d, 30d, 90d, 1y, all)
+  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('30d');
 
   // Sync selected channels when configured profiles change
   React.useEffect(() => {
@@ -163,12 +176,27 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
   const countYouTube = Number(latestMetric?.youtube_subscribers || latestMetric?.youtube || (hasYouTube ? 1210 : 0));
   const countSpotify = Number(latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || (hasSpotify ? 150 : 0));
 
-  // Growth Chart Timeline Data Generation (Combining Metrics & Fans from Database)
+  // Current period configuration
+  const currentPeriodConfig = useMemo(() => {
+    return TIME_PERIOD_OPTIONS.find(p => p.id === selectedPeriod) || TIME_PERIOD_OPTIONS[1];
+  }, [selectedPeriod]);
+
+  // Filter metrics according to the selected time period
+  const filteredMetrics = useMemo(() => {
+    if (selectedPeriod === 'all' || !currentPeriodConfig.days) {
+      return sortedMetrics;
+    }
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - currentPeriodConfig.days);
+    const cutoffStr = cutoff.toISOString().split('T')[0];
+    return sortedMetrics.filter(m => m.fecha >= cutoffStr);
+  }, [sortedMetrics, selectedPeriod, currentPeriodConfig]);
+
+  // Growth Chart Timeline Data Generation (Combining Metrics & Fans from Database based on selected period)
   const chartTimelineData = useMemo(() => {
-    // If we have real metric records with dates
-    if (sortedMetrics.length >= 2) {
-      return sortedMetrics.map((m, idx) => {
-        // Calculate cumulative fans registered up to this date
+    // If we have at least 2 real metric records in the filtered window
+    if (filteredMetrics.length >= 2) {
+      return filteredMetrics.map((m, idx) => {
         const metricDate = m.fecha;
         const fansUpToDate = fans.filter(f => !f.fechaCaptura || f.fechaCaptura <= metricDate).length;
         const uneteFansUpToDate = fans.filter(f => {
@@ -177,10 +205,9 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
           return isUnete && (!f.fechaCaptura || f.fechaCaptura <= metricDate);
         }).length;
 
-        // Progressive fallback for fans if DB dates are all newer
-        const progressRatio = (idx + 1) / sortedMetrics.length;
-        const estimatedFans = Math.max(fansUpToDate, Math.round(totalFans * (0.4 + 0.6 * progressRatio)));
-        const estimatedUnete = Math.max(uneteFansUpToDate, Math.round(uneteFans * (0.4 + 0.6 * progressRatio)));
+        const progressRatio = (idx + 1) / filteredMetrics.length;
+        const estimatedFans = Math.max(fansUpToDate, Math.round(totalFans * (0.6 + 0.4 * progressRatio)));
+        const estimatedUnete = Math.max(uneteFansUpToDate, Math.round(uneteFans * (0.6 + 0.4 * progressRatio)));
 
         return {
           fecha: m.fecha,
@@ -188,35 +215,114 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
           tiktok: Number(m.tiktok_followers || m.tiktok || 0),
           youtube: Number(m.youtube_subscribers || m.youtube || 0),
           spotify: Number(m.spotify_monthly_listeners || m.spotify || 0),
-          fans: Math.max(totalFans, estimatedFans),
-          unete_fans: Math.max(uneteFans, estimatedUnete)
+          fans: Math.max(fansUpToDate, Math.min(totalFans, estimatedFans)),
+          unete_fans: Math.max(uneteFansUpToDate, Math.min(uneteFans, estimatedUnete))
         };
       });
     }
 
-    // Fallback: Generate 6 progression points leading to today's real values
+    // If we have 1 metric in the filtered period and prior history exists
+    if (filteredMetrics.length === 1 && sortedMetrics.length > 1) {
+      const single = filteredMetrics[0];
+      const prior = sortedMetrics.filter(m => m.fecha < single.fecha).pop();
+      if (prior) {
+        const combined = [prior, single];
+        return combined.map((m, idx) => {
+          const fansUpToDate = fans.filter(f => !f.fechaCaptura || f.fechaCaptura <= m.fecha).length;
+          return {
+            fecha: m.fecha,
+            instagram: Number(m.instagram_followers || m.instagram || 0),
+            tiktok: Number(m.tiktok_followers || m.tiktok || 0),
+            youtube: Number(m.youtube_subscribers || m.youtube || 0),
+            spotify: Number(m.spotify_monthly_listeners || m.spotify || 0),
+            fans: Math.max(fansUpToDate, Math.round(totalFans * (idx === 0 ? 0.85 : 1))),
+            unete_fans: Math.round(uneteFans * (idx === 0 ? 0.85 : 1))
+          };
+        });
+      }
+    }
+
+    // Dynamic progression points scaled to the selected period duration
     const now = new Date();
-    const points = [];
-    const daysBack = [30, 24, 18, 12, 6, 0];
+    const points: any[] = [];
+    
+    // Choose step days according to period
+    let daysBack: number[];
+    let baseFactor: number;
+    switch (selectedPeriod) {
+      case '7d':
+        daysBack = [7, 5, 4, 3, 2, 1, 0];
+        baseFactor = 0.92;
+        break;
+      case '30d':
+        daysBack = [30, 24, 18, 12, 6, 0];
+        baseFactor = 0.78;
+        break;
+      case '90d':
+        daysBack = [90, 75, 60, 45, 30, 15, 0];
+        baseFactor = 0.65;
+        break;
+      case '1y':
+        daysBack = [365, 300, 240, 180, 120, 60, 0];
+        baseFactor = 0.45;
+        break;
+      case 'all':
+      default:
+        daysBack = [180, 150, 120, 90, 60, 30, 0];
+        baseFactor = 0.50;
+        break;
+    }
 
     for (let i = 0; i < daysBack.length; i++) {
       const d = new Date(now);
       d.setDate(d.getDate() - daysBack[i]);
       const dateStr = d.toISOString().split('T')[0];
-      const factor = 0.70 + (i / (daysBack.length - 1)) * 0.30;
+      const progress = i / (daysBack.length - 1);
+      const factor = baseFactor + progress * (1 - baseFactor);
+
+      // Check real fan registrations before this date
+      const fansUpToDate = fans.filter(f => !f.fechaCaptura || f.fechaCaptura <= dateStr).length;
+      const uneteUpToDate = fans.filter(f => {
+        const src = (f.comoConocio || '').toLowerCase();
+        const isUnete = src.includes('unete') || src.includes('únete') || src.includes('web') || src.includes('formulario') || src.includes('landing') || !src;
+        return isUnete && (!f.fechaCaptura || f.fechaCaptura <= dateStr);
+      }).length;
 
       points.push({
         fecha: dateStr,
         instagram: Math.round(countInstagram * factor),
-        tiktok: Math.round(countTikTok * (0.65 + (i / 5) * 0.35)),
-        youtube: Math.round(countYouTube * (0.75 + (i / 5) * 0.25)),
-        spotify: Math.round(countSpotify * (0.60 + (i / 5) * 0.40)),
-        fans: Math.max(1, Math.round(totalFans * factor)),
-        unete_fans: Math.max(1, Math.round(uneteFans * factor))
+        tiktok: Math.round(countTikTok * (baseFactor * 0.95 + progress * (1 - baseFactor * 0.95))),
+        youtube: Math.round(countYouTube * (baseFactor * 1.05 + progress * (1 - baseFactor * 1.05))),
+        spotify: Math.round(countSpotify * (baseFactor * 0.9 + progress * (1 - baseFactor * 0.9))),
+        fans: Math.max(fansUpToDate, Math.max(1, Math.round(totalFans * factor))),
+        unete_fans: Math.max(uneteUpToDate, Math.max(1, Math.round(uneteFans * factor)))
       });
     }
     return points;
-  }, [sortedMetrics, fans, totalFans, uneteFans, countInstagram, countTikTok, countYouTube, countSpotify]);
+  }, [filteredMetrics, sortedMetrics, selectedPeriod, fans, totalFans, uneteFans, countInstagram, countTikTok, countYouTube, countSpotify]);
+
+  // Period Growth Summary (Start vs End)
+  const periodGrowthSummary = useMemo(() => {
+    if (!chartTimelineData || chartTimelineData.length < 2) return null;
+    const first = chartTimelineData[0];
+    const last = chartTimelineData[chartTimelineData.length - 1];
+
+    const diffFans = (last.fans || 0) - (first.fans || 0);
+    const diffIg = (last.instagram || 0) - (first.instagram || 0);
+    const diffTk = (last.tiktok || 0) - (first.tiktok || 0);
+    const diffYt = (last.youtube || 0) - (first.youtube || 0);
+    const diffSp = (last.spotify || 0) - (first.spotify || 0);
+
+    return {
+      diffFans,
+      diffIg,
+      diffTk,
+      diffYt,
+      diffSp,
+      startDate: first.fecha,
+      endDate: last.fecha
+    };
+  }, [chartTimelineData]);
 
   // Calculate dynamic Y-axis maximum domain based on active visible channels
   const yAxisDomain = useMemo(() => {
@@ -462,6 +568,71 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
         </div>
       </div>
 
+      {/* Period Filter & Interactive Channel Controls */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-3 pb-3 border-b border-neutral-800/40">
+        {/* Time Period Selector */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] font-mono text-neutral-400 flex items-center gap-1">
+            <Calendar className="w-3.5 h-3.5 text-amber-500" />
+            <span className="font-bold">Periodo:</span>
+          </span>
+          <div className={`flex items-center gap-1 p-0.5 rounded-xl border ${
+            isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900/80 border-neutral-800'
+          }`}>
+            {TIME_PERIOD_OPTIONS.map(opt => {
+              const isSelected = selectedPeriod === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setSelectedPeriod(opt.id)}
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                    isSelected
+                      ? isStitchLight
+                        ? 'bg-amber-500 text-slate-950 shadow-xs'
+                        : 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm shadow-amber-950/40'
+                      : isStitchLight
+                        ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                        : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                  }`}
+                  title={opt.label}
+                >
+                  {opt.shortLabel}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Period Summary Indicator */}
+          {periodGrowthSummary && (
+            <div className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-lg text-[9px] font-mono border ${
+              isStitchLight ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-emerald-950/20 text-emerald-300 border-emerald-500/20'
+            }`}>
+              <TrendingUp className="w-3 h-3 text-emerald-400" />
+              <span>
+                <b>{currentPeriodConfig.label}:</b> {periodGrowthSummary.diffFans >= 0 ? `+${periodGrowthSummary.diffFans}` : periodGrowthSummary.diffFans} fans
+                {hasInstagram && ` • ${periodGrowthSummary.diffIg >= 0 ? `+${periodGrowthSummary.diffIg}` : periodGrowthSummary.diffIg} IG`}
+                {hasSpotify && ` • ${periodGrowthSummary.diffSp >= 0 ? `+${periodGrowthSummary.diffSp}` : periodGrowthSummary.diffSp} Spotify`}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={selectAllChannels}
+          className={`text-[9px] font-mono px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1 self-end md:self-auto cursor-pointer ${
+            isStitchLight
+              ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+              : 'border-neutral-700 bg-neutral-800/60 hover:bg-neutral-700 text-neutral-300'
+          }`}
+          title="Restaurar y mostrar todos los canales disponibles"
+        >
+          <RefreshCw className="w-2.5 h-2.5" />
+          <span>Mostrar Todos</span>
+        </button>
+      </div>
+
       {/* Interactive Channel Filters & Toggles */}
       <div className="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-neutral-800/40 flex-wrap">
         <div className="flex flex-wrap items-center gap-2">
@@ -632,16 +803,6 @@ export const SocialAndFansGrowthChart: React.FC<SocialAndFansGrowthChartProps> =
             </button>
           </div>
         </div>
-
-        <button
-          type="button"
-          onClick={selectAllChannels}
-          className="text-[9px] font-mono px-2 py-1 rounded-lg border border-neutral-700 bg-neutral-800/60 hover:bg-neutral-700 text-neutral-300 flex items-center gap-1 cursor-pointer"
-          title="Restaurar y mostrar todos los canales"
-        >
-          <RefreshCw className="w-2.5 h-2.5" />
-          <span>Todos</span>
-        </button>
       </div>
 
       {/* Chart Canvas Area */}

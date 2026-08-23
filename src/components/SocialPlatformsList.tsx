@@ -12,6 +12,8 @@ export interface SocialLinks {
   bandcamp?: string;
   website?: string;
   whatsapp?: string;
+  revolut?: string;
+  paypal?: string;
   [key: string]: string | undefined;
 }
 
@@ -71,6 +73,11 @@ export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
   revolut: ({ className = "w-5 h-5" }) => (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
       <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+    </svg>
+  ),
+  paypal: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.82.88 4.965-.034.17-.075.342-.123.515-.845 4.282-3.711 5.76-7.388 5.76H9.98a.827.827 0 0 0-.816.7l-1.025 6.495-.063.392a.642.642 0 0 1-.633.541l-.367.159zm1.31-7.794h2.131c3.15 0 5.61-1.267 6.33-4.93.04-.202.073-.4.1-.595.36-1.823.11-3.24-.75-4.22-.84-.96-2.39-1.37-4.37-1.37H6.77L4.54 19.387h2.47l1.376-8.736a.827.827 0 0 1 .8-.708z"/>
     </svg>
   ),
   website: Globe,
@@ -147,6 +154,13 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
     bgClass: 'bg-sky-500/10',
     borderClass: 'border-sky-500/30',
     hoverClass: 'hover:bg-sky-500/20 hover:border-sky-500/50 hover:text-sky-200'
+  },
+  paypal: {
+    label: 'PayPal',
+    colorClass: 'text-sky-400',
+    bgClass: 'bg-[#003087]/15',
+    borderClass: 'border-[#0070ba]/40',
+    hoverClass: 'hover:bg-[#003087]/25 hover:border-[#0070ba]/60 hover:text-sky-300'
   },
   whatsapp: {
     label: 'WhatsApp',
