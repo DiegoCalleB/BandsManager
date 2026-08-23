@@ -406,10 +406,10 @@ router.get("/public/epk", async (req, res) => {
       });
     }
 
-    // Filter highlighted songs
-    const highlightedSongs = epkConfig?.temasDestacadosIds?.length > 0
+    // Filter highlighted songs - solo incluir temas si el usuario los ha seleccionado expresamente
+    const highlightedSongs = Array.isArray(epkConfig?.temasDestacadosIds) && epkConfig.temasDestacadosIds.length > 0
       ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
-      : songs.slice(0, 3);
+      : [];
 
     // Upcoming concerts
     const today = new Date().toISOString().split("T")[0];

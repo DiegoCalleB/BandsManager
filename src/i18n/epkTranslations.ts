@@ -130,7 +130,7 @@ const es: EpkDict = {
 
   seccionBanda: 'La Banda',
 
-  seccionBio: 'Biografía & Propuesta Musical',
+  seccionBio: 'Biografía y Propuesta Musical',
   contactoTitulo: 'Contacto de Booking',
   contactoSubtitulo: 'Atención directa a programadores de salas, comisiones de fiestas y festivales:',
   managerPorDefecto: 'Mánager {bandName}',
