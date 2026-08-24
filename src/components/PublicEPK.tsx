@@ -42,10 +42,25 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     }
   }, [initialData]);
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: bandName,
+          text: `Mira el dossier EPK de ${bandName}`,
+          url
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    }
   };
 
   const dict = EPK_TRANSLATIONS[language];
@@ -167,7 +182,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             ))}
           </div>
           <button
-            onClick={handleCopyLink}
+            onClick={handleShare}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium rounded-lg border border-slate-700 transition"
           >
             {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-amber-400" />}
