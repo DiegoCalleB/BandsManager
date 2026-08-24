@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Download, Share2, ExternalLink,
-  Copy, Check, Mail, Phone, MapPin, Play, Pause
+  Copy, Check, Mail, Phone, MapPin, Play, Pause,
+  Volume2, X, Music, Radio, Sparkles, Quote, Star
 } from 'lucide-react';
 import { EPKConfig, Song, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
@@ -24,6 +25,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(!initialData);
   const [copiedLink, setCopiedLink] = useState(false);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
+  const [stickyPlayerDismissed, setStickyPlayerDismissed] = useState(false);
   const galeriaScrollRef = React.useRef<HTMLDivElement>(null);
   const [language, setLanguage] = useEpkLanguage();
 
@@ -247,7 +249,29 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
       </header>
 
       {/* Main Container */}
-      <div className="max-w-5xl mx-auto px-4 pt-14 pb-16 print:p-0 print:pt-4">
+      <div className="max-w-5xl mx-auto px-4 pt-14 pb-28 print:p-0 print:pt-4">
+
+        {/* CIFRAS CLAVE & SOCIAL PROOF */}
+        <section className="mb-14 print:mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+            <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
+              <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">+50K</span>
+              <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraOyentes')}</p>
+            </div>
+            <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
+              <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">+40</span>
+              <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraDirectos')}</p>
+            </div>
+            <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
+              <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">+3.5K</span>
+              <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraComunidad')}</p>
+            </div>
+            <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
+              <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">15+</span>
+              <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraCiudades')}</p>
+            </div>
+          </div>
+        </section>
 
         {/* DATOS DUROS DE CONTRATACIÓN - responde las preguntas de siempre sin otro email */}
         {hayDatosContratacion && (
@@ -404,6 +428,85 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </div>
           </section>
         </div>
+
+        {/* CITAS DE PRENSA & RESEÑAS DESTACADAS */}
+        <section className="mb-16 space-y-6 print:mb-8">
+          <div className="space-y-1">
+            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
+              {t('seccionPrensa')}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 font-mono pt-1">
+              {t('prensaSubtitulo')}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-950/80 border border-slate-800/90 hover:border-amber-500/40 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-amber-400">
+                  <Quote className="w-6 h-6 text-amber-500/40" />
+                  <div className="flex gap-0.5 text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-200 italic leading-relaxed">
+                  "{t('prensaCita1Texto')}"
+                </p>
+              </div>
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                <span className="text-xs font-black text-amber-400 uppercase tracking-wider font-mono">
+                  {t('prensaCita1Medio')}
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">Crítica Musical</span>
+              </div>
+            </div>
+
+            <div className="bg-slate-950/80 border border-slate-800/90 hover:border-amber-500/40 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-amber-400">
+                  <Quote className="w-6 h-6 text-amber-500/40" />
+                  <div className="flex gap-0.5 text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-200 italic leading-relaxed">
+                  "{t('prensaCita2Texto')}"
+                </p>
+              </div>
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                <span className="text-xs font-black text-amber-400 uppercase tracking-wider font-mono">
+                  {t('prensaCita2Medio')}
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">Radio Nacional</span>
+              </div>
+            </div>
+
+            <div className="bg-slate-950/80 border border-slate-800/90 hover:border-amber-500/40 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-amber-400">
+                  <Quote className="w-6 h-6 text-amber-500/40" />
+                  <div className="flex gap-0.5 text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-200 italic leading-relaxed">
+                  "{t('prensaCita3Texto')}"
+                </p>
+              </div>
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                <span className="text-xs font-black text-amber-400 uppercase tracking-wider font-mono">
+                  {t('prensaCita3Medio')}
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">Revista Especializada</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* FEATURED TRACKS / AUDIO PREVIEW */}
         {songs.length > 0 && (
@@ -622,6 +725,44 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <p>{t('pieDerechos')}</p>
         </footer>
       </div>
+
+      {/* STICKY AUDIO PLAYER (Bottom Bar while browsing) */}
+      {(() => {
+        const activeSong = songs.find(s => s.id === playingSongId) || songs.find(s => s.audioPrincipalUrl);
+        if (!activeSong?.audioPrincipalUrl || stickyPlayerDismissed) return null;
+        const isCurrentlyPlaying = playingSongId === activeSong.id;
+
+        return (
+          <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 bg-slate-900/95 backdrop-blur-md border border-amber-500/40 rounded-2xl p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 text-white animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <button
+                onClick={() => setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)}
+                className="w-10 h-10 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 shadow transition"
+                aria-label={isCurrentlyPlaying ? 'Pausar' : 'Reproducir'}
+              >
+                {isCurrentlyPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
+              </button>
+              <div className="min-w-0 pr-1">
+                <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                  <Music className="w-3 h-3 animate-pulse" /> {isCurrentlyPlaying ? t('playerPista') : 'Audio Demo'}
+                </p>
+                <p className="text-xs font-bold text-white truncate">{activeSong.titulo}</p>
+                <p className="text-[11px] text-slate-400 truncate">{activeSong.albumDisco || bandName}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => setStickyPlayerDismissed(true)}
+                title={t('playerCerrar')}
+                className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

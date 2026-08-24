@@ -272,6 +272,13 @@ export interface EPKConfig {
     telefono: string;
   };
   temasDestacadosIds: string[];
+  audioPreview?: {
+    habilitado?: boolean;
+    cancionId?: string;
+    audioUrl?: string;
+    tituloTema?: string;
+    subtitulo?: string;
+  };
   donacionRevolut?: {
     habilitado?: boolean;
     revolutTag?: string;

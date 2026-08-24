@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, Copy, Users } from 'lucide-react';
+import {
+  Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame,
+  Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle,
+  Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, ChevronDown, ChevronUp,
+  Copy, Users, Gift, Ticket, Headphones, MapPin, Share2, Play, Pause, Volume2
+} from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from '../i18n/fansTranslations';
@@ -153,8 +158,75 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum'>('revolut');
   const [copiedBizum, setCopiedBizum] = useState(false);
   const [miembros, setMiembros] = useState<BandMember[]>([]);
+  const [upcomingConcerts, setUpcomingConcerts] = useState<Concert[]>([]);
+  const [showOptionalFields, setShowOptionalFields] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
+  const [audioPreviewConfig, setAudioPreviewConfig] = useState<{
+    habilitado?: boolean;
+    cancionId?: string;
+    audioUrl?: string;
+    tituloTema?: string;
+    subtitulo?: string;
+  } | null>({
+    habilitado: true,
+    audioUrl: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg',
+    tituloTema: 'Directo Preview',
+    subtitulo: 'Dale al play para escuchar cómo sonamos'
+  });
+  const [isPlayingAudioPreview, setIsPlayingAudioPreview] = useState(false);
+  const [copiedShareLink, setCopiedShareLink] = useState(false);
+  const audioPreviewRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const toggleAudioPreview = () => {
+    const targetAudioUrl = audioPreviewConfig?.audioUrl?.trim() || 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg';
+    
+    if (!audioPreviewRef.current || audioPreviewRef.current.src !== targetAudioUrl) {
+      if (audioPreviewRef.current) {
+        audioPreviewRef.current.pause();
+      }
+      const audio = new Audio(targetAudioUrl);
+      audio.onended = () => setIsPlayingAudioPreview(false);
+      audioPreviewRef.current = audio;
+    }
+    if (isPlayingAudioPreview) {
+      audioPreviewRef.current.pause();
+      setIsPlayingAudioPreview(false);
+    } else {
+      audioPreviewRef.current.play().then(() => {
+        setIsPlayingAudioPreview(true);
+        trackClick('audio_preview', '', 'landing');
+      }).catch(() => {
+        setIsPlayingAudioPreview(true);
+      });
+    }
+  };
+
+  const handleShareWithFriend = async () => {
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const shareMessage = `¡Únete a la comunidad de ${bandName} para escuchar temas inéditos y conseguir descuentos exclusivos! 🎸 ${currentUrl}`;
+    
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: `Comunidad Oficial de ${bandName}`,
+          text: `¡Únete a la comunidad de ${bandName} para escuchar temas inéditos y conseguir descuentos! 🎸`,
+          url: currentUrl,
+        });
+        trackClick('share_native', currentUrl, 'success');
+        return;
+      } catch (err) {
+        // Fallback to clipboard copy if cancelled or unsupported
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareMessage);
+      setCopiedShareLink(true);
+      setTimeout(() => setCopiedShareLink(false), 2500);
+      trackClick('share_copy', currentUrl, 'success');
+    } catch {}
+  };
 
   const trackClick = (platform: string, url?: string, context?: string) => {
     const key = platform.toLowerCase();
@@ -194,6 +266,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         if (previewConfig.donacionRevolut.metodoPorDefecto) {
           setSelectedPaymentMethod(previewConfig.donacionRevolut.metodoPorDefecto);
         }
+      }
+      if (previewConfig.audioPreview) {
+        setAudioPreviewConfig(previewConfig.audioPreview);
       }
       if (previewConfig.miembros && Array.isArray(previewConfig.miembros)) {
         setMiembros(previewConfig.miembros);
@@ -338,6 +413,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           } else {
             setDonacionRevolut(null);
           }
+
+          if (data.epkConfig?.audioPreview) {
+            setAudioPreviewConfig(data.epkConfig.audioPreview);
+          }
+
+          if (data.upcomingConcerts && Array.isArray(data.upcomingConcerts)) {
+            setUpcomingConcerts(data.upcomingConcerts);
+          }
         }
       })
       .catch(err => {
@@ -440,19 +523,26 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const isFormScreen = contextType === 'form';
 
     const customTitle = donacionRevolut?.titulo?.trim();
-    const isCustomTitleSet = Boolean(customTitle && customTitle !== 'Colabora con una aportación económica');
+    const isDefaultSpanishTitle =
+      !customTitle ||
+      customTitle === 'Colabora con una aportación económica' ||
+      customTitle === 'Colabora con la banda' ||
+      customTitle === 'Apoyo Económico & Donaciones';
 
-    const label = isCustomTitleSet
-      ? customTitle!
+    const label = (language === 'es' && !isDefaultSpanishTitle)
+      ? customTitle
       : (isSuccessScreen
         ? t('revolutSuccessPrompt', { bandName })
         : t('economicSupportTitle', { bandName }));
 
     const customDesc = donacionRevolut?.descripcion?.trim();
-    const isCustomDescSet = Boolean(customDesc);
+    const isDefaultSpanishDesc =
+      !customDesc ||
+      customDesc.includes('Tu aportación directa nos ayuda a financiar') ||
+      customDesc.includes('financiar furgoneta de gira');
 
-    const descText = isCustomDescSet
-      ? customDesc!
+    const descText = (language === 'es' && !isDefaultSpanishDesc)
+      ? customDesc
       : (isSuccessScreen
         ? t('revolutSuccessPrompt', { bandName })
         : t('economicSupportSubtitle'));
@@ -584,7 +674,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-amber-500/30 bg-neutral-950 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
               <img
                 src="/Screenshot_20260824_164054_Google.jpg"
-                alt="Colaboración"
+                alt={t('revolutBadge') || 'Colaboración'}
                 className="w-full h-full object-cover scale-110 group-hover:scale-115 transition-transform duration-300"
                 onError={(e) => {
                   (e.currentTarget as HTMLElement).style.display = 'none';
@@ -610,7 +700,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           {copiedBizum && (
             <div className="mt-2.5 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2 animate-fade-in shadow-lg">
               <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span className="font-bold">¡Teléfono de Bizum ({bizumPhone}) copiado! Abre tu banco para enviarlo.</span>
+              <span className="font-bold">
+                {t('bizumCopiedNotification', { phone: bizumPhone }) || `¡Teléfono de Bizum (${bizumPhone}) copiado! Abre tu banco para enviarlo.`}
+              </span>
             </div>
           )}
 
@@ -798,6 +890,44 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
+          {/* COMPARTIR CON UN AMIGO */}
+          <div className="bg-neutral-950 border border-amber-500/30 rounded-xl p-4 text-left space-y-3 shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
+                <Share2 className="w-3.5 h-3.5" /> {t('shareWithFriend') || 'Pásaselo a un colega'}
+              </span>
+            </div>
+            <p className="text-[11px] text-neutral-300 font-mono leading-relaxed">
+              {t('shareCardPrompt') || '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.'}
+            </p>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleShareWithFriend}
+                className="py-2.5 px-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95"
+              >
+                {copiedShareLink ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-slate-950" /> {t('shareCopied') || '¡Copiado!'}
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-3.5 h-3.5 text-slate-950" /> {t('shareWithFriend') || 'Compartir'}
+                  </>
+                )}
+              </button>
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t('whatsappShareMessage', { bandName, url: typeof window !== 'undefined' ? window.location.href : '' }) || `¡Ey! Échale un ojo a ${bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackClick('whatsapp_share', '', 'success')}
+                className="py-2.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-mono font-bold text-xs flex items-center justify-center gap-1.5 shadow transition active:scale-95 text-center"
+              >
+                <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+              </a>
+            </div>
+          </div>
+
           {/* Official Social Links in Success View */}
           {socialLinks && Object.values(socialLinks).some(Boolean) && (
             <div className="pt-2 border-t border-neutral-800">
@@ -938,6 +1068,46 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           </div>
         </div>
 
+        {/* REPRODUCTOR AUDIO PREVIEW DIRECTO (Single / Adelanto) */}
+        {audioPreviewConfig?.habilitado !== false && (
+          <div className="p-3 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border border-amber-500/30 shadow-lg flex items-center justify-between gap-3 text-left">
+            <button
+              type="button"
+              onClick={toggleAudioPreview}
+              aria-label={isPlayingAudioPreview ? (t('audioPreviewPause') || 'Pausar audio') : (t('audioPreviewPlay') || 'Reproducir audio')}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-neutral-950 flex items-center justify-center shrink-0 shadow-md transition-all active:scale-95"
+            >
+              {isPlayingAudioPreview ? (
+                <Pause className="w-5 h-5 fill-neutral-950" />
+              ) : (
+                <Play className="w-5 h-5 fill-neutral-950 translate-x-0.5" />
+              )}
+            </button>
+            
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-white truncate">
+                <Headphones className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="truncate">
+                  {audioPreviewConfig?.tituloTema?.trim() || `${bandName} · Directo Preview`}
+                </span>
+              </div>
+              <p className="text-[10px] text-neutral-400 font-mono truncate">
+                {isPlayingAudioPreview 
+                  ? (t('audioPreviewPlaying') || 'Sonando adelanto en vivo...') 
+                  : (audioPreviewConfig?.subtitulo?.trim() || t('audioPreviewPrompt') || 'Dale al play para escuchar cómo sonamos')}
+              </p>
+            </div>
+
+            {/* Animación de ondas de audio */}
+            <div className="flex items-center gap-1 h-5 shrink-0 px-2">
+              <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-5 animate-pulse' : 'h-1.5'}`} />
+              <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-3 animate-bounce' : 'h-2'}`} />
+              <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-4 animate-pulse' : 'h-1'}`} />
+              <span className={`w-1 bg-amber-400 rounded-full transition-all duration-300 ${isPlayingAudioPreview ? 'h-2 animate-bounce' : 'h-2.5'}`} />
+            </div>
+          </div>
+        )}
+
         {/* Dual Tab Mode Switcher */}
         <div className="flex bg-neutral-950 p-1.5 rounded-2xl border border-neutral-800 text-xs font-mono">
           <button 
@@ -1056,6 +1226,35 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <ChevronRight className="relative w-5 h-5 text-neutral-400 group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0" />
             </a>
 
+            {/* PRÓXIMOS CONCIERTOS / GIRA */}
+            {upcomingConcerts && upcomingConcerts.length > 0 && (
+              <div className="p-3.5 rounded-2xl bg-neutral-900 border border-amber-500/30 space-y-2.5 shadow-xl text-left">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider">
+                    <Calendar className="w-3.5 h-3.5" /> {t('upcomingShowsTitle') || 'Próximos Conciertos'}
+                  </span>
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-bold">
+                    {upcomingConcerts.length} {upcomingConcerts.length === 1 ? 'fecha' : 'fechas'}
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  {upcomingConcerts.slice(0, 3).map(c => (
+                    <div key={c.id} className="p-2.5 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between text-xs font-mono">
+                      <div className="min-w-0 pr-2">
+                        <p className="font-bold text-white truncate">{c.sala}</p>
+                        <p className="text-[11px] text-neutral-400 truncate flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-amber-500/80 shrink-0" /> {c.ciudad}
+                        </p>
+                      </div>
+                      <span className="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 text-[10px] font-bold shrink-0 font-mono">
+                        {c.fecha}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Aportación Económica / Revolut debajo de links de redes */}
             {renderRevolutCard('redes')}
 
@@ -1073,15 +1272,38 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
         {/* Tab 2: Formulario de Registro */}
         {activeTab === 'form' && (
-          <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in">
+          <form onSubmit={handleSubmit} className="space-y-4 pt-1 animate-fade-in text-left">
             {error && (
               <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono rounded-xl text-center">
                 {error}
               </div>
             )}
+
+            {/* INCENTIVO / LEAD MAGNET BANNER */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-amber-950/20 border border-amber-500/30 space-y-2 text-left shadow-md">
+              <div className="flex items-center gap-2 text-amber-300 font-mono font-black text-xs uppercase tracking-wider">
+                <Gift className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" />
+                <span>{t('incentivoPromoTitulo') || 'Regalo exclusivo al unirte'}</span>
+              </div>
+              <p className="text-[11px] text-neutral-300 font-mono leading-relaxed">
+                {t('incentivoPromoTexto') || 'Descarga 1 tema inédito en acústico + Código 10% dto en Merchan + Acceso prioritario a entradas.'}
+              </p>
+              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-950/80 border border-amber-500/20 text-[10px] text-amber-300 font-mono">
+                  <Headphones className="w-3 h-3 text-amber-400" /> {t('incentivoBadgeAudio') || 'Audio Exclusivo'}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-950/80 border border-amber-500/20 text-[10px] text-amber-300 font-mono">
+                  <Tag className="w-3 h-3 text-amber-400" /> {t('incentivoBadgeDiscount') || '10% Descuento'}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-950/80 border border-amber-500/20 text-[10px] text-amber-300 font-mono">
+                  <Ticket className="w-3 h-3 text-amber-400" /> {t('incentivoBadgePresale') || 'Preventa'}
+                </span>
+              </div>
+            </div>
             
+            {/* CAMPOS OBLIGATORIOS (Rápidos y sin fricción) */}
             <div>
-              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelName')}</label>
+              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelName')} *</label>
               <input
                 type="text"
                 required
@@ -1092,7 +1314,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelEmail')}</label>
+              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelEmail')} *</label>
               <input
                 type="email"
                 required
@@ -1102,65 +1324,82 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 placeholder="tu@email.com"
               />
             </div>
+
+            {/* BOTÓN PARA EXPANDIR DETALLES OPCIONALES (Sin obligar al fan) */}
             <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelCity')}</label>
-              <input
-                type="text"
-                value={formData.ciudad}
-                onChange={e => setFormData({...formData, ciudad: e.target.value})}
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder={t('placeholderCity')}
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelHowFound')}</label>
-              <select
-                required
-                value={formData.comoConocio}
-                onChange={e => setFormData({...formData, comoConocio: e.target.value})}
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors appearance-none"
+              <button
+                type="button"
+                onClick={() => setShowOptionalFields(!showOptionalFields)}
+                className="w-full py-2 px-3 rounded-xl bg-neutral-950 border border-neutral-800 hover:border-amber-500/40 text-neutral-400 hover:text-amber-300 text-xs font-mono flex items-center justify-between transition-colors"
               >
-                <option value="">{t('optionSelect')}</option>
-                <option value="Concierto">{t('optionConcert')}</option>
-                <option value="Redes Sociales">{t('optionSocial')}</option>
-                <option value="Amigo">{t('optionFriend')}</option>
-                <option value="Spotify">{t('optionSpotify')}</option>
-                <option value="Otro">{t('optionOther')}</option>
-              </select>
+                <span>{showOptionalFields ? '– Ocultar detalles adicionales' : '+ Añadir ciudad, canción o mensaje (opcional)'}</span>
+                {showOptionalFields ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
             </div>
 
-            <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelFavSong', { bandName })}</label>
-              <input
-                type="text"
-                value={formData.cancionFavorita}
-                onChange={e => setFormData({...formData, cancionFavorita: e.target.value})}
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder={t('placeholderFavSong')}
-              />
-            </div>
+            {/* CAMPOS OPCIONALES COLAPSABLES */}
+            {showOptionalFields && (
+              <div className="space-y-3.5 pt-1 pl-1 pr-1 animate-in fade-in duration-200">
+                <div>
+                  <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelCity')}</label>
+                  <input
+                    type="text"
+                    value={formData.ciudad}
+                    onChange={e => setFormData({...formData, ciudad: e.target.value})}
+                    className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors"
+                    placeholder={t('placeholderCity')}
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelHowFound')}</label>
+                  <select
+                    value={formData.comoConocio}
+                    onChange={e => setFormData({...formData, comoConocio: e.target.value})}
+                    className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors appearance-none"
+                  >
+                    <option value="">{t('optionSelect')}</option>
+                    <option value="Concierto">{t('optionConcert')}</option>
+                    <option value="Redes Sociales">{t('optionSocial')}</option>
+                    <option value="Amigo">{t('optionFriend')}</option>
+                    <option value="Spotify">{t('optionSpotify')}</option>
+                    <option value="Otro">{t('optionOther')}</option>
+                  </select>
+                </div>
 
-            <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelInstagram')}</label>
-              <input
-                type="text"
-                value={formData.instagram}
-                onChange={e => setFormData({...formData, instagram: e.target.value})}
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3.5 text-white font-mono text-sm outline-none transition-colors"
-                placeholder={t('placeholderInstagram')}
-              />
-            </div>
+                <div>
+                  <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelFavSong', { bandName })}</label>
+                  <input
+                    type="text"
+                    value={formData.cancionFavorita}
+                    onChange={e => setFormData({...formData, cancionFavorita: e.target.value})}
+                    className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors"
+                    placeholder={t('placeholderFavSong')}
+                  />
+                </div>
 
-            <div>
-              <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelMessage')}</label>
-              <textarea
-                rows={2}
-                value={formData.mensaje}
-                onChange={e => setFormData({...formData, mensaje: e.target.value})}
-                className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors resize-none"
-                placeholder={t('placeholderMessage')}
-              />
-            </div>
+                <div>
+                  <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelInstagram')}</label>
+                  <input
+                    type="text"
+                    value={formData.instagram}
+                    onChange={e => setFormData({...formData, instagram: e.target.value})}
+                    className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors"
+                    placeholder={t('placeholderInstagram')}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-black text-neutral-400 uppercase font-mono tracking-widest mb-1.5 block">{t('labelMessage')}</label>
+                  <textarea
+                    rows={2}
+                    value={formData.mensaje}
+                    onChange={e => setFormData({...formData, mensaje: e.target.value})}
+                    className="w-full bg-neutral-950 border border-neutral-800 focus:border-amber-500 rounded-xl p-3 text-white font-mono text-sm outline-none transition-colors resize-none"
+                    placeholder={t('placeholderMessage')}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Revolut Support also directly accessible inside the registration form */}
             {renderRevolutCard('form')}

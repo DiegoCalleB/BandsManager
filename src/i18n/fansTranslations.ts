@@ -131,6 +131,32 @@ type FanFormDict = {
   previewClose: string;
   previewProductionSyncBadge: string;
   previewDisclaimer: string;
+  // Nuevas mejoras: Incentivo, compartir y próximos bolos
+  incentiveBannerTitle: string;
+  incentiveItemTickets: string;
+  incentiveItemTrack: string;
+  incentiveItemMerch: string;
+  shareWithFriend: string;
+  shareSuccessText: string;
+  shareCopied: string;
+  upcomingConcertsTitle: string;
+  buyTickets: string;
+  optionalFieldsToggle: string;
+  hideOptionalFields: string;
+  quickJoinSubtitle: string;
+  audioPreviewPlaying: string;
+  audioPreviewPrompt: string;
+  audioPreviewPlay: string;
+  audioPreviewPause: string;
+  bizumCopiedNotification: string;
+  shareCardPrompt: string;
+  whatsappShareMessage: string;
+  incentivoPromoTitulo: string;
+  incentivoPromoTexto: string;
+  incentivoBadgeAudio: string;
+  incentivoBadgeDiscount: string;
+  incentivoBadgePresale: string;
+  upcomingShowsTitle: string;
 };
 
 const es: FanFormDict = {
@@ -230,6 +256,31 @@ const es: FanFormDict = {
   previewClose: 'Cerrar',
   previewProductionSyncBadge: 'Sincronizado con Dossier',
   previewDisclaimer: 'Previsualización interactiva en tiempo real. Los cambios en el Dossier se reflejan al instante.',
+  incentiveBannerTitle: '🎁 Ventajas exclusivas de la comunidad',
+  incentiveItemTickets: '⚡ Acceso prioritario a entradas antes de salir a la venta',
+  incentiveItemTrack: '🎵 Descarga directa de tema inédito / acústico',
+  incentiveItemMerch: '👕 Código con 10% de descuento en merchandising oficial',
+  shareWithFriend: 'Compartir con un amigo',
+  shareSuccessText: '¡Me acabo de unir a la comunidad de {bandName}! 🎸',
+  shareCopied: '¡Enlace copiado para compartir!',
+  upcomingConcertsTitle: 'Próximos Conciertos & Entradas',
+  buyTickets: 'Entradas / Info',
+  optionalFieldsToggle: 'Completar más datos (opcional)',
+  hideOptionalFields: 'Ocultar campos opcionales',
+  quickJoinSubtitle: 'Únete en 1 paso para no perderte nada.',
+  audioPreviewPlaying: 'Sonando adelanto...',
+  audioPreviewPrompt: 'Dale al play para escuchar cómo sonamos',
+  audioPreviewPlay: 'Reproducir audio',
+  audioPreviewPause: 'Pausar audio',
+  bizumCopiedNotification: '¡Teléfono de Bizum ({phone}) copiado! Abre tu banco para enviarlo.',
+  shareCardPrompt: '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.',
+  whatsappShareMessage: '¡Ey! Échale un ojo a {bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: {url}',
+  incentivoPromoTitulo: 'Regalo exclusivo al unirte',
+  incentivoPromoTexto: 'Descarga 1 tema inédito en acústico + Código 10% dto en Merchan + Acceso prioritario a entradas.',
+  incentivoBadgeAudio: 'Audio Exclusivo',
+  incentivoBadgeDiscount: '10% Descuento',
+  incentivoBadgePresale: 'Preventa',
+  upcomingShowsTitle: 'Próximos Conciertos',
 };
 
 const en: FanFormDict = {
@@ -329,6 +380,31 @@ const en: FanFormDict = {
   previewClose: 'Close',
   previewProductionSyncBadge: 'Synced with EPK',
   previewDisclaimer: 'Real-time interactive preview. Changes in the EPK are reflected instantly.',
+  incentiveBannerTitle: '🎁 Exclusive Community Perks',
+  incentiveItemTickets: '⚡ Early ticket access before general release',
+  incentiveItemTrack: '🎵 Direct download of unreleased / acoustic track',
+  incentiveItemMerch: '👕 10% discount code on official merchandise',
+  shareWithFriend: 'Share with a friend',
+  shareSuccessText: 'I just joined the {bandName} music community! 🎸',
+  shareCopied: 'Link copied to share!',
+  upcomingConcertsTitle: 'Upcoming Shows & Tickets',
+  buyTickets: 'Tickets / Info',
+  optionalFieldsToggle: 'Add more details (optional)',
+  hideOptionalFields: 'Hide optional fields',
+  quickJoinSubtitle: 'Join in 1 quick step to stay in the loop.',
+  audioPreviewPlaying: 'Playing preview...',
+  audioPreviewPrompt: 'Hit play to hear our sound',
+  audioPreviewPlay: 'Play audio preview',
+  audioPreviewPause: 'Pause audio preview',
+  bizumCopiedNotification: 'Bizum phone ({phone}) copied! Open your banking app to send.',
+  shareCardPrompt: 'Know someone who loves great music? Share this direct link so they can also enjoy exclusive tracks.',
+  whatsappShareMessage: 'Hey! Check out {bandName} and join their community to get unreleased tracks and discounts: {url}',
+  incentivoPromoTitulo: 'Exclusive gift when joining',
+  incentivoPromoTexto: 'Direct download of 1 unreleased acoustic track + 10% Merch discount code + Early ticket access.',
+  incentivoBadgeAudio: 'Exclusive Audio',
+  incentivoBadgeDiscount: '10% Discount',
+  incentivoBadgePresale: 'Presale',
+  upcomingShowsTitle: 'Upcoming Shows',
 };
 
 const it: FanFormDict = {
@@ -428,6 +504,31 @@ const it: FanFormDict = {
   previewClose: 'Chiudi',
   previewProductionSyncBadge: 'Sincronizzato con Dossier',
   previewDisclaimer: 'Anteprima interattiva in tempo reale. Le modifiche nel Dossier si riflettono all\'istante.',
+  incentiveBannerTitle: '🎁 Vantaggi Esclusivi della Community',
+  incentiveItemTickets: '⚡ Accesso prioritario ai biglietti prima della vendita generale',
+  incentiveItemTrack: '🎵 Download diretto di un brano inedito / acustico',
+  incentiveItemMerch: '👕 Codice sconto del 10% sul merchandising ufficiale',
+  shareWithFriend: 'Condividi con un amico',
+  shareSuccessText: 'Mi sono appena unito alla community di {bandName}! 🎸',
+  shareCopied: 'Link copiato per la condivisione!',
+  upcomingConcertsTitle: 'Prossimi Concerti & Biglietti',
+  buyTickets: 'Biglietti / Info',
+  optionalFieldsToggle: 'Aggiungi altri dettagli (facoltativo)',
+  hideOptionalFields: 'Nascondi campi facoltativi',
+  quickJoinSubtitle: 'Unisciti in 1 semplice passaggio.',
+  audioPreviewPlaying: 'Riproduzione anteprima...',
+  audioPreviewPrompt: 'Premi play per ascoltare la nostra musica',
+  audioPreviewPlay: 'Riproduci anteprima audio',
+  audioPreviewPause: 'Metti in pausa anteprima',
+  bizumCopiedNotification: 'Numero Bizum ({phone}) copiato! Apri la tua app bancaria per inviarlo.',
+  shareCardPrompt: 'Conosci qualcuno che ama la buona musica? Condividi questo link diretto per fargli ascoltare i brani esclusivi.',
+  whatsappShareMessage: 'Ehi! Dai un\'occhiata a {bandName} e unisciti alla community per ottenere brani inediti e sconti: {url}',
+  incentivoPromoTitulo: 'Regalo esclusivo all\'iscrizione',
+  incentivoPromoTexto: 'Download di 1 brano acustico inedito + Codice sconto 10% sul merch + Accesso prioritario ai biglietti.',
+  incentivoBadgeAudio: 'Audio Esclusivo',
+  incentivoBadgeDiscount: '10% Sconto',
+  incentivoBadgePresale: 'Prevendita',
+  upcomingShowsTitle: 'Prossimi Concerti',
 };
 
 const cs: FanFormDict = {
@@ -527,6 +628,31 @@ const cs: FanFormDict = {
   previewClose: 'Zavřít',
   previewProductionSyncBadge: 'Synchronizováno s Dossier',
   previewDisclaimer: 'Interaktivní náhled v reálném čase. Změny v Dossier se okamžitě projeví.',
+  incentiveBannerTitle: '🎁 Exkluzivní výhody pro komunitu',
+  incentiveItemTickets: '⚡ Přednostní přístup k lístkům před oficiálním prodejem',
+  incentiveItemTrack: '🎵 Přímé stažení nevydané / akustické skladby',
+  incentiveItemMerch: '👕 10% slevový kód na oficiální merch',
+  shareWithFriend: 'Sdílet s kamarádem',
+  shareSuccessText: 'Právě jsem se přidal/a ke komunitě {bandName}! 🎸',
+  shareCopied: 'Odkaz ke sdílení zkopírován!',
+  upcomingConcertsTitle: 'Nadcházející koncerty & Vstupenky',
+  buyTickets: 'Vstupenky / Info',
+  optionalFieldsToggle: 'Doplnit další údaje (volitelné)',
+  hideOptionalFields: 'Skrýt volitelná pole',
+  quickJoinSubtitle: 'Připoj se v 1 rychlém kroku.',
+  audioPreviewPlaying: 'Přehrává se ukázka...',
+  audioPreviewPrompt: 'Klikni na play a poslechni si, jak hrajeme',
+  audioPreviewPlay: 'Přehrát ukázku',
+  audioPreviewPause: 'Pozastavit ukázku',
+  bizumCopiedNotification: 'Bizum telefonní číslo ({phone}) zkopírováno! Otevři své bankovnictví pro odeslání.',
+  shareCardPrompt: 'Znáš někoho, kdo má rád dobrou hudbu? Sdílej tento přímý odkaz, ať si také užije exkluzivní skladby.',
+  whatsappShareMessage: 'Ahoj! Koukni na {bandName} a přidej se k jejich komunitě pro nevydané skladby a slevy: {url}',
+  incentivoPromoTitulo: 'Exkluzivní dárek při registraci',
+  incentivoPromoTexto: 'Stažení 1 nevydané akustické skladby + 10% slevový kód na merch + Přednostní přístup ke vstupenkám.',
+  incentivoBadgeAudio: 'Exkluzivní audio',
+  incentivoBadgeDiscount: '10% Sleva',
+  incentivoBadgePresale: 'Předprodej',
+  upcomingShowsTitle: 'Nadcházející koncerty',
 };
 
 export const FAN_FORM_TRANSLATIONS: Record<FanFormLanguage, FanFormDict> = { es, en, it, cs };

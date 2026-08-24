@@ -1171,6 +1171,164 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             </div>
           </div>
 
+          {/* AUDIO PREVIEW ADELANTO EN LANDING DE FANS */}
+          <div className="bg-slate-900 border border-amber-500/30 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <Music className="w-5 h-5" /> Canción / Adelanto en Audio Preview (Landing de Fans)
+              </h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+                Player Interactivo
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              Permite a los fans que visitan tu landing pública escuchar al instante un fragmento o tema destacado de la banda mientras se unen o siguen tus redes. Puedes elegir si activar el reproductor, seleccionar qué canción del repertorio poner o pegar una URL directa de audio.
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <div className="space-y-3">
+                {/* Switch de activación */}
+                <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+                  <div className="space-y-0.5 pr-3">
+                    <span className="text-xs font-bold text-white">Activar reproductor de adelanto de audio</span>
+                    <p className="text-[10px] text-slate-400">Si está desactivado, el widget del reproductor no se mostrará en la landing pública de fans.</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={config.audioPreview?.habilitado ?? true}
+                    onChange={e => setConfig({
+                      ...config,
+                      audioPreview: {
+                        ...(config.audioPreview || {}),
+                        habilitado: e.target.checked
+                      }
+                    })}
+                    className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
+                  />
+                </div>
+
+                {/* Selector de canción del repertorio */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+                    <span>Elegir tema de vuestro repertorio</span>
+                    {songs.length > 0 && <span className="text-[10px] text-amber-400 font-mono">{songs.length} temas disponibles</span>}
+                  </label>
+                  <select
+                    value={config.audioPreview?.cancionId || ''}
+                    onChange={e => {
+                      const selectedId = e.target.value;
+                      const selectedSong = songs.find(s => s.id === selectedId);
+                      setConfig(prev => ({
+                        ...prev,
+                        audioPreview: {
+                          ...(prev.audioPreview || {}),
+                          cancionId: selectedId,
+                          tituloTema: selectedSong ? selectedSong.titulo : prev.audioPreview?.tituloTema,
+                          audioUrl: selectedSong?.audioPrincipalUrl || prev.audioPreview?.audioUrl || ''
+                        }
+                      }));
+                    }}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                  >
+                    <option value="">-- Seleccionar tema del repertorio o usar personalizado --</option>
+                    {songs.map(song => (
+                      <option key={song.id} value={song.id}>
+                        {song.titulo} {song.duracion ? `(${song.duracion})` : ''} {song.audioPrincipalUrl ? '🎵 (Con audio subido)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Título y subtítulo visual del reproductor */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-300">Título mostrado en el reproductor</label>
+                    <input
+                      type="text"
+                      value={config.audioPreview?.tituloTema ?? ''}
+                      onChange={e => setConfig({
+                        ...config,
+                        audioPreview: {
+                          ...(config.audioPreview || {}),
+                          tituloTema: e.target.value
+                        }
+                      })}
+                      placeholder="Ej: Single Debut / Directo Preview"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-slate-300">Subtítulo / Mensaje de escucha</label>
+                    <input
+                      type="text"
+                      value={config.audioPreview?.subtitulo ?? ''}
+                      onChange={e => setConfig({
+                        ...config,
+                        audioPreview: {
+                          ...(config.audioPreview || {}),
+                          subtitulo: e.target.value
+                        }
+                      })}
+                      placeholder="Ej: Dale al play para escuchar cómo sonamos"
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* URL del archivo de audio */}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-300">URL del archivo de audio (MP3 / OGG / WAV)</label>
+                  <input
+                    type="url"
+                    value={config.audioPreview?.audioUrl ?? ''}
+                    onChange={e => setConfig({
+                      ...config,
+                      audioPreview: {
+                        ...(config.audioPreview || {}),
+                        audioUrl: e.target.value
+                      }
+                    })}
+                    placeholder="https://.../tema-adelanto.mp3"
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+                  />
+                  <p className="text-[10px] text-slate-500">
+                    Si dejas la URL vacía, se usará una demo de muestra en directo con metales y ritmo ska-mestizaje.
+                  </p>
+                </div>
+              </div>
+
+              {/* Vista previa en vivo del reproductor */}
+              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col justify-center space-y-3">
+                <span className="text-[10px] uppercase font-mono font-bold text-slate-400">Previsualización del reproductor en la Landing</span>
+                <div className={`p-3 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border ${config.audioPreview?.habilitado !== false ? 'border-amber-500/40 shadow-lg' : 'border-slate-800 opacity-50'} flex items-center justify-between gap-3 text-left`}>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-neutral-950 flex items-center justify-center shrink-0 shadow-md">
+                    <Music className="w-5 h-5 fill-neutral-950" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-white truncate">
+                      <span className="truncate">
+                        {config.audioPreview?.tituloTema?.trim() || `${currentUser?.bandName || 'Tu Banda'} · Directo Preview`}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-neutral-400 font-mono truncate">
+                      {config.audioPreview?.subtitulo?.trim() || 'Dale al play para escuchar cómo sonamos'}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 h-5 shrink-0 px-2">
+                    <span className="w-1 h-3 bg-amber-400 rounded-full animate-pulse" />
+                    <span className="w-1 h-5 bg-amber-400 rounded-full animate-bounce" />
+                    <span className="w-1 h-2 bg-amber-400 rounded-full animate-pulse" />
+                  </div>
+                </div>
+                {config.audioPreview?.habilitado === false && (
+                  <p className="text-[11px] text-amber-400/90 font-mono text-center">
+                    ⚠️ Reproductor actualmente desactivado para los fans.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT & PAYPAL */}
           <div className="bg-slate-900 border border-sky-500/30 rounded-2xl p-6 space-y-4 lg:col-span-2">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
