@@ -381,11 +381,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
   // El Dossier/EPK público, mismo patrón de URL que usa EPKManager.tsx: a diferencia de
   // Revolut/PayPal, este enlace no depende de que la banda lo configure, siempre existe.
+  // Lleva &lang= con el idioma del concierto: así quien entra al EPK desde un Únete de Italia
+  // lo ve en italiano por defecto, no en español. EpkLanguage y FanFormLanguage comparten
+  // exactamente los mismos códigos (es/en/it/cs), así que conciertoLanguage vale tal cual.
   const epkUrl = (typeof window !== 'undefined'
     ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
         ? 'https://bands-manager.up.railway.app/epk'
         : `${window.location.origin}/epk`)
-    : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}`;
+    : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
   const activeMethod: 'revolut' | 'paypal' = 
     (hasRevolut && hasPaypal)
