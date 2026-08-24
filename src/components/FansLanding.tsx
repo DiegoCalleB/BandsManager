@@ -1226,7 +1226,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               <ChevronRight className="relative w-5 h-5 text-neutral-400 group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0" />
             </a>
 
-            {/* PRÓXIMOS CONCIERTOS / GIRA */}
+            {/* Aportación Económica / Revolut debajo de links de redes */}
+            {renderRevolutCard('redes')}
+
+            {/* PRÓXIMOS CONCIERTOS / GIRA - debajo de Colaborar y encima de Booking y Contratación */}
             {upcomingConcerts && upcomingConcerts.length > 0 && (
               <div className="p-3.5 rounded-2xl bg-neutral-900 border border-amber-500/30 space-y-2.5 shadow-xl text-left">
                 <div className="flex items-center justify-between">
@@ -1254,9 +1257,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
               </div>
             )}
-
-            {/* Aportación Económica / Revolut debajo de links de redes */}
-            {renderRevolutCard('redes')}
 
             <div className="pt-1 text-center">
               <button
