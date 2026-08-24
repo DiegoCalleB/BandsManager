@@ -76,10 +76,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
     const initial: Record<string, { likes: number; fire: number; applause: number; guitars: number }> = {};
     fans.forEach(f => {
       initial[f.id] = {
-        likes: f.reacciones?.likes ?? Math.max(1, (f.nombre.length % 5) + 1),
-        fire: f.reacciones?.fire ?? (f.comoConocio?.includes('Concierto') ? 3 : 1),
-        applause: f.reacciones?.applause ?? (f.nombre.length % 3),
-        guitars: f.reacciones?.guitars ?? 1
+        likes: f.reacciones?.likes ?? 0,
+        fire: f.reacciones?.fire ?? 0,
+        applause: f.reacciones?.applause ?? 0,
+        guitars: f.reacciones?.guitars ?? 0
       };
     });
     return initial;
