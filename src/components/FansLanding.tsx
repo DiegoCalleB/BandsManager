@@ -885,14 +885,29 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
             {/* Acceso al EPK/Dossier público, antes de pedir apoyo económico. Deliberadamente sin
                 la palabra "EPK" ni un botón con texto: para un fan es jerga de la industria, así
-                que el título+subtítulo+flecha ya comunican "entra a saber más" por sí solos. */}
+                que el título+subtítulo+flecha ya comunican "entra a saber más" por sí solos.
+                Fondo con la foto/logo real de la banda (si existe) para que la tarjeta no se vea
+                vacía a la derecha del texto: en vez de dejar hueco muerto entre el subtítulo y la
+                flecha, ese espacio lo ocupa la propia imagen de la banda, atenuada. */}
             <a
               href={epkUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick('epk', epkUrl, 'redes')}
-              className="group relative flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-neutral-900 via-neutral-900/95 to-neutral-950 border border-neutral-800 hover:border-amber-500/50 transition-all duration-300 shadow-xl hover:shadow-amber-500/5 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+              className="group relative flex items-center gap-4 p-4 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-amber-500/50 transition-all duration-300 shadow-xl hover:shadow-amber-500/5 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
             >
+              {logoUrl && !imgError && (
+                <img
+                  src={logoUrl}
+                  alt=""
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-35 scale-110 group-hover:scale-125 transition-all duration-500"
+                />
+              )}
+              <div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-r from-neutral-900 via-neutral-900/85 to-neutral-900/40"
+                aria-hidden="true"
+              />
               <div
                 className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full bg-amber-500/10 blur-2xl group-hover:bg-amber-500/20 transition-colors duration-500"
                 aria-hidden="true"
@@ -904,11 +919,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 <span className="text-sm font-bold text-white group-hover:text-amber-300 transition block truncate tracking-tight">
                   {t('epkCardTitle')}
                 </span>
-                <span className="text-[11px] text-neutral-400 font-mono block truncate mt-0.5">
+                <span className="text-[11px] text-neutral-300 font-mono block truncate mt-0.5">
                   {t('epkCardSubtitle')}
                 </span>
               </div>
-              <ChevronRight className="relative w-5 h-5 text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0" />
+              <ChevronRight className="relative w-5 h-5 text-neutral-400 group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0" />
             </a>
 
             {/* Aportación Económica / Revolut debajo de links de redes */}
