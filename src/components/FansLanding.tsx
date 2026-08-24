@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame, Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle, Lock as LockIcon, ExternalLink, BookOpen, ChevronRight } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
-import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate } from '../i18n/fansTranslations';
+import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from '../i18n/fansTranslations';
 import { renderBold } from '../utils/richText';
 
 import { Concert, EPKConfig } from '../types';
@@ -20,9 +20,9 @@ export interface FansLandingProps {
   onClosePreview?: () => void;
 }
 
-const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (lang: FanFormLanguage) => void }> = ({ language, onChange }) => (
+const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (lang: FanFormLanguage) => void; languages: typeof FAN_FORM_LANGUAGES }> = ({ language, onChange, languages }) => (
   <div className="flex items-center justify-center gap-1.5">
-    {FAN_FORM_LANGUAGES.map(l => (
+    {languages.map(l => (
       <button
         key={l.code}
         type="button"
@@ -73,10 +73,26 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [isConcertLink, setIsConcertLink] = useState(Boolean(previewConcert || previewConcertName));
   const [language, setLanguage] = useFanFormLanguage(isPreview ? previewLanguage : undefined);
 
+  // El idioma "del concierto": el que trae el QR (o el de la previsualización), capturado una
+  // sola vez al montar. A propósito NO seguimos a `language` según el fan va tocando el
+  // selector: si es-tiquetara "English" en un show en Praga, tomar ahí el ancla habría hecho
+  // desaparecer el checo del selector (es/en da solo 2 idiomas). El idioma de fondo del
+  // concierto se queda fijo; solo decide QUÉ 2-3 banderas se ofrecen, no cuál está activa.
+  const [conciertoLanguage, setConciertoLanguage] = useState<FanFormLanguage>(() => language);
+  const availableLanguages = FAN_FORM_LANGUAGES.filter(l =>
+    idiomasDisponiblesParaConcierto(conciertoLanguage).includes(l.code)
+  ).sort((a, b) =>
+    idiomasDisponiblesParaConcierto(conciertoLanguage).indexOf(a.code) -
+    idiomasDisponiblesParaConcierto(conciertoLanguage).indexOf(b.code)
+  );
+
   // Sincronizar idioma si se proporciona en modo preview
   useEffect(() => {
     if (isPreview && previewLanguage && previewLanguage !== language) {
       setLanguage(previewLanguage);
+    }
+    if (isPreview && previewLanguage && previewLanguage !== conciertoLanguage) {
+      setConciertoLanguage(previewLanguage);
     }
   }, [isPreview, previewLanguage]);
 
@@ -651,7 +667,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <Heart className="w-10 h-10 text-amber-500" />
           </div>
 
-          <FanFormLanguageSwitcher language={language} onChange={setLanguage} />
+          <FanFormLanguageSwitcher language={language} onChange={setLanguage} languages={availableLanguages} />
 
           <div className="space-y-2">
             <h2 className="text-2xl font-black text-white font-display uppercase tracking-widest flex items-center justify-center gap-2">
@@ -833,7 +849,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <p className="text-neutral-400 text-xs font-mono leading-relaxed max-w-sm mx-auto">
               {renderBold(t('supportIntro'))}
             </p>
-            <FanFormLanguageSwitcher language={language} onChange={setLanguage} />
+            <FanFormLanguageSwitcher language={language} onChange={setLanguage} languages={availableLanguages} />
           </div>
         </div>
 
