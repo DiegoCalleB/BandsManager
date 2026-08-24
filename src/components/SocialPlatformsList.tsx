@@ -202,7 +202,7 @@ export const PLATFORM_PRIORITY_ORDER: string[] = [
 ];
 
 // Métodos de pago y mensajería privada que NO deben aparecer entre los enlaces de redes sociales
-const NON_SOCIAL_KEYS = new Set(['whatsapp', 'revolut', 'paypal']);
+const NON_SOCIAL_KEYS = new Set(['whatsapp', 'revolut', 'paypal', 'bizum']);
 
 export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
   links,
@@ -356,3 +356,11 @@ export const SocialPlatformsList: React.FC<SocialPlatformsListProps> = ({
     </div>
   );
 };
+
+export const BizumLogo: React.FC<{ className?: string }> = ({ className = "w-full h-full" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="9" cy="8" r="2.5" fill="currentColor"/>
+    <circle cx="16" cy="18" r="2.5" fill="currentColor"/>
+    <path d="M10.5 19 L14.5 7" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+  </svg>
+);

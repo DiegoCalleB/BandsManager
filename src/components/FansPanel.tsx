@@ -1171,12 +1171,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-3">
                 <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
                   <Heart className="w-4 h-4 text-sky-400" />
-                  Colaboración Económica & Donaciones (Revolut & PayPal)
+                  Colaboración Económica Colaboración Económica & Donaciones (Revolut & PayPal) Donaciones (Revolut, PayPal y Bizum)
                 </label>
                 <p className="text-[11px] text-slate-400 font-mono">
                   {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
                     ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
-                    : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, sin intermediarios.'}
+                    : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
                 </p>
                 <button
                   type="button"

@@ -105,6 +105,9 @@ type FanFormDict = {
   paypalCopied: string;
   paypalHandle: string;
   paypalBadge: string;
+  bizumButton: string;
+  bizumHandle: string;
+  payWithBizum: string;
   payWithRevolut: string;
   payWithPaypal: string;
   selectPaymentMethod: string;
@@ -201,6 +204,9 @@ const es: FanFormDict = {
   paypalCopied: '¡Enlace de PayPal copiado!',
   paypalHandle: 'paypal.me/{tag}',
   paypalBadge: 'PayPal',
+  bizumButton: 'Aportar con Bizum',
+  bizumHandle: 'Bizum: {telefono}',
+  payWithBizum: 'Bizum',
   payWithRevolut: 'Revolut',
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Método de pago:',
@@ -297,6 +303,9 @@ const en: FanFormDict = {
   paypalCopied: 'PayPal link copied!',
   paypalHandle: 'paypal.me/{tag}',
   paypalBadge: 'PayPal',
+  bizumButton: 'Contribute via Bizum',
+  bizumHandle: 'Bizum: {telefono}',
+  payWithBizum: 'Bizum',
   payWithRevolut: 'Revolut',
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Payment method:',
@@ -393,6 +402,9 @@ const it: FanFormDict = {
   paypalCopied: 'Link PayPal copiato!',
   paypalHandle: 'paypal.me/{tag}',
   paypalBadge: 'PayPal',
+  bizumButton: 'Contribuisci con Bizum',
+  bizumHandle: 'Bizum: {telefono}',
+  payWithBizum: 'Bizum',
   payWithRevolut: 'Revolut',
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Metodo di pagamento:',
@@ -489,6 +501,9 @@ const cs: FanFormDict = {
   paypalCopied: 'Odkaz na PayPal zkopírován!',
   paypalHandle: 'paypal.me/{tag}',
   paypalBadge: 'PayPal',
+  bizumButton: 'Přispět přes Bizum',
+  bizumHandle: 'Bizum: {telefono}',
+  payWithBizum: 'Bizum',
   payWithRevolut: 'Revolut',
   payWithPaypal: 'PayPal',
   selectPaymentMethod: 'Platební metoda:',

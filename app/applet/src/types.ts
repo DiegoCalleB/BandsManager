@@ -424,11 +424,7 @@ export interface SocialContentItem {
   last_scraped_at?: string;
 }
 
-// 'admin' es un rol real en producción (ver server/auth.ts, server/routes/users.ts): antes no
-// estaba declarado aquí, así que TypeScript marcaba como "imposible" cualquier comprobación
-// `role === 'admin'` del frontend — código que en realidad protege permisos reales y que alguien
-// podría borrar por parecer inalcanzable.
-export type UserRole = 'leader' | 'member' | 'admin';
+export type UserRole = 'leader' | 'member';
 
 export interface GoogleOAuthConfig {
   connected: boolean;
@@ -455,12 +451,6 @@ export interface User {
   avatarColor?: string;
   createdAt: string;
   googleOAuth?: GoogleOAuthConfig;
-  // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente
-  // sobre el usuario persistido). Sin declararlos aquí, Planes.tsx y UserProfileModal.tsx los
-  // leían con `as any`, sin que el tipo protegiera nada.
-  estado_suscripcion?: string;
-  plan_pendiente?: string;
-  fecha_cambio_plan?: string;
 }
 
 export interface UserWithHash extends User {
@@ -692,4 +682,3 @@ export interface BandEmailAccountStatus {
   imap_port?: number;
   updated_at?: string;
 }
-
