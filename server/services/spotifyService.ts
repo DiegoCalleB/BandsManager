@@ -18,8 +18,6 @@ export interface SpotifyTrackData {
   spotifyUrl: string;
   uri: string;
   isrc?: string;
-  tonalidadEstimada?: string;
-  bpmEstimado?: number;
 }
 
 export interface SpotifyAlbumData {
@@ -61,8 +59,6 @@ function formatDuration(ms: number): string {
   const seconds = totalSeconds % 60;
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
-
-const COMMON_KEYS = ["Am", "Em", "C", "G", "Dm", "F", "Bm", "D", "E", "A", "Lam", "Mim", "SolM", "DoM", "Rem"];
 
 /**
  * Attempts to retrieve an official Spotify API token if credentials exist.
@@ -200,8 +196,6 @@ async function fetchDiscographyViaDeezer(artistName: string): Promise<SpotifyArt
         const tracks: SpotifyTrackData[] = tracksList.map((t: any, idx: number) => {
           const durationSeconds = t.duration || 180;
           const durationFormatted = formatDuration(durationSeconds * 1000);
-          const hash = t.title.split("").reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
-          const estimatedKey = COMMON_KEYS[hash % COMMON_KEYS.length];
 
           return {
             id: `dz_${t.id}`,
@@ -215,9 +209,11 @@ async function fetchDiscographyViaDeezer(artistName: string): Promise<SpotifyArt
             explicit: Boolean(t.explicit_lyrics),
             spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(t.title + " " + artist.name)}`,
             uri: `spotify:track:dz_${t.id}`,
-            isrc: t.isrc,
-            tonalidadEstimada: estimatedKey,
-            bpmEstimado: 110 + ((hash % 10) * 4)
+            isrc: t.isrc
+            // Nota: aquí antes se "estimaban" tonalidad y BPM sumando los códigos de carácter
+            // del título de la canción. No es una estimación real (no hay análisis de audio
+            // disponible), así que se guardaba ruido pseudoaleatorio como si fuera un dato
+            // musical fiable. Mejor no rellenar el campo que inventar un valor.
           };
         });
 
@@ -302,8 +298,6 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
         const tracks: SpotifyTrackData[] = trackItems.map((t: any, idx: number) => {
           const durationSeconds = Math.round((t.trackTimeMillis || 180000) / 1000);
           const durationFormatted = formatDuration(t.trackTimeMillis || 180000);
-          const hash = (t.trackName || "").split("").reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
-          const estimatedKey = COMMON_KEYS[hash % COMMON_KEYS.length];
 
           return {
             id: `it_${t.trackId}`,
@@ -317,9 +311,8 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
             explicit: t.trackExplicitness === "explicit",
             spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(t.trackName + " " + artistDisplayName)}`,
             uri: `spotify:track:it_${t.trackId}`,
-            isrc: t.isrc,
-            tonalidadEstimada: estimatedKey,
-            bpmEstimado: 115 + ((hash % 8) * 5)
+            isrc: t.isrc
+            // Ver nota equivalente más arriba: no se inventa tonalidad/BPM sin análisis real.
           };
         });
 
@@ -352,8 +345,8 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
         id: `it_${firstAlbum.artistId || "artist"}`,
         name: artistDisplayName,
         genres: [firstAlbum.primaryGenreName || "Pop / Rock"],
-        followers: 12500,
-        popularity: 65,
+        followers: 0,
+        popularity: 0,
         imageUrl: detailedAlbums[0]?.coverUrl || "",
         spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(artistDisplayName)}`,
         uri: `spotify:artist:it_${firstAlbum.artistId || "artist"}`
@@ -435,8 +428,8 @@ export async function searchSpotifyArtists(query: string) {
       id: "search_" + encodeURIComponent(cleanQ),
       name: cleanQ,
       genres: ["Música"],
-      followers: 1000,
-      popularity: 50,
+      followers: 0,
+      popularity: 0,
       imageUrl: "",
       spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(cleanQ)}`,
       uri: `spotify:artist:custom`
@@ -563,8 +556,6 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
                 const tracks: SpotifyTrackData[] = tracksList.map((t: any, index: number) => {
                   const durationSeconds = Math.round((t.duration_ms || 0) / 1000);
                   const durationFormatted = formatDuration(t.duration_ms || 0);
-                  const hash = t.name.split("").reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
-                  const estimatedKey = COMMON_KEYS[hash % COMMON_KEYS.length];
 
                   return {
                     id: t.id,
@@ -578,9 +569,8 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
                     explicit: Boolean(t.explicit),
                     spotifyUrl: t.external_urls?.spotify || `https://open.spotify.com/track/${t.id}`,
                     uri: t.uri,
-                    isrc: t.external_ids?.isrc,
-                    tonalidadEstimada: estimatedKey,
-                    bpmEstimado: 120 + ((hash % 8) * 5)
+                    isrc: t.external_ids?.isrc
+                    // Ver nota equivalente más arriba: no se inventa tonalidad/BPM sin análisis real.
                   };
                 });
 
@@ -620,7 +610,10 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
   }
 
   // 2. Seamless Universal Music API Fallback (Deezer + iTunes)
-  const artistQuery = (resolvedArtistName || (parsed.type === "query" ? parsed.value : "Bakandeya")).trim();
+  // Nota: antes, si no se resolvía ningún nombre de artista, se buscaba literalmente "Bakandeya"
+  // en Deezer/iTunes, así que una banda distinta sin nombre resuelto podía acabar viendo (o
+  // importando) la discografía del fundador. Sin nombre resuelto, no hay nada que buscar.
+  const artistQuery = (resolvedArtistName || (parsed.type === "query" ? parsed.value : "")).trim();
 
   if (artistQuery) {
     // Try Deezer first
@@ -641,11 +634,11 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
     artist: {
       id: "sp_custom",
       name: artistQuery || "Mi Banda",
-      genres: ["Indie / Mestizaje"],
-      followers: 1,
-      popularity: 50,
+      genres: ["Música"],
+      followers: 0,
+      popularity: 0,
       imageUrl: "",
-      spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(artistQuery || "Bakandeya")}`,
+      spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(artistQuery || "Mi Banda")}`,
       uri: `spotify:artist:custom`
     },
     albums: [],
@@ -761,13 +754,13 @@ export async function bulkImportSpotifyDiscographyToBand(
         duracion: track.durationFormatted,
         duracion_segundos: track.durationSeconds,
         duracion_minutos: Math.max(1, Math.round(track.durationSeconds / 60)),
-        tonalidad: existing?.tonalidad || track.tonalidadEstimada || "Mim",
-        bpm: existing?.bpm || track.bpmEstimado || 120,
+        tonalidad: existing?.tonalidad || "",
+        bpm: existing?.bpm || 0,
         afinacion: existing?.afinacion || "Estándar E",
         album_disco: albumNameWithYear,
         orden_album: track.trackNumber,
         album: album.name,
-        genero: album.genres?.[0] || artistProfile?.genres?.[0] || "Mestizaje",
+        genero: album.genres?.[0] || artistProfile?.genres?.[0] || "",
         tipo: album.albumType === "single" ? "single" : "original",
         estado: existing?.estado || "listo",
         energia: existing?.energia || 7,

@@ -23,11 +23,13 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   bandId?: string;
   lang?: EpkLanguage;
 }): string {
-  const band = params?.bandName || 'Bakandeya';
-  const email = params?.contactEmail || 'bakandeya@gmail.com';
-  const phone = params?.phone || '+34 652 938 521';
-  // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id.
-  const bandIdPdf = params?.bandId || 'band-bakandeya';
+  const band = params?.bandName || 'Tu Banda';
+  const email = params?.contactEmail || '';
+  const phone = params?.phone || '';
+  // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id. Antes,
+  // sin bandId explícito, caía en 'band-bakandeya': el dossier PDF adjunto en el email de
+  // CUALQUIER banda enlazaba al EPK público real de Bakandeya en vez del propio.
+  const bandIdPdf = params?.bandId || '';
   // El idioma viaja con el enlace: el EPK abre directamente en la versión que le toca al
   // destinatario en vez de obligarle a buscar el selector.
   const langPdf = params?.lang || DEFAULT_EPK_LANGUAGE;
@@ -113,8 +115,9 @@ export function formatEmailWithSignatureAndDossier(params: {
   epkConfig?: EPKConfig | null;
   senderName?: string;
   bandName?: string;
+  bandId?: string;
 }): FormattedEmailResult {
-  const { pitchText, lead, epkConfig, senderName, bandName } = params;
+  const { pitchText, lead, epkConfig, senderName, bandName, bandId } = params;
 
   const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'Bakandeya';
   const isBakandeya = resolvedBandName.toLowerCase().includes('bakandeya');
@@ -132,12 +135,20 @@ export function formatEmailWithSignatureAndDossier(params: {
   // Check if bodyContent already has HTML
   const isAlreadyHtml = bodyContent.startsWith('<') || bodyContent.startsWith('<!DOCTYPE');
   
-  // Format body text paragraphs cleanly
+  // Format body text paragraphs cleanly. Cuando el pitch es texto plano (el caso normal: lo
+  // escribe la IA o lo edita el usuario en un textarea) se escapa antes de envolverlo en HTML,
+  // para que un "<" o ">" sueltos en el texto no se interpreten como una etiqueta.
   const htmlBodyParagraphs = isAlreadyHtml
     ? bodyContent
     : bodyContent
         .split('\n\n')
-        .map((paragraph) => `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${paragraph.replace(/\n/g, '<br>')}</p>`)
+        .map((paragraph) => {
+          const escaped = paragraph
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+          return `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${escaped.replace(/\n/g, '<br>')}</p>`;
+        })
         .join('');
 
   // 2. Extract Signature details from epkConfig or defaults
@@ -253,6 +264,7 @@ ${linksTextArray.join(' | ')}
     bandName: resolvedBandName,
     contactEmail: email,
     phone: telefono,
+    bandId,
   });
 
   const attachments: EmailAttachment[] = [

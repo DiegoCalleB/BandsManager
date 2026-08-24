@@ -57,7 +57,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [name, setName] = useState(currentUser.name || '');
  const [instrument, setInstrument] = useState(currentUser.instrument || '');
  const [avatarColor, setAvatarColor] = useState(currentUser.avatarColor || '#10b981');
- const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id || 'band-bakandeya');
+ const [selectedMainBandId, setSelectedMainBandId] = useState(currentUser.main_band_id || currentUser.band_id || '');
  const [bandLogoUrl, setBandLogoUrl] = useState<string>(epkConfig?.logoUrl || '');
 
  useEffect(() => {
@@ -65,7 +65,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
      setName(currentUser.name || '');
      setInstrument(currentUser.instrument || '');
      setAvatarColor(currentUser.avatarColor || '#10b981');
-     setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || 'band-bakandeya');
+     setSelectedMainBandId(currentUser.main_band_id || currentUser.band_id || '');
    }
  }, [currentUser]);
 
@@ -99,8 +99,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   setUploadingLogo(true);
   setError(null);
   setSuccessMsg(null);
+  if (!currentUser.band_id) {
+   setError('No hay ninguna banda activa para actualizar el logo.');
+   setUploadingLogo(false);
+   return;
+  }
   try {
-   const userBandId = currentUser.band_id || 'band-bakandeya';
+   const userBandId = currentUser.band_id;
    const url = await uploadFileToServer(file, { bandId: userBandId, category: 'logo' });
    setBandLogoUrl(url);
 
@@ -226,7 +231,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
        if (res.user) {
          localStorage.setItem('bakandeya_user', JSON.stringify(res.user));
          onUpdateUser(res.user as User);
-         setSelectedMainBandId(res.user.main_band_id || res.user.band_id || 'band-bakandeya');
+         setSelectedMainBandId(res.user.main_band_id || res.user.band_id || '');
        }
        if (res.availableBands && Array.isArray(res.availableBands)) {
          setLocalAvailableBands(res.availableBands);
@@ -1015,10 +1020,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </button>
 
- {showAgentConfig && (
+ {showAgentConfig && currentUser.band_id && (
  <div className="mt-3 space-y-4 animate-in fade-in duration-200">
- <BandScheduleConfig bandId={currentUser.band_id || 'band-bakandeya'} isStitchLight={isStitchLight} />
- <EmailAccountConfig bandId={currentUser.band_id || 'band-bakandeya'} isStitchLight={isStitchLight} />
+ <BandScheduleConfig bandId={currentUser.band_id} isStitchLight={isStitchLight} />
+ <EmailAccountConfig bandId={currentUser.band_id} isStitchLight={isStitchLight} />
  </div>
  )}
  </div>

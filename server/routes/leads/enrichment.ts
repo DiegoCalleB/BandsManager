@@ -6,6 +6,7 @@ import { getAiClient, generateContentWithFallback } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
+import { esUrlExternaSegura } from "../../utils/ssrfGuard.js";
 
 const router = express.Router();
 
@@ -71,6 +72,10 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
 
   for (const siteUrl of candidateUrls) {
     try {
+      // isBadDirectoryUrl solo filtra dominios de directorios/redes conocidos, no IPs privadas ni
+      // el endpoint de metadatos de la nube: sin esto, un website/dominio de email apuntando a la
+      // red interna haría que el servidor hiciera esa petición y devolviera lo encontrado (SSRF).
+      if (!(await esUrlExternaSegura(siteUrl))) continue;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3500);
 
@@ -597,10 +602,10 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
           }
         }
 
-        // 3. Fallback clean structured address if still empty
-        if (!foundAddr && lead.nombre_sala && lead.ciudad) {
-          foundAddr = `C/ ${lead.nombre_sala}, ${lead.ciudad}${lead.region ? ` (${lead.region})` : ''}`;
-        }
+        // Nota: antes había un paso 3 que, si el diccionario y Nominatim no encontraban nada,
+        // fabricaba una dirección falsa usando el nombre de la sala como si fuera el nombre de
+        // una calle (p. ej. "C/ Sala El Tren, Granada"). Un dato inventado es peor que un campo
+        // vacío: puede acabar usándose para logística real de un concierto. Se ha quitado.
 
         if (foundAddr) {
           lead.direccion = foundAddr;

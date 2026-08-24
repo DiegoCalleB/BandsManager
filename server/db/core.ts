@@ -5,7 +5,10 @@ let supabaseInstance: SupabaseClient | undefined;
 export function getSupabase(): SupabaseClient {
   if (supabaseInstance) return supabaseInstance;
 
-  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "https://brynltixytuyjdfdupjx.supabase.co";
+  // Antes, si faltaba SUPABASE_URL en el entorno, se caía en silencio en el proyecto de Supabase
+  // personal del fundador del proyecto. Cualquier despliegue nuevo que se olvidara de configurar
+  // la variable de entorno acababa leyendo/escribiendo en esa base de datos real sin avisar.
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const keys = [
     process.env.SUPABASE_SERVICE_ROLE_KEY,
     process.env.SUPABASE_ANON_KEY,

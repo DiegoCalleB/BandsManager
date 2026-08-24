@@ -28,8 +28,20 @@ export async function dbUpsertFan(fan: any, bandId: string) {
   const targetBandId = cleanBandId(fan.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // El upsert es por id (clave primaria): sin esta comprobación, un id que coincidiera con el de
+  // un fan de OTRA banda (dato RGPD: nombre, email) se sobrescribiría y reasignaría a la banda del
+  // llamador. Esta función también se alcanza desde el formulario público sin autenticar, así
+  // que el id que llega del cliente nunca es de fiar por sí solo.
+  let finalFanId = fan.id;
+  if (finalFanId) {
+    const { data: existing } = await sb.from("fans").select("id, band_id").eq("id", finalFanId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalFanId = `fan-${Date.now()}`;
+    }
+  }
+
   const payload: any = {
-    id: fan.id || `fan-${Date.now()}`,
+    id: finalFanId || `fan-${Date.now()}`,
     band_id: targetBandId,
     nombre: fan.nombre || "",
     email: fan.email || "",

@@ -44,12 +44,13 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
   const [imapPort, setImapPort] = useState<number>(993);
 
   useEffect(() => {
+    if (!bandId) return;
     let isMounted = true;
     const fetchStatus = async () => {
       setLoading(true);
       setFeedback(null);
       try {
-        const data: BandEmailAccountStatus = await api.getBandEmailAccount(bandId || 'bakandeya');
+        const data: BandEmailAccountStatus = await api.getBandEmailAccount(bandId);
         if (isMounted) {
           setStatus(data || { connected: false });
           setEditing(!data?.connected);
@@ -90,11 +91,15 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
       setFeedback({ type: 'error', message: 'Rellena email, contraseña de aplicación y los datos de servidor antes de guardar.' });
       return;
     }
+    if (!bandId) {
+      setFeedback({ type: 'error', message: 'No hay ninguna banda activa para conectar esta cuenta de email.' });
+      return;
+    }
     setSaving(true);
     setFeedback(null);
     try {
       const saved = await api.saveBandEmailAccount({
-        band_id: bandId || 'bakandeya',
+        band_id: bandId,
         provider,
         email,
         app_password: appPassword,

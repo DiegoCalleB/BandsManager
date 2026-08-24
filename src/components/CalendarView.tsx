@@ -50,8 +50,8 @@ export default function CalendarView({
  onAddConcert,
  initialSelectedEventId,
  initialSelectedDate,
- currentBandId = 'band-bakandeya',
- currentBandName = 'Bakandeya',
+ currentBandId = '',
+ currentBandName = '',
  availableBands = [],
  bandUsers = [],
  currentUser
@@ -128,7 +128,7 @@ export default function CalendarView({
 
  // Helper to accurately derive the band name for any concert or rehearsal event
  const getEventBandName = React.useCallback((e: { bandName?: string; band_id?: string } | null | undefined): string => {
-  if (!e) return activeBandName || 'Bakandeya';
+  if (!e) return activeBandName || 'Tu Banda';
   if (e.bandName) return e.bandName;
   if (e.band_id) {
    const found = effectiveBandsList.find(b => isSameBandId(b.band_id, e.band_id));
@@ -187,15 +187,19 @@ export default function CalendarView({
 
 
  // Effective band members list for Convocatoria filtered by target band of the event
- const defaultMembers = React.useMemo(() => [
- { id: 'user-diego', name: 'Diego (Voz / Guitarra)', role: 'leader' },
- { id: 'user-filgue', name: 'Filgue (Bajo)', role: 'member' },
- { id: 'user-bateria', name: 'Batería', role: 'member' },
- { id: 'user-teclados', name: 'Teclados', role: 'member' }
- ], []);
+ // Antes esto era la formación real de Bakandeya (Diego, Filgue, Batería, Teclados) y se usaba
+ // como lista por defecto de "miembros" para CUALQUIER banda sin integrantes cargados todavía:
+ // cualquier banda nueva programando su primer ensayo veía a los compañeros de banda de Diego
+ // como asistentes seleccionables. Sin datos reales, el único miembro real disponible es quien
+ // ha iniciado sesión.
+ const defaultMembers = React.useMemo(() => (
+  currentUser
+   ? [{ id: currentUser.id, name: currentUser.name || currentUser.username || 'Miembro', role: currentUser.role || 'member' }]
+   : []
+ ), [currentUser]);
 
    const effectiveBandMembers = React.useMemo(() => {
-    const targetBandId = selectedBandIdForNewEvent || activeBandId || "band-bakandeya";
+    const targetBandId = selectedBandIdForNewEvent || activeBandId || "";
     const targetClean = targetBandId.replace(/^(band|reg)-/, "").replace(/-\d+$/, "").toLowerCase();
     const targetIsBakandeya = targetClean === "bakandeya";
 
@@ -684,11 +688,12 @@ export default function CalendarView({
 
  // Fetch server logistics state on mount
  useEffect(() => {
+   if (!currentBandId) return;
    const token = localStorage.getItem('auth_token') || '';
    const headers: Record<string, string> = {};
    if (token) headers['Authorization'] = `Bearer ${token}`;
 
-   fetch(`/api/logistics?band_id=${encodeURIComponent(currentBandId || 'band-bakandeya')}`, { headers })
+   fetch(`/api/logistics?band_id=${encodeURIComponent(currentBandId)}`, { headers })
      .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json().catch(() => null) : null)
      .then(data => {
        if (data) {

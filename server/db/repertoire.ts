@@ -94,8 +94,18 @@ export async function dbUpsertSong(song: any, bandId: string) {
   const targetBandId = cleanBandId(song.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
+  // usuario no se reutiliza nunca.
+  let finalSongId = song.id;
+  if (finalSongId) {
+    const { data: existing } = await sb.from("songs").select("id, band_id").eq("id", finalSongId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    }
+  }
+
   const payload: any = {
-    id: song.id || `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    id: finalSongId || `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     band_id: targetBandId,
     titulo: song.titulo || "Nueva Canción",
     duracion: song.duracion || "03:30",
@@ -183,8 +193,18 @@ export async function dbUpsertSetlist(setlist: any, bandId: string) {
   const targetBandId = cleanBandId(setlist.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
+  // usuario no se reutiliza nunca.
+  let finalSetlistId = setlist.id;
+  if (finalSetlistId) {
+    const { data: existing } = await sb.from("setlists").select("id, band_id").eq("id", finalSetlistId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalSetlistId = `setlist-${Date.now()}`;
+    }
+  }
+
   const payload = {
-    id: setlist.id || `setlist-${Date.now()}`,
+    id: finalSetlistId || `setlist-${Date.now()}`,
     band_id: targetBandId,
     nombre: setlist.nombre || "Repertorio",
     descripcion: setlist.descripcion || "",

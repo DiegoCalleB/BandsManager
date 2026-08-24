@@ -11,75 +11,16 @@ export async function dbGetLeads(bandId: string) {
     .order("nombre_sala", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
-  let leads = (data || []).map(l => ({
+  // Nota: antes, si una banda se quedaba sin leads (por ejemplo, tras borrarlos todos), esta
+  // función reinsertaba en Supabase los leads de ejemplo de Bakandeya (y un lead fijo de "Sala
+  // Siroco") en cada GET. Un endpoint de lectura no debe escribir datos de forma incondicional,
+  // y menos aún resucitar registros que la banda eligió borrar. Se ha quitado: una lista vacía
+  // de leads es simplemente una lista vacía.
+  return (data || []).map(l => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || []
   }));
-
-  if (leads.length === 0 && (cleanId === 'band-bakandeya' || cleanId === 'bakandeya')) {
-    try {
-      const { INITIAL_LEADS } = await import("../../src/db_seed.js");
-      const seededLeads = INITIAL_LEADS.map(l => ({
-        ...l,
-        id: `${cleanId}-${l.id}`,
-        band_id: cleanId,
-        pitch_generado: cleanId === 'band-bakandeya' ? l.pitch_generado : '',
-        historial_feedback_pitch: [],
-        historial_contacto: []
-      }));
-      await sb.from("leads").upsert(seededLeads);
-      leads = seededLeads;
-    } catch (err) {
-      console.error("Error seeding initial leads for band:", err);
-    }
-  }
-
-  // Guarantee Sala Siroco is always present and maintained for band-bakandeya
-  if (cleanId === 'band-bakandeya' && !leads.some(l => (l.nombre_sala || '').toLowerCase().includes('siroco'))) {
-    const sirocoLead = {
-      id: 'lead-siroco',
-      band_id: 'band-bakandeya',
-      nombre_sala: 'Sala Siroco',
-      ciudad: 'Madrid',
-      region: 'Madrid',
-      direccion: 'Calle de San Dimas, 3, Centro, 28015 Madrid, España',
-      aforo: 250,
-      genero: 'Indie / Rock / Club / Electronica',
-      tipo: 'sala',
-      email_contacto: 'booking@salasiroco.es',
-      telefono: '+34 915 933 070',
-      website: 'https://salasiroco.es/',
-      instagram: 'https://www.instagram.com/salasiroco/',
-      fuente: 'Directorio Oficial',
-      estado: 'nuevo',
-      pitch_generado: `Hola equipo de programación de Sala Siroco,
-
-Os contactamos desde Bakandeya para presentar nuestra propuesta de directo en vuestra emblemática sala de Malasaña. Combinamos bases electrónicas analógicas, violín eléctrico y percusiones con una energía arrolladora ideal para el público de Siroco.
-
-Dossier y música: https://bands-manager.up.railway.app/epk
-
-¿Tendríais fecha disponible para programar un showcase o concierto este trimestre?
-
-Saludos cordiales,
-Bakandeya Agent Manager IA`,
-      notas: 'Sala mítica de conciertos y clubbing en Malasaña, Madrid.',
-      icono: '🏛️',
-      es_favorito: true,
-      es_verificado: true,
-      fiabilidad_score: 95,
-      historial_feedback_pitch: [],
-      historial_contacto: []
-    };
-    try {
-      await sb.from("leads").upsert(sirocoLead);
-      leads.push(sirocoLead);
-    } catch (e) {
-      console.error("Error auto-inserting Sala Siroco:", e);
-    }
-  }
-
-  return leads;
 }
 
 export async function dbGetLeadById(id: string, bandId?: string) {
@@ -106,10 +47,22 @@ export async function dbUpsertLead(lead: any, bandId: string) {
 
   const name = (lead.nombre_sala || lead.nombreSala || "").trim();
 
+  // Antes se buscaba el id sin filtrar por banda: si `lead.id` coincidía con el de un lead de
+  // OTRA banda, ese registro pasaba a considerarse "el existente", el upsert (por id, clave
+  // primaria) lo sobrescribía reasignándolo a la banda atacante, y los campos no enviados se
+  // rellenaban con los valores reales del lead ajeno (email, teléfono, notas...). Un id que no
+  // pertenece a la banda del usuario no se reutiliza nunca: se trata como un lead nuevo.
   let existingRecord: any = null;
+  let idBelongsToOtherBand = false;
   if (lead.id) {
     const { data } = await sb.from("leads").select("*").eq("id", lead.id).maybeSingle();
-    existingRecord = data;
+    if (data) {
+      if (data.band_id === targetBandId) {
+        existingRecord = data;
+      } else {
+        idBelongsToOtherBand = true;
+      }
+    }
   }
   if (!existingRecord && name) {
     const { data } = await sb
@@ -121,7 +74,7 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     existingRecord = data;
   }
 
-  const finalId = existingRecord?.id || lead.id || `lead-${Date.now()}`;
+  const finalId = existingRecord?.id || (idBelongsToOtherBand ? `lead-${Date.now()}` : lead.id) || `lead-${Date.now()}`;
 
   const payload = {
     id: finalId,

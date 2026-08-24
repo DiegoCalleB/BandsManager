@@ -17,7 +17,10 @@ function getMemoryFallbackSchedule(cleanId: string) {
 }
 
 export async function dbGetBandSchedule(bandId: string) {
-  const cleanId = bandId ? bandId.trim() : 'bakandeya';
+  if (!bandId || !bandId.trim()) {
+    throw new Error("dbGetBandSchedule: se requiere un band_id válido; no hay banda por defecto.");
+  }
+  const cleanId = bandId.trim();
   try {
     const sb = getSupabase();
     const { data, error } = await sb
@@ -59,7 +62,10 @@ export async function dbUpsertBandSchedule(schedule: {
   dias_enviador?: number[];
   dias_lector?: number[];
 }) {
-  const cleanId = schedule.band_id ? schedule.band_id.trim() : 'bakandeya';
+  if (!schedule.band_id || !schedule.band_id.trim()) {
+    throw new Error("dbUpsertBandSchedule: se requiere un band_id válido; no hay banda por defecto.");
+  }
+  const cleanId = schedule.band_id.trim();
   
   // Ensure integer arrays
   const horasLectorClean = (schedule.horas_lector || []).map((h) => Math.floor(Number(h))).filter((h) => !isNaN(h) && h >= 0 && h <= 23);

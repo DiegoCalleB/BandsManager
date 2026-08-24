@@ -22,10 +22,19 @@ export async function dbUpsertBandContact(band: any, bandId: string) {
   const name = (band.nombre_banda || band.nombreBanda || band.bandName || "").trim();
   await ensureRegisteredBandExists(targetBandId, name);
 
+  // Ver nota equivalente en dbUpsertLead: un id que no pertenece a la banda del usuario no se
+  // reutiliza nunca (evita secuestrar/sobrescribir el contacto de otra banda por coincidencia de id).
   let existingRecord: any = null;
+  let idBelongsToOtherBand = false;
   if (band.id) {
     const { data } = await sb.from("band_contacts").select("*").eq("id", band.id).maybeSingle();
-    existingRecord = data;
+    if (data) {
+      if (data.band_id === targetBandId) {
+        existingRecord = data;
+      } else {
+        idBelongsToOtherBand = true;
+      }
+    }
   }
   if (!existingRecord && name) {
     const { data } = await sb
@@ -37,7 +46,7 @@ export async function dbUpsertBandContact(band: any, bandId: string) {
     existingRecord = data;
   }
 
-  const finalId = existingRecord?.id || band.id || `band-${Date.now()}`;
+  const finalId = existingRecord?.id || (idBelongsToOtherBand ? `band-${Date.now()}` : band.id) || `band-${Date.now()}`;
 
   const payload = {
     id: finalId,

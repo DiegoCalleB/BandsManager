@@ -204,24 +204,6 @@ export function ensureBakandeyaBandId(state: any): boolean {
   }
 
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
-    const hasRepercusion = state.registeredBands.some((b: any) =>
-      b.band_id === "band-repercusion" || String(b.nombre_banda || "").toLowerCase().includes("repercusion")
-    );
-    if (!hasRepercusion) {
-      state.registeredBands.push({
-        id: "reg-repercusion",
-        band_id: "band-repercusion",
-        nombre_banda: "Repercusión",
-        email: "diego.delacalleb@gmail.com",
-        plan: "pro",
-        contacto_nombre: "Diego de la Calle",
-        estilo_musical: "Reggae-Ska / Mestizaje",
-        user_id: "MUIF3Rw4eyeny7ywmBVv8IDlRl12",
-        fecha_registro: new Date().toISOString()
-      });
-      changed = true;
-    }
-
     for (const b of state.registeredBands) {
       if (b.nombre_banda && b.nombre_banda.toLowerCase() !== "bakandeya") {
         const cleanSlug = slugify(b.nombre_banda);
@@ -281,10 +263,13 @@ export function ensureBakandeyaBandId(state: any): boolean {
     changed = true;
   }
 
-  // Ensure all current users have their active bands in userBands
+  // Ensure all current users have their active bands in userBands. Un usuario sin band_id
+  // todavía (cuenta nueva sin banda asignada) no tiene banda activa que registrar aquí: antes se
+  // le daba de alta en silencio como miembro de band-bakandeya.
   if (state.users && Array.isArray(state.users)) {
     state.users.forEach((u: any) => {
-      const bid = u.band_id || "band-bakandeya";
+      if (!u.band_id) return;
+      const bid = u.band_id;
       const hasUB = state.userBands.some((ub: any) => ub.user_id === u.id && ub.band_id === bid);
       if (!hasUB) {
         state.userBands.push({
@@ -648,10 +633,15 @@ export function getDefaultEpkConfig(bandName: string = "Tu Banda", email?: strin
 }
 
 export function getEpkConfigForBand(state: any, bandId: string, bandName: string = "Tu Banda", email?: string): any {
+  if (!bandId || typeof bandId !== 'string' || !bandId.trim()) {
+    // Antes, un bandId vacío devolvía en silencio el EPK real de Bakandeya (email, teléfono y
+    // logo del fundador) a cualquier llamador que se olvidara de pasar la banda. Mejor fallar alto.
+    throw new Error("getEpkConfigForBand: se requiere un band_id válido; no hay banda por defecto.");
+  }
   if (!state.epkConfigsByBand) {
     state.epkConfigsByBand = {};
   }
-  const cleanId = (bandId || 'bakandeya').replace(/^(band|reg)-/, '');
+  const cleanId = bandId.replace(/^(band|reg)-/, '');
   const possibleKeys = [
     bandId,
     cleanId,
@@ -709,10 +699,13 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
 }
 
 export function getAutonomyConfigForBand(state: any, bandId: string): any {
+  if (!bandId || typeof bandId !== 'string' || !bandId.trim()) {
+    throw new Error("getAutonomyConfigForBand: se requiere un band_id válido; no hay banda por defecto.");
+  }
   if (!state.autonomyConfigsByBand) {
     state.autonomyConfigsByBand = {};
   }
-  const cleanId = (bandId || 'bakandeya').replace(/^(band|reg)-/, '');
+  const cleanId = bandId.replace(/^(band|reg)-/, '');
   const possibleKeys = [
     bandId,
     cleanId,

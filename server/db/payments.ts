@@ -18,8 +18,18 @@ export async function dbUpsertPayment(payment: any, bandId: string) {
   const targetBandId = cleanBandId(payment.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertConcert: un id que no pertenece a la banda del usuario no se
+  // reutiliza nunca (evita sobrescribir/robar un pago -dato financiero- de otra banda).
+  let finalPaymentId = payment.id;
+  if (finalPaymentId) {
+    const { data: existing } = await sb.from("payments").select("id, band_id").eq("id", finalPaymentId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalPaymentId = `pay-${Date.now()}`;
+    }
+  }
+
   const payload = {
-    id: payment.id || `pay-${Date.now()}`,
+    id: finalPaymentId || `pay-${Date.now()}`,
     band_id: targetBandId,
     tipo: payment.tipo || "gasto",
     categoria: payment.categoria || "Logística",

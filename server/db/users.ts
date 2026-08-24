@@ -47,7 +47,13 @@ export async function dbGetUsers(bandId?: string) {
           });
         }
       } else if (regBand.email && !list.some(u => u.email?.toLowerCase() === regBand.email.toLowerCase() || u.username?.toLowerCase() === regBand.email.toLowerCase())) {
-        const { data: ownerUser } = await sb.from("users").select("*").or(`email.eq.${regBand.email},username.eq.${regBand.email}`).maybeSingle();
+        // Antes se interpolaba regBand.email sin escapar dentro del DSL de filtros de
+        // PostgREST (.or()): un email con una coma (la validación de registro solo exige
+        // "algo@algo.algo", que la permite) podía añadir condiciones OR arbitrarias a la
+        // consulta. Dos .eq() por separado no tienen ese problema.
+        const { data: byEmail } = await sb.from("users").select("*").eq("email", regBand.email).maybeSingle();
+        const { data: byUsername } = byEmail ? { data: null } : await sb.from("users").select("*").eq("username", regBand.email).maybeSingle();
+        const ownerUser = byEmail || byUsername;
         if (ownerUser) {
           list.unshift({
             ...ownerUser,
@@ -151,19 +157,23 @@ export async function dbDeleteUserFromBand(user_id: string, band_id: string) {
   const sb = getSupabase();
   const cleanId = cleanBandId(band_id);
 
+  // Antes se interpolaba cleanId sin escapar dentro del DSL de .or(); .in() con un array de
+  // valores no pasa por ese parser de filtros y es seguro frente a la misma clase de inyección.
+  const candidateBandIds = [cleanId, `band-${cleanId}`, `reg-${cleanId}`];
+
   // Delete matching user_bands for user_id and band_id
   const { error: ubErr } = await sb
     .from('user_bands')
     .delete()
     .eq('user_id', user_id)
-    .or(`band_id.eq.${cleanId},band_id.eq.band-${cleanId},band_id.eq.reg-${cleanId}`);
+    .in('band_id', candidateBandIds);
   if (ubErr) console.warn('Supabase notice (delete user_band):', ubErr.message);
 
   // Unlink user on registered_bands if this user was registered owner/contact
   const { error: rbErr } = await sb
     .from('registered_bands')
     .update({ user_id: null, email: null })
-    .or(`band_id.eq.${cleanId},band_id.eq.band-${cleanId},band_id.eq.reg-${cleanId}`)
+    .in('band_id', candidateBandIds)
     .eq('user_id', user_id);
   if (rbErr) console.warn('Supabase notice (unlink registered_band):', rbErr.message);
 

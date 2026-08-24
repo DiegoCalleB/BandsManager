@@ -239,7 +239,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
     const loadAllConfigs = async () => {
       try {
-        const targetBand = bandId || currentUser?.band_id || 'band-bakandeya';
+        const targetBand = bandId || currentUser?.band_id;
+        if (!targetBand) return;
 
         // 1. Fetch Autonomy Config
         const serverAutonomy = await api.getAutonomyConfig().catch(() => null);
@@ -379,7 +380,12 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     setIsSaving(true);
     setStatusFeedback(null);
     try {
-      const targetBand = bandId || currentUser?.band_id || 'band-bakandeya';
+      const targetBand = bandId || currentUser?.band_id;
+      if (!targetBand) {
+        setStatusFeedback('⚠️ No hay ninguna banda activa para guardar la configuración.');
+        setIsSaving(false);
+        return;
+      }
 
       // 1. Persist Autonomy
       localStorage.setItem('bakandeya_agent_autonomy', JSON.stringify(config));

@@ -72,7 +72,13 @@ app.use("/api", billingRouter);
 app.use("/api/spotify", spotifyRouter);
 app.use("/api/concert-to-album", concertToAlbumRouter);
 app.use("/api/upload", uploadRouter);
-app.use("/uploads", express.static(path.join(process.cwd(), "public", "uploads")));
+// nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
+// aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
+// archivo subido se cuela sin pasar por la validación de tipo de server/routes/upload.ts.
+app.use("/uploads", (req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+}, express.static(path.join(process.cwd(), "public", "uploads")));
 
 // Healthcheck endpoint for Railway and deployment monitoring
 app.get("/api/health", (req, res) => {
@@ -157,10 +163,29 @@ app.get("/terms", (req, res) => {
 
 app.get("/api/download-excel", (req, res) => {
   try {
+    // Antes esta ruta no exigía sesión y exportaba en un Excel los datos de TODAS las bandas del
+    // sistema (leads, pagos, fans con RGPD, usuarios y bandas registradas de cualquier cliente),
+    // descargables por cualquiera que conociera la URL. Ahora exige sesión y filtra cada hoja a
+    // la banda del usuario autenticado.
+    const authUser = getUserFromRequest(req, loadState);
+    if (!authUser) {
+      return res.status(401).json({ error: "No autorizado. Inicia sesión para continuar." });
+    }
+    if (!authUser.band_id) {
+      return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
+    }
+    const bandId = authUser.band_id;
+    const cleanBandId = bandId.replace(/^(band|reg)-/, "");
+    const isOwn = (recordBandId: any) => {
+      if (!recordBandId) return false;
+      const clean = String(recordBandId).replace(/^(band|reg)-/, "");
+      return clean === cleanBandId;
+    };
+
     const state = loadState();
     const wb = XLSX.utils.book_new();
 
-    const rehearsalsData = (state.rehearsals || []).map((r: Rehearsal) => ({
+    const rehearsalsData = (state.rehearsals || []).filter((r: any) => isOwn(r.band_id || r.bandId)).map((r: Rehearsal) => ({
       ID: r.id,
       Fecha: r.fecha,
       Hora: r.hora,
@@ -172,7 +197,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsRehearsals = XLSX.utils.json_to_sheet(rehearsalsData);
     XLSX.utils.book_append_sheet(wb, wsRehearsals, "Ensayos");
 
-    const concertsData = (state.concerts || []).map((c: Concert) => ({
+    const concertsData = (state.concerts || []).filter((c: any) => isOwn(c.band_id || c.bandId)).map((c: Concert) => ({
       ID: c.id,
       Fecha: c.fecha,
       Ciudad: c.ciudad,
@@ -189,7 +214,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsConcerts = XLSX.utils.json_to_sheet(concertsData);
     XLSX.utils.book_append_sheet(wb, wsConcerts, "Conciertos");
 
-    const leadsData = (state.leads || []).map((l: Lead) => ({
+    const leadsData = (state.leads || []).filter((l: any) => isOwn(l.band_id || l.bandId)).map((l: Lead) => ({
       ID: l.id,
       "Nombre Sala": l.nombre_sala,
       Ciudad: l.ciudad,
@@ -208,7 +233,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsLeads = XLSX.utils.json_to_sheet(leadsData);
     XLSX.utils.book_append_sheet(wb, wsLeads, "Salas_Leads");
 
-    const paymentsData = (state.payments || []).map((p: Payment) => ({
+    const paymentsData = (state.payments || []).filter((p: any) => isOwn(p.band_id || p.bandId)).map((p: Payment) => ({
       ID: p.id,
       Fecha: p.fecha,
       Concepto: p.concepto,
@@ -221,7 +246,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsPayments = XLSX.utils.json_to_sheet(paymentsData);
     XLSX.utils.book_append_sheet(wb, wsPayments, "Finanzas_Pagos");
 
-    const postsData = (state.posts || []).map((p: SocialPost) => ({
+    const postsData = (state.posts || []).filter((p: any) => isOwn(p.band_id || p.bandId)).map((p: SocialPost) => ({
       ID: p.id,
       Fecha: p.fecha,
       Plataforma: p.plataforma,
@@ -238,6 +263,7 @@ app.get("/api/download-excel", (req, res) => {
       Object.entries(state.runOfShow).forEach(([dateKey, items]: [string, any]) => {
         if (Array.isArray(items)) {
           items.forEach((item: any) => {
+            if (!isOwn(item.band_id || item.bandId)) return;
             runOfShowRows.push({
               Fecha: dateKey,
               ID: item.id,
@@ -258,6 +284,7 @@ app.get("/api/download-excel", (req, res) => {
       Object.entries(state.gearChecklists).forEach(([dateKey, items]: [string, any]) => {
         if (Array.isArray(items)) {
           items.forEach((item: any) => {
+            if (!isOwn(item.band_id || item.bandId)) return;
             gearRows.push({
               Fecha: dateKey,
               ID: item.id,
@@ -272,7 +299,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsGear = XLSX.utils.json_to_sheet(gearRows);
     XLSX.utils.book_append_sheet(wb, wsGear, "Logistica_Equipo");
 
-    const songsData = (state.songs || []).map((s: Song) => ({
+    const songsData = (state.songs || []).filter((s: any) => isOwn(s.band_id || s.bandId)).map((s: Song) => ({
       ID: s.id,
       Título: s.titulo,
       Duración: s.duracion,
@@ -289,7 +316,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsSongs = XLSX.utils.json_to_sheet(songsData);
     XLSX.utils.book_append_sheet(wb, wsSongs, "Canciones");
 
-    const setlistsData = (state.setlists || []).map((st: Setlist) => ({
+    const setlistsData = (state.setlists || []).filter((st: any) => isOwn(st.band_id || st.bandId)).map((st: Setlist) => ({
       ID: st.id,
       Nombre: st.nombre,
       Descripción: st.descripcion || "",
@@ -303,7 +330,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsSetlists = XLSX.utils.json_to_sheet(setlistsData);
     XLSX.utils.book_append_sheet(wb, wsSetlists, "Repertorios");
 
-    const fansData = (state.fans || []).map((f: any) => ({
+    const fansData = (state.fans || []).filter((f: any) => isOwn(f.band_id || f.bandId)).map((f: any) => ({
       ID: f.id,
       Nombre: f.nombre,
       Email: f.email,
@@ -317,7 +344,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsFans = XLSX.utils.json_to_sheet(fansData);
     XLSX.utils.book_append_sheet(wb, wsFans, "Fans_Tribu");
 
-    const toursData = (state.tours || []).map((t: any) => ({
+    const toursData = (state.tours || []).filter((t: any) => isOwn(t.band_id || t.bandId)).map((t: any) => ({
       ID: t.id,
       Nombre: t.nombre,
       Vehículo: t.vehiculo,
@@ -331,7 +358,9 @@ app.get("/api/download-excel", (req, res) => {
     const wsTours = XLSX.utils.json_to_sheet(toursData);
     XLSX.utils.book_append_sheet(wb, wsTours, "Giras");
 
-    const registeredBandsData = (state.registeredBands || state.users || []).map((b: any) => ({
+    const registeredBandsData = (state.registeredBands || state.users || [])
+      .filter((b: any) => isOwn(b.band_id || b.bandId || b.id))
+      .map((b: any) => ({
       ID: b.id || b.band_id,
       "Fecha Registro": b.fecha_registro || b.createdAt || "",
       "Nombre Banda": b.nombre_banda || b.bandName || b.name || "",
@@ -350,7 +379,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsRegisteredBands = XLSX.utils.json_to_sheet(registeredBandsData);
     XLSX.utils.book_append_sheet(wb, wsRegisteredBands, "Registro_Bandas");
 
-    const usersData = (state.users || []).map((u: any) => ({
+    const usersData = (state.users || []).filter((u: any) => isOwn(u.band_id || u.bandId)).map((u: any) => ({
       ID: u.id,
       "Usuario/Email": u.username || u.email,
       Nombre: u.name || u.bandName,
@@ -378,8 +407,17 @@ app.get("/api/download-excel", (req, res) => {
 app.get("/api/state", async (req, res) => {
   try {
     const user = getUserFromRequest(req, loadState);
-    const isLeader = user?.role === "leader";
-    const userBandId = user?.band_id || 'band-bakandeya';
+    // Antes, sin sesión válida (o con sesión pero sin banda asignada), esta ruta devolvía en
+    // silencio los datos reales de Bakandeya (leads, conciertos, fans con datos RGPD, etc.) a
+    // cualquiera. Es la ruta que alimenta toda la app: hay que exigir sesión y banda de verdad.
+    if (!user) {
+      return res.status(401).json({ error: "No autorizado. Inicia sesión para continuar." });
+    }
+    if (!user.band_id) {
+      return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
+    }
+    const isLeader = user.role === "leader";
+    const userBandId = user.band_id;
 
     const state = await loadStateFromSupabase(userBandId, user);
 

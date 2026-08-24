@@ -236,9 +236,13 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
  const handleLogoUpload = async (file: File) => {
+   if (!currentBandId) {
+     alert('No hay ninguna banda activa para subir la imagen.');
+     return;
+   }
    try {
      setIsUploadingLogo(true);
-     const url = await uploadFileToServer(file, { bandId: 'bakandeya', category: 'grupos' });
+     const url = await uploadFileToServer(file, { bandId: currentBandId, category: 'grupos' });
      if (url) {
        setFormImageUrl(url);
      }

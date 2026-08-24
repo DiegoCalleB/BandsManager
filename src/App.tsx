@@ -103,9 +103,13 @@ export default function App() {
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
 
-  const currentActiveBandId = currentUser?.band_id || 'band-bakandeya';
+  // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
+  // se caía en 'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
+  // datos reales de esa banda. Sin id de banda, cleanActiveBandId queda vacío (no coincide con
+  // 'bakandeya') y el resto de componentes deben tratarlo como "sin banda seleccionada".
+  const currentActiveBandId = currentUser?.band_id || '';
   const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
-  const currentActiveBandName = currentUser?.bandName || currentUser?.name || 'BAKANDEYA';
+  const currentActiveBandName = currentUser?.bandName || currentUser?.name || 'Mi Banda';
   const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
     ? epkConfig.logoUrl
     : ((currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
@@ -201,13 +205,16 @@ export default function App() {
       selectedDate?: string;
     }
   ) => {
+    // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
+    // 'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
+    // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
+    // contratado, así que un admin con un plan que no incluye finanzas entraba igualmente.
+    if (view === 'finanzas' && !isAdmin) {
+      setShowUserProfileModal(true);
+      return;
+    }
     if (!hasModuleAccess(currentActiveBandPlan, view)) {
-      if (view === 'finanzas' && !isAdmin) {
-        setShowUserProfileModal(true);
-        return;
-      }
-      setCurrentView(view);
-      setIsMobileMenuOpen(false);
+      setShowUserProfileModal(true);
       return;
     }
     setCurrentView(view);
@@ -267,8 +274,8 @@ export default function App() {
   // GitHub Settings State
   const [showGithubSettings, setShowGithubSettings] = useState(false);
   const [githubPat, setGithubPat] = useState(() => localStorage.getItem('bakandeya_github_pat') || '');
-  const [githubOwner, setGithubOwner] = useState(() => localStorage.getItem('bakandeya_github_owner') || 'DiegoCalleB');
-  const [githubRepo, setGithubRepo] = useState(() => localStorage.getItem('bakandeya_github_repo') || 'bakandeya-agent-manager');
+  const [githubOwner, setGithubOwner] = useState(() => localStorage.getItem('bakandeya_github_owner') || '');
+  const [githubRepo, setGithubRepo] = useState(() => localStorage.getItem('bakandeya_github_repo') || '');
   const [githubRef, setGithubRef] = useState(() => localStorage.getItem('bakandeya_github_ref') || 'main');
 
   useEffect(() => {
@@ -1025,7 +1032,7 @@ export default function App() {
  rehearsals={rehearsals}
  currentUser={currentUser}
  bandName={currentActiveBandName}
- currentBandId={currentUser?.band_id || 'band-bakandeya'}
+ currentBandId={currentActiveBandId}
  availableBands={availableBands}
  onNavigate={handleNavigate}
  onOpenProfileModal={() => setShowUserProfileModal(true)}
@@ -1049,7 +1056,7 @@ export default function App() {
  initialSelectedLeadId={bookingOptions.selectedLeadId}
  currentUser={currentUser}
  bandName={currentActiveBandName}
- currentBandId={currentUser?.band_id || 'band-bakandeya'}
+ currentBandId={currentActiveBandId}
  />
  )}
  {currentView === 'bandas' && (
@@ -1058,7 +1065,7 @@ export default function App() {
  leads={leads}
  onAddLead={handleAddLeadWithLimitCheck}
  onUpdateLead={handleUpdateLead}
- currentBandId={currentUser?.band_id || 'band-bakandeya'}
+ currentBandId={currentActiveBandId}
  />
  )}
  {currentView === 'calendario' && (
@@ -1074,7 +1081,7 @@ export default function App() {
  onAddConcert={handleAddConcert}
  initialSelectedEventId={bookingOptions.selectedEventId}
  initialSelectedDate={bookingOptions.selectedDate}
- currentBandId={currentUser?.band_id || 'band-bakandeya'}
+ currentBandId={currentActiveBandId}
  currentBandName={currentActiveBandName}
  availableBands={availableBands}
  bandUsers={bandUsers}
@@ -1082,7 +1089,7 @@ export default function App() {
  />
  )}
  {currentView === 'reels' && (
- <ReelsCenter 
+ <ReelsCenter
  colors={colors}
  posts={posts}
  onAddPost={handleAddPost}
@@ -1091,16 +1098,18 @@ export default function App() {
  onAddMetric={handleAddMetric}
  onUpdateMetric={handleUpdateMetric}
  onDeleteMetric={handleDeleteMetric}
+ bandName={currentActiveBandName}
+ instagramHandle={(epkConfig?.enlacesRedes?.instagram || '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/\/$/, '') || undefined}
  />
  )}
  {currentView === 'repertorio' && (
  <RepertorioSetlists 
- key={currentUser?.band_id || 'band-bakandeya'}
+ key={currentActiveBandId}
  colors={colors}
  concerts={activeBandConcerts}
  rehearsals={activeBandRehearsals}
  bandName={currentActiveBandName}
- bandId={currentUser?.band_id || 'band-bakandeya'}
+ bandId={currentActiveBandId}
  onUpdateConcert={handleUpdateConcert}
  onUpdateRehearsal={handleUpdateRehearsal}
  />
@@ -1111,7 +1120,7 @@ export default function App() {
         {currentView === 'epk' && (
           <ErrorBoundary fallbackTitle="EPK / Dossier Promocional">
             <EPKManager
-              key={currentUser?.band_id || 'band-bakandeya'}
+              key={currentActiveBandId}
               epkConfig={epkConfig}
               onSave={handleUpdateEpkConfig}
               colors={colors}
@@ -1155,7 +1164,7 @@ export default function App() {
               onDeleteTour={handleDeleteTour}
               bandUsers={bandUsers}
               currentUser={currentUser}
-              currentBandId={currentUser?.band_id || "band-bakandeya"}
+              currentBandId={currentActiveBandId}
               currentBandName={currentActiveBandName}
               onAddConcert={handleAddConcert}
               onUpdateConcert={handleUpdateConcert}
@@ -1181,7 +1190,7 @@ export default function App() {
  <ShieldAlert className="w-10 h-10 text-rose-500 mx-auto" />
  <h3 className="text-sm font-mono font-bold text-rose-300 uppercase tracking-wider">Acceso Restringido</h3>
  <p className="text-xs text-neutral-400 max-w-md mx-auto">
- El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda (José y Diego).
+ El apartado de Finanzas es confidencial y solo está accesible para los administradores de la banda.
  </p>
  </div>
  )
@@ -1374,13 +1383,15 @@ export default function App() {
  <button
  type="button"
  onClick={() => {
+ // Antes este botón de "borrar tokens" reseteaba owner/repo al repositorio personal del
+ // desarrollador (DiegoCalleB/bakandeya-agent-manager) en vez de dejarlos vacíos.
  setGithubPat('');
- setGithubOwner('DiegoCalleB');
- setGithubRepo('bakandeya-agent-manager');
+ setGithubOwner('');
+ setGithubRepo('');
  setGithubRef('main');
  localStorage.removeItem('bakandeya_github_pat');
- localStorage.setItem('bakandeya_github_owner', 'DiegoCalleB');
- localStorage.setItem('bakandeya_github_repo', 'bakandeya-agent-manager');
+ localStorage.removeItem('bakandeya_github_owner');
+ localStorage.removeItem('bakandeya_github_repo');
  localStorage.setItem('bakandeya_github_ref', 'main');
  setShowGithubSettings(false);
  // Dispatch custom event to notify state of ref update
@@ -1562,7 +1573,7 @@ export default function App() {
   availableBands={availableBands}
   epkConfig={epkConfig}
   onUpdateEpkConfig={handleUpdateEpkConfig}
-  currentBandId={currentUser?.band_id || 'band-bakandeya'}
+  currentBandId={currentActiveBandId}
   onRefreshData={fetchState}
   onSwitchBand={async (bandId) => {
     await handleSwitchBand(bandId);

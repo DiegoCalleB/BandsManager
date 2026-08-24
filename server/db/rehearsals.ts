@@ -30,8 +30,18 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
   const targetBandId = cleanBandId(rehearsal.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertConcert: un id que no pertenece a la banda del usuario no se
+  // reutiliza nunca (evita sobrescribir/robar el ensayo de otra banda por coincidencia de id).
+  let finalRehearsalId = rehearsal.id;
+  if (finalRehearsalId) {
+    const { data: existing } = await sb.from("rehearsals").select("id, band_id").eq("id", finalRehearsalId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalRehearsalId = `reh-${Date.now()}`;
+    }
+  }
+
   const payload = {
-    id: rehearsal.id || `reh-${Date.now()}`,
+    id: finalRehearsalId || `reh-${Date.now()}`,
     band_id: targetBandId,
     band_name: rehearsal.band_name || rehearsal.bandName || "",
     fecha: rehearsal.fecha,

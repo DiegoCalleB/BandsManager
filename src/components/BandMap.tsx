@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import { BandContact, BandRelationshipStatus } from '../types';
 import { MapPin, Navigation, Check, Loader2, Layers, Music, Handshake, Repeat, Zap, Clock, Radio, X } from 'lucide-react';
+import { escapeHtml } from '../utils/escapeHtml';
 
 interface BandMapProps {
   bands: BandContact[];
@@ -367,7 +368,7 @@ export const BandMap: React.FC<BandMapProps> = ({
       const badgeCfg = getStatusBadgeConfig(band.estado_relacion);
 
       const bandIconHtml = band.imagen_url ? `
-        <img src="${band.imagen_url}" style="
+        <img src="${escapeHtml(band.imagen_url)}" style="
           width: 22px;
           height: 22px;
           border-radius: 50%;
@@ -388,7 +389,7 @@ export const BandMap: React.FC<BandMapProps> = ({
           font-size: 11px;
           margin-right: 4px;
         ">
-          ${band.icono || '🎸'}
+          ${escapeHtml(band.icono || '🎸')}
         </div>
       `;
 
@@ -420,7 +421,7 @@ export const BandMap: React.FC<BandMapProps> = ({
                 font-weight: 700;
                 color: #f5f5f5;
               ">
-                ${band.nombre_banda}
+                ${escapeHtml(band.nombre_banda)}
               </span>
             </div>
           </div>
@@ -436,13 +437,13 @@ export const BandMap: React.FC<BandMapProps> = ({
       popupHtml.innerHTML = `
         <div style="font-family: system-ui, sans-serif;">
           <div style="font-size: 14px; font-weight: 800; color: #09090b; margin-bottom: 2px;">
-            ${band.nombre_banda}
+            ${escapeHtml(band.nombre_banda)}
           </div>
           <div style="font-size: 11px; color: #52525b; margin-bottom: 6px;">
-            📍 ${band.localizacion}
+            📍 ${escapeHtml(band.localizacion)}
           </div>
           <div style="font-size: 11px; font-weight: 600; color: #d1b375; margin-bottom: 8px;">
-            🎵 ${band.estilo_musical}
+            🎵 ${escapeHtml(band.estilo_musical)}
           </div>
           <div style="margin-bottom: 8px;">
             <span style="
@@ -460,12 +461,12 @@ export const BandMap: React.FC<BandMapProps> = ({
           </div>
           ${band.contacto_nombre ? `
             <div style="font-size: 11px; color: #27272a; margin-bottom: 4px;">
-              👤 <strong>Contacto:</strong> ${band.contacto_nombre}
+              👤 <strong>Contacto:</strong> ${escapeHtml(band.contacto_nombre)}
             </div>
           ` : ''}
           ${band.email ? `
             <div style="font-size: 10px; font-family: monospace; color: #0284c7; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis;">
-              ✉️ ${band.email}
+              ✉️ ${escapeHtml(band.email)}
             </div>
           ` : ''}
           <div style="margin-top: 10px;">

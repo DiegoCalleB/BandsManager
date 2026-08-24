@@ -217,9 +217,13 @@ export default function BookingCRM({
  const [isUploadingLeadLogo, setIsUploadingLeadLogo] = useState(false);
 
  const handleLeadLogoUpload = async (file: File, isEdit: boolean): Promise<string | null> => {
+  if (!currentBandId) {
+    alert('No hay ninguna banda activa para subir la imagen.');
+    return null;
+  }
   try {
     setIsUploadingLeadLogo(true);
-    const targetBandId = currentBandId || 'band-bakandeya';
+    const targetBandId = currentBandId;
     const url = await uploadFileToServer(file, { bandId: targetBandId, category: 'leads' });
     if (url) {
       if (isEdit) {
@@ -2177,7 +2181,7 @@ export default function BookingCRM({
     isOpen={isAgentConfigOpen}
     onClose={() => setIsAgentConfigOpen(false)}
     bandName={effectiveBandName || 'Tu Banda'}
-    bandId={currentBandId || currentUser?.band_id || 'band-bakandeya'}
+    bandId={currentBandId || currentUser?.band_id || ''}
     currentUser={currentUser}
     isStitchLight={isStitchLight}
     onOpenTemplatesSection={() => {
