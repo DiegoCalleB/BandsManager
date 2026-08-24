@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Download, Share2, ExternalLink,
-  Copy, Check, Printer, Mail, Phone, MapPin, Play, Pause
+  Copy, Check, Mail, Phone, MapPin, Play, Pause
 } from 'lucide-react';
 import { EPKConfig, Song, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
@@ -46,10 +46,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     navigator.clipboard.writeText(window.location.href);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
-  };
-
-  const handlePrintPDF = () => {
-    window.print();
   };
 
   const dict = EPK_TRANSLATIONS[language];
@@ -176,14 +172,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           >
             {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-amber-400" />}
             <span>{copiedLink ? t('enlaceCopiado') : t('compartir')}</span>
-          </button>
-          <button
-            onClick={handlePrintPDF}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm rounded-lg transition shadow-md"
-          >
-            <Printer className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('imprimirLargo')}</span>
-            <span className="sm:hidden">{t('imprimirCorto')}</span>
           </button>
         </div>
       </div>
