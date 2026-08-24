@@ -3,7 +3,7 @@ import {
   Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame,
   Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle,
   Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, ChevronDown, ChevronUp,
-  Copy, Users, Gift, Ticket, Headphones, MapPin, Share2, Play, Pause, Volume2
+  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2
 } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
@@ -1293,28 +1293,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </div>
             )}
 
-            {/* INCENTIVO / LEAD MAGNET BANNER */}
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-amber-950/20 border border-amber-500/30 space-y-2 text-left shadow-md">
-              <div className="flex items-center gap-2 text-amber-300 font-mono font-black text-xs uppercase tracking-wider">
-                <Gift className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" />
-                <span>{t('incentivoPromoTitulo') || 'Regalo exclusivo al unirte'}</span>
-              </div>
-              <p className="text-[11px] text-neutral-300 font-mono leading-relaxed">
-                {t('incentivoPromoTexto') || 'Descarga 1 tema inédito en acústico + Código 10% dto en Merchan + Acceso prioritario a entradas.'}
-              </p>
-              <div className="flex flex-wrap gap-1.5 pt-0.5">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-950/80 border border-amber-500/20 text-[10px] text-amber-300 font-mono">
-                  <Headphones className="w-3 h-3 text-amber-400" /> {t('incentivoBadgeAudio') || 'Audio Exclusivo'}
-                </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-950/80 border border-amber-500/20 text-[10px] text-amber-300 font-mono">
-                  <Tag className="w-3 h-3 text-amber-400" /> {t('incentivoBadgeDiscount') || '10% Descuento'}
-                </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-950/80 border border-amber-500/20 text-[10px] text-amber-300 font-mono">
-                  <Ticket className="w-3 h-3 text-amber-400" /> {t('incentivoBadgePresale') || 'Preventa'}
-                </span>
-              </div>
-            </div>
-            
             {/* CAMPOS OBLIGATORIOS (Rápidos y sin fricción) */}
             <div>
               <label className="text-[10px] font-black text-neutral-300 uppercase font-mono tracking-widest mb-1.5 block">{t('labelName')} *</label>
@@ -1415,9 +1393,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </div>
             )}
 
-            {/* Revolut Support also directly accessible inside the registration form */}
-            {renderRevolutCard('form')}
-
             <div className="pt-2 pb-1">
               <label className="flex items-start gap-3 cursor-pointer group p-3 bg-neutral-950/50 rounded-xl border border-neutral-800 hover:border-neutral-700 transition-colors">
                 <div className="relative flex items-center justify-center mt-0.5">
@@ -1450,6 +1425,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 t('submitJoin', { bandName })
               )}
             </button>
+
+            {/* Colaborar económicamente: fuera del flujo principal del formulario, después de enviar */}
+            <div className="pt-1">
+              {renderRevolutCard('form')}
+            </div>
 
             {/* Social Links shown below form as well */}
             {socialLinks && Object.values(socialLinks).some(Boolean) && (

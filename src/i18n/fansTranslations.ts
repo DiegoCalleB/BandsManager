@@ -151,11 +151,6 @@ type FanFormDict = {
   bizumCopiedNotification: string;
   shareCardPrompt: string;
   whatsappShareMessage: string;
-  incentivoPromoTitulo: string;
-  incentivoPromoTexto: string;
-  incentivoBadgeAudio: string;
-  incentivoBadgeDiscount: string;
-  incentivoBadgePresale: string;
   upcomingShowsTitle: string;
 };
 
@@ -275,11 +270,6 @@ const es: FanFormDict = {
   bizumCopiedNotification: '¡Teléfono de Bizum ({phone}) copiado! Abre tu banco para enviarlo.',
   shareCardPrompt: '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.',
   whatsappShareMessage: '¡Ey! Échale un ojo a {bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: {url}',
-  incentivoPromoTitulo: 'Regalo exclusivo al unirte',
-  incentivoPromoTexto: 'Descarga 1 tema inédito en acústico + Código 10% dto en Merchan + Acceso prioritario a entradas.',
-  incentivoBadgeAudio: 'Audio Exclusivo',
-  incentivoBadgeDiscount: '10% Descuento',
-  incentivoBadgePresale: 'Preventa',
   upcomingShowsTitle: 'Próximos Conciertos',
 };
 
@@ -399,11 +389,6 @@ const en: FanFormDict = {
   bizumCopiedNotification: 'Bizum phone ({phone}) copied! Open your banking app to send.',
   shareCardPrompt: 'Know someone who loves great music? Share this direct link so they can also enjoy exclusive tracks.',
   whatsappShareMessage: 'Hey! Check out {bandName} and join their community to get unreleased tracks and discounts: {url}',
-  incentivoPromoTitulo: 'Exclusive gift when joining',
-  incentivoPromoTexto: 'Direct download of 1 unreleased acoustic track + 10% Merch discount code + Early ticket access.',
-  incentivoBadgeAudio: 'Exclusive Audio',
-  incentivoBadgeDiscount: '10% Discount',
-  incentivoBadgePresale: 'Presale',
   upcomingShowsTitle: 'Upcoming Shows',
 };
 
@@ -523,11 +508,6 @@ const it: FanFormDict = {
   bizumCopiedNotification: 'Numero Bizum ({phone}) copiato! Apri la tua app bancaria per inviarlo.',
   shareCardPrompt: 'Conosci qualcuno che ama la buona musica? Condividi questo link diretto per fargli ascoltare i brani esclusivi.',
   whatsappShareMessage: 'Ehi! Dai un\'occhiata a {bandName} e unisciti alla community per ottenere brani inediti e sconti: {url}',
-  incentivoPromoTitulo: 'Regalo esclusivo all\'iscrizione',
-  incentivoPromoTexto: 'Download di 1 brano acustico inedito + Codice sconto 10% sul merch + Accesso prioritario ai biglietti.',
-  incentivoBadgeAudio: 'Audio Esclusivo',
-  incentivoBadgeDiscount: '10% Sconto',
-  incentivoBadgePresale: 'Prevendita',
   upcomingShowsTitle: 'Prossimi Concerti',
 };
 
@@ -647,11 +627,6 @@ const cs: FanFormDict = {
   bizumCopiedNotification: 'Bizum telefonní číslo ({phone}) zkopírováno! Otevři své bankovnictví pro odeslání.',
   shareCardPrompt: 'Znáš někoho, kdo má rád dobrou hudbu? Sdílej tento přímý odkaz, ať si také užije exkluzivní skladby.',
   whatsappShareMessage: 'Ahoj! Koukni na {bandName} a přidej se k jejich komunitě pro nevydané skladby a slevy: {url}',
-  incentivoPromoTitulo: 'Exkluzivní dárek při registraci',
-  incentivoPromoTexto: 'Stažení 1 nevydané akustické skladby + 10% slevový kód na merch + Přednostní přístup ke vstupenkám.',
-  incentivoBadgeAudio: 'Exkluzivní audio',
-  incentivoBadgeDiscount: '10% Sleva',
-  incentivoBadgePresale: 'Předprodej',
   upcomingShowsTitle: 'Nadcházející koncerty',
 };
 
