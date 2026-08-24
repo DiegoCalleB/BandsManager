@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { EPKConfig, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
-import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict } from '../i18n/epkTranslations';
+import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from '../i18n/epkTranslations';
 import { interpolate } from '../i18n/fansTranslations';
 import { useEpkLanguage } from '../hooks/useEpkLanguage';
 import { resolverContenidoEpk } from '../utils/epkTraducciones';
@@ -24,6 +24,18 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const [copiedLink, setCopiedLink] = useState(false);
   const galeriaScrollRef = React.useRef<HTMLDivElement>(null);
   const [language, setLanguage] = useEpkLanguage();
+
+  // El idioma "de contexto" (el que trae el enlace: ?lang= puesto por el agente Redactor o
+  // heredado del Únete del concierto), capturado una sola vez al montar. Decide QUÉ 2-3
+  // banderas se ofrecen, no cuál está activa — si siguiera a `language`, un programador
+  // italiano que cambiara a "English" vería desaparecer el italiano del selector.
+  const [contextoIdioma] = useState(() => language);
+  const availableLanguages = EPK_LANGUAGES.filter(l =>
+    idiomasDisponiblesParaEpk(contextoIdioma).includes(l.code)
+  ).sort((a, b) =>
+    idiomasDisponiblesParaEpk(contextoIdioma).indexOf(a.code) -
+    idiomasDisponiblesParaEpk(contextoIdioma).indexOf(b.code)
+  );
 
   useEffect(() => {
     if (!initialData) {
@@ -135,7 +147,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               este enlace se reenvía por correo entre programadores, así que el idioma tiene
               que viajar con él. Dos botones diminutos para no competir con el resto. */}
           <div className="flex items-center gap-0.5 bg-slate-800 border border-slate-700 rounded-lg p-0.5" role="group" aria-label={t('selectorIdioma')}>
-            {EPK_LANGUAGES.map(l => (
+            {availableLanguages.map(l => (
               <button
                 key={l.code}
                 type="button"
