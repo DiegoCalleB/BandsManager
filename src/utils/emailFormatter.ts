@@ -119,7 +119,11 @@ export function formatEmailWithSignatureAndDossier(params: {
 }): FormattedEmailResult {
   const { pitchText, lead, epkConfig, senderName, bandName, bandId } = params;
 
-  const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'Bakandeya';
+  // Sin bandName ni contactoBooking.nombre, esto firmaba el email como Bakandeya y usaba su
+  // email/teléfono reales (ver isBakandeya/defaultEmail/defaultPhone más abajo) para CUALQUIER
+  // banda. Los llamantes actuales ya evitan pasar undefined (ver bandDisplayName en
+  // Chatbot.tsx), pero la función no debe depender de eso para no filtrar datos reales.
+  const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
   const isBakandeya = resolvedBandName.toLowerCase().includes('bakandeya');
   const defaultEmail = isBakandeya ? 'bakandeya@gmail.com' : `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '')}@booking.com`;
   const defaultPhone = isBakandeya ? '+34 652 938 521' : '+34 600 000 000';

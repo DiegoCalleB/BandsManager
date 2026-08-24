@@ -11,7 +11,7 @@ export async function dbGetUsers(bandId?: string) {
       bandName: u.band_name || u.bandName,
       avatarColor: u.avatar_color || u.avatarColor,
       passwordHash: u.password_hash || u.passwordHash,
-      googleOauth: u.google_oauth || u.googleOauth || {},
+      googleOAuth: u.google_oauth || u.googleOAuth || {},
       main_band_id: u.main_band_id || u.mainBandId,
       band_order: Array.isArray(u.band_order) ? u.band_order : (u.band_order ? JSON.parse(u.band_order) : undefined)
     }));
@@ -26,7 +26,7 @@ export async function dbGetUsers(bandId?: string) {
     bandName: u.band_name || u.bandName,
     avatarColor: u.avatar_color || u.avatarColor,
     passwordHash: u.password_hash || u.passwordHash,
-    googleOauth: u.google_oauth || u.googleOauth || {}
+    googleOAuth: u.google_oauth || u.googleOAuth || {}
   }));
 
   // Also include the band owner/leader from registered_bands if not already in list
@@ -43,7 +43,7 @@ export async function dbGetUsers(bandId?: string) {
             bandName: ownerUser.band_name || ownerUser.bandName,
             avatarColor: ownerUser.avatar_color || ownerUser.avatarColor,
             passwordHash: ownerUser.password_hash || ownerUser.passwordHash,
-            googleOauth: ownerUser.google_oauth || ownerUser.googleOauth || {}
+            googleOAuth: ownerUser.google_oauth || ownerUser.googleOAuth || {}
           });
         }
       } else if (regBand.email && !list.some(u => u.email?.toLowerCase() === regBand.email.toLowerCase() || u.username?.toLowerCase() === regBand.email.toLowerCase())) {
@@ -62,7 +62,7 @@ export async function dbGetUsers(bandId?: string) {
             bandName: ownerUser.band_name || ownerUser.bandName,
             avatarColor: ownerUser.avatar_color || ownerUser.avatarColor,
             passwordHash: ownerUser.password_hash || ownerUser.passwordHash,
-            googleOauth: ownerUser.google_oauth || ownerUser.googleOauth || {}
+            googleOAuth: ownerUser.google_oauth || ownerUser.googleOAuth || {}
           });
         }
       }
@@ -85,7 +85,7 @@ export async function dbGetUserById(userId: string) {
     bandName: data.band_name || data.bandName,
     avatarColor: data.avatar_color || data.avatarColor,
     passwordHash: data.password_hash || data.passwordHash,
-    googleOauth: data.google_oauth || data.googleOauth || {},
+    googleOAuth: data.google_oauth || data.googleOAuth || {},
     main_band_id: data.main_band_id || data.mainBandId,
     band_order: Array.isArray(data.band_order) ? data.band_order : (data.band_order ? JSON.parse(data.band_order) : undefined)
   };
@@ -109,7 +109,7 @@ export async function dbUpsertUser(user: any) {
     avatar_color: user.avatarColor || user.avatar_color || "bg-amber-500",
     password_hash: user.passwordHash || user.password_hash || "",
     salt: user.salt || "",
-    google_oauth: user.googleOauth || user.google_oauth || {},
+    google_oauth: user.googleOAuth || user.google_oauth || {},
     main_band_id: user.main_band_id || user.mainBandId || null,
     band_order: user.band_order || null
   };
@@ -128,7 +128,7 @@ export async function dbUpsertUser(user: any) {
         bandName: fbData.band_name,
         avatarColor: fbData.avatar_color,
         passwordHash: fbData.password_hash,
-        googleOauth: fbData.google_oauth,
+        googleOAuth: fbData.google_oauth,
         main_band_id: user.main_band_id,
         band_order: user.band_order
       };
@@ -140,7 +140,7 @@ export async function dbUpsertUser(user: any) {
     bandName: data.band_name,
     avatarColor: data.avatar_color,
     passwordHash: data.password_hash,
-    googleOauth: data.google_oauth,
+    googleOAuth: data.google_oauth,
     main_band_id: data.main_band_id || user.main_band_id,
     band_order: data.band_order || user.band_order
   };

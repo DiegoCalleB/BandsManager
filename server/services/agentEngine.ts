@@ -5,7 +5,7 @@
 // banda) - una sola implementación real, sin duplicar lógica entre los dos disparadores.
 
 import { getSupabase } from "../db.js";
-import { esEmailValido } from "../utils/email.js";
+import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
 
@@ -74,7 +74,7 @@ export async function runEnviadorAgent(opts: {
   const startTime = Date.now();
   const sb = getSupabase();
 
-  let query = sb.from("leads").select("*").in("estado", ["aprobado_propuesta", "aprobado", "aprobado_respuesta"]);
+  let query = sb.from("leads").select("*").in("estado", ESTADOS_DE_ENVIO);
   if (opts.leadId) {
     query = sb.from("leads").select("*").eq("id", opts.leadId);
   } else {

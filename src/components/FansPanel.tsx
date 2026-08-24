@@ -130,11 +130,14 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     }
   };
   
-  // Incentive state
+  // Incentive state. Antes, mientras una banda no configuraba su propio incentivo, este
+  // formulario mostraba (y podía llegar a guardar) un enlace de descarga real de Bakandeya y un
+  // código de descuento con su nombre — datos inventados de una banda concreta colándose como
+  // "valor por defecto" en el panel de cualquier otra.
   const [incentivo, setIncentivo] = useState(epkConfig?.incentivoFans || {
     mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de la banda!",
-    enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
-    codigoDescuento: "BAKANDEYA-FAN-10"
+    enlaceDescarga: "",
+    codigoDescuento: ""
   });
   const [savedIncentive, setSavedIncentive] = useState(false);
 
@@ -1145,7 +1148,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         type="text"
                         value={incentivo.codigoDescuento}
                         onChange={e => setIncentivo(prev => ({ ...prev, codigoDescuento: e.target.value.toUpperCase() }))}
-                        placeholder="BAKANDEYA-FAN-10"
+                        placeholder="TUBANDA-FAN-10"
                         className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-amber-300 font-bold outline-none font-mono"
                       />
                     </div>

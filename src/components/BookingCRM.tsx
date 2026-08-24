@@ -207,6 +207,8 @@ export default function BookingCRM({
  email_contacto: '',
  telefono: '',
  website: '',
+ instagram: '',
+ fuente: '',
  genero: 'Radio',
  notas: '',
  pitch_generado: '',
@@ -610,7 +612,7 @@ export default function BookingCRM({
  tipo: sectionTab === 'medios' ? 'medio' : newLeadData.tipo,
  email_contacto: newLeadData.email_contacto || '',
  telefono: newLeadData.telefono || '',
- instagram: newLeadData.website || '',
+ instagram: newLeadData.instagram || '',
  website: newLeadData.website || '',
  icono: newLeadData.icono || (sectionTab === 'medios' ? '📻' : '🏛️'),
  imagen_url: newLeadData.imagen_url || '',
@@ -950,9 +952,13 @@ export default function BookingCRM({
               email_contacto: '',
               telefono: '',
               website: '',
+              instagram: '',
+              fuente: '',
               genero: sectionTab === 'medios' ? 'Radio' : 'Balkan / Ska',
               notas: '',
-              pitch_generado: ''
+              pitch_generado: '',
+              icono: sectionTab === 'medios' ? '📻' : '🏛️',
+              imagen_url: ''
             });
             setIsAddingLeadModalOpen(true);
           }}

@@ -44,7 +44,7 @@ export function getSafeUsers(users: any[]) {
 }
 
 // Extract user & role from incoming request with multi-band isolation validation
-export function getUserFromRequest(req: express.Request, loadStateFn: () => any): { id: string; role: string; username: string; email?: string; name?: string; bandName?: string; band_id?: string; allowedBandIds?: string[] } | null {
+export function getUserFromRequest(req: express.Request, loadStateFn: () => any): { id: string; role: string; username: string; email?: string; name?: string; bandName?: string; band_id?: string; allowedBandIds?: string[]; plan?: string } | null {
   const authHeader = req.headers.authorization;
   // El token NO se acepta por la URL. Un `?token=` acaba en los logs del servidor, en el
   // historial del navegador y en la cabecera Referer de cualquier recurso externo que cargue la
