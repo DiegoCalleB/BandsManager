@@ -5,6 +5,7 @@ import {
   DEFAULT_EPK_LANGUAGE,
   isEpkLanguage,
   idiomaEpkParaLead,
+  idiomasDisponiblesParaEpk,
 } from '../epkTranslations';
 import { interpolate } from '../fansTranslations';
 
@@ -55,10 +56,36 @@ describe('epkTranslations', () => {
   it('isEpkLanguage solo acepta idiomas soportados', () => {
     expect(isEpkLanguage('en')).toBe(true);
     expect(isEpkLanguage('es')).toBe(true);
+    expect(isEpkLanguage('it')).toBe(true);
+    expect(isEpkLanguage('cs')).toBe(true);
     expect(isEpkLanguage('fr')).toBe(false);
     expect(isEpkLanguage(null)).toBe(false);
     expect(isEpkLanguage(undefined)).toBe(false);
     expect(isEpkLanguage('')).toBe(false);
+  });
+});
+
+describe('idiomasDisponiblesParaEpk: solo 2-3 banderas, nunca las 4', () => {
+  it('contexto español: solo español e inglés', () => {
+    expect(idiomasDisponiblesParaEpk('es')).toEqual(['es', 'en']);
+  });
+
+  it('contexto inglés: solo español e inglés', () => {
+    expect(idiomasDisponiblesParaEpk('en')).toEqual(['es', 'en']);
+  });
+
+  it('contexto italiano (dossier llamado desde un Únete de Italia): italiano primero', () => {
+    expect(idiomasDisponiblesParaEpk('it')).toEqual(['it', 'en', 'es']);
+  });
+
+  it('contexto checo: checo primero', () => {
+    expect(idiomasDisponiblesParaEpk('cs')).toEqual(['cs', 'en', 'es']);
+  });
+
+  it('nunca devuelve más de 3 idiomas', () => {
+    for (const l of EPK_LANGUAGES) {
+      expect(idiomasDisponiblesParaEpk(l.code).length).toBeLessThanOrEqual(3);
+    }
   });
 });
 
