@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { EPKConfig, Song, Concert } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
-import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict } from '../i18n/epkTranslations';
+import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from '../i18n/epkTranslations';
 import { interpolate } from '../i18n/fansTranslations';
 import { useEpkLanguage } from '../hooks/useEpkLanguage';
 import { resolverContenidoEpk } from '../utils/epkTraducciones';
@@ -25,6 +25,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
   const galeriaScrollRef = React.useRef<HTMLDivElement>(null);
   const [language, setLanguage] = useEpkLanguage();
+
+  const [contextoIdioma] = useState(() => language);
+  const availableLanguages = EPK_LANGUAGES.filter(l =>
+    idiomasDisponiblesParaEpk(contextoIdioma).includes(l.code)
+  ).sort((a, b) =>
+    idiomasDisponiblesParaEpk(contextoIdioma).indexOf(a.code) -
+    idiomasDisponiblesParaEpk(contextoIdioma).indexOf(b.code)
+  );
 
   useEffect(() => {
     if (!initialData) {
