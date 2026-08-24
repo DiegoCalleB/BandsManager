@@ -190,7 +190,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
              planId: createBandPlan,
              billingInterval: 'monthly',
              bandId: res.band_id,
-             userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com'
+             userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
            });
            setShowCreateBandSection(false);
            setCreateBandName('');
@@ -719,7 +719,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                    }`}
                  >
                    <p className="font-bold truncate text-[10px] uppercase">{planDef.name.split(' ')[0]}</p>
-                   <p className="text-[9px] font-mono text-amber-400/90">{planDef.priceLabel}</p>
+                   <p className="text-[9px] font-mono text-amber-400/90">{planDef.price}</p>
                  </button>
                );
              })}
@@ -1314,7 +1314,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                   planId: plan.id,
                                   billingInterval: 'monthly',
                                   bandId: currentUser.band_id || 'default',
-                                  userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : 'diego.delacalleb@gmail.com'
+                                  userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
                                 });
                                 setShowUpgradeModal(false);
                                 return;

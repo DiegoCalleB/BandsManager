@@ -119,7 +119,7 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
 2. Si el mánager ha introducido un comentario o instrucción específica arriba, cúplela como máxima prioridad.
 3. Analiza cuidadosamente todo el feedback acumulado del mánager en correos anteriores. Si ha pedido acortar correos, cambiar el tono, destacar el violín o evitar clichés, aplica esos aprendizajes para perfeccionar esta plantilla.
 4. Preserva las variables dinámicas de plantilla en el cuerpo si son útiles: {{nombre_sala}}, {{ciudad}}, {{website}}, etc.
-5. Asegúrate de mantener la firma y personalidad de Bakandeya.
+5. Asegúrate de mantener la firma y personalidad de ${bandName}.
 6. Devuelve un objeto JSON VÁLIDO exactamente con esta estructura (sin texto alrededor):
 {
   "subject": "Asunto optimizado para ${categoryLabel}",
@@ -133,14 +133,14 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
 
     if (ai) {
       try {
-        const responseText = await generateContentWithFallback(ai, {
+        const response = await generateContentWithFallback(ai, {
           contents: prompt,
           config: {
             temperature: 0.4,
             responseMimeType: "application/json"
           }
         });
-        resultJson = safeParseJson(responseText);
+        resultJson = safeParseJson(response?.text || "");
       } catch (err) {
         console.warn("AI generation failed for template optimization, falling back to rule-based:", err);
       }

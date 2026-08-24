@@ -15,6 +15,13 @@ router.post("/chat", requireAuth, async (req, res) => {
   const { message, chatHistory, agentsEnabled: agentsEnabledBody, autonomyConfig } = req.body;
   const agentsEnabled = agentsEnabledBody !== false;
   const userReq = getUserFromRequestLocal(req);
+  // requireAuth ya garantiza que hay banda activa (getUserFromRequest devuelve null si no la
+  // hay), pero esta ruta vuelve a resolver el usuario por su cuenta con getUserFromRequestLocal:
+  // se repite la comprobación aquí para no depender en silencio de esa garantía y caer en la
+  // banda de Bakandeya (BAKANDEYA_BAND_ID) más abajo si algún día dejara de cumplirse.
+  if (!userReq?.band_id) {
+    return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+  }
   // El rol sale solo de la sesión. Con el `req.body.userRole` que había de repuesto bastaba
   // mandar userRole:'leader' para saltarse el bloqueo de finanzas y que el bot soltara los cachés.
   const userRole = userReq?.role || "member";
@@ -27,7 +34,7 @@ router.post("/chat", requireAuth, async (req, res) => {
   const isFinanceQuery = /(finanza|dinero|pago|gasto|ingreso|contabilid|cuanto|cuánto|caché|cache|presupuest|balance|caja)/i.test(lower);
   if (!isLeader && isFinanceQuery) {
     return res.json({
-      text: "🔒 **Acceso Restringido:** El apartado y los datos de finanzas están restringidos únicamente a los administradores de la banda (José y Diego).",
+      text: "🔒 **Acceso Restringido:** El apartado y los datos de finanzas están restringidos únicamente a los administradores/líderes de la banda.",
       proposedActions: []
     });
   }
@@ -119,7 +126,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     }
 
     let paramText = "";
-    const activeBandName = userReq?.bandName || 'Bakandeya';
+    const activeBandName = userReq?.bandName || 'tu banda';
 
     if (agentName === "Scout Descubridor") {
       paramText = `\n\n**Parámetros detectados:**\n- Región: \`${triggerParams.region}\`\n- Tipo de espacio: \`${triggerParams.tipo}\` *(obligatorio, extraído de tu mensaje)*`;
@@ -174,7 +181,7 @@ router.post("/chat", requireAuth, async (req, res) => {
           });
         }
       } else if (lowerMsg.includes("reggae") || lowerMsg.includes("ska")) {
-        const userBandId = userReq?.band_id || BAKANDEYA_BAND_ID;
+        const userBandId = userReq.band_id;
         const matchBandLocal = (item: any) => {
           if (!item) return false;
           const bid = item.band_id || item.bandId;
@@ -184,7 +191,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         const count = state.leads.filter(matchBandLocal).filter((l: Lead) => (l.genero || "").toLowerCase().includes("reggae") || (l.genero || "").toLowerCase().includes("ska")).length;
         reply += `Tienes actualmente **${count} salas** especializadas en Ska/Reggae en la base de datos (por ejemplo, *Kafe Antzokia* en Bilbao, *Sala El Tren* en Granada y *Viña Rock*).`;
       } else {
-        const userBandId = userReq?.band_id || BAKANDEYA_BAND_ID;
+        const userBandId = userReq.band_id;
         const matchBandLocal = (item: any) => {
           if (!item) return false;
           const bid = item.band_id || item.bandId;
@@ -203,7 +210,7 @@ router.post("/chat", requireAuth, async (req, res) => {
   }
 
   try {
-    const userBandId = userReq?.band_id || BAKANDEYA_BAND_ID;
+    const userBandId = userReq.band_id;
     const matchBand = (item: any) => {
       if (!item) return false;
       const bid = item.band_id || item.bandId;
@@ -266,8 +273,8 @@ router.post("/chat", requireAuth, async (req, res) => {
       recentMessages: (state.messages || []).filter(matchBand).slice(-5)
     };
 
-    const bandIdForEpk = userReq?.band_id || BAKANDEYA_BAND_ID;
-    const epkConfigData = getEpkConfigForBand(state, bandIdForEpk, userReq?.bandName || 'Bakandeya', userReq?.email);
+    const bandIdForEpk = userReq.band_id;
+    const epkConfigData = getEpkConfigForBand(state, bandIdForEpk, userReq?.bandName || 'tu banda', userReq?.email);
     stateSummary.epkConfig = epkConfigData;
     stateSummary.globalPitchFeedback = getGlobalPitchFeedbackSummary(state.leads.filter(matchBand));
 
@@ -275,7 +282,7 @@ router.post("/chat", requireAuth, async (req, res) => {
       stateSummary.payments = (state.payments || []).filter(matchBand);
     }
 
-    const targetBandName = userReq?.bandName || epkConfigData?.nombre_banda || 'Bakandeya';
+    const targetBandName = userReq?.bandName || epkConfigData?.nombre_banda || 'tu banda';
     const cleanBandId = bandIdForEpk.replace(/^(band|reg)-/, '');
     const isBakandeyaBand = cleanBandId === 'bakandeya' || targetBandName.toLowerCase().includes('bakandeya');
 
@@ -342,7 +349,7 @@ REGLA DE APRENDIZAJE CONTINUO: Cada vez que redactes o propongas un borrador de 
 ${autonomyPromptBlock}
 
 ${!isLeader ? `RESTRICCIÓN CRÍTICA DE FINANZAS:
-El usuario actual NO es un administrador de la banda (rol: miembro). Tiene ESTRICTAMENTE PROHIBIDO ver, consultar o solicitar información sobre finanzas, contabilidad, pagos, gastos, ingresos, balances, caja o cachés de conciertos. Si el usuario realiza cualquier pregunta sobre dinero, finanzas o partidas contables, DEBES RESPONDER ÚNICA Y EXCLUSIVAMENTE CON ESTE TEXTO EXACTO: "🔒 *El apartado y los datos de finanzas están restringidos únicamente a los administradores de la banda (José y Diego).*" SIN APORTAR NINGÚN DATO FINANCIERO.
+El usuario actual NO es un administrador de la banda (rol: miembro). Tiene ESTRICTAMENTE PROHIBIDO ver, consultar o solicitar información sobre finanzas, contabilidad, pagos, gastos, ingresos, balances, caja o cachés de conciertos. Si el usuario realiza cualquier pregunta sobre dinero, finanzas o partidas contables, DEBES RESPONDER ÚNICA Y EXCLUSIVAMENTE CON ESTE TEXTO EXACTO: "🔒 *El apartado y los datos de finanzas están restringidos únicamente a los administradores/líderes de la banda.*" SIN APORTAR NINGÚN DATO FINANCIERO.
 ` : ''}
 Estilo de comunicación:
 - Habla en español de España.

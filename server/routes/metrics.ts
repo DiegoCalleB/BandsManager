@@ -6,296 +6,6 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 
 const router = express.Router();
 
-// Helper to extract YouTube channel ID or handle from any band's YouTube URL
-function parseYouTubeUrl(url: string): { type: "handle" | "id" | "forUsername"; value: string } | null {
-  if (!url) return null;
-  const clean = url.trim();
-  
-  // @Handle format (e.g., https://www.youtube.com/@Bakandeya or @Bakandeya)
-  if (clean.includes("/@") || clean.startsWith("@")) {
-    const handlePart = clean.includes("/@") ? clean.split("/@")[1] : clean.substring(1);
-    const handle = handlePart.split("/")[0].split("?")[0].trim();
-    if (handle) return { type: "handle", value: handle };
-  }
-  
-  // /channel/UCxxxx format
-  const channelMatch = clean.match(/youtube\.com\/channel\/([a-zA-Z0-9_-]+)/i);
-  if (channelMatch && channelMatch[1]) {
-    return { type: "id", value: channelMatch[1] };
-  }
-  
-  // /c/name or /user/name format
-  const customMatch = clean.match(/youtube\.com\/(?:c|user)\/([a-zA-Z0-9_-]+)/i);
-  if (customMatch && customMatch[1]) {
-    return { type: "forUsername", value: customMatch[1] };
-  }
-
-  // Raw handle or name
-  if (!clean.includes("/") && clean.length > 0) {
-    return { type: "handle", value: clean.replace(/^@/, "") };
-  }
-
-  return null;
-}
-
-// Fetch official YouTube Data API v3 statistics & top videos if YOUTUBE_API_KEY is configured
-async function fetchYouTubeApiStats(ytUrl: string, apiKey?: string) {
-  const key = apiKey || process.env.YOUTUBE_API_KEY;
-  if (!key || !ytUrl) return null;
-
-  const parsed = parseYouTubeUrl(ytUrl);
-  if (!parsed) return null;
-
-  try {
-    let url = "";
-    if (parsed.type === "handle") {
-      url = `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&forHandle=${encodeURIComponent(parsed.value)}&key=${key}`;
-    } else if (parsed.type === "id") {
-      url = `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&id=${encodeURIComponent(parsed.value)}&key=${key}`;
-    } else if (parsed.type === "forUsername") {
-      url = `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&forUsername=${encodeURIComponent(parsed.value)}&key=${key}`;
-    }
-
-    if (!url) return null;
-
-    const resp = await fetch(url, { signal: AbortSignal.timeout(6000) });
-    if (!resp.ok) {
-      console.warn(`YouTube Data API returned HTTP ${resp.status}`);
-      return null;
-    }
-    const data = await resp.json();
-    const item = data.items?.[0];
-    if (!item) return null;
-
-    const stats = item.statistics || {};
-    const channelId = item.id;
-    const subscribers = parseInt(stats.subscriberCount, 10);
-    const viewCount = parseInt(stats.viewCount, 10);
-    const videoCount = parseInt(stats.videoCount, 10);
-
-    // Try to fetch latest 4 videos
-    let videos: Array<{ title: string; views: number; date: string; link: string }> = [];
-    if (channelId) {
-      try {
-        const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${encodeURIComponent(channelId)}&maxResults=4&order=date&type=video&key=${key}`;
-        const sResp = await fetch(searchUrl, { signal: AbortSignal.timeout(5000) });
-        if (sResp.ok) {
-          const sData = await sResp.json();
-          if (Array.isArray(sData.items)) {
-            videos = sData.items.map((vid: any) => ({
-              title: vid.snippet?.title || "Vídeo",
-              views: 0,
-              date: vid.snippet?.publishedAt ? vid.snippet.publishedAt.split("T")[0] : "",
-              link: `https://www.youtube.com/watch?v=${vid.id?.videoId}`
-            }));
-          }
-        }
-      } catch (searchErr) {
-        console.warn("YouTube video list fetch skipped:", searchErr);
-      }
-    }
-
-    return {
-      subscribers: isNaN(subscribers) ? null : subscribers,
-      views: isNaN(viewCount) ? null : viewCount,
-      videoCount: isNaN(videoCount) ? null : videoCount,
-      channelTitle: item.snippet?.title || "",
-      videos
-    };
-  } catch (err: any) {
-    console.warn("YouTube Data API v3 request failed:", err?.message);
-    return null;
-  }
-}
-
-// Helper function to perform live scraping directly from band links or handles
-async function liveScrapePlatforms(bandInfo?: { name?: string; ytUrl?: string; igUrl?: string; tiktokUrl?: string; spotifyUrl?: string }) {
-  const headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Accept-Language": "es-ES,es;q=0.9,en;q=0.8"
-  };
-
-  const scraped = {
-    tiktok: null as number | null,
-    youtube: null as number | null,
-    instagram: null as number | null,
-    spotify: null as number | null,
-    videos: [] as Array<{ title: string; views: number; date: string; link: string }>,
-    details: [] as string[]
-  };
-
-  const ytUrl = bandInfo?.ytUrl || "https://www.youtube.com/@Bakandeya";
-  const igUrl = bandInfo?.igUrl || "https://instagram.com/bakandeya";
-  const tiktokUrl = bandInfo?.tiktokUrl || "https://www.tiktok.com/@bakandeya";
-  const spotifyUrl = bandInfo?.spotifyUrl || "https://open.spotify.com/artist/bakandeya";
-  const bandName = bandInfo?.name || "Bakandeya";
-
-  // 1. YouTube Data API v3 (if key is set) OR fallback live scrape
-  if (process.env.YOUTUBE_API_KEY && ytUrl) {
-    const apiResult = await fetchYouTubeApiStats(ytUrl, process.env.YOUTUBE_API_KEY);
-    if (apiResult && apiResult.subscribers !== null) {
-      scraped.youtube = apiResult.subscribers;
-      if (apiResult.videos && apiResult.videos.length > 0) {
-        scraped.videos = apiResult.videos;
-      }
-      scraped.details.push(`YouTube Data API v3 (${apiResult.channelTitle || ytUrl}): ${scraped.youtube} suscriptores`);
-    }
-  }
-
-  // If YouTube wasn't resolved by API, try direct public scrape with ytInitialData JSON parsing
-  if (ytUrl) {
-    try {
-      const parsedYt = parseYouTubeUrl(ytUrl);
-      const scrapeUrl = parsedYt?.type === "handle" 
-        ? `https://www.youtube.com/@${parsedYt.value}/videos`
-        : (ytUrl.includes("http") ? (ytUrl.endsWith("/videos") ? ytUrl : `${ytUrl.replace(/\/$/, '')}/videos`) : `https://www.youtube.com/${ytUrl}`);
-
-      const res = await fetch(scrapeUrl, { headers, signal: AbortSignal.timeout(6000) });
-      if (res.ok) {
-        const html = await res.text();
-        
-        // 1. Try ytInitialData JSON parsing for subscribers and video items
-        const initialMatch = html.match(/ytInitialData\s*=\s*({.+?});<\/script>/);
-        if (initialMatch && initialMatch[1]) {
-          try {
-            const data = JSON.parse(initialMatch[1]);
-            const metadataRows = data.header?.pageHeaderRenderer?.content?.pageHeaderViewModel?.metadata?.contentMetadataViewModel?.metadataRows;
-            if (Array.isArray(metadataRows)) {
-              for (const row of metadataRows) {
-                if (Array.isArray(row.metadataParts)) {
-                  for (const part of row.metadataParts) {
-                    const text = part.text?.content || part.accessibilityLabel || "";
-                    if (/suscriptor|subscriber/i.test(text)) {
-                      let num = 0;
-                      if (/k/i.test(text)) {
-                        const raw = parseFloat(text.replace(/[^0-9.,]/g, "").replace(",", "."));
-                        num = Math.round(raw * 1000);
-                      } else if (/m/i.test(text)) {
-                        const raw = parseFloat(text.replace(/[^0-9.,]/g, "").replace(",", "."));
-                        num = Math.round(raw * 1000000);
-                      } else {
-                        num = parseInt(text.replace(/[^0-9]/g, ""), 10);
-                      }
-                      if (!isNaN(num)) {
-                        scraped.youtube = num;
-                        scraped.details.push(`YouTube (${scrapeUrl}): ${scraped.youtube} suscriptores`);
-                        break;
-                      }
-                    }
-                  }
-                }
-                if (scraped.youtube !== null) break;
-              }
-            }
-
-            // Extract videos from videos tab if present
-            const tabs = data.contents?.twoColumnBrowseResultsRenderer?.tabs;
-            const videosTab = tabs?.find((t: any) => t.tabRenderer?.title === "Vídeos" || t.tabRenderer?.title === "Videos");
-            const contents = videosTab?.tabRenderer?.content?.richGridRenderer?.contents;
-            if (Array.isArray(contents) && scraped.videos.length === 0) {
-              for (const item of contents) {
-                const lockup = item.richItemRenderer?.content?.lockupViewModel;
-                if (lockup) {
-                  const videoId = lockup.contentId;
-                  const title = lockup.metadata?.lockupMetadataViewModel?.title?.content;
-                  const metaRows = lockup.metadata?.lockupMetadataViewModel?.metadata?.contentMetadataViewModel?.metadataRows;
-                  let viewsStr = "";
-                  let dateStr = "";
-                  if (metaRows && metaRows[0]?.metadataParts) {
-                    viewsStr = metaRows[0].metadataParts[0]?.text?.content || "";
-                    dateStr = metaRows[0].metadataParts[1]?.text?.content || "";
-                  }
-                  const viewsNum = parseInt(viewsStr.replace(/[^0-9]/g, ""), 10) || 0;
-                  if (title && videoId) {
-                    scraped.videos.push({
-                      title,
-                      views: viewsNum,
-                      date: dateStr,
-                      link: `https://www.youtube.com/watch?v=${videoId}`
-                    });
-                  }
-                }
-              }
-            }
-          } catch (jsonErr) {
-            console.warn("Failed to parse ytInitialData:", jsonErr);
-          }
-        }
-
-        // 2. Fallback regex search if not resolved
-        if (scraped.youtube === null) {
-          const match = html.match(/([0-9.,]+[kKmM]?)\s+(suscriptores|subscribers)/i) || html.match(/"subscriberCountText":.*?"simpleText":"([^"]+)"/i);
-          if (match) {
-            const rawStr = match[1] || match[0];
-            let num = 0;
-            if (/k/i.test(rawStr)) {
-              num = Math.round(parseFloat(rawStr.replace(/[^0-9.,]/g, "").replace(",", ".")) * 1000);
-            } else if (/m/i.test(rawStr)) {
-              num = Math.round(parseFloat(rawStr.replace(/[^0-9.,]/g, "").replace(",", ".")) * 1000000);
-            } else {
-              num = parseInt(rawStr.replace(/[^0-9]/g, ""), 10);
-            }
-            if (!isNaN(num)) {
-              scraped.youtube = num;
-              scraped.details.push(`YouTube (${scrapeUrl}): ${scraped.youtube} suscriptores`);
-            }
-          }
-        }
-      }
-    } catch (e: any) {
-      console.warn("Live YouTube scrape failed:", e?.message);
-    }
-  }
-
-  // 2. TikTok Live Web Scraping
-  try {
-    const cleanTiktok = tiktokUrl.includes("tiktok.com") ? tiktokUrl : `https://www.tiktok.com/@${tiktokUrl.replace(/^@/, '')}`;
-    const res = await fetch(cleanTiktok, { headers, signal: AbortSignal.timeout(5000) });
-    const html = await res.text();
-    const match = html.match(/"followerCount":(\d+)/i) || html.match(/data-e2e="follower-count">([^<]+)</i);
-    if (match) {
-      scraped.tiktok = parseInt(match[1], 10);
-      scraped.details.push(`TikTok (${cleanTiktok}): ${scraped.tiktok} seguidores`);
-    }
-  } catch (e: any) {
-    console.warn("Live TikTok scrape failed:", e?.message);
-  }
-
-  // 3. Instagram Live Indexing Scrape
-  try {
-    const igHandle = igUrl.replace(/https?:\/\/(www\.)?instagram\.com\//, "").replace(/\/$/, "").replace(/^@/, "");
-    const res = await fetch(`https://html.duckduckgo.com/html/?q=site:instagram.com/${encodeURIComponent(igHandle)}+seguidores`, { headers, signal: AbortSignal.timeout(5000) });
-    const html = await res.text();
-    const match = html.match(/([0-9.,]+)\s*(Seguidores|followers|Followers)/i);
-    if (match) {
-      const numStr = match[1].replace(/[^0-9]/g, "");
-      if (numStr) {
-        scraped.instagram = parseInt(numStr, 10);
-        scraped.details.push(`Instagram (${igHandle}): ${scraped.instagram} seguidores`);
-      }
-    }
-  } catch (e: any) {
-    console.warn("Live Instagram scrape failed:", e?.message);
-  }
-
-  // 4. Spotify Live Indexing Scrape
-  try {
-    const res = await fetch(`https://html.duckduckgo.com/html/?q=site:open.spotify.com/artist+${encodeURIComponent(bandName)}+listeners`, { headers, signal: AbortSignal.timeout(5000) });
-    const html = await res.text();
-    const match = html.match(/([0-9.,]+)\s*(monthly listeners|oyentes|listeners)/i);
-    if (match) {
-      const numStr = match[1].replace(/[^0-9]/g, "");
-      if (numStr) {
-        scraped.spotify = parseInt(numStr, 10);
-        scraped.details.push(`Spotify (${bandName}): ${scraped.spotify} oyentes mensuales`);
-      }
-    }
-  } catch (e: any) {
-    console.warn("Live Spotify scrape failed:", e?.message);
-  }
-
-  return scraped;
-}
 
 // GET all metrics
 router.get("/metrics", requireAuth, async (req, res) => {
@@ -394,11 +104,15 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
       dbGetEpkConfig(userBandId).catch(() => null)
     ]);
 
-    const bandName = band?.nombre_banda || "Bakandeya";
-    const ytUrl = epk?.enlacesRedes?.youtube || band?.spotify_youtube || "https://www.youtube.com/@Bakandeya";
-    const igUrl = epk?.enlacesRedes?.instagram || band?.instagram || "https://instagram.com/bakandeya";
-    const tiktokUrl = epk?.enlacesRedes?.tiktok || band?.tiktok || "https://www.tiktok.com/@bakandeya";
-    const spotifyUrl = epk?.enlacesRedes?.spotify || (band?.spotify_youtube?.includes("spotify.com") ? band.spotify_youtube : "") || "https://open.spotify.com/artist/bakandeya";
+    // Sin enlaces propios configurados, no hay nada que escanear: scrapeChannelMetrics ya
+    // gestiona URLs vacías devolviendo 0 para esa plataforma. Antes se caía a los perfiles
+    // reales de Bakandeya, así que "Escanear Métricas Reales" en una banda sin redes aún
+    // configuradas guardaba los seguidores de Bakandeya como si fueran suyos.
+    const bandName = band?.nombre_banda || "";
+    const ytUrl = epk?.enlacesRedes?.youtube || band?.spotify_youtube || "";
+    const igUrl = epk?.enlacesRedes?.instagram || band?.instagram || "";
+    const tiktokUrl = epk?.enlacesRedes?.tiktok || band?.tiktok || "";
+    const spotifyUrl = epk?.enlacesRedes?.spotify || (band?.spotify_youtube?.includes("spotify.com") ? band.spotify_youtube : "") || "";
 
     const scraped = await scrapeChannelMetrics({
       band_id: userBandId,
@@ -475,79 +189,12 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
   }
 });
 
-// Automated daily snapshot endpoint
-router.all("/metrics/cron-snapshot", requireCronOrAuth, async (req, res) => {
-  console.log("⚙️ Iniciando snapshot automático de seguidores...");
-  const userBandId = (req as any).user?.band_id || "band-1";
-  const ai = getAiClient();
-  
-  let bandName = "Bakandeya";
-  let ytUrl = "https://www.youtube.com/@Bakandeya";
-  let igUrl = "https://instagram.com/bakandeya";
-  let tiktokUrl = "https://www.tiktok.com/@bakandeya";
-  let spotifyUrl = "https://open.spotify.com/artist/bakandeya";
-
-  try {
-    const [band, epk] = await Promise.all([
-      dbGetRegisteredBandById(userBandId).catch(() => null),
-      dbGetEpkConfig(userBandId).catch(() => null)
-    ]);
-    if (band?.nombre_banda) bandName = band.nombre_banda;
-    if (epk?.enlacesRedes) {
-      if (epk.enlacesRedes.youtube) ytUrl = epk.enlacesRedes.youtube;
-      if (epk.enlacesRedes.instagram) igUrl = epk.enlacesRedes.instagram;
-      if (epk.enlacesRedes.tiktok) tiktokUrl = epk.enlacesRedes.tiktok;
-      if (epk.enlacesRedes.spotify) spotifyUrl = epk.enlacesRedes.spotify;
-    }
-  } catch (e) {
-    console.warn("Could not load band links for cron snapshot:", e);
-  }
-
-  const liveScraped = await liveScrapePlatforms({ name: bandName, ytUrl, igUrl, tiktokUrl, spotifyUrl });
-
-  let fetchedData = {
-    instagramFollowers: liveScraped.instagram || 1385,
-    tiktokFollowers: liveScraped.tiktok || 253,
-    youtubeSubscribers: liveScraped.youtube || 40,
-    spotifyListeners: liveScraped.spotify || 150
-  };
-
-  const today = new Date().toISOString().split("T")[0];
-  const state = loadState();
-
-  let existingTodayIndex = state.metrics.findIndex((m: SocialMetric) => m.fecha === today);
-  
-  const newEntry: SocialMetric = {
-    id: existingTodayIndex !== -1 ? state.metrics[existingTodayIndex].id : `metric-${Date.now()}`,
-    fecha: today,
-    instagram: fetchedData.instagramFollowers || 1385,
-    tiktok: fetchedData.tiktokFollowers || 253,
-    youtube: fetchedData.youtubeSubscribers || 40,
-    spotify: fetchedData.spotifyListeners || 150,
-    notas: `Auto-snapshot diario (${new Date().toLocaleTimeString('es-ES')})`
-  };
-
-  if (existingTodayIndex !== -1) {
-    state.metrics[existingTodayIndex] = newEntry;
-  } else {
-    state.metrics.push(newEntry);
-  }
-
-  saveState(state);
-
-  try {
-    await dbUpsertSocialMetric(newEntry, userBandId);
-    console.log("Snapshot exitoso y sincronizado con Supabase");
-  } catch (dbErr) {
-    console.error("Error sincronizando snapshot automático con Supabase:", dbErr);
-  }
-
-  res.json({
-    success: true,
-    message: `Snapshot guardado correctamente para la fecha ${today}`,
-    metric: newEntry
-  });
-});
+// Nota: existía aquí un endpoint /metrics/cron-snapshot (singular, legacy pre-multi-tenant) que
+// nadie llama ya (superado por cron-snapshot-all de abajo) y que, al no tener sesión de usuario
+// en las llamadas de cron reales, operaba siempre sobre "band-1" con los enlaces de redes de
+// Bakandeya como último fallback: cualquier disparo automático habría guardado los seguidores
+// reales de Bakandeya como snapshot de esa banda. Se elimina en vez de arreglarlo porque ya no
+// tiene ningún llamante y el reemplazo multi-banda de abajo es el correcto.
 
 // Automated daily snapshot endpoint for ALL bands using the Social Radar Agent
 router.all("/metrics/cron-snapshot-all", requireCronOrAuth, async (req, res) => {
@@ -1086,8 +733,8 @@ TU MISIÓN:
 Diseñar un Plan Estratégico de Crecimiento personalizado, táctico y sin clichés genéricos de marketing tradicional. Las recomendaciones DEBEN estar estrictamente pensadas para grupos de música / músicos en activo, adaptadas a su tipo de perfil musical, volumen de seguidores y métricas de visualizaciones actuales.
 
 DATOS ESPECÍFICOS DE LA BANDA / PROYECTO MUSICAL:
-- Nombre de la Banda / Artista: ${bandName || 'Bakandeya'}
-- Género y Estilo Musical: ${epkConfig?.genero || 'Indie Rock / Rock Alternativo / Balkan-Ska'}
+- Nombre de la Banda / Artista: ${bandName || 'la banda'}
+- Género y Estilo Musical: ${epkConfig?.genero || 'sin especificar, infiérelo del contexto disponible'}
 - Localización / Escena: ${epkConfig?.contactoBooking?.nombre ? 'Escena de directos en España' : 'España'}
 - Audiencia y Métricas Actuales:
   * Instagram: ${igCount.toLocaleString()} seguidores (Reels & Stories para captar público a bolos)
@@ -1114,7 +761,7 @@ REGLAS DE ADAPTACIÓN SEGÚN EL TAMAÑO DE SEGUIDORES Y VISUALIZACIONES:
 
 Devuelve ÚNICAMENTE un JSON estrictamente válido con este esquema exacto:
 {
-  "bandName": "${bandName || 'Bakandeya'}",
+  "bandName": "${bandName || 'la banda'}",
   "horizonDays": ${horizonDays},
   "executiveSummary": "Resumen ejecutivo directo, motivador y 100% enfocado a músicos (2-3 frases)...",
   "overallPillars": [

@@ -23,6 +23,7 @@ import {
 } from "../../src/utils/epkTraducciones.js";
 import { EPK_LANGUAGES } from "../../src/i18n/epkTranslations.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+import { checkRecordLimit } from "../utils/planLimits.js";
 
 const router = express.Router();
 
@@ -504,6 +505,17 @@ router.post("/fans", requireAuth, async (req, res) => {
     if (!(newFan as any).band_id) {
       (newFan as any).band_id = userBandId;
     }
+
+    // El límite de fans por plan solo se comprobaba en el cliente (App.tsx,
+    // handleAddFanWithLimitCheck): quien llamase a esta ruta directamente con su token de sesión
+    // podía dar de alta fans sin límite sin importar el plan contratado por su banda.
+    const userPlan = (req as any).user?.plan || 'ensayo';
+    const existingFans = await dbGetFans(userBandId);
+    const limitCheck = checkRecordLimit(userPlan, 'fans', existingFans.length);
+    if (!limitCheck.allowed) {
+      return res.status(403).json({ error: limitCheck.message, codigo: "limite_plan_alcanzado" });
+    }
+
     const saved = await dbUpsertFan(newFan, userBandId);
 
     const state = loadState();

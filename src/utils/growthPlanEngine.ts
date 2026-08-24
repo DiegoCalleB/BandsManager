@@ -55,7 +55,7 @@ export interface GrowthPlan {
 export function getDeterministicGrowthPlan(
   bandName: string,
   latestMetric: SocialMetric | null,
-  epkConfig?: EPKConfig | null,
+  epkConfig?: Partial<EPKConfig> | null,
   horizonDays: 30 | 60 | 90 = 30
 ): GrowthPlan {
   const igCount = latestMetric?.instagram_followers || latestMetric?.instagram || 0;
@@ -67,7 +67,11 @@ export function getDeterministicGrowthPlan(
 
   const archetype = detectBandProfileArchetype(latestMetric);
   const tier = archetype.tier;
-  const genre = epkConfig?.genero || 'Rock / Indie / Balkan-Ska';
+  // Sin género configurado en el EPK, no se puede inventar un estilo musical concreto para
+  // describir la música de la banda: usar el nombre por defecto de Bakandeya aquí hacía que el
+  // plan de crecimiento de CUALQUIER banda hablase de "Balkan-Ska" como si fuera su estilo. Los
+  // textos que usan `genre` abajo omiten la mención de género cuando no hay uno configurado.
+  const genre = epkConfig?.genero || '';
 
   // 1. Instagram Strategy based on Band Tier & Metrics
   let igStage = 'Iniciación / Tracción 0-500';
@@ -84,7 +88,9 @@ export function getDeterministicGrowthPlan(
     igObjective = `Construir el núcleo duro de los primeros 500 seguidores reales de ${bandName} y llenar los primeros conciertos locales`;
     igStrategy = 'Prioriza Reels cortos de 10-18 segundos con audio nítido de los mejores 15 segundos del ensayo o del bolo. En esta fase, los usuarios no te conocen: el gancho debe ser el sonido o la anécdota, no un logotipo.';
     igHooks = [
-      `«Si te mola el ${genre}, escucha el riff que grabamos ayer en el local de ensayo...»`,
+      genre
+        ? `«Si te mola el ${genre}, escucha el riff que grabamos ayer en el local de ensayo...»`
+        : '«Escucha el riff que grabamos ayer en el local de ensayo...»',
       '«Le dije a la banda que este tema no iba a funcionar y pasó esto en el primer concierto...»',
       '«El momento exacto en el que el público se unió al coro por primera vez...»',
       '«Lo que nadie te cuenta de ensayar 5 horas un domingo para un bolo de 40 minutos.»'
@@ -94,7 +100,7 @@ export function getDeterministicGrowthPlan(
       {
         id: 'ig-debut-1',
         title: 'Optimización de Bio con Enlace a Escuchas y Próximo Bolo',
-        description: `Escribe una bio directa: "🎸 ${bandName} (${genre}) · 📍 Próxima fecha: [Sala/Ciudad] · Escucha nuestro tema 👇" y enlaza a tu Smartlink/EPK.`,
+        description: `Escribe una bio directa: "🎸 ${bandName}${genre ? ` (${genre})` : ''} · 📍 Próxima fecha: [Sala/Ciudad] · Escucha nuestro tema 👇" y enlaza a tu Smartlink/EPK.`,
         impact: 'critico',
         difficulty: 'fácil',
         frequency: 'puntual',
@@ -470,7 +476,9 @@ export function getDeterministicGrowthPlan(
       : 'Elige una distribuidora digital (DistroKid, CD Baby, Altafonte, Amuse) y sube los temas con 4 semanas de antelación para poder hacer el Pitch Editorial oficial en Spotify for Artists.';
     spHooks = [
       `«Escucha el nuevo single de ${bandName} en Spotify y guárdalo en tu playlist favorita.»`,
-      `«Si te gustan bandas de ${genre}, acabamos de soltar este tema en todas las plataformas.»`,
+      genre
+        ? `«Si te gustan bandas de ${genre}, acabamos de soltar este tema en todas las plataformas.»`
+        : '«Acabamos de soltar nuestro nuevo tema en todas las plataformas.»',
       '«Haz Pre-Save para ser el primero en escucharlo el viernes a las 00:00h.»'
     ];
     spSchedule = 'Estrategia de singles en cascada: 1 single nuevo cada 6-8 semanas para mantener la curva del Release Radar en constante ascenso';
@@ -567,11 +575,11 @@ export function getDeterministicGrowthPlan(
   };
 
   return {
-    bandName: bandName || 'Bakandeya',
+    bandName: bandName || 'Tu Banda',
     generatedAt: new Date().toISOString(),
     horizonDays,
     archetype,
-    executiveSummary: `Plan Estratégico adaptado a ${bandName || 'Bakandeya'} en ${archetype.label}. Con una audiencia base de ${igCount.toLocaleString()} en Instagram, ${tkCount.toLocaleString()} en TikTok y ${ytSubs.toLocaleString()} en YouTube, el plan prioriza resolver el cuello de botella: "${archetype.primaryBottleneck}" para alcanzar una meta de crecimiento de ${archetype.idealFollowerGrowthRate} y llenar las salas del circuito musical.`,
+    executiveSummary: `Plan Estratégico adaptado a ${bandName || 'Tu Banda'} en ${archetype.label}. Con una audiencia base de ${igCount.toLocaleString()} en Instagram, ${tkCount.toLocaleString()} en TikTok y ${ytSubs.toLocaleString()} en YouTube, el plan prioriza resolver el cuello de botella: "${archetype.primaryBottleneck}" para alcanzar una meta de crecimiento de ${archetype.idealFollowerGrowthRate} y llenar las salas del circuito musical.`,
     overallPillars: [
       {
         pillar: 'Directo y Energía de Escenario (Conversión a Salas)',

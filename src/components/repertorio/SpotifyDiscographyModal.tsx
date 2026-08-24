@@ -91,7 +91,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
   // Initial fetch when modal opens
   useEffect(() => {
     if (isOpen) {
-      const initialQuery = bandName || 'Bakandeya';
+      const initialQuery = bandName || '';
       setSearchQuery(initialQuery);
       handleFetchDiscography(initialQuery);
     } else {

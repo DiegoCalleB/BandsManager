@@ -39,7 +39,10 @@ export function useSavedFilters(
 ) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<LeadStatus | 'todos'>(initialStatusFilter);
-  const [typeFilter, setTypeFilter] = useState<LeadType | 'todos'>('todos');
+  // Para sectionTab === 'medios', typeFilter también acepta las sub-categorías heurísticas de
+  // matchesMedioType en BookingCRM ('radio', 'tv', 'prensa', 'redes', 'podcast'), que no son
+  // LeadType reales sino un filtro por palabras clave sobre el lead.
+  const [typeFilter, setTypeFilter] = useState<LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast'>('todos');
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
   const [minCapacityFilter, setMinCapacityFilter] = useState<number>(0);
   const [onlyFavoritesFilter, setOnlyFavoritesFilter] = useState<boolean>(false);

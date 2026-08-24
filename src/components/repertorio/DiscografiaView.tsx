@@ -721,7 +721,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
       <SpotifyDiscographyModal
         isOpen={isSpotifyModalOpen}
         onClose={() => setIsSpotifyModalOpen(false)}
-        bandName={bandName || "Bakandeya"}
+        bandName={bandName || "Tu Banda"}
         existingSongs={songs}
         colors={colors}
         isStitchLight={isStitchLight}
@@ -739,7 +739,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           albumSongs={bulkUploadAlbum.songs}
           colors={colors}
           isStitchLight={isStitchLight}
-          bandId={bandName || "bakandeya"}
+          bandId={bandName || "Tu Banda"}
           onSaveUpdatedSongs={(updatedAlbumSongs, newAlbumName) => {
             const existingIds = new Set(songs.map((s) => s.id));
             const updatedMap = new Map<string, Song>();

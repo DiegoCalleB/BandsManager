@@ -15,7 +15,7 @@ import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 import { PayPalLogo } from './SocialPlatformsList';
 
 interface EPKManagerProps {
-  epkConfig?: EPKConfig;
+  epkConfig?: Partial<EPKConfig>;
   songs?: Song[];
   onSave?: (newConfig: EPKConfig) => void;
   colors?: any;

@@ -22,7 +22,7 @@ interface CalendarViewProps {
  currentBandName?: string;
  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
  bandUsers?: Array<{ id: string; name: string; username?: string; role?: string; instrument?: string; band_id?: string; bandName?: string }>;
- currentUser?: { id?: string; name?: string; username?: string; role?: string; band_id?: string; instrument?: string };
+ currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string };
 }
 
 interface RunOfShowItem {
@@ -140,7 +140,7 @@ export default function CalendarView({
     return slug.charAt(0).toUpperCase() + slug.slice(1);
    }
   }
-  return activeBandName || 'Bakandeya';
+  return activeBandName || 'Tu Banda';
  }, [effectiveBandsList, activeBandName, isSameBandId]);
 
  // Check if current user is in multiple bands
@@ -386,10 +386,9 @@ export default function CalendarView({
 
  // Form fields for new Rehearsal
  const [rehTime, setRehTime] = useState('18:00 - 21:00');
- const [rehLugar, setRehLugar] = useState('Locales de Ensayo Rock Palace');
- const [rehAsistentes, setRehAsistentes] = useState('Banda Completa');
+ const [rehLugar, setRehLugar] = useState('Locales de Ensayo');
  const [rehNotas, setRehNotas] = useState('Ensayo general de repertorio directo');
- const [rehEstado, setRehEstado] = useState<'programado' | 'confirmado' | 'realizado' | 'cancelado'>('programado');
+ const [rehEstado, setRehEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
 
  // Form fields for new Concert
  const [concCiudad, setConcCiudad] = useState('Madrid');
@@ -547,7 +546,7 @@ export default function CalendarView({
  fecha: formattedDate,
  hora: rehTime.trim() || '18:00 - 21:00',
  lugar: rehLugar.trim() || 'Locales de Ensayo',
- asistentes: rehAsistentes.trim() || (convocatoriaTipo === 'completa' ? 'Banda Completa' : selectedMembers.map(m => m.name).join(', ')),
+ asistentes: convocatoriaTipo === 'completa' ? ['Banda Completa'] : selectedMembers.map(m => m.name),
  notas: rehNotas.trim() || 'Ensayo general',
  estado: rehEstado,
  band_id: targetBand.band_id,
@@ -986,6 +985,7 @@ export default function CalendarView({
  const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(formattedDate);
  const hasConcert = dayConcerts.length > 0;
  const hasRehearsal = dayRehearsals.length > 0;
+ const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
 
  const isSelected = selectedDate.getFullYear() === year &&
  selectedDate.getMonth() === month &&
@@ -1047,9 +1047,9 @@ export default function CalendarView({
  {/* Responsive Band & Event Indicators */}
  <div className="w-full flex flex-col items-center justify-center gap-0.5 mb-0.5">
  {/* Desktop / Tablet Band Badges */}
- {dayConcerts.concat(dayRehearsals).length > 0 && (
+ {dayEvents.length > 0 && (
  <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5 overflow-hidden">
- {dayConcerts.concat(dayRehearsals).slice(0, 2).map((e, idx) => {
+ {dayEvents.slice(0, 2).map((e, idx) => {
  const bName = getEventBandName(e);
  const isConc = 'sala' in e;
  return (
@@ -1067,9 +1067,9 @@ export default function CalendarView({
  </div>
  );
  })}
- {dayConcerts.concat(dayRehearsals).length > 2 && (
+ {dayEvents.length > 2 && (
  <div className="text-[7px] font-mono text-neutral-400 text-center font-bold">
- +{dayConcerts.concat(dayRehearsals).length - 2} más
+ +{dayEvents.length - 2} más
  </div>
  )}
  </div>
@@ -1077,7 +1077,7 @@ export default function CalendarView({
 
  {/* Mobile Compact Band Badges / Dots */}
  <div className="flex sm:hidden gap-1 justify-center items-center w-full">
- {dayConcerts.concat(dayRehearsals).slice(0, 3).map((e, idx) => {
+ {dayEvents.slice(0, 3).map((e, idx) => {
  const bName = getEventBandName(e);
  const isConc = 'sala' in e;
  return (
@@ -2241,8 +2241,7 @@ export default function CalendarView({
  }`}
  >
  <option value="programado">Programado</option>
- <option value="confirmado">Confirmado</option>
- <option value="realizado">Realizado</option>
+ <option value="completado">Completado</option>
  <option value="cancelado">Cancelado</option>
  </select>
  </div>

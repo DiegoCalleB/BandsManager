@@ -281,7 +281,7 @@ export function ExcelImportModal({
         const rawTipo = String(row[mapping.tipo]).toLowerCase().trim();
         if (rawTipo.includes('ayuntamiento') || rawTipo.includes('ayto') || rawTipo.includes('institucion') || rawTipo.includes('festejo') || rawTipo.includes('cultura')) resolvedType = 'ayuntamiento';
         else if (rawTipo.includes('discoteca') || rawTipo.includes('club')) resolvedType = 'discoteca';
-        else if (rawTipo.includes('teatro')) resolvedType = 'teatro';
+        else if (rawTipo.includes('teatro')) resolvedType = 'sala';
         else if (rawTipo.includes('festival') || rawTipo.includes('feria') || rawTipo.includes('ciclo')) resolvedType = 'festival';
         else if (rawTipo.includes('grupo') || rawTipo.includes('banda') || rawTipo.includes('artista')) resolvedType = 'grupo';
         else if (rawTipo.includes('agencia') || rawTipo.includes('management') || rawTipo.includes('manager') || rawTipo.includes('promotor')) resolvedType = 'agencia';

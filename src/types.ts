@@ -67,7 +67,7 @@ export interface SavedFilter {
   searchTerm?: string;
   selectedCityFilter?: string;
   statusFilter?: LeadStatus | 'todos';
-  typeFilter?: LeadType | 'todos';
+  typeFilter?: LeadType | 'todos' | 'radio' | 'tv' | 'prensa' | 'redes' | 'podcast';
   minCapacityFilter?: number;
 }
 
@@ -203,6 +203,8 @@ export interface EmailSignatureConfig {
     bandcamp?: string;
     website?: string;
     whatsapp?: string;
+    revolut?: string;
+    paypal?: string;
   };
 }
 
@@ -237,6 +239,7 @@ export interface DatosContratacion {
 export interface EPKConfig {
   bandId?: string;
   biografia: string;
+  genero?: string;
   miembros?: BandMember[];
   videos?: EPKVideo[];
   datosContratacion?: DatosContratacion;

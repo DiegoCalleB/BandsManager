@@ -6,6 +6,7 @@ import { dbGetLeads, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbCheckDeletedLe
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
+import { checkRecordLimit } from "../../utils/planLimits.js";
 
 const router = express.Router();
 
@@ -115,6 +116,22 @@ router.post("/leads", requireAuth, async (req, res) => {
         newLead.tipo = 'festival';
         newLead.icono = '🎪';
       }
+    }
+
+    // El límite de leads/medios por plan solo se comprobaba en el cliente (App.tsx,
+    // handleAddLeadWithLimitCheck): quien llamase a esta ruta directamente con su token de sesión
+    // podía crear leads sin límite sin importar el plan contratado por su banda.
+    const userPlan = (req as any).user?.plan || 'ensayo';
+    const isMedio = String(newLead.tipo || '').toLowerCase().includes('medio')
+      || String(newLead.tipo || '').toLowerCase().includes('prensa')
+      || String(newLead.tipo || '').toLowerCase().includes('radio');
+    const existingLeads = await dbGetLeads(userBandId);
+    const currentCount = isMedio
+      ? existingLeads.filter((l: any) => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
+      : existingLeads.filter((l: any) => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
+    const limitCheck = checkRecordLimit(userPlan, isMedio ? 'medios' : 'leads', currentCount);
+    if (!limitCheck.allowed) {
+      return res.status(403).json({ error: limitCheck.message, codigo: "limite_plan_alcanzado" });
     }
 
     if (!newLead.pitch_generado || newLead.pitch_generado === "Sin pitch generado.") {

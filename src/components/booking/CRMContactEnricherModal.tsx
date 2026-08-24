@@ -8,7 +8,7 @@ interface CRMContactEnricherModalProps {
   isOpen: boolean;
   onClose: () => void;
   leads: Lead[];
-  onUpdateLead?: (updatedLead: Lead) => void;
+  onUpdateLead?: (id: string, updatedFields: Partial<Lead>) => void;
   isStitchLight?: boolean;
 }
 
@@ -50,8 +50,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
               instagram: res.data.instagram || lead.instagram
             });
             if (onUpdateLead) {
-              onUpdateLead({
-                ...lead,
+              onUpdateLead(lead.id, {
                 email_contacto: res.data.email_contacto || lead.email_contacto,
                 telefono: res.data.telefono || lead.telefono,
                 instagram: res.data.instagram || lead.instagram,

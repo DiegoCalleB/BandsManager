@@ -7,7 +7,7 @@ export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
     esbuild: {
-      legalComments: 'none',
+      legalComments: 'none' as const,
     },
     resolve: {
       dedupe: ['react', 'react-dom'],
@@ -22,8 +22,8 @@ export default defineConfig(() => {
       minify: false,
     },
     server: {
-      hmr: false,
-      ws: false,
+      hmr: false as const,
+      ws: false as const,
       watch: null,
     },
   };

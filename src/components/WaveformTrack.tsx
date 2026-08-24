@@ -268,12 +268,12 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
           const dur = el.duration;
           if (dur === Infinity) {
             el.currentTime = 1e101;
-            el.ontimeupdate = function () {
-              this.ontimeupdate = null;
-              this.currentTime = 0;
-              if (isFinite(this.duration) && this.duration > 0) {
-                setLocalTrackDur(this.duration);
-                if (onTrackLoaded) onTrackLoaded(this.duration);
+            el.ontimeupdate = () => {
+              el.ontimeupdate = null;
+              el.currentTime = 0;
+              if (isFinite(el.duration) && el.duration > 0) {
+                setLocalTrackDur(el.duration);
+                if (onTrackLoaded) onTrackLoaded(el.duration);
               }
             };
           } else if (dur && !isNaN(dur) && isFinite(dur) && dur > 0) {

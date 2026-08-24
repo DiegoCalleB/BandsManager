@@ -152,13 +152,16 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [claimStep, setClaimStep] = useState<'form' | 'success'>('form');
   const [selectedGiftDesignId, setSelectedGiftDesignId] = useState<string>('default-logo');
+  // El formulario de envío del regalo empezaba precargado con el nombre, la dirección real y el
+  // teléfono del fundador: cualquier banda que reclamase su pack de pegatinas sin fijarse en el
+  // formulario acababa enviando el regalo a su casa en vez de a la suya propia.
   const [shippingForm, setShippingForm] = useState({
-    nombre: 'Diego de la Calle (Bakandeya)',
-    direccion: 'Calle Gran Vía 28, 4º B',
-    cp: '28013',
-    ciudad: 'Madrid',
-    telefono: '+34 612 345 678',
-    notas: 'Dejar en portería si no estamos en el local.'
+    nombre: '',
+    direccion: '',
+    cp: '',
+    ciudad: '',
+    telefono: '',
+    notas: ''
   });
 
   useEffect(() => {
