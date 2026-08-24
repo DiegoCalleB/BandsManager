@@ -426,9 +426,8 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </section>
         )}
 
-        {/* BAND PHOTOS & GALLERY - carrete horizontal con scroll-snap nativo (swipe en móvil,
-            arrastre/rueda en escritorio) en vez de una rejilla estática. Sin librería nueva. */}
-        {((config.bandPhotos && config.bandPhotos.length > 0) || displayLogo) && (
+        {/* BAND PHOTOS & GALLERY - solo si hay fotos reales de banda (no solo logo) */}
+        {(config.bandPhotos && config.bandPhotos.length > 0) && (
           <section className="mb-16 space-y-6 print:mb-8">
             <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
               {t('seccionGaleria')}
@@ -438,7 +437,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 ref={galeriaScrollRef}
                 className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
               >
-                {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
+                {config.bandPhotos.filter(Boolean).map((photoUrl, idx) => (
                   <div key={idx} className="group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
                     <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
@@ -452,7 +451,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </div>
               {/* Print: la galería sí se imprime, pero como cuadrícula normal (el scroll no existe en papel). */}
               <div className="hidden print:grid print:grid-cols-2 print:gap-4">
-                {(config.bandPhotos && config.bandPhotos.length > 0 ? config.bandPhotos : [displayLogo]).filter(Boolean).map((photoUrl, idx) => (
+                {config.bandPhotos.filter(Boolean).map((photoUrl, idx) => (
                   <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-xl border border-slate-800" />
                 ))}
               </div>
