@@ -159,6 +159,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   const [copiedBizum, setCopiedBizum] = useState(false);
   const [miembros, setMiembros] = useState<BandMember[]>([]);
   const [upcomingConcerts, setUpcomingConcerts] = useState<Concert[]>([]);
+  const [showAllConcerts, setShowAllConcerts] = useState(false);
   const [showOptionalFields, setShowOptionalFields] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
@@ -1240,8 +1241,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     {upcomingConcerts.length} {upcomingConcerts.length === 1 ? 'fecha' : 'fechas'}
                   </span>
                 </div>
-                <div className="space-y-1.5">
-                  {upcomingConcerts.slice(0, 3).map(c => (
+                <div className={`space-y-1.5 ${showAllConcerts ? 'max-h-64 overflow-y-auto pr-0.5' : ''}`}>
+                  {(showAllConcerts ? upcomingConcerts : upcomingConcerts.slice(0, 3)).map(c => (
                     <div key={c.id} className="p-2.5 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between text-xs font-mono">
                       <div className="min-w-0 pr-2">
                         <p className="font-bold text-white truncate">{c.sala}</p>
@@ -1255,6 +1256,19 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                     </div>
                   ))}
                 </div>
+                {upcomingConcerts.length > 3 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllConcerts(v => !v)}
+                    className="w-full flex items-center justify-center gap-1 text-[11px] font-mono font-bold text-amber-400/90 hover:text-amber-300 transition-colors pt-0.5"
+                  >
+                    {showAllConcerts ? (
+                      <>Ver menos <ChevronUp className="w-3.5 h-3.5" /></>
+                    ) : (
+                      <>Ver todas ({upcomingConcerts.length}) <ChevronDown className="w-3.5 h-3.5" /></>
+                    )}
+                  </button>
+                )}
               </div>
             )}
 

@@ -470,7 +470,7 @@ router.get("/public/epk", async (req, res) => {
       logoUrl,
       epkConfig: cleanEpkConfig,
       highlightedSongs,
-      upcomingConcerts: upcomingConcerts.slice(0, 5),
+      upcomingConcerts,
       totalConcertsCount: concerts.length
     });
   } catch (err: any) {
