@@ -17,6 +17,23 @@ export function isFanFormLanguage(value: string | null | undefined): value is Fa
   return !!value && FAN_FORM_LANGUAGES.some(l => l.code === value);
 }
 
+/**
+ * Qué idiomas se le ofrecen al fan en el selector, a partir del idioma del concierto (el que
+ * trae el QR generado para ese show). No se enseñan los 4 siempre: un fan checo que ve "Čeština"
+ * entre solo 2-3 banderas siente que la landing está pensada para él; entre 4 banderas de medio
+ * mundo es solo una web más con selector de idioma.
+ *
+ * - Concierto en es/en: esos dos bastan, no hace falta añadir nada.
+ * - Cualquier otro idioma (it, cs...): va primero el suyo, y detrás inglés y español, que son
+ *   los dos que un músico o programador de fuera de España necesita para poder escribiros.
+ */
+export function idiomasDisponiblesParaConcierto(idiomaConcierto: FanFormLanguage): FanFormLanguage[] {
+  if (idiomaConcierto === 'es' || idiomaConcierto === 'en') {
+    return ['es', 'en'];
+  }
+  return [idiomaConcierto, 'en', 'es'];
+}
+
 type FanFormDict = {
   officialChannel: string;
   joinTitle: string; // {bandName}
