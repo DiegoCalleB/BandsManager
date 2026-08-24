@@ -216,6 +216,7 @@ export interface BandMember {
   rol: string;
   fotoUrl?: string;
   bio?: string;
+  instagram?: string;
 }
 
 // Vídeo de directo. Es el material que más pesa en la decisión de contratar, así que el EPK
@@ -301,6 +302,29 @@ export interface EPKConfig {
   ciudadesConfig?: string[];
   firmaEmail?: EmailSignatureConfig;
   traducciones?: EPKTranslations;
+  // Cifras clave / social proof (oyentes, directos, comunidad, ciudades) del EPK público.
+  // Deshabilitado por defecto: son cifras que la banda tiene que rellenar con datos reales
+  // propios, nunca un número inventado por defecto.
+  cifrasClave?: {
+    habilitado?: boolean;
+    oyentes?: string;
+    directos?: string;
+    comunidad?: string;
+    ciudades?: string;
+  };
+  // Citas de prensa / reseñas destacadas del EPK público. Deshabilitado por defecto y sin citas
+  // de ejemplo: antes venían 3 citas fijas atribuidas a medios reales (MondoSonoro, Radio 3,
+  // RockZone) que ninguna banda había dicho ni aprobado.
+  resenasPrensa?: {
+    habilitado?: boolean;
+    citas?: PressQuote[];
+  };
+}
+
+export interface PressQuote {
+  id: string;
+  texto: string;
+  medio: string;
 }
 
 // Versiones en otros idiomas del contenido que escribe la banda, para el EPK público

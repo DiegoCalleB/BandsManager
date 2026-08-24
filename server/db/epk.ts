@@ -158,7 +158,10 @@ export async function dbGetEpkConfig(bandId: string) {
     donacionRevolut: resolvedDonacionRevolut,
     ciudadesConfig: data.ciudades_config || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
     firmaEmail: mergedFirma,
-    traducciones: data.traducciones || {}
+    traducciones: data.traducciones || {},
+    audioPreview: data.audio_preview || {},
+    cifrasClave: data.cifras_clave || {},
+    resenasPrensa: data.resenas_prensa || {}
   };
 }
 
@@ -230,7 +233,10 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     donacion_revolut: mergedRevolut,
     ciudades_config: (config.ciudadesConfig !== undefined ? config.ciudadesConfig : (config.ciudades_config !== undefined ? config.ciudades_config : existing?.ciudadesConfig)) || (isBakandeya ? BAKANDEYA_DEFAULT_EPK.ciudades_config : []),
     firma_email: mergedFirma,
-    traducciones: mergedTraducciones
+    traducciones: mergedTraducciones,
+    audio_preview: (config.audioPreview !== undefined ? config.audioPreview : (config.audio_preview !== undefined ? config.audio_preview : existing?.audioPreview)) || {},
+    cifras_clave: (config.cifrasClave !== undefined ? config.cifrasClave : (config.cifras_clave !== undefined ? config.cifras_clave : existing?.cifrasClave)) || {},
+    resenas_prensa: (config.resenasPrensa !== undefined ? config.resenasPrensa : (config.resenas_prensa !== undefined ? config.resenas_prensa : existing?.resenasPrensa)) || {}
   };
 
   let data: any = null;

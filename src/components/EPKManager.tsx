@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { 
+import {
   FileText, Sparkles, Copy, Check, QrCode, ExternalLink, Printer,
   Upload, Save, Globe, Mail, Phone, Music, Image as ImageIcon, CheckCircle2,
-  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart, Eye, Lock as LockIcon
+  FileDown, Trash2, Loader2, Bot, Info, Download, AtSign, Share2, AlertCircle, Languages, Heart, Eye, Lock as LockIcon,
+  BarChart3, Quote, Plus, Instagram
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
@@ -1292,7 +1293,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                     className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none font-mono"
                   />
                   <p className="text-[10px] text-slate-500">
-                    Si dejas la URL vacía, se usará una demo de muestra en directo con metales y ritmo ska-mestizaje.
+                    Si dejas la URL vacía, se usará un audio de muestra genérico mientras no subas el vuestro.
                   </p>
                 </div>
               </div>
@@ -1327,6 +1328,142 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 )}
               </div>
             </div>
+          </div>
+
+          {/* CIFRAS CLAVE / SOCIAL PROOF */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" /> Cifras Clave (Social Proof)
+              </h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+                Desactivado por defecto
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              Bloque de 4 cifras destacadas (oyentes, directos, comunidad, ciudades) al principio del dossier público. Rellénalas con datos reales vuestros: si dejas alguna vacía, esa cifra simplemente no se muestra.
+            </p>
+
+            <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+              <div className="space-y-0.5 pr-3">
+                <span className="text-xs font-bold text-white">Mostrar cifras clave en el dossier público</span>
+                <p className="text-[10px] text-slate-400">Si está desactivado (por defecto), este bloque no aparece en el enlace público aunque haya cifras guardadas.</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={config.cifrasClave?.habilitado ?? false}
+                onChange={e => setConfig({
+                  ...config,
+                  cifrasClave: { ...(config.cifrasClave || {}), habilitado: e.target.checked }
+                })}
+                className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {([
+                { key: 'oyentes', label: 'Oyentes & Streams', placeholder: 'Ej: 12.400' },
+                { key: 'directos', label: 'Directos & Shows', placeholder: 'Ej: 18' },
+                { key: 'comunidad', label: 'Comunidad & Fans', placeholder: 'Ej: 2.100' },
+                { key: 'ciudades', label: 'Ciudades en Gira', placeholder: 'Ej: 6' }
+              ] as const).map(campo => (
+                <div key={campo.key} className="space-y-1">
+                  <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">{campo.label}</label>
+                  <input
+                    type="text"
+                    value={config.cifrasClave?.[campo.key] || ''}
+                    onChange={e => setConfig({
+                      ...config,
+                      cifrasClave: { ...(config.cifrasClave || {}), [campo.key]: e.target.value }
+                    })}
+                    placeholder={campo.placeholder}
+                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* RESEÑAS DE PRENSA */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 lg:col-span-2">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+              <h3 className="text-lg font-bold text-amber-400 flex items-center gap-2">
+                <Quote className="w-5 h-5" /> Reseñas de Prensa
+              </h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full">
+                Desactivado por defecto
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              Citas reales de medios, radios o críticos que hayan hablado de la banda. Añade solo reseñas que os hayan hecho de verdad; el bloque no se muestra hasta que lo actives y tenga al menos una cita.
+            </p>
+
+            <div className="flex items-center justify-between p-3 bg-slate-950 border border-slate-800 rounded-xl">
+              <div className="space-y-0.5 pr-3">
+                <span className="text-xs font-bold text-white">Mostrar reseñas de prensa en el dossier público</span>
+                <p className="text-[10px] text-slate-400">Si está desactivado (por defecto), este bloque no aparece en el enlace público aunque haya citas guardadas.</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={config.resenasPrensa?.habilitado ?? false}
+                onChange={e => setConfig({
+                  ...config,
+                  resenasPrensa: { ...(config.resenasPrensa || {}), habilitado: e.target.checked }
+                })}
+                className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
+              />
+            </div>
+
+            <div className="space-y-2.5">
+              {(config.resenasPrensa?.citas || []).map((cita, idx) => (
+                <div key={cita.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3.5 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <textarea
+                      rows={2}
+                      value={cita.texto}
+                      onChange={e => {
+                        const nuevas = [...(config.resenasPrensa?.citas || [])];
+                        nuevas[idx] = { ...nuevas[idx], texto: e.target.value };
+                        setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
+                      }}
+                      placeholder="Texto exacto de la reseña o cita..."
+                      className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-amber-500 outline-none leading-relaxed resize-none"
+                    />
+                    <button
+                      onClick={() => {
+                        const nuevas = (config.resenasPrensa?.citas || []).filter(c => c.id !== cita.id);
+                        setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
+                      }}
+                      className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 transition"
+                      title="Quitar reseña"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={cita.medio}
+                    onChange={e => {
+                      const nuevas = [...(config.resenasPrensa?.citas || [])];
+                      nuevas[idx] = { ...nuevas[idx], medio: e.target.value };
+                      setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
+                    }}
+                    placeholder="Medio / firma (Ej: Radio Local FM, blog especializado...)"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-400/90 focus:border-amber-500 outline-none"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                const nuevas = [...(config.resenasPrensa?.citas || []), { id: `cita-${Date.now()}`, texto: '', medio: '' }];
+                setConfig({ ...config, resenasPrensa: { ...(config.resenasPrensa || {}), citas: nuevas } });
+              }}
+              className="w-full py-2 rounded-xl border border-dashed border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-500/50 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+            >
+              <Plus className="w-4 h-4" /> Añadir reseña
+            </button>
           </div>
 
           {/* APOYO ECONÓMICO / DONACIONES CON REVOLUT & PAYPAL */}
@@ -1899,6 +2036,21 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                       placeholder="Trayectoria o descripción: giras, formación musical, otros proyectos o rol en directo..."
                       className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-amber-500 outline-none placeholder:text-slate-600 leading-relaxed"
                     />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                      Instagram personal (opcional)
+                    </label>
+                    <div className="relative">
+                      <Instagram className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={m.instagram || ''}
+                        onChange={e => editarMiembro(m.id, { instagram: e.target.value })}
+                        placeholder="@usuario o https://instagram.com/usuario"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:border-amber-500 outline-none"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

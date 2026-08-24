@@ -103,10 +103,6 @@ export interface EpkDict {
   tituloSpotify: string;
 
   // Rider
-  seccionRider: string;
-  descargarRider: string;
-  riderCopiado: string;
-  copiarTexto: string;
 
   // Fechas y pie
   seccionFechas: string;
@@ -126,12 +122,6 @@ export interface EpkDict {
   // Citas de Prensa & Reseñas
   seccionPrensa: string;
   prensaSubtitulo: string;
-  prensaCita1Texto: string;
-  prensaCita1Medio: string;
-  prensaCita2Texto: string;
-  prensaCita2Medio: string;
-  prensaCita3Texto: string;
-  prensaCita3Medio: string;
 }
 
 const es: EpkDict = {
@@ -186,10 +176,6 @@ const es: EpkDict = {
   seccionEscucha: 'Escúchanos y Míranos en Directo',
   tituloSpotify: '{bandName} en Spotify',
 
-  seccionRider: 'Rider Técnico',
-  descargarRider: 'Descargar PDF Rider',
-  riderCopiado: '¡Rider técnico copiado al portapapeles!',
-  copiarTexto: 'Copiar Texto',
 
   seccionFechas: 'Próximas Fechas de Gira',
   descargarDossier: 'Descargar Dossier en PDF',
@@ -206,12 +192,6 @@ const es: EpkDict = {
 
   seccionPrensa: 'Prensa & Reseñas Destacadas',
   prensaSubtitulo: 'Lo que dicen los medios especializados y la crítica de nuestros directos:',
-  prensaCita1Texto: 'Una de las propuestas más explosivas y festivas del directo actual. Ritmo demoledor y complicidad absoluta con la pista.',
-  prensaCita1Medio: 'MondoSonoro',
-  prensaCita2Texto: 'Mestizaje, ska-rock y potencia escénica que levanta a cualquier festival desde el primer acorde.',
-  prensaCita2Medio: 'Radio 3',
-  prensaCita3Texto: 'Calidad técnica, vientos afilados y un directo que no da tregua.',
-  prensaCita3Medio: 'RockZone',
 };
 
 const en: EpkDict = {
@@ -266,10 +246,6 @@ const en: EpkDict = {
   seccionEscucha: 'Listen & Watch Us Live',
   tituloSpotify: '{bandName} on Spotify',
 
-  seccionRider: 'Technical Rider',
-  descargarRider: 'Download Rider PDF',
-  riderCopiado: 'Technical rider copied to clipboard!',
-  copiarTexto: 'Copy Text',
 
   seccionFechas: 'Upcoming Tour Dates',
   descargarDossier: 'Download Press Kit PDF',
@@ -286,12 +262,6 @@ const en: EpkDict = {
 
   seccionPrensa: 'Press & Media Reviews',
   prensaSubtitulo: 'What music magazines and critics say about our live concerts:',
-  prensaCita1Texto: 'One of the most explosive and high-energy live acts today. Unstoppable groove and crowd connection.',
-  prensaCita1Medio: 'MondoSonoro',
-  prensaCita2Texto: 'Ska-rock, mestizaje and stage power that lifts festival crowds from the very first chord.',
-  prensaCita2Medio: 'Radio 3',
-  prensaCita3Texto: 'Technical mastery, sharp horns, and a live performance with zero downtime.',
-  prensaCita3Medio: 'RockZone',
 };
 
 const it: EpkDict = {
@@ -346,10 +316,6 @@ const it: EpkDict = {
   seccionEscucha: 'Ascoltaci e Guardaci dal Vivo',
   tituloSpotify: '{bandName} su Spotify',
 
-  seccionRider: 'Rider Tecnico',
-  descargarRider: 'Scarica PDF Rider',
-  riderCopiado: 'Rider tecnico copiato negli appunti!',
-  copiarTexto: 'Copia Testo',
 
   seccionFechas: 'Prossime Date del Tour',
   descargarDossier: 'Scarica Press Kit in PDF',
@@ -366,12 +332,6 @@ const it: EpkDict = {
 
   seccionPrensa: 'Rassegna Stampa & Recensioni',
   prensaSubtitulo: 'Cosa dicono i media specializzati e la critica sui nostri concerti:',
-  prensaCita1Texto: 'Una delle proposte più esplosive ed energiche della scena live attuale. Ritmo incalzante e grande empatia col pubblico.',
-  prensaCita1Medio: 'MondoSonoro',
-  prensaCita2Texto: 'Mestizaje, ska-rock e potenza scenica che conquista qualsiasi festival fin dal primo accordo.',
-  prensaCita2Medio: 'Radio 3',
-  prensaCita3Texto: 'Qualità tecnica, fiati travolgenti e uno show dal vivo implacabile.',
-  prensaCita3Medio: 'RockZone',
 };
 
 const cs: EpkDict = {
@@ -426,10 +386,6 @@ const cs: EpkDict = {
   seccionEscucha: 'Poslechněte si a sledujte nás naživo',
   tituloSpotify: '{bandName} na Spotify',
 
-  seccionRider: 'Technický rider',
-  descargarRider: 'Stáhnout rider v PDF',
-  riderCopiado: 'Technický rider zkopírován do schránky!',
-  copiarTexto: 'Kopírovat text',
 
   seccionFechas: 'Nadcházející termíny turné',
   descargarDossier: 'Stáhnout press kit v PDF',
@@ -446,12 +402,6 @@ const cs: EpkDict = {
 
   seccionPrensa: 'Ohlasy v tisku a recenze',
   prensaSubtitulo: 'Co o našich koncertech píší specializovaná hudební média:',
-  prensaCita1Texto: 'Jeden z nejvýbušnějších a nejenergičtějších koncertních projektů současnosti. Neúnavný rytmus a skvělá atmosféra.',
-  prensaCita1Medio: 'MondoSonoro',
-  prensaCita2Texto: 'Mestizaje, ska-rock a pódiová síla, která rozhýbe každý festival od prvního tónu.',
-  prensaCita2Medio: 'Radio 3',
-  prensaCita3Texto: 'Vynikající muzikantská úroveň, úderné dechy a energická show bez kompromisů.',
-  prensaCita3Medio: 'RockZone',
 };
 
 export const EPK_TRANSLATIONS: Record<EpkLanguage, EpkDict> = { es, en, it, cs };
