@@ -305,6 +305,14 @@ export function BulkAlbumAudioUploaderModal({
       return;
     }
 
+    if (!bandId) {
+      setFeedbackMsg({
+        type: 'error',
+        text: 'No hay ninguna banda activa para subir este álbum.'
+      });
+      return;
+    }
+
     if (!isCreatingBrandNewAlbum) {
       const validMatches = items.filter((it) => it.matchedSongId !== null);
       if (validMatches.length === 0) {
@@ -331,7 +339,7 @@ export function BulkAlbumAudioUploaderModal({
     if (coverFile) {
       try {
         uploadedCoverUrl = await uploadFileToServer(coverFile, {
-          bandId: bandId || 'bakandeya',
+          bandId: bandId,
           category: 'portada',
           folder: `portadas/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}`
         });
@@ -362,7 +370,7 @@ export function BulkAlbumAudioUploaderModal({
       try {
         // Upload audio file to backend / Supabase Storage
         const uploadedUrl = await uploadFileToServer(item.file, {
-          bandId: bandId || 'bakandeya',
+          bandId: bandId,
           category: 'audio',
           folder: `discografia/${finalAlbumTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}`
         });
@@ -375,7 +383,7 @@ export function BulkAlbumAudioUploaderModal({
           const newSong: Song = {
             id: `song_bulk_${Date.now()}_${i}_${Math.random().toString(36).substring(2, 6)}`,
             titulo: item.title || `Pista ${i + 1}`,
-            artista: bandId || 'Bakandeya',
+            artista: bandId,
             album: finalAlbumTitle,
             albumDisco: finalAlbumTitle,
             ordenAlbum: item.trackNumber || i + 1,

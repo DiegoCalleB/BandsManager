@@ -147,14 +147,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     metodoPorDefecto?: 'revolut' | 'paypal';
     titulo?: string;
     descripcion?: string;
-  } | null>({
-    habilitado: true,
-    revolutTag: 'bakandeya',
-    revolutUrl: 'https://revolut.me/bakandeya',
-    paypalUser: 'bakandeya',
-    paypalUrl: 'https://paypal.me/bakandeya',
-    metodoPorDefecto: 'revolut'
-  });
+  } | null>(null);
+  // Antes, el estado inicial (antes de que llegue la config real de la banda) eran directamente
+  // los datos reales de donación de Bakandeya (Revolut/PayPal de Diego): mientras cargaba la
+  // página pública de fans de CUALQUIER banda, el botón de "Donar" apuntaba brevemente al dinero
+  // del fundador. Sin config confirmada, no se muestra ningún botón de donación (ver el guard
+  // `!revolutUrl && !paypalUrl` más abajo).
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal'>('revolut');
   const [imgError, setImgError] = useState(false);
   const [clickCounts, setClickCounts] = useState<Record<string, number>>({});
@@ -229,8 +227,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
     } catch {}
 
-    // Priority: 1. URL query param, 2. Props (if explicitly passed and differs from generic), 3. Logged-in stored user, 4. Fallback
-    const targetBandId = (queryBand || initialBandId || storedBandId || 'band-bakandeya').toLowerCase();
+    // Priority: 1. URL query param, 2. Props (if explicitly passed and differs from generic), 3. Logged-in stored user.
+    // Antes, sin ninguna de las tres, la página pública de fans se identificaba directamente como
+    // Bakandeya (nombre, logo, redes y contacto real de Diego) para cualquier visitante sin
+    // contexto de banda. Sin banda identificada, no hay banda que mostrar.
+    const targetBandId = (queryBand || initialBandId || storedBandId || '').toLowerCase();
     const cleanId = targetBandId.replace(/^(band|reg)-/, '');
     setResolvedBandId(targetBandId);
 
@@ -255,9 +256,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     } else if (storedBandName && cleanId !== 'bakandeya') {
       setBandName(storedBandName);
       if (storedBandLogo) setLogoUrl(storedBandLogo);
-    } else {
+    } else if (cleanId) {
       const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       setBandName(formatted);
+      setLogoUrl(null);
+    } else {
+      setBandName('');
       setLogoUrl(null);
     }
 

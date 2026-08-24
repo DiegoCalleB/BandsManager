@@ -90,7 +90,7 @@ router.post("/import-discography", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "No se han seleccionado álbumes para importar." });
     }
 
-    const userBandId = (req as any).user?.band_id || "bakandeya";
+    const userBandId = (req as any).user?.band_id;
     const result = await bulkImportSpotifyDiscographyToBand(
       userBandId,
       artist,

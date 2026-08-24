@@ -47,7 +47,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
     let isMounted = true;
     const checkSchedule = async () => {
       try {
-        const bandId = currentUser?.band_id || 'bakandeya';
+        const bandId = currentUser?.band_id;
+        if (!bandId) { setHasScheduleConfigured(false); return; }
         const schedule = await api.getBandSchedule(bandId);
         if (isMounted && schedule) {
           const hasHours = (Array.isArray(schedule.horas_lector) && schedule.horas_lector.length > 0) ||
@@ -66,7 +67,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
     let isMounted = true;
     const checkEmailAccount = async () => {
       try {
-        const bandId = currentUser?.band_id || 'bakandeya';
+        const bandId = currentUser?.band_id;
+        if (!bandId) { setHasEmailAccountConnected(false); return; }
         const account = await api.getBandEmailAccount(bandId);
         if (isMounted) setHasEmailAccountConnected(Boolean(account?.connected));
       } catch {

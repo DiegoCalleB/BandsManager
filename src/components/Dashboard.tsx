@@ -305,8 +305,8 @@ export default function Dashboard({
  const now = new Date();
  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
- const activeBandId = currentBandId || currentUser?.band_id || 'band-bakandeya';
- const activeBandName = bandName || currentUser?.bandName || 'Bakandeya';
+ const activeBandId = currentBandId || currentUser?.band_id || '';
+ const activeBandName = bandName || currentUser?.bandName || 'Tu Banda';
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter(c => {
@@ -400,57 +400,10 @@ export default function Dashboard({
  });
  });
 
- upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
-
- // Fallback defaults if no rehearsals/concerts created yet
- if (upcomingEvents.length === 0 && (!currentUser || currentUser.band_id === 'band-bakandeya')) {
- upcomingEvents.push(
- {
- id: 'def-1',
- type: 'concierto',
- title: 'Concierto: Gira Bakandeya 2026',
- dateStr: '2026-08-15',
- day: '15',
- month: 'AGO',
- location: 'Sala Apolo (Barcelona)',
- locationQuery: 'Sala Apolo, Carrer Nou de la Rambla 113, Barcelona',
- address: 'Carrer Nou de la Rambla 113, Barcelona',
- badge: 'Confirmado',
- bandName: activeBandName,
- details: 'Caché: 1.800€ • Aforo: 900 pax • Prueba de sonido: 18:00h'
- },
- {
- id: 'def-2',
- type: 'ensayo',
- title: 'Ensayo General con Loops y Violín',
- dateStr: '2026-08-20',
- day: '20',
- month: 'AGO',
- location: 'Rock Palace (Madrid)',
- locationQuery: 'Rock Palace, Calle Vara de Rey 6, Madrid',
- address: 'Calle Vara de Rey 6, Madrid',
- badge: 'Programado',
- bandName: activeBandName,
- details: 'Horario: 17:00 a 21:00 • Preparación de repertorio y beatbox'
- },
- {
- id: 'def-3',
- type: 'concierto',
- title: 'Concierto: Festival Mestizaje del Sur',
- dateStr: '2026-09-05',
- day: '05',
- month: 'SEP',
- location: 'Anfiteatro de Granada',
- locationQuery: 'Anfiteatro de Granada, Paseo del Salón',
- address: 'Paseo del Salón, Granada',
- badge: 'En Negociación',
- bandName: activeBandName,
- details: 'Caché: 3.500€ • Aforo: 1.200 pax • Escenario Principal'
- }
- );
- }
-
- // Sort upcoming events by date
+ // Antes, sin conciertos/ensayos reales todavía, se rellenaba la agenda con tres eventos
+ // inventados (un concierto en Sala Apolo con caché de 1.800€, un ensayo y un festival con
+ // caché de 3.500€) copiados de la banda insignia. Una agenda vacía es simplemente una agenda
+ // vacía: no se inventan conciertos que no existen.
  upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
 
  // Calculate urgent leads that need response or approval
@@ -1478,7 +1431,7 @@ export default function Dashboard({
    isOpen={isAutonomyModalOpen}
    onClose={() => setIsAutonomyModalOpen(false)}
    bandName={activeBandName}
-   bandId={currentBandId || currentUser?.band_id || 'band-bakandeya'}
+   bandId={currentBandId || currentUser?.band_id || ''}
    currentUser={currentUser}
    isStitchLight={isStitchLight}
    onOpenTemplatesSection={() => {

@@ -43,12 +43,13 @@ export const BandScheduleConfig: React.FC<BandScheduleConfigProps> = ({ bandId, 
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   useEffect(() => {
+    if (!bandId) return;
     let isMounted = true;
     const fetchSchedule = async () => {
       setLoading(true);
       setFeedback(null);
       try {
-        const data: BandSchedule = await api.getBandSchedule(bandId || 'bakandeya');
+        const data: BandSchedule = await api.getBandSchedule(bandId);
         if (isMounted && data) {
           setTimezone(data.timezone || 'Europe/Madrid');
           setHorasLector(Array.isArray(data.horas_lector) ? data.horas_lector.map((h) => Number(h)) : [8, 12, 16, 20]);
@@ -124,6 +125,10 @@ export const BandScheduleConfig: React.FC<BandScheduleConfigProps> = ({ bandId, 
   };
 
   const handleSave = async () => {
+    if (!bandId) {
+      setFeedback({ type: 'error', message: 'No hay ninguna banda activa para guardar los horarios.' });
+      return;
+    }
     setSaving(true);
     setFeedback(null);
     try {
@@ -134,7 +139,7 @@ export const BandScheduleConfig: React.FC<BandScheduleConfigProps> = ({ bandId, 
       const payloadDiasLector = diasLector.map((d) => Math.floor(Number(d))).filter((d) => !isNaN(d) && d >= 1 && d <= 7);
 
       await api.saveBandSchedule({
-        band_id: bandId || 'bakandeya',
+        band_id: bandId,
         timezone,
         horas_lector: payloadLector,
         horas_enviador: payloadEnviador,

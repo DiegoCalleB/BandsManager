@@ -53,8 +53,12 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
           fetchState(retryCount + 1);
         }, 1500);
       } else {
-        console.warn('Server offline or starting, using cached state.');
-        setSyncStatus('synced');
+        // Antes se marcaba como 'synced' tras agotar los reintentos, así que el usuario veía el
+        // indicador de "sincronizado" mientras en realidad no había datos reales cargados (solo
+        // los arrays vacíos del useState inicial, no hay caché real que reutilizar). Mejor
+        // mostrar el estado de error real.
+        console.warn('No se pudo conectar con el servidor tras varios intentos.');
+        setSyncStatus('error');
       }
     } finally {
       setIsLoading(false);
@@ -87,10 +91,15 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   // REST API UPDATE OPERATIONS
   const handleUpdateEpkConfig = async (newConfig: any) => {
     setEpkConfig(prev => ({ ...prev, ...newConfig }));
+    const resolvedBandId = newConfig?.bandId || bandId;
+    if (!resolvedBandId) {
+      console.error('Error updating EPK config: no hay banda activa.');
+      return;
+    }
     try {
       const payload = {
         ...newConfig,
-        bandId: newConfig?.bandId || bandId || 'band-bakandeya'
+        bandId: resolvedBandId
       };
       await api.updateEpkConfig(payload);
     } catch (e) {

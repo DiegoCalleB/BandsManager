@@ -12,7 +12,7 @@ const provider = new GoogleAuthProvider();
 provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
 provider.addScope('https://www.googleapis.com/auth/gmail.compose');
 provider.addScope('https://www.googleapis.com/auth/gmail.send');
-// Force prompt select account to let user choose diegolimado@gmail.com easily
+// Force prompt select account so the user can pick the right Google account easily
 provider.setCustomParameters({ prompt: 'select_account' });
 
 let isSigningIn = false;

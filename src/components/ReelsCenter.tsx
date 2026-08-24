@@ -19,6 +19,8 @@ interface ReelsCenterProps {
  onAddMetric?: (metric: SocialMetric) => Promise<void>;
  onUpdateMetric?: (id: string, updatedFields: Partial<SocialMetric>) => Promise<void>;
  onDeleteMetric?: (id: string) => Promise<void>;
+ bandName?: string;
+ instagramHandle?: string;
 }
 
 import { 
@@ -67,25 +69,34 @@ function formatTime(seconds: number): string {
  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-export default function ReelsCenter({ 
- colors, 
- posts = [], 
- onAddPost, 
+export default function ReelsCenter({
+ colors,
+ posts = [],
+ onAddPost,
  onUpdatePost,
  metrics = [],
  onAddMetric,
  onUpdateMetric,
- onDeleteMetric
+ onDeleteMetric,
+ bandName,
+ instagramHandle
 }: ReelsCenterProps) {
   // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
   const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
 
- // Bakandeya Tone Analysis State
+ // Band Tone Analysis State
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
  const [bakandeyaToneData, setBakandeyaToneData] = useState<ToneAnalysisData | null>(null);
  const [isAnalyzingBakandeyaTone, setIsAnalyzingBakandeyaTone] = useState(false);
 
+ // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
+ // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
+ // Instagram del fundador en vez de la suya propia.
  const handleAnalyzeBakandeyaTone = async () => {
+   if (!instagramHandle) {
+     alert('Configura el Instagram de tu banda en el EPK antes de analizar el tono de voz.');
+     return;
+   }
    setIsAnalyzingBakandeyaTone(true);
    setIsBakandeyaToneModalOpen(true);
    try {
@@ -93,10 +104,10 @@ export default function ReelsCenter({
        method: 'POST',
        headers: { 'Content-Type': 'application/json' },
        body: JSON.stringify({
-         nombre_entidad: 'Bakandeya',
-         instagram: 'bakandeya',
-         estilo_musical: 'Balkan Ska Reggae',
-         localizacion: 'Madrid / Sevilla',
+         nombre_entidad: bandName || 'Tu Banda',
+         instagram: instagramHandle,
+         estilo_musical: '',
+         localizacion: '',
          tipo: 'Banda / Artista Emisora',
          is_sender: true
        })
@@ -3166,15 +3177,15 @@ export default function ReelsCenter({
  </div>
  )}
 
-  {/* Modal de Tono de Expresión Bakandeya */}
+  {/* Modal de Tono de Expresión de la banda activa */}
   <BandToneModal
     isOpen={isBakandeyaToneModalOpen}
     onClose={() => setIsBakandeyaToneModalOpen(false)}
     band={{
-      id: 'bakandeya',
-      nombre_banda: 'Bakandeya',
-      estilo_musical: 'Balkan Ska Reggae',
-      localizacion: 'Madrid / Sevilla',
+      id: instagramHandle || '',
+      nombre_banda: bandName || 'Tu Banda',
+      estilo_musical: '',
+      localizacion: '',
       estado_relacion: 'colegas_aliados',
       ultimo_contacto: 'Hoy'
     }}

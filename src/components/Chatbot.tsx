@@ -65,7 +65,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
   const isAdmin = userRole === 'admin' || userRole === 'leader' || (currentUser?.role as string) === 'admin' || currentUser?.role === 'leader';
   const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
   const bandDisplayName = activeBandName || currentUser?.bandName || 'vuestra banda';
-  const effectiveBandId = currentUser?.band_id || (currentUser as any)?.bandId || 'band-bakandeya';
+  const effectiveBandId = currentUser?.band_id || (currentUser as any)?.bandId;
   const cleanUserName = (() => {
     const rawName = currentUser?.name || currentUser?.username || '';
     if (!rawName) return 'equipo';
@@ -598,7 +598,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    lead: targetLead,
    epkConfig,
    senderName: action.senderName || cleanUserName,
-   bandName: bandDisplayName
+   bandName: bandDisplayName,
+   bandId: effectiveBandId
  });
  if (isDraftOnly) {
    const res = await createGmailDraft(recipientEmail, emailSubject, formatted.html, token, true);
@@ -634,8 +635,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
             agente: "redactor",
             motor: "gmail_draft_api",
             disparado_por_tipo: "chatbot",
-            usuario_id: currentUser?.id || "user-diego",
-            usuario_email: currentUser?.email || "diego.delacalleb@gmail.com",
+            // Antes, sin usuario en sesión, el log de auditoría atribuía la acción al fundador
+            // del proyecto (Diego) por defecto, lo cual es falso y confunde cualquier revisión.
+            usuario_id: currentUser?.id || null,
+            usuario_email: currentUser?.email || null,
             estado: gmailId ? "success" : "warning",
             mensaje: `Borrador generado en Gmail para "${targetLead.nombre_sala}" (${recipientEmail}) en modo Solo Borradores.`,
             leads_afectados: [{
@@ -1025,7 +1028,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    lead: targetLead,
    epkConfig,
    senderName: action.senderName || cleanUserName,
-   bandName: bandDisplayName
+   bandName: bandDisplayName,
+   bandId: effectiveBandId
  });
 
  let gmailDraftId = '';
@@ -1067,8 +1071,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
             agente: "redactor",
             motor: "gmail_draft_api",
             disparado_por_tipo: "chatbot",
-            usuario_id: currentUser?.id || "user-diego",
-            usuario_email: currentUser?.email || "diego.delacalleb@gmail.com",
+            // Antes, sin usuario en sesión, el log de auditoría atribuía la acción al fundador
+            // del proyecto (Diego) por defecto, lo cual es falso y confunde cualquier revisión.
+            usuario_id: currentUser?.id || null,
+            usuario_email: currentUser?.email || null,
             estado: gmailDraftId ? "success" : "warning",
             mensaje: `Borrador generado en Gmail para "${targetLead.nombre_sala}" (${targetLead.email_contacto || ""}).`,
             leads_afectados: [{
@@ -1126,7 +1132,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    lead: targetLead,
    epkConfig,
    senderName: action.senderName || cleanUserName,
-   bandName: bandDisplayName
+   bandName: bandDisplayName,
+   bandId: effectiveBandId
  });
  if (isDraftOnly) {
    const res = await createGmailDraft(recipientEmail, emailSubject, formatted.html, token, true);

@@ -21,8 +21,15 @@ import {
 // Run asynchronous migration check on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
 
+// Normaliza un band_id para comparar/ordenar (quita el prefijo band-/reg-). Se usa sobre datos
+// ya en memoria (listas de bandas disponibles, band_order), no como filtro de escritura en
+// Supabase. Antes, un bandId vacío devolvía 'bakandeya' en silencio, así que un registro legado
+// sin band_id podía terminar agrupado/ordenado como si fuera la banda insignia. Usamos un
+// centinela que no coincide con ningún band_id real en vez de fallar aquí, porque esta función
+// se llama en bucles .map()/.sort() sobre listas completas donde un solo registro corrupto no
+// debe tumbar el listado entero de bandas de un usuario.
 export function cleanBandId(bandId?: string): string {
-  if (!bandId) return 'bakandeya';
+  if (!bandId || typeof bandId !== 'string' || !bandId.trim()) return '__sin_banda__';
   return bandId.replace(/^(band|reg)-/, '');
 }
 
@@ -388,11 +395,13 @@ router.post("/auth/register", async (req, res) => {
 const handleGetRegisteredBands = async (req: any, res: any) => {
   try {
     const userBandId = req.user?.band_id ;
-    const isBakandeyaOrAdmin = userBandId === 'band-bakandeya' || userBandId === 'reg-bakandeya' || req.user?.role === 'admin';
+    // Antes, cualquier miembro (no solo admins) de la banda insignia veía la lista completa de
+    // TODAS las bandas registradas en la plataforma -de cualquier cliente-, no solo la suya.
+    const isAdmin = req.user?.role === 'admin';
 
     const bands = await dbGetRegisteredBands();
 
-    const filteredBands = isBakandeyaOrAdmin
+    const filteredBands = isAdmin
       ? bands
       : bands.filter((b: any) =>
           b.band_id === userBandId ||
@@ -410,11 +419,6 @@ const handleGetRegisteredBands = async (req: any, res: any) => {
 
 router.get("/registered-bands", requireAuth, handleGetRegisteredBands);
 router.get("/users/registered-bands", requireAuth, handleGetRegisteredBands);
-
-// Endpoint to force assign Bakandeya
-router.all("/sync-bakandeya", async (req, res) => {
-  res.json({ success: true, message: "Banda Bakandeya asignada y sincronizada en Supabase PostgreSQL." });
-});
 
 // Check invitation for activating added members
 // loginRateLimiter: es una ruta abierta que responde por email, o sea un comprobador de si un
@@ -642,27 +646,29 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
         console.warn("Notice: Supabase sync warning:", e);
       }
     } else {
-      // Regular Google Login: default to main or favorite band
+      // Regular Google Login: default to main or favorite band. Antes, sin ninguna banda propia
+      // todavía, se caía en 'band-bakandeya' en silencio.
       const preferredBandId =
         user.main_band_id ||
         (Array.isArray(user.band_order) && user.band_order.length > 0 ? user.band_order[0] : null) ||
-        user.band_id ||
-        'band-bakandeya';
+        user.band_id;
 
-      const normalizedBandId = preferredBandId.startsWith('band-') ? preferredBandId : (preferredBandId === 'bakandeya' ? 'band-bakandeya' : `band-${preferredBandId}`);
+      const normalizedBandId = preferredBandId
+        ? (preferredBandId.startsWith('band-') || preferredBandId.startsWith('reg-') ? preferredBandId : `band-${preferredBandId}`)
+        : undefined;
       user.band_id = normalizedBandId;
       if (!user.main_band_id) {
         user.main_band_id = normalizedBandId;
       }
 
-      const cleanPref = cleanBandId(normalizedBandId);
-      const bandInfo = (state.registeredBands || []).find((b: any) =>
+      const cleanPref = normalizedBandId ? cleanBandId(normalizedBandId) : undefined;
+      const bandInfo = !cleanPref ? undefined : ((state.registeredBands || []).find((b: any) =>
         b.band_id === user.band_id || b.id === user.band_id ||
         cleanBandId(b.band_id) === cleanPref || cleanBandId(b.id) === cleanPref
       ) || (state.bands || []).find((b: any) =>
         b.band_id === user.band_id || b.id === user.band_id ||
         cleanBandId(b.band_id) === cleanPref || cleanBandId(b.id) === cleanPref
-      );
+      ));
 
       if (bandInfo) {
         user.bandName = bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name || user.bandName;
@@ -814,24 +820,26 @@ router.post("/auth/login", loginRateLimiter, async (req, res) => {
     return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
   }
 
-  // Choose target user profile & default to main or favorite band
+  // Choose target user profile & default to main or favorite band. Antes, sin ninguna banda
+  // propia todavía, se caía en 'band-bakandeya' en silencio.
   const userMainBand =
     validUsers.find((u: any) => u.main_band_id)?.main_band_id ||
     validUsers[0]?.main_band_id ||
     (Array.isArray(validUsers[0]?.band_order) && validUsers[0].band_order.length > 0 ? validUsers[0].band_order[0] : null) ||
-    validUsers[0]?.band_id ||
-    'band-bakandeya';
+    validUsers[0]?.band_id;
 
   const preferredBandId = band_id || userMainBand;
-  const cleanPref = cleanBandId(preferredBandId);
+  const cleanPref = preferredBandId ? cleanBandId(preferredBandId) : undefined;
 
-  const foundMatching = validUsers.find((u: any) => u.band_id === preferredBandId || cleanBandId(u.band_id) === cleanPref);
+  const foundMatching = validUsers.find((u: any) => u.band_id === preferredBandId || (cleanPref && cleanBandId(u.band_id) === cleanPref));
   let selectedUser = foundMatching || validUsers[0];
 
   // Ensure active band on login is the preferred / favorite band
-  selectedUser.band_id = preferredBandId.startsWith('band-') ? preferredBandId : (preferredBandId === 'bakandeya' ? 'band-bakandeya' : `band-${preferredBandId}`);
-  if (!selectedUser.main_band_id) {
-    selectedUser.main_band_id = selectedUser.band_id;
+  if (preferredBandId) {
+    selectedUser.band_id = preferredBandId.startsWith('band-') || preferredBandId.startsWith('reg-') ? preferredBandId : `band-${preferredBandId}`;
+    if (!selectedUser.main_band_id) {
+      selectedUser.main_band_id = selectedUser.band_id;
+    }
   }
 
   // Look up band info for name and plan
@@ -1537,8 +1545,11 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
                 const chosen = remBands.find((b: any) => b.band_id === u.band_id) || remBands[0];
                 u.bandName = chosen.bandName || chosen.nombre_banda;
               } else {
-                u.band_id = 'band-bakandeya';
-                u.bandName = 'BAKANDEYA';
+                // Antes, un usuario que se quedaba sin bandas se reasignaba en silencio a la
+                // banda insignia. Sin bandas, se queda sin band_id: la app debe pedirle crear o
+                // unirse a una, no meterlo en la banda del fundador.
+                u.band_id = undefined;
+                u.bandName = undefined;
               }
             }
           }
@@ -1566,8 +1577,8 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
           const chosenBand = remainingBands.find((b: any) => b.band_id === user.band_id) || remainingBands[0];
           user.bandName = chosenBand.bandName || chosenBand.nombre_banda;
         } else {
-          user.band_id = 'band-bakandeya';
-          user.bandName = 'BAKANDEYA';
+          user.band_id = undefined;
+          user.bandName = undefined;
         }
       }
 
@@ -2011,8 +2022,8 @@ router.delete("/users/:id", requireAuth, requireLeader, async (req, res) => {
         const chosen = remainingBands.find((b: any) => b.band_id === targetUserObj.band_id) || remainingBands[0];
         targetUserObj.bandName = chosen.bandName || chosen.nombre_banda;
       } else {
-        targetUserObj.band_id = 'band-bakandeya';
-        targetUserObj.bandName = 'BAKANDEYA';
+        targetUserObj.band_id = undefined;
+        targetUserObj.bandName = undefined;
       }
     }
     try {

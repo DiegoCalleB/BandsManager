@@ -70,7 +70,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
   const [bandToDelete, setBandToDelete] = useState<{ id: string; name: string } | null>(null);
 
-  const mainBandId = currentUser?.main_band_id || currentUser?.band_id || 'band-bakandeya';
+  const mainBandId = currentUser?.main_band_id || currentUser?.band_id || '';
   const [localMainBandId, setLocalMainBandId] = useState<string>(mainBandId);
 
   // Sync if currentUser updates
@@ -104,7 +104,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
   if (!isOpen) return null;
 
-  const currentActiveBandId = currentUser?.band_id || 'band-bakandeya';
+  const currentActiveBandId = currentUser?.band_id || '';
   const activeClean = cleanBandId(currentActiveBandId);
 
   const handleRequestLeaveBand = (bandId: string, bandName: string) => {

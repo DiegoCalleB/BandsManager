@@ -378,8 +378,17 @@ app.get("/api/download-excel", (req, res) => {
 app.get("/api/state", async (req, res) => {
   try {
     const user = getUserFromRequest(req, loadState);
-    const isLeader = user?.role === "leader";
-    const userBandId = user?.band_id || 'band-bakandeya';
+    // Antes, sin sesión válida (o con sesión pero sin banda asignada), esta ruta devolvía en
+    // silencio los datos reales de Bakandeya (leads, conciertos, fans con datos RGPD, etc.) a
+    // cualquiera. Es la ruta que alimenta toda la app: hay que exigir sesión y banda de verdad.
+    if (!user) {
+      return res.status(401).json({ error: "No autorizado. Inicia sesión para continuar." });
+    }
+    if (!user.band_id) {
+      return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
+    }
+    const isLeader = user.role === "leader";
+    const userBandId = user.band_id;
 
     const state = await loadStateFromSupabase(userBandId, user);
 

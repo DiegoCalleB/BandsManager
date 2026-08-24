@@ -68,7 +68,8 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia si aplica: "${lead.pit
       prompt,
       systemPrompt,
       links: buildPitchLinksFromEpkConfig(bandConfig, userBandId),
-      providers: providers || ["gemini", "deepseek"]
+      providers: providers || ["gemini", "deepseek"],
+      contactEmail: bandConfig?.contactoBooking?.email || registeredBand?.email
     });
 
     res.json({
@@ -163,7 +164,8 @@ REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
         // Esta ruta SÍ escribe pitches: el generador local es un último recurso legítimo aquí,
         // y el resultado pasa por aprobación humana antes de enviarse.
         permitirPitchLocal: true,
-        links: buildPitchLinksFromEpkConfig(bandConfig, userBandId)
+        links: buildPitchLinksFromEpkConfig(bandConfig, userBandId),
+        contactEmail: bandConfig?.contactoBooking?.email || registeredBand?.email
       });
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();

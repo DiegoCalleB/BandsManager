@@ -50,8 +50,7 @@ router.get("/autonomy", requireAuth, async (req, res) => {
 router.post("/autonomy", requireAuth, async (req, res) => {
   try {
     const updatedConfig = req.body;
-    const user = (req as any).user;
-    const userBandId = user?.band_id || BAKANDEYA_BAND_ID;
+    const userBandId = getTargetBandId(req);
     
     await dbUpsertAutonomyConfig(userBandId, updatedConfig);
 
@@ -76,8 +75,7 @@ router.post("/autonomy", requireAuth, async (req, res) => {
 router.put("/autonomy", requireAuth, async (req, res) => {
   try {
     const updatedConfig = req.body;
-    const user = (req as any).user;
-    const userBandId = user?.band_id || BAKANDEYA_BAND_ID;
+    const userBandId = getTargetBandId(req);
 
     await dbUpsertAutonomyConfig(userBandId, updatedConfig);
 
@@ -337,7 +335,10 @@ router.post("/epk/traducir", requireAuth, async (req, res) => {
 // Public EPK Data endpoint (No Auth required for public sharing)
 router.get("/public/epk", async (req, res) => {
   try {
-    const rawBandId = (req.query.band_id as string) || (req.query.band as string) || (req.query.b as string) || (req.headers['x-band-id'] as string) || BAKANDEYA_BAND_ID;
+    const rawBandId = (req.query.band_id as string) || (req.query.band as string) || (req.query.b as string) || (req.headers['x-band-id'] as string);
+    if (!rawBandId || !rawBandId.trim()) {
+      return res.status(400).json({ error: "Falta el identificador de la banda (band_id)." });
+    }
     const cleanBandId = rawBandId.toLowerCase().replace(/^(band|reg)-/, '');
     const reqBandId = cleanBandId === 'bakandeya' ? BAKANDEYA_BAND_ID : `band-${cleanBandId}`;
 
@@ -570,7 +571,11 @@ router.post("/public/fans", async (req, res) => {
       cancionFavorita,
       instagram
     } = req.body;
-    const targetBandId = (req.query.band_id as string) || (req.query.band as string) || band_id || BAKANDEYA_BAND_ID;
+    const targetBandId = (req.query.band_id as string) || (req.query.band as string) || band_id;
+
+    if (!targetBandId || !String(targetBandId).trim()) {
+      return res.status(400).json({ error: "Falta el identificador de la banda (band_id)." });
+    }
 
     if (!nombre || !email) {
       return res.status(400).json({ error: "Por favor, introduce tu nombre y correo electrónico." });
@@ -630,7 +635,12 @@ router.post("/public/fans", async (req, res) => {
 router.post("/public/track-click", async (req, res) => {
   try {
     const { band_id, platform, button_type, context } = req.body || {};
-    const targetBandId = (band_id || "band-bakandeya").toLowerCase();
+    if (!band_id || !String(band_id).trim()) {
+      // Sin band_id no hay a quién atribuir el clic; antes se contaba en silencio como si fuera
+      // de Bakandeya. Mejor no contar nada que inflar las métricas de otra banda.
+      return res.json({ success: false });
+    }
+    const targetBandId = String(band_id).toLowerCase();
     const cleanKey = (platform || button_type || "unknown").toLowerCase();
 
     const state = loadState();

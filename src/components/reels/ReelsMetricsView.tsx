@@ -761,7 +761,7 @@ export function ReelsMetricsView({
             {igStatus?.connected ? (
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Meta API (@{igStatus.account?.username || 'bakandeya'})
+                Meta API (@{igStatus.account?.username || '...'})
               </span>
             ) : (
               <span>OAuth Instagram</span>

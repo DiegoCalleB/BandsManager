@@ -171,7 +171,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [errorSongs, setErrorSongs] = useState<string | null>(null);
   const songs: Song[] = songsProp && songsProp.length > 0 ? songsProp : songsCargadas;
 
-  const activeBandId = currentUser?.band_id || 'band-bakandeya';
+  const activeBandId = currentUser?.band_id || '';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
   const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
   const baseDefaults = isBakandeya ? DEFAULT_EPK_CONFIG : EMPTY_EPK_CONFIG;
@@ -262,8 +262,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
   // El band_id va SIEMPRE en el enlace, también para Bakandeya: es el enlace que los agentes
   // meten en los pitches y que se comparte por QR, así que no debe depender del valor por
-  // defecto del servidor para resolver de qué banda es el dossier.
-  const bandQueryParam = `?band=${encodeURIComponent(activeBandId || 'band-bakandeya')}`;
+  // defecto del servidor para resolver de qué banda es el dossier. Sin banda activa, no hay
+  // banda de la que generar un enlace (antes esto generaba, sin querer, un enlace válido al EPK
+  // público real de Bakandeya).
+  const bandQueryParam = activeBandId ? `?band=${encodeURIComponent(activeBandId)}` : '';
   const rawEpkBase = typeof window !== 'undefined' 
     ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
         ? 'https://bands-manager.up.railway.app/epk' 

@@ -60,20 +60,14 @@ export function useAuth() {
       }
     } catch (err: any) {
       console.warn('Silent session refresh skipped or offline:', err?.message || err);
-      // Only logout if server explicitly rejected auth with 401
+      // Un 401 real solo puede venir de una respuesta del servidor, así que nunca coincide con
+      // estar offline (sin red, el fetch falla con un error de red, no con un 401). Antes ambas
+      // condiciones se comprobaban juntas y el caso "offline" quedaba inalcanzable; y cualquier
+      // fallo que NO fuera un 401 explícito (500, CORS, timeout) no hacía nada: la sesión seguía
+      // marcada como activa con datos potencialmente obsoletos, sin avisar de que algo falló.
       const isExplicit401 = err?.status === 401 || err?.message?.includes('401') || err?.message?.includes('no autorizable') || err?.message?.includes('no válida');
-      if (isExplicit401 && !navigator.onLine) {
-        // Device is offline: keep cached session active on phone!
-        const savedUserStr = localStorage.getItem('bakandeya_user');
-        if (savedUserStr) {
-          try {
-            setCurrentUser(JSON.parse(savedUserStr));
-            setIsLoggedIn(true);
-            return;
-          } catch (e) {}
-        }
-      } else if (isExplicit401) {
-        // Unrecoverable invalid session
+      if (isExplicit401) {
+        // El servidor rechazó la sesión de forma explícita: cerrarla siempre.
         setCurrentUser(null);
         setAuthToken(null);
         setIsLoggedIn(false);
@@ -84,7 +78,18 @@ export function useAuth() {
         try {
           borrarCookieDeSesion();
         } catch (e) {}
+      } else if (!navigator.onLine) {
+        // Fallo de red real por estar offline: mantener la sesión en caché activa (móvil sin cobertura).
+        const savedUserStr = localStorage.getItem('bakandeya_user');
+        if (savedUserStr) {
+          try {
+            setCurrentUser(JSON.parse(savedUserStr));
+            setIsLoggedIn(true);
+          } catch (e) {}
+        }
       }
+      // Online pero con un fallo no-401 (500, CORS, timeout...): no forzamos el cierre de sesión
+      // por un error transitorio del servidor, pero tampoco lo ocultamos (ver console.warn arriba).
     }
   }, [authToken, syncSessionCookie]);
 
@@ -123,14 +128,19 @@ export function useAuth() {
   }, [isLoggedIn, authToken, refreshSession]);
 
   const handleLoginSuccess = useCallback((user: User, token: string, bandsList?: any[]) => {
-    // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login
+    // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login.
+    // Antes, si no había ninguna banda preferida, se caía en 'band-bakandeya' en silencio: una
+    // cuenta nueva sin banda todavía asignada entraba viendo los datos reales de esa banda. Sin
+    // banda preferida, dejamos band_id sin normalizar y que el resto de la app pida elegir/crear
+    // una banda en vez de asumir una por defecto.
     const preferredBandId =
       user.main_band_id ||
       (Array.isArray(user.band_order) && user.band_order.length > 0 ? user.band_order[0] : null) ||
-      user.band_id ||
-      'band-bakandeya';
+      user.band_id;
 
-    const normalizedBandId = preferredBandId.startsWith('band-') ? preferredBandId : (preferredBandId === 'bakandeya' ? 'band-bakandeya' : `band-${preferredBandId}`);
+    const normalizedBandId = preferredBandId
+      ? (preferredBandId.startsWith('band-') || preferredBandId.startsWith('reg-') ? preferredBandId : `band-${preferredBandId}`)
+      : undefined;
 
     const resolvedUser: User = {
       ...user,

@@ -291,6 +291,8 @@ export function generateSmartLocalPitchFallback(params: {
   systemPrompt?: string;
   provider?: string;
   links?: PitchLinks;
+  /** Email de contacto real de la banda que firma el pitch. Sin esto no se firma con ningún email. */
+  contactEmail?: string;
 }): string {
   const text = `${params.systemPrompt || ""} ${params.prompt || ""}`;
 
@@ -318,7 +320,7 @@ export function generateSmartLocalPitchFallback(params: {
   }
 
   // Extract band name cleanly
-  let bandName = "Bakandeya";
+  let bandName = "nuestra banda";
   const bandMatch = text.match(/(?:Banda|Nombre de la banda|Artista)\s*[:=]\s*([^\n,\.]+)/i);
   if (bandMatch && bandMatch[1]) {
     const rawBand = bandMatch[1].replace(/^-\s*Nombre:\s*/i, '').trim();
@@ -326,6 +328,8 @@ export function generateSmartLocalPitchFallback(params: {
       bandName = rawBand;
     }
   }
+
+  const contactLine = params.contactEmail && params.contactEmail.trim() ? `\n${params.contactEmail.trim()}` : "";
 
   if (params.provider === "deepseek") {
     return `Hola, equipo de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
@@ -341,8 +345,7 @@ Condiciones y propuesta técnica:
 ¿Tenéis disponibilidad en los próximos meses? Quedamos a vuestra disposición para concretar detalles.
 
 Un cordial saludo,
-Equipo de Booking & Management — ${bandName}
-contacto@bakandeya.com`;
+Equipo de Booking & Management — ${bandName}${contactLine}`;
   }
 
   // Default Gemini / General template
@@ -357,8 +360,7 @@ Quedamos a vuestra entera disposición para comentar disponibilidad de fechas, c
 ¡Muchas gracias por vuestro tiempo y por apostar siempre por la música en vivo!
 
 Un saludo,
-Equipo de Booking — ${bandName}
-contacto@bakandeya.com`;
+Equipo de Booking — ${bandName}${contactLine}`;
 }
 
 // DeepSeek API integration (OpenAI-compatible)
@@ -422,6 +424,8 @@ export async function generateUnifiedAI(params: {
   timeoutMs?: number;
   /** Enlaces reales de la banda para el generador local de pitches (ver PitchLinks). */
   links?: PitchLinks;
+  /** Email real de contacto de la banda, para firmar el pitch si cae al generador local. */
+  contactEmail?: string;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -495,7 +499,8 @@ export async function generateUnifiedAI(params: {
       prompt: params.prompt,
       systemPrompt: params.systemPrompt,
       provider,
-      links: params.links
+      links: params.links,
+      contactEmail: params.contactEmail
     });
     return {
       text: localText,
@@ -514,6 +519,8 @@ export async function generateMultiModelProposals(params: {
   systemPrompt?: string;
   providers?: string[];
   links?: PitchLinks;
+  /** Email real de contacto de la banda, para firmar el pitch si cae al generador local. */
+  contactEmail?: string;
 }) {
   const providersToRun = params.providers && params.providers.length > 0
     ? params.providers
@@ -553,7 +560,8 @@ export async function generateMultiModelProposals(params: {
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
           provider: providerId,
-          links: params.links
+          links: params.links,
+          contactEmail: params.contactEmail
         });
         const costEstimate = calculatePitchCost(providerId, fullInputText, localDraft);
 

@@ -597,10 +597,10 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
           }
         }
 
-        // 3. Fallback clean structured address if still empty
-        if (!foundAddr && lead.nombre_sala && lead.ciudad) {
-          foundAddr = `C/ ${lead.nombre_sala}, ${lead.ciudad}${lead.region ? ` (${lead.region})` : ''}`;
-        }
+        // Nota: antes había un paso 3 que, si el diccionario y Nominatim no encontraban nada,
+        // fabricaba una dirección falsa usando el nombre de la sala como si fuera el nombre de
+        // una calle (p. ej. "C/ Sala El Tren, Granada"). Un dato inventado es peor que un campo
+        // vacío: puede acabar usándose para logística real de un concierto. Se ha quitado.
 
         if (foundAddr) {
           lead.direccion = foundAddr;
