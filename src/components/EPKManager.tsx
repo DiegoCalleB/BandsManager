@@ -1377,61 +1377,143 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 ) : (
                   <div className="relative overflow-hidden p-3.5 sm:p-4 rounded-2xl bg-gradient-to-b from-neutral-900/90 via-neutral-900/80 to-neutral-950/90 border border-neutral-800 p-4 shadow-xl space-y-3">
                     <div className="pointer-events-none absolute -top-10 -right-10 w-28 h-28 rounded-full bg-amber-500/10 blur-2xl" aria-hidden="true" />
-                    {/* Header: Icon + Title + Direct Badge */}
+                    {/* Header: Screenshot + Title + Direct Badge */}
                     <div className="relative flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                        <Heart className="w-4 h-4 fill-amber-400/20 text-amber-400 animate-heartbeat" />
+                      <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden border border-amber-500/30 bg-neutral-950 flex items-center justify-center shrink-0 shadow-md">
+                        <img
+                          src="/Screenshot_20260824_164054_Google.jpg"
+                          alt="Colaboración"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/60 to-transparent pointer-events-none" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
-                          {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
-                        </h3>
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">
+                            {config.donacionRevolut?.titulo || 'Colabora con una aportación económica'}
+                          </h3>
+                          <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold shrink-0">
+                            Contribución
+                          </span>
+                        </div>
                         <p className="text-[11px] text-neutral-300/90 leading-relaxed mt-1">
                           {config.donacionRevolut?.descripcion || 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'}
                         </p>
                       </div>
                     </div>
 
-                    {/* Direct Branded Payment Buttons Preview */}
-                    <div className="grid grid-cols-2 gap-2 pt-1">
-                      {/* Revolut */}
-                      <div className="relative overflow-hidden flex items-center gap-2.5 p-2.5 rounded-xl bg-neutral-950 border border-neutral-700/80 shadow-sm text-left animate-donate-cta-glow">
-                        <span
-                          className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen"
-                          aria-hidden="true"
-                        />
-                        <div className="w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow">
-                          <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                            <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-                          </svg>
+                    {/* Direct Branded Payment Buttons Preview with Preferred on Top */}
+                    <div className="space-y-2 pt-1">
+                      {/* Método Preferido Full-Width */}
+                      {(config.donacionRevolut?.metodoPorDefecto || 'revolut') === 'bizum' && config.donacionRevolut?.bizumTelefono ? (
+                        <div className="relative overflow-hidden flex items-center justify-center gap-3.5 p-4 min-h-[64px] rounded-2xl bg-emerald-950/90 border border-emerald-500/40 shadow-md text-center animate-donate-cta-glow">
+                          <span
+                            className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
+                            aria-hidden="true"
+                          />
+                          <div className="relative flex items-center justify-center gap-3 min-w-0">
+                            <div className="w-9 h-9 rounded-xl bg-emerald-500 text-neutral-950 flex items-center justify-center p-1.5 shrink-0 shadow font-bold">
+                              <BizumLogo className="w-full h-full" />
+                            </div>
+                            <div className="text-left min-w-0">
+                              <span className="text-sm font-extrabold text-emerald-200 block truncate leading-tight">Bizum</span>
+                              <span className="text-xs text-emerald-400 font-mono block truncate">{config.donacionRevolut?.bizumTelefono}</span>
+                            </div>
+                            <span className="ml-1 p-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center shadow-sm">
+                              <Copy className="w-4 h-4" />
+                            </span>
+                          </div>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <span className="text-[11px] font-bold text-white block truncate">
-                            Revolut
-                          </span>
-                          <span className="text-[9px] text-neutral-400 font-mono block truncate">
-                            @{config.donacionRevolut?.revolutTag || 'tubanda'}
-                          </span>
+                      ) : (config.donacionRevolut?.metodoPorDefecto || 'revolut') === 'paypal' && (config.donacionRevolut?.paypalUser || config.donacionRevolut?.paypalUrl) ? (
+                        <div className="relative overflow-hidden flex items-center justify-center gap-3.5 p-4 min-h-[64px] rounded-2xl bg-[#003087] border border-sky-400/40 shadow-md text-center animate-donate-cta-glow-delayed">
+                          <span
+                            className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
+                            aria-hidden="true"
+                          />
+                          <div className="relative flex items-center justify-center gap-3 min-w-0">
+                            <div className="w-9 h-9 rounded-xl bg-white text-[#003087] flex items-center justify-center p-1.5 shrink-0 shadow">
+                              <PayPalLogo className="w-full h-full" />
+                            </div>
+                            <div className="text-left min-w-0">
+                              <span className="text-sm font-extrabold text-white block truncate leading-tight">PayPal</span>
+                              <span className="text-xs text-sky-200 font-mono block truncate">@{config.donacionRevolut?.paypalUser || 'tubanda'}</span>
+                            </div>
+                            <span className="ml-1 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-white/10 text-white border border-white/20">Abrir</span>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="relative overflow-hidden flex items-center justify-center gap-3.5 p-4 min-h-[64px] rounded-2xl bg-neutral-950 border border-neutral-700/80 shadow-md text-center animate-donate-cta-glow">
+                          <span
+                            className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
+                            aria-hidden="true"
+                          />
+                          <div className="relative flex items-center justify-center gap-3 min-w-0">
+                            <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shrink-0 shadow">
+                              <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                                <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                              </svg>
+                            </div>
+                            <div className="text-left min-w-0">
+                              <span className="text-sm font-extrabold text-white block truncate leading-tight">Revolut</span>
+                              <span className="text-xs text-neutral-400 font-mono block truncate">@{config.donacionRevolut?.revolutTag || 'tubanda'}</span>
+                            </div>
+                            <span className="ml-1 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-white/10 text-white border border-white/20">Abrir</span>
+                          </div>
+                        </div>
+                      )}
 
-                      {/* PayPal */}
-                      <div className="relative overflow-hidden flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] border border-sky-400/40 shadow-sm text-left animate-donate-cta-glow-delayed">
-                        <span
-                          className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-donate-sheen-delayed"
-                          aria-hidden="true"
-                        />
-                        <div className="w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow">
-                          <PayPalLogo className="w-full h-full" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <span className="text-[11px] font-bold text-white block truncate">
-                            PayPal
-                          </span>
-                          <span className="text-[9px] text-sky-200 font-mono block truncate">
-                            @{config.donacionRevolut?.paypalUser || 'tubanda'}
-                          </span>
-                        </div>
+                      {/* Métodos secundarios en grid de 2 columnas */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {(config.donacionRevolut?.metodoPorDefecto || 'revolut') !== 'revolut' && (
+                          <div className="relative overflow-hidden flex items-center gap-2 p-2.5 rounded-xl bg-neutral-950 border border-neutral-700/80 shadow-sm text-left">
+                            <span
+                              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-donate-sheen"
+                              aria-hidden="true"
+                            />
+                            <div className="relative w-6 h-6 rounded-lg bg-white text-black flex items-center justify-center p-0.5 shrink-0 shadow">
+                              <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                                <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+                              </svg>
+                            </div>
+                            <div className="relative min-w-0 flex-1">
+                              <span className="text-[11px] font-bold text-white block truncate">Revolut</span>
+                              <span className="text-[9px] text-neutral-400 font-mono block truncate">@{config.donacionRevolut?.revolutTag || 'tubanda'}</span>
+                            </div>
+                          </div>
+                        )}
+                        {(config.donacionRevolut?.metodoPorDefecto || 'revolut') !== 'paypal' && (
+                          <div className="relative overflow-hidden flex items-center gap-2 p-2.5 rounded-xl bg-[#003087] border border-sky-400/40 shadow-sm text-left">
+                            <span
+                              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen-delayed"
+                              aria-hidden="true"
+                            />
+                            <div className="relative w-6 h-6 rounded-lg bg-white text-[#003087] flex items-center justify-center p-0.5 shrink-0 shadow">
+                              <PayPalLogo className="w-full h-full" />
+                            </div>
+                            <div className="relative min-w-0 flex-1">
+                              <span className="text-[11px] font-bold text-white block truncate">PayPal</span>
+                              <span className="text-[9px] text-sky-200 font-mono block truncate">@{config.donacionRevolut?.paypalUser || 'tubanda'}</span>
+                            </div>
+                          </div>
+                        )}
+                        {(config.donacionRevolut?.metodoPorDefecto || 'revolut') !== 'bizum' && config.donacionRevolut?.bizumTelefono && (
+                          <div className="relative overflow-hidden flex items-center gap-2 p-2.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 shadow-sm text-left">
+                            <span
+                              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-emerald-300/10 to-transparent animate-donate-sheen"
+                              aria-hidden="true"
+                            />
+                            <div className="relative w-6 h-6 rounded-lg bg-emerald-500 text-neutral-950 flex items-center justify-center p-0.5 shrink-0 shadow font-bold">
+                              <BizumLogo className="w-full h-full" />
+                            </div>
+                            <div className="relative min-w-0 flex-1">
+                              <span className="text-[11px] font-bold text-emerald-200 block truncate">Bizum</span>
+                              <span className="text-[9px] text-emerald-400 font-mono block truncate">{config.donacionRevolut.bizumTelefono}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
