@@ -599,7 +599,7 @@ router.post("/public/fans", async (req, res) => {
       cancionFavorita: cancionFavorita ? String(cancionFavorita).trim() : undefined,
       instagram: instagram ? String(instagram).trim().replace(/^@/, '') : undefined,
       nivelFan: defaultLevel,
-      reacciones: { likes: 1, fire: 0, applause: 0, guitars: 0 }
+      reacciones: { likes: 0, fire: 0, applause: 0, guitars: 0 }
     };
 
     const saved = await dbUpsertFan(newFan, targetBandId);
