@@ -45,6 +45,7 @@ interface ProposalItem {
   provider: string;
   modelName: string;
   text: string;
+  fallbackText?: string;
   status: 'success' | 'error';
   durationMs: number;
   error?: string;

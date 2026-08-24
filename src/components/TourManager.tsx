@@ -1167,7 +1167,9 @@ export default function TourManager({
                               <label className="text-[10px] uppercase font-mono text-neutral-400 block flex items-center justify-between">
                                 <span className="flex items-center gap-1">
                                   <span>Distancia (Km)</span>
-                                  <Calculator className="w-3 h-3 text-sky-400" title="Calcula combustible combinado para toda la flota automáticamente" />
+                                  <span title="Calcula combustible combinado para toda la flota automáticamente">
+                                    <Calculator className="w-3 h-3 text-sky-400" />
+                                  </span>
                                 </span>
                                 {stop.distanciaAnteriorKm && stop.distanciaAnteriorKm > 0 ? (
                                   <span className="text-[9px] text-amber-300 font-normal">

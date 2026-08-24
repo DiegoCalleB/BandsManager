@@ -112,7 +112,7 @@ ${startxref}
 export function formatEmailWithSignatureAndDossier(params: {
   pitchText?: string;
   lead?: Partial<Lead> | null;
-  epkConfig?: EPKConfig | null;
+  epkConfig?: Partial<EPKConfig> | null;
   senderName?: string;
   bandName?: string;
   bandId?: string;

@@ -10,7 +10,7 @@ export function calculateLeadReliability(item: Lead | BandContact): { score: num
   const name = 'nombre_sala' in item ? item.nombre_sala : item.nombre_banda;
   const email = 'email_contacto' in item ? item.email_contacto : item.email;
   const phone = item.telefono;
-  const website = item.website;
+  const website = 'website' in item ? item.website : undefined;
   const instagram = item.instagram;
   const contactName = 'contacto_nombre' in item ? item.contacto_nombre : item.contacto_nombre;
   const city = 'ciudad' in item ? item.ciudad : item.localizacion;

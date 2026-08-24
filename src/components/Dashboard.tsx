@@ -52,18 +52,6 @@ const isMedio = (l?: Lead | null) => {
  return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
 };
 
-const normalizeStatus = (s: any): string => {
- if (!s) return 'nuevo';
- const str = String(s).trim().toLowerCase();
- if (str.includes('aprobado') || str === 'approved') return 'aprobado';
- if (str.includes('pendiente') || str.includes('por_aprobar') || str === 'pending') return 'pendiente_aprobacion';
- if (str.includes('enviado') || str.includes('esperando') || str === 'sent') return 'esperando_respuesta';
- if (str.includes('interesado') || str === 'interested') return 'interesado';
- if (str.includes('negociando') || str === 'negotiating') return 'negociando';
- if (str.includes('no_interesado') || str.includes('rechazado')) return 'no_interesado';
- return 'nuevo';
-};
-
 export default function Dashboard({ 
  leads, 
  colors, 
@@ -103,9 +91,11 @@ export default function Dashboard({
  telefono: string;
  website?: string;
  instagram: string;
+ contacto_nombre?: string;
  aforo?: number | null;
  region?: string;
  genero?: string;
+ contexto_extra?: string;
  source_info: string;
  } | null>(null);
  const [scrapingError, setScrapingError] = useState<string | null>(null);
@@ -1136,7 +1126,7 @@ export default function Dashboard({
  <span className={`text-[10px] font-mono uppercase tracking-widest font-bold ${isStitchLight ? 'text-sky-400' : 'text-zinc-100'}`}>
  Acciones Rápidas del Día
  </span>
- <span className={`text-[10px] font-mono ${textMuted}`}>{currentUser?.bandName || 'Bakandeya'} Virtual Manager</span>
+ <span className={`text-[10px] font-mono ${textMuted}`}>{currentUser?.bandName || 'Tu Banda'} Virtual Manager</span>
  </div>
 
  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-[10px] font-mono">

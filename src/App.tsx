@@ -153,7 +153,7 @@ export default function App() {
   });
 
   // Guarded Handlers respecting Band Contracted Plan Limits
-  const handleAddLeadWithLimitCheck = async (newLead: Partial<Lead>) => {
+  const handleAddLeadWithLimitCheck = async (newLead: Lead) => {
     const isMedio = newLead.tipo === 'medio' || String(newLead.tipo || '').toLowerCase().includes('prensa') || String(newLead.tipo || '').toLowerCase().includes('radio');
     const currentCount = isMedio
       ? leads.filter(l => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
@@ -388,7 +388,7 @@ export default function App() {
  return (
  <LoginModal 
  onLoginSuccess={handleLoginSuccess}
- isStitchLight={currentTheme === 'stitch_light'}
+ isStitchLight={false}
  />
  );
  }
@@ -1000,7 +1000,7 @@ export default function App() {
  </span>
  </div>
  <button
- onClick={fetchState}
+ onClick={() => fetchState()}
  className="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-300 font-mono text-[10px] rounded-md transition-all cursor-pointer whitespace-nowrap active:scale-95"
  >
  Reintentar Conexión
@@ -1147,7 +1147,7 @@ export default function App() {
             onUpdateMetric={handleUpdateMetric}
             onDeleteMetric={handleDeleteMetric}
             colors={colors}
-            isStitchLight={currentTheme === 'stitch_light'}
+            isStitchLight={false}
             onNavigate={handleNavigate}
           />
         )}
@@ -1236,31 +1236,31 @@ export default function App() {
  {showGithubSettings && (
  <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
  <div className={`w-full max-w-xl rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- currentTheme === 'stitch_light' 
+ false 
  ? 'bg-white border-slate-200 text-slate-800' 
  : 'bg-[#1c1b1b] border-[#f2ca50]/30 text-neutral-100'
  }`}>
  <div className={`absolute top-0 right-0 w-40 h-40 xl:w-48 xl:h-48 rounded-full blur-3xl pointer-events-none ${
- currentTheme === 'stitch_light' ? 'bg-indigo-500/5' : 'bg-[#f2ca50]/5'
+ false ? 'bg-indigo-500/5' : 'bg-[#f2ca50]/5'
  }`} />
  
  <div className="flex items-start justify-between">
  <div className="space-y-1">
  <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-bold ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-indigo-50 border-indigo-100 text-indigo-600'
  : 'bg-[#f2ca50]/10 border-[#f2ca50]/20 text-[#f2ca50]'
  }`}>
  <Sliders className="w-3 h-3" /> Configuración Motor de Agentes
  </div>
  <h3 className={`text-lg font-black tracking-wider uppercase font-display ${
- currentTheme === 'stitch_light' ? 'text-slate-900' : 'text-neutral-100'
+ false ? 'text-slate-900' : 'text-neutral-100'
  }`}>MOTOR DE AGENTES SUPABASE</h3>
  </div>
  <button 
  onClick={() => setShowGithubSettings(false)}
  className={`p-1 rounded-lg transition-colors active:scale-95 ${
- currentTheme === 'stitch_light'
+ false
  ? 'hover:bg-slate-100 text-slate-400 hover:text-slate-600'
  : 'hover:bg-neutral-800 text-neutral-500 hover:text-neutral-300'
  }`}
@@ -1270,7 +1270,7 @@ export default function App() {
  </div>
 
  <p className={`text-xs leading-relaxed ${
- currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
+ false ? 'text-slate-500' : 'text-neutral-400'
  }`}>
  Los agentes de Bakandeya (**Scout**, **Scout Descubridor**, **Redactor**, **Enviador** y **Lector de bandeja**) operan de forma nativa sobre **Supabase (PostgreSQL)**. Configura aquí los parámetros de ejecución y credenciales para lanzarlos desde el chatbot o panel de control.
  </p>
@@ -1278,13 +1278,13 @@ export default function App() {
  <form onSubmit={handleSaveGithubSettings} className="space-y-4 font-sans">
  <div className="space-y-1.5">
  <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
+ false ? 'text-slate-500' : 'text-neutral-400'
  }`}>
  GitHub Personal Access Token (PAT)
  </label>
  <div className="relative">
  <span className={`absolute inset-y-0 left-0 pl-3 flex items-center ${
- currentTheme === 'stitch_light' ? 'text-slate-400' : 'text-neutral-600'
+ false ? 'text-slate-400' : 'text-neutral-600'
  }`}>
  <Key className="w-4 h-4" />
  </span>
@@ -1294,7 +1294,7 @@ export default function App() {
  onChange={(e) => setGithubPat(e.target.value)}
  placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
  className={`w-full rounded-lg pl-9 pr-3 py-2 text-xs font-mono focus:outline-none ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500 placeholder:text-slate-300'
  : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50] placeholder:text-neutral-800'
  }`}
@@ -1305,7 +1305,7 @@ export default function App() {
  <div className="grid grid-cols-3 gap-3">
  <div className="space-y-1.5">
  <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
+ false ? 'text-slate-500' : 'text-neutral-400'
  }`}>
  Propietario (Owner)
  </label>
@@ -1316,7 +1316,7 @@ export default function App() {
  onChange={(e) => setGithubOwner(e.target.value)}
  placeholder="DiegoCalleB"
  className={`w-full rounded-lg px-2.5 py-2 text-xs font-mono focus:outline-none ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500'
  : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50]'
  }`}
@@ -1324,7 +1324,7 @@ export default function App() {
  </div>
  <div className="space-y-1.5 col-span-1">
  <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
+ false ? 'text-slate-500' : 'text-neutral-400'
  }`}>
  Repositorio (Repo)
  </label>
@@ -1335,7 +1335,7 @@ export default function App() {
  onChange={(e) => setGithubRepo(e.target.value)}
  placeholder="bakandeya-agent-manager"
  className={`w-full rounded-lg px-2.5 py-2 text-xs font-mono focus:outline-none ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500'
  : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50]'
  }`}
@@ -1343,7 +1343,7 @@ export default function App() {
  </div>
  <div className="space-y-1.5 col-span-1">
  <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
+ false ? 'text-slate-500' : 'text-neutral-400'
  }`}>
  Rama / Ref (Branch)
  </label>
@@ -1354,7 +1354,7 @@ export default function App() {
  onChange={(e) => setGithubRef(e.target.value)}
  placeholder="main"
  className={`w-full rounded-lg px-2.5 py-2 text-xs font-mono focus:outline-none ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500'
  : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50]'
  }`}
@@ -1363,18 +1363,18 @@ export default function App() {
  </div>
 
  <div className={`p-3 rounded-xl flex gap-2.5 items-start ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-slate-50 border-slate-200'
  : 'bg-neutral-950 border-neutral-800'
  }`}>
  <ShieldAlert className={`w-4 h-4 mt-0.5 shrink-0 ${
- currentTheme === 'stitch_light' ? 'text-indigo-600' : 'text-[#f2ca50]'
+ false ? 'text-indigo-600' : 'text-[#f2ca50]'
  }`} />
  <p className={`text-[10px] leading-relaxed font-mono ${
- currentTheme === 'stitch_light' ? 'text-slate-500' : 'text-neutral-400'
+ false ? 'text-slate-500' : 'text-neutral-400'
  }`}>
  <strong>Seguridad Local:</strong> Tus credenciales se guardan de forma segura temporal en el almacenamiento local de tu propio navegador (<code className={
- currentTheme === 'stitch_light' ? 'text-indigo-600 font-bold' : 'text-[#f2ca50] font-mono'
+ false ? 'text-indigo-600 font-bold' : 'text-[#f2ca50] font-mono'
  }>localStorage</code>). Nunca se guardan de forma permanente en servidores de terceros ni viajan públicamente.
  </p>
  </div>
@@ -1399,7 +1399,7 @@ export default function App() {
  alert('Se han borrado los tokens del almacenamiento local.');
  }}
  className={`px-4 py-2 font-mono text-xs rounded-lg transition-all cursor-pointer active:scale-95 ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-700'
  : 'bg-neutral-950 hover:bg-neutral-800 border-neutral-800 hover:border-neutral-700 text-neutral-400 hover:text-neutral-200'
  }`}
@@ -1409,7 +1409,7 @@ export default function App() {
  <button
  type="submit"
  className={`flex-1 py-2 font-mono font-bold text-xs tracking-wider uppercase rounded-lg transition-all cursor-pointer text-center active:scale-95 ${
- currentTheme === 'stitch_light'
+ false
  ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/10'
  : 'bg-[#f2ca50] hover:bg-[#ffe088] text-[#3c2f00] shadow-lg shadow-[#f2ca50]/10'
  }`}
@@ -1441,7 +1441,7 @@ export default function App() {
  users={bandUsers}
  onClose={() => setShowUserManagementModal(false)}
  onRefreshUsers={fetchState}
- isStitchLight={currentTheme === 'stitch_light'}
+ isStitchLight={false}
  />
  )}
 
@@ -1455,7 +1455,7 @@ export default function App() {
  localStorage.setItem('bakandeya_user', JSON.stringify(updated));
  fetchState();
  }}
- isStitchLight={currentTheme === 'stitch_light'}
+ isStitchLight={false}
  isAdmin={isAdmin}
  onOpenBandManagement={() => setShowUserManagementModal(true)}
  currentTheme={currentTheme}
@@ -1477,7 +1477,7 @@ export default function App() {
  {showFontModal && (
  <FontSelectorModal
  onClose={() => setShowFontModal(false)}
- isStitchLight={currentTheme === 'stitch_light'}
+ isStitchLight={false}
  currentFont={currentFont}
  onSelectFont={(f) => {
  handleFontChange(f);
@@ -1573,7 +1573,6 @@ export default function App() {
   availableBands={availableBands}
   epkConfig={epkConfig}
   onUpdateEpkConfig={handleUpdateEpkConfig}
-  currentBandId={currentActiveBandId}
   onRefreshData={fetchState}
   onSwitchBand={async (bandId) => {
     await handleSwitchBand(bandId);

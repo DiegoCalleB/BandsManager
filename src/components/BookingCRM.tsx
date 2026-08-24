@@ -92,7 +92,6 @@ export default function BookingCRM({
    handleDeleteSavedFilter,
    handleClearAllFilters,
  } = useSavedFilters(sectionTab, setSectionTab, initialStatusFilter);
- const [mediaTypeFilter, setMediaTypeFilter] = useState<'televisión' | 'radio' | 'redes' | 'managements' | 'todos'>('todos');
  const [isAgentConfigOpen, setIsAgentConfigOpen] = useState(false);
  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -1450,21 +1449,21 @@ export default function BookingCRM({
                 { key: 'prensa', label: '📰 Prensa' },
                 { key: 'redes', label: '📱 Redes' },
                 { key: 'podcast', label: '🎙️ Podcasts' }
-              ]
+              ] as const
             : sectionTab === 'grupos'
             ? [
                 { key: 'todos', label: '🌟 Todos' },
                 { key: 'grupo', label: '🎸 Grupos' },
                 { key: 'agencia', label: '💼 Agencias' },
                 { key: 'manager', label: '👔 Mánagers' }
-              ]
+              ] as const
             : [
                 { key: 'todos', label: '🌟 Todos' },
                 { key: 'sala', label: '🏛️ Salas' },
                 { key: 'festival', label: '🎪 Festivales' },
                 { key: 'discoteca', label: '🪩 Discotecas' },
                 { key: 'ayuntamiento', label: '🎆 Ayuntamientos' }
-              ]
+              ] as const
           ).map(t => (
             <button
               key={t.key}
@@ -1695,8 +1694,6 @@ export default function BookingCRM({
         autoDetectVenueAddress={autoDetectVenueAddress}
          onDeleteLead={onDeleteLead}
         sectionTab={sectionTab}
-     mediaTypeFilter={mediaTypeFilter}
-     setMediaTypeFilter={setMediaTypeFilter}
         isStitchLight={isStitchLight}
         onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
         isUploadingLeadLogo={isUploadingLeadLogo}

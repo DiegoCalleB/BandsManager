@@ -48,7 +48,7 @@ interface ChatbotProps {
   leads: Lead[];
   rehearsals: Rehearsal[];
   concerts: Concert[];
-  epkConfig?: EPKConfig;
+  epkConfig?: Partial<EPKConfig>;
   onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
   onCreateLead?: (lead: Lead) => void;
   onAddRehearsal: (rehearsal: Rehearsal) => void;
@@ -759,7 +759,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  setMessages(prev => [...prev, {
  id: Date.now().toString(),
  text: `✅ He añadido a **${bandData.nombre_banda}** a la base de datos de bandas aliadas.`,
- sender: 'ai',
+ sender: 'bot',
  timestamp: new Date()
  }]);
  } else if (action.type === 'propose_concert' || action.type === 'propose_add_concert' || action.concert) {

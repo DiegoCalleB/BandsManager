@@ -13,7 +13,7 @@ interface ReelsMetricsViewProps {
   colors: ThemeColors;
   isStitchLight?: boolean;
   metrics: SocialMetric[];
-  epkConfig?: EPKConfig;
+  epkConfig?: Partial<EPKConfig>;
   currentBandName?: string;
   onAddMetric?: (metric: SocialMetric) => Promise<void>;
   onUpdateMetric?: (id: string, updatedFields: Partial<SocialMetric>) => Promise<void>;
@@ -88,7 +88,7 @@ export function ReelsMetricsView({
   const [scanError, setScanError] = useState<string | null>(null);
   const [scanSuccess, setScanSuccess] = useState<string | null>(null);
 
-  const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || 'Bakandeya';
+  const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || 'Tu Banda';
 
   // Growth Plan State
   const [growthPlan, setGrowthPlan] = useState<GrowthPlan>(() => {

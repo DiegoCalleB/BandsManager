@@ -8,6 +8,7 @@ import {
 import QRCode from 'react-qr-code';
 import * as XLSX from 'xlsx';
 import { Fan, Concert, EPKConfig, SocialMetric, ThemeColors } from '../types';
+import { THEMES } from '../utils/theme';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ReelsMetricsView } from './reels/ReelsMetricsView';
 import { FansCommunityView } from './fans/FansCommunityView';
@@ -19,7 +20,7 @@ import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '
 interface FansPanelProps {
   fans: Fan[];
   concerts: Concert[];
-  epkConfig: EPKConfig;
+  epkConfig: Partial<EPKConfig>;
   onAddFan: (fan: Fan) => void;
   onDeleteFan: (id: string) => void;
   onUpdateFan?: (id: string, updates: Partial<Fan>) => void;
@@ -1459,13 +1460,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       {activeTab === 'metrics' && (
         <div className="space-y-6">
           <ReelsMetricsView
-            colors={colors || {
-              bg: 'bg-slate-900',
-              card: 'bg-slate-900 border border-slate-800 rounded-2xl',
-              text: 'text-white',
-              accent: 'text-amber-400',
-              border: 'border-slate-800'
-            }}
+            colors={colors || THEMES.indie_velvet}
             isStitchLight={isStitchLight}
             metrics={metrics || []}
             epkConfig={epkConfig}

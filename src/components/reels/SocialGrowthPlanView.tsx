@@ -14,7 +14,7 @@ interface SocialGrowthPlanViewProps {
   isStitchLight: boolean;
   bandName: string;
   latestMetric: SocialMetric | null;
-  epkConfig?: EPKConfig | null;
+  epkConfig?: Partial<EPKConfig> | null;
   growthPlan: GrowthPlan;
   onRefreshPlanWithAI: (horizon: 30 | 60 | 90, customFocus?: string) => Promise<void>;
   isGeneratingAI: boolean;

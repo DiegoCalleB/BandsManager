@@ -259,7 +259,7 @@ export const api = {
   },
 
   async trackPublicClick(params: { band_id: string; platform: string; button_type?: string; context?: string }): Promise<{ success: boolean; count?: number }> {
-    return request('/api/public/track-click', {
+    return request<{ success: boolean; count?: number }>('/api/public/track-click', {
       method: 'POST',
       body: JSON.stringify(params)
     }).catch(() => ({ success: false }));
@@ -267,7 +267,7 @@ export const api = {
 
   async getEpkClickStats(bandId?: string): Promise<{ success: boolean; clicks: Record<string, number | string> }> {
     const q = bandId ? `?band_id=${encodeURIComponent(bandId)}` : '';
-    return request(`/api/epk/clicks${q}`).catch(() => ({ success: false, clicks: {} }));
+    return request<{ success: boolean; clicks: Record<string, number | string> }>(`/api/epk/clicks${q}`).catch(() => ({ success: false, clicks: {} }));
   },
 
   // Autonomy
@@ -383,7 +383,7 @@ export const api = {
 
   async getSocialContentItems(platform?: string): Promise<any[]> {
     const url = platform ? `/api/metrics/content-items?platform=${platform}` : '/api/metrics/content-items';
-    const res = await request(url);
+    const res = await request<{ items?: any[] }>(url);
     return res?.items || [];
   },
 

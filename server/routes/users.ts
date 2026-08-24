@@ -453,7 +453,7 @@ router.post("/auth/check-invitation", loginRateLimiter, async (req, res) => {
     const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === ub.band_id);
     return {
       band_id: ub.band_id,
-      bandName: bandInfo?.nombre_banda || user.bandName || "Bakandeya",
+      bandName: bandInfo?.nombre_banda || user.bandName || "Tu banda",
       role: ub.role || "member"
     };
   });
