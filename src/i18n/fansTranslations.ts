@@ -188,7 +188,7 @@ const es: FanFormDict = {
   epkCardTitle: 'Conoce nuestra historia',
   epkCardSubtitle: 'Biografía, fotos y vídeos en directo',
   epkSuccessLink: 'Ya eres parte de la familia — descubre más sobre {bandName}',
-  economicSupportTitle: 'Colabora con una aportación económica',
+  economicSupportTitle: 'Colabora con la banda',
   economicSupportSubtitle: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
   openButton: 'Abrir',
   clickSingular: 'clic',

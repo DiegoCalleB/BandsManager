@@ -320,22 +320,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             if (data.epkConfig.donacionRevolut.metodoPorDefecto) {
               setSelectedPaymentMethod(data.epkConfig.donacionRevolut.metodoPorDefecto);
             }
-          } else if (cleanId === 'bakandeya') {
-            setDonacionRevolut({
-              habilitado: true,
-              revolutTag: 'bakandeya',
-              revolutUrl: 'https://revolut.me/bakandeya',
-              paypalUser: 'bakandeya',
-              paypalUrl: 'https://paypal.me/bakandeya',
-              bizumTelefono: '+34 612 345 678',
-              metodoPorDefecto: 'revolut'
-            });
           } else if (data.epkConfig?.enlacesRedes?.revolut || data.epkConfig?.enlacesRedes?.paypal || data.epkConfig?.enlacesRedes?.bizum) {
-            const rawRev = data.epkConfig.enlacesRedes.revolut;
+            const rawRev = data.epkConfig.enlacesRedes.revolut?.trim();
             const revUrl = rawRev ? (rawRev.startsWith('http') ? rawRev : `https://revolut.me/${rawRev.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : undefined;
-            const rawPay = data.epkConfig.enlacesRedes.paypal;
+            const rawPay = data.epkConfig.enlacesRedes.paypal?.trim();
             const payUrl = rawPay ? (rawPay.startsWith('http') ? rawPay : `https://paypal.me/${rawPay.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : undefined;
-            const rawBiz = data.epkConfig.enlacesRedes.bizum || data.epkConfig.contactoBooking?.telefono;
+            const rawBiz = data.epkConfig.enlacesRedes.bizum?.trim();
             setDonacionRevolut({
               habilitado: true,
               revolutUrl: revUrl,
@@ -391,23 +381,31 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   // safeUrl() al final: donacionRevolut.revolutUrl/paypalUrl es texto libre editado por el admin
   // de la banda y se renderiza como href en esta página pública sin sesión — sin filtrar el
   // esquema, un valor tipo "javascript:..." se ejecutaría en el navegador de cualquier fan.
-  const revolutUrl = safeUrl(donacionRevolut?.revolutUrl
-    || (donacionRevolut?.revolutTag ? (donacionRevolut.revolutTag.startsWith('http') ? donacionRevolut.revolutTag : `https://revolut.me/${donacionRevolut.revolutTag.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
-    || (socialLinks?.revolut ? (socialLinks.revolut.startsWith('http') ? socialLinks.revolut : `https://revolut.me/${socialLinks.revolut.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
-    || (resolvedBandId.includes('bakandeya') ? 'https://revolut.me/bakandeya' : '')) || '';
+  const rawRevolutTag = donacionRevolut?.revolutTag?.replace(/^@/, '').replace(/^revolut\.me\//i, '').trim() || '';
+  const rawRevolutUrl = donacionRevolut?.revolutUrl?.trim() || '';
+  const rawSocialRevolut = socialLinks?.revolut?.trim() || '';
+  const revolutUrl = safeUrl(
+    rawRevolutUrl ||
+    (rawRevolutTag ? (rawRevolutTag.startsWith('http') ? rawRevolutTag : `https://revolut.me/${rawRevolutTag}`) : '') ||
+    (rawSocialRevolut ? (rawSocialRevolut.startsWith('http') ? rawSocialRevolut : `https://revolut.me/${rawSocialRevolut.replace(/^@/, '').replace(/^revolut\.me\//i, '')}`) : '')
+  ) || '';
 
-  const paypalUrl = safeUrl(donacionRevolut?.paypalUrl
-    || (donacionRevolut?.paypalUser ? (donacionRevolut.paypalUser.startsWith('http') ? donacionRevolut.paypalUser : `https://paypal.me/${donacionRevolut.paypalUser.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
-    || (socialLinks?.paypal ? (socialLinks.paypal.startsWith('http') ? socialLinks.paypal : `https://paypal.me/${socialLinks.paypal.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
-    || (resolvedBandId.includes('bakandeya') ? 'https://paypal.me/bakandeya' : '')) || '';
+  const rawPaypalUser = donacionRevolut?.paypalUser?.replace(/^@/, '').replace(/^paypal\.me\//i, '').trim() || '';
+  const rawPaypalUrl = donacionRevolut?.paypalUrl?.trim() || '';
+  const rawSocialPaypal = socialLinks?.paypal?.trim() || '';
+  const paypalUrl = safeUrl(
+    rawPaypalUrl ||
+    (rawPaypalUser ? (rawPaypalUser.startsWith('http') ? rawPaypalUser : `https://paypal.me/${rawPaypalUser}`) : '') ||
+    (rawSocialPaypal ? (rawSocialPaypal.startsWith('http') ? rawSocialPaypal : `https://paypal.me/${rawSocialPaypal.replace(/^@/, '').replace(/^paypal\.me\//i, '')}`) : '')
+  ) || '';
 
-  const bizumPhone = (donacionRevolut?.bizumTelefono || socialLinks?.bizum || contactoBooking?.telefono || (resolvedBandId.includes('bakandeya') ? '+34 612 345 678' : '')).trim();
+  const bizumPhone = (donacionRevolut?.bizumTelefono || socialLinks?.bizum || '').trim();
 
   const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  const revolutDisplay = rawHandle || 'revolut.me/bakandeya';
+  const revolutDisplay = rawHandle || (rawRevolutTag ? `revolut.me/${rawRevolutTag}` : '');
 
   const rawPaypalHandle = paypalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  const paypalDisplay = rawPaypalHandle || 'paypal.me/bakandeya';
+  const paypalDisplay = rawPaypalHandle || (rawPaypalUser ? `paypal.me/${rawPaypalUser}` : '');
 
   const hasRevolut = Boolean(revolutUrl);
   const hasPaypal = Boolean(paypalUrl);
@@ -441,30 +439,20 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     const isSuccessScreen = contextType === 'success';
     const isFormScreen = contextType === 'form';
 
-    const isDefaultSpanishTitle = !donacionRevolut?.titulo ||
-      donacionRevolut.titulo.trim() === '' ||
-      donacionRevolut.titulo.trim() === 'Colabora con una aportación económica' ||
-      donacionRevolut.titulo.trim() === 'Colabora con la banda' ||
-      donacionRevolut.titulo.trim() === `Colabora con ${bandName}` ||
-      donacionRevolut.titulo.trim() === 'Colabora con Bakandeya';
+    const customTitle = donacionRevolut?.titulo?.trim();
+    const isCustomTitleSet = Boolean(customTitle && customTitle !== 'Colabora con una aportación económica');
 
-    const isDefaultSpanishDesc = !donacionRevolut?.descripcion ||
-      donacionRevolut.descripcion.trim() === '' ||
-      donacionRevolut.descripcion.includes('financiar') ||
-      donacionRevolut.descripcion.includes('furgoneta') ||
-      donacionRevolut.descripcion.includes('grabaciones') ||
-      donacionRevolut.descripcion.includes('aportación directa nos ayuda');
-
-    // Si el usuario configuró un título personalizado y estamos en español, usarlo; si no, usar la traducción internacional
-    const label = (!isDefaultSpanishTitle && language === 'es' && donacionRevolut?.titulo?.trim())
-      ? donacionRevolut.titulo.trim()
+    const label = isCustomTitleSet
+      ? customTitle!
       : (isSuccessScreen
         ? t('revolutSuccessPrompt', { bandName })
         : t('economicSupportTitle', { bandName }));
 
-    // Si el usuario configuró una descripción personalizada y estamos en español, usarla; si no, usar el subtítulo traducido
-    const descText = (!isDefaultSpanishDesc && language === 'es' && donacionRevolut?.descripcion?.trim())
-      ? donacionRevolut.descripcion.trim()
+    const customDesc = donacionRevolut?.descripcion?.trim();
+    const isCustomDescSet = Boolean(customDesc);
+
+    const descText = isCustomDescSet
+      ? customDesc!
       : (isSuccessScreen
         ? t('revolutSuccessPrompt', { bandName })
         : t('economicSupportSubtitle'));
@@ -488,66 +476,32 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     const secondaryMethods = availableMethods.filter(m => m !== primaryMethod);
 
-    const renderPaymentButton = (method: 'revolut' | 'paypal' | 'bizum', isPrimary: boolean) => {
+    const renderPaymentButton = (method: 'revolut' | 'paypal' | 'bizum', variant: 'full' | 'half') => {
+      const isFull = variant === 'full';
       if (method === 'revolut') {
-        if (isPrimary) {
-          return (
-            <a
-              key="revolut-primary"
-              href={revolutUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackClick('revolut', revolutUrl, contextType)}
-              className="group relative w-full flex items-center justify-center gap-3.5 sm:gap-4 p-4 sm:p-5 min-h-[68px] sm:min-h-[76px] rounded-2xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/80 hover:border-amber-500/60 transition-all duration-200 ease-out shadow-lg hover:shadow-2xl hover:shadow-black/50 text-center active:scale-[0.98] cursor-pointer overflow-hidden animate-donate-cta-glow"
-            >
-              <span
-                className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
-                aria-hidden="true"
-              />
-              <div className="relative flex items-center justify-center gap-3.5 sm:gap-4 min-w-0">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white text-black flex items-center justify-center p-1.5 shrink-0 shadow-md group-hover:scale-110 transition-transform duration-200">
-                  <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                    <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
-                  </svg>
-                </div>
-                <div className="text-left min-w-0">
-                  <span className="text-base sm:text-lg font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight">
-                    Revolut
-                  </span>
-                  <span className="text-xs sm:text-sm text-neutral-400 font-mono block truncate group-hover:text-neutral-200">
-                    {revolutDisplay.replace(/^revolut\.me\//, '@')}
-                  </span>
-                </div>
-                <span className="ml-2 text-xs font-bold px-3 py-1.5 rounded-xl bg-white/10 group-hover:bg-white/20 text-white shrink-0 border border-white/20 flex items-center gap-1.5 transition-all duration-200 group-hover:translate-x-0.5 shadow-sm">
-                  {t('openButton')} <ExternalLink className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </a>
-          );
-        }
         return (
           <a
-            key="revolut-secondary"
+            key={`revolut-${variant}`}
             href={revolutUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick('revolut', revolutUrl, contextType)}
-            className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/80 hover:border-amber-500/50 transition-all duration-200 ease-out shadow-sm hover:shadow-md text-left active:scale-[0.98] cursor-pointer overflow-hidden"
+            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-xl bg-neutral-950 hover:bg-neutral-900 border border-neutral-700/90 hover:border-amber-500/60 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
           >
             <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-donate-sheen"
+              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen"
               aria-hidden="true"
             />
-            <div className="relative w-7 h-7 rounded-lg bg-white text-black flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-110 transition-transform duration-200">
+            <div className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-lg bg-white text-black flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
               <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
                 <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
               </svg>
             </div>
-            <div className="relative min-w-0 flex-1">
-              <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition-colors block truncate">
+            <div className="text-center min-w-0">
+              <span className={`${isFull ? 'text-sm sm:text-base' : 'text-xs'} font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight`}>
                 Revolut
               </span>
-              <span className="text-[9px] text-neutral-400 font-mono block truncate group-hover:text-neutral-200">
+              <span className={`${isFull ? 'text-xs' : 'text-[10px]'} text-neutral-400 font-mono block truncate group-hover:text-neutral-200 leading-tight`}>
                 {revolutDisplay.replace(/^revolut\.me\//, '@')}
               </span>
             </div>
@@ -556,60 +510,27 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
 
       if (method === 'paypal') {
-        if (isPrimary) {
-          return (
-            <a
-              key="paypal-primary"
-              href={paypalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackClick('paypal', paypalUrl, contextType)}
-              className="group relative w-full flex items-center justify-center gap-3.5 sm:gap-4 p-4 sm:p-5 min-h-[68px] sm:min-h-[76px] rounded-2xl bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 hover:border-sky-300 transition-all duration-200 ease-out shadow-lg hover:shadow-2xl hover:shadow-sky-900/40 text-center active:scale-[0.98] cursor-pointer overflow-hidden animate-donate-cta-glow-delayed"
-            >
-              <span
-                className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
-                aria-hidden="true"
-              />
-              <div className="relative flex items-center justify-center gap-3.5 sm:gap-4 min-w-0">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white text-[#003087] flex items-center justify-center p-1.5 shrink-0 shadow-md group-hover:scale-110 transition-transform duration-200">
-                  <PayPalLogo className="w-full h-full" />
-                </div>
-                <div className="text-left min-w-0">
-                  <span className="text-base sm:text-lg font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight">
-                    PayPal
-                  </span>
-                  <span className="text-xs sm:text-sm text-sky-200 font-mono block truncate group-hover:text-white">
-                    {paypalDisplay.replace(/^paypal\.me\//, '@')}
-                  </span>
-                </div>
-                <span className="ml-2 text-xs font-bold px-3 py-1.5 rounded-xl bg-white/10 group-hover:bg-white/20 text-white shrink-0 border border-white/20 flex items-center gap-1.5 transition-all duration-200 group-hover:translate-x-0.5 shadow-sm">
-                  {t('openButton')} <ExternalLink className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </a>
-          );
-        }
         return (
           <a
-            key="paypal-secondary"
+            key={`paypal-${variant}`}
             href={paypalUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackClick('paypal', paypalUrl, contextType)}
-            className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-[#003087] hover:bg-[#00266e] border border-sky-400/40 hover:border-sky-300 transition-all duration-200 ease-out shadow-sm hover:shadow-md text-left active:scale-[0.98] cursor-pointer overflow-hidden"
+            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-xl bg-[#003087] hover:bg-[#00266e] border border-sky-400/60 hover:border-sky-300 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow-delayed' : ''}`}
           >
             <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-donate-sheen-delayed"
+              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-white/15 to-transparent animate-donate-sheen-delayed"
               aria-hidden="true"
             />
-            <div className="relative w-7 h-7 rounded-lg bg-white text-[#003087] flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-110 transition-transform duration-200">
+            <div className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-lg bg-white text-[#003087] flex items-center justify-center shrink-0 shadow group-hover:scale-105 transition-transform`}>
               <PayPalLogo className="w-full h-full" />
             </div>
-            <div className="relative min-w-0 flex-1">
-              <span className="text-[11px] sm:text-xs font-bold text-white group-hover:text-amber-300 transition-colors block truncate">
+            <div className="text-center min-w-0">
+              <span className={`${isFull ? 'text-sm sm:text-base' : 'text-xs'} font-extrabold text-white group-hover:text-amber-300 transition-colors block truncate leading-tight`}>
                 PayPal
               </span>
-              <span className="text-[9px] text-sky-200 font-mono block truncate group-hover:text-white">
+              <span className={`${isFull ? 'text-xs' : 'text-[10px]'} text-sky-200 font-mono block truncate group-hover:text-white leading-tight`}>
                 {paypalDisplay.replace(/^paypal\.me\//, '@')}
               </span>
             </div>
@@ -618,59 +539,33 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
 
       if (method === 'bizum') {
-        if (isPrimary) {
-          return (
-            <button
-              key="bizum-primary"
-              type="button"
-              onClick={() => handleCopyBizum(contextType)}
-              className="group relative w-full flex items-center justify-center gap-3.5 sm:gap-4 p-4 sm:p-5 min-h-[68px] sm:min-h-[76px] rounded-2xl bg-emerald-950/90 hover:bg-emerald-900/90 border border-emerald-500/40 hover:border-emerald-400 transition-all duration-200 ease-out shadow-lg hover:shadow-2xl hover:shadow-emerald-950/50 text-center active:scale-[0.98] cursor-pointer overflow-hidden animate-donate-cta-glow"
-            >
-              <span
-                className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
-                aria-hidden="true"
-              />
-              <div className="relative flex items-center justify-center gap-3.5 sm:gap-4 min-w-0">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500 text-neutral-950 flex items-center justify-center p-1.5 shrink-0 shadow-md group-hover:scale-110 transition-transform duration-200 font-bold">
-                  <BizumLogo className="w-full h-full" />
-                </div>
-                <div className="text-left min-w-0">
-                  <span className="text-base sm:text-lg font-extrabold text-emerald-200 group-hover:text-white transition-colors block truncate leading-tight">
-                    Bizum
-                  </span>
-                  <span className="text-xs sm:text-sm text-emerald-400 font-mono block truncate group-hover:text-emerald-300">
-                    {bizumPhone}
-                  </span>
-                </div>
-                <span className="ml-2 p-2 sm:p-2.5 rounded-xl bg-emerald-500/20 group-hover:bg-emerald-500/30 text-emerald-300 shrink-0 border border-emerald-500/30 flex items-center justify-center transition-all duration-200 group-hover:scale-110 group-active:scale-95 shadow-sm">
-                  <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
-                </span>
-              </div>
-            </button>
-          );
-        }
         return (
           <button
-            key="bizum-secondary"
+            key={`bizum-${variant}`}
             type="button"
             onClick={() => handleCopyBizum(contextType)}
-            className="group relative flex items-center gap-2.5 p-2.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900/80 border border-emerald-500/40 hover:border-emerald-400 transition-all duration-200 ease-out shadow-sm hover:shadow-md text-left active:scale-[0.98] cursor-pointer overflow-hidden"
+            className={`group relative w-full flex items-center justify-center ${isFull ? 'gap-3.5 p-4 min-h-[64px]' : 'gap-2 px-2.5 py-2 min-h-[42px] sm:min-h-[44px]'} rounded-xl bg-emerald-950/90 hover:bg-emerald-900/90 border border-emerald-500/60 hover:border-emerald-400 transition-all duration-200 ease-out shadow-md hover:shadow-xl text-center active:scale-[0.98] cursor-pointer overflow-hidden ${isFull ? 'animate-donate-cta-glow' : ''}`}
           >
             <span
-              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-8 bg-gradient-to-r from-transparent via-emerald-300/10 to-transparent animate-donate-sheen"
+              className="pointer-events-none absolute -top-1/2 -left-8 h-[200%] w-12 bg-gradient-to-r from-transparent via-emerald-300/15 to-transparent animate-donate-sheen"
               aria-hidden="true"
             />
-            <div className="relative w-7 h-7 rounded-lg bg-emerald-500 text-neutral-950 flex items-center justify-center p-1 shrink-0 shadow group-hover:scale-110 transition-transform duration-200 font-bold">
+            <div className={`${isFull ? 'w-8 h-8 sm:w-9 sm:h-9 p-1.5' : 'w-6 h-6 p-1'} rounded-lg bg-emerald-500 text-neutral-950 flex items-center justify-center shrink-0 shadow font-bold group-hover:scale-105 transition-transform`}>
               <BizumLogo className="w-full h-full" />
             </div>
-            <div className="relative min-w-0 flex-1">
-              <span className="text-[11px] sm:text-xs font-bold text-emerald-200 group-hover:text-white transition-colors block truncate">
+            <div className="text-center min-w-0">
+              <span className={`${isFull ? 'text-sm sm:text-base' : 'text-xs'} font-extrabold text-emerald-200 group-hover:text-white transition-colors block truncate leading-tight`}>
                 Bizum
               </span>
-              <span className="text-[9px] text-emerald-400 font-mono block truncate">
+              <span className={`${isFull ? 'text-xs' : 'text-[10px]'} text-emerald-400 font-mono block truncate group-hover:text-emerald-300 leading-tight`}>
                 {bizumPhone}
               </span>
             </div>
+            {isFull && (
+              <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">
+                <Copy className="w-3.5 h-3.5" />
+              </span>
+            )}
           </button>
         );
       }
@@ -680,22 +575,21 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     return (
       <div className={isSuccessScreen ? 'pt-3 border-t border-neutral-800 text-left' : isFormScreen ? 'pt-2' : 'pt-1.5'}>
-        <div className="relative rounded-2xl bg-gradient-to-b from-neutral-900/95 via-neutral-900/90 to-neutral-950/95 border border-neutral-800/90 hover:border-amber-500/30 p-3.5 sm:p-4 shadow-2xl transition-all duration-300 text-left overflow-hidden">
+        <div className="relative rounded-2xl bg-gradient-to-b from-neutral-900/95 via-neutral-900/90 to-neutral-950/95 border border-neutral-700 hover:border-amber-500/60 p-3.5 sm:p-4 shadow-2xl transition-all duration-300 text-left overflow-hidden">
           {/* Halo ambiental sutil */}
           <div className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-amber-500/10 blur-2xl" aria-hidden="true" />
 
           {/* Cabecera de la tarjeta: Screenshot / Imagen + Título + Badge */}
-          <div className="relative flex items-start gap-3">
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden border border-amber-500/30 bg-neutral-950 flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform">
+          <div className="relative flex items-start gap-3 sm:gap-3.5">
+            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-amber-500/30 bg-neutral-950 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
               <img
                 src="/Screenshot_20260824_164054_Google.jpg"
                 alt="Colaboración"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover scale-110 group-hover:scale-115 transition-transform duration-300"
                 onError={(e) => {
                   (e.currentTarget as HTMLElement).style.display = 'none';
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/60 to-transparent pointer-events-none" />
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
@@ -720,15 +614,24 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
-          {/* Botones de Pasarelas / Métodos de Pago: Preferido arriba a full width y secundarios abajo a media columna */}
-          <div className="pt-3 space-y-2">
-            {/* Método Preferido (Ancho Completo Arriba) */}
-            {primaryMethod && renderPaymentButton(primaryMethod, true)}
+          {/* Botones de Pasarelas / Métodos de Pago */}
+          <div className="pt-3">
+            {availableMethods.length === 1 && (
+              renderPaymentButton(availableMethods[0], 'full')
+            )}
 
-            {/* Métodos Secundarios (Ocupando la mitad / 2 columnas abajo) */}
-            {secondaryMethods.length > 0 && (
-              <div className={`grid gap-2 ${secondaryMethods.length === 1 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-2'}`}>
-                {secondaryMethods.map(m => renderPaymentButton(m, false))}
+            {availableMethods.length === 2 && (
+              <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                {availableMethods.map(m => renderPaymentButton(m, 'half'))}
+              </div>
+            )}
+
+            {availableMethods.length === 3 && (
+              <div className="space-y-2.5">
+                {primaryMethod && renderPaymentButton(primaryMethod, 'full')}
+                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                  {secondaryMethods.map(m => renderPaymentButton(m, 'half'))}
+                </div>
               </div>
             )}
           </div>
@@ -1087,7 +990,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackClick('epk', epkUrl, 'redes')}
-              className="group relative flex items-center gap-3.5 p-4 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-amber-500/50 transition-all duration-300 shadow-xl hover:shadow-amber-500/5 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
+              className="group relative flex items-center gap-3.5 p-4 rounded-2xl bg-neutral-900 border border-neutral-700 hover:border-amber-500/80 transition-all duration-300 shadow-xl hover:shadow-amber-500/10 text-left cursor-pointer overflow-hidden active:scale-[0.99]"
             >
               {logoUrl && !imgError && (
                 <img
