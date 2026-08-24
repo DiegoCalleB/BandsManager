@@ -269,6 +269,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  steps: { name: string; status: string; conclusion: string | null; number: number }[];
  isDemo: boolean;
  initialLeadIds?: string[];
+ // Sin declarar aquí, TypeScript no veía estos campos aunque se asignan y se leen para
+ // filtrar los leads simulados de fallback por región/tipo (ver más abajo en este archivo).
+ region?: string;
+ params?: { ciudad?: string; region?: string; tipo?: string; [key: string]: any };
  } | null>(null);
 
  useEffect(() => {

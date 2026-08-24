@@ -15,6 +15,7 @@ export interface NewLeadDataState {
   tipo?: LeadType;
   email_contacto: string;
   telefono: string;
+  website?: string;
   instagram: string;
   fuente: string;
   pitch_generado: string;
