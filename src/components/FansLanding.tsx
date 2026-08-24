@@ -1208,8 +1208,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       className="w-7 h-7 rounded-full border-2 border-neutral-900 bg-neutral-800 flex items-center justify-center text-[10px] font-bold text-amber-300 overflow-hidden shadow-sm"
                       title={`${m.nombre}${m.rol ? ` (${m.rol})` : ''}`}
                     >
-                      {m.foto ? (
-                        <img src={m.foto} alt={m.nombre} className="w-full h-full object-cover" />
+                      {m.fotoUrl ? (
+                        <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" />
                       ) : (
                         <span>{(m.nombre || 'M').slice(0, 2).toUpperCase()}</span>
                       )}
