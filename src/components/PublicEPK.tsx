@@ -167,7 +167,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               este enlace se reenvía por correo entre programadores, así que el idioma tiene
               que viajar con él. Dos botones diminutos para no competir con el resto. */}
           <div className="flex items-center gap-0.5 bg-slate-800 border border-slate-700 rounded-lg p-0.5" role="group" aria-label={t('selectorIdioma')}>
-            {EPK_LANGUAGES.map(l => (
+            {availableLanguages.map(l => (
               <button
                 key={l.code}
                 type="button"
