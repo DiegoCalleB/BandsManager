@@ -1,4 +1,5 @@
 import express from "express";
+import helmet from "helmet";
 import path from "path";
 import * as XLSX from "xlsx";
 
@@ -44,6 +45,12 @@ process.on("unhandledRejection", (reason) => {
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+
+// CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
+// y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
+// propio. El resto de cabeceras de helmet (HSTS, X-Frame-Options, nosniff, Referrer-Policy,
+// X-Powered-By oculto) no rompen nada de eso y sí cierran clickjacking y fuga de metadata.
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 
 app.use(
   express.json({
