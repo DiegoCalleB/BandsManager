@@ -261,6 +261,7 @@ export interface EPKConfig {
     bandcamp?: string;
     website?: string;
     whatsapp?: string;
+    revolut?: string;
     [key: string]: string | undefined;
   };
   contactoBooking: {
@@ -269,6 +270,13 @@ export interface EPKConfig {
     telefono: string;
   };
   temasDestacadosIds: string[];
+  donacionRevolut?: {
+    habilitado?: boolean;
+    revolutTag?: string;
+    revolutUrl?: string;
+    titulo?: string;
+    descripcion?: string;
+  };
   incentivoFans?: {
     mensajeAgradecimiento?: string;
     enlaceDescarga?: string;
@@ -515,6 +523,8 @@ export interface Song {
   tipo?: string;
   estado?: string;
   energia?: number;
+  cantantePrincipal?: string; // Lead vocalist for this song (shown in the setlist and searchable)
+  artista?: string; // Performing artist/band name (written on bulk album upload, shown in the player)
   portadaUrl?: string;
   favoritoGeneral?: boolean;
   estadoTema?: 'listo' | 'ensayando' | 'componiendo' | 'descartado';

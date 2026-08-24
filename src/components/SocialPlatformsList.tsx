@@ -63,6 +63,11 @@ export const SocialIcons: Record<string, React.FC<{ className?: string }>> = {
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
     </svg>
   ),
+  revolut: ({ className = "w-5 h-5" }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.72 9.24c-.06-.5-.2-.98-.44-1.42a4.43 4.43 0 0 0-1.12-1.3A4.78 4.78 0 0 0 15.5 5.6c-.63-.23-1.3-.35-1.98-.35H6.28v2.75h7.24c.72 0 1.39.28 1.9.79.5.5.79 1.18.79 1.9 0 .73-.29 1.4-.79 1.91-.51.5-1.18.78-1.9.78h-3.3v2.8h2.64l4.28 7.82h3.28l-4.14-7.57a4.93 4.93 0 0 0 2.94-4.23zM6.28 10.3v13.7h2.75V10.3H6.28z"/>
+    </svg>
+  ),
   website: Globe,
   whatsapp: Phone
 };
@@ -130,6 +135,13 @@ export const PLATFORM_CONFIG: Record<string, { label: string; colorClass: string
     bgClass: 'bg-amber-500/10',
     borderClass: 'border-amber-500/30',
     hoverClass: 'hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-300'
+  },
+  revolut: {
+    label: 'Revolut Pay',
+    colorClass: 'text-sky-300',
+    bgClass: 'bg-sky-500/10',
+    borderClass: 'border-sky-500/30',
+    hoverClass: 'hover:bg-sky-500/20 hover:border-sky-500/50 hover:text-sky-200'
   },
   whatsapp: {
     label: 'WhatsApp',

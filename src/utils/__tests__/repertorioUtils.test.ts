@@ -46,6 +46,26 @@ describe('repertorioUtils', () => {
       expect(stats.averageBpm).toBe(130); // (120+140)/2
       expect(stats.songCount).toBe(2);
     });
+
+    it('counts section headers as blocks without adding stage time', () => {
+      const songsMap = new Map<string, SongLike>([
+        ['s1', { id: 's1', titulo: 'Canción 1', duracionSegundos: 200, bpm: 120 }]
+      ]);
+
+      const items: SetlistItemLike[] = [
+        { id: 'b1', tipoItem: 'bloque_header', duracionEstimadaMinutos: 5 },
+        { id: 'i1', songId: 's1' },
+        { id: 'e1', tipoItem: 'chapa', duracionEstimadaSegundos: 90 }
+      ];
+
+      const stats = calculateSetlistStats(items, songsMap);
+
+      expect(stats.blockCount).toBe(1);
+      expect(stats.eventCount).toBe(1);
+      expect(stats.songCount).toBe(1);
+      // El encabezado de bloque no suma tiempo aunque traiga duración estimada
+      expect(stats.totalDurationSeconds).toBe(290); // 200 + 90
+    });
   });
 
   describe('sortSongs', () => {
