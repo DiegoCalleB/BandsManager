@@ -1,11 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock Supabase client
-const mockEqChain = vi.fn().mockResolvedValue({ error: null });
-const mockOr = vi.fn().mockReturnValue({ eq: mockEqChain });
-const mockEq = vi.fn().mockReturnValue({ or: mockOr });
-const mockDelete = vi.fn().mockReturnValue({ eq: mockEq });
-const mockUpdate = vi.fn().mockReturnValue({ or: mockOr });
+// dbDeleteUserFromBand usa ahora .in() (array de candidatos) en vez de interpolar el band_id
+// dentro del DSL de texto de .or(), que era inyectable (ver server/db/users.ts).
+// user_bands: .delete().eq('user_id', ...).in('band_id', ...)
+const mockDeleteIn = vi.fn().mockResolvedValue({ error: null });
+const mockDeleteEq = vi.fn().mockReturnValue({ in: mockDeleteIn });
+const mockDelete = vi.fn().mockReturnValue({ eq: mockDeleteEq });
+// registered_bands: .update({...}).in('band_id', ...).eq('user_id', ...)
+const mockUpdateEq = vi.fn().mockResolvedValue({ error: null });
+const mockUpdateIn = vi.fn().mockReturnValue({ eq: mockUpdateEq });
+const mockUpdate = vi.fn().mockReturnValue({ in: mockUpdateIn });
 const mockFrom = vi.fn().mockImplementation((table: string) => {
   if (table === 'user_bands') {
     return { delete: mockDelete };

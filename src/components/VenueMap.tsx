@@ -3,6 +3,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import { Lead } from '../types';
 import { MapPin, Navigation, Eye, Check, Loader2, RefreshCw, Layers } from 'lucide-react';
+import { escapeHtml } from '../utils/escapeHtml';
 
 interface VenueMapProps {
  leads: Lead[];
@@ -615,7 +616,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  letter-spacing: -0.1px;
  z-index: 1;
  ">
- ${lead.nombre_sala}
+ ${escapeHtml(lead.nombre_sala)}
  </div>
  </div>
  `,
@@ -632,21 +633,21 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  popupHtml.innerHTML = `
  <div style="font-family: system-ui, sans-serif;">
  <div style="font-size: 13px; font-weight: 700; margin-bottom: 2px; color: ${isStitchLight ? '#0f172a' : '#0f172a'};">
- ${lead.nombre_sala}
+ ${escapeHtml(lead.nombre_sala)}
  </div>
  <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">
- 📍 ${lead.ciudad} ${lead.region ? `(${lead.region})` : ''}
+ 📍 ${escapeHtml(lead.ciudad)} ${lead.region ? `(${escapeHtml(lead.region)})` : ''}
  </div>
  <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; font-size: 10px; font-family: monospace;">
  <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0;">
  👥 ${lead.aforo > 0 ? `${lead.aforo} personas` : 'Sin aforo'}
  </span>
  <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0;">
- ${lead.genero || 'Música'}
+ ${escapeHtml(lead.genero || 'Música')}
  </span>
  </div>
  <div style="font-size: 10px; margin-bottom: 8px; font-family: monospace;">
- 📧 ${lead.email_contacto ? lead.email_contacto : '<span style="color:#e11d48; font-weight:bold;">⚠️ Sin email</span>'}
+ 📧 ${lead.email_contacto ? escapeHtml(lead.email_contacto) : '<span style="color:#e11d48; font-weight:bold;">⚠️ Sin email</span>'}
  </div>
  <div style="display: flex; gap: 6px; margin-top: 8px;">
  <button id="pop-select-${lead.id}" style="
@@ -696,10 +697,10 @@ export const VenueMap: React.FC<VenueMapProps> = ({
  color: #0f172a;
  ">
  <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 2px; line-height: 1.25;">
- ${lead.nombre_sala}
+ ${escapeHtml(lead.nombre_sala)}
  </div>
  <div style="font-size: 10.5px; color: #64748b; margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
- <span>📍 ${lead.ciudad}${lead.region ? ` (${lead.region})` : ''}</span>
+ <span>📍 ${escapeHtml(lead.ciudad)}${lead.region ? ` (${escapeHtml(lead.region)})` : ''}</span>
  </div>
  <div style="display: flex; flex-direction: column; gap: 4px;">
  <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">

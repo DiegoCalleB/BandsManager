@@ -2,6 +2,7 @@ import { getAiClient, generateContentWithFallback } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState } from "./state.js";
 import { detectPitchLanguage } from "./utils/leadLanguage.js";
+import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
 
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
@@ -25,6 +26,10 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
 
   for (const targetUrl of urlsToTry) {
     try {
+      // websiteUrl es texto libre del lead: sin esto, un valor apuntando a una IP privada o al
+      // endpoint de metadatos de la nube haría que el servidor hiciera esa petición interna y
+      // devolviera lo encontrado (SSRF).
+      if (!(await esUrlExternaSegura(targetUrl))) continue;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5s timeout
       const res = await fetch(targetUrl, {

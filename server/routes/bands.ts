@@ -4,6 +4,7 @@ import { loadState, saveState } from "../state.js";
 import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
+import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
 
 const router = express.Router();
 
@@ -33,6 +34,9 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
 
   for (const siteUrl of candidateUrls) {
     try {
+      // Ver nota en leads/enrichment.ts: sin esto, un dominio apuntando a la red interna o al
+      // endpoint de metadatos de la nube provoca que el servidor haga esa petición (SSRF).
+      if (!(await esUrlExternaSegura(siteUrl))) continue;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3500);
       const res = await fetch(siteUrl, {

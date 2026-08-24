@@ -18,8 +18,18 @@ export async function dbUpsertSocialPost(post: any, bandId: string) {
   const targetBandId = cleanBandId(post.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
+  // usuario no se reutiliza nunca.
+  let finalPostId = post.id;
+  if (finalPostId) {
+    const { data: existing } = await sb.from("social_posts").select("id, band_id").eq("id", finalPostId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalPostId = `post-${Date.now()}`;
+    }
+  }
+
   const payload = {
-    id: post.id || `post-${Date.now()}`,
+    id: finalPostId || `post-${Date.now()}`,
     band_id: targetBandId,
     fecha: post.fecha || new Date().toISOString().split("T")[0],
     plataforma: post.plataforma || "instagram",
@@ -87,8 +97,18 @@ export async function dbUpsertSocialMetric(metric: any, bandId: string) {
   const targetBandId = cleanBandId(metric.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
+  // usuario no se reutiliza nunca.
+  let finalMetricId = metric.id;
+  if (finalMetricId) {
+    const { data: existing } = await sb.from("social_metrics").select("id, band_id").eq("id", finalMetricId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalMetricId = `met-${Date.now()}`;
+    }
+  }
+
   const payload = {
-    id: metric.id || `met-${Date.now()}`,
+    id: finalMetricId || `met-${Date.now()}`,
     band_id: targetBandId,
     fecha: metric.fecha || new Date().toISOString().split("T")[0],
     instagram: Number(metric.instagram ?? metric.instagram_followers ?? 0),
@@ -148,8 +168,19 @@ export async function dbGetSocialContentItems(bandId: string, platform?: string)
 export async function dbUpsertSocialContentItem(item: any, bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(item.band_id || bandId);
+
+  // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id explícito que no pertenece a la
+  // banda del usuario no se reutiliza nunca.
+  let finalContentId = item.id;
+  if (finalContentId) {
+    const { data: existing } = await sb.from("social_content_items").select("id, band_id").eq("id", finalContentId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalContentId = null;
+    }
+  }
+
   const payload = {
-    id: item.id || `content-${targetBandId}-${item.platform}-${item.external_id || Date.now()}`,
+    id: finalContentId || `content-${targetBandId}-${item.platform}-${item.external_id || Date.now()}`,
     band_id: targetBandId,
     platform: item.platform || "youtube",
     external_id: String(item.external_id || item.externalId || ""),

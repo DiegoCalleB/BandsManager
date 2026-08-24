@@ -35,8 +35,19 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   const targetBandId = cleanBandId(concert.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // El upsert es por id (clave primaria): si `concert.id` coincidiera con el de un concierto de
+  // OTRA banda, este upsert lo sobrescribiría y se lo reasignaría a la banda del llamador. Un id
+  // que no pertenece a la banda del usuario no se reutiliza nunca.
+  let finalConcertId = concert.id;
+  if (finalConcertId) {
+    const { data: existing } = await sb.from("concerts").select("id, band_id").eq("id", finalConcertId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalConcertId = `cnc-${Date.now()}`;
+    }
+  }
+
   const payload: any = {
-    id: concert.id || `cnc-${Date.now()}`,
+    id: finalConcertId || `cnc-${Date.now()}`,
     band_id: targetBandId,
     band_name: concert.band_name || concert.bandName || "",
     fecha: concert.fecha,

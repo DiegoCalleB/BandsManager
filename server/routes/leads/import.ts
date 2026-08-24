@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
 import { Lead } from "../../../src/types.js";
-import { loadState, saveState } from "../../state.js";
+import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
 
 const router = express.Router();
 
-router.post("/import-excel", async (req: Request, res: Response) => {
+// Antes esta ruta no exigía sesión: cualquiera sin autenticar podía escribir leads arbitrarios
+// en la base de datos, con band_id vacío (registro mal asignado o corrupto).
+router.post("/import-excel", requireAuth, async (req: Request, res: Response) => {
   try {
     const { leads, updateDuplicates = true, sourceName = "Importación Excel / CSV" } = req.body;
     if (!Array.isArray(leads) || leads.length === 0) {
@@ -13,6 +15,9 @@ router.post("/import-excel", async (req: Request, res: Response) => {
     }
 
     const userBandId = (req as any).user?.band_id;
+    if (!userBandId) {
+      return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
+    }
     const state = loadState();
     let importedCount = 0;
     let updatedCount = 0;

@@ -9,6 +9,7 @@ import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } f
 import { interpolate } from '../i18n/fansTranslations';
 import { useEpkLanguage } from '../hooks/useEpkLanguage';
 import { resolverContenidoEpk } from '../utils/epkTraducciones';
+import { safeUrl } from '../utils/safeUrl';
 
 interface PublicEPKProps {
   initialData?: {
@@ -465,9 +466,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                     <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
                       <span className="text-xs font-semibold text-white">{t('fotoPromocional', { n: String(idx + 1) })}</span>
-                      <a href={photoUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                      {safeUrl(photoUrl) && (
+                        <a href={safeUrl(photoUrl)} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -544,9 +547,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               {t('seccionRider')}
             </h2>
             <div className="flex items-center gap-2 print:hidden">
-              {config.riderPdfUrl && (
+              {safeUrl(config.riderPdfUrl) && (
                 <a
-                  href={config.riderPdfUrl}
+                  href={safeUrl(config.riderPdfUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow"
@@ -606,9 +609,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
         {/* FOOTER */}
         <footer className="text-center text-xs text-slate-500 space-y-4 pt-6 border-t border-slate-800 print:text-black">
-          {config.dossierPdfUrl && (
+          {safeUrl(config.dossierPdfUrl) && (
             <a
-              href={config.dossierPdfUrl}
+              href={safeUrl(config.dossierPdfUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 text-xs font-bold rounded-full transition print:hidden"

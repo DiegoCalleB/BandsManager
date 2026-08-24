@@ -57,6 +57,16 @@ export async function dbUpsertTour(tour: any, bandId: string) {
   const targetBandId = cleanBandId(tour.band_id || bandId);
   await ensureRegisteredBandExists(targetBandId);
 
+  // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
+  // usuario no se reutiliza nunca.
+  let finalTourId = tour.id;
+  if (finalTourId) {
+    const { data: existing } = await sb.from("tours").select("id, band_id").eq("id", finalTourId).maybeSingle();
+    if (existing && existing.band_id !== targetBandId) {
+      finalTourId = `tour-${Date.now()}`;
+    }
+  }
+
   const vehiculos = Array.isArray(tour.vehiculos) && tour.vehiculos.length > 0
     ? tour.vehiculos
     : tour.vehiculo
@@ -74,7 +84,7 @@ export async function dbUpsertTour(tour: any, bandId: string) {
     : (tour.vehiculo || "");
 
   const payload: any = {
-    id: tour.id || `tour-${Date.now()}`,
+    id: finalTourId || `tour-${Date.now()}`,
     band_id: targetBandId,
     nombre: tour.nombre || "Gira",
     fecha_inicio: tour.fecha_inicio || tour.fechaInicio || "",

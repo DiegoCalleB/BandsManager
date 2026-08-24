@@ -32,6 +32,35 @@ if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
+// Antes no había ninguna lista de extensiones/tipos permitidos: se aceptaba cualquier archivo,
+// con el Content-Type que el propio cliente declarara en el multipart/form-data. Un .svg o .html
+// subido así se sirve luego (por extensión) como image/svg+xml o text/html tanto por
+// express.static como por Supabase Storage, ejecutando cualquier <script> que contenga en el
+// navegador de quien abra la URL — XSS almacenado. Solo se permiten los tipos que la app
+// realmente usa (audio, imagen, PDF, documentos), nunca HTML/SVG/JS.
+const EXTENSIONES_PERMITIDAS = new Set([
+  // Audio
+  'mp3', 'wav', 'm4a', 'flac', 'ogg', 'aac', 'wma',
+  // Imagen (sin svg: es HTML/JS ejecutable disfrazado de imagen)
+  'jpg', 'jpeg', 'png', 'webp', 'gif',
+  // Vídeo
+  'mp4', 'mov', 'webm',
+  // Documentos
+  'pdf', 'doc', 'docx'
+]);
+
+function extensionPermitida(originalname: string): boolean {
+  const ext = path.extname(originalname).slice(1).toLowerCase();
+  return EXTENSIONES_PERMITIDAS.has(ext);
+}
+
+const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  if (!extensionPermitida(file.originalname)) {
+    return cb(new Error('Tipo de archivo no permitido.'));
+  }
+  cb(null, true);
+};
+
 // Multer storage engine for direct binary disk streaming (handles files > 1GB)
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -47,21 +76,38 @@ const multerStorage = multer.diskStorage({
 
 const uploadMiddleware = multer({
   storage: multerStorage,
-  limits: { fileSize: 4 * 1024 * 1024 * 1024 } // 4GB max
+  limits: { fileSize: 4 * 1024 * 1024 * 1024 }, // 4GB max
+  fileFilter: multerFileFilter
 });
 
 const multerChunkStorage = multer.memoryStorage();
 const uploadChunkMiddleware = multer({
   storage: multerChunkStorage,
-  limits: { fileSize: 20 * 1024 * 1024 } // 20MB per chunk limit
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB per chunk limit
+  fileFilter: multerFileFilter
 });
 
+// Sin este envoltorio, un fileFilter rechazado llega a next(err) y responde con la página de
+// error genérica de Express en vez de un JSON limpio.
+function conManejoDeErrorMulter(mw: express.RequestHandler): express.RequestHandler {
+  return (req, res, next) => {
+    mw(req, res, (err: any) => {
+      if (err) {
+        return res.status(400).json({ error: err.message || "No se pudo procesar el archivo." });
+      }
+      next();
+    });
+  };
+}
+
 export function getSupabaseClient() {
-  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "https://brynltixytuyjdfdupjx.supabase.co";
+  // Antes, sin SUPABASE_URL en el entorno, caía en silencio en el proyecto de Supabase personal
+  // del fundador del proyecto (ver la misma nota en server/db/core.ts).
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   // Favor JWT formatted keys (starts with eyJ) if available
   const keys = [
-    process.env.SUPABASE_ANON_KEY,
     process.env.SUPABASE_SERVICE_ROLE_KEY,
+    process.env.SUPABASE_ANON_KEY,
     process.env.SUPABASE_KEY,
     process.env.VITE_SUPABASE_ANON_KEY
   ].filter(Boolean) as string[];
@@ -128,7 +174,7 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
   }
 });
 
-router.post("/", requireAuth, uploadMiddleware.single("file"), async (req: any, res: any) => {
+router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req: any, res: any) => {
   try {
     let filePath = "";
     let originalFilename = "";
@@ -151,6 +197,11 @@ router.post("/", requireAuth, uploadMiddleware.single("file"), async (req: any, 
       mimeType = req.file.mimetype || 'application/octet-stream';
     } else if (base64) {
       originalFilename = bodyFilename || "file.bin";
+      // Esta rama (subida por base64) no pasa por el fileFilter de Multer: necesita su propia
+      // comprobación de extensión permitida.
+      if (!extensionPermitida(originalFilename)) {
+        return res.status(400).json({ error: "Tipo de archivo no permitido." });
+      }
       const ext = path.extname(originalFilename) || '';
       const baseNameSanitized = path.basename(originalFilename, ext).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 50);
       uniqueName = `${crypto.randomUUID()}${baseNameSanitized ? '-' + baseNameSanitized : ''}${ext}`;
@@ -224,7 +275,7 @@ router.post("/", requireAuth, uploadMiddleware.single("file"), async (req: any, 
 });
 
 // Route for Chunked File Upload (bypasses 32MB single request limit for 1GB+ files)
-router.post("/chunk", requireAuth, uploadChunkMiddleware.single("chunk"), async (req: any, res: any) => {
+router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.single("chunk")), async (req: any, res: any) => {
   try {
     const { uploadId, chunkIndex, totalChunks, filename, folder } = req.body || {};
     if (!uploadId || chunkIndex === undefined || !totalChunks || !filename) {

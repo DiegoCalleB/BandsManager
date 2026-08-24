@@ -529,6 +529,13 @@ router.patch("/fans/:id", requireAuth, async (req, res) => {
     if (!state.fans) state.fans = [];
     const index = state.fans.findIndex((f: Fan) => f.id === id);
     if (index !== -1) {
+      // state.fans es un array global compartido por todas las bandas: sin esta comprobación,
+      // cualquier usuario autenticado podía modificar el fan (nombre, email, consentimiento RGPD)
+      // de otra banda adivinando su id.
+      const ownerBandId = (state.fans[index] as any).band_id || (state.fans[index] as any).bandId;
+      if (!puedeEscribirEnBanda(req, ownerBandId || userBandId)) {
+        return res.status(403).json({ error: "No puedes modificar un fan de otra banda." });
+      }
       state.fans[index] = { ...state.fans[index], ...updates };
       await dbUpsertFan(state.fans[index], userBandId);
       saveState(state);

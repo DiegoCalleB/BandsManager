@@ -17,7 +17,10 @@ export function esEstadoDeEnvio(estado: unknown): boolean {
 
 export function esEmailValido(email?: unknown): boolean {
   if (!email || typeof email !== 'string') return false;
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  // Sin excluir la coma y los paréntesis, un valor como "a,role.eq.admin@evil.com" pasaba como
+  // "email válido" y luego se usaba tal cual en consultas .or() de Supabase/PostgREST en
+  // server/db/users.ts, permitiendo inyectar condiciones OR adicionales al filtro.
+  return /^[^\s@,()]+@[^\s@,()]+\.[^\s@,()]+$/.test(email.trim());
 }
 
 /** Alias en inglés para el código que ya lo llamaba así (server/routes/billing.ts). */

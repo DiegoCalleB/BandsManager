@@ -47,10 +47,22 @@ export async function dbUpsertLead(lead: any, bandId: string) {
 
   const name = (lead.nombre_sala || lead.nombreSala || "").trim();
 
+  // Antes se buscaba el id sin filtrar por banda: si `lead.id` coincidía con el de un lead de
+  // OTRA banda, ese registro pasaba a considerarse "el existente", el upsert (por id, clave
+  // primaria) lo sobrescribía reasignándolo a la banda atacante, y los campos no enviados se
+  // rellenaban con los valores reales del lead ajeno (email, teléfono, notas...). Un id que no
+  // pertenece a la banda del usuario no se reutiliza nunca: se trata como un lead nuevo.
   let existingRecord: any = null;
+  let idBelongsToOtherBand = false;
   if (lead.id) {
     const { data } = await sb.from("leads").select("*").eq("id", lead.id).maybeSingle();
-    existingRecord = data;
+    if (data) {
+      if (data.band_id === targetBandId) {
+        existingRecord = data;
+      } else {
+        idBelongsToOtherBand = true;
+      }
+    }
   }
   if (!existingRecord && name) {
     const { data } = await sb
@@ -62,7 +74,7 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     existingRecord = data;
   }
 
-  const finalId = existingRecord?.id || lead.id || `lead-${Date.now()}`;
+  const finalId = existingRecord?.id || (idBelongsToOtherBand ? `lead-${Date.now()}` : lead.id) || `lead-${Date.now()}`;
 
   const payload = {
     id: finalId,

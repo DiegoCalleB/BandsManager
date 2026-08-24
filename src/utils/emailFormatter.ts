@@ -135,12 +135,20 @@ export function formatEmailWithSignatureAndDossier(params: {
   // Check if bodyContent already has HTML
   const isAlreadyHtml = bodyContent.startsWith('<') || bodyContent.startsWith('<!DOCTYPE');
   
-  // Format body text paragraphs cleanly
+  // Format body text paragraphs cleanly. Cuando el pitch es texto plano (el caso normal: lo
+  // escribe la IA o lo edita el usuario en un textarea) se escapa antes de envolverlo en HTML,
+  // para que un "<" o ">" sueltos en el texto no se interpreten como una etiqueta.
   const htmlBodyParagraphs = isAlreadyHtml
     ? bodyContent
     : bodyContent
         .split('\n\n')
-        .map((paragraph) => `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${paragraph.replace(/\n/g, '<br>')}</p>`)
+        .map((paragraph) => {
+          const escaped = paragraph
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+          return `<p style="margin: 0 0 14px 0; line-height: 1.6; color: #1e293b; font-size: 15px;">${escaped.replace(/\n/g, '<br>')}</p>`;
+        })
         .join('');
 
   // 2. Extract Signature details from epkConfig or defaults

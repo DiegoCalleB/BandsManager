@@ -6,6 +6,7 @@ import { getAiClient, generateContentWithFallback } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
+import { esUrlExternaSegura } from "../../utils/ssrfGuard.js";
 
 const router = express.Router();
 
@@ -71,6 +72,10 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
 
   for (const siteUrl of candidateUrls) {
     try {
+      // isBadDirectoryUrl solo filtra dominios de directorios/redes conocidos, no IPs privadas ni
+      // el endpoint de metadatos de la nube: sin esto, un website/dominio de email apuntando a la
+      // red interna haría que el servidor hiciera esa petición y devolviera lo encontrado (SSRF).
+      if (!(await esUrlExternaSegura(siteUrl))) continue;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3500);
 

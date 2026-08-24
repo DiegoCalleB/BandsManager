@@ -4,6 +4,7 @@ import { SocialPlatformsList, SocialLinks, PayPalLogo } from './SocialPlatformsL
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from '../i18n/fansTranslations';
 import { renderBold } from '../utils/richText';
+import { safeUrl } from '../utils/safeUrl';
 
 import { Concert, EPKConfig } from '../types';
 
@@ -364,15 +365,18 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     }
   }, []);
 
-  const revolutUrl = donacionRevolut?.revolutUrl 
+  // safeUrl() al final: donacionRevolut.revolutUrl/paypalUrl es texto libre editado por el admin
+  // de la banda y se renderiza como href en esta página pública sin sesión — sin filtrar el
+  // esquema, un valor tipo "javascript:..." se ejecutaría en el navegador de cualquier fan.
+  const revolutUrl = safeUrl(donacionRevolut?.revolutUrl
     || (donacionRevolut?.revolutTag ? (donacionRevolut.revolutTag.startsWith('http') ? donacionRevolut.revolutTag : `https://revolut.me/${donacionRevolut.revolutTag.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
     || (socialLinks?.revolut ? (socialLinks.revolut.startsWith('http') ? socialLinks.revolut : `https://revolut.me/${socialLinks.revolut.replace(/^@/, '').replace(/^revolut\.me\//, '')}`) : '')
-    || (resolvedBandId.includes('bakandeya') ? 'https://revolut.me/bakandeya' : '');
+    || (resolvedBandId.includes('bakandeya') ? 'https://revolut.me/bakandeya' : '')) || '';
 
-  const paypalUrl = donacionRevolut?.paypalUrl
+  const paypalUrl = safeUrl(donacionRevolut?.paypalUrl
     || (donacionRevolut?.paypalUser ? (donacionRevolut.paypalUser.startsWith('http') ? donacionRevolut.paypalUser : `https://paypal.me/${donacionRevolut.paypalUser.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
     || (socialLinks?.paypal ? (socialLinks.paypal.startsWith('http') ? socialLinks.paypal : `https://paypal.me/${socialLinks.paypal.replace(/^@/, '').replace(/^paypal\.me\//, '')}`) : '')
-    || (resolvedBandId.includes('bakandeya') ? 'https://paypal.me/bakandeya' : '');
+    || (resolvedBandId.includes('bakandeya') ? 'https://paypal.me/bakandeya' : '')) || '';
 
   const rawHandle = revolutUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const revolutDisplay = rawHandle || 'revolut.me/bakandeya';
@@ -694,10 +698,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 mt-6 space-y-4">
               <h3 className="text-amber-500 font-black uppercase tracking-widest text-xs font-mono">{t('benefitsTitle')}</h3>
 
-              {incentivo.enlaceDescarga && (
+              {safeUrl(incentivo.enlaceDescarga) && (
                 <div className="pt-2">
                   <a
-                    href={incentivo.enlaceDescarga}
+                    href={safeUrl(incentivo.enlaceDescarga)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-col items-center justify-center gap-2 w-full p-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 rounded-lg text-white font-mono text-xs transition-colors"

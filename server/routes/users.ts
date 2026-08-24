@@ -1195,6 +1195,12 @@ router.post(['/set-main-band', '/users/set-main-band'], requireAuth, async (req,
     if (!band_id) {
       return res.status(400).json({ error: 'band_id es requerido' });
     }
+    // Antes se aceptaba cualquier band_id del body sin comprobar que el usuario perteneciera a
+    // ella: cualquier cuenta autenticada podía convertirse en leader de una banda ajena con solo
+    // conocer su id. set-main-band solo puede fijar como principal una banda a la que ya perteneces.
+    if (!puedeEscribirEnBanda(req, band_id)) {
+      return res.status(403).json({ error: 'No perteneces a esa banda.' });
+    }
 
     const state = loadState();
     const cleanTarget = band_id.replace(/^(band|reg)-/, '');
@@ -1929,6 +1935,12 @@ router.put("/users/:id", requireAuth, async (req, res) => {
   if (instrument !== undefined) user.instrument = instrument.trim();
   if (avatarColor) user.avatarColor = avatarColor;
   if (req.body.main_band_id !== undefined) {
+    // Antes se aceptaba cualquier main_band_id del body sin comprobar que quien hace la
+    // petición perteneciera a esa banda: bastaba editar el propio perfil para auto-asignarse
+    // como leader de una banda ajena con solo conocer su id.
+    if (req.body.main_band_id && !puedeEscribirEnBanda(req, req.body.main_band_id)) {
+      return res.status(403).json({ error: "No perteneces a esa banda." });
+    }
     user.main_band_id = req.body.main_band_id;
     if (req.body.main_band_id) user.band_id = req.body.main_band_id;
   }
