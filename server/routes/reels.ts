@@ -38,6 +38,7 @@ import {
   resumirEnergiaParaPrompt
 } from "../utils/audioEnergy.js";
 import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
+import { uploadToSupabaseIfAvailable, rutaAlmacenamientoClip } from "../utils/storage.js";
 import {
   detectarCambiosDePlano,
   detectarTipoContenido,
@@ -881,13 +882,39 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
 
     const tamano = fs.statSync(rutaSalida).size;
 
-    // El clip se sirve como archivo estático. Devolver 20-40 MB en base64 dentro del JSON
-    // reventaba el límite del body y multiplicaba por 1,37 lo que viajaba por la red.
+    // Se intenta subir a Supabase Storage para que el clip sobreviva al próximo despliegue:
+    // public/clips/ vive en el disco EFÍMERO de Railway, y se pierde en cada redeploy.
+    // Best-effort: si Supabase no responde, se sigue sirviendo desde el disco local exactamente
+    // como antes (mismo comportamiento, solo que ese clip no sobrevivirá a un redeploy).
+    let clipUrl = `/clips/${nombreSalida}`;
+    let guardadoPermanente = false;
+    try {
+      const bandId = getTargetBandId(req);
+      const urlPermanente = await uploadToSupabaseIfAvailable(
+        rutaSalida,
+        rutaAlmacenamientoClip(bandId, nombreSalida),
+        "video/mp4"
+      );
+      if (urlPermanente) {
+        clipUrl = urlPermanente;
+        guardadoPermanente = true;
+        // Ya no hace falta servirlo desde el disco local: subido con éxito, se libera el
+        // espacio ya mismo en vez de esperar a la barrida periódica.
+        await borrarSiExiste([rutaSalida]);
+      }
+    } catch (err: any) {
+      console.warn("[Reels] No se pudo subir el clip a Supabase Storage:", err?.message || err);
+    }
+
+    // El clip se sirve como archivo estático (local o de Supabase Storage). Devolver 20-40 MB
+    // en base64 dentro del JSON reventaba el límite del body y multiplicaba por 1,37 lo que
+    // viajaba por la red.
     const respuesta: any = {
       success: true,
-      clipUrl: `/clips/${nombreSalida}`,
+      clipUrl,
       clipFileName: nombreSalida,
       fileSize: tamano,
+      storedPermanently: guardadoPermanente,
       start: inicio,
       duration: duracion,
       cropMode,
@@ -898,8 +925,9 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       sinTranscripcionReal
     };
 
-    // Compatibilidad con clientes antiguos que solo entienden base64, y solo si cabe.
-    if (inlineBase64 && tamano < 24 * 1024 * 1024) {
+    // Compatibilidad con clientes antiguos que solo entienden base64, y solo si cabe y el
+    // fichero local sigue existiendo (si ya se subió a Storage y se borró, no hay de dónde leerlo).
+    if (inlineBase64 && tamano < 24 * 1024 * 1024 && fs.existsSync(rutaSalida)) {
       const buffer = await fs.promises.readFile(rutaSalida);
       respuesta.videoBase64 = `data:video/mp4;base64,${buffer.toString("base64")}`;
     }

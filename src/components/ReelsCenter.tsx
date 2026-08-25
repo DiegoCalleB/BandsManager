@@ -241,6 +241,9 @@ export default function ReelsCenter({
  const [sinTranscripcionReal, setSinTranscripcionReal] = useState<boolean>(false);
  const [renderedClipSize, setRenderedClipSize] = useState<number>(0);
  const [renderedBurnedSubs, setRenderedBurnedSubs] = useState<boolean>(false);
+ // Si el clip se subió a Supabase Storage sobrevive a un redeploy; si no, solo vive en el
+ // disco del servidor hasta el próximo despliegue.
+ const [renderedStoredPermanently, setRenderedStoredPermanently] = useState<boolean>(false);
  // Cuándo se guardó el análisis que se está viendo, si viene recuperado de la BD en vez de
  // recién calculado. null cuando el análisis en pantalla es fresco (o no hay ninguno).
  const [loadedFromSaveAt, setLoadedFromSaveAt] = useState<string | null>(null);
@@ -516,6 +519,7 @@ export default function ReelsCenter({
  setRenderedClipUrl(nuevaUrl);
  setRenderedClipSize(Number(data.fileSize) || 0);
  setRenderedBurnedSubs(Boolean(data.burnedSubtitles));
+ setRenderedStoredPermanently(Boolean(data.storedPermanently));
 
  if (data.vttContent) {
  const vttBlob = new Blob([data.vttContent], { type: 'text/vtt' });
@@ -912,6 +916,7 @@ export default function ReelsCenter({
  setRenderedClipUrl(null);
  setRenderedClipSize(0);
  setRenderedBurnedSubs(false);
+ setRenderedStoredPermanently(false);
  setRenderedSubUrl(null);
  setSubtitleCues([]);
  setWordOffsets([]);
@@ -1043,6 +1048,7 @@ export default function ReelsCenter({
  setRenderedClipUrl(null);
  setRenderedClipSize(0);
  setRenderedBurnedSubs(false);
+ setRenderedStoredPermanently(false);
  setRenderedSubUrl(null);
  setSubtitleCues([]);
  setWordOffsets([]);
@@ -3383,6 +3389,20 @@ export default function ReelsCenter({
  <p className="text-[11px] text-neutral-300">
  Clip listo{renderedClipSize > 0 ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)` : ''}. Se está reproduciendo en el simulador de la izquierda y puedes descargarlo ya.
  </p>
+
+ {/* Sin esto, el usuario no sabe si el clip va a seguir ahí mañana o solo hasta el
+ próximo despliegue del servidor. */}
+ <div className={`p-2 rounded-lg text-[10px] font-mono flex items-center gap-2 ${
+ renderedStoredPermanently
+ ? 'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ : 'bg-amber-500/10 -amber-500/20 text-amber-300'
+ }`}>
+ <span>
+ {renderedStoredPermanently
+ ? '☁️ Guardado de forma permanente. Seguirá disponible aunque pase el tiempo.'
+ : '⚠️ Guardado solo temporalmente en el servidor. Descárgalo antes de que se reinicie o se despliegue una nueva versión.'}
+ </span>
+ </div>
 
  {sinTranscripcionReal && (
  <div className="p-2 rounded-lg bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono flex items-center gap-2">

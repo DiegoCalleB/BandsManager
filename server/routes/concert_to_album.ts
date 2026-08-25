@@ -6,47 +6,12 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from "../ai.js";
 import { loadState, saveState, requireAuth } from "../state.js";
-import { getSupabaseClient, getBucketName } from "./upload.js";
 // Estos helpers vivían aquí; ahora los comparte también el generador de Reels, que antes
 // descargaba con ytdl-core a secas y era el que se comía los bloqueos antibot de YouTube.
 import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../utils/youtubeSource.js";
-
-async function uploadToSupabaseIfAvailable(
-  localFilePath: string,
-  storageSubPath: string,
-  contentType: string = "audio/mpeg"
-): Promise<string | null> {
-  const supabase = getSupabaseClient();
-  if (!supabase || !fs.existsSync(localFilePath)) return null;
-
-  try {
-    const bucketName = getBucketName();
-    const fileBuffer = fs.readFileSync(localFilePath);
-    const { error: uploadError } = await supabase.storage
-      .from(bucketName)
-      .upload(storageSubPath, fileBuffer, {
-        contentType,
-        upsert: true
-      });
-
-    if (uploadError) {
-      console.warn(`[Supabase Upload Notice] Failed for ${storageSubPath}:`, uploadError.message);
-      return null;
-    }
-
-    const { data: publicUrlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(storageSubPath);
-
-    if (publicUrlData?.publicUrl) {
-      console.log(`[Supabase Storage] Successfully uploaded: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
-      return publicUrlData.publicUrl;
-    }
-  } catch (err: any) {
-    console.warn(`[Supabase Storage Error] ${storageSubPath}:`, err.message || err);
-  }
-  return null;
-}
+// uploadToSupabaseIfAvailable vivía aquí; ahora la comparte también el generador de Reels,
+// para que el clip renderizado sobreviva a un redeploy del disco efímero de Railway.
+import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
