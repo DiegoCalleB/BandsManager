@@ -49,9 +49,21 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 // CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
 // y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
-// propio. El resto de cabeceras de helmet (HSTS, X-Frame-Options, nosniff, Referrer-Policy,
-// X-Powered-By oculto) no rompen nada de eso y sí cierran clickjacking y fuga de metadata.
-app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
+// propio. El resto de cabeceras de helmet (HSTS, X-Frame-Options, nosniff, X-Powered-By oculto)
+// no rompen nada de eso y sí cierran clickjacking y fuga de metadata.
+//
+// Referrer-Policy SÍ hay que fijarlo a mano: el "no-referrer" por defecto de helmet hace que el
+// navegador no mande cabecera Referer al pedir el iframe de YouTube del EPK público, y el
+// reproductor de YouTube necesita ese referrer para validar la carga - sin él responde con un
+// "Error 153 / error de configuración" en vez de reproducir el vídeo (visto en producción tras
+// añadir helmet). "strict-origin-when-cross-origin" es el valor por defecto que ya usan los
+// navegadores modernos: manda el origen (no la URL completa) a otros sitios, nada a HTTP en
+// claro, y es suficiente para que YouTube/Vimeo/Spotify carguen bien.
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" }
+}));
 
 app.use(
   express.json({
