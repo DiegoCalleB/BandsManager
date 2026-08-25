@@ -181,6 +181,9 @@ export default function ReelsCenter({
  const [dragActive, setDragActive] = useState(false);
  const [selectedFile, setSelectedFile] = useState<{ name: string; size: number } | null>(null);
  const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
+ // Duración real del archivo subido. Sin ella, al analizar un vídeo local el backend
+ // trabajaba a ciegas y repartía los cortes sobre una duración inventada.
+ const [localVideoDuration, setLocalVideoDuration] = useState<number>(0);
  const [isPreviewMuted, setIsPreviewMuted] = useState(true);
  const [isExpandedPreview, setIsExpandedPreview] = useState(false);
  const [videoTopic, setVideoTopic] = useState('');
@@ -268,11 +271,12 @@ export default function ReelsCenter({
 
  /** Duración de referencia para la línea de tiempo: la real si la conocemos. */
  const timelineDuration = React.useMemo(() => {
+ if (inputType === 'file' && localVideoDuration > 0) return localVideoDuration;
  if (videoMeta?.durationKnown && videoMeta.duration > 0) return videoMeta.duration;
  const clip = highlights[selectedHighlightIndex];
  const { end } = parseRangeTimes(clip?.range);
  return Math.max(120, end + 30);
- }, [videoMeta, highlights, selectedHighlightIndex]);
+ }, [videoMeta, highlights, selectedHighlightIndex, inputType, localVideoDuration]);
 
  // Clip Re-analysis states
  const [clipUserNote, setClipUserNote] = useState<string>('');
@@ -785,6 +789,7 @@ export default function ReelsCenter({
  name: file.name,
  size: file.size
  });
+ setLocalVideoDuration(0);
  try {
  const url = URL.createObjectURL(file);
  setLocalVideoUrl(url);
@@ -804,6 +809,7 @@ export default function ReelsCenter({
  name: file.name,
  size: file.size
  });
+ setLocalVideoDuration(0);
  try {
  const url = URL.createObjectURL(file);
  setLocalVideoUrl(url);
@@ -857,7 +863,9 @@ export default function ReelsCenter({
  // targetDuration = cuánto debe durar cada clip; knownDuration = cuánto dura el vídeo.
  // Antes ambas cosas viajaban en el mismo campo y la IA recibía "el vídeo dura 30 s".
  targetDuration: videoDuration,
- knownDuration: videoMeta?.durationKnown ? videoMeta.duration : undefined,
+ knownDuration: inputType === 'file'
+ ? (localVideoDuration > 0 ? localVideoDuration : undefined)
+ : (videoMeta?.durationKnown ? videoMeta.duration : undefined),
  videoDuration: videoDuration,
  videoTopic: videoTopic || undefined
  })
@@ -2255,6 +2263,9 @@ export default function ReelsCenter({
  }}
  onLoadedMetadata={(e) => {
  const video = e.currentTarget;
+ if (Number.isFinite(video.duration) && video.duration > 0) {
+ setLocalVideoDuration(Math.floor(video.duration));
+ }
  const { start } = parseRangeTimes(phoneDuration);
  video.currentTime = start;
  }}
