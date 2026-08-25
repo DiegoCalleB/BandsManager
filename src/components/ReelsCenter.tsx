@@ -96,6 +96,10 @@ export default function ReelsCenter({
   // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
   const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
 
+  // Esta pantalla estaba llena de "Bakandeya" a pelo, así que cualquier otra banda veía por
+  // todas partes el nombre de la banda del fundador en vez del suyo.
+  const nombreBanda = (bandName || '').trim() || 'tu banda';
+
  // Band Tone Analysis State
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
  const [bakandeyaToneData, setBakandeyaToneData] = useState<ToneAnalysisData | null>(null);
@@ -243,7 +247,7 @@ export default function ReelsCenter({
  if (data?.success && data.meta) {
  setVideoMeta(data.meta as YoutubeVideoMeta);
  // Rellenamos el contexto con el título real en vez del texto genérico de relleno.
- setVideoTopic(prev => (!prev || prev === 'Vídeo de YouTube de Bakandeya') ? (data.meta.title || prev) : prev);
+ setVideoTopic(prev => prev.trim() ? prev : (data.meta.title || prev));
  } else {
  setMetaError(data?.error || 'No se pudo leer la ficha del vídeo.');
  }
@@ -621,32 +625,10 @@ export default function ReelsCenter({
  const [metricSuccess, setMetricSuccess] = useState('');
  const [isSyncingMetrics, setIsSyncingMetrics] = useState(false);
  const [isScanningMetrics, setIsScanningMetrics] = useState(false);
- const [realVideos, setRealVideos] = useState<any[]>([
- {
- title:"El Violín del Diablo (Ska-Reggae Live)",
- views: 5240,
- date:"2025-11-12",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- },
- {
- title:"Bakandeya - Ensayo en Trinchera Málaga",
- views: 3120,
- date:"2026-02-18",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- },
- {
- title:"Gira Bakandeya 2026 - Promo Oficial",
- views: 1850,
- date:"2026-04-05",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- },
- {
- title:"Roots Reggae Session Live in Madrid",
- views: 1420,
- date:"2026-05-20",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- }
- ]);
+ // Vídeos reales que devuelve el escaneo de métricas. Arrancaba con cuatro vídeos
+ // inventados de Bakandeya (todos apuntando al mismo enlace de relleno), que en cualquier
+ // otra banda eran datos falsos de un grupo ajeno.
+ const [realVideos, setRealVideos] = useState<any[]>([]);
 
  const handleSaveMetric = async (e: React.FormEvent) => {
  e.preventDefault();
@@ -1039,9 +1021,9 @@ export default function ReelsCenter({
  } catch (err) {
  console.error(err);
  if (style === 'hype') {
- setGeneratedCopy(`⚡️ ¡FUEGO EN EL ESCENARIO! 🔥\n\nLa locomotora balkan de Bakandeya no tiene freno: ${reelIdea}. ¡Prepárate para sudar la camiseta! 🎺🎸\n\n#bakandeya #balkanska #mestizaje #livemusic`);
+ setGeneratedCopy(`⚡️ ¡FUEGO EN EL ESCENARIO! 🔥\n\n${nombreBanda} no tiene freno: ${reelIdea}. ¡Prepárate para sudar la camiseta! 🔥🎸\n\n#MusicaEnDirecto #Directo`);
  } else {
- setGeneratedCopy(`🌊 Respirando hondo, dejando fluir el ritmo... 🍀\n\nConectando ideas en el local: ${reelIdea}. Buenas energías para el camino. Paz y roots. 🕊️✨\n\n#bakandeya #reggae #rootsreggae #mestizaje`);
+ setGeneratedCopy(`🌊 Respirando hondo, dejando fluir el ritmo... 🍀\n\n${nombreBanda} conectando ideas en el local: ${reelIdea}. Buenas energías para el camino. ✨\n\n#MusicaEnDirecto #Local`);
  }
  } finally {
  setIsGenerating(false);
@@ -1073,8 +1055,8 @@ export default function ReelsCenter({
  const phoneTitle = selectedPostInPhone
  ? `${selectedPostInPhone.plataforma} · ${selectedPostInPhone.responsable}`
  : (activeTab === 'analyzer' && highlights.length > 0
- ? (highlights[selectedHighlightIndex]?.title || 'Reel de Bakandeya')
- : 'Bakandeya Reels');
+ ? (highlights[selectedHighlightIndex]?.title || `Reel de ${nombreBanda}`)
+ : `Reels de ${nombreBanda}`);
 
  const phoneDuration = selectedPostInPhone
  ? selectedPostInPhone.fecha
@@ -1101,10 +1083,10 @@ export default function ReelsCenter({
  <button
  onClick={handleAnalyzeBakandeyaTone}
  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 transition-all cursor-pointer shadow-md"
- title="Escanear Reels y Posts de @bakandeya para fijar el Tono de Voz y Expresión de la banda"
+ title={`Escanear los Reels y posts de ${instagramHandle || nombreBanda} para fijar el tono de voz de la banda`}
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
- <span>Tono Redes Bakandeya</span>
+ <span>Tono de voz en redes</span>
  </button>
 
  <button
@@ -1571,12 +1553,7 @@ export default function ReelsCenter({
  id="youtube-url-input"
  type="url"
  value={youtubeUrl}
- onChange={(e) => {
- setYoutubeUrl(e.target.value);
- if (e.target.value && !videoTopic) {
- setVideoTopic("Vídeo de YouTube de Bakandeya");
- }
- }}
+ onChange={(e) => setYoutubeUrl(e.target.value)}
  placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
  className={`w-full rounded-xl pl-3 pr-10 py-2.5 text-xs focus:outline-none font-mono ${
  isStitchLight
@@ -2091,7 +2068,7 @@ export default function ReelsCenter({
  <Calendar className="w-4 h-4" /> Calendario de Publicaciones de la Banda ({posts.length})
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
- Aquí puedes ver la parrilla de contenidos aprobada y programada en la base de datos de Bakandeya.
+ Aquí puedes ver la parrilla de contenidos aprobada y programada de {nombreBanda}.
  </p>
  </div>
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded uppercase ${
@@ -2144,7 +2121,7 @@ export default function ReelsCenter({
  <button
  id={`delete-post-${post.id}`}
  onClick={async () => {
- if (confirm('¿Seguro que deseas eliminar esta publicación del calendario de Bakandeya?')) {
+ if (confirm(`¿Seguro que deseas eliminar esta publicación del calendario de ${nombreBanda}?`)) {
  await onUpdatePost(post.id, { estado: 'borrador' }); // or we can handle direct deletion or mock update
  alert('Publicación desactivada/movida a borrador.');
  }
@@ -2403,10 +2380,10 @@ export default function ReelsCenter({
  <div className="flex items-center gap-1.5">
  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-mono font-bold ${
  isStitchLight ? 'bg-indigo-50 -indigo-200 text-indigo-600' : 'bg-[#f2ca50]/20 -[#f2ca50] text-[#f2ca50]'
- }`}>B</span>
+ }`}>{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
- <span className="text-[9px] font-bold text-white block">@bakandeya_reggae</span>
- <span className={`text-[7px] font-mono block ${isStitchLight ? 'text-indigo-200' : 'text-[#ffb596]'}`}>Banda Balkan-Ska Mestizo</span>
+ <span className="text-[9px] font-bold text-white block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
+ <span className={`text-[7px] font-mono block ${isStitchLight ? 'text-indigo-200' : 'text-[#ffb596]'}`}>{nombreBanda}</span>
  </div>
  </div>
 
@@ -2458,7 +2435,7 @@ export default function ReelsCenter({
  isStitchLight ? 'text-indigo-400 bg-white/10 -indigo-200/20' : 'text-[#f2ca50] bg-black/40 -neutral-800/50'
  }`}>
  <Music className="w-2.5 h-2.5 shrink-0" />
- <span className="animate-marquee whitespace-nowrap">Bakandeya - Balkan Brass Intro 2026</span>
+ <span className="animate-marquee whitespace-nowrap">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
  </div>
  </div>
  </div>
@@ -2675,10 +2652,10 @@ export default function ReelsCenter({
 
  <div className="z-10 space-y-2 mt-auto text-left">
  <div className="flex items-center gap-1.5">
- <span className="w-5 h-5 rounded-full -[#f2ca50] bg-[#f2ca50]/20 flex items-center justify-center text-[8px] font-mono font-bold text-[#f2ca50]">B</span>
+ <span className="w-5 h-5 rounded-full -[#f2ca50] bg-[#f2ca50]/20 flex items-center justify-center text-[8px] font-mono font-bold text-[#f2ca50]">{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
- <span className="text-[9px] font-bold text-white block">@bakandeya_reggae</span>
- <span className="text-[7px] font-mono text-neutral-400 block">Banda Balkan-Ska Mestizo</span>
+ <span className="text-[9px] font-bold text-white block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
+ <span className="text-[7px] font-mono text-neutral-400 block truncate max-w-[120px]">{nombreBanda}</span>
  </div>
  </div>
 
@@ -2722,7 +2699,7 @@ export default function ReelsCenter({
 
  <div className="flex items-center gap-1 text-[8px] font-mono bg-black/60 text-[#f2ca50] -neutral-800/50 py-1 px-2 rounded-full max-w-[150px] truncate">
  <Music className="w-2.5 h-2.5 shrink-0" />
- <span>Bakandeya - Ensayo Original 2026</span>
+ <span className="truncate">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
  </div>
  </div>
 
