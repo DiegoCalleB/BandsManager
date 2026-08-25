@@ -2229,7 +2229,7 @@ export default function ReelsCenter({
  </video>
 
  {/* Kinetic Reels Subtitles Overlay */}
- {currentSubtitleText && (
+ {currentSubtitleText && !renderedBurnedSubs && (
  <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-xl -[#f2ca50]/40 text-center backdrop-blur-sm shadow-xl">
  <span className="text-[10px] font-sans font-black tracking-wide text-[#f2ca50] uppercase leading-tight">
  ✨ {currentSubtitleText} ✨
@@ -2597,7 +2597,7 @@ export default function ReelsCenter({
  </video>
 
  {/* Subtitles Overlay inside Cinema Phone */}
- {currentSubtitleText && (
+ {currentSubtitleText && !renderedBurnedSubs && (
  <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-xl -[#f2ca50]/40 text-center backdrop-blur-sm shadow-xl">
  <span className="text-[10px] font-sans font-black tracking-wide text-[#f2ca50] uppercase leading-tight">
  ✨ {currentSubtitleText} ✨
@@ -3297,6 +3297,96 @@ export default function ReelsCenter({
  )}
  </div>
  )}
+
+ {/* Hook, CTA y variantes por plataforma: lo que de verdad decide si alguien
+ se queda en el primer segundo, y que antes la IA ni generaba. */}
+ {(() => {
+ const clip = highlights[selectedHighlightIndex];
+ if (!clip) return null;
+ const variantes = [
+ { etiqueta: 'Instagram', texto: clip.recommendedCopy },
+ { etiqueta: 'TikTok', texto: clip.copyTikTok },
+ { etiqueta: 'YouTube Shorts', texto: clip.copyYouTube }
+ ].filter(v => v.texto && v.texto.trim());
+
+ if (!clip.hookText && !clip.cta && variantes.length < 2 && !(clip.hashtags || []).length) return null;
+
+ return (
+ <div className="p-4 rounded-xl bg-neutral-950/40 -neutral-800/60 space-y-3">
+ {clip.hookText && (
+ <div className="space-y-1">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ Rótulo para los primeros 2 segundos
+ </span>
+ <div className="flex items-center gap-2">
+ <p className="flex-1 text-sm font-black text-[#f2ca50] leading-tight">"{clip.hookText}"</p>
+ <button
+ type="button"
+ onClick={() => handleCopyToClipboard(clip.hookText || '')}
+ className="shrink-0 px-2 py-1 rounded-lg bg-neutral-900 -neutral-800 text-[9px] font-mono text-neutral-400 hover:text-neutral-200 cursor-pointer"
+ >
+ Copiar
+ </button>
+ </div>
+ </div>
+ )}
+
+ {clip.cta && (
+ <div className="space-y-1">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Llamada a la acción</span>
+ <p className="text-[11px] text-neutral-300 leading-snug">{clip.cta}</p>
+ </div>
+ )}
+
+ {variantes.length > 1 && (
+ <div className="space-y-1.5">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ Versiones por plataforma (pulsa para usarla)
+ </span>
+ <div className="flex flex-wrap gap-1.5">
+ {variantes.map(v => (
+ <button
+ key={v.etiqueta}
+ type="button"
+ onClick={() => setEditedCopy(v.texto || '')}
+ title={v.texto}
+ className={`px-2.5 py-1 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer transition-all ${
+ editedCopy === v.texto
+ ? 'bg-[#f2ca50] text-[#3c2f00]'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {v.etiqueta}
+ </button>
+ ))}
+ </div>
+ </div>
+ )}
+
+ {(clip.hashtags || []).length > 0 && (
+ <div className="space-y-1.5">
+ <div className="flex justify-between items-center">
+ <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Hashtags sugeridos</span>
+ <button
+ type="button"
+ onClick={() => setEditedCopy(prev => `${prev.trimEnd()}\n\n${(clip.hashtags || []).join(' ')}`.trim())}
+ className="text-[9px] font-mono text-[#f2ca50] hover:underline cursor-pointer bg-transparent -none"
+ >
+ Añadir todos al copy
+ </button>
+ </div>
+ <div className="flex flex-wrap gap-1">
+ {(clip.hashtags || []).map((tag, i) => (
+ <span key={`${tag}-${i}`} className="px-1.5 py-0.5 rounded bg-neutral-900 -neutral-800 text-[9px] font-mono text-neutral-400">
+ {tag}
+ </span>
+ ))}
+ </div>
+ </div>
+ )}
+ </div>
+ );
+ })()}
 
  {/* Copy Editor Area */}
  <div className="space-y-2">

@@ -492,15 +492,17 @@ export type CropMode = "crop" | "blur" | "none";
  */
 export function buildVerticalFilter(mode: CropMode, width = 1080, height = 1920): string[] {
   if (mode === "none") return [];
+  // `setsar=1` no es opcional: scale deja un SAR como 4096:4095 y el clip sale
+  // mínimamente estirado, además de que algunas plataformas lo recodifican por ello.
   if (mode === "blur") {
     return [
-      `[0:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},boxblur=luma_radius=40:luma_power=2[bg]`,
-      `[0:v]scale=${width}:${height}:force_original_aspect_ratio=decrease[fg]`,
+      `[0:v]scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},boxblur=luma_radius=40:luma_power=2,setsar=1[bg]`,
+      `[0:v]scale=${width}:${height}:force_original_aspect_ratio=decrease,setsar=1[fg]`,
       `[bg][fg]overlay=(W-w)/2:(H-h)/2[v]`
     ];
   }
   return [
-    `[0:v]crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height}[v]`
+    `[0:v]crop='min(iw,ih*9/16)':'min(ih,iw*16/9)',scale=${width}:${height}:force_original_aspect_ratio=increase,crop=${width}:${height},setsar=1[v]`
   ];
 }
 

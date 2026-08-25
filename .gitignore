@@ -10,3 +10,4 @@ bin/
 public/uploads/
 bun.lock
 *.py
+public/clips/

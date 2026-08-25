@@ -251,6 +251,11 @@ describe('filtros de ffmpeg', () => {
     expect(filtros[0].endsWith('[v]')).toBe(true);
   });
 
+  it('fuerza píxeles cuadrados: sin setsar el clip sale estirado', () => {
+    expect(buildVerticalFilter('crop')[0]).toContain('setsar=1');
+    expect(buildVerticalFilter('blur').join(';')).toContain('setsar=1');
+  });
+
   it('blur compone fondo desenfocado y vídeo centrado', () => {
     const filtros = buildVerticalFilter('blur');
     expect(filtros).toHaveLength(3);
