@@ -69,6 +69,55 @@ vi.mock('fluent-ffmpeg', () => ({
 }));
 vi.mock('ffmpeg-static', () => ({ default: '/bin/false' }));
 
+// Sin este mock cada petición lanzaba un `yt-dlp` de verdad y salía a la red: el fichero
+// pasaba de 0,5 s a 17 s y en CI dependería de que el binario esté instalado.
+const fuentes = {
+  dataApi: true,
+  ytDlpInstalado: false,
+  capitulos: [] as Array<{ title: string; start: number; end: number }>,
+};
+const llamadas = { dataApi: 0, ytDlp: 0, descargas: 0 };
+
+vi.mock('../../utils/youtubeSource.js', async (importOriginal) => {
+  // fusionarMetadatos / metadatosVacios / normalizarCapitulos son puros: usamos los de verdad.
+  const real = await importOriginal<typeof import('../../utils/youtubeSource.js')>();
+  return {
+    ...real,
+    tieneClaveDataApi: () => fuentes.dataApi,
+    metadatosDataApi: async () => {
+      llamadas.dataApi++;
+      if (!fuentes.dataApi) return null;
+      return {
+        title: 'Directo en la sala',
+        description: '',
+        author: 'Canal Ruta 66',
+        duration: 600,
+        thumbnail: 'https://i.ytimg.com/alta.jpg',
+        chapters: [],
+        fuente: 'data-api' as const,
+      };
+    },
+    ytDlpDisponible: async () => fuentes.ytDlpInstalado,
+    metadatosYtDlp: async () => {
+      llamadas.ytDlp++;
+      if (!fuentes.ytDlpInstalado) return null;
+      return {
+        title: 'Directo en la sala',
+        description: '',
+        author: 'Canal Ruta 66',
+        duration: 600,
+        thumbnail: '',
+        chapters: fuentes.capitulos,
+        fuente: 'yt-dlp' as const,
+      };
+    },
+    descargarConYtDlp: async () => {
+      llamadas.descargas++;
+      return false;
+    },
+  };
+});
+
 // Guardamos el fetch real ANTES de sustituirlo: las pruebas necesitan llamar al servidor
 // local, y el stub solo debe cubrir la llamada a oEmbed que hace la ruta.
 const realFetch = globalThis.fetch.bind(globalThis);
@@ -108,6 +157,12 @@ beforeEach(() => {
   promptsVistos.length = 0;
   respuestaIa.texto = '';
   aiDisponible.valor = true;
+  fuentes.dataApi = true;
+  fuentes.ytDlpInstalado = false;
+  fuentes.capitulos = [];
+  llamadas.dataApi = 0;
+  llamadas.ytDlp = 0;
+  llamadas.descargas = 0;
 });
 
 describe('POST /api/analyze-video-highlights', () => {
@@ -210,6 +265,34 @@ describe('GET /api/youtube-meta', () => {
     const { status, body } = await get('/api/youtube-meta?url=https://example.com/x');
     expect(status).toBe(400);
     expect(body.success).toBe(false);
+  });
+
+  it('con la Data API y sin yt-dlp, no gasta tiempo en yt-dlp', async () => {
+    fuentes.dataApi = true;
+    fuentes.ytDlpInstalado = false;
+    const { body } = await get('/api/youtube-meta?url=https://youtu.be/8Jdw41lYdak');
+    expect(body.meta.duration).toBe(600);
+    expect(llamadas.dataApi).toBe(1);
+    expect(llamadas.ytDlp).toBe(0);
+  });
+
+  it('sin clave de Data API cae a yt-dlp', async () => {
+    fuentes.dataApi = false;
+    fuentes.ytDlpInstalado = true;
+    const { body } = await get('/api/youtube-meta?url=https://youtu.be/8Jdw41lYdak');
+    expect(llamadas.ytDlp).toBe(1);
+    expect(body.meta.duration).toBe(600);
+  });
+
+  it('con Data API y yt-dlp instalado, consulta yt-dlp por los capítulos', async () => {
+    // Los capítulos solo los da yt-dlp, y son la mejor pista para elegir cortes:
+    // merece la pena la llamada extra aunque la ficha ya esté completa.
+    fuentes.dataApi = true;
+    fuentes.ytDlpInstalado = true;
+    fuentes.capitulos = [{ title: 'Solo de guitarra', start: 120, end: 180 }];
+    await get('/api/youtube-meta?url=https://youtu.be/8Jdw41lYdak');
+    expect(llamadas.dataApi).toBe(1);
+    expect(llamadas.ytDlp).toBe(1);
   });
 });
 

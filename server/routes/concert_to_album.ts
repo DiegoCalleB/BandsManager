@@ -1,13 +1,15 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { execFile, spawn } from "child_process";
 import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from "../ai.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { getSupabaseClient, getBucketName } from "./upload.js";
+// Estos helpers vivían aquí; ahora los comparte también el generador de Reels, que antes
+// descargaba con ytdl-core a secas y era el que se comía los bloqueos antibot de YouTube.
+import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../utils/youtubeSource.js";
 
 async function uploadToSupabaseIfAvailable(
   localFilePath: string,
@@ -52,32 +54,6 @@ if (ffmpegStatic) {
 
 const router = express.Router();
 
-/**
- * Ejecuta un binario con sus argumentos SIN pasar por el shell.
- *
- * Antes esto era `exec()` con la orden montada como texto: la URL de YouTube y el
- * `sourceFilePath` venían del body y se interpolaban entre comillas dobles, así que un valor con
- * una comilla y un `;` (o un `$(...)`) se salía de la cadena y ejecutaba lo que quisiera en el
- * servidor. Con execFile y un array de argumentos no hay cadena que romper: el valor llega al
- * proceso tal cual, por raro que sea.
- */
-const ejecutar = (binario: string, args: string[], opts: any = {}) =>
-  new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
-    execFile(binario, args, opts, (err, stdout, stderr) => {
-      if (err) return reject(err);
-      resolve({ stdout: stdout.toString(), stderr: stderr.toString() });
-    });
-  });
-
-/** Las banderas anti-bot de yt-dlp, que estaban copiadas en cuatro sitios. */
-function banderasAntiBot(): string[] {
-  return [
-    ...banderasDeCookies(),
-    "--extractor-args", "youtube:player_client=android,web,mweb,ios",
-    "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "--no-check-certificates"
-  ];
-}
 
 /**
  * URL de vídeo utilizable. Además de rechazar lo que no sea http(s) (un `file://` haría que
@@ -128,16 +104,6 @@ interface TrackItem {
   videoUrl?: string;
 }
 
-const COOKIES_FILE = path.join(process.cwd(), "data", "youtube_cookies.txt");
-
-function banderasDeCookies(): string[] {
-  try {
-    if (fs.existsSync(COOKIES_FILE) && fs.statSync(COOKIES_FILE).size > 10) {
-      return ["--cookies", COOKIES_FILE];
-    }
-  } catch {}
-  return [];
-}
 
 // Routes for YouTube Cookies Management
 // requireAuth en las tres: el fichero de cookies guarda la sesión de YouTube con la que el
