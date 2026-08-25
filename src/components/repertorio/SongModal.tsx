@@ -29,8 +29,6 @@ export function SongModal({
   defaultAlbumForNewSong = '',
   bandMembers = []
 }: SongModalProps) {
-  if (!isOpen) return null;
-
   const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
   const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);
 
@@ -64,6 +62,10 @@ export function SongModal({
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
+  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
+  if (!isOpen) return null;
 
   const handleMemberNoteChange = (name: string, text: string) => {
     setMemberNotesState(prev => ({

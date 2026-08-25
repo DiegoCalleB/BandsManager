@@ -303,7 +303,7 @@ export async function scrapeChannelMetrics(band: {
               const postsMatch = desc.match(/([0-9.,]+[kKmM]?)\s+(?:Posts|publicaciones)/i);
               if (postsMatch) {
                 const raw = postsMatch[1];
-                let count = parseInt(raw.replace(/[^0-9]/g, ""), 10);
+                const count = parseInt(raw.replace(/[^0-9]/g, ""), 10);
                 if (!isNaN(count)) result.instagramPostsCount = count;
               }
             }
@@ -344,7 +344,7 @@ export async function scrapeChannelMetrics(band: {
             const postsMatch = text.match(/([0-9.,]+[kKmM]?)\s*(?:posts|Posts|publicaciones)/i);
             if (postsMatch) {
               const raw = postsMatch[1];
-              let count = parseInt(raw.replace(/[^0-9]/g, ""), 10);
+              const count = parseInt(raw.replace(/[^0-9]/g, ""), 10);
               if (!isNaN(count)) result.instagramPostsCount = count;
             }
           }

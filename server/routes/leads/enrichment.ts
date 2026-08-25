@@ -329,7 +329,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
     }
   }
   
-  let finalWebsite = scrapedLogoObj?.workingWebsite || 
+  const finalWebsite = scrapedLogoObj?.workingWebsite || 
                      (existingLead?.website && !isBadDirectoryUrl(existingLead.website) ? existingLead.website : "") ||
                      (parsed.website && !isBadDirectoryUrl(parsed.website) ? parsed.website : "") ||
                      (placesWebsite && !isBadDirectoryUrl(placesWebsite) ? placesWebsite : "");

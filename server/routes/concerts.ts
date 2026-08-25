@@ -554,7 +554,7 @@ router.get("/calendar.ics", async (req, res) => {
     const nowStamp = formatUtcStamp(new Date());
     const calTitle = bandIds.length > 1 ? "BandManager - Mis Bandas" : `BandManager - ${bandIds[0].replace(/^band-/, "").toUpperCase()}`;
 
-    let ics = [
+    const ics = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
       "PRODID:-//BandManager.ai//ES",

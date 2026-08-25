@@ -23,13 +23,12 @@ export function MemberNotesModal({
   onClose,
   onSaveSongNotes
 }: MemberNotesModalProps) {
-  if (!isOpen || !song) return null;
-
-  const resolvedMembers = resolveBandMembers(bandMembers, song.notasMiembros);
+  const resolvedMembers = resolveBandMembers(bandMembers, song?.notasMiembros);
 
   // Initialize local state of notes per member
   const [memberNotes, setMemberNotes] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
+    if (!song) return initial;
     resolvedMembers.forEach(m => {
       initial[m.name.toLowerCase()] = getSongMemberNote(song, m.id, m.name);
     });
@@ -37,7 +36,7 @@ export function MemberNotesModal({
   });
 
   const [generalRepertorioNote, setGeneralRepertorioNote] = useState<string>(
-    song.notasRepertorio || song.notasInternas || ''
+    song?.notasRepertorio || song?.notasInternas || ''
   );
 
   const [newMemberName, setNewMemberName] = useState<string>('');
@@ -45,6 +44,11 @@ export function MemberNotesModal({
   const [showAddCustomMember, setShowAddCustomMember] = useState<boolean>(false);
   const [customMembers, setCustomMembers] = useState<BandMemberOption[]>([]);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
+
+  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
+  // guard vivía antes de ellos, así que abrir el modal con una canción distinta (o cerrarlo)
+  // cambiaba cuántos hooks corrían entre renders.
+  if (!isOpen || !song) return null;
 
   const handleNoteChange = (key: string, text: string) => {
     setMemberNotes(prev => ({

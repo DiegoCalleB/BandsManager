@@ -1,10 +1,12 @@
 import express from "express";
+import helmet from "helmet";
 import path from "path";
 import * as XLSX from "xlsx";
 
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
 import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
+import { mismaBanda } from "./server/utils/bandAccess.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase } from "./server/db.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
@@ -44,6 +46,12 @@ process.on("unhandledRejection", (reason) => {
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+
+// CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
+// y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
+// propio. El resto de cabeceras de helmet (HSTS, X-Frame-Options, nosniff, Referrer-Policy,
+// X-Powered-By oculto) no rompen nada de eso y sí cierran clickjacking y fuga de metadata.
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 
 app.use(
   express.json({
@@ -175,11 +183,9 @@ app.get("/api/download-excel", (req, res) => {
       return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
     }
     const bandId = authUser.band_id;
-    const cleanBandId = bandId.replace(/^(band|reg)-/, "");
     const isOwn = (recordBandId: any) => {
       if (!recordBandId) return false;
-      const clean = String(recordBandId).replace(/^(band|reg)-/, "");
-      return clean === cleanBandId;
+      return mismaBanda(String(recordBandId), bandId);
     };
 
     const state = loadState();

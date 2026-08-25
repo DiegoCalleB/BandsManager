@@ -458,7 +458,7 @@ export function getDeterministicGrowthPlan(
   };
 
   // 4. Spotify & Streaming Strategy
-  let spStage = !hasSpotifyProfile ? 'Fase Pre-Lanzamiento' : spCount < 1000 ? 'Tracción Inicial (0 - 1K oyentes)' : 'Consolidación Algorítmica (1K+ oyentes)';
+  const spStage = !hasSpotifyProfile ? 'Fase Pre-Lanzamiento' : spCount < 1000 ? 'Tracción Inicial (0 - 1K oyentes)' : 'Consolidación Algorítmica (1K+ oyentes)';
   let spObjective = '';
   let spStrategy = '';
   let spHooks: string[] = [];

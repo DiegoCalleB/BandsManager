@@ -20,8 +20,6 @@ export function SetlistModal({
   onClose,
   onSave,
 }: SetlistModalProps) {
-  if (!isOpen) return null;
-
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');
@@ -37,6 +35,10 @@ export function SetlistModal({
       setTipoFormato('festival');
     }
   }, [setlistToEdit]);
+
+  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
+  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
+  if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

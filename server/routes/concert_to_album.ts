@@ -384,7 +384,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
       ytDlpBinaryPath = "yt-dlp";
     }
 
-    let sourceMediaToAnalyze = sourceFilePath || "";
+    const sourceMediaToAnalyze = sourceFilePath || "";
     let youtubeBlocked = false;
 
     if (urlVideo && (urlVideo.includes("youtube.com") || urlVideo.includes("youtu.be"))) {

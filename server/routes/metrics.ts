@@ -296,7 +296,7 @@ async function fetchInstagramInsightsData(igUserId: string, token: string) {
       const mediaList = mediaData?.data || [];
 
       for (const m of mediaList) {
-        let mediaInsights: any = {};
+        const mediaInsights: any = {};
         // Fetch media-specific insights (Reels plays, reach, saved, shares, total_interactions)
         try {
           const isReel = m.media_product_type === "REELS" || m.media_type === "VIDEO";
