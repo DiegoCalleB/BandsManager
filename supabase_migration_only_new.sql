@@ -234,3 +234,31 @@ CREATE TABLE IF NOT EXISTS public.band_email_accounts (
 ALTER TABLE public.band_email_accounts ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.band_email_accounts;
 CREATE POLICY "Permitir acceso total al backend" ON public.band_email_accounts FOR ALL USING (true);
+
+-- Análisis de highlights del generador de Reels (server/routes/reels.ts). Antes vivía solo en
+-- el estado de React: al recargar la página se perdían los clips sugeridos, el mapa de energía
+-- del audio y los copies, y para volver a verlos había que pagar otra llamada a Gemini. Ver
+-- supabase_schema.sql para el comentario completo.
+CREATE TABLE IF NOT EXISTS public.reel_analyses (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES public.registered_bands(band_id) ON DELETE CASCADE,
+  video_key TEXT NOT NULL,
+  source_type TEXT NOT NULL DEFAULT 'youtube',
+  source_url TEXT DEFAULT '',
+  video_title TEXT DEFAULT '',
+  video_duration INTEGER DEFAULT 0,
+  target_duration INTEGER DEFAULT 30,
+  highlights JSONB NOT NULL DEFAULT '[]'::jsonb,
+  optimal_time JSONB DEFAULT '{}'::jsonb,
+  energy_windows JSONB DEFAULT '[]'::jsonb,
+  video_meta JSONB DEFAULT '{}'::jsonb,
+  generated_by_ai BOOLEAN DEFAULT false,
+  notice TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(band_id, video_key)
+);
+CREATE INDEX IF NOT EXISTS idx_reel_analyses_band_video ON public.reel_analyses(band_id, video_key);
+ALTER TABLE public.reel_analyses ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.reel_analyses;
+CREATE POLICY "Permitir acceso total al backend" ON public.reel_analyses FOR ALL USING (true);

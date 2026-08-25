@@ -18,6 +18,15 @@ export interface HighlightClip {
   energyLevel?: string;
   recommendedCopy?: string;
   hashtags?: string[];
+  /** Segundos exactos que devuelve el backend, ya recortados a la duración real del vídeo. */
+  startSec?: number;
+  endSec?: number;
+  duration?: number;
+  /** Rótulo sobreimpreso para los primeros segundos, que es lo que frena el scroll. */
+  hookText?: string;
+  copyTikTok?: string;
+  copyYouTube?: string;
+  cta?: string;
 }
 
 export interface OptimalTime {

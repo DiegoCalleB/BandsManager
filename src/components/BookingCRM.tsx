@@ -298,8 +298,9 @@ export default function BookingCRM({
  method: 'POST',
  headers: { 'Content-Type': 'application/json' }
  });
- if (res.ok) {
- const data = await res.json();
+ // apiFetch devuelve el JSON ya parseado (y lanza si la respuesta no fue 2xx).
+ const data = res as any;
+ if (data) {
  if (data.enrichedCount > 0) {
  setEnrichStatusMsg(`¡Éxito! Se han completado y guardado en Supabase ${data.enrichedCount} direcciones de salas/festivales.`);
  if (Array.isArray(data.leads)) {

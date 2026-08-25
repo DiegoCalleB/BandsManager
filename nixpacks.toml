@@ -1,5 +1,8 @@
 [phases.setup]
-nixPkgs = ["nodejs_22"]
+# yt-dlp es lo que permite descargar de YouTube sin que el antibot corte la petición desde una
+# IP de datacenter. Lo usan el analizador de conciertos y el generador de Reels; sin él ambos
+# caen a caminos de respaldo mucho más frágiles.
+nixPkgs = ["nodejs_22", "yt-dlp", "python3"]
 
 [phases.install]
 cmds = ["npm install"]
