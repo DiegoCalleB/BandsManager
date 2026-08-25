@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
 import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
+import { mismaBanda } from "./server/utils/bandAccess.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase } from "./server/db.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
@@ -182,11 +183,9 @@ app.get("/api/download-excel", (req, res) => {
       return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
     }
     const bandId = authUser.band_id;
-    const cleanBandId = bandId.replace(/^(band|reg)-/, "");
     const isOwn = (recordBandId: any) => {
       if (!recordBandId) return false;
-      const clean = String(recordBandId).replace(/^(band|reg)-/, "");
-      return clean === cleanBandId;
+      return mismaBanda(String(recordBandId), bandId);
     };
 
     const state = loadState();

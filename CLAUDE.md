@@ -85,3 +85,7 @@ Each band connects its own SMTP/IMAP mailbox (app password) stored per-band in S
 ### Testing
 
 Vitest tests live in `__tests__/` subfolders next to the code they cover (`server/__tests__`, `server/db/__tests__`, `server/routes/__tests__`, `server/services/__tests__`, `server/utils/__tests__`, `src/hooks/__tests__`, `src/i18n/__tests__`, `src/utils/__tests__`). There's no central `vitest.config.ts`; add new tests as `*.test.ts` next to the module in a nearby `__tests__` folder.
+
+The established style is unit-testing exported pure functions directly against a fake `loadState`/`req` object (see `server/__tests__/auth_bandas.test.ts`, `server/utils/__tests__/bandAccess.test.ts`) rather than spinning up the Express app with an HTTP client — there's no `supertest` in the repo, and route handlers that need coverage should have their core logic extracted into a testable helper (e.g. `server/utils/bandAccess.ts`) rather than tested through a live request.
+
+Run `npm run test:coverage` (adds `@vitest/coverage-v8`) for a coverage report. As of this writing overall statement coverage is ~24% — `server/utils` (the auth/multi-tenancy/SSRF helpers) is the best-covered area at ~90%, while most of `server/db/*.ts` (thin Supabase wrappers) and `server/routes/*.ts` (large inline handlers) have little to none. When adding tests, prioritize security- and multi-tenancy-sensitive logic over raw coverage percentage.
