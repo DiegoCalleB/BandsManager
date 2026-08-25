@@ -115,6 +115,26 @@ vi.mock('../../utils/youtubeSource.js', async (importOriginal) => {
       llamadas.descargas++;
       return false;
     },
+    // Ojo: las llamadas internas del módulo no pasan por el mock, así que urlDeAudioDirecta
+    // ejecutaría el ytDlpDisponible REAL y lanzaría un proceso por petición.
+    urlDeAudioDirecta: async () => (fuentes.ytDlpInstalado ? 'https://audio.example/stream.webm' : null),
+  };
+});
+
+const energia = { ventanas: [] as Array<{ start: number; end: number; db: number; score: number }> };
+
+vi.mock('../../utils/audioEnergy.js', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../../utils/audioEnergy.js')>();
+  return {
+    ...real,
+    // Lo puro (ventanasConMasEnergia, resumirEnergiaParaPrompt) se usa de verdad; solo se
+    // sustituye la parte que llamaría a ffmpeg contra una URL remota.
+    analizarEnergiaAudio: async () =>
+      energia.ventanas.flatMap((v) => {
+        const puntos = [];
+        for (let t = v.start; t < v.end; t++) puntos.push({ t, db: v.db });
+        return puntos;
+      }),
   };
 });
 
@@ -163,6 +183,7 @@ beforeEach(() => {
   llamadas.dataApi = 0;
   llamadas.ytDlp = 0;
   llamadas.descargas = 0;
+  energia.ventanas = [];
 });
 
 describe('POST /api/analyze-video-highlights', () => {
@@ -237,6 +258,74 @@ describe('POST /api/analyze-video-highlights', () => {
     for (const clip of body.highlights) {
       expect(clip.endSec).toBeLessThanOrEqual(600);
     }
+  });
+
+  it('pasa a la IA los tramos con más energía medida en el audio', async () => {
+    fuentes.ytDlpInstalado = true;
+    // Silencio al principio, caña entre el 100 y el 160.
+    energia.ventanas = [
+      { start: 0, end: 100, db: -50, score: 0 },
+      { start: 100, end: 160, db: -12, score: 100 },
+      { start: 160, end: 600, db: -45, score: 0 },
+    ];
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 100, endSec: 130 }] });
+
+    await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+
+    const prompt = promptsVistos[0];
+    expect(prompt).toContain('ENERGÍA SONORA MEDIDA EN EL AUDIO REAL');
+    expect(prompt).toMatch(/1:4[0-9]|2:0[0-9]/); // la ventana fuerte cae sobre el minuto 1-2
+  });
+
+  it('pasa a la IA los capítulos que marcó quien subió el vídeo', async () => {
+    fuentes.ytDlpInstalado = true;
+    fuentes.capitulos = [{ title: 'Solo de guitarra', start: 120, end: 180 }];
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 120, endSec: 150 }] });
+
+    await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+    expect(promptsVistos[0]).toContain('Solo de guitarra');
+    expect(promptsVistos[0]).toContain('CAPÍTULOS');
+  });
+
+  it('sin IA, los cortes de respaldo caen en los picos de energía, no en posiciones fijas', async () => {
+    aiDisponible.valor = false;
+    fuentes.ytDlpInstalado = true;
+    energia.ventanas = [
+      { start: 0, end: 200, db: -50, score: 0 },
+      { start: 200, end: 260, db: -10, score: 100 },
+      { start: 260, end: 600, db: -48, score: 0 },
+    ];
+
+    const { body } = await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+
+    expect(body.generatedByAI).toBe(false);
+    expect(body.audioAnalyzed).toBe(true);
+    // El corte con más confianza debe estar dentro del tramo fuerte (200-260), no en el 0.
+    const mejor = body.highlights[0];
+    expect(mejor.startSec).toBeGreaterThanOrEqual(195);
+    expect(mejor.startSec).toBeLessThan(260);
+  });
+
+  it('si no se puede medir el audio, el análisis sigue igual', async () => {
+    fuentes.ytDlpInstalado = false; // sin yt-dlp no hay URL de audio
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 10, endSec: 40 }] });
+
+    const { status, body } = await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+    expect(status).toBe(200);
+    expect(body.audioAnalyzed).toBe(false);
+    expect(body.highlights).toHaveLength(1);
   });
 
   it('sin clave de IA también responde con cortes utilizables', async () => {

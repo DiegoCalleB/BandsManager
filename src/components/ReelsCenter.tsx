@@ -197,6 +197,9 @@ export default function ReelsCenter({
  const [isFetchingMeta, setIsFetchingMeta] = useState(false);
  const [metaError, setMetaError] = useState<string | null>(null);
  const [analysisNotice, setAnalysisNotice] = useState<string | null>(null);
+ // Tramos con más volumen medidos en el audio real. Es lo que permite acertar en material
+ // instrumental, donde no hay transcripción de la que tirar.
+ const [energyWindows, setEnergyWindows] = useState<Array<{ start: number; end: number; score: number }>>([]);
 
  // Opciones de renderizado del clip físico
  const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
@@ -773,6 +776,7 @@ export default function ReelsCenter({
  return [
  firstStep,
  "Descargando la transcripción con marcas de tiempo (si la hay)...",
+ "Midiendo el volumen del audio para localizar los subidones...",
  "Enviando el contexto real de tu banda al modelo...",
  `Buscando los mejores fragmentos de ~${videoDuration} s...`,
  "Redactando copys, hooks y hashtags..."
@@ -840,6 +844,7 @@ export default function ReelsCenter({
  setIsAnalyzing(true);
  setAnalysisError(null);
  setAnalysisNotice(null);
+ setEnergyWindows([]);
  setLoadingStep(0);
 
  const steps = getLoadingSteps();
@@ -885,6 +890,7 @@ export default function ReelsCenter({
  setOptimalTime(data.optimalTime || null);
  setSelectedHighlightIndex(0);
  setAnalysisNotice(data.notice || null);
+ setEnergyWindows(Array.isArray(data.energyWindows) ? data.energyWindows : []);
  if (data.videoMeta && data.videoMeta.videoId) {
  setVideoMeta(data.videoMeta as YoutubeVideoMeta);
  }
@@ -1749,6 +1755,56 @@ export default function ReelsCenter({
  Hemos localizado {highlights.length} momentos de alto potencial. Haz clic en un clip para seleccionarlo, previsualizarlo y ajustar su programación.
  </p>
  </div>
+
+ {/* Mapa de energía del audio: deja ver POR QUÉ se han elegido estos momentos, y sirve
+ igual en vídeos instrumentales, donde no hay transcripción de la que tirar. */}
+ {energyWindows.length > 0 && timelineDuration > 0 && (
+ <div className="space-y-1.5">
+ <div className="flex items-center justify-between">
+ <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ Energía medida en el audio
+ </span>
+ <span className="text-[9px] font-mono text-emerald-400">● {energyWindows.length} tramos con caña</span>
+ </div>
+ <div className={`relative w-full h-7 rounded-lg overflow-hidden ${isStitchLight ? 'bg-slate-100' : 'bg-neutral-950 -neutral-900'}`}>
+ {energyWindows.map((v, i) => {
+ const izq = Math.max(0, Math.min(100, (v.start / timelineDuration) * 100));
+ const ancho = Math.max(0.8, Math.min(100 - izq, ((v.end - v.start) / timelineDuration) * 100));
+ return (
+ <div
+ key={`${v.start}-${i}`}
+ className="absolute top-0 bottom-0 rounded-sm"
+ title={`${formatTime(v.start)} - ${formatTime(v.end)} · energía ${v.score}/100`}
+ style={{
+ left: `${izq}%`,
+ width: `${ancho}%`,
+ background: isStitchLight ? '#4f46e5' : '#f2ca50',
+ opacity: 0.25 + (Math.max(0, Math.min(100, v.score)) / 100) * 0.75
+ }}
+ />
+ );
+ })}
+ {/* Dónde ha caído el clip seleccionado sobre ese mapa */}
+ {(() => {
+ const clip = highlights[selectedHighlightIndex];
+ if (!clip) return null;
+ const { start, end } = parseRangeTimes(clip.range);
+ if (end <= start) return null;
+ const izq = Math.max(0, Math.min(100, (start / timelineDuration) * 100));
+ const ancho = Math.max(0.8, Math.min(100 - izq, ((end - start) / timelineDuration) * 100));
+ return (
+ <div
+ className="absolute top-0 bottom-0 -2 -emerald-400 rounded-sm pointer-events-none"
+ style={{ left: `${izq}%`, width: `${ancho}%`, boxShadow: '0 0 0 1px rgba(16,185,129,0.6) inset' }}
+ />
+ );
+ })()}
+ </div>
+ <p className="text-[9px] font-mono text-neutral-600 leading-tight">
+ Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.
+ </p>
+ </div>
+ )}
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {highlights.map((clip, index) => {

@@ -275,12 +275,51 @@ export function buildFallbackHighlights(options: {
   bandName: string;
   videoTitle: string;
   hashtags: string[];
+  /** Tramos con más volumen medido. Si los hay, mandan sobre el reparto fijo. */
+  energyWindows?: Array<{ start: number; end: number; score: number }>;
+  /** Capítulos marcados por quien subió el vídeo. Segunda mejor pista. */
+  chapters?: Array<{ title: string; start: number; end: number }>;
 }): NormalizedHighlight[] {
   const total = Math.max(10, Math.floor(options.videoDuration || 0));
   const dur = Math.max(8, Math.min(Math.floor(options.targetDuration || 30), total));
   const titulo = (options.videoTitle || "").trim() || "el vídeo";
   const banda = (options.bandName || "").trim() || "la banda";
   const corto = titulo.length > 40 ? `${titulo.substring(0, 40)}…` : titulo;
+
+  // Sin IA, un corte en el minuto donde más suena la banda es infinitamente mejor que uno
+  // en el 40% del vídeo porque sí.
+  const ventanas = (options.energyWindows || []).filter((v) => v.end > v.start);
+  if (ventanas.length > 0) {
+    return ventanas
+      .slice()
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 4)
+      .map((v, idx) => {
+        const start = Math.max(0, Math.min(Math.floor(v.start), Math.max(0, total - 5)));
+        const end = Math.min(total, Math.max(start + 5, Math.floor(v.end)));
+        const capitulo = (options.chapters || []).find((c) => c.start <= start && c.end >= start);
+        const tituloCorte = capitulo?.title
+          ? `${capitulo.title} (${formatMMSS(start)})`
+          : `Pico de energía ${idx + 1} (${formatMMSS(start)}-${formatMMSS(end)})`;
+        return {
+          id: `hl-${idx + 1}`,
+          title: tituloCorte,
+          range: `${formatMMSS(start)} - ${formatMMSS(end)}`,
+          startSec: start,
+          endSec: end,
+          duration: end - start,
+          confidence: Math.max(50, Math.min(95, v.score)),
+          energyLevel: v.score >= 80 ? "Muy Alta" : v.score >= 50 ? "Alta" : "Media",
+          hookText: "",
+          recommendedCopy: `${banda} en directo. Fragmento de "${corto}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`,
+          copyTikTok: "",
+          copyYouTube: "",
+          hashtags: options.hashtags,
+          cta: "¿Te lo llevas al próximo bolo? Cuéntanoslo en comentarios.",
+          reason: `Tramo con más volumen medido del vídeo (energía ${v.score}/100). Corte automático sin IA: revisa el rango antes de publicar.`
+        };
+      });
+  }
 
   const plantillas = [
     {

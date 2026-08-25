@@ -24,11 +24,17 @@ import {
   fusionarMetadatos,
   metadatosVacios,
   descargarConYtDlp,
+  urlDeAudioDirecta,
   ytDlpDisponible,
   tieneClaveDataApi,
   type CapituloVideo,
   type MetadatosVideo
 } from "../utils/youtubeSource.js";
+import {
+  analizarEnergiaAudio,
+  ventanasConMasEnergia,
+  resumirEnergiaParaPrompt
+} from "../utils/audioEnergy.js";
 import {
   parseRange,
   formatMMSS,
@@ -416,6 +422,32 @@ router.post("/analyze-video-highlights", requireAuth, async (req, res) => {
           .substring(0, 6000)
       : "";
 
+    // Energía real del audio. Es la única pista objetiva de dónde pasa algo cuando el vídeo
+    // es instrumental y no hay transcripción: hasta ahora, ahí la IA elegía a ciegas.
+    // Best-effort y con tope de tiempo: si no se puede medir, el análisis sigue igual.
+    const analizarAudio = req.body?.analyzeAudio !== false;
+    let ventanasEnergia: ReturnType<typeof ventanasConMasEnergia> = [];
+    if (analizarAudio && videoId) {
+      try {
+        const urlAudio = await urlDeAudioDirecta(canonicalYouTubeUrl(videoId));
+        if (urlAudio) {
+          const curva = await analizarEnergiaAudio(urlAudio, { timeoutMs: 120_000 });
+          ventanasEnergia = ventanasConMasEnergia(curva, { duracion: objetivoClip, maxVentanas: 6 });
+          console.log(`[Reels] Energía del audio medida: ${curva.length} puntos, ${ventanasEnergia.length} tramos candidatos.`);
+        }
+      } catch (e: any) {
+        console.log("[Reels] Análisis de audio omitido:", e?.message || e);
+      }
+    }
+    const bloqueEnergia = resumirEnergiaParaPrompt(ventanasEnergia);
+
+    const bloqueCapitulos = meta.chapters.length
+      ? [
+          "CAPÍTULOS QUE MARCÓ QUIEN SUBIÓ EL VÍDEO (son highlights ya elegidos a mano, tenlos muy en cuenta):",
+          ...meta.chapters.slice(0, 25).map((c) => `- ${formatMMSS(c.start)}-${formatMMSS(c.end)}: ${c.title}`)
+        ].join("\n")
+      : "";
+
     const ai = getAiClient();
     let highlights: NormalizedHighlight[] = [];
     let optimalTime: any = null;
@@ -435,7 +467,11 @@ ${meta.description ? `- Descripción original: "${meta.description.substring(0, 
 ${fileName ? `- Archivo local: ${fileName}` : ""}
 ${youtubeUrl ? `- URL: ${youtubeUrl}` : ""}
 ${videoTopic ? `- Contexto/anécdota que aporta el usuario: "${videoTopic}"` : ""}
-${resumenTranscripcion ? `- TRANSCRIPCIÓN REAL CON MARCAS DE TIEMPO (úsala como fuente principal):\n${resumenTranscripcion}` : "- Este vídeo NO tiene transcripción disponible: es material instrumental o sin subtítulos. NO cites letras ni frases concretas, y no supongas qué se dice."}
+${resumenTranscripcion ? `- TRANSCRIPCIÓN REAL CON MARCAS DE TIEMPO:\n${resumenTranscripcion}` : "- Este vídeo NO tiene transcripción disponible: es material instrumental o sin subtítulos. NO cites letras ni frases concretas, y no supongas qué se dice."}
+
+${bloqueCapitulos}
+
+${bloqueEnergia}
 
 TU TAREA:
 Identifica entre 3 y 5 fragmentos con más potencial de enganche. Reglas de los rangos:
@@ -509,7 +545,9 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         targetDuration: objetivoClip,
         bandName: nombreBanda,
         videoTitle: tituloReal,
-        hashtags: hashtagsBase
+        hashtags: hashtagsBase,
+        energyWindows: ventanasEnergia,
+        chapters: meta.chapters
       });
     }
 
@@ -529,6 +567,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       optimalTime,
       generatedByAI: generadoPorIa,
       notice: avisoIa || undefined,
+      audioAnalyzed: ventanasEnergia.length > 0,
+      energyWindows: ventanasEnergia,
       band: { name: nombreBanda, instruments: perfil.instruments, hashtags: hashtagsBase },
       videoMeta: {
         videoId: meta.videoId,

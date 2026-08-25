@@ -185,6 +185,27 @@ export async function descargarConYtDlp(url: string, destino: string): Promise<b
   }
 }
 
+/**
+ * URL directa del mejor flujo de solo audio, para que ffmpeg lo lea en streaming sin bajar el
+ * vídeo entero a disco. Es lo que permite medir la energía del audio antes de decidir cortes
+ * sin pagar una descarga completa.
+ */
+export async function urlDeAudioDirecta(url: string): Promise<string | null> {
+  if (!(await ytDlpDisponible())) return null;
+  try {
+    const { stdout } = await ejecutar(
+      rutaYtDlp(),
+      [...banderasAntiBot(), "-g", "-f", "ba/bestaudio/best", "--no-playlist", url],
+      { timeout: 60_000, maxBuffer: 4 * 1024 * 1024 }
+    );
+    const primera = stdout.split(/\r?\n/).map((l) => l.trim()).find((l) => l.startsWith("http"));
+    return primera || null;
+  } catch (err: any) {
+    console.log("[YouTube] No se pudo obtener la URL de audio:", String(err?.message || err).substring(0, 200));
+    return null;
+  }
+}
+
 /* -------------------------------------------------------- YouTube Data API */
 
 /**
