@@ -8,6 +8,7 @@ import {
   metadatosDataApi,
   banderasAntiBot,
   rutaYtDlp,
+  tramoDeDescarga,
 } from '../youtubeSource';
 
 const CLAVE_ORIGINAL = process.env.YOUTUBE_API_KEY;
@@ -166,6 +167,43 @@ describe('metadatosDataApi', () => {
     vi.stubGlobal('fetch', async () => { llamadas++; return { ok: true, json: async () => ({}) }; });
     expect(await metadatosDataApi('8Jdw41lYdak')).toBeNull();
     expect(llamadas).toBe(0);
+  });
+});
+
+describe('tramoDeDescarga', () => {
+  it('deja margen por delante y devuelve ese margen como desplazamiento', () => {
+    // Es la pieza de la que depende que el corte salga del sitio correcto: lo que se recorta
+    // luego con ffmpeg va referido al fichero descargado, no al vídeo original.
+    expect(tramoDeDescarga(720, 30)).toEqual({ desde: 718, hasta: 752, offset: 718 });
+  });
+
+  it('el desplazamiento y el inicio del tramo son SIEMPRE el mismo número', () => {
+    // Si se separan, el corte sale desplazado justo por esa diferencia.
+    for (const [inicio, dur] of [[0, 30], [1, 15], [5, 60], [3600, 30]] as const) {
+      const t = tramoDeDescarga(inicio, dur);
+      expect(t.offset).toBe(t.desde);
+    }
+  });
+
+  it('no se va por debajo de cero al principio del vídeo', () => {
+    expect(tramoDeDescarga(0, 30).desde).toBe(0);
+    expect(tramoDeDescarga(0, 30).offset).toBe(0);
+    expect(tramoDeDescarga(1, 30).desde).toBe(0);
+  });
+
+  it('el tramo cubre de sobra el corte pedido', () => {
+    const t = tramoDeDescarga(100, 30);
+    expect(t.desde).toBeLessThanOrEqual(100);
+    expect(t.hasta).toBeGreaterThanOrEqual(130);
+  });
+
+  it('aguanta valores basura sin devolver NaN', () => {
+    for (const t of [tramoDeDescarga(NaN as any, NaN as any), tramoDeDescarga(-50, 0)]) {
+      expect(Number.isFinite(t.desde)).toBe(true);
+      expect(Number.isFinite(t.hasta)).toBe(true);
+      expect(t.desde).toBeGreaterThanOrEqual(0);
+      expect(t.hasta).toBeGreaterThan(t.desde);
+    }
   });
 });
 

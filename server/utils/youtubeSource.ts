@@ -159,30 +159,110 @@ export async function metadatosYtDlp(url: string): Promise<MetadatosVideo | null
 }
 
 /**
- * Descarga el vídeo con yt-dlp. `destino` es la ruta final del mp4.
- * Devuelve false si yt-dlp no está o falla, para que quien llame pruebe otra cosa.
+ * Tramo que se le pide a yt-dlp y desplazamiento resultante.
+ *
+ * Se baja con un margen por delante para no quedarse sin el fotograma clave del principio,
+ * y ese margen es justo lo que hay que restar luego al tiempo de corte: si se baja desde el
+ * minuto 12 y después se busca el minuto 12 DENTRO del fichero, el corte sale del sitio
+ * equivocado o directamente vacío.
  */
-export async function descargarConYtDlp(url: string, destino: string): Promise<boolean> {
-  if (!(await ytDlpDisponible())) return false;
+export function tramoDeDescarga(
+  start: number,
+  duration: number,
+  margen = 2
+): { desde: number; hasta: number; offset: number } {
+  const inicio = Math.max(0, Math.floor(Number(start) || 0));
+  const dur = Math.max(1, Math.ceil(Number(duration) || 1));
+  const m = Math.max(0, Math.floor(margen));
+  const desde = Math.max(0, inicio - m);
+  return { desde, hasta: inicio + dur + m, offset: desde };
+}
+
+/** Un fichero de salida que exista y no esté vacío. */
+function descargaValida(destino: string): boolean {
   try {
-    await ejecutar(
-      rutaYtDlp(),
-      [
-        ...banderasAntiBot(),
-        // Preferimos un mp4 ya combinado; si no existe, el mejor vídeo + el mejor audio.
-        "-f", "best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
-        "--merge-output-format", "mp4",
-        "--no-playlist",
-        "-o", destino,
-        url
-      ],
-      { timeout: 10 * 60_000, maxBuffer: 20 * 1024 * 1024 }
-    );
     return fs.existsSync(destino) && fs.statSync(destino).size > 0;
-  } catch (err: any) {
-    console.warn("[YouTube] Descarga con yt-dlp fallida:", String(err?.message || err).substring(0, 300));
+  } catch {
     return false;
   }
+}
+
+export interface OpcionesDescarga {
+  /**
+   * Descargar SOLO este tramo en vez del vídeo entero. Para sacar 30 segundos de un bolo de
+   * dos horas, bajar el vídeo completo son varios GB en el disco efímero de Railway, además
+   * de minutos de espera. Si el tramo falla se reintenta la descarga completa.
+   */
+  seccion?: { start: number; duration: number };
+  /** Ruta de la carpeta de ffmpeg: yt-dlp lo necesita para poder recortar el tramo. */
+  ffmpegDir?: string;
+  timeoutMs?: number;
+}
+
+export interface ResultadoDescarga {
+  ok: boolean;
+  /**
+   * Segundos del vídeo original que NO están en el fichero descargado, porque se bajó solo
+   * un tramo. Quien recorte después tiene que restar esto a su tiempo de inicio: si se baja
+   * desde el minuto 12 y se sigue buscando el minuto 12 dentro del fichero, el corte sale
+   * del sitio equivocado (o vacío).
+   */
+  offset: number;
+}
+
+/**
+ * Descarga el vídeo con yt-dlp. `destino` es la ruta final del mp4.
+ * `ok: false` si yt-dlp no está o falla, para que quien llame pruebe otra cosa.
+ */
+export async function descargarConYtDlp(
+  url: string,
+  destino: string,
+  opciones: OpcionesDescarga = {}
+): Promise<ResultadoDescarga> {
+  if (!(await ytDlpDisponible())) return { ok: false, offset: 0 };
+
+  const timeout = opciones.timeoutMs ?? 10 * 60_000;
+  const formato = ["-f", "best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best", "--merge-output-format", "mp4", "--no-playlist"];
+
+  const intentar = async (argsExtra: string[]): Promise<boolean> => {
+    try {
+      await ejecutar(
+        rutaYtDlp(),
+        [...banderasAntiBot(), ...formato, ...argsExtra, "-o", destino, url],
+        { timeout, maxBuffer: 20 * 1024 * 1024 }
+      );
+      return descargaValida(destino);
+    } catch (err: any) {
+      console.warn("[YouTube] Intento de descarga fallido:", String(err?.message || err).substring(0, 300));
+      return false;
+    }
+  };
+
+  // 1) Solo el tramo, si nos lo piden y podemos darle un ffmpeg a yt-dlp.
+  const sec = opciones.seccion;
+  if (sec && sec.duration > 0 && opciones.ffmpegDir) {
+    const { desde, hasta, offset } = tramoDeDescarga(sec.start, sec.duration);
+    const args = [
+      "--ffmpeg-location", opciones.ffmpegDir,
+      "--download-sections", `*${desde}-${hasta}`,
+      "--force-keyframes-at-cuts"
+    ];
+    if (await intentar(args)) {
+      console.log(`[YouTube] Descargado solo el tramo ${desde}-${hasta}s con yt-dlp.`);
+      return { ok: true, offset };
+    }
+    // No todos los formatos ni todos los vídeos admiten el recorte en descarga: se limpia
+    // lo que haya quedado a medias y se cae a la descarga completa.
+    try {
+      if (fs.existsSync(destino)) fs.unlinkSync(destino);
+    } catch {
+      /* si no se puede borrar, la descarga completa lo sobrescribe igual */
+    }
+    console.log("[YouTube] El recorte en descarga no salió; se baja el vídeo completo.");
+  }
+
+  // 2) Vídeo completo: el fichero empieza en 0, así que no hay desplazamiento que aplicar.
+  return { ok: await intentar([]), offset: 0 };
 }
 
 /**

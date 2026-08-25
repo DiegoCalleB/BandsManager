@@ -113,7 +113,7 @@ vi.mock('../../utils/youtubeSource.js', async (importOriginal) => {
     },
     descargarConYtDlp: async () => {
       llamadas.descargas++;
-      return false;
+      return { ok: false, offset: 0 };
     },
     // Ojo: las llamadas internas del módulo no pasan por el mock, así que urlDeAudioDirecta
     // ejecutaría el ytDlpDisponible REAL y lanzaría un proceso por petición.

@@ -10,6 +10,7 @@ import { requireAuth, loadState } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
 import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import {
   loadBandProfile,
   buildBandContextBlock,
@@ -262,16 +263,31 @@ function asegurarDirectorioClips() {
   if (!fs.existsSync(CLIPS_DIR)) fs.mkdirSync(CLIPS_DIR, { recursive: true });
 }
 
-/** Borra los clips viejos para que public/clips no crezca sin freno en el disco de Railway. */
-function limpiarClipsAntiguos() {
+let ultimaLimpieza = 0;
+/** No más de una barrida cada cuarto de hora, aunque lluevan peticiones. */
+const INTERVALO_LIMPIEZA_MS = 15 * 60 * 1000;
+
+/**
+ * Borra los clips viejos para que public/clips no crezca sin freno en el disco de Railway.
+ *
+ * Es asíncrona y va limitada por tiempo a propósito: antes recorría el directorio con
+ * readdirSync + statSync por fichero EN CADA petición de recorte, bloqueando el bucle de
+ * eventos —y por tanto a todos los demás usuarios— justo cuando más ocupado está el servidor.
+ */
+async function limpiarClipsAntiguos(): Promise<void> {
+  const ahora = Date.now();
+  if (ahora - ultimaLimpieza < INTERVALO_LIMPIEZA_MS) return;
+  ultimaLimpieza = ahora;
+
   try {
     if (!fs.existsSync(CLIPS_DIR)) return;
-    const ahora = Date.now();
-    for (const fichero of fs.readdirSync(CLIPS_DIR)) {
+    const ficheros = await fs.promises.readdir(CLIPS_DIR);
+    for (const fichero of ficheros) {
       if (!/\.(mp4|vtt|ass)$/i.test(fichero)) continue;
       const completo = path.join(CLIPS_DIR, fichero);
       try {
-        if (ahora - fs.statSync(completo).mtimeMs > CLIP_TTL_MS) fs.unlinkSync(completo);
+        const info = await fs.promises.stat(completo);
+        if (ahora - info.mtimeMs > CLIP_TTL_MS) await fs.promises.unlink(completo);
       } catch (e) {
         /* fichero en uso o ya borrado */
       }
@@ -292,13 +308,23 @@ async function borrarSiExiste(rutas: string[]) {
 }
 
 /** Descarga el vídeo probando primero un formato con vídeo+audio y cayendo al mejor global. */
-async function descargarVideo(url: string, destino: string): Promise<void> {
+/**
+ * Deja el vídeo en `destino` y devuelve cuántos segundos del original se han saltado, que es
+ * distinto de cero cuando se ha podido bajar solo el tramo pedido.
+ */
+async function descargarVideo(
+  url: string,
+  destino: string,
+  seccion?: { start: number; duration: number }
+): Promise<number> {
   // yt-dlp primero: es el que aguanta el antibot de YouTube (y usa las cookies que el usuario
   // ya puede subir desde el gestor de cookies). ytdl-core queda como respaldo para cuando el
   // binario no esté instalado en la máquina.
-  if (await descargarConYtDlp(url, destino)) {
-    console.log("[Reels] Descarga completada con yt-dlp.");
-    return;
+  const ffmpegDir = ffmpegStatic ? path.dirname(ffmpegStatic as unknown as string) : undefined;
+  const resultado = await descargarConYtDlp(url, destino, { seccion, ffmpegDir });
+  if (resultado.ok) {
+    console.log(`[Reels] Descarga completada con yt-dlp (offset ${resultado.offset}s).`);
+    return resultado.offset;
   }
   await borrarSiExiste([destino]);
   console.log("[Reels] yt-dlp no disponible o fallido, probando con ytdl-core...");
@@ -334,6 +360,8 @@ async function descargarVideo(url: string, destino: string): Promise<void> {
   if (!fs.existsSync(destino) || fs.statSync(destino).size === 0) {
     throw new Error("La descarga terminó vacía.");
   }
+  // ytdl-core siempre baja el vídeo entero: no hay desplazamiento.
+  return 0;
 }
 
 /* ============================================================================
@@ -378,7 +406,7 @@ router.get("/youtube-meta", requireAuth, async (req, res) => {
  * POST /api/analyze-video-highlights - Detección de highlights con IA
  * ==========================================================================*/
 
-router.post("/analyze-video-highlights", requireAuth, async (req, res) => {
+router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req, res) => {
   try {
     const { fileName, youtubeUrl, videoDuration = 0, videoTopic, targetDuration } = req.body || {};
 
@@ -594,7 +622,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
  * POST /api/cut-video-clip - Recorte físico 9:16 + subtítulos
  * ==========================================================================*/
 
-router.post("/cut-video-clip", requireAuth, async (req, res) => {
+router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrencyLimiter, async (req, res) => {
   const {
     youtubeUrl,
     start = 0,
@@ -631,13 +659,16 @@ router.post("/cut-video-clip", requireAuth, async (req, res) => {
   const nombreSalida = `${reqId}.mp4`;
   const rutaSalida = path.join(CLIPS_DIR, nombreSalida);
 
-  limpiarClipsAntiguos();
+  // Sin await: el usuario no tiene por qué esperar a que se barra el directorio.
+  void limpiarClipsAntiguos();
 
   try {
     const urlCanonica = canonicalYouTubeUrl(videoId);
 
     console.log(`[Reels] Descargando ${videoId} para recortar ${inicio}s +${duracion}s...`);
-    await descargarVideo(urlCanonica, rutaDescarga);
+    const offsetDescarga = await descargarVideo(urlCanonica, rutaDescarga, { start: inicio, duration: duracion });
+    // Si solo se bajó el tramo, dentro del fichero nuestro corte empieza mucho antes.
+    const inicioEnFichero = Math.max(0, inicio - offsetDescarga);
 
     // Subtítulos ANTES de codificar: si se van a incrustar, ffmpeg los necesita en disco.
     const transcript = await fetchTranscript(videoId).catch(() => [] as TranscriptItem[]);
@@ -656,8 +687,8 @@ router.post("/cut-video-clip", requireAuth, async (req, res) => {
       // Seek híbrido: un salto rápido de entrada hasta 5 s antes del corte (barato, salta al
       // keyframe) y el resto como seek de salida (exacto al fotograma). Con solo el seek de
       // salida, un corte del minuto 12 obligaba a decodificar 12 minutos de vídeo.
-      const saltoEntrada = Math.max(0, inicio - 5);
-      const ajusteSalida = inicio - saltoEntrada;
+      const saltoEntrada = Math.max(0, inicioEnFichero - 5);
+      const ajusteSalida = inicioEnFichero - saltoEntrada;
 
       const comando = ffmpeg(rutaDescarga);
       if (saltoEntrada > 0) comando.seekInput(saltoEntrada);
@@ -741,7 +772,7 @@ router.post("/cut-video-clip", requireAuth, async (req, res) => {
  * POST /api/reanalyze-clip - Reanálisis de un corte concreto
  * ==========================================================================*/
 
-router.post("/reanalyze-clip", requireAuth, async (req, res) => {
+router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
   try {
     const {
       youtubeUrl,

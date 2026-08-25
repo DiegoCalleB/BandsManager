@@ -8,6 +8,7 @@ import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } fro
 import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
+import { iaRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -575,7 +576,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
 // AI Reels Copy Writer Endpoint
 // requireAuth: llama al modelo de IA, y abierta era una pasarela gratis a la cuenta de la
 // plataforma para cualquiera que diera con la URL.
-router.post("/write-reels-copy", requireAuth, async (req, res) => {
+router.post("/write-reels-copy", requireAuth, iaRateLimiter, async (req, res) => {
   const { idea, style } = req.body;
   const client = getAiClient();
 

@@ -272,6 +272,26 @@ export default function ReelsCenter({
  // eslint-disable-next-line react-hooks/exhaustive-deps
  }, [youtubeUrl, inputType]);
 
+ // Al salir del centro de Reels hay que soltar los blobs: sin esto, el vídeo local y el clip
+ // renderizado se quedaban retenidos en memoria hasta recargar la página entera.
+ const urlsVivas = React.useRef<{ local: string | null; clip: string | null; subs: string | null }>({
+ local: null, clip: null, subs: null
+ });
+
+ useEffect(() => {
+ urlsVivas.current = { local: localVideoUrl, clip: renderedClipUrl, subs: renderedSubUrl };
+ }, [localVideoUrl, renderedClipUrl, renderedSubUrl]);
+
+ useEffect(() => {
+ return () => {
+ for (const url of Object.values(urlsVivas.current)) {
+ if (url && url.startsWith('blob:')) {
+ try { URL.revokeObjectURL(url); } catch (err) { /* ya revocado */ }
+ }
+ }
+ };
+ }, []);
+
  /** Duración de referencia para la línea de tiempo: la real si la conocemos. */
  const timelineDuration = React.useMemo(() => {
  if (inputType === 'file' && localVideoDuration > 0) return localVideoDuration;
@@ -784,6 +804,25 @@ export default function ReelsCenter({
  };
 
  // Drag & Drop helper
+ /**
+  * Cambia el vídeo local revocando antes el blob anterior. Elegir otro archivo sin pasar por
+  * el botón de "eliminar" dejaba el vídeo previo entero retenido en memoria por su object URL.
+  */
+ const cambiarVideoLocal = (file: File | null) => {
+ setLocalVideoUrl(prev => {
+ if (prev && prev.startsWith('blob:')) {
+ try { URL.revokeObjectURL(prev); } catch (err) { /* ya revocado */ }
+ }
+ if (!file) return null;
+ try {
+ return URL.createObjectURL(file);
+ } catch (err) {
+ console.error("Error creating Object URL for video:", err);
+ return null;
+ }
+ });
+ };
+
  const handleFileDrop = (e: React.DragEvent) => {
  e.preventDefault();
  setDragActive(false);
@@ -794,12 +833,7 @@ export default function ReelsCenter({
  size: file.size
  });
  setLocalVideoDuration(0);
- try {
- const url = URL.createObjectURL(file);
- setLocalVideoUrl(url);
- } catch (err) {
- console.error("Error creating Object URL for video:", err);
- }
+ cambiarVideoLocal(file);
  // Try to auto-extract context from file name
  const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
  setVideoTopic(cleanName);
@@ -814,12 +848,7 @@ export default function ReelsCenter({
  size: file.size
  });
  setLocalVideoDuration(0);
- try {
- const url = URL.createObjectURL(file);
- setLocalVideoUrl(url);
- } catch (err) {
- console.error("Error creating Object URL for video:", err);
- }
+ cambiarVideoLocal(file);
  const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
  setVideoTopic(cleanName);
  }
@@ -1522,10 +1551,8 @@ export default function ReelsCenter({
  onClick={(e) => {
  e.stopPropagation();
  setSelectedFile(null);
- if (localVideoUrl) {
- try { URL.revokeObjectURL(localVideoUrl); } catch (err) {}
- setLocalVideoUrl(null);
- }
+ cambiarVideoLocal(null);
+ setLocalVideoDuration(0);
  setHighlights([]);
  setOptimalTime(null);
  }}
