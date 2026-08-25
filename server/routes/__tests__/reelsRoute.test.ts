@@ -27,6 +27,10 @@ vi.mock('../../state.js', () => ({
   }),
 }));
 
+// Guarda en memoria lo que la ruta persiste, para poder comprobar en los tests que el
+// análisis (y el highlight reanalizado) se guardan de verdad, sin tocar Supabase real.
+const analisisGuardados = new Map<string, any>();
+
 vi.mock('../../db.js', () => ({
   dbGetRegisteredBandById: async () => ({
     nombre_banda: 'Ruta 66',
@@ -34,6 +38,31 @@ vi.mock('../../db.js', () => ({
     localizacion: 'Sevilla',
   }),
   dbGetEpkConfig: async () => ({ biografia: 'Banda de versiones de rock.' }),
+  dbGetReelAnalysis: async (bandId: string, videoKey: string) => analisisGuardados.get(`${bandId}|${videoKey}`) || null,
+  dbUpsertReelAnalysis: async (registro: any) => {
+    const clave = `${registro.bandId}|${registro.videoKey}`;
+    const fila = {
+      id: clave,
+      band_id: registro.bandId,
+      video_key: registro.videoKey,
+      highlights: registro.highlights,
+      optimal_time: registro.optimalTime,
+      energy_windows: registro.energyWindows,
+      video_meta: registro.videoMeta,
+      generated_by_ai: registro.generatedByAI,
+      notice: registro.notice,
+      updated_at: new Date().toISOString(),
+    };
+    analisisGuardados.set(clave, fila);
+    return fila;
+  },
+  dbUpdateReelAnalysisHighlight: async (bandId: string, videoKey: string, highlightId: string, patch: any) => {
+    const clave = `${bandId}|${videoKey}`;
+    const fila = analisisGuardados.get(clave);
+    if (!fila) return false;
+    fila.highlights = (fila.highlights || []).map((h: any) => (h.id === highlightId ? { ...h, ...patch } : h));
+    return true;
+  },
 }));
 
 const promptsVistos: string[] = [];
@@ -174,6 +203,7 @@ afterAll(() => {
 });
 
 beforeEach(() => {
+  analisisGuardados.clear();
   promptsVistos.length = 0;
   respuestaIa.texto = '';
   aiDisponible.valor = true;
@@ -337,6 +367,104 @@ describe('POST /api/analyze-video-highlights', () => {
     expect(body.success).toBe(true);
     expect(body.generatedByAI).toBe(false);
     expect(body.highlights.length).toBeGreaterThan(0);
+  });
+});
+
+describe('Persistencia del análisis en BD', () => {
+  it('guarda el análisis automáticamente al terminar de analizar', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ id: 'hl-1', title: 'Arranque', startSec: 10, endSec: 40 }] });
+
+    const { body } = await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+
+    expect(body.savedToDb).toBe(true);
+    expect(analisisGuardados.size).toBe(1);
+    const [fila] = analisisGuardados.values();
+    expect(fila.highlights[0].title).toBe('Arranque');
+  });
+
+  it('GET /api/reel-analysis devuelve lo guardado sin llamar a la IA', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ id: 'hl-1', title: 'Guardado', startSec: 0, endSec: 30 }] });
+    await post('/api/analyze-video-highlights', { youtubeUrl: 'https://youtu.be/8Jdw41lYdak', targetDuration: 30 });
+
+    promptsVistos.length = 0; // si el GET llamara a la IA, aparecería aquí
+
+    const { status, body } = await get('/api/reel-analysis?youtubeUrl=https://youtu.be/8Jdw41lYdak');
+    expect(status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(body.found).toBe(true);
+    expect(body.highlights[0].title).toBe('Guardado');
+    expect(promptsVistos).toHaveLength(0);
+  });
+
+  it('GET /api/reel-analysis dice found:false cuando no hay nada guardado', async () => {
+    const { body } = await get('/api/reel-analysis?youtubeUrl=https://youtu.be/8Jdw41lYdak');
+    expect(body.success).toBe(false);
+    expect(body.found).toBe(false);
+  });
+
+  it('reanalyze-clip actualiza el highlight dentro del análisis ya guardado', async () => {
+    respuestaIa.texto = JSON.stringify({
+      highlights: [
+        { id: 'hl-1', title: 'Original A', startSec: 0, endSec: 30 },
+        { id: 'hl-2', title: 'Original B', startSec: 60, endSec: 90 },
+      ],
+    });
+    await post('/api/analyze-video-highlights', { youtubeUrl: 'https://youtu.be/8Jdw41lYdak', targetDuration: 30 });
+
+    respuestaIa.texto = JSON.stringify({ title: 'Reanalizado con notas', reason: 'x', confidence: 95 });
+    await post('/api/reanalyze-clip', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      highlightId: 'hl-1',
+      start: 0,
+      duration: 30,
+      userNotes: 'solo bajo y batería',
+    });
+
+    const { body } = await get('/api/reel-analysis?youtubeUrl=https://youtu.be/8Jdw41lYdak');
+    const [hl1, hl2] = body.highlights;
+    expect(hl1.title).toBe('Reanalizado con notas');
+    // El otro highlight no se toca.
+    expect(hl2.title).toBe('Original B');
+  });
+
+  it('reanalyze-clip sin un análisis previo guardado no crea una fila a medias', async () => {
+    respuestaIa.texto = JSON.stringify({ title: 'Suelto', reason: 'x' });
+    await post('/api/reanalyze-clip', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      highlightId: 'hl-1',
+      start: 0,
+      duration: 30,
+    });
+    expect(analisisGuardados.size).toBe(0);
+  });
+
+  it('en modo archivo, sin videoKey explícita no hay nada que guardar (no revienta)', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ id: 'hl-1', title: 'A', startSec: 0, endSec: 30 }] });
+    const { body } = await post('/api/analyze-video-highlights', {
+      fileName: 'ensayo.mp4',
+      targetDuration: 30,
+      knownDuration: 120,
+    });
+    expect(body.success).toBe(true);
+    expect(body.savedToDb).toBe(false);
+    expect(analisisGuardados.size).toBe(0);
+  });
+
+  it('con una videoKey de archivo explícita, sí se guarda y se recupera', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ id: 'hl-1', title: 'A', startSec: 0, endSec: 30 }] });
+    await post('/api/analyze-video-highlights', {
+      fileName: 'ensayo.mp4',
+      targetDuration: 30,
+      knownDuration: 120,
+      videoKey: 'file:ensayo.mp4-582910',
+    });
+    expect(analisisGuardados.size).toBe(1);
+
+    const { body } = await get('/api/reel-analysis?videoKey=file:ensayo.mp4-582910');
+    expect(body.found).toBe(true);
   });
 });
 

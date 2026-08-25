@@ -46,6 +46,13 @@ export interface YoutubeVideoMeta {
  isLive?: boolean;
 }
 
+/** Clave estable para un archivo local: no sube el vídeo, solo permite reconocerlo si se
+ * vuelve a abrir el mismo (mismo nombre y tamaño) para recuperar su análisis guardado. */
+function videoKeyDeArchivo(file: { name: string; size: number } | null): string | undefined {
+ if (!file) return undefined;
+ return `file:${file.name}-${file.size}`;
+}
+
 function parseRangeTimes(rangeStr?: string) {
  if (!rangeStr) return { start: 0, end: 0, duration: 0 };
  const parts = rangeStr.split('-');
@@ -228,6 +235,9 @@ export default function ReelsCenter({
  const [sinTranscripcionReal, setSinTranscripcionReal] = useState<boolean>(false);
  const [renderedClipSize, setRenderedClipSize] = useState<number>(0);
  const [renderedBurnedSubs, setRenderedBurnedSubs] = useState<boolean>(false);
+ // Cuándo se guardó el análisis que se está viendo, si viene recuperado de la BD en vez de
+ // recién calculado. null cuando el análisis en pantalla es fresco (o no hay ninguno).
+ const [loadedFromSaveAt, setLoadedFromSaveAt] = useState<string | null>(null);
 
  // Al escribir/pegar una URL de YouTube pedimos su ficha real (título, duración, canal,
  // si tiene subtítulos). Sin esto trabajábamos a ciegas y la línea de tiempo mentía.
@@ -254,6 +264,28 @@ export default function ReelsCenter({
  setVideoMeta(data.meta as YoutubeVideoMeta);
  // Rellenamos el contexto con el título real en vez del texto genérico de relleno.
  setVideoTopic(prev => prev.trim() ? prev : (data.meta.title || prev));
+
+ // Si este vídeo ya se analizó antes, recuperamos ese análisis en vez de dejar la
+ // pantalla vacía hasta que el usuario pulse "Analizar" (y sin gastar otra llamada a
+ // Gemini). Solo si no hay ya algo en pantalla: nunca se pisa un análisis en curso.
+ try {
+ const guardado = await apiFetch<any>(`/api/reel-analysis?youtubeUrl=${encodeURIComponent(youtubeUrl)}`);
+ if (!cancelado && guardado?.success && guardado.found) {
+ setHighlights(prev => {
+ if (prev.length > 0) return prev;
+ setSelectedHighlightIndex(0);
+ setEditedCopy(guardado.highlights?.[0]?.recommendedCopy || '');
+ setOptimalTime(guardado.optimalTime || null);
+ setEnergyWindows(Array.isArray(guardado.energyWindows) ? guardado.energyWindows : []);
+ setLoadedFromSaveAt(guardado.savedAt || new Date().toISOString());
+ return guardado.highlights || [];
+ });
+ }
+ } catch (err) {
+ // Recuperar el análisis guardado es una comodidad: si falla, simplemente no aparece
+ // y el flujo normal de "pegar URL y Analizar" sigue funcionando igual.
+ console.warn('No se pudo recuperar un análisis guardado:', err);
+ }
  } else {
  setMetaError(data?.error || 'No se pudo leer la ficha del vídeo.');
  }
@@ -326,7 +358,11 @@ export default function ReelsCenter({
  start,
  duration,
  userNotes: clipUserNote,
- currentTitle: activeClip.title
+ currentTitle: activeClip.title,
+ // Para que el highlight reanalizado se actualice también en lo que ya se guardó en BD,
+ // no solo en la pantalla actual.
+ highlightId: activeClip.id,
+ videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined
  })
  });
 
@@ -874,6 +910,9 @@ export default function ReelsCenter({
  setAnalysisError(null);
  setAnalysisNotice(null);
  setEnergyWindows([]);
+ // Un análisis pedido a propósito siempre es fresco, así que no arrastramos el aviso de
+ // "esto es lo que había guardado" de una vez anterior.
+ setLoadedFromSaveAt(null);
  setLoadingStep(0);
 
  const steps = getLoadingSteps();
@@ -900,6 +939,9 @@ export default function ReelsCenter({
  knownDuration: inputType === 'file'
  ? (localVideoDuration > 0 ? localVideoDuration : undefined)
  : (videoMeta?.durationKnown ? videoMeta.duration : undefined),
+ // Sin esto, un vídeo subido como archivo nunca se podía guardar ni recuperar: el
+ // servidor nunca ve el archivo en sí, así que necesita esta clave para reconocerlo.
+ videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
  videoDuration: videoDuration,
  videoTopic: videoTopic || undefined
  })
@@ -1555,6 +1597,8 @@ export default function ReelsCenter({
  setLocalVideoDuration(0);
  setHighlights([]);
  setOptimalTime(null);
+ setEnergyWindows([]);
+ setLoadedFromSaveAt(null);
  }}
  className="text-[10px] font-mono text-rose-500 hover:underline hover:text-rose-600 bg-transparent -none p-0 cursor-pointer"
  >
@@ -1609,6 +1653,8 @@ export default function ReelsCenter({
  setYoutubeUrl('');
  setHighlights([]);
  setOptimalTime(null);
+ setEnergyWindows([]);
+ setLoadedFromSaveAt(null);
  }}
  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 text-xs font-mono bg-transparent -none cursor-pointer"
  >
@@ -1706,6 +1752,21 @@ export default function ReelsCenter({
  </select>
  </div>
  </div>
+
+ {/* Aviso de análisis recuperado: sin esto, el usuario no sabría por qué ya hay
+ clips sugeridos sin haber pulsado "Analizar" en esta visita. */}
+ {loadedFromSaveAt && highlights.length > 0 && !isAnalyzing && (
+ <div className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
+ isStitchLight ? 'bg-emerald-50 -emerald-200 text-emerald-700' : 'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ }`}>
+ <CheckCircle2 className="w-4 h-4 shrink-0" />
+ <span>
+ Recuperado el análisis guardado de este vídeo
+ ({new Date(loadedFromSaveAt).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}).
+ Pulsa "Analizar highlights con IA" si quieres uno nuevo.
+ </span>
+ </div>
+ )}
 
  {/* Analysis Button */}
  <div className="pt-2">

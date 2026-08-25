@@ -8,7 +8,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { requireAuth, loadState } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import {
@@ -77,6 +77,19 @@ function getYouTubeId(urlStr?: string): string | null {
 /** URL canónica, para no pasarle a ytdl lo que haya escrito el usuario. */
 function canonicalYouTubeUrl(videoId: string): string {
   return `https://www.youtube.com/watch?v=${videoId}`;
+}
+
+/**
+ * Clave estable para guardar/recuperar el análisis de un vídeo. Para YouTube es el propio id
+ * del vídeo. Un archivo local nunca llega al servidor, así que ahí solo podemos reconocer "es
+ * probablemente el mismo vídeo" a partir de lo que el cliente ya conoce sin subir nada: si el
+ * frontend manda una `videoKey` explícita (derivada de nombre+tamaño del archivo), se respeta;
+ * si no, no hay nada que cachear y el análisis funciona igual, sin persistencia.
+ */
+function resolverVideoKey(youtubeUrl?: string, videoKeyExplicita?: unknown): string | null {
+  const explicita = typeof videoKeyExplicita === "string" ? videoKeyExplicita.trim() : "";
+  if (explicita) return explicita.substring(0, 200);
+  return getYouTubeId(youtubeUrl);
 }
 
 /* ------------------------------------------------------------ contexto de banda */
@@ -403,12 +416,49 @@ router.get("/youtube-meta", requireAuth, async (req, res) => {
 });
 
 /* ============================================================================
+ * GET /api/reel-analysis - Recupera un análisis ya guardado, sin llamar a la IA
+ * ==========================================================================*/
+
+router.get("/reel-analysis", requireAuth, async (req, res) => {
+  try {
+    const videoKey = resolverVideoKey(
+      typeof req.query.youtubeUrl === "string" ? req.query.youtubeUrl : undefined,
+      req.query.videoKey
+    );
+    if (!videoKey) {
+      return res.status(400).json({ success: false, error: "Falta 'youtubeUrl' o 'videoKey'." });
+    }
+
+    const bandId = getTargetBandId(req);
+    const guardado = await dbGetReelAnalysis(bandId, videoKey);
+    if (!guardado) {
+      return res.json({ success: false, found: false });
+    }
+
+    return res.json({
+      success: true,
+      found: true,
+      savedAt: guardado.updated_at,
+      highlights: guardado.highlights || [],
+      optimalTime: guardado.optimal_time || null,
+      energyWindows: guardado.energy_windows || [],
+      generatedByAI: Boolean(guardado.generated_by_ai),
+      notice: guardado.notice || undefined,
+      videoMeta: guardado.video_meta || {}
+    });
+  } catch (err: any) {
+    console.error("[GET /reel-analysis]", err);
+    return res.status(500).json({ success: false, error: "No se pudo recuperar el análisis guardado." });
+  }
+});
+
+/* ============================================================================
  * POST /api/analyze-video-highlights - Detección de highlights con IA
  * ==========================================================================*/
 
 router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req, res) => {
   try {
-    const { fileName, youtubeUrl, videoDuration = 0, videoTopic, targetDuration } = req.body || {};
+    const { fileName, youtubeUrl, videoDuration = 0, videoTopic, targetDuration, videoKey: videoKeyExplicita } = req.body || {};
 
     const perfil = await perfilDeLaPeticion(req);
     const nombreBanda = displayBandName(perfil);
@@ -589,6 +639,38 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       };
     }
 
+    // Guardado best-effort: si Supabase falla, el análisis que ya se ha calculado y se le va
+    // a devolver al usuario sigue siendo válido igualmente, así que nunca debe tumbar la
+    // respuesta ni retrasarla de forma perceptible.
+    const videoKey = resolverVideoKey(youtubeUrl, videoKeyExplicita);
+    let guardadoEnBd = false;
+    if (videoKey) {
+      const bandId = getTargetBandId(req);
+      const guardado = await dbUpsertReelAnalysis({
+        bandId,
+        videoKey,
+        sourceType: videoId ? "youtube" : "file",
+        sourceUrl: youtubeUrl || fileName || "",
+        videoTitle: tituloReal,
+        videoDuration: duracionTotal,
+        targetDuration: objetivoClip,
+        highlights,
+        optimalTime,
+        energyWindows: ventanasEnergia,
+        videoMeta: {
+          videoId: meta.videoId,
+          title: meta.title,
+          author: meta.author,
+          thumbnail: meta.thumbnail,
+          hasTranscript: tieneTranscripcion,
+          chapters: meta.chapters
+        },
+        generatedByAI: generadoPorIa,
+        notice: avisoIa
+      });
+      guardadoEnBd = Boolean(guardado);
+    }
+
     return res.json({
       success: true,
       highlights,
@@ -597,6 +679,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       notice: avisoIa || undefined,
       audioAnalyzed: ventanasEnergia.length > 0,
       energyWindows: ventanasEnergia,
+      savedToDb: guardadoEnBd,
       band: { name: nombreBanda, instruments: perfil.instruments, hashtags: hashtagsBase },
       videoMeta: {
         videoId: meta.videoId,
@@ -781,8 +864,19 @@ router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
       start = 0,
       duration = 30,
       userNotes = "",
-      currentTitle = ""
+      currentTitle = "",
+      highlightId,
+      videoKey: videoKeyExplicita
     } = req.body || {};
+
+    // Para dejar el highlight reanalizado también actualizado en lo que ya se guardó en BD
+    // (si no, la próxima vez que se recuperase el análisis guardado se vería la versión vieja).
+    const videoKeyDelCorte = resolverVideoKey(youtubeUrl, videoKeyExplicita);
+    const persistirPatch = async (patch: Record<string, any>) => {
+      if (!videoKeyDelCorte || !highlightId) return;
+      const bandId = getTargetBandId(req);
+      await dbUpdateReelAnalysisHighlight(bandId, videoKeyDelCorte, highlightId, patch).catch(() => false);
+    };
 
     const perfil = await perfilDeLaPeticion(req);
     const nombreBanda = displayBandName(perfil);
@@ -842,21 +936,19 @@ Responde ÚNICAMENTE con JSON válido:
 
         const parsed = extractJsonObject(aiResponse?.text);
         if (parsed && parsed.title) {
-          return res.json({
-            success: true,
-            generatedByAI: true,
-            analysis: {
-              title: String(parsed.title),
-              reason: parsed.reason || "Fragmento reanalizado sobre el contenido real del tramo.",
-              hookText: parsed.hookText || "",
-              recommendedCopy: parsed.recommendedCopy || "",
-              copyTikTok: parsed.copyTikTok || "",
-              hashtags: Array.isArray(parsed.hashtags) && parsed.hashtags.length ? parsed.hashtags : hashtagsBase,
-              cta: parsed.cta || "",
-              energyLevel: parsed.energyLevel || "Alta",
-              confidence: Number(parsed.confidence) || 90
-            }
-          });
+          const analysis = {
+            title: String(parsed.title),
+            reason: parsed.reason || "Fragmento reanalizado sobre el contenido real del tramo.",
+            hookText: parsed.hookText || "",
+            recommendedCopy: parsed.recommendedCopy || "",
+            copyTikTok: parsed.copyTikTok || "",
+            hashtags: Array.isArray(parsed.hashtags) && parsed.hashtags.length ? parsed.hashtags : hashtagsBase,
+            cta: parsed.cta || "",
+            energyLevel: parsed.energyLevel || "Alta",
+            confidence: Number(parsed.confidence) || 90
+          };
+          await persistirPatch(analysis);
+          return res.json({ success: true, generatedByAI: true, analysis });
         }
       } catch (err: any) {
         console.warn("[Reanalyze Clip AI Error]:", err?.message || err);
@@ -864,23 +956,25 @@ Responde ÚNICAMENTE con JSON válido:
     }
 
     const notas = String(userNotes || "").trim();
+    const analysisRespaldo = {
+      title: notas ? `${rangoStr}: ${notas.substring(0, 40)}` : `Corte de ${nombreBanda} (${rangoStr})`,
+      reason: notas
+        ? `Análisis ajustado a tus notas: "${notas.substring(0, 200)}"`
+        : `Pasaje de "${tituloVideo}" entre ${formatMMSS(inicio)} y ${formatMMSS(fin)}.`,
+      hookText: "",
+      recommendedCopy: `${nombreBanda} en directo — fragmento de ${rangoStr}.${notas ? ` ${notas}` : ""}`,
+      copyTikTok: "",
+      hashtags: hashtagsBase,
+      cta: "¿Qué te ha parecido? Cuéntanoslo en comentarios.",
+      energyLevel: "Alta",
+      confidence: 80
+    };
+    await persistirPatch(analysisRespaldo);
     return res.json({
       success: true,
       generatedByAI: false,
       notice: "La IA no estaba disponible: este análisis es una plantilla basada en tus notas y en el rango del corte.",
-      analysis: {
-        title: notas ? `${rangoStr}: ${notas.substring(0, 40)}` : `Corte de ${nombreBanda} (${rangoStr})`,
-        reason: notas
-          ? `Análisis ajustado a tus notas: "${notas.substring(0, 200)}"`
-          : `Pasaje de "${tituloVideo}" entre ${formatMMSS(inicio)} y ${formatMMSS(fin)}.`,
-        hookText: "",
-        recommendedCopy: `${nombreBanda} en directo — fragmento de ${rangoStr}.${notas ? ` ${notas}` : ""}`,
-        copyTikTok: "",
-        hashtags: hashtagsBase,
-        cta: "¿Qué te ha parecido? Cuéntanoslo en comentarios.",
-        energyLevel: "Alta",
-        confidence: 80
-      }
+      analysis: analysisRespaldo
     });
   } catch (err: any) {
     console.error("[Reanalyze Clip Route Error]:", err);
