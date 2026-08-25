@@ -329,8 +329,11 @@ router.post("/analyze-video-highlights", requireAuth, async (req, res) => {
       ]);
     }
 
-    // Duración real > la que declare el cliente > un valor de trabajo razonable.
-    const duracionDeclarada = Number(req.body?.knownDuration) || Number(videoDuration) || 0;
+    // Duración real del vídeo > la que declare el cliente > un valor de trabajo razonable.
+    // OJO: `videoDuration` NO sirve aquí. En el cliente antiguo ese campo llevaba la duración
+    // deseada del CLIP (15/30/60), así que usarlo como longitud del vídeo hacía creer al
+    // servidor que un directo de 40 minutos duraba 30 segundos y recortaba todo a ese rango.
+    const duracionDeclarada = Number(req.body?.knownDuration) || 0;
     const duracionTotal = meta.duration > 0 ? meta.duration : duracionDeclarada > 0 ? duracionDeclarada : 180;
 
     // `videoDuration` era a la vez "duración del vídeo" y "duración deseada del clip" en el
