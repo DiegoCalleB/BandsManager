@@ -832,7 +832,7 @@ router.post("/auth/login", loginRateLimiter, async (req, res) => {
   const cleanPref = preferredBandId ? cleanBandId(preferredBandId) : undefined;
 
   const foundMatching = validUsers.find((u: any) => u.band_id === preferredBandId || (cleanPref && cleanBandId(u.band_id) === cleanPref));
-  let selectedUser = foundMatching || validUsers[0];
+  const selectedUser = foundMatching || validUsers[0];
 
   // Ensure active band on login is the preferred / favorite band
   if (preferredBandId) {
@@ -1005,8 +1005,8 @@ router.get("/auth/me", async (req, res) => {
     // Non-blocking fallback to state.registeredBands
   }
 
-  let session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
-  let user = session ? state.users.find((u: any) => u.id === session.userId) : null;
+  const session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
+  const user = session ? state.users.find((u: any) => u.id === session.userId) : null;
 
   if (!user) {
     return res.status(401).json({ error: "Sesión no iniciada o expirada" });
@@ -1075,7 +1075,7 @@ router.post("/auth/switch-band", async (req, res) => {
   }
 
   let session = (token && ACTIVE_SESSIONS[token]) || (token && state.sessions && state.sessions[token]);
-  let currentUser = session ? state.users.find((u: any) => u.id === session.userId) : null;
+  const currentUser = session ? state.users.find((u: any) => u.id === session.userId) : null;
 
   if (!currentUser) {
     return res.status(401).json({ error: "Sesión no válida o expirada" });

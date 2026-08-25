@@ -123,7 +123,7 @@ export function transposeSingleNote(rootNote: string, semitones: number, targetN
   }
 
   // Convert rootNote to standard EN index
-  let normEn = ES_TO_EN_MAP[rootNote] || rootNote;
+  const normEn = ES_TO_EN_MAP[rootNote] || rootNote;
   let idx = NOTE_NAMES_EN.indexOf(normEn);
   if (idx === -1) {
     idx = NOTE_NAMES_EN_FLATS.indexOf(normEn);
@@ -164,7 +164,7 @@ export function processChordText(
   if (!text) return '';
 
   // Process inline bracket notation [Do] or [C#m]
-  let result = text.replace(/\[([A-Za-z0-9#\/]+)\]/g, (match, chord) => {
+  const result = text.replace(/\[([A-Za-z0-9#\/]+)\]/g, (match, chord) => {
     const transposed = transposeChordToken(chord, semitones, notation);
     return `[${transposed}]`;
   });

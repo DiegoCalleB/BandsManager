@@ -505,12 +505,12 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
 
         if (artistData) {
           // Query albums without hard market restriction first to capture all global releases
-          let albumsRes = await fetch(
+          const albumsRes = await fetch(
             `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single,compilation&limit=50`,
             { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8000) }
           );
 
-          let rawAlbumsData = albumsRes.ok ? await albumsRes.json() : null;
+          const rawAlbumsData = albumsRes.ok ? await albumsRes.json() : null;
           let rawAlbums = rawAlbumsData?.items || [];
 
           // If empty, retry with market=ES

@@ -359,7 +359,7 @@ export default function RepertorioSetlists({
    try {
      const key = `band_setlists_${cleanBand || 'default'}`;
      const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
-     let parsed = saved ? JSON.parse(saved) : [];
+     const parsed = saved ? JSON.parse(saved) : [];
      const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((sl: any) => {
        const slId = (sl?.id || '').toLowerCase();
        return slId !== 'setlist-1' && slId !== 'setlist-2';
@@ -1322,7 +1322,7 @@ export default function RepertorioSetlists({
  ) => {
   if (!activeSetlist) return;
 
-  let newItem: SetlistItem = {
+  const newItem: SetlistItem = {
    id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
    tipoItem,
    songId,

@@ -69,7 +69,7 @@ router.post("/chat", requireAuth, async (req, res) => {
       desc = "Disparar el agente de Python Lector para revisar tu bandeja de correo en busca de respuestas de salas.";
     }
 
-    let triggerParams: Record<string, any> = {};
+    const triggerParams: Record<string, any> = {};
 
     if (agentName === "Scout Descubridor" || agentName === "Scout") {
       let detectedRegion = "";
@@ -154,7 +154,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     setTimeout(() => {
       const lowerMsg = message.toLowerCase();
       let reply = "¡Hola! Estoy funcionando en modo simulación (sin clave GEMINI_API_KEY). Puedo responderte de manera estática.\n\n";
-      let proposedActions: any[] = [];
+      const proposedActions: any[] = [];
       
       if (lowerMsg.includes("madrid") || lowerMsg.includes("pendiente")) {
         const pendingMadrid = state.leads.filter((l: Lead) => l.ciudad.toLowerCase().includes("madrid") || l.estado === "pendiente_aprobacion");

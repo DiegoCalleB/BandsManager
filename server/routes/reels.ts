@@ -206,7 +206,7 @@ router.post("/analyze-video-highlights", requireAuth, async (req, res) => {
     const { fileName, youtubeUrl, videoDuration = 180, videoTopic } = req.body || {};
 
     let transcriptSummary = "";
-    let youtubeMeta = { title: "", description: "", duration: 0, author: "" };
+    const youtubeMeta = { title: "", description: "", duration: 0, author: "" };
 
     if (youtubeUrl) {
       const videoId = getYouTubeId(youtubeUrl);

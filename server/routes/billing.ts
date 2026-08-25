@@ -85,7 +85,7 @@ function findBandInState(state: any, bandId?: string, customerEmail?: string) {
   const cleanBandId = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
   const cleanEmail = (customerEmail || '').toLowerCase().trim();
 
-  let band = state.registeredBands.find((b: any) => {
+  const band = state.registeredBands.find((b: any) => {
     const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
     const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
     const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
