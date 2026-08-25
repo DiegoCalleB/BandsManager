@@ -207,6 +207,12 @@ export default function ReelsCenter({
  // Tramos con más volumen medidos en el audio real. Es lo que permite acertar en material
  // instrumental, donde no hay transcripción de la que tirar.
  const [energyWindows, setEnergyWindows] = useState<Array<{ start: number; end: number; score: number }>>([]);
+ // Versión con el desglose por señal (volumen / arranque / ritmo visual). Cuando el backend
+ // no llega a calcularla (p.ej. sin yt-dlp para leer el audio en streaming) se cae a
+ // energyWindows, que solo trae el score combinado.
+ const [viralWindows, setViralWindows] = useState<Array<{
+ start: number; end: number; energia: number; arranque: number; dinamismo: number; score: number; motivo: string;
+ }>>([]);
 
  // Opciones de renderizado del clip físico
  const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
@@ -238,6 +244,10 @@ export default function ReelsCenter({
  // Cuándo se guardó el análisis que se está viendo, si viene recuperado de la BD en vez de
  // recién calculado. null cuando el análisis en pantalla es fresco (o no hay ninguno).
  const [loadedFromSaveAt, setLoadedFromSaveAt] = useState<string | null>(null);
+ // Cómo está grabado el material: cambia qué busca la IA y cómo titula. 'auto' deja que el
+ // servidor lo adivine del título/descripción reales; el usuario puede fijarlo a mano.
+ const [contentType, setContentType] = useState<'auto' | 'concierto' | 'videoclip' | 'ensayo'>('auto');
+ const [detectedContentType, setDetectedContentType] = useState<string | null>(null);
 
  // Al escribir/pegar una URL de YouTube pedimos su ficha real (título, duración, canal,
  // si tiene subtítulos). Sin esto trabajábamos a ciegas y la línea de tiempo mentía.
@@ -277,6 +287,8 @@ export default function ReelsCenter({
  setEditedCopy(guardado.highlights?.[0]?.recommendedCopy || '');
  setOptimalTime(guardado.optimalTime || null);
  setEnergyWindows(Array.isArray(guardado.energyWindows) ? guardado.energyWindows : []);
+ setViralWindows(Array.isArray(guardado.videoMeta?.viralWindows) ? guardado.videoMeta.viralWindows : []);
+ setDetectedContentType(guardado.videoMeta?.contentType || null);
  setLoadedFromSaveAt(guardado.savedAt || new Date().toISOString());
  return guardado.highlights || [];
  });
@@ -362,7 +374,8 @@ export default function ReelsCenter({
  // Para que el highlight reanalizado se actualice también en lo que ya se guardó en BD,
  // no solo en la pantalla actual.
  highlightId: activeClip.id,
- videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined
+ videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
+ contentType: contentType !== 'auto' ? contentType : (detectedContentType || undefined)
  })
  });
 
@@ -910,10 +923,14 @@ export default function ReelsCenter({
  setAnalysisError(null);
  setAnalysisNotice(null);
  setEnergyWindows([]);
+ setViralWindows([]);
  // Un análisis pedido a propósito siempre es fresco, así que no arrastramos el aviso de
  // "esto es lo que había guardado" de una vez anterior.
  setLoadedFromSaveAt(null);
  setLoadingStep(0);
+ // El tipo detectado se pisa con el que devuelva este análisis nuevo; hasta entonces no
+ // mostramos el de un vídeo anterior.
+ setDetectedContentType(null);
 
  const steps = getLoadingSteps();
 
@@ -942,6 +959,7 @@ export default function ReelsCenter({
  // Sin esto, un vídeo subido como archivo nunca se podía guardar ni recuperar: el
  // servidor nunca ve el archivo en sí, así que necesita esta clave para reconocerlo.
  videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
+ contentType: contentType !== 'auto' ? contentType : undefined,
  videoDuration: videoDuration,
  videoTopic: videoTopic || undefined
  })
@@ -962,6 +980,8 @@ export default function ReelsCenter({
  setSelectedHighlightIndex(0);
  setAnalysisNotice(data.notice || null);
  setEnergyWindows(Array.isArray(data.energyWindows) ? data.energyWindows : []);
+ setViralWindows(Array.isArray(data.viralWindows) ? data.viralWindows : []);
+ setDetectedContentType(data.contentType || null);
  if (data.videoMeta && data.videoMeta.videoId) {
  setVideoMeta(data.videoMeta as YoutubeVideoMeta);
  }
@@ -1598,7 +1618,9 @@ export default function ReelsCenter({
  setHighlights([]);
  setOptimalTime(null);
  setEnergyWindows([]);
+ setViralWindows([]);
  setLoadedFromSaveAt(null);
+ setDetectedContentType(null);
  }}
  className="text-[10px] font-mono text-rose-500 hover:underline hover:text-rose-600 bg-transparent -none p-0 cursor-pointer"
  >
@@ -1654,7 +1676,9 @@ export default function ReelsCenter({
  setHighlights([]);
  setOptimalTime(null);
  setEnergyWindows([]);
+ setViralWindows([]);
  setLoadedFromSaveAt(null);
+ setDetectedContentType(null);
  }}
  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 text-xs font-mono bg-transparent -none cursor-pointer"
  >
@@ -1718,7 +1742,31 @@ export default function ReelsCenter({
  )}
 
  {/* Configurations */}
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ <div className="space-y-1">
+ <label className="block text-[9px] font-mono uppercase text-neutral-400">
+ Tipo de material
+ {contentType === 'auto' && detectedContentType && (
+ <span className="normal-case font-sans text-neutral-500"> (detectado: {detectedContentType})</span>
+ )}
+ </label>
+ <select
+ id="video-content-type-select"
+ value={contentType}
+ onChange={(e) => setContentType(e.target.value as typeof contentType)}
+ title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
+ className={`w-full rounded-lg px-3 py-2 text-xs focus:outline-none ${
+ isStitchLight
+ ? 'bg-white -slate-200 text-slate-800 focus:-indigo-500'
+ : 'bg-[#131313] -neutral-800 text-neutral-300 focus:-[#f2ca50]/50'
+ }`}
+ >
+ <option value="auto">Detectar automáticamente</option>
+ <option value="concierto">Concierto / Directo</option>
+ <option value="videoclip">Videoclip</option>
+ <option value="ensayo">Ensayo / Local</option>
+ </select>
+ </div>
  <div className="space-y-1">
  <label className="block text-[9px] font-mono uppercase text-neutral-400">Contexto / Anécdota de apoyo (IA)</label>
  <input
@@ -1844,25 +1892,31 @@ export default function ReelsCenter({
  </p>
  </div>
 
- {/* Mapa de energía del audio: deja ver POR QUÉ se han elegido estos momentos, y sirve
- igual en vídeos instrumentales, donde no hay transcripción de la que tirar. */}
- {energyWindows.length > 0 && timelineDuration > 0 && (
+ {/* Mapa de señales: si hay desglose (volumen/arranque/ritmo visual) se usa ese, porque
+ explica MEJOR por qué se ha elegido cada momento; si no, se cae al de solo energía. */}
+ {(viralWindows.length > 0 || energyWindows.length > 0) && timelineDuration > 0 && (() => {
+ const ventanas = viralWindows.length > 0 ? viralWindows : energyWindows;
+ const conDesglose = viralWindows.length > 0;
+ return (
  <div className="space-y-1.5">
  <div className="flex items-center justify-between">
  <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
- Energía medida en el audio
+ {conDesglose ? 'Señales medidas (volumen · arranque · montaje)' : 'Energía medida en el audio'}
  </span>
- <span className="text-[9px] font-mono text-emerald-400">● {energyWindows.length} tramos con caña</span>
+ <span className="text-[9px] font-mono text-emerald-400">● {ventanas.length} tramos con potencial</span>
  </div>
  <div className={`relative w-full h-7 rounded-lg overflow-hidden ${isStitchLight ? 'bg-slate-100' : 'bg-neutral-950 -neutral-900'}`}>
- {energyWindows.map((v, i) => {
+ {ventanas.map((v, i) => {
  const izq = Math.max(0, Math.min(100, (v.start / timelineDuration) * 100));
  const ancho = Math.max(0.8, Math.min(100 - izq, ((v.end - v.start) / timelineDuration) * 100));
+ const titulo = conDesglose && 'motivo' in v
+ ? `${formatTime(v.start)} - ${formatTime(v.end)} · potencial ${v.score}/100\nvolumen ${(v as any).energia} · arranque ${(v as any).arranque} · montaje ${(v as any).dinamismo}\n${(v as any).motivo}`
+ : `${formatTime(v.start)} - ${formatTime(v.end)} · energía ${v.score}/100`;
  return (
  <div
  key={`${v.start}-${i}`}
  className="absolute top-0 bottom-0 rounded-sm"
- title={`${formatTime(v.start)} - ${formatTime(v.end)} · energía ${v.score}/100`}
+ title={titulo}
  style={{
  left: `${izq}%`,
  width: `${ancho}%`,
@@ -1889,10 +1943,27 @@ export default function ReelsCenter({
  })()}
  </div>
  <p className="text-[9px] font-mono text-neutral-600 leading-tight">
- Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.
+ {conDesglose
+ ? 'Cuanto más intenso, más potencial combinado (volumen + arranque + montaje). El recuadro verde es el corte seleccionado.'
+ : 'Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.'}
  </p>
+ {(() => {
+ // El motivo de la ventana que coincide con el corte seleccionado, para no obligar a
+ // pasar el ratón por encima de una barra diminuta para leerlo.
+ const clip = highlights[selectedHighlightIndex];
+ if (!clip || !conDesglose) return null;
+ const { start } = parseRangeTimes(clip.range);
+ const ventana = (viralWindows as any[]).find(v => Math.abs(v.start - start) <= 2);
+ if (!ventana?.motivo) return null;
+ return (
+ <p className={`text-[10px] font-sans italic leading-snug pt-0.5 ${isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'}`}>
+ "{ventana.motivo}"
+ </p>
+ );
+ })()}
  </div>
- )}
+ );
+ })()}
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {highlights.map((clip, index) => {

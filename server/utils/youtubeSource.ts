@@ -286,6 +286,30 @@ export async function urlDeAudioDirecta(url: string): Promise<string | null> {
   }
 }
 
+/**
+ * URL directa de un flujo SOLO DE VÍDEO en baja resolución, para detectar cambios de plano sin
+ * bajar el vídeo entero ni tirar de una calidad que luego se va a reescalar de todos modos.
+ *
+ * Importante: `canonicalYouTubeUrl(videoId)` es la URL de la PÁGINA de YouTube, y ffmpeg no
+ * puede decodificar eso directamente con -i. Hace falta la URL del stream real, igual que ya
+ * se hace para el audio en `urlDeAudioDirecta`.
+ */
+export async function urlDeVideoDirecta(url: string): Promise<string | null> {
+  if (!(await ytDlpDisponible())) return null;
+  try {
+    const { stdout } = await ejecutar(
+      rutaYtDlp(),
+      [...banderasAntiBot(), "-g", "-f", "bv*[height<=480]/bv*/best", "--no-playlist", url],
+      { timeout: 60_000, maxBuffer: 4 * 1024 * 1024 }
+    );
+    const primera = stdout.split(/\r?\n/).map((l) => l.trim()).find((l) => l.startsWith("http"));
+    return primera || null;
+  } catch (err: any) {
+    console.log("[YouTube] No se pudo obtener la URL de vídeo:", String(err?.message || err).substring(0, 200));
+    return null;
+  }
+}
+
 /* -------------------------------------------------------- YouTube Data API */
 
 /**

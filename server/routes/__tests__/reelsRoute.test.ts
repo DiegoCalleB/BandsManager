@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import express from 'express';
 import type { AddressInfo } from 'net';
+import { _vaciarRateLimitStore } from '../../middleware/rateLimiter';
 
 /**
  * Prueba de integración de las rutas de Reels con la red simulada. Verifica el cableado que
@@ -147,6 +148,7 @@ vi.mock('../../utils/youtubeSource.js', async (importOriginal) => {
     // Ojo: las llamadas internas del módulo no pasan por el mock, así que urlDeAudioDirecta
     // ejecutaría el ytDlpDisponible REAL y lanzaría un proceso por petición.
     urlDeAudioDirecta: async () => (fuentes.ytDlpInstalado ? 'https://audio.example/stream.webm' : null),
+    urlDeVideoDirecta: async () => (fuentes.ytDlpInstalado ? 'https://video.example/stream.mp4' : null),
   };
 });
 
@@ -164,6 +166,22 @@ vi.mock('../../utils/audioEnergy.js', async (importOriginal) => {
         for (let t = v.start; t < v.end; t++) puntos.push({ t, db: v.db });
         return puntos;
       }),
+  };
+});
+
+const cambiosDePlanoSimulados = { valor: [] as number[], llamadas: 0 };
+
+vi.mock('../../utils/viralSignals.js', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../../utils/viralSignals.js')>();
+  return {
+    ...real,
+    // ventanasMasVirales, detectarTipoContenido, esTipoContenido y resumirSenalesParaPrompt
+    // son puros y se usan de verdad; solo se sustituye la llamada a ffmpeg contra una URL
+    // remota (que en la ruta real solo se hace cuando el tipo detectado no es "ensayo").
+    detectarCambiosDePlano: async () => {
+      cambiosDePlanoSimulados.llamadas++;
+      return cambiosDePlanoSimulados.valor;
+    },
   };
 });
 
@@ -214,6 +232,11 @@ beforeEach(() => {
   llamadas.ytDlp = 0;
   llamadas.descargas = 0;
   energia.ventanas = [];
+  cambiosDePlanoSimulados.valor = [];
+  cambiosDePlanoSimulados.llamadas = 0;
+  // Sin esto, el mismo usuario mockeado ('user-1') va acumulando peticiones contra
+  // iaRateLimiter entre tests de este fichero hasta superar el cupo y devolver 429.
+  _vaciarRateLimitStore();
 });
 
 describe('POST /api/analyze-video-highlights', () => {
@@ -306,8 +329,73 @@ describe('POST /api/analyze-video-highlights', () => {
     });
 
     const prompt = promptsVistos[0];
-    expect(prompt).toContain('ENERGÍA SONORA MEDIDA EN EL AUDIO REAL');
+    // Con las señales combinadas ya activas, el bloque de energía pura queda como respaldo:
+    // lo que llega al prompt es el desglose por volumen/arranque/ritmo visual.
+    expect(prompt).toContain('SEÑALES MEDIDAS EN EL VÍDEO REAL');
     expect(prompt).toMatch(/1:4[0-9]|2:0[0-9]/); // la ventana fuerte cae sobre el minuto 1-2
+  });
+
+  it('el tipo de contenido detectado llega al prompt y a la respuesta', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 0, endSec: 30 }] });
+    const { body } = await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+    // El título mockeado de youtube-transcript/ytdl es "Directo en la sala" -> concierto.
+    expect(body.contentType).toBe('concierto');
+    expect(promptsVistos[0]).toContain('CONCIERTO');
+    expect(promptsVistos[0]).toContain('reacción del público');
+  });
+
+  it('el usuario puede fijar el tipo de contenido a mano, y manda sobre lo detectado', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 0, endSec: 30 }] });
+    const { body } = await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+      contentType: 'videoclip',
+    });
+    expect(body.contentType).toBe('videoclip');
+    expect(promptsVistos[0]).toContain('VIDEOCLIP');
+    expect(promptsVistos[0]).toContain('estribillo');
+  });
+
+  it('el prompt prohíbe los títulos comodín', async () => {
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 0, endSec: 30 }] });
+    await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+    });
+    expect(promptsVistos[0]).toMatch(/PROHIBIDO/);
+    expect(promptsVistos[0]).toMatch(/momento épico/i);
+  });
+
+  it('en un ensayo no se piden cambios de plano (cámara fija, sería ruido)', async () => {
+    fuentes.ytDlpInstalado = true;
+    energia.ventanas = [{ start: 0, end: 60, db: -20, score: 80 }];
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 0, endSec: 30 }] });
+
+    await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+      contentType: 'ensayo',
+    });
+
+    expect(promptsVistos[0]).toContain('ENSAYO');
+    expect(cambiosDePlanoSimulados.llamadas).toBe(0);
+  });
+
+  it('fuera de un ensayo sí se piden los cambios de plano', async () => {
+    fuentes.ytDlpInstalado = true;
+    energia.ventanas = [{ start: 0, end: 60, db: -20, score: 80 }];
+    respuestaIa.texto = JSON.stringify({ highlights: [{ title: 'A', startSec: 0, endSec: 30 }] });
+
+    await post('/api/analyze-video-highlights', {
+      youtubeUrl: 'https://youtu.be/8Jdw41lYdak',
+      targetDuration: 30,
+      contentType: 'concierto',
+    });
+
+    expect(cambiosDePlanoSimulados.llamadas).toBe(1);
   });
 
   it('pasa a la IA los capítulos que marcó quien subió el vídeo', async () => {

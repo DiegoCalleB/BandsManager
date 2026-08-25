@@ -26,6 +26,7 @@ import {
   metadatosVacios,
   descargarConYtDlp,
   urlDeAudioDirecta,
+  urlDeVideoDirecta,
   ytDlpDisponible,
   tieneClaveDataApi,
   type CapituloVideo,
@@ -36,6 +37,16 @@ import {
   ventanasConMasEnergia,
   resumirEnergiaParaPrompt
 } from "../utils/audioEnergy.js";
+import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
+import {
+  detectarCambiosDePlano,
+  detectarTipoContenido,
+  esTipoContenido,
+  ventanasMasVirales,
+  resumirSenalesParaPrompt,
+  type TipoContenido,
+  type VentanaViral
+} from "../utils/viralSignals.js";
 import {
   parseRange,
   formatMMSS,
@@ -458,7 +469,7 @@ router.get("/reel-analysis", requireAuth, async (req, res) => {
 
 router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req, res) => {
   try {
-    const { fileName, youtubeUrl, videoDuration = 0, videoTopic, targetDuration, videoKey: videoKeyExplicita } = req.body || {};
+    const { fileName, youtubeUrl, videoDuration = 0, videoTopic, targetDuration, videoKey: videoKeyExplicita, contentType } = req.body || {};
 
     const perfil = await perfilDeLaPeticion(req);
     const nombreBanda = displayBandName(perfil);
@@ -500,24 +511,62 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
           .substring(0, 6000)
       : "";
 
-    // Energía real del audio. Es la única pista objetiva de dónde pasa algo cuando el vídeo
-    // es instrumental y no hay transcripción: hasta ahora, ahí la IA elegía a ciegas.
-    // Best-effort y con tope de tiempo: si no se puede medir, el análisis sigue igual.
+    // Cómo está grabado el material cambia por completo qué hace viral a un fragmento: en un
+    // bolo mandan el subidón y el público, en un videoclip mandan el estribillo y el montaje.
+    // El usuario puede fijarlo; si no, se deduce del título y la descripción reales.
+    const tipoContenido: TipoContenido = esTipoContenido(contentType)
+      ? contentType
+      : detectarTipoContenido(meta.title || tituloReal, meta.description);
+
+    // Señales medidas sobre el vídeo real. Medir solo el volumen encontraba "dónde suena
+    // fuerte", que en un concierto entero a todo trapo no distingue nada; ahora se mide
+    // también el CONTRASTE al arrancar el corte y el ritmo de montaje.
+    // Best-effort y con tope de tiempo: si no se pueden medir, el análisis sigue igual.
     const analizarAudio = req.body?.analyzeAudio !== false;
     let ventanasEnergia: ReturnType<typeof ventanasConMasEnergia> = [];
+    let ventanasVirales: VentanaViral[] = [];
+    let cambiosDePlano: number[] = [];
+
     if (analizarAudio && videoId) {
       try {
         const urlAudio = await urlDeAudioDirecta(canonicalYouTubeUrl(videoId));
         if (urlAudio) {
           const curva = await analizarEnergiaAudio(urlAudio, { timeoutMs: 120_000 });
+
+          // La señal visual solo se pide cuando de verdad va a pesar en la puntuación: en un
+          // ensayo grabado con el móvil en una silla, contar planos es gastar CPU para nada.
+          if (curva.length > 0 && tipoContenido !== "ensayo") {
+            // urlDeAudioDirecta/urlDeVideoDirecta, NO canonicalYouTubeUrl: esa es la URL de la
+            // página de YouTube, y ffmpeg no puede decodificarla directamente con -i.
+            const urlVideo = await urlDeVideoDirecta(canonicalYouTubeUrl(videoId));
+            if (urlVideo) {
+              cambiosDePlano = await detectarCambiosDePlano(urlVideo, { timeoutMs: 150_000 });
+            }
+          }
+
+          ventanasVirales = ventanasMasVirales(curva, {
+            duracion: objetivoClip,
+            tipo: tipoContenido,
+            cambiosDePlano,
+            maxVentanas: 6
+          });
+          // Se mantiene la lista por energía pura para los cortes de respaldo sin IA.
           ventanasEnergia = ventanasConMasEnergia(curva, { duracion: objetivoClip, maxVentanas: 6 });
-          console.log(`[Reels] Energía del audio medida: ${curva.length} puntos, ${ventanasEnergia.length} tramos candidatos.`);
+          console.log(
+            `[Reels] Señales: ${curva.length} puntos de audio, ${cambiosDePlano.length} cambios de plano, ` +
+            `${ventanasVirales.length} tramos candidatos (tipo: ${tipoContenido}).`
+          );
         }
       } catch (e: any) {
-        console.log("[Reels] Análisis de audio omitido:", e?.message || e);
+        console.log("[Reels] Análisis de señales omitido:", e?.message || e);
       }
     }
-    const bloqueEnergia = resumirEnergiaParaPrompt(ventanasEnergia);
+
+    // El bloque nuevo trae el desglose (volumen/arranque/ritmo visual); el antiguo, solo el
+    // volumen. Se usa el que haya, para no perder la pista de energía si falla la puntuación.
+    const bloqueEnergia = ventanasVirales.length
+      ? resumirSenalesParaPrompt(ventanasVirales, tipoContenido)
+      : resumirEnergiaParaPrompt(ventanasEnergia);
 
     const bloqueCapitulos = meta.chapters.length
       ? [
@@ -533,57 +582,64 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
     let avisoIa = "";
 
     if (ai) {
-      const prompt = `Eres estratega de contenido viral para bandas de música en TikTok, Instagram Reels y YouTube Shorts. Analizas un vídeo REAL para preparar cortes verticales.
+      const prompt = `Eres quien decide qué trozo de un vídeo se convierte en Reel para una banda de música. Trabajas con material REAL y con señales medidas sobre él, no con suposiciones.
 
 ${buildBandContextBlock(perfil)}
 
-DATOS REALES DEL VÍDEO QUE ESTAMOS ANALIZANDO:
+${buildEstrategiaBlock(tipoContenido)}
+
+DATOS REALES DEL VÍDEO:
 - Título: "${tituloReal}"
 ${meta.author ? `- Canal: "${meta.author}"` : ""}
 ${meta.description ? `- Descripción original: "${meta.description.substring(0, 700)}"` : ""}
 - Duración total EXACTA: ${duracionTotal} segundos (${formatMMSS(duracionTotal)})
 ${fileName ? `- Archivo local: ${fileName}` : ""}
-${youtubeUrl ? `- URL: ${youtubeUrl}` : ""}
-${videoTopic ? `- Contexto/anécdota que aporta el usuario: "${videoTopic}"` : ""}
-${resumenTranscripcion ? `- TRANSCRIPCIÓN REAL CON MARCAS DE TIEMPO:\n${resumenTranscripcion}` : "- Este vídeo NO tiene transcripción disponible: es material instrumental o sin subtítulos. NO cites letras ni frases concretas, y no supongas qué se dice."}
+${videoTopic ? `- Contexto que aporta el usuario (tiene prioridad sobre tus suposiciones): "${videoTopic}"` : ""}
+${resumenTranscripcion ? `- TRANSCRIPCIÓN REAL CON MARCAS DE TIEMPO:\n${resumenTranscripcion}` : "- Este vídeo NO tiene transcripción: es material instrumental o sin subtítulos. NO cites letras ni frases concretas, y no supongas qué se dice ni quién habla."}
 
 ${bloqueCapitulos}
 
 ${bloqueEnergia}
 
-TU TAREA:
-Identifica entre 3 y 5 fragmentos con más potencial de enganche. Reglas de los rangos:
-- Cada fragmento debe durar aproximadamente ${objetivoClip} segundos (acepta de ${Math.max(8, Math.round(objetivoClip * 0.7))} a ${Math.round(objetivoClip * 1.3)} s).
-- startSec y endSec son NÚMEROS en segundos y deben estar SIEMPRE dentro de 0 y ${duracionTotal}.
-- Los fragmentos no pueden solaparse entre sí.
-- Ordénalos de mayor a menor potencial.
+${buildReglasDeRedaccion(nombreBanda)}
 
-Para cada fragmento entrega también:
-- "hookText": el rótulo de 3 a 6 palabras que va sobreimpreso en los primeros 2 segundos para frenar el scroll.
-- "recommendedCopy": pie de publicación para Instagram Reels, en la voz de la banda, con 1-2 emojis y sin hashtags dentro del texto.
-- "copyTikTok": versión más corta y directa para TikTok.
+TU TAREA:
+Elige entre 3 y 5 fragmentos. Reglas de los rangos:
+- Cada fragmento dura unos ${objetivoClip} segundos (se acepta de ${Math.max(8, Math.round(objetivoClip * 0.7))} a ${Math.round(objetivoClip * 1.3)} s).
+- startSec y endSec son NÚMEROS en segundos, siempre dentro de 0 y ${duracionTotal}.
+- No pueden solaparse entre sí.
+- Ordénalos de mayor a menor potencial real.
+- Coloca el inicio JUSTO donde empieza lo interesante, no unos segundos antes: los dos
+  primeros segundos del corte son los que deciden si alguien sigue mirando.
+
+Campos de cada fragmento:
+- "title": qué pasa en ese tramo (ver reglas de redacción).
+- "hookText": rótulo sobreimpreso para los 2 primeros segundos, máximo 6 palabras.
+- "recommendedCopy": pie de publicación para Instagram Reels, 2-4 líneas, sin hashtags dentro.
+- "copyTikTok": versión más corta y directa para TikTok, una o dos frases.
 - "copyYouTube": título de YouTube Shorts, máximo 60 caracteres.
-- "hashtags": entre 4 y 8 hashtags relevantes en español.
-- "cta": llamada a la acción concreta (comentar, guardar, compartir, entradas...).
-- "confidence": 1-100, tu estimación real de potencial.
+- "hashtags": entre 4 y 8, en español, mezclando los de la banda con los del estilo musical.
+- "cta": una llamada a la acción concreta y realista (comentar algo específico, guardar, compartir con alguien, venir al próximo bolo).
+- "confidence": 1-100, tu estimación honesta. No pongas 95 a todos: si un corte es flojo, dilo.
+- "reason": por qué ESE tramo, citando la señal medida o la letra que lo justifica.
 
 Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
 {
   "highlights": [
     {
       "id": "hl-1",
-      "title": "Título del momento",
+      "title": "...",
       "startSec": 15,
       "endSec": ${15 + objetivoClip},
       "confidence": 92,
       "energyLevel": "Muy Alta",
-      "hookText": "Espera al segundo 8",
+      "hookText": "...",
       "recommendedCopy": "...",
       "copyTikTok": "...",
       "copyYouTube": "...",
       "hashtags": ["#Ejemplo"],
       "cta": "...",
-      "reason": "Por qué engancha en los primeros 3 segundos"
+      "reason": "..."
     }
   ],
   "optimalTime": { "date": "YYYY-MM-DD", "time": "20:30", "reason": "Por qué ese hueco" }
@@ -663,7 +719,9 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
           author: meta.author,
           thumbnail: meta.thumbnail,
           hasTranscript: tieneTranscripcion,
-          chapters: meta.chapters
+          chapters: meta.chapters,
+          contentType: tipoContenido,
+          viralWindows: ventanasVirales
         },
         generatedByAI: generadoPorIa,
         notice: avisoIa
@@ -679,6 +737,11 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       notice: avisoIa || undefined,
       audioAnalyzed: ventanasEnergia.length > 0,
       energyWindows: ventanasEnergia,
+      // Ventanas con el desglose de señales (volumen / arranque / ritmo visual) y el tipo
+      // detectado, para que la interfaz pueda enseñar POR QUÉ se ha elegido cada momento.
+      viralWindows: ventanasVirales,
+      contentType: tipoContenido,
+      sceneChanges: cambiosDePlano.length,
       savedToDb: guardadoEnBd,
       band: { name: nombreBanda, instruments: perfil.instruments, hashtags: hashtagsBase },
       videoMeta: {
@@ -866,8 +929,13 @@ router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
       userNotes = "",
       currentTitle = "",
       highlightId,
-      videoKey: videoKeyExplicita
+      videoKey: videoKeyExplicita,
+      contentType
     } = req.body || {};
+
+    const tipoContenido: TipoContenido = esTipoContenido(contentType)
+      ? contentType
+      : detectarTipoContenido(videoTitle || fileName);
 
     // Para dejar el highlight reanalizado también actualizado en lo que ya se guardó en BD
     // (si no, la próxima vez que se recuperase el análisis guardado se vería la versión vieja).
@@ -904,13 +972,16 @@ router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
 ${buildBandContextBlock(perfil)}
 
 DATOS DEL CORTE:
+- Tipo de material: ${estrategiaDe(tipoContenido).etiqueta}
 - Vídeo de origen: "${tituloVideo}"
 - Rango exacto: de ${formatMMSS(inicio)} a ${formatMMSS(fin)} (${duracion} s)
 ${transcripcionExacta ? `- Transcripción literal de ESTE tramo:\n"${transcripcionExacta.substring(0, 1500)}"` : "- En este tramo no hay letra ni voz transcrita: es un pasaje instrumental o sin subtítulos. NO inventes qué se dice."}
 ${userNotes ? `- OBSERVACIONES DEL USUARIO SOBRE ESTE TRAMO (mándan sobre cualquier suposición tuya): "${String(userNotes).substring(0, 600)}"` : ""}
 ${currentTitle ? `- Título que tenía antes: "${currentTitle}"` : ""}
 
-REGLAS:
+${buildReglasDeRedaccion(nombreBanda)}
+
+REGLAS ESPECÍFICAS DE ESTE REANÁLISIS:
 1. Reescribe título, razón y copy para que describan EXACTAMENTE estos ${duracion} segundos.
 2. Si el usuario ha dejado observaciones, mándan sobre cualquier suposición: ajústalo todo a lo que dice.
 3. Sin notas del usuario y sin transcripción, usa un título estructural en vez de inventar solos concretos.
