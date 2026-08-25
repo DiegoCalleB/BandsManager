@@ -68,8 +68,6 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   onLeadLogoUpload,
   isUploadingLeadLogo = false
 }) => {
-  if (!selectedLead) return null;
-
   // Active Tab inside panel
   const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'bitacora'>('info');
 
@@ -79,7 +77,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Pitch Editing & Feedback State
   const [isEditingPitch, setIsEditingPitch] = useState(false);
-  const [editedPitch, setEditedPitch] = useState(selectedLead.pitch_generado || '');
+  const [editedPitch, setEditedPitch] = useState(selectedLead?.pitch_generado || '');
   const [toneRating, setToneRating] = useState<number>(0);
   const [contentRating, setContentRating] = useState<number>(0);
   const [feedbackComment, setFeedbackComment] = useState<string>('');
@@ -91,6 +89,18 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [showMultiModelModal, setShowMultiModelModal] = useState(false);
   const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek'>('gemini');
 
+  // Bitácora state
+  const [interactionType, setInteractionType] = useState<InteractionLog['tipo']>('Llamada');
+  const [interactionAutor, setInteractionAutor] = useState('Diego (Manager)');
+  const [interactionNotes, setInteractionNotes] = useState('');
+  const [interactionResultado, setInteractionResultado] = useState<InteractionLog['resultado']>('Interesado');
+
+  // Quick Copy status
+  const [copiedPitch, setCopiedPitch] = useState(false);
+  const [isSearchingLogo, setIsSearchingLogo] = useState(false);
+  const [isEnrichingLead, setIsEnrichingLead] = useState(false);
+  const [enrichStatusMsg, setEnrichStatusMsg] = useState<string | null>(null);
+
   // Clean helper for values like #ERROR!
   const cleanVal = (val?: string) => {
     if (!val || val.includes('#ERROR!') || val.includes('#N/A') || val.includes('#VALUE!')) return '';
@@ -99,6 +109,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Sync state when selected lead changes or pitch updates
   useEffect(() => {
+    if (!selectedLead) return;
     setEditedPitch(selectedLead.pitch_generado || '');
     setEditedLeadInfo({
       ...selectedLead,
@@ -107,7 +118,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       email_contacto: cleanVal(selectedLead.email_contacto),
       direccion: cleanVal(selectedLead.direccion),
     });
-  }, [selectedLead.id, selectedLead.pitch_generado, selectedLead.imagen_url, selectedLead.icono]);
+  }, [selectedLead?.id, selectedLead?.pitch_generado, selectedLead?.imagen_url, selectedLead?.icono]);
+
+  // Los hooks de arriba tienen que ejecutarse siempre en el mismo orden (ver
+  // react-hooks/rules-of-hooks): este guard vivía ANTES de ellos, así que abrir el panel con
+  // una sala nueva cambiaba cuántos hooks se ejecutaban entre un render y el siguiente.
+  if (!selectedLead) return null;
 
   const handleRegeneratePitchWithFeedback = async (targetProvider?: 'gemini' | 'deepseek') => {
     setIsRegeneratingPitch(true);
@@ -221,18 +237,6 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       setIsRevertingPitch(false);
     }
   };
-
-  // Bitácora state
-  const [interactionType, setInteractionType] = useState<InteractionLog['tipo']>('Llamada');
-  const [interactionAutor, setInteractionAutor] = useState('Diego (Manager)');
-  const [interactionNotes, setInteractionNotes] = useState('');
-  const [interactionResultado, setInteractionResultado] = useState<InteractionLog['resultado']>('Interesado');
-
-  // Quick Copy status
-  const [copiedPitch, setCopiedPitch] = useState(false);
-  const [isSearchingLogo, setIsSearchingLogo] = useState(false);
-  const [isEnrichingLead, setIsEnrichingLead] = useState(false);
-  const [enrichStatusMsg, setEnrichStatusMsg] = useState<string | null>(null);
 
   const handleEnrichLead = async () => {
     if (!selectedLead?.id) return;

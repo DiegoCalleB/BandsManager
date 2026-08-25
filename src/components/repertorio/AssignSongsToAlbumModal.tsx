@@ -27,8 +27,6 @@ export function AssignSongsToAlbumModal({
   onClose,
   onSaveAlbumSongs,
 }: AssignSongsToAlbumModalProps) {
-  if (!isOpen) return null;
-
   const currentAlbumSongs = songs.filter(s => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set(currentAlbumSongs.map(s => s.id)));
   const [search, setSearch] = useState('');
@@ -37,6 +35,10 @@ export function AssignSongsToAlbumModal({
   const [albumType, setAlbumType] = useState('Álbum Estudio');
   const [coverUrl, setCoverUrl] = useState('');
   const [description, setDescription] = useState('');
+
+  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
+  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
+  if (!isOpen) return null;
 
   const filteredSongs = songs.filter(s =>
     s.titulo.toLowerCase().includes(search.toLowerCase()) ||

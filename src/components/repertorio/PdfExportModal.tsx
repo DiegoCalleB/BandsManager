@@ -36,8 +36,6 @@ export function PdfExportModal({
   onClose,
   onUpdateSong
 }: PdfExportModalProps) {
-  if (!isOpen || !activeSetlist) return null;
-
   const resolvedMembers = resolveBandMembers(bandMembers);
 
   // Print mode: 'all_members' | 'single_member' | 'master'
@@ -66,6 +64,11 @@ export function PdfExportModal({
 
   // Quick edit note state
   const [editingSongForNotes, setEditingSongForNotes] = useState<Song | null>(null);
+
+  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
+  // guard vivía antes de ellos, así que abrir/cerrar el modal o cambiar de repertorio activo
+  // cambiaba cuántos hooks corrían entre renders.
+  if (!isOpen || !activeSetlist) return null;
 
   const selectedMember = resolvedMembers.find(m => m.id === selectedMemberId) || resolvedMembers[0] || {
     id: 'usr-1',

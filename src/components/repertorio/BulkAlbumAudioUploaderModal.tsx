@@ -61,8 +61,6 @@ export function BulkAlbumAudioUploaderModal({
   isNewAlbumMode = false,
   onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
-  if (!isOpen) return null;
-
   const [currentAlbumName, setCurrentAlbumName] = useState<string>(initialAlbumName || '');
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string>('');
@@ -92,6 +90,10 @@ export function BulkAlbumAudioUploaderModal({
       }
     };
   }, []);
+
+  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
+  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
+  if (!isOpen) return null;
 
   const stopPreview = () => {
     if (audioPlayerRef.current) {

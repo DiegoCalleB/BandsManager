@@ -9,12 +9,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev      # tsx server.ts — runs the Express server (serves API + Vite-built frontend)
-npm run build     # vite build (frontend) + esbuild bundles server.ts -> dist/server.cjs
-npm start         # node dist/server.cjs — run the production build
-npm run lint      # esbuild dry-run bundle check of server.ts + src/main.tsx (not eslint)
-npm test          # vitest run — runs the full suite once
+npm run dev         # tsx server.ts — runs the Express server (serves API + Vite-built frontend)
+npm run build       # vite build (frontend) + esbuild bundles server.ts -> dist/server.cjs
+npm start           # node dist/server.cjs — run the production build
+npm run lint        # esbuild dry-run bundle check of server.ts + src/main.tsx (not eslint - see below)
+npm run lint:eslint  # real ESLint (typescript-eslint + react-hooks), not wired into CI yet
+npm test            # vitest run — runs the full suite once
+npm run test:coverage  # vitest run --coverage
 ```
+
+`npm run lint:eslint` is separate from `npm run lint` on purpose: CI's `lint` step needs to keep meaning "esbuild can still bundle this," so ESLint was added alongside it rather than replacing it. It currently reports ~2200 findings (`eslint.config.js`), split roughly 1170 `no-explicit-any` + 750 `no-unused-vars` (matches the loose-typing debt tracked by the `tsc` baseline below) plus a long tail of `react-hooks/*` findings — `rules-of-hooks` violations (hooks called after an early `return null`, so a hook count that changes between renders) have already been fixed in the 7 components that had them; the rest (`set-state-in-effect`, `purity`, `exhaustive-deps`, `no-empty`, `no-useless-assignment`) are open. Not wired into CI: fixing the bulk of it (mostly `any`) is a real, separate effort, not something to silently ratchet like `tsc`.
 
 Run a single test file or test case with vitest directly:
 
