@@ -5,6 +5,9 @@ import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyCon
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { getTargetBandId } from "../utils/bandAccess.js";
+import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 
 const router = express.Router();
 
@@ -575,27 +578,55 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
 router.post("/write-reels-copy", requireAuth, async (req, res) => {
   const { idea, style } = req.body;
   const client = getAiClient();
-  
-  const baseIdea = idea || "un ensayo improvisando ritmos ska";
-  const prompt = style === "hype" 
-    ? `Eres el redactor de redes de la banda "Bakandeya". Genera una publicación para Instagram Reels o TikTok con un estilo de "Balkan Hype" salvaje, enérgico, callejero, de fiesta descontrolada y directo sudoroso. Usa emojis de fuego, violín, sintetizadores, percusión, saltos, y hashtags de balkan ska, mestizaje, violin en directo, sintetizadores y rock. REGLA OBLIGATORIA: Bakandeya NO TIENE instrumentos de viento (trompetas, saxos, trombones); NUNCA uses la palabra vientos, trompetas, ni saxos. Sé muy cañero, breve y directo. La idea es: "${baseIdea}"`
-    : `Eres el redactor de redes de la banda "Bakandeya". Genera una publicación para Instagram Reels o TikTok con un estilo de "Reggae Chill", relajado, místico, de buenas vibras veraniegas, paz, amor y conexión con el ritmo de la tierra. Usa emojis de paz, sol, violín, plantas, olas y hashtags de roots reggae, reggae español, mestizaje y ska tranquilo. REGLA OBLIGATORIA: Bakandeya NO TIENE instrumentos de viento; NUNCA uses vientos, trompetas ni saxos. Sé breve y deja que la vibra fluya. La idea es: "${baseIdea}"`;
+
+  // Antes este prompt decía "Bakandeya" a pelo, con su instrumentación y su regla de vientos.
+  // En una app multi-banda eso le escribía a cualquiera copies sobre una banda que no es la suya.
+  let perfil = emptyBandProfile();
+  try {
+    perfil = await loadBandProfile(getTargetBandId(req), {
+      getBand: (id) => dbGetRegisteredBandById(id),
+      getEpk: (id) => dbGetEpkConfig(id),
+      getState: () => loadState()
+    });
+  } catch (e: any) {
+    console.warn("[write-reels-copy] Sin perfil de banda:", e?.message || e);
+  }
+
+  const nombreBanda = displayBandName(perfil);
+  const hashtags = baseHashtags(perfil);
+  const baseIdea = idea || "un ensayo de la banda";
+
+  const estilo = style === "hype"
+    ? 'Estilo "HYPE": enérgico, callejero, de fiesta y directo sudoroso. Frases cortas, mayúsculas puntuales y emojis de fuego y de subidón.'
+    : 'Estilo "CHILL": relajado, de buen rollo y buenas vibras. Ritmo pausado, imágenes de sol y calma, sin gritar.';
+
+  const prompt = `Eres quien lleva las redes de la banda. Escribe UNA publicación para Instagram Reels o TikTok.
+
+${buildBandContextBlock(perfil)}
+
+${estilo}
+
+IDEA A CONTAR: "${baseIdea}"
+
+FORMATO: 2-4 líneas de texto, después una línea con 4-6 hashtags. Sin comillas alrededor, sin títulos, sin explicar lo que has hecho. Devuelve solo el texto de la publicación.`;
 
   if (!client) {
     const copy = style === "hype"
-      ? `🔥 ¡ESTO VA A EXPLODAR! 🎻💥 Nos hemos encerrado en el local y ha salido esta LOCURA DE RITMO BALKÁNICO. Si te gusta sudar y saltar con violín virtuoso y sintetizadores hasta romper la zapatilla, guárdate este vídeo. ¡Nos vemos en los escenarios de la gira Bakandeya 2026! 🥁🚀\n\n#Bakandeya #BalkanSka #Fiesta #Mestizaje #ViolinEnDirecto #Directo`
-      : `✨ Buenas vibras y buenas energías. 🌴 Sol, ritmo y espacio para respirar con Bakandeya. La música sana y une. ¿Sientes el groove? Dejad un comentario con vuestra energía. 🌿✌️\n\n#Bakandeya #ReggaeChill #RootsReggae #BuenasVibras #MusicaReal #Groove`;
-    return res.json({ copy });
+      ? `🔥 Se nos ha ido de las manos en el local: ${baseIdea}. Sube el volumen y dinos si lo llevamos al próximo bolo. 🚀\n\n${hashtags.join(" ")}`
+      : `✨ Buenas vibras y tiempo para respirar: ${baseIdea}. Dale al play y cuéntanos cómo te deja. 🌿\n\n${hashtags.join(" ")}`;
+    return res.json({ success: true, text: copy, copy, generatedByAI: false, band: nombreBanda });
   }
 
   try {
-    const response = await generateContentWithFallback(client, {
-      contents: prompt
-    });
-    res.json({ copy: response.text });
+    const response = await generateContentWithFallback(client, { contents: prompt });
+    const copy = (response.text || "").trim();
+    if (!copy) throw new Error("La IA devolvió una respuesta vacía.");
+    // El frontend (ReelsCenter) espera { success, text }: devolver solo { copy } hacía que el
+    // copy generado nunca se pintara y saltara siempre el aviso de "hubo un problema".
+    res.json({ success: true, text: copy, copy, generatedByAI: true, band: nombreBanda });
   } catch (err) {
     console.error("Error generating reels copy with Gemini:", err);
-    res.status(500).json({ error: "Fallo al generar copy con IA" });
+    res.status(500).json({ success: false, error: "Fallo al generar copy con IA" });
   }
 });
 

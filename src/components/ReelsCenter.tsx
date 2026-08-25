@@ -34,6 +34,18 @@ import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
+export interface YoutubeVideoMeta {
+ videoId: string;
+ title: string;
+ author: string;
+ duration: number;
+ durationKnown: boolean;
+ thumbnail: string;
+ hasTranscript: boolean;
+ transcriptLines: number;
+ isLive?: boolean;
+}
+
 function parseRangeTimes(rangeStr?: string) {
  if (!rangeStr) return { start: 0, end: 0, duration: 0 };
  const parts = rangeStr.split('-');
@@ -112,8 +124,8 @@ export default function ReelsCenter({
          is_sender: true
        })
      });
-     const json = await res.json();
-     if (json.success && json.data) {
+     const json = res as any;
+     if (json?.success && json.data) {
        setBakandeyaToneData(json.data);
      }
    } catch (err) {
@@ -168,8 +180,20 @@ export default function ReelsCenter({
  const [isPreviewMuted, setIsPreviewMuted] = useState(true);
  const [isExpandedPreview, setIsExpandedPreview] = useState(false);
  const [videoTopic, setVideoTopic] = useState('');
+ // Duración objetivo del CLIP que queremos sacar (15/30/60), no la del vídeo de origen.
  const [videoDuration, setVideoDuration] = useState(30);
  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+ // Ficha real del vídeo de YouTube. Antes la línea de tiempo asumía siempre 120 s, así que
+ // en un directo de 40 minutos los marcadores no se correspondían con nada.
+ const [videoMeta, setVideoMeta] = useState<YoutubeVideoMeta | null>(null);
+ const [isFetchingMeta, setIsFetchingMeta] = useState(false);
+ const [metaError, setMetaError] = useState<string | null>(null);
+ const [analysisNotice, setAnalysisNotice] = useState<string | null>(null);
+
+ // Opciones de renderizado del clip físico
+ const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
+ const [burnSubtitles, setBurnSubtitles] = useState(false);
  const [loadingStep, setLoadingStep] = useState(0);
  const [analysisError, setAnalysisError] = useState<string | null>(null);
  
@@ -192,6 +216,59 @@ export default function ReelsCenter({
  const [cuttingProgressText, setCuttingProgressText] = useState('');
  const [cuttingError, setCuttingError] = useState<string | null>(null);
  const [sinTranscripcionReal, setSinTranscripcionReal] = useState<boolean>(false);
+ const [renderedClipSize, setRenderedClipSize] = useState<number>(0);
+ const [renderedBurnedSubs, setRenderedBurnedSubs] = useState<boolean>(false);
+
+ // Al escribir/pegar una URL de YouTube pedimos su ficha real (título, duración, canal,
+ // si tiene subtítulos). Sin esto trabajábamos a ciegas y la línea de tiempo mentía.
+ useEffect(() => {
+ const videoId = getYouTubeId(youtubeUrl);
+ if (inputType !== 'youtube' || !videoId) {
+ setVideoMeta(null);
+ setMetaError(null);
+ setIsFetchingMeta(false);
+ return;
+ }
+
+ if (videoMeta && videoMeta.videoId === videoId) return;
+
+ let cancelado = false;
+ setIsFetchingMeta(true);
+ setMetaError(null);
+
+ const temporizador = setTimeout(async () => {
+ try {
+ const data = await apiFetch<any>(`/api/youtube-meta?url=${encodeURIComponent(youtubeUrl)}`);
+ if (cancelado) return;
+ if (data?.success && data.meta) {
+ setVideoMeta(data.meta as YoutubeVideoMeta);
+ // Rellenamos el contexto con el título real en vez del texto genérico de relleno.
+ setVideoTopic(prev => (!prev || prev === 'Vídeo de YouTube de Bakandeya') ? (data.meta.title || prev) : prev);
+ } else {
+ setMetaError(data?.error || 'No se pudo leer la ficha del vídeo.');
+ }
+ } catch (err: any) {
+ if (!cancelado) setMetaError(err?.message || 'No se pudo leer la ficha del vídeo.');
+ } finally {
+ if (!cancelado) setIsFetchingMeta(false);
+ }
+ }, 600);
+
+ return () => {
+ cancelado = true;
+ clearTimeout(temporizador);
+ };
+ // videoMeta queda fuera a propósito: solo se relee cuando cambia la URL o el tipo de entrada.
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [youtubeUrl, inputType]);
+
+ /** Duración de referencia para la línea de tiempo: la real si la conocemos. */
+ const timelineDuration = React.useMemo(() => {
+ if (videoMeta?.durationKnown && videoMeta.duration > 0) return videoMeta.duration;
+ const clip = highlights[selectedHighlightIndex];
+ const { end } = parseRangeTimes(clip?.range);
+ return Math.max(120, end + 30);
+ }, [videoMeta, highlights, selectedHighlightIndex]);
 
  // Clip Re-analysis states
  const [clipUserNote, setClipUserNote] = useState<string>('');
@@ -222,9 +299,9 @@ export default function ReelsCenter({
  })
  });
 
- const data = await response.json();
- if (data.success && data.analysis) {
- const { title, reason, recommendedCopy, hashtags, energyLevel, confidence } = data.analysis;
+ const data = response as any;
+ if (data?.success && data.analysis) {
+ const { title, reason, recommendedCopy, hashtags, energyLevel, confidence, hookText, copyTikTok, cta } = data.analysis;
 
  setHighlights(prev => prev.map((clip, idx) => {
  if (idx === selectedHighlightIndex) {
@@ -235,7 +312,10 @@ export default function ReelsCenter({
  recommendedCopy: recommendedCopy || clip.recommendedCopy,
  hashtags: hashtags || clip.hashtags,
  energyLevel: energyLevel || clip.energyLevel,
- confidence: confidence || clip.confidence
+ confidence: confidence || clip.confidence,
+ hookText: hookText || clip.hookText,
+ copyTikTok: copyTikTok || clip.copyTikTok,
+ cta: cta || clip.cta
  };
  }
  return clip;
@@ -245,10 +325,14 @@ export default function ReelsCenter({
  setEditedCopy(recommendedCopy);
  }
 
- setReanalyzeSuccessMsg("¡Análisis del fragmento refinado con éxito!");
- setTimeout(() => setReanalyzeSuccessMsg(null), 4000);
+ setReanalyzeSuccessMsg(
+ data.generatedByAI === false
+ ? "Fragmento actualizado (la IA no estaba disponible: se ha usado una plantilla con tus notas)."
+ : "¡Análisis del fragmento refinado con éxito!"
+ );
+ setTimeout(() => setReanalyzeSuccessMsg(null), 5000);
  } else {
- alert(data.error ||"No se pudo reanalizar el fragmento.");
+ alert(data?.error ||"No se pudo reanalizar el fragmento.");
  }
  } catch (err) {
  console.error("Error reanalyzing clip:", err);
@@ -272,17 +356,20 @@ export default function ReelsCenter({
  const { start, duration } = parseRangeTimes(activeClip.range);
  const clipId = `reel-${selectedHighlightIndex}-${Date.now()}`;
 
- // Cycle through real steps to give perfect feedback
  const progressSteps = [
-"Iniciando descarga del stream de YouTube...",
-"Extrayendo flujo de audio y vídeo de alta calidad...",
-"Estabilizando búfer y preparando ffmpeg...",
-"Recortando fragmento con precisión de milisegundos...",
-"Aplicando filtro de encuadre vertical (9:16)...",
-"Analizando audio e indexando subtítulos de YouTube...",
-"Sincronizando offsets de palabras...",
-"Codificando vídeo y empaquetando en MP4...",
-"Finalizando renderizado físico..."
+"Descargando el vídeo de YouTube...",
+"Extrayendo la mejor pista de vídeo y audio disponible...",
+"Preparando ffmpeg...",
+`Recortando de ${formatTime(start)} a ${formatTime(start + duration)}...`,
+ cropMode === 'blur'
+ ? "Componiendo fondo desenfocado en 9:16 (no se recorta a nadie)..."
+ : cropMode === 'crop'
+ ? "Aplicando encuadre vertical 9:16..."
+ : "Manteniendo el encuadre original...",
+"Buscando la transcripción de YouTube para los subtítulos...",
+ burnSubtitles ? "Incrustando los subtítulos en la imagen..." : "Generando la pista de subtítulos (.vtt)...",
+"Codificando el MP4 final...",
+"Últimos ajustes..."
  ];
 
  let currentStep = 0;
@@ -302,16 +389,23 @@ export default function ReelsCenter({
  start,
  duration,
  clipId,
- cropVertical: true
+ cropMode,
+ burnSubtitles,
+ // Flag antiguo, por si el servidor todavía no está actualizado.
+ cropVertical: cropMode !== 'none'
  })
  });
 
  clearInterval(interval);
- if (!res.ok) throw new Error("El servidor devolvió un error al realizar el recorte.");
- 
- const data = await res.json();
- if (data.success && data.videoBase64) {
- // Revoke previous Blob URLs if existing to free memory
+
+ // apiFetch ya devuelve el JSON parseado, no una Response: llamar a res.json() aquí
+ // reventaba con "res.json is not a function" y res.ok era siempre undefined.
+ const data = res as any;
+ if (!data?.success) {
+ throw new Error(data?.error || "Error al codificar el clip de vídeo.");
+ }
+
+ // Los blobs anteriores dejan de hacer falta en cuanto llega un clip nuevo.
  if (renderedClipUrl && renderedClipUrl.startsWith('blob:')) {
  URL.revokeObjectURL(renderedClipUrl);
  }
@@ -319,8 +413,13 @@ export default function ReelsCenter({
  URL.revokeObjectURL(renderedSubUrl);
  }
 
- // Convert base64 Data URL to Blob -> ObjectURL
- const parts = data.videoBase64.split(',');
+ // El servidor sirve ahora el clip como archivo estático. El base64 se mantiene como
+ // respaldo: metía 30 MB dentro de un JSON y reventaba el límite del body.
+ let nuevaUrl: string | null = null;
+ if (data.clipUrl) {
+ nuevaUrl = String(data.clipUrl);
+ } else if (data.videoBase64) {
+ const parts = String(data.videoBase64).split(',');
  const mimeString = parts[0].split(':')[1].split(';')[0];
  const byteString = atob(parts[1]);
  const ab = new ArrayBuffer(byteString.length);
@@ -328,15 +427,19 @@ export default function ReelsCenter({
  for (let i = 0; i < byteString.length; i++) {
  ia[i] = byteString.charCodeAt(i);
  }
- const videoBlob = new Blob([ab], { type: mimeString });
- const newClipUrl = URL.createObjectURL(videoBlob);
- setRenderedClipUrl(newClipUrl);
+ nuevaUrl = URL.createObjectURL(new Blob([ab], { type: mimeString }));
+ }
 
- // Handle VTT Subtitles as Object URL
+ if (!nuevaUrl) {
+ throw new Error("El servidor no devolvió ningún clip renderizado.");
+ }
+ setRenderedClipUrl(nuevaUrl);
+ setRenderedClipSize(Number(data.fileSize) || 0);
+ setRenderedBurnedSubs(Boolean(data.burnedSubtitles));
+
  if (data.vttContent) {
  const vttBlob = new Blob([data.vttContent], { type: 'text/vtt' });
- const newSubUrl = URL.createObjectURL(vttBlob);
- setRenderedSubUrl(newSubUrl);
+ setRenderedSubUrl(URL.createObjectURL(vttBlob));
  } else {
  setRenderedSubUrl(null);
  }
@@ -345,13 +448,10 @@ export default function ReelsCenter({
  setWordOffsets(data.words || []);
  setSinTranscripcionReal(Boolean(data.sinTranscripcionReal));
  setIsWhisperTranscribed(false);
- setCuttingProgressText("¡Reel físico en memoria renderizado con éxito!");
- } else {
- throw new Error(data.error ||"Error al codificar el clip de vídeo.");
- }
+ setCuttingProgressText("¡Clip renderizado y listo para descargar!");
  } catch (err: any) {
  clearInterval(interval);
- setCuttingError(err.message ||"Error al renderizar el clip.");
+ setCuttingError(err?.message ||"Error al renderizar el clip.");
  } finally {
  setIsCuttingVideo(false);
  }
@@ -372,16 +472,18 @@ export default function ReelsCenter({
  const currentClip = highlights[selectedHighlightIndex];
  if (!currentClip) return;
  const { start, end } = parseRangeTimes(currentClip.range);
- const totalDuration = Math.max(120, end + 30);
+ const totalDuration = timelineDuration;
  const targetSeconds = Math.round(clickPct * totalDuration);
 
  let newStart = start;
  let newEnd = end;
 
  if (draggingBoundary === 'start') {
- newStart = Math.min(targetSeconds, end - 1);
+ newStart = Math.max(0, Math.min(targetSeconds, end - 1));
  } else if (draggingBoundary === 'end') {
- newEnd = Math.max(targetSeconds, start + 1);
+ // No dejamos arrastrar más allá del final real del vídeo: un rango imposible
+ // llegaba a ffmpeg y devolvía un recorte vacío.
+ newEnd = Math.min(totalDuration, Math.max(targetSeconds, start + 1));
  }
 
  const formatSecsToMMSS = (totalSecs: number) => {
@@ -418,16 +520,18 @@ export default function ReelsCenter({
  const currentClip = highlights[selectedHighlightIndex];
  if (!currentClip) return;
  const { start, end } = parseRangeTimes(currentClip.range);
- const totalDuration = Math.max(120, end + 30);
+ const totalDuration = timelineDuration;
  const targetSeconds = Math.round(clickPct * totalDuration);
 
  let newStart = start;
  let newEnd = end;
 
  if (draggingBoundary === 'start') {
- newStart = Math.min(targetSeconds, end - 1);
+ newStart = Math.max(0, Math.min(targetSeconds, end - 1));
  } else if (draggingBoundary === 'end') {
- newEnd = Math.max(targetSeconds, start + 1);
+ // No dejamos arrastrar más allá del final real del vídeo: un rango imposible
+ // llegaba a ffmpeg y devolvía un recorte vacío.
+ newEnd = Math.min(totalDuration, Math.max(targetSeconds, start + 1));
  }
 
  const formatSecsToMMSS = (totalSecs: number) => {
@@ -457,7 +561,7 @@ export default function ReelsCenter({
  window.removeEventListener('touchmove', handleGlobalTouchMove);
  window.removeEventListener('touchend', handleGlobalTouchEnd);
  };
- }, [draggingBoundary, highlights, selectedHighlightIndex]);
+ }, [draggingBoundary, highlights, selectedHighlightIndex, timelineDuration]);
 
  // Simulated playback time for highlight looping
  useEffect(() => {
@@ -674,16 +778,18 @@ export default function ReelsCenter({
  }
  };
 
+ // Pasos reales del backend. Los de antes describían un análisis espectral y un modelo de
+ // BPM que no existen en ningún sitio del código.
  const getLoadingSteps = () => {
  const firstStep = inputType === 'youtube'
- ?"Obteniendo flujo de audio y vídeo de YouTube..."
- :"Subiendo metraje bruto al búfer temporal seguro...";
+ ? "Leyendo la ficha del vídeo de YouTube..."
+ : "Preparando el metraje subido...";
  return [
  firstStep,
-"Analizando espectro acústico en busca de picos de violín y percusión (+12dB)...",
-"Mapeando transiciones rítmicas de compases (BPM 145 balkan a 85 reggae)...",
-"Calculando curvas de retención con el modelo de engagement para España...",
-"Generando copys identitarios de la banda y hashtags con Gemini..."
+ "Descargando la transcripción con marcas de tiempo (si la hay)...",
+ "Enviando el contexto real de tu banda al modelo...",
+ `Buscando los mejores fragmentos de ~${videoDuration} s...`,
+ "Redactando copys, hooks y hashtags..."
  ];
  };
 
@@ -734,6 +840,8 @@ export default function ReelsCenter({
 
  // Reset physical clip and subtitle state for the new video
  setRenderedClipUrl(null);
+ setRenderedClipSize(0);
+ setRenderedBurnedSubs(false);
  setRenderedSubUrl(null);
  setSubtitleCues([]);
  setWordOffsets([]);
@@ -743,6 +851,7 @@ export default function ReelsCenter({
 
  setIsAnalyzing(true);
  setAnalysisError(null);
+ setAnalysisNotice(null);
  setLoadingStep(0);
 
  const steps = getLoadingSteps();
@@ -763,22 +872,32 @@ export default function ReelsCenter({
  body: JSON.stringify({
  fileName: inputType === 'file' ? selectedFile?.name : undefined,
  youtubeUrl: targetYtUrl,
+ // targetDuration = cuánto debe durar cada clip; knownDuration = cuánto dura el vídeo.
+ // Antes ambas cosas viajaban en el mismo campo y la IA recibía "el vídeo dura 30 s".
+ targetDuration: videoDuration,
+ knownDuration: videoMeta?.durationKnown ? videoMeta.duration : undefined,
  videoDuration: videoDuration,
- videoTopic: videoTopic || (targetYtUrl ?"Vídeo de YouTube de Bakandeya" :"Ensayo o directo de la banda con violín y percusión reciclada")
+ videoTopic: videoTopic || undefined
  })
  });
 
  clearInterval(stepInterval);
 
- const data = await res.json().catch(() => null);
+ // apiFetch resuelve ya con el JSON parseado (o lanza si la respuesta no fue 2xx),
+ // así que aquí no hay ninguna Response sobre la que llamar a .json().
+ const data = res as any;
 
- if (!res.ok || !data?.success) {
+ if (!data?.success) {
  throw new Error(data?.error || data?.message || 'Error al procesar el vídeo en el servidor. Revisa tu sesión o inténtalo de nuevo.');
  }
 
  setHighlights(data.highlights || []);
  setOptimalTime(data.optimalTime || null);
  setSelectedHighlightIndex(0);
+ setAnalysisNotice(data.notice || null);
+ if (data.videoMeta && data.videoMeta.videoId) {
+ setVideoMeta(data.videoMeta as YoutubeVideoMeta);
+ }
  
  // Initialize editing form fields
  if (data.highlights && data.highlights.length > 0) {
@@ -835,6 +954,8 @@ export default function ReelsCenter({
  setSelectedHighlightIndex(index);
  // Reset physical cutting states when switching segments
  setRenderedClipUrl(null);
+ setRenderedClipSize(0);
+ setRenderedBurnedSubs(false);
  setRenderedSubUrl(null);
  setSubtitleCues([]);
  setWordOffsets([]);
@@ -909,8 +1030,8 @@ export default function ReelsCenter({
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({ idea: reelIdea, style })
  });
- const data = await response.json();
- if (data.success && data.text) {
+ const data = response as any;
+ if (data?.success && data.text) {
  setGeneratedCopy(data.text);
  } else {
  alert('Hubo un problema al generar el texto. Mostrando plantilla de respaldo.');
@@ -1477,6 +1598,57 @@ export default function ReelsCenter({
  </button>
  )}
  </div>
+
+ {/* Ficha real del vídeo: sin esto el usuario no sabía si la URL era la correcta
+ hasta después de gastar un análisis entero. */}
+ {isFetchingMeta && (
+ <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-neutral-500 pt-1">
+ <RefreshCw className="w-3 h-3 animate-spin" />
+ <span>Leyendo la ficha del vídeo...</span>
+ </div>
+ )}
+
+ {!isFetchingMeta && metaError && (
+ <div className="p-2 rounded-lg bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono text-left flex items-start gap-2">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+ <span>{metaError} Puedes analizarlo igualmente, pero los rangos serán aproximados.</span>
+ </div>
+ )}
+
+ {!isFetchingMeta && videoMeta && (
+ <div className={`flex gap-3 items-center p-2.5 rounded-xl text-left ${
+ isStitchLight ? 'bg-white -slate-200' : 'bg-[#131313] -neutral-800'
+ }`}>
+ {videoMeta.thumbnail && (
+ <img
+ src={videoMeta.thumbnail}
+ alt=""
+ className="w-20 h-12 object-cover rounded-lg shrink-0 -neutral-800"
+ loading="lazy"
+ />
+ )}
+ <div className="min-w-0 flex-1 space-y-1">
+ <p className={`text-[11px] font-bold truncate ${isStitchLight ? 'text-slate-800' : 'text-neutral-100'}`}>
+ {videoMeta.title || 'Vídeo de YouTube'}
+ </p>
+ <div className="flex flex-wrap gap-1.5 items-center text-[9px] font-mono">
+ {videoMeta.author && <span className="text-neutral-500 truncate max-w-[120px]">{videoMeta.author}</span>}
+ {videoMeta.durationKnown ? (
+ <span className={`px-1.5 py-0.5 rounded font-bold ${isStitchLight ? 'bg-indigo-50 text-indigo-600' : 'bg-[#f2ca50]/10 text-[#f2ca50]'}`}>
+ {formatTime(videoMeta.duration)}
+ </span>
+ ) : (
+ <span className="px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400">duración desconocida</span>
+ )}
+ <span className={`px-1.5 py-0.5 rounded font-bold ${
+ videoMeta.hasTranscript ? 'bg-emerald-500/10 text-emerald-400' : 'bg-neutral-800 text-neutral-500'
+ }`}>
+ {videoMeta.hasTranscript ? `subtítulos ✓ (${videoMeta.transcriptLines})` : 'sin subtítulos'}
+ </span>
+ </div>
+ </div>
+ </div>
+ )}
  </div>
  </div>
  )}
@@ -1568,6 +1740,15 @@ export default function ReelsCenter({
  <div className="p-3 bg-rose-500/10 -rose-500/20 rounded-lg text-rose-400 text-xs flex gap-2 items-center">
  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
  <span>{analysisError}</span>
+ </div>
+ )}
+
+ {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
+ presentaban como si los hubiera elegido el modelo. */}
+ {!analysisError && analysisNotice && (
+ <div className="p-3 bg-amber-500/10 -amber-500/20 rounded-lg text-amber-300 text-xs flex gap-2 items-start">
+ <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+ <span>{analysisNotice}</span>
  </div>
  )}
  </div>
@@ -2652,7 +2833,7 @@ export default function ReelsCenter({
  {highlights[selectedHighlightIndex] && (() => {
  const { start, end, duration } = parseRangeTimes(highlights[selectedHighlightIndex]?.range);
  if (duration > 0) {
- const totalDuration = Math.max(120, end + 30);
+ const totalDuration = timelineDuration;
  const startPct = (start / totalDuration) * 100;
  const endPct = (end / totalDuration) * 100;
  const activeWidth = endPct - startPct;
@@ -2907,6 +3088,58 @@ export default function ReelsCenter({
  Corta físicamente el fragmento del vídeo de YouTube a formato vertical 9:16 para Reels/TikTok y genera la pista de subtítulos sincronizada con la voz.
  </p>
 
+ {/* Opciones de renderizado */}
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ <div className="space-y-1.5">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Encuadre vertical</span>
+ <div className="grid grid-cols-3 gap-1">
+ {([
+ { valor: 'crop' as const, etiqueta: 'Recortar', ayuda: 'Recorta los laterales. Encuadre cerrado: puede dejar fuera a parte de la banda.' },
+ { valor: 'blur' as const, etiqueta: 'Fondo blur', ayuda: 'Mete el vídeo entero centrado sobre un fondo desenfocado. No se pierde a nadie.' },
+ { valor: 'none' as const, etiqueta: 'Original', ayuda: 'Deja el encuadre horizontal tal cual.' }
+ ]).map(opcion => (
+ <button
+ key={opcion.valor}
+ type="button"
+ title={opcion.ayuda}
+ onClick={() => setCropMode(opcion.valor)}
+ disabled={isCuttingVideo}
+ className={`px-2 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+ cropMode === opcion.valor
+ ? 'bg-[#f2ca50] text-[#3c2f00]'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {opcion.etiqueta}
+ </button>
+ ))}
+ </div>
+ </div>
+
+ <div className="space-y-1.5">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Subtítulos</span>
+ <button
+ type="button"
+ onClick={() => setBurnSubtitles(v => !v)}
+ disabled={isCuttingVideo || (videoMeta ? !videoMeta.hasTranscript : false)}
+ title={videoMeta && !videoMeta.hasTranscript
+ ? 'Este vídeo no tiene transcripción en YouTube, así que no hay nada que incrustar.'
+ : 'Graba los subtítulos dentro de la imagen, que es como se ven en Reels y TikTok sin activar nada.'}
+ className={`w-full px-3 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+ burnSubtitles
+ ? 'bg-emerald-500/15 -emerald-500/40 text-emerald-300'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {burnSubtitles ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5 opacity-40" />}
+ <span>{burnSubtitles ? 'Incrustados en el vídeo' : 'Solo pista .vtt aparte'}</span>
+ </button>
+ {videoMeta && !videoMeta.hasTranscript && (
+ <p className="text-[9px] font-mono text-neutral-600 leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
+ )}
+ </div>
+ </div>
+
  {/* Rendering State indicators */}
  {isCuttingVideo ? (
  <div className="bg-neutral-900/80 p-4 rounded-xl -neutral-800 space-y-3 animate-pulse">
@@ -2932,31 +3165,50 @@ export default function ReelsCenter({
  ¡Reel Renderizado con Éxito!
  </span>
  </div>
+ <div className="flex gap-1 shrink-0">
  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#10b981]/15 text-[#10b981] font-extrabold -emerald-500/30">
- LISTO (9:16)
+ {cropMode === 'none' ? 'ORIGINAL' : cropMode === 'blur' ? '9:16 BLUR' : '9:16'}
  </span>
+ {renderedBurnedSubs && (
+ <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#f2ca50]/15 text-[#f2ca50] font-extrabold -[#f2ca50]/30">
+ SUBS
+ </span>
+ )}
  </div>
- 
+ </div>
+
  <p className="text-[11px] text-neutral-300">
- El vídeo recortado se ha procesado en memoria. Ahora se está reproduciendo en el simulador móvil de la izquierda.
+ Clip listo{renderedClipSize > 0 ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)` : ''}. Se está reproduciendo en el simulador de la izquierda y puedes descargarlo ya.
  </p>
 
  {sinTranscripcionReal && (
  <div className="p-2 rounded-lg bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono flex items-center gap-2">
- <span>ℹ️ No hay subtítulos / transcripción real disponible en YouTube para este vídeo.</span>
+ <span>ℹ️ Este vídeo no tiene transcripción en YouTube, así que el clip va sin subtítulos.</span>
  </div>
  )}
 
  <div className="flex flex-col sm:flex-row gap-2 pt-1">
- <a 
- href={renderedClipUrl} 
- download="bakandeya_reel.mp4"
+ <a
+ href={renderedClipUrl}
+ download={`${(bandName || 'reel').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'reel'}-${highlights[selectedHighlightIndex]?.range?.replace(/[^0-9]/g, '') || 'clip'}.mp4`}
  rel="noreferrer noopener"
  className="flex-1 px-3 py-1.5 rounded-lg bg-neutral-900 -neutral-800 hover:-neutral-700 text-[11px] font-mono font-bold text-[#f2ca50] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
  >
  <ExternalLink className="w-3.5 h-3.5" />
- <span>Descargar Clip MP4</span>
+ <span>Descargar MP4</span>
  </a>
+
+ {renderedSubUrl && !renderedBurnedSubs && (
+ <a
+ href={renderedSubUrl}
+ download="subtitulos.vtt"
+ rel="noreferrer noopener"
+ className="flex-1 px-3 py-1.5 rounded-lg bg-neutral-900 -neutral-800 hover:-neutral-700 text-[11px] font-mono font-bold text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+ >
+ <ExternalLink className="w-3.5 h-3.5" />
+ <span>Descargar .VTT</span>
+ </a>
+ )}
  
  <button
  type="button"

@@ -99,8 +99,10 @@ export function useNegotiationSimulation(
  senderName: simulationSenderName
  })
  });
- if (res.ok) {
- const data = await res.json();
+ // apiFetch devuelve el JSON ya parseado (y lanza si la respuesta no fue 2xx),
+ // así que no hay Response que interrogar con .ok / .json().
+ const data = res as any;
+ if (data?.message) {
  setSimulationMessage(data.message);
  setSimulationGenerated(true);
  } else {
