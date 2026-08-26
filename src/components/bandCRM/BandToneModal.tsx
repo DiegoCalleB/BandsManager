@@ -26,6 +26,8 @@ interface BandToneModalProps {
   isStitchLight?: boolean;
   toneData: ToneAnalysisData | null;
   isLoading: boolean;
+  /** Si el backend confirmó que este análisis quedó guardado de forma permanente (Supabase). */
+  isSaved?: boolean;
   onReAnalyze: () => void;
   onUseTailoredPitch?: (text: string) => void;
 }
@@ -37,6 +39,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   isStitchLight = false,
   toneData,
   isLoading,
+  isSaved,
   onReAnalyze,
   onUseTailoredPitch
 }) => {
@@ -69,6 +72,17 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <p className="text-[10px] text-neutral-400 font-mono">
                 Rastreo IA Grounding de redes sociales y notas de prensa oficiales
               </p>
+              {!isLoading && toneData && isSaved !== undefined && (
+                isSaved ? (
+                  <p className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5">
+                    <Check className="w-3 h-3" /> Guardado: la IA usará este tono en tus próximos Reels, Shorts y TikToks
+                  </p>
+                ) : (
+                  <p className="text-[10px] text-amber-500 font-mono mt-0.5">
+                    ⚠️ No se pudo guardar de forma permanente. Vuelve a analizarlo antes de usarlo en tus próximos posts.
+                  </p>
+                )
+              )}
             </div>
           </div>
           <button 

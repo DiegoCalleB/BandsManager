@@ -102,9 +102,10 @@ CREATE TABLE IF NOT EXISTS public.deleted_bands (
 );
 
 -- 2. CAMPOS NUEVOS EN TABLAS EXISTENTES
-ALTER TABLE public.registered_bands 
+ALTER TABLE public.registered_bands
     ADD COLUMN IF NOT EXISTS radar_enabled BOOLEAN DEFAULT TRUE,
-    ADD COLUMN IF NOT EXISTS last_social_radar_at TIMESTAMPTZ;
+    ADD COLUMN IF NOT EXISTS last_social_radar_at TIMESTAMPTZ,
+    ADD COLUMN IF NOT EXISTS dna_expresion JSONB DEFAULT NULL;
 
 ALTER TABLE public.users 
     ADD COLUMN IF NOT EXISTS main_band_id TEXT DEFAULT 'band-bakandeya',

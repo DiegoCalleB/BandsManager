@@ -33,6 +33,9 @@ CREATE TABLE IF NOT EXISTS registered_bands (
     aforo_promedio INTEGER DEFAULT 0,
     estado_cuenta TEXT DEFAULT 'activo',
     notas TEXT,
+    radar_enabled BOOLEAN DEFAULT TRUE,
+    last_social_radar_at TIMESTAMPTZ,
+    dna_expresion JSONB,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

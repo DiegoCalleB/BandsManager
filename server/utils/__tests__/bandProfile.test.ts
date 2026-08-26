@@ -183,4 +183,26 @@ describe('loadBandProfile', () => {
     expect(perfil.name).toBe('X');
     expect(perfil.members).toEqual([]);
   });
+
+  it('lee el ADN de tono de Supabase (registered_bands.dna_expresion), no solo del caché local', async () => {
+    const perfil = await loadBandProfile('band-ruta-66', {
+      getBand: async () => ({
+        nombre_banda: 'Ruta 66',
+        dna_expresion: { tono_comunicacion: 'Gamberro', vocabulario_clave: ['pogo'] },
+      }),
+      getEpk: async () => null,
+      getState: () => ({ users: [], bands: [] }),
+    });
+    expect(perfil.toneSummary).toBe('Gamberro');
+    expect(perfil.toneVocabulary).toEqual(['pogo']);
+  });
+
+  it('el ADN de Supabase manda sobre el del caché local si ambos existen', async () => {
+    const perfil = await loadBandProfile('band-ruta-66', {
+      getBand: async () => ({ dna_expresion: { tono_comunicacion: 'De Supabase' } }),
+      getEpk: async () => null,
+      getState: () => state,
+    });
+    expect(perfil.toneSummary).toBe('De Supabase');
+  });
 });

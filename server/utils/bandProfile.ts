@@ -216,6 +216,19 @@ export async function loadBandProfile(
   perfil.youtube = limpiar(epk?.enlacesRedes?.youtube || band?.spotify_youtube);
   perfil.bio = limpiar(epk?.biografia);
 
+  // ADN de voz guardado en Supabase por /api/bands/analyze-tone (fuente durable: sobrevive a
+  // un redeploy). Se lee antes que el estado local para que el análisis que ve el usuario y
+  // el que usa la IA para escribir sean siempre el mismo.
+  const adnDurable = band?.dna_expresion;
+  if (adnDurable && typeof adnDurable === "object") {
+    perfil.toneSummary = limpiar(adnDurable.tono_comunicacion);
+    perfil.toneTreatment = limpiar(adnDurable.tratamiento_habitual);
+    perfil.toneEnergy = limpiar(adnDurable.nivel_energia);
+    perfil.toneVocabulary = listaLimpia(adnDurable.vocabulario_clave, 10);
+    perfil.toneEmojis = listaLimpia(adnDurable.emojis_frecuentes, 8);
+    perfil.tonePhrases = listaLimpia(adnDurable.frases_emblematicas_extraidas, 4);
+  }
+
   let state: any = null;
   try {
     state = deps.getState();
@@ -240,11 +253,13 @@ export async function loadBandProfile(
       perfil.name = limpiar(desdeUsuario?.bandName || desdeUsuario?.band_name);
     }
 
-    // ADN de voz guardado por /api/bands/analyze-tone
+    // Respaldo del ADN de voz en el caché local (data.json), solo si Supabase no lo tenía
+    // todavía: cubre despliegues sin Supabase configurado o análisis guardados antes de que
+    // existiera esta columna.
     const bandas = Array.isArray(state.bands) ? state.bands : [];
     const conAdn = bandas.find((b: any) => (mismoId(b.band_id) || mismoId(b.id)) && b.dna_expresion);
     const adn = conAdn?.dna_expresion;
-    if (adn) {
+    if (adn && !perfil.toneSummary) {
       perfil.toneSummary = limpiar(adn.tono_comunicacion);
       perfil.toneTreatment = limpiar(adn.tratamiento_habitual);
       perfil.toneEnergy = limpiar(adn.nivel_energia);

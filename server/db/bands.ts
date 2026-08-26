@@ -104,4 +104,35 @@ export async function dbDeleteRegisteredBand(bandId: string) {
   return true;
 }
 
+/**
+ * Guarda el ADN de expresión/tono (`/api/bands/analyze-tone`) de la banda EMISORA (la propia,
+ * no un contacto de booking) en `registered_bands`, para que sobreviva a un redeploy y lo lea
+ * `loadBandProfile` en cada generación de copy. Antes solo se escribía en `data.json`, un
+ * fichero local que Railway borra en cada despliegue.
+ *
+ * Best-effort: si Supabase falla, el análisis que ya se le devolvió al usuario en esa misma
+ * respuesta sigue siendo válido, solo que no se recordará la próxima vez.
+ */
+export async function dbUpdateBandToneDna(bandId: string, dna: any): Promise<boolean> {
+  const targetBandId = cleanBandId(bandId);
+  if (!targetBandId || !dna) return false;
+  try {
+    await ensureRegisteredBandExists(targetBandId);
+    const sb = getSupabase();
+    const { error } = await sb
+      .from("registered_bands")
+      .update({ dna_expresion: dna, updated_at: new Date().toISOString() })
+      .eq("band_id", targetBandId);
+
+    if (error) {
+      console.warn(`Supabase warning (update dna_expresion en registered_bands): ${error.message}`);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn("[registered_bands] No se pudo guardar el ADN de tono:", err?.message || err);
+    return false;
+  }
+}
+
 // --- USERS ---
