@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
 import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
-import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save } from 'lucide-react';
+import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
@@ -1589,6 +1589,54 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }
  };
 
+ // Dictado por voz (Web Speech API) para poder dar instrucciones al chatbot hablando
+ // en vez de escribir. No hay backend/servidor implicado: el reconocimiento corre en el
+ // propio navegador y solo escribe el texto transcrito en el input existente.
+ const speechRecognitionRef = useRef<any>(null);
+ const [isListening, setIsListening] = useState(false);
+ const speechSupported = typeof window !== 'undefined' && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
+ useEffect(() => {
+ return () => {
+ if (speechRecognitionRef.current) {
+ try { speechRecognitionRef.current.stop(); } catch (e) {}
+ }
+ };
+ }, []);
+
+ const handleToggleMic = () => {
+ if (!speechSupported) return;
+
+ if (isListening) {
+ speechRecognitionRef.current?.stop();
+ return;
+ }
+
+ const SpeechRecognitionCtor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+ const recognition = new SpeechRecognitionCtor();
+ recognition.lang = 'es-ES';
+ recognition.interimResults = false;
+ recognition.continuous = false;
+
+ recognition.onstart = () => setIsListening(true);
+ recognition.onerror = () => setIsListening(false);
+ recognition.onend = () => {
+ setIsListening(false);
+ speechRecognitionRef.current = null;
+ };
+ recognition.onresult = (event: any) => {
+ const transcript = Array.from(event.results)
+ .map((result: any) => result[0].transcript)
+ .join(' ')
+ .trim();
+ if (!transcript) return;
+ setInputText(prev => (prev.trim() ? `${prev.trim()} ${transcript}` : transcript));
+ };
+
+ speechRecognitionRef.current = recognition;
+ recognition.start();
+ };
+
  return (
  <div className={`flex flex-col ${isFloating ? 'h-[550px]' : 'h-full min-h-[500px]'} ${isStitchLight ? 'bg-white -slate-200' : 'bg-[#0c0c10]/95 -neutral-900'} rounded-2xl overflow-hidden font-sans backdrop-blur-xl shadow-2xl w-full max-w-full overflow-x-hidden`}>
  {/* Bot Header */}
@@ -2295,6 +2343,20 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  : 'bg-neutral-950/60 -neutral-900 text-neutral-200 focus:-cyan-500/50 placeholder:text-neutral-600'
  }`}
  />
+ <button
+ id="chatbot-mic-btn"
+ type="button"
+ onClick={handleToggleMic}
+ disabled={!speechSupported}
+ title={speechSupported ? (isListening ? 'Detener dictado por voz' : 'Dar instrucciones por voz') : 'Tu navegador no soporta dictado por voz'}
+ className={`p-2.5 rounded-xl font-bold transition-all flex items-center justify-center shrink-0 cursor-pointer active:scale-95 active:opacity-90 mb-0.5 disabled:opacity-30 disabled:cursor-not-allowed ${
+ isListening
+ ? 'bg-red-500 text-white animate-pulse'
+ : (isStitchLight ? 'bg-slate-100 text-slate-500 -slate-200' : 'bg-neutral-900 text-neutral-400 -neutral-800/40')
+ }`}
+ >
+ <Mic className="w-4 h-4" />
+ </button>
  <button
  id="chatbot-send-btn"
  type="submit"
