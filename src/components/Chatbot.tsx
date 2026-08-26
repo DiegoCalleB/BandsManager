@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
-import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle } from '../types';
-import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle } from 'lucide-react';
+import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea } from '../types';
+import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
+import { uploadFileToServer } from '../utils/audioStorage';
 
 interface ProposedAction {
   status?: 'pending' | 'applied' | 'dismissed';
@@ -39,6 +40,7 @@ interface ProposedAction {
    includeDrums: boolean;
    includeBass: boolean;
    durationSecs: number;
+   songId?: string;
    songTitle?: string;
  };
 }
@@ -187,7 +189,14 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  // Bases rítmicas generadas al vuelo (síntesis local Web Audio) por 'propose_accompaniment',
  // guardadas por clave "msgId-actionIndex" para no regenerar el audio en cada re-render.
- const [accompanimentAudio, setAccompanimentAudio] = useState<Record<string, { loading: boolean; url?: string; error?: string }>>({});
+ const [accompanimentAudio, setAccompanimentAudio] = useState<Record<string, {
+   loading: boolean;
+   url?: string;
+   error?: string;
+   saving?: boolean;
+   savedToSong?: string;
+   saveError?: string;
+ }>>({});
 
  const handleGenerateAccompanimentAudio = async (key: string, params: NonNullable<ProposedAction['accompaniment']>) => {
    setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: true } }));
@@ -205,6 +214,70 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    } catch (err) {
      console.error('Error generando base rítmica:', err);
      setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
+   }
+ };
+
+ // Guarda la base ya generada como una nueva idea de audio en una canción existente del
+ // repertorio. Se manda SIEMPRE la canción completa (fetch + spread), nunca un parche parcial:
+ // dbUpsertSong rellena con valores por defecto cualquier campo ausente (ver server/db/repertoire.ts),
+ // así que un PUT parcial borraría título, bpm y tonalidad de la canción real.
+ const handleSaveAccompanimentToSong = async (key: string, params: NonNullable<ProposedAction['accompaniment']>) => {
+   const current = accompanimentAudio[key];
+   if (!current?.url) return;
+
+   setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
+   try {
+     const token = localStorage.getItem('bakandeya_token');
+     const activeBandId = currentUser?.band_id || '';
+     const headers: Record<string, string> = {
+       'Content-Type': 'application/json',
+       'Authorization': token ? `Bearer ${token}` : '',
+       ...(activeBandId ? { 'x-band-id': activeBandId } : {})
+     };
+
+     const songsRes = await fetch('/api/songs', { headers });
+     const songsData = await songsRes.json().catch(() => null);
+     const allSongs: any[] = songsData?.songs || [];
+
+     let targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+     if (!targetSong && params.songTitle) {
+       const lowerTitle = params.songTitle.trim().toLowerCase();
+       targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
+         || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
+     }
+     if (!targetSong) {
+       throw new Error('No he encontrado esa canción en el repertorio. Pídeme la base mencionando el nombre exacto de un tema existente.');
+     }
+
+     const wavBlob = await (await fetch(current.url)).blob();
+     const fileName = `chatbot-base-${params.drumPattern}-${Date.now()}.wav`;
+     const file = new File([wavBlob], fileName, { type: 'audio/wav' });
+     const uploadedUrl = await uploadFileToServer(file, { bandId: activeBandId });
+
+     const newIdea: SongAudioIdea = {
+       id: `idea-${Date.now()}`,
+       titulo: `Base IA (${params.drumPattern.toUpperCase()} - ${params.keyName})`,
+       seccion: 'general',
+       audioUrl: uploadedUrl,
+       subidoPor: cleanUserName,
+       instrumento: params.includeDrums && params.includeBass ? 'Batería + Bajo (AI)' : params.includeDrums ? 'Batería (AI)' : 'Bajo (AI)',
+       fecha: new Date().toISOString().split('T')[0],
+       notas: `Generada desde el chatbot a ${params.bpm} BPM.`
+     };
+
+     const updatedSong = { ...targetSong, audioIdeas: [...(targetSong.audioIdeas || []), newIdea] };
+
+     const putRes = await fetch(`/api/songs/${encodeURIComponent(targetSong.id)}`, {
+       method: 'PUT',
+       headers,
+       body: JSON.stringify(updatedSong)
+     });
+     if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
+
+     setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
+   } catch (err: any) {
+     console.error('Error guardando base rítmica en el repertorio:', err);
+     setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
    }
  };
 
@@ -1634,7 +1707,27 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <span>· {acc.durationSecs}s</span>
  </div>
  {audioState?.url ? (
+ <>
  <audio controls src={audioState.url} className="w-full h-9" />
+ {audioState.savedToSong ? (
+ <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
+ <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
+ </div>
+ ) : (
+ <button
+ type="button"
+ onClick={() => handleSaveAccompanimentToSong(audioKey, acc)}
+ disabled={audioState.saving}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 -slate-200' : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-300 -neutral-800'}`}
+ >
+ {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+ {audioState.saving ? 'Guardando...' : (acc.songTitle || acc.songId ? `Guardar en "${acc.songTitle || 'la canción'}"` : 'Guardar en el repertorio')}
+ </button>
+ )}
+ {audioState.saveError && (
+ <div className="text-[10px] font-mono text-red-500">{audioState.saveError}</div>
+ )}
+ </>
  ) : (
  <button
  type="button"
