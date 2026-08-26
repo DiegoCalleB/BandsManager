@@ -53,17 +53,10 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
       const saved = localStorage.getItem(`bakandeya_community_announcements_${effectiveBandName}`);
       if (saved) return JSON.parse(saved);
     } catch {}
-    return [
-      {
-        id: 'ann-1',
-        fecha: new Date().toISOString().split('T')[0],
-        autor: effectiveBandName,
-        titulo: '¡Bienvenidos al Fan Club Oficial! 🎸',
-        contenido: `Gracias a todos los que os habéis unido a nuestra comunidad a través de los directos y las redes. ¡Tendréis acceso prioritario a entradas, setlists exclusivos y sorteos de merchan!`,
-        fijado: true,
-        reacciones: { likes: 24, fire: 18, applause: 12, guitars: 15 }
-      }
-    ];
+    // Sin comunicados propios el muro arranca vacío. Antes se sembraba un comunicado de
+    // bienvenida firmado por la banda (con 24 likes y 18 fuegos inventados) que nadie había
+    // publicado: la banda veía como suyo un texto y unas reacciones que no existían.
+    return [];
   });
 
   const [showNewPostModal, setShowNewPostModal] = useState(false);
@@ -259,6 +252,18 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
       </div>
 
       {/* Band Announcements Feed */}
+      {announcements.length === 0 && (
+        <div className="bg-slate-900/60 border border-dashed border-slate-800 rounded-2xl p-6 text-center space-y-2">
+          <div className="w-10 h-10 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-slate-500">
+            <Megaphone className="w-5 h-5" />
+          </div>
+          <h4 className="text-white font-bold text-sm">Todavía no has publicado ningún comunicado</h4>
+          <p className="text-slate-400 text-xs font-mono max-w-sm mx-auto">
+            Usa «Publicar Comunicado» para contarle a tu comunidad las próximas fechas, lanzamientos o sorteos.
+          </p>
+        </div>
+      )}
+
       {announcements.map((ann) => (
         <div 
           key={ann.id} 
@@ -354,16 +359,16 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           fans.map((fan) => {
             const badge = getFanLevelBadge(fan);
             const BadgeIcon = badge.icon;
-            const fanReactions = fanReactionCounts[fan.id] || { likes: 1, fire: 0, applause: 0, guitars: 0 };
+            const fanReactions = fanReactionCounts[fan.id] || { likes: 0, fire: 0, applause: 0, guitars: 0 };
             const fanUserReactions = userReactions[fan.id] || {};
             const initialLetter = fan.nombre?.charAt(0)?.toUpperCase() || 'F';
             const gradient = getRandomGradient(fan.nombre || 'fan');
 
-            const defaultMessage = fan.mensaje || (
-              fan.comoConocio?.toLowerCase().includes('concierto')
-                ? `¡Directo brutal en ${fan.ciudad || 'el concierto'}! Contando los días para el próximo bolo.`
-                : `¡Apoyando a ${effectiveBandName} desde ${fan.ciudad || 'las redes'}!`
-            );
+            // El muro solo puede enseñar lo que el fan escribió de verdad en el formulario. Antes,
+            // si dejaba el mensaje en blanco, se pintaba entre comillas una frase inventada
+            // ("¡Directo brutal en...!") como si fuera suya: la banda leía testimonios que nadie
+            // había escrito. Si no hay mensaje, se dice claramente que no lo dejó.
+            const mensajeFan = typeof fan.mensaje === 'string' ? fan.mensaje.trim() : '';
 
             return (
               <div 
@@ -451,9 +456,15 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
 
                 {/* Fan Post / Message / Shout */}
                 <div className="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5">
-                  <p className="text-slate-200 text-xs font-sans leading-relaxed">
-                    "{defaultMessage}"
-                  </p>
+                  {mensajeFan ? (
+                    <p className="text-slate-200 text-xs font-sans leading-relaxed">
+                      "{mensajeFan}"
+                    </p>
+                  ) : (
+                    <p className="text-slate-500 text-xs font-mono italic leading-relaxed">
+                      Sin mensaje: este fan no escribió nada al registrarse.
+                    </p>
+                  )}
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-900 text-[10px] text-slate-500 font-mono">
                     <span>Origen: {fan.conciertoOrigenNombre ? `Concierto ${fan.conciertoOrigenNombre}` : (fan.comoConocio || 'Fan Club Web')}</span>
                     <span>ID: {fan.id.slice(-6)}</span>
