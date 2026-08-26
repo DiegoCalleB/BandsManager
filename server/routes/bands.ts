@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -342,6 +342,72 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
   } catch (err: any) {
     console.error("Error in Tone Analysis:", err);
     res.status(500).json({ error: "No se pudo analizar el tono de comunicación.", details: err?.message || String(err) });
+  }
+});
+
+// Campos del ADN de tono que puede tocar un humano a mano. El resto (redes_rastreadas,
+// es_emisor, nombre_entidad...) son metadatos del propio análisis de la IA: mezclarlos con una
+// edición manual parcial los dejaría desactualizados o vacíos sin que nadie lo pidiera.
+const CAMPOS_TONO_EDITABLES = [
+  "tono_comunicacion",
+  "tratamiento_habitual",
+  "nivel_energia",
+  "vocabulario_clave",
+  "frases_emblematicas_extraidas",
+  "emojis_frecuentes",
+  "puntos_fuertes_para_conectar",
+  "recomendacion_pitch",
+] as const;
+
+function limpiarListaTono(v: any, max = 12): string[] {
+  if (!Array.isArray(v)) return [];
+  const salida: string[] = [];
+  for (const item of v) {
+    const s = String(item ?? "").trim();
+    if (s && !salida.includes(s)) salida.push(s);
+    if (salida.length >= max) break;
+  }
+  return salida;
+}
+
+// GET/PATCH del ADN de tono de la banda EMISORA (no de un contacto de booking): lo que ve y
+// puede corregir el propio usuario en el generador de Reels.
+router.get("/bands/tone-dna", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const band = await dbGetRegisteredBandById(bandId);
+    res.json({ success: true, data: band?.dna_expresion || null });
+  } catch (err: any) {
+    console.error("Error fetching tone DNA:", err);
+    res.status(500).json({ error: "No se pudo cargar el ADN de tono guardado.", details: err?.message || String(err) });
+  }
+});
+
+router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const cambios = req.body || {};
+
+    const actual = (await dbGetRegisteredBandById(bandId))?.dna_expresion || {};
+    const actualizado: any = { ...actual };
+
+    for (const campo of CAMPOS_TONO_EDITABLES) {
+      if (!(campo in cambios)) continue;
+      if (campo === "vocabulario_clave" || campo === "frases_emblematicas_extraidas" || campo === "emojis_frecuentes") {
+        actualizado[campo] = limpiarListaTono(cambios[campo]);
+      } else {
+        actualizado[campo] = String(cambios[campo] ?? "").trim();
+      }
+    }
+
+    const guardado = await dbUpdateBandToneDna(bandId, actualizado);
+    if (!guardado) {
+      return res.status(500).json({ error: "No se pudo guardar la edición del ADN de tono." });
+    }
+    res.json({ success: true, data: actualizado });
+  } catch (err: any) {
+    console.error("Error updating tone DNA:", err);
+    res.status(500).json({ error: err?.message || "No se pudo actualizar el ADN de tono." });
   }
 });
 

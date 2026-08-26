@@ -3764,6 +3764,11 @@ export default function ReelsCenter({
     toneData={bakandeyaToneData}
     isLoading={isAnalyzingBakandeyaTone}
     isSaved={toneAnalysisSaved}
+    editable
+    onSaved={(data) => {
+      setBakandeyaToneData(data);
+      setToneAnalysisSaved(true);
+    }}
     onReAnalyze={handleAnalyzeBakandeyaTone}
   />
 
