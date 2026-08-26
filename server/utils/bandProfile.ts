@@ -168,7 +168,7 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
     lineas.push("");
     lineas.push("ESTE ADN DE VOZ MANDA SOBRE CUALQUIER REGLA GENÉRICA DE REDACCIÓN QUE VENGA DESPUÉS:");
     if (p.toneVocabulary.length) {
-      lineas.push(`- Usa de verdad varias de esas palabras (${p.toneVocabulary.slice(0, 4).join(", ")}...) en el copy y el hookText, no las dejes solo como referencia.`);
+      lineas.push(`- Usa de verdad varias de esas palabras (${p.toneVocabulary.slice(0, 4).join(", ")}...) en el título, el copy y el hookText, no las dejes solo como referencia.`);
     }
     if (p.tonePhrases.length) {
       lineas.push(`- Si alguna expresión real suya encaja de forma natural, cuélala tal cual, entre comillas si hace falta.`);
