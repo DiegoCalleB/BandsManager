@@ -153,19 +153,24 @@ export const PublicMusiciansLanding: React.FC = () => {
 
       {/* Sticky Navigation / Header */}
       <header className="relative z-20 border-b border-neutral-800/80 bg-[#121111]/90 backdrop-blur-md sticky top-0">
-        <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 p-0.5 shadow-md flex items-center justify-center">
-              <div className="w-full h-full bg-[#121111] rounded-[10px] flex items-center justify-center">
-                <Music className="w-5 h-5 text-[#f2ca50]" />
-              </div>
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-amber-500/30 p-0.5 shadow-md flex items-center justify-center shrink-0">
+              <img
+                src="/bandmanager_logo.jpeg"
+                alt="BandManager.ai Logo"
+                className="w-full h-full object-contain rounded-[10px]"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
+                }}
+              />
             </div>
             <div>
-              <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-1.5">
-                BandManager<span className="text-[#f2ca50]">.io</span>
+              <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-1">
+                BandManager<span className="text-[#f2ca50]">.ai</span>
               </span>
-              <span className="text-[10px] font-mono text-neutral-400 block -mt-1 tracking-wider uppercase">
-                Operating System for Bands
+              <span className="text-[10px] font-mono text-amber-400/80 block -mt-1 tracking-wider uppercase">
+                IA Agéntica para tu Banda
               </span>
             </div>
           </div>
@@ -215,9 +220,26 @@ export const PublicMusiciansLanding: React.FC = () => {
 
         {/* HERO SECTION */}
         <section className="text-center space-y-5 pt-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{t.badge}</span>
+          {/* Official BandManager.ai Brand Logo */}
+          <div className="flex flex-col items-center justify-center gap-3">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-black border border-amber-500/40 p-1 shadow-2xl flex items-center justify-center">
+                <img
+                  src="/bandmanager_logo.jpeg"
+                  alt="BandManager.ai"
+                  className="w-full h-full object-contain rounded-xl"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mt-1">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{t.badge}</span>
+            </div>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white max-w-3xl mx-auto leading-[1.15]">

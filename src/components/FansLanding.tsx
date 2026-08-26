@@ -540,8 +540,15 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         className="group block p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-neutral-950 via-neutral-900/90 to-amber-950/25 border border-neutral-800 hover:border-amber-500/50 transition-all shadow-md active:scale-[0.99]"
       >
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 shrink-0 mt-0.5 group-hover:scale-105 transition-transform">
-            <Music className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg bg-black border border-amber-500/30 overflow-hidden flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition-transform p-0.5">
+            <img
+              src="/bandmanager_logo.jpeg"
+              alt="BandManager.ai"
+              className="w-full h-full object-contain rounded-md"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
+              }}
+            />
           </div>
           <div className="flex-1 min-w-0 space-y-1">
             <div className="flex items-center justify-between gap-2">
