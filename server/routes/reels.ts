@@ -8,7 +8,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { requireAuth, loadState } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import {
@@ -581,6 +581,9 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
     let optimalTime: any = null;
     let generadoPorIa = false;
     let avisoIa = "";
+    // Frases reales de directo (habla, no letra cantada) extraídas de la transcripción: la fuente
+    // de tono más auténtica que hay. Se acumulan en el ADN de la banda más abajo.
+    let frasesDirectoExtraidas: string[] = [];
 
     if (ai) {
       const prompt = `Eres quien decide qué trozo de un vídeo se convierte en Reel para una banda de música. Trabajas con material REAL y con señales medidas sobre él, no con suposiciones.
@@ -619,10 +622,13 @@ Campos de cada fragmento:
 - "recommendedCopy": pie de publicación para Instagram Reels, 2-4 líneas, sin hashtags dentro.
 - "copyTikTok": versión más corta y directa para TikTok, una o dos frases.
 - "copyYouTube": título de YouTube Shorts, máximo 60 caracteres.
+- "copyFacebook": pie de publicación para Facebook, algo más explicativo y menos telegráfico que TikTok, 2-3 líneas.
 - "hashtags": entre 4 y 8, en español, mezclando los de la banda con los del estilo musical.
 - "cta": una llamada a la acción concreta y realista (comentar algo específico, guardar, compartir con alguien, venir al próximo bolo).
 - "confidence": 1-100, tu estimación honesta. No pongas 95 a todos: si un corte es flojo, dilo.
 - "reason": por qué ESE tramo, citando la señal medida o la letra que lo justifica.
+
+${tieneTranscripcion ? `ADEMÁS DE LOS FRAGMENTOS: repasa la transcripción completa y devuelve en "frasesDirectoExtraidas" las frases donde la banda HABLA de verdad al público entre canciones (presentaciones, bromas, agradecimientos, "qué tal Madrid", etc.), tal cual las dicen. NO metas letras cantadas ni te las inventes: es la fuente de tono más auténtica que hay, así que solo cuenta si es real y distinguible del canto. Si no puedes diferenciar con seguridad habla de letra cantada, deja la lista vacía. Máximo 5 frases, solo las más claras.` : ""}
 
 Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
 {
@@ -638,12 +644,14 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       "recommendedCopy": "...",
       "copyTikTok": "...",
       "copyYouTube": "...",
+      "copyFacebook": "...",
       "hashtags": ["#Ejemplo"],
       "cta": "...",
       "reason": "..."
     }
   ],
-  "optimalTime": { "date": "YYYY-MM-DD", "time": "20:30", "reason": "Por qué ese hueco" }
+  "optimalTime": { "date": "YYYY-MM-DD", "time": "20:30", "reason": "Por qué ese hueco" },
+  "frasesDirectoExtraidas": ["..."]
 }`;
 
       try {
@@ -665,6 +673,13 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
           generadoPorIa = true;
         } else {
           avisoIa = "La IA respondió pero sin fragmentos utilizables; se muestran cortes automáticos que puedes ajustar a mano.";
+        }
+
+        if (Array.isArray(parsed?.frasesDirectoExtraidas)) {
+          frasesDirectoExtraidas = parsed.frasesDirectoExtraidas
+            .map((f: any) => String(f || "").trim())
+            .filter(Boolean)
+            .slice(0, 5);
         }
       } catch (err: any) {
         console.warn("[Highlights AI] Fallo llamando al modelo:", err?.message || err);
@@ -728,6 +743,12 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         notice: avisoIa
       });
       guardadoEnBd = Boolean(guardado);
+    }
+
+    if (frasesDirectoExtraidas.length > 0) {
+      dbAppendBandSpeechPhrases(getTargetBandId(req), frasesDirectoExtraidas).catch((e: any) =>
+        console.warn("[Highlights AI] No se pudieron guardar las frases de directo:", e?.message || e)
+      );
     }
 
     return res.json({
@@ -1021,6 +1042,7 @@ Responde ÚNICAMENTE con JSON válido:
   "hookText": "Rótulo corto para los 2 primeros segundos",
   "recommendedCopy": "Pie de publicación listo para Instagram Reels",
   "copyTikTok": "Versión corta para TikTok",
+  "copyFacebook": "Pie de publicación para Facebook, algo más explicativo",
   "hashtags": ["#Ejemplo"],
   "cta": "Llamada a la acción",
   "energyLevel": "Muy Alta",
@@ -1041,6 +1063,7 @@ Responde ÚNICAMENTE con JSON válido:
             hookText: parsed.hookText || "",
             recommendedCopy: parsed.recommendedCopy || "",
             copyTikTok: parsed.copyTikTok || "",
+            copyFacebook: parsed.copyFacebook || "",
             hashtags: Array.isArray(parsed.hashtags) && parsed.hashtags.length ? parsed.hashtags : hashtagsBase,
             cta: parsed.cta || "",
             energyLevel: parsed.energyLevel || "Alta",
@@ -1063,6 +1086,7 @@ Responde ÚNICAMENTE con JSON válido:
       hookText: "",
       recommendedCopy: `${nombreBanda} en directo — fragmento de ${rangoStr}.${notas ? ` ${notas}` : ""}`,
       copyTikTok: "",
+      copyFacebook: "",
       hashtags: hashtagsBase,
       cta: "¿Qué te ha parecido? Cuéntanoslo en comentarios.",
       energyLevel: "Alta",
