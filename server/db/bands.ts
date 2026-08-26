@@ -179,4 +179,41 @@ export async function dbAppendBandSpeechPhrases(bandId: string, nuevasFrases: st
   }
 }
 
+/**
+ * Registra una entrada de feedback (valoración + comentario) sobre un título/descripción de
+ * Reel regenerado, para que `formatGlobalReelFeedbackForPrompt` la use como memoria en próximas
+ * generaciones. Mismo patrón que `historial_feedback_pitch` para los pitches de booking, pero
+ * guardado dentro de `dna_expresion` (no hay una tabla de "reels" por banda como sí hay leads).
+ *
+ * Se acumula (últimas 30) porque cada corrección del usuario aporta una señal más de aprendizaje.
+ */
+export async function dbLogReelFeedback(bandId: string, entry: Record<string, any>): Promise<boolean> {
+  const targetBandId = cleanBandId(bandId);
+  if (!targetBandId || !entry) return false;
+
+  try {
+    const sb = getSupabase();
+    const actual = await dbGetRegisteredBandById(targetBandId);
+    const dnaActual = actual?.dna_expresion && typeof actual.dna_expresion === "object" ? actual.dna_expresion : {};
+    const existentes: any[] = Array.isArray(dnaActual.historial_feedback_reels) ? dnaActual.historial_feedback_reels : [];
+
+    const actualizados = [entry, ...existentes].slice(0, 30);
+
+    await ensureRegisteredBandExists(targetBandId);
+    const { error } = await sb
+      .from("registered_bands")
+      .update({ dna_expresion: { ...dnaActual, historial_feedback_reels: actualizados }, updated_at: new Date().toISOString() })
+      .eq("band_id", targetBandId);
+
+    if (error) {
+      console.warn(`Supabase warning (log historial_feedback_reels): ${error.message}`);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn("[registered_bands] No se pudo guardar el feedback del Reel:", err?.message || err);
+    return false;
+  }
+}
+
 // --- USERS ---
