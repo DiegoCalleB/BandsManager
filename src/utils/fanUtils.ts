@@ -72,15 +72,25 @@ export function filterFans(fans: Fan[], search: string = '', city: string = 'tod
 
 /**
  * Normaliza y sanea el nombre de un concierto para su visualización en el Fan Landing y componentes públicos.
- * Corrige de forma transparente erratas conocidas (por ejemplo, "Ferrera" -> "Ferrara") sin romper
- * los enlaces de códigos QR impresos o compartidos que lleven el parámetro original en la URL.
+ * Corrige de forma transparente nombres y erratas conocidas (por ejemplo, "Busking festival (Ferrera)" -> "Ferrara Buskers Fest")
+ * sin romper los enlaces de códigos QR impresos o compartidos que lleven el parámetro original en la URL.
  */
 export function sanitizeConcertDisplayName(rawName?: string | null): string {
   if (!rawName) return '';
   let clean = rawName.trim();
 
-  // Corrección de erratas de ciudades/conciertos conocidas:
-  // Reemplazar Ferrera por Ferrara preservando mayúsculas / minúsculas
+  const lower = clean.toLowerCase();
+  // Normalizar el festival de Ferrara a su nombre oficial completo "Ferrara Buskers Fest"
+  if (
+    (lower.includes('busk') && (lower.includes('ferrera') || lower.includes('ferrara'))) ||
+    lower.includes('ferrera-busking') ||
+    lower.includes('ferrara-busking') ||
+    lower.includes('busking-festival')
+  ) {
+    return 'Ferrara Buskers Fest';
+  }
+
+  // Corrección general de erratas de ciudades/conciertos conocidas:
   clean = clean.replace(/Ferrera/g, 'Ferrara');
   clean = clean.replace(/ferrera/g, 'ferrara');
   clean = clean.replace(/FERRERA/g, 'FERRARA');

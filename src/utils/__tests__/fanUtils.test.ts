@@ -51,10 +51,12 @@ describe('fanUtils', () => {
     expect(madridFans.length).toBe(2);
   });
 
-  it('sanitizes concert names fixing typos like Ferrera to Ferrara while preserving URLs', () => {
-    expect(sanitizeConcertDisplayName('Busking festival (Ferrera)')).toBe('Busking festival (Ferrara)');
-    expect(sanitizeConcertDisplayName('Busking Festival (Ferrera)!')).toBe('Busking Festival (Ferrara)!');
-    expect(sanitizeConcertDisplayName('busking-festival-ferrera')).toBe('busking-festival-ferrara');
+  it('sanitizes concert names fixing typos and normalizing to official festival names like Ferrara Buskers Fest', () => {
+    expect(sanitizeConcertDisplayName('Busking festival (Ferrera)')).toBe('Ferrara Buskers Fest');
+    expect(sanitizeConcertDisplayName('Busking Festival (Ferrera)!')).toBe('Ferrara Buskers Fest');
+    expect(sanitizeConcertDisplayName('busking-festival-ferrera')).toBe('Ferrara Buskers Fest');
+    expect(sanitizeConcertDisplayName('ferrera-busking-festival')).toBe('Ferrara Buskers Fest');
+    expect(sanitizeConcertDisplayName('Ferrara busking festival')).toBe('Ferrara Buskers Fest');
     expect(sanitizeConcertDisplayName('Ferrera')).toBe('Ferrara');
     expect(sanitizeConcertDisplayName('ferrera')).toBe('ferrara');
     expect(sanitizeConcertDisplayName('FERRERA')).toBe('FERRARA');
