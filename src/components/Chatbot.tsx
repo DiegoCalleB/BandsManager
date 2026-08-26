@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
-import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea } from '../types';
+import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
 import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
+import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { uploadFileToServer } from '../utils/audioStorage';
 
 interface ProposedAction {
   status?: 'pending' | 'applied' | 'dismissed';
-  type: 'propose_lead_approval' | 'propose_rehearsal' | 'propose_status_change' | 'propose_agent_trigger' | 'propose_concert' | 'propose_add_concert' | 'propose_band' | 'propose_tour' | 'propose_update_logo' | 'propose_send_email' | 'propose_draft_email' | 'propose_add_lead' | 'propose_update_lead' | 'propose_accompaniment';
+  type: 'propose_lead_approval' | 'propose_rehearsal' | 'propose_status_change' | 'propose_agent_trigger' | 'propose_concert' | 'propose_add_concert' | 'propose_band' | 'propose_tour' | 'propose_update_logo' | 'propose_send_email' | 'propose_draft_email' | 'propose_add_lead' | 'propose_update_lead' | 'propose_accompaniment' | 'propose_melodic_idea';
  leadId?: string;
  bandId?: string;
  targetType?: 'lead' | 'band';
@@ -42,6 +43,17 @@ interface ProposedAction {
    durationSecs: number;
    songId?: string;
    songTitle?: string;
+ };
+ melodicIdea?: {
+   instrument: MelodicInstrument;
+   bpm: number;
+   keyName: string;
+   escala?: 'mayor' | 'menor';
+   durationSecs: number;
+   seccion?: SongAudioIdea['seccion'];
+   songId?: string;
+   songTitle?: string;
+   eventos: MelodicNoteEvent[];
  };
 }
 
@@ -281,11 +293,105 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    }
  };
 
+ // Ideas melódicas por instrumento ('propose_melodic_idea', síntesis local Tone.js), misma
+ // mecánica que accompanimentAudio: se generan bajo demanda y se guardan por clave "msgId-actionIndex".
+ const [melodicIdeaAudio, setMelodicIdeaAudio] = useState<Record<string, {
+   loading: boolean;
+   url?: string;
+   error?: string;
+   saving?: boolean;
+   savedToSong?: string;
+   saveError?: string;
+ }>>({});
+
+ const handleGenerateMelodicIdeaAudio = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>) => {
+   setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: true } }));
+   try {
+     const blob = await renderMelodicIdeaAudioBlob({
+       instrument: params.instrument,
+       bpm: params.bpm,
+       durationSecs: params.durationSecs,
+       eventos: params.eventos
+     });
+     const url = URL.createObjectURL(blob);
+     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, url } }));
+   } catch (err) {
+     console.error('Error generando idea melódica:', err);
+     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
+   }
+ };
+
+ const handleSaveMelodicIdeaToSong = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>) => {
+   const current = melodicIdeaAudio[key];
+   if (!current?.url) return;
+
+   setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
+   try {
+     const token = localStorage.getItem('bakandeya_token');
+     const activeBandId = currentUser?.band_id || '';
+     const headers: Record<string, string> = {
+       'Content-Type': 'application/json',
+       'Authorization': token ? `Bearer ${token}` : '',
+       ...(activeBandId ? { 'x-band-id': activeBandId } : {})
+     };
+
+     const songsRes = await fetch('/api/songs', { headers });
+     const songsData = await songsRes.json().catch(() => null);
+     const allSongs: any[] = songsData?.songs || [];
+
+     let targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+     if (!targetSong && params.songTitle) {
+       const lowerTitle = params.songTitle.trim().toLowerCase();
+       targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
+         || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
+     }
+     if (!targetSong) {
+       throw new Error('No he encontrado esa canción en el repertorio. Pídeme la idea mencionando el nombre exacto de un tema existente.');
+     }
+
+     const wavBlob = await (await fetch(current.url)).blob();
+     const fileName = `chatbot-idea-${params.instrument}-${Date.now()}.wav`;
+     const file = new File([wavBlob], fileName, { type: 'audio/wav' });
+     const uploadedUrl = await uploadFileToServer(file, { bandId: activeBandId });
+
+     const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
+     const newIdea: SongAudioIdea = {
+       id: `idea-${Date.now()}`,
+       titulo: `Idea IA de ${instrumentLabel} (${params.keyName})`,
+       seccion: params.seccion || 'general',
+       audioUrl: uploadedUrl,
+       subidoPor: cleanUserName,
+       instrumento: `${instrumentLabel} (AI)`,
+       fecha: new Date().toISOString().split('T')[0],
+       notas: `Generada desde el chatbot a ${params.bpm} BPM.`
+     };
+
+     const updatedSong = { ...targetSong, audioIdeas: [...(targetSong.audioIdeas || []), newIdea] };
+
+     const putRes = await fetch(`/api/songs/${encodeURIComponent(targetSong.id)}`, {
+       method: 'PUT',
+       headers,
+       body: JSON.stringify(updatedSong)
+     });
+     if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
+
+     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
+   } catch (err: any) {
+     console.error('Error guardando idea melódica en el repertorio:', err);
+     setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
+   }
+ };
+
  const accompanimentAudioRef = useRef(accompanimentAudio);
  accompanimentAudioRef.current = accompanimentAudio;
+ const melodicIdeaAudioRef = useRef(melodicIdeaAudio);
+ melodicIdeaAudioRef.current = melodicIdeaAudio;
  useEffect(() => {
    return () => {
      Object.values(accompanimentAudioRef.current).forEach(entry => {
+       if (entry.url) URL.revokeObjectURL(entry.url);
+     });
+     Object.values(melodicIdeaAudioRef.current).forEach(entry => {
        if (entry.url) URL.revokeObjectURL(entry.url);
      });
    };
@@ -678,7 +784,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  async function handleConfirmAllActions(msgId: string, actions: ProposedAction[]) {
  const pendingItems = actions
  .map((act, idx) => ({ act, idx }))
- .filter(item => item.act.type !== 'propose_agent_trigger' && item.act.type !== 'propose_accompaniment' && (item.act.status || 'pending') === 'pending');
+ .filter(item => item.act.type !== 'propose_agent_trigger' && item.act.type !== 'propose_accompaniment' && item.act.type !== 'propose_melodic_idea' && (item.act.status || 'pending') === 'pending');
 
  for (const item of pendingItems) {
  await handleConfirmAction(msgId, item.idx, item.act);
@@ -1664,7 +1770,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Proposed actions box within chat */}
  {isBot && msg.proposedActions && msg.proposedActions.length > 0 && (() => {
  const nonTriggerActions = msg.proposedActions;
- const pendingActions = nonTriggerActions.filter(a => a.type !== 'propose_accompaniment' && (a.status || 'pending') === 'pending');
+ const pendingActions = nonTriggerActions.filter(a => a.type !== 'propose_accompaniment' && a.type !== 'propose_melodic_idea' && (a.status || 'pending') === 'pending');
 
  return (
  <div className={` rounded-2xl p-4 space-y-3 max-w-sm mt-1 backdrop-blur-md ${isStitchLight ? '-indigo-100 bg-indigo-50/20' : '-cyan-500/20 bg-cyan-500/5'}`}>
@@ -1732,6 +1838,59 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <button
  type="button"
  onClick={() => handleGenerateAccompanimentAudio(audioKey, acc)}
+ disabled={audioState?.loading}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm' : 'bg-cyan-500 hover:bg-cyan-600 text-neutral-950'}`}
+ >
+ {audioState?.loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <PlayCircle className="w-3.5 h-3.5" />}
+ {audioState?.loading ? 'Sintetizando...' : 'Generar y escuchar'}
+ </button>
+ )}
+ {audioState?.error && (
+ <div className="text-[10px] font-mono text-red-500">{audioState.error}</div>
+ )}
+ </div>
+ );
+ })() : act.type === 'propose_melodic_idea' && act.melodicIdea ? (() => {
+ const idea = act.melodicIdea;
+ if (!idea) return null;
+ const instrumentLabels: Record<MelodicInstrument, string> = { guitarra: 'Guitarra', violin: 'Violín', handpan: 'Handpan', percusion: 'Percusión' };
+ const audioKey = `${msg.id}-${aIdx}`;
+ const audioState = melodicIdeaAudio[audioKey];
+ return (
+ <div className="space-y-2">
+ <div className={`text-[9px] font-mono px-2 py-1 rounded-lg flex flex-wrap gap-x-2 gap-y-0.5 ${isStitchLight ? 'bg-purple-50 text-purple-700' : 'bg-purple-500/10 text-purple-300'}`}>
+ <span>{instrumentLabels[idea.instrument]}</span>
+ <span>· {idea.bpm} BPM</span>
+ <span>· Tono {idea.keyName}</span>
+ {idea.seccion && idea.seccion !== 'general' && <span>· {idea.seccion}</span>}
+ <span>· {idea.durationSecs}s</span>
+ </div>
+ {audioState?.url ? (
+ <>
+ <audio controls src={audioState.url} className="w-full h-9" />
+ {audioState.savedToSong ? (
+ <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
+ <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
+ </div>
+ ) : (
+ <button
+ type="button"
+ onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea)}
+ disabled={audioState.saving}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 -slate-200' : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-300 -neutral-800'}`}
+ >
+ {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+ {audioState.saving ? 'Guardando...' : (idea.songTitle || idea.songId ? `Guardar en "${idea.songTitle || 'la canción'}"` : 'Guardar en el repertorio')}
+ </button>
+ )}
+ {audioState.saveError && (
+ <div className="text-[10px] font-mono text-red-500">{audioState.saveError}</div>
+ )}
+ </>
+ ) : (
+ <button
+ type="button"
+ onClick={() => handleGenerateMelodicIdeaAudio(audioKey, idea)}
  disabled={audioState?.loading}
  className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm' : 'bg-cyan-500 hover:bg-cyan-600 text-neutral-950'}`}
  >

@@ -508,6 +508,20 @@ export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roo
 // compartido entre el generador del Song Studio y las bases rítmicas propuestas por el chatbot.
 export type DrumPatternStyle = 'rock' | 'pop' | 'funk' | 'reggae' | 'ska' | 'cumbia' | 'punk';
 
+// Instrumentos melódicos que el "genio de la lámpara" del chatbot puede sintetizar
+// (src/utils/instrumentSynth.ts, motor Tone.js) para proponer ideas de partes de canción
+// coherentes con el ADN musical de la banda, más allá de la base de batería/bajo.
+export type MelodicInstrument = 'guitarra' | 'violin' | 'handpan' | 'percusion';
+
+// Una nota o golpe dentro de una idea melódica generada por IA. 'tiempo' y 'duracionBeats'
+// se expresan en beats (no segundos) para que sean independientes del BPM al reproducirlos.
+export interface MelodicNoteEvent {
+  tiempo: number; // posición de inicio en beats desde el arranque de la idea (0 = primer tiempo)
+  nota: string; // notación científica compatible con Tone.js, ej. 'A3', 'C#4', 'G2'
+  duracionBeats: number; // duración de la nota/golpe en beats
+  velocidad?: number; // intensidad de 0 a 1 (por defecto ~0.8)
+}
+
 export interface AudioComment {
   id: string;
   autor: string;
