@@ -9,6 +9,7 @@ import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
+import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
@@ -600,6 +601,10 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
       console.warn("[Gemini API] No se pudo parsear el JSON de respuesta. Usando texto plano en su lugar:", parseErr);
       parsed = { text: textResult, proposedActions: [] };
     }
+
+    // Las notas que compone la IA se validan y reparan antes de salir hacia el navegador: sin
+    // esto, un nombre de nota inválido se sintetizaba como un hueco mudo (ver melodicIdeaValidator).
+    parsed = sanearIdeasMelodicas(parsed);
     res.json(parsed);
 
   } catch (error: any) {
