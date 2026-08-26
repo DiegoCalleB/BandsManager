@@ -8,7 +8,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { requireAuth, loadState } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases, dbLogReelFeedback } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import {
@@ -977,9 +977,13 @@ router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
       duration = 30,
       userNotes = "",
       currentTitle = "",
+      currentCopy = "",
       highlightId,
       videoKey: videoKeyExplicita,
-      contentType
+      contentType,
+      tonoRating,
+      contenidoRating,
+      alcance
     } = req.body || {};
 
     const tipoContenido: TipoContenido = esTipoContenido(contentType)
@@ -1027,6 +1031,8 @@ DATOS DEL CORTE:
 ${transcripcionExacta ? `- Transcripción literal de ESTE tramo:\n"${transcripcionExacta.substring(0, 1500)}"` : "- En este tramo no hay letra ni voz transcrita: es un pasaje instrumental o sin subtítulos. NO inventes qué se dice."}
 ${userNotes ? `- OBSERVACIONES DEL USUARIO SOBRE ESTE TRAMO (mándan sobre cualquier suposición tuya): "${String(userNotes).substring(0, 600)}"` : ""}
 ${currentTitle ? `- Título que tenía antes: "${currentTitle}"` : ""}
+${tonoRating ? `- El usuario valoró el TONO de la versión anterior con ${tonoRating}/5: si es bajo, es justo lo que hay que corregir ahora.` : ""}
+${contenidoRating ? `- El usuario valoró el CONTENIDO de la versión anterior con ${contenidoRating}/5: si es bajo, revisa que describa de verdad este tramo.` : ""}
 
 ${buildReglasDeRedaccion(nombreBanda)}
 
@@ -1070,6 +1076,27 @@ Responde ÚNICAMENTE con JSON válido:
             confidence: Number(parsed.confidence) || 90
           };
           await persistirPatch(analysis);
+
+          // Solo se guarda como aprendizaje si el usuario dio una señal real (nota o valoración):
+          // reanalizar un corte sin más (p.ej. tras mover el rango) no es feedback sobre el tono.
+          if (String(userNotes || "").trim() || tonoRating || contenidoRating) {
+            const feedbackLog = {
+              id: `rf-${Date.now()}`,
+              fecha: new Date().toISOString(),
+              tituloPrevio: currentTitle || "",
+              descripcionPrevia: currentCopy || "",
+              comentario: String(userNotes || "").trim(),
+              tonoRating: tonoRating || undefined,
+              contenidoRating: contenidoRating || undefined,
+              tituloNuevo: analysis.title,
+              descripcionNueva: analysis.recommendedCopy,
+              alcance: alcance === "este_reel" ? "este_reel" : "global"
+            };
+            dbLogReelFeedback(getTargetBandId(req), feedbackLog).catch((e: any) =>
+              console.warn("[Reanalyze Clip] No se pudo guardar el feedback:", e?.message || e)
+            );
+          }
+
           return res.json({ success: true, generatedByAI: true, analysis });
         }
       } catch (err: any) {

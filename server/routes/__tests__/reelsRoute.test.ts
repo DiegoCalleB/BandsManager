@@ -64,6 +64,8 @@ vi.mock('../../db.js', () => ({
     fila.highlights = (fila.highlights || []).map((h: any) => (h.id === highlightId ? { ...h, ...patch } : h));
     return true;
   },
+  dbAppendBandSpeechPhrases: async () => true,
+  dbLogReelFeedback: async () => true,
 }));
 
 const promptsVistos: string[] = [];
