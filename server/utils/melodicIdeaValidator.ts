@@ -18,6 +18,11 @@
  * (mismo estilo que server/utils/bandAccess.ts y server/utils/musicalDna.ts).
  */
 import type { MelodicInstrument, MelodicNoteEvent } from "../../src/types.js";
+import { notaAMidi, midiANota, CLASE_POR_LETRA } from "../../src/utils/musicTheory.js";
+
+// Re-exportadas porque el exportador MIDI del navegador y este validador comparten la misma
+// conversión (ver src/utils/musicTheory.ts), pero los tests de este módulo las cubren aquí.
+export { notaAMidi, midiANota };
 
 export interface ResultadoValidacion {
   eventos: MelodicNoteEvent[];
@@ -27,11 +32,6 @@ export interface ResultadoValidacion {
 
 /** Tope de eventos por idea: por encima deja de ser una idea con gancho y es ruido. */
 const MAX_EVENTOS = 64;
-
-/** Nota científica compatible con Tone.js: Do central = C4 = MIDI 60. */
-const RE_NOTA = /^([A-Ga-g])([#b]?)(-1|[0-8])$/;
-
-const CLASE_POR_LETRA: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
 /**
  * Registro real de cada instrumento, en MIDI. Una nota fuera de aquí no es "otra opción": es una
@@ -55,26 +55,6 @@ const PENTATONICA_MENOR = [0, 3, 5, 7, 10];
  * a esos tres para que suene a instrumento de percusión y no a tom afinado tocando una melodía.
  */
 const GOLPES_PERCUSION = [36, 43, 48]; // C2, G2, C3
-
-export function notaAMidi(nota: string): number | null {
-  const match = RE_NOTA.exec((nota || "").trim());
-  if (!match) return null;
-  const [, letra, alteracion, octavaStr] = match;
-  const clase = CLASE_POR_LETRA[letra.toUpperCase()];
-  if (clase === undefined) return null;
-  const ajuste = alteracion === "#" ? 1 : alteracion === "b" ? -1 : 0;
-  const octava = parseInt(octavaStr, 10);
-  const midi = (octava + 1) * 12 + clase + ajuste;
-  return midi >= 0 && midi <= 127 ? midi : null;
-}
-
-const NOMBRES_MIDI = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-
-export function midiANota(midi: number): string {
-  const redondeado = Math.round(midi);
-  const octava = Math.floor(redondeado / 12) - 1;
-  return `${NOMBRES_MIDI[((redondeado % 12) + 12) % 12]}${octava}`;
-}
 
 /**
  * Acepta tanto la nomenclatura española que usa el chatbot ('La', 'Fa#m') como la inglesa que

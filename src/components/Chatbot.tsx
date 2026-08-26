@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
 import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
-import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic } from 'lucide-react';
+import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic, Download } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
+import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 
 interface ProposedAction {
@@ -340,6 +341,27 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
      console.error('Error generando idea melódica:', err);
      setMelodicIdeaAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
    }
+ };
+
+ // Descarga la idea como .mid. Un WAV solo se puede escuchar; un MIDI se abre en cualquier DAW o
+ // editor de partituras y se edita nota a nota, así que es la forma de que la idea salga de aquí.
+ const handleDownloadMelodicIdeaMidi = (params: NonNullable<ProposedAction['melodicIdea']>) => {
+   const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
+   const blob = eventosAMidiBlob({
+     eventos: params.eventos,
+     bpm: params.bpm,
+     instrument: params.instrument,
+     nombrePista: `Idea IA ${instrumentLabel} ${params.keyName}`
+   });
+
+   const url = URL.createObjectURL(blob);
+   const enlace = document.createElement('a');
+   enlace.href = url;
+   enlace.download = `idea-${params.instrument}-${params.keyName}-${params.bpm}bpm.mid`;
+   document.body.appendChild(enlace);
+   enlace.click();
+   document.body.removeChild(enlace);
+   URL.revokeObjectURL(url);
  };
 
  const handleSaveMelodicIdeaToSong = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>, overrideSongId?: string) => {
@@ -1963,6 +1985,14 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {audioState?.url ? (
  <>
  <audio controls src={audioState.url} className="w-full h-9" />
+ <button
+ type="button"
+ onClick={() => handleDownloadMelodicIdeaMidi(idea)}
+ title="Abre en cualquier DAW o editor de partituras para editarla nota a nota"
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-1.5 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ? 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200' : 'bg-transparent hover:bg-neutral-900 text-neutral-400 border border-neutral-800'}`}
+ >
+ <Download className="w-3.5 h-3.5" /> Descargar .mid
+ </button>
  {audioState.savedToSong ? (
  <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
