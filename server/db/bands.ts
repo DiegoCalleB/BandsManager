@@ -135,4 +135,48 @@ export async function dbUpdateBandToneDna(bandId: string, dna: any): Promise<boo
   }
 }
 
+/**
+ * Acumula frases reales de directo (lo que la banda dice ENTRE canciones al público: saludos,
+ * bromas, agradecimientos) extraídas por la IA de transcripciones de vídeos ya analizados en el
+ * generador de Reels. Es la fuente de tono más auténtica que hay -ipsissima verba, sin filtro de
+ * community manager- así que se guarda dentro del mismo `dna_expresion` para que `loadBandProfile`
+ * y `/api/bands/analyze-tone` la usen igual que el resto del ADN.
+ *
+ * Se acumula (no se sobrescribe) porque cada vídeo nuevo analizado aporta más frases sueltas;
+ * se corta a las últimas 25 para no dejar crecer el JSONB sin límite.
+ */
+export async function dbAppendBandSpeechPhrases(bandId: string, nuevasFrases: string[]): Promise<boolean> {
+  const targetBandId = cleanBandId(bandId);
+  const limpias = (nuevasFrases || []).map((f) => String(f || "").trim()).filter(Boolean);
+  if (!targetBandId || !limpias.length) return true;
+
+  try {
+    const sb = getSupabase();
+    const actual = await dbGetRegisteredBandById(targetBandId);
+    const dnaActual = actual?.dna_expresion && typeof actual.dna_expresion === "object" ? actual.dna_expresion : {};
+    const existentes: string[] = Array.isArray(dnaActual.frases_directo_extraidas) ? dnaActual.frases_directo_extraidas : [];
+
+    const combinadas = [...existentes];
+    for (const frase of limpias) {
+      if (!combinadas.some((f) => f.toLowerCase() === frase.toLowerCase())) combinadas.push(frase);
+    }
+    const acotadas = combinadas.slice(-25);
+
+    await ensureRegisteredBandExists(targetBandId);
+    const { error } = await sb
+      .from("registered_bands")
+      .update({ dna_expresion: { ...dnaActual, frases_directo_extraidas: acotadas }, updated_at: new Date().toISOString() })
+      .eq("band_id", targetBandId);
+
+    if (error) {
+      console.warn(`Supabase warning (append frases_directo_extraidas): ${error.message}`);
+      return false;
+    }
+    return true;
+  } catch (err: any) {
+    console.warn("[registered_bands] No se pudieron guardar las frases de directo:", err?.message || err);
+    return false;
+  }
+}
+
 // --- USERS ---

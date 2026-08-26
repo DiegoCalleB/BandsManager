@@ -31,6 +31,7 @@ export interface NormalizedHighlight {
   recommendedCopy: string;
   copyTikTok: string;
   copyYouTube: string;
+  copyFacebook: string;
   hashtags: string[];
   cta: string;
   reason: string;
@@ -256,6 +257,7 @@ export function normalizeHighlights(rawList: any, options: NormalizeOptions): No
       recommendedCopy: aTexto(item.recommendedCopy || item.copy || item.caption, ""),
       copyTikTok: aTexto(item.copyTikTok || item.tiktokCopy, ""),
       copyYouTube: aTexto(item.copyYouTube || item.youtubeCopy || item.shortsTitle, ""),
+      copyFacebook: aTexto(item.copyFacebook || item.facebookCopy, ""),
       hashtags: aHashtags(item.hashtags, defaults),
       cta: aTexto(item.cta || item.callToAction, ""),
       reason: aTexto(item.reason || item.razon, "")
@@ -314,6 +316,7 @@ export function buildFallbackHighlights(options: {
           recommendedCopy: `${banda} en directo. Fragmento de "${corto}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`,
           copyTikTok: "",
           copyYouTube: "",
+          copyFacebook: "",
           hashtags: options.hashtags,
           cta: "¿Te lo llevas al próximo bolo? Cuéntanoslo en comentarios.",
           reason: `Tramo con más volumen medido del vídeo (energía ${v.score}/100). Corte automático sin IA: revisa el rango antes de publicar.`
@@ -364,6 +367,7 @@ export function buildFallbackHighlights(options: {
       recommendedCopy: `${banda} en directo. Fragmento de "${titulo}" (${formatMMSS(start)}-${formatMMSS(end)}). ${options.hashtags.join(" ")}`,
       copyTikTok: "",
       copyYouTube: "",
+      copyFacebook: "",
       hashtags: options.hashtags,
       cta: "¿Te lo llevas al próximo bolo? Cuéntanoslo en comentarios.",
       reason: `${p.razon} (Corte automático: la IA no estaba disponible, ajusta el rango a mano si hace falta.)`

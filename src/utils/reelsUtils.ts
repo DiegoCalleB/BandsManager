@@ -26,6 +26,7 @@ export interface HighlightClip {
   hookText?: string;
   copyTikTok?: string;
   copyYouTube?: string;
+  copyFacebook?: string;
   cta?: string;
 }
 

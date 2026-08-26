@@ -1100,6 +1100,12 @@ export default function App() {
  onDeleteMetric={handleDeleteMetric}
  bandName={currentActiveBandName}
  instagramHandle={(epkConfig?.enlacesRedes?.instagram || '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/\/$/, '') || undefined}
+ hasAnySocialLink={Boolean(
+   epkConfig?.enlacesRedes?.instagram ||
+   epkConfig?.enlacesRedes?.tiktok ||
+   epkConfig?.enlacesRedes?.youtube ||
+   epkConfig?.enlacesRedes?.facebook
+ )}
  />
  )}
  {currentView === 'repertorio' && (

@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -241,7 +241,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON:
 });
 
 router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
-  const { nombre_entidad, instagram, estilo_musical, localizacion, tipo, is_sender, save_to_band_id } = req.body;
+  const { nombre_entidad, estilo_musical, localizacion, tipo, is_sender, save_to_band_id } = req.body;
+  let { instagram } = req.body;
   if (!nombre_entidad) {
     return res.status(400).json({ error: "Nombre de la entidad requerido" });
   }
@@ -253,21 +254,62 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
 
   const isBakandeyaOrSender = is_sender || nombre_entidad.toLowerCase().includes("bakandeya");
 
-  const prompt = `Actúa como un experto lingüista y analista de comunicación musical especializado en redes sociales (Instagram Reels, Posts, TikTok, YouTube Shorts, entrevistas y notas de prensa).
+  // Para la banda EMISORA (la propia) hay algo mejor que lo que mande el body: su EPK real,
+  // que ya guarda los 4 enlaces de verdad. Antes solo se rastreaba Instagram porque era el
+  // único dato que el frontend mandaba, aunque la banda tuviera TikTok, YouTube y Facebook
+  // dados de alta: el ADN de tono salía sesgado a una sola red.
+  let tiktok = "";
+  let youtube = "";
+  let facebook = "";
+  // Frases reales dichas en directo (habla al público entre canciones), acumuladas por el
+  // generador de Reels a partir de transcripciones de vídeos ya analizados. Es la fuente de
+  // tono más auténtica que hay -sin filtro de community manager- así que se le pasa a la IA
+  // como grounding real, y se conserva al guardar (la IA no la genera, solo la usa).
+  let frasesDirectoExistentes: string[] = [];
+  if (is_sender) {
+    try {
+      const ownBandId = getTargetBandId(req);
+      const [epk, bandaActual] = await Promise.all([
+        dbGetEpkConfig(ownBandId),
+        dbGetRegisteredBandById(ownBandId)
+      ]);
+      const redes = epk?.enlacesRedes || {};
+      instagram = redes.instagram || instagram || "";
+      tiktok = redes.tiktok || "";
+      youtube = redes.youtube || "";
+      facebook = redes.facebook || "";
+      const dnaActual = bandaActual?.dna_expresion;
+      if (dnaActual && typeof dnaActual === "object" && Array.isArray(dnaActual.frases_directo_extraidas)) {
+        frasesDirectoExistentes = dnaActual.frases_directo_extraidas.map((f: any) => String(f || "").trim()).filter(Boolean);
+      }
+    } catch (e: any) {
+      console.warn("[analyze-tone] No se pudo cargar el EPK para leer las redes reales:", e?.message || e);
+    }
+  }
+
+  const redesConHandle: string[] = [];
+  if (instagram) redesConHandle.push(`- Instagram: ${instagram}`);
+  if (tiktok) redesConHandle.push(`- TikTok: ${tiktok}`);
+  if (youtube) redesConHandle.push(`- YouTube: ${youtube}`);
+  if (facebook) redesConHandle.push(`- Facebook: ${facebook}`);
+
+  const prompt = `Actúa como un experto lingüista y analista de comunicación musical especializado en redes sociales (Instagram Reels, Posts, TikTok, YouTube Shorts, Facebook, entrevistas y notas de prensa).
 
 OBJETIVO: Analizar en profundidad la FORMA DE HABLAR, EL ADN DE EXPRESIÓN Y EL TONO DE COMUNICACIÓN de la siguiente entidad musical:
 - Nombre de la Entidad: "${nombre_entidad}"
 - Rol: ${isBakandeyaOrSender ? "Banda EMISORA de la propuesta (nuestro perfil)" : "Entidad RECEPTORA / Objetivo"}
 - Tipo: ${tipo || "Banda / Artista / Sala / Festival"}
-- Instagram / Handle: ${instagram || "No especificado"}
+${redesConHandle.length ? redesConHandle.join("\n") : `- Instagram / Handle: ${instagram || "No especificado"}`}
 - Estilo Musical: ${estilo_musical || "No especificado"}
 - Localización: ${localizacion || "No especificada"}
+${frasesDirectoExistentes.length ? `\nFRASES REALES DICHAS EN DIRECTO (extraídas de transcripciones de sus propios conciertos, hablando al público entre canciones -no letras cantadas-; es más fiable que cualquier red social porque es habla real sin filtro):\n${frasesDirectoExistentes.map((f) => `- "${f}"`).join("\n")}` : ""}
 
 INSTRUCCIONES DE BÚSQUEDA Y EXTRACCIÓN (SEARCH GROUNDING):
-1. Rastrear con precisión sus publicaciones recientes en Instagram (@${instagram || nombre_entidad}), Reels, captions de vídeo, TikToks, entrevistas o canal oficial.
-2. Extraer frases literales o expresiones muletillas reales que usen en sus Reels/Posts (ej: "chavales", "pogo en el barro", "aúpa familia", "nos vemos en las trincheras", "fuck yeah", "teatralidad e ironía", etc.).
-3. Determinar su tono (¿informal/fiestero, provocador/gótico, elegante/institucional, enérgico, académico, callejero?), su nivel de energía, tratamiento habitual (Tú/Vosotros vs Usted) y vocabulario icónico.
-4. Redactar una propuesta de contacto o correo electrónico en la que:
+1. Rastrear con precisión CADA UNA de las redes listadas arriba por separado (no solo Instagram): sus publicaciones recientes, Reels, captions de vídeo, TikToks, vídeos/descripciones de YouTube, posts de Facebook, entrevistas o canal oficial.
+2. Extraer frases literales o expresiones muletillas reales que usen en sus Reels/Posts (ej: "chavales", "pogo en el barro", "aúpa familia", "nos vemos en las trincheras", "fuck yeah", "teatralidad e ironía", etc.). Si arriba hay FRASES REALES DICHAS EN DIRECTO, dales prioridad sobre lo que encuentres en redes: inclúyelas (o el vocabulario que aparezca en ellas) en "frases_emblematicas_extraidas" y "vocabulario_clave" cuando sean representativas.
+3. Determinar su tono general (¿informal/fiestero, provocador/gótico, elegante/institucional, enérgico, académico, callejero?), su nivel de energía, tratamiento habitual (Tú/Vosotros vs Usted) y vocabulario icónico.
+4. IMPORTANTE: el tono no es idéntico en todas las redes. Compara cómo hablan en cada una de las que tengan handle arriba: Facebook suele ser más institucional/informativo que TikTok; TikTok suele ser más gamberro, rápido y con jerga que Instagram; YouTube suele explicar más. Anota en qué se diferencia REALMENTE cada red (no lo des por hecho sin comprobarlo) en "matices_por_red". Si una red no tiene handle o no encuentras diferencia real respecto al tono general, deja esa clave vacía o igual al tono general; no inventes una diferencia que no hayas comprobado.
+5. Redactar una propuesta de contacto o correo electrónico en la que:
    - Si es la banda emisora (Bakandeya): El correo transmite fielmente la energía festiva y directa de Bakandeya (balkan-ska, violín enérgico, sustitución de metales por sintetizador).
    - Si es un grupo destino (ej: Marilyn Manson, Ska-P, etc.): La propuesta se adapta para utilizar referencias, vocabulario y tono que conecten con la personalidad del grupo destino sin perder la esencia de Bakandeya.
 
@@ -276,8 +318,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
 {
   "nombre_entidad": "${nombre_entidad}",
   "es_emisor": ${isBakandeyaOrSender ? "true" : "false"},
-  "redes_rastreadas": ["Instagram Reels @...", "TikTok", "Prensa / Web oficial"],
-  "tono_comunicacion": "Resumen conciso de 1-2 frases del ADN y estilo de voz",
+  "redes_rastreadas": ["Instagram Reels @...", "TikTok", "YouTube", "Facebook", "Prensa / Web oficial"],
+  "tono_comunicacion": "Resumen conciso de 1-2 frases del ADN y estilo de voz general",
   "tratamiento_habitual": "Tú / Colegueo",
   "nivel_energia": "Alta / Explosiva",
   "vocabulario_clave": ["palabra1", "palabra2", "palabra3", "palabra4"],
@@ -287,6 +329,12 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
   ],
   "emojis_frecuentes": ["🔥", "⚡", "🎷", "🍻"],
   "valores_e_intereses": ["autogestión", "música en directo", "directos potentes"],
+  "matices_por_red": {
+    "instagram": "Cómo varía el tono en Instagram respecto al general, o igual que el general si no hay diferencia real",
+    "tiktok": "Cómo varía el tono en TikTok",
+    "youtube": "Cómo varía el tono en YouTube",
+    "facebook": "Cómo varía el tono en Facebook"
+  },
   "puntos_fuertes_para_conectar": "Cómo conectar esta forma de hablar con una propuesta de concierto/co-booking",
   "recomendacion_pitch": "Consejo lingüístico para redactarles correos de forma auténtica",
   "pitch_personalizado_ejemplo": "Texto completo del email o mensaje de presentación adaptado exactamente a esta forma de expresarse"
@@ -332,6 +380,11 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
     if (is_sender) {
       try {
         const ownBandId = getTargetBandId(req);
+        // La IA no genera "frases_directo_extraidas" (las acumula el generador de Reels aparte):
+        // sin esto, cada vez que se reanaliza el tono se perdería lo ya guardado de conciertos.
+        if (frasesDirectoExistentes.length) {
+          data.frases_directo_extraidas = frasesDirectoExistentes;
+        }
         savedOwnBandDna = await dbUpdateBandToneDna(ownBandId, data);
       } catch (e: any) {
         console.warn("[analyze-tone] No se pudo guardar el ADN de la banda emisora:", e?.message || e);
@@ -355,9 +408,12 @@ const CAMPOS_TONO_EDITABLES = [
   "vocabulario_clave",
   "frases_emblematicas_extraidas",
   "emojis_frecuentes",
+  "matices_por_red",
   "puntos_fuertes_para_conectar",
   "recomendacion_pitch",
 ] as const;
+
+const REDES_MATICES = ["instagram", "tiktok", "youtube", "facebook"] as const;
 
 function limpiarListaTono(v: any, max = 12): string[] {
   if (!Array.isArray(v)) return [];
@@ -366,6 +422,16 @@ function limpiarListaTono(v: any, max = 12): string[] {
     const s = String(item ?? "").trim();
     if (s && !salida.includes(s)) salida.push(s);
     if (salida.length >= max) break;
+  }
+  return salida;
+}
+
+function limpiarMaticesPorRed(v: any): Record<string, string> {
+  const salida: Record<string, string> = {};
+  if (!v || typeof v !== "object") return salida;
+  for (const red of REDES_MATICES) {
+    const s = String(v[red] ?? "").trim();
+    if (s) salida[red] = s;
   }
   return salida;
 }
@@ -395,6 +461,8 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
       if (!(campo in cambios)) continue;
       if (campo === "vocabulario_clave" || campo === "frases_emblematicas_extraidas" || campo === "emojis_frecuentes") {
         actualizado[campo] = limpiarListaTono(cambios[campo]);
+      } else if (campo === "matices_por_red") {
+        actualizado[campo] = limpiarMaticesPorRed(cambios[campo]);
       } else {
         actualizado[campo] = String(cambios[campo] ?? "").trim();
       }
