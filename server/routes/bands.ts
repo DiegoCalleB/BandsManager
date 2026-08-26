@@ -1,10 +1,11 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
+import { getTargetBandId } from "../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -311,7 +312,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
       data = JSON.parse(cleanedText);
     }
 
-    // Persist in state if requested or if band_id provided
+    // Persist in state if requested or if band_id provided (contacto de booking en el CRM)
     if (save_to_band_id) {
       const state = loadState();
       state.bands = state.bands || [];
@@ -322,8 +323,22 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
         saveState(state);
       }
     }
-    
-    res.json({ success: true, data });
+
+    // Cuando se analiza la banda EMISORA (la propia, no un contacto de booking) el ADN se
+    // guarda siempre en Supabase, de forma automática: antes dependía de que el frontend
+    // mandara `save_to_band_id` (nunca lo hacía) y aun así solo tocaba data.json, que Railway
+    // borra en cada despliegue. Así lo usan de verdad los Reels/Shorts/TikTok la próxima vez.
+    let savedOwnBandDna = false;
+    if (is_sender) {
+      try {
+        const ownBandId = getTargetBandId(req);
+        savedOwnBandDna = await dbUpdateBandToneDna(ownBandId, data);
+      } catch (e: any) {
+        console.warn("[analyze-tone] No se pudo guardar el ADN de la banda emisora:", e?.message || e);
+      }
+    }
+
+    res.json({ success: true, data, savedPermanently: savedOwnBandDna });
   } catch (err: any) {
     console.error("Error in Tone Analysis:", err);
     res.status(500).json({ error: "No se pudo analizar el tono de comunicación.", details: err?.message || String(err) });

@@ -111,6 +111,9 @@ export default function ReelsCenter({
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
  const [bakandeyaToneData, setBakandeyaToneData] = useState<ToneAnalysisData | null>(null);
  const [isAnalyzingBakandeyaTone, setIsAnalyzingBakandeyaTone] = useState(false);
+ // Si el backend confirmó que guardó el ADN de tono en Supabase (y no solo en esta pantalla).
+ // El usuario preguntó explícitamente si esto se guardaba: antes no había forma de saberlo.
+ const [toneAnalysisSaved, setToneAnalysisSaved] = useState(false);
 
  // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
  // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
@@ -122,6 +125,7 @@ export default function ReelsCenter({
    }
    setIsAnalyzingBakandeyaTone(true);
    setIsBakandeyaToneModalOpen(true);
+   setToneAnalysisSaved(false);
    try {
      const res = await apiFetch('/api/bands/analyze-tone', {
        method: 'POST',
@@ -138,6 +142,9 @@ export default function ReelsCenter({
      const json = res as any;
      if (json?.success && json.data) {
        setBakandeyaToneData(json.data);
+       // El backend guarda el ADN en Supabase de forma automática cuando is_sender es true;
+       // savedPermanently confirma que la escritura no falló, para poder decírselo al usuario.
+       setToneAnalysisSaved(Boolean(json.savedPermanently));
      }
    } catch (err) {
      console.error('Error analyzing Bakandeya tone:', err);
@@ -3756,6 +3763,7 @@ export default function ReelsCenter({
     }}
     toneData={bakandeyaToneData}
     isLoading={isAnalyzingBakandeyaTone}
+    isSaved={toneAnalysisSaved}
     onReAnalyze={handleAnalyzeBakandeyaTone}
   />
 
