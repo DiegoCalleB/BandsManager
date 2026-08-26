@@ -210,6 +210,23 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    saveError?: string;
  }>>({});
 
+ // Cuando el chatbot no ha identificado una canción exacta del repertorio (el usuario pidió la
+ // base/idea sin nombrar un tema, o Gemini no encontró coincidencia), en vez de fallar con un
+ // error sin salida se ofrece un desplegable para elegir a mano en qué canción guardarla.
+ // Compartido entre 'propose_accompaniment' y 'propose_melodic_idea': audioKey ("msgId-actionIndex")
+ // es único por acción dentro del mensaje, así que no hay colisión entre ambos tipos.
+ const [songPicker, setSongPicker] = useState<Record<string, { songs: { id: string; titulo: string }[]; selectedId: string }>>({});
+
+ const buildBandAuthHeaders = (): Record<string, string> => {
+   const token = localStorage.getItem('bakandeya_token');
+   const activeBandId = currentUser?.band_id || '';
+   return {
+     'Content-Type': 'application/json',
+     'Authorization': token ? `Bearer ${token}` : '',
+     ...(activeBandId ? { 'x-band-id': activeBandId } : {})
+   };
+ };
+
  const handleGenerateAccompanimentAudio = async (key: string, params: NonNullable<ProposedAction['accompaniment']>) => {
    setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: true } }));
    try {
@@ -233,32 +250,35 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  // repertorio. Se manda SIEMPRE la canción completa (fetch + spread), nunca un parche parcial:
  // dbUpsertSong rellena con valores por defecto cualquier campo ausente (ver server/db/repertoire.ts),
  // así que un PUT parcial borraría título, bpm y tonalidad de la canción real.
- const handleSaveAccompanimentToSong = async (key: string, params: NonNullable<ProposedAction['accompaniment']>) => {
+ const handleSaveAccompanimentToSong = async (key: string, params: NonNullable<ProposedAction['accompaniment']>, overrideSongId?: string) => {
    const current = accompanimentAudio[key];
    if (!current?.url) return;
 
    setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
    try {
-     const token = localStorage.getItem('bakandeya_token');
      const activeBandId = currentUser?.band_id || '';
-     const headers: Record<string, string> = {
-       'Content-Type': 'application/json',
-       'Authorization': token ? `Bearer ${token}` : '',
-       ...(activeBandId ? { 'x-band-id': activeBandId } : {})
-     };
+     const headers = buildBandAuthHeaders();
 
      const songsRes = await fetch('/api/songs', { headers });
      const songsData = await songsRes.json().catch(() => null);
      const allSongs: any[] = songsData?.songs || [];
 
-     let targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+     let targetSong = overrideSongId ? allSongs.find(s => s.id === overrideSongId) : undefined;
+     if (!targetSong) {
+       targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+     }
      if (!targetSong && params.songTitle) {
        const lowerTitle = params.songTitle.trim().toLowerCase();
        targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
          || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
      }
+     // No se ha podido resolver la canción sola (ni por id ni por título, ni el usuario ha
+     // elegido una del desplegable todavía): en vez de fallar sin salida, se ofrece elegir a
+     // mano entre las canciones reales del repertorio.
      if (!targetSong) {
-       throw new Error('No he encontrado esa canción en el repertorio. Pídeme la base mencionando el nombre exacto de un tema existente.');
+       setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false } }));
+       setSongPicker(prev => ({ ...prev, [key]: { songs: allSongs.map(s => ({ id: s.id, titulo: s.titulo })), selectedId: prev[key]?.selectedId || '' } }));
+       return;
      }
 
      const wavBlob = await (await fetch(current.url)).blob();
@@ -287,6 +307,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
      if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
 
      setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
+     setSongPicker(prev => { const next = { ...prev }; delete next[key]; return next; });
    } catch (err: any) {
      console.error('Error guardando base rítmica en el repertorio:', err);
      setAccompanimentAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
@@ -321,32 +342,34 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    }
  };
 
- const handleSaveMelodicIdeaToSong = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>) => {
+ const handleSaveMelodicIdeaToSong = async (key: string, params: NonNullable<ProposedAction['melodicIdea']>, overrideSongId?: string) => {
    const current = melodicIdeaAudio[key];
    if (!current?.url) return;
 
    setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: true, saveError: undefined } }));
    try {
-     const token = localStorage.getItem('bakandeya_token');
      const activeBandId = currentUser?.band_id || '';
-     const headers: Record<string, string> = {
-       'Content-Type': 'application/json',
-       'Authorization': token ? `Bearer ${token}` : '',
-       ...(activeBandId ? { 'x-band-id': activeBandId } : {})
-     };
+     const headers = buildBandAuthHeaders();
 
      const songsRes = await fetch('/api/songs', { headers });
      const songsData = await songsRes.json().catch(() => null);
      const allSongs: any[] = songsData?.songs || [];
 
-     let targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+     let targetSong = overrideSongId ? allSongs.find(s => s.id === overrideSongId) : undefined;
+     if (!targetSong) {
+       targetSong = params.songId ? allSongs.find(s => s.id === params.songId) : undefined;
+     }
      if (!targetSong && params.songTitle) {
        const lowerTitle = params.songTitle.trim().toLowerCase();
        targetSong = allSongs.find(s => (s.titulo || '').trim().toLowerCase() === lowerTitle)
          || allSongs.find(s => (s.titulo || '').toLowerCase().includes(lowerTitle));
      }
+     // Igual que en handleSaveAccompanimentToSong: sin coincidencia automática, se ofrece elegir
+     // a mano en vez de fallar sin salida.
      if (!targetSong) {
-       throw new Error('No he encontrado esa canción en el repertorio. Pídeme la idea mencionando el nombre exacto de un tema existente.');
+       setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false } }));
+       setSongPicker(prev => ({ ...prev, [key]: { songs: allSongs.map(s => ({ id: s.id, titulo: s.titulo })), selectedId: prev[key]?.selectedId || '' } }));
+       return;
      }
 
      const wavBlob = await (await fetch(current.url)).blob();
@@ -376,6 +399,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
      if (!putRes.ok) throw new Error('El servidor rechazó el guardado de la canción.');
 
      setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, savedToSong: targetSong.titulo } }));
+     setSongPicker(prev => { const next = { ...prev }; delete next[key]; return next; });
    } catch (err: any) {
      console.error('Error guardando idea melódica en el repertorio:', err);
      setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
@@ -1819,6 +1843,29 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
  </div>
+ ) : songPicker[audioKey] ? (
+ <div className={`space-y-1.5 p-2 rounded-lg ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-neutral-900 border border-neutral-800'}`}>
+ <p className="text-[10px] font-mono text-neutral-400">No he identificado la canción. Elige en cuál guardarla:</p>
+ <select
+ value={songPicker[audioKey].selectedId}
+ onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
+ className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-lg ${isStitchLight ? 'bg-white border border-slate-200 text-slate-800' : 'bg-black border border-neutral-800 text-neutral-200'}`}
+ >
+ <option value="">— Selecciona una canción —</option>
+ {songPicker[audioKey].songs.map(s => (
+ <option key={s.id} value={s.id}>{s.titulo}</option>
+ ))}
+ </select>
+ <button
+ type="button"
+ onClick={() => handleSaveAccompanimentToSong(audioKey, acc, songPicker[audioKey].selectedId)}
+ disabled={!songPicker[audioKey].selectedId || audioState.saving}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${isStitchLight ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-cyan-500 hover:bg-cyan-600 text-neutral-950'}`}
+ >
+ {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+ {audioState.saving ? 'Guardando...' : 'Guardar aquí'}
+ </button>
+ </div>
  ) : (
  <button
  type="button"
@@ -1871,6 +1918,29 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {audioState.savedToSong ? (
  <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
+ </div>
+ ) : songPicker[audioKey] ? (
+ <div className={`space-y-1.5 p-2 rounded-lg ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-neutral-900 border border-neutral-800'}`}>
+ <p className="text-[10px] font-mono text-neutral-400">No he identificado la canción. Elige en cuál guardarla:</p>
+ <select
+ value={songPicker[audioKey].selectedId}
+ onChange={(e) => setSongPicker(prev => ({ ...prev, [audioKey]: { ...prev[audioKey], selectedId: e.target.value } }))}
+ className={`w-full text-[11px] font-mono px-2 py-1.5 rounded-lg ${isStitchLight ? 'bg-white border border-slate-200 text-slate-800' : 'bg-black border border-neutral-800 text-neutral-200'}`}
+ >
+ <option value="">— Selecciona una canción —</option>
+ {songPicker[audioKey].songs.map(s => (
+ <option key={s.id} value={s.id}>{s.titulo}</option>
+ ))}
+ </select>
+ <button
+ type="button"
+ onClick={() => handleSaveMelodicIdeaToSong(audioKey, idea, songPicker[audioKey].selectedId)}
+ disabled={!songPicker[audioKey].selectedId || audioState.saving}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed ${isStitchLight ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-cyan-500 hover:bg-cyan-600 text-neutral-950'}`}
+ >
+ {audioState.saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+ {audioState.saving ? 'Guardando...' : 'Guardar aquí'}
+ </button>
  </div>
  ) : (
  <button
