@@ -619,6 +619,7 @@ Campos de cada fragmento:
 - "recommendedCopy": pie de publicación para Instagram Reels, 2-4 líneas, sin hashtags dentro.
 - "copyTikTok": versión más corta y directa para TikTok, una o dos frases.
 - "copyYouTube": título de YouTube Shorts, máximo 60 caracteres.
+- "copyFacebook": pie de publicación para Facebook, algo más explicativo y menos telegráfico que TikTok, 2-3 líneas.
 - "hashtags": entre 4 y 8, en español, mezclando los de la banda con los del estilo musical.
 - "cta": una llamada a la acción concreta y realista (comentar algo específico, guardar, compartir con alguien, venir al próximo bolo).
 - "confidence": 1-100, tu estimación honesta. No pongas 95 a todos: si un corte es flojo, dilo.
@@ -638,6 +639,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       "recommendedCopy": "...",
       "copyTikTok": "...",
       "copyYouTube": "...",
+      "copyFacebook": "...",
       "hashtags": ["#Ejemplo"],
       "cta": "...",
       "reason": "..."
@@ -1021,6 +1023,7 @@ Responde ÚNICAMENTE con JSON válido:
   "hookText": "Rótulo corto para los 2 primeros segundos",
   "recommendedCopy": "Pie de publicación listo para Instagram Reels",
   "copyTikTok": "Versión corta para TikTok",
+  "copyFacebook": "Pie de publicación para Facebook, algo más explicativo",
   "hashtags": ["#Ejemplo"],
   "cta": "Llamada a la acción",
   "energyLevel": "Muy Alta",
@@ -1041,6 +1044,7 @@ Responde ÚNICAMENTE con JSON válido:
             hookText: parsed.hookText || "",
             recommendedCopy: parsed.recommendedCopy || "",
             copyTikTok: parsed.copyTikTok || "",
+            copyFacebook: parsed.copyFacebook || "",
             hashtags: Array.isArray(parsed.hashtags) && parsed.hashtags.length ? parsed.hashtags : hashtagsBase,
             cta: parsed.cta || "",
             energyLevel: parsed.energyLevel || "Alta",
@@ -1063,6 +1067,7 @@ Responde ÚNICAMENTE con JSON válido:
       hookText: "",
       recommendedCopy: `${nombreBanda} en directo — fragmento de ${rangoStr}.${notas ? ` ${notas}` : ""}`,
       copyTikTok: "",
+      copyFacebook: "",
       hashtags: hashtagsBase,
       cta: "¿Qué te ha parecido? Cuéntanoslo en comentarios.",
       energyLevel: "Alta",

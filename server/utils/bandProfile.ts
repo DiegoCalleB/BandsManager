@@ -24,6 +24,7 @@ export interface BandProfile {
   instagram: string;
   tiktok: string;
   youtube: string;
+  facebook: string;
   bio: string;
   members: BandMemberInfo[];
   /** Instrumentos reales deducidos de los miembros, deduplicados. */
@@ -34,6 +35,8 @@ export interface BandProfile {
   toneVocabulary: string[];
   toneEmojis: string[];
   tonePhrases: string[];
+  /** Matiz de tono por red (Instagram/TikTok/YouTube/Facebook no suenan igual), si se ha analizado. */
+  toneByPlatform: { instagram: string; tiktok: string; youtube: string; facebook: string };
 }
 
 export function emptyBandProfile(bandId = ""): BandProfile {
@@ -45,6 +48,7 @@ export function emptyBandProfile(bandId = ""): BandProfile {
     instagram: "",
     tiktok: "",
     youtube: "",
+    facebook: "",
     bio: "",
     members: [],
     instruments: [],
@@ -53,7 +57,17 @@ export function emptyBandProfile(bandId = ""): BandProfile {
     toneEnergy: "",
     toneVocabulary: [],
     toneEmojis: [],
-    tonePhrases: []
+    tonePhrases: [],
+    toneByPlatform: { instagram: "", tiktok: "", youtube: "", facebook: "" }
+  };
+}
+
+function limpiarMaticesPorRed(v: any): { instagram: string; tiktok: string; youtube: string; facebook: string } {
+  return {
+    instagram: limpiar(v?.instagram),
+    tiktok: limpiar(v?.tiktok),
+    youtube: limpiar(v?.youtube),
+    facebook: limpiar(v?.facebook)
   };
 }
 
@@ -155,6 +169,7 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
   if (p.instagram) lineas.push(`- Instagram: ${p.instagram}`);
   if (p.tiktok) lineas.push(`- TikTok: ${p.tiktok}`);
   if (p.youtube) lineas.push(`- YouTube: ${p.youtube}`);
+  if (p.facebook) lineas.push(`- Facebook: ${p.facebook}`);
 
   if (p.toneSummary || p.toneVocabulary.length || p.tonePhrases.length || p.toneEmojis.length) {
     lineas.push("");
@@ -177,6 +192,17 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
       lineas.push(`- Usa emojis DE ESA LISTA (${p.toneEmojis.join(" ")}) en vez de otros genéricos, y en la cantidad que ellos usarían de verdad, aunque eso choque con un tope genérico de emojis.`);
     }
     lineas.push(`- El tono y el nivel de energía de arriba pesan más que cualquier plantilla de estilo genérica: que se note en cómo suena el texto, no en una redacción neutra e intercambiable con la de otra banda.`);
+
+    const { instagram: matizIg, tiktok: matizTt, youtube: matizYt, facebook: matizFb } = p.toneByPlatform;
+    if (matizIg || matizTt || matizYt || matizFb) {
+      lineas.push("");
+      lineas.push("MATICES DE TONO SEGÚN LA RED (no hablan igual en todas; usa el matiz de CADA red en el campo que le corresponde):");
+      if (matizIg) lineas.push(`- Instagram (campo "recommendedCopy"): ${matizIg}`);
+      if (matizTt) lineas.push(`- TikTok (campo "copyTikTok"): ${matizTt}`);
+      if (matizYt) lineas.push(`- YouTube (campo "copyYouTube"): ${matizYt}`);
+      if (matizFb) lineas.push(`- Facebook (campo "copyFacebook"): ${matizFb}`);
+      lineas.push(`- No copies el mismo texto en los distintos campos de copy cambiando solo el hashtag: cada uno tiene que sonar a esa red, con el matiz de arriba.`);
+    }
   }
 
   lineas.push("");
@@ -226,6 +252,7 @@ export async function loadBandProfile(
   perfil.instagram = limpiar(epk?.enlacesRedes?.instagram || band?.instagram);
   perfil.tiktok = limpiar(epk?.enlacesRedes?.tiktok || band?.tiktok);
   perfil.youtube = limpiar(epk?.enlacesRedes?.youtube || band?.spotify_youtube);
+  perfil.facebook = limpiar(epk?.enlacesRedes?.facebook);
   perfil.bio = limpiar(epk?.biografia);
 
   // ADN de voz guardado en Supabase por /api/bands/analyze-tone (fuente durable: sobrevive a
@@ -239,6 +266,7 @@ export async function loadBandProfile(
     perfil.toneVocabulary = listaLimpia(adnDurable.vocabulario_clave, 10);
     perfil.toneEmojis = listaLimpia(adnDurable.emojis_frecuentes, 8);
     perfil.tonePhrases = listaLimpia(adnDurable.frases_emblematicas_extraidas, 4);
+    perfil.toneByPlatform = limpiarMaticesPorRed(adnDurable.matices_por_red);
   }
 
   let state: any = null;
@@ -278,6 +306,7 @@ export async function loadBandProfile(
       perfil.toneVocabulary = listaLimpia(adn.vocabulario_clave, 10);
       perfil.toneEmojis = listaLimpia(adn.emojis_frecuentes, 8);
       perfil.tonePhrases = listaLimpia(adn.frases_emblematicas_extraidas, 4);
+      perfil.toneByPlatform = limpiarMaticesPorRed(adn.matices_por_red);
     }
   }
 

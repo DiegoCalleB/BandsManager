@@ -88,6 +88,17 @@ function formatTime(seconds: number): string {
  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
+// El tono no es el mismo en cada red (Facebook más institucional, TikTok más gamberro...), así
+// que el texto que se propone para programar el post tiene que seguir a la red elegida, no
+// enseñar siempre el copy de Instagram aunque el usuario haya marcado TikTok o Facebook.
+function copyForPlatform(clip: HighlightClip | undefined | null, platform: 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook'): string {
+ if (!clip) return '';
+ if (platform === 'TikTok') return clip.copyTikTok || clip.recommendedCopy || '';
+ if (platform === 'YouTube') return clip.copyYouTube || clip.recommendedCopy || '';
+ if (platform === 'Facebook') return clip.copyFacebook || clip.recommendedCopy || '';
+ return clip.recommendedCopy || '';
+}
+
 export default function ReelsCenter({
  colors,
  posts = [],
@@ -317,7 +328,7 @@ export default function ReelsCenter({
  setHighlights(prev => {
  if (prev.length > 0) return prev;
  setSelectedHighlightIndex(0);
- setEditedCopy(guardado.highlights?.[0]?.recommendedCopy || '');
+ setEditedCopy(copyForPlatform(guardado.highlights?.[0], selectedPlatform));
  setOptimalTime(guardado.optimalTime || null);
  setEnergyWindows(Array.isArray(guardado.energyWindows) ? guardado.energyWindows : []);
  setViralWindows(Array.isArray(guardado.videoMeta?.viralWindows) ? guardado.videoMeta.viralWindows : []);
@@ -414,11 +425,12 @@ export default function ReelsCenter({
 
  const data = response as any;
  if (data?.success && data.analysis) {
- const { title, reason, recommendedCopy, hashtags, energyLevel, confidence, hookText, copyTikTok, cta } = data.analysis;
+ const { title, reason, recommendedCopy, hashtags, energyLevel, confidence, hookText, copyTikTok, copyFacebook, cta } = data.analysis;
 
+ let clipActualizado: HighlightClip | null = null;
  setHighlights(prev => prev.map((clip, idx) => {
  if (idx === selectedHighlightIndex) {
- return {
+ clipActualizado = {
  ...clip,
  title: title || clip.title,
  reason: reason || clip.reason,
@@ -428,14 +440,16 @@ export default function ReelsCenter({
  confidence: confidence || clip.confidence,
  hookText: hookText || clip.hookText,
  copyTikTok: copyTikTok || clip.copyTikTok,
+ copyFacebook: copyFacebook || clip.copyFacebook,
  cta: cta || clip.cta
  };
+ return clipActualizado;
  }
  return clip;
  }));
 
- if (recommendedCopy) {
- setEditedCopy(recommendedCopy);
+ if (clipActualizado) {
+ setEditedCopy(copyForPlatform(clipActualizado, selectedPlatform));
  }
 
  setReanalyzeSuccessMsg(
@@ -1023,7 +1037,7 @@ export default function ReelsCenter({
  
  // Initialize editing form fields
  if (data.highlights && data.highlights.length > 0) {
- setEditedCopy(data.highlights[0].recommendedCopy || data.highlights[0].copy || '');
+ setEditedCopy(copyForPlatform(data.highlights[0], selectedPlatform) || data.highlights[0].copy || '');
  }
  if (data.optimalTime) {
  setScheduledDate(data.optimalTime.date || '2026-07-30');
@@ -1090,7 +1104,7 @@ export default function ReelsCenter({
  
  const clip = highlights[index];
  if (clip) {
- setEditedCopy(clip.recommendedCopy || '');
+ setEditedCopy(copyForPlatform(clip, selectedPlatform));
  }
  };
 
@@ -2233,7 +2247,11 @@ export default function ReelsCenter({
  <button
  type="button"
  key={plat.id}
- onClick={() => setSelectedPlatform(plat.id as any)}
+ onClick={() => {
+ const nuevaPlataforma = plat.id as 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook';
+ setSelectedPlatform(nuevaPlataforma);
+ setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nuevaPlataforma));
+ }}
  className={`py-2 px-2 rounded-lg text-[10px] font-mono text-center transition-all cursor-pointer ${
  selectedPlatform === plat.id
  ? isStitchLight
@@ -3559,7 +3577,8 @@ export default function ReelsCenter({
  const variantes = [
  { etiqueta: 'Instagram', texto: clip.recommendedCopy },
  { etiqueta: 'TikTok', texto: clip.copyTikTok },
- { etiqueta: 'YouTube Shorts', texto: clip.copyYouTube }
+ { etiqueta: 'YouTube Shorts', texto: clip.copyYouTube },
+ { etiqueta: 'Facebook', texto: clip.copyFacebook }
  ].filter(v => v.texto && v.texto.trim());
 
  if (!clip.hookText && !clip.cta && variantes.length < 2 && !(clip.hashtags || []).length) return null;
@@ -3688,12 +3707,17 @@ export default function ReelsCenter({
  <select
  id="modal-platform-select"
  value={selectedPlatform}
- onChange={(e) => setSelectedPlatform(e.target.value as any)}
+ onChange={(e) => {
+ const nuevaPlataforma = e.target.value as 'Instagram' | 'TikTok' | 'YouTube' | 'Facebook';
+ setSelectedPlatform(nuevaPlataforma);
+ setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nuevaPlataforma));
+ }}
  className="w-full text-xs font-mono bg-neutral-900 -neutral-800 rounded-lg p-2 text-white focus:outline-none cursor-pointer"
  >
  <option value="Instagram">Instagram Reel</option>
  <option value="TikTok">TikTok Video</option>
  <option value="YouTube">YouTube Shorts</option>
+ <option value="Facebook">Facebook</option>
  </select>
  </div>
 

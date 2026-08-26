@@ -15,6 +15,8 @@ export interface ToneAnalysisData {
   frases_emblematicas_extraidas?: string[];
   emojis_frecuentes?: string[];
   valores_e_intereses?: string[];
+  /** El tono no es idéntico en todas las redes (Facebook más institucional, TikTok más gamberro...). */
+  matices_por_red?: { instagram?: string; tiktok?: string; youtube?: string; facebook?: string };
   puntos_fuertes_para_conectar?: string;
   recomendacion_pitch?: string;
   pitch_personalizado_ejemplo?: string;
@@ -28,6 +30,10 @@ interface ToneDraft {
   vocabulario_clave: string;
   frases_emblematicas_extraidas: string;
   emojis_frecuentes: string;
+  matiz_instagram: string;
+  matiz_tiktok: string;
+  matiz_youtube: string;
+  matiz_facebook: string;
   puntos_fuertes_para_conectar: string;
   recomendacion_pitch: string;
 }
@@ -40,6 +46,10 @@ function toDraft(toneData: ToneAnalysisData | null): ToneDraft {
     vocabulario_clave: (toneData?.vocabulario_clave || []).join(', '),
     frases_emblematicas_extraidas: (toneData?.frases_emblematicas_extraidas || []).join('\n'),
     emojis_frecuentes: (toneData?.emojis_frecuentes || []).join(' '),
+    matiz_instagram: toneData?.matices_por_red?.instagram || '',
+    matiz_tiktok: toneData?.matices_por_red?.tiktok || '',
+    matiz_youtube: toneData?.matices_por_red?.youtube || '',
+    matiz_facebook: toneData?.matices_por_red?.facebook || '',
     puntos_fuertes_para_conectar: toneData?.puntos_fuertes_para_conectar || '',
     recomendacion_pitch: toneData?.recomendacion_pitch || '',
   };
@@ -121,6 +131,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         vocabulario_clave: partirLista(draft.vocabulario_clave, /[,\n]/),
         frases_emblematicas_extraidas: partirLista(draft.frases_emblematicas_extraidas, /\n/),
         emojis_frecuentes: partirLista(draft.emojis_frecuentes, /[\s,]+/),
+        matices_por_red: {
+          instagram: draft.matiz_instagram.trim(),
+          tiktok: draft.matiz_tiktok.trim(),
+          youtube: draft.matiz_youtube.trim(),
+          facebook: draft.matiz_facebook.trim(),
+        },
         puntos_fuertes_para_conectar: draft.puntos_fuertes_para_conectar.trim(),
         recomendacion_pitch: draft.recomendacion_pitch.trim(),
       };
@@ -278,6 +294,36 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               />
             </div>
 
+            <div className="space-y-2">
+              <label className={labelClass}>Matices de tono por red (no hablan igual en todas)</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <input
+                  className={inputClass}
+                  value={draft.matiz_instagram}
+                  onChange={(e) => setDraft({ ...draft, matiz_instagram: e.target.value })}
+                  placeholder="Instagram: igual que el tono general..."
+                />
+                <input
+                  className={inputClass}
+                  value={draft.matiz_tiktok}
+                  onChange={(e) => setDraft({ ...draft, matiz_tiktok: e.target.value })}
+                  placeholder="TikTok: más gamberro y directo..."
+                />
+                <input
+                  className={inputClass}
+                  value={draft.matiz_youtube}
+                  onChange={(e) => setDraft({ ...draft, matiz_youtube: e.target.value })}
+                  placeholder="YouTube: más explicativo..."
+                />
+                <input
+                  className={inputClass}
+                  value={draft.matiz_facebook}
+                  onChange={(e) => setDraft({ ...draft, matiz_facebook: e.target.value })}
+                  placeholder="Facebook: más institucional..."
+                />
+              </div>
+            </div>
+
             <div>
               <label className={labelClass}>Expresiones reales suyas (una por línea)</label>
               <textarea
@@ -399,6 +445,29 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                         "{quote}"
                       </p>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Per-platform tone nuances: el tono no es idéntico en todas las redes. */}
+              {toneData.matices_por_red && Object.values(toneData.matices_por_red).some((v) => v && v.trim()) && (
+                <div className="pt-1.5 border-t border-neutral-800 space-y-1.5">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-400/90 block">
+                    🎚️ Matices de tono según la red:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                    {([
+                      ['instagram', 'Instagram'],
+                      ['tiktok', 'TikTok'],
+                      ['youtube', 'YouTube'],
+                      ['facebook', 'Facebook'],
+                    ] as const).map(([key, label]) =>
+                      toneData.matices_por_red?.[key] ? (
+                        <p key={key} className="text-[10px] font-mono text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60">
+                          <span className="text-sky-400 font-bold">{label}:</span> {toneData.matices_por_red[key]}
+                        </p>
+                      ) : null
+                    )}
                   </div>
                 </div>
               )}
