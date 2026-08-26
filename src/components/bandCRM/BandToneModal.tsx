@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
-import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle } from 'lucide-react';
+import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { apiFetch } from '../../utils/api';
 
@@ -184,6 +184,15 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-1.5">
+            {editable && !isLoading && toneData && !isEditing && (
+              <button
+                onClick={onReAnalyze}
+                className="p-1.5 hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer text-neutral-400 hover:text-amber-400"
+                title="Volver a rastrear redes con IA (sustituye lo que haya, incluidas ediciones a mano)"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            )}
             {editable && !isLoading && toneData && !isEditing && (
               <button
                 onClick={handleStartEdit}

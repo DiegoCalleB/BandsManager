@@ -165,6 +165,18 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
     if (p.toneVocabulary.length) lineas.push(`- Vocabulario propio: ${p.toneVocabulary.join(", ")}`);
     if (p.tonePhrases.length) lineas.push(`- Expresiones reales suyas: ${p.tonePhrases.map((f) => `"${f}"`).join(" | ")}`);
     if (p.toneEmojis.length) lineas.push(`- Emojis que usan: ${p.toneEmojis.join(" ")}`);
+    lineas.push("");
+    lineas.push("ESTE ADN DE VOZ MANDA SOBRE CUALQUIER REGLA GENÉRICA DE REDACCIÓN QUE VENGA DESPUÉS:");
+    if (p.toneVocabulary.length) {
+      lineas.push(`- Usa de verdad varias de esas palabras (${p.toneVocabulary.slice(0, 4).join(", ")}...) en el copy y el hookText, no las dejes solo como referencia.`);
+    }
+    if (p.tonePhrases.length) {
+      lineas.push(`- Si alguna expresión real suya encaja de forma natural, cuélala tal cual, entre comillas si hace falta.`);
+    }
+    if (p.toneEmojis.length) {
+      lineas.push(`- Usa emojis DE ESA LISTA (${p.toneEmojis.join(" ")}) en vez de otros genéricos, y en la cantidad que ellos usarían de verdad, aunque eso choque con un tope genérico de emojis.`);
+    }
+    lineas.push(`- El tono y el nivel de energía de arriba pesan más que cualquier plantilla de estilo genérica: que se note en cómo suena el texto, no en una redacción neutra e intercambiable con la de otra banda.`);
   }
 
   lineas.push("");
