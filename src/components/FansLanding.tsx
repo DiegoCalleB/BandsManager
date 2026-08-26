@@ -105,10 +105,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   // Si se solicita previsualizar directamente la pantalla de éxito
   useEffect(() => {
     if (isPreview && previewView === 'success') {
+      // La previsualización debe reflejar lo que el fan verá de verdad: si la banda no ha
+      // rellenado descarga/cupón en el apartado QR, aquí tampoco se inventan (antes se colaban
+      // los valores de Bakandeya y la banda creía tener un incentivo configurado).
       const inc = previewConfig?.incentivoFans || {
-        mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!',
-        enlaceDescarga: 'https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3',
-        codigoDescuento: 'BAKANDEYA-FAN-10'
+        mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!'
       };
       setSuccessData({
         success: true,
@@ -761,9 +762,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setTimeout(() => {
         setLoading(false);
         const inc = previewConfig?.incentivoFans || {
-          mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!',
-          enlaceDescarga: 'https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3',
-          codigoDescuento: 'BAKANDEYA-FAN-10'
+          mensajeAgradecimiento: '¡Gracias por unirte a nuestra comunidad oficial!'
         };
         setSuccessData({
           success: true,
@@ -807,6 +806,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
   if (successData) {
     const incentivo = successData.incentivo || {};
+    // Solo hay bloque de beneficios si la banda ha rellenado de verdad la descarga o el cupón
+    // en el apartado QR; una cadena vacía o con espacios no cuenta como incentivo configurado.
+    const enlaceDescargaFan = safeUrl(typeof incentivo.enlaceDescarga === 'string' ? incentivo.enlaceDescarga.trim() : '');
+    const codigoDescuentoFan = typeof incentivo.codigoDescuento === 'string' ? incentivo.codigoDescuento.trim() : '';
+    const tieneBeneficios = Boolean(enlaceDescargaFan || codigoDescuentoFan);
     
     return (
       <div className={`${isPreview ? 'min-h-full p-2 sm:p-4' : 'min-h-screen p-4 pt-8 sm:items-center sm:pt-4'} bg-[#121111] flex items-start justify-center`}>
@@ -861,14 +865,14 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </p>
           </div>
 
-          {(incentivo.enlaceDescarga || incentivo.codigoDescuento) && (
+          {tieneBeneficios && (
             <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 mt-6 space-y-4">
               <h3 className="text-amber-500 font-black uppercase tracking-widest text-xs font-mono">{t('benefitsTitle')}</h3>
 
-              {safeUrl(incentivo.enlaceDescarga) && (
+              {enlaceDescargaFan && (
                 <div className="pt-2">
                   <a
-                    href={safeUrl(incentivo.enlaceDescarga)}
+                    href={enlaceDescargaFan}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-col items-center justify-center gap-2 w-full p-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 rounded-lg text-white font-mono text-xs transition-colors"
@@ -879,12 +883,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
               )}
 
-              {incentivo.codigoDescuento && (
+              {codigoDescuentoFan && (
                 <div className="pt-2">
                   <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold mb-1">{t('merchCode')}</p>
                   <div className="flex items-center justify-center gap-2 p-3 bg-neutral-900 border border-neutral-700 border-dashed rounded-lg">
                     <Tag className="w-4 h-4 text-emerald-400" />
-                    <span className="font-mono text-emerald-400 font-bold tracking-widest">{incentivo.codigoDescuento}</span>
+                    <span className="font-mono text-emerald-400 font-bold tracking-widest">{codigoDescuentoFan}</span>
                   </div>
                 </div>
               )}

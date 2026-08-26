@@ -24,6 +24,7 @@ import {
 import { EPK_LANGUAGES } from "../../src/i18n/epkTranslations.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 import { checkRecordLimit } from "../utils/planLimits.js";
+import { buildFanIncentive } from "../utils/fanIncentive.js";
 
 const router = express.Router();
 
@@ -636,13 +637,16 @@ router.post("/public/fans", async (req, res) => {
     const epkConf = getEpkConfigForBand(state, targetBandId);
     const bandName = epkConf?.contactoBooking?.nombre || (targetBandId.includes('bakandeya') ? "Bakandeya" : "la banda");
 
+    // El incentivo (descarga exclusiva / cupón de merchan) es opcional y lo configura cada banda
+    // en el apartado QR de Fans. Antes, si la banda no lo había rellenado, se devolvía un cupón
+    // inventado ("FAN-VIP-10") que la banda no podía canjear: la pantalla de éxito prometía un
+    // descuento inexistente. Ahora solo se devuelve lo que la banda haya rellenado de verdad.
+    const incentivo = buildFanIncentive(epkConf?.incentivoFans);
+
     res.json({
       success: true,
       message: `¡Registro completado con éxito! Bienvenido/a a la familia de ${bandName}.`,
-      incentivo: epkConf?.incentivoFans || {
-        mensajeAgradecimiento: "¡Muchas gracias por unirte!",
-        codigoDescuento: "FAN-VIP-10"
-      }
+      incentivo
     });
   } catch (err: any) {
     console.error("Error in public fan registration:", err);
