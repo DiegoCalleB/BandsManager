@@ -21,6 +21,8 @@ interface ReelsCenterProps {
  onDeleteMetric?: (id: string) => Promise<void>;
  bandName?: string;
  instagramHandle?: string;
+ /** El backend ya rastrea Instagram, TikTok, YouTube y Facebook: basta con tener uno configurado. */
+ hasAnySocialLink?: boolean;
 }
 
 import { 
@@ -109,7 +111,8 @@ export default function ReelsCenter({
  onUpdateMetric,
  onDeleteMetric,
  bandName,
- instagramHandle
+ instagramHandle,
+ hasAnySocialLink
 }: ReelsCenterProps) {
   // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
   const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
@@ -153,8 +156,11 @@ export default function ReelsCenter({
  // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
  // Instagram del fundador en vez de la suya propia.
  const handleAnalyzeBakandeyaTone = async () => {
-   if (!instagramHandle) {
-     alert('Configura el Instagram de tu banda en el EPK antes de analizar el tono de voz.');
+   // El backend ya rastrea Instagram, TikTok, YouTube y Facebook (lee el EPK real de la banda),
+   // así que exigir Instagram en concreto bloqueaba a cualquier banda que solo tuviera, por
+   // ejemplo, TikTok configurado.
+   if (!instagramHandle && !hasAnySocialLink) {
+     alert('Configura al menos una red social de tu banda (Instagram, TikTok, YouTube o Facebook) en el EPK antes de analizar el tono de voz.');
      return;
    }
    setIsAnalyzingBakandeyaTone(true);
