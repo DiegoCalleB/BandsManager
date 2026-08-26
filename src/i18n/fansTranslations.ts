@@ -405,8 +405,8 @@ const en: FanFormDict = {
 const it: FanFormDict = {
   officialChannel: 'Canale Ufficiale',
   joinTitle: 'Unisciti a {bandName}',
-  thanksConcertWithName: 'Grazie per essere venuto al concerto di {concertName}! 🎸',
-  thanksConcertGeneric: 'Grazie per essere venuto al concerto! 🎸',
+  thanksConcertWithName: 'Grazie per essere venuti al concerto di {concertName}! 🎸',
+  thanksConcertGeneric: 'Grazie per essere venuti al concerto! 🎸',
   thanksSupport: 'Grazie per il tuo supporto! 🎶',
   supportIntro: 'Sostienici come preferisci: **seguici direttamente sui tuoi social preferiti** oppure **ricevi le novità via email**.',
   tabFollow: '📱 Seguici sui Social',
