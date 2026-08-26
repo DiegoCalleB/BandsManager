@@ -487,11 +487,30 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
 
     if (!response) {
       console.warn("Gemini chat models failed, returning helpful quota/error message. Error details:", lastError);
-      
-      const errMessage = String(lastError?.message || lastError || "");
+
+      // generateContentWithFallback ya intentó automáticamente el failover a DeepSeek antes de
+      // llegar aquí (ver server/ai.ts): si también falló, cuelga su error por separado en
+      // '.deepSeekError' en vez de tragárselo, para poder decir la causa real de CADA proveedor
+      // en vez de repetir solo el error de Gemini como si DeepSeek ni se hubiera intentado.
+      const geminiErrObj = lastError?.geminiError ?? lastError;
+      const deepSeekErrObj = lastError?.deepSeekError;
+      const errMessage = String(geminiErrObj?.message || geminiErrObj || "");
+      const deepSeekMessage = String(deepSeekErrObj?.message || deepSeekErrObj || "");
+
       let reply = "⚠️ **Servicio de Inteligencia Artificial No Disponible Temporalmente**\n\n";
-      
-      if (errMessage.includes("quota") || errMessage.includes("exhausted") || errMessage.includes("429") || errMessage.includes("limit")) {
+
+      const geminiQuota = /quota|exhausted|429|limit/i.test(errMessage);
+      const deepSeekSinSaldo = /insufficient balance|402/i.test(deepSeekMessage);
+
+      if (geminiQuota && deepSeekErrObj) {
+        reply += `Se ha agotado la cuota de Google Gemini **y** el intento automático de failover a DeepSeek también ha fallado, así que ahora mismo no hay ningún proveedor de IA disponible.\n\n` +
+                 `**Gemini:** límite de peticiones alcanzado (Quota Exceeded / Rate Limit).\n` +
+                 `**DeepSeek:** ${deepSeekSinSaldo ? 'sin saldo en la cuenta (Error 402 Insufficient Balance).' : `\`${deepSeekMessage}\``}\n\n` +
+                 `**Cómo solucionarlo:**\n` +
+                 `1. **Recarga saldo en DeepSeek** (recomendado, muy barato ~0,14 € / 1000 peticiones): [platform.deepseek.com](https://platform.deepseek.com/).\n` +
+                 `2. **O usa tu propia clave de Google AI Studio**: créala en [aistudio.google.com](https://aistudio.google.com/) y ponla como \`GEMINI_API_KEY\` en las variables de entorno (1.500 peticiones/día gratis).\n\n` +
+                 `*Nota: Todas las demás funciones del panel (Supabase, gestión de salas, agenda de ensayos y gestión de propuestas) siguen funcionando con normalidad.*`;
+      } else if (geminiQuota) {
         reply += `El límite de peticiones de Google Gemini para la clave actual se ha alcanzado (Error: Quota Exceeded / Rate Limit).\n\n` +
                  `**Explicación y Solución:**\n` +
                  `1. **Clave compartida por defecto**: El entorno de vista previa utiliza una clave gratuita con un límite estricto de **20 peticiones al día por proyecto** (\`GenerateRequestsPerDay-FreeTier\`).\n` +

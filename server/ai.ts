@@ -190,6 +190,7 @@ export async function generateContentWithFallback(
     : FALLBACK_MODELS;
 
   let lastError: any = null;
+  let deepSeekError: any = null;
 
   for (const modelName of modelsToTry) {
     try {
@@ -219,7 +220,12 @@ export async function generateContentWithFallback(
   if (promptText && getDeepSeekKey()) {
     try {
       console.log("[AI Engine] Activando failover automático a DeepSeek V3 por fallo/cuota en Gemini...");
-      const text = await callDeepSeek({ prompt: promptText, temperature: params.config?.temperature, timeoutMs: params.timeoutMs });
+      const text = await callDeepSeek({
+        prompt: promptText,
+        systemPrompt: params.config?.systemInstruction,
+        temperature: params.config?.temperature,
+        timeoutMs: params.timeoutMs
+      });
       if (text) {
         return {
           text,
@@ -227,6 +233,7 @@ export async function generateContentWithFallback(
         };
       }
     } catch (dsErr: any) {
+      deepSeekError = dsErr;
       console.warn("[AI Engine] Falló también fallback a DeepSeek:", dsErr.message);
     }
   }
@@ -243,9 +250,17 @@ export async function generateContentWithFallback(
     };
   }
 
-  throw lastError instanceof Error
+  // Si Gemini Y el failover a DeepSeek han fallado los dos, relanzar solo el error de Gemini
+  // (como antes) escondía que DeepSeek también se había intentado y por qué: quien recibe el
+  // error (server/routes/chat.ts) no podía distinguir "solo falló Gemini" de "fallaron los dos
+  // proveedores por motivos distintos" (ej. cuota de Gemini + sin saldo en DeepSeek). Se adjuntan
+  // ambos errores por separado para que el mensaje al usuario pueda nombrar la causa real de cada uno.
+  const finalError: any = lastError instanceof Error
     ? lastError
-    : new Error("Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas.");
+    : new Error(String(lastError || "Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas."));
+  finalError.geminiError = lastError;
+  finalError.deepSeekError = deepSeekError;
+  throw finalError;
 }
 
 export interface PitchLinks {
