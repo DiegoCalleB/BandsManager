@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
-import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake } from 'lucide-react';
+import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
+import { apiFetch } from '../../utils/api';
 
 export interface ToneAnalysisData {
   nombre_entidad?: string;
@@ -19,6 +20,38 @@ export interface ToneAnalysisData {
   pitch_personalizado_ejemplo?: string;
 }
 
+/** Borrador de edición manual: los campos de lista se editan como texto y se parten al guardar. */
+interface ToneDraft {
+  tono_comunicacion: string;
+  tratamiento_habitual: string;
+  nivel_energia: string;
+  vocabulario_clave: string;
+  frases_emblematicas_extraidas: string;
+  emojis_frecuentes: string;
+  puntos_fuertes_para_conectar: string;
+  recomendacion_pitch: string;
+}
+
+function toDraft(toneData: ToneAnalysisData | null): ToneDraft {
+  return {
+    tono_comunicacion: toneData?.tono_comunicacion || '',
+    tratamiento_habitual: toneData?.tratamiento_habitual || '',
+    nivel_energia: toneData?.nivel_energia || '',
+    vocabulario_clave: (toneData?.vocabulario_clave || []).join(', '),
+    frases_emblematicas_extraidas: (toneData?.frases_emblematicas_extraidas || []).join('\n'),
+    emojis_frecuentes: (toneData?.emojis_frecuentes || []).join(' '),
+    puntos_fuertes_para_conectar: toneData?.puntos_fuertes_para_conectar || '',
+    recomendacion_pitch: toneData?.recomendacion_pitch || '',
+  };
+}
+
+function partirLista(texto: string, separador: RegExp): string[] {
+  return texto
+    .split(separador)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 interface BandToneModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,8 +61,15 @@ interface BandToneModalProps {
   isLoading: boolean;
   /** Si el backend confirmó que este análisis quedó guardado de forma permanente (Supabase). */
   isSaved?: boolean;
+  /**
+   * Solo la banda EMISORA (la propia) se puede editar a mano: un contacto de booking del CRM
+   * usa otro destino de guardado (band_contacts) que este modal no toca.
+   */
+  editable?: boolean;
   onReAnalyze: () => void;
   onUseTailoredPitch?: (text: string) => void;
+  /** Se llama tras guardar una edición manual, con el ADN ya actualizado. */
+  onSaved?: (data: ToneAnalysisData) => void;
 }
 
 export const BandToneModal: React.FC<BandToneModalProps> = ({
@@ -40,10 +80,16 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   toneData,
   isLoading,
   isSaved,
+  editable = false,
   onReAnalyze,
-  onUseTailoredPitch
+  onUseTailoredPitch,
+  onSaved
 }) => {
   const [copied, setCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState<ToneDraft>(() => toDraft(toneData));
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   if (!isOpen || !band) return null;
 
@@ -52,6 +98,58 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
+
+  const handleStartEdit = () => {
+    setDraft(toDraft(toneData));
+    setSaveError(null);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setSaveError(null);
+  };
+
+  const handleSaveEdit = async () => {
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      const cambios = {
+        tono_comunicacion: draft.tono_comunicacion.trim(),
+        tratamiento_habitual: draft.tratamiento_habitual.trim(),
+        nivel_energia: draft.nivel_energia.trim(),
+        vocabulario_clave: partirLista(draft.vocabulario_clave, /[,\n]/),
+        frases_emblematicas_extraidas: partirLista(draft.frases_emblematicas_extraidas, /\n/),
+        emojis_frecuentes: partirLista(draft.emojis_frecuentes, /[\s,]+/),
+        puntos_fuertes_para_conectar: draft.puntos_fuertes_para_conectar.trim(),
+        recomendacion_pitch: draft.recomendacion_pitch.trim(),
+      };
+      const res = await apiFetch('/api/bands/tone-dna', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cambios)
+      });
+      const json = res as any;
+      if (json?.success && json.data) {
+        onSaved?.(json.data);
+        setIsEditing(false);
+      } else {
+        setSaveError(json?.error || 'No se pudo guardar la edición.');
+      }
+    } catch (err: any) {
+      console.error('Error guardando edición del ADN de tono:', err);
+      setSaveError(err?.message || 'Error de conexión al guardar.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const inputClass = `w-full p-2 rounded-lg font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${
+    isStitchLight
+      ? 'bg-white border border-slate-200 text-slate-800'
+      : 'bg-black/40 border border-neutral-800 text-neutral-100'
+  }`;
+  const labelClass = 'text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-400 block mb-1';
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -72,7 +170,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <p className="text-[10px] text-neutral-400 font-mono">
                 Rastreo IA Grounding de redes sociales y notas de prensa oficiales
               </p>
-              {!isLoading && toneData && isSaved !== undefined && (
+              {!isLoading && toneData && !isEditing && isSaved !== undefined && (
                 isSaved ? (
                   <p className="text-[10px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5">
                     <Check className="w-3 h-3" /> Guardado: la IA usará este tono en tus próximos Reels, Shorts y TikToks
@@ -85,12 +183,23 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               )}
             </div>
           </div>
-          <button 
-            onClick={onClose}
-            className="p-1 hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5 text-neutral-400" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            {editable && !isLoading && toneData && !isEditing && (
+              <button
+                onClick={handleStartEdit}
+                className="p-1.5 hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer text-neutral-400 hover:text-amber-400"
+                title="Editar a mano"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5 text-neutral-400" />
+            </button>
+          </div>
         </div>
 
         {/* Loading State */}
@@ -106,6 +215,110 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <p className="text-[10px] text-neutral-400 font-mono max-w-md">
                 Analizando publicaciones de Instagram, TikTok, estilo de comunicación, muletillas y tono de voz con Gemini Search Grounding...
               </p>
+            </div>
+          </div>
+        ) : isEditing ? (
+          <div className="space-y-3.5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+              <div>
+                <label className={labelClass}>Tono General</label>
+                <input
+                  className={inputClass}
+                  value={draft.tono_comunicacion}
+                  onChange={(e) => setDraft({ ...draft, tono_comunicacion: e.target.value })}
+                  placeholder="Cercano, directo, gamberro..."
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Tratamiento</label>
+                <input
+                  className={inputClass}
+                  value={draft.tratamiento_habitual}
+                  onChange={(e) => setDraft({ ...draft, tratamiento_habitual: e.target.value })}
+                  placeholder="Tú / Vosotros..."
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Nivel de Energía</label>
+                <input
+                  className={inputClass}
+                  value={draft.nivel_energia}
+                  onChange={(e) => setDraft({ ...draft, nivel_energia: e.target.value })}
+                  placeholder="Alta / Explosiva..."
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className={labelClass}>Vocabulario Clave & Muletillas (separadas por comas)</label>
+              <input
+                className={inputClass}
+                value={draft.vocabulario_clave}
+                onChange={(e) => setDraft({ ...draft, vocabulario_clave: e.target.value })}
+                placeholder="familia, pogo, aúpa..."
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>Emojis que usáis (separados por espacios)</label>
+              <input
+                className={inputClass}
+                value={draft.emojis_frecuentes}
+                onChange={(e) => setDraft({ ...draft, emojis_frecuentes: e.target.value })}
+                placeholder="🔥 ⚡ 🎷"
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>Expresiones reales suyas (una por línea)</label>
+              <textarea
+                rows={3}
+                className={inputClass}
+                value={draft.frases_emblematicas_extraidas}
+                onChange={(e) => setDraft({ ...draft, frases_emblematicas_extraidas: e.target.value })}
+                placeholder={'nos vemos en las trincheras\naúpa familia'}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>Punto de Conexión</label>
+              <textarea
+                rows={2}
+                className={inputClass}
+                value={draft.puntos_fuertes_para_conectar}
+                onChange={(e) => setDraft({ ...draft, puntos_fuertes_para_conectar: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className={labelClass}>Recomendación de Contacto</label>
+              <textarea
+                rows={2}
+                className={inputClass}
+                value={draft.recomendacion_pitch}
+                onChange={(e) => setDraft({ ...draft, recomendacion_pitch: e.target.value })}
+              />
+            </div>
+
+            {saveError && (
+              <p className="text-[10px] font-mono text-red-400">{saveError}</p>
+            )}
+
+            <div className="flex items-center gap-2 pt-1">
+              <button
+                onClick={handleSaveEdit}
+                disabled={isSaving}
+                className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+              >
+                <Save className="w-3.5 h-3.5" /> {isSaving ? 'Guardando...' : 'Guardar cambios'}
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                disabled={isSaving}
+                className="py-2.5 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 disabled:opacity-50 text-neutral-300 font-mono font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all"
+              >
+                <XCircle className="w-3.5 h-3.5" /> Cancelar
+              </button>
             </div>
           </div>
         ) : toneData ? (
@@ -153,7 +366,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
               <div className="flex flex-wrap gap-1.5">
                 {toneData.vocabulario_clave && toneData.vocabulario_clave.length > 0 ? (
                   toneData.vocabulario_clave.map((word, idx) => (
-                    <span 
+                    <span
                       key={idx}
                       className="px-2 py-1 rounded-md text-[10px] font-mono bg-amber-500/10 text-amber-300 border border-amber-500/20"
                     >

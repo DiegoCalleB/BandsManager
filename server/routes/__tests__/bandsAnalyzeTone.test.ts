@@ -34,6 +34,10 @@ vi.mock('../../db.js', () => ({
     guardadoEnSupabase.set(bandId, dna);
     return true;
   },
+  dbGetRegisteredBandById: async (bandId: string) => ({
+    nombre_banda: 'Ruta 66',
+    dna_expresion: guardadoEnSupabase.get(bandId) || null,
+  }),
 }));
 
 const promptsVistos: string[] = [];
@@ -67,6 +71,20 @@ async function post(ruta: string, cuerpo: any) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(cuerpo),
   });
+  return { status: res.status, body: await res.json() };
+}
+
+async function patch(ruta: string, cuerpo: any) {
+  const res = await realFetch(`http://127.0.0.1:${puerto}${ruta}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(cuerpo),
+  });
+  return { status: res.status, body: await res.json() };
+}
+
+async function get(ruta: string) {
+  const res = await realFetch(`http://127.0.0.1:${puerto}${ruta}`);
   return { status: res.status, body: await res.json() };
 }
 
@@ -112,5 +130,69 @@ describe('POST /api/bands/analyze-tone', () => {
 
     expect(body.savedPermanently).toBe(false);
     expect(guardadoEnSupabase.size).toBe(0);
+  });
+});
+
+describe('GET /api/bands/tone-dna', () => {
+  it('sin análisis guardado devuelve null en vez de un objeto vacío inventado', async () => {
+    const { status, body } = await get('/api/bands/tone-dna');
+    expect(status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(body.data).toBeNull();
+  });
+
+  it('devuelve el ADN ya guardado de la banda de la sesión', async () => {
+    await post('/api/bands/analyze-tone', { nombre_entidad: 'Ruta 66', is_sender: true });
+    const { body } = await get('/api/bands/tone-dna');
+    expect(body.data?.tono_comunicacion).toBe('Directo y gamberro');
+  });
+});
+
+describe('PATCH /api/bands/tone-dna', () => {
+  it('el usuario puede corregir a mano el tono que sacó la IA', async () => {
+    await post('/api/bands/analyze-tone', { nombre_entidad: 'Ruta 66', is_sender: true });
+
+    const { status, body } = await patch('/api/bands/tone-dna', {
+      tono_comunicacion: 'Cercano y con humor negro',
+      vocabulario_clave: ['familia', 'pogo', 'familia'],
+      emojis_frecuentes: ['🔥', '⚡'],
+    });
+
+    expect(status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(body.data.tono_comunicacion).toBe('Cercano y con humor negro');
+    expect(body.data.vocabulario_clave).toEqual(['familia', 'pogo']);
+    expect(guardadoEnSupabase.get('band-ruta-66')?.tono_comunicacion).toBe('Cercano y con humor negro');
+  });
+
+  it('una edición parcial no borra los campos que no se tocan', async () => {
+    await post('/api/bands/analyze-tone', { nombre_entidad: 'Ruta 66', is_sender: true });
+
+    const { body } = await patch('/api/bands/tone-dna', { nivel_energia: 'Media, de tarde de domingo' });
+
+    expect(body.data.nivel_energia).toBe('Media, de tarde de domingo');
+    expect(body.data.tono_comunicacion).toBe('Directo y gamberro');
+    expect(body.data.vocabulario_clave).toEqual(['pogo', 'familia']);
+  });
+
+  it('se puede editar a mano aunque todavía no exista ningún análisis previo', async () => {
+    const { status, body } = await patch('/api/bands/tone-dna', {
+      tono_comunicacion: 'Escrito a mano, sin pasar por la IA',
+    });
+
+    expect(status).toBe(200);
+    expect(body.data.tono_comunicacion).toBe('Escrito a mano, sin pasar por la IA');
+  });
+
+  it('ignora campos que no están en la lista de editables', async () => {
+    const { body } = await patch('/api/bands/tone-dna', {
+      es_emisor: false,
+      nombre_entidad: 'Otro Nombre',
+      tono_comunicacion: 'Válido',
+    });
+
+    expect(body.data.tono_comunicacion).toBe('Válido');
+    expect(body.data.es_emisor).toBeUndefined();
+    expect(body.data.nombre_entidad).toBeUndefined();
   });
 });
