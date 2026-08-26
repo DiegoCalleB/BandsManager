@@ -14,3 +14,4 @@ bun.lock
 # Caché local de estado (server/state.ts) - espejo de Supabase con datos reales de
 # producción (emails, teléfonos de contacto de bandas/salas). Nunca debe versionarse.
 data.json
+public/clips/

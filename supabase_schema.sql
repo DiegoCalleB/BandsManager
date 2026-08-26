@@ -512,3 +512,34 @@ CREATE TABLE IF NOT EXISTS band_email_accounts (
 ALTER TABLE band_email_accounts ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON band_email_accounts FOR ALL USING (true);
 
+
+-- Análisis de highlights del generador de Reels (server/routes/reels.ts). Antes vivía solo en
+-- el estado de React: al recargar la página, o simplemente al cerrar la pestaña, se perdían los
+-- clips sugeridos, el mapa de energía del audio y los copies ya escritos, y para volver a verlos
+-- había que pagar otra llamada a Gemini. Una fila por banda+vídeo: volver a analizar el mismo
+-- vídeo actualiza la fila en vez de acumular duplicados.
+CREATE TABLE IF NOT EXISTS reel_analyses (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  -- Id de YouTube, o una clave sintética "file:nombre-tamaño" para vídeos subidos como archivo
+  -- (que no llegan al servidor, así que solo sirve para reconocer si es "el mismo" al reabrirlo).
+  video_key TEXT NOT NULL,
+  source_type TEXT NOT NULL DEFAULT 'youtube', -- 'youtube' | 'file'
+  source_url TEXT DEFAULT '',
+  video_title TEXT DEFAULT '',
+  video_duration INTEGER DEFAULT 0,
+  target_duration INTEGER DEFAULT 30,
+  highlights JSONB NOT NULL DEFAULT '[]'::jsonb,
+  optimal_time JSONB DEFAULT '{}'::jsonb,
+  energy_windows JSONB DEFAULT '[]'::jsonb,
+  video_meta JSONB DEFAULT '{}'::jsonb,
+  generated_by_ai BOOLEAN DEFAULT false,
+  notice TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(band_id, video_key)
+);
+CREATE INDEX IF NOT EXISTS idx_reel_analyses_band_video ON reel_analyses(band_id, video_key);
+
+ALTER TABLE reel_analyses ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON reel_analyses FOR ALL USING (true);

@@ -34,6 +34,25 @@ import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
 export type { ReelCard, HighlightClip, OptimalTime };
 
+export interface YoutubeVideoMeta {
+ videoId: string;
+ title: string;
+ author: string;
+ duration: number;
+ durationKnown: boolean;
+ thumbnail: string;
+ hasTranscript: boolean;
+ transcriptLines: number;
+ isLive?: boolean;
+}
+
+/** Clave estable para un archivo local: no sube el vídeo, solo permite reconocerlo si se
+ * vuelve a abrir el mismo (mismo nombre y tamaño) para recuperar su análisis guardado. */
+function videoKeyDeArchivo(file: { name: string; size: number } | null): string | undefined {
+ if (!file) return undefined;
+ return `file:${file.name}-${file.size}`;
+}
+
 function parseRangeTimes(rangeStr?: string) {
  if (!rangeStr) return { start: 0, end: 0, duration: 0 };
  const parts = rangeStr.split('-');
@@ -84,6 +103,10 @@ export default function ReelsCenter({
   // Tabs: 'pipeline' (existing Kanban + Writer) vs 'analyzer' (new AI Video Highlight Extractor)
   const [activeTab, setActiveTab] = useState<'pipeline' | 'analyzer'>('pipeline');
 
+  // Esta pantalla estaba llena de "Bakandeya" a pelo, así que cualquier otra banda veía por
+  // todas partes el nombre de la banda del fundador en vez del suyo.
+  const nombreBanda = (bandName || '').trim() || 'tu banda';
+
  // Band Tone Analysis State
  const [isBakandeyaToneModalOpen, setIsBakandeyaToneModalOpen] = useState(false);
  const [bakandeyaToneData, setBakandeyaToneData] = useState<ToneAnalysisData | null>(null);
@@ -112,8 +135,8 @@ export default function ReelsCenter({
          is_sender: true
        })
      });
-     const json = await res.json();
-     if (json.success && json.data) {
+     const json = res as any;
+     if (json?.success && json.data) {
        setBakandeyaToneData(json.data);
      }
    } catch (err) {
@@ -165,11 +188,35 @@ export default function ReelsCenter({
  const [dragActive, setDragActive] = useState(false);
  const [selectedFile, setSelectedFile] = useState<{ name: string; size: number } | null>(null);
  const [localVideoUrl, setLocalVideoUrl] = useState<string | null>(null);
+ // Duración real del archivo subido. Sin ella, al analizar un vídeo local el backend
+ // trabajaba a ciegas y repartía los cortes sobre una duración inventada.
+ const [localVideoDuration, setLocalVideoDuration] = useState<number>(0);
  const [isPreviewMuted, setIsPreviewMuted] = useState(true);
  const [isExpandedPreview, setIsExpandedPreview] = useState(false);
  const [videoTopic, setVideoTopic] = useState('');
+ // Duración objetivo del CLIP que queremos sacar (15/30/60), no la del vídeo de origen.
  const [videoDuration, setVideoDuration] = useState(30);
  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+ // Ficha real del vídeo de YouTube. Antes la línea de tiempo asumía siempre 120 s, así que
+ // en un directo de 40 minutos los marcadores no se correspondían con nada.
+ const [videoMeta, setVideoMeta] = useState<YoutubeVideoMeta | null>(null);
+ const [isFetchingMeta, setIsFetchingMeta] = useState(false);
+ const [metaError, setMetaError] = useState<string | null>(null);
+ const [analysisNotice, setAnalysisNotice] = useState<string | null>(null);
+ // Tramos con más volumen medidos en el audio real. Es lo que permite acertar en material
+ // instrumental, donde no hay transcripción de la que tirar.
+ const [energyWindows, setEnergyWindows] = useState<Array<{ start: number; end: number; score: number }>>([]);
+ // Versión con el desglose por señal (volumen / arranque / ritmo visual). Cuando el backend
+ // no llega a calcularla (p.ej. sin yt-dlp para leer el audio en streaming) se cae a
+ // energyWindows, que solo trae el score combinado.
+ const [viralWindows, setViralWindows] = useState<Array<{
+ start: number; end: number; energia: number; arranque: number; dinamismo: number; score: number; motivo: string;
+ }>>([]);
+
+ // Opciones de renderizado del clip físico
+ const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
+ const [burnSubtitles, setBurnSubtitles] = useState(false);
  const [loadingStep, setLoadingStep] = useState(0);
  const [analysisError, setAnalysisError] = useState<string | null>(null);
  
@@ -192,6 +239,114 @@ export default function ReelsCenter({
  const [cuttingProgressText, setCuttingProgressText] = useState('');
  const [cuttingError, setCuttingError] = useState<string | null>(null);
  const [sinTranscripcionReal, setSinTranscripcionReal] = useState<boolean>(false);
+ const [renderedClipSize, setRenderedClipSize] = useState<number>(0);
+ const [renderedBurnedSubs, setRenderedBurnedSubs] = useState<boolean>(false);
+ // Si el clip se subió a Supabase Storage sobrevive a un redeploy; si no, solo vive en el
+ // disco del servidor hasta el próximo despliegue.
+ const [renderedStoredPermanently, setRenderedStoredPermanently] = useState<boolean>(false);
+ // Cuándo se guardó el análisis que se está viendo, si viene recuperado de la BD en vez de
+ // recién calculado. null cuando el análisis en pantalla es fresco (o no hay ninguno).
+ const [loadedFromSaveAt, setLoadedFromSaveAt] = useState<string | null>(null);
+ // Cómo está grabado el material: cambia qué busca la IA y cómo titula. 'auto' deja que el
+ // servidor lo adivine del título/descripción reales; el usuario puede fijarlo a mano.
+ const [contentType, setContentType] = useState<'auto' | 'concierto' | 'videoclip' | 'ensayo'>('auto');
+ const [detectedContentType, setDetectedContentType] = useState<string | null>(null);
+
+ // Al escribir/pegar una URL de YouTube pedimos su ficha real (título, duración, canal,
+ // si tiene subtítulos). Sin esto trabajábamos a ciegas y la línea de tiempo mentía.
+ useEffect(() => {
+ const videoId = getYouTubeId(youtubeUrl);
+ if (inputType !== 'youtube' || !videoId) {
+ setVideoMeta(null);
+ setMetaError(null);
+ setIsFetchingMeta(false);
+ return;
+ }
+
+ if (videoMeta && videoMeta.videoId === videoId) return;
+
+ let cancelado = false;
+ setIsFetchingMeta(true);
+ setMetaError(null);
+
+ const temporizador = setTimeout(async () => {
+ try {
+ const data = await apiFetch<any>(`/api/youtube-meta?url=${encodeURIComponent(youtubeUrl)}`);
+ if (cancelado) return;
+ if (data?.success && data.meta) {
+ setVideoMeta(data.meta as YoutubeVideoMeta);
+ // Rellenamos el contexto con el título real en vez del texto genérico de relleno.
+ setVideoTopic(prev => prev.trim() ? prev : (data.meta.title || prev));
+
+ // Si este vídeo ya se analizó antes, recuperamos ese análisis en vez de dejar la
+ // pantalla vacía hasta que el usuario pulse "Analizar" (y sin gastar otra llamada a
+ // Gemini). Solo si no hay ya algo en pantalla: nunca se pisa un análisis en curso.
+ try {
+ const guardado = await apiFetch<any>(`/api/reel-analysis?youtubeUrl=${encodeURIComponent(youtubeUrl)}`);
+ if (!cancelado && guardado?.success && guardado.found) {
+ setHighlights(prev => {
+ if (prev.length > 0) return prev;
+ setSelectedHighlightIndex(0);
+ setEditedCopy(guardado.highlights?.[0]?.recommendedCopy || '');
+ setOptimalTime(guardado.optimalTime || null);
+ setEnergyWindows(Array.isArray(guardado.energyWindows) ? guardado.energyWindows : []);
+ setViralWindows(Array.isArray(guardado.videoMeta?.viralWindows) ? guardado.videoMeta.viralWindows : []);
+ setDetectedContentType(guardado.videoMeta?.contentType || null);
+ setLoadedFromSaveAt(guardado.savedAt || new Date().toISOString());
+ return guardado.highlights || [];
+ });
+ }
+ } catch (err) {
+ // Recuperar el análisis guardado es una comodidad: si falla, simplemente no aparece
+ // y el flujo normal de "pegar URL y Analizar" sigue funcionando igual.
+ console.warn('No se pudo recuperar un análisis guardado:', err);
+ }
+ } else {
+ setMetaError(data?.error || 'No se pudo leer la ficha del vídeo.');
+ }
+ } catch (err: any) {
+ if (!cancelado) setMetaError(err?.message || 'No se pudo leer la ficha del vídeo.');
+ } finally {
+ if (!cancelado) setIsFetchingMeta(false);
+ }
+ }, 600);
+
+ return () => {
+ cancelado = true;
+ clearTimeout(temporizador);
+ };
+ // videoMeta queda fuera a propósito: solo se relee cuando cambia la URL o el tipo de entrada.
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [youtubeUrl, inputType]);
+
+ // Al salir del centro de Reels hay que soltar los blobs: sin esto, el vídeo local y el clip
+ // renderizado se quedaban retenidos en memoria hasta recargar la página entera.
+ const urlsVivas = React.useRef<{ local: string | null; clip: string | null; subs: string | null }>({
+ local: null, clip: null, subs: null
+ });
+
+ useEffect(() => {
+ urlsVivas.current = { local: localVideoUrl, clip: renderedClipUrl, subs: renderedSubUrl };
+ }, [localVideoUrl, renderedClipUrl, renderedSubUrl]);
+
+ useEffect(() => {
+ return () => {
+ for (const url of Object.values(urlsVivas.current)) {
+ if (url && url.startsWith('blob:')) {
+ try { URL.revokeObjectURL(url); } catch (err) { /* ya revocado */ }
+ }
+ }
+ };
+ }, []);
+
+ /** Duración de referencia para la línea de tiempo: la real si la conocemos. */
+ const timelineDuration = React.useMemo(() => {
+ if (inputType === 'file' && localVideoDuration > 0) return localVideoDuration;
+ if (videoMeta?.durationKnown && videoMeta.duration > 0) return videoMeta.duration;
+ const clip = highlights[selectedHighlightIndex];
+ const { end } = parseRangeTimes(clip?.range);
+ return Math.max(120, end + 30);
+ }, [videoMeta, highlights, selectedHighlightIndex, inputType, localVideoDuration]);
 
  // Clip Re-analysis states
  const [clipUserNote, setClipUserNote] = useState<string>('');
@@ -218,13 +373,18 @@ export default function ReelsCenter({
  start,
  duration,
  userNotes: clipUserNote,
- currentTitle: activeClip.title
+ currentTitle: activeClip.title,
+ // Para que el highlight reanalizado se actualice también en lo que ya se guardó en BD,
+ // no solo en la pantalla actual.
+ highlightId: activeClip.id,
+ videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
+ contentType: contentType !== 'auto' ? contentType : (detectedContentType || undefined)
  })
  });
 
- const data = await response.json();
- if (data.success && data.analysis) {
- const { title, reason, recommendedCopy, hashtags, energyLevel, confidence } = data.analysis;
+ const data = response as any;
+ if (data?.success && data.analysis) {
+ const { title, reason, recommendedCopy, hashtags, energyLevel, confidence, hookText, copyTikTok, cta } = data.analysis;
 
  setHighlights(prev => prev.map((clip, idx) => {
  if (idx === selectedHighlightIndex) {
@@ -235,7 +395,10 @@ export default function ReelsCenter({
  recommendedCopy: recommendedCopy || clip.recommendedCopy,
  hashtags: hashtags || clip.hashtags,
  energyLevel: energyLevel || clip.energyLevel,
- confidence: confidence || clip.confidence
+ confidence: confidence || clip.confidence,
+ hookText: hookText || clip.hookText,
+ copyTikTok: copyTikTok || clip.copyTikTok,
+ cta: cta || clip.cta
  };
  }
  return clip;
@@ -245,10 +408,14 @@ export default function ReelsCenter({
  setEditedCopy(recommendedCopy);
  }
 
- setReanalyzeSuccessMsg("¡Análisis del fragmento refinado con éxito!");
- setTimeout(() => setReanalyzeSuccessMsg(null), 4000);
+ setReanalyzeSuccessMsg(
+ data.generatedByAI === false
+ ? "Fragmento actualizado (la IA no estaba disponible: se ha usado una plantilla con tus notas)."
+ : "¡Análisis del fragmento refinado con éxito!"
+ );
+ setTimeout(() => setReanalyzeSuccessMsg(null), 5000);
  } else {
- alert(data.error ||"No se pudo reanalizar el fragmento.");
+ alert(data?.error ||"No se pudo reanalizar el fragmento.");
  }
  } catch (err) {
  console.error("Error reanalyzing clip:", err);
@@ -272,17 +439,20 @@ export default function ReelsCenter({
  const { start, duration } = parseRangeTimes(activeClip.range);
  const clipId = `reel-${selectedHighlightIndex}-${Date.now()}`;
 
- // Cycle through real steps to give perfect feedback
  const progressSteps = [
-"Iniciando descarga del stream de YouTube...",
-"Extrayendo flujo de audio y vídeo de alta calidad...",
-"Estabilizando búfer y preparando ffmpeg...",
-"Recortando fragmento con precisión de milisegundos...",
-"Aplicando filtro de encuadre vertical (9:16)...",
-"Analizando audio e indexando subtítulos de YouTube...",
-"Sincronizando offsets de palabras...",
-"Codificando vídeo y empaquetando en MP4...",
-"Finalizando renderizado físico..."
+"Descargando el vídeo de YouTube...",
+"Extrayendo la mejor pista de vídeo y audio disponible...",
+"Preparando ffmpeg...",
+`Recortando de ${formatTime(start)} a ${formatTime(start + duration)}...`,
+ cropMode === 'blur'
+ ? "Componiendo fondo desenfocado en 9:16 (no se recorta a nadie)..."
+ : cropMode === 'crop'
+ ? "Aplicando encuadre vertical 9:16..."
+ : "Manteniendo el encuadre original...",
+"Buscando la transcripción de YouTube para los subtítulos...",
+ burnSubtitles ? "Incrustando los subtítulos en la imagen..." : "Generando la pista de subtítulos (.vtt)...",
+"Codificando el MP4 final...",
+"Últimos ajustes..."
  ];
 
  let currentStep = 0;
@@ -302,16 +472,23 @@ export default function ReelsCenter({
  start,
  duration,
  clipId,
- cropVertical: true
+ cropMode,
+ burnSubtitles,
+ // Flag antiguo, por si el servidor todavía no está actualizado.
+ cropVertical: cropMode !== 'none'
  })
  });
 
  clearInterval(interval);
- if (!res.ok) throw new Error("El servidor devolvió un error al realizar el recorte.");
- 
- const data = await res.json();
- if (data.success && data.videoBase64) {
- // Revoke previous Blob URLs if existing to free memory
+
+ // apiFetch ya devuelve el JSON parseado, no una Response: llamar a res.json() aquí
+ // reventaba con "res.json is not a function" y res.ok era siempre undefined.
+ const data = res as any;
+ if (!data?.success) {
+ throw new Error(data?.error || "Error al codificar el clip de vídeo.");
+ }
+
+ // Los blobs anteriores dejan de hacer falta en cuanto llega un clip nuevo.
  if (renderedClipUrl && renderedClipUrl.startsWith('blob:')) {
  URL.revokeObjectURL(renderedClipUrl);
  }
@@ -319,8 +496,13 @@ export default function ReelsCenter({
  URL.revokeObjectURL(renderedSubUrl);
  }
 
- // Convert base64 Data URL to Blob -> ObjectURL
- const parts = data.videoBase64.split(',');
+ // El servidor sirve ahora el clip como archivo estático. El base64 se mantiene como
+ // respaldo: metía 30 MB dentro de un JSON y reventaba el límite del body.
+ let nuevaUrl: string | null = null;
+ if (data.clipUrl) {
+ nuevaUrl = String(data.clipUrl);
+ } else if (data.videoBase64) {
+ const parts = String(data.videoBase64).split(',');
  const mimeString = parts[0].split(':')[1].split(';')[0];
  const byteString = atob(parts[1]);
  const ab = new ArrayBuffer(byteString.length);
@@ -328,15 +510,20 @@ export default function ReelsCenter({
  for (let i = 0; i < byteString.length; i++) {
  ia[i] = byteString.charCodeAt(i);
  }
- const videoBlob = new Blob([ab], { type: mimeString });
- const newClipUrl = URL.createObjectURL(videoBlob);
- setRenderedClipUrl(newClipUrl);
+ nuevaUrl = URL.createObjectURL(new Blob([ab], { type: mimeString }));
+ }
 
- // Handle VTT Subtitles as Object URL
+ if (!nuevaUrl) {
+ throw new Error("El servidor no devolvió ningún clip renderizado.");
+ }
+ setRenderedClipUrl(nuevaUrl);
+ setRenderedClipSize(Number(data.fileSize) || 0);
+ setRenderedBurnedSubs(Boolean(data.burnedSubtitles));
+ setRenderedStoredPermanently(Boolean(data.storedPermanently));
+
  if (data.vttContent) {
  const vttBlob = new Blob([data.vttContent], { type: 'text/vtt' });
- const newSubUrl = URL.createObjectURL(vttBlob);
- setRenderedSubUrl(newSubUrl);
+ setRenderedSubUrl(URL.createObjectURL(vttBlob));
  } else {
  setRenderedSubUrl(null);
  }
@@ -345,13 +532,10 @@ export default function ReelsCenter({
  setWordOffsets(data.words || []);
  setSinTranscripcionReal(Boolean(data.sinTranscripcionReal));
  setIsWhisperTranscribed(false);
- setCuttingProgressText("¡Reel físico en memoria renderizado con éxito!");
- } else {
- throw new Error(data.error ||"Error al codificar el clip de vídeo.");
- }
+ setCuttingProgressText("¡Clip renderizado y listo para descargar!");
  } catch (err: any) {
  clearInterval(interval);
- setCuttingError(err.message ||"Error al renderizar el clip.");
+ setCuttingError(err?.message ||"Error al renderizar el clip.");
  } finally {
  setIsCuttingVideo(false);
  }
@@ -372,16 +556,18 @@ export default function ReelsCenter({
  const currentClip = highlights[selectedHighlightIndex];
  if (!currentClip) return;
  const { start, end } = parseRangeTimes(currentClip.range);
- const totalDuration = Math.max(120, end + 30);
+ const totalDuration = timelineDuration;
  const targetSeconds = Math.round(clickPct * totalDuration);
 
  let newStart = start;
  let newEnd = end;
 
  if (draggingBoundary === 'start') {
- newStart = Math.min(targetSeconds, end - 1);
+ newStart = Math.max(0, Math.min(targetSeconds, end - 1));
  } else if (draggingBoundary === 'end') {
- newEnd = Math.max(targetSeconds, start + 1);
+ // No dejamos arrastrar más allá del final real del vídeo: un rango imposible
+ // llegaba a ffmpeg y devolvía un recorte vacío.
+ newEnd = Math.min(totalDuration, Math.max(targetSeconds, start + 1));
  }
 
  const formatSecsToMMSS = (totalSecs: number) => {
@@ -418,16 +604,18 @@ export default function ReelsCenter({
  const currentClip = highlights[selectedHighlightIndex];
  if (!currentClip) return;
  const { start, end } = parseRangeTimes(currentClip.range);
- const totalDuration = Math.max(120, end + 30);
+ const totalDuration = timelineDuration;
  const targetSeconds = Math.round(clickPct * totalDuration);
 
  let newStart = start;
  let newEnd = end;
 
  if (draggingBoundary === 'start') {
- newStart = Math.min(targetSeconds, end - 1);
+ newStart = Math.max(0, Math.min(targetSeconds, end - 1));
  } else if (draggingBoundary === 'end') {
- newEnd = Math.max(targetSeconds, start + 1);
+ // No dejamos arrastrar más allá del final real del vídeo: un rango imposible
+ // llegaba a ffmpeg y devolvía un recorte vacío.
+ newEnd = Math.min(totalDuration, Math.max(targetSeconds, start + 1));
  }
 
  const formatSecsToMMSS = (totalSecs: number) => {
@@ -457,7 +645,7 @@ export default function ReelsCenter({
  window.removeEventListener('touchmove', handleGlobalTouchMove);
  window.removeEventListener('touchend', handleGlobalTouchEnd);
  };
- }, [draggingBoundary, highlights, selectedHighlightIndex]);
+ }, [draggingBoundary, highlights, selectedHighlightIndex, timelineDuration]);
 
  // Simulated playback time for highlight looping
  useEffect(() => {
@@ -517,32 +705,10 @@ export default function ReelsCenter({
  const [metricSuccess, setMetricSuccess] = useState('');
  const [isSyncingMetrics, setIsSyncingMetrics] = useState(false);
  const [isScanningMetrics, setIsScanningMetrics] = useState(false);
- const [realVideos, setRealVideos] = useState<any[]>([
- {
- title:"El Violín del Diablo (Ska-Reggae Live)",
- views: 5240,
- date:"2025-11-12",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- },
- {
- title:"Bakandeya - Ensayo en Trinchera Málaga",
- views: 3120,
- date:"2026-02-18",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- },
- {
- title:"Gira Bakandeya 2026 - Promo Oficial",
- views: 1850,
- date:"2026-04-05",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- },
- {
- title:"Roots Reggae Session Live in Madrid",
- views: 1420,
- date:"2026-05-20",
- link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
- }
- ]);
+ // Vídeos reales que devuelve el escaneo de métricas. Arrancaba con cuatro vídeos
+ // inventados de Bakandeya (todos apuntando al mismo enlace de relleno), que en cualquier
+ // otra banda eran datos falsos de un grupo ajeno.
+ const [realVideos, setRealVideos] = useState<any[]>([]);
 
  const handleSaveMetric = async (e: React.FormEvent) => {
  e.preventDefault();
@@ -674,20 +840,42 @@ export default function ReelsCenter({
  }
  };
 
+ // Pasos reales del backend. Los de antes describían un análisis espectral y un modelo de
+ // BPM que no existen en ningún sitio del código.
  const getLoadingSteps = () => {
  const firstStep = inputType === 'youtube'
- ?"Obteniendo flujo de audio y vídeo de YouTube..."
- :"Subiendo metraje bruto al búfer temporal seguro...";
+ ? "Leyendo la ficha del vídeo de YouTube..."
+ : "Preparando el metraje subido...";
  return [
  firstStep,
-"Analizando espectro acústico en busca de picos de violín y percusión (+12dB)...",
-"Mapeando transiciones rítmicas de compases (BPM 145 balkan a 85 reggae)...",
-"Calculando curvas de retención con el modelo de engagement para España...",
-"Generando copys identitarios de la banda y hashtags con Gemini..."
+ "Descargando la transcripción con marcas de tiempo (si la hay)...",
+ "Midiendo el volumen del audio para localizar los subidones...",
+ "Enviando el contexto real de tu banda al modelo...",
+ `Buscando los mejores fragmentos de ~${videoDuration} s...`,
+ "Redactando copys, hooks y hashtags..."
  ];
  };
 
  // Drag & Drop helper
+ /**
+  * Cambia el vídeo local revocando antes el blob anterior. Elegir otro archivo sin pasar por
+  * el botón de "eliminar" dejaba el vídeo previo entero retenido en memoria por su object URL.
+  */
+ const cambiarVideoLocal = (file: File | null) => {
+ setLocalVideoUrl(prev => {
+ if (prev && prev.startsWith('blob:')) {
+ try { URL.revokeObjectURL(prev); } catch (err) { /* ya revocado */ }
+ }
+ if (!file) return null;
+ try {
+ return URL.createObjectURL(file);
+ } catch (err) {
+ console.error("Error creating Object URL for video:", err);
+ return null;
+ }
+ });
+ };
+
  const handleFileDrop = (e: React.DragEvent) => {
  e.preventDefault();
  setDragActive(false);
@@ -697,12 +885,8 @@ export default function ReelsCenter({
  name: file.name,
  size: file.size
  });
- try {
- const url = URL.createObjectURL(file);
- setLocalVideoUrl(url);
- } catch (err) {
- console.error("Error creating Object URL for video:", err);
- }
+ setLocalVideoDuration(0);
+ cambiarVideoLocal(file);
  // Try to auto-extract context from file name
  const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
  setVideoTopic(cleanName);
@@ -716,12 +900,8 @@ export default function ReelsCenter({
  name: file.name,
  size: file.size
  });
- try {
- const url = URL.createObjectURL(file);
- setLocalVideoUrl(url);
- } catch (err) {
- console.error("Error creating Object URL for video:", err);
- }
+ setLocalVideoDuration(0);
+ cambiarVideoLocal(file);
  const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
  setVideoTopic(cleanName);
  }
@@ -734,6 +914,9 @@ export default function ReelsCenter({
 
  // Reset physical clip and subtitle state for the new video
  setRenderedClipUrl(null);
+ setRenderedClipSize(0);
+ setRenderedBurnedSubs(false);
+ setRenderedStoredPermanently(false);
  setRenderedSubUrl(null);
  setSubtitleCues([]);
  setWordOffsets([]);
@@ -743,7 +926,16 @@ export default function ReelsCenter({
 
  setIsAnalyzing(true);
  setAnalysisError(null);
+ setAnalysisNotice(null);
+ setEnergyWindows([]);
+ setViralWindows([]);
+ // Un análisis pedido a propósito siempre es fresco, así que no arrastramos el aviso de
+ // "esto es lo que había guardado" de una vez anterior.
+ setLoadedFromSaveAt(null);
  setLoadingStep(0);
+ // El tipo detectado se pisa con el que devuelva este análisis nuevo; hasta entonces no
+ // mostramos el de un vídeo anterior.
+ setDetectedContentType(null);
 
  const steps = getLoadingSteps();
 
@@ -763,22 +955,41 @@ export default function ReelsCenter({
  body: JSON.stringify({
  fileName: inputType === 'file' ? selectedFile?.name : undefined,
  youtubeUrl: targetYtUrl,
+ // targetDuration = cuánto debe durar cada clip; knownDuration = cuánto dura el vídeo.
+ // Antes ambas cosas viajaban en el mismo campo y la IA recibía "el vídeo dura 30 s".
+ targetDuration: videoDuration,
+ knownDuration: inputType === 'file'
+ ? (localVideoDuration > 0 ? localVideoDuration : undefined)
+ : (videoMeta?.durationKnown ? videoMeta.duration : undefined),
+ // Sin esto, un vídeo subido como archivo nunca se podía guardar ni recuperar: el
+ // servidor nunca ve el archivo en sí, así que necesita esta clave para reconocerlo.
+ videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
+ contentType: contentType !== 'auto' ? contentType : undefined,
  videoDuration: videoDuration,
- videoTopic: videoTopic || (targetYtUrl ?"Vídeo de YouTube de Bakandeya" :"Ensayo o directo de la banda con violín y percusión reciclada")
+ videoTopic: videoTopic || undefined
  })
  });
 
  clearInterval(stepInterval);
 
- const data = await res.json().catch(() => null);
+ // apiFetch resuelve ya con el JSON parseado (o lanza si la respuesta no fue 2xx),
+ // así que aquí no hay ninguna Response sobre la que llamar a .json().
+ const data = res as any;
 
- if (!res.ok || !data?.success) {
+ if (!data?.success) {
  throw new Error(data?.error || data?.message || 'Error al procesar el vídeo en el servidor. Revisa tu sesión o inténtalo de nuevo.');
  }
 
  setHighlights(data.highlights || []);
  setOptimalTime(data.optimalTime || null);
  setSelectedHighlightIndex(0);
+ setAnalysisNotice(data.notice || null);
+ setEnergyWindows(Array.isArray(data.energyWindows) ? data.energyWindows : []);
+ setViralWindows(Array.isArray(data.viralWindows) ? data.viralWindows : []);
+ setDetectedContentType(data.contentType || null);
+ if (data.videoMeta && data.videoMeta.videoId) {
+ setVideoMeta(data.videoMeta as YoutubeVideoMeta);
+ }
  
  // Initialize editing form fields
  if (data.highlights && data.highlights.length > 0) {
@@ -835,6 +1046,9 @@ export default function ReelsCenter({
  setSelectedHighlightIndex(index);
  // Reset physical cutting states when switching segments
  setRenderedClipUrl(null);
+ setRenderedClipSize(0);
+ setRenderedBurnedSubs(false);
+ setRenderedStoredPermanently(false);
  setRenderedSubUrl(null);
  setSubtitleCues([]);
  setWordOffsets([]);
@@ -909,8 +1123,8 @@ export default function ReelsCenter({
  headers: { 'Content-Type': 'application/json' },
  body: JSON.stringify({ idea: reelIdea, style })
  });
- const data = await response.json();
- if (data.success && data.text) {
+ const data = response as any;
+ if (data?.success && data.text) {
  setGeneratedCopy(data.text);
  } else {
  alert('Hubo un problema al generar el texto. Mostrando plantilla de respaldo.');
@@ -918,9 +1132,9 @@ export default function ReelsCenter({
  } catch (err) {
  console.error(err);
  if (style === 'hype') {
- setGeneratedCopy(`⚡️ ¡FUEGO EN EL ESCENARIO! 🔥\n\nLa locomotora balkan de Bakandeya no tiene freno: ${reelIdea}. ¡Prepárate para sudar la camiseta! 🎺🎸\n\n#bakandeya #balkanska #mestizaje #livemusic`);
+ setGeneratedCopy(`⚡️ ¡FUEGO EN EL ESCENARIO! 🔥\n\n${nombreBanda} no tiene freno: ${reelIdea}. ¡Prepárate para sudar la camiseta! 🔥🎸\n\n#MusicaEnDirecto #Directo`);
  } else {
- setGeneratedCopy(`🌊 Respirando hondo, dejando fluir el ritmo... 🍀\n\nConectando ideas en el local: ${reelIdea}. Buenas energías para el camino. Paz y roots. 🕊️✨\n\n#bakandeya #reggae #rootsreggae #mestizaje`);
+ setGeneratedCopy(`🌊 Respirando hondo, dejando fluir el ritmo... 🍀\n\n${nombreBanda} conectando ideas en el local: ${reelIdea}. Buenas energías para el camino. ✨\n\n#MusicaEnDirecto #Local`);
  }
  } finally {
  setIsGenerating(false);
@@ -952,8 +1166,8 @@ export default function ReelsCenter({
  const phoneTitle = selectedPostInPhone
  ? `${selectedPostInPhone.plataforma} · ${selectedPostInPhone.responsable}`
  : (activeTab === 'analyzer' && highlights.length > 0
- ? (highlights[selectedHighlightIndex]?.title || 'Reel de Bakandeya')
- : 'Bakandeya Reels');
+ ? (highlights[selectedHighlightIndex]?.title || `Reel de ${nombreBanda}`)
+ : `Reels de ${nombreBanda}`);
 
  const phoneDuration = selectedPostInPhone
  ? selectedPostInPhone.fecha
@@ -980,10 +1194,10 @@ export default function ReelsCenter({
  <button
  onClick={handleAnalyzeBakandeyaTone}
  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 transition-all cursor-pointer shadow-md"
- title="Escanear Reels y Posts de @bakandeya para fijar el Tono de Voz y Expresión de la banda"
+ title={`Escanear los Reels y posts de ${instagramHandle || nombreBanda} para fijar el tono de voz de la banda`}
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
- <span>Tono Redes Bakandeya</span>
+ <span>Tono de voz en redes</span>
  </button>
 
  <button
@@ -1405,12 +1619,14 @@ export default function ReelsCenter({
  onClick={(e) => {
  e.stopPropagation();
  setSelectedFile(null);
- if (localVideoUrl) {
- try { URL.revokeObjectURL(localVideoUrl); } catch (err) {}
- setLocalVideoUrl(null);
- }
+ cambiarVideoLocal(null);
+ setLocalVideoDuration(0);
  setHighlights([]);
  setOptimalTime(null);
+ setEnergyWindows([]);
+ setViralWindows([]);
+ setLoadedFromSaveAt(null);
+ setDetectedContentType(null);
  }}
  className="text-[10px] font-mono text-rose-500 hover:underline hover:text-rose-600 bg-transparent -none p-0 cursor-pointer"
  >
@@ -1450,12 +1666,7 @@ export default function ReelsCenter({
  id="youtube-url-input"
  type="url"
  value={youtubeUrl}
- onChange={(e) => {
- setYoutubeUrl(e.target.value);
- if (e.target.value && !videoTopic) {
- setVideoTopic("Vídeo de YouTube de Bakandeya");
- }
- }}
+ onChange={(e) => setYoutubeUrl(e.target.value)}
  placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..."
  className={`w-full rounded-xl pl-3 pr-10 py-2.5 text-xs focus:outline-none font-mono ${
  isStitchLight
@@ -1470,6 +1681,10 @@ export default function ReelsCenter({
  setYoutubeUrl('');
  setHighlights([]);
  setOptimalTime(null);
+ setEnergyWindows([]);
+ setViralWindows([]);
+ setLoadedFromSaveAt(null);
+ setDetectedContentType(null);
  }}
  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 text-xs font-mono bg-transparent -none cursor-pointer"
  >
@@ -1477,12 +1692,87 @@ export default function ReelsCenter({
  </button>
  )}
  </div>
+
+ {/* Ficha real del vídeo: sin esto el usuario no sabía si la URL era la correcta
+ hasta después de gastar un análisis entero. */}
+ {isFetchingMeta && (
+ <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-neutral-500 pt-1">
+ <RefreshCw className="w-3 h-3 animate-spin" />
+ <span>Leyendo la ficha del vídeo...</span>
+ </div>
+ )}
+
+ {!isFetchingMeta && metaError && (
+ <div className="p-2 rounded-lg bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono text-left flex items-start gap-2">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+ <span>{metaError} Puedes analizarlo igualmente, pero los rangos serán aproximados.</span>
+ </div>
+ )}
+
+ {!isFetchingMeta && videoMeta && (
+ <div className={`flex gap-3 items-center p-2.5 rounded-xl text-left ${
+ isStitchLight ? 'bg-white -slate-200' : 'bg-[#131313] -neutral-800'
+ }`}>
+ {videoMeta.thumbnail && (
+ <img
+ src={videoMeta.thumbnail}
+ alt=""
+ className="w-20 h-12 object-cover rounded-lg shrink-0 -neutral-800"
+ loading="lazy"
+ />
+ )}
+ <div className="min-w-0 flex-1 space-y-1">
+ <p className={`text-[11px] font-bold truncate ${isStitchLight ? 'text-slate-800' : 'text-neutral-100'}`}>
+ {videoMeta.title || 'Vídeo de YouTube'}
+ </p>
+ <div className="flex flex-wrap gap-1.5 items-center text-[9px] font-mono">
+ {videoMeta.author && <span className="text-neutral-500 truncate max-w-[120px]">{videoMeta.author}</span>}
+ {videoMeta.durationKnown ? (
+ <span className={`px-1.5 py-0.5 rounded font-bold ${isStitchLight ? 'bg-indigo-50 text-indigo-600' : 'bg-[#f2ca50]/10 text-[#f2ca50]'}`}>
+ {formatTime(videoMeta.duration)}
+ </span>
+ ) : (
+ <span className="px-1.5 py-0.5 rounded bg-neutral-800 text-neutral-400">duración desconocida</span>
+ )}
+ <span className={`px-1.5 py-0.5 rounded font-bold ${
+ videoMeta.hasTranscript ? 'bg-emerald-500/10 text-emerald-400' : 'bg-neutral-800 text-neutral-500'
+ }`}>
+ {videoMeta.hasTranscript ? `subtítulos ✓ (${videoMeta.transcriptLines})` : 'sin subtítulos'}
+ </span>
+ </div>
+ </div>
+ </div>
+ )}
  </div>
  </div>
  )}
 
  {/* Configurations */}
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ <div className="space-y-1">
+ <label className="block text-[9px] font-mono uppercase text-neutral-400">
+ Tipo de material
+ {contentType === 'auto' && detectedContentType && (
+ <span className="normal-case font-sans text-neutral-500"> (detectado: {detectedContentType})</span>
+ )}
+ </label>
+ <select
+ id="video-content-type-select"
+ value={contentType}
+ onChange={(e) => setContentType(e.target.value as typeof contentType)}
+ title="Un concierto, un videoclip y un ensayo se buscan y se titulan de forma distinta: cambia qué momentos prioriza la IA."
+ className={`w-full rounded-lg px-3 py-2 text-xs focus:outline-none ${
+ isStitchLight
+ ? 'bg-white -slate-200 text-slate-800 focus:-indigo-500'
+ : 'bg-[#131313] -neutral-800 text-neutral-300 focus:-[#f2ca50]/50'
+ }`}
+ >
+ <option value="auto">Detectar automáticamente</option>
+ <option value="concierto">Concierto / Directo</option>
+ <option value="videoclip">Videoclip</option>
+ <option value="ensayo">Ensayo / Local</option>
+ </select>
+ </div>
  <div className="space-y-1">
  <label className="block text-[9px] font-mono uppercase text-neutral-400">Contexto / Anécdota de apoyo (IA)</label>
  <input
@@ -1516,6 +1806,21 @@ export default function ReelsCenter({
  </select>
  </div>
  </div>
+
+ {/* Aviso de análisis recuperado: sin esto, el usuario no sabría por qué ya hay
+ clips sugeridos sin haber pulsado "Analizar" en esta visita. */}
+ {loadedFromSaveAt && highlights.length > 0 && !isAnalyzing && (
+ <div className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
+ isStitchLight ? 'bg-emerald-50 -emerald-200 text-emerald-700' : 'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ }`}>
+ <CheckCircle2 className="w-4 h-4 shrink-0" />
+ <span>
+ Recuperado el análisis guardado de este vídeo
+ ({new Date(loadedFromSaveAt).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}).
+ Pulsa "Analizar highlights con IA" si quieres uno nuevo.
+ </span>
+ </div>
+ )}
 
  {/* Analysis Button */}
  <div className="pt-2">
@@ -1570,6 +1875,15 @@ export default function ReelsCenter({
  <span>{analysisError}</span>
  </div>
  )}
+
+ {/* Cuando la IA no ha intervenido lo decimos: antes los cortes de respaldo se
+ presentaban como si los hubiera elegido el modelo. */}
+ {!analysisError && analysisNotice && (
+ <div className="p-3 bg-amber-500/10 -amber-500/20 rounded-lg text-amber-300 text-xs flex gap-2 items-start">
+ <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+ <span>{analysisNotice}</span>
+ </div>
+ )}
  </div>
 
  {/* 2. Lighttable (Mesa de Luz con los Clips Detectados) */}
@@ -1583,6 +1897,79 @@ export default function ReelsCenter({
  Hemos localizado {highlights.length} momentos de alto potencial. Haz clic en un clip para seleccionarlo, previsualizarlo y ajustar su programación.
  </p>
  </div>
+
+ {/* Mapa de señales: si hay desglose (volumen/arranque/ritmo visual) se usa ese, porque
+ explica MEJOR por qué se ha elegido cada momento; si no, se cae al de solo energía. */}
+ {(viralWindows.length > 0 || energyWindows.length > 0) && timelineDuration > 0 && (() => {
+ const ventanas = viralWindows.length > 0 ? viralWindows : energyWindows;
+ const conDesglose = viralWindows.length > 0;
+ return (
+ <div className="space-y-1.5">
+ <div className="flex items-center justify-between">
+ <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ {conDesglose ? 'Señales medidas (volumen · arranque · montaje)' : 'Energía medida en el audio'}
+ </span>
+ <span className="text-[9px] font-mono text-emerald-400">● {ventanas.length} tramos con potencial</span>
+ </div>
+ <div className={`relative w-full h-7 rounded-lg overflow-hidden ${isStitchLight ? 'bg-slate-100' : 'bg-neutral-950 -neutral-900'}`}>
+ {ventanas.map((v, i) => {
+ const izq = Math.max(0, Math.min(100, (v.start / timelineDuration) * 100));
+ const ancho = Math.max(0.8, Math.min(100 - izq, ((v.end - v.start) / timelineDuration) * 100));
+ const titulo = conDesglose && 'motivo' in v
+ ? `${formatTime(v.start)} - ${formatTime(v.end)} · potencial ${v.score}/100\nvolumen ${(v as any).energia} · arranque ${(v as any).arranque} · montaje ${(v as any).dinamismo}\n${(v as any).motivo}`
+ : `${formatTime(v.start)} - ${formatTime(v.end)} · energía ${v.score}/100`;
+ return (
+ <div
+ key={`${v.start}-${i}`}
+ className="absolute top-0 bottom-0 rounded-sm"
+ title={titulo}
+ style={{
+ left: `${izq}%`,
+ width: `${ancho}%`,
+ background: isStitchLight ? '#4f46e5' : '#f2ca50',
+ opacity: 0.25 + (Math.max(0, Math.min(100, v.score)) / 100) * 0.75
+ }}
+ />
+ );
+ })}
+ {/* Dónde ha caído el clip seleccionado sobre ese mapa */}
+ {(() => {
+ const clip = highlights[selectedHighlightIndex];
+ if (!clip) return null;
+ const { start, end } = parseRangeTimes(clip.range);
+ if (end <= start) return null;
+ const izq = Math.max(0, Math.min(100, (start / timelineDuration) * 100));
+ const ancho = Math.max(0.8, Math.min(100 - izq, ((end - start) / timelineDuration) * 100));
+ return (
+ <div
+ className="absolute top-0 bottom-0 -2 -emerald-400 rounded-sm pointer-events-none"
+ style={{ left: `${izq}%`, width: `${ancho}%`, boxShadow: '0 0 0 1px rgba(16,185,129,0.6) inset' }}
+ />
+ );
+ })()}
+ </div>
+ <p className="text-[9px] font-mono text-neutral-600 leading-tight">
+ {conDesglose
+ ? 'Cuanto más intenso, más potencial combinado (volumen + arranque + montaje). El recuadro verde es el corte seleccionado.'
+ : 'Cuanto más intenso, más suena la banda en ese punto. El recuadro verde es el corte seleccionado.'}
+ </p>
+ {(() => {
+ // El motivo de la ventana que coincide con el corte seleccionado, para no obligar a
+ // pasar el ratón por encima de una barra diminuta para leerlo.
+ const clip = highlights[selectedHighlightIndex];
+ if (!clip || !conDesglose) return null;
+ const { start } = parseRangeTimes(clip.range);
+ const ventana = (viralWindows as any[]).find(v => Math.abs(v.start - start) <= 2);
+ if (!ventana?.motivo) return null;
+ return (
+ <p className={`text-[10px] font-sans italic leading-snug pt-0.5 ${isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'}`}>
+ "{ventana.motivo}"
+ </p>
+ );
+ })()}
+ </div>
+ );
+ })()}
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  {highlights.map((clip, index) => {
@@ -1910,7 +2297,7 @@ export default function ReelsCenter({
  <Calendar className="w-4 h-4" /> Calendario de Publicaciones de la Banda ({posts.length})
  </h3>
  <p className={`text-[10px] font-mono mt-1 ${textSub}`}>
- Aquí puedes ver la parrilla de contenidos aprobada y programada en la base de datos de Bakandeya.
+ Aquí puedes ver la parrilla de contenidos aprobada y programada de {nombreBanda}.
  </p>
  </div>
  <span className={`text-[8px] font-mono px-2 py-0.5 rounded uppercase ${
@@ -1963,7 +2350,7 @@ export default function ReelsCenter({
  <button
  id={`delete-post-${post.id}`}
  onClick={async () => {
- if (confirm('¿Seguro que deseas eliminar esta publicación del calendario de Bakandeya?')) {
+ if (confirm(`¿Seguro que deseas eliminar esta publicación del calendario de ${nombreBanda}?`)) {
  await onUpdatePost(post.id, { estado: 'borrador' }); // or we can handle direct deletion or mock update
  alert('Publicación desactivada/movida a borrador.');
  }
@@ -2048,7 +2435,7 @@ export default function ReelsCenter({
  </video>
 
  {/* Kinetic Reels Subtitles Overlay */}
- {currentSubtitleText && (
+ {currentSubtitleText && !renderedBurnedSubs && (
  <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-xl -[#f2ca50]/40 text-center backdrop-blur-sm shadow-xl">
  <span className="text-[10px] font-sans font-black tracking-wide text-[#f2ca50] uppercase leading-tight">
  ✨ {currentSubtitleText} ✨
@@ -2097,6 +2484,9 @@ export default function ReelsCenter({
  }}
  onLoadedMetadata={(e) => {
  const video = e.currentTarget;
+ if (Number.isFinite(video.duration) && video.duration > 0) {
+ setLocalVideoDuration(Math.floor(video.duration));
+ }
  const { start } = parseRangeTimes(phoneDuration);
  video.currentTime = start;
  }}
@@ -2222,10 +2612,10 @@ export default function ReelsCenter({
  <div className="flex items-center gap-1.5">
  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-mono font-bold ${
  isStitchLight ? 'bg-indigo-50 -indigo-200 text-indigo-600' : 'bg-[#f2ca50]/20 -[#f2ca50] text-[#f2ca50]'
- }`}>B</span>
+ }`}>{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
- <span className="text-[9px] font-bold text-white block">@bakandeya_reggae</span>
- <span className={`text-[7px] font-mono block ${isStitchLight ? 'text-indigo-200' : 'text-[#ffb596]'}`}>Banda Balkan-Ska Mestizo</span>
+ <span className="text-[9px] font-bold text-white block truncate max-w-[90px]">{instagramHandle || nombreBanda}</span>
+ <span className={`text-[7px] font-mono block ${isStitchLight ? 'text-indigo-200' : 'text-[#ffb596]'}`}>{nombreBanda}</span>
  </div>
  </div>
 
@@ -2277,7 +2667,7 @@ export default function ReelsCenter({
  isStitchLight ? 'text-indigo-400 bg-white/10 -indigo-200/20' : 'text-[#f2ca50] bg-black/40 -neutral-800/50'
  }`}>
  <Music className="w-2.5 h-2.5 shrink-0" />
- <span className="animate-marquee whitespace-nowrap">Bakandeya - Balkan Brass Intro 2026</span>
+ <span className="animate-marquee whitespace-nowrap">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
  </div>
  </div>
  </div>
@@ -2416,7 +2806,7 @@ export default function ReelsCenter({
  </video>
 
  {/* Subtitles Overlay inside Cinema Phone */}
- {currentSubtitleText && (
+ {currentSubtitleText && !renderedBurnedSubs && (
  <div className="absolute bottom-20 left-3 right-3 z-40 bg-black/80 px-2 py-1.5 rounded-xl -[#f2ca50]/40 text-center backdrop-blur-sm shadow-xl">
  <span className="text-[10px] font-sans font-black tracking-wide text-[#f2ca50] uppercase leading-tight">
  ✨ {currentSubtitleText} ✨
@@ -2494,10 +2884,10 @@ export default function ReelsCenter({
 
  <div className="z-10 space-y-2 mt-auto text-left">
  <div className="flex items-center gap-1.5">
- <span className="w-5 h-5 rounded-full -[#f2ca50] bg-[#f2ca50]/20 flex items-center justify-center text-[8px] font-mono font-bold text-[#f2ca50]">B</span>
+ <span className="w-5 h-5 rounded-full -[#f2ca50] bg-[#f2ca50]/20 flex items-center justify-center text-[8px] font-mono font-bold text-[#f2ca50]">{nombreBanda.charAt(0).toUpperCase()}</span>
  <div>
- <span className="text-[9px] font-bold text-white block">@bakandeya_reggae</span>
- <span className="text-[7px] font-mono text-neutral-400 block">Banda Balkan-Ska Mestizo</span>
+ <span className="text-[9px] font-bold text-white block truncate max-w-[120px]">{instagramHandle || nombreBanda}</span>
+ <span className="text-[7px] font-mono text-neutral-400 block truncate max-w-[120px]">{nombreBanda}</span>
  </div>
  </div>
 
@@ -2541,7 +2931,7 @@ export default function ReelsCenter({
 
  <div className="flex items-center gap-1 text-[8px] font-mono bg-black/60 text-[#f2ca50] -neutral-800/50 py-1 px-2 rounded-full max-w-[150px] truncate">
  <Music className="w-2.5 h-2.5 shrink-0" />
- <span>Bakandeya - Ensayo Original 2026</span>
+ <span className="truncate">{videoMeta?.title || `Audio original · ${nombreBanda}`}</span>
  </div>
  </div>
 
@@ -2652,7 +3042,7 @@ export default function ReelsCenter({
  {highlights[selectedHighlightIndex] && (() => {
  const { start, end, duration } = parseRangeTimes(highlights[selectedHighlightIndex]?.range);
  if (duration > 0) {
- const totalDuration = Math.max(120, end + 30);
+ const totalDuration = timelineDuration;
  const startPct = (start / totalDuration) * 100;
  const endPct = (end / totalDuration) * 100;
  const activeWidth = endPct - startPct;
@@ -2907,6 +3297,58 @@ export default function ReelsCenter({
  Corta físicamente el fragmento del vídeo de YouTube a formato vertical 9:16 para Reels/TikTok y genera la pista de subtítulos sincronizada con la voz.
  </p>
 
+ {/* Opciones de renderizado */}
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ <div className="space-y-1.5">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Encuadre vertical</span>
+ <div className="grid grid-cols-3 gap-1">
+ {([
+ { valor: 'crop' as const, etiqueta: 'Recortar', ayuda: 'Recorta los laterales. Encuadre cerrado: puede dejar fuera a parte de la banda.' },
+ { valor: 'blur' as const, etiqueta: 'Fondo blur', ayuda: 'Mete el vídeo entero centrado sobre un fondo desenfocado. No se pierde a nadie.' },
+ { valor: 'none' as const, etiqueta: 'Original', ayuda: 'Deja el encuadre horizontal tal cual.' }
+ ]).map(opcion => (
+ <button
+ key={opcion.valor}
+ type="button"
+ title={opcion.ayuda}
+ onClick={() => setCropMode(opcion.valor)}
+ disabled={isCuttingVideo}
+ className={`px-2 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+ cropMode === opcion.valor
+ ? 'bg-[#f2ca50] text-[#3c2f00]'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {opcion.etiqueta}
+ </button>
+ ))}
+ </div>
+ </div>
+
+ <div className="space-y-1.5">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Subtítulos</span>
+ <button
+ type="button"
+ onClick={() => setBurnSubtitles(v => !v)}
+ disabled={isCuttingVideo || (videoMeta ? !videoMeta.hasTranscript : false)}
+ title={videoMeta && !videoMeta.hasTranscript
+ ? 'Este vídeo no tiene transcripción en YouTube, así que no hay nada que incrustar.'
+ : 'Graba los subtítulos dentro de la imagen, que es como se ven en Reels y TikTok sin activar nada.'}
+ className={`w-full px-3 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+ burnSubtitles
+ ? 'bg-emerald-500/15 -emerald-500/40 text-emerald-300'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {burnSubtitles ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5 opacity-40" />}
+ <span>{burnSubtitles ? 'Incrustados en el vídeo' : 'Solo pista .vtt aparte'}</span>
+ </button>
+ {videoMeta && !videoMeta.hasTranscript && (
+ <p className="text-[9px] font-mono text-neutral-600 leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
+ )}
+ </div>
+ </div>
+
  {/* Rendering State indicators */}
  {isCuttingVideo ? (
  <div className="bg-neutral-900/80 p-4 rounded-xl -neutral-800 space-y-3 animate-pulse">
@@ -2932,31 +3374,64 @@ export default function ReelsCenter({
  ¡Reel Renderizado con Éxito!
  </span>
  </div>
+ <div className="flex gap-1 shrink-0">
  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#10b981]/15 text-[#10b981] font-extrabold -emerald-500/30">
- LISTO (9:16)
+ {cropMode === 'none' ? 'ORIGINAL' : cropMode === 'blur' ? '9:16 BLUR' : '9:16'}
+ </span>
+ {renderedBurnedSubs && (
+ <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-[#f2ca50]/15 text-[#f2ca50] font-extrabold -[#f2ca50]/30">
+ SUBS
+ </span>
+ )}
+ </div>
+ </div>
+
+ <p className="text-[11px] text-neutral-300">
+ Clip listo{renderedClipSize > 0 ? ` (${(renderedClipSize / (1024 * 1024)).toFixed(1)} MB)` : ''}. Se está reproduciendo en el simulador de la izquierda y puedes descargarlo ya.
+ </p>
+
+ {/* Sin esto, el usuario no sabe si el clip va a seguir ahí mañana o solo hasta el
+ próximo despliegue del servidor. */}
+ <div className={`p-2 rounded-lg text-[10px] font-mono flex items-center gap-2 ${
+ renderedStoredPermanently
+ ? 'bg-emerald-500/10 -emerald-500/20 text-emerald-300'
+ : 'bg-amber-500/10 -amber-500/20 text-amber-300'
+ }`}>
+ <span>
+ {renderedStoredPermanently
+ ? '☁️ Guardado de forma permanente. Seguirá disponible aunque pase el tiempo.'
+ : '⚠️ Guardado solo temporalmente en el servidor. Descárgalo antes de que se reinicie o se despliegue una nueva versión.'}
  </span>
  </div>
- 
- <p className="text-[11px] text-neutral-300">
- El vídeo recortado se ha procesado en memoria. Ahora se está reproduciendo en el simulador móvil de la izquierda.
- </p>
 
  {sinTranscripcionReal && (
  <div className="p-2 rounded-lg bg-amber-500/10 -amber-500/20 text-[10px] text-amber-300 font-mono flex items-center gap-2">
- <span>ℹ️ No hay subtítulos / transcripción real disponible en YouTube para este vídeo.</span>
+ <span>ℹ️ Este vídeo no tiene transcripción en YouTube, así que el clip va sin subtítulos.</span>
  </div>
  )}
 
  <div className="flex flex-col sm:flex-row gap-2 pt-1">
- <a 
- href={renderedClipUrl} 
- download="bakandeya_reel.mp4"
+ <a
+ href={renderedClipUrl}
+ download={`${(bandName || 'reel').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'reel'}-${highlights[selectedHighlightIndex]?.range?.replace(/[^0-9]/g, '') || 'clip'}.mp4`}
  rel="noreferrer noopener"
  className="flex-1 px-3 py-1.5 rounded-lg bg-neutral-900 -neutral-800 hover:-neutral-700 text-[11px] font-mono font-bold text-[#f2ca50] flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
  >
  <ExternalLink className="w-3.5 h-3.5" />
- <span>Descargar Clip MP4</span>
+ <span>Descargar MP4</span>
  </a>
+
+ {renderedSubUrl && !renderedBurnedSubs && (
+ <a
+ href={renderedSubUrl}
+ download="subtitulos.vtt"
+ rel="noreferrer noopener"
+ className="flex-1 px-3 py-1.5 rounded-lg bg-neutral-900 -neutral-800 hover:-neutral-700 text-[11px] font-mono font-bold text-emerald-300 flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+ >
+ <ExternalLink className="w-3.5 h-3.5" />
+ <span>Descargar .VTT</span>
+ </a>
+ )}
  
  <button
  type="button"
@@ -3045,6 +3520,96 @@ export default function ReelsCenter({
  )}
  </div>
  )}
+
+ {/* Hook, CTA y variantes por plataforma: lo que de verdad decide si alguien
+ se queda en el primer segundo, y que antes la IA ni generaba. */}
+ {(() => {
+ const clip = highlights[selectedHighlightIndex];
+ if (!clip) return null;
+ const variantes = [
+ { etiqueta: 'Instagram', texto: clip.recommendedCopy },
+ { etiqueta: 'TikTok', texto: clip.copyTikTok },
+ { etiqueta: 'YouTube Shorts', texto: clip.copyYouTube }
+ ].filter(v => v.texto && v.texto.trim());
+
+ if (!clip.hookText && !clip.cta && variantes.length < 2 && !(clip.hashtags || []).length) return null;
+
+ return (
+ <div className="p-4 rounded-xl bg-neutral-950/40 -neutral-800/60 space-y-3">
+ {clip.hookText && (
+ <div className="space-y-1">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ Rótulo para los primeros 2 segundos
+ </span>
+ <div className="flex items-center gap-2">
+ <p className="flex-1 text-sm font-black text-[#f2ca50] leading-tight">"{clip.hookText}"</p>
+ <button
+ type="button"
+ onClick={() => handleCopyToClipboard(clip.hookText || '')}
+ className="shrink-0 px-2 py-1 rounded-lg bg-neutral-900 -neutral-800 text-[9px] font-mono text-neutral-400 hover:text-neutral-200 cursor-pointer"
+ >
+ Copiar
+ </button>
+ </div>
+ </div>
+ )}
+
+ {clip.cta && (
+ <div className="space-y-1">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Llamada a la acción</span>
+ <p className="text-[11px] text-neutral-300 leading-snug">{clip.cta}</p>
+ </div>
+ )}
+
+ {variantes.length > 1 && (
+ <div className="space-y-1.5">
+ <span className="block text-[9px] font-mono uppercase text-neutral-500 tracking-wider">
+ Versiones por plataforma (pulsa para usarla)
+ </span>
+ <div className="flex flex-wrap gap-1.5">
+ {variantes.map(v => (
+ <button
+ key={v.etiqueta}
+ type="button"
+ onClick={() => setEditedCopy(v.texto || '')}
+ title={v.texto}
+ className={`px-2.5 py-1 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer transition-all ${
+ editedCopy === v.texto
+ ? 'bg-[#f2ca50] text-[#3c2f00]'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {v.etiqueta}
+ </button>
+ ))}
+ </div>
+ </div>
+ )}
+
+ {(clip.hashtags || []).length > 0 && (
+ <div className="space-y-1.5">
+ <div className="flex justify-between items-center">
+ <span className="text-[9px] font-mono uppercase text-neutral-500 tracking-wider">Hashtags sugeridos</span>
+ <button
+ type="button"
+ onClick={() => setEditedCopy(prev => `${prev.trimEnd()}\n\n${(clip.hashtags || []).join(' ')}`.trim())}
+ className="text-[9px] font-mono text-[#f2ca50] hover:underline cursor-pointer bg-transparent -none"
+ >
+ Añadir todos al copy
+ </button>
+ </div>
+ <div className="flex flex-wrap gap-1">
+ {(clip.hashtags || []).map((tag, i) => (
+ <span key={`${tag}-${i}`} className="px-1.5 py-0.5 rounded bg-neutral-900 -neutral-800 text-[9px] font-mono text-neutral-400">
+ {tag}
+ </span>
+ ))}
+ </div>
+ </div>
+ )}
+ </div>
+ );
+ })()}
 
  {/* Copy Editor Area */}
  <div className="space-y-2">
