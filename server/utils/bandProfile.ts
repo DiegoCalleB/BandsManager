@@ -37,6 +37,8 @@ export interface BandProfile {
   tonePhrases: string[];
   /** Matiz de tono por red (Instagram/TikTok/YouTube/Facebook no suenan igual), si se ha analizado. */
   toneByPlatform: { instagram: string; tiktok: string; youtube: string; facebook: string };
+  /** Frases reales de directo (habla al público entre canciones, no letra cantada), extraídas de transcripciones. */
+  toneStagePhrases: string[];
 }
 
 export function emptyBandProfile(bandId = ""): BandProfile {
@@ -58,7 +60,8 @@ export function emptyBandProfile(bandId = ""): BandProfile {
     toneVocabulary: [],
     toneEmojis: [],
     tonePhrases: [],
-    toneByPlatform: { instagram: "", tiktok: "", youtube: "", facebook: "" }
+    toneByPlatform: { instagram: "", tiktok: "", youtube: "", facebook: "" },
+    toneStagePhrases: []
   };
 }
 
@@ -171,7 +174,7 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
   if (p.youtube) lineas.push(`- YouTube: ${p.youtube}`);
   if (p.facebook) lineas.push(`- Facebook: ${p.facebook}`);
 
-  if (p.toneSummary || p.toneVocabulary.length || p.tonePhrases.length || p.toneEmojis.length) {
+  if (p.toneSummary || p.toneVocabulary.length || p.tonePhrases.length || p.toneEmojis.length || p.toneStagePhrases.length) {
     lineas.push("");
     lineas.push("ADN DE VOZ YA ANALIZADO DE ESTA BANDA (imítalo, es como hablan de verdad):");
     if (p.toneSummary) lineas.push(`- Tono: ${p.toneSummary}`);
@@ -180,6 +183,9 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
     if (p.toneVocabulary.length) lineas.push(`- Vocabulario propio: ${p.toneVocabulary.join(", ")}`);
     if (p.tonePhrases.length) lineas.push(`- Expresiones reales suyas: ${p.tonePhrases.map((f) => `"${f}"`).join(" | ")}`);
     if (p.toneEmojis.length) lineas.push(`- Emojis que usan: ${p.toneEmojis.join(" ")}`);
+    if (p.toneStagePhrases.length) {
+      lineas.push(`- Frases REALES dichas en directo, habladas al público entre canciones (fuente: transcripciones de sus propios conciertos, no redes; es la más fiable de todas): ${p.toneStagePhrases.map((f) => `"${f}"`).join(" | ")}`);
+    }
     lineas.push("");
     lineas.push("ESTE ADN DE VOZ MANDA SOBRE CUALQUIER REGLA GENÉRICA DE REDACCIÓN QUE VENGA DESPUÉS:");
     if (p.toneVocabulary.length) {
@@ -187,6 +193,9 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
     }
     if (p.tonePhrases.length) {
       lineas.push(`- Si alguna expresión real suya encaja de forma natural, cuélala tal cual, entre comillas si hace falta.`);
+    }
+    if (p.toneStagePhrases.length) {
+      lineas.push(`- Las frases de directo de arriba pesan más que el vocabulario sacado de redes: es literalmente cómo hablan sin filtro. Si alguna encaja, úsala tal cual.`);
     }
     if (p.toneEmojis.length) {
       lineas.push(`- Usa emojis DE ESA LISTA (${p.toneEmojis.join(" ")}) en vez de otros genéricos, y en la cantidad que ellos usarían de verdad, aunque eso choque con un tope genérico de emojis.`);
@@ -267,6 +276,7 @@ export async function loadBandProfile(
     perfil.toneEmojis = listaLimpia(adnDurable.emojis_frecuentes, 8);
     perfil.tonePhrases = listaLimpia(adnDurable.frases_emblematicas_extraidas, 4);
     perfil.toneByPlatform = limpiarMaticesPorRed(adnDurable.matices_por_red);
+    perfil.toneStagePhrases = listaLimpia(adnDurable.frases_directo_extraidas, 6);
   }
 
   let state: any = null;
@@ -307,6 +317,7 @@ export async function loadBandProfile(
       perfil.toneEmojis = listaLimpia(adn.emojis_frecuentes, 8);
       perfil.tonePhrases = listaLimpia(adn.frases_emblematicas_extraidas, 4);
       perfil.toneByPlatform = limpiarMaticesPorRed(adn.matices_por_red);
+      perfil.toneStagePhrases = listaLimpia(adn.frases_directo_extraidas, 6);
     }
   }
 

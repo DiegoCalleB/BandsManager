@@ -8,7 +8,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { requireAuth, loadState } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import {
@@ -581,6 +581,9 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
     let optimalTime: any = null;
     let generadoPorIa = false;
     let avisoIa = "";
+    // Frases reales de directo (habla, no letra cantada) extraídas de la transcripción: la fuente
+    // de tono más auténtica que hay. Se acumulan en el ADN de la banda más abajo.
+    let frasesDirectoExtraidas: string[] = [];
 
     if (ai) {
       const prompt = `Eres quien decide qué trozo de un vídeo se convierte en Reel para una banda de música. Trabajas con material REAL y con señales medidas sobre él, no con suposiciones.
@@ -625,6 +628,8 @@ Campos de cada fragmento:
 - "confidence": 1-100, tu estimación honesta. No pongas 95 a todos: si un corte es flojo, dilo.
 - "reason": por qué ESE tramo, citando la señal medida o la letra que lo justifica.
 
+${tieneTranscripcion ? `ADEMÁS DE LOS FRAGMENTOS: repasa la transcripción completa y devuelve en "frasesDirectoExtraidas" las frases donde la banda HABLA de verdad al público entre canciones (presentaciones, bromas, agradecimientos, "qué tal Madrid", etc.), tal cual las dicen. NO metas letras cantadas ni te las inventes: es la fuente de tono más auténtica que hay, así que solo cuenta si es real y distinguible del canto. Si no puedes diferenciar con seguridad habla de letra cantada, deja la lista vacía. Máximo 5 frases, solo las más claras.` : ""}
+
 Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
 {
   "highlights": [
@@ -645,7 +650,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       "reason": "..."
     }
   ],
-  "optimalTime": { "date": "YYYY-MM-DD", "time": "20:30", "reason": "Por qué ese hueco" }
+  "optimalTime": { "date": "YYYY-MM-DD", "time": "20:30", "reason": "Por qué ese hueco" },
+  "frasesDirectoExtraidas": ["..."]
 }`;
 
       try {
@@ -667,6 +673,13 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
           generadoPorIa = true;
         } else {
           avisoIa = "La IA respondió pero sin fragmentos utilizables; se muestran cortes automáticos que puedes ajustar a mano.";
+        }
+
+        if (Array.isArray(parsed?.frasesDirectoExtraidas)) {
+          frasesDirectoExtraidas = parsed.frasesDirectoExtraidas
+            .map((f: any) => String(f || "").trim())
+            .filter(Boolean)
+            .slice(0, 5);
         }
       } catch (err: any) {
         console.warn("[Highlights AI] Fallo llamando al modelo:", err?.message || err);
@@ -730,6 +743,12 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         notice: avisoIa
       });
       guardadoEnBd = Boolean(guardado);
+    }
+
+    if (frasesDirectoExtraidas.length > 0) {
+      dbAppendBandSpeechPhrases(getTargetBandId(req), frasesDirectoExtraidas).catch((e: any) =>
+        console.warn("[Highlights AI] No se pudieron guardar las frases de directo:", e?.message || e)
+      );
     }
 
     return res.json({

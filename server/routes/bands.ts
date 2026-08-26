@@ -261,14 +261,27 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
   let tiktok = "";
   let youtube = "";
   let facebook = "";
+  // Frases reales dichas en directo (habla al público entre canciones), acumuladas por el
+  // generador de Reels a partir de transcripciones de vídeos ya analizados. Es la fuente de
+  // tono más auténtica que hay -sin filtro de community manager- así que se le pasa a la IA
+  // como grounding real, y se conserva al guardar (la IA no la genera, solo la usa).
+  let frasesDirectoExistentes: string[] = [];
   if (is_sender) {
     try {
-      const epk = await dbGetEpkConfig(getTargetBandId(req));
+      const ownBandId = getTargetBandId(req);
+      const [epk, bandaActual] = await Promise.all([
+        dbGetEpkConfig(ownBandId),
+        dbGetRegisteredBandById(ownBandId)
+      ]);
       const redes = epk?.enlacesRedes || {};
       instagram = redes.instagram || instagram || "";
       tiktok = redes.tiktok || "";
       youtube = redes.youtube || "";
       facebook = redes.facebook || "";
+      const dnaActual = bandaActual?.dna_expresion;
+      if (dnaActual && typeof dnaActual === "object" && Array.isArray(dnaActual.frases_directo_extraidas)) {
+        frasesDirectoExistentes = dnaActual.frases_directo_extraidas.map((f: any) => String(f || "").trim()).filter(Boolean);
+      }
     } catch (e: any) {
       console.warn("[analyze-tone] No se pudo cargar el EPK para leer las redes reales:", e?.message || e);
     }
@@ -289,10 +302,11 @@ OBJETIVO: Analizar en profundidad la FORMA DE HABLAR, EL ADN DE EXPRESIÓN Y EL 
 ${redesConHandle.length ? redesConHandle.join("\n") : `- Instagram / Handle: ${instagram || "No especificado"}`}
 - Estilo Musical: ${estilo_musical || "No especificado"}
 - Localización: ${localizacion || "No especificada"}
+${frasesDirectoExistentes.length ? `\nFRASES REALES DICHAS EN DIRECTO (extraídas de transcripciones de sus propios conciertos, hablando al público entre canciones -no letras cantadas-; es más fiable que cualquier red social porque es habla real sin filtro):\n${frasesDirectoExistentes.map((f) => `- "${f}"`).join("\n")}` : ""}
 
 INSTRUCCIONES DE BÚSQUEDA Y EXTRACCIÓN (SEARCH GROUNDING):
 1. Rastrear con precisión CADA UNA de las redes listadas arriba por separado (no solo Instagram): sus publicaciones recientes, Reels, captions de vídeo, TikToks, vídeos/descripciones de YouTube, posts de Facebook, entrevistas o canal oficial.
-2. Extraer frases literales o expresiones muletillas reales que usen en sus Reels/Posts (ej: "chavales", "pogo en el barro", "aúpa familia", "nos vemos en las trincheras", "fuck yeah", "teatralidad e ironía", etc.).
+2. Extraer frases literales o expresiones muletillas reales que usen en sus Reels/Posts (ej: "chavales", "pogo en el barro", "aúpa familia", "nos vemos en las trincheras", "fuck yeah", "teatralidad e ironía", etc.). Si arriba hay FRASES REALES DICHAS EN DIRECTO, dales prioridad sobre lo que encuentres en redes: inclúyelas (o el vocabulario que aparezca en ellas) en "frases_emblematicas_extraidas" y "vocabulario_clave" cuando sean representativas.
 3. Determinar su tono general (¿informal/fiestero, provocador/gótico, elegante/institucional, enérgico, académico, callejero?), su nivel de energía, tratamiento habitual (Tú/Vosotros vs Usted) y vocabulario icónico.
 4. IMPORTANTE: el tono no es idéntico en todas las redes. Compara cómo hablan en cada una de las que tengan handle arriba: Facebook suele ser más institucional/informativo que TikTok; TikTok suele ser más gamberro, rápido y con jerga que Instagram; YouTube suele explicar más. Anota en qué se diferencia REALMENTE cada red (no lo des por hecho sin comprobarlo) en "matices_por_red". Si una red no tiene handle o no encuentras diferencia real respecto al tono general, deja esa clave vacía o igual al tono general; no inventes una diferencia que no hayas comprobado.
 5. Redactar una propuesta de contacto o correo electrónico en la que:
@@ -366,6 +380,11 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
     if (is_sender) {
       try {
         const ownBandId = getTargetBandId(req);
+        // La IA no genera "frases_directo_extraidas" (las acumula el generador de Reels aparte):
+        // sin esto, cada vez que se reanaliza el tono se perdería lo ya guardado de conciertos.
+        if (frasesDirectoExistentes.length) {
+          data.frases_directo_extraidas = frasesDirectoExistentes;
+        }
         savedOwnBandDna = await dbUpdateBandToneDna(ownBandId, data);
       } catch (e: any) {
         console.warn("[analyze-tone] No se pudo guardar el ADN de la banda emisora:", e?.message || e);

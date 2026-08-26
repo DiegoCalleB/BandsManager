@@ -17,6 +17,8 @@ export interface ToneAnalysisData {
   valores_e_intereses?: string[];
   /** El tono no es idéntico en todas las redes (Facebook más institucional, TikTok más gamberro...). */
   matices_por_red?: { instagram?: string; tiktok?: string; youtube?: string; facebook?: string };
+  /** Frases reales de directo (habla al público entre canciones), acumuladas desde transcripciones de conciertos ya analizados en Reels. Se generan solas, no se editan a mano aquí. */
+  frases_directo_extraidas?: string[];
   puntos_fuertes_para_conectar?: string;
   recomendacion_pitch?: string;
   pitch_personalizado_ejemplo?: string;
@@ -441,6 +443,22 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </span>
                   <div className="space-y-1">
                     {toneData.frases_emblematicas_extraidas.map((quote, idx) => (
+                      <p key={idx} className="text-[10px] font-mono italic text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60">
+                        "{quote}"
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Frases reales de directo: se acumulan solas desde transcripciones de conciertos, no se editan aquí. */}
+              {toneData.frases_directo_extraidas && toneData.frases_directo_extraidas.length > 0 && (
+                <div className="pt-1.5 border-t border-neutral-800 space-y-1">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-emerald-400/90 block">
+                    🎤 Frases reales dichas en directo (de vuestros propios conciertos):
+                  </span>
+                  <div className="space-y-1">
+                    {toneData.frases_directo_extraidas.map((quote, idx) => (
                       <p key={idx} className="text-[10px] font-mono italic text-neutral-300 bg-black/30 p-1.5 rounded border border-neutral-800/60">
                         "{quote}"
                       </p>
