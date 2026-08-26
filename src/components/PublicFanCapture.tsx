@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Heart, CheckCircle2, Download, Copy, Check, ShieldCheck, Mail, User, MapPin, Music } from 'lucide-react';
+import { sanitizeConcertDisplayName } from '../utils/fanUtils';
 
 export const PublicFanCapture: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -25,8 +26,9 @@ export const PublicFanCapture: React.FC = () => {
 
     if (cId) setConciertoOrigenId(cId);
     if (cName) {
-      setConciertoOrigenNombre(cName);
-      setComoConocio(`Concierto: ${cName}`);
+      const sanitizedName = sanitizeConcertDisplayName(cName);
+      setConciertoOrigenNombre(sanitizedName);
+      setComoConocio(`Concierto: ${sanitizedName}`);
     } else {
       setComoConocio("En directo / Concierto");
     }

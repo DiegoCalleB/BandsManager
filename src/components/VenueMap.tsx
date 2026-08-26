@@ -122,6 +122,8 @@ const SPANISH_CITIES_GEO: Record<string, [number, number]> = {
  'Caldas de Reis': [42.6027, -8.6427], // PortAmérica
  'Aranda de Duero': [41.6704, -3.6892], // Sonorama
  'Ponferrada': [42.5466, -6.5962],
+ 'Ferrara': [44.8381, 11.6198],
+ 'Ferrera': [44.8381, 11.6198],
  'Gandía': [38.9678, -0.1818],
  'Gandia': [38.9678, -0.1818],
  'Benicàssim': [40.0558, 0.0637], // FIB

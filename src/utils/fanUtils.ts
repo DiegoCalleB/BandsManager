@@ -69,3 +69,21 @@ export function filterFans(fans: Fan[], search: string = '', city: string = 'tod
     return matchesSearch && matchesCity;
   });
 }
+
+/**
+ * Normaliza y sanea el nombre de un concierto para su visualización en el Fan Landing y componentes públicos.
+ * Corrige de forma transparente erratas conocidas (por ejemplo, "Ferrera" -> "Ferrara") sin romper
+ * los enlaces de códigos QR impresos o compartidos que lleven el parámetro original en la URL.
+ */
+export function sanitizeConcertDisplayName(rawName?: string | null): string {
+  if (!rawName) return '';
+  let clean = rawName.trim();
+
+  // Corrección de erratas de ciudades/conciertos conocidas:
+  // Reemplazar Ferrera por Ferrara preservando mayúsculas / minúsculas
+  clean = clean.replace(/Ferrera/g, 'Ferrara');
+  clean = clean.replace(/ferrera/g, 'ferrara');
+  clean = clean.replace(/FERRERA/g, 'FERRARA');
+
+  return clean;
+}

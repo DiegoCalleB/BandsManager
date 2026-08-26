@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateFanEngagementMetrics, filterFans } from '../fanUtils';
+import { calculateFanEngagementMetrics, filterFans, sanitizeConcertDisplayName } from '../fanUtils';
 import { Fan } from '../../types';
 
 describe('fanUtils', () => {
@@ -49,5 +49,17 @@ describe('fanUtils', () => {
 
     const madridFans = filterFans(mockFans, '', 'madrid');
     expect(madridFans.length).toBe(2);
+  });
+
+  it('sanitizes concert names fixing typos like Ferrera to Ferrara while preserving URLs', () => {
+    expect(sanitizeConcertDisplayName('Busking festival (Ferrera)')).toBe('Busking festival (Ferrara)');
+    expect(sanitizeConcertDisplayName('Busking Festival (Ferrera)!')).toBe('Busking Festival (Ferrara)!');
+    expect(sanitizeConcertDisplayName('busking-festival-ferrera')).toBe('busking-festival-ferrara');
+    expect(sanitizeConcertDisplayName('Ferrera')).toBe('Ferrara');
+    expect(sanitizeConcertDisplayName('ferrera')).toBe('ferrara');
+    expect(sanitizeConcertDisplayName('FERRERA')).toBe('FERRARA');
+    expect(sanitizeConcertDisplayName('Sala Apolo (Barcelona)')).toBe('Sala Apolo (Barcelona)');
+    expect(sanitizeConcertDisplayName('')).toBe('');
+    expect(sanitizeConcertDisplayName(null)).toBe('');
   });
 });

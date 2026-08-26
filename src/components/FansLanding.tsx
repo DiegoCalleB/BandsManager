@@ -10,6 +10,7 @@ import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
 import { FAN_FORM_TRANSLATIONS, FAN_FORM_LANGUAGES, FanFormLanguage, interpolate, idiomasDisponiblesParaConcierto } from '../i18n/fansTranslations';
 import { renderBold } from '../utils/richText';
 import { safeUrl } from '../utils/safeUrl';
+import { sanitizeConcertDisplayName } from '../utils/fanUtils';
 
 import { Concert, EPKConfig, BandMember } from '../types';
 
@@ -277,10 +278,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       }
       if (previewConcert) {
         setConcertId(previewConcert.id);
-        setConcertName(`${previewConcert.sala} (${previewConcert.ciudad})`);
+        setConcertName(sanitizeConcertDisplayName(`${previewConcert.sala} (${previewConcert.ciudad})`));
         setIsConcertLink(true);
       } else if (previewConcertName) {
-        setConcertName(previewConcertName);
+        setConcertName(sanitizeConcertDisplayName(previewConcertName));
         setIsConcertLink(true);
       }
       return;
@@ -457,7 +458,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     // mostrar el mensaje de "gracias por venir al concierto".
     if (slug && slug !== 'directo') {
       const formattedName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-      setConcertName(formattedName);
+      setConcertName(sanitizeConcertDisplayName(formattedName));
       setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
       setIsConcertLink(true);
     }
@@ -468,7 +469,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
     if (cid) setConcertId(cid);
     if (cname) {
-      setConcertName(cname);
+      setConcertName(sanitizeConcertDisplayName(cname));
       setFormData(prev => ({ ...prev, comoConocio: 'Concierto' }));
       setIsConcertLink(true);
     }
@@ -1106,7 +1107,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             {isConcertLink ? (
               <div>
                 <span className="text-emerald-400 font-bold px-3.5 py-1.5 bg-emerald-400/10 border border-emerald-400/20 rounded-full inline-flex items-center gap-1.5 text-xs">
-                  <span>{concertName ? t('thanksConcertWithName', { concertName }) : t('thanksConcertGeneric')}</span>
+                  <span>{concertName ? t('thanksConcertWithName', { concertName: sanitizeConcertDisplayName(concertName) }) : t('thanksConcertGeneric')}</span>
                 </span>
               </div>
             ) : (
