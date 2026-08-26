@@ -10,6 +10,8 @@
  * La parte de construcción del prompt es pura y está testeada; la de carga toca la BD.
  */
 
+import { formatGlobalReelFeedbackForPrompt, type ReelFeedbackLogEntry } from "./reelFeedback.js";
+
 export interface BandMemberInfo {
   name: string;
   instrument: string;
@@ -39,6 +41,8 @@ export interface BandProfile {
   toneByPlatform: { instagram: string; tiktok: string; youtube: string; facebook: string };
   /** Frases reales de directo (habla al público entre canciones, no letra cantada), extraídas de transcripciones. */
   toneStagePhrases: string[];
+  /** Feedback previo del usuario (estrellas + comentario) sobre títulos/descripciones de Reels ya regenerados. */
+  reelFeedbackHistory: ReelFeedbackLogEntry[];
 }
 
 export function emptyBandProfile(bandId = ""): BandProfile {
@@ -61,7 +65,8 @@ export function emptyBandProfile(bandId = ""): BandProfile {
     toneEmojis: [],
     tonePhrases: [],
     toneByPlatform: { instagram: "", tiktok: "", youtube: "", facebook: "" },
-    toneStagePhrases: []
+    toneStagePhrases: [],
+    reelFeedbackHistory: []
   };
 }
 
@@ -174,7 +179,7 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
   if (p.youtube) lineas.push(`- YouTube: ${p.youtube}`);
   if (p.facebook) lineas.push(`- Facebook: ${p.facebook}`);
 
-  if (p.toneSummary || p.toneVocabulary.length || p.tonePhrases.length || p.toneEmojis.length || p.toneStagePhrases.length) {
+  if (p.toneSummary || p.toneVocabulary.length || p.tonePhrases.length || p.toneEmojis.length || p.toneStagePhrases.length || p.reelFeedbackHistory.length) {
     lineas.push("");
     lineas.push("ADN DE VOZ YA ANALIZADO DE ESTA BANDA (imítalo, es como hablan de verdad):");
     if (p.toneSummary) lineas.push(`- Tono: ${p.toneSummary}`);
@@ -211,6 +216,13 @@ export function buildBandContextBlock(profile: Partial<BandProfile> | null | und
       if (matizYt) lineas.push(`- YouTube (campo "copyYouTube"): ${matizYt}`);
       if (matizFb) lineas.push(`- Facebook (campo "copyFacebook"): ${matizFb}`);
       lineas.push(`- No copies el mismo texto en los distintos campos de copy cambiando solo el hashtag: cada uno tiene que sonar a esa red, con el matiz de arriba.`);
+    }
+
+    const feedbackFormateado = formatGlobalReelFeedbackForPrompt(p.reelFeedbackHistory);
+    if (feedbackFormateado) {
+      lineas.push("");
+      lineas.push("APRENDIZAJE DE CORRECCIONES PREVIAS DEL USUARIO SOBRE TÍTULOS Y DESCRIPCIONES DE REELS (no repitas lo que ya te corrigió antes):");
+      lineas.push(feedbackFormateado);
     }
   }
 
@@ -277,6 +289,7 @@ export async function loadBandProfile(
     perfil.tonePhrases = listaLimpia(adnDurable.frases_emblematicas_extraidas, 4);
     perfil.toneByPlatform = limpiarMaticesPorRed(adnDurable.matices_por_red);
     perfil.toneStagePhrases = listaLimpia(adnDurable.frases_directo_extraidas, 6);
+    perfil.reelFeedbackHistory = Array.isArray(adnDurable.historial_feedback_reels) ? adnDurable.historial_feedback_reels : [];
   }
 
   let state: any = null;
@@ -318,6 +331,7 @@ export async function loadBandProfile(
       perfil.tonePhrases = listaLimpia(adn.frases_emblematicas_extraidas, 4);
       perfil.toneByPlatform = limpiarMaticesPorRed(adn.matices_por_red);
       perfil.toneStagePhrases = listaLimpia(adn.frases_directo_extraidas, 6);
+      perfil.reelFeedbackHistory = Array.isArray(adn.historial_feedback_reels) ? adn.historial_feedback_reels : [];
     }
   }
 

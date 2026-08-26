@@ -6,7 +6,7 @@ import {
  Upload, Layers, CheckCircle2, RotateCcw, AlertCircle, RefreshCw,
  Video, Calendar, Clock, Trash2, Film, Check, ExternalLink, Gauge, ChevronRight, ChevronLeft,
  Plus, TrendingUp, LineChart, Instagram, Youtube, Edit, Table,
- Volume2, VolumeX, Maximize2, X
+ Volume2, VolumeX, Maximize2, X, Star
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
@@ -399,6 +399,11 @@ export default function ReelsCenter({
  const [clipUserNote, setClipUserNote] = useState<string>('');
  const [isReanalyzingClip, setIsReanalyzingClip] = useState<boolean>(false);
  const [reanalyzeSuccessMsg, setReanalyzeSuccessMsg] = useState<string | null>(null);
+ // Valorar el título/copy anterior con estrellas + decidir si la corrección se recuerda para
+ // todos los próximos Reels de la banda o es solo un ajuste puntual de este corte.
+ const [clipToneRating, setClipToneRating] = useState<number>(0);
+ const [clipContentRating, setClipContentRating] = useState<number>(0);
+ const [clipFeedbackScope, setClipFeedbackScope] = useState<'este_reel' | 'global'>('este_reel');
 
  const handleReanalyzeClip = async () => {
  const activeClip = highlights[selectedHighlightIndex];
@@ -421,11 +426,15 @@ export default function ReelsCenter({
  duration,
  userNotes: clipUserNote,
  currentTitle: activeClip.title,
+ currentCopy: activeClip.recommendedCopy,
  // Para que el highlight reanalizado se actualice también en lo que ya se guardó en BD,
  // no solo en la pantalla actual.
  highlightId: activeClip.id,
  videoKey: inputType === 'file' ? videoKeyDeArchivo(selectedFile) : undefined,
- contentType: contentType !== 'auto' ? contentType : (detectedContentType || undefined)
+ contentType: contentType !== 'auto' ? contentType : (detectedContentType || undefined),
+ tonoRating: clipToneRating || undefined,
+ contenidoRating: clipContentRating || undefined,
+ alcance: clipFeedbackScope
  })
  });
 
@@ -458,12 +467,19 @@ export default function ReelsCenter({
  setEditedCopy(copyForPlatform(clipActualizado, selectedPlatform));
  }
 
+ const huboFeedback = Boolean(clipUserNote.trim() || clipToneRating || clipContentRating);
  setReanalyzeSuccessMsg(
  data.generatedByAI === false
  ? "Fragmento actualizado (la IA no estaba disponible: se ha usado una plantilla con tus notas)."
+ : huboFeedback && clipFeedbackScope === 'global'
+ ? "¡Análisis refinado! Este ajuste se recordará también en tus próximos Reels."
  : "¡Análisis del fragmento refinado con éxito!"
  );
  setTimeout(() => setReanalyzeSuccessMsg(null), 5000);
+ // Se resetea la valoración tras usarla: es feedback sobre ESA versión, no debe arrastrarse
+ // a la siguiente regeneración como si aplicara también a ella.
+ setClipToneRating(0);
+ setClipContentRating(0);
  } else {
  alert(data?.error ||"No se pudo reanalizar el fragmento.");
  }
@@ -2186,6 +2202,71 @@ export default function ReelsCenter({
  : 'bg-[#131313] -neutral-800 text-neutral-200 focus:-[#f2ca50]/50'
  }`}
  />
+ </div>
+
+ {/* Valorar la versión anterior (como el entrenamiento de pitches en Booking CRM):
+ estrellas + comentario ya existente arriba, y decidir si se recuerda para siempre
+ o es solo un ajuste puntual de este corte. */}
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+ <div className={`p-2 rounded-xl border space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[#131313] -neutral-800'}`}>
+ <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-400 block">Tono (versión anterior)</span>
+ <div className="flex items-center gap-0.5">
+ {[1, 2, 3, 4, 5].map((star) => (
+ <button
+ key={`clip-tone-${star}`}
+ type="button"
+ onClick={() => setClipToneRating(clipToneRating === star ? 0 : star)}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipToneRating >= star ? 'text-[#f2ca50]' : 'text-neutral-700 hover:text-neutral-500'}`}
+ title={`Valorar el tono: ${star}/5`}
+ >
+ <Star className="w-3.5 h-3.5 fill-current" />
+ </button>
+ ))}
+ </div>
+ </div>
+ <div className={`p-2 rounded-xl border space-y-1 ${isStitchLight ? 'bg-white -slate-200' : 'bg-[#131313] -neutral-800'}`}>
+ <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-400 block">Contenido (versión anterior)</span>
+ <div className="flex items-center gap-0.5">
+ {[1, 2, 3, 4, 5].map((star) => (
+ <button
+ key={`clip-content-${star}`}
+ type="button"
+ onClick={() => setClipContentRating(clipContentRating === star ? 0 : star)}
+ className={`p-0.5 rounded cursor-pointer transition-colors ${clipContentRating >= star ? 'text-[#f2ca50]' : 'text-neutral-700 hover:text-neutral-500'}`}
+ title={`Valorar el contenido: ${star}/5`}
+ >
+ <Star className="w-3.5 h-3.5 fill-current" />
+ </button>
+ ))}
+ </div>
+ </div>
+ </div>
+
+ <div className="flex items-center gap-1.5 text-[10px] font-mono">
+ <span className="text-neutral-500 uppercase tracking-wider">Alcance del ajuste:</span>
+ <button
+ type="button"
+ onClick={() => setClipFeedbackScope('este_reel')}
+ className={`px-2 py-1 rounded-lg cursor-pointer transition-all ${
+ clipFeedbackScope === 'este_reel'
+ ? 'bg-neutral-700 text-white font-bold'
+ : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+ }`}
+ >
+ Solo este corte
+ </button>
+ <button
+ type="button"
+ onClick={() => setClipFeedbackScope('global')}
+ className={`px-2 py-1 rounded-lg cursor-pointer transition-all flex items-center gap-1 ${
+ clipFeedbackScope === 'global'
+ ? 'bg-[#f2ca50]/20 text-[#f2ca50] font-bold'
+ : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+ }`}
+ title="La IA recordará esta corrección también para futuros Reels de la banda"
+ >
+ <Sparkles className="w-3 h-3" /> Recordar para siempre
+ </button>
  </div>
 
  {reanalyzeSuccessMsg && (
