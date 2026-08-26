@@ -2,7 +2,7 @@ import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbUpsertLead } from "../../db.js";
-import { getAiClient, generateContentWithFallback } from "../../ai.js";
+import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
@@ -473,14 +473,18 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr) {
-      console.warn("[ScrapeContact Warning] Google search grounding failed, falling back to standard model call:", searchErr);
-      response = await generateContentWithFallback(client, {
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: {
-          responseMimeType: 'application/json'
-        }
-      });
+    } catch (searchErr: any) {
+      if (!isSpendCapOrQuotaError(searchErr)) {
+        console.warn("[ScrapeContact Warning] Google search grounding failed, falling back to standard model call:", searchErr?.message || searchErr);
+        response = await generateContentWithFallback(client, {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          config: {
+            responseMimeType: 'application/json'
+          }
+        });
+      } else {
+        throw searchErr;
+      }
     }
 
     const textResult = response?.text || "";

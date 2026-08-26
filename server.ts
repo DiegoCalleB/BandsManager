@@ -28,6 +28,7 @@ import uploadRouter from "./server/routes/upload.js";
 import concertToAlbumRouter from "./server/routes/concert_to_album.js";
 import billingRouter from "./server/routes/billing.js";
 import spotifyRouter from "./server/routes/spotify.js";
+import aiMusicRouter from "./server/routes/ai_music.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -90,6 +91,7 @@ app.use("/api", repertorioRouter);
 app.use("/api", epkFansRouter);
 app.use("/api", billingRouter);
 app.use("/api/spotify", spotifyRouter);
+app.use("/api", aiMusicRouter);
 app.use("/api/concert-to-album", concertToAlbumRouter);
 app.use("/api/upload", uploadRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido

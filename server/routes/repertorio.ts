@@ -363,4 +363,64 @@ Final con parada seca al compás 4 en [${rootChord}].`;
   }
 });
 
+// POST AI Composer & Real Musician Arrangement Idea
+router.post("/ai-composer-arrangement", requireAuth, async (req, res) => {
+  try {
+    const { titulo, tonalidad, bpm, estiloMusico, objetivoIdea, seccionCancion, tiempoMinuto, promptUsuario, cifradoTexto } = req.body;
+
+    if (!titulo) {
+      return res.status(400).json({ error: "El título de la canción es requerido." });
+    }
+
+    const aiClient = getAiClient();
+    if (!aiClient) {
+      return res.status(500).json({ error: "El servicio de IA no está configurado." });
+    }
+
+    const prompt = `Eres un músico profesional de sesión, productor y co-autor de una banda independiente. Estás colaborando con la banda en el estudio de ensayo.
+Canción: "${titulo}"
+Tonalidad: "${tonalidad || 'Mim'}"
+Tempo: ${bpm || 120} BPM
+Parte de la canción seleccionada: ${seccionCancion || 'General'}
+Momento / Minuto de aplicación: ${tiempoMinuto || 'Toda la canción / Inicio'}
+Rol del Músico IA: ${estiloMusico || 'Productor y Arreglista General'}
+Objetivo de la Idea: ${objetivoIdea || 'Crear un nuevo arreglo o gancho instrumental'}
+${promptUsuario ? `Instrucción específica del músico/banda: "${promptUsuario}"` : ''}
+${cifradoTexto ? `Estructura y acordes actuales:\n${cifradoTexto}` : ''}
+
+Aporta una idea creativa, original y profesional de músico real específicamente diseñada para la parte de la canción "${seccionCancion || 'General'}" (en torno al minuto/compás ${tiempoMinuto || 'indicado'}). 
+
+Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
+{
+  "tituloIdea": "Título corto y molón para la idea (ej: Riff de Intro [01:15] Sincopado)",
+  "instrumentoRol": "Guitarra Líder / Bajo / Teclados / Producción",
+  "descripcionArreglo": "Explicación detallada de cómo tocar el arreglo, qué intención aporta exactamente en la sección ${seccionCancion || 'General'} (${tiempoMinuto || 'minuto indicado'}), notas de producción y compases.",
+  "tablaturaOAcordes": "Ej: [${seccionCancion || 'Sección'}] e|-----------------| B|---7-8-10-8-7----| o progresión armónica sugerida",
+  "notasParaBanda": "Consejo directo para grabar esta idea en el estudio"
+}`;
+
+    const aiRes = await generateContentWithFallback(aiClient, {
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: "application/json"
+      }
+    });
+
+    const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const parsed = safeParseJson(responseText);
+
+    if (!parsed || !parsed.tituloIdea) {
+      return res.status(500).json({ error: "La IA no pudo generar una idea válida." });
+    }
+
+    res.json({
+      success: true,
+      idea: parsed
+    });
+  } catch (err: any) {
+    console.error("Error in ai-composer-arrangement:", err);
+    res.status(500).json({ error: err?.message || "Error al generar arreglo con IA." });
+  }
+});
+
 export default router;

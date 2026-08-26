@@ -2,7 +2,7 @@ import express from "express";
 import { SocialMetric } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth } from "../state.js";
 import { dbGetSocialMetrics, dbUpsertSocialMetric, dbDeleteSocialMetric, dbGetRegisteredBandById, dbGetEpkConfig, dbUpsertEpkConfig, dbGetRegisteredBands, dbGetSocialContentItems, dbUpsertSocialContentItem } from "../db.js";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, GEMINI_MODEL } from "../ai.js";
 
 const router = express.Router();
 
@@ -636,7 +636,7 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
 }`;
 
     const response = await generateContentWithFallback(ai, {
-      preferredModel: "gemini-2.5-flash",
+      preferredModel: GEMINI_MODEL,
       contents: [
         {
           role: "user",

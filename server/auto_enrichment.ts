@@ -3,6 +3,8 @@ import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState } from "./state.js";
 import { detectPitchLanguage } from "./utils/leadLanguage.js";
 import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
+import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
+import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
@@ -270,43 +272,52 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
   // Ensure initial pitch is generated if missing
   if (!lead.pitch_generado || lead.pitch_generado === "Sin pitch generado." || lead.pitch_generado.trim() === "") {
     const state = loadState();
-    const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
-    const cleanId = userBandId.replace(/^(band|reg)-/, '');
-    const isBakandeya = cleanId === 'bakandeya';
-    const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-    const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
+    const bandDna = getBandDnaProfile(state, userBandId, lead);
+    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+
+    const pitchLinks = {
+      spotify: bandDna.spotifyUrl,
+      youtube: bandDna.youtubeUrl,
+      epk: bandDna.epkUrl
+    };
 
     const client = getAiClient();
     if (client) {
-      const languageHint = detectPitchLanguage(lead);
-      const promptPitch = `Eres el Agente Redactor e Inteligencia Artificial de Booking de la banda "${bandName}" (${bandBio ? bandBio : 'banda de música en directo'}).
-Redacta un correo de pitch inicial muy profesional, fresco y atractivo para presentar a la banda y proponer un concierto en la sala, festival o medio: "${lead.nombre_sala}" ubicado en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}, Género habitual: ${lead.genero || "N/D"}).
-${bandBio ? `Destaca su propuesta artística: ${bandBio}.` : `Destaca su propuesta de música en directo.`}
-${languageHint.instruction}
-No suenes a plantilla robótica.
-Devuelve ÚNICAMENTE el texto final redactado del pitch, sin asuntos, encabezados ni metadatos.`;
+      const promptPitch = `${systemPrompt}
+
+TAREA ESPECÍFICA:
+Redacta el correo de propuesta de concierto inicial de máxima calidad y personalización para:
+- Nombre: "${lead.nombre_sala}"
+- Ubicación: ${lead.ciudad || "España"} (Región: ${lead.region || "N/D"})
+- Tipo: ${lead.tipo || "sala"}
+- Aforo: ${lead.aforo || "Estándar"}
+- Género / Línea musical: ${lead.genero || "Música en directo"}
+
+Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado por el mánager.`;
 
       try {
-        const pitchRes = await generateContentWithFallback(client, { contents: promptPitch });
+        const pitchRes = await generateContentWithFallback(client, {
+          contents: promptPitch,
+          permitirPitchLocal: true,
+          links: pitchLinks
+        });
         if (pitchRes && pitchRes.text) {
           lead.pitch_generado = pitchRes.text.trim();
           modified = true;
-          console.log(`[AutoEnrich] Pitch inicial generado automáticamente para '${lead.nombre_sala}'.`);
+          console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '${lead.nombre_sala}'.`);
         }
       } catch (e: any) {
-        console.warn(`[AutoEnrich] Error generando pitch inicial:`, e?.message || e);
+        console.warn(`[AutoEnrich] Error generando pitch inicial con IA:`, e?.message || e);
       }
     }
 
     if (!lead.pitch_generado || lead.pitch_generado === "Sin pitch generado." || lead.pitch_generado.trim() === "") {
-      if (bandBio) {
-        lead.pitch_generado = `¡Buenas desde el equipo de ${bandName}!\n\nQueríamos proponeros un concierto en ${lead.nombre_sala} (${lead.ciudad || "España"}). Nuestra propuesta es un directo de ${bandBio} enérgico y profesional, ideal para vuestro espacio.\n\n¿Cómo tenéis la agenda para los próximos meses?\n\n¡Un saludo!\n${bandName} Agent Manager`;
-        modified = true;
-      } else {
-        lead.pitch_generado = `¡Buenas desde el equipo de ${bandName}!\n\nQueríamos proponeros un concierto en ${lead.nombre_sala} (${lead.ciudad || "España"}). Nos encanta vuestra programación y creemos que nuestra propuesta de música en directo encajaría muy bien en vuestro espacio.\n\n¿Cómo tenéis la disponibilidad para los próximos meses?\n\n¡Un saludo!\n${bandName} Agent Manager`;
-        modified = true;
-      }
+      lead.pitch_generado = generateSmartDnaPitchFallback({
+        bandDna,
+        lead
+      });
+      modified = true;
     }
   }
 

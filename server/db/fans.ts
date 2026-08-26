@@ -93,4 +93,70 @@ export async function dbDeleteFan(id: string, bandId: string) {
   return true;
 }
 
-// --- SOCIAL POSTS ---
+// --- MUSICIANS WAITLIST ---
+
+export async function dbUpsertMusicianWaitlist(item: any) {
+  const sb = getSupabase();
+  const payload = {
+    id: item.id || `musician-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    nombre_banda: item.nombreBanda || item.nombre_banda || "",
+    nombre_contacto: item.nombreContacto || item.nombre_contacto || "",
+    email: item.email || "",
+    instagram: item.instagram || "",
+    telefono: item.telefono || "",
+    ciudad: item.ciudad || "",
+    genero: item.genero || "",
+    enlace_musica: item.enlaceMusica || item.enlace_musica || "",
+    interes_principal: item.interesPrincipal || item.interes_principal || "",
+    notas: item.notas || "",
+    idioma: item.idioma || "es",
+    banda_origen: item.bandaOrigen || item.banda_origen || "",
+    concierto_origen: item.conciertoOrigen || item.concierto_origen || "",
+    created_at: item.created_at || new Date().toISOString()
+  };
+
+  try {
+    const { data, error } = await sb.from("musicians_waitlist").upsert(payload).select().single();
+    if (!error && data) {
+      return data;
+    }
+  } catch (err) {
+    // Si la tabla musicians_waitlist no existe en Supabase todavía, guardamos como lead especial
+  }
+
+  try {
+    const leadPayload = {
+      id: payload.id,
+      band_id: "band-bakandeya",
+      nombre: payload.nombre_banda || payload.nombre_contacto,
+      contacto: payload.nombre_contacto,
+      email: payload.email,
+      telefono: payload.telefono,
+      ciudad: payload.ciudad,
+      tipo: "musico_waitlist",
+      estado: "nuevo",
+      notas: `[Waitlist Músicos BandManager.io] Instagram: ${payload.instagram} | Género: ${payload.genero} | Enlace: ${payload.enlace_musica} | Interés: ${payload.interes_principal} | Idioma: ${payload.idioma} | Origen: ${payload.banda_origen} ${payload.concierto_origen} | Notas: ${payload.notas}`
+    };
+    await sb.from("leads").upsert(leadPayload);
+  } catch (leadErr) {
+    console.warn("Could not save musician to leads table:", leadErr);
+  }
+
+  return payload;
+}
+
+export async function dbGetMusiciansWaitlist() {
+  const sb = getSupabase();
+  try {
+    const { data, error } = await sb.from("musicians_waitlist").select("*").order("created_at", { ascending: false });
+    if (!error && data) return data;
+  } catch (e) {}
+
+  try {
+    const { data, error } = await sb.from("leads").select("*").eq("tipo", "musico_waitlist").order("created_at", { ascending: false });
+    if (!error && data) return data;
+  } catch (e) {}
+
+  return [];
+}
+

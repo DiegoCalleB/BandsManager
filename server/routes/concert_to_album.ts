@@ -4,7 +4,7 @@ import fs from "fs";
 import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
-import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from "../ai.js";
+import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS, GEMINI_MODEL } from "../ai.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 // Estos helpers vivían aquí; ahora los comparte también el generador de Reels, que antes
 // descargaba con ytdl-core a secas y era el que se comía los bloqueos antibot de YouTube.
@@ -523,9 +523,9 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
           }
 
           const response = await generateContentWithFallback(aiClient, {
-        timeoutMs: TIMEOUT_IA_LARGO_MS,
+            timeoutMs: TIMEOUT_IA_LARGO_MS,
             contents,
-            preferredModel: "gemini-3.6-flash",
+            preferredModel: GEMINI_MODEL,
           });
 
           const jsonText = response.text || "";
@@ -1004,7 +1004,7 @@ REQUISITOS OBLIGATORIOS:
       const response = await generateContentWithFallback(aiClient, {
         timeoutMs: TIMEOUT_IA_LARGO_MS,
         contents,
-        preferredModel: "gemini-3.6-flash",
+        preferredModel: GEMINI_MODEL,
       });
       if (response && response.text) {
         transText = response.text.trim();
@@ -1092,9 +1092,9 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
 }
 `;
         const response = await generateContentWithFallback(aiClient, {
-        timeoutMs: TIMEOUT_IA_LARGO_MS,
+          timeoutMs: TIMEOUT_IA_LARGO_MS,
           contents: prompt,
-          preferredModel: "gemini-3.6-flash",
+          preferredModel: GEMINI_MODEL,
         });
 
         const jsonText = response.text || "";
@@ -1211,7 +1211,7 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
       const response = await generateContentWithFallback(aiClient, {
         timeoutMs: TIMEOUT_IA_LARGO_MS,
         contents,
-        preferredModel: "gemini-3.6-flash",
+        preferredModel: GEMINI_MODEL,
       });
 
       const jsonText = response.text || "";

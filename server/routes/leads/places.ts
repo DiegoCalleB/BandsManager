@@ -2,7 +2,7 @@ import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
-import { getAiClient, generateContentWithFallback } from "../../ai.js";
+import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from "../../ai.js";
 import { safeParseJson } from "../../utils.js";
 import { getDomainFromUrl } from "./helpers.js";
 
@@ -287,11 +287,15 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (err) {
-      response = await generateContentWithFallback(aiClient, {
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: { responseMimeType: 'application/json' }
-      });
+    } catch (err: any) {
+      if (!isSpendCapOrQuotaError(err)) {
+        response = await generateContentWithFallback(aiClient, {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          config: { responseMimeType: 'application/json' }
+        });
+      } else {
+        throw err;
+      }
     }
 
     const textResult = response?.text || "{}";
@@ -398,12 +402,16 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
               tools: [{ googleSearch: {} }]
             }
           });
-        } catch (err) {
-          console.warn("[Email Extractor Warning] Grounding failed, fallback to direct JSON model:", err);
-          response = await generateContentWithFallback(aiClient, {
-            contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            config: { responseMimeType: 'application/json' }
-          });
+        } catch (err: any) {
+          if (!isSpendCapOrQuotaError(err)) {
+            console.warn("[Email Extractor Warning] Grounding failed, fallback to direct JSON model:", err?.message || err);
+            response = await generateContentWithFallback(aiClient, {
+              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              config: { responseMimeType: 'application/json' }
+            });
+          } else {
+            throw err;
+          }
         }
 
         const textResult = response?.text || "{}";

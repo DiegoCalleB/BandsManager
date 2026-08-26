@@ -255,6 +255,28 @@ export const PublicFanCapture: React.FC = () => {
           </div>
         )}
 
+        {/* Banner para músicos y bandas */}
+        <div className="pt-2">
+          <a
+            href="/musicos"
+            className="group block p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/40 transition-all text-left"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+                <Music className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-slate-200 group-hover:text-amber-300 transition-colors">
+                  ¿Eres músico o tienes una banda?
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Consigue una página como esta para tu grupo con BandManager.ai →
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+
         <footer className="text-center text-[11px] text-slate-600">
           Bakandeya Official Community • Powered by BandManager.ai
         </footer>

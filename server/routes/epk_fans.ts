@@ -10,7 +10,9 @@ import {
   dbUpsertFan,
   dbDeleteFan,
   dbGetSongs,
-  dbGetConcerts
+  dbGetConcerts,
+  dbUpsertMusicianWaitlist,
+  dbGetMusiciansWaitlist
 } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
@@ -288,6 +290,22 @@ router.post("/epk/traducir", requireAuth, async (req, res) => {
       datosTraducidos[clave] = texto(crudo.datosContratacion?.[clave]);
     }
 
+    const cifrasTraducidas: Record<string, { etiqueta?: string }> = {};
+    const listaCifras = Array.isArray(crudo.cifras) ? crudo.cifras : [];
+    for (const c of listaCifras) {
+      if (c?.id && textos.cifras.some(o => o.id === c.id)) {
+        cifrasTraducidas[c.id] = { etiqueta: texto(c.etiqueta) };
+      }
+    }
+
+    const resenasTraducidas: Record<string, { cita?: string; tipo?: string }> = {};
+    const listaResenas = Array.isArray(crudo.resenas) ? crudo.resenas : [];
+    for (const r of listaResenas) {
+      if (r?.id && textos.resenas.some(o => o.id === r.id)) {
+        resenasTraducidas[r.id] = { cita: texto(r.cita), tipo: texto(r.tipo) };
+      }
+    }
+
     const traduccion = {
       biografia: texto(crudo.biografia),
       textoPie: texto(crudo.textoPie),
@@ -295,6 +313,9 @@ router.post("/epk/traducir", requireAuth, async (req, res) => {
       miembros: miembrosTraducidos,
       videos: videosTraducidos,
       datosContratacion: datosTraducidos,
+      cifras: cifrasTraducidas,
+      prensaSubtitulo: texto(crudo.prensaSubtitulo),
+      resenas: resenasTraducidas,
       _fuenteHash: hashActual,
       _traducidoEn: new Date().toISOString(),
       _revisadoAMano: false
@@ -451,10 +472,39 @@ router.get("/public/epk", async (req, res) => {
       }
     }
 
+    // Resolver el audioPreview del EPK si la banda ha elegido un tema o subido un audio
+    let resolvedAudioPreview = epkConfig?.audioPreview ? { ...epkConfig.audioPreview } : null;
+    if (resolvedAudioPreview || epkConfig?.temasDestacadosIds?.length || songs.length > 0) {
+      const selectedSongId = resolvedAudioPreview?.cancionId;
+      const targetSong = selectedSongId
+        ? songs.find((s: any) => s.id === selectedSongId)
+        : (highlightedSongs[0] || songs.find((s: any) => s.audioPrincipalUrl || (s.audioIdeas && s.audioIdeas[0]?.audioUrl)));
+
+      const resolvedAudioUrl = (resolvedAudioPreview?.audioUrl && String(resolvedAudioPreview.audioUrl).trim())
+        || targetSong?.audioPrincipalUrl
+        || (targetSong?.audioIdeas && targetSong.audioIdeas[0]?.audioUrl)
+        || '';
+
+      const resolvedTitulo = (resolvedAudioPreview?.tituloTema && String(resolvedAudioPreview.tituloTema).trim())
+        || targetSong?.titulo
+        || (cleanBandId === 'bakandeya' ? 'Bakandeya · Directo Preview' : `${bandName} · Directo Preview`);
+
+      if (resolvedAudioPreview || resolvedAudioUrl || targetSong) {
+        resolvedAudioPreview = {
+          habilitado: resolvedAudioPreview?.habilitado ?? true,
+          cancionId: selectedSongId || targetSong?.id || undefined,
+          tituloTema: resolvedTitulo,
+          subtitulo: resolvedAudioPreview?.subtitulo?.trim() || 'Dale al play para escuchar cómo sonamos',
+          audioUrl: resolvedAudioUrl
+        };
+      }
+    }
+
     const cleanEpkConfig = {
       ...epkConfig,
       logoUrl,
       enlacesRedes,
+      audioPreview: resolvedAudioPreview || epkConfig?.audioPreview,
       contactoBooking: {
         ...(epkConfig?.contactoBooking || {}),
         nombre: (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) 
@@ -707,6 +757,78 @@ router.get("/epk/clicks", requireAuth, async (req, res) => {
     res.json({ success: true, clicks });
   } catch (err: any) {
     res.status(500).json({ error: "Error al obtener estadísticas de clicks." });
+  }
+});
+
+// Public Musician Waitlist Signup Endpoint (No Auth required)
+router.post("/public/musicians-waitlist", async (req, res) => {
+  try {
+    const {
+      nombreBanda,
+      nombreContacto,
+      email,
+      instagram,
+      telefono,
+      ciudad,
+      genero,
+      enlaceMusica,
+      interesPrincipal,
+      notas,
+      idioma,
+      bandaOrigen,
+      conciertoOrigen
+    } = req.body || {};
+
+    if (!nombreBanda || !email) {
+      return res.status(400).json({ error: "Por favor, indica al menos el nombre de la banda y el correo electrónico." });
+    }
+
+    const waitlistItem = {
+      id: `musician-${Date.now()}`,
+      nombreBanda: String(nombreBanda).trim(),
+      nombreContacto: nombreContacto ? String(nombreContacto).trim() : undefined,
+      email: String(email).toLowerCase().trim(),
+      instagram: instagram ? String(instagram).trim() : undefined,
+      telefono: telefono ? String(telefono).trim() : undefined,
+      ciudad: ciudad ? String(ciudad).trim() : undefined,
+      genero: genero ? String(genero).trim() : undefined,
+      enlaceMusica: enlaceMusica ? String(enlaceMusica).trim() : undefined,
+      interesPrincipal: interesPrincipal ? String(interesPrincipal).trim() : undefined,
+      notas: notas ? String(notas).trim() : undefined,
+      idioma: idioma || "es",
+      bandaOrigen: bandaOrigen || undefined,
+      conciertoOrigen: conciertoOrigen || undefined,
+      created_at: new Date().toISOString()
+    };
+
+    const saved = await dbUpsertMusicianWaitlist(waitlistItem);
+
+    const state = loadState();
+    if (!state.musiciansWaitlist) state.musiciansWaitlist = [];
+    state.musiciansWaitlist.unshift(saved);
+    saveState(state);
+
+    res.json({
+      success: true,
+      message: "¡Solicitud recibida con éxito! Te contactaremos tan pronto abramos nuevas plazas.",
+      data: saved
+    });
+  } catch (err: any) {
+    console.error("Error saving musician waitlist submission:", err);
+    res.status(500).json({ error: "Error al procesar tu solicitud." });
+  }
+});
+
+// Get Musician Waitlist submissions (Authenticated)
+router.get("/musicians-waitlist", requireAuth, async (req, res) => {
+  try {
+    const list = await dbGetMusiciansWaitlist();
+    const state = loadState();
+    const combined = Array.from(new Map([...(state.musiciansWaitlist || []), ...list].map(m => [m.id || m.email, m])).values());
+    res.json({ success: true, count: combined.length, list: combined });
+  } catch (err: any) {
+    console.error("Error fetching musicians waitlist:", err);
+    res.status(500).json({ error: "Error al obtener la lista de espera de músicos." });
   }
 });
 

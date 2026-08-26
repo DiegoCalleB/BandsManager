@@ -170,18 +170,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     audioUrl?: string;
     tituloTema?: string;
     subtitulo?: string;
-  } | null>({
-    habilitado: true,
-    audioUrl: 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg',
-    tituloTema: 'Directo Preview',
-    subtitulo: 'Dale al play para escuchar cómo sonamos'
-  });
+  } | null>(null);
   const [isPlayingAudioPreview, setIsPlayingAudioPreview] = useState(false);
   const [copiedShareLink, setCopiedShareLink] = useState(false);
   const audioPreviewRef = React.useRef<HTMLAudioElement | null>(null);
 
   const toggleAudioPreview = () => {
-    const targetAudioUrl = audioPreviewConfig?.audioUrl?.trim() || 'https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg';
+    const targetAudioUrl = audioPreviewConfig?.audioUrl?.trim();
+    if (!targetAudioUrl) {
+      console.warn("No hay URL de audio configurada para reproducir.");
+      return;
+    }
     
     if (!audioPreviewRef.current || audioPreviewRef.current.src !== targetAudioUrl) {
       if (audioPreviewRef.current) {
@@ -198,8 +197,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       audioPreviewRef.current.play().then(() => {
         setIsPlayingAudioPreview(true);
         trackClick('audio_preview', '', 'landing');
-      }).catch(() => {
-        setIsPlayingAudioPreview(true);
+      }).catch((err) => {
+        console.warn("Error playing audio preview:", err);
+        setIsPlayingAudioPreview(false);
       });
     }
   };
@@ -418,6 +418,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           if (data.epkConfig?.audioPreview) {
             setAudioPreviewConfig(data.epkConfig.audioPreview);
+          } else if (data.highlightedSongs && data.highlightedSongs.length > 0) {
+            const songWithAudio = data.highlightedSongs.find((s: any) => s.audioPrincipalUrl || (s.audioIdeas && s.audioIdeas[0]?.audioUrl));
+            if (songWithAudio) {
+              setAudioPreviewConfig({
+                habilitado: true,
+                cancionId: songWithAudio.id,
+                tituloTema: songWithAudio.titulo,
+                subtitulo: 'Dale al play para escuchar cómo sonamos',
+                audioUrl: songWithAudio.audioPrincipalUrl || (songWithAudio.audioIdeas && songWithAudio.audioIdeas[0]?.audioUrl) || ''
+              });
+            }
           }
 
           if (data.upcomingConcerts && Array.isArray(data.upcomingConcerts)) {
@@ -517,6 +528,42 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         ? 'https://bands-manager.up.railway.app/epk'
         : `${window.location.origin}/epk`)
     : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+
+  const musicianLandingUrl = `/musicos?lang=${encodeURIComponent(language)}&from_band=${encodeURIComponent((resolvedBandId || '').replace(/^(band|reg)-/, ''))}&from_concert=${encodeURIComponent(concertName || '')}`;
+
+  const renderMusicianBanner = (contextType: 'redes' | 'form' | 'success' = 'form') => (
+    <div className="pt-3.5 border-t border-neutral-800/80">
+      <a
+        href={musicianLandingUrl}
+        onClick={() => trackClick('musician_waitlist_banner', `/musicos?lang=${language}`, contextType)}
+        className="group block p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-neutral-950 via-neutral-900/90 to-amber-950/25 border border-neutral-800 hover:border-amber-500/50 transition-all shadow-md active:scale-[0.99]"
+      >
+        <div className="flex items-start gap-3">
+          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 shrink-0 mt-0.5 group-hover:scale-105 transition-transform">
+            <Music className="w-4 h-4" />
+          </div>
+          <div className="flex-1 min-w-0 space-y-1">
+            <div className="flex items-center justify-between gap-2">
+              <h4 className="text-xs font-bold font-mono text-white group-hover:text-amber-300 transition-colors">
+                {t('musicianBannerTitle')}
+              </h4>
+              <span className="hidden sm:flex text-[10px] font-mono text-amber-400 opacity-90 group-hover:opacity-100 transition-opacity items-center gap-0.5 shrink-0 font-bold">
+                <span>{t('musicianBannerCTA')}</span>
+                <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+              </span>
+            </div>
+            <p className="text-[11px] font-mono text-neutral-400 leading-snug">
+              {t('musicianBannerSubtitle')}
+            </p>
+            <div className="pt-1 flex items-center gap-1 text-[11px] font-mono text-amber-400 font-bold sm:hidden">
+              <span>{t('musicianBannerCTA')}</span>
+              <ChevronRight className="w-3 h-3" />
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  );
 
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
     if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;
@@ -1014,6 +1061,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
               </div>
             </div>
           )}
+
+          {/* Banner para Músicos y Bandas en pantalla de éxito */}
+          {renderMusicianBanner('success')}
 
           <div className="pt-2">
             <a href="/" className="text-xs font-mono text-neutral-500 hover:text-amber-500 underline transition-colors">
@@ -1514,6 +1564,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           </div>
         )}
+
+        {/* Banner para Músicos y Bandas interesadas en tener su propia página */}
+        {renderMusicianBanner('form')}
 
       </div>
 

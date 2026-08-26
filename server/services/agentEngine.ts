@@ -8,6 +8,8 @@ import { getSupabase } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
+import { dbGetEpkConfig } from "../db/epk.js";
+import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 
 export async function logAgentExecution(logData: {
   band_id: string;
@@ -108,12 +110,27 @@ export async function runEnviadorAgent(opts: {
   const { data: bandData } = await sb.from("registered_bands").select("nombre_banda").eq("band_id", opts.bandId).maybeSingle();
   if (bandData?.nombre_banda) bandName = bandData.nombre_banda;
 
+  let epkConfig: any = null;
+  try {
+    epkConfig = await dbGetEpkConfig(opts.bandId);
+  } catch (e) {
+    // Non-blocking fallback
+  }
+
   const results: any[] = [];
   const nowIso = new Date().toISOString();
 
   for (const lead of approvedLeads) {
     const emailContacto = lead.email_contacto || lead.email;
-    const pitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
+    const rawPitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
+    const { html: emailHtml, text: emailText, cleanPitch } = buildServerEmailHtml({
+      pitchText: rawPitch,
+      bandName,
+      bandId: opts.bandId,
+      epkConfig,
+      lead
+    });
+
     const isRespuesta = lead.estado === "aprobado_respuesta";
     const asunto = isRespuesta
       ? `Re: Concierto ${bandName} en ${lead.nombre_sala}`
@@ -137,15 +154,12 @@ export async function runEnviadorAgent(opts: {
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
       if (!ENVIO_REAL) {
-        // Modo borrador: se deja el email en la bandeja de la banda para revisión humana. El
-        // lead NO pasa a 'contactado' (nadie ha contactado con nadie todavía) ni se apunta nada
-        // en lead_messages (no hay mensaje enviado en el hilo) ni se toca fecha_envio. Pero sí
-        // cambia de estado, porque si se quedara en 'aprobado_*' el scheduler crearía un
-        // borrador duplicado en cada pasada.
+        // Modo borrador: se deja el email en la bandeja de la banda para revisión humana.
         const { draftPath } = await crearBorrador(opts.bandId, {
           to: emailContacto,
           subject: asunto,
-          body: pitch,
+          body: emailText,
+          html: emailHtml,
           inReplyTo: lead.thread_id || undefined
         });
 
@@ -159,7 +173,8 @@ export async function runEnviadorAgent(opts: {
       await enviarEmail(opts.bandId, {
         to: emailContacto,
         subject: asunto,
-        body: pitch,
+        body: emailText,
+        html: emailHtml,
         inReplyTo: lead.thread_id || undefined
       });
 
@@ -175,7 +190,7 @@ export async function runEnviadorAgent(opts: {
         remitente: "banda",
         remitente_nombre: `${bandName} Booking`,
         asunto,
-        mensaje: pitch,
+        mensaje: cleanPitch,
         fecha: nowIso
       });
 

@@ -1,6 +1,8 @@
 import { SongStudioCubaseHelpModal } from "./song_studio/SongStudioCubaseHelpModal";
 import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConfirmModal";
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
+import { SongStudioAiMusicModal } from "./song_studio/SongStudioAiMusicModal";
+import { SongStudioAiComposerModal } from "./song_studio/SongStudioAiComposerModal";
 import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
 import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
@@ -75,6 +77,8 @@ export default function SongStudioModal({
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
   const [showChordsModal, setShowChordsModal] = useState<boolean>(false);
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
+  const [showAiMusicModal, setShowAiMusicModal] = useState<boolean>(false);
+  const [showAiComposerModal, setShowAiComposerModal] = useState<boolean>(false);
   const {
     shareModalData, setShareModalData,
     handleShareSong,
@@ -1343,17 +1347,26 @@ export default function SongStudioModal({
         const aiFile = new File([aiWavBlob], `base-ia-${newIdeaStyle}-${Date.now()}.wav`, { type: 'audio/wav' });
         const aiServerUrl = await uploadFileToServer(aiFile);
 
-        let aiTrackLabel = 'Ref IA: Batería y Bajo';
-        if (newIdeaIncludeDrums && newIdeaIncludeBass) aiTrackLabel = `🥁🎸 Ref AI (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
-        else if (newIdeaIncludeDrums) aiTrackLabel = `🥁 Ref AI: Batería (${newIdeaStyle.toUpperCase()})`;
-        else if (newIdeaIncludeBass) aiTrackLabel = `🎸 Ref AI: Bajo Tónica (${newIdeaKey})`;
+        const parts = [];
+        if (newIdeaIncludeDrums) parts.push('Batería');
+        if (newIdeaIncludeBass) parts.push('Bajo');
+        const aiTrackLabel = `Ref AI: ${parts.join(' + ') || 'IA Synth'} (${newIdeaStyle.toUpperCase()} - ${newIdeaKey})`;
 
-        if (primaryAudioUrl) {
-          createNewIdea(primaryAudioUrl, {
-            url: aiServerUrl,
-            label: aiTrackLabel,
-            instrument: newIdeaIncludeDrums && newIdeaIncludeBass ? 'Batería + Bajo (AI)' : newIdeaIncludeDrums ? 'Batería (AI)' : 'Bajo (AI)'
-          }, finalTitle, secondaryBaseTrack);
+        const aiTrackInfo = {
+          url: aiServerUrl,
+          label: aiTrackLabel,
+          instrument: parts.join(' + ') || 'IA Synth'
+        };
+
+        if (useSongBaseTrack && selectedSongBaseUrl) {
+          createNewIdea(
+            selectedSongBaseUrl,
+            aiTrackInfo,
+            finalTitle,
+            secondaryBaseTrack
+          );
+        } else if (primaryAudioUrl) {
+          createNewIdea(primaryAudioUrl, aiTrackInfo, finalTitle, secondaryBaseTrack);
         } else {
           createNewIdea(aiServerUrl, undefined, finalTitle, secondaryBaseTrack);
         }
@@ -1597,6 +1610,26 @@ export default function SongStudioModal({
                 >
                   <Keyboard className="w-3.5 h-3.5 text-purple-400" />
                   <span>Atajos Cubase</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowAiMusicModal(true)}
+                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/40 hover:from-amber-500/30 hover:to-orange-500/30 shadow-sm"
+                  title="Generar soundtracks, jingles o música de fondo con IA basada en la banda"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>🎵 Soundtrack IA (Lyria)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowAiComposerModal(true)}
+                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/40 hover:from-indigo-500/30 hover:to-purple-500/30 shadow-sm"
+                  title="Asistente Compositor IA: aporta ideas y arreglos como un músico real"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
+                  <span>🧠 Arreglos IA (Músico Virtual)</span>
                 </button>
               </div>
               <p className="text-xs text-neutral-400 font-mono flex items-center gap-3 mt-0.5">
@@ -1972,7 +2005,7 @@ export default function SongStudioModal({
                       </div>
 
                       <div className="sm:col-span-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-neutral-300 pt-1 border-t border-purple-500/20">
-                        <div className="flex items-center gap-4">
+                        <div className="flex flex-wrap items-center gap-4">
                           <label className="flex items-center gap-1.5 cursor-pointer">
                             <input
                               type="checkbox"
@@ -1989,7 +2022,7 @@ export default function SongStudioModal({
                               onChange={(e) => setNewIdeaIncludeBass(e.target.checked)}
                               className="accent-purple-500"
                             />
-                            <span>🎸 Bajo Tónica</span>
+                            <span>🎸 Bajo</span>
                           </label>
                         </div>
 
@@ -3222,6 +3255,52 @@ export default function SongStudioModal({
         subtitle={shareModalData.subtitle}
         initialText={shareModalData.text}
         itemType={shareModalData.itemType}
+      />
+
+      {/* AI MUSIC / SOUNDTRACK GENERATOR MODAL */}
+      <SongStudioAiMusicModal
+        isOpen={showAiMusicModal}
+        onClose={() => setShowAiMusicModal(false)}
+        song={song}
+        onAddGeneratedAudio={(audioUrl, title) => {
+          // Create new idea with generated soundtrack
+          const newIdea: SongAudioIdea = {
+            id: `idea-${Date.now()}`,
+            titulo: title,
+            seccion: 'general',
+            audioUrl: audioUrl,
+            fecha: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+            subidoPor: currentUsername || 'AI Lyria Engine',
+            instrumento: 'Soundtrack IA',
+            comentarios: [],
+            pistas: [
+              {
+                id: `track-${Date.now()}-1`,
+                nombre: title,
+                audioUrl: audioUrl,
+                autor: 'Lyria AI',
+                instrumento: 'Soundtrack / Jingle',
+                fecha: new Date().toLocaleDateString('es-ES'),
+                volumen: 1,
+                muted: false
+              }
+            ]
+          };
+          const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
+          onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+        }}
+      />
+
+      {/* AI COMPOSER / MUSICIAN ARRANGEMENT MODAL */}
+      <SongStudioAiComposerModal
+        isOpen={showAiComposerModal}
+        onClose={() => setShowAiComposerModal(false)}
+        song={song}
+        currentUsername={currentUsername}
+        onAddIdea={(newIdea) => {
+          const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
+          onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+        }}
       />
     </div>
     </ModalPortal>

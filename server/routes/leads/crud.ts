@@ -7,6 +7,7 @@ import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
 import { checkRecordLimit } from "../../utils/planLimits.js";
+import { getBandDnaProfile, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
 
 const router = express.Router();
 
@@ -135,11 +136,12 @@ router.post("/leads", requireAuth, async (req, res) => {
     }
 
     if (!newLead.pitch_generado || newLead.pitch_generado === "Sin pitch generado.") {
-      if (bandBio) {
-        newLead.pitch_generado = `¡Buenas desde el equipo de ${bandName}!\n\nQueríamos proponeros un concierto en ${newLead.nombre_sala} (${newLead.ciudad || "España"}). Nuestra propuesta es ${bandBio}, ideal para vuestro espacio.\n\n¿Cómo tenéis la agenda para los próximos meses?\n\n¡Un saludo!\n${bandName} Agent Manager`;
-      } else {
-        newLead.pitch_generado = `¡Buenas desde el equipo de ${bandName}!\n\nQueríamos proponeros un concierto en ${newLead.nombre_sala} (${newLead.ciudad || "España"}). Nos encanta vuestra programación y creemos que nuestra propuesta de música en directo encajaría muy bien en vuestro espacio.\n\n¿Cómo tenéis la disponibilidad para los próximos meses?\n\n¡Un saludo!\n${bandName} Agent Manager`;
-      }
+      const state = loadState();
+      const bandDna = getBandDnaProfile(state, userBandId, newLead);
+      newLead.pitch_generado = generateSmartDnaPitchFallback({
+        bandDna,
+        lead: newLead
+      });
     }
     
     // Check if this venue was previously deleted

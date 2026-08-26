@@ -22,6 +22,8 @@ const GithubWorkflowTracker = lazy(() => import('./components/GithubWorkflowTrac
 const EPKManager = lazy(() => import('./components/EPKManager'));
 const FansPanel = lazy(() => import('./components/FansPanel'));
 const FansLanding = lazy(() => import('./components/FansLanding'));
+const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLanding').then(m => ({ default: m.PublicMusiciansLanding })));
+const PublicEPK = lazy(() => import('./components/PublicEPK').then(m => ({ default: m.PublicEPK })));
 const Planes = lazy(() => import('./components/Planes'));
 import { LoginModal } from './components/LoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
@@ -365,11 +367,37 @@ export default function App() {
     });
   }, [rehearsals, currentActiveBandId, currentActiveBandName]);
 
-  // Fans Landing Route
+  // Public Landing Routes
   const isFanRoute = React.useMemo(() => {
     const p = window.location.pathname.toLowerCase();
     return p.startsWith('/fans') || p.startsWith('/unete') || p.startsWith('/directo') || p.startsWith('/fan');
   }, []);
+
+  const isMusicianRoute = React.useMemo(() => {
+    const p = window.location.pathname.toLowerCase();
+    return p.startsWith('/musicos') || p.startsWith('/landing-musicos') || p.startsWith('/musicians') || p.startsWith('/artistas') || p.startsWith('/waitlist') || p.startsWith('/bandas-registro');
+  }, []);
+
+  const isEpkRoute = React.useMemo(() => {
+    const p = window.location.pathname.toLowerCase();
+    return p.startsWith('/epk') || p.startsWith('/dossier') || p.startsWith('/press');
+  }, []);
+
+  if (isMusicianRoute) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[#0d0c0c] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+        <PublicMusiciansLanding />
+      </Suspense>
+    );
+  }
+
+  if (isEpkRoute) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[#121111] flex items-center justify-center"><RefreshCw className="w-8 h-8 animate-spin text-[#f2ca50]" /></div>}>
+        <PublicEPK />
+      </Suspense>
+    );
+  }
 
   if (isFanRoute) {
     return (

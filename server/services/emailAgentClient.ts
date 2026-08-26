@@ -54,7 +54,7 @@ export async function verificarIdentidadEmail(bandId: string): Promise<{ ok: boo
 // Envía un email real por SMTP desde la cuenta de la banda. Lanza EmailAgentError si no hay
 // cuenta configurada o si la identidad no coincide con el EPK - nunca marca un envío como
 // hecho sin haberlo hecho de verdad.
-export async function enviarEmail(bandId: string, params: { to: string; subject: string; body: string; inReplyTo?: string }): Promise<{ messageId: string }> {
+export async function enviarEmail(bandId: string, params: { to: string; subject: string; body: string; html?: string; inReplyTo?: string }): Promise<{ messageId: string }> {
   const account = await getAccount(bandId);
   const identidad = await verificarIdentidadEmail(bandId);
   if (!identidad.ok) {
@@ -77,6 +77,7 @@ export async function enviarEmail(bandId: string, params: { to: string; subject:
       to: params.to,
       subject: params.subject,
       text: params.body,
+      html: params.html || undefined,
       inReplyTo: params.inReplyTo,
       references: params.inReplyTo
     });
@@ -95,7 +96,7 @@ export async function enviarEmail(bandId: string, params: { to: string; subject:
 // MailComposer y se sube con IMAP APPEND. La carpeta de borradores NO se puede hardcodear: en
 // Gmail en español es '[Gmail]/Borradores' y en Outlook 'Drafts', así que se localiza por el
 // atributo especial '\Drafts' que ImapFlow ya resuelve incluso con nombres traducidos.
-export async function crearBorrador(bandId: string, params: { to: string; subject: string; body: string; inReplyTo?: string }): Promise<{ draftPath: string }> {
+export async function crearBorrador(bandId: string, params: { to: string; subject: string; body: string; html?: string; inReplyTo?: string }): Promise<{ draftPath: string }> {
   const account = await getAccount(bandId);
   const identidad = await verificarIdentidadEmail(bandId);
   if (!identidad.ok) {
@@ -110,6 +111,7 @@ export async function crearBorrador(bandId: string, params: { to: string; subjec
     to: params.to,
     subject: params.subject,
     text: params.body,
+    html: params.html || undefined,
     inReplyTo: params.inReplyTo,
     references: params.inReplyTo
   }).compile().build();

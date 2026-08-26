@@ -4,11 +4,11 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
 
-// App (todo el panel interno: CRM, calendario, reels, repertorio...) y PublicEPK (la única
-// ruta pública además de /fans) se cargan bajo demanda y por separado: quien abre /epk no
-// necesita descargar el panel interno, y viceversa.
+// App (todo el panel interno: CRM, calendario, reels, repertorio...) y las rutas públicas
+// (/epk, /musicos, /fans) se cargan bajo demanda y por separado.
 const App = lazy(() => import('./App.tsx'));
 const PublicEPK = lazy(() => import('./components/PublicEPK'));
+const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLanding'));
 
 const LoadingFallback = () => (
   <div style={{ minHeight: '100vh', background: '#121111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -26,11 +26,10 @@ const LoadingFallback = () => (
   </div>
 );
 
-// /epk es la única ruta pública de la app: es el enlace que los agentes meten en los pitches,
-// así que lo abre gente de fuera (programadores de salas, prensa) que NO tiene cuenta. Se
-// resuelve aquí, antes de montar App, para no pasar por su pantalla de login - sin esto la
-// página existía pero era inalcanzable y el enlace acababa en "Entrar a mi cuenta".
-const esRutaPublicaEpk = typeof window !== 'undefined' && /^\/epk\/?$/.test(window.location.pathname);
+// Rutas públicas accesibles sin autenticación
+const pathname = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
+const esRutaPublicaEpk = /^\/epk\/?$/.test(pathname);
+const esRutaPublicaMusicos = /^\/(musicos|musicians|para-musicos|waitlist-musicos)\/?$/.test(pathname);
 
 // El EPK se monta FUERA de LanguageProvider a propósito: ese provider inyecta el widget de
 // Google Translate, que traduce a nivel de DOM y destroza nombres propios y jerga ("Bakandeya",
@@ -50,6 +49,8 @@ createRoot(document.getElementById('root')!).render(
       <Suspense fallback={<LoadingFallback />}>
         {esRutaPublicaEpk ? (
           <PublicEPK />
+        ) : esRutaPublicaMusicos ? (
+          <PublicMusiciansLanding />
         ) : (
           <LanguageProvider>
             <App />

@@ -2403,100 +2403,111 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               <span className="text-[10px] text-slate-400 font-mono">Renderizado de Email</span>
             </div>
 
-            <div className="bg-white text-slate-900 p-6 rounded-2xl border border-slate-200 shadow-xl space-y-4 font-sans text-xs">
-              <p className="text-slate-500 italic pb-2 border-b border-slate-100">
+            <div className="bg-white text-slate-900 p-6 rounded-2xl border border-slate-200 shadow-md space-y-4 font-sans text-xs">
+              <p className="text-slate-500 italic pb-3 border-b border-slate-100">
                 ... [Cuerpo del correo electrónico redactado para la sala o festival] ...
               </p>
 
-              <div className="pt-2 space-y-3">
-                <div className="flex items-start gap-4">
+              {/* FIRMA ORGÁNICA Y NATURAL */}
+              <div className="pt-2 space-y-2.5">
+                <div className="flex items-start gap-3">
                   {config.logoUrl ? (
                     <img
                       src={config.logoUrl}
                       alt="Logo"
-                      className="w-16 h-16 rounded-xl object-contain bg-slate-950 p-1 border border-amber-500 shrink-0"
+                      className="w-11 h-11 rounded-lg object-contain shrink-0"
                     />
                   ) : isBakandeya ? (
                     <img
                       src="/logo_bakandeya_bueno_sin_fondo.png"
                       alt="Bakandeya Logo"
-                      className="w-16 h-16 rounded-xl object-contain bg-slate-950 p-1 border border-amber-500 shrink-0"
+                      className="w-11 h-11 rounded-lg object-contain shrink-0"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-400 font-bold text-lg shrink-0">
-                      <Music className="w-8 h-8 text-slate-400" />
+                    <div className="w-11 h-11 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 font-bold shrink-0">
+                      <Music className="w-5 h-5 text-slate-400" />
                     </div>
                   )}
 
-                  <div className="space-y-1 flex-1">
-                    <h4 className="font-extrabold text-slate-900 text-sm">
+                  <div className="space-y-0.5 flex-1">
+                    <h4 className="font-bold text-slate-900 text-sm leading-tight">
                       {config.firmaEmail?.nombreRemitente || config.contactoBooking?.nombre || 'Diego & Filgue'}
                     </h4>
-                    <p className="text-amber-600 font-bold text-[11px]">
+                    <p className="text-slate-600 font-medium text-xs">
                       {config.firmaEmail?.cargo || 'Booking & Management Team'}
                     </p>
-                    <p className="text-slate-600 text-[11px] font-medium">
-                      {config.firmaEmail?.textoPie || 'Bakandeya — Directo de Fusión y Escenario'}
-                    </p>
+                    {config.firmaEmail?.textoPie && (
+                      <p className="text-slate-500 text-[11px] italic">
+                        {config.firmaEmail.textoPie}
+                      </p>
+                    )}
 
-                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-600 pt-1 font-mono">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 pt-1">
                       {config.firmaEmail?.telefono && (
-                        <span>📞 {config.firmaEmail.telefono}</span>
+                        <span>{config.firmaEmail.telefono}</span>
+                      )}
+                      {config.firmaEmail?.telefono && config.firmaEmail?.email && (
+                        <span className="text-slate-300">•</span>
                       )}
                       {config.firmaEmail?.email && (
-                        <span>✉️ {config.firmaEmail.email}</span>
+                        <span className="text-sky-600 font-medium">{config.firmaEmail.email}</span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* BOTÓN DOSSIER SI ESTÁ HABILITADO */}
+                {/* ENLACE AL DOSSIER SI ESTÁ HABILITADO */}
                 {(config.firmaEmail?.adjuntarDossierPorDefecto ?? true) && (
-                  <div className="pt-2">
+                  <div className="pt-1 text-xs">
                     <a
                       href={publicEpkUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-[11px] shadow-sm transition"
+                      className="inline-flex items-center gap-1.5 text-sky-600 hover:text-sky-700 font-semibold underline transition"
                     >
                       <FileDown className="w-3.5 h-3.5" />
-                      <span>{config.dossierPdfName ? `📄 Ver Dossier Oficial (${config.dossierPdfName})` : '📄 Abrir Dossier & Kit de Prensa'}</span>
+                      <span>{config.dossierPdfName ? `Dossier Oficial & Rider (${config.dossierPdfName})` : 'Dossier Oficial & Kit de Prensa'}</span>
                     </a>
                   </div>
                 )}
 
-                {/* ICONOS DE REDES SOCIALES */}
+                {/* ENLACES A REDES SOCIALES ELEGANTES */}
                 {(config.firmaEmail?.incluirIconosRedes ?? true) && (
-                  <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-2">
-                    {Object.entries(config.enlacesRedes || {}).map(([net, url]) => {
-                      if (!url || !String(url).trim()) return null;
-                      const icons: Record<string, { label: string; bg: string }> = {
-                        spotify: { label: '🟢 Spotify', bg: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-                        instagram: { label: '📸 Instagram', bg: 'bg-pink-50 text-pink-700 border-pink-200' },
-                        youtube: { label: '🔴 YouTube', bg: 'bg-red-50 text-red-700 border-red-200' },
-                        tiktok: { label: '🎵 TikTok', bg: 'bg-slate-100 text-slate-900 border-slate-300' },
-                        facebook: { label: '📘 Facebook', bg: 'bg-blue-50 text-blue-700 border-blue-200' },
-                        twitter: { label: '🐦 X / Twitter', bg: 'bg-slate-100 text-slate-800 border-slate-300' },
-                        appleMusic: { label: '🍎 Apple Music', bg: 'bg-rose-50 text-rose-700 border-rose-200' },
-                        bandcamp: { label: '⛺ Bandcamp', bg: 'bg-teal-50 text-teal-700 border-teal-200' },
-                        website: { label: '🌐 Web', bg: 'bg-amber-50 text-amber-800 border-amber-200' },
-                        whatsapp: { label: '💬 WhatsApp', bg: 'bg-emerald-50 text-emerald-800 border-emerald-200' }
-                      };
-                      const iconData = icons[net] || { label: net, bg: 'bg-slate-100 text-slate-700 border-slate-200' };
-                      const rawUrl = String(url || '');
+                  <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+                    {Object.entries(config.enlacesRedes || {})
+                      .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban'].includes(net.toLowerCase()))
+                      .map(([net, url], idx, arr) => {
+                        const labels: Record<string, string> = {
+                          spotify: 'Spotify',
+                          instagram: 'Instagram',
+                          youtube: 'YouTube',
+                          tiktok: 'TikTok',
+                          facebook: 'Facebook',
+                          appleMusic: 'Apple Music',
+                          bandcamp: 'Bandcamp',
+                          website: 'Web Oficial',
+                          whatsapp: 'WhatsApp'
+                        };
+                        const label = labels[net] || net;
+                        const rawUrl = String(url || '');
+                        const href = rawUrl.startsWith('http') || rawUrl.startsWith('+')
+                          ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl)
+                          : `https://${rawUrl}`;
 
-                      return (
-                        <a
-                          key={net}
-                          href={rawUrl.startsWith('http') || rawUrl.startsWith('+') ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl) : `https://${rawUrl}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`px-2 py-0.5 rounded-md border font-semibold text-[10px] flex items-center gap-1 transition ${iconData.bg}`}
-                        >
-                          {iconData.label}
-                        </a>
-                      );
-                    })}
+                        return (
+                          <span key={net} className="inline-flex items-center gap-2">
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-slate-500 hover:text-slate-800 underline transition font-medium text-[11px]"
+                            >
+                              {label}
+                            </a>
+                            {idx < arr.length - 1 && <span className="text-slate-300">•</span>}
+                          </span>
+                        );
+                      })}
                   </div>
                 )}
               </div>

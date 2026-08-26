@@ -4,6 +4,7 @@ import { dbGetLeadById, dbUpsertLead } from "../../db.js";
 import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkConfig } from "../../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
+import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
 
 const router = express.Router();
 
@@ -30,46 +31,31 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
       return res.status(404).json({ success: false, error: "Sala no encontrada." });
     }
 
-    const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
-    const cleanId = userBandId.replace(/^(band|reg)-/, '');
-    const isBakandeya = cleanId === 'bakandeya';
-    const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-    const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
-    const website = bandConfig?.website || registeredBand?.spotify_youtube || '';
-
+    const bandDna = getBandDnaProfile(state, userBandId, lead);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
     const feedbackDetails: string[] = [];
     if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
     if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
     if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas del mánager: "${comentario.trim()}"`);
 
-    const languageHint = detectPitchLanguage(lead);
-    const systemPrompt = `Eres el Agente Redactor y Director de Comunicación IA de la banda "${bandName}".
-INFORMACIÓN Y ADN DE LA BANDA:
-- Nombre: ${bandName}
-- Propuesta artística y directo: ${bandBio || "Banda independiente de música en directo muy bailable y enérgica"}
-- Enlaces y material promocional: ${website || "Dossier y música oficial"}
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
 
-ENTRENAMIENTO PREVIO Y HISTORIAL DE PREFERENCIAS DEL MÁNAGER:
-${globalMemory}
-
-REGLAS ESTRICTAS DE REDACCIÓN:
-1. ${languageHint.instruction}
-2. Adapta el mensaje al tipo de recinto ("${lead.nombre_sala}", Ciudad: ${lead.ciudad || 'España'}, Aforo: ${lead.aforo || 'N/D'}).
-3. Cero fórmulas clichés artificiales de IA. Destaca la energía del directo y la facilidad logística.
-4. Devuelve ÚNICAMENTE el cuerpo del correo redactado listo para enviar (sin asuntos ni metadatos extra).`;
-
-    const prompt = `Redacta una propuesta de concierto para la sala "${lead.nombre_sala}" en ${lead.ciudad || 'España'} (Tipo: ${lead.tipo || 'sala'}).
+    const prompt = `Redacta una propuesta comercial y artística de concierto para "${lead.nombre_sala}" en ${lead.ciudad || 'España'} (Tipo: ${lead.tipo || 'sala'}, Aforo: ${lead.aforo || 'N/D'}).
 ${feedbackDetails.length > 0 ? `\nINSTRUCCIONES ADICIONALES DEL MÁNAGER:\n${feedbackDetails.join('\n')}` : ''}
-${lead.pitch_generado ? `\n(Versión previa de referencia si aplica: "${lead.pitch_generado.substring(0, 150)}...")` : ''}`;
+${lead.pitch_generado ? `\n(Versión previa de referencia: "${lead.pitch_generado.substring(0, 150)}...")` : ''}`;
+
+    const pitchLinks = {
+      spotify: bandDna.spotifyUrl,
+      youtube: bandDna.youtubeUrl,
+      epk: bandDna.epkUrl
+    };
 
     const proposals = await generateMultiModelProposals({
       prompt,
       systemPrompt,
-      links: buildPitchLinksFromEpkConfig(bandConfig, userBandId),
+      links: pitchLinks,
       providers: providers || ["gemini", "deepseek"],
-      contactEmail: bandConfig?.contactoBooking?.email || registeredBand?.email
+      contactEmail: bandDna.contactoEmail
     });
 
     res.json({
@@ -109,13 +95,8 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     if (!lead) {
       return res.status(404).json({ success: false, error: "Sala no encontrada." });
     }
-    const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
-    const cleanId = userBandId.replace(/^(band|reg)-/, '');
-    const isBakandeya = cleanId === 'bakandeya';
-    const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-    const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
 
+    const bandDna = getBandDnaProfile(state, userBandId, lead);
     const previousPitch = lead.pitch_generado || "";
 
     let newPitchText = "";
@@ -132,58 +113,54 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     }
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const languageHint = detectPitchLanguage(lead);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
 
-    const prompt = `Eres el Agente Redactor e Inteligencia Artificial de Booking de la banda "${bandName}" (${bandBio ? bandBio : 'banda de música en directo'}).
-Estás reescribiendo y perfeccionando el correo de pitch para la sala/organizador/medio "${lead.nombre_sala}" en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}, Género habitual: ${lead.genero || "N/D"}).
+    const prompt = `Reescribe y perfecciona el correo de pitch para "${lead.nombre_sala}" en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}).
 
-PITCH ANTERIOR PARA ESTA SALA/MEDIO:
+PITCH ANTERIOR:
 """
 ${previousPitch || "Sin pitch anterior."}
 """
 
-FEEDBACK E INSTRUCCIONES ESPECÍFICAS DEL MÁNAGER PARA ESTA SALA/MEDIO:
-${feedbackDetails.length > 0 ? feedbackDetails.join("\n") : "Reescribir con mayor fuerza, frescura y claridad."}
+FEEDBACK E INSTRUCCIONES ESPECÍFICAS DEL MÁNAGER:
+${feedbackDetails.length > 0 ? feedbackDetails.join("\n") : "Reescribir con mayor fuerza, autenticidad y claridad."}
 
-MEMORIA GLOBAL DE APRENDIZAJES Y ESTILO EN OTROS PITCHES (ENTRENAMIENTO PREVIO DEL MÁNAGER):
-${globalMemory}
+INSTRUCCIONES CLAVE:
+1. Aplica e integra las instrucciones del mánager y el ADN completo de la banda.
+2. Devuelve ÚNICAMENTE el texto final redactado del nuevo pitch, sin asuntos, encabezados ni metadatos extra.`;
 
-REGLAS DE REESCRITURA Y APRENDIZAJE GLOBAL:
-1. Aplica e integra las instrucciones específicas indicadas para esta sala o medio, así como las preferencias generales del historial global.
-2. Si el mánager pide acortar, acorta. Si pide cambiar el tono (más formal, más cañero, más directo), cámbialo. Si pide mencionar detalles clave, inclúyelos.
-3. Destaca el directo bailable y la propuesta artística de ${bandName} (${bandBio}).
-4. ${languageHint.instruction}
-5. No suenes a plantilla robótica ni a spam.
-6. Devuelve ÚNICAMENTE el texto final redactado del nuevo pitch, sin asuntos, encabezados ni metadatos.`;
+    const pitchLinks = {
+      spotify: bandDna.spotifyUrl,
+      youtube: bandDna.youtubeUrl,
+      epk: bandDna.epkUrl
+    };
 
     try {
       const unifiedRes = await generateUnifiedAI({
         prompt,
+        systemPrompt,
         provider: provider || "gemini",
         modelName: modelName,
-        // Esta ruta SÍ escribe pitches: el generador local es un último recurso legítimo aquí,
-        // y el resultado pasa por aprobación humana antes de enviarse.
         permitirPitchLocal: true,
-        links: buildPitchLinksFromEpkConfig(bandConfig, userBandId),
-        contactEmail: bandConfig?.contactoBooking?.email || registeredBand?.email
+        links: pitchLinks,
+        contactEmail: bandDna.contactoEmail
       });
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();
       }
     } catch (aiErr: any) {
-      console.warn(`Fallo ${provider || 'AI'} al regenerar pitch, utilizando fallback:`, aiErr.message);
+      console.warn(`Fallo ${provider || 'AI'} al regenerar pitch, utilizando motor local de ADN:`, aiErr.message);
     }
 
     if (!newPitchText) {
-      if (bandBio) {
-        isSimulated = true;
-        const cleanComment = comentario ? comentario.trim() : "";
-        const commentIntro = cleanComment ? `\n[Nota de ajuste aplicada: "${cleanComment}"]\n\n` : "";
-        
-        newPitchText = `¡Buenas desde el equipo de ${bandName}!${commentIntro}Queríamos proponeros un concierto en ${lead.nombre_sala} (${lead.ciudad || "España"}).\n\nNuestra propuesta es ${bandBio} muy bailable y enérgico, ideal para recintos como el vuestro.\n\n${cleanComment ? `Atendiendo a tu nota ("${cleanComment}"), nos adaptamos a vuestro formato habitual de taquilla o caché y podemos coordinar la fecha con bandas locales.` : `Nos adaptamos a vuestras condiciones de taquilla o caché garantizado y podemos colaborar con bandas locales para asegurar asistencia.`}\n\n¿Cómo tenéis la agenda para los próximos meses?\n\n¡Un saludo!\n${bandName} Agent Manager`;
-      } else {
-        newPitchText = previousPitch || "";
-      }
+      isSimulated = true;
+      newPitchText = generateSmartDnaPitchFallback({
+        bandDna,
+        lead,
+        provider,
+        customInstruction: comentario,
+        feedbackDetails
+      });
     }
 
     // Record learning log in lead

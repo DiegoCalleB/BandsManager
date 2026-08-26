@@ -8,6 +8,7 @@ import { getAiClient, generateContentWithFallback, buildPitchLinksFromEpkConfig 
 import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { runEnviadorAgent, logAgentExecution } from "../services/agentEngine.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaDelAgente } from "../utils/bandAccess.js";
+import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "../utils/bandDna.js";
 
 const router = express.Router();
 
@@ -187,32 +188,30 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
       const ai = getAiClient();
       const state = loadState();
       const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-      const pitchLinks = buildPitchLinksFromEpkConfig(getEpkConfigForBand(state, targetBandId, bandInfo), targetBandId);
 
       for (const lead of leadsToDraft) {
+        const bandDna = getBandDnaProfile(state, targetBandId, lead);
+        const pitchLinks = {
+          spotify: bandDna.spotifyUrl,
+          youtube: bandDna.youtubeUrl,
+          epk: bandDna.epkUrl
+        };
+        const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+
         let generatedPitch = "";
         if (ai) {
           try {
-            const prompt = `Actúa como el Agente Redactor de booking para la banda: ${bandInfo}.
+            const prompt = `${systemPrompt}
+
+TAREA ESPECÍFICA:
 Redacta una propuesta de concierto (pitch) cercana, profesional y atractiva para la sala o programador:
 - Sala: ${lead.nombre_sala} (${lead.ciudad || 'España'})
-- Género/Estilo de la sala: ${lead.genero || 'Música en directo'}
+- Género/Estilo habitual: ${lead.genero || 'Música en directo'}
 - Aforo: ${lead.aforo || 300}
 - Tipo: ${lead.tipo || 'sala'}
 
-MEMORIA GLOBAL DE APRENDIZAJES Y ESTILO EN OTROS PITCHES (ENTRENAMIENTO PREVIO DEL MÁNAGER):
-${globalMemory}
-
-Instrucciones:
-- Saludo personalizado a la sala.
-- Presentación concisa de la banda y propuesta de fecha para la temporada.
-- Enlace al dossier/EPK y propuesta económica flexible (caché o taquilla).
-- Despedida profesional y cordial con llamada a la acción.
-- Respeta las preferencias globales de estilo y tono aprendidas en la memoria del mánager.
 Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el usuario.`;
 
-            // El Redactor escribe pitches: aquí el generador local sí tiene sentido como
-            // último recurso (y el lead se queda en 'pendiente_aprobacion' para revisión).
             const resp = await generateContentWithFallback(ai, { contents: prompt, permitirPitchLocal: true, links: pitchLinks });
             generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
           } catch (err) {
@@ -220,13 +219,13 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           }
         }
 
-        // Si la IA no respondió se usa una plantilla genérica. No pasa nada (la sala sí es
-        // real y hay revisión humana antes de enviar), pero quien revisa tiene que saber que
-        // esto NO lo ha escrito la IA con el contexto del lead.
         let pitchEsPlantilla = false;
         if (!generatedPitch) {
           pitchEsPlantilla = true;
-          generatedPitch = `Hola equipo de ${lead.nombre_sala},\n\nOs escribimos desde ${bandInfo} porque estamos cerrando fechas para nuestra próxima gira y nos encantaría presentar nuestro directo en vuestra sala.\n\nContamos con un repertorio dinámico y gran puesta en escena. Podéis consultar nuestro Dossier EPK y material en directo. ¿Tendríais disponibilidad para los próximos meses?\n\n¡Un cordial saludo!\nEquipo de Booking`;
+          generatedPitch = generateSmartDnaPitchFallback({
+            bandDna,
+            lead
+          });
         }
 
         const notaPlantilla = pitchEsPlantilla

@@ -214,6 +214,8 @@ export async function uploadFileToServer(
     if (opts.folder) formData.append('folder', opts.folder);
 
     const headers: Record<string, string> = { ...authHeaders };
+    delete headers['Content-Type'];
+    delete headers['content-type'];
     if (opts.bandId) headers['x-band-id'] = opts.bandId;
 
     const response = await fetch('/api/upload', {

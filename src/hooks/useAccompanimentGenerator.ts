@@ -36,20 +36,20 @@ export function useAccompanimentGenerator(
 
       const serverUrl = await uploadFileToServer(file);
 
-      let trackLabel = 'Ref IA: Batería y Bajo';
-      if (includeDrums && includeBass) trackLabel = `🥁🎸 Ref AI (${drumStyle.toUpperCase()} - ${genKey})`;
-      else if (includeDrums) trackLabel = `🥁 Ref AI: Batería (${drumStyle.toUpperCase()})`;
-      else if (includeBass) trackLabel = `🎸 Ref AI: Bajo Tónica (${genKey})`;
+      const parts = [];
+      if (includeDrums) parts.push('Batería');
+      if (includeBass) parts.push('Bajo');
+      const trackLabel = `Ref IA: ${parts.join(' + ') || 'Acompañamiento'} (${genKey})`;
 
       saveNewTrackToIdea(
         showGenModalForIdea, 
         serverUrl, 
         trackLabel, 
-        includeDrums && includeBass ? 'Batería + Bajo (AI)' : includeDrums ? 'Batería (AI)' : 'Bajo (AI)'
+        parts.join(' + ') || 'IA Synth'
       );
 
       setShowGenModalForIdea(null);
-      alert(`¡Acompañamiento sintetizado con éxito! Se ha agregado al mezclador multipista como "${trackLabel}". Sincronizado a ${genBpm} BPM.`);
+      alert(`¡Acompañamiento sintetizado con éxito teniendo en cuenta la tonalidad (${genKey}) y tempo (${genBpm} BPM)! Se ha agregado al mezclador multipista como "${trackLabel}".`);
     } catch (err) {
       console.error("Error al generar acompañamiento:", err);
       alert("Error al sintetizar el acompañamiento de referencia.");

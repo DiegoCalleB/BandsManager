@@ -24,6 +24,9 @@ export interface TextosTraducibles {
   miembros: { id: string; rol: string; bio: string }[];
   videos: { id: string; titulo: string }[];
   datosContratacion: Record<ClaveDatoTraducible, string>;
+  cifras: { id: string; etiqueta: string }[];
+  prensaSubtitulo: string;
+  resenas: { id: string; cita: string; tipo: string }[];
 }
 
 /**
@@ -35,6 +38,8 @@ export function recopilarTextosTraducibles(config: Partial<EPKConfig> | null | u
   const miembros = (config?.miembros || []) as BandMember[];
   const videos = (config?.videos || []) as EPKVideo[];
   const datos: any = config?.datosContratacion || {};
+  const cifras = (config as any)?.cifrasImpacto?.items || [];
+  const resenas = (config as any)?.prensaResenas?.resenas || [];
 
   const datosTraducibles = {} as Record<ClaveDatoTraducible, string>;
   for (const clave of CLAVES_DATOS_TRADUCIBLES) {
@@ -54,6 +59,15 @@ export function recopilarTextosTraducibles(config: Partial<EPKConfig> | null | u
       .map(v => ({ id: v.id, titulo: v.titulo || '' }))
       .sort((a, b) => a.id.localeCompare(b.id)),
     datosContratacion: datosTraducibles,
+    cifras: cifras
+      .filter(c => c?.id && (c.etiqueta || '').trim())
+      .map(c => ({ id: c.id, etiqueta: c.etiqueta || '' }))
+      .sort((a, b) => a.id.localeCompare(b.id)),
+    prensaSubtitulo: (config as any)?.prensaResenas?.subtitulo || '',
+    resenas: resenas
+      .filter(r => r?.id && ((r.cita || '').trim() || (r.tipo || '').trim()))
+      .map(r => ({ id: r.id, cita: r.cita || '', tipo: r.tipo || '' }))
+      .sort((a, b) => a.id.localeCompare(b.id)),
   };
 }
 
@@ -62,7 +76,8 @@ export function hayAlgoQueTraducir(textos: TextosTraducibles): boolean {
   return Boolean(
     textos.biografia.trim() || textos.textoPie.trim() || textos.riderTecnico.trim() ||
     textos.miembros.length || textos.videos.length ||
-    CLAVES_DATOS_TRADUCIBLES.some(c => textos.datosContratacion[c].trim())
+    CLAVES_DATOS_TRADUCIBLES.some(c => textos.datosContratacion[c].trim()) ||
+    textos.cifras.length || textos.prensaSubtitulo.trim() || textos.resenas.length
   );
 }
 
@@ -107,6 +122,10 @@ export interface ResolutorEpk {
   bioMiembro: (m: BandMember) => string;
   tituloVideo: (v: EPKVideo) => string;
   dato: (clave: ClaveDatoTraducible) => string;
+  cifraEtiqueta: (id: string, defaultVal: string) => string;
+  prensaSubtitulo: string;
+  resenaCita: (id: string, defaultVal: string) => string;
+  resenaTipo: (id: string, defaultVal: string) => string;
 }
 
 /**
@@ -136,5 +155,9 @@ export function resolverContenidoEpk(
     bioMiembro: (m) => usar(tr.miembros?.[m?.id]?.bio, m?.bio),
     tituloVideo: (v) => usar(tr.videos?.[v?.id]?.titulo, v?.titulo),
     dato: (clave) => usar(tr.datosContratacion?.[clave], datos[clave] === undefined || datos[clave] === null ? '' : String(datos[clave])),
+    cifraEtiqueta: (id, defaultVal) => usar((tr as any)?.cifras?.[id]?.etiqueta, defaultVal),
+    prensaSubtitulo: usar((tr as any)?.prensaSubtitulo, (config as any)?.prensaResenas?.subtitulo),
+    resenaCita: (id, defaultVal) => usar((tr as any)?.resenas?.[id]?.cita, defaultVal),
+    resenaTipo: (id, defaultVal) => usar((tr as any)?.resenas?.[id]?.tipo, defaultVal),
   };
 }
