@@ -634,7 +634,20 @@ router.post("/public/fans", async (req, res) => {
     state.fans.unshift(saved as any);
     saveState(state);
 
-    const epkConf = getEpkConfigForBand(state, targetBandId);
+    // Supabase es la fuente de verdad del incentivo (ver AGENTS.md); el `state` en memoria de
+    // esta ruta puede llevar cacheado, para la banda por defecto, el incentivo de ejemplo
+    // (enlace de descarga y cupón reales) con el que arranca el proyecto en local, aunque la
+    // banda ya lo haya vaciado en Supabase desde el apartado QR. Se lee primero de Supabase y
+    // solo se cae al estado en memoria si esa consulta falla.
+    let epkConf: any = null;
+    try {
+      epkConf = await dbGetEpkConfig(targetBandId);
+    } catch (e) {
+      // Fallback abajo
+    }
+    if (!epkConf) {
+      epkConf = getEpkConfigForBand(state, targetBandId);
+    }
     const bandName = epkConf?.contactoBooking?.nombre || (targetBandId.includes('bakandeya') ? "Bakandeya" : "la banda");
 
     // El incentivo (descarga exclusiva / cupón de merchan) es opcional y lo configura cada banda
