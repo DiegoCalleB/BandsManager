@@ -115,6 +115,29 @@ export default function ReelsCenter({
  // El usuario preguntó explícitamente si esto se guardaba: antes no había forma de saberlo.
  const [toneAnalysisSaved, setToneAnalysisSaved] = useState(false);
 
+ // Abrir el modal disparaba SIEMPRE un análisis nuevo con IA, aunque ya hubiera un ADN guardado
+ // (de una edición manual o de un análisis anterior): cada vez que el usuario solo quería
+ // consultarlo, se lo pisaba con un resultado nuevo de la IA y perdía sus correcciones a mano.
+ // Ahora primero se mira qué hay ya guardado; solo se lanza la IA si no hay nada todavía.
+ const handleOpenToneModal = async () => {
+   setIsBakandeyaToneModalOpen(true);
+   setIsAnalyzingBakandeyaTone(true);
+   try {
+     const res = await apiFetch('/api/bands/tone-dna');
+     const json = res as any;
+     if (json?.success && json.data) {
+       setBakandeyaToneData(json.data);
+       setToneAnalysisSaved(true);
+       setIsAnalyzingBakandeyaTone(false);
+       return;
+     }
+   } catch (err) {
+     console.error('Error cargando el ADN de tono guardado:', err);
+   }
+   // Sin nada guardado todavía: se cae al análisis con IA de siempre.
+   await handleAnalyzeBakandeyaTone();
+ };
+
  // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
  // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
  // Instagram del fundador en vez de la suya propia.
@@ -1199,9 +1222,9 @@ export default function ReelsCenter({
       </div>
  <div className="flex gap-2.5 items-center flex-wrap">
  <button
- onClick={handleAnalyzeBakandeyaTone}
+ onClick={handleOpenToneModal}
  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30 transition-all cursor-pointer shadow-md"
- title={`Escanear los Reels y posts de ${instagramHandle || nombreBanda} para fijar el tono de voz de la banda`}
+ title={`Ver el tono de voz guardado de ${instagramHandle || nombreBanda}, o analizarlo si todavía no existe`}
  >
  <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
  <span>Tono de voz en redes</span>

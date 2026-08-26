@@ -139,6 +139,8 @@ export function buildReglasDeRedaccion(nombreBanda: string): string {
     "   de la banda en tercera persona como si fuera una nota de prensa.",
     "6. \"reason\" es para ti y para el usuario, no para publicar: explica en una frase por qué",
     "   ESE tramo y no otro, citando la señal medida o la letra que lo justifica.",
-    "7. Español de España, natural. Sin exclamaciones en cadena y sin más de 2 emojis por copy."
+    "7. Español de España, natural. Sin exclamaciones en cadena. Si hay un ADN DE VOZ analizado",
+    "   arriba, sigue su cantidad real de emojis y su vocabulario en vez de esta regla; si no hay",
+    "   ADN de voz, no pongas más de 2 emojis por copy."
   ].join("\n");
 }
