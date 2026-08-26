@@ -3,7 +3,7 @@ import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConf
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
 import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
-import { Song, SongAudioIdea, AudioTrack, ThemeColors } from '../types';
+import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
 import { uploadFileToServer, resolveAudioUrl } from '../utils/audioStorage';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import WaveformTrack from './WaveformTrack';
@@ -171,7 +171,7 @@ export default function SongStudioModal({
   const [genAiOnNewIdea, setGenAiOnNewIdea] = useState<boolean>(false);
   const [newIdeaBpm, setNewIdeaBpm] = useState<number>(song.bpm || 120);
   const [newIdeaKey, setNewIdeaKey] = useState<string>(song.tonalidad || 'Do');
-  const [newIdeaStyle, setNewIdeaStyle] = useState<'rock' | 'pop' | 'funk' | 'reggae'>('rock');
+  const [newIdeaStyle, setNewIdeaStyle] = useState<DrumPatternStyle>('rock');
   const [newIdeaIncludeDrums, setNewIdeaIncludeDrums] = useState<boolean>(true);
   const [newIdeaIncludeBass, setNewIdeaIncludeBass] = useState<boolean>(true);
 
@@ -1944,6 +1944,9 @@ export default function SongStudioModal({
                           <option value="pop">Pop / Disco 4-on-floor</option>
                           <option value="funk">Funk Syncopated</option>
                           <option value="reggae">Reggae One-Drop</option>
+                          <option value="ska">Ska Skank</option>
+                          <option value="cumbia">Cumbia Tresillo</option>
+                          <option value="punk">Punk Corcheas</option>
                         </select>
                       </div>
 

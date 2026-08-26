@@ -1,12 +1,14 @@
 // WEBAUDIO SYNTHESIZER FOR AI DRUMS AND BASS REFERENCE ACCOMPANIMENT
 
+import { DrumPatternStyle } from '../types';
+
 export async function generateAccompanimentAudioBlob(opts: {
   bpm: number;
   durationSecs: number;
   keyName: string;
   includeDrums: boolean;
   includeBass: boolean;
-  drumPattern: 'rock' | 'pop' | 'funk' | 'reggae';
+  drumPattern: DrumPatternStyle;
 }): Promise<Blob> {
   const sampleRate = 44100;
   const bpm = Math.max(50, Math.min(220, opts.bpm || 120));
@@ -149,6 +151,26 @@ export async function generateAccompanimentAudioBlob(opts: {
             triggerKick(beatTime);
             triggerSnare(beatTime);
           }
+          triggerHiHat(beatTime + eighthDuration);
+        } else if (opts.drumPattern === 'ska') {
+          // Ska: bombo en 1 y 3, caja marcada en 2 y 4, acento abierto de charles en cada contratiempo (skank)
+          if (beat === 0 || beat === 2) triggerKick(beatTime);
+          if (beat === 1 || beat === 3) triggerSnare(beatTime);
+          triggerHiHat(beatTime + eighthDuration, true);
+        } else if (opts.drumPattern === 'cumbia') {
+          // Cumbia: tresillo 3+3+2 en el bombo y charles corrido tipo güiro
+          if (beat === 0) triggerKick(beatTime);
+          if (beat === 1) triggerKick(beatTime + eighthDuration);
+          if (beat === 3) triggerKick(beatTime);
+          if (beat === 2) triggerSnare(beatTime);
+          triggerHiHat(beatTime);
+          triggerHiHat(beatTime + eighthDuration);
+        } else if (opts.drumPattern === 'punk') {
+          // Punk: bombo corrido en corcheas, caja seca en 2 y 4, charles cerrado sin descanso
+          triggerKick(beatTime);
+          triggerKick(beatTime + eighthDuration);
+          if (beat === 1 || beat === 3) triggerSnare(beatTime);
+          triggerHiHat(beatTime);
           triggerHiHat(beatTime + eighthDuration);
         } else if (opts.drumPattern === 'funk') {
           if (beat === 0) triggerKick(beatTime);

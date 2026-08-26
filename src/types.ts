@@ -504,6 +504,10 @@ export interface UserWithHash extends User {
 
 export type ThemeName = 'indie_velvet' | 'stitch_dark' | 'backstage_neon' | 'roots_ska' | 'brutalist_fuzz';
 
+// Patrones de batería soportados por el sintetizador de acompañamiento (src/utils/accompanimentSynth.ts),
+// compartido entre el generador del Song Studio y las bases rítmicas propuestas por el chatbot.
+export type DrumPatternStyle = 'rock' | 'pop' | 'funk' | 'reggae' | 'ska' | 'cumbia' | 'punk';
+
 export interface AudioComment {
   id: string;
   autor: string;

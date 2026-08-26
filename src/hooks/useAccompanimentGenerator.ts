@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Song, SongAudioIdea } from '../types';
+import { Song, SongAudioIdea, DrumPatternStyle } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 
@@ -14,7 +14,7 @@ export function useAccompanimentGenerator(
   const [genDuration, setGenDuration] = useState<number>(30);
   const [includeDrums, setIncludeDrums] = useState<boolean>(true);
   const [includeBass, setIncludeBass] = useState<boolean>(true);
-  const [drumStyle, setDrumStyle] = useState<'rock' | 'pop' | 'funk' | 'reggae'>('rock');
+  const [drumStyle, setDrumStyle] = useState<DrumPatternStyle>('rock');
   const [isGeneratingAccompaniment, setIsGeneratingAccompaniment] = useState<boolean>(false);
 
   const handleGenerateAccompaniment = async () => {

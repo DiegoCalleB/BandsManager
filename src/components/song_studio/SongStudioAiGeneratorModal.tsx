@@ -1,7 +1,7 @@
 import React from 'react';
 import { Wand2, X, Sparkles, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
-import { SongAudioIdea } from '../../types';
+import { SongAudioIdea, DrumPatternStyle } from '../../types';
 
 interface SongStudioAiGeneratorModalProps {
   // Solo se usa como "hay idea seleccionada o no", pero el estado real es la idea completa.
@@ -15,8 +15,8 @@ interface SongStudioAiGeneratorModalProps {
   setIncludeDrums: (v: boolean) => void;
   includeBass: boolean;
   setIncludeBass: (v: boolean) => void;
-  drumStyle: 'rock' | 'pop' | 'funk' | 'reggae';
-  setDrumStyle: (style: 'rock' | 'pop' | 'funk' | 'reggae') => void;
+  drumStyle: DrumPatternStyle;
+  setDrumStyle: (style: DrumPatternStyle) => void;
   genDuration: number;
   setGenDuration: (duration: number) => void;
   isGeneratingAccompaniment: boolean;
@@ -142,7 +142,7 @@ export const SongStudioAiGeneratorModal: React.FC<SongStudioAiGeneratorModalProp
             <div>
               <label className="text-xs font-mono text-neutral-400 block mb-1">Patrón Rítmico de Batería</label>
               <div className="grid grid-cols-4 gap-2">
-                {(['rock', 'pop', 'funk', 'reggae'] as const).map(style => (
+                {(['rock', 'pop', 'funk', 'reggae', 'ska', 'cumbia', 'punk'] as const).map(style => (
                   <button
                     key={style}
                     type="button"

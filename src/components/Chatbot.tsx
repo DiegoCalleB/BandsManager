@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
-import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig } from '../types';
-import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail } from 'lucide-react';
+import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle } from '../types';
+import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
+import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 
 interface ProposedAction {
   status?: 'pending' | 'applied' | 'dismissed';
-  type: 'propose_lead_approval' | 'propose_rehearsal' | 'propose_status_change' | 'propose_agent_trigger' | 'propose_concert' | 'propose_add_concert' | 'propose_band' | 'propose_tour' | 'propose_update_logo' | 'propose_send_email' | 'propose_draft_email' | 'propose_add_lead' | 'propose_update_lead';
+  type: 'propose_lead_approval' | 'propose_rehearsal' | 'propose_status_change' | 'propose_agent_trigger' | 'propose_concert' | 'propose_add_concert' | 'propose_band' | 'propose_tour' | 'propose_update_logo' | 'propose_send_email' | 'propose_draft_email' | 'propose_add_lead' | 'propose_update_lead' | 'propose_accompaniment';
  leadId?: string;
  bandId?: string;
  targetType?: 'lead' | 'band';
@@ -31,6 +32,15 @@ interface ProposedAction {
  incluirFirmaRedes?: boolean;
  lead?: any;
  updatedFields?: any;
+ accompaniment?: {
+   bpm: number;
+   keyName: string;
+   drumPattern: DrumPatternStyle;
+   includeDrums: boolean;
+   includeBass: boolean;
+   durationSecs: number;
+   songTitle?: string;
+ };
 }
 
 interface ChatMessage {
@@ -174,6 +184,39 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
   }, [messages, storageKey]);
  const [inputText, setInputText] = useState('');
  const [isLoading, setIsLoading] = useState(false);
+
+ // Bases rítmicas generadas al vuelo (síntesis local Web Audio) por 'propose_accompaniment',
+ // guardadas por clave "msgId-actionIndex" para no regenerar el audio en cada re-render.
+ const [accompanimentAudio, setAccompanimentAudio] = useState<Record<string, { loading: boolean; url?: string; error?: string }>>({});
+
+ const handleGenerateAccompanimentAudio = async (key: string, params: NonNullable<ProposedAction['accompaniment']>) => {
+   setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: true } }));
+   try {
+     const blob = await generateAccompanimentAudioBlob({
+       bpm: params.bpm,
+       durationSecs: params.durationSecs,
+       keyName: params.keyName,
+       includeDrums: params.includeDrums,
+       includeBass: params.includeBass,
+       drumPattern: params.drumPattern
+     });
+     const url = URL.createObjectURL(blob);
+     setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, url } }));
+   } catch (err) {
+     console.error('Error generando base rítmica:', err);
+     setAccompanimentAudio(prev => ({ ...prev, [key]: { loading: false, error: 'No se pudo sintetizar el audio en este navegador.' } }));
+   }
+ };
+
+ const accompanimentAudioRef = useRef(accompanimentAudio);
+ accompanimentAudioRef.current = accompanimentAudio;
+ useEffect(() => {
+   return () => {
+     Object.values(accompanimentAudioRef.current).forEach(entry => {
+       if (entry.url) URL.revokeObjectURL(entry.url);
+     });
+   };
+ }, []);
 
  const onLoadingChangeRef = useRef(onLoadingChange);
  useEffect(() => {
@@ -562,7 +605,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  async function handleConfirmAllActions(msgId: string, actions: ProposedAction[]) {
  const pendingItems = actions
  .map((act, idx) => ({ act, idx }))
- .filter(item => item.act.type !== 'propose_agent_trigger' && (item.act.status || 'pending') === 'pending');
+ .filter(item => item.act.type !== 'propose_agent_trigger' && item.act.type !== 'propose_accompaniment' && (item.act.status || 'pending') === 'pending');
 
  for (const item of pendingItems) {
  await handleConfirmAction(msgId, item.idx, item.act);
@@ -1548,7 +1591,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {/* Proposed actions box within chat */}
  {isBot && msg.proposedActions && msg.proposedActions.length > 0 && (() => {
  const nonTriggerActions = msg.proposedActions;
- const pendingActions = nonTriggerActions.filter(a => (a.status || 'pending') === 'pending');
+ const pendingActions = nonTriggerActions.filter(a => a.type !== 'propose_accompaniment' && (a.status || 'pending') === 'pending');
 
  return (
  <div className={` rounded-2xl p-4 space-y-3 max-w-sm mt-1 backdrop-blur-md ${isStitchLight ? '-indigo-100 bg-indigo-50/20' : '-cyan-500/20 bg-cyan-500/5'}`}>
@@ -1577,7 +1620,38 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {act.description}
  </p>
 
- {actStatus === 'pending' ? (
+ {act.type === 'propose_accompaniment' && act.accompaniment ? (() => {
+ const acc = act.accompaniment;
+ if (!acc) return null;
+ const audioKey = `${msg.id}-${aIdx}`;
+ const audioState = accompanimentAudio[audioKey];
+ return (
+ <div className="space-y-2">
+ <div className={`text-[9px] font-mono px-2 py-1 rounded-lg flex flex-wrap gap-x-2 gap-y-0.5 ${isStitchLight ? 'bg-purple-50 text-purple-700' : 'bg-purple-500/10 text-purple-300'}`}>
+ <span>{acc.bpm} BPM</span>
+ <span>· Tono {acc.keyName}</span>
+ <span>· {acc.drumPattern.toUpperCase()}</span>
+ <span>· {acc.durationSecs}s</span>
+ </div>
+ {audioState?.url ? (
+ <audio controls src={audioState.url} className="w-full h-9" />
+ ) : (
+ <button
+ type="button"
+ onClick={() => handleGenerateAccompanimentAudio(audioKey, acc)}
+ disabled={audioState?.loading}
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-2 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 disabled:opacity-60 disabled:cursor-wait ${isStitchLight ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm' : 'bg-cyan-500 hover:bg-cyan-600 text-neutral-950'}`}
+ >
+ {audioState?.loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <PlayCircle className="w-3.5 h-3.5" />}
+ {audioState?.loading ? 'Sintetizando...' : 'Generar y escuchar'}
+ </button>
+ )}
+ {audioState?.error && (
+ <div className="text-[10px] font-mono text-red-500">{audioState.error}</div>
+ )}
+ </div>
+ );
+ })() : actStatus === 'pending' ? (
  <div className="flex gap-2">
  <button
  id={`confirm-proposal-btn-${msg.id}-${aIdx}`}
@@ -1590,8 +1664,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  id={`dismiss-proposal-btn-${msg.id}-${aIdx}`}
  onClick={() => handleDismissAction(msg.id, realIdx, act)}
  className={`px-3 py-2 text-[10px] font-mono rounded-lg transition-colors cursor-pointer active:scale-95 active:opacity-90 ${
- isStitchLight 
- ? 'bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 -slate-200' 
+ isStitchLight
+ ? 'bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 -slate-200'
  : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white -neutral-800'
  }`}
  >

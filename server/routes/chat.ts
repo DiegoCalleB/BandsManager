@@ -8,6 +8,7 @@ import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } fro
 import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
+import { computeMusicalDna } from "../utils/musicalDna.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
@@ -261,7 +262,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         presupuestoLogistica: t.presupuestoLogistica,
         stops: t.stops
       })),
-      songs: (state.songs || []).filter(matchBand).map((s: any) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion })),
+      songs: (state.songs || []).filter(matchBand).map((s: any) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
       setlists: (state.setlists || []).filter(matchBand).map((st: any) => ({ id: st.id, titulo: st.titulo, fecha: st.fecha, duracionTotal: st.duracionTotal })),
       fansCount: (state.fans || []).filter(matchBand).length,
       rehearsals: (state.rehearsals || []).filter(matchBand),
@@ -281,6 +282,13 @@ router.post("/chat", requireAuth, async (req, res) => {
     const epkConfigData = getEpkConfigForBand(state, bandIdForEpk, userReq?.bandName || 'tu banda', userReq?.email);
     stateSummary.epkConfig = epkConfigData;
     stateSummary.globalPitchFeedback = getGlobalPitchFeedbackSummary(state.leads.filter(matchBand));
+
+    // ADN musical: tempo/tonalidad/género dominantes del repertorio real + instrumentación real
+    // de los miembros, para que 'propose_accompaniment' proponga bases rítmicas coherentes con
+    // la banda en vez de un rock genérico a 120 BPM por defecto.
+    const ownBandGenre = (state.registeredBands || []).find((b: any) => b.id === userBandId)?.estilo_musical || "";
+    const bandMembersForDna = (state.users || []).filter(matchBand).map((u: any) => ({ name: u.name || u.username || "", instrument: u.instrument || "" }));
+    stateSummary.musicalDna = computeMusicalDna((state.songs || []).filter(matchBand), ownBandGenre, bandMembersForDna);
 
     if (isLeader) {
       stateSummary.payments = (state.payments || []).filter(matchBand);
@@ -392,6 +400,7 @@ Puedes proponer acciones como:
 10. 'propose_draft_email' para crear y guardar un borrador de correo electrónico/pitch para una sala o medio. Incluye 'description', 'leadId', 'leadName', 'subject', 'body' y 'attachDossier' (boolean, por defecto true).
 11. 'propose_send_email' para enviar o registrar el envío oficial de un correo a un lead, actualizar la fecha de envío e incluir la firma personalizada con redes sociales y dossier. Incluye 'description', 'leadId', 'leadName', 'subject', 'body', 'senderName', 'attachDossier' (true), 'incluirFirmaRedes' (true).
 12. 'propose_agent_trigger' con 'agentName' (debe ser obligatoriamente 'Enviador', 'Scout', 'Redactor' o 'Lector') y un objeto 'params' opcional. ÚNICAMENTE propón esta acción cuando el usuario te ordene EXPLÍCITAMENTE ejecutar, lanzar o correr uno de los agentes de Supabase (ej: 'ejecuta el enviador', 'lanza el agente scout en Sevilla'). SI EL USUARIO ESTÁ HACIENDO UNA PREGUNTA INFORMATIVA, HIPOTÉTICA O DE DUDA (ej: '¿qué pasa si me escribe una sala que no tengo?', '¿cómo funciona el lector?', '¿qué hace el scout?'), RESPONDE ÚNICAMENTE CON LA EXPLICACIÓN EN TEXTO Y DEJA 'proposedActions' COMO UNA LISTA VACÍA []. NUNCA propongas disparar un agente ante una simple consulta o pregunta.
+13. 'propose_accompaniment' cuando el usuario pida una base rítmica, un acompañamiento, una pista de batería y bajo, o algo para ensayar o tocar encima (ej: 'hazme una base para ensayar', 'ponme un ritmo de batería', 'genérame un acompañamiento para el estribillo'). Esto NO envía ni guarda nada: solo sintetiza el audio en el propio navegador del usuario mediante Web Audio para que lo escuche al instante. Incluye 'description' y un objeto 'accompaniment' con { bpm: number, keyName: 'Do'|'Re'|'Mi'|'Fa'|'Sol'|'La'|'Si' (puede llevar 'm' al final si es tonalidad menor), drumPattern: 'rock'|'pop'|'funk'|'reggae'|'ska'|'cumbia'|'punk', includeDrums: boolean, includeBass: boolean, durationSecs: number (entre 10 y 120), songTitle: 'opcional, solo si el usuario menciona una canción concreta del repertorio' }. REGLA DE ADN MUSICAL: usa SIEMPRE por defecto 'stateSummary.musicalDna' (bpmSuggested, tonalidadSuggested, drumPatternSuggested) — son el tempo, la tonalidad y el estilo de batería reales de esta banda, calculados a partir de su propio repertorio y género — salvo que el usuario pida explícitamente en su mensaje otro tempo, tonalidad o estilo distinto, en cuyo caso prioriza lo que pida el usuario. Si 'musicalDna.instrumentos' incluye instrumentos que no son batería/bajo/voz (viento, teclado, violín...), menciónalo en el 'description' (ej: "va con batería y bajo de referencia; luego le añades encima el violín/saxo en directo").
 
 PODER ABSOLUTO DE ESCRITURA EN BASE DE DATOS Y CORREOS: Tienes autorización y poder para crear nuevos registros (leads, medios, salas, giras, conciertos, bandas, ensayos), modificar la información de los existentes, redactar borradores y disparar los agentes de Supabase tras confirmación del usuario. Si el usuario te lo solicita, propón la acción correspondiente inmediatamente.
 
