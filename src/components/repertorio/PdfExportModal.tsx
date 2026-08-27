@@ -217,13 +217,13 @@ export function PdfExportModal({
             ${itemsRowsHtml}
           </div>
 
-          <!-- Professional Footer with BandManager.ai and App URL -->
+          <!-- Professional Footer with BandManager and App URL -->
           ${showAppBranding ? `
             <div class="page-footer">
               <div class="footer-left">
-                <span class="app-logo-badge">⚡ BandManager.ai</span>
+                <span class="app-logo-badge">⚡ BandManager</span>
                 <span class="footer-sep">•</span>
-                <a href="https://www.bandmanager.ia" target="_blank" class="app-link">www.bandmanager.ia</a>
+                <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
               </div>
               <div class="footer-right">
                 <span>Hoja ${mIdx + 1} de ${membersToExport.length} (${member.name})</span>
@@ -826,7 +826,7 @@ export function PdfExportModal({
                   onChange={(e) => setShowAppBranding(e.target.checked)}
                   className="rounded accent-[#1db954] cursor-pointer"
                 />
-                <span>Pie BandManager.ai</span>
+                <span>Pie BandManager</span>
               </label>
             </div>
           </div>
@@ -1054,14 +1054,14 @@ export function PdfExportModal({
               </div>
             </div>
 
-            {/* Bottom Footer with BandManager.ai & link */}
+            {/* Bottom Footer with BandManager & link */}
             {showAppBranding && (
               <div className="flex justify-between items-center border-t-2 border-black pt-3 mt-8 font-mono text-[9pt] text-neutral-600">
                 <div className="flex items-center gap-2">
-                  <span className="font-black text-black">⚡ BandManager.ai</span>
+                  <span className="font-black text-black">⚡ BandManager</span>
                   <span>•</span>
-                  <a href="https://www.bandmanager.ia" target="_blank" rel="noreferrer" className="text-black font-bold underline">
-                    www.bandmanager.ia
+                  <a href="https://www.bandmanager.app" target="_blank" rel="noreferrer" className="text-black font-bold underline">
+                    www.bandmanager.app
                   </a>
                 </div>
                 <div className="flex items-center gap-2">

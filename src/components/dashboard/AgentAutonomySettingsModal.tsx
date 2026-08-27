@@ -141,7 +141,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     requireHumanForFinalSignOff: true,
     pitchTone: initialConfig?.pitchTone || 'Cercano y Profesional (Indie/Rock)',
     bioSummary: initialConfig?.bioSummary || 'Proyecto de directo potente con fusión electrónica y ska/balkan.',
-    epkUrl: initialConfig?.epkUrl || 'https://bandmanager.ai/epk/bakandeya',
+    epkUrl: initialConfig?.epkUrl || 'https://bandmanager.app/epk/bakandeya',
     agentSenderEmail: initialConfig?.agentSenderEmail || '',
     agentSenderName: initialConfig?.agentSenderName || `${bandName} Management`,
     agentReplyToEmail: initialConfig?.agentReplyToEmail || '',
@@ -1566,7 +1566,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                     value={config.epkUrl}
                     onChange={(e) => setConfig({ ...config, epkUrl: e.target.value })}
                     className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                    placeholder="https://bandmanager.ai/epk/bakandeya"
+                    placeholder="https://bandmanager.app/epk/bakandeya"
                   />
                 </div>
                 <p className="text-[10px] text-neutral-500">

@@ -1,6 +1,6 @@
 /**
  * Utilidades para exportación, descarga e impresión en máxima calidad (Vectorial SVG, PNG 4K 300 DPI y Flyer A4)
- * de Códigos QR para BandManager.ai (Captura de Fans en Concierto, Dossier EPK, Merchandising).
+ * de Códigos QR para BandManager (Captura de Fans en Concierto, Dossier EPK, Merchandising).
  */
 
 export interface QrExportOptions {
@@ -265,7 +265,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
     // Pie de marca
     ctx.fillStyle = '#94a3b8';
     ctx.font = '500 28px system-ui, -apple-system, sans-serif';
-    ctx.fillText('BandManager.ai • Gestión y Captura de Fans para Músicos', canvas.width / 2, canvas.height - 100);
+    ctx.fillText('BandManager • Gestión y Captura de Fans para Músicos', canvas.width / 2, canvas.height - 100);
 
   } else if (template === 'badge-card') {
     // Tarjeta Cuadrada para Merchandising / Pegatina 2400 x 2400 px
@@ -586,7 +586,7 @@ export function printHighQualityFlyer(options: {
           </div>
 
           <div class="url-box">${url}</div>
-          <div class="footer-note">BandManager.ai • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
+          <div class="footer-note">BandManager • Diseñado para imprimir en A4 y colocar en barras, taquilla, roll-ups o escenario</div>
         </div>
         <script>
           setTimeout(() => {

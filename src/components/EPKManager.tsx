@@ -1116,7 +1116,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                   </button>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Para que la app envíe correos oficiales o cree borradores en Gmail desde este email, Google requiere permisos <code className="text-amber-300 bg-slate-900 px-1 py-0.5 rounded">gmail.send</code> y <code className="text-amber-300 bg-slate-900 px-1 py-0.5 rounded">gmail.compose</code>. Si Firebase muestra advertencia de app no verificada, pulsa <span className="text-slate-200 font-semibold">"Avanzados" &rarr; "Ir a BandManager.ai"</span>.
+                  Para que la app envíe correos oficiales o cree borradores en Gmail desde este email, Google requiere permisos <code className="text-amber-300 bg-slate-900 px-1 py-0.5 rounded">gmail.send</code> y <code className="text-amber-300 bg-slate-900 px-1 py-0.5 rounded">gmail.compose</code>. Si Firebase muestra advertencia de app no verificada, pulsa <span className="text-slate-200 font-semibold">"Avanzados" &rarr; "Ir a BandManager"</span>.
                 </p>
               </div>
 

@@ -904,7 +904,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
               Tabla Comparativa de Módulos
             </h2>
             <p className="text-xs text-neutral-400">
-              Desglose detallado de capacidades técnicas, límites y herramientas de BandManager.ai
+              Desglose detallado de capacidades técnicas, límites y herramientas de BandManager
             </p>
           </div>
 
@@ -1055,7 +1055,7 @@ export const Planes: React.FC<PlanesProps> = ({ colors, currentUser, activeBandN
           </div>
           <div>
             <h3 className="text-lg font-bold font-display uppercase tracking-wide text-zinc-100">
-              Garantía BandManager.ai: Política de Planes y Datos Protegidos
+              Garantía BandManager: Política de Planes y Datos Protegidos
             </h3>
             <p className="text-xs text-neutral-400">
               Transparencia total para bandas independientes sin letra pequeña.

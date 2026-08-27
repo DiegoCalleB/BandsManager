@@ -1,5 +1,5 @@
 /**
- * Audio Storage & Utility Helpers for BandManager.ai
+ * Audio Storage & Utility Helpers for BandManager
  * Handles IndexedDB persistence for large audio files (MP3/WAV/M4A),
  * Google Drive URL parsing into playable audio streams,
  * and audio file helpers.

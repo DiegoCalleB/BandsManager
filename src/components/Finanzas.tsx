@@ -803,7 +803,7 @@ export default function Finanzas({
  Cualquier cambio que realices desde este panel de control se guardará automáticamente en Supabase.
  </p>
  <p className={textSub}>
- Los agentes inteligentes de BandManager.ai leen este libro diario para optimizar ofertas de caché en salas o calcular presupuestos de giras de forma automatizada.
+ Los agentes inteligentes de BandManager leen este libro diario para optimizar ofertas de caché en salas o calcular presupuestos de giras de forma automatizada.
  </p>
  </div>
  </div>

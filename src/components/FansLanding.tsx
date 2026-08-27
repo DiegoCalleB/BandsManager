@@ -543,7 +543,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           <div className="w-8 h-8 rounded-lg bg-black border border-amber-500/30 overflow-hidden flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition-transform p-0.5">
             <img
               src="/bandmanager_logo.jpeg"
-              alt="BandManager.ai"
+              alt="BandManager"
               className="w-full h-full object-contain rounded-md"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';

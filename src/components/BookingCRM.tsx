@@ -2096,7 +2096,7 @@ export default function BookingCRM({
  </div>
 
  <div className={`text-[10px] font-sans mt-4 leading-normal text-right ${textMuted}`}>
- Módulo de Modelado AI de BandManager.ai. Powered by Gemini.
+ Módulo de Modelado AI de BandManager. Powered by Gemini.
  </div>
  </div>
  </div>

@@ -309,7 +309,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
         body: JSON.stringify({
           leaderName: regLeaderName.trim(),
           bandName: regBandName.trim() || 'Nueva Banda',
-          email: regEmail.trim() || `banda_${Date.now()}@bakandeya.ai`,
+          email: regEmail.trim() || `banda_${Date.now()}@bandmanager.app`,
           password: regPassword || '123456',
           plan: planKey
         })
@@ -496,7 +496,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           <div className="relative group cursor-pointer flex flex-col items-center justify-center mt-2 mb-1">
             <img 
               src="/bandmanager_logo.jpeg" 
-              alt="BANDMANAGER.ai - IA Agéntica para tu Banda" 
+              alt="BANDMANAGER - Plataforma Integral para Bandas" 
               className="w-52 h-auto sm:w-60 drop-shadow-[0_10px_25px_rgba(242,202,80,0.12)] group-hover:scale-[1.01] transition-transform rounded-2xl border border-[#f2ca50]/10"
               referrerPolicy="no-referrer"
             />

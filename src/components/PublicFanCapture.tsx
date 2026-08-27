@@ -272,7 +272,7 @@ export const PublicFanCapture: React.FC = () => {
                   ¿Eres músico o tienes una banda?
                 </p>
                 <p className="text-[11px] text-slate-400">
-                  Consigue una página como esta para tu grupo con BandManager.ai →
+                  Consigue una página como esta para tu grupo con BandManager →
                 </p>
               </div>
             </div>
@@ -280,7 +280,7 @@ export const PublicFanCapture: React.FC = () => {
         </div>
 
         <footer className="text-center text-[11px] text-slate-600">
-          Bakandeya Official Community • Powered by BandManager.ai
+          Bakandeya Official Community • Powered by BandManager
         </footer>
       </div>
     </div>

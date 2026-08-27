@@ -70,8 +70,8 @@ export interface MusiciansLandingDict {
 
 const es: MusiciansLandingDict = {
   badge: 'Próximamente • Lista de Espera Exclusiva',
-  heroTitle: 'Tú dedícate a la música.',
-  heroHighlight: 'BandManager.io se encarga de llenar tus conciertos.',
+  heroTitle: 'Tú piensa en tu música.',
+  heroHighlight: 'BandManager.io se encarga de todo lo demás!',
   heroSubtitle: 'Estamos terminando de construir la plataforma integral definitiva para músicos y bandas independientes: captación de fans en directo mediante QR, automatización de booking de salas con IA, dossier de prensa EPK interactivo y control de giras. Deja tu email e Instagram para recibir toda la información y acceso prioritario en cuanto esté disponible.',
   badgeFromBand: 'Has llegado desde el concierto de {bandName}',
   backToOrigin: 'Volver a la página de {bandName}',
@@ -121,20 +121,20 @@ const es: MusiciansLandingDict = {
 
   successTitle: '¡Estás en la lista!',
   successSubtitle: 'Hemos registrado a {bandName} para el lanzamiento de BandManager.io.',
-  successMessage: 'En cuanto la plataforma esté lista, te enviaremos por email e Instagram toda la información detallada y tu pase de acceso preferente para empezar a llenar tus conciertos.',
+  successMessage: 'En cuanto la plataforma esté lista, te enviaremos por email e Instagram toda la información detallada y tu pase de acceso preferente.',
   successBackToBand: 'Volver a {bandName}',
   successExploreApp: 'Conocer más sobre BandManager.io',
 
   errorRequired: 'Por favor, completa los campos obligatorios (*) y acepta la casilla de consentimiento.',
   errorGeneric: 'Hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo.',
 
-  footerText: 'BandManager.io • Tú dedícate a la música, nosotros a llenar tus conciertos.'
+  footerText: 'BandManager.io • Tú piensa en tu música, nosotros en todo lo demás.'
 };
 
 const en: MusiciansLandingDict = {
   badge: 'Coming Soon • Exclusive Early Access Waitlist',
   heroTitle: 'You focus on the music.',
-  heroHighlight: 'BandManager.io fills your gigs.',
+  heroHighlight: 'BandManager.io takes care of everything else.',
   heroSubtitle: 'We are putting the final touches on the ultimate all-in-one operating system for independent musicians and bands: live QR fan capture, AI tour booking, interactive EPK & gig management. Leave your email and Instagram to receive priority access and full info before public launch.',
   badgeFromBand: 'You arrived from {bandName}\'s show page',
   backToOrigin: 'Back to {bandName}',
@@ -191,13 +191,13 @@ const en: MusiciansLandingDict = {
   errorRequired: 'Please fill in all required fields (*) and accept the consent checkbox.',
   errorGeneric: 'An error occurred while submitting your request. Please try again.',
 
-  footerText: 'BandManager.io • Focus on the music, we\'ll pack your shows.'
+  footerText: 'BandManager.io • Focus on the music, we take care of everything else.'
 };
 
 const it: MusiciansLandingDict = {
   badge: 'Prossimamente • Lista d\'Attesa Esclusiva',
   heroTitle: 'Tu pensa solo alla musica.',
-  heroHighlight: 'BandManager.io riempie i tuoi concerti.',
+  heroHighlight: 'BandManager.io si occupa di tutto il resto.',
   heroSubtitle: 'Stiamo ultimando la piattaforma definitiva per musicisti e band indipendenti: cattura fan ai concerti con codice QR, booking automatizzato con IA, dossier stampa EPK e gestione tour. Lascia la tua email e Instagram per ricevere tutte le informazioni e accesso prioritario.',
   badgeFromBand: 'Arrivi dalla pagina di {bandName}',
   backToOrigin: 'Torna alla pagina di {bandName}',
@@ -254,13 +254,13 @@ const it: MusiciansLandingDict = {
   errorRequired: 'Compila tutti i campi obbligatori (*) e accetta la casella di consenso.',
   errorGeneric: 'Si è verificato un errore durante l\'invio. Per favore riprova.',
 
-  footerText: 'BandManager.io • Tu pensa alla musica, noi a riempire i tuoi concerti.'
+  footerText: 'BandManager.io • Tu pensa alla musica, noi a tutto il resto.'
 };
 
 const cs: MusiciansLandingDict = {
   badge: 'Již brzy • Exkluzivní přednostní přístup',
   heroTitle: 'Ty se věnuj hudbě.',
-  heroHighlight: 'BandManager.io se postará o plné koncerty.',
+  heroHighlight: 'BandManager.io se postará o všechno ostatní.',
   heroSubtitle: 'Dokončujeme komplexní platformu pro nezávislé hudebníky a kapely: sběr fanoušků na koncertech přes QR kód, automatizovaný booking klubů s AI, interaktivní EPK presskit a management turné. Zanech nám svůj e-mail a Instagram pro přednostní přístup a veškeré informace.',
   badgeFromBand: 'Přišel/přišla jsi ze stránky koncertu {bandName}',
   backToOrigin: 'Zpět na stránku {bandName}',
@@ -317,7 +317,7 @@ const cs: MusiciansLandingDict = {
   errorRequired: 'Vyplň prosím všechna povinná pole (*) a zaškrtni souhlas.',
   errorGeneric: 'Při odesílání žádosti došlo k chybě. Zkus to prosím znovu.',
 
-  footerText: 'BandManager.io • Ty se věnuj hudbě, my naplníme tvé koncerty.'
+  footerText: 'BandManager.io • Ty se věnuj hudbě, my se postaráme o všechno ostatní.'
 };
 
 export const MUSICIANS_TRANSLATIONS: Record<FanFormLanguage, MusiciansLandingDict> = { es, en, it, cs };
