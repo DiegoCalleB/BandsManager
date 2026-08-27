@@ -46,7 +46,7 @@ process.on("unhandledRejection", (reason) => {
 });
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 // CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
 // y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
@@ -102,8 +102,8 @@ app.use("/uploads", (req, res, next) => {
   next();
 }, express.static(path.join(process.cwd(), "public", "uploads")));
 
-// Healthcheck endpoint for Railway and deployment monitoring
-app.get("/api/health", (req, res) => {
+// Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
+app.get(["/health", "/api/health"], (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
