@@ -530,49 +530,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         : `${window.location.origin}/epk`)
     : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
-  const musicianLandingUrl = `/musicos?lang=${encodeURIComponent(language)}&from_band=${encodeURIComponent((resolvedBandId || '').replace(/^(band|reg)-/, ''))}&from_concert=${encodeURIComponent(concertName || '')}`;
-
-  const renderMusicianBanner = (contextType: 'redes' | 'form' | 'success' = 'form') => (
-    <div className="pt-3.5 border-t border-neutral-800/80">
-      <a
-        href={musicianLandingUrl}
-        onClick={() => trackClick('musician_waitlist_banner', `/musicos?lang=${language}`, contextType)}
-        className="group block p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-neutral-950 via-neutral-900/90 to-amber-950/25 border border-neutral-800 hover:border-amber-500/50 transition-all shadow-md active:scale-[0.99]"
-      >
-        <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-black border border-amber-500/30 overflow-hidden flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-105 transition-transform p-0.5">
-            <img
-              src="/bandmanager_logo.jpeg"
-              alt="BandManager"
-              className="w-full h-full object-contain rounded-md"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
-              }}
-            />
-          </div>
-          <div className="flex-1 min-w-0 space-y-1">
-            <div className="flex items-center justify-between gap-2">
-              <h4 className="text-xs font-bold font-mono text-white group-hover:text-amber-300 transition-colors">
-                {t('musicianBannerTitle')}
-              </h4>
-              <span className="hidden sm:flex text-[10px] font-mono text-amber-400 opacity-90 group-hover:opacity-100 transition-opacity items-center gap-0.5 shrink-0 font-bold">
-                <span>{t('musicianBannerCTA')}</span>
-                <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-              </span>
-            </div>
-            <p className="text-[11px] font-mono text-neutral-400 leading-snug">
-              {t('musicianBannerSubtitle')}
-            </p>
-            <div className="pt-1 flex items-center gap-1 text-[11px] font-mono text-amber-400 font-bold sm:hidden">
-              <span>{t('musicianBannerCTA')}</span>
-              <ChevronRight className="w-3 h-3" />
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
-  );
-
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
     if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;
 
@@ -1070,9 +1027,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
-          {/* Banner para Músicos y Bandas en pantalla de éxito */}
-          {renderMusicianBanner('success')}
-
+          {/* Enlace a Inicio */}
           <div className="pt-2">
             <a href="/" className="text-xs font-mono text-neutral-500 hover:text-amber-500 underline transition-colors">
               {t('backHome')}
@@ -1572,9 +1527,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           </div>
         )}
-
-        {/* Banner para Músicos y Bandas interesadas en tener su propia página */}
-        {renderMusicianBanner('form')}
 
       </div>
 

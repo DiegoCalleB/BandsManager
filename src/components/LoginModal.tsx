@@ -493,13 +493,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
         {/* --- BRANDING LOGO & TYPOGRAPHY (Only for Login/Register) --- */}
         {view !== 'plans' && (
-          <div className="relative group cursor-pointer flex flex-col items-center justify-center mt-2 mb-1">
-            <img 
-              src="/bandmanager_logo.jpeg" 
-              alt="BANDMANAGER - Plataforma Integral para Bandas" 
-              className="w-52 h-auto sm:w-60 drop-shadow-[0_10px_25px_rgba(242,202,80,0.12)] group-hover:scale-[1.01] transition-transform rounded-2xl border border-[#f2ca50]/10"
-              referrerPolicy="no-referrer"
-            />
+          <div className="relative flex flex-col items-center justify-center mt-2 mb-2 text-center">
+            <div className="group cursor-pointer max-w-[280px] sm:max-w-[320px]">
+              <img 
+                src="/bandmanager_login_logo.png" 
+                alt="BANDMANAGER.oi - Plataforma Integral para Bandas" 
+                className="w-full h-auto max-h-36 object-contain drop-shadow-[0_10px_25px_rgba(242,202,80,0.15)] group-hover:scale-[1.01] transition-transform rounded-2xl"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
+                }}
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="mt-3 px-3.5 py-1.5 rounded-xl bg-black/40 border border-[#f2ca50]/20 max-w-[340px]">
+              <p className="text-xs sm:text-sm text-neutral-200 font-medium tracking-wide leading-relaxed">
+                Tú piensa en tu música.{' '}
+                <span className="text-[#f2ca50] font-bold block sm:inline">¡BandManager.oi se encarga de todo lo demás!</span>
+              </p>
+            </div>
           </div>
         )}
 

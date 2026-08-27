@@ -8,7 +8,6 @@ import {
   Calendar, 
   CheckCircle2, 
   ArrowLeft, 
-  Globe, 
   Check, 
   Loader2, 
   MessageSquare, 
@@ -24,7 +23,8 @@ import {
   FanFormLanguage, 
   DEFAULT_FAN_FORM_LANGUAGE, 
   FAN_FORM_LANGUAGES, 
-  isFanFormLanguage 
+  isFanFormLanguage,
+  idiomasDisponiblesParaConcierto
 } from '../i18n/fansTranslations';
 import { 
   getMusiciansTranslations, 
@@ -43,6 +43,19 @@ export const PublicMusiciansLanding: React.FC = () => {
 
   const [currentLang, setCurrentLang] = useState<FanFormLanguage>(initialLang);
   const t: MusiciansLandingDict = useMemo(() => getMusiciansTranslations(currentLang), [currentLang]);
+
+  // Regla contextual de idiomas (idéntica a FansLanding y Dossier EPK):
+  // - Si el idioma es italiano ('it'): Italia (🇮🇹), UK (🇬🇧) y España (🇪🇸).
+  // - Si es español ('es') o inglés ('en'): España (🇪🇸) y UK (🇬🇧).
+  // - Si es checo ('cs'): Chequia (🇨🇿), UK (🇬🇧) y España (🇪🇸).
+  const baseLangForFlags = (currentLang === 'it' || currentLang === 'cs')
+    ? currentLang
+    : ((initialLang === 'it' || initialLang === 'cs') ? initialLang : currentLang);
+  const availableCodes = useMemo(() => idiomasDisponiblesParaConcierto(baseLangForFlags), [baseLangForFlags]);
+  const availableLanguages = useMemo(() => {
+    return FAN_FORM_LANGUAGES.filter(l => availableCodes.includes(l.code))
+      .sort((a, b) => availableCodes.indexOf(a.code) - availableCodes.indexOf(b.code));
+  }, [availableCodes]);
 
   // Contextual params (if opened from another band's fan page)
   const originInfo = useMemo(() => {
@@ -157,17 +170,14 @@ export const PublicMusiciansLanding: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-amber-500/30 p-0.5 shadow-md flex items-center justify-center shrink-0">
               <img
-                src="/bandmanager_logo.jpeg"
-                alt="BandManager Logo"
+                src="/logo_bandmanager_official.svg"
+                alt="BandManager.oi Logo"
                 className="w-full h-full object-contain rounded-[10px]"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
-                }}
               />
             </div>
             <div>
-              <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-1">
-                BandManager
+              <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-0.5">
+                BandManager<span className="text-[#f2ca50]">.oi</span>
               </span>
               <span className="text-[10px] font-mono text-amber-400/80 block -mt-1 tracking-wider uppercase">
                 IA Agéntica para tu Banda
@@ -175,22 +185,22 @@ export const PublicMusiciansLanding: React.FC = () => {
             </div>
           </div>
 
-          {/* Language Selector */}
-          <div className="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 p-1 rounded-xl">
-            <Globe className="w-3.5 h-3.5 text-neutral-400 ml-1.5 mr-0.5" />
-            {FAN_FORM_LANGUAGES.map((lang) => (
+          {/* Language Selector (Solo banderas, contextual) */}
+          <div className="flex items-center gap-1.5 bg-neutral-950/80 border border-neutral-800/90 p-1 rounded-xl shadow-inner" role="group" aria-label="Idioma / Language">
+            {availableLanguages.map((lang) => (
               <button
                 key={lang.code}
+                type="button"
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`px-2 py-1 rounded-lg text-xs font-mono transition-all ${
+                className={`w-8 h-8 rounded-lg text-base flex items-center justify-center border transition-all ${
                   currentLang === lang.code
-                    ? 'bg-amber-500/20 text-[#f2ca50] font-bold border border-amber-500/30'
-                    : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                    ? 'bg-amber-500/20 text-[#f2ca50] border-amber-500/50 shadow-inner scale-105'
+                    : 'bg-neutral-900/60 border-neutral-800/80 hover:border-neutral-700 opacity-70 hover:opacity-100'
                 }`}
                 title={lang.label}
+                aria-label={lang.label}
               >
-                <span className="mr-1">{lang.flag}</span>
-                <span className="uppercase text-[11px]">{lang.code}</span>
+                <span className="text-base leading-none select-none">{lang.flag}</span>
               </button>
             ))}
           </div>
@@ -226,12 +236,9 @@ export const PublicMusiciansLanding: React.FC = () => {
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-black border border-amber-500/40 p-1 shadow-2xl flex items-center justify-center">
                 <img
-                  src="/bandmanager_logo.jpeg"
-                  alt="BandManager"
+                  src="/logo_bandmanager_official.svg"
+                  alt="BandManager.oi"
                   className="w-full h-full object-contain rounded-xl"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
-                  }}
                 />
               </div>
             </div>

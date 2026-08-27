@@ -142,9 +142,9 @@
 
   <!-- BRAND TYPOGRAPHY -->
   <g text-anchor="middle">
-    <!-- BANDMANAGER -->
+    <!-- BANDMANAGER.oi -->
     <text x="250" y="482" font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', Roboto, sans-serif" font-weight="900" font-size="34" letter-spacing="2.5">
-      <tspan fill="#ffffff">BANDMANAGER</tspan>
+      <tspan fill="#ffffff">BANDMANAGER</tspan><tspan fill="#f2ca50">.oi</tspan>
     </text>
 
     <!-- IA AGÉNTICA PARA TU BANDA -->

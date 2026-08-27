@@ -749,13 +749,13 @@ export default function App() {
  <div className="flex items-center gap-2">
  <img 
  src="/logo_bandmanager_symbol.svg" 
- alt="BandManager" 
+ alt="BandManager.oi" 
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER
+ BANDMANAGER<span className="text-[#f2ca50]">.OI</span>
  </span>
  </div>
  </div>
@@ -993,13 +993,13 @@ export default function App() {
  <div className="flex items-center gap-2">
  <img 
  src="/logo_bandmanager_symbol.svg" 
- alt="BandManager" 
+ alt="BandManager.oi" 
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER
+ BANDMANAGER<span className="text-[#f2ca50]">.OI</span>
  </span>
  </div>
  </div>

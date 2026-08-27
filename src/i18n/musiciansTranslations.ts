@@ -71,7 +71,7 @@ export interface MusiciansLandingDict {
 const es: MusiciansLandingDict = {
   badge: 'Próximamente • Lista de Espera Exclusiva',
   heroTitle: 'Tú piensa en tu música.',
-  heroHighlight: 'BandManager.io se encarga de todo lo demás!',
+  heroHighlight: 'BandManager.oi se encarga de todo lo demás!',
   heroSubtitle: 'Estamos terminando de construir la plataforma integral definitiva para músicos y bandas independientes: captación de fans en directo mediante QR, automatización de booking de salas con IA, dossier de prensa EPK interactivo y control de giras. Deja tu email e Instagram para recibir toda la información y acceso prioritario en cuanto esté disponible.',
   badgeFromBand: 'Has llegado desde el concierto de {bandName}',
   backToOrigin: 'Volver a la página de {bandName}',
@@ -86,7 +86,7 @@ const es: MusiciansLandingDict = {
   feature4Desc: 'Organiza tus setlists con acordes y tonalidades, calcula rutas y dietas de furgoneta, y lleva el control exhaustivo de ingresos, gastos y merchan.',
 
   formTitle: 'Apúntate a la Lista de Espera',
-  formSubtitle: 'BandManager.io estará disponible muy pronto. Déjanos tu email e Instagram para que te enviemos toda la información y seas de los primeros en probarlo.',
+  formSubtitle: 'BandManager.oi estará disponible muy pronto. Déjanos tu email e Instagram para que te enviemos toda la información y seas de los primeros en probarlo.',
   labelBandName: 'Nombre de la Banda o Proyecto *',
   placeholderBandName: 'Ej: Los Astronautas, Bakandeya...',
   labelContactName: 'Tu Nombre y Apellidos *',
@@ -109,32 +109,32 @@ const es: MusiciansLandingDict = {
   optionInterestBooking: 'Llenar conciertos y automatizar booking en salas',
   optionInterestEpk: 'Tener un EPK / Dossier profesional interactivo',
   optionInterestRepertoire: 'Gestionar repertorio, setlists y logística de gira',
-  optionInterestAll: 'Todo el ecosistema completo de BandManager.io',
+  optionInterestAll: 'Todo el ecosistema completo de BandManager.oi',
   labelNotes: '¿Algo más que nos quieras contar? (Opcional)',
   placeholderNotes: 'Cuéntanos sobre tus próximos planes, giras o necesidades específicas...',
   moreInfoToggleOpen: '+ Añadir más información sobre mi banda (opcional)',
   moreInfoToggleClose: '- Ocultar información adicional',
   moreInfoSubtitle: 'Indícanos más detalles si quieres ayudarnos a adaptar el lanzamiento a tu banda:',
-  consentCheckbox: 'Quiero recibir acceso prioritario, novedades y toda la información de lanzamiento de BandManager.io en mi correo e Instagram.',
+  consentCheckbox: 'Quiero recibir acceso prioritario, novedades y toda la información de lanzamiento de BandManager.oi en mi correo e Instagram.',
   submitButton: 'Avisadme cuando esté disponible',
   submittingButton: 'Guardando tus datos...',
 
   successTitle: '¡Estás en la lista!',
-  successSubtitle: 'Hemos registrado a {bandName} para el lanzamiento de BandManager.io.',
+  successSubtitle: 'Hemos registrado a {bandName} para el lanzamiento de BandManager.oi.',
   successMessage: 'En cuanto la plataforma esté lista, te enviaremos por email e Instagram toda la información detallada y tu pase de acceso preferente.',
   successBackToBand: 'Volver a {bandName}',
-  successExploreApp: 'Conocer más sobre BandManager.io',
+  successExploreApp: 'Conocer más sobre BandManager.oi',
 
   errorRequired: 'Por favor, completa los campos obligatorios (*) y acepta la casilla de consentimiento.',
   errorGeneric: 'Hubo un error al procesar tu solicitud. Por favor, inténtalo de nuevo.',
 
-  footerText: 'BandManager.io • Tú piensa en tu música, nosotros en todo lo demás.'
+  footerText: 'BandManager.oi • Tú piensa en tu música, nosotros en todo lo demás.'
 };
 
 const en: MusiciansLandingDict = {
   badge: 'Coming Soon • Exclusive Early Access Waitlist',
   heroTitle: 'You focus on the music.',
-  heroHighlight: 'BandManager.io takes care of everything else.',
+  heroHighlight: 'BandManager.oi takes care of everything else.',
   heroSubtitle: 'We are putting the final touches on the ultimate all-in-one operating system for independent musicians and bands: live QR fan capture, AI tour booking, interactive EPK & gig management. Leave your email and Instagram to receive priority access and full info before public launch.',
   badgeFromBand: 'You arrived from {bandName}\'s show page',
   backToOrigin: 'Back to {bandName}',
@@ -149,7 +149,7 @@ const en: MusiciansLandingDict = {
   feature4Desc: 'Manage concert setlists with keys & tempo, calculate van routing & per-diems, and track live gig finances & merch stock.',
 
   formTitle: 'Join the Early Access Waitlist',
-  formSubtitle: 'BandManager.io is launching very soon. Leave your email & Instagram so we can send you all the information and invite you first.',
+  formSubtitle: 'BandManager.oi is launching very soon. Leave your email & Instagram so we can send you all the information and invite you first.',
   labelBandName: 'Band or Project Name *',
   placeholderBandName: 'e.g. The Indie Collective, Soundwave...',
   labelContactName: 'Your Full Name *',
@@ -172,32 +172,32 @@ const en: MusiciansLandingDict = {
   optionInterestBooking: 'Booking more gigs & automating venue outreach',
   optionInterestEpk: 'Professional interactive EPK dossier',
   optionInterestRepertoire: 'Managing setlists, chords & tour van logistics',
-  optionInterestAll: 'The complete BandManager.io ecosystem',
+  optionInterestAll: 'The complete BandManager.oi ecosystem',
   labelNotes: 'Anything else you\'d like to share? (Optional)',
   placeholderNotes: 'Tell us about your upcoming releases, tour plans or specific needs...',
   moreInfoToggleOpen: '+ Add more details about my band (optional)',
   moreInfoToggleClose: '- Hide optional details',
   moreInfoSubtitle: 'Give us extra details to help us tailor our launch to your band:',
-  consentCheckbox: 'I agree to receive early access, launch details and updates from BandManager.io via email and Instagram.',
+  consentCheckbox: 'I agree to receive early access, launch details and updates from BandManager.oi via email and Instagram.',
   submitButton: 'Notify Me When Available',
   submittingButton: 'Saving your details...',
 
   successTitle: 'You\'re on the list!',
-  successSubtitle: 'We have registered {bandName} for BandManager.io.',
+  successSubtitle: 'We have registered {bandName} for BandManager.oi.',
   successMessage: 'As soon as the platform goes live, we will send all the details to your email and Instagram along with your priority access pass.',
   successBackToBand: 'Back to {bandName}',
-  successExploreApp: 'Learn more about BandManager.io',
+  successExploreApp: 'Learn more about BandManager.oi',
 
   errorRequired: 'Please fill in all required fields (*) and accept the consent checkbox.',
   errorGeneric: 'An error occurred while submitting your request. Please try again.',
 
-  footerText: 'BandManager.io • Focus on the music, we take care of everything else.'
+  footerText: 'BandManager.oi • Focus on the music, we take care of everything else.'
 };
 
 const it: MusiciansLandingDict = {
   badge: 'Prossimamente • Lista d\'Attesa Esclusiva',
   heroTitle: 'Tu pensa solo alla musica.',
-  heroHighlight: 'BandManager.io si occupa di tutto il resto.',
+  heroHighlight: 'BandManager.oi si occupa di tutto il resto.',
   heroSubtitle: 'Stiamo ultimando la piattaforma definitiva per musicisti e band indipendenti: cattura fan ai concerti con codice QR, booking automatizzato con IA, dossier stampa EPK e gestione tour. Lascia la tua email e Instagram per ricevere tutte le informazioni e accesso prioritario.',
   badgeFromBand: 'Arrivi dalla pagina di {bandName}',
   backToOrigin: 'Torna alla pagina di {bandName}',
@@ -212,7 +212,7 @@ const it: MusiciansLandingDict = {
   feature4Desc: 'Organizza le tue scalette con tonalità e accordi, calcola le spese del furgone da tour e gestisci il merchandising.',
 
   formTitle: 'Iscriviti alla Lista d\'Attesa',
-  formSubtitle: 'BandManager.io sarà disponibile a breve. Lasciaci email e Instagram per ricevere tutte le informazioni e il pass di accesso anticipato.',
+  formSubtitle: 'BandManager.oi sarà disponibile a breve. Lasciaci email e Instagram per ricevere tutte le informazioni e il pass di accesso anticipato.',
   labelBandName: 'Nome della Band o Progetto *',
   placeholderBandName: 'Es: Velvet Sound, I Notturni...',
   labelContactName: 'Nome e Cognome del Referente *',
@@ -235,32 +235,32 @@ const it: MusiciansLandingDict = {
   optionInterestBooking: 'Trovare più date e automatizzare il booking',
   optionInterestEpk: 'Avere un EPK professionale e interattivo',
   optionInterestRepertoire: 'Gestire scalette, accordi e logistica tour',
-  optionInterestAll: 'L\'intero ecosistema completo di BandManager.io',
+  optionInterestAll: 'L\'intero ecosistema completo di BandManager.oi',
   labelNotes: 'Altre note o dettagli? (Facoltativo)',
   placeholderNotes: 'Raccontaci dei tuoi prossimi progetti, concerti o esigenze...',
   moreInfoToggleOpen: '+ Aggiungi altre informazioni sulla band (facoltativo)',
   moreInfoToggleClose: '- Nascondi informazioni facoltative',
   moreInfoSubtitle: 'Fornisci maggiori dettagli per aiutarci a personalizzare il lancio:',
-  consentCheckbox: 'Accetto di ricevere novità, accesso anticipato e informazioni da BandManager.io via email e Instagram.',
+  consentCheckbox: 'Accetto di ricevere novità, accesso anticipato e informazioni da BandManager.oi via email e Instagram.',
   submitButton: 'Avvisami quando sarà disponibile',
   submittingButton: 'Salvataggio in corso...',
 
   successTitle: 'Sei in lista!',
-  successSubtitle: 'Abbiamo registrato {bandName} per BandManager.io.',
+  successSubtitle: 'Abbiamo registrato {bandName} per BandManager.oi.',
   successMessage: 'Non appena la piattaforma sarà online, ti invieremo tutti i dettagli su email e Instagram insieme al tuo invito prioritario.',
   successBackToBand: 'Torna a {bandName}',
-  successExploreApp: 'Scopri di più su BandManager.io',
+  successExploreApp: 'Scopri di più su BandManager.oi',
 
   errorRequired: 'Compila tutti i campi obbligatori (*) e accetta la casella di consenso.',
   errorGeneric: 'Si è verificato un errore durante l\'invio. Per favore riprova.',
 
-  footerText: 'BandManager.io • Tu pensa alla musica, noi a tutto il resto.'
+  footerText: 'BandManager.oi • Tu pensa alla musica, noi a tutto il resto.'
 };
 
 const cs: MusiciansLandingDict = {
   badge: 'Již brzy • Exkluzivní přednostní přístup',
   heroTitle: 'Ty se věnuj hudbě.',
-  heroHighlight: 'BandManager.io se postará o všechno ostatní.',
+  heroHighlight: 'BandManager.oi se postará o všechno ostatní.',
   heroSubtitle: 'Dokončujeme komplexní platformu pro nezávislé hudebníky a kapely: sběr fanoušků na koncertech přes QR kód, automatizovaný booking klubů s AI, interaktivní EPK presskit a management turné. Zanech nám svůj e-mail a Instagram pro přednostní přístup a veškeré informace.',
   badgeFromBand: 'Přišel/přišla jsi ze stránky koncertu {bandName}',
   backToOrigin: 'Zpět na stránku {bandName}',
@@ -275,7 +275,7 @@ const cs: MusiciansLandingDict = {
   feature4Desc: 'Měj přehled o setlistech s akordy, plánuj trasy dodávky na koncerty a měj pod kontrolou příjmy, výdaje i prodej merche.',
 
   formTitle: 'Připoj se na čekací listinu',
-  formSubtitle: 'BandManager.io bude k dispozici již brzy. Zanech nám svůj e-mail a Instagram, abychom ti zaslali všechny informace a přednostní přístup.',
+  formSubtitle: 'BandManager.oi bude k dispozici již brzy. Zanech nám svůj e-mail a Instagram, abychom ti zaslali všechny informace a přednostní přístup.',
   labelBandName: 'Název kapely nebo projektu *',
   placeholderBandName: 'Např.: The Indie Collective, Bakandeya...',
   labelContactName: 'Tvé celé jméno a příjmení *',
@@ -298,26 +298,26 @@ const cs: MusiciansLandingDict = {
   optionInterestBooking: 'Získat více koncertů a automatizovat oslovování klubů',
   optionInterestEpk: 'Mít profesionální a interaktivní EPK presskit',
   optionInterestRepertoire: 'Spravovat setlisty, akordy a logistiku turné',
-  optionInterestAll: 'Celý kompletní systém BandManager.io',
+  optionInterestAll: 'Celý kompletní systém BandManager.oi',
   labelNotes: 'Chceš nám ještě něco vzkázat? (volitelné)',
   placeholderNotes: 'Napiš nám o svých nadcházejících plánech, vydáních nebo potřebách...',
   moreInfoToggleOpen: '+ Přidat další informace o kapele (volitelné)',
   moreInfoToggleClose: '- Skrýt doplňující informace',
   moreInfoSubtitle: 'Uveď podrobnosti, které nám pomohou lépe přizpůsobit platformu tvé kapele:',
-  consentCheckbox: 'Souhlasím se zasíláním novinek, informací o spuštění a přednostního přístupu k BandManager.io na e-mail a Instagram.',
+  consentCheckbox: 'Souhlasím se zasíláním novinek, informací o spuštění a přednostního přístupu k BandManager.oi na e-mail a Instagram.',
   submitButton: 'Upozornit mě, až bude hotovo',
   submittingButton: 'Ukládám údaje...',
 
   successTitle: 'Jsi na seznamu!',
-  successSubtitle: 'Údaje o kapele {bandName} byly úspěšně uloženy pro spuštění BandManager.io.',
+  successSubtitle: 'Údaje o kapele {bandName} byly úspěšně uloženy pro spuštění BandManager.oi.',
   successMessage: 'Jakmile bude platforma spuštěna, zašleme ti veškeré informace a přednostní pozvánku na e-mail a Instagram.',
   successBackToBand: 'Zpět na {bandName}',
-  successExploreApp: 'Zjistit více o BandManager.io',
+  successExploreApp: 'Zjistit více o BandManager.oi',
 
   errorRequired: 'Vyplň prosím všechna povinná pole (*) a zaškrtni souhlas.',
   errorGeneric: 'Při odesílání žádosti došlo k chybě. Zkus to prosím znovu.',
 
-  footerText: 'BandManager.io • Ty se věnuj hudbě, my se postaráme o všechno ostatní.'
+  footerText: 'BandManager.oi • Ty se věnuj hudbě, my se postaráme o všechno ostatní.'
 };
 
 export const MUSICIANS_TRANSLATIONS: Record<FanFormLanguage, MusiciansLandingDict> = { es, en, it, cs };

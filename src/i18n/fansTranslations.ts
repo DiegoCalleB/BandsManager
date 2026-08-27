@@ -276,7 +276,7 @@ const es: FanFormDict = {
   whatsappShareMessage: '¡Ey! Échale un ojo a {bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: {url}',
   upcomingShowsTitle: 'Próximos Conciertos',
   musicianBannerTitle: '¿Eres músico o tienes una banda?',
-  musicianBannerSubtitle: 'Tú piensa en tu música, ¡BandManager.io se encarga de todo lo demás!',
+  musicianBannerSubtitle: 'Tú piensa en tu música, ¡BandManager.oi se encarga de todo lo demás!',
   musicianBannerCTA: 'Quiero unirme a la lista de espera →',
 };
 
@@ -398,7 +398,7 @@ const en: FanFormDict = {
   whatsappShareMessage: 'Hey! Check out {bandName} and join their community to get unreleased tracks and discounts: {url}',
   upcomingShowsTitle: 'Upcoming Shows',
   musicianBannerTitle: 'Are you a musician or in a band?',
-  musicianBannerSubtitle: 'You focus on the music, BandManager.io takes care of everything else.',
+  musicianBannerSubtitle: 'You focus on the music, BandManager.oi takes care of everything else.',
   musicianBannerCTA: 'Join the musician waitlist →',
 };
 
@@ -520,7 +520,7 @@ const it: FanFormDict = {
   whatsappShareMessage: 'Ehi! Dai un\'occhiata a {bandName} e unisciti alla community per ottenere brani inediti e sconti: {url}',
   upcomingShowsTitle: 'Prossimi Concerti',
   musicianBannerTitle: 'Sei un musicista o hai una band?',
-  musicianBannerSubtitle: 'Tu pensa alla musica, BandManager.io si occupa di tutto il resto.',
+  musicianBannerSubtitle: 'Tu pensa alla musica, BandManager.oi si occupa di tutto il resto.',
   musicianBannerCTA: 'Unisciti alla lista d\'attesa per musicisti →',
 };
 
@@ -642,7 +642,7 @@ const cs: FanFormDict = {
   whatsappShareMessage: 'Ahoj! Koukni na {bandName} a přidej se k jejich komunitě pro nevydané skladby a slevy: {url}',
   upcomingShowsTitle: 'Nadcházející koncerty',
   musicianBannerTitle: 'Jsi hudebník nebo máš kapelu?',
-  musicianBannerSubtitle: 'Ty se soustřeď na hudbu, BandManager.io se postará o všechno ostatní.',
+  musicianBannerSubtitle: 'Ty se soustřeď na hudbu, BandManager.oi se postará o všechno ostatní.',
   musicianBannerCTA: 'Chci se přidat na čekací listinu pro kapely →',
 };
 

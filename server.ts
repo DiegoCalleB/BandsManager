@@ -46,7 +46,7 @@ process.on("unhandledRejection", (reason) => {
 });
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = 3000;
 
 // CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
 // y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
@@ -486,11 +486,19 @@ async function startServer() {
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Bakandeya Virtual Manager server running on http://localhost:${PORT}`);
+    console.log(`BandManager.oi server running on http://localhost:${PORT}`);
     // Start background autonomous Social Radar Agent
-    startSocialRadarScheduler();
+    try {
+      startSocialRadarScheduler();
+    } catch (e) {
+      console.error("Error starting Social Radar Scheduler:", e);
+    }
     // Start booking agents scheduler (Enviador/Lector, ver server/services/agentScheduler.ts)
-    startAgentScheduler();
+    try {
+      startAgentScheduler();
+    } catch (e) {
+      console.error("Error starting Agent Scheduler:", e);
+    }
   });
 
   server.on("error", (err: any) => {
