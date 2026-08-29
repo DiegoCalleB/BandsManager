@@ -15,6 +15,7 @@ import { dbGetPayments } from "./payments.js";
 import { dbGetTours } from "./tours.js";
 import { dbGetRunOfShow, dbGetGearChecklists } from "./production.js";
 import { dbGetCampaigns } from "./campaigns.js";
+import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 
 export async function loadStateFromSupabase(bandId: string, user?: any) {
   const cleanId = cleanBandId(bandId);
@@ -64,7 +65,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     registeredBands,
     users,
     bands,
-    campaigns
+    campaigns,
+    categoryTemplates
   ] = await Promise.all([
     dbGetLeads(cleanId).catch(() => []),
     dbGetRehearsals(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
@@ -83,7 +85,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     dbGetRegisteredBands().catch(() => []),
     dbGetUsers(cleanId).catch(() => []),
     dbGetBandContacts(cleanId).catch(() => []),
-    dbGetCampaigns(cleanId).catch(() => [])
+    dbGetCampaigns(cleanId).catch(() => []),
+    dbGetCategoryTemplates(cleanId).catch(() => ({}))
   ]);
 
   return {
@@ -172,7 +175,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     },
     registeredBands,
     users,
-    categoryTemplates: []
+    categoryTemplates
   };
 }
 

@@ -396,7 +396,7 @@ Bakandeya Agent Manager IA`);
      });
      const data = await res.json();
      if (res.ok && data.success) {
-       setOptimizationFeedbackMsg(`✅ Plantilla y Pautas para [${activeData.title}] guardadas en Memoria IA, Supabase (tab plantillas_pautas_ia) y PROMPTS_AGENTES_IA.md.`);
+       setOptimizationFeedbackMsg(`✅ Plantilla y Pautas para [${activeData.title}] guardadas y ya se usarán al generar pitches para esta categoría.`);
        setTemplateCustomInstruction('');
        setTemplateToneRating(0);
        setTemplateContentRating(0);

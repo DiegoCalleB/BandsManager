@@ -21,3 +21,4 @@ export * from "./db/emailAccounts.js";
 export * from "./db/reelAnalyses.js";
 export * from "./db/campaigns.js";
 export * from "./db/pitchLearning.js";
+export * from "./db/categoryTemplates.js";

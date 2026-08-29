@@ -57,6 +57,30 @@ describe('getBandDnaProfile - ADN de voz entrenado por el mánager', () => {
   });
 });
 
+describe('getBandDnaProfile - pautas de la plantilla de categoría del lead', () => {
+  it('extrae las pautas de la categoría correspondiente al tipo del lead', () => {
+    const state = {
+      registeredBands: [{ band_id: 'banda-test', nombre_banda: 'Banda Test' }],
+      categoryTemplates: {
+        salas: { title: 'Salas y Teatros', guidelines: 'Tono festivo y bailable para salas.', customInstruction: '' },
+        medios: { title: 'Medios de Comunicación', guidelines: 'Nunca pedir bolo a un medio.', customInstruction: 'Ir siempre al grano' },
+      },
+    };
+
+    const dnaSala = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' });
+    expect(dnaSala.categoryTemplateGuidelines).toBe('Tono festivo y bailable para salas.');
+
+    const dnaMedio = getBandDnaProfile(state, 'banda-test', { tipo: 'medio' });
+    expect(dnaMedio.categoryTemplateGuidelines).toBe('Nunca pedir bolo a un medio.');
+    expect(dnaMedio.categoryTemplateCustomInstruction).toBe('Ir siempre al grano');
+  });
+
+  it('no revienta si el estado no tiene categoryTemplates', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-templates', { tipo: 'festival' });
+    expect(dna.categoryTemplateGuidelines).toBeUndefined();
+  });
+});
+
 describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado', () => {
   const lead = { nombre_sala: 'Sala Test', ciudad: 'Madrid', tipo: 'sala' };
 
@@ -79,6 +103,21 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn');
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
     expect(prompt).not.toContain('ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER');
+  });
+
+  it('incluye las pautas de la plantilla de categoría cuando existen', () => {
+    const state = {
+      registeredBands: [{ band_id: 'banda-test' }],
+      categoryTemplates: {
+        salas: { title: 'Salas y Teatros', guidelines: 'Destaca siempre el montaje rápido.', customInstruction: 'Evitar mencionar cachés altos' },
+      },
+    };
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('PAUTAS ESPECÍFICAS PARA "Salas y Teatros"');
+    expect(prompt).toContain('Destaca siempre el montaje rápido.');
+    expect(prompt).toContain('Evitar mencionar cachés altos');
   });
 
   it('sigue incluyendo el bloque de campaña activa junto con el ADN de voz', () => {

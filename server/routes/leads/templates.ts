@@ -1,64 +1,65 @@
 import express from "express";
-import { loadState, saveState, requireAuth } from "../../state.js";
+import { requireAuth, loadState } from "../../state.js";
+import { getTargetBandId } from "../../utils/bandAccess.js";
 import { getAiClient, generateContentWithFallback } from "../../ai.js";
 import { safeParseJson } from "../../utils.js";
-import { ensureCategoryTemplatesInState, updatePromptsMarkdownFile } from "../../promptsManager.js";
+import { DEFAULT_CATEGORY_TEMPLATES } from "../../promptsManager.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
+import { dbGetCategoryTemplates, dbUpsertCategoryTemplate } from "../../db/categoryTemplates.js";
 
 const router = express.Router();
 
 router.get("/templates", requireAuth, async (req, res) => {
   try {
-    const state = loadState();
-    const categoryTemplates = ensureCategoryTemplatesInState(state);
-    res.json({ success: true, templates: categoryTemplates });
+    const bandId = getTargetBandId(req);
+    const templates = await dbGetCategoryTemplates(bandId);
+    res.json({ success: true, templates });
   } catch (error: any) {
     console.error("Error in GET /api/templates:", error);
     res.status(500).json({ success: false, error: "Error al obtener las plantillas." });
   }
 });
 
-// Save category templates, update state, write PROMPTS_AGENTES_IA.md and sync to Google Sheets
+// Save a single category's template + guidelines, persistido por banda en Supabase.
 router.post("/templates/save", requireAuth, async (req, res) => {
   try {
+    const bandId = getTargetBandId(req);
     const { category, subject, body, guidelines, customInstruction, toneRating, contentRating } = req.body;
-    const state = loadState();
-    const categoryTemplates = ensureCategoryTemplatesInState(state);
 
-    if (category && categoryTemplates[category]) {
-      const current = categoryTemplates[category];
-      current.subject = subject ?? current.subject;
-      current.body = body ?? current.body;
-      current.guidelines = guidelines ?? current.guidelines;
-      current.customInstruction = customInstruction ?? current.customInstruction;
-      if (toneRating !== undefined && toneRating > 0) current.toneRating = toneRating;
-      if (contentRating !== undefined && contentRating > 0) current.contentRating = contentRating;
-      current.updatedAt = new Date().toISOString();
-
-      if (customInstruction || toneRating || contentRating) {
-        if (!current.feedbackLogs) current.feedbackLogs = [];
-        current.feedbackLogs.push({
-          timestamp: new Date().toISOString(),
-          toneRating: toneRating || undefined,
-          contentRating: contentRating || undefined,
-          comment: customInstruction || undefined,
-          source: "manager_ui"
-        });
-      }
-    } else if (req.body.templates) {
-      state.categoryTemplates = req.body.templates;
+    if (!category || !DEFAULT_CATEGORY_TEMPLATES[category]) {
+      return res.status(400).json({ success: false, error: "Categoría de plantilla no válida." });
     }
 
-    saveState(state);
+    const existing = await dbGetCategoryTemplates(bandId);
+    const current = existing[category];
 
-    // Write PROMPTS_AGENTES_IA.md
-    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    updatePromptsMarkdownFile(state.categoryTemplates, globalMemory);
+    const feedbackLogs = current.feedbackLogs || [];
+    if (customInstruction || toneRating || contentRating) {
+      feedbackLogs.push({
+        timestamp: new Date().toISOString(),
+        toneRating: toneRating || undefined,
+        contentRating: contentRating || undefined,
+        comment: customInstruction || undefined,
+        source: "manager_ui"
+      });
+    }
 
+    const saved = await dbUpsertCategoryTemplate(bandId, category, {
+      title: current.title,
+      subject: subject ?? current.subject,
+      body: body ?? current.body,
+      guidelines: guidelines ?? current.guidelines,
+      customInstruction: customInstruction ?? current.customInstruction,
+      toneRating: toneRating && toneRating > 0 ? toneRating : current.toneRating,
+      contentRating: contentRating && contentRating > 0 ? contentRating : current.contentRating,
+      feedbackLogs
+    });
+
+    const templates = { ...existing, [category]: saved };
     res.json({
       success: true,
-      message: "Plantilla y Pautas guardadas correctamente en la Memoria IA y PROMPTS_AGENTES_IA.md.",
-      templates: state.categoryTemplates
+      message: "Plantilla y pautas guardadas correctamente.",
+      templates
     });
   } catch (error: any) {
     console.error("Error in POST /api/templates/save:", error);
@@ -66,21 +67,25 @@ router.post("/templates/save", requireAuth, async (req, res) => {
   }
 });
 
-// Auto-optimize and regenerate category templates using accumulated manager learnings
+// Auto-optimize and regenerate a category template using accumulated manager learnings
 router.post("/templates/optimize", requireAuth, async (req, res) => {
   try {
+    const bandId = getTargetBandId(req);
     const { category, currentSubject, currentBody, currentGuidelines, customInstruction, toneRating, contentRating } = req.body;
+
+    if (!category || !DEFAULT_CATEGORY_TEMPLATES[category]) {
+      return res.status(400).json({ success: false, error: "Categoría de plantilla no válida." });
+    }
+
     const state = loadState();
-    ensureCategoryTemplatesInState(state);
     const ai = getAiClient();
     const feedbackSummaryLogs = getGlobalPitchFeedbackSummary(state.leads);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
     const feedbackCount = feedbackSummaryLogs.length;
 
-    const userBandId = (req as any).user?.band_id ;
-    const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
-    const cleanId = userBandId.replace(/^(band|reg)-/, '');
+    const bandConfig = state.epkConfigsByBand?.[bandId] || state.epkConfigsByBand?.[bandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
+    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === bandId || b.band_id === bandId.replace(/^(band|reg)-/, ''));
+    const cleanId = bandId.replace(/^(band|reg)-/, '');
     const isBakandeya = cleanId === 'bakandeya';
     const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
     const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
@@ -149,47 +154,45 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
     if (!resultJson || !resultJson.subject || !resultJson.body || !resultJson.guidelines) {
       isSimulated = true;
       const instructionApplied = customInstruction ? `Aplicada la instrucción del mánager: "${customInstruction.trim()}". ` : '';
-      const feedbackNotes = feedbackCount > 0 
+      const feedbackNotes = feedbackCount > 0
         ? `Se han integrado las ${feedbackCount} valoraciones previas del mánager sobre tono y estilo.`
         : "Sin feedback previo guardado, se ha refrescado con tono directo y bailable sin vientos.";
 
       resultJson = {
-        subject: currentSubject ? `${currentSubject}` : `Propuesta de concierto: Bakandeya`,
-        body: currentBody 
-          ? currentBody 
-          : `Hola equipo de {{nombre_sala}},\n\nSomos Bakandeya...`,
-        guidelines: currentGuidelines 
-          ? `${currentGuidelines}. ${customInstruction ? `Instrucción reciente: ${customInstruction}.` : ''}` 
+        subject: currentSubject ? `${currentSubject}` : `Propuesta de concierto: ${bandName}`,
+        body: currentBody
+          ? currentBody
+          : `Hola equipo de {{nombre_sala}},\n\nSomos ${bandName}...`,
+        guidelines: currentGuidelines
+          ? `${currentGuidelines}. ${customInstruction ? `Instrucción reciente: ${customInstruction}.` : ''}`
           : `Tono directo adaptado a ${categoryLabel}.`,
         explanation: `Plantilla regenerada con IA. ${instructionApplied}${feedbackNotes}`
       };
     }
 
-    // Automatically persist optimized result in state, PROMPTS_AGENTES_IA.md and Google Sheets
-    if (category && state.categoryTemplates && state.categoryTemplates[category]) {
-      const target = state.categoryTemplates[category];
-      target.subject = resultJson.subject;
-      target.body = resultJson.body;
-      target.guidelines = resultJson.guidelines;
-      if (toneRating) target.toneRating = toneRating;
-      if (contentRating) target.contentRating = contentRating;
-      if (customInstruction) target.customInstruction = customInstruction;
-      target.updatedAt = new Date().toISOString();
+    const existing = await dbGetCategoryTemplates(bandId);
+    const current = existing[category];
+    const feedbackLogs = current.feedbackLogs || [];
+    feedbackLogs.push({
+      timestamp: new Date().toISOString(),
+      toneRating: toneRating || undefined,
+      contentRating: contentRating || undefined,
+      comment: customInstruction || resultJson.explanation || "Re-generada con IA",
+      source: "ai_optimization"
+    });
 
-      if (!target.feedbackLogs) target.feedbackLogs = [];
-      target.feedbackLogs.push({
-        timestamp: new Date().toISOString(),
-        toneRating: toneRating || undefined,
-        contentRating: contentRating || undefined,
-        comment: customInstruction || resultJson.explanation || "Re-generada con IA",
-        source: "ai_optimization"
-      });
+    const saved = await dbUpsertCategoryTemplate(bandId, category, {
+      title: current.title,
+      subject: resultJson.subject,
+      body: resultJson.body,
+      guidelines: resultJson.guidelines,
+      customInstruction: customInstruction || current.customInstruction,
+      toneRating: toneRating || current.toneRating,
+      contentRating: contentRating || current.contentRating,
+      feedbackLogs
+    });
 
-      saveState(state);
-
-      // Refresh PROMPTS_AGENTES_IA.md
-      updatePromptsMarkdownFile(state.categoryTemplates, globalMemory);
-    }
+    const updatedTemplates = { ...existing, [category]: saved };
 
     res.json({
       success: true,
@@ -198,14 +201,12 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
       feedbackSummary: feedbackSummaryLogs,
       optimized: resultJson,
       isSimulated,
-      updatedTemplates: state.categoryTemplates
+      updatedTemplates
     });
   } catch (error: any) {
     console.error("Error in POST /api/templates/optimize:", error);
     res.status(500).json({ error: error?.message || "Error al optimizar la plantilla con IA." });
   }
 });
-
-// POST /api/leads/:id/generate-multi-pitch (Human-in-the-Loop A/B/C Multi-Model Generation)
 
 export default router;

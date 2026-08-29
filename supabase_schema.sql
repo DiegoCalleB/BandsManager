@@ -665,3 +665,29 @@ CREATE INDEX IF NOT EXISTS idx_agent_logs_band_date ON agent_execution_logs(band
 ALTER TABLE agent_execution_logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON agent_execution_logs FOR ALL USING (true);
 
+-- 29. category_pitch_templates (Plantillas de email + pautas de IA por categoría de lead, por banda)
+--
+-- Antes vivía en state.categoryTemplates: un único objeto en memoria/data.json compartido por
+-- TODAS las bandas de la plataforma (sin band_id), que además se perdía en cada redeploy de
+-- Railway. Una fila por banda+categoría: volver a guardar la misma categoría actualiza la fila
+-- en vez de acumular duplicados.
+CREATE TABLE IF NOT EXISTS category_pitch_templates (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  category TEXT NOT NULL, -- 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements'
+  title TEXT DEFAULT '',
+  subject TEXT DEFAULT '',
+  body TEXT DEFAULT '',
+  guidelines TEXT DEFAULT '',
+  custom_instruction TEXT DEFAULT '',
+  tone_rating INTEGER DEFAULT 5,
+  content_rating INTEGER DEFAULT 5,
+  feedback_logs JSONB DEFAULT '[]'::jsonb,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(band_id, category)
+);
+CREATE INDEX IF NOT EXISTS idx_category_templates_band ON category_pitch_templates(band_id, category);
+ALTER TABLE category_pitch_templates ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON category_pitch_templates FOR ALL USING (true);
+

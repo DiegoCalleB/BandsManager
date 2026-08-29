@@ -1,5 +1,5 @@
 import { detectPitchLanguage } from "./leadLanguage.js";
-import { formatGlobalPitchFeedbackForPrompt } from "../promptsManager.js";
+import { formatGlobalPitchFeedbackForPrompt, mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 
 export interface BandDnaProfile {
   bandId: string;
@@ -51,6 +51,11 @@ export interface BandDnaProfile {
   emojisFrecuentes?: string[];
   puntosFuertesConectar?: string;
   recomendacionPitch?: string;
+  // Pautas de IA + instrucción del mánager para la plantilla de la categoría de este lead
+  // (BandCRM > Plantillas de Email), persistidas por banda en category_pitch_templates.
+  categoryTemplateTitle?: string;
+  categoryTemplateGuidelines?: string;
+  categoryTemplateCustomInstruction?: string;
 }
 
 function strOrUndef(v: any): string | undefined {
@@ -191,6 +196,16 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   const puntosFuertesConectar = strOrUndef(dnaExpresion.puntos_fuertes_para_conectar);
   const recomendacionPitch = strOrUndef(dnaExpresion.recomendacion_pitch);
 
+  // Pautas de IA y plantilla entrenadas por el mánager para la categoría de ESTE lead
+  // (server/routes/leads/templates.ts, category_pitch_templates). Antes esto ni persistía de
+  // verdad ni llegaba aquí: el mánager editaba "pautas para salas" y no tenía ningún efecto
+  // real en los pitches generados para salas.
+  const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
+  const categoryTemplate = state?.categoryTemplates?.[categoryKey];
+  const categoryTemplateTitle = strOrUndef(categoryTemplate?.title);
+  const categoryTemplateGuidelines = strOrUndef(categoryTemplate?.guidelines);
+  const categoryTemplateCustomInstruction = strOrUndef(categoryTemplate?.customInstruction);
+
   return {
     bandId,
     cleanId,
@@ -230,7 +245,10 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     frasesEmblematicas,
     emojisFrecuentes,
     puntosFuertesConectar,
-    recomendacionPitch
+    recomendacionPitch,
+    categoryTemplateTitle,
+    categoryTemplateGuidelines,
+    categoryTemplateCustomInstruction
   };
 }
 
@@ -328,7 +346,13 @@ ${lead?.notas ? `- Notas previas registradas: "${lead.notas}"` : ""}
 🧠 HISTORIAL DE FEEDBACK Y APRENDIZAJE DEL MÁNAGER:
 ═════════════════════════════════════════════════════════════════════
 ${globalMemory || "Sin historial previo. Mantener tono bailable, directo, profesional y fresco sin instrumentos de viento."}
-
+${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction) ? `
+═════════════════════════════════════════════════════════════════════
+📋 PAUTAS ESPECÍFICAS PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
+═════════════════════════════════════════════════════════════════════
+${bandDna.categoryTemplateGuidelines ? bandDna.categoryTemplateGuidelines : ""}
+${bandDna.categoryTemplateCustomInstruction ? `Instrucción específica reciente del mánager para esta categoría: "${bandDna.categoryTemplateCustomInstruction}"` : ""}
+` : ""}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):
 ═════════════════════════════════════════════════════════════════════

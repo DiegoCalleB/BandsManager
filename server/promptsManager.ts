@@ -71,6 +71,22 @@ export interface CategoryTemplateConfig {
   updatedAt: string;
 }
 
+/**
+ * A qué categoría de plantilla pertenece un lead según su `tipo`, con el mismo criterio difuso
+ * que ya usa buildEnhancedPitchSystemPrompt para adaptar el enfoque por tipo de destinatario.
+ * No hay categoría de plantilla para "ayuntamiento" ni el resto de tipos sueltos: caen en
+ * "salas" (la plantilla genérica) en vez de fallar o quedarse sin pautas.
+ */
+export function mapLeadTipoToTemplateCategory(leadTipo: string | undefined | null): string {
+  const tipo = String(leadTipo || "").toLowerCase();
+  if (tipo.includes("medio") || tipo.includes("prensa") || tipo.includes("radio") || tipo.includes("podcast")) return "medios";
+  if (tipo.includes("festiv")) return "festivales";
+  if (tipo.includes("disco") || tipo.includes("club")) return "discotecas";
+  if (tipo.includes("grup") || tipo.includes("artist") || tipo.includes("banda")) return "grupos";
+  if (tipo.includes("agencia") || tipo.includes("manager") || tipo.includes("management") || tipo.includes("sello")) return "managements";
+  return "salas";
+}
+
 export const DEFAULT_CATEGORY_TEMPLATES: Record<string, CategoryTemplateConfig> = {
   salas: {
     category: "salas",
