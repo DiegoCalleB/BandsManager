@@ -6,7 +6,7 @@ import {
  Upload, Layers, CheckCircle2, RotateCcw, AlertCircle, RefreshCw,
  Video, Calendar, Clock, Trash2, Film, Check, ExternalLink, Gauge, ChevronRight, ChevronLeft,
  Plus, TrendingUp, LineChart, Instagram, Youtube, Edit, Table,
- Volume2, VolumeX, Maximize2, X, Star
+ Volume2, VolumeX, Maximize2, X, Star, Bookmark, ThumbsUp
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
@@ -103,6 +103,17 @@ function copyForPlatform(clip: HighlightClip | undefined | null, platform: 'Inst
  if (platform === 'Facebook') return clip.copyFacebook || clip.recommendedCopy || '';
  return clip.recommendedCopy || '';
 }
+
+// Qué iconos de interacción tapan el lateral derecho del vídeo en cada red: no es solo el
+// copy lo que cambia por plataforma, la propia UI de la app también se come parte del encuadre
+// de forma distinta (Instagram añade guardar, YouTube separa like/dislike, etc.), así que un
+// hookText o un subtítulo pegado al borde derecho puede quedar tapado en una red y no en otra.
+const PLATFORM_UI_ICONS: Record<'Instagram' | 'TikTok' | 'YouTube' | 'Facebook', typeof Heart[]> = {
+ Instagram: [Heart, MessageCircle, Share2, Bookmark],
+ TikTok: [Heart, MessageCircle, Bookmark, Share2],
+ YouTube: [ThumbsUp, MessageCircle, Share2],
+ Facebook: [ThumbsUp, MessageCircle, Share2]
+};
 
 export default function ReelsCenter({
  colors,
@@ -3042,6 +3053,17 @@ export default function ReelsCenter({
 
  {/* Dark Gradient Overlay */}
  <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 pointer-events-none z-10" />
+
+ {/* Vista previa de la plataforma: la propia UI de cada app tapa una franja distinta del
+ borde derecho (guardar en Instagram/TikTok, like+dislike separados en YouTube...), así
+ que un hookText o subtítulo pegado ahí puede quedar oculto en una red y no en otra. */}
+ <div className="absolute right-2 bottom-24 z-20 flex flex-col gap-3 items-center pointer-events-none">
+ {PLATFORM_UI_ICONS[selectedPlatform].map((Icon, idx) => (
+ <div key={idx} className="w-7 h-7 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center text-white/85">
+ <Icon className="w-3.5 h-3.5" />
+ </div>
+ ))}
+ </div>
 
  {/* Video Info Overlays inside the phone */}
  <div className="z-10 flex justify-between items-center">
