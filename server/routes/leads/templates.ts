@@ -1,11 +1,14 @@
 import express from "express";
 import { requireAuth, loadState } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
-import { getAiClient, generateContentWithFallback } from "../../ai.js";
-import { safeParseJson } from "../../utils.js";
 import { DEFAULT_CATEGORY_TEMPLATES } from "../../promptsManager.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { dbGetCategoryTemplates, dbUpsertCategoryTemplate } from "../../db/categoryTemplates.js";
+import {
+  generateOptimizedCategoryTemplate,
+  autoOptimizeCategoryTemplateIfDue,
+  resolveBandNameAndBio
+} from "../../utils/templateOptimizer.js";
 
 const router = express.Router();
 
@@ -20,7 +23,9 @@ router.get("/templates", requireAuth, async (req, res) => {
   }
 });
 
-// Save a single category's template + guidelines, persistido por banda en Supabase.
+// Save a single category's template + guidelines, persistido por banda en Supabase. Si tras
+// este guardado se han acumulado suficientes valoraciones sin optimizar, dispara en segundo
+// plano una auto-optimización con IA (ver AUTO_OPTIMIZE_FEEDBACK_THRESHOLD).
 router.post("/templates/save", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
@@ -61,6 +66,12 @@ router.post("/templates/save", requireAuth, async (req, res) => {
       message: "Plantilla y pautas guardadas correctamente.",
       templates
     });
+
+    // En segundo plano, después de responder: si ya hay bastante feedback sin aplicar, se
+    // auto-optimiza sola. No bloquea el guardado ni el mensaje de éxito al mánager.
+    autoOptimizeCategoryTemplateIfDue(bandId, category, loadState()).catch((err) => {
+      console.warn("Notice en auto-optimización de plantilla:", err);
+    });
   } catch (error: any) {
     console.error("Error in POST /api/templates/save:", error);
     res.status(500).json({ success: false, error: "Error al guardar las plantillas y pautas de IA." });
@@ -68,6 +79,8 @@ router.post("/templates/save", requireAuth, async (req, res) => {
 });
 
 // Auto-optimize and regenerate a category template using accumulated manager learnings
+// (disparo manual: el mánager pulsa "optimizar con IA" en el editor, usando lo que hay en
+// pantalla en ese momento aunque no lo haya guardado todavía).
 router.post("/templates/optimize", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
@@ -78,97 +91,24 @@ router.post("/templates/optimize", requireAuth, async (req, res) => {
     }
 
     const state = loadState();
-    const ai = getAiClient();
     const feedbackSummaryLogs = getGlobalPitchFeedbackSummary(state.leads);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
     const feedbackCount = feedbackSummaryLogs.length;
+    const { bandName, bandBio } = resolveBandNameAndBio(state, bandId);
 
-    const bandConfig = state.epkConfigsByBand?.[bandId] || state.epkConfigsByBand?.[bandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
-    const registeredBand = state.registeredBands?.find((b: any) => b.band_id === bandId || b.band_id === bandId.replace(/^(band|reg)-/, ''));
-    const cleanId = bandId.replace(/^(band|reg)-/, '');
-    const isBakandeya = cleanId === 'bakandeya';
-    const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda || (isBakandeya ? 'Bakandeya' : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
-    const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || '';
-
-    const categoryNames: Record<string, string> = {
-      salas: "Salas y Teatros de Conciertos",
-      festivales: "Festivales de Música",
-      discotecas: "Discotecas y Clubbing Nocturno",
-      medios: "Medios de Comunicación, Radio y Prensa",
-      grupos: "Grupos y Bandas para Intercambio de Fechas (Co-Booking / Date Swap)",
-      managements: "Agencias de Booking y Management"
-    };
-
-    const categoryLabel = categoryNames[category] || category || "General";
-
-    const prompt = `Eres el Especialista Director de Redacción de la banda "${bandName}" (${bandBio ? bandBio : 'banda de música en directo'}).
-Tu tarea es REGENERAR Y OPTIMIZAR la plantilla de correo por defecto y sus pautas de IA para la categoría: "${categoryLabel}".
-
-PLANTILLA ACTUAL:
-- Asunto: "${currentSubject || ''}"
-- Cuerpo: "${currentBody || ''}"
-- Pautas de IA: "${currentGuidelines || ''}"
-
-VALORACIÓN DIRECTA DEL MÁNAGER SOBRE ESTA PLANTILLA ACTUAL:
-- Tono y Estilo: ${toneRating ? `${toneRating}/5 estrellas` : 'Sin calificar'}
-- Contenido y Estructura: ${contentRating ? `${contentRating}/5 estrellas` : 'Sin calificar'}
-
-${customInstruction && customInstruction.trim() ? `INSTRUCCIÓN / COMENTARIO DIRECTO DEL MÁNAGER PARA ESTA PLANTILLA (CUMPLIR OBLIGATORIAMENTE):
-"${customInstruction.trim()}"` : ''}
-
-MEMORIA COMPLETA Y APRENDIZAJES ACUMULADOS DE VALORACIONES Y CORRECCIONES PREVIAS DEL MÁNAGER EN OTROS CORREOS (${feedbackCount} entradas de feedback):
-${globalMemory}
-
-INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
-1. Si el mánager ha dado una puntuación baja en Tono/Estilo (1-3/5), ajusta radicalmente la voz, el ritmo y la cercanía/respeto del mensaje. Si ha dado puntuación baja en Contenido/Estructura (1-3/5), reorganiza los bloques de información, acorta o aclara los puntos clave.
-2. Si el mánager ha introducido un comentario o instrucción específica arriba, cúplela como máxima prioridad.
-3. Analiza cuidadosamente todo el feedback acumulado del mánager en correos anteriores. Si ha pedido acortar correos, cambiar el tono, destacar el violín o evitar clichés, aplica esos aprendizajes para perfeccionar esta plantilla.
-4. Preserva las variables dinámicas de plantilla en el cuerpo si son útiles: {{nombre_sala}}, {{ciudad}}, {{website}}, etc.
-5. Asegúrate de mantener la firma y personalidad de ${bandName}.
-6. Devuelve un objeto JSON VÁLIDO exactamente con esta estructura (sin texto alrededor):
-{
-  "subject": "Asunto optimizado para ${categoryLabel}",
-  "body": "Cuerpo completo de la plantilla optimizado...",
-  "guidelines": "Nuevas pautas de IA refinadas para que el agente Redactor las aplique...",
-  "explanation": "Explicación breve (1-2 frases) de qué aprendizajes, estrellas e instrucciones del mánager se han aplicado en esta regeneración."
-}`;
-
-    let resultJson: any = null;
-    let isSimulated = false;
-
-    if (ai) {
-      try {
-        const response = await generateContentWithFallback(ai, {
-          contents: prompt,
-          config: {
-            temperature: 0.4,
-            responseMimeType: "application/json"
-          }
-        });
-        resultJson = safeParseJson(response?.text || "");
-      } catch (err) {
-        console.warn("AI generation failed for template optimization, falling back to rule-based:", err);
-      }
-    }
-
-    if (!resultJson || !resultJson.subject || !resultJson.body || !resultJson.guidelines) {
-      isSimulated = true;
-      const instructionApplied = customInstruction ? `Aplicada la instrucción del mánager: "${customInstruction.trim()}". ` : '';
-      const feedbackNotes = feedbackCount > 0
-        ? `Se han integrado las ${feedbackCount} valoraciones previas del mánager sobre tono y estilo.`
-        : "Sin feedback previo guardado, se ha refrescado con tono directo y bailable sin vientos.";
-
-      resultJson = {
-        subject: currentSubject ? `${currentSubject}` : `Propuesta de concierto: ${bandName}`,
-        body: currentBody
-          ? currentBody
-          : `Hola equipo de {{nombre_sala}},\n\nSomos ${bandName}...`,
-        guidelines: currentGuidelines
-          ? `${currentGuidelines}. ${customInstruction ? `Instrucción reciente: ${customInstruction}.` : ''}`
-          : `Tono directo adaptado a ${categoryLabel}.`,
-        explanation: `Plantilla regenerada con IA. ${instructionApplied}${feedbackNotes}`
-      };
-    }
+    const result = await generateOptimizedCategoryTemplate({
+      bandName,
+      bandBio,
+      category,
+      currentSubject,
+      currentBody,
+      currentGuidelines,
+      toneRating,
+      contentRating,
+      customInstruction,
+      globalMemory,
+      feedbackCount
+    });
 
     const existing = await dbGetCategoryTemplates(bandId);
     const current = existing[category];
@@ -177,15 +117,15 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
       timestamp: new Date().toISOString(),
       toneRating: toneRating || undefined,
       contentRating: contentRating || undefined,
-      comment: customInstruction || resultJson.explanation || "Re-generada con IA",
+      comment: customInstruction || result.explanation || "Re-generada con IA",
       source: "ai_optimization"
     });
 
     const saved = await dbUpsertCategoryTemplate(bandId, category, {
       title: current.title,
-      subject: resultJson.subject,
-      body: resultJson.body,
-      guidelines: resultJson.guidelines,
+      subject: result.subject,
+      body: result.body,
+      guidelines: result.guidelines,
       customInstruction: customInstruction || current.customInstruction,
       toneRating: toneRating || current.toneRating,
       contentRating: contentRating || current.contentRating,
@@ -199,8 +139,8 @@ INSTRUCCIONES DE OPTIMIZACIÓN CON APRENDIZAJE AUTOMÁTICO:
       category,
       feedbackCountUsed: feedbackCount,
       feedbackSummary: feedbackSummaryLogs,
-      optimized: resultJson,
-      isSimulated,
+      optimized: result,
+      isSimulated: result.isSimulated,
       updatedTemplates
     });
   } catch (error: any) {

@@ -5,7 +5,7 @@ import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkC
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback, isCampaignActive } from "../../utils/bandDna.js";
-import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, triggerSelfRefiningToneDnaBackground, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
+import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, refineAllToneDnaCategoriesForBand, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 
 const router = express.Router();
 
@@ -310,15 +310,22 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
   }
 });
 
-// Endpoint para disparar o forzar el auto-refinamiento de ADN de Tono (Self-Refining Tone DNA)
+// Endpoint para disparar o forzar el auto-refinamiento de ADN de Tono (Self-Refining Tone DNA),
+// para todas las categorías de lead que tengan ya suficiente señal acumulada.
 router.post("/leads/train-tone-dna", requireAuth, async (req, res) => {
   try {
     const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado." });
     }
-    await triggerSelfRefiningToneDnaBackground(userBandId);
-    res.json({ success: true, message: "Auto-refinamiento del ADN de tono ejecutado con éxito." });
+    const refinedCategories = await refineAllToneDnaCategoriesForBand(userBandId);
+    res.json({
+      success: true,
+      refinedCategories,
+      message: refinedCategories.length > 0
+        ? `Auto-refinamiento ejecutado para: ${refinedCategories.join(", ")}.`
+        : "Todavía no hay suficientes correcciones (mínimo 2 por categoría) para refinar el ADN de tono."
+    });
   } catch (err: any) {
     console.error("Error in POST /api/leads/train-tone-dna:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al refinar el ADN de tono." });

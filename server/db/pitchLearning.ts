@@ -2,6 +2,7 @@ import { getSupabase, cleanBandId } from "./core.js";
 import { getBandDnaProfile } from "../utils/bandDna.js";
 import { generateUnifiedAI } from "../ai.js";
 import { dbGetRegisteredBandById, dbUpdateBandToneDna } from "./bands.js";
+import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 
 export interface PitchHumanEditRecord {
   id: string;
@@ -67,7 +68,9 @@ export async function dbRecordPitchHumanEdit(record: {
     }
 
     // Disparar en segundo plano el refinamiento automático de ADN si hay suficientes ediciones
-    triggerSelfRefiningToneDnaBackground(cleanId).catch(err => {
+    // para ESTA categoría de lead (sala, medio, festival...), no para toda la banda a la vez.
+    const category = mapLeadTipoToTemplateCategory(record.tipo_entidad);
+    triggerSelfRefiningToneDnaBackground(cleanId, category).catch(err => {
       console.warn("Background self-refining tone DNA notice:", err);
     });
 
@@ -199,41 +202,45 @@ ${formatted}
 `;
 }
 
+type PitchEditRow = { borrador_ia: string; texto_aprobado: string; nombre_sala: string; tipo_entidad: string };
+
+/** Ediciones humanas recientes de la banda (hasta 40), tal cual vienen de Supabase. */
+async function fetchRecentEditedExamples(cleanId: string): Promise<PitchEditRow[]> {
+  const sb = getSupabase();
+  const { data } = await sb
+    .from("pitch_learning_examples")
+    .select("borrador_ia, texto_aprobado, nombre_sala, tipo_entidad")
+    .eq("band_id", cleanId)
+    .eq("tuvo_edicion", true)
+    .order("fecha_aprobacion", { ascending: false })
+    .limit(40);
+  return data || [];
+}
+
 /**
- * Analizador y Refinador Autónomo del ADN de Tono (Self-Refining Tone DNA).
- * Analiza los diffs entre borradores y versiones aprobadas para extraer reglas
- * de estilo recurrentes y actualizar el perfil de la banda.
+ * Analiza los diffs de una categoría concreta y actualiza `dna_expresion.reglas_por_categoria`
+ * para esa categoría. Requiere al menos 2 ediciones para inferir patrones; si no hay
+ * suficientes, no hace nada (no es un error, solo "todavía no hay señal suficiente").
  */
-export async function triggerSelfRefiningToneDnaBackground(bandId: string): Promise<void> {
-  const cleanId = cleanBandId(bandId);
-  try {
-    const sb = getSupabase();
-    // Obtener los últimos 10 ejemplos con edición humana
-    const { data: edits } = await sb
-      .from("pitch_learning_examples")
-      .select("borrador_ia, texto_aprobado, nombre_sala")
-      .eq("band_id", cleanId)
-      .eq("tuvo_edicion", true)
-      .order("fecha_aprobacion", { ascending: false })
-      .limit(8);
+async function refineToneDnaForCategory(cleanId: string, targetCategory: string, edits: PitchEditRow[]): Promise<void> {
+  if (edits.length < 2) return;
 
-    if (!edits || edits.length < 2) return; // Requiere al menos 2 ediciones para inferir patrones
+  const registered = await dbGetRegisteredBandById(cleanId);
+  const currentDna = registered?.dna_expresion || {};
+  const reglasPorCategoria = { ...(currentDna.reglas_por_categoria || {}) };
 
-    const registered = await dbGetRegisteredBandById(cleanId);
-    const currentDna = registered?.dna_expresion || {};
-
-    const diffsText = edits.map((e, idx) => `
+  const diffsText = edits.slice(0, 8).map((e, idx) => `
 Caso ${idx + 1} (${e.nombre_sala}):
 - Borrador IA rechazado: "${e.borrador_ia}"
 - Versión final escrita por el mánager: "${e.texto_aprobado}"
 `).join("\n");
 
-    const prompt = `Actúa como un lingüista experto en comunicación de bandas de música independiente.
-Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos:
+  const prompt = `Actúa como un lingüista experto en comunicación de bandas de música independiente.
+Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos, TODOS dirigidos al mismo tipo de destinatario ("${targetCategory}"):
 
 ${diffsText}
 
-Extrae de forma ultra-concisa las 3 a 5 REGLAS DE ORO O PREFERENCIAS DE ESTILO que el mánager aplica sistemáticamente (por ejemplo: expresiones que elimina, cómo saluda, qué datos añade, nivel de formalidad, cómo pide fechas).
+Extrae de forma ultra-concisa las 3 a 5 REGLAS DE ORO O PREFERENCIAS DE ESTILO que el mánager aplica sistemáticamente PARA ESTE TIPO DE DESTINATARIO (por ejemplo: expresiones que elimina, cómo saluda, qué datos añade, nivel de formalidad, cómo pide fechas).
 
 Devuelve un JSON con este formato exacto:
 {
@@ -243,27 +250,82 @@ Devuelve un JSON con este formato exacto:
   "ajuste_tono_recomendado": "directo_y_profesional"
 }`;
 
-    const response = await generateUnifiedAI({
-      prompt,
-      temperature: 0.2
+  const response = await generateUnifiedAI({ prompt, temperature: 0.2 });
+
+  const jsonMatch = (response.text || "").match(/\{[\s\S]*\}/);
+  const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+  if (parsed.reglas_aprendidas && Array.isArray(parsed.reglas_aprendidas)) {
+    reglasPorCategoria[targetCategory] = {
+      reglas_estilo_aprendidas: parsed.reglas_aprendidas,
+      vocabulario_aprendido: parsed.palabras_favoritas || reglasPorCategoria[targetCategory]?.vocabulario_aprendido || [],
+      terminos_a_evitar: parsed.palabras_prohibidas || reglasPorCategoria[targetCategory]?.terminos_a_evitar || [],
+      actualizado: new Date().toISOString()
+    };
+
+    await dbUpdateBandToneDna(cleanId, {
+      ...currentDna,
+      reglas_por_categoria: reglasPorCategoria,
+      ultimo_auto_refinamiento: new Date().toISOString()
     });
+    console.log(`[Self-Refining Tone DNA] Actualizadas ${parsed.reglas_aprendidas.length} reglas de estilo para ${cleanId} / categoría "${targetCategory}"`);
+  }
+}
 
-    // Extraer JSON limpio de la respuesta
-    const jsonMatch = (response.text || "").match(/\{[\s\S]*\}/);
-    const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
-    if (parsed.reglas_aprendidas && Array.isArray(parsed.reglas_aprendidas)) {
-      const updatedDna = {
-        ...currentDna,
-        reglas_estilo_aprendidas: parsed.reglas_aprendidas,
-        vocabulario_aprendido: parsed.palabras_favoritas || currentDna.vocabulario_aprendido || [],
-        terminos_a_evitar: parsed.palabras_prohibidas || currentDna.terminos_a_evitar || [],
-        ultimo_auto_refinamiento: new Date().toISOString()
-      };
+/**
+ * Analizador y Refinador Autónomo del ADN de Tono (Self-Refining Tone DNA) para UNA categoría.
+ * Analiza los diffs entre borradores y versiones aprobadas para extraer reglas de estilo
+ * recurrentes y actualizar el perfil de la banda.
+ *
+ * Las reglas se guardan separadas por categoría de lead (`dna_expresion.reglas_por_categoria`):
+ * antes eran una única bolsa por banda, así que corregir 5 pitches de medios y 5 de salas
+ * mezclaba ambos aprendizajes en las mismas reglas, aplicándolas por igual a todo tipo de
+ * destinatario aunque el registro que corresponda sea muy distinto.
+ */
+export async function triggerSelfRefiningToneDnaBackground(bandId: string, category?: string): Promise<void> {
+  const cleanId = cleanBandId(bandId);
+  try {
+    const recentEdits = await fetchRecentEditedExamples(cleanId);
+    if (recentEdits.length === 0) return;
 
-      await dbUpdateBandToneDna(cleanId, updatedDna);
-      console.log(`[Self-Refining Tone DNA] Actualizadas ${parsed.reglas_aprendidas.length} reglas de estilo para ${cleanId}`);
-    }
+    const targetCategory = category || mapLeadTipoToTemplateCategory(recentEdits[0]?.tipo_entidad);
+    const edits = recentEdits.filter((e) => mapLeadTipoToTemplateCategory(e.tipo_entidad) === targetCategory);
+
+    await refineToneDnaForCategory(cleanId, targetCategory, edits);
   } catch (err: any) {
     console.warn("Notice during triggerSelfRefiningToneDnaBackground:", err?.message || err);
+  }
+}
+
+/**
+ * Igual que triggerSelfRefiningToneDnaBackground, pero refina TODAS las categorías que tengan
+ * señal suficiente de una vez, en vez de solo la más reciente. Pensado para el botón manual
+ * "entrenar ADN de tono" (POST /api/leads/train-tone-dna), donde el mánager espera que se
+ * aprovechen todas las correcciones acumuladas, no solo las del último pitch corregido.
+ */
+export async function refineAllToneDnaCategoriesForBand(bandId: string): Promise<string[]> {
+  const cleanId = cleanBandId(bandId);
+  const refinedCategories: string[] = [];
+  try {
+    const recentEdits = await fetchRecentEditedExamples(cleanId);
+    if (recentEdits.length === 0) return refinedCategories;
+
+    const byCategory = new Map<string, PitchEditRow[]>();
+    for (const edit of recentEdits) {
+      const cat = mapLeadTipoToTemplateCategory(edit.tipo_entidad);
+      if (!byCategory.has(cat)) byCategory.set(cat, []);
+      byCategory.get(cat)!.push(edit);
+    }
+
+    // Secuencial a propósito: cada categoría con señal dispara una llamada a IA, y no queremos
+    // lanzar varias en paralelo contra el mismo proveedor por una sola pulsación del mánager.
+    for (const [cat, edits] of byCategory) {
+      if (edits.length < 2) continue;
+      await refineToneDnaForCategory(cleanId, cat, edits);
+      refinedCategories.push(cat);
+    }
+    return refinedCategories;
+  } catch (err: any) {
+    console.warn("Notice during refineAllToneDnaCategoriesForBand:", err?.message || err);
+    return refinedCategories;
   }
 }

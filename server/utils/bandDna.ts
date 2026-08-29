@@ -177,11 +177,23 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   const contactoTelefono = bandConfig?.contactoBooking?.telefono || registeredBand?.telefono || "+34 612 345 678";
   const cargoFirma = bandConfig?.firmaEmail?.cargo || `Booking & Management — ${bandName}`;
 
-  // DNA aprendido automáticamente (Self-Refining Tone DNA)
   const dnaExpresion = registeredBand?.dna_expresion || {};
-  const reglasEstiloAprendidas = Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined;
-  const vocabularioAprendido = Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined;
-  const terminosAEvitar = Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined;
+  const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
+
+  // DNA aprendido automáticamente (Self-Refining Tone DNA), separado por categoría de lead
+  // (server/db/pitchLearning.ts) para no mezclar "cómo corrijo a un medio" con "cómo corrijo
+  // a una sala". Con fallback a los campos planos antiguos (una única bolsa para toda la banda)
+  // para bandas que aún no tengan reglas aprendidas específicas de esta categoría.
+  const reglasPorCategoria = dnaExpresion.reglas_por_categoria?.[categoryKey];
+  const reglasEstiloAprendidas = Array.isArray(reglasPorCategoria?.reglas_estilo_aprendidas)
+    ? reglasPorCategoria.reglas_estilo_aprendidas
+    : (Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined);
+  const vocabularioAprendido = Array.isArray(reglasPorCategoria?.vocabulario_aprendido)
+    ? reglasPorCategoria.vocabulario_aprendido
+    : (Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined);
+  const terminosAEvitar = Array.isArray(reglasPorCategoria?.terminos_a_evitar)
+    ? reglasPorCategoria.terminos_a_evitar
+    : (Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined);
 
   // ADN de voz entrenado a mano por el mánager en BandToneModal (POST /api/bands/analyze-tone,
   // PATCH /api/bands/tone-dna). Hasta ahora solo alimentaba Reels/chat (bandProfile.ts) y nunca
@@ -200,7 +212,6 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   // (server/routes/leads/templates.ts, category_pitch_templates). Antes esto ni persistía de
   // verdad ni llegaba aquí: el mánager editaba "pautas para salas" y no tenía ningún efecto
   // real en los pitches generados para salas.
-  const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
   const categoryTemplate = state?.categoryTemplates?.[categoryKey];
   const categoryTemplateTitle = strOrUndef(categoryTemplate?.title);
   const categoryTemplateGuidelines = strOrUndef(categoryTemplate?.guidelines);
@@ -260,6 +271,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
 export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
+  const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
 
   let campaignSection = "";
   if (isCampaignActive(activeCampaign)) {
@@ -323,7 +335,7 @@ ${bandDna.puntosFuertesConectar ? `   - Puntos fuertes para conectar con el dest
 ${bandDna.recomendacionPitch ? `   - Recomendación de enfoque de pitch para esta banda (análisis de IA sobre su ADN real): ${bandDna.recomendacionPitch}` : ""}
 ` : ""}
 ${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-6. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS (SELF-REFINING TONE DNA):
+6. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS PARA "${categoryKey.toUpperCase()}" (SELF-REFINING TONE DNA):
 ${bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n")}
 ${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
 ${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}

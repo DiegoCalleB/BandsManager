@@ -81,6 +81,47 @@ describe('getBandDnaProfile - pautas de la plantilla de categoría del lead', ()
   });
 });
 
+describe('getBandDnaProfile - reglas de estilo auto-aprendidas separadas por categoría', () => {
+  it('usa las reglas de la categoría del lead cuando existen', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: {
+        medios: { reglas_estilo_aprendidas: ['Sé breve y directo con medios'], vocabulario_aprendido: ['nota de prensa'], terminos_a_evitar: ['bolo'] },
+        salas: { reglas_estilo_aprendidas: ['Destaca el montaje rápido'], vocabulario_aprendido: ['barra'], terminos_a_evitar: [] },
+      },
+    });
+
+    const dnaMedio = getBandDnaProfile(state, 'banda-test', { tipo: 'medio' });
+    expect(dnaMedio.reglasEstiloAprendidas).toEqual(['Sé breve y directo con medios']);
+    expect(dnaMedio.vocabularioAprendido).toEqual(['nota de prensa']);
+
+    const dnaSala = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' });
+    expect(dnaSala.reglasEstiloAprendidas).toEqual(['Destaca el montaje rápido']);
+    expect(dnaSala.vocabularioAprendido).toEqual(['barra']);
+  });
+
+  it('cae a los campos planos antiguos si la categoría del lead no tiene reglas propias todavía', () => {
+    const state = stateConBanda({
+      reglas_estilo_aprendidas: ['Regla general antigua'],
+      vocabulario_aprendido: ['palabra general'],
+      reglas_por_categoria: {
+        medios: { reglas_estilo_aprendidas: ['Solo para medios'] },
+      },
+    });
+
+    // Lead de tipo "festival" no tiene bucket propio en reglas_por_categoria: cae al plano.
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'festival' });
+    expect(dna.reglasEstiloAprendidas).toEqual(['Regla general antigua']);
+    expect(dna.vocabularioAprendido).toEqual(['palabra general']);
+  });
+
+  it('no revienta si no hay ni reglas por categoría ni reglas planas', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-reglas', { tipo: 'sala' });
+    expect(dna.reglasEstiloAprendidas).toBeUndefined();
+    expect(dna.vocabularioAprendido).toBeUndefined();
+    expect(dna.terminosAEvitar).toBeUndefined();
+  });
+});
+
 describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado', () => {
   const lead = { nombre_sala: 'Sala Test', ciudad: 'Madrid', tipo: 'sala' };
 
