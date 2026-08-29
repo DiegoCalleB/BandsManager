@@ -32,7 +32,8 @@ import {
   getYouTubeId,
   getStartTimeInSeconds,
   defaultScheduleDate,
-  validateScheduleReadiness
+  validateScheduleReadiness,
+  getCadenceWarnings
 } from '../utils/reelsUtils';
 import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
@@ -766,6 +767,9 @@ export default function ReelsCenter({
  // Antes solo se comprobaba que el copy no estuviera vacío, y en silencio: el botón no hacía
  // nada y no se explicaba por qué. Ahora se avisa de qué falta (hashtag, fecha pasada...).
  const [scheduleErrors, setScheduleErrors] = useState<string[]>([]);
+ // Avisos de cadencia (no bloquean programar, son sobre estrategia: dos posts pegados en la
+ // misma red, o un hueco largo sin publicar nada).
+ const [scheduleWarnings, setScheduleWarnings] = useState<string[]>([]);
  const [copySuccess, setCopySuccess] = useState(false);
 
  // Metrics Form States
@@ -1086,6 +1090,8 @@ export default function ReelsCenter({
  e.preventDefault();
  const problemas = validateScheduleReadiness({ copy: editedCopy, scheduledDate, scheduledTime });
  setScheduleErrors(problemas);
+ // La cadencia es un aviso, no un bloqueo: se calcula igualmente para enseñarlo junto al post ya programado.
+ setScheduleWarnings(getCadenceWarnings({ posts, platform: selectedPlatform, scheduledDate, scheduledTime }));
  if (problemas.length > 0) return;
 
  setIsScheduling(true);
@@ -2435,6 +2441,16 @@ export default function ReelsCenter({
  <div key={problema} className="flex items-center gap-1.5">
  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
  <span>{problema}</span>
+ </div>
+ ))}
+ </div>
+ )}
+ {scheduleWarnings.length > 0 && (
+ <div className="p-2.5 bg-amber-500/10 -amber-500/30 rounded-lg text-amber-400 text-[11px] font-mono mt-2 space-y-1">
+ {scheduleWarnings.map((aviso) => (
+ <div key={aviso} className="flex items-center gap-1.5">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{aviso}</span>
  </div>
  ))}
  </div>
@@ -3891,6 +3907,15 @@ export default function ReelsCenter({
  <div key={problema} className="flex items-center gap-1.5 text-red-400 text-[11px] font-mono">
  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
  <span>{problema}</span>
+ </div>
+ ))}
+ </div>
+ ) : scheduleWarnings.length > 0 ? (
+ <div className="space-y-1">
+ {scheduleWarnings.map((aviso) => (
+ <div key={aviso} className="flex items-center gap-1.5 text-amber-400 text-[11px] font-mono">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{aviso}</span>
  </div>
  ))}
  </div>
