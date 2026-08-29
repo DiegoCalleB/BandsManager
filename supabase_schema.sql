@@ -547,12 +547,19 @@ CREATE INDEX IF NOT EXISTS idx_reel_analyses_band_video ON reel_analyses(band_id
 ALTER TABLE reel_analyses ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON reel_analyses FOR ALL USING (true);
 
--- 22. booking_campaigns (Campañas activas de booking por banda)
-CREATE TABLE IF NOT EXISTS booking_campaigns (
+-- 22. campaigns (Campañas activas de booking por banda)
+--
+-- server/db/campaigns.ts prueba primero la tabla "campaigns" y solo cae a "booking_campaigns"
+-- si esa falla. En producción existía una tabla "campaigns" creada a mano con id/band_id como
+-- uuid y start_date/end_date NOT NULL sin default -tipos incompatibles con lo que este código
+-- manda (band_id como texto tipo "bakandeya", sin fechas de inicio/fin)-, así que CADA guardado
+-- fallaba en silencio y la app devolvía un objeto simulado como si se hubiera guardado. Este es
+-- el esquema real y corregido (ver migración fix_campaigns_table_schema).
+CREATE TABLE IF NOT EXISTS campaigns (
   id TEXT PRIMARY KEY,
   band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
   name TEXT NOT NULL,
-  target_cities JSONB DEFAULT '[]'::jsonb,
+  target_cities TEXT[] DEFAULT '{}',
   min_capacity INTEGER DEFAULT 0,
   max_capacity INTEGER DEFAULT 0,
   target_dates JSONB DEFAULT '[]'::jsonb,
@@ -563,9 +570,9 @@ CREATE TABLE IF NOT EXISTS booking_campaigns (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS idx_booking_campaigns_band ON booking_campaigns(band_id, is_active);
-ALTER TABLE booking_campaigns ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Permitir acceso total al backend" ON booking_campaigns FOR ALL USING (true);
+CREATE INDEX IF NOT EXISTS idx_campaigns_band_active ON campaigns(band_id, is_active);
+ALTER TABLE campaigns ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON campaigns FOR ALL USING (true);
 
 -- 23. deleted_leads (Lista negra de salas/leads descartados)
 CREATE TABLE IF NOT EXISTS deleted_leads (
@@ -690,4 +697,44 @@ CREATE TABLE IF NOT EXISTS category_pitch_templates (
 CREATE INDEX IF NOT EXISTS idx_category_templates_band ON category_pitch_templates(band_id, category);
 ALTER TABLE category_pitch_templates ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON category_pitch_templates FOR ALL USING (true);
+
+-- 30. pitch_learning_examples (Comparación borrador IA vs. versión aprobada por el humano)
+--
+-- Alimenta el few-shot dinámico (dbGetDynamicFewShotExamples) y el auto-refinamiento de tono
+-- (triggerSelfRefiningToneDnaBackground) en server/db/pitchLearning.ts. Ese código ya
+-- contemplaba que esta tabla pudiera no existir y degradaba en silencio con un aviso por
+-- consola - pero nunca llegó a crearse, así que este bucle de aprendizaje nunca ha funcionado
+-- en producción hasta esta migración.
+CREATE TABLE IF NOT EXISTS pitch_learning_examples (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  lead_id TEXT NOT NULL,
+  nombre_sala TEXT DEFAULT 'Sala',
+  tipo_entidad TEXT DEFAULT 'sala',
+  ciudad TEXT DEFAULT '',
+  borrador_ia TEXT DEFAULT '',
+  texto_aprobado TEXT DEFAULT '',
+  tuvo_edicion BOOLEAN DEFAULT false,
+  diferencia_longitud INTEGER DEFAULT 0,
+  tipo_accion TEXT NOT NULL, -- 'aprobado_propuesta' | 'aprobado_respuesta' | 'regenerado_con_feedback'
+  resultado_respuesta TEXT DEFAULT 'pendiente', -- 'pendiente' | 'positiva' | 'negativa' | 'sin_respuesta'
+  fecha_aprobacion TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_pitch_learning_band_fecha ON pitch_learning_examples(band_id, fecha_aprobacion DESC);
+ALTER TABLE pitch_learning_examples ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON pitch_learning_examples FOR ALL USING (true);
+
+-- 31. agent_schedule_state (Estado "ya se ejecutó esta hora" del planificador de agentes IA)
+--
+-- server/services/agentScheduler.ts y server/db/agentSchedule.ts. Sin esta tabla, un redeploy
+-- de Railway reinicia el proceso y pierde ese estado en memoria, con riesgo real de que el
+-- Enviador vuelva a mandar correos ya aprobados a las mismas salas. Tampoco existía en
+-- producción hasta esta migración.
+CREATE TABLE IF NOT EXISTS agent_schedule_state (
+  job_name TEXT PRIMARY KEY,
+  last_run_at TIMESTAMPTZ NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE agent_schedule_state ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON agent_schedule_state FOR ALL USING (true);
 
