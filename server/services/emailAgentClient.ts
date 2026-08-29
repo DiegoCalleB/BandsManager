@@ -12,6 +12,7 @@
 import nodemailer from "nodemailer";
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { ImapFlow } from "imapflow";
+import { simpleParser } from "mailparser";
 import { getSupabase } from "../db/core.js";
 import { dbGetBandEmailAccount, BandEmailAccount } from "../db/emailAccounts.js";
 
@@ -186,4 +187,95 @@ export async function leerNoLeidos(bandId: string, maxResults = 10): Promise<Arr
   }
 
   return results;
+}
+
+export interface RespuestaEntrante {
+  uid: number;
+  messageId: string;
+  from: string;
+  subject: string;
+  text: string;
+  date: Date | null;
+}
+
+// Igual que leerNoLeidos, pero trae el CUERPO real del mensaje (parseado con mailparser a
+// partir del RFC822 crudo) en vez de solo remitente/asunto - es lo que necesita el Agente
+// Lector para emparejar la respuesta con un lead real y dejarla registrada en su hilo, en vez
+// de solo contar cuántos mensajes hay sin leer.
+export async function leerRespuestasEntrantes(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
+  const account = await getAccount(bandId);
+
+  const client = new ImapFlow({
+    host: account.imap_host,
+    port: account.imap_port,
+    secure: true,
+    auth: { user: account.email, pass: account.app_password },
+    logger: false
+  });
+
+  const results: RespuestaEntrante[] = [];
+
+  try {
+    await client.connect();
+    const lock = await client.getMailboxLock("INBOX");
+    try {
+      const uids = await client.search({ seen: false });
+      const toFetch = (uids || []).slice(-maxResults);
+
+      for (const uid of toFetch) {
+        const msg = await client.fetchOne(uid, { envelope: true, source: true }, { uid: true });
+        if (!msg || !msg.source) continue;
+
+        const parsed = await simpleParser(msg.source);
+        const fromAddress = parsed.from?.value?.[0]?.address || "";
+        results.push({
+          uid: Number(uid),
+          messageId: parsed.messageId || `imap-uid-${uid}`,
+          from: fromAddress,
+          subject: parsed.subject || "",
+          text: (parsed.text || "").trim(),
+          date: parsed.date || null
+        });
+      }
+    } finally {
+      lock.release();
+    }
+    await client.logout();
+  } catch (err: any) {
+    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    throw new EmailAgentError(`No se pudo leer las respuestas entrantes de '${bandId}': ${err.message || err}`, "api_error");
+  }
+
+  return results;
+}
+
+// Marca mensajes como leídos tras procesarlos con éxito, para que el siguiente tick del
+// scheduler (cada 60s) no los vuelva a traer con search({seen:false}). Se llama solo sobre los
+// UIDs que ya se emparejaron y persistieron correctamente: uno que falle a mitad se queda sin
+// marcar y se reintenta en el siguiente ciclo.
+export async function marcarComoLeido(bandId: string, uids: number[]): Promise<void> {
+  if (!uids || uids.length === 0) return;
+  const account = await getAccount(bandId);
+
+  const client = new ImapFlow({
+    host: account.imap_host,
+    port: account.imap_port,
+    secure: true,
+    auth: { user: account.email, pass: account.app_password },
+    logger: false
+  });
+
+  try {
+    await client.connect();
+    const lock = await client.getMailboxLock("INBOX");
+    try {
+      await client.messageFlagsAdd(uids, ["\\Seen"], { uid: true });
+    } finally {
+      lock.release();
+    }
+    await client.logout();
+  } catch (err: any) {
+    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    throw new EmailAgentError(`No se pudieron marcar como leídos los mensajes de '${bandId}': ${err.message || err}`, "api_error");
+  }
 }

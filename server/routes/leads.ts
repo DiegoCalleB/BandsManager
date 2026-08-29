@@ -6,6 +6,8 @@ import templatesRouter from "./leads/templates.js";
 import pitchRouter from "./leads/pitch.js";
 import placesRouter from "./leads/places.js";
 import importRouter from "./leads/import.js";
+import exampleThreadsRouter from "./leads/exampleThreads.js";
+import replyRouter from "./leads/reply.js";
 
 export * from "./leads/feedback.js";
 
@@ -18,5 +20,7 @@ router.use(templatesRouter);
 router.use(pitchRouter);
 router.use(placesRouter);
 router.use(importRouter);
+router.use(exampleThreadsRouter);
+router.use(replyRouter);
 
 export default router;

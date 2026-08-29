@@ -102,11 +102,18 @@ CREATE TABLE IF NOT EXISTS leads (
     pitch_feedback_comentario TEXT,
     historial_feedback_pitch JSONB DEFAULT '[]'::jsonb,
     historial_contacto JSONB DEFAULT '[]'::jsonb,
+    -- Historial de hilo de email tal como lo ve el frontend (integración de Gmail, simulación de
+    -- negociación) - NO es la fuente de verdad de la conversación real (esa es lead_messages,
+    -- donde escribe el Enviador/Lector); server/db/leads.ts la persiste para que ese lado del
+    -- frontend deje de perderse en cada guardado, pero conceptualmente son dos cosas distintas.
+    hilo_emails JSONB DEFAULT '[]'::jsonb,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. lead_messages
+-- 5. lead_messages (fuente de verdad de la conversación real por lead: lo que el Enviador
+-- manda de verdad y lo que el Lector detecta como respuesta entrante, ambos en esta misma
+-- tabla - ver server/db/leadMessages.ts, server/services/lectorAgent.ts)
 CREATE TABLE IF NOT EXISTS lead_messages (
     id TEXT PRIMARY KEY,
     lead_id TEXT NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
@@ -119,6 +126,7 @@ CREATE TABLE IF NOT EXISTS lead_messages (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+CREATE INDEX IF NOT EXISTS idx_lead_messages_lead_band ON lead_messages(lead_id, band_id);
 
 -- 6. band_contacts
 CREATE TABLE IF NOT EXISTS band_contacts (
@@ -478,17 +486,8 @@ ALTER TABLE concerts ADD COLUMN IF NOT EXISTS gira_nombre TEXT;
 -- Motor de agentes de booking consolidado en Node (server/services/agentScheduler.ts,
 -- server/services/gmailAgentClient.ts) - sustituye a las implementaciones en Python/GitHub
 -- Actions, Node nativo con Resend y las Edge Functions de Supabase, ver server/routes/agent.ts.
-
--- Última ejecución de cada job del scheduler interno, para evitar doble-disparo en cada
--- redeploy de Railway (el proceso Node se reinicia en cada deploy; sin esto, un scheduler
--- basado solo en memoria dispararía otra vez el job del día aunque ya hubiera corrido).
-CREATE TABLE IF NOT EXISTS agent_schedule_state (
-  job_name TEXT PRIMARY KEY,
-  last_run_at TIMESTAMPTZ
-);
-
-ALTER TABLE agent_schedule_state ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Permitir acceso total al backend" ON agent_schedule_state FOR ALL USING (true);
+-- (agent_schedule_state se define más abajo, tabla 31 - esta sección solo documentaba la
+-- intención antes de que la tabla real llegara a crearse en producción).
 
 -- Cuenta de email por banda para envío/lectura desatendidos (Agente Enviador/Lector), vía
 -- SMTP (envío) e IMAP (lectura) - protocolos estándar que soportan Gmail, Outlook, Yahoo o
@@ -737,4 +736,25 @@ CREATE TABLE IF NOT EXISTS agent_schedule_state (
 );
 ALTER TABLE agent_schedule_state ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON agent_schedule_state FOR ALL USING (true);
+
+-- 32. pitch_example_threads (Hilos de email reales completos pegados a mano por el mánager, por categoría)
+--
+-- A diferencia de pitch_learning_examples (un único borrador-IA vs versión-aprobada), aquí se
+-- guarda la conversación completa (nuestro mensaje inicial + la respuesta real de la sala +
+-- nuestra respuesta a esa respuesta...) para entrenar tanto la generación del pitch inicial
+-- como el Contestador (server/routes/leads/reply.ts, server/utils/bandDna.ts:
+-- buildReplySystemPrompt), que hasta esta migración no tenía ninguna fuente de ejemplos reales.
+CREATE TABLE IF NOT EXISTS pitch_example_threads (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  category TEXT NOT NULL, -- 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements'
+  titulo TEXT DEFAULT '',
+  mensajes JSONB NOT NULL DEFAULT '[]'::jsonb, -- [{rol: 'banda'|'sala', texto, orden}]
+  resultado TEXT DEFAULT 'positiva', -- 'positiva' | 'negativa' | 'neutral'
+  notas TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_pitch_example_threads_band_cat ON pitch_example_threads(band_id, category);
+ALTER TABLE pitch_example_threads ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON pitch_example_threads FOR ALL USING (true);
 

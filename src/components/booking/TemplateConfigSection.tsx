@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star } from 'lucide-react';
 import { ThemeColors } from '../../types';
+import { ExampleThreadsSection } from './ExampleThreadsSection';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements';
 
@@ -324,6 +325,8 @@ export function TemplateConfigSection({
               💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la IA aplicará tus valoraciones para optimizar la plantilla.
             </div>
           </div>
+
+          <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
 
           <div className="flex flex-wrap gap-2 pt-2">
             {onOptimizeTemplate && (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getBandDnaProfile, buildEnhancedPitchSystemPrompt } from '../bandDna';
+import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, buildReplySystemPrompt, formatReplyFewShotForPrompt } from '../bandDna';
 
 function stateConBanda(dnaExpresion: any) {
   return {
@@ -176,5 +176,61 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     expect(prompt).toContain('CAMPAÑA DE BOOKING ACTIVA: "Gira Primavera"');
     expect(prompt).toContain('4 y 5 de diciembre');
     expect(prompt).toContain('Ir directo al grano');
+  });
+});
+
+describe('buildReplySystemPrompt - Contestador', () => {
+  const lead = { nombre_sala: 'Sala Test', ciudad: 'Madrid', tipo: 'sala' };
+
+  it('incluye el mensaje entrante, el hilo previo y el ADN de voz de la banda', () => {
+    const state = stateConBanda({
+      tono_comunicacion: 'Cercano y directo',
+      vocabulario_clave: ['bolo', 'currárnoslo'],
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    const prompt = buildReplySystemPrompt(
+      dna,
+      lead,
+      '¿Cuánto cobráis y tenéis fecha libre en abril?',
+      [{ remitente: 'banda', mensaje: 'Os escribimos con nuestra propuesta...' }],
+      ''
+    );
+
+    expect(prompt).toContain('¿Cuánto cobráis y tenéis fecha libre en abril?');
+    expect(prompt).toContain('Os escribimos con nuestra propuesta...');
+    expect(prompt).toContain('Cercano y directo');
+    expect(prompt).toContain('bolo, currárnoslo');
+    expect(prompt).toContain('CONTESTACIÓN');
+  });
+
+  it('avisa cuando no hay hilo previo registrado', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], '');
+    expect(prompt).toContain('Sin mensajes previos registrados');
+  });
+});
+
+describe('formatReplyFewShotForPrompt', () => {
+  it('formatea hilos completos incluyendo la respuesta real de la sala', () => {
+    const texto = formatReplyFewShotForPrompt([
+      {
+        titulo: 'Sala Ejemplo',
+        resultado: 'positiva',
+        mensajes: [
+          { rol: 'banda', texto: 'Hola, os proponemos fecha', orden: 1 },
+          { rol: 'sala', texto: 'Nos interesa, ¿cuánto pedís?', orden: 2 },
+          { rol: 'banda', texto: 'Nuestro caché es flexible según aforo', orden: 3 },
+        ],
+      },
+    ]);
+
+    expect(texto).toContain('Sala Ejemplo');
+    expect(texto).toContain('RESULTADO: POSITIVO');
+    expect(texto).toContain('Nos interesa, ¿cuánto pedís?');
+    expect(texto).toContain('Nuestro caché es flexible según aforo');
+  });
+
+  it('devuelve cadena vacía si no hay hilos', () => {
+    expect(formatReplyFewShotForPrompt([])).toBe('');
   });
 });

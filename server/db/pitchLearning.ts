@@ -98,9 +98,44 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
   resultado_respuesta?: string;
 }>> {
   const cleanId = cleanBandId(bandId);
+  const category = mapLeadTipoToTemplateCategory(currentLead?.tipo);
   try {
     const sb = getSupabase();
-    
+
+    // 0. Hilos de ejemplo pegados a mano por el mánager para esta categoría (pitch_example_threads):
+    // curados por una persona, así que se ponderan alto sin depender de que ya haya negociaciones
+    // reales registradas.
+    const pastedExamples: Array<{ nombre_sala: string; tipo_entidad: string; ciudad: string; borrador_ia?: string; texto_aprobado: string; resultado_respuesta?: string; score: number }> = [];
+    try {
+      const { data: threads } = await sb
+        .from("pitch_example_threads")
+        .select("titulo, mensajes, resultado")
+        .eq("band_id", cleanId)
+        .eq("category", category)
+        .limit(10);
+
+      for (const thread of threads || []) {
+        const mensajes = Array.isArray(thread.mensajes) ? thread.mensajes : [];
+        const primerMensajeBanda = mensajes
+          .filter((m: any) => m.rol === "banda")
+          .sort((a: any, b: any) => (a.orden ?? 0) - (b.orden ?? 0))[0];
+        if (!primerMensajeBanda?.texto) continue;
+
+        let score = 6; // ya está garantizado que coincide la categoría, por construcción
+        if (thread.resultado === "positiva") score += 10;
+        pastedExamples.push({
+          nombre_sala: thread.titulo || "Ejemplo pegado por el mánager",
+          tipo_entidad: category,
+          ciudad: "",
+          texto_aprobado: primerMensajeBanda.texto,
+          resultado_respuesta: thread.resultado,
+          score
+        });
+      }
+    } catch (err) {
+      console.warn("Notice buscando pitch_example_threads para few-shot:", err);
+    }
+
     // 1. Intentar obtener ejemplos de pitch_learning_examples
     let query = sb
       .from("pitch_learning_examples")
@@ -112,28 +147,44 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
 
     const { data: dbExamples, error } = await query;
 
-    if (!error && dbExamples && dbExamples.length > 0) {
+    if ((!error && dbExamples && dbExamples.length > 0) || pastedExamples.length > 0) {
       // Ponderación inteligente:
       // +10 si tuvo respuesta positiva
       // +5 si coincide el tipo de entidad (sala, medio, etc.)
       // +3 si fue corregido y validado por el humano
-      const scored = dbExamples.map((ex: any) => {
+      const scoredLearning = (dbExamples || []).map((ex: any) => {
         let score = 0;
         if (ex.resultado_respuesta === "positiva") score += 10;
         if (currentLead?.tipo && ex.tipo_entidad && currentLead.tipo.toLowerCase() === ex.tipo_entidad.toLowerCase()) score += 5;
         if (ex.tuvo_edicion) score += 3;
-        return { item: ex, score };
+        return {
+          item: {
+            nombre_sala: ex.nombre_sala,
+            tipo_entidad: ex.tipo_entidad,
+            ciudad: ex.ciudad,
+            borrador_ia: ex.borrador_ia,
+            texto_aprobado: ex.texto_aprobado,
+            resultado_respuesta: ex.resultado_respuesta
+          },
+          score
+        };
       });
 
-      scored.sort((a, b) => b.score - a.score);
-      return scored.slice(0, maxExamples).map(s => ({
-        nombre_sala: s.item.nombre_sala,
-        tipo_entidad: s.item.tipo_entidad,
-        ciudad: s.item.ciudad,
-        borrador_ia: s.item.borrador_ia,
-        texto_aprobado: s.item.texto_aprobado,
-        resultado_respuesta: s.item.resultado_respuesta
+      const scoredPasted = pastedExamples.map((ex) => ({
+        item: {
+          nombre_sala: ex.nombre_sala,
+          tipo_entidad: ex.tipo_entidad,
+          ciudad: ex.ciudad,
+          borrador_ia: ex.borrador_ia,
+          texto_aprobado: ex.texto_aprobado,
+          resultado_respuesta: ex.resultado_respuesta
+        },
+        score: ex.score
       }));
+
+      const scored = [...scoredLearning, ...scoredPasted];
+      scored.sort((a, b) => b.score - a.score);
+      return scored.slice(0, maxExamples).map((s) => s.item);
     }
 
     // 2. Fallback resiliente: Buscar en los leads existentes que ya tengan pitch aprobado o enviado
@@ -158,6 +209,48 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
     return [];
   } catch (err: any) {
     console.warn("Could not load dynamic few-shot examples from Supabase:", err?.message || err);
+    return [];
+  }
+}
+
+/**
+ * Hilos de ejemplo completos (pitch_example_threads) para el Contestador: a diferencia de
+ * dbGetDynamicFewShotExamples (que solo extrae el primer mensaje "banda" para el pitch inicial),
+ * aquí interesa la conversación completa, incluida la respuesta real de la sala, porque es lo
+ * que enseña a la IA cómo responder a negociaciones reales.
+ */
+export async function dbGetReplyFewShotThreads(bandId: string, category: string, maxThreads = 2): Promise<Array<{
+  titulo?: string;
+  resultado?: string;
+  mensajes: Array<{ rol: "banda" | "sala"; texto: string; orden: number }>;
+}>> {
+  const cleanId = cleanBandId(bandId);
+  try {
+    const sb = getSupabase();
+    const { data, error } = await sb
+      .from("pitch_example_threads")
+      .select("titulo, mensajes, resultado")
+      .eq("band_id", cleanId)
+      .eq("category", category)
+      .limit(10);
+
+    if (error || !data) return [];
+
+    // Prioriza los hilos con resultado positivo y con más de un intercambio (más útiles para
+    // aprender a gestionar una respuesta real que uno con un único mensaje).
+    const sorted = [...data].sort((a: any, b: any) => {
+      const scoreA = (a.resultado === "positiva" ? 10 : 0) + (Array.isArray(a.mensajes) ? a.mensajes.length : 0);
+      const scoreB = (b.resultado === "positiva" ? 10 : 0) + (Array.isArray(b.mensajes) ? b.mensajes.length : 0);
+      return scoreB - scoreA;
+    });
+
+    return sorted.slice(0, maxThreads).map((t: any) => ({
+      titulo: t.titulo,
+      resultado: t.resultado,
+      mensajes: Array.isArray(t.mensajes) ? t.mensajes : []
+    }));
+  } catch (err: any) {
+    console.warn("Could not load reply few-shot threads from Supabase:", err?.message || err);
     return [];
   }
 }

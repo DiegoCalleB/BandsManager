@@ -393,6 +393,108 @@ ${bandDna.fewShotSection || ""}`;
 }
 
 /**
+ * Prompt para el Contestador: redacta la respuesta a un mensaje REAL ya recibido de una sala/
+ * medio/festival (negociación, petición de más info, confirmación, rechazo...), no el primer
+ * contacto. Comparte el ADN de la banda con buildEnhancedPitchSystemPrompt, pero cambia el
+ * objetivo (responder, no presentar) y las fuentes de estilo (hilo real + ejemplos de
+ * respuestas pasadas, en vez de campaña + directrices de primer contacto).
+ */
+export function buildReplySystemPrompt(
+  bandDna: BandDnaProfile,
+  lead: any,
+  incomingMessage: string,
+  threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
+  replyFewShotSection: string
+): string {
+  const languageHint = detectPitchLanguage(lead);
+  const historialTexto = threadSoFar.length > 0
+    ? threadSoFar.map((m) => `[${m.remitente === "banda" ? bandDna.bandName : (lead?.nombre_sala || "Sala")}]: "${m.mensaje}"`).join("\n\n")
+    : "Sin mensajes previos registrados en el hilo (es la primera respuesta que se les envía tras el contacto inicial).";
+
+  return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".
+Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}" a una propuesta que ya les enviasteis. Tu tarea es redactar la CONTESTACIÓN a ese mensaje, no un pitch nuevo desde cero: responde específicamente a lo que dicen, sin repetir toda la presentación de la banda desde el principio.
+
+═════════════════════════════════════════════════════════════════════
+🧬 ADN Y VECTORES DE IDENTIDAD DE "${bandDna.bandName}":
+═════════════════════════════════════════════════════════════════════
+- Género / Fusión: ${bandDna.genero}
+- Concepto artístico: ${bandDna.biografia}
+- Formato escénico: ${bandDna.formato} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
+- Modelo económico: ${bandDna.flexibilidadEconomica}
+- Co-booking: ${bandDna.propuestaCoBooking}
+${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || bandDna.recomendacionPitch) ? `
+ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER (MANDA SOBRE EL TONO GENÉRICO):
+${bandDna.tonoComunicacion ? `- Tono de comunicación habitual: ${bandDna.tonoComunicacion}` : ""}
+${bandDna.tratamientoHabitual ? `- Tratamiento habitual: ${bandDna.tratamientoHabitual}` : ""}
+${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `- Vocabulario propio (úsalo de verdad): ${bandDna.vocabularioClave.join(", ")}` : ""}
+${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `- Frases/expresiones emblemáticas suyas: ${bandDna.frasesEmblematicas.map((f) => `"${f}"`).join(" | ")}` : ""}
+${bandDna.recomendacionPitch ? `- Recomendación de enfoque para esta banda: ${bandDna.recomendacionPitch}` : ""}
+` : ""}
+${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
+REGLAS DE ESTILO APRENDIDAS DE CORRECCIONES PREVIAS:
+${bandDna.reglasEstiloAprendidas.map((r) => `- ⭐ ${r}`).join("\n")}
+${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `- Expresiones prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
+` : ""}
+
+═════════════════════════════════════════════════════════════════════
+🎯 PERFIL DEL DESTINATARIO:
+═════════════════════════════════════════════════════════════════════
+- Nombre de la Entidad: "${lead?.nombre_sala || "Sala"}"
+- Ciudad: ${lead?.ciudad || "España"}
+- Tipo: ${String(lead?.tipo || "sala").toLowerCase()}
+${lead?.contacto_nombre ? `- Responsable de programación: ${lead.contacto_nombre}` : ""}
+
+═════════════════════════════════════════════════════════════════════
+📜 HILO DE LA CONVERSACIÓN HASTA AHORA:
+═════════════════════════════════════════════════════════════════════
+${historialTexto}
+
+═════════════════════════════════════════════════════════════════════
+📩 MENSAJE ENTRANTE AL QUE HAY QUE RESPONDER AHORA:
+═════════════════════════════════════════════════════════════════════
+"${incomingMessage}"
+${replyFewShotSection}
+═════════════════════════════════════════════════════════════════════
+📐 DIRECTRICES DE LA RESPUESTA:
+═════════════════════════════════════════════════════════════════════
+1. ${languageHint.instruction}
+2. Responde específicamente a lo que dice el mensaje entrante: si pide fecha, propón o confirma fecha; si pregunta precio/condiciones, responde con el modelo económico de la banda; si pone objeciones, gestiónalas sin ser insistente; si es un rechazo claro, agradece con cortesía y deja la puerta abierta sin insistir.
+3. NO repitas la presentación completa de la banda como si fuera el primer contacto: ya la tienen, ve al grano de esta respuesta concreta.
+4. Mantén el mismo tono y vocabulario que ya viene usando la banda en su ADN de voz y en los ejemplos reales de respuestas anteriores, si los hay.
+5. REGLA DE NO DOBLE FIRMA: no escribas bloques de firma manuales al final; el sistema añade la firma automáticamente.
+6. Devuelve ÚNICAMENTE el cuerpo del email de respuesta, sin asunto ni metadatos.`;
+}
+
+/**
+ * Formatea hilos de ejemplo reales (pegados por el mánager o resueltos de verdad) para el
+ * prompt del Contestador: a diferencia del few-shot de pitches, aquí interesa la conversación
+ * completa (incluida la respuesta real de la sala), no solo el mensaje inicial.
+ */
+export function formatReplyFewShotForPrompt(threads: Array<{
+  titulo?: string;
+  resultado?: string;
+  mensajes: Array<{ rol: "banda" | "sala"; texto: string; orden: number }>;
+}>): string {
+  if (!threads || threads.length === 0) return "";
+
+  const formatted = threads.map((t, i) => {
+    const ordenados = [...t.mensajes].sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0));
+    const cuerpo = ordenados.map((m) => `  [${m.rol === "banda" ? "Banda" : "Sala"}]: "${m.texto}"`).join("\n");
+    const resultadoTxt = t.resultado === "positiva" ? " | RESULTADO: POSITIVO" : t.resultado === "negativa" ? " | Resultado: no prosperó, pero así se gestionó" : "";
+    return `EJEMPLO REAL ${i + 1} (${t.titulo || "conversación real"}${resultadoTxt}):\n${cuerpo}`;
+  }).join("\n\n");
+
+  return `
+═════════════════════════════════════════════════════════════════════
+💎 EJEMPLOS REALES DE CÓMO ESTA BANDA HA GESTIONADO CONVERSACIONES SIMILARES:
+═════════════════════════════════════════════════════════════════════
+Imita el tono, la cadencia y el estilo de respuesta de estos hilos reales, adaptándolo a este caso concreto:
+
+${formatted}
+`;
+}
+
+/**
  * Generador inteligente local de pitches que incorpora todos los ADNs de la banda,
  * tipos de lead, idiomas y enlaces verificados de forma inmediata y resiliente.
  */

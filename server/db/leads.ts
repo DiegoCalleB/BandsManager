@@ -34,7 +34,8 @@ export async function dbGetLeads(bandId: string): Promise<any[]> {
   return (data || []).map(l => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
-    historial_contacto: l.historial_contacto || []
+    historial_contacto: l.historial_contacto || [],
+    hilo_emails: l.hilo_emails || []
   }));
 }
 
@@ -77,7 +78,8 @@ export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptio
   const leads = (data || []).map(l => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
-    historial_contacto: l.historial_contacto || []
+    historial_contacto: l.historial_contacto || [],
+    hilo_emails: l.hilo_emails || []
   }));
 
   const total = count ?? leads.length;
@@ -106,7 +108,8 @@ export async function dbGetLeadById(id: string, bandId?: string) {
   return {
     ...data,
     historial_feedback_pitch: data.historial_feedback_pitch || [],
-    historial_contacto: data.historial_contacto || []
+    historial_contacto: data.historial_contacto || [],
+    hilo_emails: data.hilo_emails || []
   };
 }
 
@@ -177,7 +180,8 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     pitch_feedback_contenido: lead.pitch_feedback_contenido ?? lead.pitchFeedbackContenido ?? existingRecord?.pitch_feedback_contenido ?? null,
     pitch_feedback_comentario: lead.pitch_feedback_comentario || lead.pitchFeedbackComentario || existingRecord?.pitch_feedback_comentario || "",
     historial_feedback_pitch: lead.historial_feedback_pitch || lead.historialFeedbackPitch || existingRecord?.historial_feedback_pitch || [],
-    historial_contacto: lead.historial_contacto || lead.historialContacto || existingRecord?.historial_contacto || []
+    historial_contacto: lead.historial_contacto || lead.historialContacto || existingRecord?.historial_contacto || [],
+    hilo_emails: lead.hilo_emails || existingRecord?.hilo_emails || []
   };
 
   const { data, error } = await sb.from("leads").upsert(payload).select().single();

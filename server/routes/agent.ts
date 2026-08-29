@@ -9,6 +9,8 @@ import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { runEnviadorAgent, logAgentExecution } from "../services/agentEngine.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaDelAgente } from "../utils/bandAccess.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "../utils/bandDna.js";
+import { runLectorAgent } from "../services/lectorAgent.js";
+import { EmailAgentError } from "../services/emailAgentClient.js";
 
 const router = express.Router();
 
@@ -431,49 +433,59 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
     }
   }
 
-  // --- EJECUCIÓN NATIVA SUPABASE PARA EL AGENTE LECTOR ---
+  // --- AGENTE LECTOR: lee de verdad la bandeja IMAP de la banda, empareja las respuestas con
+  // leads reales por email de contacto, y transiciona su estado (server/services/lectorAgent.ts).
+  // Solo lee y clasifica - nunca redacta ni envía nada por su cuenta.
   if (normalizedAgentName === "lector" || normalizedAgentName === "lector_de_bandeja") {
     try {
-      const sb = getSupabase();
-
-      // Igual que en el Redactor: el filtro por banda pasa a ser incondicional. Cuando no venía
-      // params.band_id, el Lector repasaba los leads contactados de todas las bandas.
-      const query = sb
-        .from("leads")
-        .select("*")
-        .eq("band_id", targetBandId)
-        .in("estado", ["contactado", "esperando_respuesta"]);
-      const { data: contactedLeads } = await query.limit(10);
-
-      const results: any[] = [];
-      
-      // El lector revisa la bandeja real o hilos existentes sin inventar respuestas ficticias
-      const successMsg = `¡Agente Lector ejecutado! Se ha comprobado el estado de los correos de la banda en Supabase (${contactedLeads?.length || 0} leads contactados en espera). No se han detectado nuevas respuestas entrantes en la bandeja de entrada.`;
+      const resultado = await runLectorAgent(targetBandId);
+      const successMsg = resultado.mensajesLeidos === 0
+        ? "Agente Lector ejecutado. No hay mensajes nuevos en la bandeja de entrada."
+        : `Agente Lector ejecutado. ${resultado.mensajesLeidos} mensaje(s) nuevo(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s) con la respuesta real${resultado.sinEmparejar > 0 ? `, ${resultado.sinEmparejar} sin emparejar con ningún lead conocido` : ""}.`;
 
       await logExecution({
         band_id: targetBandId,
         agente: "lector",
-        motor: "supabase_edge",
+        motor: "node_email_engine",
         disparado_por_tipo: triggerType,
         usuario_id: userId,
         usuario_email: userEmail,
         estado: "success",
         mensaje: successMsg,
-        leads_afectados: results,
-        conteo_afectados: results.length,
-        detalles: { params }
+        leads_afectados: resultado.leadsActualizados,
+        conteo_afectados: resultado.leadsActualizados.length,
+        detalles: { params, ...resultado }
       });
 
       return res.json({
         success: true,
         agent: "Lector",
-        engine: "Supabase Native Agent Engine",
+        engine: "Node IMAP Email Engine",
         message: successMsg,
-        results
+        results: resultado.leadsActualizados
       });
     } catch (err: any) {
-      console.error("Error en Agente Lector Supabase:", err);
-      return res.status(500).json({ success: false, error: `Error en Agente Lector: ${err.message}` });
+      const sinCuenta = err instanceof EmailAgentError && err.code === "no_token";
+      const mensaje = sinCuenta
+        ? "Esta banda todavía no tiene una cuenta de email conectada (Ajustes > Cuenta de Email)."
+        : `Error en Agente Lector: ${err.message}`;
+
+      if (!sinCuenta) console.error("Error en Agente Lector:", err);
+
+      await logExecution({
+        band_id: targetBandId,
+        agente: "lector",
+        motor: "node_email_engine",
+        disparado_por_tipo: triggerType,
+        usuario_id: userId,
+        usuario_email: userEmail,
+        estado: sinCuenta ? "success" : "error",
+        mensaje,
+        detalles: { params }
+      });
+
+      const status = sinCuenta ? 200 : 500;
+      return res.status(status).json({ success: sinCuenta, agent: "Lector", message: mensaje, error: sinCuenta ? undefined : mensaje });
     }
   }
 

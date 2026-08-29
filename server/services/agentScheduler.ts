@@ -9,7 +9,8 @@
 
 import { dbGetRegisteredBands, dbGetBandSchedule } from "../db.js";
 import { dbGetAgentLastRun, dbSetAgentLastRun } from "../db/agentSchedule.js";
-import { leerNoLeidos, EmailAgentError } from "./emailAgentClient.js";
+import { EmailAgentError } from "./emailAgentClient.js";
+import { runLectorAgent } from "./lectorAgent.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
 
 const TICK_MS = 60 * 1000;
@@ -85,23 +86,22 @@ async function tick() {
       await runEnviadorAgent({ bandId, triggerType: "scheduler" });
     });
 
-    // Lector: solo lee y audita los no leídos por ahora - la clasificación automática y el
-    // cambio de estado de los leads es trabajo futuro (ver AGENTS.md / plan de consolidación),
-    // para no repetir el mismo error de "fingir trabajo hecho" con una clasificación a medias.
+    // Lector: lee la bandeja real, empareja respuestas con leads por email de contacto y
+    // transiciona su estado (server/services/lectorAgent.ts). Nunca redacta ni envía nada.
     await runIfScheduledHour("lector", bandId, schedule, async () => {
       const startTime = Date.now();
       try {
-        const mensajes = await leerNoLeidos(bandId);
+        const resultado = await runLectorAgent(bandId);
         await logAgentExecution({
           band_id: bandId,
           agente: "lector",
           motor: "node_email_engine",
           disparado_por_tipo: "scheduler",
           estado: "success",
-          mensaje: `Agente Lector: ${mensajes.length} mensaje(s) no leído(s) en la bandeja de ${bandId}.`,
-          conteo_afectados: mensajes.length,
+          mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s) en la bandeja de ${bandId}.`,
+          conteo_afectados: resultado.leadsActualizados.length,
           duracion_ms: Date.now() - startTime,
-          detalles: { mensajes }
+          detalles: resultado
         });
       } catch (e: any) {
         const sinCuenta = e instanceof EmailAgentError && e.code === "no_token";
