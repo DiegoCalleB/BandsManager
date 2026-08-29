@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   Search, MapPin, Phone, Globe, Star, Sparkles, Check, Loader2, X, 
   PlusCircle, Building2, CheckCircle2, AlertCircle, Sliders, Users, Music2, Radio, Briefcase, Disc3, ShieldCheck,
-  Ban, Trash2, RotateCcw
+  Ban, Trash2, RotateCcw, Target
 } from 'lucide-react';
-import { Lead, LeadType } from '../../types';
+import { Lead, LeadType, BookingCampaign } from '../../types';
 import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
 import { ModalPortal } from '../common/ModalPortal';
 
 export interface PlaceResult {
@@ -30,6 +31,11 @@ export interface PlaceResult {
   fuente?: string;
   selected?: boolean;
   extractingEmail?: boolean;
+  alreadyInCrm?: boolean;
+  crmStatus?: string | null;
+  crmId?: string | null;
+  crmNombre?: string | null;
+  capacityMatch?: boolean;
 }
 
 export interface DiscardedPlace {
@@ -62,6 +68,10 @@ interface GooglePlacesExplorerModalProps {
   isStitchLight: boolean;
   onClose: () => void;
   onImportLeads: (leads: Lead[]) => void;
+  activeCampaign?: BookingCampaign | null;
+  existingLeads?: Lead[];
+  bandGenre?: string;
+  bandName?: string;
 }
 
 const QUICK_CITIES = [
@@ -140,17 +150,33 @@ export function GooglePlacesExplorerModal({
   isOpen,
   isStitchLight,
   onClose,
-  onImportLeads
+  onImportLeads,
+  activeCampaign,
+  existingLeads = [],
+  bandGenre = '',
+  bandName = ''
 }: GooglePlacesExplorerModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState(activeCampaign?.targetCities[0] || '');
   const [selectedType, setSelectedType] = useState<LeadType>('sala');
   const [searchLimit, setSearchLimit] = useState<number>(6); // Between 1 and 10
-  const [aforoMin, setAforoMin] = useState<string>('');
-  const [aforoMax, setAforoMax] = useState<string>('');
+  const [aforoMin, setAforoMin] = useState<string>(activeCampaign?.minCapacity?.toString() || '');
+  const [aforoMax, setAforoMax] = useState<string>(activeCampaign?.maxCapacity?.toString() || '');
+
+  // Keep state synced if campaign changes while modal is open
+  useEffect(() => {
+    if (activeCampaign && isOpen) {
+      setSelectedCity(activeCampaign.targetCities[0] || '');
+      setAforoMin(activeCampaign.minCapacity?.toString() || '');
+      setAforoMax(activeCampaign.maxCapacity?.toString() || '');
+    }
+  }, [activeCampaign, isOpen]);
+
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const [isSearching, setIsSearching] = useState(false);
+  const [isMassCampaignSearching, setIsMassCampaignSearching] = useState(false);
+  const [massFilterTipos, setMassFilterTipos] = useState<string[]>(['sala', 'local', 'discoteca', 'teatro']);
   const [places, setPlaces] = useState<PlaceResult[]>([]);
   const [searchSource, setSearchSource] = useState('');
   const [searchError, setSearchError] = useState('');
@@ -214,11 +240,34 @@ export function GooglePlacesExplorerModal({
 
         const mapped: PlaceResult[] = res.results
           .filter((p: any) => !isDiscarded(p))
-          .map((p: any) => ({
-            ...p,
-            tipo: p.tipo || selectedType,
-            selected: true
-          }));
+          .map((p: any) => {
+            const normName = (p.nombre_sala || '').toLowerCase().trim();
+            const existingMatch = existingLeads.find(l => {
+              if (!l.nombre_sala) return false;
+              const lNorm = l.nombre_sala.toLowerCase().trim();
+              const sameName = lNorm === normName;
+              const sameEmail = p.email_contacto && l.email_contacto && l.email_contacto.toLowerCase().trim() === p.email_contacto.toLowerCase().trim();
+              return sameName || sameEmail;
+            });
+            const cap = p.aforo ? Number(p.aforo) : null;
+            const minCap = aforoMin ? Number(aforoMin) : (activeCampaign?.minCapacity || null);
+            const maxCap = aforoMax ? Number(aforoMax) : (activeCampaign?.maxCapacity || null);
+            let capacityMatch = true;
+            if (cap) {
+              if (minCap && cap < minCap) capacityMatch = false;
+              if (maxCap && cap > maxCap) capacityMatch = false;
+            }
+            return {
+              ...p,
+              tipo: p.tipo || selectedType,
+              selected: !existingMatch,
+              alreadyInCrm: !!existingMatch,
+              crmStatus: existingMatch ? existingMatch.estado : null,
+              crmId: existingMatch ? existingMatch.id : null,
+              crmNombre: existingMatch ? existingMatch.nombre_sala : null,
+              capacityMatch
+            };
+          });
         setPlaces(mapped);
         setSearchSource(res.source || (res.isPlacesApi ? 'Google Places API Direct' : 'Buscador Agéntico Gemini con Grounding'));
       } else {
@@ -229,6 +278,89 @@ export function GooglePlacesExplorerModal({
       setSearchError(err.message || 'Error de conexión al buscar nuevos contactos.');
     } finally {
       setIsSearching(false);
+    }
+  };
+
+  // Búsqueda Masiva de Recintos, Locales y Discotecas según Campaña, Aforo, Localización y Estilo
+  const handleMassCampaignSearch = async () => {
+    setIsMassCampaignSearching(true);
+    setSearchError('');
+    setImportSuccessMsg('');
+    setExtractStatus('');
+    setDiscardToast('');
+
+    try {
+      const citiesToSearch = activeCampaign?.targetCities && activeCampaign.targetCities.length > 0
+        ? activeCampaign.targetCities
+        : (selectedCity.trim() ? [selectedCity.trim()] : ['Madrid', 'Barcelona', 'Valencia', 'Granada', 'Sevilla', 'Bilbao']);
+
+      const res = await apiFetch('/api/leads/campaign-mass-search', {
+        method: 'POST',
+        body: JSON.stringify({
+          targetCities: citiesToSearch,
+          minCapacity: aforoMin ? Number(aforoMin) : (activeCampaign?.minCapacity || undefined),
+          maxCapacity: aforoMax ? Number(aforoMax) : (activeCampaign?.maxCapacity || undefined),
+          targetDates: activeCampaign?.targetDates,
+          targetDatesText: activeCampaign?.targetDatesText,
+          tipos: massFilterTipos,
+          campaignName: activeCampaign?.name || 'Campaña Activa',
+          campaignId: activeCampaign?.id,
+          limitPerCity: 12,
+          bandGenre: bandGenre || undefined,
+          bandName: bandName || undefined
+        })
+      });
+
+      if (res.success && Array.isArray(res.results)) {
+        const currentDiscarded = getStoredDiscarded();
+        const isDiscarded = (p: any) => {
+          const normName = (p.nombre_sala || '').toLowerCase().trim();
+          return currentDiscarded.some(d =>
+            (p.place_id && d.place_id && d.place_id === p.place_id) ||
+            (normName && d.nombre_sala.toLowerCase().trim() === normName)
+          );
+        };
+
+        const mapped: PlaceResult[] = res.results
+          .filter((p: any) => !isDiscarded(p))
+          .map((p: any) => {
+            const normName = (p.nombre_sala || '').toLowerCase().trim();
+            const existingMatch = existingLeads.find(l => {
+              if (!l.nombre_sala) return false;
+              const lNorm = l.nombre_sala.toLowerCase().trim();
+              const sameName = lNorm === normName;
+              const sameEmail = p.email_contacto && l.email_contacto && l.email_contacto.toLowerCase().trim() === p.email_contacto.toLowerCase().trim();
+              return sameName || sameEmail;
+            });
+            const cap = p.aforo ? Number(p.aforo) : null;
+            const minCap = aforoMin ? Number(aforoMin) : (activeCampaign?.minCapacity || null);
+            const maxCap = aforoMax ? Number(aforoMax) : (activeCampaign?.maxCapacity || null);
+            let capacityMatch = true;
+            if (cap) {
+              if (minCap && cap < minCap) capacityMatch = false;
+              if (maxCap && cap > maxCap) capacityMatch = false;
+            }
+            return {
+              ...p,
+              selected: !existingMatch,
+              alreadyInCrm: !!existingMatch,
+              crmStatus: existingMatch ? existingMatch.estado : null,
+              crmId: existingMatch ? existingMatch.id : null,
+              crmNombre: existingMatch ? existingMatch.nombre_sala : null,
+              capacityMatch
+            };
+          });
+
+        setPlaces(mapped);
+        setSearchSource(`Scout Masivo de Campaña (${citiesToSearch.length} ciudades · Género: ${res.bandGenre || 'Banda'} · Tipos: ${massFilterTipos.join(', ')})`);
+      } else {
+        setSearchError(res.error || 'No se obtuvieron resultados para la prospección masiva.');
+      }
+    } catch (err: any) {
+      console.error('Error en prospección masiva de campaña:', err);
+      setSearchError(err.message || 'Error al ejecutar la búsqueda masiva de recintos de campaña.');
+    } finally {
+      setIsMassCampaignSearching(false);
     }
   };
 
@@ -521,6 +653,96 @@ export function GooglePlacesExplorerModal({
         {/* Content Container */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
           
+          {/* Búsqueda Masiva de Campaña Activa: Recintos, Locales y Discotecas con Aforo y Estilo */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-indigo-500/10 border border-amber-500/30 space-y-3 shadow-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-start sm:items-center gap-2.5">
+                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
+                  <Target className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-bold font-display uppercase tracking-wider text-amber-300">
+                      Prospección Masiva de Campaña
+                    </span>
+                    {activeCampaign && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 border border-amber-400/40 font-mono">
+                        {activeCampaign.name}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-zinc-300 mt-0.5">
+                    Descubre simultáneamente todos los recintos, salas, locales y discotecas del aforo ({aforoMin || (activeCampaign?.minCapacity || '0')} - {aforoMax || (activeCampaign?.maxCapacity || '∞')} pax), adaptados a las ciudades objetivo y estilo de la banda.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleMassCampaignSearch}
+                disabled={isMassCampaignSearching || isSearching}
+                className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-zinc-950 font-black text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-amber-500/20 cursor-pointer disabled:opacity-50 shrink-0"
+              >
+                {isMassCampaignSearching ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-950" />
+                    <span>Rastreando Ciudades...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-zinc-950" />
+                    <span>Lanzar Búsqueda Masiva</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Selector de Tipos de Espacio para la prospección masiva */}
+            <div className="pt-2 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[10px] uppercase font-mono text-zinc-400 font-bold mr-1">Espacios a rastrear:</span>
+                {[
+                  { id: 'sala', label: 'Salas & Recintos', icon: '🏛️' },
+                  { id: 'local', label: 'Locales & Bares', icon: '☕' },
+                  { id: 'discoteca', label: 'Discotecas & Clubs', icon: '🪩' },
+                  { id: 'teatro', label: 'Teatros & Auditorios', icon: '🎭' },
+                  { id: 'grupo', label: 'Bandas & Co-booking', icon: '🎸' }
+                ].map(item => {
+                  const isChecked = massFilterTipos.includes(item.id);
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        if (isChecked) {
+                          if (massFilterTipos.length > 1) {
+                            setMassFilterTipos(massFilterTipos.filter(t => t !== item.id));
+                          }
+                        } else {
+                          setMassFilterTipos([...massFilterTipos, item.id]);
+                        }
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+                        isChecked
+                          ? 'bg-amber-400/20 text-amber-300 border-amber-400/50 shadow-sm'
+                          : 'bg-zinc-900/80 text-zinc-500 border-zinc-800 hover:text-zinc-300'
+                      }`}
+                    >
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeCampaign?.targetCities && activeCampaign.targetCities.length > 0 && (
+                <span className="text-[10px] text-zinc-400 font-mono">
+                  Ciudades ({activeCampaign.targetCities.length}): <strong className="text-zinc-200">{activeCampaign.targetCities.join(', ')}</strong>
+                </span>
+              )}
+            </div>
+          </div>
+
           {/* Discard Toast */}
           {discardToast && (
             <div className="p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between animate-in fade-in duration-200">
@@ -812,9 +1034,21 @@ export function GooglePlacesExplorerModal({
                             </div>
                           )}
                           <div className="min-w-0">
-                            <h4 className="text-xs font-bold text-zinc-100 truncate">
-                              {place.nombre_sala}
-                            </h4>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h4 className="text-xs font-bold text-zinc-100 truncate">
+                                {place.nombre_sala}
+                              </h4>
+                              {place.alreadyInCrm && (
+                                <span className="text-[9px] px-1.5 py-0.2 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded font-bold uppercase tracking-wider shrink-0" title="Este contacto ya existe en tu CRM de Leads">
+                                  En CRM ({place.crmStatus || 'Registrado'})
+                                </span>
+                              )}
+                              {place.capacityMatch === false && (
+                                <span className="text-[9px] px-1.5 py-0.2 bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded font-medium shrink-0" title="El aforo estimado difiere de los filtros de la campaña">
+                                  ⚠️ Aforo fuera de rango
+                                </span>
+                              )}
+                            </div>
                             <p className="text-[10px] text-zinc-400 flex items-center gap-1">
                               <MapPin className="w-3 h-3 text-[#f2ca50] shrink-0" />
                               <span className="truncate">{place.ciudad} ({place.region})</span>

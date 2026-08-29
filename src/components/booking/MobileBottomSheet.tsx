@@ -17,6 +17,7 @@ interface MobileBottomSheetProps {
   autoDetectVenueAddress: (venueName: string, city: string) => string;
   sectionTab: 'salas' | 'medios' | 'grupos';
   isStitchLight?: boolean;
+  activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => void;
   isUploadingLeadLogo?: boolean;
 }
@@ -34,6 +35,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   autoDetectVenueAddress,
   sectionTab,
   isStitchLight = false,
+  activeCampaign,
   onLeadLogoUpload,
   isUploadingLeadLogo = false
 }) => {
@@ -97,6 +99,7 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             autoDetectVenueAddress={autoDetectVenueAddress}
             sectionTab={sectionTab}
             isStitchLight={isStitchLight}
+            activeCampaign={activeCampaign}
             onLeadLogoUpload={onLeadLogoUpload}
             isUploadingLeadLogo={isUploadingLeadLogo}
           />

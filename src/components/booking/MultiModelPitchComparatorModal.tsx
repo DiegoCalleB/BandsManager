@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Lead } from '../../types';
 import { api } from '../../services/api';
+import { ModalPortal } from '../common/ModalPortal';
 import {
   X,
   Sparkles,
@@ -26,6 +27,7 @@ interface MultiModelPitchComparatorModalProps {
   lead: Lead;
   onSelectProposal: (text: string, providerName: string) => void;
   isStitchLight?: boolean;
+  activeCampaign?: any;
 }
 
 interface CostEstimateInfo {
@@ -76,7 +78,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
   onClose,
   lead,
   onSelectProposal,
-  isStitchLight = false
+  isStitchLight = false,
+  activeCampaign
 }) => {
   const [providers, setProviders] = useState<AIProviderInfo[]>([]);
   const [selectedProviders, setSelectedProviders] = useState<string[]>(['deepseek', 'gemini']);
@@ -128,7 +131,8 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
     try {
       const res = await api.generateMultiPitch(lead.id, {
         comentario: customComment || undefined,
-        providers: selectedProviders
+        providers: selectedProviders,
+        activeCampaign
       });
 
       if (res.success && res.proposals) {
@@ -208,8 +212,9 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-6xl bg-[#141312] border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
+    <ModalPortal isOpen={isOpen} onClose={onClose}>
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain">
+        <div className="relative w-full max-w-6xl bg-[#141312] border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto">
         
         {/* HEADER */}
         <div className="px-5 py-3.5 border-b border-zinc-800 flex items-center justify-between bg-[#191817]/95 sticky top-0 z-10">
@@ -631,5 +636,6 @@ export const MultiModelPitchComparatorModal: React.FC<MultiModelPitchComparatorM
 
       </div>
     </div>
-  );
+  </ModalPortal>
+);
 };

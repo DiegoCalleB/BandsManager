@@ -37,6 +37,11 @@ export interface BandDnaProfile {
   contactoEmail: string;
   contactoTelefono: string;
   cargoFirma: string;
+  // Reglas aprendidas automáticamente (Self-Refining Tone DNA)
+  reglasEstiloAprendidas?: string[];
+  vocabularioAprendido?: string[];
+  terminosAEvitar?: string[];
+  fewShotSection?: string;
 }
 
 /**
@@ -149,6 +154,12 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   const contactoTelefono = bandConfig?.contactoBooking?.telefono || registeredBand?.telefono || "+34 612 345 678";
   const cargoFirma = bandConfig?.firmaEmail?.cargo || `Booking & Management — ${bandName}`;
 
+  // DNA aprendido automáticamente (Self-Refining Tone DNA)
+  const dnaExpresion = registeredBand?.dna_expresion || {};
+  const reglasEstiloAprendidas = Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined;
+  const vocabularioAprendido = Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined;
+  const terminosAEvitar = Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined;
+
   return {
     bandId,
     cleanId,
@@ -177,7 +188,10 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     contactoNombre,
     contactoEmail,
     contactoTelefono,
-    cargoFirma
+    cargoFirma,
+    reglasEstiloAprendidas,
+    vocabularioAprendido,
+    terminosAEvitar
   };
 }
 
@@ -186,13 +200,37 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
  * el perfil del recinto/medio receptor, el historial de aprendizaje del mánager y las directrices
  * de idioma y tono sin fórmulas clichés de IA.
  */
-export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any): string {
+export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
 
+  let campaignSection = "";
+  if (activeCampaign && (activeCampaign.isActive !== false && activeCampaign.is_active !== false)) {
+    const cName = activeCampaign.name || "Campaña de Booking";
+    const cDates = activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign.target_dates) ? activeCampaign.target_dates.join(', ') : 'próximas semanas/meses'));
+    const cCities = Array.isArray(activeCampaign.targetCities) && activeCampaign.targetCities.length > 0 ? activeCampaign.targetCities.join(', ') : (Array.isArray(activeCampaign.target_cities) ? activeCampaign.target_cities.join(', ') : 'España');
+    const cTemplate = activeCampaign.custom_pitch_template || activeCampaign.customPitchTemplate || '';
+    const cNotes = activeCampaign.notes || '';
+    const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
+    const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
+    const capInfo = cMax > 0 ? `Aforo objetivo de sala para esta campaña: ${cMin}-${cMax} personas.` : '';
+
+    campaignSection = `
+═════════════════════════════════════════════════════════════════════
+🎯 CAMPAÑA DE BOOKING ACTIVA: "${cName}" (PRIORIDAD MÁXIMA DE AGENDA)
+═════════════════════════════════════════════════════════════════════
+- Fechas de concierto deseadas: ${cDates}
+- Ciudades / Rutas objetivo: ${cCities}
+${capInfo ? `- ${capInfo}` : ''}
+${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
+${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
+* DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
+`;
+  }
+
   return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".
 Tu cometido es redactar una propuesta de concierto de altísimo impacto, redactada como un auténtico profesional de la industria musical independiente (cálido, directo, sin clichés corporativos ni fórmulas acartonadas de IA).
-
+${campaignSection}
 ═════════════════════════════════════════════════════════════════════
 🧬 ADN Y VECTORES DE IDENTIDAD DE "${bandDna.bandName}":
 ═════════════════════════════════════════════════════════════════════
@@ -216,12 +254,14 @@ Tu cometido es redactar una propuesta de concierto de altísimo impacto, redacta
 4. CONDICIONES ECONÓMICAS Y CO-BOOKING:
    - Modelo: ${bandDna.flexibilidadEconomica}
    - Co-booking: ${bandDna.propuestaCoBooking}
-
-5. ENLACES OFICIALES VERIFICADOS (OBLIGATORIO INCLUIRLOS EN FORMATO MARKDOWN):
-   - 🎧 Escuchar en Spotify: ${bandDna.spotifyUrl}
-   - 🎬 Ver vídeo en directo (YouTube): ${bandDna.youtubeUrl}
-   - 📄 Dossier EPK y Rider Técnico: ${bandDna.epkUrl}
-   - Contacto: ${bandDna.contactoNombre} (${bandDna.cargoFirma}) | ${bandDna.contactoEmail} | ${bandDna.contactoTelefono}
+${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
+5. REGLAS DE ESTILO APRENDIDAS DE LA BANDA (SELF-REFINING TONE DNA):
+${bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n")}
+${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
+${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
+` : ""}
+6. ENLACES Y DOSSIER:
+   - REGLA DE ORO DE ENLACES: No saturar el cuerpo del correo con enlaces a plataformas de streaming en medio del texto. En el cuerpo del correo únicamente se hace referencia elegante al Dossier Oficial / EPK y Rider Técnico adjunto al pie de la firma (${bandDna.epkUrl}), donde el programador encontrará toda la información, vídeos en directo, temas y rider.
 
 ═════════════════════════════════════════════════════════════════════
 🎯 PERFIL ESPECÍFICO DEL DESTINATARIO:
@@ -248,20 +288,22 @@ ${globalMemory || "Sin historial previo. Mantener tono bailable, directo, profes
    - FESTIVALES: Resalta la conexión masiva, el alto impacto en horarios nocturnos/tardes y la agilidad en cambio de set.
    - DISCOTECAS / CLUBS: Presenta el show como Live Set nocturno bailable de madrugada entre DJs.
    - MEDIOS / RADIO / PRENSA: Enfoque informativo y de colaboración cultural; ofrece temas en calidad broadcast (WAV), entrevistas o acústicos (¡JAMÁS pedir bolos ni taquilla a un medio!).
-   - GRUPOS / ARTISTAS: Enfoque de colega de profesión para intercambio de fechas (Date Swap en su ciudad y en la nuestra).
+   - GRUPOS / ARTISTAS: Enfoque de colega de profesión para compartir concierto, fecha doble o intercambio (Date Swap en su ciudad y en la nuestra).
    - AYUNTAMIENTOS / FIESTAS: Destaca el carácter festivo e intergeneracional, la solvencia técnica y la facturación formal.
-5. TONO Y FORMATO:
-   - Saludo cercano y personalizado.
-   - Gancho inicial breve (1-2 frases) que justifique por qué la banda encaja en su programación.
-   - Bloque conciso con viñetas de puntos clave (formato, montaje, condiciones).
-   - Lista clara de enlaces oficiales en Markdown para que el programador escuche y vea en 1 solo clic.
-   - Cierre con pregunta abierta orientada a agenda (ej. "¿Cómo tenéis la programación para los próximos meses para valorar una fecha?").
-   - Cierre cordial breve (ej: "¡Un saludo!" o "Quedamos a vuestra entera disposición.").
-   - IMPORTANTE: NUNCA incluyas bloques de firma repetitivos, ni teléfonos, ni emails, ni nombres al pie, ya que el sistema de correo adjunta automáticamente la firma HTML oficial de la banda con su logotipo, contactos y redes.
+3. TONO, ESTRUCTURA Y FIRMA ÚNICA:
+   - Saludo cercano y personalizado (ej: "Hola equipo de [Sala]").
+   - Gancho inicial directo conectando con la fecha objetivo de la gira (ej. 4 de diciembre en Madrid).
+   - Resumen conciso de propuesta, formato y facilidad técnica sin rodeos.
+   - Referencia limpia al dossier: indicar que al pie disponen del Dossier Oficial y EPK con el directo y el rider técnico.
+   - Cierre con pregunta abierta orientada a agenda (ej. "¿Cómo tenéis la agenda para coordinar esa fecha?").
+   - Cierre cordial de una sola frase (ej: "¡Un saludo!" o "Quedamos a vuestra disposición.").
+   - REGLA DE NO DOBLE FIRMA: NUNCA escribas bloques de firma manuales, números de teléfono, correos, nombres ni cargos al final del texto. El sistema inserta automáticamente la firma visual única con el dossier y las redes oficiales de la banda (Instagram, Facebook, TikTok).
 4. PROHIBICIONES ESTRICTAS:
    - NUNCA inventar instrumentos de viento (trompetas, saxos, trombones) para Bakandeya.
    - PROHIBIDAS las frases hechas y clichés ("espero que te encuentres bien", "en el competitivo panorama actual", "una experiencia inolvidable").
-   - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.`;
+   - NO incluir enlaces a Spotify/YouTube en el texto del cuerpo; toda la referencia se canaliza a través del dossier oficial en la firma.
+   - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.
+${bandDna.fewShotSection || ""}`;
 }
 
 /**
@@ -274,8 +316,9 @@ export function generateSmartDnaPitchFallback(params: {
   provider?: string;
   customInstruction?: string;
   feedbackDetails?: string[];
+  activeCampaign?: any;
 }): string {
-  const { bandDna, lead } = params;
+  const { bandDna, lead, activeCampaign } = params;
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const salaNombre = lead?.nombre_sala || "la sala";
   const ciudad = lead?.ciudad || "";
@@ -284,13 +327,19 @@ export function generateSmartDnaPitchFallback(params: {
   const aforoStr = aforo > 0 ? ` para aforos de unas ${aforo} personas` : "";
   const customNote = params.customInstruction ? `\n[Ajuste solicitado por el mánager: "${params.customInstruction.trim()}"]\n` : "";
 
+  const campDatesText = activeCampaign?.targetDatesText || (Array.isArray(activeCampaign?.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign?.target_dates) ? activeCampaign.target_dates.join(', ') : ''));
+  const campName = activeCampaign?.name || '';
+  const campaignIntro = campDatesText 
+    ? `Actualmente estamos coordinando la ruta de conciertos de nuestra **${campName || 'campaña de directo'}** y nos gustaría proponeros cuadrar fecha para **${campDatesText}** en ${salaNombre}${ciudadStr}.`
+    : `Actualmente estamos cerrando el calendario de los próximos meses y nos encantaría valorar disponibilidad de fechas en vuestra sala.`;
+
   const greetingPerson = lead?.contacto_nombre ? `Hola ${lead.contacto_nombre.split(" ")[0]}, equipo de ${salaNombre}` : `Hola equipo de ${salaNombre}`;
 
   // 1. CASO: MEDIOS / PRENSA / RADIO / PODCAST
   if (leadTipo.includes("medio") || leadTipo.includes("prensa") || leadTipo.includes("radio") || leadTipo.includes("podcast")) {
     return `${greetingPerson}${ciudadStr}:
 ${customNote}
-Os escribimos desde el equipo de **${bandDna.bandName}** (${bandDna.genero}). Os hacemos llegar nuestro dossier de prensa y último material con motivo de nuestra gira de conciertos y lanzamientos 2026.
+Os escribimos desde el equipo de **${bandDna.bandName}** (${bandDna.genero}). Os hacemos llegar nuestra propuesta informativa con motivo de nuestra gira de conciertos y lanzamientos 2026.
 
 ${bandDna.biografia}
 
@@ -298,10 +347,7 @@ Nos encantaría ponernos a vuestra disposición para:
 • Remitiros temas en calidad broadcast / WAV para sonar en vuestra programación.
 • Entrevistas, acústicos en directo en estudio o reseñas del nuevo material.
 
-Enlaces oficiales y material promocional:
-• Dossier de Prensa y EPK: ${bandDna.epkUrl}
-• Escuchar en Spotify: ${bandDna.spotifyUrl}
-• Vídeo en directo: ${bandDna.youtubeUrl}
+Tenéis acceso a todos los temas, material audiovisual y kit de prensa completo en nuestro **Dossier Oficial & EPK** que encontraréis referenciado al pie de este correo.
 
 Quedamos a vuestra entera disposición para cualquier contenido o consulta. ¡Muchas gracias por apoyar la música independiente en directo!
 
@@ -315,14 +361,11 @@ ${customNote}
 Nos ponemos en contacto desde la oficina de **${bandDna.bandName}** para presentar nuestra propuesta artística (${bandDna.genero}) de cara a la próxima edición de vuestro festival.
 
 ${bandDna.bandName} ofrece un espectáculo en directo de alto impacto concebido para escenarios de festival (${bandDna.duracionDirecto}):
-• ${bandDna.formato} con un directo arrollador, bailable y festivo liderado por violín solista, sintetizadores analógicos, percusión potente, bajo y voz.
+• ${bandDna.formato} con un directo potente, dinámico y festivo (${bandDna.instrumentacion}).
 • Montaje rápido y rotación ágil de escenario (${bandDna.montajeRapido}), facilitando la operativa técnica del festival.
 • ${bandDna.cifrasClaveTexto}
 
-Material audiovisual en directo y rider:
-• Vídeo en directo (YouTube): ${bandDna.youtubeUrl}
-• Escuchar en Spotify: ${bandDna.spotifyUrl}
-• Dossier Oficial, EPK y Rider Técnico: ${bandDna.epkUrl}
+Disponéis de nuestro **Dossier Oficial, EPK y Rider Técnico** completo con vídeos de directo y temas al pie de la firma de este mensaje.
 
 Estaríamos encantados de enviaros nuestra propuesta económica y disponibilidad de fechas para valorar nuestra incorporación al cartel.
 
@@ -342,10 +385,7 @@ Detalles de la propuesta:
 • Montaje técnico limpio y ágil (${bandDna.montajeRapido}).
 • Flexibilidad total de condiciones (taquilla con consumición o caché acordado).
 
-Material de escucha y directos:
-• Directo en YouTube: ${bandDna.youtubeUrl}
-• Spotify: ${bandDna.spotifyUrl}
-• Dossier y Rider: ${bandDna.epkUrl}
+Podéis consultar nuestro dossier interactivo y rider técnico al pie de este correo.
 
 ¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha de sesión?
 
@@ -361,10 +401,7 @@ Nos dirigimos a ustedes desde la representación de **${bandDna.bandName}** (${b
 ${bandDna.biografia}
 Es un espectáculo de 90 minutos de alta energía, familiar, participativo y muy bailable, ideal para plazas públicas y eventos al aire libre. Contamos con amplia solvencia técnica, facturación oficial y rigurosa puntualidad de producción.
 
-Enlaces oficiales de consulta:
-• Vídeo en directo (YouTube): ${bandDna.youtubeUrl}
-• Dossier de Prensa y Rider Técnico: ${bandDna.epkUrl}
-• Escuchar en Spotify: ${bandDna.spotifyUrl}
+Disponen del Dossier de Prensa y Rider Técnico oficial referenciado al pie de esta comunicación.
 
 Quedamos a su entera disposición para remitirles nuestro rider técnico y propuesta presupuestaria formal.
 
@@ -381,10 +418,7 @@ Seguimos vuestra trayectoria y nos gusta mucho vuestro proyecto. Estamos organiz
 1. Montamos una fecha conjunta en nuestra ciudad (${bandDna.ciudadBase}), compartiendo cartel, backline y taquilla al 50%.
 2. Coordinamos la fecha de vuelta en vuestra ciudad (${ciudad || "vuestra zona"}) para sumar ambos públicos locales y rentabilizar gastos de viaje.
 
-Podéis echar un ojo a nuestro directo aquí:
-• En directo en YouTube: ${bandDna.youtubeUrl}
-• Spotify: ${bandDna.spotifyUrl}
-• EPK interactivo: ${bandDna.epkUrl}
+Podéis consultar nuestro directo, dossier y propuesta en el enlace de la firma al pie de este mensaje.
 
 ¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos una breve llamada para cuadrar calendarios?
 
@@ -397,16 +431,13 @@ ${customNote}
 Os escribimos desde el equipo de **${bandDna.bandName}** (${bandDna.genero}). Seguimos de cerca la programación de ${salaNombre} y creemos que nuestra propuesta de directo encaja perfectamente con vuestra línea artística y vuestro público habitual.
 
 **Sobre nuestra propuesta de directo:**
-• **Formato:** ${bandDna.formato} — show arrollador y muy bailable liderado por violín solista, sintetizadores analógicos, percusión en vivo, bajo y voz (${bandDna.duracionDirecto}).
+• **Formato:** ${bandDna.formato} — show continuo, dinámico y participativo (${bandDna.instrumentacion}) con una duración de ${bandDna.duracionDirecto}.
 • **Producción:** Montaje y prueba de sonido ágil (${bandDna.montajeRapido}) con rider técnico limpio y eficiente${aforoStr}.
 • **Condiciones:** ${bandDna.flexibilidadEconomica} Además, tenemos total disposición para colaborar con bandas locales de ${ciudad || "la zona"} para asegurar convocatoria y venta de barra.
 
-**Enlaces oficiales de escucha y directo:**
-• 🎧 Escuchar en Spotify: ${bandDna.spotifyUrl}
-• 🎬 Ver directo en YouTube: ${bandDna.youtubeUrl}
-• 📄 Dossier EPK y Rider Técnico: ${bandDna.epkUrl}
+Tenéis a vuestra disposición el **Dossier Oficial, EPK y Rider Técnico** completo con vídeos de directo y audios referenciado en la firma al pie de este mensaje.
 
-Actualmente estamos cerrando el calendario de los próximos meses y nos encantaría valorar disponibilidad de fechas en vuestra sala. ¿Cómo tenéis la agenda para la próxima temporada?
+${campaignIntro} ¿Cómo tenéis la agenda para valorar una fecha conjunta?
 
 ¡Muchas gracias por vuestro tiempo y por seguir apostando por la música en directo!
 

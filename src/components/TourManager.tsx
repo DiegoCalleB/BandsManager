@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead } from '../types';
+import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from '../types';
 import { calculateVehiclesFuelCost } from '../utils/tourUtils';
 import { ModalPortal } from './common/ModalPortal';
 import { 
   Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign, 
   Activity, TrendingUp, Calculator, Users, CheckSquare, Square, 
-  CheckCircle2, AlertCircle, RefreshCw, ArrowRight, Sparkles 
+  CheckCircle2, AlertCircle, RefreshCw, ArrowRight, Sparkles, Target
 } from 'lucide-react';
 
 interface TourManagerProps {
@@ -13,6 +13,8 @@ interface TourManagerProps {
   tours: Tour[];
   concerts: Concert[];
   leads?: Lead[];
+  activeCampaign?: BookingCampaign | null;
+  setActiveCampaign?: (campaign: BookingCampaign | null) => void;
   onAddLead?: (lead: Lead) => void;
   onDeleteLead?: (id: string) => void;
   onSaveTour: (tour: Tour) => void;
@@ -32,6 +34,8 @@ export default function TourManager({
   tours,
   concerts,
   leads = [],
+  activeCampaign,
+  setActiveCampaign,
   onSaveTour,
   onDeleteTour,
   bandUsers = [],
@@ -501,6 +505,7 @@ export default function TourManager({
 
   return (
     <div className={`space-y-6 ${colors.text}`}>
+
       {/* Header */}
       <div className={`p-5 sm:p-6 rounded-2xl ${colors.card} shadow-sm border border-white/5`}>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

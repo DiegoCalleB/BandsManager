@@ -5,13 +5,14 @@ import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkC
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
+import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, triggerSelfRefiningToneDnaBackground, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 
 const router = express.Router();
 
 router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { comentario, tono_rating, contenido_rating, providers } = req.body;
+    const { comentario, tono_rating, contenido_rating, providers, activeCampaign } = req.body;
 
     const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
     if (!userBandId) {
@@ -33,12 +34,23 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
 
     const bandDna = getBandDnaProfile(state, userBandId, lead);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+
+    // Dynamic Few-Shot In-Context Learning: recuperar ejemplos reales aprobados
+    try {
+      const fewShotExamples = await dbGetDynamicFewShotExamples(userBandId, lead, 3);
+      if (fewShotExamples.length > 0) {
+        bandDna.fewShotSection = formatFewShotExamplesForPrompt(fewShotExamples);
+      }
+    } catch (err) {
+      console.warn("Few-shot examples lookup notice:", err);
+    }
+
     const feedbackDetails: string[] = [];
     if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
     if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
     if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas del mánager: "${comentario.trim()}"`);
 
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign);
 
     const prompt = `Redacta una propuesta comercial y artística de concierto para "${lead.nombre_sala}" en ${lead.ciudad || 'España'} (Tipo: ${lead.tipo || 'sala'}, Aforo: ${lead.aforo || 'N/D'}).
 ${feedbackDetails.length > 0 ? `\nINSTRUCCIONES ADICIONALES DEL MÁNAGER:\n${feedbackDetails.join('\n')}` : ''}
@@ -74,7 +86,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${lead.pitch_generad
 router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const { tono_rating, contenido_rating, comentario, alcance, provider, modelName } = req.body;
+    const { tono_rating, contenido_rating, comentario, alcance, provider, modelName, activeCampaign } = req.body;
 
     const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
     if (!userBandId) {
@@ -103,6 +115,9 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     let isSimulated = false;
 
     const feedbackDetails: string[] = [];
+    if (activeCampaign && activeCampaign.isActive) {
+      feedbackDetails.push(`CONTEXTO DE CAMPAÑA IMPORTANTE: Menciona que buscamos fecha específicamente para el ${activeCampaign.targetDatesText || 'rango objetivo'}, enfocando a un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity}.`);
+    }
     if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);
     if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
     if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas de este pitch: "${comentario.trim()}"`);
@@ -113,7 +128,18 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     }
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+
+    // Dynamic Few-Shot In-Context Learning: recuperar ejemplos reales aprobados
+    try {
+      const fewShotExamples = await dbGetDynamicFewShotExamples(userBandId, lead, 3);
+      if (fewShotExamples.length > 0) {
+        bandDna.fewShotSection = formatFewShotExamplesForPrompt(fewShotExamples);
+      }
+    } catch (err) {
+      console.warn("Few-shot examples lookup notice:", err);
+    }
+
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign);
 
     const prompt = `Reescribe y perfecciona el correo de pitch para "${lead.nombre_sala}" en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}).
 
@@ -159,7 +185,8 @@ INSTRUCCIONES CLAVE:
         lead,
         provider,
         customInstruction: comentario,
-        feedbackDetails
+        feedbackDetails,
+        activeCampaign
       });
     }
 
@@ -180,6 +207,19 @@ INSTRUCCIONES CLAVE:
       lead.historial_feedback_pitch = [];
     }
     lead.historial_feedback_pitch.unshift(logEntry);
+
+    // Dynamic Few-Shot: registrar en el repositorio global de aprendizaje
+    dbRecordPitchHumanEdit({
+      band_id: userBandId,
+      lead_id: lead.id,
+      nombre_sala: lead.nombre_sala,
+      tipo_entidad: lead.tipo,
+      ciudad: lead.ciudad,
+      borrador_ia: previousPitch,
+      texto_aprobado: newPitchText,
+      tipo_accion: "regenerado_con_feedback",
+      resultado_respuesta: "pendiente"
+    }).catch(err => console.warn("Notice dbRecordPitchHumanEdit on regenerate:", err));
 
     // Update lead's pitch
     lead.pitch_generado = newPitchText;
@@ -267,6 +307,21 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
   } catch (error: any) {
     console.error("Error in POST /api/leads/:id/revert-pitch:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al deshacer el entrenamiento del pitch." });
+  }
+});
+
+// Endpoint para disparar o forzar el auto-refinamiento de ADN de Tono (Self-Refining Tone DNA)
+router.post("/leads/train-tone-dna", requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
+    if (!userBandId) {
+      return res.status(401).json({ error: "Acceso no autorizado." });
+    }
+    await triggerSelfRefiningToneDnaBackground(userBandId);
+    res.json({ success: true, message: "Auto-refinamiento del ADN de tono ejecutado con éxito." });
+  } catch (err: any) {
+    console.error("Error in POST /api/leads/train-tone-dna:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al refinar el ADN de tono." });
   }
 });
 

@@ -5,6 +5,7 @@ import BandMap from './BandMap';
 import { BandPitchModal } from './bandCRM/BandPitchModal';
 import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 import { ChangeBandImageModal } from './bandCRM/ChangeBandImageModal';
+import { AIBandScoutModal } from './bandCRM/AIBandScoutModal';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { FavoriteButton } from './common/FavoriteButton';
 import { VerifiedBadge } from './common/VerifiedBadge';
@@ -14,8 +15,11 @@ import {
  Users, Music, MapPin, Clock, Sparkles, Plus, Search, Filter, Edit3, Trash2, 
  Copy, Check, ExternalLink, Send, MessageCircle, RefreshCw, LayoutGrid, List, 
  Handshake, Repeat, Zap, Share2, X, Star, Radio, Phone, Mail, Globe, AlertCircle, Building2, Map, FileSpreadsheet,
- Loader2, Bot, Upload, Image as ImageIcon
+ Loader2, Bot, Upload, Image as ImageIcon, CheckSquare, Square, MinusSquare
 } from 'lucide-react';
+import { BulkBandActionBar } from './bands/BulkBandActionBar';
+import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+
 
 interface BandCRMProps {
  colors: ThemeColors;
@@ -29,6 +33,23 @@ interface BandCRMProps {
 export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, onDeleteBand, currentBandId }: BandCRMProps) {
  // Local state for band contacts with persistence
  const [bands, setBands] = useState<BandContact[]>([]);
+ const [selectedBandIds, setSelectedBandIds] = useState<string[]>([]);
+ const [bulkProgressState, setBulkProgressState] = useState<{
+   isOpen: boolean;
+   title: string;
+   subtitle?: string;
+   items: BulkProgressItem[];
+   currentIndex: number;
+   totalCount: number;
+   isCompleted: boolean;
+ }>({
+   isOpen: false,
+   title: '',
+   items: [],
+   currentIndex: 0,
+   totalCount: 0,
+   isCompleted: false
+ });
  const [isLoading, setIsLoading] = useState(true);
 
  const fetchBands = () => {
@@ -91,7 +112,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  telefono: l.telefono || '',
  instagram: l.instagram || '',
  spotify_youtube: l.website || '',
- aforo_promedio: l.aforo || 300,
+ aforo_promedio: l.aforo || 0,
  notas_colaboracion: l.notas || l.pitch_generado || 'Importado desde Leads de Booking.',
  ciudad_origen_swap: l.ciudad || 'España'
  }));
@@ -229,11 +250,22 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  const [formPhone, setFormPhone] = useState('');
  const [formInstagram, setFormInstagram] = useState('');
  const [formSpotifyYoutube, setFormSpotifyYoutube] = useState('');
- const [formAforo, setFormAforo] = useState<number>(300);
+ const [formAforo, setFormAforo] = useState<number>(0);
  const [formNotes, setFormNotes] = useState('');
  const [formIcon, setFormIcon] = useState('🎸');
  const [formImageUrl, setFormImageUrl] = useState('');
  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+ const [activeCampaign, setActiveCampaign] = useState<any>(null);
+ const [isScoutModalOpen, setIsScoutModalOpen] = useState(false);
+
+ useEffect(() => {
+   const saved = localStorage.getItem('bandmanager_active_campaign');
+   if (saved) {
+     try {
+       setActiveCampaign(JSON.parse(saved));
+     } catch (e) {}
+   }
+ }, []);
 
  const handleLogoUpload = async (file: File) => {
    if (!currentBandId) {
@@ -319,7 +351,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
   setFormPhone('');
   setFormInstagram('');
   setFormSpotifyYoutube('');
-  setFormAforo(300);
+  setFormAforo(0);
   setFormNotes('');
   setFormIcon('🎸');
   setFormImageUrl('');
@@ -342,7 +374,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
   setFormPhone(band.telefono || '');
   setFormInstagram(band.instagram || '');
   setFormSpotifyYoutube(band.spotify_youtube || '');
-  setFormAforo(band.aforo_promedio || 300);
+  setFormAforo(band.aforo_promedio || 0);
   setFormNotes(band.notas_colaboracion || '');
   setFormIcon(band.icono || '🎸');
   setFormImageUrl(band.imagen_url || '');
@@ -428,7 +460,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  telefono: formPhone.trim(),
  instagram: formInstagram.trim(),
  spotify_youtube: formSpotifyYoutube.trim(),
- aforo_promedio: Number(formAforo) || 300,
+ aforo_promedio: Number(formAforo) || 0,
  notas_colaboracion: formNotes.trim(),
  ciudad_origen_swap: formLocation.trim(),
  icono: formIcon,
@@ -454,7 +486,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  nombre_sala: newBand.nombre_banda,
  ciudad: newBand.localizacion,
  region: newBand.localizacion,
- aforo: newBand.aforo_promedio || 300,
+ aforo: newBand.aforo_promedio || 0,
  genero: newBand.estilo_musical,
  tipo: 'grupo',
  email_contacto: newBand.email || '',
@@ -472,6 +504,43 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  }
 
  setIsAddEditModalOpen(false);
+ };
+
+ // Handle Import Scouted Bands
+ const handleImportScoutedBands = async (importedBands: Partial<BandContact>[]) => {
+   const today = new Date().toISOString().split('T')[0];
+   const newBands = [];
+   
+   for (const b of importedBands) {
+     const newBand = {
+       id: `temp-${Date.now()}-${Math.random()}`,
+       nombre_banda: b.nombre_banda || 'Sin nombre',
+       localizacion: b.localizacion || 'Desconocida',
+       estilo_musical: b.estilo_musical || 'Mestizaje',
+       estado_relacion: 'sin_contactar' as BandRelationshipStatus,
+       instagram: (b as any).instagram_url || '',
+       spotify: (b as any).spotify_url || '',
+       youtube: (b as any).youtube_url || '',
+       aforo_promedio: b.aforo_promedio || null,
+       fecha_creacion: today,
+       ultimo_contacto: today,
+       notas: activeCampaign ? `Scouteada para campaña: ${activeCampaign.name}` : 'Scouteada vía IA',
+       es_favorito: false
+     };
+     newBands.push(newBand);
+     try {
+       await fetch('/api/bands', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(newBand)
+       });
+     } catch (err) {
+       console.error("Error creating scouted band", err);
+     }
+   }
+   
+   // Optimistic UI update
+   setBands(prev => [...newBands, ...prev]);
  };
 
  // Handle Delete
@@ -513,6 +582,156 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  });
  } catch (err) { console.error("Error updating band status", err); }
  };
+
+  // Bulk action handlers
+  const handleToggleSelectBand = (id: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setSelectedBandIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllFilteredBands = () => {
+    setSelectedBandIds(filteredBands.map(b => b.id));
+  };
+
+  const handleDeselectAllBands = () => {
+    setSelectedBandIds([]);
+  };
+
+  const handleBulkBandStatusChange = async (newStatus: BandRelationshipStatus) => {
+    if (selectedBandIds.length === 0) return;
+    const today = new Date().toISOString().split('T')[0];
+    setBands(prev => prev.map(b => selectedBandIds.includes(b.id) ? { ...b, estado_relacion: newStatus, ultimo_contacto: today } : b));
+    
+    selectedBandIds.forEach(id => {
+      fetch(`/api/bands/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado_relacion: newStatus, ultimo_contacto: today })
+      }).catch(console.error);
+    });
+  };
+
+  const handleBulkBandToggleFavorite = (isFav: boolean) => {
+    if (selectedBandIds.length === 0) return;
+    setBands(prev => prev.map(b => selectedBandIds.includes(b.id) ? { ...b, es_favorito: isFav } : b));
+    selectedBandIds.forEach(id => {
+      fetch(`/api/bands/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ es_favorito: isFav })
+      }).catch(console.error);
+    });
+  };
+
+  const handleBulkBandDelete = async () => {
+    if (selectedBandIds.length === 0) return;
+    const idsToDelete = [...selectedBandIds];
+    setSelectedBandIds([]);
+    setBands(prev => prev.filter(b => !idsToDelete.includes(b.id)));
+    try {
+      await api.bulkDeleteBands(idsToDelete);
+    } catch (err) {
+      console.error('Error bulk deleting bands:', err);
+      fetchBands();
+    }
+  };
+
+  const handleBulkBandExportCsv = () => {
+    const bandsToExport = bands.filter(b => selectedBandIds.includes(b.id));
+    if (bandsToExport.length === 0) return;
+
+    const headers = ['Nombre Banda', 'Estilo Musical', 'Localización', 'Estado Relación', 'Contacto', 'Email', 'Teléfono', 'Instagram', 'Spotify / Web', 'Aforo Habitual', 'Notas'];
+    const rows = bandsToExport.map(b => [
+      `"${(b.nombre_banda || '').replace(/"/g, '""')}"`,
+      `"${(b.estilo_musical || '').replace(/"/g, '""')}"`,
+      `"${(b.localizacion || '').replace(/"/g, '""')}"`,
+      `"${(b.estado_relacion || '').replace(/"/g, '""')}"`,
+      `"${(b.contacto_nombre || '').replace(/"/g, '""')}"`,
+      `"${(b.email || '').replace(/"/g, '""')}"`,
+      `"${(b.telefono || '').replace(/"/g, '""')}"`,
+      `"${(b.instagram || '').replace(/"/g, '""')}"`,
+      `"${(b.spotify_youtube || '').replace(/"/g, '""')}"`,
+      `"${b.aforo_promedio || ''}"`,
+      `"${(b.notas_colaboracion || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `bandmanager_bandas_seleccionadas_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleBulkGenerateSwaps = async () => {
+    const targetBands = bands.filter(b => selectedBandIds.includes(b.id));
+    if (targetBands.length === 0) return;
+
+    const initialItems: BulkProgressItem[] = targetBands.map(b => ({
+      id: b.id,
+      name: b.nombre_banda,
+      status: 'pending'
+    }));
+
+    setBulkProgressState({
+      isOpen: true,
+      title: 'Generando Propuestas Date Swap con IA',
+      subtitle: 'Redactando propuestas de intercambio de fechas y cartel doble',
+      items: initialItems,
+      currentIndex: 0,
+      totalCount: initialItems.length,
+      isCompleted: false
+    });
+
+    const updatedItems = [...initialItems];
+
+    for (let i = 0; i < targetBands.length; i++) {
+      const band = targetBands[i];
+      updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Redactando propuesta swap...' };
+      setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
+
+      try {
+        const res = await fetch('/api/bands/generate-date-swap-pitch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bandName: band.nombre_banda,
+            bandLocation: band.localizacion,
+            bandStyle: band.estilo_musical,
+            aforo: band.aforo_promedio
+          })
+        });
+
+        const data = await res.json();
+        const pitchText = data.pitch || data.data?.pitch || `Hola compas de ${band.nombre_banda},\n\nOs escribimos desde Bakandeya. Nos encanta vuestro estilo ${band.estilo_musical} y estamos planeando fechas por vuestra zona (${band.localizacion}). ¿Os cuadraría plantear un intercambio de fechas (Date Swap)? Nosotros os montamos fecha en nuestra ciudad y vosotros nos abrís en la vuestra.\n\n¡Un abrazo grande!`;
+
+        const updatedBand = {
+          ...band,
+          estado_relacion: 'propuesta_enviada' as BandRelationshipStatus,
+          notas_colaboracion: `${band.notas_colaboracion ? band.notas_colaboracion + '\n\n' : ''}[Propuesta Swap IA]:\n${pitchText}`
+        };
+
+        setBands(prev => prev.map(b => b.id === band.id ? updatedBand : b));
+        await fetch(`/api/bands/${band.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedBand)
+        });
+
+        updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta lista' };
+      } catch (err: any) {
+        updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
+      }
+
+      setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
+    }
+
+    setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
+  };
 
  // Filter logic
  const filteredBands = bands.filter(band => {
@@ -600,6 +819,26 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
 
  // Generate Date Swap Pitch Text
  const generatePitchText = (band: BandContact) => {
+   if (activeCampaign && activeCampaign.isActive) {
+     return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
+
+Os escribimos directamente desde Bakandeya (banda de Balkan-Ska, violín enérgico, loops analógicos y electrónica).
+
+Nos mola mucho vuestra propuesta en ${band.estilo_musical} y vemos que tenéis fuerte tirón en ${band.localizacion}. Os escribimos porque estamos armando una campaña de conciertos muy especial y creemos que podríamos montar un cartelazo juntos.
+
+Nuestro objetivo es un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity} personas en ${activeCampaign.targetCities.join(', ')} para las fechas: ${activeCampaign.targetDatesText || 'la próxima temporada'}. 
+
+Nuestra idea es montar un CO-BOOKING donde nosotros aportamos la producción y nuestro público en la ciudad, y vosotros sumáis vuestra fuerza para asegurar un *sold out* brutal. Además, dejamos la puerta abierta para devolveros la visita en ${band.localizacion} en el futuro compartiendo escenario y backline.
+
+Podéis escuchar nuestra música y directo aquí:
+https://youtube.com/bakandeya_live
+
+¿Os cuadran las fechas? ¿Qué os parece la idea? Si os mola, hablamos por WhatsApp esta semana para cerrar los detalles de sala.
+
+¡Un fuerte abrazo!
+Bakandeya Agent Manager`;
+   }
+
  return `¡Buenas chavales de ${band.nombre_banda}! 🎸🔥
 
 Os escribimos directamente desde Bakandeya (banda de Balkan-Ska, violín enérgico, loops analógicos y electrónica de Madrid/Sevilla).
@@ -657,6 +896,15 @@ Bakandeya Agent Manager IA & Músicos`;
  >
  <Repeat className="w-4 h-4 text-white shrink-0" />
  <span>Pitch de Date Swap</span>
+ </button>
+
+ <button
+ onClick={() => setIsScoutModalOpen(true)}
+ className="px-2 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-500 transition-all cursor-pointer flex items-center gap-2 shadow-md active:scale-95"
+ title="Scout IA: Buscar bandas de fuera para co-booking"
+ >
+ <Sparkles className="w-4 h-4 shrink-0" />
+ <span>Scout IA de Bandas</span>
  </button>
 
  <button
@@ -909,6 +1157,29 @@ Bakandeya Agent Manager IA & Músicos`;
  ))}
  </select>
 
+ {/* Quick Selection Toggle */}
+ {filteredBands.length > 0 && (
+   <button
+     type="button"
+     onClick={selectedBandIds.length === filteredBands.length ? handleDeselectAllBands : handleSelectAllFilteredBands}
+     className={`px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 border ${
+       selectedBandIds.length > 0
+         ? 'bg-[#f2ca50]/15 text-[#f2ca50] border-[#f2ca50]/30 hover:bg-[#f2ca50]/25'
+         : 'bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-white'
+     }`}
+     title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas las filtradas'}
+   >
+     {selectedBandIds.length === filteredBands.length ? (
+       <CheckSquare className="w-3.5 h-3.5 text-[#f2ca50]" />
+     ) : selectedBandIds.length > 0 ? (
+       <MinusSquare className="w-3.5 h-3.5 text-[#f2ca50]" />
+     ) : (
+       <Square className="w-3.5 h-3.5 text-neutral-400" />
+     )}
+     <span>{selectedBandIds.length > 0 ? `${selectedBandIds.length}/${filteredBands.length}` : 'Sel. Todos'}</span>
+   </button>
+ )}
+
  {/* View Mode Toggle */}
  <div className="flex items-center p-1 bg-neutral-900 rounded-xl shrink-0">
  <button
@@ -949,6 +1220,21 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </div>
 
+  {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
+  <BulkBandActionBar
+    selectedCount={selectedBandIds.length}
+    totalFilteredCount={filteredBands.length}
+    isAllSelected={filteredBands.length > 0 && selectedBandIds.length === filteredBands.length}
+    onSelectAll={handleSelectAllFilteredBands}
+    onDeselectAll={handleDeselectAllBands}
+    onBulkStatusChange={handleBulkBandStatusChange}
+    onBulkGeneratePitch={handleBulkGenerateSwaps}
+    onBulkToggleFavorite={handleBulkBandToggleFavorite}
+    onBulkExportCsv={handleBulkBandExportCsv}
+    onBulkDelete={handleBulkBandDelete}
+    isStitchLight={isStitchLight}
+  />
+
  {/* 3. BAND LIST CONTAINER */}
  {filteredBands.length === 0 ? (
  <div className={`p-12 rounded-2xl text-center space-y-3 ${colors.card} `}>
@@ -976,14 +1262,31 @@ Bakandeya Agent Manager IA & Músicos`;
  ) : viewMode === 'grid' ? (
  /* GRID CARDS VIEW */
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
- {filteredBands.map((band) => (
+ {filteredBands.map((band) => {
+   const isSelected = selectedBandIds.includes(band.id);
+   return (
  <div
  key={band.id}
- className={`p-5 rounded-2xl transition-all hover:-amber-500/40 flex flex-col justify-between space-y-4 ${colors.card}  shadow-md group relative overflow-hidden`}
+ className={`p-5 rounded-2xl transition-all flex flex-col justify-between space-y-4 ${colors.card} shadow-md group relative overflow-hidden ${
+   isSelected ? 'ring-2 ring-[#f2ca50] border-[#f2ca50]/70 bg-[#1e1c17]' : 'hover:-amber-500/40'
+ }`}
  >
  <div className="space-y-3">
  {/* Card Top: Band Name & Status */}
  <div className="flex items-start justify-between gap-2">
+ <div className="flex items-start gap-2.5 min-w-0">
+ <button
+   type="button"
+   onClick={(e) => handleToggleSelectBand(band.id, e)}
+   className="mt-0.5 p-1 rounded hover:bg-neutral-800/80 text-neutral-400 hover:text-[#f2ca50] transition-colors cursor-pointer shrink-0"
+   title={isSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
+ >
+   {isSelected ? (
+     <CheckSquare className="w-4 h-4 text-[#f2ca50]" />
+   ) : (
+     <Square className="w-4 h-4 text-neutral-500 hover:text-neutral-300" />
+   )}
+ </button>
  <div className="space-y-1 min-w-0">
  <div className="flex items-center gap-1.5 min-w-0">
  <h3 className="text-base font-bold font-display tracking-wider uppercase text-white flex items-center gap-2 group-hover:text-[#f2ca50] transition-colors truncate min-w-0">
@@ -1009,6 +1312,7 @@ Bakandeya Agent Manager IA & Músicos`;
  </span>
 
  <ReliabilityBadge item={band} size="sm" />
+ </div>
  </div>
  </div>
 
@@ -1134,7 +1438,8 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </div>
  </div>
- ))}
+ );
+ })}
  </div>
  ) : (
  /* TABLE LIST VIEW */
@@ -1142,6 +1447,22 @@ Bakandeya Agent Manager IA & Músicos`;
  <table className="w-full text-left text-[10px] font-mono">
  <thead className="bg-neutral-900/90 text-neutral-400 uppercase tracking-wider text-[10px]">
  <tr>
+ <th className="p-3.5 w-10 text-center">
+   <button
+     type="button"
+     onClick={selectedBandIds.length === filteredBands.length && filteredBands.length > 0 ? handleDeselectAllBands : handleSelectAllFilteredBands}
+     className="text-neutral-400 hover:text-[#f2ca50] transition-colors cursor-pointer"
+     title={selectedBandIds.length === filteredBands.length ? 'Deseleccionar todas' : 'Seleccionar todas'}
+   >
+     {filteredBands.length > 0 && selectedBandIds.length === filteredBands.length ? (
+       <CheckSquare className="w-4 h-4 text-[#f2ca50]" />
+     ) : selectedBandIds.length > 0 ? (
+       <MinusSquare className="w-4 h-4 text-[#f2ca50]" />
+     ) : (
+       <Square className="w-4 h-4 text-neutral-500" />
+     )}
+   </button>
+ </th>
  <th className="p-3.5">Banda / Artista</th>
  <th className="p-3.5">Estilo Musical</th>
  <th className="p-3.5">Localización</th>
@@ -1153,8 +1474,24 @@ Bakandeya Agent Manager IA & Músicos`;
  </tr>
  </thead>
  <tbody className=" /60 text-neutral-300">
- {filteredBands.map((band) => (
- <tr key={band.id} className="hover:bg-neutral-900/50 transition-colors">
+ {filteredBands.map((band) => {
+   const isRowSelected = selectedBandIds.includes(band.id);
+   return (
+ <tr key={band.id} className={`transition-colors ${isRowSelected ? 'bg-[#f2ca50]/10 hover:bg-[#f2ca50]/15' : 'hover:bg-neutral-900/50'}`}>
+ <td className="p-3.5 w-10 text-center" onClick={(e) => e.stopPropagation()}>
+   <button
+     type="button"
+     onClick={(e) => handleToggleSelectBand(band.id, e)}
+     className="text-neutral-400 hover:text-[#f2ca50] transition-colors cursor-pointer"
+     title={isRowSelected ? 'Deseleccionar banda' : 'Seleccionar banda'}
+   >
+     {isRowSelected ? (
+       <CheckSquare className="w-4 h-4 text-[#f2ca50]" />
+     ) : (
+       <Square className="w-4 h-4 text-neutral-500 hover:text-neutral-300" />
+     )}
+   </button>
+ </td>
  <td className="p-3.5 font-bold text-white">
  <div className="flex items-center gap-2">
  {band.imagen_url ? (
@@ -1222,7 +1559,8 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  </td>
  </tr>
- ))}
+ );
+ })}
  </tbody>
  </table>
  </div>
@@ -1630,6 +1968,7 @@ Bakandeya Agent Manager IA & Músicos`;
  onClose={() => setIsPitchModalOpen(false)}
  band={selectedPitchBand}
  isStitchLight={isStitchLight}
+ activeCampaign={activeCampaign}
  proposedBakandeyaCity={proposedBakandeyaCity}
  setProposedBakandeyaCity={setProposedBakandeyaCity}
  proposedVenueBakandeya={proposedVenueBakandeya}
@@ -1655,6 +1994,28 @@ Bakandeya Agent Manager IA & Músicos`;
    setIsPitchModalOpen(true);
  }}
  />
+
+ <AIBandScoutModal
+  isOpen={isScoutModalOpen}
+  onClose={() => setIsScoutModalOpen(false)}
+  activeCampaign={activeCampaign}
+  onAddBands={handleImportScoutedBands}
+  isStitchLight={isStitchLight}
+ />
+
+
+
+  {/* Bulk Progress Modal */}
+  <BulkProgressModal
+    isOpen={bulkProgressState.isOpen}
+    onClose={() => setBulkProgressState(prev => ({ ...prev, isOpen: false }))}
+    title={bulkProgressState.title}
+    subtitle={bulkProgressState.subtitle}
+    items={bulkProgressState.items}
+    currentIndex={bulkProgressState.currentIndex}
+    totalCount={bulkProgressState.totalCount}
+    isCompleted={bulkProgressState.isCompleted}
+  />
 
  </div>
  );

@@ -48,6 +48,7 @@ interface VenueDetailPanelProps {
   autoDetectVenueAddress: (venueName: string, city: string) => string;
   sectionTab: 'salas' | 'medios' | 'grupos';
   isStitchLight?: boolean;
+  activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
 }
@@ -65,6 +66,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   autoDetectVenueAddress,
   sectionTab,
   isStitchLight = false,
+  activeCampaign,
   onLeadLogoUpload,
   isUploadingLeadLogo = false
 }) => {
@@ -146,7 +148,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           contenido_rating: contentRating || undefined,
           comentario: feedbackComment || undefined,
           alcance: feedbackScope,
-          provider: providerToUse
+          provider: providerToUse,
+          activeCampaign
         })
       });
 
@@ -1076,6 +1079,33 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
             </div>
 
+            {/* Active Campaign Context Banner in Pitch Section */}
+            {activeCampaign && (activeCampaign.isActive !== false) && (
+              <div className="mb-2.5 p-2.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border border-purple-500/30 rounded-xl flex items-center justify-between gap-2 shadow-xs">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-xs shrink-0">🎯</span>
+                  <div className="min-w-0">
+                    <span className="text-[11px] font-bold text-purple-200 truncate block">
+                      Campaña: {activeCampaign.name}
+                    </span>
+                    <span className="text-[10px] text-purple-300/80 truncate block">
+                      Fechas objetivo: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(', ') : 'Próximos meses')} · Aforo: {activeCampaign.minCapacity || 0}-{activeCampaign.maxCapacity || 'sin límite'} pax
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRegeneratePitchWithFeedback()}
+                  disabled={isRegeneratingPitch}
+                  className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 shadow-sm disabled:opacity-50"
+                  title="Reescribe el pitch adaptándolo a las fechas y aforo de esta campaña"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>Adaptar a Campaña</span>
+                </button>
+              </div>
+            )}
+
             {isEditingPitch ? (
               <div className="space-y-2">
                 <textarea
@@ -1114,13 +1144,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
             )}
 
-            {/* SECCIÓN DE FEEDBACK Y ENTRENAMIENTO IA DEL PITCH */}
+            {/* SECCIÓN DE FEEDBACK Y ENTRENAMIENTO IA DEL PITCH (DYNAMIC FEW-SHOT & SELF-REFINING TONE DNA) */}
             <div className="mt-4 p-3.5 bg-gradient-to-br from-[#181716] to-[#121110] rounded-xl border border-amber-500/30 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span className="text-xs font-bold text-amber-300 font-sans uppercase tracking-wider">
-                    Feedback & Entrenar Agente Redactor
+                  <span className="text-xs font-bold text-amber-300 font-sans uppercase tracking-wider flex items-center gap-1.5">
+                    Aprendizaje Agéntico & ADN de Tono
+                    <span className="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-mono font-normal">
+                      Dynamic Few-Shot
+                    </span>
                   </span>
                 </div>
                 {selectedLead.historial_feedback_pitch && selectedLead.historial_feedback_pitch.length > 0 && (
@@ -1615,6 +1648,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         onClose={() => setShowMultiModelModal(false)}
         lead={selectedLead}
         isStitchLight={isStitchLight}
+        activeCampaign={activeCampaign}
         onSelectProposal={(text, providerName) => {
           setEditedPitch(text);
           selectedLead.pitch_generado = text;

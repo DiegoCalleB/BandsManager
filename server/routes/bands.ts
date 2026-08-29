@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -140,6 +140,27 @@ router.put("/bands/:id", requireAuth, async (req, res) => {
   }
 });
 
+router.post("/bands/bulk-delete", requireAuth, async (req, res) => {
+  const userBandId = (req as any).user?.band_id;
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: "Debe proporcionar una lista de IDs de bandas para eliminar." });
+  }
+  try {
+    await dbBulkDeleteBandContacts(ids, userBandId);
+    const state = loadState();
+    if (state.bands) {
+      const idsSet = new Set(ids);
+      state.bands = state.bands.filter((b: any) => !idsSet.has(b.id));
+      saveState(state);
+    }
+    res.json({ success: true, count: ids.length });
+  } catch (err: any) {
+    console.error("Error bulk deleting band contacts:", err);
+    res.status(500).json({ error: err.message || String(err) });
+  }
+});
+
 router.delete("/bands/:id", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   const { id } = req.params;
@@ -176,6 +197,60 @@ router.post("/bands/sync", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error syncing bands:", err);
     res.status(500).json({ error: err.message || String(err) });
+  }
+});
+
+router.post("/bands/ai-scout", requireAuth, async (req, res) => {
+  const { genre, city, count = 5 } = req.body;
+  if (!genre && !city) {
+    return res.status(400).json({ error: "Debes especificar un género o una ciudad." });
+  }
+
+  const client = getAiClient();
+  if (!client) {
+    return res.status(500).json({ error: "Servicio de IA no disponible." });
+  }
+
+  const prompt = `Actúa como un experto A&R y booker musical de la escena independiente.
+Busca bandas musicales activas que coincidan con estos criterios:
+${genre ? `- Estilo/Género Musical: afín a ${genre}` : ''}
+${city ? `- Ciudad/Ubicación: ${city} (y alrededores)` : ''}
+
+Necesito que devuelvas exactamente ${count} resultados. Prioriza bandas que tengan un nivel de popularidad intermedio (que puedan llevar entre 50 y 300 personas a una sala, ideal para co-booking o intercambio de fechas).
+
+Devuelve EXCLUSIVAMENTE un array JSON válido con la siguiente estructura (sin formato Markdown, sin comillas triples, sólo el array JSON crudo):
+[
+  {
+    "nombre_banda": "Nombre de la banda",
+    "estilo_musical": "El género musical exacto (p. ej. 'Balkan Ska', 'Punk Rock')",
+    "localizacion": "Ciudad y región de origen",
+    "instagram_url": "URL de su Instagram (o déjalo vacío si no lo sabes)",
+    "spotify_url": "URL de su Spotify (o vacío)",
+    "youtube_url": "URL de YouTube (o vacío)",
+    "aforo_promedio": 150
+  }
+]`;
+
+  try {
+    const response = await generateContentWithFallback(client, {
+      contents: prompt,
+      config: { responseMimeType: "application/json" }
+    });
+    
+    const resultText = response?.text || "";
+    if (!resultText) {
+      throw new Error("Respuesta vacía de Gemini");
+    }
+    
+    let cleanJson = resultText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    if (!cleanJson.startsWith('[')) cleanJson = `[${cleanJson}`;
+    if (!cleanJson.endsWith(']')) cleanJson = `${cleanJson}]`;
+    
+    const parsedData = JSON.parse(cleanJson);
+    res.json({ bands: parsedData });
+  } catch (error: any) {
+    console.error("AI Scout Error:", error);
+    res.status(500).json({ error: "No se pudieron obtener resultados de la IA." });
   }
 });
 
@@ -411,6 +486,9 @@ const CAMPOS_TONO_EDITABLES = [
   "matices_por_red",
   "puntos_fuertes_para_conectar",
   "recomendacion_pitch",
+  "reglas_estilo_aprendidas",
+  "vocabulario_aprendido",
+  "terminos_a_evitar",
 ] as const;
 
 const REDES_MATICES = ["instagram", "tiktok", "youtube", "facebook"] as const;
@@ -459,8 +537,15 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
 
     for (const campo of CAMPOS_TONO_EDITABLES) {
       if (!(campo in cambios)) continue;
-      if (campo === "vocabulario_clave" || campo === "frases_emblematicas_extraidas" || campo === "emojis_frecuentes") {
-        actualizado[campo] = limpiarListaTono(cambios[campo]);
+      if (
+        campo === "vocabulario_clave" ||
+        campo === "frases_emblematicas_extraidas" ||
+        campo === "emojis_frecuentes" ||
+        campo === "reglas_estilo_aprendidas" ||
+        campo === "vocabulario_aprendido" ||
+        campo === "terminos_a_evitar"
+      ) {
+        actualizado[campo] = limpiarListaTono(cambios[campo], 20);
       } else if (campo === "matices_por_red") {
         actualizado[campo] = limpiarMaticesPorRed(cambios[campo]);
       } else {

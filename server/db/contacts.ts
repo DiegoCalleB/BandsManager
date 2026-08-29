@@ -78,22 +78,20 @@ export async function dbUpsertBandContact(band: any, bandId: string) {
   return data;
 }
 
+export async function dbBulkDeleteBandContacts(ids: string[], bandId: string) {
+  if (!ids || ids.length === 0) return true;
+  const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
+  // PostgreSQL Trigger (trg_archive_deleted_band) handles blacklist archival atomically BEFORE DELETE
+  const { error } = await sb.from("band_contacts").delete().in("id", ids).eq("band_id", cleanId);
+  if (error) throw new Error(`Supabase Error (bulk delete band_contacts): ${error.message}`);
+  return true;
+}
+
 export async function dbDeleteBandContact(id: string, bandId: string) {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
-  const { data: bandData } = await sb.from("band_contacts").select("*").eq("id", id).maybeSingle();
-  if (bandData) {
-    try {
-      await sb.from("deleted_bands").upsert({
-        id: `del-band-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-        band_id: cleanId,
-        nombre_banda: bandData.nombre_banda,
-        motivo: 'Eliminado por el usuario para evitar ruido'
-      });
-    } catch (e) {
-      console.warn("Notice recording deleted band in blacklist:", e);
-    }
-  }
+  // PostgreSQL Trigger (trg_archive_deleted_band) handles blacklist archival atomically BEFORE DELETE
   const { error } = await sb.from("band_contacts").delete().eq("id", id).eq("band_id", cleanId);
   if (error) throw new Error(`Supabase Error (delete band_contacts): ${error.message}`);
   return true;

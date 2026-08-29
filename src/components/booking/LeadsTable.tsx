@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Lead, LeadStatus, LeadType } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { ReliabilityBadge } from '../common/ReliabilityBadge';
 import { FavoriteButton } from '../common/FavoriteButton';
 import { isLeadVerificado } from '../../utils/leadReliability';
-import { MessageCircle, PhoneCall, CheckCircle2, Eye, Sparkles, Trash2, Camera } from 'lucide-react';
+import { MessageCircle, PhoneCall, CheckCircle2, Eye, Sparkles, Trash2, Camera, CheckSquare, Square, MinusSquare } from 'lucide-react';
 import { ChangeLeadImageModal } from './ChangeLeadImageModal';
 import { LeadAvatar } from './LeadAvatar';
 
@@ -23,6 +23,12 @@ interface LeadsTableProps {
   sectionTab?: 'salas' | 'medios' | 'grupos';
   mediaTypeFilter?: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos';
   setMediaTypeFilter?: (type: 'televisión' | 'radio' | 'redes' | 'managements' | 'todos') => void;
+  selectedLeadIds?: string[];
+  onToggleSelectLead?: (id: string, e?: React.MouseEvent) => void;
+  onSelectAllFiltered?: () => void;
+  onDeselectAll?: () => void;
+  isAllSelected?: boolean;
+  isSomeSelected?: boolean;
 }
 
 export const LeadsTable: React.FC<LeadsTableProps> = ({
@@ -38,8 +44,22 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
   normalizeType,
   sectionTab = 'salas',
   mediaTypeFilter = 'todos',
-  setMediaTypeFilter
+  setMediaTypeFilter,
+  selectedLeadIds = [],
+  onToggleSelectLead,
+  onSelectAllFiltered,
+  onDeselectAll,
+  isAllSelected = false,
+  isSomeSelected = false
 }) => {
+  const headerCheckboxRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (headerCheckboxRef.current) {
+      headerCheckboxRef.current.indeterminate = isSomeSelected && !isAllSelected;
+    }
+  }, [isSomeSelected, isAllSelected]);
+
   const filteredLeads = mediaTypeFilter === 'todos' || !setMediaTypeFilter
     ? leads
     : leads.filter(l => l.genero?.toLowerCase() === mediaTypeFilter);
@@ -67,23 +87,60 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   return (
     <div className="w-full">
-      {sectionTab === 'medios' && setMediaTypeFilter && (
-        <div className="flex gap-2 mb-4">
-          {['todos', 'televisión', 'radio', 'redes', 'managements'].map((type) => (
+      {/* Top Filter Tabs & Selection Bar if applicable */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        {sectionTab === 'medios' && setMediaTypeFilter && (
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+            {['todos', 'televisión', 'radio', 'redes', 'managements'].map((type) => (
+              <button
+                key={type}
+                onClick={() => setMediaTypeFilter(type as any)}
+                className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-colors cursor-pointer ${
+                  mediaTypeFilter === type 
+                    ? 'bg-[#f2ca50] text-black' 
+                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Quick select buttons in Grid view */}
+        {viewMode === 'grid' && onToggleSelectLead && (
+          <div className="flex items-center gap-2 text-xs font-mono ml-auto">
             <button
-              key={type}
-              onClick={() => setMediaTypeFilter(type as any)}
-              className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-colors ${
-                mediaTypeFilter === type 
-                  ? 'bg-[#f2ca50] text-black' 
-                  : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-              }`}
+              type="button"
+              onClick={isAllSelected ? onDeselectAll : onSelectAllFiltered}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs"
             >
-              {type}
+              {isAllSelected ? (
+                <>
+                  <CheckSquare className="w-3.5 h-3.5 text-[#f2ca50]" />
+                  <span>Deseleccionar todos ({filteredLeads.length})</span>
+                </>
+              ) : isSomeSelected ? (
+                <>
+                  <MinusSquare className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Seleccionar todos ({filteredLeads.length})</span>
+                </>
+              ) : (
+                <>
+                  <Square className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>Seleccionar todos ({filteredLeads.length})</span>
+                </>
+              )}
             </button>
-          ))}
-        </div>
-      )}
+            {selectedLeadIds.length > 0 && (
+              <span className="text-amber-400 font-bold bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-md text-[11px]">
+                {selectedLeadIds.length} selecc.
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
       {viewMode === 'grid' ? (
         <div className={`grid gap-4 pb-10 transition-all duration-300 ${
           selectedLead 
@@ -91,7 +148,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
         }`}>
           {filteredLeads.map((lead, idx) => {
-            const isSelected = selectedLead?.id === lead.id;
+            const isDetailOpen = selectedLead?.id === lead.id;
+            const isChecked = selectedLeadIds.includes(lead.id);
             const phoneClean = cleanPhone(lead.telefono);
             const leadKey = lead.id ? `lead-grid-${lead.id}` : `lead-grid-${idx}`;
 
@@ -100,13 +158,36 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 key={leadKey}
                 onClick={() => onSelectLead(lead)}
                 className={`p-4 rounded-2xl transition-all cursor-pointer flex flex-col justify-between gap-3 relative group ${
-                  isSelected
-                    ? 'bg-[#1A1918] border-2 border-[#f2ca50] shadow-xl ring-1 ring-[#f2ca50]/30'
+                  isChecked
+                    ? 'bg-[#1e1c17] border-2 border-[#f2ca50] shadow-xl ring-2 ring-[#f2ca50]/25'
+                    : isDetailOpen
+                    ? 'bg-[#1A1918] border-2 border-purple-400 shadow-xl ring-1 ring-purple-400/30'
                     : 'bg-[#121110] border border-zinc-800/80 hover:bg-[#1A1918] hover:border-zinc-700 shadow-md'
                 }`}
               >
                 {/* Header info */}
-                <div className="flex items-start gap-3 min-w-0 w-full">
+                <div className="flex items-start gap-2.5 min-w-0 w-full">
+                  
+                  {/* Select Checkbox (Grid Mode) */}
+                  {onToggleSelectLead && (
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleSelectLead(lead.id, e);
+                      }}
+                      className="shrink-0 pt-0.5 cursor-pointer"
+                      title={isChecked ? "Deseleccionar sala" : "Seleccionar sala para acciones masivas"}
+                    >
+                      <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
+                        isChecked 
+                          ? 'bg-[#f2ca50] border-[#f2ca50] text-black shadow-xs' 
+                          : 'border-zinc-600 group-hover:border-zinc-400 bg-zinc-900/80 hover:border-amber-400'
+                      }`}>
+                        {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Interactive Avatar Container */}
                   <LeadAvatar
                     lead={lead}
@@ -217,7 +298,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         onSelectLead(lead);
                       }}
                       className={`px-3 py-1.5 rounded-xl text-xs font-sans font-bold transition-all cursor-pointer flex items-center gap-1 min-h-[38px] ${
-                        isSelected
+                        isDetailOpen
                           ? 'bg-[#f2ca50] text-[#3c2f00] shadow-sm'
                           : 'bg-zinc-800 text-zinc-200 hover:bg-zinc-700'
                       }`}
@@ -247,9 +328,26 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       ) : (
         /* TABLE VIEW */
         <div className="overflow-x-auto rounded-2xl border border-zinc-800/80 bg-[#121110] shadow-lg pb-10">
-          <table className="w-full text-left border-collapse min-w-[950px]">
+          <table className="w-full text-left border-collapse min-w-[980px]">
             <thead>
               <tr className="border-b border-zinc-800 text-[10px] font-mono uppercase tracking-wider text-zinc-400 bg-black/40">
+                
+                {/* Select All Checkbox Header */}
+                {onToggleSelectLead && (
+                  <th className="py-3.5 px-3 w-10 text-center whitespace-nowrap">
+                    <div className="flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        ref={headerCheckboxRef}
+                        checked={isAllSelected}
+                        onChange={isAllSelected ? onDeselectAll : onSelectAllFiltered}
+                        className="w-4 h-4 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
+                        title={isAllSelected ? "Deseleccionar todos" : "Seleccionar todos los resultados"}
+                      />
+                    </div>
+                  </th>
+                )}
+
                 <th className="py-3.5 px-3 w-10 text-center whitespace-nowrap">Fav</th>
                 <th className="py-3.5 px-4 min-w-[220px] whitespace-nowrap">
                   {sectionTab === 'medios' ? 'Medio / Contacto' : sectionTab === 'grupos' ? 'Banda / Management' : 'Espacio / Sala'}
@@ -267,7 +365,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
             </thead>
             <tbody className="divide-y divide-zinc-800/60 text-xs font-mono align-middle">
               {filteredLeads.map((lead, idx) => {
-                const isSelected = selectedLead?.id === lead.id;
+                const isDetailOpen = selectedLead?.id === lead.id;
+                const isChecked = selectedLeadIds.includes(lead.id);
                 const phoneClean = cleanPhone(lead.telefono);
                 const leadKey = lead.id ? `lead-row-${lead.id}` : `lead-row-${idx}`;
 
@@ -276,9 +375,38 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     key={leadKey}
                     onClick={() => onSelectLead(lead)}
                     className={`transition-colors cursor-pointer ${
-                      isSelected ? 'bg-[#1A1918]' : 'hover:bg-zinc-900/60'
+                      isChecked
+                        ? 'bg-[#1e1c17] border-l-2 border-l-[#f2ca50]'
+                        : isDetailOpen 
+                        ? 'bg-[#1A1918] border-l-2 border-l-purple-400' 
+                        : 'hover:bg-zinc-900/60'
                     }`}
                   >
+                    {/* Row Select Checkbox */}
+                    {onToggleSelectLead && (
+                      <td 
+                        className="py-3.5 px-3 text-center align-middle" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleSelectLead(lead.id, e);
+                        }}
+                      >
+                        <div className="flex items-center justify-center">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {}}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleSelectLead(lead.id, e);
+                            }}
+                            className="w-4 h-4 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
+                            title={isChecked ? "Deseleccionar" : "Seleccionar"}
+                          />
+                        </div>
+                      </td>
+                    )}
+
                     <td className="py-3.5 px-3 text-center align-middle" onClick={(e) => e.stopPropagation()}>
                       <FavoriteButton 
                         isFavorite={!!lead.es_favorito}
@@ -320,23 +448,19 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <LeadHealthBadge lead={lead} showDescription={false} size="sm" />
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[110px] whitespace-nowrap align-middle text-zinc-300 font-semibold text-xs">
-                      {lead.ciudad || '-'}
+                    <td className="py-3.5 px-4 min-w-[110px] text-zinc-300 align-middle">
+                      <span className="font-semibold">{lead.ciudad || 'España'}</span>
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[90px] align-middle text-zinc-300 text-xs">
-                      {lead.roster ? (
-                        <span className="text-amber-300 font-semibold truncate max-w-[150px] block" title={lead.roster}>
-                          🎸 {lead.roster}
-                        </span>
-                      ) : (
-                        lead.aforo ? `${lead.aforo} pax` : (['agencia', 'manager', 'productora', 'sello'].includes(String(lead.tipo || '').toLowerCase()) ? 'Booking' : '-')
-                      )}
+                    <td className="py-3.5 px-4 min-w-[90px] text-zinc-300 align-middle">
+                      <span className={lead.roster ? 'text-amber-300 font-semibold' : 'text-zinc-200'}>
+                        {lead.roster ? `Róster: ${lead.roster}` : (lead.aforo ? `${lead.aforo} pax` : 'n/d')}
+                      </span>
                     </td>
 
                     <td className="py-3.5 px-4 min-w-[140px] whitespace-nowrap align-middle">
                       <span
-                        className={`inline-flex items-center text-[10px] px-2.5 py-0.5 rounded-full font-mono font-medium ${getStatusBadgeClass(
+                        className={`inline-flex items-center text-[10px] px-2 py-0.5 rounded-full font-sans font-medium ${getStatusBadgeClass(
                           lead.estado
                         )}`}
                       >
@@ -344,88 +468,85 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[180px] align-middle text-zinc-400">
-                      <div className="flex flex-col text-[11px] font-sans">
-                        <span className="text-zinc-200 font-medium truncate max-w-[160px]" title={lead.email_contacto}>
-                          {lead.email_contacto || 'Sin email'}
-                        </span>
-                        {lead.telefono && (
-                          <span className="text-zinc-400 font-mono text-[10px]">
-                            {lead.telefono}
-                          </span>
+                    {/* Direct Contact Column */}
+                    <td className="py-3.5 px-4 min-w-[180px] align-middle">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          {lead.email_contacto ? (
+                            <a
+                              href={`mailto:${lead.email_contacto}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-sky-400 hover:text-sky-300 font-normal truncate max-w-[140px] inline-block"
+                              title={lead.email_contacto}
+                            >
+                              {lead.email_contacto}
+                            </a>
+                          ) : (
+                            <span className="text-zinc-600 italic text-[11px]">Sin email</span>
+                          )}
+                        </div>
+                        {phoneClean && (
+                          <div className="flex items-center gap-1.5 text-zinc-400">
+                            <span>{lead.telefono}</span>
+                          </div>
                         )}
                       </div>
                     </td>
 
+                    {/* Direct Quick Action Buttons in Table View */}
                     <td className="py-3.5 px-4 min-w-[160px] text-right whitespace-nowrap align-middle">
                       <div className="flex items-center justify-end gap-1.5">
-                        {/* Direct WhatsApp */}
                         {phoneClean && (
                           <a
                             href={`https://wa.me/${phoneClean}`}
                             target="_blank"
                             rel="noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 rounded-lg font-bold text-xs transition-all cursor-pointer shadow-xs"
+                            className="p-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 rounded-lg transition-colors inline-flex items-center"
                             title="WhatsApp directo"
                           >
                             <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
                           </a>
                         )}
 
-                        {/* Direct Call */}
                         {lead.telefono && (
                           <a
                             href={`tel:${lead.telefono}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-sky-950/80 hover:bg-sky-900 border border-sky-700/60 text-sky-300 rounded-lg font-bold text-xs transition-all cursor-pointer shadow-xs"
-                            title="Llamar por teléfono"
+                            className="p-1.5 bg-sky-950/80 hover:bg-sky-900 border border-sky-700/60 text-sky-300 rounded-lg transition-colors inline-flex items-center"
+                            title="Llamar teléfono"
                           >
                             <PhoneCall className="w-3.5 h-3.5 text-sky-400" />
                           </a>
                         )}
 
-                        {/* Direct Pitch Approval */}
                         {(lead.estado === 'pendiente_aprobacion' || lead.estado === 'nuevo') && (
                           <button
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
-                            className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-lg font-bold text-[10px] flex items-center gap-1 transition-all cursor-pointer"
-                            title="Aprobar pitch"
+                            className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-lg text-[10px] font-bold transition-all cursor-pointer inline-flex items-center gap-1"
+                            title="Aprobar pitch directamente"
                           >
                             <CheckCircle2 className="w-3 h-3 text-amber-400" />
                             <span>Aprobar</span>
                           </button>
                         )}
 
-                        {/* Open Ficha */}
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             onSelectLead(lead);
                           }}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#f2ca50] text-[#3c2f00]'
-                              : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                          className={`p-1.5 rounded-lg transition-colors inline-flex items-center ${
+                            isDetailOpen
+                              ? 'bg-[#f2ca50] text-black font-bold'
+                              : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300'
                           }`}
+                          title="Abrir ficha"
                         >
-                          Ver
+                          <Eye className="w-3.5 h-3.5" />
                         </button>
-                        {onDeleteLead && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onDeleteLead(lead.id, lead.nombre_sala);
-                            }}
-                            className="p-1.5 bg-rose-950/60 hover:bg-rose-900 border border-rose-800/60 text-rose-300 rounded-lg transition-all cursor-pointer"
-                            title="Eliminar y guardar en lista negra"
-                          >
-                            <Trash2 className="w-3.5 h-3.5 text-rose-400" />
-                          </button>
-                        )}
                       </div>
                     </td>
                   </tr>
@@ -436,14 +557,19 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </div>
       )}
 
-      {/* Quick Image Change Modal */}
-      <ChangeLeadImageModal
-        lead={leadForImageChange}
-        isOpen={!!leadForImageChange}
-        onClose={() => setLeadForImageChange(null)}
-        onUpdateLead={onUpdateLead}
-        onLeadLogoUpload={onLeadLogoUpload}
-      />
+      {/* Change Image Modal */}
+      {leadForImageChange && (
+        <ChangeLeadImageModal
+          lead={leadForImageChange}
+          isOpen={Boolean(leadForImageChange)}
+          onClose={() => setLeadForImageChange(null)}
+          onUpdateLead={(id, updates) => {
+            onUpdateLead(id, updates);
+            setLeadForImageChange(null);
+          }}
+          onLeadLogoUpload={onLeadLogoUpload}
+        />
+      )}
     </div>
   );
 };

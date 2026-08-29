@@ -122,6 +122,10 @@ export interface EpkDict {
   // Citas de Prensa & Reseñas
   seccionPrensa: string;
   prensaSubtitulo: string;
+
+  // Redes y miembros
+  seguirInstagram: string;
+  seguirMiembro: string;
 }
 
 const es: EpkDict = {
@@ -192,6 +196,8 @@ const es: EpkDict = {
 
   seccionPrensa: 'Prensa & Reseñas Destacadas',
   prensaSubtitulo: 'Lo que dicen los medios especializados y la crítica de nuestros directos:',
+  seguirInstagram: 'Seguir en Instagram',
+  seguirMiembro: 'Seguir a {name} en Instagram',
 };
 
 const en: EpkDict = {
@@ -262,6 +268,8 @@ const en: EpkDict = {
 
   seccionPrensa: 'Press & Media Reviews',
   prensaSubtitulo: 'What music magazines and critics say about our live concerts:',
+  seguirInstagram: 'Follow on Instagram',
+  seguirMiembro: 'Follow {name} on Instagram',
 };
 
 const it: EpkDict = {
@@ -332,6 +340,8 @@ const it: EpkDict = {
 
   seccionPrensa: 'Rassegna Stampa & Recensioni',
   prensaSubtitulo: 'Cosa dicono i media specializzati e la critica sui nostri concerti:',
+  seguirInstagram: 'Segui su Instagram',
+  seguirMiembro: 'Segui {name} su Instagram',
 };
 
 const cs: EpkDict = {
@@ -402,6 +412,8 @@ const cs: EpkDict = {
 
   seccionPrensa: 'Ohlasy v tisku a recenze',
   prensaSubtitulo: 'Co o našich koncertech píší specializovaná hudební média:',
+  seguirInstagram: 'Sledovat na Instagramu',
+  seguirMiembro: 'Sledovat {name} na Instagramu',
 };
 
 export const EPK_TRANSLATIONS: Record<EpkLanguage, EpkDict> = { es, en, it, cs };

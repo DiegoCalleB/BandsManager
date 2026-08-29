@@ -128,21 +128,41 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
     return `👋 **¡Buenas, ${name}!** Soy vuestro **Manager Virtual de ${band}**.\n\nEstoy conectado en tiempo real con vuestra base de datos de Supabase (salas), el calendario de ensayos de banda, la contabilidad y la logística de redes.\n\nPuedes preguntarme cosas como:\n- *¿Qué salas tengo pendientes de aprobación en Madrid o Granada?*\n- *Resúmeme el estado de la semana o hazme una lista de tareas para hoy.*\n- *¿Cuántas salas de Ska, Reggae o Fusión tenemos registradas?*\n\nSi necesitas, puedo **proponer cambios directos** en las salas (como aprobar un correo de contacto) o agendar ensayos, pidiéndote confirmación antes de actuar.`;
   };
 
+  let chatMsgSeq = 0;
+  const generateUniqueMsgId = (prefix: string = 'msg'): string => {
+    chatMsgSeq += 1;
+    const rand = Math.random().toString(36).substring(2, 7);
+    return `${prefix}-${Date.now()}-${chatMsgSeq}-${rand}`;
+  };
+
+  const ensureUniqueMessageIds = (rawMessages: any[]): ChatMessage[] => {
+    const seenIds = new Set<string>();
+    return rawMessages.map((m: any, idx: number) => {
+      let msgId = m.id;
+      if (!msgId || seenIds.has(msgId)) {
+        msgId = generateUniqueMsgId(typeof msgId === 'string' && msgId ? msgId.split('-')[0] : 'msg');
+      }
+      seenIds.add(msgId);
+      return {
+        ...m,
+        id: msgId,
+        text: cleanLegacyText(m.text),
+        timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
+        proposedActions: (m.proposedActions || []).map((act: any) => ({
+          ...act,
+          status: act.status || (m.actionStatus === 'applied' ? 'applied' : m.actionStatus === 'dismissed' ? 'dismissed' : 'pending')
+        }))
+      };
+    });
+  };
+
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.map((m: any) => ({
-            ...m,
-            text: cleanLegacyText(m.text),
-            timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
-            proposedActions: (m.proposedActions || []).map((act: any) => ({
-              ...act,
-              status: act.status || (m.actionStatus === 'applied' ? 'applied' : m.actionStatus === 'dismissed' ? 'dismissed' : 'pending')
-            }))
-          }));
+          return ensureUniqueMessageIds(parsed);
         }
       } catch (e) {
         console.error("Error al cargar historial del chat:", e);
@@ -165,15 +185,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(parsed.map((m: any) => ({
-            ...m,
-            text: cleanLegacyText(m.text),
-            timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
-            proposedActions: (m.proposedActions || []).map((act: any) => ({
-              ...act,
-              status: act.status || (m.actionStatus === 'applied' ? 'applied' : m.actionStatus === 'dismissed' ? 'dismissed' : 'pending')
-            }))
-          })));
+          setMessages(ensureUniqueMessageIds(parsed));
           return;
         }
       } catch (e) {
@@ -182,7 +194,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
     }
     setMessages([
       {
-        id: `welcome-${Date.now()}`,
+        id: generateUniqueMsgId('welcome'),
         sender: 'bot',
         text: getWelcomeMessageText(cleanUserName, bandDisplayName),
         timestamp: new Date()
@@ -1003,7 +1015,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  telefono: action.band?.telefono || '',
  instagram: action.band?.instagram || '',
  spotify_youtube: action.band?.spotify_youtube || '',
- aforo_promedio: Number(action.band?.aforo_promedio) || 300,
+ aforo_promedio: Number(action.band?.aforo_promedio) || 0,
  notas_colaboracion: action.band?.notas_colaboracion || 'Añadido vía AI',
  ciudad_origen_swap: action.band?.localizacion || ''
  };
@@ -1225,7 +1237,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  nombre_sala: action.lead?.nombre_sala || action.leadName || 'Nuevo Lead',
  ciudad: action.lead?.ciudad || 'Madrid',
  region: action.lead?.region || action.lead?.ciudad || 'Madrid',
- aforo: action.lead?.aforo || 300,
+ aforo: Number(action.lead?.aforo) || 0,
  genero: action.lead?.genero || 'Variado',
  tipo: action.lead?.tipo || 'sala',
  email_contacto: action.lead?.email_contacto || '',

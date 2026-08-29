@@ -29,6 +29,7 @@ import concertToAlbumRouter from "./server/routes/concert_to_album.js";
 import billingRouter from "./server/routes/billing.js";
 import spotifyRouter from "./server/routes/spotify.js";
 import aiMusicRouter from "./server/routes/ai_music.js";
+import campaignsRouter from "./server/routes/campaigns.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -94,6 +95,7 @@ app.use("/api/spotify", spotifyRouter);
 app.use("/api", aiMusicRouter);
 app.use("/api/concert-to-album", concertToAlbumRouter);
 app.use("/api/upload", uploadRouter);
+app.use("/api", campaignsRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
 // archivo subido se cuela sin pasar por la validación de tipo de server/routes/upload.ts.

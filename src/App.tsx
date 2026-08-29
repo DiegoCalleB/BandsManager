@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { Lead, LeadStatus, Rehearsal, Concert, SocialPost, Payment, Message, ThemeName, ThemeColors, SocialMetric, User, Fan } from './types';
+import { Lead, LeadStatus, Rehearsal, Concert, SocialPost, Payment, Message, ThemeName, ThemeColors, SocialMetric, User, Fan, BookingCampaign } from './types';
 import { THEMES } from './utils/theme';
 import { useAuth } from './hooks/useAuth';
 import { useAppData } from './hooks/useAppData';
@@ -33,13 +33,15 @@ import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
 import { BandSwitcherModal } from './components/BandSwitcherModal';
 import { PlanLimitModal } from './components/PlanLimitModal';
+import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
+import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
 import { useLanguage } from './context/LanguageContext';
 import { 
   Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
   Table, FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
-  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Sliders
+  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Sliders, Target
 } from 'lucide-react';
 
 export default function App() {
@@ -73,9 +75,14 @@ export default function App() {
     bandUsers,
     fans,
     epkConfig,
+    campaigns,
+    activeCampaign,
     isLoading,
     syncStatus,
     fetchState,
+    handleSaveCampaign,
+    handleDeleteCampaign,
+    handleSetActiveCampaign,
     handleUpdateEpkConfig,
     handleUpdateLead,
     handleUpdateRehearsal,
@@ -84,6 +91,7 @@ export default function App() {
     handleDeleteConcert,
     handleAddLead,
     handleDeleteLead,
+    handleBulkDeleteLeads,
     handleDeleteBand,
     handleAddRehearsal,
     handleAddConcert,
@@ -104,6 +112,7 @@ export default function App() {
 
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  const [showCampaignModal, setShowCampaignModal] = useState(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en 'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
@@ -471,6 +480,18 @@ export default function App() {
   </div>
  </div>
  <div className="flex items-center gap-2">
+  <button
+   onClick={() => setShowCampaignModal(true)}
+   className={`px-2 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+     activeCampaign
+       ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-xs'
+       : 'bg-[#1A1918] text-neutral-400 border-[#22211F] hover:text-white'
+   }`}
+   title="Gestionar Campañas de Booking"
+  >
+   <Target className="w-3.5 h-3.5 text-purple-400" />
+   <span className="text-[10px] hidden xs:inline font-mono">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
+  </button>
   <button
   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
   className="p-2 text-neutral-300 hover:text-white rounded-lg bg-[#1A1918] border-[#22211F] cursor-pointer active:scale-95 transition-all"
@@ -892,7 +913,45 @@ export default function App() {
 
  {/* Bottom Quick Tools (Metrónomo y Afinador) */}
  <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
-   <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-1">Herramientas</p>
+   <div className="flex items-center justify-between px-1">
+     <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Herramientas</p>
+     <button 
+       onClick={() => setShowCampaignModal(true)}
+       className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
+       title="Gestionar Campañas de Booking"
+     >
+       <Target className="w-3 h-3" />
+       <span>Campañas</span>
+     </button>
+   </div>
+
+   {/* Quick Campaign Switcher / Status */}
+   <button
+     onClick={() => setShowCampaignModal(true)}
+     className={`w-full flex items-center justify-between p-2 rounded-xl border text-left transition-all cursor-pointer group ${
+       activeCampaign
+         ? 'bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-xs'
+         : 'bg-[#181716] border-[#22211F] hover:border-neutral-700 text-neutral-400 hover:text-neutral-200'
+     }`}
+     title="Configurar y activar campañas de booking con fechas objetivo"
+   >
+     <div className="flex items-center gap-2 min-w-0">
+       <div className={`p-1 rounded-lg ${activeCampaign ? 'bg-purple-500/30 text-purple-300' : 'bg-neutral-800 text-neutral-400'}`}>
+         <Target className="w-3.5 h-3.5" />
+       </div>
+       <div className="flex flex-col min-w-0">
+         <span className="text-[11px] font-bold truncate leading-tight">
+           {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
+         </span>
+         <span className="text-[9px] font-mono text-neutral-500 truncate">
+           {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
+         </span>
+       </div>
+     </div>
+     <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 shrink-0">
+       {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
+     </span>
+   </button>
    <div className="grid grid-cols-2 gap-1.5">
      <button
        onClick={() => setShowMetronomeModal(true)}
@@ -1018,6 +1077,18 @@ export default function App() {
 
  {/* Main Content Area */}
  <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] p-3 sm:p-5 md:p-8">
+ {/* Global Active Campaign Banner */}
+ {activeCampaign && (
+   <GlobalCampaignBar
+     campaign={activeCampaign}
+     allLeads={leads}
+     onOpenManager={() => setShowCampaignModal(true)}
+     onDeactivate={() => handleSetActiveCampaign(null)}
+     onNavigate={handleNavigate}
+     currentView={currentView}
+   />
+ )}
+
  {/* Sync warning if backend fails */}
  {syncStatus === 'error' && (
  <div className="mb-4 p-3 bg-rose-500/10 border-rose-500/20 rounded-lg text-rose-300 text-xs flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
@@ -1072,11 +1143,14 @@ export default function App() {
  )}
  {(currentView === 'booking' || currentView === 'medios') && (
  <BookingCRM 
+ activeCampaign={activeCampaign} 
+ onCampaignChange={handleSetActiveCampaign}
  leads={leads} 
  colors={colors}
  onUpdateLead={handleUpdateLead}
  onAddLead={handleAddLeadWithLimitCheck}
  onDeleteLead={handleDeleteLead}
+ onBulkDeleteLeads={handleBulkDeleteLeads}
  epkConfig={epkConfig}
  onUpdateEpkConfig={handleUpdateEpkConfig}
  initialSection={bookingOptions.sectionTab || (currentView === 'medios' ? 'medios' : 'salas')}
@@ -1093,6 +1167,7 @@ export default function App() {
  leads={leads}
  onAddLead={handleAddLeadWithLimitCheck}
  onUpdateLead={handleUpdateLead}
+ onDeleteBand={handleDeleteBand}
  currentBandId={currentActiveBandId}
  />
  )}
@@ -1101,6 +1176,9 @@ export default function App() {
  colors={colors}
  rehearsals={rehearsals}
  concerts={concerts}
+ campaigns={campaigns}
+ activeCampaign={activeCampaign}
+ onNavigate={handleNavigate}
  onUpdateRehearsal={handleUpdateRehearsal}
  onUpdateConcert={handleUpdateConcert}
  onDeleteRehearsal={handleDeleteRehearsal}
@@ -1192,6 +1270,8 @@ export default function App() {
               tours={tours}
               concerts={activeBandConcerts}
               leads={leads}
+              activeCampaign={activeCampaign}
+              setActiveCampaign={handleSetActiveCampaign}
               onAddLead={handleAddLeadWithLimitCheck}
               onDeleteLead={handleDeleteLead}
               onSaveTour={handleSaveTour}
@@ -1628,6 +1708,18 @@ export default function App() {
     activeBandName={currentActiveBandName}
     resourceType={planLimitModal.resourceType}
     currentCount={planLimitModal.currentCount}
+  />
+
+  {/* Campaign Manager Modal */}
+  <CampaignManagerModal
+    isOpen={showCampaignModal}
+    onClose={() => setShowCampaignModal(false)}
+    campaigns={campaigns}
+    activeCampaign={activeCampaign}
+    onSaveCampaign={handleSaveCampaign}
+    onDeleteCampaign={handleDeleteCampaign}
+    onSetActiveCampaign={handleSetActiveCampaign}
+    onNavigate={handleNavigate}
   />
 
  </div>

@@ -13,6 +13,31 @@ const DB_VERSION = 1;
 
 let cachedDb: IDBDatabase | null = null;
 
+// Reset cachedDb when the page becomes hidden or is unloaded, to avoid holding closing connections
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && cachedDb) {
+      try {
+        cachedDb.close();
+      } catch {
+        // ignore
+      }
+      cachedDb = null;
+    }
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (cachedDb) {
+      try {
+        cachedDb.close();
+      } catch {
+        // ignore
+      }
+      cachedDb = null;
+    }
+  });
+}
+
 function openAudioDB(): Promise<IDBDatabase> {
   if (cachedDb) {
     try {
@@ -21,6 +46,11 @@ function openAudioDB(): Promise<IDBDatabase> {
       tx.abort();
       return Promise.resolve(cachedDb);
     } catch {
+      try {
+        cachedDb.close();
+      } catch {
+        // ignore
+      }
       cachedDb = null;
     }
   }
@@ -58,6 +88,10 @@ function openAudioDB(): Promise<IDBDatabase> {
           cachedDb = null;
         };
 
+        db.onerror = () => {
+          cachedDb = null;
+        };
+
         resolve(db);
       };
 
@@ -77,36 +111,96 @@ function openAudioDB(): Promise<IDBDatabase> {
 }
 
 /**
- * Execute an IDB operation with automatic retry if the database was closing
+ * Execute an IDB operation with automatic retry if the database was closing or tab hidden
  */
 async function executeIDBOperation<T>(
   mode: IDBTransactionMode,
   op: (store: IDBObjectStore) => Promise<T>
 ): Promise<T> {
   let attempts = 0;
-  while (attempts < 2) {
+  let lastError: any = null;
+
+  while (attempts < 3) {
     attempts++;
     try {
       const db = await openAudioDB();
-      const tx = db.transaction(STORE_NAME, mode);
-      const store = tx.objectStore(STORE_NAME);
-      return await op(store);
+      return await new Promise<T>((resolve, reject) => {
+        try {
+          const tx = db.transaction(STORE_NAME, mode);
+          const store = tx.objectStore(STORE_NAME);
+          let finished = false;
+
+          tx.onerror = () => {
+            if (!finished) {
+              finished = true;
+              reject(tx.error || new Error('Transaction error'));
+            }
+          };
+
+          tx.onabort = () => {
+            if (!finished) {
+              finished = true;
+              reject(tx.error || new Error('Transaction aborted (Database closing or hidden)'));
+            }
+          };
+
+          op(store).then(
+            (result) => {
+              if (mode === 'readonly') {
+                if (!finished) {
+                  finished = true;
+                  resolve(result);
+                }
+              } else {
+                tx.oncomplete = () => {
+                  if (!finished) {
+                    finished = true;
+                    resolve(result);
+                  }
+                };
+              }
+            },
+            (err) => {
+              if (!finished) {
+                finished = true;
+                reject(err);
+              }
+            }
+          );
+        } catch (txErr) {
+          reject(txErr);
+        }
+      });
     } catch (err: any) {
-      cachedDb = null;
-      const isClosingErr = err && (
+      lastError = err;
+      if (cachedDb) {
+        try {
+          cachedDb.close();
+        } catch {
+          // ignore
+        }
+        cachedDb = null;
+      }
+
+      const isClosingOrHidden = err && (
         err.name === 'InvalidStateError' || 
+        err.name === 'AbortError' ||
         String(err.message || '').toLowerCase().includes('closing') ||
-        String(err.message || '').toLowerCase().includes('closed')
+        String(err.message || '').toLowerCase().includes('closed') ||
+        String(err.message || '').toLowerCase().includes('hidden') ||
+        String(err.message || '').toLowerCase().includes('database')
       );
-      if (isClosingErr && attempts < 2) {
-        // Wait a tick and retry with fresh connection
-        await new Promise(r => setTimeout(r, 50));
+
+      if (isClosingOrHidden && attempts < 3) {
+        // Wait exponentially and retry with fresh connection
+        await new Promise(r => setTimeout(r, 80 * attempts));
         continue;
       }
-      throw err;
+      break;
     }
   }
-  throw new Error('IndexedDB operation failed after retry');
+
+  throw lastError || new Error('IndexedDB operation failed after retries');
 }
 
 /**

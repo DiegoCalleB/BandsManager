@@ -14,6 +14,7 @@ import { dbGetSocialPosts, dbGetSocialMetrics } from "./social.js";
 import { dbGetPayments } from "./payments.js";
 import { dbGetTours } from "./tours.js";
 import { dbGetRunOfShow, dbGetGearChecklists } from "./production.js";
+import { dbGetCampaigns } from "./campaigns.js";
 
 export async function loadStateFromSupabase(bandId: string, user?: any) {
   const cleanId = cleanBandId(bandId);
@@ -62,7 +63,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     gearChecklists,
     registeredBands,
     users,
-    bands
+    bands,
+    campaigns
   ] = await Promise.all([
     dbGetLeads(cleanId).catch(() => []),
     dbGetRehearsals(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
@@ -80,7 +82,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     dbGetGearChecklists(cleanId).catch(() => ({})),
     dbGetRegisteredBands().catch(() => []),
     dbGetUsers(cleanId).catch(() => []),
-    dbGetBandContacts(cleanId).catch(() => [])
+    dbGetBandContacts(cleanId).catch(() => []),
+    dbGetCampaigns(cleanId).catch(() => [])
   ]);
 
   return {
@@ -95,6 +98,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     bands,
     tours,
     fans,
+    campaigns,
     messages: [],
     runOfShow,
     gearChecklists,

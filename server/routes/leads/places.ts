@@ -1,12 +1,28 @@
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
+import { dbUpsertLead, dbCheckDeletedLead, dbGetLeads, dbGetActiveCampaign } from "../../db.js";
 import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from "../../ai.js";
 import { safeParseJson } from "../../utils.js";
 import { getDomainFromUrl } from "./helpers.js";
+import { getBandDnaProfile } from "../../utils/bandDna.js";
 
 const router = express.Router();
+
+/**
+ * Normaliza el nombre de un recinto para comparación y deduplicación inteligente:
+ * Elimina prefijos genéricos ("sala", "teatro", "club", etc.), tildes y caracteres no alfanuméricos.
+ */
+export function normalizeVenueName(name: string): string {
+  if (!name) return "";
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // quitar acentos
+    .replace(/\b(sala|teatro|club|cafe|cafeteria|pub|espacio|asociacion|cultural|discoteca|auditorio|centro|la|el|los|las|de|del|y|&)\b/gi, " ")
+    .replace(/[^a-z0-9]/g, "") // solo alfanumérico
+    .trim();
+}
 
 router.post(["/places-search", "/leads/places-search"], requireAuth, async (req, res) => {
   try {
@@ -326,6 +342,422 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
   }
 });
 
+// Búsqueda Masiva de Recintos, Locales y Discotecas para Campaña Activa y Estilo de Banda
+router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id;
+    const state = loadState();
+    let { 
+      targetCities, 
+      minCapacity, 
+      maxCapacity, 
+      targetDates,
+      targetDatesText,
+      tipos, 
+      campaignName, 
+      campaignId, 
+      limitPerCity, 
+      bandGenre, 
+      genero, 
+      bandStyle 
+    } = req.body;
+
+    // Obtener ADN de la banda para conocer su género y estilo por defecto si no se indica
+    let bandDnaGenre = "";
+    let bandName = "Banda";
+    try {
+      if (userBandId) {
+        const dna = getBandDnaProfile(state, userBandId);
+        bandDnaGenre = dna.genero || "";
+        bandName = dna.bandName || "Banda";
+      }
+    } catch (e) {
+      console.warn("[Campaign Mass Search] Error obteniendo ADN de la banda:", e);
+    }
+
+    const resolvedGenre = (bandGenre || genero || bandStyle || bandDnaGenre || "Rock / Pop / Indie / Música en Directo").trim();
+
+    // Si no se especifican ciudades, intentar resolver desde la campaña activa en Supabase
+    if (!Array.isArray(targetCities) || targetCities.length === 0) {
+      if (userBandId) {
+        try {
+          const activeCamp = await dbGetActiveCampaign(userBandId);
+          if (activeCamp) {
+            const cities = activeCamp.targetCities || (activeCamp as any).target_cities;
+            targetCities = Array.isArray(cities) && cities.length > 0
+              ? cities 
+              : [(activeCamp as any).ciudad || "Madrid"];
+            if (minCapacity === undefined) minCapacity = activeCamp.minCapacity ?? (activeCamp as any).min_capacity;
+            if (maxCapacity === undefined) maxCapacity = activeCamp.maxCapacity ?? (activeCamp as any).max_capacity;
+            if (!campaignName) campaignName = activeCamp.name;
+          }
+        } catch (e) {
+          console.warn("[Campaign Mass Search] Error al obtener campaña activa de Supabase:", e);
+        }
+      }
+    }
+
+    if (!Array.isArray(targetCities) || targetCities.length === 0) {
+      targetCities = ["Madrid"];
+    }
+
+    const minCap = minCapacity !== undefined && Number(minCapacity) >= 0 ? Number(minCapacity) : 0;
+    const maxCap = maxCapacity !== undefined && Number(maxCapacity) > 0 ? Number(maxCapacity) : Infinity;
+    const limit = Math.max(4, Math.min(25, Number(limitPerCity) || 12));
+
+    const activeTipos: string[] = Array.isArray(tipos) && tipos.length > 0
+      ? tipos
+      : ["sala", "local", "discoteca", "teatro"];
+
+    console.log(`[Campaign Mass Search] Iniciando prospección masiva para banda "${bandName}" (${resolvedGenre}) en campaña "${campaignName || 'Activa'}" - Ciudades: ${targetCities.join(', ')} (Aforo: ${minCap}-${maxCap === Infinity ? '∞' : maxCap}) [Categorías: ${activeTipos.join(', ')}]`);
+
+    // 1. CARGA DE LEADS EXISTENTES PARA DEDUPLICACIÓN CONTRA SUPABASE Y ESTADO
+    let existingLeads: any[] = [];
+    if (userBandId) {
+      try {
+        existingLeads = await dbGetLeads(userBandId);
+      } catch (e) {
+        console.warn("[Campaign Mass Search] Error consultando leads existentes:", e);
+      }
+    }
+    const allKnownLeads = [...existingLeads, ...(state.leads || [])];
+
+    // Índices de coincidencia rápida
+    const existingMap = new Map<string, any>();
+    const existingPlaceIds = new Set<string>();
+    const existingDomains = new Map<string, any>();
+    const existingPhones = new Map<string, any>();
+
+    for (const lead of allKnownLeads) {
+      if (!lead.nombre_sala) continue;
+      const normName = normalizeVenueName(lead.nombre_sala);
+      const normCity = (lead.ciudad || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+      if (normName) {
+        if (normCity) existingMap.set(`${normName}_${normCity}`, lead);
+        existingMap.set(normName, lead);
+      }
+      if (lead.place_id) existingPlaceIds.add(lead.place_id);
+
+      const domain = getDomainFromUrl(lead.website || "");
+      if (domain && !["instagram.com", "facebook.com", "linktr.ee", "google.com", "spotify.com", "youtube.com"].includes(domain)) {
+        existingDomains.set(domain, lead);
+      }
+      const cleanPhone = (lead.telefono || "").replace(/[^0-9]/g, "");
+      if (cleanPhone && cleanPhone.length >= 9) {
+        existingPhones.set(cleanPhone, lead);
+      }
+    }
+
+    // 2. EJECUCIÓN MULTI-CONSULTA PARA CADA CIUDAD DE LA CAMPAÑA
+    const discoveredRaw: any[] = [];
+    const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
+
+    for (const city of targetCities) {
+      if (!city || typeof city !== "string" || !city.trim()) continue;
+      const cleanCity = city.trim();
+
+      // Consultas específicas para Recintos, Locales y Discotecas con música en vivo
+      const subQueries: { query: string; defaultType: string; icon: string }[] = [];
+      
+      if (activeTipos.includes("sala")) {
+        subQueries.push({ 
+          query: `salas de conciertos directos ${resolvedGenre} ${cleanCity}`,
+          defaultType: "sala",
+          icon: "🏛️"
+        });
+      }
+      if (activeTipos.includes("local") || activeTipos.includes("sala")) {
+        subQueries.push({ 
+          query: `locales bares con música en directo ${resolvedGenre} ${cleanCity}`,
+          defaultType: "local",
+          icon: "☕"
+        });
+      }
+      if (activeTipos.includes("discoteca")) {
+        subQueries.push({ 
+          query: `discotecas clubs nocturnos música en directo sesiones ${cleanCity}`,
+          defaultType: "discoteca",
+          icon: "🪩"
+        });
+      }
+      if (activeTipos.includes("teatro")) {
+        subQueries.push({ 
+          query: `teatros auditorios salas acústicas ${cleanCity}`,
+          defaultType: "teatro",
+          icon: "🎭"
+        });
+      }
+      if (activeTipos.includes("grupo")) {
+        subQueries.push({ 
+          query: `grupos bandas de música en activo ${resolvedGenre} ${cleanCity}`,
+          defaultType: "grupo",
+          icon: "🎸"
+        });
+      }
+
+      // A. Google Places API si está configurada
+      if (placesApiKey && placesApiKey.trim() !== "") {
+        for (const sqObj of subQueries) {
+          try {
+            const v1Res = await fetch("https://places.googleapis.com/v1/places:searchText", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key": placesApiKey,
+                "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.types,places.photos,places.businessStatus"
+              },
+              body: JSON.stringify({
+                textQuery: sqObj.query,
+                languageCode: "es",
+                pageSize: Math.min(limit, 10)
+              })
+            });
+            const v1Data: any = await v1Res.json();
+            if (v1Res.ok && Array.isArray(v1Data.places)) {
+              for (const place of v1Data.places) {
+                const status = place.businessStatus || "OPERATIONAL";
+                if (status === "CLOSED_PERMANENTLY" || status === "CLOSED_TEMPORARILY") continue;
+
+                let photoUrl = "";
+                if (place.photos && place.photos.length > 0 && place.photos[0].name) {
+                  photoUrl = `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=600&maxWidthPx=800&key=${placesApiKey}`;
+                }
+                const domain = getDomainFromUrl(place.websiteUri || "");
+                if (!photoUrl && domain) {
+                  photoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                }
+
+                // Determinar tipo a partir de tipos de Google Places o fallback a sqObj
+                let calculatedType = sqObj.defaultType;
+                let calculatedIcon = sqObj.icon;
+                const pTypes = place.types || [];
+                if (pTypes.includes("night_club") || pTypes.includes("disco")) {
+                  calculatedType = "discoteca";
+                  calculatedIcon = "🪩";
+                } else if (pTypes.includes("bar") || pTypes.includes("cafe")) {
+                  calculatedType = "local";
+                  calculatedIcon = "☕";
+                } else if (pTypes.includes("performing_arts_theater") || pTypes.includes("auditorium")) {
+                  calculatedType = "teatro";
+                  calculatedIcon = "🎭";
+                }
+
+                discoveredRaw.push({
+                  place_id: place.id,
+                  nombre_sala: place.displayName?.text || "Recinto Musical",
+                  ciudad: cleanCity,
+                  region: cleanCity,
+                  direccion: place.formattedAddress || "",
+                  telefono: place.nationalPhoneNumber || place.internationalPhoneNumber || "",
+                  website: place.websiteUri || "",
+                  rating: place.rating || null,
+                  user_ratings_total: place.userRatingCount || null,
+                  tipo: calculatedType,
+                  aforo: 0,
+                  genero: resolvedGenre,
+                  descripcion: `Espacio de música en directo en ${cleanCity} apto para estilo ${resolvedGenre}.`,
+                  imagen_url: photoUrl,
+                  icono: calculatedIcon,
+                  email_contacto: "",
+                  fuente: `Google Places (${cleanCity})`
+                });
+              }
+            }
+          } catch (pErr: any) {
+            console.warn(`[Mass Places] Advertencia en consulta "${sqObj.query}":`, pErr.message);
+          }
+        }
+      }
+
+      // B. Gemini Grounding Search para recintos, locales, discotecas y bandas compatibles con el estilo y aforo
+      const aiClient = getAiClient();
+      if (aiClient) {
+        try {
+          const dateStr = targetDatesText || (Array.isArray(targetDates) && targetDates.length > 0 ? targetDates.join(', ') : '');
+          const datePrompt = dateStr ? ` para la fecha prevista "${dateStr}"` : '';
+          const shouldIncludeGroups = activeTipos.includes("grupo");
+
+          const groundingPrompt = `Actúa como un Scout Profesional de Booking Musical en España.
+Para la campaña de conciertos en la ciudad "${cleanCity}" (España)${datePrompt} con rango de aforo ${minCap} a ${maxCap === Infinity ? 'sin límite' : maxCap} personas y estilo musical "${resolvedGenre}":
+
+Busca y extrae una lista exhaustiva de hasta ${limit} recintos, locales, discotecas, teatros y bandas locales REALES, ACTIVOS Y OPERATIVOS en "${cleanCity}" que programen conciertos, música en directo o sean afines al género "${resolvedGenre}".
+
+Debes incluir según proceda:
+1. Salas de conciertos dedicadas y recintos de directos (tipo: "sala")
+2. Locales, bares musicales, pubs con escenario y cafés concierto (tipo: "local")
+3. Discotecas, salas de fiesta y clubs nocturnos con conciertos/sesiones (tipo: "discoteca")
+4. Teatros, auditorios y centros culturales con acústica para directos (tipo: "teatro")
+${shouldIncludeGroups ? `5. Bandas y grupos locales en activo en "${cleanCity}" afines al género para co-booking, compartir cartel o intercambio de fechas (tipo: "grupo")` : ''}
+
+Para cada lugar o banda proporciona:
+- nombre_sala: Nombre oficial exacto (o nombre de la banda local)
+- ciudad: "${cleanCity}"
+- region: "${cleanCity}"
+- direccion: Calle o zona en ${cleanCity}
+- telefono: Teléfono oficial (o "")
+- website: Web oficial, Instagram o perfil público (o "")
+- aforo: Aforo orientativo en número (ej. 150, 300, 500, o 0 si se desconoce)
+- genero: Géneros habituales programados o estilo de la banda
+- tipo: "sala" | "local" | "discoteca" | "teatro" | "grupo"
+- rating: Puntuación orientativa (ej. 4.5)
+- descripcion: Breve explicación de por qué encaja con el estilo "${resolvedGenre}" y aforo ${minCap}-${maxCap === Infinity ? 'libre' : maxCap}${dateStr ? ` para la fecha ${dateStr}` : ''}.
+
+Responde estrictamente con un JSON con la estructura:
+{
+  "results": [ ... ]
+}`;
+
+          let response: any;
+          try {
+            response = await generateContentWithFallback(aiClient, {
+              contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
+              config: {
+                // @ts-ignore
+                tools: [{ googleSearch: {} }],
+                responseMimeType: 'application/json'
+              }
+            });
+          } catch (aiErr: any) {
+            if (!isSpendCapOrQuotaError(aiErr)) {
+              response = await generateContentWithFallback(aiClient, {
+                contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
+                config: { responseMimeType: 'application/json' }
+              });
+            }
+          }
+
+          const textRes = response?.text || "{}";
+          const parsedRes = safeParseJson(textRes);
+          if (Array.isArray(parsedRes?.results)) {
+            for (const r of parsedRes.results) {
+              let img = r.imagen_url || "";
+              const domain = getDomainFromUrl(r.website || "");
+              if (!img && domain) {
+                img = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+              }
+              const tipoNormalized = (r.tipo || 'sala').toLowerCase();
+              discoveredRaw.push({
+                ...r,
+                place_id: r.place_id || `mass-scout-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+                ciudad: r.ciudad || cleanCity,
+                region: r.region || cleanCity,
+                tipo: tipoNormalized,
+                imagen_url: img,
+                icono: tipoNormalized === 'teatro' ? '🎭' : tipoNormalized === 'discoteca' ? '🪩' : tipoNormalized === 'local' ? '☕' : '🏛️',
+                fuente: `Scout IA Grounding (${cleanCity})`
+              });
+            }
+          }
+        } catch (groundingErr: any) {
+          console.warn(`[Mass Grounding] Error en ${cleanCity}:`, groundingErr.message);
+        }
+      }
+    }
+
+    // 3. FUSIÓN INTRA-LOTE Y DEDUPLICACIÓN CONTRA SUPABASE
+    const unifiedPool = new Map<string, any>();
+
+    for (const raw of discoveredRaw) {
+      if (!raw.nombre_sala || raw.nombre_sala.trim().length < 2) continue;
+
+      const normName = normalizeVenueName(raw.nombre_sala);
+      const normCity = (raw.ciudad || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+      const poolKey = normName ? `${normName}_${normCity}` : (raw.place_id || raw.nombre_sala);
+
+      // Si ya está en el pool de esta búsqueda, fusionamos los mejores metadatos
+      if (unifiedPool.has(poolKey)) {
+        const existingInPool = unifiedPool.get(poolKey);
+        if (!existingInPool.telefono && raw.telefono) existingInPool.telefono = raw.telefono;
+        if (!existingInPool.website && raw.website) existingInPool.website = raw.website;
+        if (!existingInPool.email_contacto && raw.email_contacto) existingInPool.email_contacto = raw.email_contacto;
+        if ((!existingInPool.aforo || existingInPool.aforo === 0) && raw.aforo > 0) existingInPool.aforo = raw.aforo;
+        if (!existingInPool.imagen_url && raw.imagen_url) existingInPool.imagen_url = raw.imagen_url;
+        continue;
+      }
+
+      // Verificación de lista negra / eliminados previamente
+      const isDeleted = await dbCheckDeletedLead(raw.nombre_sala, userBandId);
+      if (isDeleted) continue;
+
+      // Verificación contra CRM de Supabase
+      let matchedExisting: any = null;
+      if (raw.place_id && existingPlaceIds.has(raw.place_id)) {
+        matchedExisting = allKnownLeads.find(l => l.place_id === raw.place_id);
+      }
+      if (!matchedExisting && normName) {
+        matchedExisting = existingMap.get(`${normName}_${normCity}`) || existingMap.get(normName);
+      }
+      if (!matchedExisting && raw.website) {
+        const d = getDomainFromUrl(raw.website);
+        if (d && existingDomains.has(d)) {
+          matchedExisting = existingDomains.get(d);
+        }
+      }
+      if (!matchedExisting && raw.telefono) {
+        const cp = raw.telefono.replace(/[^0-9]/g, "");
+        if (cp && cp.length >= 9 && existingPhones.has(cp)) {
+          matchedExisting = existingPhones.get(cp);
+        }
+      }
+
+      const alreadyInCrm = Boolean(matchedExisting);
+      const leadAforo = Number(raw.aforo) || 0;
+
+      // Verificación de coincidencia de aforo con la campaña
+      let capacityMatch = true;
+      if (leadAforo > 0) {
+        if (leadAforo < minCap || (maxCap < Infinity && leadAforo > maxCap)) {
+          capacityMatch = false;
+        }
+      }
+
+      unifiedPool.set(poolKey, {
+        ...raw,
+        alreadyInCrm,
+        crmStatus: matchedExisting ? (matchedExisting.estado || "registrado") : null,
+        crmId: matchedExisting ? matchedExisting.id : null,
+        crmNombre: matchedExisting ? matchedExisting.nombre_sala : null,
+        capacityMatch,
+        selected: !alreadyInCrm // Por defecto seleccionamos solo los nuevos
+      });
+    }
+
+    const finalResults = Array.from(unifiedPool.values());
+    // Ordenar: primero los nuevos con coincidencia de aforo, luego los demás nuevos, luego los existentes
+    finalResults.sort((a, b) => {
+      if (!a.alreadyInCrm && b.alreadyInCrm) return -1;
+      if (a.alreadyInCrm && !b.alreadyInCrm) return 1;
+      if (a.capacityMatch && !b.capacityMatch) return -1;
+      if (!a.capacityMatch && b.capacityMatch) return 1;
+      return (b.rating || 0) - (a.rating || 0);
+    });
+
+    const newVenuesCount = finalResults.filter(r => !r.alreadyInCrm).length;
+    const alreadyInCrmCount = finalResults.filter(r => r.alreadyInCrm).length;
+
+    console.log(`[Campaign Mass Search] Completada búsqueda masiva: ${finalResults.length} recintos unificados (${newVenuesCount} nuevos, ${alreadyInCrmCount} ya en CRM).`);
+
+    return res.json({
+      success: true,
+      campaignName: campaignName || "Campaña Activa",
+      targetCities,
+      bandGenre: resolvedGenre,
+      tipos: activeTipos,
+      minCapacity: minCap,
+      maxCapacity: maxCap === Infinity ? null : maxCap,
+      totalDiscovered: finalResults.length,
+      newVenuesCount,
+      alreadyInCrmCount,
+      results: finalResults
+    });
+
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/campaign-mass-search:", error);
+    res.status(500).json({ error: error?.message || "Error al realizar la búsqueda masiva de recintos para la campaña." });
+  }
+});
+
 // Email Extraction Pipeline for Google Places & Web Venues (Agente Enriquecedor)
 router.post(["/extract-emails", "/leads/extract-emails"], requireAuth, async (req, res) => {
   try {
@@ -536,7 +968,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           ciudad: rawLead.ciudad || "España",
           region: rawLead.region || "España",
           direccion: rawLead.direccion || "",
-          aforo: rawLead.aforo || 300,
+          aforo: Number(rawLead.aforo) || 0,
           genero: rawLead.genero || "Música en Directo / Mestizaje",
           tipo: resolvedType as any,
           email_contacto: rawLead.email_contacto || "",

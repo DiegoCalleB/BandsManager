@@ -14,8 +14,9 @@ export function cleanTrailingPitchSignature(text: string): string {
   // Strip redundant trailing signature blocks with contact details (names, roles, phones, emails)
   const signOffPatterns = [
     /\n+(?:(?:¡?Un saludo(?: cordial)?!?|Atentamente,?|Cordialmente,?|¡?Un (?:fuerte )?abrazo!?|Saludos cordiales,?|Quedamos a vuestra (?:entera )?disposici[oó]n\.?))\s*\n+([\s\S]*)$/i,
-    /\n+(?:(?:Booking\s*&\s*Management|Management|Equipo de Booking|Booking Team)[\s\S]*)$/i,
-    /\n+(?:(?:📞|📱|✉️|Email:|Tel:|\+34|\b[\w.-]+@[\w.-]+\.\w+\b)[\s\S]*)$/i
+    /\n+(?:(?:Booking\s*&\s*Management|Management|Equipo de Booking|Booking Team|Bakandeya Management|Equipo de Comunicación|Músicos de \w+)[\s\S]*)$/i,
+    /\n+(?:(?:📞|📱|✉️|Email:|Tel:|\+34|\b[\w.-]+@[\w.-]+\.\w+\b)[\s\S]*)$/i,
+    /\n+(?:--\s*\n[\s\S]*)$/i
   ];
 
   for (const pat of signOffPatterns) {
@@ -27,6 +28,9 @@ export function cleanTrailingPitchSignature(text: string): string {
       cleaned = cleaned.substring(0, idx).trim() + (isPureSignOff ? `\n\n${signOffWord}` : '');
     }
   }
+
+  // Remove trailing email/telephone links or placeholders
+  cleaned = cleaned.replace(/\n+\s*(?:Tel|Email|Web|Dossier|Spotify|YouTube|Instagram):.*$/gim, '').trim();
 
   return cleaned.trim();
 }
@@ -81,31 +85,71 @@ export function buildServerEmailHtml(params: {
 
   const enlaces = epkConfig?.enlacesRedes || epkConfig?.enlaces_redes || {};
 
-  // Build clean, elegant social media links (textual with middle dot, strictly NO payment platforms)
-  const socialLinksList: Array<{ net: string; label: string; url: string }> = [
-    { net: 'spotify', label: 'Spotify', url: enlaces.spotify || '' },
-    { net: 'instagram', label: 'Instagram', url: enlaces.instagram || '' },
-    { net: 'youtube', label: 'YouTube', url: enlaces.youtube || '' },
-    { net: 'tiktok', label: 'TikTok', url: enlaces.tiktok || '' },
-    { net: 'appleMusic', label: 'Apple Music', url: enlaces.appleMusic || '' },
-    { net: 'bandcamp', label: 'Bandcamp', url: enlaces.bandcamp || '' },
-    { net: 'website', label: 'Web Oficial', url: enlaces.website || '' },
-    { net: 'facebook', label: 'Facebook', url: enlaces.facebook || '' },
-    { net: 'whatsapp', label: 'WhatsApp', url: (enlaces as any).whatsapp ? `https://wa.me/${String((enlaces as any).whatsapp).replace(/[^0-9]/g, '')}` : '' }
+  // Build clean, elegant social media links with official icons for Instagram, Facebook, TikTok
+  const socialIconsMap: Record<string, { iconSvg: string; label: string; color: string; bg: string }> = {
+    instagram: {
+      iconSvg: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
+      label: 'Instagram',
+      color: '#E4405F',
+      bg: '#fdf2f8'
+    },
+    facebook: {
+      iconSvg: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white',
+      label: 'Facebook',
+      color: '#1877F2',
+      bg: '#eff6ff'
+    },
+    tiktok: {
+      iconSvg: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white',
+      label: 'TikTok',
+      color: '#000000',
+      bg: '#f8fafc'
+    },
+    spotify: {
+      iconSvg: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white',
+      label: 'Spotify',
+      color: '#1DB954',
+      bg: '#f0fdf4'
+    },
+    youtube: {
+      iconSvg: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
+      label: 'YouTube',
+      color: '#FF0000',
+      bg: '#fef2f2'
+    },
+    website: {
+      iconSvg: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white',
+      label: 'Web Oficial',
+      color: '#475569',
+      bg: '#f1f5f9'
+    }
+  };
+
+  const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string; color: string }> = [
+    { net: 'instagram', label: 'Instagram', url: enlaces.instagram || (isBakandeya ? 'https://instagram.com/bakandeyamusic' : ''), badgeUrl: socialIconsMap.instagram.iconSvg, color: socialIconsMap.instagram.color },
+    { net: 'facebook', label: 'Facebook', url: enlaces.facebook || (isBakandeya ? 'https://facebook.com/bakandeyaband' : ''), badgeUrl: socialIconsMap.facebook.iconSvg, color: socialIconsMap.facebook.color },
+    { net: 'tiktok', label: 'TikTok', url: enlaces.tiktok || (isBakandeya ? 'https://tiktok.com/@bakandeya' : ''), badgeUrl: socialIconsMap.tiktok.iconSvg, color: socialIconsMap.tiktok.color },
+    { net: 'spotify', label: 'Spotify', url: enlaces.spotify || '', badgeUrl: socialIconsMap.spotify.iconSvg, color: socialIconsMap.spotify.color },
+    { net: 'youtube', label: 'YouTube', url: enlaces.youtube || '', badgeUrl: socialIconsMap.youtube.iconSvg, color: socialIconsMap.youtube.color },
+    { net: 'website', label: 'Web Oficial', url: enlaces.website || '', badgeUrl: socialIconsMap.website.iconSvg, color: socialIconsMap.website.color }
   ].filter(item => item.url && String(item.url).trim() !== '');
 
   const activeSocialLinksHtml = ((firma.incluirIconosRedes ?? true) && socialLinksList.length > 0)
-    ? socialLinksList
-        .map(b => {
+    ? `
+      <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        ${socialLinksList.map(b => {
           const raw = String(b.url).trim();
           const href = raw.startsWith('http') ? raw : `https://${raw}`;
-          return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color: #64748b; text-decoration: underline; font-size: 12px; font-weight: 500;">${b.label}</a>`;
-        })
-        .join(' <span style="color: #cbd5e1; font-size: 11px;">•</span> ')
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
+            <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
+          </a>`;
+        }).join('')}
+      </div>
+    `
     : '';
 
   const adjuntarDossier = (firma.adjuntarDossierPorDefecto ?? true);
-  const dossierLabel = dossierPdfName ? `Dossier Oficial & Rider (${dossierPdfName})` : 'Dossier Oficial & Kit de Prensa';
+  const dossierLabel = dossierPdfName ? `Dossier Oficial & Rider Técnico (${dossierPdfName})` : 'Dossier Oficial & Kit de Prensa';
 
   const html = `<!DOCTYPE html>
 <html>
@@ -115,13 +159,23 @@ export function buildServerEmailHtml(params: {
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 15px; color: #1e293b; line-height: 1.6; background-color: #ffffff; margin: 0; padding: 12px;">
   <div style="max-width: 620px; margin: 0 auto; background: #ffffff;">
     
-    <!-- PITCH TEXT -->
+    <!-- PITCH TEXT (SIN DOBLE FIRMA) -->
     <div style="font-size: 15px; color: #1e293b; line-height: 1.6;">
       ${htmlBodyParagraphs}
     </div>
 
-    <!-- NATURAL ORGANIC SIGNATURE -->
-    <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <!-- FIRMA ÚNICA CON DOSSIER Y REDES OFICIALES -->
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      
+      ${adjuntarDossier ? `
+      <!-- BOTÓN DESTACADO DOSSIER OFICIAL -->
+      <div style="margin-bottom: 14px;">
+        <a href="${webEpkUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #0f172a; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 6px; letter-spacing: 0.2px;">
+          📄 Ver ${dossierLabel}
+        </a>
+      </div>
+      ` : ''}
+
       <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
         <tr>
           ${logoUrl ? `
@@ -150,17 +204,7 @@ export function buildServerEmailHtml(params: {
         </tr>
       </table>
 
-      ${adjuntarDossier ? `
-      <div style="margin-top: 10px; font-size: 12px;">
-        📁 <a href="${webEpkUrl}" target="_blank" rel="noopener noreferrer" style="color: #0284c7; text-decoration: underline; font-weight: 600;">${dossierLabel}</a>
-      </div>
-      ` : ''}
-
-      ${activeSocialLinksHtml ? `
-      <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dotted #e2e8f0; font-size: 12px; color: #64748b;">
-        ${activeSocialLinksHtml}
-      </div>
-      ` : ''}
+      ${activeSocialLinksHtml}
     </div>
 
   </div>

@@ -175,10 +175,23 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
       }
 
       let bandInfo = "Bakandeya (Rock / Mestizaje / Fusión)";
+      let activeCampaign: any = null;
       try {
         const { data: bandData } = await sb.from("registered_bands").select("*").eq("band_id", targetBandId).maybeSingle();
         if (bandData) {
           bandInfo = `${bandData.nombre_banda} - Estilo: ${bandData.estilo_musical || 'Mestizaje / Rock'} - Bio: ${bandData.biografia_corta || 'Banda en gira'}`;
+        }
+      } catch (e) {
+        // fallback
+      }
+
+      try {
+        const { data: campData } = await sb.from("campaigns").select("*").eq("band_id", targetBandId).eq("is_active", true).maybeSingle();
+        if (campData) {
+          activeCampaign = campData;
+        } else {
+          const { data: fallbackCamp } = await sb.from("booking_campaigns").select("*").eq("band_id", targetBandId).eq("is_active", true).maybeSingle();
+          if (fallbackCamp) activeCampaign = fallbackCamp;
         }
       } catch (e) {
         // fallback
@@ -196,7 +209,7 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
           youtube: bandDna.youtubeUrl,
           epk: bandDna.epkUrl
         };
-        const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+        const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign);
 
         let generatedPitch = "";
         if (ai) {
@@ -207,8 +220,9 @@ TAREA ESPECÍFICA:
 Redacta una propuesta de concierto (pitch) cercana, profesional y atractiva para la sala o programador:
 - Sala: ${lead.nombre_sala} (${lead.ciudad || 'España'})
 - Género/Estilo habitual: ${lead.genero || 'Música en directo'}
-- Aforo: ${lead.aforo || 300}
+- Aforo: ${lead.aforo ? `${lead.aforo} personas` : 'No especificado / Estándar'}
 - Tipo: ${lead.tipo || 'sala'}
+${activeCampaign ? `\nCONTEXTO CRÍTICO DE CAMPAÑA ACTIVA "${activeCampaign.name || 'Campaña de Conciertos'}": Proponer fechas deseadas (${activeCampaign.target_dates_text || (activeCampaign.target_dates ? activeCampaign.target_dates.join(', ') : 'próximas fechas')}).` : ''}
 
 Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el usuario.`;
 
@@ -224,7 +238,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           pitchEsPlantilla = true;
           generatedPitch = generateSmartDnaPitchFallback({
             bandDna,
-            lead
+            lead,
+            activeCampaign
           });
         }
 

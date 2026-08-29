@@ -1,7 +1,27 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
-export async function dbGetLeads(bandId: string) {
+export interface GetLeadsOptions {
+  page?: number;
+  limit?: number;
+  estado?: string;
+  search?: string;
+  ciudad?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+export interface PaginatedLeadsResult {
+  leads: any[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export async function dbGetLeads(bandId: string): Promise<any[]> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
@@ -11,16 +31,66 @@ export async function dbGetLeads(bandId: string) {
     .order("nombre_sala", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
-  // Nota: antes, si una banda se quedaba sin leads (por ejemplo, tras borrarlos todos), esta
-  // función reinsertaba en Supabase los leads de ejemplo de Bakandeya (y un lead fijo de "Sala
-  // Siroco") en cada GET. Un endpoint de lectura no debe escribir datos de forma incondicional,
-  // y menos aún resucitar registros que la banda eligió borrar. Se ha quitado: una lista vacía
-  // de leads es simplemente una lista vacía.
   return (data || []).map(l => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || []
   }));
+}
+
+export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptions): Promise<PaginatedLeadsResult> {
+  const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
+
+  let query = sb
+    .from("leads")
+    .select("*", { count: "exact" })
+    .eq("band_id", cleanId);
+
+  if (options?.estado && options.estado !== "todos") {
+    query = query.eq("estado", options.estado);
+  }
+
+  if (options?.ciudad && options.ciudad.trim()) {
+    query = query.ilike("ciudad", `%${options.ciudad.trim()}%`);
+  }
+
+  if (options?.search && options.search.trim()) {
+    const term = `%${options.search.trim()}%`;
+    query = query.or(`nombre_sala.ilike.${term},ciudad.ilike.${term},email_contacto.ilike.${term},genero.ilike.${term}`);
+  }
+
+  const sortCol = options?.sortBy || "nombre_sala";
+  const ascending = options?.sortOrder ? options.sortOrder === "asc" : true;
+  query = query.order(sortCol, { ascending });
+
+  const page = options?.page || 1;
+  const limit = options?.limit || 50;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+  query = query.range(from, to);
+
+  const { data, count, error } = await query;
+
+  if (error) throw new Error(`Supabase Error (leads paginated): ${error.message}`);
+  
+  const leads = (data || []).map(l => ({
+    ...l,
+    historial_feedback_pitch: l.historial_feedback_pitch || [],
+    historial_contacto: l.historial_contacto || []
+  }));
+
+  const total = count ?? leads.length;
+
+  return {
+    leads,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit)
+    }
+  };
 }
 
 export async function dbGetLeadById(id: string, bandId?: string) {
@@ -115,23 +185,21 @@ export async function dbUpsertLead(lead: any, bandId: string) {
   return data;
 }
 
+export async function dbBulkDeleteLeads(ids: string[], bandId: string) {
+  if (!ids || ids.length === 0) return true;
+  const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
+
+  // PostgreSQL Trigger (trg_archive_deleted_lead) automatically archives rows to deleted_leads BEFORE DELETE
+  const { error } = await sb.from("leads").delete().in("id", ids).eq("band_id", cleanId);
+  if (error) throw new Error(`Supabase Error (bulk delete leads): ${error.message}`);
+  return true;
+}
+
 export async function dbDeleteLead(id: string, bandId: string) {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
-  const { data: leadData } = await sb.from("leads").select("*").eq("id", id).maybeSingle();
-  if (leadData) {
-    try {
-      await sb.from("deleted_leads").upsert({
-        id: `del-lead-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-        band_id: cleanId,
-        nombre_sala: leadData.nombre_sala,
-        ciudad: leadData.ciudad || '',
-        motivo: 'Eliminado por el usuario para evitar ruido'
-      });
-    } catch (e) {
-      console.warn("Notice recording deleted lead in blacklist:", e);
-    }
-  }
+  // PostgreSQL Trigger (trg_archive_deleted_lead) handles blacklist archival atomically
   const { error } = await sb.from("leads").delete().eq("id", id).eq("band_id", cleanId);
   if (error) throw new Error(`Supabase Error (delete lead): ${error.message}`);
   return true;

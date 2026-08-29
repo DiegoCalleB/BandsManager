@@ -11,6 +11,7 @@ import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, 
 import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
 
 const router = express.Router();
 
@@ -479,7 +480,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
         contents: contents,
         config: {
           systemInstruction: systemPrompt,
-          responseMimeType: 'application/json'
+          tools: [{ functionDeclarations: chatFunctionDeclarations }]
         }
       });
     } catch (err: any) {
@@ -574,36 +575,60 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     }
 
     let textResult = "";
+    let nativeProposedActions: any[] = [];
+
+    // 1. Extraer Function Calls nativas del SDK si están presentes
+    try {
+      const functionCalls = response.functionCalls || 
+        response.candidates?.[0]?.content?.parts?.filter((p: any) => p.functionCall)?.map((p: any) => p.functionCall);
+      if (Array.isArray(functionCalls) && functionCalls.length > 0) {
+        nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls);
+      }
+    } catch (fcErr) {
+      console.warn("[Gemini API] Error al extraer functionCalls nativas:", fcErr);
+    }
+
+    // 2. Extraer texto conversacional
     try {
       textResult = response.text || "";
     } catch (_) {
       try {
-        textResult = response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const textParts = response.candidates?.[0]?.content?.parts?.filter((p: any) => p.text)?.map((p: any) => p.text);
+        textResult = textParts ? textParts.join("\n\n") : "";
       } catch (__) {
         textResult = "";
       }
     }
 
-    if (!textResult) {
-      textResult = "No se pudo obtener un texto claro del modelo en este momento.";
-    }
+    let parsed: any;
 
-    let parsed;
-    try {
-      parsed = safeParseJson(textResult);
-      if (!parsed || typeof parsed !== "object" || typeof parsed.text !== "string") {
-        parsed = {
-          text: typeof parsed?.text === "string" ? parsed.text : textResult,
-          proposedActions: Array.isArray(parsed?.proposedActions) ? parsed.proposedActions : []
-        };
+    if (nativeProposedActions.length > 0) {
+      // Si el modelo invocó herramientas nativas, usamos su texto o un mensaje de cortesía si solo emitió tool calls
+      parsed = {
+        text: textResult.trim() ? textResult : "He preparado las siguientes acciones para tu revisión y confirmación:",
+        proposedActions: nativeProposedActions
+      };
+    } else {
+      // Fallback para modelos en texto/JSON (ej. DeepSeek o respuestas JSON)
+      if (!textResult) {
+        textResult = "No se pudo obtener un texto claro del modelo en este momento.";
       }
-    } catch (parseErr) {
-      console.warn("[Gemini API] No se pudo parsear el JSON de respuesta. Usando texto plano en su lugar:", parseErr);
-      parsed = { text: textResult, proposedActions: [] };
+
+      try {
+        parsed = safeParseJson(textResult);
+        if (!parsed || typeof parsed !== "object" || typeof parsed.text !== "string") {
+          parsed = {
+            text: typeof parsed?.text === "string" ? parsed.text : textResult,
+            proposedActions: Array.isArray(parsed?.proposedActions) ? parsed.proposedActions : []
+          };
+        }
+      } catch (parseErr) {
+        console.warn("[Gemini API] No se pudo parsear el JSON de respuesta. Usando texto plano en su lugar:", parseErr);
+        parsed = { text: textResult, proposedActions: [] };
+      }
     }
 
-    // Las notas que compone la IA se validan y reparan antes de salir hacia el navegador: sin
-    // esto, un nombre de nota inválido se sintetizaba como un hueco mudo (ver melodicIdeaValidator).
+    // Las notas que compone la IA se validan y reparan antes de salir hacia el navegador
     parsed = sanearIdeasMelodicas(parsed);
     res.json(parsed);
 

@@ -2,12 +2,13 @@ import express from "express";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeads, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbCheckDeletedLead } from "../../db.js";
+import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
 import { checkRecordLimit } from "../../utils/planLimits.js";
 import { getBandDnaProfile, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
+import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 
 const router = express.Router();
 
@@ -26,12 +27,30 @@ router.post("/leads/realign-headers", requireAuth, async (req, res) => {
   res.json({ success: true, message: "Cabeceras sincronizadas en Supabase PostgreSQL." });
 });
 
-// GET all leads
+// GET all leads (supports optional server pagination & filtering)
 router.get("/leads", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   try {
-    const rawLeads = await dbGetLeads(userBandId);
-    const leads = rawLeads.map((l: any) => {
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+    const estado = req.query.estado as string | undefined;
+    const search = req.query.search as string | undefined;
+    const ciudad = req.query.ciudad as string | undefined;
+    const sortBy = req.query.sortBy as string | undefined;
+    const sortOrder = (req.query.sortOrder as "asc" | "desc") || undefined;
+
+    let leadsList: any[] = [];
+    let pagination: any = undefined;
+
+    if (page !== undefined || limit !== undefined || estado || search || ciudad || sortBy) {
+      const paginated = await dbGetLeadsPaginated(userBandId, { page, limit, estado, search, ciudad, sortBy, sortOrder });
+      leadsList = paginated.leads;
+      pagination = (page !== undefined || limit !== undefined) ? paginated.pagination : undefined;
+    } else {
+      leadsList = await dbGetLeads(userBandId);
+    }
+
+    const leads = leadsList.map((l: any) => {
       let img = l.imagen_url || '';
       let web = l.website || '';
 
@@ -50,7 +69,12 @@ router.get("/leads", requireAuth, async (req, res) => {
       }
       return { ...l, website: web, imagen_url: img };
     });
-    res.json({ leads });
+
+    if (pagination) {
+      res.json({ leads, pagination });
+    } else {
+      res.json({ leads });
+    }
   } catch (err: any) {
     console.error("Error getting leads from Supabase:", err);
     res.status(500).json({ error: "Error al obtener salas desde Supabase" });
@@ -77,6 +101,24 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
     }
 
     const saved = await dbUpsertLead(merged, userBandId);
+
+    // Dynamic Few-Shot & Self-Refining Tone DNA: registrar edición humana al aprobar o modificar el pitch
+    const esAprobacion = updatedFields.estado === "aprobado" || updatedFields.estado === "aprobado_propuesta" || updatedFields.estado === "aprobado_respuesta";
+    const cambioPitch = updatedFields.pitch_generado && existing?.pitch_generado && updatedFields.pitch_generado !== existing.pitch_generado;
+    
+    if (esAprobacion || cambioPitch) {
+      dbRecordPitchHumanEdit({
+        band_id: userBandId,
+        lead_id: id,
+        nombre_sala: saved.nombre_sala,
+        tipo_entidad: saved.tipo,
+        ciudad: saved.ciudad,
+        borrador_ia: existing?.pitch_generado || "",
+        texto_aprobado: saved.pitch_generado || "",
+        tipo_accion: updatedFields.estado === "aprobado_respuesta" ? "aprobado_respuesta" : "aprobado_propuesta",
+        resultado_respuesta: saved.estado === "confirmado" || saved.estado === "negociando" ? "positiva" : (saved.estado === "no_interesado" ? "negativa" : "pendiente")
+      }).catch(err => console.warn("Notice dbRecordPitchHumanEdit:", err));
+    }
 
     // Fire autoEnrichLead in background so request returns instantly
     autoEnrichLead(saved, userBandId).catch(err => console.error("Error autoEnrichLead background:", err));
@@ -174,6 +216,31 @@ router.post("/leads", requireAuth, async (req, res) => {
   } catch (error: any) {
     console.error("Error in POST /api/leads:", error);
     res.status(500).json({ error: error?.message || "Error al crear la sala." });
+  }
+});
+
+// Bulk delete leads
+router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
+  try {
+    const userBandId = (req as any).user?.band_id;
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: "Debe proporcionar una lista de IDs para eliminar." });
+    }
+
+    await dbBulkDeleteLeads(ids, userBandId);
+
+    const state = loadState();
+    if (state.leads) {
+      const idsSet = new Set(ids);
+      state.leads = state.leads.filter((l: any) => !idsSet.has(l.id));
+      saveState(state);
+    }
+
+    res.json({ success: true, count: ids.length, message: `${ids.length} registros eliminados correctamente y guardados en la lista negra.` });
+  } catch (error: any) {
+    console.error("Error in POST /api/leads/bulk-delete:", error);
+    res.status(500).json({ error: error?.message || "Error al eliminar registros masivamente." });
   }
 });
 

@@ -16,6 +16,21 @@ export type LeadStatus =
   | 'aprobado_respuesta'
   | 'borrador_creado';
 
+export interface BookingCampaign {
+  id: string;
+  band_id?: string;
+  name: string;
+  targetCities: string[];
+  minCapacity: number;
+  maxCapacity: number;
+  targetDates: string[]; // e.g., ['2026-12-04', '2026-12-05', '2027-04-11', '2027-04-12']
+  targetDatesText?: string; // e.g., "4 o 5 de diciembre, o 11 y 12 de abril"
+  notes?: string;
+  isActive: boolean;
+  color?: string; // Hex color for badge styling (e.g. '#8b5cf6', '#f59e0b', '#06b6d4')
+  created_at?: string;
+}
+
 export type LeadType = 'sala' | 'festival' | 'ayuntamiento' | 'grupo' | 'productora' | 'medio' | 'discoteca' | 'agencia' | 'manager' | 'sello';
 
 export type BandRelationshipStatus = 
@@ -743,5 +758,37 @@ export interface BandEmailAccountStatus {
   imap_host?: string;
   imap_port?: number;
   updated_at?: string;
+}
+
+export interface PitchLearningExample {
+  id: string;
+  band_id: string;
+  lead_id: string;
+  nombre_sala: string;
+  tipo_entidad: string;
+  ciudad?: string;
+  borrador_ia: string;
+  texto_aprobado: string;
+  tuvo_edicion: boolean;
+  diferencia_longitud?: number;
+  tipo_accion: 'aprobado_propuesta' | 'aprobado_respuesta' | 'regenerado_con_feedback';
+  resultado_respuesta?: 'pendiente' | 'positiva' | 'negativa' | 'sin_respuesta';
+  fecha_aprobacion: string;
+}
+
+export interface BandToneDnaExpression {
+  tono_comunicacion?: string;
+  tratamiento_habitual?: string;
+  nivel_energia?: string;
+  vocabulario_clave?: string[];
+  frases_emblematicas_extraidas?: string[];
+  emojis_frecuentes?: string[];
+  matices_por_red?: Record<string, string>;
+  puntos_fuertes_para_conectar?: string;
+  recomendacion_pitch?: string;
+  reglas_estilo_aprendidas?: string[];
+  vocabulario_aprendido?: string[];
+  terminos_a_evitar?: string[];
+  ultimo_auto_refinamiento?: string;
 }
 

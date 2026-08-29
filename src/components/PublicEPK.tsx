@@ -386,18 +386,31 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                     {contenido.bioMiembro(m) && <p className="text-[11px] text-slate-500 mt-1 leading-snug">{contenido.bioMiembro(m)}</p>}
                     {m.instagram?.trim() && (() => {
                       const raw = m.instagram.trim();
-                      const url = safeUrl(raw.startsWith('http') ? raw : `https://instagram.com/${raw.replace(/^@/, '')}`);
+                      const username = raw.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/^@/, '').replace(/\/$/, '');
+                      const url = safeUrl(raw.startsWith('http') ? raw : `https://instagram.com/${username}`);
                       if (!url) return null;
+                      const ctaText = t('seguirInstagram');
                       return (
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] text-amber-400/90 hover:text-amber-300 mt-1.5 print:hidden"
-                        >
-                          <Instagram className="w-3 h-3" />
-                          <span className="truncate">{raw.startsWith('http') ? raw.replace(/^https?:\/\/(www\.)?instagram\.com\//, '@').replace(/\/$/, '') : `@${raw.replace(/^@/, '')}`}</span>
-                        </a>
+                        <div className="mt-2.5 flex items-center justify-center print:hidden">
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-slate-300 hover:text-white"
+                            title={interpolate(t('seguirMiembro'), { name: m.nombre })}
+                            aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
+                          >
+                            <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-white shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
+                              <Instagram className="w-full h-full stroke-[2.5]" />
+                            </span>
+                            <span className="text-[11px] font-mono font-medium truncate max-w-[85px] sm:max-w-[110px]">
+                              @{username}
+                            </span>
+                            <span className="text-[10px] font-semibold text-pink-400 group-hover/ig:text-pink-300 shrink-0 ml-0.5">
+                              {ctaText.split(' ')[0]} ↗
+                            </span>
+                          </a>
+                        </div>
                       );
                     })()}
                   </div>

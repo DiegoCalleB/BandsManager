@@ -10,7 +10,7 @@ import { useEmailTemplates, TemplateCategory } from '../hooks/useEmailTemplates'
 import { useGmailIntegration } from '../hooks/useGmailIntegration';
 import { useNegotiationSimulation } from '../hooks/useNegotiationSimulation';
 import { 
- Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, 
+ Target, Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, 
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
  Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet
@@ -27,21 +27,27 @@ import { VenueDetailPanel } from './booking/VenueDetailPanel';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { isLeadVerificado } from '../utils/leadReliability';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+import { BookingCampaign } from '../types';
+import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
+import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
 
 interface BookingCRMProps {
- leads: Lead[];
- colors: ThemeColors;
- onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
- onAddLead?: (lead: Lead) => void;
- onDeleteLead?: (id: string) => void;
- initialSection?: 'salas' | 'medios' | 'grupos';
- initialStatusFilter?: LeadStatus | 'todos';
- initialSelectedLeadId?: string;
- epkConfig?: Partial<EPKConfig>;
- onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
- currentBandId?: string;
- currentUser?: any;
- bandName?: string;
+  leads: Lead[];
+  colors: ThemeColors;
+  onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void;
+  onAddLead?: (lead: Lead) => void;
+  onDeleteLead?: (id: string) => void;
+  onBulkDeleteLeads?: (ids: string[]) => void;
+  initialSection?: 'salas' | 'medios' | 'grupos';
+  initialStatusFilter?: LeadStatus | 'todos';
+  initialSelectedLeadId?: string;
+  epkConfig?: Partial<EPKConfig>;
+  onUpdateEpkConfig?: (newConfig: Partial<EPKConfig>) => void;
+  currentBandId?: string;
+  currentUser?: any;
+  bandName?: string;
+  activeCampaign?: BookingCampaign | null;
+  onCampaignChange?: (campaign: BookingCampaign | null) => void;
 }
 
 import { 
@@ -59,22 +65,25 @@ export {
 };
 
 export default function BookingCRM({ 
- leads, 
- colors, 
- onUpdateLead, 
- onAddLead, 
- onDeleteLead,
- initialSection = 'salas',
- initialStatusFilter = 'todos',
- initialSelectedLeadId,
- epkConfig,
- onUpdateEpkConfig,
- currentBandId,
- currentUser,
- bandName
+  leads, 
+  colors, 
+  onUpdateLead, 
+  onAddLead, 
+  onDeleteLead,
+  onBulkDeleteLeads,
+  initialSection = 'salas',
+  initialStatusFilter = 'todos',
+  initialSelectedLeadId,
+  epkConfig,
+  onUpdateEpkConfig,
+  currentBandId,
+  currentUser,
+  bandName,
+  activeCampaign,
+  onCampaignChange
 }: BookingCRMProps) {
- const effectiveBandName = bandName || 'Tu Banda';
- const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
+  const effectiveBandName = bandName || 'Tu Banda';
+  const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
  const {
    searchTerm, setSearchTerm,
    statusFilter, setStatusFilter,
@@ -117,6 +126,24 @@ export default function BookingCRM({
  }, [initialSelectedLeadId, leads]);
 
  const [viewMode, setViewMode] = useState<'grid' | 'table' | 'map'>('table');
+
+ const [selectedLeadIds, setSelectedLeadIds] = useState<string[]>([]);
+ const [bulkProgressState, setBulkProgressState] = useState<{
+   isOpen: boolean;
+   title: string;
+   subtitle?: string;
+   items: BulkProgressItem[];
+   currentIndex: number;
+   totalCount: number;
+   isCompleted: boolean;
+ }>({
+   isOpen: false,
+   title: '',
+   items: [],
+   currentIndex: 0,
+   totalCount: 0,
+   isCompleted: false
+ });
 
  const interventionPanelRef = React.useRef<HTMLDivElement>(null);
  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -161,6 +188,15 @@ export default function BookingCRM({
    handleGmailLogout,
    handleSyncGmailForLead,
  } = useGmailIntegration(selectedLead, setSelectedLead, onUpdateLead);
+
+  const [filterByCampaign, setFilterByCampaign] = useState(Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)));
+
+  // Automatically activate campaign filter whenever an active campaign is present or selected
+  useEffect(() => {
+    if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
+      setFilterByCampaign(true);
+    }
+  }, [activeCampaign?.id, activeCampaign?.isActive, (activeCampaign as any)?.is_active]);
 
  // Keep selectedLead synchronized with the latest leads prop data
  useEffect(() => {
@@ -386,6 +422,36 @@ export default function BookingCRM({
      if (seen.has(leadKey)) return false;
      seen.add(leadKey);
 
+     if (filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
+        const targetCities = (activeCampaign.targetCities || (activeCampaign as any).target_cities || []);
+        const targetRegions = ((activeCampaign as any).targetRegions || (activeCampaign as any).target_regions || []);
+        const leadCityLower = (lead.ciudad || '').toLowerCase().trim();
+        const leadRegionLower = (lead.region || '').toLowerCase().trim();
+        
+        const hasLocationFilter = targetCities.length > 0 || targetRegions.length > 0;
+        const matchesTargetCity = !hasLocationFilter || 
+          targetCities.some((city: string) => {
+            if (!city) return false;
+            const c = city.toLowerCase().trim();
+            return leadCityLower.includes(c) || leadRegionLower.includes(c) || (c.includes('madrid') && (leadCityLower.includes('madrid') || leadRegionLower.includes('madrid')));
+          }) ||
+          targetRegions.some((reg: string) => {
+            if (!reg) return false;
+            const r = reg.toLowerCase().trim();
+            return leadCityLower.includes(r) || leadRegionLower.includes(r);
+          });
+
+        const cap = Number(lead.aforo) || 0;
+        const minCap = Number(activeCampaign.minCapacity || (activeCampaign as any).min_capacity || 0);
+        const maxCap = Number(activeCampaign.maxCapacity || (activeCampaign as any).max_capacity || Infinity);
+        
+        const matchesTargetCapacity = cap > 0 
+          ? (cap >= minCap && cap <= maxCap) 
+          : (minCap === 0 || cap === 0);
+
+        if (!matchesTargetCity || !matchesTargetCapacity) return false;
+     }
+
      const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
        (lead.ciudad || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
        (lead.region || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -416,7 +482,7 @@ export default function BookingCRM({
      const matchesCapacity = !minCapacityFilter || ((lead.aforo || 0) >= minCapacityFilter);
      return matchesSearch && matchesStatus && matchesType && matchesCity && matchesCapacity;
    });
- }, [sectionLeads, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, sectionTab]);
+ }, [sectionLeads, searchTerm, statusFilter, typeFilter, selectedCityFilter, minCapacityFilter, sectionTab, filterByCampaign, activeCampaign]);
 
  const handleModalScrape = async () => {
  if (!newLeadData.nombre_sala.trim()) {
@@ -1184,34 +1250,52 @@ export default function BookingCRM({
 
   {/* Search & View Mode Switcher Row */}
  <div className="flex flex-col sm:flex-row gap-2.5 sm:items-center justify-between">
-   {/* Search Input */}
-   <div className="relative flex-1">
-     <Search className={`absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors ${
-       isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'
-     }`} />
-     <input
-       id="crm-search"
-       type="text"
-       placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : "🔍 Buscar sala o festival..."}
-       value={searchTerm}
-       onChange={(e) => setSearchTerm(e.target.value)}
-       className={`w-full rounded-xl pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-all border shadow-sm ${
-         isStitchLight 
-           ? 'bg-white text-slate-900 border-indigo-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400' 
-           : 'bg-[#141414] text-white border-white/10 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/30 placeholder:text-neutral-500'
-       }`}
-     />
-     {searchTerm && (
-       <button
-         id="crm-search-clear"
-         type="button"
-         onClick={() => setSearchTerm('')}
-         className={`absolute right-2.5 top-2.5 p-0.5 rounded-full transition-colors cursor-pointer ${
-           isStitchLight ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+   <div className="flex-1 flex gap-2">
+     {/* Search Input */}
+     <div className="relative flex-1">
+       <Search className={`absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors ${
+         isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'
+       }`} />
+       <input
+         id="crm-search"
+         type="text"
+         placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : "🔍 Buscar sala o festival..."}
+         value={searchTerm}
+         onChange={(e) => setSearchTerm(e.target.value)}
+         className={`w-full rounded-xl pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-all border shadow-sm ${
+           isStitchLight 
+             ? 'bg-white text-slate-900 border-indigo-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400' 
+             : 'bg-[#141414] text-white border-white/10 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/30 placeholder:text-neutral-500'
          }`}
-         title="Borrar búsqueda"
+       />
+       {searchTerm && (
+         <button
+           id="crm-search-clear"
+           type="button"
+           onClick={() => setSearchTerm('')}
+           className={`absolute right-2.5 top-2.5 p-0.5 rounded-full transition-colors cursor-pointer ${
+             isStitchLight ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+           }`}
+           title="Borrar búsqueda"
+         >
+           <X className="w-3.5 h-3.5" />
+         </button>
+       )}
+     </div>
+     
+     {/* Filter by Campaign Toggle */}
+     {activeCampaign && (
+       <button
+         onClick={() => setFilterByCampaign(!filterByCampaign)}
+         className={`px-3 py-2 rounded-xl text-xs font-semibold font-sans transition-all flex items-center gap-2 border shadow-sm shrink-0 cursor-pointer ${
+           filterByCampaign
+             ? (isStitchLight ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-green-600 text-white border-green-700')
+             : (isStitchLight ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' : 'bg-[#1a1a1a] text-neutral-300 border-white/10 hover:bg-[#2a2a2a]')
+         }`}
+         title={filterByCampaign ? "Quitar filtro de campaña" : "Mostrar solo salas de la campaña activa"}
        >
-         <X className="w-4 h-4" />
+         <Target className="w-4 h-4" />
+         <span className="hidden sm:inline">Campaña Activa</span>
        </button>
      )}
    </div>
@@ -1651,6 +1735,252 @@ export default function BookingCRM({
     })}
   </div>
 
+  {/* 🎯 CAMPAIGN CONTEXT BANNER & TOGGLE */}
+  {activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true) && (
+    <div className={`p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm ${
+      filterByCampaign 
+        ? isStitchLight
+          ? 'bg-indigo-50/90 border-indigo-200 text-indigo-950'
+          : 'bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border-purple-500/40 text-purple-100'
+        : isStitchLight
+          ? 'bg-slate-50 border-slate-200 text-slate-700'
+          : 'bg-zinc-900/60 border-white/5 text-zinc-300'
+    }`}>
+      <div className="flex items-center gap-2.5 min-w-0">
+        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+          filterByCampaign 
+            ? isStitchLight ? 'bg-indigo-600 text-white' : 'bg-purple-600 text-white'
+            : 'bg-zinc-800 text-zinc-400'
+        }`}>
+          <Target className="w-4 h-4" />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-bold font-sans">
+              Campaña: {activeCampaign.name}
+            </span>
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+              filterByCampaign 
+                ? isStitchLight ? 'bg-indigo-200 text-indigo-800' : 'bg-purple-500/30 text-purple-200 border border-purple-500/40'
+                : 'bg-zinc-800 text-zinc-400'
+            }`}>
+              {filterByCampaign ? `Filtro Activo (${filteredLeads.length} salas)` : 'Filtro Desactivado'}
+            </span>
+          </div>
+          <div className="text-[11px] opacity-80 mt-0.5 flex items-center gap-2 flex-wrap font-sans">
+            <span>📍 Ciudades: {(activeCampaign.targetCities || (activeCampaign as any).target_cities || []).join(', ') || 'Todas'}</span>
+            <span>•</span>
+            <span>👥 Aforo: {activeCampaign.minCapacity || (activeCampaign as any).min_capacity || 0}-{activeCampaign.maxCapacity || (activeCampaign as any).max_capacity || '∞'} pax</span>
+            <span>•</span>
+            <span>📅 Fechas: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(', ') : 'Gira')}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+        <button
+          type="button"
+          onClick={() => setFilterByCampaign(!filterByCampaign)}
+          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs ${
+            filterByCampaign
+              ? isStitchLight ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-purple-600 text-white hover:bg-purple-500'
+              : isStitchLight ? 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-100' : 'bg-zinc-800 text-zinc-200 border border-white/10 hover:bg-zinc-700'
+          }`}
+        >
+          <Filter className="w-3.5 h-3.5" />
+          <span>{filterByCampaign ? 'Ver Todas las Salas' : 'Filtrar Solo Campaña'}</span>
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
+  <BulkLeadsActionBar
+    selectedCount={selectedLeadIds.length}
+    totalFilteredCount={filteredLeads.length}
+    isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
+    onSelectAll={() => setSelectedLeadIds(filteredLeads.map(l => l.id))}
+    onDeselectAll={() => setSelectedLeadIds([])}
+    onBulkStatusChange={(newStatus) => {
+      if (selectedLeadIds.length === 0) return;
+      selectedLeadIds.forEach(id => {
+        onUpdateLead(id, { estado: newStatus });
+      });
+    }}
+    onBulkToggleFavorite={(isFav) => {
+      if (selectedLeadIds.length === 0) return;
+      selectedLeadIds.forEach(id => {
+        onUpdateLead(id, { es_favorito: isFav });
+      });
+    }}
+    onBulkGeneratePitches={async () => {
+      const selectedList = leads.filter(l => selectedLeadIds.includes(l.id));
+      if (selectedList.length === 0) return;
+
+      const initialItems: BulkProgressItem[] = selectedList.map(l => ({
+        id: l.id,
+        name: l.nombre_sala,
+        status: 'pending'
+      }));
+
+      setBulkProgressState({
+        isOpen: true,
+        title: 'Generando Pitches con IA Agéntica',
+        subtitle: 'Redactando propuestas personalizadas basadas en el ADN de la banda',
+        items: initialItems,
+        currentIndex: 0,
+        totalCount: initialItems.length,
+        isCompleted: false
+      });
+
+      const updatedItems = [...initialItems];
+
+      for (let i = 0; i < selectedList.length; i++) {
+        const targetLead = selectedList[i];
+        updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Contactando Agente Redactor...' };
+        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
+
+        try {
+          const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
+            method: 'POST',
+            body: JSON.stringify({
+              targetCities: activeCampaign?.targetCities,
+              targetDates: activeCampaign?.targetDates
+            })
+          });
+
+          if (res.success && (res.pitch || res.pitch_generado || res.data?.pitch_generado)) {
+            const pitchText = res.pitch || res.pitch_generado || res.data?.pitch_generado;
+            onUpdateLead(targetLead.id, {
+              pitch_generado: pitchText,
+              estado: 'pendiente_aprobacion'
+            });
+            updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta redactada' };
+          } else {
+            const bandADN = bandName || 'Nuestra banda';
+            const spotifyLink = epkConfig?.enlacesRedes?.spotify || epkConfig?.enlacesRedes?.website || 'Dossier disponible';
+            const fallbackPitch = `Hola equipo de ${targetLead.nombre_sala},\n\nOs escribimos desde ${bandADN}. Hemos estado siguiendo vuestra programación en ${targetLead.ciudad || 'vuestra ciudad'} y creemos que nuestra propuesta encaja a la perfección con vuestro público.\n\nNos encantaría explorar una fecha conjunta. Podéis escuchar nuestro material aquí: ${spotifyLink}.\n\n¡Un saludo!\n${bandADN}`;
+            onUpdateLead(targetLead.id, {
+              pitch_generado: fallbackPitch,
+              estado: 'pendiente_aprobacion'
+            });
+            updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta lista' };
+          }
+        } catch (err: any) {
+          updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
+        }
+
+        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
+      }
+
+      setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
+    }}
+    onBulkEnrich={async () => {
+      const selectedList = leads.filter(l => selectedLeadIds.includes(l.id));
+      if (selectedList.length === 0) return;
+
+      const initialItems: BulkProgressItem[] = selectedList.map(l => ({
+        id: l.id,
+        name: l.nombre_sala,
+        status: 'pending'
+      }));
+
+      setBulkProgressState({
+        isOpen: true,
+        title: 'Enriquecimiento Masivo con Agente Scout',
+        subtitle: 'Buscando datos de contacto, aforo, dirección y redes',
+        items: initialItems,
+        currentIndex: 0,
+        totalCount: initialItems.length,
+        isCompleted: false
+      });
+
+      const updatedItems = [...initialItems];
+
+      for (let i = 0; i < selectedList.length; i++) {
+        const targetLead = selectedList[i];
+        updatedItems[i] = { ...updatedItems[i], status: 'in_progress', detail: 'Buscando datos...' };
+        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
+
+        try {
+          const res = await apiFetch(`/api/leads/enrich-lead`, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: targetLead.nombre_sala,
+              city: targetLead.ciudad || 'España'
+            })
+          });
+
+          if (res.success && res.data) {
+            const d = res.data;
+            const updates: Partial<Lead> = {};
+            if (d.email && !targetLead.email_contacto) updates.email_contacto = d.email;
+            if (d.phone && !targetLead.telefono) updates.telefono = d.phone;
+            if (d.website && !targetLead.website) updates.website = d.website;
+            if (d.capacity && !targetLead.aforo) updates.aforo = d.capacity;
+            if (d.address && !targetLead.direccion) updates.direccion = d.address;
+            if (d.instagram && !targetLead.instagram) updates.instagram = d.instagram;
+
+            if (Object.keys(updates).length > 0) {
+              onUpdateLead(targetLead.id, updates);
+              updatedItems[i] = { ...updatedItems[i], status: 'success', detail: `Actualizado: ${Object.keys(updates).join(', ')}` };
+            } else {
+              updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Ficha al día' };
+            }
+          } else {
+            updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Sin datos nuevos' };
+          }
+        } catch (err: any) {
+          updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error en búsqueda' };
+        }
+
+        setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i + 1 }));
+      }
+
+      setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
+    }}
+    onBulkExportCsv={() => {
+      const leadsToExport = leads.filter(l => selectedLeadIds.includes(l.id));
+      if (leadsToExport.length === 0) return;
+
+      const headers = ['Nombre', 'Tipo', 'Estado', 'Ciudad', 'Región', 'Aforo', 'Género', 'Email', 'Teléfono', 'Web / Redes', 'Notas'];
+      const rows = leadsToExport.map(l => [
+        `"${(l.nombre_sala || '').replace(/"/g, '""')}"`,
+        `"${(l.tipo || '').replace(/"/g, '""')}"`,
+        `"${(l.estado || '').replace(/"/g, '""')}"`,
+        `"${(l.ciudad || '').replace(/"/g, '""')}"`,
+        `"${(l.region || '').replace(/"/g, '""')}"`,
+        `"${l.aforo || ''}"`,
+        `"${(l.genero || '').replace(/"/g, '""')}"`,
+        `"${(l.email_contacto || '').replace(/"/g, '""')}"`,
+        `"${(l.telefono || '').replace(/"/g, '""')}"`,
+        `"${(l.website || l.instagram || '').replace(/"/g, '""')}"`,
+        `"${(l.notas || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `bandmanager_salas_seleccionadas_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }}
+    onBulkDelete={() => {
+      if (selectedLeadIds.length === 0) return;
+      const idsToDelete = [...selectedLeadIds];
+      setSelectedLeadIds([]);
+      if (onBulkDeleteLeads) {
+        onBulkDeleteLeads(idsToDelete);
+      } else if (onDeleteLead) {
+        idsToDelete.forEach(id => onDeleteLead(id));
+      }
+    }}
+    sectionTab={sectionTab}
+    isStitchLight={isStitchLight}
+  />
+
  {/* Main Display Area: Map vs List */}
  {viewMode === 'map' ? (
  <VenueMap
@@ -1675,6 +2005,19 @@ export default function BookingCRM({
     getStatusLabel={getStatusLabel}
     normalizeType={normalizeType}
     sectionTab={sectionTab}
+    selectedLeadIds={selectedLeadIds}
+    onToggleSelectLead={(id, e) => {
+      if (e) e.stopPropagation();
+      setSelectedLeadIds(prev =>
+        prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+      );
+    }}
+    onSelectAllFiltered={() => {
+      setSelectedLeadIds(filteredLeads.map(l => l.id));
+    }}
+    onDeselectAll={() => setSelectedLeadIds([])}
+    isAllSelected={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIds.includes(l.id))}
+    isSomeSelected={filteredLeads.length > 0 && filteredLeads.some(l => selectedLeadIds.includes(l.id))}
   />
   )}
   </div>
@@ -1693,9 +2036,10 @@ export default function BookingCRM({
         normalizeStatus={normalizeStatus}
         normalizeType={normalizeType}
         autoDetectVenueAddress={autoDetectVenueAddress}
-         onDeleteLead={onDeleteLead}
+        onDeleteLead={onDeleteLead}
         sectionTab={sectionTab}
         isStitchLight={isStitchLight}
+        activeCampaign={activeCampaign}
         onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
         isUploadingLeadLogo={isUploadingLeadLogo}
       />
@@ -1716,6 +2060,7 @@ export default function BookingCRM({
     autoDetectVenueAddress={autoDetectVenueAddress}
     sectionTab={sectionTab}
     isStitchLight={isStitchLight}
+    activeCampaign={activeCampaign}
     onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
     isUploadingLeadLogo={isUploadingLeadLogo}
   />
@@ -2154,6 +2499,10 @@ export default function BookingCRM({
   <GooglePlacesExplorerModal
     isOpen={isPlacesExplorerOpen}
     isStitchLight={isStitchLight}
+    existingLeads={leads}
+    activeCampaign={activeCampaign}
+    bandGenre={epkConfig?.genero || (currentUser as any)?.genero || ''}
+    bandName={effectiveBandName}
     onClose={() => setIsPlacesExplorerOpen(false)}
     onImportLeads={() => {
       window.dispatchEvent(new CustomEvent('app-data-updated'));
@@ -2184,7 +2533,7 @@ export default function BookingCRM({
   <AgentAutonomySettingsModal
     isOpen={isAgentConfigOpen}
     onClose={() => setIsAgentConfigOpen(false)}
-    bandName={effectiveBandName || 'Tu Banda'}
+    bandName={effectiveBandName}
     bandId={currentBandId || currentUser?.band_id || ''}
     currentUser={currentUser}
     isStitchLight={isStitchLight}
@@ -2193,6 +2542,20 @@ export default function BookingCRM({
       const el = document.getElementById('ai-template-config-section');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }}
+  />
+
+
+
+  {/* BULK PROGRESS MODAL */}
+  <BulkProgressModal
+    isOpen={bulkProgressState.isOpen}
+    onClose={() => setBulkProgressState(prev => ({ ...prev, isOpen: false }))}
+    title={bulkProgressState.title}
+    subtitle={bulkProgressState.subtitle}
+    items={bulkProgressState.items}
+    currentIndex={bulkProgressState.currentIndex}
+    totalCount={bulkProgressState.totalCount}
+    isCompleted={bulkProgressState.isCompleted}
   />
 
  </div>

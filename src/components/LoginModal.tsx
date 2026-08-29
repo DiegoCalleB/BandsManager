@@ -486,29 +486,35 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     <ModalPortal isOpen={true}>
       <div className="fixed inset-0 z-[9999] p-4 bg-[#09090b] text-neutral-100 overflow-y-auto overscroll-contain animate-in fade-in duration-300">
         <div className="min-h-full flex items-center justify-center py-6 md:py-8">
-        <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-6xl' : 'max-w-sm space-y-5'}`}>
+        <div className={`w-full relative z-10 flex flex-col items-center transition-all duration-500 ${view === 'plans' ? 'max-w-6xl' : 'max-w-md space-y-6'}`}>
         
         {/* Soft Golden Background Ambient Glow */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#f2ca50]/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-[#f2ca50]/8 rounded-full blur-[110px] pointer-events-none" />
 
         {/* --- BRANDING LOGO & TYPOGRAPHY (Only for Login/Register) --- */}
         {view !== 'plans' && (
-          <div className="relative flex flex-col items-center justify-center mt-2 mb-2 text-center">
-            <div className="group cursor-pointer max-w-[280px] sm:max-w-[320px]">
+          <div className="relative flex flex-col items-center justify-center pt-2 pb-1 text-center w-full">
+            {/* Ambient Spotlight behind logo */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-44 bg-[#f2ca50]/10 rounded-full blur-2xl pointer-events-none" />
+            
+            <div className="relative group cursor-pointer w-full max-w-[320px] sm:max-w-[360px] flex justify-center">
               <img 
                 src="/bandmanager_login_logo.png" 
                 alt="BANDMANAGER.oi - Plataforma Integral para Bandas" 
-                className="w-full h-auto max-h-36 object-contain drop-shadow-[0_10px_25px_rgba(242,202,80,0.15)] group-hover:scale-[1.01] transition-transform rounded-2xl"
+                className="w-full h-auto max-h-48 object-contain drop-shadow-[0_12px_32px_rgba(242,202,80,0.22)] group-hover:scale-[1.015] transition-all duration-300"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
                 }}
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="mt-3 px-3.5 py-1.5 rounded-xl bg-black/40 border border-[#f2ca50]/20 max-w-[340px]">
-              <p className="text-xs sm:text-sm text-neutral-200 font-medium tracking-wide leading-relaxed">
+
+            <div className="mt-3.5 max-w-sm text-center px-4">
+              <p className="text-sm text-neutral-300 font-normal leading-relaxed tracking-tight">
                 Tú piensa en tu música.{' '}
-                <span className="text-[#f2ca50] font-bold block sm:inline">¡BandManager.oi se encarga de todo lo demás!</span>
+                <span className="text-[#f2ca50] font-semibold block sm:inline mt-0.5 sm:mt-0">
+                  ¡BandManager.oi se encarga de todo lo demás!
+                </span>
               </p>
             </div>
           </div>

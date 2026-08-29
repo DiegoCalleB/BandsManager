@@ -8,6 +8,7 @@ interface BandPitchModalProps {
   onClose: () => void;
   band: BandContact | null;
   isStitchLight?: boolean;
+  activeCampaign?: any;
   proposedBakandeyaCity: 'Madrid' | 'Sevilla' | 'Ambas';
   setProposedBakandeyaCity: (val: 'Madrid' | 'Sevilla' | 'Ambas') => void;
   proposedVenueBakandeya: string;
@@ -23,6 +24,7 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
   onClose,
   band,
   isStitchLight = false,
+  activeCampaign,
   proposedBakandeyaCity,
   setProposedBakandeyaCity,
   proposedVenueBakandeya,
@@ -60,40 +62,42 @@ export const BandPitchModal: React.FC<BandPitchModalProps> = ({
         </div>
 
         {/* Config Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-xl bg-neutral-900 text-[10px] font-mono">
-          <div>
-            <label className="block text-[10px] text-neutral-400 uppercase mb-1">Ciudad de Bakandeya</label>
-            <select
-              value={proposedBakandeyaCity}
-              onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
-              className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
-            >
-              <option value="Madrid">Madrid</option>
-              <option value="Sevilla">Sevilla</option>
-              <option value="Ambas">Madrid & Sevilla</option>
-            </select>
-          </div>
+        {!activeCampaign?.isActive && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 rounded-xl bg-neutral-900 text-[10px] font-mono">
+            <div>
+              <label className="block text-[10px] text-neutral-400 uppercase mb-1">Ciudad de Bakandeya</label>
+              <select
+                value={proposedBakandeyaCity}
+                onChange={(e) => setProposedBakandeyaCity(e.target.value as 'Madrid' | 'Sevilla' | 'Ambas')}
+                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
+              >
+                <option value="Madrid">Madrid</option>
+                <option value="Sevilla">Sevilla</option>
+                <option value="Ambas">Madrid & Sevilla</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-[10px] text-neutral-400 uppercase mb-1">Sala propuesta en Madrid/Sevilla</label>
-            <input
-              type="text"
-              value={proposedVenueBakandeya}
-              onChange={(e) => setProposedVenueBakandeya(e.target.value)}
-              className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
-            />
-          </div>
+            <div>
+              <label className="block text-[10px] text-neutral-400 uppercase mb-1">Sala propuesta en Madrid/Sevilla</label>
+              <input
+                type="text"
+                value={proposedVenueBakandeya}
+                onChange={(e) => setProposedVenueBakandeya(e.target.value)}
+                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
+              />
+            </div>
 
-          <div>
-            <label className="block text-[10px] text-neutral-400 uppercase mb-1">Periodo / Mes Estimado</label>
-            <input
-              type="text"
-              value={proposedMonth}
-              onChange={(e) => setProposedMonth(e.target.value)}
-              className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
-            />
+            <div>
+              <label className="block text-[10px] text-neutral-400 uppercase mb-1">Periodo / Mes Estimado</label>
+              <input
+                type="text"
+                value={proposedMonth}
+                onChange={(e) => setProposedMonth(e.target.value)}
+                className="w-full bg-neutral-800 text-white px-2 py-1 rounded-lg text-[10px]"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Generated Pitch Preview Box */}
         <div className="space-y-1.5">

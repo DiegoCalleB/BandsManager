@@ -546,3 +546,122 @@ CREATE INDEX IF NOT EXISTS idx_reel_analyses_band_video ON reel_analyses(band_id
 
 ALTER TABLE reel_analyses ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON reel_analyses FOR ALL USING (true);
+
+-- 22. booking_campaigns (Campañas activas de booking por banda)
+CREATE TABLE IF NOT EXISTS booking_campaigns (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  target_cities JSONB DEFAULT '[]'::jsonb,
+  min_capacity INTEGER DEFAULT 0,
+  max_capacity INTEGER DEFAULT 0,
+  target_dates JSONB DEFAULT '[]'::jsonb,
+  target_dates_text TEXT DEFAULT '',
+  notes TEXT DEFAULT '',
+  is_active BOOLEAN DEFAULT false,
+  color TEXT DEFAULT '#8b5cf6',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_booking_campaigns_band ON booking_campaigns(band_id, is_active);
+ALTER TABLE booking_campaigns ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON booking_campaigns FOR ALL USING (true);
+
+-- 23. deleted_leads (Lista negra de salas/leads descartados)
+CREATE TABLE IF NOT EXISTS deleted_leads (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  nombre_sala TEXT NOT NULL,
+  motivo TEXT DEFAULT 'Eliminado por el usuario para evitar ruido',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_deleted_leads_band_sala ON deleted_leads(band_id, nombre_sala);
+ALTER TABLE deleted_leads ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON deleted_leads FOR ALL USING (true);
+
+-- 24. deleted_bands (Lista negra de bandas de intercambio descartadas)
+CREATE TABLE IF NOT EXISTS deleted_bands (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  nombre_banda TEXT NOT NULL,
+  motivo TEXT DEFAULT 'Eliminado por el usuario para evitar ruido',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_deleted_bands_band_nombre ON deleted_bands(band_id, nombre_banda);
+ALTER TABLE deleted_bands ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON deleted_bands FOR ALL USING (true);
+
+-- 25. musicians_waitlist (Captación de músicos en landing pública / EPK)
+CREATE TABLE IF NOT EXISTS musicians_waitlist (
+  id TEXT PRIMARY KEY,
+  nombre_banda TEXT,
+  nombre_contacto TEXT,
+  email TEXT,
+  instagram TEXT,
+  telefono TEXT,
+  ciudad TEXT,
+  genero TEXT,
+  enlace_musica TEXT,
+  interes_principal TEXT,
+  notas TEXT,
+  idioma TEXT DEFAULT 'es',
+  banda_origen TEXT,
+  concierto_origen TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_musicians_waitlist_email ON musicians_waitlist(email);
+ALTER TABLE musicians_waitlist ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON musicians_waitlist FOR ALL USING (true);
+
+-- 26. social_content_items (Radar de contenidos en redes: YouTube, TikTok, Reels)
+CREATE TABLE IF NOT EXISTS social_content_items (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  platform TEXT NOT NULL,
+  external_id TEXT,
+  title TEXT DEFAULT 'Sin título',
+  url TEXT DEFAULT '',
+  thumbnail_url TEXT DEFAULT '',
+  published_at TIMESTAMPTZ,
+  views BIGINT DEFAULT 0,
+  likes INTEGER DEFAULT 0,
+  comments INTEGER DEFAULT 0,
+  shares INTEGER DEFAULT 0,
+  last_scraped_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_social_content_band_plat ON social_content_items(band_id, platform);
+ALTER TABLE social_content_items ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON social_content_items FOR ALL USING (true);
+
+-- 27. stripe_webhook_events (Idempotencia de webhooks de facturación Stripe)
+CREATE TABLE IF NOT EXISTS stripe_webhook_events (
+  event_id TEXT PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  payload JSONB DEFAULT '{}'::jsonb,
+  processed_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE stripe_webhook_events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON stripe_webhook_events FOR ALL USING (true);
+
+-- 28. agent_execution_logs (Auditoría y trazabilidad de ejecuciones de Agentes IA)
+CREATE TABLE IF NOT EXISTS agent_execution_logs (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  agente TEXT NOT NULL,
+  motor TEXT,
+  disparado_por_tipo TEXT DEFAULT 'usuario_manual',
+  usuario_id TEXT,
+  usuario_email TEXT,
+  estado TEXT NOT NULL,
+  mensaje TEXT,
+  leads_afectados JSONB DEFAULT '[]'::jsonb,
+  conteo_afectados INTEGER DEFAULT 0,
+  duracion_ms INTEGER DEFAULT 0,
+  detalles JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_agent_logs_band_date ON agent_execution_logs(band_id, created_at DESC);
+ALTER TABLE agent_execution_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON agent_execution_logs FOR ALL USING (true);
+

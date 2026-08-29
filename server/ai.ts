@@ -400,12 +400,7 @@ export function generateSmartLocalPitchFallback(params: {
     ? "Cuarteto compacto (violín solista acústico y eléctrico, sintetizadores analógicos, percusión en vivo y batería, bajo y voz)"
     : "Banda en directo";
 
-  const contactLine = params.contactEmail && params.contactEmail.trim() ? `\n${params.contactEmail.trim()}` : "";
-  const linksBlock = formatPitchLinksBlock(params.links, "Enlaces oficiales de escucha y material de directo:", {
-    spotify: "🎧 Escuchar en Spotify",
-    youtube: "🎬 Vídeo en directo en YouTube",
-    epk: "📄 Dossier EPK interactivo y Rider Técnico"
-  });
+  const dossierNote = "Disponéis de nuestro Dossier Oficial, EPK interactivo y Rider Técnico referenciado al pie de la firma de este mensaje.";
 
   const isMedio = textLower.includes("tipo: medio") || textLower.includes("tipo: prensa") || textLower.includes("tipo: radio") || textLower.includes("podcast");
   const isFestival = textLower.includes("tipo: festival") || textLower.includes("festivales") || salaNombre.toLowerCase().includes("festiv") || salaNombre.toLowerCase().includes("fest");
@@ -417,19 +412,19 @@ export function generateSmartLocalPitchFallback(params: {
   if (isMedio) {
     return `Hola equipo de redacción y programación de ${salaNombre}${ciudad ? ` (${ciudad})` : ""}:
 
-Nos ponemos en contacto desde la oficina de ${bandName} (${estilo}). Os hacemos llegar nuestro dossier de prensa con motivo de nuestra gira de directos y lanzamientos 2026.
+Nos ponemos en contacto desde la oficina de ${bandName} (${estilo}). Os hacemos llegar nuestra propuesta de prensa con motivo de nuestra gira de directos y lanzamientos 2026.
 
 Presentamos una propuesta liderada por ${formato}. Ofrecemos un repertorio dinámico con sonido de alta intensidad.
 
 Nos ponemos a vuestra disposición para:
 • Facilitaros temas en formato WAV / broadcast para sonar en vuestra programación.
 • Entrevistas, acústicos en directo en estudio o reseñas de nuestros directos.
-${linksBlock}
+
+${dossierNote}
 
 Muchas gracias por vuestro tiempo y por dar visibilidad a la música independiente en directo.
 
-Un cordial saludo,
-Equipo de Booking & Comunicación — ${bandName}${contactLine}`;
+Un cordial saludo,`;
   }
 
   // FESTIVALES
@@ -442,12 +437,12 @@ ${bandName} ofrece un directo arrollador de 75 a 90 minutos concebido especialme
 • Formato: ${formato}.
 • Logística ágil: Montaje y cambio de set ultra-rápido (30-45 min) con rider técnico limpio y eficiente.
 • Directo bailable, sudoroso y participativo que garantiza fiesta continua en la pista.
-${linksBlock}
+
+${dossierNote}
 
 Estaríamos encantados de enviaros nuestro rider técnico detallado y propuesta económica adaptada.
 
-Atentamente,
-Equipo de Booking — ${bandName}${contactLine}`;
+Atentamente,`;
   }
 
   // DISCOTECAS / CLUBS
@@ -457,12 +452,12 @@ Equipo de Booking — ${bandName}${contactLine}`;
 Os escribimos desde ${bandName} para presentar nuestro formato especial de **Live Set nocturno** (${estilo}), diseñado para la sesión de madrugada en clubes y discotecas.
 
 Nuestra propuesta combina secuencias electrónicas analógicas, percusión en vivo y violín enérgico, creando una experiencia bailable ideal entre sesiones de DJs o como show central de la noche${aforo ? ` (aforo aprox. ${aforo} personas)` : ""}.
-${linksBlock}
+
+${dossierNote}
 
 ¿Cómo tenéis la agenda para los próximos meses para coordinar una fecha de sesión?
 
-Un saludo cordial,
-Equipo de Booking — ${bandName}${contactLine}`;
+Un saludo cordial,`;
   }
 
   // DATE SWAP / GRUPOS
@@ -472,12 +467,12 @@ Equipo de Booking — ${bandName}${contactLine}`;
 Os escribimos directamente desde ${bandName} (${estilo}). Nos mola mucho vuestra propuesta y queremos proponeros un **intercambio de fechas / co-booking (Date Swap)**:
 1. Montamos una fecha conjunta en nuestra ciudad compartiendo cartel, backline y taquilla al 50%.
 2. Coordinamos la fecha de vuelta en ${ciudad || "vuestra ciudad"} en vuestro espacio habitual para sumar ambos públicos locales y optimizar gastos de gira.
-${linksBlock}
+
+${dossierNote}
 
 ¿Cómo lo veis? ¿Hablamos por WhatsApp o hacemos una breve llamada para cuadrar agendas?
 
-¡Un fuerte abrazo!
-Músicos de ${bandName}${contactLine}`;
+¡Un fuerte abrazo!`;
   }
 
   // AYUNTAMIENTOS / FIESTAS
@@ -487,12 +482,12 @@ Músicos de ${bandName}${contactLine}`;
 Nos dirigimos a ustedes desde la representación de ${bandName} (${estilo}) para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales.
 
 Ofrecemos un espectáculo enérgico, familiar, festivo y muy bailable de 90 minutos liderado por ${formato}. Disponemos de plena solvencia técnica, facturación oficial y rigurosa puntualidad de montaje.
-${linksBlock}
+
+${dossierNote}
 
 Quedamos a su entera disposición para remitirles nuestro dossier técnico y propuesta presupuestaria.
 
-Cordialmente,
-Equipo de Booking — ${bandName}${contactLine}`;
+Cordialmente,`;
   }
 
   // SALAS Y TEATROS (ESTÁNDAR)
@@ -505,12 +500,12 @@ Nos ponemos en contacto desde la oficina de ${bandName} (${estilo}). Hemos revis
 • **Formato:** ${formato} — show arrollador de 75 a 90 minutos de alta energía y baile continuo.
 • **Logística y técnica:** Montaje ágil (30-45 min), prueba de sonido limpia y rider técnico eficiente${aforo ? ` (aforo ${aforo})` : ""}.
 • **Condiciones:** Flexibilidad total en modelo de taquilla o caché; además, total disposición para compartir fecha con bandas locales de ${ciudad || "la zona"} para sumar público.
-${linksBlock}
+
+${dossierNote}
 
 Estamos cerrando el calendario de nuestra próxima gira y nos gustaría consultar vuestra disponibilidad de fechas para la próxima temporada.
 
-Un cordial saludo,
-Equipo de Booking & Management — ${bandName}${contactLine}`;
+Un cordial saludo,`;
   }
 
   // Default Gemini / General
@@ -522,14 +517,14 @@ Os escribimos desde la oficina de ${bandName} (${estilo}). Seguimos vuestra prog
 • **Formato enérgico y bailable:** ${formato} — directo arrollador de 75-90 minutos concebido para hacer bailar al público y dinamizar la sala.
 • **Producción técnica ágil:** Montaje rápido (30-45 min) con rider limpio y adaptable a cualquier escenario${aforo ? ` (aforo estimado: ${aforo})` : ""}.
 • **Modelo colaborativo:** Flexibilidad de taquilla/caché y total apertura a coordinar fecha doble con bandas locales de ${ciudad || "la zona"} para asegurar buena entrada y venta de barra.
-${linksBlock}
+
+${dossierNote}
 
 ¿Cómo tenéis la agenda para los próximos meses para valorar una fecha?
 
 ¡Muchas gracias por vuestro tiempo y por seguir apostando por la música en directo!
 
-Un saludo cordial,
-Equipo de Booking & Management — ${bandName}${contactLine}`;
+Un saludo cordial,`;
 }
 
 // DeepSeek API integration (OpenAI-compatible)

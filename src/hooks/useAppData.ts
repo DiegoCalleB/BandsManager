@@ -1,6 +1,33 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, User, Fan, Tour, EPKConfig } from '../types';
+import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, User, Fan, Tour, EPKConfig, BookingCampaign } from '../types';
 import { api, ApiError } from '../services/api';
+
+const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
+  {
+    id: 'camp-dic-2026',
+    name: 'Campaña Diciembre 2026 (Madrid & Centro)',
+    targetCities: ['Madrid', 'Toledo', 'Guadalajara'],
+    minCapacity: 300,
+    maxCapacity: 500,
+    targetDates: ['2026-12-04', '2026-12-05', '2026-12-11', '2026-12-12'],
+    targetDatesText: '4 y 5 de diciembre, 11 y 12 de diciembre',
+    notes: 'Presentación del nuevo single y co-booking en salas de aforo medio.',
+    isActive: true,
+    color: '#8b5cf6'
+  },
+  {
+    id: 'camp-primavera-2027',
+    name: 'Gira Primavera 2027 (Levante & Norte)',
+    targetCities: ['Barcelona', 'Valencia', 'Bilbao', 'Zaragoza'],
+    minCapacity: 200,
+    maxCapacity: 450,
+    targetDates: ['2027-04-09', '2027-04-10', '2027-04-23', '2027-04-24'],
+    targetDatesText: '9 y 10 de abril, 23 y 24 de abril',
+    notes: 'Gira de salas con intercambio de público con bandas aliadas de la zona.',
+    isActive: false,
+    color: '#f59e0b'
+  }
+];
 
 export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -14,6 +41,20 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const [bandUsers, setBandUsers] = useState<User[]>([]);
   const [fans, setFans] = useState<Fan[]>([]);
   const [epkConfig, setEpkConfig] = useState<Partial<EPKConfig>>({});
+  const [campaigns, setCampaigns] = useState<BookingCampaign[]>(() => {
+    try {
+      const cached = localStorage.getItem('bandmanager_campaigns');
+      if (cached) return JSON.parse(cached);
+    } catch (_) {}
+    return DEFAULT_CAMPAIGNS;
+  });
+  const [activeCampaign, setActiveCampaign] = useState<BookingCampaign | null>(() => {
+    try {
+      const cached = localStorage.getItem('bandmanager_active_campaign');
+      if (cached) return JSON.parse(cached);
+    } catch (_) {}
+    return DEFAULT_CAMPAIGNS.find(c => c.isActive) || DEFAULT_CAMPAIGNS[0];
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error'>('syncing');
@@ -45,6 +86,15 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       setBandUsers(dedupeById(data.users || []));
       setFans(dedupeById(data.fans || []));
       setEpkConfig(data.epkConfig || {});
+      if (Array.isArray((data as any).campaigns) && (data as any).campaigns.length > 0) {
+        setCampaigns((data as any).campaigns);
+        localStorage.setItem('bandmanager_campaigns', JSON.stringify((data as any).campaigns));
+        const active = (data as any).campaigns.find((c: BookingCampaign) => c.isActive);
+        if (active) {
+          setActiveCampaign(active);
+          localStorage.setItem('bandmanager_active_campaign', JSON.stringify(active));
+        }
+      }
       setSyncStatus('synced');
     } catch (e) {
       console.warn(`Connecting to server (attempt ${retryCount + 1}):`, e);
@@ -182,6 +232,18 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       await api.deleteLead(id);
     } catch (e) {
       console.error('Error deleting lead:', e);
+      fetchState();
+    }
+  };
+
+  const handleBulkDeleteLeads = async (ids: string[]) => {
+    if (!ids || ids.length === 0) return;
+    const idsSet = new Set(ids);
+    setLeads(prev => prev.filter(l => !idsSet.has(l.id)));
+    try {
+      await api.bulkDeleteLeads(ids);
+    } catch (e) {
+      console.error('Error bulk deleting leads:', e);
       fetchState();
     }
   };
@@ -350,6 +412,107 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     }
   };
 
+  const handleSaveCampaign = async (campaignData: Partial<BookingCampaign>) => {
+    const dates = campaignData.targetDates || [];
+    const formattedDatesText = campaignData.targetDatesText || (dates.length > 0 ? dates.map(d => {
+      const parts = d.split('-');
+      if (parts.length === 3) {
+        const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+      }
+      return d;
+    }).join(', ') : 'Sin fechas');
+
+    const campaignId = campaignData.id || `camp-${Date.now()}`;
+    const fullCampaign: BookingCampaign = {
+      id: campaignId,
+      band_id: campaignData.band_id || bandId || 'bakandeya',
+      name: campaignData.name || 'Nueva Campaña',
+      targetCities: campaignData.targetCities || [],
+      minCapacity: Number(campaignData.minCapacity || 0),
+      maxCapacity: Number(campaignData.maxCapacity || 0),
+      targetDates: dates,
+      targetDatesText: formattedDatesText,
+      notes: campaignData.notes || '',
+      isActive: Boolean(campaignData.isActive),
+      color: campaignData.color || '#8b5cf6',
+      created_at: campaignData.created_at || new Date().toISOString()
+    };
+
+    setCampaigns(prev => {
+      const exists = prev.some(c => c.id === fullCampaign.id);
+      let next: BookingCampaign[];
+      if (exists) {
+        next = prev.map(c => c.id === fullCampaign.id ? fullCampaign : (fullCampaign.isActive ? { ...c, isActive: false } : c));
+      } else {
+        next = [fullCampaign, ...(fullCampaign.isActive ? prev.map(c => ({ ...c, isActive: false })) : prev)];
+      }
+      localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
+      return next;
+    });
+
+    if (fullCampaign.isActive) {
+      setActiveCampaign(fullCampaign);
+      localStorage.setItem('bandmanager_active_campaign', JSON.stringify(fullCampaign));
+    }
+
+    try {
+      await api.saveCampaign(fullCampaign);
+    } catch (e) {
+      console.warn('Could not persist campaign to backend:', e);
+    }
+    return fullCampaign;
+  };
+
+  const handleDeleteCampaign = async (id: string) => {
+    setCampaigns(prev => {
+      const next = prev.filter(c => c.id !== id);
+      localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
+      return next;
+    });
+    if (activeCampaign?.id === id) {
+      setActiveCampaign(null);
+      localStorage.removeItem('bandmanager_active_campaign');
+    }
+    try {
+      await api.deleteCampaign(id);
+    } catch (e) {
+      console.warn('Could not delete campaign on backend:', e);
+    }
+  };
+
+  const handleSetActiveCampaign = async (idOrCampaign: string | BookingCampaign | null) => {
+    let targetCampaign: BookingCampaign | null = null;
+    if (typeof idOrCampaign === 'string') {
+      targetCampaign = campaigns.find(c => c.id === idOrCampaign) || null;
+    } else {
+      targetCampaign = idOrCampaign;
+    }
+
+    setActiveCampaign(targetCampaign);
+    if (targetCampaign) {
+      localStorage.setItem('bandmanager_active_campaign', JSON.stringify(targetCampaign));
+      setCampaigns(prev => {
+        const next = prev.map(c => ({ ...c, isActive: c.id === targetCampaign!.id }));
+        localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
+        return next;
+      });
+    } else {
+      localStorage.removeItem('bandmanager_active_campaign');
+      setCampaigns(prev => {
+        const next = prev.map(c => ({ ...c, isActive: false }));
+        localStorage.setItem('bandmanager_campaigns', JSON.stringify(next));
+        return next;
+      });
+    }
+
+    try {
+      await api.setActiveCampaign(targetCampaign ? targetCampaign.id : null);
+    } catch (e) {
+      console.warn('Could not set active campaign on backend:', e);
+    }
+  };
+
   return {
     leads,
     rehearsals,
@@ -362,9 +525,14 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     bandUsers,
     fans,
     epkConfig,
+    campaigns,
+    activeCampaign,
     isLoading,
     syncStatus,
     fetchState,
+    handleSaveCampaign,
+    handleDeleteCampaign,
+    handleSetActiveCampaign,
     handleUpdateEpkConfig,
     handleUpdateLead,
     handleUpdateRehearsal,
@@ -373,6 +541,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     handleDeleteConcert,
     handleAddLead,
     handleDeleteLead,
+    handleBulkDeleteLeads,
     handleDeleteBand,
     handleAddRehearsal,
     handleAddConcert,

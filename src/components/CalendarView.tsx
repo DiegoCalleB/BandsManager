@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Rehearsal, Concert, ThemeColors } from '../types';
+import { Rehearsal, Concert, ThemeColors, BookingCampaign } from '../types';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye } from 'lucide-react';
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
 import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
@@ -10,6 +10,9 @@ interface CalendarViewProps {
  colors: ThemeColors;
  rehearsals: Rehearsal[];
  concerts: Concert[];
+ campaigns?: BookingCampaign[];
+ activeCampaign?: BookingCampaign | null;
+ onNavigate?: (view: string, options?: any) => void;
  onUpdateRehearsal: (id: string, updatedFields: Partial<Rehearsal>) => void;
  onUpdateConcert: (id: string, updatedFields: Partial<Concert>) => void;
  onDeleteRehearsal?: (id: string) => void;
@@ -42,6 +45,9 @@ export default function CalendarView({
  colors,
  rehearsals,
  concerts,
+ campaigns = [],
+ activeCampaign = null,
+ onNavigate,
  onUpdateRehearsal,
  onUpdateConcert,
  onDeleteRehearsal,
@@ -446,11 +452,20 @@ export default function CalendarView({
  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
  }, []);
 
+ // Helper to find campaigns that target a specific date
+ const getCampaignsForDate = React.useCallback((dateStr: string): BookingCampaign[] => {
+   if (!campaigns || campaigns.length === 0) return [];
+   return campaigns.filter(c => Array.isArray(c.targetDates) && c.targetDates.includes(dateStr));
+ }, [campaigns]);
+
+ // Upcoming events filter state: 'todos' | 'conciertos' | 'ensayos' | 'campañas'
+ const [upcomingFilter, setUpcomingFilter] = useState<'todos' | 'conciertos' | 'ensayos' | 'campañas'>('todos');
+
  // Upcoming events starting from today (filters out past dates)
  const upcomingCalendarEvents = React.useMemo(() => {
  const list: Array<{
  id: string;
- type: 'concierto' | 'ensayo';
+ type: 'concierto' | 'ensayo' | 'campaña';
  title: string;
  fecha: string;
  day: string;
@@ -461,6 +476,7 @@ export default function CalendarView({
  locationQuery: string;
  bandName: string;
  badge: string;
+ campaign?: BookingCampaign;
  }> = [];
 
  // Filter concerts that are today or in the future
@@ -513,9 +529,40 @@ export default function CalendarView({
  });
  });
 
+ // Add campaign target dates (only if no confirmed concert on that same date)
+ (campaigns || []).forEach(camp => {
+   (camp.targetDates || []).forEach(tDate => {
+     if (tDate < todayStr) return;
+     const alreadyHasConcert = filteredConcerts.some(c => c.fecha === tDate);
+     if (alreadyHasConcert) return;
+
+     const parts = tDate.split('-');
+     if (parts.length !== 3) return;
+     const day = parts[2];
+     const monthIdx = parseInt(parts[1], 10) - 1;
+     const month = monthNames[monthIdx] ? monthNames[monthIdx].slice(0, 3).toUpperCase() : 'ENE';
+
+     list.push({
+       id: `camp-date-${camp.id}-${tDate}`,
+       type: 'campaña',
+       title: `🎯 Posible Concierto: ${camp.name}`,
+       fecha: tDate,
+       day,
+       month,
+       salaOrLugar: `Salas en ${camp.targetCities?.join(', ') || 'Ciudad objetivo'}`,
+       ciudad: camp.targetCities?.[0] || 'Madrid',
+       direccion: undefined,
+       locationQuery: `Salas ${camp.targetCities?.join(' ')}, España`,
+       bandName: activeBandName || 'Bakandeya',
+       badge: camp.isActive ? 'Campaña Activa' : 'Objetivo Campaña',
+       campaign: camp
+     });
+   });
+ });
+
  list.sort((a, b) => a.fecha.localeCompare(b.fecha));
  return list;
- }, [filteredConcerts, filteredRehearsals, todayStr, activeBandName, monthNames]);
+ }, [filteredConcerts, filteredRehearsals, campaigns, todayStr, activeBandName, monthNames]);
 
  const handlePrevMonth = () => {
  setViewDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
@@ -983,8 +1030,11 @@ export default function CalendarView({
 
  const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(cell.day).padStart(2, '0')}`;
  const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(formattedDate);
+ const dayCampaigns = getCampaignsForDate(formattedDate);
  const hasConcert = dayConcerts.length > 0;
  const hasRehearsal = dayRehearsals.length > 0;
+ const hasCampaign = dayCampaigns.length > 0;
+ const activeDateCampaign = dayCampaigns.find(c => c.isActive) || dayCampaigns[0];
  const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
 
  const isSelected = selectedDate.getFullYear() === year &&
@@ -1007,6 +1057,8 @@ export default function CalendarView({
  borderAndBgClass = 'bg-amber-950/20 border border-amber-500/40 hover:border-amber-400 hover:shadow-md hover:shadow-amber-500/10 text-amber-200';
  } else if (hasRehearsal) {
  borderAndBgClass = 'bg-emerald-950/20 border border-emerald-500/40 hover:border-emerald-400 hover:shadow-md hover:shadow-emerald-500/10 text-emerald-200';
+ } else if (hasCampaign) {
+ borderAndBgClass = 'bg-purple-950/30 border border-purple-500/50 hover:border-purple-400 hover:shadow-md hover:shadow-purple-500/20 text-purple-200';
  } else {
  borderAndBgClass = isStitchLight
  ? 'bg-white border border-slate-200 hover:border-sky-400 hover:bg-slate-50 text-slate-800 shadow-xs'
@@ -1039,6 +1091,8 @@ export default function CalendarView({
  ? 'text-amber-300 font-bold'
  : hasRehearsal
  ? 'text-emerald-300 font-bold'
+ : hasCampaign
+ ? 'text-purple-300 font-bold'
  : isStitchLight ? 'text-slate-800' : 'text-slate-200'
  }`}>
  {cell.day}
@@ -1047,7 +1101,7 @@ export default function CalendarView({
  {/* Responsive Band & Event Indicators */}
  <div className="w-full flex flex-col items-center justify-center gap-0.5 mb-0.5">
  {/* Desktop / Tablet Band Badges */}
- {dayEvents.length > 0 && (
+ {dayEvents.length > 0 ? (
  <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5 overflow-hidden">
  {dayEvents.slice(0, 2).map((e, idx) => {
  const bName = getEventBandName(e);
@@ -1073,11 +1127,22 @@ export default function CalendarView({
  </div>
  )}
  </div>
- )}
+ ) : hasCampaign && activeDateCampaign ? (
+ <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5 overflow-hidden">
+   <div 
+     className="text-[7.5px] font-mono font-extrabold px-1 py-[1px] rounded border truncate w-full text-center leading-tight bg-purple-500/25 text-purple-200 border-purple-500/50 flex items-center justify-center gap-0.5"
+     title={`Fecha objetivo: ${activeDateCampaign.name} (Salas en ${activeDateCampaign.targetCities?.join(', ') || 'España'})`}
+   >
+     <span>🎯</span>
+     <span className="truncate">Posible Bolo</span>
+   </div>
+ </div>
+ ) : null}
 
  {/* Mobile Compact Band Badges / Dots */}
  <div className="flex sm:hidden gap-1 justify-center items-center w-full">
- {dayEvents.slice(0, 3).map((e, idx) => {
+ {dayEvents.length > 0 ? (
+ dayEvents.slice(0, 3).map((e, idx) => {
  const bName = getEventBandName(e);
  const isConc = 'sala' in e;
  return (
@@ -1094,7 +1159,12 @@ export default function CalendarView({
  {bName.slice(0, 3).toUpperCase()}
  </span>
  );
- })}
+ })
+ ) : hasCampaign ? (
+   <span className="text-[7px] font-mono font-black px-1 py-[0.5px] rounded border bg-purple-500/30 text-purple-200 border-purple-500/60">
+     🎯 BOLO
+   </span>
+ ) : null}
  </div>
  </div>
  </button>
@@ -1373,13 +1443,97 @@ export default function CalendarView({
  <span className={`w-2.5 h-2.5 rounded inline-block ${isStitchLight ? 'bg-sky-500/15' : 'bg-[#f2ca50]'}`} />
  <span>Seleccionado</span>
  </div>
+ <div className="flex items-center gap-1.5">
+ <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_#a855f7]" />
+ <span>🎯 Objetivo Campaña (Posible Concierto)</span>
+ </div>
  </div>
  </div>
 
  {/* RIGHT: LOGISTICS & CHECKLISTS SIDEBAR (1/3 width) */}
  <div className={`${colors.card} p-5 flex flex-col justify-between lg:col-span-1`}>
  {selectedEventDetails.type === 'free' ? (
- <div className="flex flex-col items-center justify-center text-center py-6 space-y-3">
+ <div className="flex flex-col items-center justify-center text-center py-4 space-y-3">
+ {getCampaignsForDate(selectedDateKey).length > 0 ? (
+ <div className="w-full text-left rounded-2xl bg-gradient-to-br from-purple-950/40 via-purple-900/20 to-neutral-900 border border-purple-500/50 p-4 shadow-xl shadow-purple-950/20">
+ <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-purple-500/30">
+ <div className="flex items-center gap-2">
+ <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-300 flex items-center justify-center">
+ <Target className="w-4 h-4" />
+ </div>
+ <div>
+ <span className="text-[9px] font-mono font-extrabold uppercase tracking-wider text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full border border-purple-500/30">
+ 🎯 Fecha Objetivo de Campaña
+ </span>
+ <p className="text-[11px] font-mono text-zinc-300 font-bold mt-0.5">
+ {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+ </p>
+ </div>
+ </div>
+ </div>
+
+ {getCampaignsForDate(selectedDateKey).map(camp => (
+ <div key={camp.id} className="pt-3 space-y-2">
+ <div className="flex items-center justify-between">
+ <h4 className="text-sm font-bold font-display text-zinc-100 flex items-center gap-1.5">
+ <span className="w-2 h-2 rounded-full" style={{ backgroundColor: camp.color || '#8b5cf6' }} />
+ {camp.name}
+ </h4>
+ {camp.isActive && (
+ <span className="text-[8px] font-mono font-black uppercase px-1.5 py-0.5 rounded bg-purple-500 text-white">
+ ACTIVA
+ </span>
+ )}
+ </div>
+
+ <div className="flex flex-wrap gap-2 text-xs text-neutral-300">
+ <span className="inline-flex items-center gap-1 text-sky-300 text-[11px]">
+ <MapPin className="w-3 h-3 text-sky-400" />
+ {camp.targetCities?.join(', ') || 'Cualquier ciudad'}
+ </span>
+ <span className="inline-flex items-center gap-1 text-amber-300 text-[11px]">
+ <Users className="w-3 h-3 text-amber-400" />
+ {camp.minCapacity} - {camp.maxCapacity} pax
+ </span>
+ </div>
+
+ {camp.notes && (
+ <p className="text-[11px] text-neutral-400 italic bg-black/20 p-2 rounded-xl border border-neutral-800">
+ &ldquo;{camp.notes}&rdquo;
+ </p>
+ )}
+
+ <div className="pt-2 flex flex-col sm:flex-row gap-2">
+ {onNavigate && (
+ <button
+ type="button"
+ onClick={() => onNavigate('booking', { campaignFilter: camp.id })}
+ className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+ >
+ <Building2 className="w-3 h-3 text-purple-300" />
+ <span>Salas CRM</span>
+ </button>
+ )}
+
+ <button
+ type="button"
+ onClick={() => {
+ setConcCiudad(camp.targetCities?.[0] || 'Madrid');
+ setConcAforo(String(camp.minCapacity || 250));
+ setConcNotas(`Concierto agendado para la campaña "${camp.name}".`);
+ setShowCreateModal('concert');
+ }}
+ className="flex-1 py-1.5 px-2.5 rounded-xl text-[10px] font-mono font-bold bg-purple-600 hover:bg-purple-500 text-white shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+ >
+ <Plus className="w-3 h-3" />
+ <span>Confirmar Concierto</span>
+ </button>
+ </div>
+ </div>
+ ))}
+ </div>
+ ) : (
+ <>
  <div className={`p-3 rounded-full ${isStitchLight ? 'bg-slate-100 text-slate-400' : 'bg-neutral-800 text-neutral-500'}`}>
  <Calendar className="w-6 h-6" />
  </div>
@@ -1421,20 +1575,56 @@ export default function CalendarView({
  <span>+ Agendar Concierto</span>
  </button>
  </div>
+ </>
+ )}
 
  {/* Quick GPS & Upcoming Events List */}
  <div className={`w-full text-left mt-4 pt-3 space-y-2.5 ${isStitchLight ? 'border-t border-slate-200' : 'border-t border-neutral-800'}`}>
+ <div className="flex items-center justify-between gap-1 flex-wrap">
  <div className={`flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
  <MapPin className="w-3.5 h-3.5" />
  <span>Próximas Fechas ({upcomingCalendarEvents.length})</span>
  </div>
+
+ {/* Filter Buttons */}
+ <div className="flex items-center gap-1">
+ {[
+ { id: 'todos', label: 'Todas' },
+ { id: 'conciertos', label: 'Bolos' },
+ { id: 'campañas', label: '🎯 Campañas' }
+ ].map(f => (
+ <button
+ key={f.id}
+ onClick={() => setUpcomingFilter(f.id as any)}
+ className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold transition-all cursor-pointer ${
+ upcomingFilter === f.id
+ ? 'bg-amber-400/20 text-amber-300 border border-amber-400/40'
+ : 'text-neutral-500 hover:text-neutral-300'
+ }`}
+ >
+ {f.label}
+ </button>
+ ))}
+ </div>
+ </div>
+
  <div className="space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
- {upcomingCalendarEvents.length === 0 ? (
+ {upcomingCalendarEvents.filter(evt => {
+ if (upcomingFilter === 'conciertos') return evt.type === 'concierto';
+ if (upcomingFilter === 'ensayos') return evt.type === 'ensayo';
+ if (upcomingFilter === 'campañas') return evt.type === 'campaña';
+ return true;
+ }).length === 0 ? (
  <p className={`text-[10px] italic text-center py-4 ${textMuted}`}>
- No hay próximas fechas o conciertos programados a partir de hoy.
+ No hay próximas fechas con el filtro seleccionado.
  </p>
  ) : (
- upcomingCalendarEvents.map(evt => (
+ upcomingCalendarEvents.filter(evt => {
+ if (upcomingFilter === 'conciertos') return evt.type === 'concierto';
+ if (upcomingFilter === 'ensayos') return evt.type === 'ensayo';
+ if (upcomingFilter === 'campañas') return evt.type === 'campaña';
+ return true;
+ }).map(evt => (
  <div
  key={evt.id}
  onClick={() => {
@@ -1447,17 +1637,25 @@ export default function CalendarView({
  }
  }}
  className={`p-2.5 rounded-xl flex items-start gap-3 transition-all cursor-pointer ${
- isStitchLight ? 'bg-white hover:border-sky-400 hover:shadow-sm border border-slate-200' : 'bg-[#141414] hover:border-amber-500/40 border border-zinc-800'
+ evt.type === 'campaña'
+ ? 'bg-purple-950/20 hover:border-purple-500/50 border border-purple-500/30'
+ : isStitchLight ? 'bg-white hover:border-sky-400 hover:shadow-sm border border-slate-200' : 'bg-[#141414] hover:border-amber-500/40 border border-zinc-800'
  }`}
  >
  {/* Custom calendar badge: Day number top, short month bottom */}
  <div className={`w-11 h-11 rounded-xl flex flex-col items-center justify-center shrink-0 shadow-sm border ${
- isStitchLight ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-[#1c1b1b] border-amber-500/30 text-neutral-100'
+ evt.type === 'campaña'
+ ? 'bg-purple-900/30 border-purple-500/40 text-purple-200'
+ : isStitchLight ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-[#1c1b1b] border-amber-500/30 text-neutral-100'
  }`}>
- <span className={`text-base font-mono font-black leading-none ${isStitchLight ? 'text-sky-500' : 'text-amber-400'}`}>
+ <span className={`text-base font-mono font-black leading-none ${
+ evt.type === 'campaña' ? 'text-purple-300' : isStitchLight ? 'text-sky-500' : 'text-amber-400'
+ }`}>
  {evt.day}
  </span>
- <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${isStitchLight ? 'text-slate-600' : 'text-amber-300'}`}>
+ <span className={`text-[9px] font-mono font-extrabold uppercase tracking-widest mt-0.5 ${
+ evt.type === 'campaña' ? 'text-purple-200' : isStitchLight ? 'text-slate-600' : 'text-amber-300'
+ }`}>
  {evt.month}
  </span>
  </div>
@@ -1467,9 +1665,11 @@ export default function CalendarView({
  <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
  evt.type === 'concierto'
  ? isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+ : evt.type === 'campaña'
+ ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
  : isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
  }`}>
- {evt.type}
+ {evt.type === 'campaña' ? '🎯 Posible Bolo' : evt.type}
  </span>
  {evt.bandName && (
  <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-zinc-800/80 text-amber-200 border border-amber-500/30 truncate max-w-[100px]" title={evt.bandName}>
@@ -1483,6 +1683,7 @@ export default function CalendarView({
  {evt.direccion && (
  <p className={`text-[10px] font-sans ${textSub} mt-0.5`}>📍 {evt.direccion}</p>
  )}
+ {evt.type !== 'campaña' ? (
  <div className="mt-1 flex justify-center">
  <DirectionsCard 
  query={evt.locationQuery} 
@@ -1491,6 +1692,11 @@ export default function CalendarView({
  isStitchLight={isStitchLight} 
  />
  </div>
+ ) : (
+ <p className="text-[10px] font-mono text-purple-300/80 mt-0.5">
+ {evt.salaOrLugar}
+ </p>
+ )}
  </div>
  </div>
  ))

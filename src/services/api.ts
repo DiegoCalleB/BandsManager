@@ -1,4 +1,4 @@
-import { Lead, Rehearsal, Concert, SocialPost, Payment, SocialMetric, Fan, User, Tour, EPKConfig, Message } from '../types';
+import { Lead, Rehearsal, Concert, SocialPost, Payment, SocialMetric, Fan, User, Tour, EPKConfig, Message, BookingCampaign } from '../types';
 
 export class ApiError extends Error {
   status: number;
@@ -283,6 +283,19 @@ export const api = {
   },
 
   // Leads
+  async getLeads(params?: { page?: number; limit?: number; estado?: string; search?: string; ciudad?: string; sortBy?: string; sortOrder?: string }): Promise<{ leads: Lead[]; pagination?: { page: number; limit: number; total: number; totalPages: number } }> {
+    const query = new URLSearchParams();
+    if (params?.page) query.set('page', String(params.page));
+    if (params?.limit) query.set('limit', String(params.limit));
+    if (params?.estado && params.estado !== 'todos') query.set('estado', params.estado);
+    if (params?.search) query.set('search', params.search);
+    if (params?.ciudad) query.set('ciudad', params.ciudad);
+    if (params?.sortBy) query.set('sortBy', params.sortBy);
+    if (params?.sortOrder) query.set('sortOrder', params.sortOrder);
+    const qs = query.toString();
+    return request(`/api/leads${qs ? `?${qs}` : ''}`);
+  },
+
   async createLead(lead: Lead): Promise<Lead> {
     return request('/api/leads', {
       method: 'POST',
@@ -300,6 +313,20 @@ export const api = {
   async deleteLead(id: string): Promise<void> {
     return request(`/api/leads/${id}`, {
       method: 'DELETE'
+    });
+  },
+
+  async bulkDeleteLeads(ids: string[]): Promise<{ success: boolean; count: number }> {
+    return request('/api/leads/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids })
+    });
+  },
+
+  async bulkDeleteBands(ids: string[]): Promise<{ success: boolean; count: number }> {
+    return request('/api/bands/bulk-delete', {
+      method: 'POST',
+      body: JSON.stringify({ ids })
     });
   },
 
@@ -594,6 +621,7 @@ export const api = {
     tono_rating?: number;
     contenido_rating?: number;
     providers?: string[];
+    activeCampaign?: any;
   }): Promise<{
     success: boolean;
     leadId: string;
@@ -657,6 +685,72 @@ export const api = {
     return request('/api/metrics/generate-growth-plan', {
       method: 'POST',
       body: JSON.stringify(data)
+    });
+  },
+
+  // Booking Campaigns CRUD & Active Campaign State
+  async getCampaigns(): Promise<{ success: boolean; campaigns: BookingCampaign[] }> {
+    return request('/api/campaigns');
+  },
+
+  async saveCampaign(campaign: Partial<BookingCampaign>): Promise<{ success: boolean; campaign: BookingCampaign }> {
+    return request('/api/campaigns', {
+      method: 'POST',
+      body: JSON.stringify(campaign)
+    });
+  },
+
+  async updateCampaign(id: string, campaign: Partial<BookingCampaign>): Promise<{ success: boolean; campaign: BookingCampaign }> {
+    return request(`/api/campaigns/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(campaign)
+    });
+  },
+
+  async deleteCampaign(id: string): Promise<{ success: boolean; message?: string }> {
+    return request(`/api/campaigns/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  async setActiveCampaign(id: string | null): Promise<{ success: boolean; activeCampaign: BookingCampaign | null; campaigns: BookingCampaign[] }> {
+    return request('/api/campaigns/active', {
+      method: 'POST',
+      body: JSON.stringify({ id })
+    });
+  },
+
+  // Búsqueda masiva de recintos para la campaña activa sin duplicados
+  async campaignMassSearch(params: {
+    targetCities?: string[];
+    minCapacity?: number;
+    maxCapacity?: number;
+    tipos?: string[];
+    campaignName?: string;
+    campaignId?: string;
+    limitPerCity?: number;
+  }): Promise<{
+    success: boolean;
+    campaignName: string;
+    targetCities: string[];
+    minCapacity: number;
+    maxCapacity: number | null;
+    totalDiscovered: number;
+    newVenuesCount: number;
+    alreadyInCrmCount: number;
+    results: any[];
+    error?: string;
+  }> {
+    return request('/api/leads/campaign-mass-search', {
+      method: 'POST',
+      body: JSON.stringify(params)
+    });
+  },
+
+  // Trigger manual o automático del refinamiento del ADN de Tono (Self-Refining Tone DNA)
+  async trainToneDna(): Promise<{ success: boolean; message?: string; error?: string }> {
+    return request('/api/leads/train-tone-dna', {
+      method: 'POST'
     });
   }
 };
