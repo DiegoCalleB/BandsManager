@@ -4,7 +4,7 @@ import { dbGetLeadById, dbUpsertLead } from "../../db.js";
 import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkConfig } from "../../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
-import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
+import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback, isCampaignActive } from "../../utils/bandDna.js";
 import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, triggerSelfRefiningToneDnaBackground, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 
 const router = express.Router();
@@ -115,7 +115,7 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     let isSimulated = false;
 
     const feedbackDetails: string[] = [];
-    if (activeCampaign && activeCampaign.isActive) {
+    if (isCampaignActive(activeCampaign)) {
       feedbackDetails.push(`CONTEXTO DE CAMPAÑA IMPORTANTE: Menciona que buscamos fecha específicamente para el ${activeCampaign.targetDatesText || 'rango objetivo'}, enfocando a un aforo de ${activeCampaign.minCapacity}-${activeCampaign.maxCapacity}.`);
     }
     if (tono_rating) feedbackDetails.push(`Puntuación de tono deseado: ${tono_rating}/5`);

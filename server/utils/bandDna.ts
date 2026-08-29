@@ -42,6 +42,24 @@ export interface BandDnaProfile {
   vocabularioAprendido?: string[];
   terminosAEvitar?: string[];
   fewShotSection?: string;
+  // ADN de voz y tono entrenado manualmente por el mánager (BandToneModal / dna_expresion)
+  tonoComunicacion?: string;
+  tratamientoHabitual?: string;
+  nivelEnergia?: string;
+  vocabularioClave?: string[];
+  frasesEmblematicas?: string[];
+  emojisFrecuentes?: string[];
+  puntosFuertesConectar?: string;
+  recomendacionPitch?: string;
+}
+
+function strOrUndef(v: any): string | undefined {
+  return typeof v === "string" && v.trim() ? v.trim() : undefined;
+}
+
+/** Una campaña sin `isActive`/`is_active` explícito a `false` se trata como activa. */
+export function isCampaignActive(campaign: any): boolean {
+  return Boolean(campaign) && campaign.isActive !== false && campaign.is_active !== false;
 }
 
 /**
@@ -160,6 +178,19 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   const vocabularioAprendido = Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined;
   const terminosAEvitar = Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined;
 
+  // ADN de voz entrenado a mano por el mánager en BandToneModal (POST /api/bands/analyze-tone,
+  // PATCH /api/bands/tone-dna). Hasta ahora solo alimentaba Reels/chat (bandProfile.ts) y nunca
+  // llegaba al Redactor de pitches, así que el mánager entrenaba tono y vocabulario sin que
+  // tuviera ningún efecto real en los correos a salas.
+  const tonoComunicacion = strOrUndef(dnaExpresion.tono_comunicacion);
+  const tratamientoHabitual = strOrUndef(dnaExpresion.tratamiento_habitual);
+  const nivelEnergia = strOrUndef(dnaExpresion.nivel_energia);
+  const vocabularioClave = Array.isArray(dnaExpresion.vocabulario_clave) ? dnaExpresion.vocabulario_clave : undefined;
+  const frasesEmblematicas = Array.isArray(dnaExpresion.frases_emblematicas_extraidas) ? dnaExpresion.frases_emblematicas_extraidas : undefined;
+  const emojisFrecuentes = Array.isArray(dnaExpresion.emojis_frecuentes) ? dnaExpresion.emojis_frecuentes : undefined;
+  const puntosFuertesConectar = strOrUndef(dnaExpresion.puntos_fuertes_para_conectar);
+  const recomendacionPitch = strOrUndef(dnaExpresion.recomendacion_pitch);
+
   return {
     bandId,
     cleanId,
@@ -191,7 +222,15 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     cargoFirma,
     reglasEstiloAprendidas,
     vocabularioAprendido,
-    terminosAEvitar
+    terminosAEvitar,
+    tonoComunicacion,
+    tratamientoHabitual,
+    nivelEnergia,
+    vocabularioClave,
+    frasesEmblematicas,
+    emojisFrecuentes,
+    puntosFuertesConectar,
+    recomendacionPitch
   };
 }
 
@@ -205,7 +244,7 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
 
   let campaignSection = "";
-  if (activeCampaign && (activeCampaign.isActive !== false && activeCampaign.is_active !== false)) {
+  if (isCampaignActive(activeCampaign)) {
     const cName = activeCampaign.name || "Campaña de Booking";
     const cDates = activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign.target_dates) ? activeCampaign.target_dates.join(', ') : 'próximas semanas/meses'));
     const cCities = Array.isArray(activeCampaign.targetCities) && activeCampaign.targetCities.length > 0 ? activeCampaign.targetCities.join(', ') : (Array.isArray(activeCampaign.target_cities) ? activeCampaign.target_cities.join(', ') : 'España');
@@ -254,13 +293,24 @@ ${campaignSection}
 4. CONDICIONES ECONÓMICAS Y CO-BOOKING:
    - Modelo: ${bandDna.flexibilidadEconomica}
    - Co-booking: ${bandDna.propuestaCoBooking}
+${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || bandDna.nivelEnergia || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || (bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0) || bandDna.puntosFuertesConectar || bandDna.recomendacionPitch) ? `
+5. ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER (MANDA SOBRE EL TONO GENÉRICO DE MÁS ABAJO):
+${bandDna.tonoComunicacion ? `   - Tono de comunicación habitual: ${bandDna.tonoComunicacion}` : ""}
+${bandDna.tratamientoHabitual ? `   - Tratamiento habitual: ${bandDna.tratamientoHabitual}` : ""}
+${bandDna.nivelEnergia ? `   - Nivel de energía: ${bandDna.nivelEnergia}` : ""}
+${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `   - Vocabulario propio (úsalo de verdad en el texto, no lo dejes solo como referencia): ${bandDna.vocabularioClave.join(", ")}` : ""}
+${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `   - Frases/expresiones emblemáticas suyas (cuélalas tal cual si encajan de forma natural): ${bandDna.frasesEmblematicas.map(f => `"${f}"`).join(" | ")}` : ""}
+${bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0 ? `   - Emojis que usan de verdad, solo si el registro del correo los admite con moderación profesional: ${bandDna.emojisFrecuentes.join(" ")}` : ""}
+${bandDna.puntosFuertesConectar ? `   - Puntos fuertes para conectar con el destinatario: ${bandDna.puntosFuertesConectar}` : ""}
+${bandDna.recomendacionPitch ? `   - Recomendación de enfoque de pitch para esta banda (análisis de IA sobre su ADN real): ${bandDna.recomendacionPitch}` : ""}
+` : ""}
 ${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-5. REGLAS DE ESTILO APRENDIDAS DE LA BANDA (SELF-REFINING TONE DNA):
+6. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS (SELF-REFINING TONE DNA):
 ${bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n")}
 ${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
 ${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
 ` : ""}
-6. ENLACES Y DOSSIER:
+7. ENLACES Y DOSSIER:
    - REGLA DE ORO DE ENLACES: No saturar el cuerpo del correo con enlaces a plataformas de streaming en medio del texto. En el cuerpo del correo únicamente se hace referencia elegante al Dossier Oficial / EPK y Rider Técnico adjunto al pie de la firma (${bandDna.epkUrl}), donde el programador encontrará toda la información, vídeos en directo, temas y rider.
 
 ═════════════════════════════════════════════════════════════════════
