@@ -5,6 +5,7 @@ import {
   formatSecondsToTime,
   defaultScheduleDate,
   validateScheduleReadiness,
+  getCadenceWarnings,
 } from '../reelsUtils';
 
 describe('reelsUtils', () => {
@@ -75,6 +76,42 @@ describe('reelsUtils', () => {
         now: ahora,
       });
       expect(problemas).toContain('La fecha y hora elegidas ya han pasado.');
+    });
+  });
+
+  describe('getCadenceWarnings', () => {
+    it('sin posts previos no hay ningún aviso', () => {
+      expect(getCadenceWarnings({ posts: [], platform: 'Instagram', scheduledDate: '2026-08-30', scheduledTime: '20:30' })).toEqual([]);
+    });
+
+    it('avisa si hay otro post en la misma red muy cerca en el tiempo', () => {
+      const posts = [{ fecha: '2026-08-30 21:00', plataforma: 'Instagram' }];
+      const avisos = getCadenceWarnings({ posts, platform: 'Instagram', scheduledDate: '2026-08-30', scheduledTime: '20:30' });
+      expect(avisos.some((a) => a.includes('Instagram'))).toBe(true);
+    });
+
+    it('no avisa de cercanía si el otro post es en otra red', () => {
+      const posts = [{ fecha: '2026-08-30 21:00', plataforma: 'TikTok' }];
+      const avisos = getCadenceWarnings({ posts, platform: 'Instagram', scheduledDate: '2026-08-30', scheduledTime: '20:30' });
+      expect(avisos.some((a) => a.includes('Instagram'))).toBe(false);
+    });
+
+    it('no avisa de cercanía si el otro post está lejos en el tiempo', () => {
+      const posts = [{ fecha: '2026-08-28 08:00', plataforma: 'Instagram' }];
+      const avisos = getCadenceWarnings({ posts, platform: 'Instagram', scheduledDate: '2026-08-30', scheduledTime: '20:30' });
+      expect(avisos.some((a) => a.toLowerCase().includes('menos de'))).toBe(false);
+    });
+
+    it('avisa de un hueco grande sin publicar nada antes de este post', () => {
+      const posts = [{ fecha: '2026-08-01 20:00', plataforma: 'Instagram' }];
+      const avisos = getCadenceWarnings({ posts, platform: 'Instagram', scheduledDate: '2026-08-30', scheduledTime: '20:30' });
+      expect(avisos.some((a) => a.includes('días sin nada programado'))).toBe(true);
+    });
+
+    it('no avisa de hueco si el post anterior es reciente', () => {
+      const posts = [{ fecha: '2026-08-27 20:00', plataforma: 'Instagram' }];
+      const avisos = getCadenceWarnings({ posts, platform: 'Instagram', scheduledDate: '2026-08-30', scheduledTime: '20:30' });
+      expect(avisos.some((a) => a.includes('días sin nada programado'))).toBe(false);
     });
   });
 });
