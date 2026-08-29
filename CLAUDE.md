@@ -36,7 +36,7 @@ Type checking is not an npm script; CI runs `npx tsc --noEmit` directly (see bel
 
 On every push/PR, CI runs, in order: `npx tsc --noEmit` (see gate below), `npm run lint`, `npm test`. Match this locally before pushing.
 
-**tsc error-count ratchet:** CI fails if `npx tsc --noEmit`'s total error count exceeds `BASELINE` in the workflow file (currently `118`) — so it's fine to leave *pre-existing* type errors alone, but never add new ones on top. Separately, CI has **zero tolerance** for `TS2304`/`TS2551`/`TS2552` (undeclared name / missing import / nonexistent method) anywhere, since those are guaranteed runtime crashes, not just type nits. As of this writing the actual count is **0** — the baseline is stale and well above reality; it should be lowered (see improvement list below) so it actually catches regressions instead of allowing 118 new errors back in before it trips.
+**tsc error-count ratchet:** CI fails if `npx tsc --noEmit`'s total error count exceeds `BASELINE` in the workflow file (currently `5`, lowered from a stale `118` now that the real count is `0` — small margin so one minor `@types/*` bump doesn't break CI outright) — so it's fine to leave *pre-existing* type errors alone, but never add new ones on top. Separately, CI has **zero tolerance** for `TS2304`/`TS2551`/`TS2552` (undeclared name / missing import / nonexistent method) anywhere, since those are guaranteed runtime crashes, not just type nits.
 
 ## Architecture
 
