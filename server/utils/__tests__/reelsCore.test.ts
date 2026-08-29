@@ -12,6 +12,7 @@ import {
   buildVtt,
   buildWordOffsets,
   buildAssSubtitles,
+  buildKaraokeAssSubtitles,
   buildVerticalFilter,
   escapeFilterPath,
   decodeTranscriptText,
@@ -241,6 +242,44 @@ describe('subtítulos', () => {
   it('escapa las llaves del texto para que ASS no las lea como override', () => {
     const ass = buildAssSubtitles([{ text: 'un {tag} raro', start: 0, end: 1 }]);
     expect(ass).toContain('\\{tag\\}');
+  });
+
+  describe('karaoke (resaltado palabra a palabra)', () => {
+    it('mete una etiqueta \\k por palabra, con la línea completa como Dialogue', () => {
+      const ass = buildKaraokeAssSubtitles([{ text: 'hola mundo', start: 0, end: 2 }]);
+      expect(ass).toContain('[Script Info]');
+      expect(ass).toContain('Dialogue: 0,0:00:00.00,0:00:02.00,Reel');
+      expect(ass).toMatch(/\{\\k\d+\}hola/);
+      expect(ass).toMatch(/\{\\k\d+\}mundo/);
+    });
+
+    it('las centésimas de cada \\k suman aproximadamente la duración del cue', () => {
+      const ass = buildKaraokeAssSubtitles([{ text: 'una dos tres', start: 0, end: 3 }]);
+      const centesimas = [...ass.matchAll(/\\k(\d+)\}/g)].map((m) => Number(m[1]));
+      expect(centesimas).toHaveLength(3);
+      const total = centesimas.reduce((a, b) => a + b, 0);
+      expect(total).toBeGreaterThanOrEqual(295);
+      expect(total).toBeLessThanOrEqual(305);
+    });
+
+    it('escapa las llaves del texto igual que la versión estática', () => {
+      const ass = buildKaraokeAssSubtitles([{ text: 'un {tag} raro', start: 0, end: 1 }]);
+      expect(ass).toContain('\\{tag\\}');
+    });
+
+    it('reparte líneas muy largas en como mucho 3 líneas visuales', () => {
+      const textoLargo = 'esta es una frase bastante larga que debería partirse en varias líneas visuales para caber en un móvil vertical';
+      const ass = buildKaraokeAssSubtitles([{ text: textoLargo, start: 0, end: 6 }]);
+      const dialogo = ass.split('\n').find((l) => l.startsWith('Dialogue:')) || '';
+      const saltos = (dialogo.match(/\\N/g) || []).length;
+      expect(saltos).toBeLessThanOrEqual(2);
+    });
+
+    it('sin cues devuelve solo cabecera, sin diálogos', () => {
+      const ass = buildKaraokeAssSubtitles([]);
+      expect(ass).toContain('[Events]');
+      expect(ass).not.toContain('Dialogue:');
+    });
   });
 });
 

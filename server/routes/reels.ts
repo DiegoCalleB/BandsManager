@@ -58,6 +58,7 @@ import {
   buildVtt,
   buildWordOffsets,
   buildAssSubtitles,
+  buildKaraokeAssSubtitles,
   buildVerticalFilter,
   escapeFilterPath,
   decodeTranscriptText,
@@ -798,6 +799,11 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     cropVertical = true,
     cropMode: cropModeRaw,
     burnSubtitles = false,
+    // Resaltado palabra por palabra (estilo TikTok/CapCut) en vez de la línea estática de
+    // siempre: sube la retención y ya teníamos calculados los tiempos por palabra, solo se
+    // enseñaban en pantalla sin llegar a quemarse en el vídeo. Por defecto activado: es
+    // estrictamente una mejora visual sobre el subtítulo plano anterior.
+    karaokeSubtitles = true,
     inlineBase64 = false
   } = req.body || {};
 
@@ -847,7 +853,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
 
     const incrustarSubs = Boolean(burnSubtitles) && cues.length > 0;
     if (incrustarSubs) {
-      await fs.promises.writeFile(rutaAss, buildAssSubtitles(cues), "utf-8");
+      const assContent = karaokeSubtitles ? buildKaraokeAssSubtitles(cues) : buildAssSubtitles(cues);
+      await fs.promises.writeFile(rutaAss, assContent, "utf-8");
     }
 
     console.log(`[Reels] ffmpeg: modo ${cropMode}, subtítulos incrustados: ${incrustarSubs}`);
