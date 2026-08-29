@@ -1841,30 +1841,26 @@ export default function BookingCRM({
         setBulkProgressState(prev => ({ ...prev, items: [...updatedItems], currentIndex: i }));
 
         try {
+          const campaignIsActive = Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true));
           const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
             method: 'POST',
             body: JSON.stringify({
-              targetCities: activeCampaign?.targetCities,
-              targetDates: activeCampaign?.targetDates
+              activeCampaign: campaignIsActive ? activeCampaign : undefined
             })
           });
 
-          if (res.success && (res.pitch || res.pitch_generado || res.data?.pitch_generado)) {
-            const pitchText = res.pitch || res.pitch_generado || res.data?.pitch_generado;
+          if (res.success && res.newPitchText) {
             onUpdateLead(targetLead.id, {
-              pitch_generado: pitchText,
+              pitch_generado: res.newPitchText,
               estado: 'pendiente_aprobacion'
             });
-            updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta redactada' };
+            updatedItems[i] = {
+              ...updatedItems[i],
+              status: 'success',
+              detail: res.simulated ? 'Propuesta lista (motor local ADN)' : 'Propuesta redactada'
+            };
           } else {
-            const bandADN = bandName || 'Nuestra banda';
-            const spotifyLink = epkConfig?.enlacesRedes?.spotify || epkConfig?.enlacesRedes?.website || 'Dossier disponible';
-            const fallbackPitch = `Hola equipo de ${targetLead.nombre_sala},\n\nOs escribimos desde ${bandADN}. Hemos estado siguiendo vuestra programación en ${targetLead.ciudad || 'vuestra ciudad'} y creemos que nuestra propuesta encaja a la perfección con vuestro público.\n\nNos encantaría explorar una fecha conjunta. Podéis escuchar nuestro material aquí: ${spotifyLink}.\n\n¡Un saludo!\n${bandADN}`;
-            onUpdateLead(targetLead.id, {
-              pitch_generado: fallbackPitch,
-              estado: 'pendiente_aprobacion'
-            });
-            updatedItems[i] = { ...updatedItems[i], status: 'success', detail: 'Propuesta lista' };
+            updatedItems[i] = { ...updatedItems[i], status: 'error', detail: res.error || 'No se pudo generar la propuesta' };
           }
         } catch (err: any) {
           updatedItems[i] = { ...updatedItems[i], status: 'error', detail: err.message || 'Error al generar' };
