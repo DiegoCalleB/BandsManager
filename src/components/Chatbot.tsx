@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
 import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
-import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save } from 'lucide-react';
+import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Download } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
+import { eventosAMidiBlob } from '../utils/midiExport';
 import { uploadFileToServer } from '../utils/audioStorage';
 
 interface ProposedAction {
@@ -380,6 +381,25 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
      console.error('Error guardando idea melódica en el repertorio:', err);
      setMelodicIdeaAudio(prev => ({ ...prev, [key]: { ...prev[key], saving: false, saveError: err?.message || 'No se pudo guardar en el repertorio.' } }));
    }
+ };
+
+ const handleDownloadMelodicIdeaMidi = (params: NonNullable<ProposedAction['melodicIdea']>) => {
+   const instrumentLabel = params.instrument.charAt(0).toUpperCase() + params.instrument.slice(1);
+   const blob = eventosAMidiBlob({
+     eventos: params.eventos,
+     bpm: params.bpm,
+     instrument: params.instrument,
+     nombrePista: `Idea IA ${instrumentLabel} ${params.keyName}`
+   });
+
+   const url = URL.createObjectURL(blob);
+   const enlace = document.createElement('a');
+   enlace.href = url;
+   enlace.download = `idea-${params.instrument}-${params.keyName}-${params.bpm}bpm.mid`;
+   document.body.appendChild(enlace);
+   enlace.click();
+   document.body.removeChild(enlace);
+   URL.revokeObjectURL(url);
  };
 
  const accompanimentAudioRef = useRef(accompanimentAudio);
@@ -1815,6 +1835,18 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {audioState?.url ? (
  <>
  <audio controls src={audioState.url} className="w-full h-9" />
+ <button
+ type="button"
+ onClick={() => {
+   const userMsg = `Genera otra base rítmica en ${acc.keyName}, ${acc.bpm} BPM con patrón ${acc.drumPattern} distinto. Quiero escuchar otra variación del mismo estilo.`;
+   setInputText(userMsg);
+   setTimeout(() => document.getElementById('chatbot-send-btn')?.click(), 100);
+ }}
+ title="Genera una nueva base rítmica (mismo BPM y patrón, pero ritmo diferente)"
+ className={`w-full flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-1.5 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ? 'bg-amber-100 hover:bg-amber-200 text-amber-700 border border-amber-300' : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30'}`}
+ >
+ <RefreshCw className="w-3.5 h-3.5" /> Otra variación
+ </button>
  {audioState.savedToSong ? (
  <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
@@ -1868,6 +1900,28 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  {audioState?.url ? (
  <>
  <audio controls src={audioState.url} className="w-full h-9" />
+ <div className="flex gap-2">
+ <button
+ type="button"
+ onClick={() => handleDownloadMelodicIdeaMidi(idea)}
+ title="Abre en cualquier DAW o editor de partituras para editarla nota a nota"
+ className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-1.5 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ? 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200' : 'bg-transparent hover:bg-neutral-900 text-neutral-400 border border-neutral-800'}`}
+ >
+ <Download className="w-3.5 h-3.5" /> Descargar .mid
+ </button>
+ <button
+ type="button"
+ onClick={() => {
+   const userMsg = `Genera otra variación de la idea de ${idea.instrument} en ${idea.keyName}, ${idea.bpm} BPM para la sección ${idea.seccion || 'general'}. Que sea diferente pero con el mismo carácter.`;
+   setInputText(userMsg);
+   setTimeout(() => document.getElementById('chatbot-send-btn')?.click(), 100);
+ }}
+ title="Genera una nueva variación de esta idea (mismo instrumento, tono y tempo, pero notas distintas)"
+ className={`flex-1 flex items-center justify-center gap-1.5 text-[10px] font-bold font-mono tracking-wider uppercase py-1.5 rounded-lg transition-all cursor-pointer active:scale-95 active:opacity-90 ${isStitchLight ? 'bg-amber-100 hover:bg-amber-200 text-amber-700 border border-amber-300' : 'bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30'}`}
+ >
+ <RefreshCw className="w-3.5 h-3.5" /> Otra variación
+ </button>
+ </div>
  {audioState.savedToSong ? (
  <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
