@@ -1,5 +1,7 @@
 import express from "express";
 import { GoogleGenAI, Modality } from "@google/genai";
+import { requireAuth } from "../state.js";
+import { iaRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -12,7 +14,11 @@ const ai = new GoogleGenAI({
   }
 });
 
-router.post(["/generate", "/generate-music"], async (req, res) => {
+// requireAuth + iaRateLimiter: llegó desde AI Studio sin ninguno de los dos, así que era una
+// pasarela gratis y sin límite a un modelo de pago (Lyria) con la clave de la propia plataforma
+// para cualquiera que diera con la URL — la misma clase de fallo que /write-reels-copy ya
+// tenía cerrada (ver ese comentario en chat.ts).
+router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async (req, res) => {
   try {
     const { prompt, style, lyrics } = req.body;
     const fullPrompt = `Create a professional custom soundtrack, jingle or background music in the musical style of: ${style || 'rock'}. User prompt / description: ${prompt || 'Energetic independent band theme'}. Band style, ideology and lyric context: ${lyrics || 'Independent music passion'}`;

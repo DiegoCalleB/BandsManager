@@ -12,7 +12,7 @@ const router = express.Router();
 // GET /api/campaigns
 router.get("/campaigns", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || "bakandeya";
+    const userBandId = (req as any).user?.band_id;
     const campaigns = await dbGetCampaigns(userBandId);
     res.json({ success: true, campaigns });
   } catch (error: any) {
@@ -24,7 +24,7 @@ router.get("/campaigns", requireAuth, async (req, res) => {
 // POST /api/campaigns
 router.post("/campaigns", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || "bakandeya";
+    const userBandId = (req as any).user?.band_id;
     const campaignData = req.body;
     if (!campaignData || !campaignData.name) {
       return res.status(400).json({ success: false, error: "Nombre de campaña requerido" });
@@ -47,7 +47,7 @@ router.post("/campaigns", requireAuth, async (req, res) => {
 // PUT /api/campaigns/:id
 router.put("/campaigns/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || "bakandeya";
+    const userBandId = (req as any).user?.band_id;
     const { id } = req.params;
     const campaignData = { ...req.body, id };
 
@@ -66,7 +66,7 @@ router.put("/campaigns/:id", requireAuth, async (req, res) => {
 // DELETE /api/campaigns/:id
 router.delete("/campaigns/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || "bakandeya";
+    const userBandId = (req as any).user?.band_id;
     const { id } = req.params;
     await dbDeleteCampaign(id, userBandId);
     res.json({ success: true, message: "Campaña eliminada correctamente" });
@@ -79,7 +79,7 @@ router.delete("/campaigns/:id", requireAuth, async (req, res) => {
 // POST /api/campaigns/active
 router.post("/campaigns/active", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId || "bakandeya";
+    const userBandId = (req as any).user?.band_id;
     const { id } = req.body;
     await dbSetActiveCampaign(id || null, userBandId);
     const campaigns = await dbGetCampaigns(userBandId);

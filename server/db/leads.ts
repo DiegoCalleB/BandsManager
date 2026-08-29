@@ -112,7 +112,13 @@ export async function dbGetLeadById(id: string, bandId?: string) {
 
 export async function dbUpsertLead(lead: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(lead.band_id || bandId);
+  // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
+  // (req.user.band_id). 'lead.band_id' viene del cuerpo de la petición sin validar, y
+  // server/routes/leads/crud.ts solo lo rellena si falta ('if (!newLead.band_id)') — si el
+  // cliente ya lo manda, antes se colaba tal cual. Priorizarlo permitía a cualquier usuario
+  // autenticado escribir un lead en la banda de otro con solo incluir "band_id" en el body
+  // (mismo fallo ya corregido en server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   const name = (lead.nombre_sala || lead.nombreSala || "").trim();

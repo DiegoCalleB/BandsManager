@@ -25,7 +25,12 @@ export async function dbGetFans(bandId: string) {
 
 export async function dbUpsertFan(fan: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(fan.band_id || bandId);
+  // 'bandId' es el único origen de confianza. En las rutas con sesión es req.user.band_id; en el
+  // alta pública por QR (/api/public/fans) la propia ruta ya resuelve targetBandId desde la URL
+  // antes de llamar aquí, así que 'fan.band_id' del cuerpo nunca hace falta y no debe primar —
+  // si no, un usuario autenticado podría registrar un fan en la banda de otro con solo mandar
+  // {"band_id": "banda-ajena"} (mismo fallo ya corregido en server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   // El upsert es por id (clave primaria): sin esta comprobación, un id que coincidiera con el de
