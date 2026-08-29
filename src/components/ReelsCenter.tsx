@@ -264,6 +264,8 @@ export default function ReelsCenter({
  // Opciones de renderizado del clip físico
  const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
  const [burnSubtitles, setBurnSubtitles] = useState(false);
+ // Resaltado palabra por palabra (estilo TikTok/CapCut) en vez del subtítulo estático de siempre.
+ const [karaokeSubtitles, setKaraokeSubtitles] = useState(true);
  const [loadingStep, setLoadingStep] = useState(0);
  const [analysisError, setAnalysisError] = useState<string | null>(null);
  
@@ -540,6 +542,7 @@ export default function ReelsCenter({
  clipId,
  cropMode,
  burnSubtitles,
+ karaokeSubtitles,
  // Flag antiguo, por si el servidor todavía no está actualizado.
  cropVertical: cropMode !== 'none'
  })
@@ -3480,6 +3483,22 @@ export default function ReelsCenter({
  </button>
  {videoMeta && !videoMeta.hasTranscript && (
  <p className="text-[9px] font-mono text-neutral-600 leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
+ )}
+ {burnSubtitles && (
+ <button
+ type="button"
+ onClick={() => setKaraokeSubtitles(v => !v)}
+ disabled={isCuttingVideo}
+ title="Resalta cada palabra según se pronuncia, como en TikTok/CapCut, en vez de enseñar la línea entera fija."
+ className={`w-full px-3 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+ karaokeSubtitles
+ ? 'bg-[#f2ca50]/15 -[#f2ca50]/40 text-[#f2ca50]'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {karaokeSubtitles ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5 opacity-40" />}
+ <span>{karaokeSubtitles ? 'Resaltado palabra a palabra' : 'Línea fija clásica'}</span>
+ </button>
  )}
  </div>
  </div>
