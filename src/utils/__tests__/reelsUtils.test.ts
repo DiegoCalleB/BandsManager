@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { getYouTubeId, getStartTimeInSeconds, formatSecondsToTime } from '../reelsUtils';
+import {
+  getYouTubeId,
+  getStartTimeInSeconds,
+  formatSecondsToTime,
+  defaultScheduleDate,
+  validateScheduleReadiness,
+} from '../reelsUtils';
 
 describe('reelsUtils', () => {
   it('extracts YouTube video IDs correctly', () => {
@@ -17,5 +23,58 @@ describe('reelsUtils', () => {
   it('formats seconds to MM:SS', () => {
     expect(formatSecondsToTime(90)).toBe('01:30');
     expect(formatSecondsToTime(5)).toBe('00:05');
+  });
+
+  describe('defaultScheduleDate', () => {
+    it('devuelve el día siguiente por defecto, no una fecha fija', () => {
+      const hoy = new Date('2026-08-29T12:00:00Z');
+      expect(defaultScheduleDate(1, hoy)).toBe('2026-08-30');
+    });
+
+    it('acepta cuántos días de margen dar', () => {
+      const hoy = new Date('2026-08-29T12:00:00Z');
+      expect(defaultScheduleDate(7, hoy)).toBe('2026-09-05');
+    });
+  });
+
+  describe('validateScheduleReadiness', () => {
+    const ahora = new Date('2026-08-29T10:00:00');
+
+    it('sin problemas cuando hay copy con hashtag y fecha futura', () => {
+      const problemas = validateScheduleReadiness({
+        copy: 'Menudo bolo el de ayer! #MusicaEnDirecto',
+        scheduledDate: '2026-08-30',
+        scheduledTime: '20:30',
+        now: ahora,
+      });
+      expect(problemas).toEqual([]);
+    });
+
+    it('avisa si el copy está vacío', () => {
+      const problemas = validateScheduleReadiness({ copy: '   ', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
+      expect(problemas).toContain('Falta el texto del copy.');
+    });
+
+    it('avisa si no hay ningún hashtag en el copy', () => {
+      const problemas = validateScheduleReadiness({ copy: 'Sin hashtags por aquí', scheduledDate: '2026-08-30', scheduledTime: '20:30', now: ahora });
+      expect(problemas).toContain('El copy no lleva ningún hashtag: añade al menos uno.');
+    });
+
+    it('avisa si falta fecha u hora', () => {
+      expect(validateScheduleReadiness({ copy: '#ok', scheduledDate: '', scheduledTime: '20:30', now: ahora }))
+        .toContain('Elige fecha y hora de publicación.');
+      expect(validateScheduleReadiness({ copy: '#ok', scheduledDate: '2026-08-30', scheduledTime: '', now: ahora }))
+        .toContain('Elige fecha y hora de publicación.');
+    });
+
+    it('avisa si la fecha/hora elegida ya pasó', () => {
+      const problemas = validateScheduleReadiness({
+        copy: '#ok',
+        scheduledDate: '2026-08-28',
+        scheduledTime: '09:00',
+        now: ahora,
+      });
+      expect(problemas).toContain('La fecha y hora elegidas ya han pasado.');
+    });
   });
 });

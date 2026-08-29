@@ -25,12 +25,14 @@ interface ReelsCenterProps {
  hasAnySocialLink?: boolean;
 }
 
-import { 
-  ReelCard, 
-  HighlightClip, 
-  OptimalTime, 
-  getYouTubeId, 
-  getStartTimeInSeconds 
+import {
+  ReelCard,
+  HighlightClip,
+  OptimalTime,
+  getYouTubeId,
+  getStartTimeInSeconds,
+  defaultScheduleDate,
+  validateScheduleReadiness
 } from '../utils/reelsUtils';
 import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
@@ -757,10 +759,13 @@ export default function ReelsCenter({
  // Form values for Scheduling
  const [editedCopy, setEditedCopy] = useState('');
  const [selectedPlatform, setSelectedPlatform] = useState<'Instagram' | 'TikTok' | 'YouTube' | 'Facebook'>('Instagram');
- const [scheduledDate, setScheduledDate] = useState('2026-07-16');
+ const [scheduledDate, setScheduledDate] = useState(() => defaultScheduleDate(1));
  const [scheduledTime, setScheduledTime] = useState('20:30');
  const [isScheduling, setIsScheduling] = useState(false);
  const [schedulingSuccess, setSchedulingSuccess] = useState(false);
+ // Antes solo se comprobaba que el copy no estuviera vacío, y en silencio: el botón no hacía
+ // nada y no se explicaba por qué. Ahora se avisa de qué falta (hashtag, fecha pasada...).
+ const [scheduleErrors, setScheduleErrors] = useState<string[]>([]);
  const [copySuccess, setCopySuccess] = useState(false);
 
  // Metrics Form States
@@ -1079,7 +1084,9 @@ export default function ReelsCenter({
  // Submit and Schedule Post
  const handleSchedulePost = async (e: React.FormEvent) => {
  e.preventDefault();
- if (!editedCopy.trim()) return;
+ const problemas = validateScheduleReadiness({ copy: editedCopy, scheduledDate, scheduledTime });
+ setScheduleErrors(problemas);
+ if (problemas.length > 0) return;
 
  setIsScheduling(true);
  setSchedulingSuccess(false);
@@ -1096,7 +1103,8 @@ export default function ReelsCenter({
 
  await onAddPost(newPost);
  setSchedulingSuccess(true);
- 
+ setScheduleErrors([]);
+
  // Auto-clear success state after a few seconds
  setTimeout(() => {
  setSchedulingSuccess(false);
@@ -2419,6 +2427,16 @@ export default function ReelsCenter({
  <div className="p-2.5 bg-emerald-500/10 -emerald-500/20 rounded-lg text-emerald-400 text-xs text-center font-mono animate-bounce mt-2 flex items-center justify-center gap-1.5">
  <Check className="w-3.5 h-3.5 text-emerald-400" />
  <span>¡Reel programado con éxito!</span>
+ </div>
+ )}
+ {scheduleErrors.length > 0 && (
+ <div className="p-2.5 bg-red-500/10 -red-500/30 rounded-lg text-red-400 text-[11px] font-mono mt-2 space-y-1">
+ {scheduleErrors.map((problema) => (
+ <div key={problema} className="flex items-center gap-1.5">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{problema}</span>
+ </div>
+ ))}
  </div>
  )}
  </div>
@@ -3867,8 +3885,17 @@ export default function ReelsCenter({
  <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-pulse" />
  <span>¡Clip guardado e insertado en tu agenda de redes!</span>
  </div>
+ ) : scheduleErrors.length > 0 ? (
+ <div className="space-y-1">
+ {scheduleErrors.map((problema) => (
+ <div key={problema} className="flex items-center gap-1.5 text-red-400 text-[11px] font-mono">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{problema}</span>
+ </div>
+ ))}
+ </div>
  ) : (
- <span className="text-[10px] font-mono text-neutral-500">Sincronizado con Google Calendar & Sheets</span>
+ <span className="text-[10px] font-mono text-neutral-500">Se guarda en tu agenda de Reels</span>
  )}
  </div>
 
