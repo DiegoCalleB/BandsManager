@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-**BandManager.oi** (internally "Bakandeya"; the product name has changed twice in-repo — BandManager.ai → BandManager.io → BandManager.oi, see `index.html`'s `<title>`/meta tags for whichever is current) is a full-stack platform for independent bands: booking CRM, tour logistics, EPK (electronic press kit), repertoire/setlists, finances, fan capture, a Reels/social-content generator, AI music tools (rhythmic-base generation, instrument synthesis, MIDI export), booking campaigns, and AI agents that scout venues and draft/send booking emails on a band's behalf. It's the technical core of a Master's thesis (TFM) on AI-agent-assisted software development — see `AGENTS.md` for the project's non-negotiable business rules, which take precedence over general conventions below.
+**BandManager.ai** (internally "Bakandeya"; the product name churned through BandManager.ai → .io → .oi → back to .ai in four commits, see `index.html`'s `<title>`/meta tags if it ever moves again) is a full-stack platform for independent bands: booking CRM, tour logistics, EPK (electronic press kit), repertoire/setlists, finances, fan capture, a Reels/social-content generator, AI music tools (rhythmic-base generation, instrument synthesis, MIDI export), booking campaigns, and AI agents that scout venues and draft/send booking emails on a band's behalf. It's the technical core of a Master's thesis (TFM) on AI-agent-assisted software development — see `AGENTS.md` for the project's non-negotiable business rules, which take precedence over general conventions below.
 
-The name change hasn't been applied everywhere — `package.json`'s `name` field is still the original Vite scaffold name, and `server.ts`'s inline `/privacy`/`/terms` HTML still says "BandManager.ai". Don't assume the string in one file is authoritative for the current brand name; check `index.html` first.
+`package.json`'s `name` field is still the original Vite scaffold name (`react-example`) and was never updated through any of the rebrands — everywhere user-facing is consistently "BandManager.ai" as of the latest rebrand commit.
 
 ## Commands
 
