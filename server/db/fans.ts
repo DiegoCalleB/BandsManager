@@ -135,7 +135,7 @@ export async function dbUpsertMusicianWaitlist(item: any) {
       ciudad: payload.ciudad,
       tipo: "musico_waitlist",
       estado: "nuevo",
-      notas: `[Waitlist Músicos BandManager.oi] Instagram: ${payload.instagram} | Género: ${payload.genero} | Enlace: ${payload.enlace_musica} | Interés: ${payload.interes_principal} | Idioma: ${payload.idioma} | Origen: ${payload.banda_origen} ${payload.concierto_origen} | Notas: ${payload.notas}`
+      notas: `[Waitlist Músicos BandManager.ai] Instagram: ${payload.instagram} | Género: ${payload.genero} | Enlace: ${payload.enlace_musica} | Interés: ${payload.interes_principal} | Idioma: ${payload.idioma} | Origen: ${payload.banda_origen} ${payload.concierto_origen} | Notas: ${payload.notas}`
     };
     await sb.from("leads").upsert(leadPayload);
   } catch (leadErr) {

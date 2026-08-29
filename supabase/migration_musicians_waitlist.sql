@@ -1,5 +1,5 @@
 -- ====================================================================
--- MIGRACIÓN SUPABASE: TABLA MUSICIANS_WAITLIST (BandManager.io)
+-- MIGRACIÓN SUPABASE: TABLA MUSICIANS_WAITLIST (BandManager.ai)
 -- ====================================================================
 
 CREATE TABLE IF NOT EXISTS public.musicians_waitlist (

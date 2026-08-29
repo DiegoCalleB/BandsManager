@@ -770,7 +770,7 @@ export default function App() {
  <div className="flex items-center gap-2">
  <img 
  src="/logo_bandmanager_symbol.svg" 
- alt="BandManager.oi" 
+ alt="BandManager.ai" 
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
@@ -1052,7 +1052,7 @@ export default function App() {
  <div className="flex items-center gap-2">
  <img 
  src="/logo_bandmanager_symbol.svg" 
- alt="BandManager.oi" 
+ alt="BandManager.ai" 
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />

@@ -488,7 +488,7 @@ async function startServer() {
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`BandManager.oi server running on http://localhost:${PORT}`);
+    console.log(`BandManager.ai server running on http://localhost:${PORT}`);
     // Start background autonomous Social Radar Agent
     try {
       startSocialRadarScheduler();

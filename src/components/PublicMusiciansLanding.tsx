@@ -171,7 +171,7 @@ export const PublicMusiciansLanding: React.FC = () => {
             <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-amber-500/30 p-0.5 shadow-md flex items-center justify-center shrink-0">
               <img
                 src="/logo_bandmanager_official.svg"
-                alt="BandManager.oi Logo"
+                alt="BandManager.ai Logo"
                 className="w-full h-full object-contain rounded-[10px]"
               />
             </div>
@@ -237,7 +237,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-black border border-amber-500/40 p-1 shadow-2xl flex items-center justify-center">
                 <img
                   src="/logo_bandmanager_official.svg"
-                  alt="BandManager.oi"
+                  alt="BandManager.ai"
                   className="w-full h-full object-contain rounded-xl"
                 />
               </div>
