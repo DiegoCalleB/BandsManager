@@ -28,6 +28,7 @@
    * La aplicación web lee y actualiza el estado en **Supabase**.
    * Los envíos de correo se realizan únicamente cuando el registro en Supabase pasa a estado `aprobado_propuesta` o `aprobado_respuesta`.
    * La aplicación web no dispara envíos directos no autorizados sin la aprobación explícita humana.
+   * Esta regla no tiene excepción por configuración de banda: `dispatch_mode` (`autonomy_configs`, ver sección 3) decide solo qué pasa DESPUÉS de esa aprobación (borrador para un último vistazo, o despacho directo) - nunca si la aprobación en sí hace falta. Tampoco puede una banda activar el envío real por su cuenta: hace falta además `AGENT_EMAIL_MODE=send` a nivel de todo el servidor (`server/services/agentEngine.ts`), el interruptor de seguridad de la plataforma.
 
 2. **Modelo de Estados en 2 Dimensiones (CRM + Agentes IA):**
    * **Dimensión 1: Estado del Lead en el Embudo CRM (`estado`):**
@@ -47,5 +48,5 @@
    * **Scout:** Descubre y enriquece salas en Supabase en estado `nuevo`.
    * **Redactor:** Genera propuesta personalizada en `pitch_generado` y marca sub-estado `pendiente_aprobacion`.
    * **Usuario (Human-in-the-Loop):** Valida o edita el texto y aprueba (`aprobado_propuesta` o `aprobado_respuesta`).
-   * **Enviador (Python):** Despacha únicamente registros aprobados respetando rate-limits y actualiza `fecha_envio` a `esperando_respuesta` / `contactado`.
-   * **Lector:** Monitoriza respuestas entrantes, actualiza el hilo de correos `hilo_emails` y transiciona el lead a `respondido` o `negociando`.
+   * **Enviador** (`server/services/agentEngine.ts`, Node/TypeScript - no Python): despacha únicamente registros aprobados respetando rate-limits. Según `dispatch_mode` de la banda, o bien crea un borrador (Gmail vía OAuth sin contraseña si la banda lo conectó, si no por IMAP) y marca el lead `borrador_creado`, o bien despacha directamente y actualiza `fecha_envio` a `contactado` (primer contacto) / `negociando` (réplica) - ambos caminos exigen la aprobación humana previa por igual.
+   * **Lector** (`server/services/lectorAgent.ts`): monitoriza respuestas entrantes (por Gmail OAuth o IMAP, prefiriendo OAuth) y las deja en `lead_messages`, transicionando el lead a `respondido` o `negociando`; también detecta cuando un borrador de Gmail se envió a mano sin pasar por la app y transiciona el lead a `contactado`. Corre en cada ciclo del scheduler (~60s), sin horario configurable - a diferencia del Enviador, que sí respeta la ventana comercial de la banda.
