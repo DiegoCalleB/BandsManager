@@ -4,11 +4,11 @@
 // el scheduler interno (server/services/agentScheduler.ts, disparo por horario configurado por
 // banda) - una sola implementación real, sin duplicar lógica entre los dos disparadores.
 
-import { getSupabase } from "../db.js";
+import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
-import { crearBorradorGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
+import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviado, enviarEmailGmailApi } from "./gmailApiClient.js";
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 
@@ -55,11 +55,10 @@ export interface EnviadorResult {
   results: any[];
 }
 
-// Modo de trabajo del Agente Enviador. Por defecto 'draft': deja el email como borrador en la
-// bandeja de la banda en vez de enviarlo, para poder revisar redacción y formato antes de que
-// llegue a una sala real. Enviar de verdad exige poner AGENT_EMAIL_MODE=send explícitamente -
-// si la variable falta o está mal escrita, NO se envía nada (seguro por defecto).
-const ENVIO_REAL = (process.env.AGENT_EMAIL_MODE || "draft").toLowerCase().trim() === "send";
+// Interruptor de seguridad global: mientras AGENT_EMAIL_MODE no sea exactamente 'send', NINGUNA
+// banda puede enviar de verdad, pase lo que pase en su propia configuración de autonomía - es el
+// límite de la plataforma entera, no algo que una banda pueda subir por su cuenta.
+const ENVIO_REAL_HABILITADO_GLOBALMENTE = (process.env.AGENT_EMAIL_MODE || "draft").toLowerCase().trim() === "send";
 
 // Despacha los leads aprobados de una banda por email real (SMTP, cualquier proveedor). A
 // diferencia de las implementaciones anteriores de este mismo agente (Node nativo con Resend,
@@ -118,11 +117,25 @@ export async function runEnviadorAgent(opts: {
     // Non-blocking fallback
   }
 
-  // Si la banda conectó Gmail por OAuth (server/routes/gmailOAuth.ts), se prefiere sobre IMAP
-  // para el modo borrador: crea el borrador por la API de Gmail sin contraseña de aplicación,
+  // El paso 1 (un humano le da a "Aprobar" en la app, lo que trajo el lead a este lote) es
+  // siempre obligatorio y no depende de nada de lo de aquí abajo. Lo que decide esta banda es
+  // solo el paso 2, qué pasa justo después de esa aprobación: 'draft_gmail' (por defecto) deja
+  // el borrador para un último vistazo, 'direct_send' lo despacha ya sin ese segundo paso manual
+  // - pero solo si además la plataforma entera tiene el envío real habilitado.
+  let dispatchMode = "draft_gmail";
+  try {
+    const autonomyConfig: any = await dbGetAutonomyConfig(opts.bandId);
+    if (autonomyConfig?.dispatchMode === "direct_send") dispatchMode = "direct_send";
+  } catch (e) {
+    // Sin configuración de autonomía guardada todavía: se queda en el modo seguro por defecto.
+  }
+  const ENVIO_REAL = ENVIO_REAL_HABILITADO_GLOBALMENTE && dispatchMode === "direct_send";
+
+  // Si la banda conectó Gmail por OAuth (server/routes/gmailOAuth.ts), se prefiere sobre
+  // SMTP/IMAP tanto para el borrador como para el envío directo - sin contraseña de aplicación,
   // funciona igual desde el scheduler (sin navegador) que desde un disparo manual. Si no hay
-  // OAuth conectado (o la banda usa Outlook), se mantiene el camino IMAP de siempre.
-  const usarGmailOAuth = !ENVIO_REAL && (await tieneGmailOAuthConectado(opts.bandId));
+  // OAuth conectado (o la banda usa Outlook), se mantiene el camino SMTP/IMAP de siempre.
+  const usarGmailOAuth = await tieneGmailOAuthConectado(opts.bandId);
 
   const results: any[] = [];
   const nowIso = new Date().toISOString();
@@ -162,41 +175,57 @@ export async function runEnviadorAgent(opts: {
 
       if (!ENVIO_REAL) {
         // Modo borrador: se deja el email en la bandeja de la banda para revisión humana.
-        const { draftPath } = usarGmailOAuth
-          ? await crearBorradorGmailApi(opts.bandId, {
-              to: emailContacto,
-              subject: asunto,
-              body: emailText,
-              html: emailHtml,
-              inReplyTo: lead.thread_id || undefined
-            })
-          : await crearBorrador(opts.bandId, {
-              to: emailContacto,
-              subject: asunto,
-              body: emailText,
-              html: emailHtml,
-              inReplyTo: lead.thread_id || undefined
-            });
+        let draftPath: string;
+        let draftId: string | null = null;
+        if (usarGmailOAuth) {
+          const creado = await crearBorradorGmailApi(opts.bandId, {
+            to: emailContacto,
+            subject: asunto,
+            body: emailText,
+            html: emailHtml,
+            inReplyTo: lead.thread_id || undefined
+          });
+          draftPath = creado.draftPath;
+          draftId = creado.draftId;
+        } else {
+          draftPath = (await crearBorrador(opts.bandId, {
+            to: emailContacto,
+            subject: asunto,
+            body: emailText,
+            html: emailHtml,
+            inReplyTo: lead.thread_id || undefined
+          })).draftPath;
+        }
 
         const draftNote = `*** [${dateTag}] BORRADOR creado en '${draftPath}' para ${emailContacto} por el Agente Enviador - NO se ha enviado, revísalo y envíalo a mano ***\n` + (lead.notas || "");
-        await sb.from("leads").update({ estado: "borrador_creado", notas: draftNote }).eq("id", lead.id);
+        await sb.from("leads").update({ estado: "borrador_creado", notas: draftNote, gmail_draft_id: draftId }).eq("id", lead.id);
 
         results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: "borrador_creado", carpeta_borradores: draftPath, status: "borrador" });
         continue;
       }
 
-      await enviarEmail(opts.bandId, {
-        to: emailContacto,
-        subject: asunto,
-        body: emailText,
-        html: emailHtml,
-        inReplyTo: lead.thread_id || undefined
-      });
+      if (usarGmailOAuth) {
+        await enviarEmailGmailApi(opts.bandId, {
+          to: emailContacto,
+          subject: asunto,
+          body: emailText,
+          html: emailHtml,
+          inReplyTo: lead.thread_id || undefined
+        });
+      } else {
+        await enviarEmail(opts.bandId, {
+          to: emailContacto,
+          subject: asunto,
+          body: emailText,
+          html: emailHtml,
+          inReplyTo: lead.thread_id || undefined
+        });
+      }
 
       const nextState = isRespuesta ? "negociando" : "contactado";
       const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto} por el Agente Enviador (email real) ***\n` + (lead.notas || "");
 
-      await sb.from("leads").update({ estado: nextState, fecha_envio: nowIso, notas: newNote }).eq("id", lead.id);
+      await sb.from("leads").update({ estado: nextState, fecha_envio: nowIso, notas: newNote, gmail_draft_id: null }).eq("id", lead.id);
 
       await sb.from("lead_messages").insert({
         id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
@@ -243,4 +272,60 @@ export async function runEnviadorAgent(opts: {
   });
 
   return { success: sentCount > 0 || errorCount === 0, dispatchedCount: sentCount, message: successMsg, results };
+}
+
+export interface ComprobarBorradoresResult {
+  revisados: number;
+  confirmadosEnviados: string[];
+}
+
+// Cierra el hueco de los borradores creados vía Gmail OAuth (crearBorradorGmailApi): la banda
+// puede darle a "Enviar" dentro de Gmail sin que la app se entere, así que el lead se quedaba
+// para siempre en 'borrador_creado' aunque el correo ya hubiera salido de verdad. Se llama desde
+// el propio Agente Lector (server/services/lectorAgent.ts) porque conceptualmente es lo mismo -
+// comprobar el estado real de la bandeja de la banda - y ya corre en el mismo tick programado.
+export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<ComprobarBorradoresResult> {
+  const sb = getSupabase();
+  const { data: leads, error } = await sb
+    .from("leads")
+    .select("id, nombre_sala, notas, gmail_draft_id")
+    .eq("band_id", bandId)
+    .eq("estado", "borrador_creado")
+    .not("gmail_draft_id", "is", null);
+
+  if (error) throw error;
+  if (!leads || leads.length === 0) return { revisados: 0, confirmadosEnviados: [] };
+
+  const confirmadosEnviados: string[] = [];
+  const nowIso = new Date().toISOString();
+
+  for (const lead of leads) {
+    let sigueComoBorrador: boolean;
+    try {
+      sigueComoBorrador = await comprobarBorradorEnviado(bandId, lead.gmail_draft_id);
+    } catch (e) {
+      // Un fallo puntual comprobando (token caducado, red) no debe marcar nada como enviado por
+      // error - se reintenta en el siguiente tick.
+      continue;
+    }
+    if (sigueComoBorrador) continue;
+
+    const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+    const newNote = `*** [${dateTag}] Borrador de Gmail detectado como ENVIADO (ya no está en Borradores de Gmail) ***\n` + (lead.notas || "");
+
+    await sb.from("leads").update({ estado: "contactado", fecha_envio: nowIso, notas: newNote, gmail_draft_id: null }).eq("id", lead.id);
+    await sb.from("lead_messages").insert({
+      id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      lead_id: lead.id,
+      band_id: bandId,
+      remitente: "banda",
+      remitente_nombre: "Enviado manualmente desde Gmail",
+      asunto: `Concierto en ${lead.nombre_sala}`,
+      mensaje: "(Correo enviado a mano desde el borrador que había creado el Agente Enviador en Gmail)",
+      fecha: nowIso
+    });
+    confirmadosEnviados.push(String(lead.id));
+  }
+
+  return { revisados: leads.length, confirmadosEnviados };
 }

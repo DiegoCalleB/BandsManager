@@ -21,7 +21,13 @@ import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, to
 
 const router = express.Router();
 
-const GMAIL_OAUTH_SCOPE = "https://www.googleapis.com/auth/gmail.compose";
+// gmail.compose: crear/leer/enviar borradores (crearBorradorGmailApi, enviarEmailGmailApi,
+// comprobarBorradorEnviado). gmail.modify: leer la bandeja y quitar la etiqueta UNREAD de lo ya
+// procesado (leerRespuestasGmailApi/marcarComoLeidoGmailApi en gmailApiClient.ts) - lo que
+// necesita el Agente Lector para detectar respuestas de una banda conectada solo por OAuth, sin
+// IMAP. Una banda que conectó antes de este cambio solo tiene gmail.compose concedido y necesita
+// reconectar (botón "Desconectar" + "Conectar con Google" de nuevo) para que el Lector funcione.
+const GMAIL_OAUTH_SCOPE = "https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.modify";
 const AUTHORIZE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const USERINFO_ENDPOINT = "https://www.googleapis.com/oauth2/v2/userinfo";

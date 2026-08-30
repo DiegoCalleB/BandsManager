@@ -18,7 +18,8 @@ export async function dbGetAutonomyConfig(bandId: string) {
     maxCacheThreshold: data.max_cache_threshold,
     autoDeclineUnderMinCache: data.auto_decline_under_min_cache,
     notifyOnEveryProposal: data.notify_on_every_proposal,
-    requireHumanForFinalSignOff: data.require_human_for_final_sign_off
+    requireHumanForFinalSignOff: data.require_human_for_final_sign_off,
+    dispatchMode: data.dispatch_mode
   };
 }
 
@@ -35,7 +36,12 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
     max_cache_threshold: Number(config.maxCacheThreshold ?? config.max_cache_threshold ?? 800),
     auto_decline_under_min_cache: Boolean(config.autoDeclineUnderMinCache ?? config.auto_decline_under_min_cache),
     notify_on_every_proposal: Boolean(config.notifyOnEveryProposal ?? config.notify_on_every_proposal ?? true),
-    require_human_for_final_sign_off: Boolean(config.requireHumanForFinalSignOff ?? config.require_human_for_final_sign_off ?? true)
+    require_human_for_final_sign_off: Boolean(config.requireHumanForFinalSignOff ?? config.require_human_for_final_sign_off ?? true),
+    // Qué hace el Enviador justo tras la aprobación humana del lead (paso 1, siempre
+    // obligatorio, sin relación con esto): dejar borrador en Gmail o despachar directamente.
+    // Ver AGENTS.md sección 3 y el comentario junto a ENVIO_REAL_HABILITADO_GLOBALMENTE en
+    // server/services/agentEngine.ts.
+    dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail"
   };
 
   const { data, error } = await sb.from("autonomy_configs").upsert(payload).select().single();

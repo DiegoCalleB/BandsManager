@@ -107,6 +107,12 @@ CREATE TABLE IF NOT EXISTS leads (
     -- donde escribe el Enviador/Lector); server/db/leads.ts la persiste para que ese lado del
     -- frontend deje de perderse en cada guardado, pero conceptualmente son dos cosas distintas.
     hilo_emails JSONB DEFAULT '[]'::jsonb,
+    -- ID del borrador creado por el Agente Enviador vía la API de Gmail (server/services/
+    -- gmailApiClient.ts) cuando la banda usa OAuth sin contraseña. Permite comprobar en el
+    -- siguiente tick del scheduler si el borrador sigue existiendo o si ya se envió a mano
+    -- desde Gmail (server/services/agentEngine.ts:comprobarBorradoresGmailEnviados). Null para
+    -- leads creados por el camino IMAP o enviados de verdad.
+    gmail_draft_id TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -390,6 +396,13 @@ CREATE TABLE IF NOT EXISTS autonomy_configs (
     auto_decline_under_min_cache BOOLEAN DEFAULT FALSE,
     notify_on_every_proposal BOOLEAN DEFAULT TRUE,
     require_human_for_final_sign_off BOOLEAN DEFAULT TRUE,
+    -- Qué hace el Agente Enviador justo después de que un humano apruebe un lead en la app:
+    -- 'draft_gmail' (por defecto) deja un borrador en Gmail para un último vistazo antes de
+    -- mandarlo a mano; 'direct_send' lo despacha directamente, sin ese segundo paso manual, para
+    -- bandas que ya se fían de lo que aprobaron en el paso 1. Ninguno de los dos salta la
+    -- aprobación humana en sí (server/services/agentEngine.ts) - y solo tiene efecto si además
+    -- el servidor entero tiene AGENT_EMAIL_MODE=send (si no, siempre se queda en borrador).
+    dispatch_mode TEXT DEFAULT 'draft_gmail',
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

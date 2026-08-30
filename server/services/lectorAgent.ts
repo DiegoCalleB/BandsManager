@@ -9,6 +9,8 @@
 // humano lo revise y lo mande).
 
 import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
+import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
+import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage } from "../db.js";
 
 // Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
@@ -30,17 +32,39 @@ export interface LectorAgentResult {
   mensajesLeidos: number;
   leadsActualizados: string[];
   sinEmparejar: number;
+  borradoresEnviadosDetectados: number;
 }
 
 export async function runLectorAgent(bandId: string): Promise<LectorAgentResult> {
-  const mensajes = await leerRespuestasEntrantes(bandId);
+  // Gmail por OAuth (sin contraseña) se prefiere sobre IMAP, igual que ya hace el Agente
+  // Enviador (server/services/agentEngine.ts) - hasta ahora este agente era 100% IMAP, así que
+  // una banda conectada solo por OAuth nunca detectaba respuestas entrantes en absoluto.
+  const usarGmailOAuth = await tieneGmailOAuthConectado(bandId);
+  const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
+
+  const leadsActualizados: string[] = [];
+
+  // Comprueba, solo si la banda usa OAuth, si algún borrador que el Agente Enviador dejó en
+  // Gmail se envió a mano desde ahí sin pasar por la app (ver comprobarBorradoresGmailEnviados).
+  // Va antes del "return" temprano de abajo para que se compruebe también cuando no hay mensajes
+  // nuevos que leer.
+  let borradoresEnviadosDetectados = 0;
+  if (usarGmailOAuth) {
+    try {
+      const resultado = await comprobarBorradoresGmailEnviados(bandId);
+      leadsActualizados.push(...resultado.confirmadosEnviados);
+      borradoresEnviadosDetectados = resultado.confirmadosEnviados.length;
+    } catch (e) {
+      console.warn(`[Lector] No se pudieron comprobar los borradores de Gmail de ${bandId}:`, e);
+    }
+  }
+
   if (mensajes.length === 0) {
-    return { mensajesLeidos: 0, leadsActualizados: [], sinEmparejar: 0 };
+    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados };
   }
 
   const leads = await dbGetLeads(bandId);
-  const leadsActualizados: string[] = [];
-  const uidsProcesados: number[] = [];
+  const uidsProcesados: Array<number | string> = [];
   let sinEmparejar = 0;
 
   for (const msg of mensajes) {
@@ -93,10 +117,13 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   }
 
   if (uidsProcesados.length > 0) {
-    await marcarComoLeido(bandId, uidsProcesados).catch((err) => {
+    const marcarLeidos = usarGmailOAuth
+      ? marcarComoLeidoGmailApi(bandId, uidsProcesados as string[])
+      : marcarComoLeido(bandId, uidsProcesados as number[]);
+    await marcarLeidos.catch((err) => {
       console.warn(`[Lector] No se pudieron marcar como leídos los mensajes de ${bandId}:`, err);
     });
   }
 
-  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar };
+  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados };
 }

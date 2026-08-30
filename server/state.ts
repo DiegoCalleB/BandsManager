@@ -102,7 +102,8 @@ export const DEFAULT_AUTONOMY_CONFIG = {
   maxCacheThreshold: 800,
   autoDeclineUnderMinCache: false,
   notifyOnEveryProposal: true,
-  requireHumanForFinalSignOff: true
+  requireHumanForFinalSignOff: true,
+  dispatchMode: 'draft_gmail'
 };
 
 const INITIAL_FANS = [

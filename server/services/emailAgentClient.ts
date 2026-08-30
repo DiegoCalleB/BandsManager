@@ -198,8 +198,10 @@ export async function leerNoLeidos(bandId: string, maxResults = 10): Promise<Arr
   return results;
 }
 
+// uid es number para IMAP (ImapFlow) o string para la API de Gmail (gmailApiClient.ts,
+// leerRespuestasGmailApi) - mismo shape para que lectorAgent.ts trate ambos caminos igual.
 export interface RespuestaEntrante {
-  uid: number;
+  uid: number | string;
   messageId: string;
   from: string;
   subject: string;

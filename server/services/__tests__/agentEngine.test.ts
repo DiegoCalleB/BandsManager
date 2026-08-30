@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+const dbGetAutonomyConfigMock = vi.fn();
 vi.mock('../../db.js', () => ({
-  getSupabase: vi.fn()
+  getSupabase: vi.fn(),
+  dbGetAutonomyConfig: (...args: any[]) => dbGetAutonomyConfigMock(...args)
 }));
 
 vi.mock('../../state.js', () => ({
@@ -22,13 +24,17 @@ vi.mock('../emailAgentClient.js', () => ({
 
 const crearBorradorGmailApiMock = vi.fn();
 const tieneGmailOAuthConectadoMock = vi.fn();
+const enviarEmailGmailApiMock = vi.fn();
+const comprobarBorradorEnviadoMock = vi.fn();
 vi.mock('../gmailApiClient.js', () => ({
   crearBorradorGmailApi: (...args: any[]) => crearBorradorGmailApiMock(...args),
-  tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args)
+  tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args),
+  enviarEmailGmailApi: (...args: any[]) => enviarEmailGmailApiMock(...args),
+  comprobarBorradorEnviado: (...args: any[]) => comprobarBorradorEnviadoMock(...args)
 }));
 
 import { getSupabase } from '../../db.js';
-import { runEnviadorAgent } from '../agentEngine';
+import { runEnviadorAgent, comprobarBorradoresGmailEnviados } from '../agentEngine';
 
 const lead = {
   id: 'lead-1',
@@ -105,10 +111,10 @@ describe('runEnviadorAgent en modo borrador (AGENT_EMAIL_MODE por defecto)', () 
     expect(result.message).toContain('No se ha enviado ningún email');
   });
 
-  it('crea el borrador por la API de Gmail (OAuth) en vez de IMAP cuando la banda la tiene conectada', async () => {
+  it('crea el borrador por la API de Gmail (OAuth) en vez de IMAP cuando la banda la tiene conectada, y guarda el gmail_draft_id', async () => {
     const { updates } = mockSupabase();
     tieneGmailOAuthConectadoMock.mockResolvedValue(true);
-    crearBorradorGmailApiMock.mockResolvedValue({ draftPath: 'Gmail API draft draft-1' });
+    crearBorradorGmailApiMock.mockResolvedValue({ draftPath: 'Gmail API draft draft-1', draftId: 'draft-1' });
 
     await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
 
@@ -118,5 +124,70 @@ describe('runEnviadorAgent en modo borrador (AGENT_EMAIL_MODE por defecto)', () 
 
     const leadUpdate = updates.find((u) => u.estado);
     expect(leadUpdate.estado).toBe('borrador_creado');
+    expect(leadUpdate.gmail_draft_id).toBe('draft-1');
+  });
+
+  it('sigue creando un borrador aunque la banda tenga dispatch_mode=direct_send, porque el servidor no tiene AGENT_EMAIL_MODE=send', async () => {
+    // Regla de seguridad: el interruptor por banda nunca basta por sí solo para enviar de
+    // verdad, hace falta también el interruptor global del servidor.
+    const { updates } = mockSupabase();
+    tieneGmailOAuthConectadoMock.mockResolvedValue(false);
+    dbGetAutonomyConfigMock.mockResolvedValue({ dispatchMode: 'direct_send' });
+    crearBorradorMock.mockResolvedValue({ draftPath: '[Gmail]/Borradores' });
+
+    await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(enviarEmailGmailApiMock).not.toHaveBeenCalled();
+    expect(crearBorradorMock).toHaveBeenCalledTimes(1);
+
+    const leadUpdate = updates.find((u) => u.estado);
+    expect(leadUpdate.estado).toBe('borrador_creado');
+  });
+});
+
+describe('comprobarBorradoresGmailEnviados', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('marca como contactado un lead cuyo borrador de Gmail ya no existe, y deja intactos los que siguen como borrador', async () => {
+    const leadConBorradorEnviado = { id: 'lead-1', nombre_sala: 'Sala Uno', notas: '', gmail_draft_id: 'draft-1' };
+    const leadTodaviaEnBorrador = { id: 'lead-2', nombre_sala: 'Sala Dos', notas: '', gmail_draft_id: 'draft-2' };
+    const updates: any[] = [];
+    const inserts: any[] = [];
+
+    vi.mocked(getSupabase).mockReturnValue({
+      from: (tabla: string) => ({
+        select: () => ({
+          eq: () => ({
+            eq: () => ({
+              not: () => Promise.resolve({ data: tabla === 'leads' ? [leadConBorradorEnviado, leadTodaviaEnBorrador] : [], error: null })
+            })
+          })
+        }),
+        update: (fila: any) => ({
+          eq: () => {
+            updates.push(fila);
+            return Promise.resolve({ error: null });
+          }
+        }),
+        insert: (fila: any) => {
+          inserts.push(fila);
+          return Promise.resolve({ error: null });
+        }
+      })
+    } as any);
+
+    comprobarBorradorEnviadoMock.mockImplementation((_bandId: string, draftId: string) => Promise.resolve(draftId !== 'draft-1'));
+
+    const resultado = await comprobarBorradoresGmailEnviados('band-test');
+
+    expect(resultado.revisados).toBe(2);
+    expect(resultado.confirmadosEnviados).toEqual(['lead-1']);
+    expect(updates).toHaveLength(1);
+    expect(updates[0].estado).toBe('contactado');
+    expect(updates[0].gmail_draft_id).toBeNull();
+    expect(inserts).toHaveLength(1);
   });
 });

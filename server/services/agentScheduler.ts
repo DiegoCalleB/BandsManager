@@ -98,7 +98,7 @@ async function tick() {
           motor: "node_email_engine",
           disparado_por_tipo: "scheduler",
           estado: "success",
-          mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s) en la bandeja de ${bandId}.`,
+          mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s)${resultado.borradoresEnviadosDetectados > 0 ? ` (${resultado.borradoresEnviadosDetectados} de ellos por borrador de Gmail enviado a mano)` : ""} en la bandeja de ${bandId}.`,
           conteo_afectados: resultado.leadsActualizados.length,
           duracion_ms: Date.now() - startTime,
           detalles: resultado
