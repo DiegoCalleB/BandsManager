@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog } from '../../types';
+import { Lead, LeadStatus, LeadType, InteractionLog, EPKConfig } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { LeadAvatar } from './LeadAvatar';
@@ -9,6 +9,8 @@ import { isLeadVerificado } from '../../utils/leadReliability';
 import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
+import { createGmailDraft } from '../../utils/gmail';
+import { formatEmailWithSignatureAndDossier } from '../../utils/emailFormatter';
 import {
   Edit3,
   X,
@@ -51,6 +53,10 @@ interface VenueDetailPanelProps {
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
+  epkConfig?: Partial<EPKConfig>;
+  bandName?: string;
+  bandId?: string;
+  currentUser?: any;
 }
 
 export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
@@ -68,7 +74,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   isStitchLight = false,
   activeCampaign,
   onLeadLogoUpload,
-  isUploadingLeadLogo = false
+  isUploadingLeadLogo = false,
+  epkConfig,
+  bandName,
+  bandId,
+  currentUser
 }) => {
   // Active Tab inside panel
   const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'bitacora'>('info');
@@ -102,6 +112,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [isSearchingLogo, setIsSearchingLogo] = useState(false);
   const [isEnrichingLead, setIsEnrichingLead] = useState(false);
   const [enrichStatusMsg, setEnrichStatusMsg] = useState<string | null>(null);
+  const [isCreatingDraft, setIsCreatingDraft] = useState(false);
+  const [draftError, setDraftError] = useState<string | null>(null);
 
   // Clean helper for values like #ERROR!
   const cleanVal = (val?: string) => {
@@ -325,15 +337,95 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   const isReplyStage = (selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0) || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
 
-  const handleSavePitch = () => {
+  // Al aprobar se crea directamente el borrador real en Gmail vía OAuth (mismo mecanismo que
+  // el Chatbot "Mánager IA"), en vez de dejar el lead en cola para el Agente Enviador por
+  // IMAP - ese agente exige una App Password real de Gmail por banda que no siempre está
+  // configurada. Si el borrador falla (sin sesión de Google, sin email de contacto...), el
+  // lead cae de todos modos en el estado de aprobado clásico para no perder la aprobación.
+  const createDraftAndApprove = async (pitchText: string, alsoSavePitch: boolean) => {
     const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
-    onUpdateLead(selectedLead.id, { pitch_generado: editedPitch, estado: approvalState });
+    const recipientEmail = selectedLead.email_contacto;
+    const bandNameResolved = bandName || 'Tu Banda';
+    const subject = isReplyStage
+      ? `Re: Concierto ${bandNameResolved} en ${selectedLead.nombre_sala}`
+      : `Propuesta de concierto: ${bandNameResolved} en ${selectedLead.nombre_sala}`;
+
+    setIsCreatingDraft(true);
+    setDraftError(null);
+
+    let gmailId = '';
+    let gmailError = '';
+
+    if (recipientEmail) {
+      try {
+        const formatted = formatEmailWithSignatureAndDossier({
+          pitchText,
+          lead: selectedLead,
+          epkConfig,
+          senderName: currentUser?.name || currentUser?.username,
+          bandName: bandNameResolved,
+          bandId
+        });
+        const res = await createGmailDraft(recipientEmail, subject, formatted.html, null, true);
+        gmailId = res.id;
+      } catch (err: any) {
+        console.error('Error creando borrador en Gmail al aprobar lead:', err);
+        gmailError = err.message || 'Error al crear el borrador en Gmail';
+      }
+    } else {
+      gmailError = 'La sala no tiene un correo de contacto (email_contacto).';
+    }
+
+    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
+    const updatedNotes = gmailId
+      ? `*** [${nowStr}] Borrador Creado en Gmail al aprobar [Gmail Draft ID: ${gmailId}] ***\n${selectedLead.notas || ''}`
+      : `*** [${nowStr}] Correo APROBADO manualmente, pero no se pudo crear el borrador en Gmail (${gmailError}) ***\n${selectedLead.notas || ''}`;
+
+    onUpdateLead(selectedLead.id, {
+      estado: gmailId ? 'borrador_creado' : approvalState,
+      ...(alsoSavePitch ? { pitch_generado: pitchText } : {}),
+      notas: updatedNotes
+    });
+
+    try {
+      await apiFetch('/api/agent-logs', {
+        method: 'POST',
+        body: JSON.stringify({
+          band_id: bandId,
+          agente: 'redactor',
+          motor: 'gmail_draft_api',
+          disparado_por_tipo: 'usuario_manual',
+          usuario_id: currentUser?.id || null,
+          usuario_email: currentUser?.email || null,
+          estado: gmailId ? 'success' : 'warning',
+          mensaje: `Borrador ${gmailId ? 'generado' : 'NO generado'} en Gmail para "${selectedLead.nombre_sala}" (${recipientEmail || 'sin email'}) al aprobar desde el CRM.`,
+          leads_afectados: [{
+            id: selectedLead.id,
+            nombre_sala: selectedLead.nombre_sala,
+            email_contacto: recipientEmail,
+            estado_anterior: selectedLead.estado,
+            estado_nuevo: gmailId ? 'borrador_creado' : approvalState,
+            gmail_draft_id: gmailId
+          }],
+          conteo_afectados: 1,
+          detalles: { gmailDraftId: gmailId, subject, error: gmailError || undefined }
+        })
+      });
+    } catch (e) {
+      console.warn('Error registrando auditoría de aprobación:', e);
+    }
+
+    if (gmailError) setDraftError(gmailError);
+    setIsCreatingDraft(false);
+  };
+
+  const handleSavePitch = () => {
     setIsEditingPitch(false);
+    void createDraftAndApprove(editedPitch, true);
   };
 
   const handleApprovePitchDirectly = () => {
-    const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
-    onUpdateLead(selectedLead.id, { estado: approvalState });
+    void createDraftAndApprove(selectedLead.pitch_generado || '', false);
   };
 
   const handleAddInteractionLog = (e: React.FormEvent) => {
@@ -545,6 +637,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         {(() => {
           const rawStatus = String(selectedLead.estado || '');
           const isPending = rawStatus === 'pendiente_aprobacion' || (rawStatus === 'nuevo' && !!selectedLead.pitch_generado && !selectedLead.fecha_envio);
+          const isDraftCreated = rawStatus === 'borrador_creado';
           const isApproved = rawStatus.startsWith('aprobado');
           const isSent = normalizeStatus(rawStatus) === 'esperando_respuesta';
 
@@ -567,11 +660,28 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                 <button
                   type="button"
                   onClick={handleApprovePitchDirectly}
-                  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-lg shrink-0 flex items-center gap-1 cursor-pointer shadow-sm"
+                  disabled={isCreatingDraft}
+                  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs rounded-lg shrink-0 flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
                 >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Aprobar</span>
+                  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                  <span>{isCreatingDraft ? 'Creando borrador...' : 'Aprobar'}</span>
                 </button>
+              </div>
+            );
+          }
+
+          if (isDraftCreated) {
+            return (
+              <div className="p-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-xl flex items-center gap-2.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shrink-0 ml-1" />
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-cyan-300">
+                    📝 Borrador creado en tu Gmail
+                  </p>
+                  <p className="text-[10px] text-zinc-400">
+                    Revísalo en tu bandeja de borradores y envíalo cuando quieras — no se ha enviado nada automáticamente.
+                  </p>
+                </div>
               </div>
             );
           }
@@ -585,7 +695,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     🚀 {rawStatus === 'aprobado_respuesta' ? 'Respuesta Aprobada' : 'Propuesta Aprobada'} — En cola del Agente Enviador
                   </p>
                   <p className="text-[10px] text-zinc-400">
-                    El agente despachará este correo respetando las normas de envío y rate-limiting.
+                    {draftError
+                      ? `No se pudo crear el borrador en Gmail (${draftError}). El lead quedó en cola para el Agente Enviador por email.`
+                      : 'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
                   </p>
                 </div>
               </div>
@@ -1070,10 +1182,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   <button
                     type="button"
                     onClick={handleApprovePitchDirectly}
-                    className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm"
+                    disabled={isCreatingDraft}
+                    className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-xs flex items-center gap-1 cursor-pointer shadow-sm disabled:opacity-50"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>{isReplyStage ? 'Aprobar Respuesta' : 'Aprobar Pitch'}</span>
+                    {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                    <span>{isCreatingDraft ? 'Creando borrador...' : (isReplyStage ? 'Aprobar Respuesta' : 'Aprobar Pitch')}</span>
                   </button>
                 ) : null}
               </div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Lead, LeadStatus } from '../../types';
+import { Lead, LeadStatus, EPKConfig } from '../../types';
 import { VenueDetailPanel } from './VenueDetailPanel';
 import { X, Building2 } from 'lucide-react';
 
@@ -20,6 +20,10 @@ interface MobileBottomSheetProps {
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => void;
   isUploadingLeadLogo?: boolean;
+  epkConfig?: Partial<EPKConfig>;
+  bandName?: string;
+  bandId?: string;
+  currentUser?: any;
 }
 
 export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
@@ -37,7 +41,11 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
   isStitchLight = false,
   activeCampaign,
   onLeadLogoUpload,
-  isUploadingLeadLogo = false
+  isUploadingLeadLogo = false,
+  epkConfig,
+  bandName,
+  bandId,
+  currentUser
 }) => {
   useEffect(() => {
     if (selectedLead) {
@@ -102,6 +110,10 @@ export const MobileBottomSheet: React.FC<MobileBottomSheetProps> = ({
             activeCampaign={activeCampaign}
             onLeadLogoUpload={onLeadLogoUpload}
             isUploadingLeadLogo={isUploadingLeadLogo}
+            epkConfig={epkConfig}
+            bandName={bandName}
+            bandId={bandId}
+            currentUser={currentUser}
           />
         </div>
       </div>
