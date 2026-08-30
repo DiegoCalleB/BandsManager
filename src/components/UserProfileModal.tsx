@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, HardDrive, Unlink, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot } from 'lucide-react';
-import { User, ThemeName, GoogleOAuthConfig } from '../types';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot } from 'lucide-react';
+import { User, ThemeName } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
-import { googleSignIn, logout } from '../utils/gmail';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
 import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
@@ -247,89 +246,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
    } finally {
      setDeletingBandId(null);
    }
- };
-
- // Google OAuth state
- const [oauthLoading, setOauthLoading] = useState(false);
- const [googleOAuthState, setGoogleOAuthState] = useState<GoogleOAuthConfig | null>(
- currentUser.googleOAuth || null
- );
-
- const handleConnectGoogleOAuth = async () => {
- setOauthLoading(true);
- setError(null);
- setSuccessMsg(null);
- try {
- const res = await googleSignIn();
- const googleData: GoogleOAuthConfig = {
- connected: true,
- email: res.user?.email || '',
- displayName: res.user?.displayName || res.user?.email || '',
- photoURL: res.user?.photoURL || '',
- accessToken: res.accessToken,
- scopes: [
- 'https://www.googleapis.com/auth/gmail.readonly',
- 'https://www.googleapis.com/auth/gmail.compose',
- 'https://www.googleapis.com/auth/gmail.send',
- 'https://www.googleapis.com/auth/drive.readonly'
- ],
- connectedAt: new Date().toISOString()
- };
-
- setGoogleOAuthState(googleData);
-
- const token = localStorage.getItem('bakandeya_token');
- const updateRes = await fetch(`/api/users/${currentUser.id}`, {
- method: 'PUT',
- headers: {
- 'Content-Type': 'application/json',
- ...(token ? { Authorization: `Bearer ${token}` } : {})
- },
- body: JSON.stringify({ googleOAuth: googleData })
- });
-
- if (updateRes.ok) {
- const updatedUser = await updateRes.json();
- onUpdateUser(updatedUser);
- setSuccessMsg(`¡Cuenta Google (${googleData.email}) conectada con OAuth 2.0 para Gmail y Drive!`);
- } else {
- setSuccessMsg(`Cuenta Google autenticada: ${googleData.email}`);
- }
- } catch (err: any) {
- console.error("Error connecting Google OAuth:", err);
- setError(err.message || 'Error al conectar con Google OAuth.');
- } finally {
- setOauthLoading(false);
- }
- };
-
- const handleDisconnectGoogleOAuth = async () => {
- setOauthLoading(true);
- try {
- await logout();
- const disconnectedState: GoogleOAuthConfig = { connected: false };
- setGoogleOAuthState(disconnectedState);
-
- const token = localStorage.getItem('bakandeya_token');
- const updateRes = await fetch(`/api/users/${currentUser.id}`, {
- method: 'PUT',
- headers: {
- 'Content-Type': 'application/json',
- ...(token ? { Authorization: `Bearer ${token}` } : {})
- },
- body: JSON.stringify({ googleOAuth: disconnectedState })
- });
-
- if (updateRes.ok) {
- const updatedUser = await updateRes.json();
- onUpdateUser(updatedUser);
- }
- setSuccessMsg('Conexión con Google revocada.');
- } catch (err: any) {
- setError(err.message || 'Error al desconectar de Google.');
- } finally {
- setOauthLoading(false);
- }
  };
 
  const colors = [

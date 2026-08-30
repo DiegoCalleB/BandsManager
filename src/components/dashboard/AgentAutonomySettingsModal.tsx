@@ -3,12 +3,12 @@ import {
   Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles, 
   Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
   Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
-  ChevronRight, Volume2, Music, CheckSquare, Square, Unlink, HardDrive, AtSign, UserCheck, Download
+  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { BandSchedule } from '../../types';
-import { initAuth, googleSignIn, logout } from '../../utils/gmail';
 import { ModalPortal } from '../common/ModalPortal';
+import { EmailAccountConfig } from '../EmailAccountConfig';
 
 export type DispatchAutonomyLevel = 'draft_only' | 'scheduled_window' | 'autonomous_first_contact';
 export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'advanced_negotiation';
@@ -148,14 +148,28 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     dispatchMode: initialConfig?.dispatchMode || 'draft_gmail'
   });
 
-  // State: Google OAuth connection
-  const [googleOAuthState, setGoogleOAuthState] = useState<{
-    connected: boolean;
-    email?: string;
-    displayName?: string;
-    photoURL?: string;
-  } | null>(null);
-  const [oauthLoading, setOauthLoading] = useState(false);
+  // Indicador (punto verde en la pestaña) de si la banda tiene YA una bandeja conectada -
+  // Gmail OAuth o SMTP/IMAP, lo que sea que EmailAccountConfig gestione. Estado propio y
+  // desacoplado de EmailAccountConfig a propósito: solo se usa para el badge de la pestaña,
+  // no duplica su lógica de conexión.
+  const [emailAccountConnected, setEmailAccountConnected] = useState(false);
+
+  useEffect(() => {
+    const targetBand = bandId || currentUser?.band_id;
+    if (!isOpen || !targetBand) return;
+    let isMounted = true;
+    const checkEmailAccountConnected = async () => {
+      const [gmailOAuth, imapAccount] = await Promise.all([
+        api.getGmailOAuthStatus().catch(() => null),
+        api.getBandEmailAccount(targetBand).catch(() => null)
+      ]);
+      if (isMounted) {
+        setEmailAccountConnected(Boolean(gmailOAuth?.connected) || Boolean(imapAccount?.connected));
+      }
+    };
+    checkEmailAccountConnected();
+    return () => { isMounted = false; };
+  }, [isOpen, bandId, currentUser]);
 
   // State: Band Schedules (Lector & Enviador)
   const [timezone, setTimezone] = useState<string>('Europe/Madrid');
@@ -169,66 +183,6 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [statusFeedback, setStatusFeedback] = useState<string | null>(null);
-
-  // Google OAuth Auth State Listener
-  useEffect(() => {
-    const unsubscribe = initAuth(
-      (user) => {
-        setGoogleOAuthState({
-          connected: true,
-          email: user.email || undefined,
-          displayName: user.displayName || undefined,
-          photoURL: user.photoURL || undefined
-        });
-      },
-      () => {
-        setGoogleOAuthState({ connected: false });
-      }
-    );
-    return () => {
-      if (typeof unsubscribe === 'function') unsubscribe();
-    };
-  }, []);
-
-  const handleConnectGoogleOAuth = async () => {
-    setOauthLoading(true);
-    try {
-      const res = await googleSignIn();
-      if (res?.user) {
-        setGoogleOAuthState({
-          connected: true,
-          email: res.user.email || undefined,
-          displayName: res.user.displayName || undefined,
-          photoURL: res.user.photoURL || undefined
-        });
-        // Prefill sender email if empty
-        if (!config.agentSenderEmail && res.user.email) {
-          setConfig(prev => ({ ...prev, agentSenderEmail: res.user.email || '' }));
-        }
-        setStatusFeedback('Cuenta Google conectada para el Agente Enviador.');
-        setTimeout(() => setStatusFeedback(null), 3500);
-      }
-    } catch (err: any) {
-      console.error('Error al conectar Google OAuth:', err);
-      alert('No se pudo conectar con Google: ' + (err.message || 'Error desconocido'));
-    } finally {
-      setOauthLoading(false);
-    }
-  };
-
-  const handleDisconnectGoogleOAuth = async () => {
-    setOauthLoading(true);
-    try {
-      await logout();
-      setGoogleOAuthState({ connected: false });
-      setStatusFeedback('Cuenta Google desconectada.');
-      setTimeout(() => setStatusFeedback(null), 3000);
-    } catch (err: any) {
-      console.error('Error al desconectar Google:', err);
-    } finally {
-      setOauthLoading(false);
-    }
-  };
 
   // Load existing configuration from server
   useEffect(() => {
@@ -496,7 +450,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
           >
             <Mail className="w-4 h-4 text-sky-400" />
             <span>2. Email & Buzón de Agentes</span>
-            {googleOAuthState?.connected && (
+            {emailAccountConnected && (
               <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-sm"></span>
             )}
           </button>
@@ -903,102 +857,11 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                 </div>
               </div>
 
-              {/* 2. Conexión Google OAuth 2.0 (Gmail / Borradores) */}
-              <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
-                    <Mail className="w-4 h-4" /> 2. Conexión Google OAuth 2.0 (Gmail & Drive)
-                  </h4>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
-                    googleOAuthState?.connected
-                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
-                  }`}>
-                    {googleOAuthState?.connected ? '✓ Google OAuth Activo' : 'No Conectado'}
-                  </span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-3">
-                  {googleOAuthState?.connected ? (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          {googleOAuthState.photoURL ? (
-                            <img src={googleOAuthState.photoURL} alt="Google Avatar" className="w-9 h-9 rounded-full ring-2 ring-emerald-500/40" />
-                          ) : (
-                            <div className="w-9 h-9 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-xs border border-sky-500/30">
-                              G
-                            </div>
-                          )}
-                          <div>
-                            <p className="font-bold text-xs text-zinc-100">{googleOAuthState.displayName || googleOAuthState.email}</p>
-                            <p className="text-[11px] font-mono text-neutral-400 truncate max-w-[240px]">{googleOAuthState.email}</p>
-                          </div>
-                        </div>
-                        {isAdmin && (
-                          <button
-                            type="button"
-                            onClick={handleDisconnectGoogleOAuth}
-                            disabled={oauthLoading}
-                            className="px-2.5 py-1.5 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-mono border border-rose-500/20"
-                            title="Desconectar cuenta Google de los agentes"
-                          >
-                            <Unlink className="w-3.5 h-3.5" />
-                            <span>Desconectar</span>
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="pt-2 border-t border-neutral-800/80 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10.5px] font-mono text-neutral-400">
-                        <div className="flex items-center gap-1 text-emerald-400">
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Gmail Borradores</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-emerald-400">
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Envíos Aprobados</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-emerald-400">
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Lector Bandeja</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-sky-400">
-                          <HardDrive className="w-3.5 h-3.5" />
-                          <span>Tokens Seguros</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-xs text-neutral-300 leading-relaxed font-sans">
-                        Conecta la cuenta de Gmail de la banda para que los agentes puedan preparar borradores listos para enviar en tu carpeta de Gmail, sincronizar hilos de conversación y despachar correos autorizados.
-                      </p>
-                      {isAdmin ? (
-                        <button
-                          type="button"
-                          onClick={handleConnectGoogleOAuth}
-                          disabled={oauthLoading}
-                          className="w-full py-2.5 px-4 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-98"
-                        >
-                          {oauthLoading ? (
-                            <>
-                              <Loader2 className="w-4 h-4 animate-spin text-sky-300" />
-                              <span>Conectando con Google...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Mail className="w-4 h-4 text-sky-400" />
-                              <span>Conectar Cuenta de Google (Gmail & Drive)</span>
-                            </>
-                          )}
-                        </button>
-                      ) : (
-                        <p className="text-[11px] text-amber-400/80 font-mono">Solo administradores pueden vincular la cuenta de Google.</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
+              {/* 2. Conexión de la bandeja de correo (Gmail sin contraseña vía OAuth, o
+                  SMTP/IMAP con contraseña de aplicación para Outlook/otros) - misma
+                  configuración que usa el Agente Enviador programado, sin duplicar aquí
+                  un mecanismo de conexión distinto al de EmailAccountConfig. */}
+              <EmailAccountConfig bandId={bandId || currentUser?.band_id} isStitchLight={isStitchLight} />
 
               {/* 3. Modo de Despacho de Correo */}
               <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">

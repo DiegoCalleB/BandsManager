@@ -69,8 +69,13 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       try {
         const bandId = currentUser?.band_id;
         if (!bandId) { setHasEmailAccountConnected(false); return; }
-        const account = await api.getBandEmailAccount(bandId);
-        if (isMounted) setHasEmailAccountConnected(Boolean(account?.connected));
+        // Cuenta como "conectado" cualquiera de las dos vías que gestiona EmailAccountConfig:
+        // Gmail por OAuth (sin contraseña) o SMTP/IMAP con contraseña de aplicación.
+        const [gmailOAuth, imapAccount] = await Promise.all([
+          api.getGmailOAuthStatus().catch(() => null),
+          api.getBandEmailAccount(bandId).catch(() => null)
+        ]);
+        if (isMounted) setHasEmailAccountConnected(Boolean(gmailOAuth?.connected) || Boolean(imapAccount?.connected));
       } catch {
         if (isMounted) setHasEmailAccountConnected(false);
       }
