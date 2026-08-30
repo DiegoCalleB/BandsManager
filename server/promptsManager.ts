@@ -330,8 +330,17 @@ ${logsText}
 
     content += `\n*Generado automáticamente por Bakandeya Intelligence System - ${new Date().toISOString()}*\n`;
 
-    fs.writeFileSync(markdownPath, content, "utf-8");
-    console.log("Updated PROMPTS_AGENTES_IA.md successfully!");
+    // loadState() (server/state.ts) llama a esta función en cada carga de estado - y loadState()
+    // se llama desde 100+ sitios del código, uno por petición. writeFileSync bloqueaba el event
+    // loop entero por cada una de esas llamadas; bajo tráfico normal, esas escrituras síncronas
+    // consecutivas bastaban para dejar sin CPU al scheduler en segundo plano (setInterval de
+    // server/services/agentScheduler.ts) durante minutos u horas seguidas, sin ningún error
+    // visible - el servidor seguía respondiendo peticiones HTTP con normalidad mientras tanto.
+    // fs.writeFile (sin Sync) no bloquea: el resto del proceso sigue mientras el disco escribe.
+    fs.writeFile(markdownPath, content, "utf-8", (err) => {
+      if (err) console.error("Error writing PROMPTS_AGENTES_IA.md:", err);
+      else console.log("Updated PROMPTS_AGENTES_IA.md successfully!");
+    });
   } catch (err) {
     console.error("Error writing PROMPTS_AGENTES_IA.md:", err);
   }
