@@ -1215,13 +1215,15 @@ export default function App() {
  />
  )}
  {currentView === 'repertorio' && (
- <RepertorioSetlists 
+ <RepertorioSetlists
  key={currentActiveBandId}
  colors={colors}
  concerts={activeBandConcerts}
  rehearsals={activeBandRehearsals}
  bandName={currentActiveBandName}
  bandId={currentActiveBandId}
+ bandUsers={bandUsers}
+ bandLogoUrl={currentActiveBandLogo}
  onUpdateConcert={handleUpdateConcert}
  onUpdateRehearsal={handleUpdateRehearsal}
  />
