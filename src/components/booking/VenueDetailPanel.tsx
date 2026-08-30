@@ -8,6 +8,7 @@ import { FavoriteButton } from '../common/FavoriteButton';
 import { isLeadVerificado } from '../../utils/leadReliability';
 import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
 import {
   Edit3,
@@ -104,6 +105,32 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [enrichStatusMsg, setEnrichStatusMsg] = useState<string | null>(null);
   const [isCreatingDraft, setIsCreatingDraft] = useState(false);
   const [draftError, setDraftError] = useState<string | null>(null);
+
+  // Historial real de conversación (lead_messages, escrito por el Enviador/Lector) - independiente
+  // de selectedLead.hilo_emails, que solo lo rellena el sync manual de Gmail del cliente. Sin esto,
+  // los pitches enviados de verdad y las respuestas detectadas automáticamente nunca aparecían aquí.
+  const [leadMessages, setLeadMessages] = useState<Array<{ id: string; remitente: 'banda' | 'sala'; remitente_nombre: string; asunto: string; mensaje: string; fecha: string }>>([]);
+
+  useEffect(() => {
+    if (!selectedLead?.id) { setLeadMessages([]); return; }
+    let isMounted = true;
+    api.getLeadMessages(selectedLead.id)
+      .then((res) => { if (isMounted) setLeadMessages(res?.messages || []); })
+      .catch(() => { if (isMounted) setLeadMessages([]); });
+    return () => { isMounted = false; };
+  }, [selectedLead?.id]);
+
+  // Une el hilo manual (hilo_emails) con el real (lead_messages), sin duplicar por asunto+fecha
+  // aproximada, y ordenado cronológicamente - una banda puede tener las dos fuentes a la vez si
+  // sincronizó Gmail a mano alguna vez además de dejar que los agentes trabajen.
+  const hiloCompleto = React.useMemo(() => {
+    const manual = (selectedLead?.hilo_emails || []).map((m: any) => ({ ...m, _origen: 'manual' as const }));
+    const real = leadMessages.map((m) => ({ ...m, _origen: 'real' as const }));
+    const todos = [...real, ...manual].filter((m, idx, arr) =>
+      arr.findIndex((o) => o.mensaje === m.mensaje && o.remitente === m.remitente) === idx
+    );
+    return todos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+  }, [selectedLead?.hilo_emails, leadMessages]);
 
   // Clean helper for values like #ERROR!
   const cleanVal = (val?: string) => {
@@ -778,9 +805,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         >
           <Mail className="w-3.5 h-3.5" />
           <span>Correos</span>
-          {selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0 && (
+          {hiloCompleto.length > 0 && (
             <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#f2ca50] text-[#3c2f00]">
-              {selectedLead.hilo_emails.length}
+              {hiloCompleto.length}
             </span>
           )}
         </button>
@@ -1506,12 +1533,12 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       {/* TAB 2: EMAIL THREAD & REPLY SIMULATION */}
       {activeTab === 'emails' && (
         <div className="space-y-3">
-          {(selectedLead.hilo_emails || []).length === 0 ? (
+          {hiloCompleto.length === 0 ? (
             <div className="p-6 text-center rounded-xl bg-[#1A1918] border border-zinc-800 text-zinc-400 text-xs italic">
               No hay correos registrados en el historial de esta sala aún.
             </div>
           ) : (
-            (selectedLead.hilo_emails || []).map((msg) => (
+            hiloCompleto.map((msg) => (
               <div
                 key={msg.id}
                 className={`p-3.5 rounded-xl border space-y-1.5 text-xs font-sans ${

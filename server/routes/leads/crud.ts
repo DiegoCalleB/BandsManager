@@ -2,13 +2,14 @@ import express from "express";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead } from "../../db.js";
+import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
 import { checkRecordLimit } from "../../utils/planLimits.js";
 import { getBandDnaProfile, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
 import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
+import { getTargetBandId } from "../../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -78,6 +79,23 @@ router.get("/leads", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error getting leads from Supabase:", err);
     res.status(500).json({ error: "Error al obtener salas desde Supabase" });
+  }
+});
+
+// Historial real de conversación de un lead (server/db/leadMessages.ts): lo que el Enviador ya
+// mandó de verdad y lo que el Lector ya detectó como respuesta o como borrador enviado a mano -
+// distinto de leads.hilo_emails, un campo aparte que el frontend rellena por su cuenta (sync de
+// Gmail por popup) y que nunca se cruza con esto. Sin esta ruta, todo lo que los agentes
+// registran en lead_messages era invisible en el CRM.
+router.get("/leads/:id/messages", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bandId = getTargetBandId(req);
+    const messages = await dbGetLeadMessages(id, bandId);
+    res.json({ success: true, messages });
+  } catch (error: any) {
+    console.error("Error in GET /api/leads/:id/messages:", error);
+    res.status(500).json({ error: error?.message || "Error al obtener el historial de conversación." });
   }
 });
 

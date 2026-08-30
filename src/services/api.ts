@@ -316,6 +316,13 @@ export const api = {
     });
   },
 
+  // Historial real de conversación (server/db/leadMessages.ts) - lo que el Enviador mandó de
+  // verdad y lo que el Lector detectó como respuesta o borrador enviado a mano. Distinto de
+  // lead.hilo_emails (sync manual de Gmail desde el cliente).
+  async getLeadMessages(leadId: string): Promise<{ success: boolean; messages: any[] }> {
+    return request(`/api/leads/${leadId}/messages`);
+  },
+
   async bulkDeleteLeads(ids: string[]): Promise<{ success: boolean; count: number }> {
     return request('/api/leads/bulk-delete', {
       method: 'POST',
