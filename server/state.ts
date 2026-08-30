@@ -4,7 +4,7 @@ import express from "express";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES, INITIAL_SOCIAL_METRICS, INITIAL_USERS, INITIAL_SONGS, INITIAL_SETLISTS, INITIAL_BANDS, INITIAL_TOURS } from "../src/db_seed.js";
 import { ACTIVE_SESSIONS, hashPassword, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware, createCronOrAuthMiddleware } from "./auth.js";
 import { generateUniqueSlugId, slugify } from "./utils/slug.js";
-import { ensureCategoryTemplatesInState, updatePromptsMarkdownFile, getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
+import { ensureCategoryTemplatesInState } from "./promptsManager.js";
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
 
@@ -858,14 +858,6 @@ export function loadState(): any {
         saveState(state);
       }
 
-      try {
-        const feedbackSummary = getGlobalPitchFeedbackSummary(state.leads);
-        const globalMemoryStr = formatGlobalPitchFeedbackForPrompt(state.leads);
-        updatePromptsMarkdownFile(state.categoryTemplates, globalMemoryStr);
-      } catch (err) {
-        // Non-blocking
-      }
-      
       return state;
     } catch (e) {
       console.error("Error reading data.json, falling back to seed data", e);
