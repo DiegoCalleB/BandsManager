@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog, EPKConfig } from '../../types';
+import { Lead, LeadStatus, LeadType, InteractionLog } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { LeadAvatar } from './LeadAvatar';
@@ -9,8 +9,6 @@ import { isLeadVerificado } from '../../utils/leadReliability';
 import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
-import { createGmailDraft } from '../../utils/gmail';
-import { formatEmailWithSignatureAndDossier } from '../../utils/emailFormatter';
 import {
   Edit3,
   X,
@@ -53,10 +51,6 @@ interface VenueDetailPanelProps {
   activeCampaign?: any;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
-  epkConfig?: Partial<EPKConfig>;
-  bandName?: string;
-  bandId?: string;
-  currentUser?: any;
 }
 
 export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
@@ -74,11 +68,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   isStitchLight = false,
   activeCampaign,
   onLeadLogoUpload,
-  isUploadingLeadLogo = false,
-  epkConfig,
-  bandName,
-  bandId,
-  currentUser
+  isUploadingLeadLogo = false
 }) => {
   // Active Tab inside panel
   const [activeTab, setActiveTab] = useState<'info' | 'emails' | 'bitacora'>('info');
@@ -337,85 +327,53 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   const isReplyStage = (selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0) || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
 
-  // Al aprobar se crea directamente el borrador real en Gmail vía OAuth (mismo mecanismo que
-  // el Chatbot "Mánager IA"), en vez de dejar el lead en cola para el Agente Enviador por
-  // IMAP - ese agente exige una App Password real de Gmail por banda que no siempre está
-  // configurada. Si el borrador falla (sin sesión de Google, sin email de contacto...), el
-  // lead cae de todos modos en el estado de aprobado clásico para no perder la aprobación.
+  // Al aprobar se dispara el Agente Enviador en el servidor para este lead concreto
+  // (POST /api/trigger-agent, el mismo endpoint que usa el scheduler) en vez de crear el
+  // borrador desde el navegador: el servidor ya sabe elegir entre la API de Gmail por OAuth
+  // (sin contraseña, sin popup - ver server/services/gmailApiClient.ts) y el camino IMAP con
+  // contraseña de aplicación para Outlook (server/services/agentEngine.ts). Así el botón
+  // "Aprobar" y el Agente Enviador programado comparten una sola implementación, sin duplicar
+  // lógica ni depender de Firebase/popup en el cliente. Si falla (sin email de contacto, sin
+  // ninguna cuenta conectada...), el lead cae de todos modos en el estado de aprobado clásico
+  // para no perder la aprobación humana.
   const createDraftAndApprove = async (pitchText: string, alsoSavePitch: boolean) => {
     const approvalState = isReplyStage ? 'aprobado_respuesta' : 'aprobado_propuesta';
-    const recipientEmail = selectedLead.email_contacto;
-    const bandNameResolved = bandName || 'Tu Banda';
-    const subject = isReplyStage
-      ? `Re: Concierto ${bandNameResolved} en ${selectedLead.nombre_sala}`
-      : `Propuesta de concierto: ${bandNameResolved} en ${selectedLead.nombre_sala}`;
 
     setIsCreatingDraft(true);
     setDraftError(null);
 
-    let gmailId = '';
-    let gmailError = '';
-
-    if (recipientEmail) {
-      try {
-        const formatted = formatEmailWithSignatureAndDossier({
-          pitchText,
-          lead: selectedLead,
-          epkConfig,
-          senderName: currentUser?.name || currentUser?.username,
-          bandName: bandNameResolved,
-          bandId
-        });
-        const res = await createGmailDraft(recipientEmail, subject, formatted.html, null, true);
-        gmailId = res.id;
-      } catch (err: any) {
-        console.error('Error creando borrador en Gmail al aprobar lead:', err);
-        gmailError = err.message || 'Error al crear el borrador en Gmail';
-      }
-    } else {
-      gmailError = 'La sala no tiene un correo de contacto (email_contacto).';
+    if (alsoSavePitch) {
+      // El Enviador lee pitch_generado directamente de Supabase, así que el texto editado
+      // tiene que quedar guardado antes de disparar el agente o vería la versión anterior.
+      await onUpdateLead(selectedLead.id, { pitch_generado: pitchText });
     }
 
-    const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
-    const updatedNotes = gmailId
-      ? `*** [${nowStr}] Borrador Creado en Gmail al aprobar [Gmail Draft ID: ${gmailId}] ***\n${selectedLead.notas || ''}`
-      : `*** [${nowStr}] Correo APROBADO manualmente, pero no se pudo crear el borrador en Gmail (${gmailError}) ***\n${selectedLead.notas || ''}`;
-
-    onUpdateLead(selectedLead.id, {
-      estado: gmailId ? 'borrador_creado' : approvalState,
-      ...(alsoSavePitch ? { pitch_generado: pitchText } : {}),
-      notas: updatedNotes
-    });
-
+    let draftError = '';
     try {
-      await apiFetch('/api/agent-logs', {
+      const data = await apiFetch('/api/trigger-agent', {
         method: 'POST',
         body: JSON.stringify({
-          band_id: bandId,
-          agente: 'redactor',
-          motor: 'gmail_draft_api',
-          disparado_por_tipo: 'usuario_manual',
-          usuario_id: currentUser?.id || null,
-          usuario_email: currentUser?.email || null,
-          estado: gmailId ? 'success' : 'warning',
-          mensaje: `Borrador ${gmailId ? 'generado' : 'NO generado'} en Gmail para "${selectedLead.nombre_sala}" (${recipientEmail || 'sin email'}) al aprobar desde el CRM.`,
-          leads_afectados: [{
-            id: selectedLead.id,
-            nombre_sala: selectedLead.nombre_sala,
-            email_contacto: recipientEmail,
-            estado_anterior: selectedLead.estado,
-            estado_nuevo: gmailId ? 'borrador_creado' : approvalState,
-            gmail_draft_id: gmailId
-          }],
-          conteo_afectados: 1,
-          detalles: { gmailDraftId: gmailId, subject, error: gmailError || undefined }
+          agentName: 'enviador',
+          params: { id: selectedLead.id, trigger_type: 'usuario_manual' }
         })
       });
-    } catch (e) {
-      console.warn('Error registrando auditoría de aprobación:', e);
+
+      const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === selectedLead.id) : null;
+      if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
+        onUpdateLead(selectedLead.id, { estado: 'borrador_creado' });
+      } else {
+        draftError = leadResult?.error || data.message || 'No se pudo crear el borrador.';
+      }
+    } catch (err: any) {
+      console.error('Error aprobando lead:', err);
+      draftError = err.message || 'Error al aprobar el lead.';
     }
 
-    if (gmailError) setDraftError(gmailError);
+    if (draftError) {
+      setDraftError(draftError);
+      onUpdateLead(selectedLead.id, { estado: approvalState });
+    }
+
     setIsCreatingDraft(false);
   };
 

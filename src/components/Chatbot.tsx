@@ -3,8 +3,9 @@ import { api } from '../services/api';
 import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
 import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic, Download } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
-import { sendGmailMessage, createGmailDraft, getAccessToken, googleSignIn } from '../utils/gmail';
+import { sendGmailMessage, getAccessToken, googleSignIn } from '../utils/gmail';
 import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
+import { apiFetch } from '../utils/api';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
 import { eventosAMidiBlob } from '../utils/midiExport';
@@ -866,6 +867,62 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const recipientEmail = targetLead.email_contacto;
  const isDraftOnly = autonomyConfig.dispatchLevel === 'draft_only' || autonomyConfig.dispatchLevel !== 'autonomous_first_contact';
 
+ if (isDraftOnly) {
+ // Antes esto abría un popup de Google (Firebase Auth) para crear el borrador - imposible
+ // de repetir sin usuario delante, y por tanto incompatible con que el Agente Enviador
+ // programado hiciera lo mismo sin contraseña. Dispara el mismo endpoint que usa el
+ // scheduler (POST /api/trigger-agent), que ya elige entre la API de Gmail por OAuth (sin
+ // popup) y el IMAP con contraseña de aplicación para Outlook (server/services/agentEngine.ts)
+ // - así el borrador vale igual venga del chatbot, del botón "Aprobar" del CRM o del scheduler.
+ let gmailOk = false;
+ let gmailError = '';
+ if (!recipientEmail) {
+ gmailError = 'La sala no tiene un correo de contacto (email_contacto).';
+ } else {
+ try {
+ if (emailBody && emailBody !== targetLead.pitch_generado) {
+ await onUpdateLead(action.leadId, { pitch_generado: emailBody }, targetLead.estado);
+ }
+ const data = await apiFetch('/api/trigger-agent', {
+ method: 'POST',
+ body: JSON.stringify({ agentName: 'enviador', params: { id: targetLead.id, trigger_type: 'chatbot' } })
+ });
+ const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === targetLead.id) : null;
+ gmailOk = leadResult?.status === 'borrador';
+ if (!gmailOk) gmailError = leadResult?.error || data.message || 'No se pudo crear el borrador.';
+ } catch (err: any) {
+ console.error('Error aprobando lead vía Chatbot:', err);
+ gmailError = err.message || 'Error al aprobar el lead.';
+ }
+ }
+
+ const updatedNotes = `*** [${nowStr}] Borrador Creado por Mánager IA (Modo Sólo Borradores Activo) ***\n${targetLead.notas || ''}`;
+ onUpdateLead(action.leadId, {
+ estado: gmailOk ? 'borrador_creado' : 'pendiente_aprobacion',
+ pitch_generado: emailBody || targetLead.pitch_generado,
+ notas: updatedNotes
+ }, targetLead.estado);
+ // El servidor ya audita la ejecución (logAgentExecution dentro de runEnviadorAgent), no
+ // hace falta duplicar el registro aquí como antes.
+
+ setMessages(prev => prev.map(m => {
+ if (m.id === msgId) return { ...m, actionStatus: 'applied' };
+ return m;
+ }));
+
+ const draftMsg: ChatMessage = {
+ id: `sys-${Date.now()}`,
+ sender: 'bot',
+ text: gmailOk
+ ? `📝 **Borrador Creado (Modo Sólo Borradores Activo):**\n\n🔒 Por seguridad y al estar la autonomía fijada en **SÓLO BORRADORES**, el correo NO se ha enviado directamente.\nSe ha generado el **borrador real** en tu bandeja de email para **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Estado:** Guardado para revisión humana obligatoria.`
+ : `⚠️ **No se pudo crear el borrador:** ${gmailError || 'Error desconocido.'}\n\nEl lead queda pendiente de aprobación para que lo revises a mano.`,
+ timestamp: new Date()
+ };
+ setMessages(prev => [...prev, draftMsg]);
+ } else {
+ // Envío directo (autonomía "Auto 1er Contacto"): sigue yendo por el popup de Google desde
+ // el navegador - a diferencia del borrador, esto no lo dispara el Agente Enviador
+ // programado, así que no necesita el camino sin popup.
  let gmailId = '';
  let gmailError = '';
 
@@ -885,13 +942,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    bandName: bandDisplayName,
    bandId: effectiveBandId
  });
- if (isDraftOnly) {
-   const res = await createGmailDraft(recipientEmail, emailSubject, formatted.html, token, true);
-   gmailId = res.id;
- } else {
-   const res = await sendGmailMessage(recipientEmail, emailSubject, formatted.html, token, true);
-   gmailId = res.id;
- }
+ const res = await sendGmailMessage(recipientEmail, emailSubject, formatted.html, token, true);
+ gmailId = res.id;
  } else {
  gmailError = 'Sin conexión Google OAuth activa.';
  }
@@ -899,60 +951,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  console.error('Error processing email on lead approval:', err);
  gmailError = err.message || 'Error al procesar por Gmail API';
  }
- } else if (!recipientEmail) {
+ } else {
  gmailError = 'La sala no tiene un correo de contacto (email_contacto).';
  }
 
- if (isDraftOnly) {
- const updatedNotes = `*** [${nowStr}] Borrador Creado en Gmail por Mánager IA (Modo Sólo Borradores Activo)${gmailId ? ` [Gmail Draft ID: ${gmailId}]` : ''} ***\n${targetLead.notas || ''}`;
- onUpdateLead(action.leadId, {
- estado: 'pendiente_aprobacion',
- pitch_generado: emailBody || targetLead.pitch_generado,
- notas: updatedNotes
- }, targetLead.estado);
-        // Auditoría en Supabase
-        fetch("/api/agent-logs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            band_id: effectiveBandId,
-            agente: "redactor",
-            motor: "gmail_draft_api",
-            disparado_por_tipo: "chatbot",
-            // Antes, sin usuario en sesión, el log de auditoría atribuía la acción al fundador
-            // del proyecto (Diego) por defecto, lo cual es falso y confunde cualquier revisión.
-            usuario_id: currentUser?.id || null,
-            usuario_email: currentUser?.email || null,
-            estado: gmailId ? "success" : "warning",
-            mensaje: `Borrador generado en Gmail para "${targetLead.nombre_sala}" (${recipientEmail}) en modo Solo Borradores.`,
-            leads_afectados: [{
-              id: targetLead.id,
-              nombre_sala: targetLead.nombre_sala,
-              email_contacto: recipientEmail,
-              estado_anterior: targetLead.estado,
-              estado_nuevo: "pendiente_aprobacion",
-              gmail_draft_id: gmailId
-            }],
-            conteo_afectados: 1,
-            detalles: { gmailDraftId: gmailId, subject: emailSubject }
-          })
-        }).catch(e => console.warn("Error audit log:", e));
-
- setMessages(prev => prev.map(m => {
- if (m.id === msgId) return { ...m, actionStatus: 'applied' };
- return m;
- }));
-
- const draftMsg: ChatMessage = {
- id: `sys-${Date.now()}`,
- sender: 'bot',
- text: gmailId
- ? `📝 **Borrador Creado en Gmail (Modo Sólo Borradores Activo):**\n\n🔒 Por seguridad y al estar la autonomía fijada en **SÓLO BORRADORES**, el correo NO se ha enviado directamente.\nSe ha generado el **borrador real** en tu bandeja de Gmail para **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Borrador ID:** \`${gmailId}\`\n- **Estado:** Guardado en Gmail para revisión humana obligatoria.`
- : `📝 **Borrador Guardado en Supabase:** Se ha registrado el borrador para **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
- timestamp: new Date()
- };
- setMessages(prev => [...prev, draftMsg]);
- } else {
  const updatedNotes = `*** [${nowStr}] Correo APROBADO Y ENVIADO vía Chatbot AI Assistant${gmailId ? ` [Gmail ID: ${gmailId}]` : ''} ***\n${targetLead.notas || ''}`;
  onUpdateLead(action.leadId, {
  estado: 'aprobado',
@@ -1304,75 +1306,48 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
 
  } else if (action.type === 'propose_draft_email' && action.leadId) {
  const targetLead = leads.find(l => l.id === action.leadId);
- const today = new Date().toISOString().split('T')[0];
  const rawDraftBody = action.body || targetLead?.pitch_generado || '';
- const draftSubject = action.subject || `Propuesta de Concierto - Bakandeya en ${targetLead?.nombre_sala || 'Sala'}`;
- const formatted = formatEmailWithSignatureAndDossier({
-   pitchText: rawDraftBody,
-   lead: targetLead,
-   epkConfig,
-   senderName: action.senderName || cleanUserName,
-   bandName: bandDisplayName,
-   bandId: effectiveBandId
- });
 
- let gmailDraftId = '';
+ // Antes esto abría un popup de Google para crear el borrador (ver comentario en
+ // propose_lead_approval, más arriba) - ahora dispara el Agente Enviador en el servidor
+ // (POST /api/trigger-agent), que crea el borrador sin popup vía la API de Gmail por OAuth
+ // si la banda la tiene conectada, o por IMAP si no.
+ let gmailOk = false;
  let gmailError = '';
 
- if (targetLead && targetLead.email_contacto) {
- try {
- let token = await getAccessToken();
- if (!token) {
- const authRes = await googleSignIn();
- token = authRes?.accessToken || null;
- }
- if (token) {
- const res = await createGmailDraft(targetLead.email_contacto, draftSubject, formatted.html, token, true);
- gmailDraftId = res.id;
+ if (!targetLead) {
+ gmailError = 'No se encontró el lead.';
+ } else if (!targetLead.email_contacto) {
+ gmailError = 'La sala no tiene un correo de contacto (email_contacto).';
  } else {
- gmailError = 'No hay sesión de Google OAuth activa para crear el borrador.';
+ try {
+ if (rawDraftBody && rawDraftBody !== targetLead.pitch_generado) {
+ await onUpdateLead(action.leadId, { pitch_generado: rawDraftBody }, targetLead.estado);
  }
+ const data = await apiFetch('/api/trigger-agent', {
+ method: 'POST',
+ body: JSON.stringify({ agentName: 'enviador', params: { id: targetLead.id, trigger_type: 'chatbot' } })
+ });
+ const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === targetLead.id) : null;
+ gmailOk = leadResult?.status === 'borrador';
+ if (!gmailOk) gmailError = leadResult?.error || data.message || 'No se pudo crear el borrador.';
  } catch (err: any) {
- console.error('Error creating Gmail draft:', err);
- gmailError = err.message || 'Error en la API de Gmail';
+ console.error('Error creando el borrador vía Chatbot:', err);
+ gmailError = err.message || 'Error al crear el borrador.';
  }
  }
 
  if (targetLead) {
- const updatedNotes = `*** [${today}] Borrador guardado vía Chatbot AI (${draftSubject})${gmailDraftId ? ` [Gmail Draft ID: ${gmailDraftId}]` : ''} ***\n${targetLead.notas || ''}`;
+ const today = new Date().toISOString().split('T')[0];
+ const updatedNotes = `*** [${today}] Borrador guardado vía Chatbot AI ***\n${targetLead.notas || ''}`;
  onUpdateLead(action.leadId, {
- pitch_generado: formatted.text,
- estado: 'pendiente_aprobacion',
+ pitch_generado: rawDraftBody || targetLead.pitch_generado,
+ estado: gmailOk ? 'borrador_creado' : 'pendiente_aprobacion',
  notas: updatedNotes
  }, targetLead.estado);
  }
-        // Auditoría en Supabase
-        fetch("/api/agent-logs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            band_id: effectiveBandId,
-            agente: "redactor",
-            motor: "gmail_draft_api",
-            disparado_por_tipo: "chatbot",
-            // Antes, sin usuario en sesión, el log de auditoría atribuía la acción al fundador
-            // del proyecto (Diego) por defecto, lo cual es falso y confunde cualquier revisión.
-            usuario_id: currentUser?.id || null,
-            usuario_email: currentUser?.email || null,
-            estado: gmailDraftId ? "success" : "warning",
-            mensaje: `Borrador generado en Gmail para "${targetLead.nombre_sala}" (${targetLead.email_contacto || ""}).`,
-            leads_afectados: [{
-              id: targetLead.id,
-              nombre_sala: targetLead.nombre_sala,
-              email_contacto: targetLead.email_contacto,
-              estado_anterior: targetLead.estado,
-              estado_nuevo: "pendiente_aprobacion",
-              gmail_draft_id: gmailDraftId
-            }],
-            conteo_afectados: 1,
-            detalles: { gmailDraftId, subject: draftSubject }
-          })
-        }).catch(e => console.warn("Error audit log:", e));
+ // El servidor ya audita la ejecución (logAgentExecution dentro de runEnviadorAgent), no
+ // hace falta duplicar el registro aquí como antes.
 
  setMessages(prev => prev.map(m => {
  if (m.id === msgId) return { ...m, actionStatus: 'applied' };
@@ -1382,9 +1357,9 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const draftSuccessMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: gmailDraftId
- ? `📝 **Borrador Creado en Gmail & Guardado:**\n\nSe ha creado el borrador real en tu bandeja de Gmail para **"${targetLead?.email_contacto}"** (${targetLead?.nombre_sala}).\n- **Borrador ID:** \`${gmailDraftId}\`\n- **Estado:** Pendiente de Aprobación en Supabase.`
- : `📝 **Borrador Guardado en Supabase:**\n\nSe ha guardado el borrador para **"${action.leadName || targetLead?.nombre_sala || 'Sala'}"** en el panel de aprobación.${gmailError ? `\n\n⚠️ *Aviso Gmail:* ${gmailError}` : ''}`,
+ text: gmailOk
+ ? `📝 **Borrador Creado y Guardado:**\n\nSe ha creado el borrador real en tu bandeja de email para **"${targetLead?.email_contacto}"** (${targetLead?.nombre_sala}).\n- **Estado:** Pendiente de revisión humana.`
+ : `⚠️ **No se pudo crear el borrador:** ${gmailError || 'Error desconocido.'}\n\nEl lead queda pendiente de aprobación para que lo revises a mano.`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, draftSuccessMsg]);
@@ -1395,13 +1370,62 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const nowStr = `${today} ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
  const isDraftOnly = autonomyConfig.dispatchLevel === 'draft_only' || autonomyConfig.dispatchLevel !== 'autonomous_first_contact';
 
- let gmailId = '';
- let gmailError = '';
-
  if (targetLead) {
  const emailBody = action.body || targetLead.pitch_generado || '';
- const emailSubject = action.subject || `Propuesta de Concierto / Presentación - Bakandeya en ${targetLead.nombre_sala}`;
  const recipientEmail = targetLead.email_contacto;
+
+ if (isDraftOnly) {
+ // Ver comentario en propose_lead_approval: dispara el Agente Enviador en el servidor
+ // en vez de abrir el popup de Google, para que funcione igual que el scheduler.
+ let gmailOk = false;
+ let gmailError = '';
+ if (!recipientEmail) {
+ gmailError = 'El lead/sala no tiene un correo de contacto definido (email_contacto).';
+ } else {
+ try {
+ if (emailBody && emailBody !== targetLead.pitch_generado) {
+ await onUpdateLead(action.leadId, { pitch_generado: emailBody }, targetLead.estado);
+ }
+ const data = await apiFetch('/api/trigger-agent', {
+ method: 'POST',
+ body: JSON.stringify({ agentName: 'enviador', params: { id: targetLead.id, trigger_type: 'chatbot' } })
+ });
+ const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === targetLead.id) : null;
+ gmailOk = leadResult?.status === 'borrador';
+ if (!gmailOk) gmailError = leadResult?.error || data.message || 'No se pudo crear el borrador.';
+ } catch (err: any) {
+ console.error('Error creando el borrador vía Chatbot:', err);
+ gmailError = err.message || 'Error al crear el borrador.';
+ }
+ }
+
+ const updatedNotes = `*** [${nowStr}] Borrador Creado por Mánager IA (Bloqueado Modo Solo Borradores) ***\n${targetLead.notas || ''}`;
+ onUpdateLead(action.leadId, {
+ estado: gmailOk ? 'borrador_creado' : 'pendiente_aprobacion',
+ pitch_generado: emailBody,
+ notas: updatedNotes
+ }, targetLead.estado);
+ // El servidor ya audita la ejecución (logAgentExecution dentro de runEnviadorAgent).
+
+ setMessages(prev => prev.map(m => {
+ if (m.id === msgId) return { ...m, actionStatus: 'applied' };
+ return m;
+ }));
+
+ const draftOnlyMsg: ChatMessage = {
+ id: `sys-${Date.now()}`,
+ sender: 'bot',
+ text: gmailOk
+ ? `📝 **Borrador Creado (Modo Sólo Borradores Activo):**\n\n🔒 Por seguridad y al estar la autonomía en **SÓLO BORRADORES**, el correo NO se ha enviado directamente.\nSe ha creado el **borrador real** en tu bandeja de email para **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Estado:** Guardado para revisión humana.`
+ : `⚠️ **No se pudo crear el borrador:** ${gmailError || 'Error desconocido.'}\n\nEl lead queda pendiente de aprobación para que lo revises a mano.`,
+ timestamp: new Date()
+ };
+ setMessages(prev => [...prev, draftOnlyMsg]);
+ } else {
+ // Envío directo (autonomía "Auto 1er Contacto"): sigue yendo por el popup de Google, ver
+ // comentario equivalente en propose_lead_approval.
+ let gmailId = '';
+ let gmailError = '';
 
  if (recipientEmail) {
  try {
@@ -1411,6 +1435,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  token = authRes?.accessToken || null;
  }
  if (token) {
+ const emailSubject = action.subject || `Propuesta de Concierto / Presentación - Bakandeya en ${targetLead.nombre_sala}`;
  const formatted = formatEmailWithSignatureAndDossier({
    pitchText: emailBody,
    lead: targetLead,
@@ -1419,13 +1444,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
    bandName: bandDisplayName,
    bandId: effectiveBandId
  });
- if (isDraftOnly) {
-   const res = await createGmailDraft(recipientEmail, emailSubject, formatted.html, token, true);
-   gmailId = res.id;
- } else {
-   const res = await sendGmailMessage(recipientEmail, emailSubject, formatted.html, token, true);
-   gmailId = res.id;
- }
+ const res = await sendGmailMessage(recipientEmail, emailSubject, formatted.html, token, true);
+ gmailId = res.id;
  } else {
  gmailError = 'No hay sesión de Google OAuth activa para procesar el correo.';
  }
@@ -1437,29 +1457,6 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  gmailError = 'El lead/sala no tiene un correo de contacto definido (email_contacto).';
  }
 
- if (isDraftOnly) {
- const updatedNotes = `*** [${nowStr}] Borrador Creado en Gmail por Mánager IA (Bloqueado Modo Solo Borradores)${gmailId ? ` [Gmail Draft ID: ${gmailId}]` : ''} ***\n${targetLead.notas || ''}`;
- onUpdateLead(action.leadId, {
- estado: 'pendiente_aprobacion',
- pitch_generado: emailBody,
- notas: updatedNotes
- }, targetLead.estado);
-
- setMessages(prev => prev.map(m => {
- if (m.id === msgId) return { ...m, actionStatus: 'applied' };
- return m;
- }));
-
- const draftOnlyMsg: ChatMessage = {
- id: `sys-${Date.now()}`,
- sender: 'bot',
- text: gmailId
- ? `📝 **Borrador Creado en Gmail (Modo Sólo Borradores Activo):**\n\n🔒 Por seguridad y al estar la autonomía en **SÓLO BORRADORES**, el correo NO se ha enviado directamente.\nSe ha creado el **borrador real en tu Gmail** para **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Borrador ID:** \`${gmailId}\`\n- **Estado:** Guardado en tu bandeja de entrada para revisión humana.`
- : `📝 **Borrador Guardado en Supabase:** Se ha registrado el borrador de correo para **"${action.leadName || targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
- timestamp: new Date()
- };
- setMessages(prev => [...prev, draftOnlyMsg]);
- } else {
  const updatedNotes = `*** [${nowStr}] Correo ENVIADO a ${recipientEmail || 'sin_email'} por ${action.senderName || 'Mánager Virtual Chatbot'}${gmailId ? ` [Gmail Message ID: ${gmailId}]` : ''} ***\n${targetLead.notas || ''}`;
  onUpdateLead(action.leadId, {
  estado: 'aprobado',

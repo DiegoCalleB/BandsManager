@@ -20,6 +20,13 @@ vi.mock('../emailAgentClient.js', () => ({
   }
 }));
 
+const crearBorradorGmailApiMock = vi.fn();
+const tieneGmailOAuthConectadoMock = vi.fn();
+vi.mock('../gmailApiClient.js', () => ({
+  crearBorradorGmailApi: (...args: any[]) => crearBorradorGmailApiMock(...args),
+  tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args)
+}));
+
 import { getSupabase } from '../../db.js';
 import { runEnviadorAgent } from '../agentEngine';
 
@@ -69,8 +76,9 @@ describe('runEnviadorAgent en modo borrador (AGENT_EMAIL_MODE por defecto)', () 
     vi.clearAllMocks();
   });
 
-  it('crea un borrador, no envía, y no marca el lead como contactado', async () => {
+  it('crea un borrador por IMAP cuando la banda no tiene Gmail OAuth conectado, no envía, y no marca el lead como contactado', async () => {
     const { updates, inserts } = mockSupabase();
+    tieneGmailOAuthConectadoMock.mockResolvedValue(false);
     crearBorradorMock.mockResolvedValue({ draftPath: '[Gmail]/Borradores' });
 
     const result = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
@@ -78,6 +86,7 @@ describe('runEnviadorAgent en modo borrador (AGENT_EMAIL_MODE por defecto)', () 
     // No ha salido ningún email.
     expect(enviarEmailMock).not.toHaveBeenCalled();
     expect(crearBorradorMock).toHaveBeenCalledTimes(1);
+    expect(crearBorradorGmailApiMock).not.toHaveBeenCalled();
 
     // El lead cambia de estado (si no, el scheduler duplicaría el borrador cada pasada)
     // pero NUNCA a 'contactado': nadie ha contactado con nadie todavía.
@@ -94,5 +103,20 @@ describe('runEnviadorAgent en modo borrador (AGENT_EMAIL_MODE por defecto)', () 
     // El resumen no debe afirmar que se despachó nada.
     expect(result.message).toContain('borrador');
     expect(result.message).toContain('No se ha enviado ningún email');
+  });
+
+  it('crea el borrador por la API de Gmail (OAuth) en vez de IMAP cuando la banda la tiene conectada', async () => {
+    const { updates } = mockSupabase();
+    tieneGmailOAuthConectadoMock.mockResolvedValue(true);
+    crearBorradorGmailApiMock.mockResolvedValue({ draftPath: 'Gmail API draft draft-1' });
+
+    await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(crearBorradorGmailApiMock).toHaveBeenCalledTimes(1);
+    expect(crearBorradorMock).not.toHaveBeenCalled();
+
+    const leadUpdate = updates.find((u) => u.estado);
+    expect(leadUpdate.estado).toBe('borrador_creado');
   });
 });

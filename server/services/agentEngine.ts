@@ -8,6 +8,7 @@ import { getSupabase } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
+import { crearBorradorGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 
@@ -117,6 +118,12 @@ export async function runEnviadorAgent(opts: {
     // Non-blocking fallback
   }
 
+  // Si la banda conectó Gmail por OAuth (server/routes/gmailOAuth.ts), se prefiere sobre IMAP
+  // para el modo borrador: crea el borrador por la API de Gmail sin contraseña de aplicación,
+  // funciona igual desde el scheduler (sin navegador) que desde un disparo manual. Si no hay
+  // OAuth conectado (o la banda usa Outlook), se mantiene el camino IMAP de siempre.
+  const usarGmailOAuth = !ENVIO_REAL && (await tieneGmailOAuthConectado(opts.bandId));
+
   const results: any[] = [];
   const nowIso = new Date().toISOString();
 
@@ -155,13 +162,21 @@ export async function runEnviadorAgent(opts: {
 
       if (!ENVIO_REAL) {
         // Modo borrador: se deja el email en la bandeja de la banda para revisión humana.
-        const { draftPath } = await crearBorrador(opts.bandId, {
-          to: emailContacto,
-          subject: asunto,
-          body: emailText,
-          html: emailHtml,
-          inReplyTo: lead.thread_id || undefined
-        });
+        const { draftPath } = usarGmailOAuth
+          ? await crearBorradorGmailApi(opts.bandId, {
+              to: emailContacto,
+              subject: asunto,
+              body: emailText,
+              html: emailHtml,
+              inReplyTo: lead.thread_id || undefined
+            })
+          : await crearBorrador(opts.bandId, {
+              to: emailContacto,
+              subject: asunto,
+              body: emailText,
+              html: emailHtml,
+              inReplyTo: lead.thread_id || undefined
+            });
 
         const draftNote = `*** [${dateTag}] BORRADOR creado en '${draftPath}' para ${emailContacto} por el Agente Enviador - NO se ha enviado, revísalo y envíalo a mano ***\n` + (lead.notas || "");
         await sb.from("leads").update({ estado: "borrador_creado", notas: draftNote }).eq("id", lead.id);
@@ -224,7 +239,7 @@ export async function runEnviadorAgent(opts: {
     leads_afectados: results,
     conteo_afectados: sentCount,
     duracion_ms: Date.now() - startTime,
-    detalles: { band_name: bandName, modo_email: ENVIO_REAL ? "send" : "draft" }
+    detalles: { band_name: bandName, modo_email: ENVIO_REAL ? "send" : "draft", motor_borrador: usarGmailOAuth ? "gmail_oauth_api" : "imap" }
   });
 
   return { success: sentCount > 0 || errorCount === 0, dispatchedCount: sentCount, message: successMsg, results };

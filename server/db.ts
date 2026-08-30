@@ -18,6 +18,7 @@ export * from "./db/schedule.js";
 export * from "./db/webhooks.js";
 export * from "./db/agentSchedule.js";
 export * from "./db/emailAccounts.js";
+export * from "./db/gmailOAuth.js";
 export * from "./db/reelAnalyses.js";
 export * from "./db/campaigns.js";
 export * from "./db/pitchLearning.js";

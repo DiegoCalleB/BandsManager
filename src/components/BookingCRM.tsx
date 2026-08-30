@@ -2038,10 +2038,6 @@ export default function BookingCRM({
         activeCampaign={activeCampaign}
         onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
         isUploadingLeadLogo={isUploadingLeadLogo}
-        epkConfig={epkConfig}
-        bandName={effectiveBandName}
-        bandId={currentBandId}
-        currentUser={currentUser}
       />
     </div>
   )}
@@ -2063,10 +2059,6 @@ export default function BookingCRM({
     activeCampaign={activeCampaign}
     onLeadLogoUpload={(file) => handleLeadLogoUpload(file, true)}
     isUploadingLeadLogo={isUploadingLeadLogo}
-    epkConfig={epkConfig}
-    bandName={effectiveBandName}
-    bandId={currentBandId}
-    currentUser={currentUser}
   />
 </div>
 

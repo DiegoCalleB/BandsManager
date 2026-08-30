@@ -517,6 +517,21 @@ export const api = {
     });
   },
 
+  // Gmail conectado por OAuth (sin contraseña de aplicación ni popup para el Agente Enviador
+  // programado - ver server/routes/gmailOAuth.ts). authorizeUrl devuelve la URL de consentimiento
+  // de Google para que el propio cliente navegue con window.location.href.
+  async getGmailOAuthAuthorizeUrl(): Promise<{ url: string }> {
+    return request('/api/gmail-oauth/authorize-url');
+  },
+
+  async getGmailOAuthStatus(): Promise<any> {
+    return request('/api/gmail-oauth/status');
+  },
+
+  async disconnectGmailOAuth(): Promise<{ success: boolean }> {
+    return request('/api/gmail-oauth/disconnect', { method: 'POST' });
+  },
+
   // Fans
   async createFan(fan: Fan): Promise<Fan> {
     return request('/api/fans', {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Save, Loader2, CheckCircle2, AlertCircle, Info, KeyRound, RefreshCw } from 'lucide-react';
+import { Mail, Save, Loader2, CheckCircle2, AlertCircle, Info, KeyRound, RefreshCw, Sparkles, Unlink } from 'lucide-react';
 import { api } from '../services/api';
 import { BandEmailAccountStatus } from '../types';
 
@@ -42,6 +42,85 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
   const [smtpSecure, setSmtpSecure] = useState(true);
   const [imapHost, setImapHost] = useState('');
   const [imapPort, setImapPort] = useState<number>(993);
+
+  // Gmail conectado por OAuth (sin contraseña de aplicación ni popup para el Agente Enviador
+  // programado - ver server/routes/gmailOAuth.ts). Independiente del formulario IMAP de
+  // arriba: una banda puede tener las dos cosas, ninguna, o solo una.
+  const [gmailOAuthStatus, setGmailOAuthStatus] = useState<{ connected: boolean; gmail_email?: string }>({ connected: false });
+  const [gmailOAuthLoading, setGmailOAuthLoading] = useState(true);
+  const [gmailOAuthConnecting, setGmailOAuthConnecting] = useState(false);
+  const [gmailOAuthDisconnecting, setGmailOAuthDisconnecting] = useState(false);
+  const [gmailOAuthFeedback, setGmailOAuthFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  useEffect(() => {
+    if (!bandId) return;
+    let isMounted = true;
+    const fetchGmailOAuthStatus = async () => {
+      setGmailOAuthLoading(true);
+      try {
+        const data = await api.getGmailOAuthStatus();
+        if (isMounted) setGmailOAuthStatus(data || { connected: false });
+      } catch (err) {
+        console.error('Error consultando el estado de Gmail OAuth:', err);
+        if (isMounted) setGmailOAuthStatus({ connected: false });
+      } finally {
+        if (isMounted) setGmailOAuthLoading(false);
+      }
+    };
+    fetchGmailOAuthStatus();
+    return () => { isMounted = false; };
+  }, [bandId]);
+
+  // El callback del servidor (server/routes/gmailOAuth.ts) redirige de vuelta con
+  // ?gmail_oauth=conectado|error tras completar (o fallar) el consentimiento en Google.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const resultado = params.get('gmail_oauth');
+    if (!resultado) return;
+
+    if (resultado === 'conectado') {
+      setGmailOAuthFeedback({ type: 'success', message: '¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.' });
+      api.getGmailOAuthStatus().then((data) => setGmailOAuthStatus(data || { connected: false })).catch(() => {});
+    } else {
+      const motivo = params.get('motivo') || 'error_desconocido';
+      setGmailOAuthFeedback({ type: 'error', message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.` });
+    }
+    setTimeout(() => setGmailOAuthFeedback(null), 6000);
+
+    params.delete('gmail_oauth');
+    params.delete('motivo');
+    const nuevaQuery = params.toString();
+    window.history.replaceState({}, '', window.location.pathname + (nuevaQuery ? `?${nuevaQuery}` : ''));
+  }, []);
+
+  const handleConnectGmailOAuth = async () => {
+    setGmailOAuthConnecting(true);
+    setGmailOAuthFeedback(null);
+    try {
+      const { url } = await api.getGmailOAuthAuthorizeUrl();
+      window.location.href = url;
+    } catch (err: any) {
+      console.error('Error iniciando la conexión de Gmail OAuth:', err);
+      setGmailOAuthFeedback({ type: 'error', message: err?.message || 'No se pudo iniciar la conexión con Google.' });
+      setGmailOAuthConnecting(false);
+    }
+  };
+
+  const handleDisconnectGmailOAuth = async () => {
+    setGmailOAuthDisconnecting(true);
+    setGmailOAuthFeedback(null);
+    try {
+      await api.disconnectGmailOAuth();
+      setGmailOAuthStatus({ connected: false });
+      setGmailOAuthFeedback({ type: 'success', message: 'Gmail desconectado.' });
+      setTimeout(() => setGmailOAuthFeedback(null), 4000);
+    } catch (err: any) {
+      console.error('Error desconectando Gmail OAuth:', err);
+      setGmailOAuthFeedback({ type: 'error', message: err?.message || 'No se pudo desconectar Gmail.' });
+    } finally {
+      setGmailOAuthDisconnecting(false);
+    }
+  };
 
   useEffect(() => {
     if (!bandId) return;
@@ -165,6 +244,82 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({ bandId, 
             <span>Conectado</span>
           </div>
         )}
+      </div>
+
+      {/* Conectar Gmail por OAuth: recomendado, sin contraseña de aplicación ni popup - único
+          camino sin contraseña que funciona también desde el Agente Enviador programado, que
+          corre en el servidor sin banda con sesión abierta (ver server/routes/gmailOAuth.ts).
+          Solo para Gmail; Outlook y otros proveedores siguen usando el formulario SMTP/IMAP de
+          abajo. */}
+      <div className={`p-4 rounded-xl border space-y-3 ${
+        isStitchLight ? 'bg-sky-50/60 border-sky-200' : 'bg-sky-500/5 border-sky-500/20'
+      }`}>
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-sky-400 shrink-0" />
+          <h4 className="text-sm font-bold">Gmail sin contraseña (recomendado)</h4>
+        </div>
+        <p className="text-xs font-mono text-neutral-400">
+          Conecta tu cuenta de Gmail con un solo clic - sin generar ninguna contraseña de aplicación.
+          Funciona tanto al aprobar un lead a mano como en el Agente Enviador programado.
+        </p>
+
+        {gmailOAuthLoading ? (
+          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <span>Comprobando conexión de Gmail...</span>
+          </div>
+        ) : gmailOAuthStatus.connected ? (
+          <div className={`p-3 rounded-lg text-xs flex items-center justify-between gap-3 border ${
+            isStitchLight ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-200'
+          }`}>
+            <div className="flex items-center gap-2 min-w-0">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              <span className="truncate">
+                Conectado como <strong>{gmailOAuthStatus.gmail_email}</strong>
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleDisconnectGmailOAuth}
+              disabled={gmailOAuthDisconnecting}
+              className="shrink-0 px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-[11px] font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+            >
+              {gmailOAuthDisconnecting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Unlink className="w-3 h-3" />}
+              Desconectar
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={handleConnectGmailOAuth}
+            disabled={gmailOAuthConnecting}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-neutral-950 font-bold text-xs font-mono transition-all shadow-lg shadow-sky-500/10 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            {gmailOAuthConnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+            <span>{gmailOAuthConnecting ? 'Redirigiendo a Google...' : 'Conectar con Google'}</span>
+          </button>
+        )}
+
+        {gmailOAuthFeedback && (
+          <div className={`p-2.5 rounded-lg text-[11px] flex items-center gap-2 animate-fadeIn ${
+            gmailOAuthFeedback.type === 'success'
+              ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+              : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+          }`}>
+            {gmailOAuthFeedback.type === 'success' ? (
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+            ) : (
+              <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-400" />
+            )}
+            <span>{gmailOAuthFeedback.message}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center gap-3 text-[11px] font-mono text-neutral-500">
+        <div className="h-px flex-1 bg-neutral-800/60" />
+        <span>o conecta por SMTP/IMAP (Outlook u otro proveedor)</span>
+        <div className="h-px flex-1 bg-neutral-800/60" />
       </div>
 
       {status.connected && !editing ? (

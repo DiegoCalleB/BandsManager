@@ -514,6 +514,25 @@ CREATE TABLE IF NOT EXISTS band_email_accounts (
 ALTER TABLE band_email_accounts ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON band_email_accounts FOR ALL USING (true);
 
+-- Reintroduce, deliberadamente y solo para Gmail, lo que band_gmail_tokens hacía antes de ser
+-- retirada (ver DROP TABLE arriba): un refresh token de OAuth por banda para que el backend
+-- pueda crear borradores en Gmail sin contraseña de aplicación NI popup - imprescindible para
+-- el Agente Enviador programado (server/services/agentScheduler.ts), que corre sin navegador y
+-- sin ninguna banda con sesión abierta en ese instante. band_email_accounts (arriba) sigue
+-- siendo el único camino para Outlook y para cualquier banda Gmail que no conecte OAuth; ver
+-- server/services/agentEngine.ts para el orden de preferencia entre las dos.
+CREATE TABLE IF NOT EXISTS band_gmail_oauth_accounts (
+  band_id TEXT PRIMARY KEY REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  gmail_email TEXT NOT NULL,
+  refresh_token TEXT NOT NULL,
+  scope TEXT NOT NULL,
+  connected_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE band_gmail_oauth_accounts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON band_gmail_oauth_accounts FOR ALL USING (true);
+
 
 -- Análisis de highlights del generador de Reels (server/routes/reels.ts). Antes vivía solo en
 -- el estado de React: al recargar la página, o simplemente al cerrar la pestaña, se perdían los
