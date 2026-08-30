@@ -40,14 +40,15 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   // Enviador (server/services/agentEngine.ts) - hasta ahora este agente era 100% IMAP, así que
   // una banda conectada solo por OAuth nunca detectaba respuestas entrantes en absoluto.
   const usarGmailOAuth = await tieneGmailOAuthConectado(bandId);
-  const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
 
   const leadsActualizados: string[] = [];
 
   // Comprueba, solo si la banda usa OAuth, si algún borrador que el Agente Enviador dejó en
   // Gmail se envió a mano desde ahí sin pasar por la app (ver comprobarBorradoresGmailEnviados).
-  // Va antes del "return" temprano de abajo para que se compruebe también cuando no hay mensajes
-  // nuevos que leer.
+  // A PROPÓSITO antes de leerRespuestasGmailApi: solo necesita el scope gmail.compose (el que ya
+  // tenía cualquier banda conectada antes de añadir gmail.modify), así que si leer la bandeja
+  // falla por falta de ese scope nuevo, la detección de borradores enviados no debe quedarse sin
+  // ejecutarse por eso - son dos permisos y dos llamadas independientes.
   let borradoresEnviadosDetectados = 0;
   if (usarGmailOAuth) {
     try {
@@ -58,6 +59,8 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       console.warn(`[Lector] No se pudieron comprobar los borradores de Gmail de ${bandId}:`, e);
     }
   }
+
+  const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
 
   if (mensajes.length === 0) {
     return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados };
