@@ -15,7 +15,10 @@ export async function dbGetSocialPosts(bandId: string) {
 
 export async function dbUpsertSocialPost(post: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(post.band_id || bandId);
+  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
+  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
+  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
@@ -94,7 +97,10 @@ export async function dbGetSocialMetrics(bandId: string) {
 
 export async function dbUpsertSocialMetric(metric: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(metric.band_id || bandId);
+  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
+  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
+  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
@@ -167,7 +173,10 @@ export async function dbGetSocialContentItems(bandId: string, platform?: string)
 
 export async function dbUpsertSocialContentItem(item: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(item.band_id || bandId);
+  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
+  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
+  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id explícito que no pertenece a la
   // banda del usuario no se reutiliza nunca.

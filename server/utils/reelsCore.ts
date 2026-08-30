@@ -434,27 +434,32 @@ export function buildVtt(cues: SubtitleCue[]): string {
   return vtt;
 }
 
+/** Reparte una línea en palabras con tiempos proporcionales a su longitud (una sola cue). */
+function wordTimingsForCue(cue: SubtitleCue): Array<{ word: string; start: number; end: number }> {
+  const palabras = cue.text.split(/\s+/).filter(Boolean);
+  if (!palabras.length) return [];
+  const total = palabras.reduce((acc, w) => acc + w.length, 0) || palabras.length;
+  const span = Math.max(0.01, cue.end - cue.start);
+  const salida: Array<{ word: string; start: number; end: number }> = [];
+  let acumulado = 0;
+  for (const palabra of palabras) {
+    const peso = palabra.length / total;
+    const start = cue.start + span * acumulado;
+    acumulado += peso;
+    const end = cue.start + span * acumulado;
+    salida.push({
+      word: palabra,
+      start: Number(start.toFixed(2)),
+      end: Number(Math.min(cue.end, end).toFixed(2))
+    });
+  }
+  return salida;
+}
+
 /** Reparte cada línea en palabras con tiempos proporcionales a su longitud. */
 export function buildWordOffsets(cues: SubtitleCue[]): Array<{ word: string; start: number; end: number }> {
   const salida: Array<{ word: string; start: number; end: number }> = [];
-  for (const cue of cues) {
-    const palabras = cue.text.split(/\s+/).filter(Boolean);
-    if (!palabras.length) continue;
-    const total = palabras.reduce((acc, w) => acc + w.length, 0) || palabras.length;
-    const span = Math.max(0.01, cue.end - cue.start);
-    let acumulado = 0;
-    for (const palabra of palabras) {
-      const peso = palabra.length / total;
-      const start = cue.start + span * acumulado;
-      acumulado += peso;
-      const end = cue.start + span * acumulado;
-      salida.push({
-        word: palabra,
-        start: Number(start.toFixed(2)),
-        end: Number(Math.min(cue.end, end).toFixed(2))
-      });
-    }
-  }
+  for (const cue of cues) salida.push(...wordTimingsForCue(cue));
   return salida;
 }
 
@@ -518,6 +523,73 @@ export function buildAssSubtitles(
       (c) =>
         `Dialogue: 0,${formatAssTime(c.start)},${formatAssTime(c.end)},Reel,,0,0,0,,${escapeAss(wrapSubtitleLine(c.text))}`
     )
+    .join("\n");
+
+  return `${cabecera}\n${eventos}\n`;
+}
+
+/**
+ * Subtítulos ASS con resaltado palabra por palabra (el estilo "karaoke" que usan TikTok/CapCut),
+ * usando las etiquetas nativas `\k` de Advanced SubStation Alpha: libass (el filtro `subtitles`
+ * de ffmpeg) las interpreta solo, sin necesitar una línea de Dialogue por palabra ni tocar el
+ * vídeo aparte. `buildWordOffsets` ya calculaba estos tiempos por palabra pero solo se enseñaban
+ * en pantalla como dato; aquí es donde de verdad se queman en el vídeo.
+ */
+export function buildKaraokeAssSubtitles(
+  cues: SubtitleCue[],
+  options: { width?: number; height?: number; fontSize?: number; primaryColour?: string; secondaryColour?: string; maxChars?: number } = {}
+): string {
+  const width = options.width || 1080;
+  const height = options.height || 1920;
+  const fontSize = options.fontSize || Math.round(height / 22);
+  // La palabra ya "dicha" queda en PrimaryColour (blanco); la que todavía no le toca, en
+  // SecondaryColour (ámbar), que es como libass pinta el tramo pendiente de un \k.
+  const primary = options.primaryColour || "&H00FFFFFF";
+  const secondary = options.secondaryColour || "&H0000D7FF";
+  const maxChars = options.maxChars || 22;
+
+  const cabecera = [
+    "[Script Info]",
+    "ScriptType: v4.00+",
+    `PlayResX: ${width}`,
+    `PlayResY: ${height}`,
+    "WrapStyle: 2",
+    "ScaledBorderAndShadow: yes",
+    "",
+    "[V4+ Styles]",
+    "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+    `Style: Reel,Arial,${fontSize},${primary},${secondary},&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,${Math.max(2, Math.round(fontSize / 9))},2,2,60,60,${Math.round(height * 0.16)},1`,
+    "",
+    "[Events]",
+    "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"
+  ].join("\n");
+
+  const eventos = cues
+    .filter((c) => c && c.end > c.start && String(c.text || "").trim())
+    .map((c) => {
+      const palabras = wordTimingsForCue(c);
+      if (!palabras.length) return "";
+
+      // Reparte las palabras en como mucho 3 líneas visuales, cada una con su propio \k.
+      const lineas: string[] = [];
+      let lineaActual: string[] = [];
+      let anchoLinea = 0;
+      for (const p of palabras) {
+        const anchoPalabra = p.word.length + 1;
+        if (anchoLinea > 0 && anchoLinea + anchoPalabra > maxChars && lineas.length < 2) {
+          lineas.push(lineaActual.join(" "));
+          lineaActual = [];
+          anchoLinea = 0;
+        }
+        const centesimas = Math.max(1, Math.round((p.end - p.start) * 100));
+        lineaActual.push(`{\\k${centesimas}}${escapeAss(p.word)}`);
+        anchoLinea += anchoPalabra;
+      }
+      if (lineaActual.length) lineas.push(lineaActual.join(" "));
+
+      return `Dialogue: 0,${formatAssTime(c.start)},${formatAssTime(c.end)},Reel,,0,0,0,,${lineas.join("\\N")}`;
+    })
+    .filter(Boolean)
     .join("\n");
 
   return `${cabecera}\n${eventos}\n`;

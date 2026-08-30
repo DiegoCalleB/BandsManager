@@ -98,7 +98,11 @@ export async function dbGetCampaigns(bandId: string) {
 
 export async function dbUpsertCampaign(campaign: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(campaign.band_id || bandId);
+  // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
+  // (req.user.band_id). 'campaign.band_id' viene del cuerpo de la petición sin validar — de
+  // priorizarlo, cualquier usuario autenticado podría escribir una campaña en la banda de otro
+  // con solo mandar {"band_id": "banda-ajena"} en el POST/PUT.
+  const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   const payload: any = {

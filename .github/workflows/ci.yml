@@ -44,9 +44,11 @@ jobs:
           fi
 
           # Ratchet: no dejar que la deuda de tipos general crezca respecto al
-          # baseline conocido (2026-08-21). Baja este número cuando arregles
-          # avisos existentes; nunca lo subas sin justificar por qué.
-          BASELINE=118
+          # baseline conocido (2026-08-29: el recuento real es 0). Baja este
+          # número cuando arregles avisos existentes; nunca lo subas sin
+          # justificar por qué. Margen de 5 sobre 0 para no ser tan frágil
+          # como para romper CI por una sola actualización menor de @types.
+          BASELINE=5
           if [ "$TOTAL" -gt "$BASELINE" ]; then
             echo "::error::El total de errores de tsc ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear."
             exit 1

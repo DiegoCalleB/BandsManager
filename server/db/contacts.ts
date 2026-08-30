@@ -18,7 +18,12 @@ export async function dbGetBandContacts(bandId: string) {
 
 export async function dbUpsertBandContact(band: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(band.band_id || bandId);
+  // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
+  // (req.user.band_id). 'band.band_id' viene del cuerpo de la petición sin validar — de
+  // priorizarlo, cualquier usuario autenticado podría escribir un contacto en la banda de otro
+  // con solo mandar {"band_id": "banda-ajena"} en el body (ver el mismo fallo ya corregido en
+  // server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
   const name = (band.nombre_banda || band.nombreBanda || band.bandName || "").trim();
   await ensureRegisteredBandExists(targetBandId, name);
 

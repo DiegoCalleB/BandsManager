@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-**BandManager.ai** (internally "Bakandeya") is a full-stack platform for independent bands: booking CRM, tour logistics, EPK (electronic press kit), repertoire/setlists, finances, fan capture, and AI agents that scout venues and draft/send booking emails on a band's behalf. It's the technical core of a Master's thesis (TFM) on AI-agent-assisted software development — see `AGENTS.md` for the project's non-negotiable business rules, which take precedence over general conventions below.
+**BandManager.ai** (internally "Bakandeya"; the product name churned through BandManager.ai → .io → .oi → back to .ai in four commits, see `index.html`'s `<title>`/meta tags if it ever moves again) is a full-stack platform for independent bands: booking CRM, tour logistics, EPK (electronic press kit), repertoire/setlists, finances, fan capture, a Reels/social-content generator, AI music tools (rhythmic-base generation, instrument synthesis, MIDI export), booking campaigns, and AI agents that scout venues and draft/send booking emails on a band's behalf. It's the technical core of a Master's thesis (TFM) on AI-agent-assisted software development — see `AGENTS.md` for the project's non-negotiable business rules, which take precedence over general conventions below.
+
+`package.json`'s `name` field is still the original Vite scaffold name (`react-example`) and was never updated through any of the rebrands — everywhere user-facing is consistently "BandManager.ai" as of the latest rebrand commit.
 
 ## Commands
 
@@ -18,7 +20,7 @@ npm test            # vitest run — runs the full suite once
 npm run test:coverage  # vitest run --coverage
 ```
 
-`npm run lint:eslint` is separate from `npm run lint` on purpose: CI's `lint` step needs to keep meaning "esbuild can still bundle this," so ESLint was added alongside it rather than replacing it. It currently reports ~2200 findings (`eslint.config.js`), split roughly 1170 `no-explicit-any` + 750 `no-unused-vars` (matches the loose-typing debt tracked by the `tsc` baseline below) plus a long tail of `react-hooks/*` findings — `rules-of-hooks` violations (hooks called after an early `return null`, so a hook count that changes between renders) have already been fixed in the 7 components that had them; the rest (`set-state-in-effect`, `purity`, `exhaustive-deps`, `no-empty`, `no-useless-assignment`) are open. Not wired into CI: fixing the bulk of it (mostly `any`) is a real, separate effort, not something to silently ratchet like `tsc`.
+`npm run lint:eslint` is separate from `npm run lint` on purpose: CI's `lint` step needs to keep meaning "esbuild can still bundle this," so ESLint was added alongside it rather than replacing it. It currently reports ~2500 findings (`eslint.config.js`), split roughly 1420 `no-explicit-any` + 800 `no-unused-vars` (matches the loose-typing debt tracked by the `tsc` baseline below) plus a long tail of `react-hooks/*` findings — `rules-of-hooks` violations (hooks called after an early `return null`, so a hook count that changes between renders) have already been fixed in the 7 components that had them; the rest (`set-state-in-effect`, `purity`, `exhaustive-deps`, `no-empty`, `no-useless-assignment`) are open. Not wired into CI: fixing the bulk of it (mostly `any`) is a real, separate effort, not something to silently ratchet like `tsc`.
 
 Run a single test file or test case with vitest directly:
 
@@ -34,7 +36,7 @@ Type checking is not an npm script; CI runs `npx tsc --noEmit` directly (see bel
 
 On every push/PR, CI runs, in order: `npx tsc --noEmit` (see gate below), `npm run lint`, `npm test`. Match this locally before pushing.
 
-**tsc error-count ratchet:** the codebase currently has a nonzero baseline of `tsc` errors (see `BASELINE` in the workflow file). CI fails if the total error count exceeds that baseline — so it's fine to leave *pre-existing* type errors alone, but never add new ones on top. Separately, CI has **zero tolerance** for `TS2304`/`TS2551`/`TS2552` (undeclared name / missing import / nonexistent method) anywhere, since those are guaranteed runtime crashes, not just type nits.
+**tsc error-count ratchet:** CI fails if `npx tsc --noEmit`'s total error count exceeds `BASELINE` in the workflow file (currently `5`, lowered from a stale `118` now that the real count is `0` — small margin so one minor `@types/*` bump doesn't break CI outright) — so it's fine to leave *pre-existing* type errors alone, but never add new ones on top. Separately, CI has **zero tolerance** for `TS2304`/`TS2551`/`TS2552` (undeclared name / missing import / nonexistent method) anywhere, since those are guaranteed runtime crashes, not just type nits.
 
 ## Architecture
 
@@ -53,9 +55,11 @@ Per `AGENTS.md`, **Supabase (Postgres) is the single source of truth** — Googl
 
 A user can belong to multiple bands (`AuthContext.availableBands`, switched via `handleSwitchBand`/`setMainBand`). The active band travels as the `x-band-id` header (set in `src/services/api.ts` from the current user), and server-side every route must resolve the target band through **`getTargetBandId(req)`** in `server/utils/bandAccess.ts` — never read `req.body.bandId` or the header directly. That helper only honors an explicit band header if the authenticated user actually belongs to it (or is a platform admin); otherwise it falls back to the user's own `band_id`. This exists specifically to close a cross-tenant data leak (see the comment in that file) — any new route touching band-scoped data must go through it.
 
+The same trust boundary applies one layer down, in `server/db/*.ts`: every `dbUpsertX(objeto, bandId)` receives `bandId` already resolved by the route from the session — that parameter is the only trusted source. A systemic bug (found while auditing the AI-Studio-authored `campaigns.ts`) had many of these functions instead compute `cleanBandId(objeto.band_id || bandId)`, letting an unvalidated `band_id` from the request **body** override the session's — any authenticated user could write into another band's data by just adding `"band_id": "otra-banda"` to the payload. Fixed across `campaigns`/`leads`/`fans`/`contacts`/`concerts`/`payments`/`rehearsals`/`repertoire`/`social`/`tours`; `server/db/__tests__/bandIdTrustBoundary.test.ts` statically scans every `server/db/*.ts` file (`users.ts` excepted — it manages `band_id` itself, not the same pattern) for the dangerous `cleanBandId(x.band_id || ...)` shape, so a new file that reintroduces it fails CI even without a dedicated test.
+
 ### Auth
 
-Session-based auth lives in `server/auth.ts`: `hashPassword`/`verifyPassword` (PBKDF2, with a legacy 1000-iteration fallback for old hashes), `ACTIVE_SESSIONS` (in-memory), and `getUserFromRequest`. Middleware factories — `createAuthMiddleware` (`requireAuth`), `createLeaderMiddleware` (`requireLeader`), `createCronOrAuthMiddleware` (`requireCronOrAuth`, gated by `CRON_SECRET` for internal/Postgres-trigger calls without a user session) — are built from `loadState`, not imported as singletons. `loginRateLimiter` (`server/middleware/rateLimiter.ts`) guards the login endpoint.
+Session-based auth lives in `server/auth.ts`: `hashPassword`/`verifyPassword` (PBKDF2, with a legacy 1000-iteration fallback for old hashes), `ACTIVE_SESSIONS` (in-memory), and `getUserFromRequest`. Middleware factories — `createAuthMiddleware` (`requireAuth`), `createLeaderMiddleware` (`requireLeader`), `createCronOrAuthMiddleware` (`requireCronOrAuth`, gated by `CRON_SECRET` for internal/Postgres-trigger calls without a user session) — are built from `loadState`, not imported as singletons. `server/middleware/rateLimiter.ts` exports `loginRateLimiter` (login endpoint) and `iaRateLimiter` (paid AI-generation endpoints like `ai_music.ts`/`chat.ts`'s `/write-reels-copy`) — any new endpoint that calls out to a metered/paid AI model needs both `requireAuth` and a rate limiter from here, not just one of the two.
 
 ### The booking AI agents (human-in-the-loop, mandatory)
 
@@ -70,6 +74,19 @@ This is the most business-critical subsystem — read `AGENTS.md` section 3 in f
 `server/services/agentScheduler.ts` runs a 60s-tick in-process scheduler (per-band send/read windows from `band_schedules`, configured via `BandScheduleConfig.tsx`) and persists "already ran this hour" state in Supabase (`agent_schedule_state`) specifically so a Railway redeploy doesn't cause duplicate sends. `AGENT_EMAIL_MODE` env var gates real sending: defaults to `draft` (safe — drafts only, never sends) and only sends real email when explicitly set to `send`.
 
 Each band connects its own SMTP/IMAP mailbox (app password) stored per-band in Supabase (`band_email_accounts`) — there are no global email credentials in env vars.
+
+### Reels generator (multi-platform, tone-aware)
+
+`server/routes/reels.ts` + `server/services/socialRadarService.ts` scrape a band's YouTube/TikTok/Instagram/Facebook (official YouTube Data API where an API key is configured, `yt-dlp` otherwise) to find viral fragments by real audio energy (not just transcript keywords), then render clips. Rendered clips are stored in **Supabase Storage**, not on Railway's ephemeral disk — a clip generated before a redeploy would otherwise vanish. Each band has a persistent, editable "tone DNA" (`src/components/ReelsCenter.tsx`) built from scraped captions/live-show speech samples, used to keep generated titles/descriptions consistent with how the band actually talks; it's per-band state, not hardcoded to Bakandeya (this used to leak Bakandeya's own voice into every band's reels — fixed).
+
+### AI music tools
+
+- `server/routes/ai_music.ts` — `/api/generate` / `/api/generate-music`, calls Gemini's Lyria model to generate a soundtrack/jingle clip from a text prompt. Guarded by `requireAuth` + a rate limiter (`iaRateLimiter`) — it originally shipped from AI Studio with neither, letting anyone burn the platform's Gemini quota unauthenticated; same class of gap `/write-reels-copy` already had closed (see the comment in `chat.ts`).
+- Chatbot rhythmic-base generation and instrument synthesis (guitar/violin/handpan/percussion) use `tone.js` (`src/utils/instrumentSynth.ts`, `accompanimentSynth.ts`) driven by AI-composed melodic ideas (`src/utils/musicTheory.ts`), with note validation/repair before synthesis so malformed AI output doesn't produce broken audio. Generated ideas can be downloaded as MIDI (`src/utils/midiExport.ts`) or saved into the band's repertoire.
+
+### Booking campaigns (`server/routes/campaigns.ts`)
+
+CRUD for outreach campaigns, newest subsystem. Used to fall back to the literal string `"bakandeya"` when `req.user.band_id` was missing — the exact cross-tenant fallback `bandAccess.ts` documents as rejected on purpose ("better an explicit 500 than silently inheriting the flagship band"). Removed.
 
 ### Frontend structure
 
@@ -92,4 +109,4 @@ Vitest tests live in `__tests__/` subfolders next to the code they cover (`serve
 
 The established style is unit-testing exported pure functions directly against a fake `loadState`/`req` object (see `server/__tests__/auth_bandas.test.ts`, `server/utils/__tests__/bandAccess.test.ts`) rather than spinning up the Express app with an HTTP client — there's no `supertest` in the repo, and route handlers that need coverage should have their core logic extracted into a testable helper (e.g. `server/utils/bandAccess.ts`) rather than tested through a live request.
 
-Run `npm run test:coverage` (adds `@vitest/coverage-v8`) for a coverage report. As of this writing overall statement coverage is ~24% — `server/utils` (the auth/multi-tenancy/SSRF helpers) is the best-covered area at ~90%, while most of `server/db/*.ts` (thin Supabase wrappers) and `server/routes/*.ts` (large inline handlers) have little to none. When adding tests, prioritize security- and multi-tenancy-sensitive logic over raw coverage percentage.
+Run `npm run test:coverage` (adds `@vitest/coverage-v8`) for a coverage report. As of this writing there are 461 tests across 47 files — `server/utils` (the auth/multi-tenancy/SSRF helpers) and the `server/db` band-scoping tests are the best-covered areas, while most `server/routes/*.ts` (large inline handlers) still have little. When adding tests, prioritize security- and multi-tenancy-sensitive logic over raw coverage percentage; the static source-scanning style of `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex over the file text, not a mocked call) is worth reaching for again for a class of bug rather than one function.

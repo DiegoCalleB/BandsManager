@@ -6,7 +6,7 @@ import {
  Upload, Layers, CheckCircle2, RotateCcw, AlertCircle, RefreshCw,
  Video, Calendar, Clock, Trash2, Film, Check, ExternalLink, Gauge, ChevronRight, ChevronLeft,
  Plus, TrendingUp, LineChart, Instagram, Youtube, Edit, Table,
- Volume2, VolumeX, Maximize2, X, Star
+ Volume2, VolumeX, Maximize2, X, Star, Bookmark, ThumbsUp
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 
@@ -25,12 +25,15 @@ interface ReelsCenterProps {
  hasAnySocialLink?: boolean;
 }
 
-import { 
-  ReelCard, 
-  HighlightClip, 
-  OptimalTime, 
-  getYouTubeId, 
-  getStartTimeInSeconds 
+import {
+  ReelCard,
+  HighlightClip,
+  OptimalTime,
+  getYouTubeId,
+  getStartTimeInSeconds,
+  defaultScheduleDate,
+  validateScheduleReadiness,
+  getCadenceWarnings
 } from '../utils/reelsUtils';
 import { BandToneModal, ToneAnalysisData } from './bandCRM/BandToneModal';
 
@@ -100,6 +103,17 @@ function copyForPlatform(clip: HighlightClip | undefined | null, platform: 'Inst
  if (platform === 'Facebook') return clip.copyFacebook || clip.recommendedCopy || '';
  return clip.recommendedCopy || '';
 }
+
+// Qué iconos de interacción tapan el lateral derecho del vídeo en cada red: no es solo el
+// copy lo que cambia por plataforma, la propia UI de la app también se come parte del encuadre
+// de forma distinta (Instagram añade guardar, YouTube separa like/dislike, etc.), así que un
+// hookText o un subtítulo pegado al borde derecho puede quedar tapado en una red y no en otra.
+const PLATFORM_UI_ICONS: Record<'Instagram' | 'TikTok' | 'YouTube' | 'Facebook', typeof Heart[]> = {
+ Instagram: [Heart, MessageCircle, Share2, Bookmark],
+ TikTok: [Heart, MessageCircle, Bookmark, Share2],
+ YouTube: [ThumbsUp, MessageCircle, Share2],
+ Facebook: [ThumbsUp, MessageCircle, Share2]
+};
 
 export default function ReelsCenter({
  colors,
@@ -264,6 +278,8 @@ export default function ReelsCenter({
  // Opciones de renderizado del clip físico
  const [cropMode, setCropMode] = useState<'crop' | 'blur' | 'none'>('crop');
  const [burnSubtitles, setBurnSubtitles] = useState(false);
+ // Resaltado palabra por palabra (estilo TikTok/CapCut) en vez del subtítulo estático de siempre.
+ const [karaokeSubtitles, setKaraokeSubtitles] = useState(true);
  const [loadingStep, setLoadingStep] = useState(0);
  const [analysisError, setAnalysisError] = useState<string | null>(null);
  
@@ -540,6 +556,7 @@ export default function ReelsCenter({
  clipId,
  cropMode,
  burnSubtitles,
+ karaokeSubtitles,
  // Flag antiguo, por si el servidor todavía no está actualizado.
  cropVertical: cropMode !== 'none'
  })
@@ -754,10 +771,16 @@ export default function ReelsCenter({
  // Form values for Scheduling
  const [editedCopy, setEditedCopy] = useState('');
  const [selectedPlatform, setSelectedPlatform] = useState<'Instagram' | 'TikTok' | 'YouTube' | 'Facebook'>('Instagram');
- const [scheduledDate, setScheduledDate] = useState('2026-07-16');
+ const [scheduledDate, setScheduledDate] = useState(() => defaultScheduleDate(1));
  const [scheduledTime, setScheduledTime] = useState('20:30');
  const [isScheduling, setIsScheduling] = useState(false);
  const [schedulingSuccess, setSchedulingSuccess] = useState(false);
+ // Antes solo se comprobaba que el copy no estuviera vacío, y en silencio: el botón no hacía
+ // nada y no se explicaba por qué. Ahora se avisa de qué falta (hashtag, fecha pasada...).
+ const [scheduleErrors, setScheduleErrors] = useState<string[]>([]);
+ // Avisos de cadencia (no bloquean programar, son sobre estrategia: dos posts pegados en la
+ // misma red, o un hueco largo sin publicar nada).
+ const [scheduleWarnings, setScheduleWarnings] = useState<string[]>([]);
  const [copySuccess, setCopySuccess] = useState(false);
 
  // Metrics Form States
@@ -1076,7 +1099,11 @@ export default function ReelsCenter({
  // Submit and Schedule Post
  const handleSchedulePost = async (e: React.FormEvent) => {
  e.preventDefault();
- if (!editedCopy.trim()) return;
+ const problemas = validateScheduleReadiness({ copy: editedCopy, scheduledDate, scheduledTime });
+ setScheduleErrors(problemas);
+ // La cadencia es un aviso, no un bloqueo: se calcula igualmente para enseñarlo junto al post ya programado.
+ setScheduleWarnings(getCadenceWarnings({ posts, platform: selectedPlatform, scheduledDate, scheduledTime }));
+ if (problemas.length > 0) return;
 
  setIsScheduling(true);
  setSchedulingSuccess(false);
@@ -1093,7 +1120,8 @@ export default function ReelsCenter({
 
  await onAddPost(newPost);
  setSchedulingSuccess(true);
- 
+ setScheduleErrors([]);
+
  // Auto-clear success state after a few seconds
  setTimeout(() => {
  setSchedulingSuccess(false);
@@ -2418,6 +2446,26 @@ export default function ReelsCenter({
  <span>¡Reel programado con éxito!</span>
  </div>
  )}
+ {scheduleErrors.length > 0 && (
+ <div className="p-2.5 bg-red-500/10 -red-500/30 rounded-lg text-red-400 text-[11px] font-mono mt-2 space-y-1">
+ {scheduleErrors.map((problema) => (
+ <div key={problema} className="flex items-center gap-1.5">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{problema}</span>
+ </div>
+ ))}
+ </div>
+ )}
+ {scheduleWarnings.length > 0 && (
+ <div className="p-2.5 bg-amber-500/10 -amber-500/30 rounded-lg text-amber-400 text-[11px] font-mono mt-2 space-y-1">
+ {scheduleWarnings.map((aviso) => (
+ <div key={aviso} className="flex items-center gap-1.5">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{aviso}</span>
+ </div>
+ ))}
+ </div>
+ )}
  </div>
  </div>
  </form>
@@ -3006,6 +3054,17 @@ export default function ReelsCenter({
  {/* Dark Gradient Overlay */}
  <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/85 pointer-events-none z-10" />
 
+ {/* Vista previa de la plataforma: la propia UI de cada app tapa una franja distinta del
+ borde derecho (guardar en Instagram/TikTok, like+dislike separados en YouTube...), así
+ que un hookText o subtítulo pegado ahí puede quedar oculto en una red y no en otra. */}
+ <div className="absolute right-2 bottom-24 z-20 flex flex-col gap-3 items-center pointer-events-none">
+ {PLATFORM_UI_ICONS[selectedPlatform].map((Icon, idx) => (
+ <div key={idx} className="w-7 h-7 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center text-white/85">
+ <Icon className="w-3.5 h-3.5" />
+ </div>
+ ))}
+ </div>
+
  {/* Video Info Overlays inside the phone */}
  <div className="z-10 flex justify-between items-center">
  <span className="text-[8px] font-mono text-[#f2ca50] font-extrabold tracking-widest bg-black/40 py-1 px-2 rounded-full -white/5 uppercase">
@@ -3481,6 +3540,22 @@ export default function ReelsCenter({
  {videoMeta && !videoMeta.hasTranscript && (
  <p className="text-[9px] font-mono text-neutral-600 leading-tight">Este vídeo no tiene transcripción en YouTube.</p>
  )}
+ {burnSubtitles && (
+ <button
+ type="button"
+ onClick={() => setKaraokeSubtitles(v => !v)}
+ disabled={isCuttingVideo}
+ title="Resalta cada palabra según se pronuncia, como en TikTok/CapCut, en vez de enseñar la línea entera fija."
+ className={`w-full px-3 py-1.5 rounded-lg text-[9.5px] font-mono font-bold cursor-pointer flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+ karaokeSubtitles
+ ? 'bg-[#f2ca50]/15 -[#f2ca50]/40 text-[#f2ca50]'
+ : 'bg-neutral-900 -neutral-800 text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ {karaokeSubtitles ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5 opacity-40" />}
+ <span>{karaokeSubtitles ? 'Resaltado palabra a palabra' : 'Línea fija clásica'}</span>
+ </button>
+ )}
  </div>
  </div>
 
@@ -3848,8 +3923,26 @@ export default function ReelsCenter({
  <CheckCircle2 className="w-4 h-4 text-emerald-400 animate-pulse" />
  <span>¡Clip guardado e insertado en tu agenda de redes!</span>
  </div>
+ ) : scheduleErrors.length > 0 ? (
+ <div className="space-y-1">
+ {scheduleErrors.map((problema) => (
+ <div key={problema} className="flex items-center gap-1.5 text-red-400 text-[11px] font-mono">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{problema}</span>
+ </div>
+ ))}
+ </div>
+ ) : scheduleWarnings.length > 0 ? (
+ <div className="space-y-1">
+ {scheduleWarnings.map((aviso) => (
+ <div key={aviso} className="flex items-center gap-1.5 text-amber-400 text-[11px] font-mono">
+ <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+ <span>{aviso}</span>
+ </div>
+ ))}
+ </div>
  ) : (
- <span className="text-[10px] font-mono text-neutral-500">Sincronizado con Google Calendar & Sheets</span>
+ <span className="text-[10px] font-mono text-neutral-500">Se guarda en tu agenda de Reels</span>
  )}
  </div>
 

@@ -54,7 +54,10 @@ export async function dbGetTours(bandId: string) {
 
 export async function dbUpsertTour(tour: any, bandId: string) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(tour.band_id || bandId);
+  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
+  // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
+  // petición y no debe primar (ver el mismo fallo corregido en server/db/campaigns.ts).
+  const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
