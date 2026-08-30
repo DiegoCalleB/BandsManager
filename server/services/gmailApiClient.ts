@@ -18,6 +18,20 @@ const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const DRAFTS_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
 const MESSAGES_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/messages";
 
+// Ninguna llamada a este archivo tenía límite de tiempo: un fetch() que Google (o la red de
+// Railway) deja colgado sin responder ni cerrar la conexión se queda esperando para siempre. El
+// scheduler procesa las bandas en secuencia (agentScheduler.ts), así que UNA sola llamada
+// atascada aquí bastaba para dejar el tick() entero sin terminar nunca - y como cada tick nuevo
+// se dispara igualmente cada 60s sin esperar al anterior, se iban acumulando llamadas colgadas
+// hasta agotar las conexiones disponibles y dejar el Lector (y el Enviador) completamente
+// parados para TODAS las bandas, en silencio, sin ningún error que lo delatara. 15s es de sobra
+// para cualquier llamada normal a la API de Gmail.
+const FETCH_TIMEOUT_MS = 15_000;
+
+function fetchConTimeout(url: string, init: RequestInit = {}): Promise<Response> {
+  return fetch(url, { ...init, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+}
+
 interface CachedToken {
   accessToken: string;
   expiresAt: number;
@@ -53,7 +67,7 @@ async function getValidAccessToken(bandId: string): Promise<string> {
     throw new EmailAgentError("Faltan GOOGLE_OAUTH_CLIENT_ID/GOOGLE_OAUTH_CLIENT_SECRET en el servidor.", "no_token");
   }
 
-  const res = await fetch(TOKEN_ENDPOINT, {
+  const res = await fetchConTimeout(TOKEN_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
@@ -98,7 +112,7 @@ export async function crearBorradorGmailApi(bandId: string, params: { to: string
     references: params.inReplyTo
   }).compile().build();
 
-  const res = await fetch(DRAFTS_ENDPOINT, {
+  const res = await fetchConTimeout(DRAFTS_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -133,7 +147,7 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
     references: params.inReplyTo
   }).compile().build();
 
-  const res = await fetch(`${MESSAGES_ENDPOINT}/send`, {
+  const res = await fetchConTimeout(`${MESSAGES_ENDPOINT}/send`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -158,7 +172,7 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
 // false = desapareció (se interpreta como enviado).
 export async function comprobarBorradorEnviado(bandId: string, draftId: string): Promise<boolean> {
   const accessToken = await getValidAccessToken(bandId);
-  const res = await fetch(`${DRAFTS_ENDPOINT}/${encodeURIComponent(draftId)}`, {
+  const res = await fetchConTimeout(`${DRAFTS_ENDPOINT}/${encodeURIComponent(draftId)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   if (res.status === 404) return false;
@@ -194,7 +208,7 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
 export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
   const accessToken = await getValidAccessToken(bandId);
 
-  const listRes = await fetch(`${MESSAGES_ENDPOINT}?q=${encodeURIComponent("is:unread in:inbox")}&maxResults=${maxResults}`, {
+  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${encodeURIComponent("is:unread in:inbox")}&maxResults=${maxResults}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   if (!listRes.ok) {
@@ -206,7 +220,7 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): P
 
   const resultados: RespuestaEntrante[] = [];
   for (const id of ids) {
-    const msgRes = await fetch(`${MESSAGES_ENDPOINT}/${id}?format=full`, {
+    const msgRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}/${id}?format=full`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     if (!msgRes.ok) continue;
@@ -235,7 +249,7 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): P
 export async function marcarComoLeidoGmailApi(bandId: string, messageIds: string[]): Promise<void> {
   if (!messageIds || messageIds.length === 0) return;
   const accessToken = await getValidAccessToken(bandId);
-  const res = await fetch(`${MESSAGES_ENDPOINT}/batchModify`, {
+  const res = await fetchConTimeout(`${MESSAGES_ENDPOINT}/batchModify`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
