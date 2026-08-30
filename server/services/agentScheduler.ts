@@ -81,43 +81,53 @@ async function tick() {
       continue;
     }
 
-    // Enviador: despacho de pitches en frío en las horas/días configurados por la banda.
+    // Enviador: despacho de pitches en frío en las horas/días configurados por la banda - eso sí
+    // debe respetar una ventana comercial, para no escribir a una sala a las 3 de la madrugada.
     await runIfScheduledHour("enviador", bandId, schedule, async () => {
       await runEnviadorAgent({ bandId, triggerType: "scheduler" });
     });
 
     // Lector: lee la bandeja real, empareja respuestas con leads por email de contacto y
-    // transiciona su estado (server/services/lectorAgent.ts). Nunca redacta ni envía nada.
-    await runIfScheduledHour("lector", bandId, schedule, async () => {
-      const startTime = Date.now();
-      try {
-        const resultado = await runLectorAgent(bandId);
-        await logAgentExecution({
-          band_id: bandId,
-          agente: "lector",
-          motor: "node_email_engine",
-          disparado_por_tipo: "scheduler",
-          estado: "success",
-          mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s)${resultado.borradoresEnviadosDetectados > 0 ? ` (${resultado.borradoresEnviadosDetectados} de ellos por borrador de Gmail enviado a mano)` : ""} en la bandeja de ${bandId}.`,
-          conteo_afectados: resultado.leadsActualizados.length,
-          duracion_ms: Date.now() - startTime,
-          detalles: resultado
-        });
-      } catch (e: any) {
-        const sinCuenta = e instanceof EmailAgentError && e.code === "no_token";
-        // Sin cuenta de email conectada para esta banda no es un error a auditar en cada tick
-        // - es simplemente que la banda no lo ha configurado todavía.
-        if (sinCuenta) return;
-        await logAgentExecution({
-          band_id: bandId,
-          agente: "lector",
-          motor: "node_email_engine",
-          disparado_por_tipo: "scheduler",
-          estado: "error",
-          mensaje: `Agente Lector: error leyendo la bandeja de ${bandId}: ${e.message || e}`,
-          duracion_ms: Date.now() - startTime
-        });
-      }
+    // transiciona su estado, y comprueba borradores de Gmail enviados a mano
+    // (server/services/lectorAgent.ts). Nunca redacta ni envía nada, así que a diferencia del
+    // Enviador no hay ninguna razón para restringirlo a una ventana horaria - corre en TODOS los
+    // ticks (cada 60s), para que una respuesta o un envío manual se reflejen cuanto antes.
+    // horas_lector/dias_lector (band_schedules) ya no lo limitan.
+    await runLectorTick(bandId);
+  }
+}
+
+async function runLectorTick(bandId: string): Promise<void> {
+  const startTime = Date.now();
+  try {
+    const resultado = await runLectorAgent(bandId);
+    // Solo se audita cuando hay algo que contar - de lo contrario, correr cada minuto llenaría
+    // agent_execution_logs de miles de entradas "0 mensajes, 0 leads" al día por banda.
+    if (resultado.mensajesLeidos === 0 && resultado.borradoresEnviadosDetectados === 0) return;
+    await logAgentExecution({
+      band_id: bandId,
+      agente: "lector",
+      motor: "node_email_engine",
+      disparado_por_tipo: "scheduler",
+      estado: "success",
+      mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s)${resultado.borradoresEnviadosDetectados > 0 ? ` (${resultado.borradoresEnviadosDetectados} de ellos por borrador de Gmail enviado a mano)` : ""} en la bandeja de ${bandId}.`,
+      conteo_afectados: resultado.leadsActualizados.length,
+      duracion_ms: Date.now() - startTime,
+      detalles: resultado
+    });
+  } catch (e: any) {
+    const sinCuenta = e instanceof EmailAgentError && e.code === "no_token";
+    // Sin cuenta de email conectada para esta banda no es un error a auditar en cada tick - es
+    // simplemente que la banda no lo ha configurado todavía.
+    if (sinCuenta) return;
+    await logAgentExecution({
+      band_id: bandId,
+      agente: "lector",
+      motor: "node_email_engine",
+      disparado_por_tipo: "scheduler",
+      estado: "error",
+      mensaje: `Agente Lector: error leyendo la bandeja de ${bandId}: ${e.message || e}`,
+      duracion_ms: Date.now() - startTime
     });
   }
 }

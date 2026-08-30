@@ -269,13 +269,6 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   if (!isOpen) return null;
 
   // Toggle Hour & Day Handlers
-  const toggleHoraLector = (hour: number) => {
-    if (!isAdmin) return;
-    setHorasLector(prev => 
-      prev.includes(hour) ? prev.filter(h => h !== hour) : [...prev, hour].sort((a, b) => a - b)
-    );
-  };
-
   const toggleHoraEnviador = (hour: number) => {
     if (!isAdmin) return;
     setHorasEnviador(prev => 
@@ -286,13 +279,6 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   const toggleDiaEnviador = (dayId: number) => {
     if (!isAdmin) return;
     setDiasEnviador(prev =>
-      prev.includes(dayId) ? prev.filter(d => d !== dayId) : [...prev, dayId].sort((a, b) => a - b)
-    );
-  };
-
-  const toggleDiaLector = (dayId: number) => {
-    if (!isAdmin) return;
-    setDiasLector(prev =>
       prev.includes(dayId) ? prev.filter(d => d !== dayId) : [...prev, dayId].sort((a, b) => a - b)
     );
   };
@@ -1173,134 +1159,23 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                 </div>
               </div>
 
-              {/* DÍAS Y HORAS LECTOR */}
-              <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">
-                {/* Header Lector */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-sky-400" />
-                    <div>
-                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
-                        Agente Lector (Días y Frecuencia de Lectura de Bandeja)
-                      </h4>
-                      <p className="text-[10px] text-neutral-400">
-                        Frecuencia en la que el bot sincroniza respuestas y actualiza el hilo en Supabase.
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/30 font-bold">
-                    {diasLector.length} días · {horasLector.length} chequeos / día
+              {/* Agente Lector: ya no tiene horario configurable - corre en TODOS los ticks del
+                  scheduler (cada ~60s), porque a diferencia del Enviador (que sí debe respetar
+                  una ventana comercial para no escribir de madrugada) leer la bandeja y detectar
+                  respuestas/borradores enviados no tiene ninguna razón para esperar. */}
+              <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-sky-400" />
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
+                    Agente Lector (Bandeja de Entrada)
+                  </h4>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 font-bold">
+                    Siempre activo
                   </span>
                 </div>
-
-                {/* Días Lector Selector */}
-                <div className="space-y-2 pt-1 border-t border-neutral-900">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
-                    <span className="font-semibold text-zinc-300 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-sky-400" /> Días de Revisión de Correos:
-                    </span>
-                    {isAdmin && (
-                      <div className="flex items-center gap-1.5 text-[10px]">
-                        <button
-                          type="button"
-                          onClick={() => setDiasLector([1, 2, 3, 4, 5, 6, 7])}
-                          className="px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 transition-all cursor-pointer font-bold"
-                        >
-                          Toda la Semana (7 días)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setDiasLector([1, 2, 3, 4, 5])}
-                          className="px-2 py-0.5 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-700 transition-all cursor-pointer"
-                        >
-                          Solo L-V
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                    {DAYS_OF_WEEK.map((day) => {
-                      const isSelected = diasLector.includes(day.id);
-                      return (
-                        <button
-                          key={`dia-lector-${day.id}`}
-                          type="button"
-                          disabled={!isAdmin}
-                          onClick={() => toggleDiaLector(day.id)}
-                          className={`p-2.5 rounded-xl border text-left flex flex-col justify-between gap-1 transition-all ${
-                            !isAdmin ? 'cursor-default' : 'cursor-pointer active:scale-95'
-                          } ${
-                            isSelected
-                              ? 'bg-sky-500/15 border-sky-500 text-sky-200 shadow-sm shadow-sky-500/10 ring-1 ring-sky-500/30'
-                              : 'bg-neutral-900/90 border-neutral-800 text-neutral-400 hover:text-zinc-200 hover:bg-neutral-900'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between w-full">
-                            <span className={`text-xs font-mono font-bold ${isSelected ? 'text-sky-300' : 'text-zinc-300'}`}>
-                              {day.short}
-                            </span>
-                            <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-sky-400' : 'bg-neutral-700'}`} />
-                          </div>
-                          <span className="text-[11px] font-sans font-medium leading-tight truncate">
-                            {day.name}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Horas Lector Grid */}
-                <div className="space-y-2 pt-2 border-t border-neutral-900">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
-                    <span className="font-semibold text-zinc-300 flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-sky-400" /> Horas de Revisión:
-                    </span>
-                    {isAdmin && (
-                      <div className="flex items-center gap-1.5 text-[10px]">
-                        <button
-                          type="button"
-                          onClick={() => setHorasLector([9, 13, 17, 21])}
-                          className="px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 transition-all cursor-pointer font-bold"
-                        >
-                          Cada 4h (9, 13, 17, 21h)
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setHorasLector([8, 10, 12, 14, 16, 18, 20, 22])}
-                          className="px-2 py-0.5 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-700 transition-all cursor-pointer"
-                        >
-                          Cada 2h
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-6 sm:grid-cols-12 gap-1.5 pt-1">
-                    {HOURS.map((hour) => {
-                      const isSelected = horasLector.includes(hour);
-                      const formatted = `${String(hour).padStart(2, '0')}:00`;
-                      return (
-                        <button
-                          key={`lector-${hour}`}
-                          type="button"
-                          disabled={!isAdmin}
-                          onClick={() => toggleHoraLector(hour)}
-                          className={`p-2 rounded-lg text-center font-mono text-[11px] font-bold transition-all ${
-                            !isAdmin ? 'cursor-default' : 'cursor-pointer active:scale-95'
-                          } ${
-                            isSelected
-                              ? 'bg-sky-500 text-stone-950 shadow-sm font-black'
-                              : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800'
-                          }`}
-                        >
-                          {formatted}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <p className="text-[11px] text-neutral-400 font-sans leading-relaxed">
+                  Revisa tu bandeja constantemente (cada minuto), sin horario configurable: detecta respuestas de las salas y actualiza el hilo del lead, y comprueba si algún borrador de Gmail se ha enviado a mano para marcar el lead como contactado. Las horas y días de abajo son solo para el Agente Enviador (el despacho de propuestas).
+                </p>
               </div>
 
               {/* Monitor de Estado de Agentes de Supabase (GitHub Actions) */}
@@ -1362,7 +1237,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                       <div>
                         <div className="text-xs font-mono font-bold text-zinc-100">Agente Lector (Clasificador)</div>
                         <div className="text-[10px] text-neutral-400 font-sans">
-                          {diasLector.length}d/sem · {horasLector.length} revisiones/día
+                          Revisa la bandeja cada minuto, sin horario
                         </div>
                       </div>
                     </div>
