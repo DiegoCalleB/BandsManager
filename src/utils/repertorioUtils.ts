@@ -171,14 +171,7 @@ export function resolveBandMembers(users?: any[], extraNotes?: Record<string, st
     });
   }
 
-  // 2. If no members or fewer than 2, enrich with default Bakandeya members
-  if (memberMap.size === 0) {
-    DEFAULT_BAND_MEMBERS.forEach(m => {
-      memberMap.set(m.name.toLowerCase(), m);
-    });
-  }
-
-  // 3. If there are custom keys in extraNotes that aren't yet in memberMap, add them
+  // 2. If there are custom keys in extraNotes that aren't yet in memberMap, add them
   if (extraNotes) {
     Object.keys(extraNotes).forEach(key => {
       const cleanKey = key.trim();

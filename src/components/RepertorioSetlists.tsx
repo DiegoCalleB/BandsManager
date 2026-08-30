@@ -36,7 +36,7 @@ import {
  uploadFileToServer, parseGoogleDriveAudioUrl, isGoogleDriveUrl, 
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
 } from '../utils/audioStorage';
-import { calculateSetlistStats } from '../utils/repertorioUtils';
+import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -44,9 +44,23 @@ interface RepertorioSetlistsProps {
  rehearsals: Rehearsal[];
  bandName?: string;
  bandId?: string;
+ bandUsers?: any[];
+ bandLogoUrl?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
 }
+
+// Plantilla de la formación de Bakandeya usada como banda de demostración de la propia
+// app: solo debe mostrarse cuando la banda activa es literalmente Bakandeya, nunca como
+// fallback para otras bandas (ver bandRosterMembers más abajo).
+const BAKANDEYA_DEMO_MEMBERS: BandMemberOption[] = [
+  { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
+  { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
+  { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
+  { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
+  { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
+  { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
+];
 
 export function formatSecondsToMmSs(secs: number): string {
   if (!secs || isNaN(secs) || secs < 0) return '00:00';
@@ -296,6 +310,8 @@ export default function RepertorioSetlists({
  rehearsals,
  bandName,
  bandId,
+ bandUsers,
+ bandLogoUrl,
  onUpdateConcert,
  onUpdateRehearsal
 }: RepertorioSetlistsProps) {
@@ -305,6 +321,15 @@ export default function RepertorioSetlists({
 
  const cleanBand = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
  const isBakandeya = cleanBand === 'bakandeya';
+
+ // Plantilla de Bakandeya solo para la propia Bakandeya; el resto de bandas ven a sus
+ // miembros reales (bandUsers, ya filtrados por banda en el servidor) y nunca el roster
+ // de otra banda — este mismo bug (ver MemberNotesModal/PdfExportModal/SongModal más abajo)
+ // hacía que cualquier banda viera hardcodeados los músicos de Bakandeya en "Repertorios".
+ const bandRosterMembers: BandMemberOption[] = useMemo(() => {
+   if (isBakandeya) return BAKANDEYA_DEMO_MEMBERS;
+   return resolveBandMembers(bandUsers);
+ }, [isBakandeya, bandUsers]);
 
  // Helper to filter out template songs for non-Bakandeya bands
  const sanitizeBandSongs = React.useCallback((rawList: Song[]): Song[] => {
@@ -2968,14 +2993,7 @@ export default function RepertorioSetlists({
  {/* MODAL: ADD / EDIT SONG */}
  <SongModal
    isOpen={showSongModal}
-    bandMembers={[
-      { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
-      { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
-      { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
-      { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
-      { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
-      { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
-    ]}
+    bandMembers={bandRosterMembers}
    editingSong={editingSong}
    defaultAlbumForNewSong={defaultAlbumForNewSong}
    albumsList={albumsList}
@@ -3227,15 +3245,8 @@ export default function RepertorioSetlists({
 
       {/* PDF Preview Modal */}
       <PdfExportModal
-        bandMembers={[
-          { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
-          { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
-          { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
-          { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
-          { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
-          { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
-        ]}
-        bandLogoUrl="/logo_bakandeya_bueno_sin_fondo.png"
+        bandMembers={bandRosterMembers}
+        bandLogoUrl={isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : (bandLogoUrl || '')}
         isOpen={showPdfPreview}
         activeSetlist={activeSetlist}
         activeSetlistMetrics={activeSetlistMetrics}
@@ -3315,14 +3326,7 @@ export default function RepertorioSetlists({
       song={activeMemberNotesSong}
       colors={colors}
       isStitchLight={isStitchLight}
-      bandMembers={[
-        { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
-        { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
-        { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
-        { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
-        { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
-        { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
-      ]}
+      bandMembers={bandRosterMembers}
       onClose={() => setActiveMemberNotesSong(null)}
       onSaveSongNotes={handleUpdateSongFromStudio}
     />
