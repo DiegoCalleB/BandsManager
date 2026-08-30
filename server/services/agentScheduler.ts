@@ -15,6 +15,12 @@ import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
 
 const TICK_MS = 60 * 1000;
 let schedulerHandle: NodeJS.Timeout | null = null;
+// Segunda barrera además de los timeouts de gmailApiClient.ts: si por lo que sea un tick tarda
+// más de 60s (una llamada externa lenta, muchas bandas, lo que sea), el setInterval de abajo
+// dispara igualmente el siguiente sin esperar a que termine el anterior - así que sin este guard
+// se podían ir acumulando ticks solapados indefinidamente. Con él, un tick lento simplemente hace
+// que se salten los siguientes disparos hasta que el que está en curso termine.
+let tickEnCurso = false;
 
 export function currentHourAndDay(timezone: string, now: Date): { hour: number; dayIso: number; dateKey: string } {
   const formatter = new Intl.DateTimeFormat("en-US", {
@@ -62,38 +68,47 @@ async function runIfScheduledHour(
 }
 
 async function tick() {
-  let bands: any[] = [];
-  try {
-    bands = await dbGetRegisteredBands();
-  } catch (e) {
-    console.warn("[AgentScheduler] No se pudo obtener la lista de bandas activas:", e);
+  if (tickEnCurso) {
+    console.warn("[AgentScheduler] El tick anterior todavía no ha terminado - se salta este disparo.");
     return;
   }
-
-  const activeBands = bands.filter((b) => (b.estado_cuenta || "activo") === "activo");
-
-  for (const band of activeBands) {
-    const bandId = band.band_id;
-    let schedule;
+  tickEnCurso = true;
+  try {
+    let bands: any[] = [];
     try {
-      schedule = await dbGetBandSchedule(bandId);
+      bands = await dbGetRegisteredBands();
     } catch (e) {
-      continue;
+      console.warn("[AgentScheduler] No se pudo obtener la lista de bandas activas:", e);
+      return;
     }
 
-    // Enviador: despacho de pitches en frío en las horas/días configurados por la banda - eso sí
-    // debe respetar una ventana comercial, para no escribir a una sala a las 3 de la madrugada.
-    await runIfScheduledHour("enviador", bandId, schedule, async () => {
-      await runEnviadorAgent({ bandId, triggerType: "scheduler" });
-    });
+    const activeBands = bands.filter((b) => (b.estado_cuenta || "activo") === "activo");
 
-    // Lector: lee la bandeja real, empareja respuestas con leads por email de contacto y
-    // transiciona su estado, y comprueba borradores de Gmail enviados a mano
-    // (server/services/lectorAgent.ts). Nunca redacta ni envía nada, así que a diferencia del
-    // Enviador no hay ninguna razón para restringirlo a una ventana horaria - corre en TODOS los
-    // ticks (cada 60s), para que una respuesta o un envío manual se reflejen cuanto antes.
-    // horas_lector/dias_lector (band_schedules) ya no lo limitan.
-    await runLectorTick(bandId);
+    for (const band of activeBands) {
+      const bandId = band.band_id;
+      let schedule;
+      try {
+        schedule = await dbGetBandSchedule(bandId);
+      } catch (e) {
+        continue;
+      }
+
+      // Enviador: despacho de pitches en frío en las horas/días configurados por la banda - eso
+      // sí debe respetar una ventana comercial, para no escribir a una sala a las 3 de la madrugada.
+      await runIfScheduledHour("enviador", bandId, schedule, async () => {
+        await runEnviadorAgent({ bandId, triggerType: "scheduler" });
+      });
+
+      // Lector: lee la bandeja real, empareja respuestas con leads por email de contacto y
+      // transiciona su estado, y comprueba borradores de Gmail enviados a mano
+      // (server/services/lectorAgent.ts). Nunca redacta ni envía nada, así que a diferencia del
+      // Enviador no hay ninguna razón para restringirlo a una ventana horaria - corre en TODOS
+      // los ticks (cada 60s), para que una respuesta o un envío manual se reflejen cuanto antes.
+      // horas_lector/dias_lector (band_schedules) ya no lo limitan.
+      await runLectorTick(bandId);
+    }
+  } finally {
+    tickEnCurso = false;
   }
 }
 
