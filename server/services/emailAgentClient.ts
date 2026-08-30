@@ -129,9 +129,18 @@ export async function crearBorrador(bandId: string, params: { to: string; subjec
     await client.connect();
 
     const mailboxes = await client.list();
-    const drafts = (mailboxes || []).find((mb: any) => mb.specialUse === "\\Drafts");
+    // Buscar carpeta de borradores: primero por specialUse (Outlook), luego por nombre (Gmail)
+    let drafts = (mailboxes || []).find((mb: any) => mb.specialUse === "\\Drafts");
     if (!drafts) {
-      throw new Error("no se encontró la carpeta de borradores (\\Drafts) en la cuenta");
+      // Fallback para Gmail: buscar por nombre
+      drafts = (mailboxes || []).find((mb: any) =>
+        mb.path === "[Gmail]/Drafts" ||
+        mb.path === "Drafts" ||
+        mb.name?.toLowerCase() === "drafts"
+      );
+    }
+    if (!drafts) {
+      throw new Error("no se encontró la carpeta de borradores (\\Drafts o [Gmail]/Drafts) en la cuenta");
     }
 
     await client.append(drafts.path, raw, ["\\Draft"]);
