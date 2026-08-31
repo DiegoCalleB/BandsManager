@@ -105,7 +105,7 @@ export function CampaignManagerModal({
       return d;
     }).join(', ');
 
-    await onSaveCampaign({
+    const payload = {
       id: editingCampaignId || undefined,
       name: formData.name.trim(),
       targetCities: formData.targetCities || [],
@@ -117,7 +117,12 @@ export function CampaignManagerModal({
       customPitchTemplates: formData.customPitchTemplates || {},
       color: formData.color || '#8b5cf6',
       isActive: formData.isActive ?? true
-    });
+    };
+
+    console.log('🔵 Guardando campaña:', payload);
+    console.log('📝 customPitchTemplates:', JSON.stringify(payload.customPitchTemplates, null, 2));
+
+    await onSaveCampaign(payload);
 
     setIsEditing(false);
     setEditingCampaignId(null);
