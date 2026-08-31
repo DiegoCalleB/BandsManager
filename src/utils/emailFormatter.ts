@@ -257,22 +257,9 @@ export function formatEmailWithSignatureAndDossier(params: {
   };
 
   // Solo incluir links de redes sociales que están efectivamente configurados (no vacíos/whitespace)
+  // No usar defaults: solo mostrar lo que está explícitamente en enlaces
   const buildSocialLink = (platform: string, configUrl?: string): { net: string; label: string; url: string; badgeUrl: string } | null => {
-    let url = '';
-
-    // Usar URL configurada si existe y no es vacía
-    if (configUrl && String(configUrl).trim()) {
-      url = String(configUrl).trim();
-    }
-    // Solo usar defaults de Bakandeya para Bakandeya misma
-    else if (isBakandeya) {
-      switch (platform) {
-        case 'instagram': url = 'https://instagram.com/bakandeyamusic'; break;
-        case 'facebook': url = 'https://facebook.com/bakandeyaband'; break;
-        case 'tiktok': url = 'https://tiktok.com/@bakandeya'; break;
-      }
-    }
-
+    const url = configUrl && String(configUrl).trim() ? String(configUrl).trim() : '';
     if (!url) return null;
 
     const map = socialIconsMap[platform as keyof typeof socialIconsMap];
