@@ -205,4 +205,83 @@ ${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"
   }
 });
 
+// Estadísticas de éxito: cuántos leads usaron cada template y cuántos respondieron
+router.get("/templates/stats", requireAuth, async (req, res) => {
+  try {
+    const state = await loadState();
+    const bandId = getTargetBandId(req);
+    const leads = state.leads?.filter((l: any) => l.band_id === bandId) || [];
+
+    const stats: Record<string, { totalUses: number; positiveResponses: number; responseRate: number }> = {
+      salas: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
+      festivales: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
+      discotecas: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
+      medios: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
+      grupos: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
+      managements: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
+      ayuntamientos: { totalUses: 0, positiveResponses: 0, responseRate: 0 }
+    };
+
+    for (const lead of leads) {
+      const cat = lead.template_category || 'salas';
+      if (!stats[cat]) continue;
+
+      // Contar uso (si tiene historial de pitches generados)
+      if (lead.ultimo_pitch_generado) stats[cat].totalUses++;
+
+      // Contar respuesta positiva (respondido, negociando, confirmado)
+      const isPositive = ['respondido', 'negociando', 'confirmado', 'concierto_programado'].includes(lead.estado);
+      if (isPositive) stats[cat].positiveResponses++;
+    }
+
+    // Calcular tasas
+    for (const cat of Object.keys(stats)) {
+      if (stats[cat].totalUses > 0) {
+        stats[cat].responseRate = Math.round((stats[cat].positiveResponses / stats[cat].totalUses) * 100);
+      }
+    }
+
+    res.json({ success: true, stats });
+  } catch (error: any) {
+    console.error("Error in GET /api/templates/stats:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al obtener estadísticas." });
+  }
+});
+
+// Reset template a valores por defecto
+router.post("/templates/reset", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { category } = req.body;
+
+    if (!category || !DEFAULT_CATEGORY_TEMPLATES[category]) {
+      return res.status(400).json({ success: false, error: "Categoría no válida." });
+    }
+
+    const defaultTemplate = DEFAULT_CATEGORY_TEMPLATES[category];
+
+    await dbUpsertCategoryTemplate(
+      bandId,
+      category,
+      {
+        subject: defaultTemplate.subject,
+        body: defaultTemplate.body,
+        guidelines: defaultTemplate.guidelines,
+        customInstruction: "",
+        toneRating: 5,
+        contentRating: 5
+      }
+    );
+
+    res.json({
+      success: true,
+      message: `Plantilla de ${category} restaurada a valores por defecto.`,
+      template: defaultTemplate
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/templates/reset:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al resetear plantilla." });
+  }
+});
+
 export default router;

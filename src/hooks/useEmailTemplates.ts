@@ -124,6 +124,9 @@ Cordialmente,
   const [templateToneRating, setTemplateToneRating] = useState<number>(0);
   const [templateContentRating, setTemplateContentRating] = useState<number>(0);
 
+  // Estadísticas de éxito por categoría
+  const [templateStats, setTemplateStats] = useState<Record<string, { totalUses: number; positiveResponses: number; responseRate: number }>>({});
+
  const handleOptimizeTemplate = async () => {
    setIsOptimizingTemplate(true);
    setOptimizationFeedbackMsg(null);
@@ -347,7 +350,25 @@ ${data.optimized.body}`);
         console.warn('Could not load saved templates from API:', err);
       }
     };
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+        const headers: Record<string, string> = {};
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+          headers['x-auth-token'] = token;
+        }
+        const res = await fetch('/api/templates/stats', { headers });
+        const data = await res.json();
+        if (res.ok && data.success && data.stats) {
+          setTemplateStats(data.stats);
+        }
+      } catch (err) {
+        console.warn('Could not load template stats from API:', err);
+      }
+    };
     fetchTemplates();
+    fetchStats();
   }, []);
 
  const handleSaveTemplates = async () => {
@@ -389,6 +410,40 @@ ${data.optimized.body}`);
    }
  };
 
+ const handleResetTemplate = async () => {
+   if (!confirm(`¿Restaurar la plantilla de ${templateTab} a valores por defecto?`)) return;
+
+   try {
+     const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+     if (token) {
+       headers['Authorization'] = `Bearer ${token}`;
+       headers['x-auth-token'] = token;
+     }
+     const res = await fetch('/api/templates/reset', {
+       method: 'POST',
+       headers,
+       body: JSON.stringify({ category: templateTab })
+     });
+     const data = await res.json();
+     if (res.ok && data.success) {
+       const activeData = getActiveTemplateData();
+       activeData.setSubject(data.template.subject);
+       activeData.setBody(data.template.body);
+       activeData.setGuidelines(data.template.guidelines);
+       setOptimizationFeedbackMsg(`✅ ${data.message}`);
+       setTemplateCustomInstruction('');
+       setTemplateToneRating(0);
+       setTemplateContentRating(0);
+     } else {
+       setOptimizationFeedbackMsg('⚠️ Error al resetear la plantilla.');
+     }
+   } catch (err) {
+     console.error('Error resetting template:', err);
+     setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
+   }
+ };
+
   return {
     templateTab, setTemplateTab,
     testPromptResult, isTestingPrompt,
@@ -396,9 +451,11 @@ ${data.optimized.body}`);
     templateCustomInstruction, setTemplateCustomInstruction,
     templateToneRating, setTemplateToneRating,
     templateContentRating, setTemplateContentRating,
+    templateStats,
     getActiveTemplateData,
     handleOptimizeTemplate,
     handleTestPrompt,
     handleSaveTemplates,
+    handleResetTemplate,
   };
 }
