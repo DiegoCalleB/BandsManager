@@ -126,9 +126,9 @@ export function buildServerEmailHtml(params: {
   };
 
   const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string; color: string }> = [
-    { net: 'instagram', label: 'Instagram', url: enlaces.instagram || (isBakandeya ? 'https://instagram.com/bakandeyamusic' : ''), badgeUrl: socialIconsMap.instagram.iconSvg, color: socialIconsMap.instagram.color },
-    { net: 'facebook', label: 'Facebook', url: enlaces.facebook || (isBakandeya ? 'https://facebook.com/bakandeyaband' : ''), badgeUrl: socialIconsMap.facebook.iconSvg, color: socialIconsMap.facebook.color },
-    { net: 'tiktok', label: 'TikTok', url: enlaces.tiktok || (isBakandeya ? 'https://tiktok.com/@bakandeya' : ''), badgeUrl: socialIconsMap.tiktok.iconSvg, color: socialIconsMap.tiktok.color },
+    { net: 'instagram', label: 'Instagram', url: enlaces.instagram || '', badgeUrl: socialIconsMap.instagram.iconSvg, color: socialIconsMap.instagram.color },
+    { net: 'facebook', label: 'Facebook', url: enlaces.facebook || '', badgeUrl: socialIconsMap.facebook.iconSvg, color: socialIconsMap.facebook.color },
+    { net: 'tiktok', label: 'TikTok', url: enlaces.tiktok || '', badgeUrl: socialIconsMap.tiktok.iconSvg, color: socialIconsMap.tiktok.color },
     { net: 'spotify', label: 'Spotify', url: enlaces.spotify || '', badgeUrl: socialIconsMap.spotify.iconSvg, color: socialIconsMap.spotify.color },
     { net: 'youtube', label: 'YouTube', url: enlaces.youtube || '', badgeUrl: socialIconsMap.youtube.iconSvg, color: socialIconsMap.youtube.color },
     { net: 'website', label: 'Web Oficial', url: enlaces.website || '', badgeUrl: socialIconsMap.website.iconSvg, color: socialIconsMap.website.color }
@@ -149,7 +149,7 @@ export function buildServerEmailHtml(params: {
     : '';
 
   const adjuntarDossier = (firma.adjuntarDossierPorDefecto ?? true);
-  const dossierLabel = dossierPdfName ? `Dossier Oficial & Rider Técnico (${dossierPdfName})` : 'Dossier Oficial & Kit de Prensa';
+  const dossierLabel = 'Dossier Oficial & Kit de Prensa';
 
   const html = `<!DOCTYPE html>
 <html>
