@@ -318,6 +318,7 @@ ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
 ${campaignToneSection}
 * DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
+${cTemplate ? `* DIRECTIVA DE PLANTILLA: La plantilla/mensaje clave de esta campaña ("${cTemplate}") DEBE estar incorporada de forma natural en tu propuesta. Úsala como base o referencia obligatoria para mantener coherencia con la estrategia de la campaña.` : ''}
 `;
   }
 
