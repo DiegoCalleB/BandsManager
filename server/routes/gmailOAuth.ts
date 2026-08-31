@@ -30,7 +30,12 @@ const router = express.Router();
 const GMAIL_OAUTH_SCOPE = "https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.modify";
 const AUTHORIZE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
-const USERINFO_ENDPOINT = "https://www.googleapis.com/oauth2/v2/userinfo";
+// La API de userinfo clásica (https://www.googleapis.com/oauth2/v2/userinfo) exige los scopes
+// "email"/"profile", que este flujo nunca pide (solo gmail.compose/gmail.modify) - por eso
+// gmail_email se guardaba siempre vacío. El propio endpoint de perfil de la API de Gmail sí
+// funciona con esos scopes (lo confirma obtenerEmailDeLaCuentaConectada en gmailApiClient.ts,
+// que ya lo usa con éxito), así que se reutiliza aquí en vez de pedir un scope nuevo.
+const PROFILE_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/profile";
 const ESTADO_VALIDEZ_MS = 10 * 60 * 1000; // 10 minutos: tiempo de sobra para completar el consentimiento en Google
 
 export function firmarEstadoOAuth(bandId: string): string {
@@ -136,11 +141,11 @@ router.get("/callback", async (req, res) => {
       return redirigirConError("google_no_devolvio_refresh_token");
     }
 
-    const userinfoRes = await fetch(USERINFO_ENDPOINT, {
+    const profileRes = await fetch(PROFILE_ENDPOINT, {
       headers: { Authorization: `Bearer ${tokenData.access_token}` }
     });
-    const userinfo = userinfoRes.ok ? await userinfoRes.json() : {};
-    const gmailEmail = userinfo.email || "";
+    const profile = profileRes.ok ? await profileRes.json() : {};
+    const gmailEmail = profile.emailAddress || "";
 
     await dbUpsertBandGmailOAuth({
       band_id: bandId,
