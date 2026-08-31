@@ -96,6 +96,26 @@ export async function tieneGmailOAuthConectado(bandId: string): Promise<boolean>
   return !!account;
 }
 
+// Diagnóstico: a qué cuenta de Gmail pertenece de verdad el access token que se está usando.
+// band_gmail_oauth_accounts.gmail_email puede estar vacío (el callback de OAuth en
+// server/routes/gmailOAuth.ts pide el userinfo de Google con un scope que no lo cubre, así que
+// esa llamada falla en silencio) - esto usa el propio endpoint de perfil de la API de Gmail
+// (cubierto por el scope gmail.modify que sí tenemos) para saber con certeza qué buzón se está
+// consultando de verdad, sin depender de ese dato.
+export async function obtenerEmailDeLaCuentaConectada(bandId: string): Promise<string | null> {
+  try {
+    const accessToken = await getValidAccessToken(bandId);
+    const res = await fetchConTimeout("https://gmail.googleapis.com/gmail/v1/users/me/profile", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.emailAddress || null;
+  } catch {
+    return null;
+  }
+}
+
 // Deja el email como BORRADOR real en Gmail vía su API REST (users.drafts.create), sin pasar
 // por IMAP - la banda nunca ve una contraseña ni un popup. Misma firma que crearBorrador en
 // emailAgentClient.ts a propósito, para que agentEngine.ts pueda elegir entre las dos sin
@@ -178,7 +198,7 @@ export async function comprobarBorradorEnviado(bandId: string, draftId: string):
 // que necesita comprobarBorradoresGmailEnviados (agentEngine.ts) para poder registrar, cuando el
 // borrador "sigue existiendo", si de verdad se comprobó (200) o si el chequeo en sí falló de un
 // modo que terminó interpretándose como "sigue existiendo" sin serlo.
-export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId: string): Promise<{ existe: boolean; status: number }> {
+export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId: string): Promise<{ existe: boolean; status: number; cuerpo?: string }> {
   const accessToken = await getValidAccessToken(bandId);
   const res = await fetchConTimeout(`${DRAFTS_ENDPOINT}/${encodeURIComponent(draftId)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
@@ -188,7 +208,21 @@ export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId
     const errBody = await res.text().catch(() => "");
     throw new EmailAgentError(`No se pudo comprobar el borrador '${draftId}' de '${bandId}': ${errBody || res.status}`, "api_error");
   }
-  return { existe: true, status: res.status };
+  // Diagnóstico temporal: capturar qué dice Google exactamente que existe (id del mensaje, para
+  // de quién y cuándo) cuando responde 200 pero la carpeta de Borradores está vacía a simple
+  // vista - para saber si es de verdad el mismo recurso o algo inesperado (cuenta equivocada,
+  // caché de token, lo que sea).
+  let cuerpo: string | undefined;
+  try {
+    const data = await res.json();
+    const headers = data?.message?.payload?.headers as Array<{ name: string; value: string }> | undefined;
+    const to = headers?.find((h) => h.name.toLowerCase() === "to")?.value;
+    const subject = headers?.find((h) => h.name.toLowerCase() === "subject")?.value;
+    cuerpo = JSON.stringify({ draftId: data?.id, messageId: data?.message?.id, threadId: data?.message?.threadId, to, subject });
+  } catch (e) {
+    cuerpo = "no se pudo parsear el cuerpo de la respuesta";
+  }
+  return { existe: true, status: res.status, cuerpo };
 }
 
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene

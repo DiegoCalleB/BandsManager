@@ -30,7 +30,8 @@ vi.mock('../gmailApiClient.js', () => ({
   crearBorradorGmailApi: (...args: any[]) => crearBorradorGmailApiMock(...args),
   tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args),
   enviarEmailGmailApi: (...args: any[]) => enviarEmailGmailApiMock(...args),
-  comprobarBorradorEnviadoConDetalle: (...args: any[]) => comprobarBorradorEnviadoConDetalleMock(...args)
+  comprobarBorradorEnviadoConDetalle: (...args: any[]) => comprobarBorradorEnviadoConDetalleMock(...args),
+  obtenerEmailDeLaCuentaConectada: vi.fn().mockResolvedValue(null)
 }));
 
 import { getSupabase } from '../../db.js';
