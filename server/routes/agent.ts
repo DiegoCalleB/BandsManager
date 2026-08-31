@@ -728,4 +728,16 @@ router.post("/agent-logs", requireAuth, async (req, res) => {
   }
 });
 
+// Debug endpoint: fuerza el chequeo de borradores enviados de Gmail
+router.post("/debug/check-drafts", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { comprobarBorradoresGmailEnviados } = await import("../services/agentEngine.js");
+    const resultado = await comprobarBorradoresGmailEnviados(bandId);
+    res.json(resultado);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || String(err) });
+  }
+});
+
 export default router;
