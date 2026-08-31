@@ -198,7 +198,12 @@ export async function comprobarBorradorEnviado(bandId: string, draftId: string):
 // que necesita comprobarBorradoresGmailEnviados (agentEngine.ts) para poder registrar, cuando el
 // borrador "sigue existiendo", si de verdad se comprobó (200) o si el chequeo en sí falló de un
 // modo que terminó interpretándose como "sigue existiendo" sin serlo.
-export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId: string): Promise<{ existe: boolean; status: number; cuerpo?: string }> {
+//
+// Detalle importante de Gmail API: cuando envías un borrador manualmente desde Gmail, el endpoint
+// /drafts/{id} sigue devolviendo 200 durante un tiempo, pero con un messageId diferente del draftId.
+// Esto significa que el borrador ha sido enviado (convertido en un message) - interpretamos eso como
+// "no existe" (fue enviado).
+export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId: string): Promise<{ existe: boolean; status: number; messageId?: string; cuerpo?: string }> {
   const accessToken = await getValidAccessToken(bandId);
   const res = await fetchConTimeout(`${DRAFTS_ENDPOINT}/${encodeURIComponent(draftId)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
@@ -208,21 +213,23 @@ export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId
     const errBody = await res.text().catch(() => "");
     throw new EmailAgentError(`No se pudo comprobar el borrador '${draftId}' de '${bandId}': ${errBody || res.status}`, "api_error");
   }
-  // Diagnóstico temporal: capturar qué dice Google exactamente que existe (id del mensaje, para
-  // de quién y cuándo) cuando responde 200 pero la carpeta de Borradores está vacía a simple
-  // vista - para saber si es de verdad el mismo recurso o algo inesperado (cuenta equivocada,
-  // caché de token, lo que sea).
+
   let cuerpo: string | undefined;
+  let messageId: string | undefined;
   try {
     const data = await res.json();
+    messageId = data?.message?.id;
     const headers = data?.message?.payload?.headers as Array<{ name: string; value: string }> | undefined;
     const to = headers?.find((h) => h.name.toLowerCase() === "to")?.value;
     const subject = headers?.find((h) => h.name.toLowerCase() === "subject")?.value;
-    cuerpo = JSON.stringify({ draftId: data?.id, messageId: data?.message?.id, threadId: data?.message?.threadId, to, subject });
+    cuerpo = JSON.stringify({ draftId: data?.id, messageId, threadId: data?.message?.threadId, to, subject });
   } catch (e) {
     cuerpo = "no se pudo parsear el cuerpo de la respuesta";
   }
-  return { existe: true, status: res.status, cuerpo };
+
+  // Si tiene messageId diferente del draftId, significa que fue enviado (se convirtió en message)
+  const fueEnviado = messageId && messageId !== draftId;
+  return { existe: !fueEnviado, status: res.status, messageId, cuerpo };
 }
 
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene
