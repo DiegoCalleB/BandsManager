@@ -278,7 +278,8 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const cName = activeCampaign.name || "Campaña de Booking";
     const cDates = activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign.target_dates) ? activeCampaign.target_dates.join(', ') : 'próximas semanas/meses'));
     const cCities = Array.isArray(activeCampaign.targetCities) && activeCampaign.targetCities.length > 0 ? activeCampaign.targetCities.join(', ') : (Array.isArray(activeCampaign.target_cities) ? activeCampaign.target_cities.join(', ') : 'España');
-    const cTemplate = activeCampaign.custom_pitch_template || activeCampaign.customPitchTemplate || '';
+    const cTemplatesMap = activeCampaign.custom_pitch_templates || activeCampaign.customPitchTemplates || {};
+    const cTemplate = (cTemplatesMap && typeof cTemplatesMap === 'object' ? cTemplatesMap[categoryKey] : '') || '';
     const cNotes = activeCampaign.notes || '';
     const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
     const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
@@ -291,7 +292,7 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
 - Fechas de concierto deseadas: ${cDates}
 - Ciudades / Rutas objetivo: ${cCities}
 ${capInfo ? `- ${capInfo}` : ''}
-${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
+${cTemplate ? `- Mensaje clave / Plantilla de la campaña para "${categoryKey}": "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
 * DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
 `;

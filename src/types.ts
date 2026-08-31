@@ -16,6 +16,11 @@ export type LeadStatus =
   | 'aprobado_respuesta'
   | 'borrador_creado';
 
+// Mismas 7 categorías que server/promptsManager.ts (mapLeadTipoToTemplateCategory) y
+// src/components/booking/TemplateConfigSection.tsx usan para las plantillas generales por
+// tipo de lead — se reutilizan aquí para poder definir un mensaje de campaña por caso de uso.
+export type PitchTemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
+
 export interface BookingCampaign {
   id: string;
   band_id?: string;
@@ -26,7 +31,10 @@ export interface BookingCampaign {
   targetDates: string[]; // e.g., ['2026-12-04', '2026-12-05', '2027-04-11', '2027-04-12']
   targetDatesText?: string; // e.g., "4 o 5 de diciembre, o 11 y 12 de abril"
   notes?: string;
-  customPitchTemplate?: string; // Mensaje clave que el Redactor prioriza sobre la plantilla de categoría mientras la campaña esté activa
+  // Mensaje clave por caso de uso (salas/festivales/discotecas/...) que el Redactor prioriza
+  // sobre la plantilla general de esa categoría mientras la campaña esté activa. Las categorías
+  // sin entrada aquí siguen usando solo la plantilla general de su tipo.
+  customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
   isActive: boolean;
   color?: string; // Hex color for badge styling (e.g. '#8b5cf6', '#f59e0b', '#06b6d4')
   created_at?: string;

@@ -11,7 +11,7 @@ export interface DbCampaign {
   target_dates: string[];
   target_dates_text?: string;
   notes?: string;
-  custom_pitch_template?: string;
+  custom_pitch_templates?: Record<string, string>;
   is_active: boolean;
   color?: string;
   created_at?: string;
@@ -48,6 +48,19 @@ export function normalizeCampaignFromDb(c: any) {
     targetDates = c.targetDates;
   }
 
+  let customPitchTemplates: Record<string, string> = {};
+  const rawTemplates = c.custom_pitch_templates ?? c.customPitchTemplates;
+  if (rawTemplates && typeof rawTemplates === "object" && !Array.isArray(rawTemplates)) {
+    customPitchTemplates = rawTemplates;
+  } else if (typeof rawTemplates === "string" && rawTemplates) {
+    try {
+      const parsed = JSON.parse(rawTemplates);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) customPitchTemplates = parsed;
+    } catch {
+      // Ignora JSON malformado y se queda con el mapa vacío por defecto.
+    }
+  }
+
   return {
     id: String(c.id),
     band_id: c.band_id || c.bandId,
@@ -58,7 +71,7 @@ export function normalizeCampaignFromDb(c: any) {
     targetDates,
     targetDatesText: c.target_dates_text || c.targetDatesText || "",
     notes: c.notes || "",
-    customPitchTemplate: c.custom_pitch_template || c.customPitchTemplate || "",
+    customPitchTemplates,
     isActive: Boolean(c.is_active ?? c.isActive ?? false),
     color: c.color || "#8b5cf6",
     created_at: c.created_at || c.createdAt || new Date().toISOString()
@@ -117,7 +130,9 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     target_dates: Array.isArray(campaign.targetDates) ? campaign.targetDates : [],
     target_dates_text: campaign.targetDatesText || "",
     notes: campaign.notes || "",
-    custom_pitch_template: campaign.customPitchTemplate || "",
+    custom_pitch_templates: (campaign.customPitchTemplates && typeof campaign.customPitchTemplates === "object")
+      ? campaign.customPitchTemplates
+      : {},
     is_active: Boolean(campaign.isActive),
     color: campaign.color || "#8b5cf6"
   };
