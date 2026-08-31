@@ -171,16 +171,24 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
 // deja el lead marcado como enviado por error, corregible a mano). true = sigue como borrador,
 // false = desapareció (se interpreta como enviado).
 export async function comprobarBorradorEnviado(bandId: string, draftId: string): Promise<boolean> {
+  return (await comprobarBorradorEnviadoConDetalle(bandId, draftId)).existe;
+}
+
+// Misma comprobación, pero devolviendo también el status HTTP crudo que respondió Google - lo
+// que necesita comprobarBorradoresGmailEnviados (agentEngine.ts) para poder registrar, cuando el
+// borrador "sigue existiendo", si de verdad se comprobó (200) o si el chequeo en sí falló de un
+// modo que terminó interpretándose como "sigue existiendo" sin serlo.
+export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId: string): Promise<{ existe: boolean; status: number }> {
   const accessToken = await getValidAccessToken(bandId);
   const res = await fetchConTimeout(`${DRAFTS_ENDPOINT}/${encodeURIComponent(draftId)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
-  if (res.status === 404) return false;
+  if (res.status === 404) return { existe: false, status: 404 };
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
     throw new EmailAgentError(`No se pudo comprobar el borrador '${draftId}' de '${bandId}': ${errBody || res.status}`, "api_error");
   }
-  return true;
+  return { existe: true, status: res.status };
 }
 
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene

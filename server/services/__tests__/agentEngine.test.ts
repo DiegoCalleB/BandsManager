@@ -25,12 +25,12 @@ vi.mock('../emailAgentClient.js', () => ({
 const crearBorradorGmailApiMock = vi.fn();
 const tieneGmailOAuthConectadoMock = vi.fn();
 const enviarEmailGmailApiMock = vi.fn();
-const comprobarBorradorEnviadoMock = vi.fn();
+const comprobarBorradorEnviadoConDetalleMock = vi.fn();
 vi.mock('../gmailApiClient.js', () => ({
   crearBorradorGmailApi: (...args: any[]) => crearBorradorGmailApiMock(...args),
   tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args),
   enviarEmailGmailApi: (...args: any[]) => enviarEmailGmailApiMock(...args),
-  comprobarBorradorEnviado: (...args: any[]) => comprobarBorradorEnviadoMock(...args)
+  comprobarBorradorEnviadoConDetalle: (...args: any[]) => comprobarBorradorEnviadoConDetalleMock(...args)
 }));
 
 import { getSupabase } from '../../db.js';
@@ -179,7 +179,9 @@ describe('comprobarBorradoresGmailEnviados', () => {
       })
     } as any);
 
-    comprobarBorradorEnviadoMock.mockImplementation((_bandId: string, draftId: string) => Promise.resolve(draftId !== 'draft-1'));
+    comprobarBorradorEnviadoConDetalleMock.mockImplementation((_bandId: string, draftId: string) =>
+      Promise.resolve(draftId === 'draft-1' ? { existe: false, status: 404 } : { existe: true, status: 200 })
+    );
 
     const resultado = await comprobarBorradoresGmailEnviados('band-test');
 

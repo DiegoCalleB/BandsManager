@@ -8,7 +8,7 @@ import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
-import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviado, enviarEmailGmailApi } from "./gmailApiClient.js";
+import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, enviarEmailGmailApi } from "./gmailApiClient.js";
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 
@@ -277,6 +277,12 @@ export async function runEnviadorAgent(opts: {
 export interface ComprobarBorradoresResult {
   revisados: number;
   confirmadosEnviados: string[];
+  // Para cada lead cuyo borrador Google confirma que SIGUE existiendo (no se interpreta como
+  // enviado) - visibilidad de qué se comprobó y qué respondió Google, aunque la conclusión sea
+  // "no ha cambiado nada". Sin esto, un chequeo que sí se ejecuta bien pero encuentra el borrador
+  // todavía ahí es indistinguible en los logs de un chequeo que nunca llegó a hacerse.
+  todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number }>;
+  errores: Array<{ leadId: string; draftId: string; error: string }>;
 }
 
 // Cierra el hueco de los borradores creados vía Gmail OAuth (crearBorradorGmailApi): la banda
@@ -294,21 +300,28 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     .not("gmail_draft_id", "is", null);
 
   if (error) throw error;
-  if (!leads || leads.length === 0) return { revisados: 0, confirmadosEnviados: [] };
+  if (!leads || leads.length === 0) return { revisados: 0, confirmadosEnviados: [], todaviaComoBorrador: [], errores: [] };
 
   const confirmadosEnviados: string[] = [];
+  const todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number }> = [];
+  const errores: Array<{ leadId: string; draftId: string; error: string }> = [];
   const nowIso = new Date().toISOString();
 
   for (const lead of leads) {
-    let sigueComoBorrador: boolean;
+    let resultado: { existe: boolean; status: number };
     try {
-      sigueComoBorrador = await comprobarBorradorEnviado(bandId, lead.gmail_draft_id);
-    } catch (e) {
+      resultado = await comprobarBorradorEnviadoConDetalle(bandId, lead.gmail_draft_id);
+    } catch (e: any) {
       // Un fallo puntual comprobando (token caducado, red) no debe marcar nada como enviado por
-      // error - se reintenta en el siguiente tick.
+      // error - se reintenta en el siguiente tick. Pero SÍ queda registrado en el resultado, para
+      // no confundir "no se pudo comprobar" con "se comprobó y sigue existiendo".
+      errores.push({ leadId: lead.id, draftId: lead.gmail_draft_id, error: e?.message || String(e) });
       continue;
     }
-    if (sigueComoBorrador) continue;
+    if (resultado.existe) {
+      todaviaComoBorrador.push({ leadId: String(lead.id), draftId: lead.gmail_draft_id, status: resultado.status });
+      continue;
+    }
 
     const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
     const newNote = `*** [${dateTag}] Borrador de Gmail detectado como ENVIADO (ya no está en Borradores de Gmail) ***\n` + (lead.notas || "");
@@ -327,5 +340,5 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     confirmadosEnviados.push(String(lead.id));
   }
 
-  return { revisados: leads.length, confirmadosEnviados };
+  return { revisados: leads.length, confirmadosEnviados, todaviaComoBorrador, errores };
 }
