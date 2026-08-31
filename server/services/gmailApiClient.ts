@@ -13,6 +13,7 @@
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { dbGetBandGmailOAuth } from "../db/gmailOAuth.js";
 import { EmailAgentError, RespuestaEntrante } from "./emailAgentClient.js";
+import { classifyGmailError, isBounceMessage } from "../utils/emailDeliveryTracker.js";
 
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const DRAFTS_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
@@ -178,7 +179,14 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
 
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
-    throw new EmailAgentError(`No se pudo enviar el email por Gmail (API) para '${bandId}': ${errBody || res.status}`, "api_error");
+    const failureReason = classifyGmailError(errBody, res.status);
+    const error = new EmailAgentError(
+      `No se pudo enviar el email por Gmail (API) para '${bandId}': ${errBody || res.status}`,
+      "api_error"
+    );
+    // Adjuntar el tipo de fallo para que agentEngine pueda registrarlo
+    (error as any).deliveryFailureReason = failureReason;
+    throw error;
   }
 
   const data = await res.json();

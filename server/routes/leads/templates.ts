@@ -219,14 +219,15 @@ router.get("/templates/stats", requireAuth, async (req, res) => {
       positiveResponses: number;
       responseRate: number;
       invalidEmails: number;
+      bouncedEmails: number;
     }> = {
-      salas: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
-      festivales: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
-      discotecas: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
-      medios: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
-      grupos: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
-      managements: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
-      ayuntamientos: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 }
+      salas: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 },
+      festivales: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 },
+      discotecas: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 },
+      medios: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 },
+      grupos: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 },
+      managements: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 },
+      ayuntamientos: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0, bouncedEmails: 0 }
     };
 
     // Validar emails en paralelo (con caché para performance)
@@ -250,6 +251,13 @@ router.get("/templates/stats", requireAuth, async (req, res) => {
 
       const email = lead.email || lead.email_contacto;
       const isEmailValid = validLeadIds.has(lead.id);
+      const hasBouncedEmail = lead.notas?.includes('[Email Rechazado]');
+
+      // Si email rebotó o fue rechazado, excluir del cálculo pero contar
+      if (hasBouncedEmail) {
+        stats[cat].bouncedEmails++;
+        continue;
+      }
 
       // Si email es inválido, excluir del cálculo pero contar
       if (!isEmailValid) {

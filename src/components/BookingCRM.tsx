@@ -2304,10 +2304,20 @@ export default function BookingCRM({
          {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
        </span>
      </div>
-     {templateStats[templateTab].invalidEmails > 0 && (
-       <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
-         <span>⚠️</span>
-         <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
+     {(templateStats[templateTab].invalidEmails > 0 || templateStats[templateTab].bouncedEmails > 0) && (
+       <div className="space-y-1">
+         {templateStats[templateTab].invalidEmails > 0 && (
+           <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
+             <span>⚠️</span>
+             <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
+           </div>
+         )}
+         {templateStats[templateTab].bouncedEmails > 0 && (
+           <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-orange-100 text-orange-700' : 'bg-orange-950 text-orange-300'}`}>
+             <span>📬</span>
+             <span>{templateStats[templateTab].bouncedEmails} emails rebotados (usuario no existe)</span>
+           </div>
+         )}
        </div>
      )}
    </div>

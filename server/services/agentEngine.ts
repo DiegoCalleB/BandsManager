@@ -241,6 +241,19 @@ export async function runEnviadorAgent(opts: {
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: nextState, fecha_envio: nowIso, status: "enviado" });
     } catch (err: any) {
       const isIdentityIssue = err instanceof EmailAgentError && (err.code === "no_token" || err.code === "identity_mismatch");
+
+      // Registrar si el fallo fue por "usuario no existe" (invalid_recipient)
+      const failureReason = (err as any).deliveryFailureReason;
+      if (failureReason === 'invalid_recipient') {
+        const sb = getSupabase();
+        const leadNote = `[Email Rechazado] Usuario no existe en ${emailContacto} - no reintentar`;
+        try {
+          await sb.from("leads").update({ notas: leadNote }).eq("id", lead.id);
+        } catch (updateErr) {
+          // Ignorar error al actualizar notas
+        }
+      }
+
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: err.message || String(err) });
       // Si el problema es de identidad/token, es el mismo para toda la banda: no tiene
       // sentido reintentar con el resto de leads de este lote.
