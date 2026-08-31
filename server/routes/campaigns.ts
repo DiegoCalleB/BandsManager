@@ -29,7 +29,6 @@ router.post("/campaigns", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const campaignData = req.body;
-    console.log('🟢 POST /api/campaigns received req.body:', JSON.stringify({ customPitchTemplates: campaignData?.customPitchTemplates }, null, 2));
     if (!campaignData || !campaignData.name) {
       return res.status(400).json({ success: false, error: "Nombre de campaña requerido" });
     }

@@ -160,7 +160,6 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     color: campaign.color || "#8b5cf6"
   };
 
-  console.log('🟡 dbUpsertCampaign payload:', JSON.stringify({ id: payload.id, custom_pitch_templates: payload.custom_pitch_templates }, null, 2));
 
   try {
     // Try inserting into 'campaigns' table first
