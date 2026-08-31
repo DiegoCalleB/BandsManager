@@ -303,7 +303,7 @@ export function formatEmailWithSignatureAndDossier(params: {
     : '';
 
   const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true);
-  const dossierLabel = dossierPdfName ? `Dossier Oficial & Rider (${dossierPdfName})` : 'Dossier Oficial & Kit de Prensa';
+  const dossierLabel = 'Dossier Oficial & Kit de Prensa';
 
   // 3. Construct natural, organically integrated HTML email
   const html = `<!DOCTYPE html>
