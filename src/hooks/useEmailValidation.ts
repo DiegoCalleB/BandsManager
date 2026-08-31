@@ -38,3 +38,11 @@ export function getEmailStatus(leadId: string, email: string | null | undefined,
   if (!email) return 'empty';
   return emailValidities[leadId] === false ? 'invalid' : 'valid';
 }
+
+/**
+ * El Lector marca en las notas del lead los emails que rebotaron (NDR) tras el envío -
+ * el destinatario no existía, aunque el envío en sí no dio ningún error al mandarlo.
+ */
+export function isBouncedLead(notas: string | null | undefined): boolean {
+  return !!notas && notas.includes('[Email Rechazado]');
+}

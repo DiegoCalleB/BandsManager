@@ -8,7 +8,7 @@ import { isLeadVerificado } from '../../utils/leadReliability';
 import { MessageCircle, PhoneCall, CheckCircle2, Eye, Sparkles, Trash2, Camera, CheckSquare, Square, MinusSquare, AlertCircle } from 'lucide-react';
 import { ChangeLeadImageModal } from './ChangeLeadImageModal';
 import { LeadAvatar } from './LeadAvatar';
-import { useEmailValidation, getEmailStatus } from '../../hooks/useEmailValidation';
+import { useEmailValidation, getEmailStatus, isBouncedLead } from '../../hooks/useEmailValidation';
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -477,23 +477,32 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         <div className="flex items-center gap-2">
                           {lead.email_contacto ? (
                             <>
-                              <a
-                                href={`mailto:${lead.email_contacto}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className={`font-normal truncate max-w-[140px] inline-block ${
-                                  getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid'
-                                    ? 'text-red-400 hover:text-red-300 line-through'
-                                    : 'text-sky-400 hover:text-sky-300'
-                                }`}
-                                title={lead.email_contacto}
-                              >
-                                {lead.email_contacto}
-                              </a>
-                              {getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid' && (
-                                <div title="Email inválido - no se puede contactar">
-                                  <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
-                                </div>
-                              )}
+                              {(() => {
+                                const bounced = isBouncedLead(lead.notas);
+                                const invalid = getEmailStatus(lead.id, lead.email_contacto, emailValidities) === 'invalid';
+                                const broken = bounced || invalid;
+                                return (
+                                  <>
+                                    <a
+                                      href={`mailto:${lead.email_contacto}`}
+                                      onClick={(e) => e.stopPropagation()}
+                                      className={`font-normal truncate max-w-[140px] inline-block ${
+                                        broken
+                                          ? 'text-red-400 hover:text-red-300 line-through'
+                                          : 'text-sky-400 hover:text-sky-300'
+                                      }`}
+                                      title={lead.email_contacto}
+                                    >
+                                      {lead.email_contacto}
+                                    </a>
+                                    {broken && (
+                                      <div title={bounced ? 'Email rebotado - el destinatario no existe' : 'Email inválido - no se puede contactar'}>
+                                        <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+                                      </div>
+                                    )}
+                                  </>
+                                );
+                              })()}
                             </>
                           ) : (
                             <span className="text-zinc-600 italic text-[11px]">Sin email</span>
