@@ -288,7 +288,9 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const cName = activeCampaign.name || "Campaña de Booking";
     const cDates = activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign.target_dates) ? activeCampaign.target_dates.join(', ') : 'próximas semanas/meses'));
     const cCities = Array.isArray(activeCampaign.targetCities) && activeCampaign.targetCities.length > 0 ? activeCampaign.targetCities.join(', ') : (Array.isArray(activeCampaign.target_cities) ? activeCampaign.target_cities.join(', ') : 'España');
-    const cTemplate = activeCampaign.custom_pitch_template || activeCampaign.customPitchTemplate || '';
+    // Leer plantilla específica de la categoría del lead desde customPitchTemplates (objeto con claves por categoría)
+    const customTemplates = activeCampaign.customPitchTemplates || activeCampaign.custom_pitch_templates || {};
+    const cTemplate = customTemplates[categoryKey] || '';
     const cNotes = activeCampaign.notes || '';
     const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
     const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
