@@ -256,17 +256,50 @@ export function formatEmailWithSignatureAndDossier(params: {
     }
   };
 
+  // Solo incluir links de redes sociales que están efectivamente configurados (no vacíos/whitespace)
+  const buildSocialLink = (platform: string, configUrl?: string): { net: string; label: string; url: string; badgeUrl: string } | null => {
+    let url = '';
+
+    // Usar URL configurada si existe y no es vacía
+    if (configUrl && String(configUrl).trim()) {
+      url = String(configUrl).trim();
+    }
+    // Solo usar defaults de Bakandeya para Bakandeya misma
+    else if (isBakandeya) {
+      switch (platform) {
+        case 'instagram': url = 'https://instagram.com/bakandeyamusic'; break;
+        case 'facebook': url = 'https://facebook.com/bakandeyaband'; break;
+        case 'tiktok': url = 'https://tiktok.com/@bakandeya'; break;
+      }
+    }
+
+    if (!url) return null;
+
+    const map = socialIconsMap[platform as keyof typeof socialIconsMap];
+    return {
+      net: platform,
+      label: map?.label || platform,
+      url,
+      badgeUrl: map?.badgeUrl || ''
+    };
+  };
+
   const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string }> = [
-    { net: 'instagram', label: 'Instagram', url: enlaces.instagram || (isBakandeya ? 'https://instagram.com/bakandeyamusic' : ''), badgeUrl: socialIconsMap.instagram.badgeUrl },
-    { net: 'facebook', label: 'Facebook', url: enlaces.facebook || (isBakandeya ? 'https://facebook.com/bakandeyaband' : ''), badgeUrl: socialIconsMap.facebook.badgeUrl },
-    { net: 'tiktok', label: 'TikTok', url: enlaces.tiktok || (isBakandeya ? 'https://tiktok.com/@bakandeya' : ''), badgeUrl: socialIconsMap.tiktok.badgeUrl },
-    { net: 'spotify', label: 'Spotify', url: enlaces.spotify || '', badgeUrl: socialIconsMap.spotify.badgeUrl },
-    { net: 'youtube', label: 'YouTube', url: enlaces.youtube || '', badgeUrl: socialIconsMap.youtube.badgeUrl },
-    { net: 'appleMusic', label: 'Apple Music', url: enlaces.appleMusic || '', badgeUrl: socialIconsMap.appleMusic.badgeUrl },
-    { net: 'bandcamp', label: 'Bandcamp', url: enlaces.bandcamp || '', badgeUrl: socialIconsMap.bandcamp.badgeUrl },
-    { net: 'website', label: 'Web Oficial', url: enlaces.website || '', badgeUrl: socialIconsMap.website.badgeUrl },
-    { net: 'whatsapp', label: 'WhatsApp', url: (enlaces as any).whatsapp ? `https://wa.me/${String((enlaces as any).whatsapp).replace(/[^0-9]/g, '')}` : '', badgeUrl: socialIconsMap.whatsapp.badgeUrl }
-  ].filter(item => item.url && String(item.url).trim() !== '');
+    buildSocialLink('instagram', enlaces.instagram),
+    buildSocialLink('facebook', enlaces.facebook),
+    buildSocialLink('tiktok', enlaces.tiktok),
+    buildSocialLink('spotify', enlaces.spotify),
+    buildSocialLink('youtube', enlaces.youtube),
+    buildSocialLink('appleMusic', enlaces.appleMusic),
+    buildSocialLink('bandcamp', enlaces.bandcamp),
+    buildSocialLink('website', enlaces.website),
+    (enlaces as any).whatsapp ? {
+      net: 'whatsapp',
+      label: 'WhatsApp',
+      url: `https://wa.me/${String((enlaces as any).whatsapp).replace(/[^0-9]/g, '')}`,
+      badgeUrl: socialIconsMap.whatsapp.badgeUrl
+    } : null
+  ].filter((item): item is { net: string; label: string; url: string; badgeUrl: string } => !!item && !!item.url);
 
   const activeSocialLinksHtml = ((firma?.incluirIconosRedes ?? true) && socialLinksList.length > 0)
     ? `
