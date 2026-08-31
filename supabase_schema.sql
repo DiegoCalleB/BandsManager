@@ -596,6 +596,7 @@ CREATE TABLE IF NOT EXISTS campaigns (
   target_dates JSONB DEFAULT '[]'::jsonb,
   target_dates_text TEXT DEFAULT '',
   notes TEXT DEFAULT '',
+  custom_pitch_template TEXT DEFAULT '',
   is_active BOOLEAN DEFAULT false,
   color TEXT DEFAULT '#8b5cf6',
   created_at TIMESTAMPTZ DEFAULT NOW(),

@@ -35,6 +35,7 @@ export function CampaignManagerModal({
     maxCapacity: 500,
     targetDates: ['2026-12-04', '2026-12-05'],
     notes: '',
+    customPitchTemplate: '',
     color: '#8b5cf6',
     isActive: true
   });
@@ -51,6 +52,7 @@ export function CampaignManagerModal({
       maxCapacity: 500,
       targetDates: ['2026-12-04', '2026-12-05'],
       notes: 'Búsqueda de salas y fechas para la gira.',
+      customPitchTemplate: '',
       color: '#8b5cf6',
       isActive: true
     });
@@ -67,6 +69,7 @@ export function CampaignManagerModal({
       targetDates: [...(camp.targetDates || [])],
       targetDatesText: camp.targetDatesText || '',
       notes: camp.notes || '',
+      customPitchTemplate: camp.customPitchTemplate || '',
       color: camp.color || '#8b5cf6',
       isActive: camp.isActive
     });
@@ -94,6 +97,7 @@ export function CampaignManagerModal({
       targetDates: dates,
       targetDatesText: formattedDatesText,
       notes: formData.notes || '',
+      customPitchTemplate: formData.customPitchTemplate || '',
       color: formData.color || '#8b5cf6',
       isActive: formData.isActive ?? true
     });
@@ -349,6 +353,23 @@ export function CampaignManagerModal({
                 />
               </div>
 
+              {/* Campaign-specific pitch template */}
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
+                  Plantilla de Pitch de Campaña (opcional)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.customPitchTemplate || ''}
+                  onChange={e => setFormData({ ...formData, customPitchTemplate: e.target.value })}
+                  placeholder="Ej: Mensaje clave que el Redactor IA debe priorizar mientras esta campaña esté activa (usa {{nombre_sala}}, {{ciudad}}, etc. si quieres). Déjalo vacío para usar la plantilla del tipo de sala."
+                  className="w-full bg-[#181716] border border-neutral-700 rounded-xl px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
+                />
+                <p className="text-[11px] text-neutral-400 italic mt-1">
+                  💡 Mientras esta campaña esté activa, el Redactor IA usará este mensaje en lugar de la plantilla del tipo de sala. Si lo dejas vacío, se mantiene la plantilla habitual.
+                </p>
+              </div>
+
               {/* Action buttons */}
               <div className="flex justify-end gap-2 pt-3 border-t border-neutral-800">
                 <button
@@ -484,6 +505,12 @@ export function CampaignManagerModal({
                               <Calendar className="w-3.5 h-3.5 text-pink-400" />
                               {camp.targetDates?.length || 0} fechas ({camp.targetDatesText || 'Sin definir'})
                             </span>
+                            {camp.customPitchTemplate && (
+                              <span className="flex items-center gap-1 text-purple-300">
+                                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                                Plantilla propia
+                              </span>
+                            )}
                           </div>
 
                           {camp.notes && (
