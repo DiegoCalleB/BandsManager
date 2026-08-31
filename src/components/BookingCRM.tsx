@@ -2294,14 +2294,22 @@ export default function BookingCRM({
 
  {/* Success Stats Badge + Reset Button */}
  {templateStats && templateStats[templateTab] && (
-   <div className="flex flex-wrap gap-2 items-center pt-3 pb-2">
-     <span className="text-[9px] font-mono text-neutral-400">📊 Resultados:</span>
-     <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
-       {templateStats[templateTab].totalUses} usos
-     </span>
-     <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ? 'bg-green-100 text-green-700' : 'bg-green-950 text-green-300') : (isStitchLight ? 'bg-yellow-100 text-yellow-700' : 'bg-yellow-950 text-yellow-300')}`}>
-       {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
-     </span>
+   <div className="space-y-2 pt-3 pb-2">
+     <div className="flex flex-wrap gap-2 items-center">
+       <span className="text-[9px] font-mono text-neutral-400">📊 Resultados:</span>
+       <span className={`text-[9px] font-mono px-2 py-1 rounded ${isStitchLight ? 'bg-blue-100 text-blue-700' : 'bg-blue-950 text-blue-300'}`}>
+         {templateStats[templateTab].totalUses} usos
+       </span>
+       <span className={`text-[9px] font-mono px-2 py-1 rounded ${templateStats[templateTab].responseRate >= 40 ? (isStitchLight ? 'bg-green-100 text-green-700' : 'bg-green-950 text-green-300') : (isStitchLight ? 'bg-yellow-100 text-yellow-700' : 'bg-yellow-950 text-yellow-300')}`}>
+         {templateStats[templateTab].positiveResponses}/{templateStats[templateTab].totalUses} respuestas ({templateStats[templateTab].responseRate}%)
+       </span>
+     </div>
+     {templateStats[templateTab].invalidEmails > 0 && (
+       <div className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${isStitchLight ? 'bg-red-100 text-red-700' : 'bg-red-950 text-red-300'}`}>
+         <span>⚠️</span>
+         <span>{templateStats[templateTab].invalidEmails} emails inválidos (excluidos del cálculo)</span>
+       </div>
+     )}
    </div>
  )}
 

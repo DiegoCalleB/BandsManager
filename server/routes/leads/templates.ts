@@ -11,6 +11,7 @@ import {
 } from "../../utils/templateOptimizer.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt } from "../../utils/bandDna.js";
 import { generateUnifiedAI } from "../../ai.js";
+import { isValidEmailSyntax, isValidEmailCached } from "../../utils/emailValidator.js";
 
 const router = express.Router();
 
@@ -206,32 +207,67 @@ ${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"
 });
 
 // Estadísticas de éxito: cuántos leads usaron cada template y cuántos respondieron
+// NOTA: Excluye leads con email inválido para que las métricas sean justas
 router.get("/templates/stats", requireAuth, async (req, res) => {
   try {
     const state = await loadState();
     const bandId = getTargetBandId(req);
     const leads = state.leads?.filter((l: any) => l.band_id === bandId) || [];
 
-    const stats: Record<string, { totalUses: number; positiveResponses: number; responseRate: number }> = {
-      salas: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
-      festivales: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
-      discotecas: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
-      medios: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
-      grupos: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
-      managements: { totalUses: 0, positiveResponses: 0, responseRate: 0 },
-      ayuntamientos: { totalUses: 0, positiveResponses: 0, responseRate: 0 }
+    const stats: Record<string, {
+      totalUses: number;
+      positiveResponses: number;
+      responseRate: number;
+      invalidEmails: number;
+    }> = {
+      salas: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
+      festivales: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
+      discotecas: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
+      medios: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
+      grupos: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
+      managements: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 },
+      ayuntamientos: { totalUses: 0, positiveResponses: 0, responseRate: 0, invalidEmails: 0 }
     };
+
+    // Validar emails en paralelo (con caché para performance)
+    const emailValidities = await Promise.all(
+      leads.map(async (lead: any) => ({
+        leadId: lead.id,
+        email: lead.email || lead.email_contacto,
+        isValid: isValidEmailSyntax(lead.email || lead.email_contacto)
+          ? await isValidEmailCached(lead.email || lead.email_contacto)
+          : false
+      }))
+    );
+
+    const validLeadIds = new Set(
+      emailValidities.filter(ev => ev.isValid).map(ev => ev.leadId)
+    );
 
     for (const lead of leads) {
       const cat = lead.template_category || 'salas';
       if (!stats[cat]) continue;
 
-      // Contar uso (si tiene historial de pitches generados)
-      if (lead.ultimo_pitch_generado) stats[cat].totalUses++;
+      const email = lead.email || lead.email_contacto;
+      const isEmailValid = validLeadIds.has(lead.id);
 
-      // Contar respuesta positiva (respondido, negociando, confirmado)
-      const isPositive = ['respondido', 'negociando', 'confirmado', 'concierto_programado'].includes(lead.estado);
-      if (isPositive) stats[cat].positiveResponses++;
+      // Si email es inválido, excluir del cálculo pero contar
+      if (!isEmailValid) {
+        if (isValidEmailSyntax(email)) {
+          // Sintaxis válida pero dominio no existe
+          stats[cat].invalidEmails++;
+        }
+        continue;
+      }
+
+      // Contar uso solo si tiene pitch generado (y email válido)
+      if (lead.ultimo_pitch_generado) {
+        stats[cat].totalUses++;
+
+        // Contar respuesta positiva (respondido, negociando, confirmado)
+        const isPositive = ['respondido', 'negociando', 'confirmado', 'concierto_programado'].includes(lead.estado);
+        if (isPositive) stats[cat].positiveResponses++;
+      }
     }
 
     // Calcular tasas

@@ -125,7 +125,7 @@ Cordialmente,
   const [templateContentRating, setTemplateContentRating] = useState<number>(0);
 
   // Estadísticas de éxito por categoría
-  const [templateStats, setTemplateStats] = useState<Record<string, { totalUses: number; positiveResponses: number; responseRate: number }>>({});
+  const [templateStats, setTemplateStats] = useState<Record<string, { totalUses: number; positiveResponses: number; responseRate: number; invalidEmails: number }>>({});
 
  const handleOptimizeTemplate = async () => {
    setIsOptimizingTemplate(true);
