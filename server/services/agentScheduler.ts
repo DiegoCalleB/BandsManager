@@ -107,6 +107,13 @@ async function tick() {
       // horas_lector/dias_lector (band_schedules) ya no lo limitan.
       await runLectorTick(bandId);
     }
+
+    // Señal de vida mínima: hoy costó más de dos horas darse cuenta de que el scheduler estaba
+    // parado porque ni un solo tick sano deja rastro (el Lector solo audita cuando encuentra algo
+    // que contar, y el Enviador solo dentro de su ventana horaria) - sin esto, "todo en silencio"
+    // es indistinguible de "todo funcionando perfectamente" hasta que alguien nota que un lead
+    // concreto no se actualiza.
+    console.log(`[AgentScheduler] Tick ${new Date().toISOString()} - ${activeBands.length} banda(s) activa(s) revisada(s).`);
   } finally {
     tickEnCurso = false;
   }
@@ -149,6 +156,7 @@ async function runLectorTick(bandId: string): Promise<void> {
 
 export function startAgentScheduler(): void {
   if (schedulerHandle) return;
+  console.log("[AgentScheduler] Iniciado - tick cada 60s.");
   tick().catch((e) => console.error("[AgentScheduler] Error en el primer tick:", e));
   schedulerHandle = setInterval(() => {
     tick().catch((e) => console.error("[AgentScheduler] Error en tick:", e));
