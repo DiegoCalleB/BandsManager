@@ -1,6 +1,6 @@
 import express from "express";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeadById, dbUpsertLead } from "../../db.js";
+import { dbGetLeadById, dbUpsertLead, dbGetCategoryTemplates } from "../../db.js";
 import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkConfig } from "../../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
@@ -30,6 +30,14 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
     }
     if (!lead) {
       return res.status(404).json({ success: false, error: "Sala no encontrada." });
+    }
+
+    // Cargar plantillas de categoría desde DB para que getBandDnaProfile tenga acceso
+    try {
+      const categoryTemplates = await dbGetCategoryTemplates(userBandId);
+      state.categoryTemplates = categoryTemplates;
+    } catch (err) {
+      console.warn("No se pudieron cargar las plantillas de categoría:", err);
     }
 
     const bandDna = getBandDnaProfile(state, userBandId, lead);
@@ -106,6 +114,14 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     }
     if (!lead) {
       return res.status(404).json({ success: false, error: "Sala no encontrada." });
+    }
+
+    // Cargar plantillas de categoría desde DB para que getBandDnaProfile tenga acceso
+    try {
+      const categoryTemplates = await dbGetCategoryTemplates(userBandId);
+      state.categoryTemplates = categoryTemplates;
+    } catch (err) {
+      console.warn("No se pudieron cargar las plantillas de categoría:", err);
     }
 
     const bandDna = getBandDnaProfile(state, userBandId, lead);
