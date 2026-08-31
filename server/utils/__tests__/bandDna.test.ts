@@ -181,6 +181,25 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     expect(prompt).toContain('NUNCA la copies literal');
   });
 
+  it('incluye el asunto de la plantilla de categoría como patrón para el email', () => {
+    const state = {
+      registeredBands: [{ band_id: 'banda-test' }],
+      categoryTemplates: {
+        salas: {
+          title: 'Salas y Teatros',
+          guidelines: 'Tono festivo y bailable.',
+          subject: 'Somos {{nombre_banda}}: directo para {{nombre_sala}}',
+          body: 'Hola equipo de {{nombre_sala}}, somos {{nombre_banda}}.',
+        },
+      },
+    };
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    expect(dna.categoryTemplateSubject).toBe('Somos {{nombre_banda}}: directo para {{nombre_sala}}');
+
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+    expect(prompt).toContain('Estructura recomendada para el Asunto del email');
+    expect(prompt).toContain('Somos {{nombre_banda}}: directo para {{nombre_sala}}');
+  });
   it('sigue incluyendo el bloque de campaña activa junto con el ADN de voz', () => {
     const state = stateConBanda({ recomendacion_pitch: 'Ir directo al grano' });
     const dna = getBandDnaProfile(state, 'banda-test');
