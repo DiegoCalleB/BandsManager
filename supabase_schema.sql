@@ -597,6 +597,7 @@ CREATE TABLE IF NOT EXISTS campaigns (
   target_dates_text TEXT DEFAULT '',
   notes TEXT DEFAULT '',
   custom_pitch_templates JSONB DEFAULT '{}'::jsonb, -- { "salas": "...", "festivales": "...", ... } por caso de uso
+  campaign_tone_rules JSONB DEFAULT NULL, -- { "reglas_estilo_aprendidas": [...], "vocabulario_aprendido": [...], "terminos_a_evitar": [...], "actualizado": "..." }
   is_active BOOLEAN DEFAULT false,
   color TEXT DEFAULT '#8b5cf6',
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -605,6 +606,26 @@ CREATE TABLE IF NOT EXISTS campaigns (
 CREATE INDEX IF NOT EXISTS idx_campaigns_band_active ON campaigns(band_id, is_active);
 ALTER TABLE campaigns ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON campaigns FOR ALL USING (true);
+
+-- 22b. campaign_pitch_training (Registro de entrenamiento de tono específico por campaña)
+CREATE TABLE IF NOT EXISTS campaign_pitch_training (
+    id TEXT PRIMARY KEY,
+    band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+    campaign_id TEXT NOT NULL REFERENCES campaigns(id) ON DELETE CASCADE,
+    borrador_ia TEXT NOT NULL,
+    texto_aprobado TEXT NOT NULL,
+    tuvo_edicion BOOLEAN DEFAULT FALSE,
+    diferencia_longitud INTEGER,
+    tipo_accion TEXT DEFAULT 'entrenamiento_campaña',
+    fecha_aprobacion TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_campaign_pitch_training_band_campaign
+    ON campaign_pitch_training(band_id, campaign_id);
+CREATE INDEX IF NOT EXISTS idx_campaign_pitch_training_campaign
+    ON campaign_pitch_training(campaign_id);
+ALTER TABLE campaign_pitch_training ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON campaign_pitch_training FOR ALL USING (true);
 
 -- 23. deleted_leads (Lista negra de salas/leads descartados)
 CREATE TABLE IF NOT EXISTS deleted_leads (
