@@ -36,8 +36,9 @@ export interface LectorAgentResult {
   // Diagnóstico de comprobarBorradoresGmailEnviados: qué borradores Google confirma que siguen
   // existiendo (con el status HTTP crudo) y qué comprobaciones fallaron - visibilidad necesaria
   // para no confundir "se comprobó y de verdad sigue ahí" con "el chequeo nunca llegó a hacerse".
-  borradoresTodaviaSinEnviar: Array<{ leadId: string; draftId: string; status: number }>;
+  borradoresTodaviaSinEnviar: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }>;
   erroresComprobandoBorradores: Array<{ leadId: string; draftId: string; error: string }>;
+  cuentaGmailReal: string | null;
 }
 
 export async function runLectorAgent(bandId: string): Promise<LectorAgentResult> {
@@ -55,8 +56,9 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   // falla por falta de ese scope nuevo, la detección de borradores enviados no debe quedarse sin
   // ejecutarse por eso - son dos permisos y dos llamadas independientes.
   let borradoresEnviadosDetectados = 0;
-  let borradoresTodaviaSinEnviar: Array<{ leadId: string; draftId: string; status: number }> = [];
+  let borradoresTodaviaSinEnviar: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }> = [];
   let erroresComprobandoBorradores: Array<{ leadId: string; draftId: string; error: string }> = [];
+  let cuentaGmailReal: string | null = null;
   if (usarGmailOAuth) {
     try {
       const resultado = await comprobarBorradoresGmailEnviados(bandId);
@@ -64,6 +66,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       borradoresEnviadosDetectados = resultado.confirmadosEnviados.length;
       borradoresTodaviaSinEnviar = resultado.todaviaComoBorrador;
       erroresComprobandoBorradores = resultado.errores;
+      cuentaGmailReal = resultado.cuentaGmailReal;
     } catch (e) {
       console.warn(`[Lector] No se pudieron comprobar los borradores de Gmail de ${bandId}:`, e);
     }
@@ -72,7 +75,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
 
   if (mensajes.length === 0) {
-    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores };
+    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal };
   }
 
   const leads = await dbGetLeads(bandId);
@@ -137,5 +140,5 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     });
   }
 
-  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores };
+  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal };
 }

@@ -8,7 +8,7 @@ import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { BAKANDEYA_BAND_ID } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
-import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, enviarEmailGmailApi } from "./gmailApiClient.js";
+import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 
@@ -281,8 +281,12 @@ export interface ComprobarBorradoresResult {
   // enviado) - visibilidad de qué se comprobó y qué respondió Google, aunque la conclusión sea
   // "no ha cambiado nada". Sin esto, un chequeo que sí se ejecuta bien pero encuentra el borrador
   // todavía ahí es indistinguible en los logs de un chequeo que nunca llegó a hacerse.
-  todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number }>;
+  todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }>;
   errores: Array<{ leadId: string; draftId: string; error: string }>;
+  // A qué cuenta de Gmail pertenece de verdad el access token usado en esta comprobación (ver
+  // obtenerEmailDeLaCuentaConectada) - para descartar que se esté consultando una cuenta distinta
+  // a la que la banda cree tener conectada.
+  cuentaGmailReal: string | null;
 }
 
 // Cierra el hueco de los borradores creados vía Gmail OAuth (crearBorradorGmailApi): la banda
@@ -292,6 +296,7 @@ export interface ComprobarBorradoresResult {
 // comprobar el estado real de la bandeja de la banda - y ya corre en el mismo tick programado.
 export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<ComprobarBorradoresResult> {
   const sb = getSupabase();
+  const cuentaGmailReal = await obtenerEmailDeLaCuentaConectada(bandId);
   const { data: leads, error } = await sb
     .from("leads")
     .select("id, nombre_sala, notas, gmail_draft_id")
@@ -300,15 +305,15 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     .not("gmail_draft_id", "is", null);
 
   if (error) throw error;
-  if (!leads || leads.length === 0) return { revisados: 0, confirmadosEnviados: [], todaviaComoBorrador: [], errores: [] };
+  if (!leads || leads.length === 0) return { revisados: 0, confirmadosEnviados: [], todaviaComoBorrador: [], errores: [], cuentaGmailReal };
 
   const confirmadosEnviados: string[] = [];
-  const todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number }> = [];
+  const todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }> = [];
   const errores: Array<{ leadId: string; draftId: string; error: string }> = [];
   const nowIso = new Date().toISOString();
 
   for (const lead of leads) {
-    let resultado: { existe: boolean; status: number };
+    let resultado: { existe: boolean; status: number; cuerpo?: string };
     try {
       resultado = await comprobarBorradorEnviadoConDetalle(bandId, lead.gmail_draft_id);
     } catch (e: any) {
@@ -319,7 +324,7 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
       continue;
     }
     if (resultado.existe) {
-      todaviaComoBorrador.push({ leadId: String(lead.id), draftId: lead.gmail_draft_id, status: resultado.status });
+      todaviaComoBorrador.push({ leadId: String(lead.id), draftId: lead.gmail_draft_id, status: resultado.status, cuerpo: resultado.cuerpo });
       continue;
     }
 
@@ -340,5 +345,5 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     confirmadosEnviados.push(String(lead.id));
   }
 
-  return { revisados: leads.length, confirmadosEnviados, todaviaComoBorrador, errores };
+  return { revisados: leads.length, confirmadosEnviados, todaviaComoBorrador, errores, cuentaGmailReal };
 }
