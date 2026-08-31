@@ -294,6 +294,17 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
     const capInfo = cMax > 0 ? `Aforo objetivo de sala para esta campaña: ${cMin}-${cMax} personas.` : '';
 
+    const campaignToneRules = activeCampaign.campaignToneRules || activeCampaign.campaign_tone_rules;
+    let campaignToneSection = "";
+    if (campaignToneRules?.reglas_estilo_aprendidas && campaignToneRules.reglas_estilo_aprendidas.length > 0) {
+      campaignToneSection = `
+🎨 REGLAS DE TONO APRENDIDAS ESPECÍFICAMENTE PARA ESTA CAMPAÑA:
+${campaignToneRules.reglas_estilo_aprendidas.map((r: string) => `   - ⭐ ${r}`).join("\n")}
+${campaignToneRules.vocabulario_aprendido && campaignToneRules.vocabulario_aprendido.length > 0 ? `   - Vocabulario clave para esta campaña: ${campaignToneRules.vocabulario_aprendido.join(", ")}` : ""}
+${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.length > 0 ? `   - Expresiones prohibidas en esta campaña: ${campaignToneRules.terminos_a_evitar.join(", ")}` : ""}
+`;
+    }
+
     campaignSection = `
 ═════════════════════════════════════════════════════════════════════
 🎯 CAMPAÑA DE BOOKING ACTIVA: "${cName}" (PRIORIDAD MÁXIMA DE AGENDA)
@@ -303,6 +314,7 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
 ${capInfo ? `- ${capInfo}` : ''}
 ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
+${campaignToneSection}
 * DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
 `;
   }

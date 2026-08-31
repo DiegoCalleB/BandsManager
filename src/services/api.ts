@@ -774,6 +774,25 @@ export const api = {
     return request('/api/leads/train-tone-dna', {
       method: 'POST'
     });
+  },
+
+  // Record campaign-specific pitch training for tone/content refinement
+  async recordCampaignTraining(
+    campaignId: string,
+    borrador_ia: string,
+    texto_aprobado: string
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
+    return request(`/api/campaigns/${campaignId}/record-training`, {
+      method: 'POST',
+      body: JSON.stringify({ borrador_ia, texto_aprobado })
+    });
+  },
+
+  // Force immediate campaign tone DNA training if enough examples exist
+  async trainCampaignToneDna(campaignId: string): Promise<{ success: boolean; campaign?: BookingCampaign; message?: string; error?: string }> {
+    return request(`/api/campaigns/${campaignId}/train-tone-dna`, {
+      method: 'POST'
+    });
   }
 };
 

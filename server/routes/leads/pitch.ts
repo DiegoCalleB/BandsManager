@@ -1,6 +1,6 @@
 import express from "express";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeadById, dbUpsertLead, dbGetCategoryTemplates } from "../../db.js";
+import { dbGetLeadById, dbUpsertLead, dbGetCategoryTemplates, dbRecordCampaignPitchTraining } from "../../db.js";
 import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkConfig } from "../../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
@@ -236,6 +236,16 @@ INSTRUCCIONES CLAVE:
       tipo_accion: "regenerado_con_feedback",
       resultado_respuesta: "pendiente"
     }).catch(err => console.warn("Notice dbRecordPitchHumanEdit on regenerate:", err));
+
+    // Campaign-specific training: if there's an active campaign and feedback for it, record campaign training
+    if (isCampaignActive(activeCampaign) && (tono_rating || contenido_rating || comentario)) {
+      dbRecordCampaignPitchTraining({
+        band_id: userBandId,
+        campaign_id: activeCampaign.id,
+        borrador_ia: previousPitch,
+        texto_aprobado: newPitchText
+      }).catch(err => console.warn("Notice dbRecordCampaignPitchTraining on regenerate:", err));
+    }
 
     // Update lead's pitch
     lead.pitch_generado = newPitchText;

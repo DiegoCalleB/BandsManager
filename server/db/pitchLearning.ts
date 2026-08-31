@@ -422,3 +422,188 @@ export async function refineAllToneDnaCategoriesForBand(bandId: string): Promise
     return refinedCategories;
   }
 }
+
+/**
+ * Registra entrenamiento de tono/contenido específico para una campaña activa.
+ * Similar a dbRecordPitchHumanEdit pero scoped a una campaña en lugar de un lead.
+ */
+export interface CampaignPitchTrainingRecord {
+  id: string;
+  band_id: string;
+  campaign_id: string;
+  borrador_ia: string;
+  texto_aprobado: string;
+  tuvo_edicion: boolean;
+  diferencia_longitud?: number;
+  tipo_accion: "entrenamiento_campaña";
+  fecha_aprobacion: string;
+}
+
+export async function dbRecordCampaignPitchTraining(record: {
+  band_id: string;
+  campaign_id: string;
+  borrador_ia: string;
+  texto_aprobado: string;
+}): Promise<boolean> {
+  const cleanId = cleanBandId(record.band_id);
+  const borrador = (record.borrador_ia || "").trim();
+  const aprobado = (record.texto_aprobado || "").trim();
+  const tuvoEdicion = borrador.length > 0 && borrador !== aprobado;
+
+  const payload: CampaignPitchTrainingRecord = {
+    id: `campaign-train-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    band_id: cleanId,
+    campaign_id: record.campaign_id,
+    borrador_ia: borrador,
+    texto_aprobado: aprobado,
+    tuvo_edicion: tuvoEdicion,
+    diferencia_longitud: aprobado.length - borrador.length,
+    tipo_accion: "entrenamiento_campaña",
+    fecha_aprobacion: new Date().toISOString()
+  };
+
+  try {
+    const sb = getSupabase();
+    const { error } = await sb.from("campaign_pitch_training").insert(payload);
+    if (error) {
+      console.warn("Notice: campaign_pitch_training table insert skipped/error:", error.message);
+      return false;
+    }
+
+    // Disparar en segundo plano el refinamiento automático de ADN de campaña
+    triggerCampaignToneRefinement(cleanId, record.campaign_id).catch(err => {
+      console.warn("Background campaign tone refinement notice:", err);
+    });
+
+    return true;
+  } catch (err: any) {
+    console.warn("Error recording campaign pitch training:", err?.message || err);
+    return false;
+  }
+}
+
+/**
+ * Obtiene ediciones recientes para una campaña específica.
+ */
+async function fetchCampaignTrainingExamples(cleanId: string, campaignId: string): Promise<PitchEditRow[]> {
+  const sb = getSupabase();
+  const { data } = await sb
+    .from("campaign_pitch_training")
+    .select("borrador_ia, texto_aprobado, texto_aprobado as nombre_sala, texto_aprobado as tipo_entidad")
+    .eq("band_id", cleanId)
+    .eq("campaign_id", campaignId)
+    .eq("tuvo_edicion", true)
+    .order("fecha_aprobacion", { ascending: false })
+    .limit(20);
+
+  return (data || []).map((row: any) => ({
+    borrador_ia: row.borrador_ia,
+    texto_aprobado: row.texto_aprobado,
+    nombre_sala: "Campaña",
+    tipo_entidad: "campaña"
+  }));
+}
+
+/**
+ * Refina el ADN de tono de una campaña específica basándose en ediciones acumuladas.
+ * Requiere al menos 2 ediciones para inferir patrones.
+ */
+async function refineCampaignToneDna(cleanId: string, campaignId: string, edits: PitchEditRow[]): Promise<void> {
+  if (edits.length < 2) return;
+
+  const sb = getSupabase();
+  const { data: campaignData } = await sb
+    .from("campaigns")
+    .select("campaign_tone_rules")
+    .eq("id", campaignId)
+    .eq("band_id", cleanId)
+    .single();
+
+  const currentRules = campaignData?.campaign_tone_rules || {};
+
+  const diffsText = edits.slice(0, 8).map((e, idx) => `
+Caso ${idx + 1}:
+- Borrador IA rechazado: "${e.borrador_ia}"
+- Versión final escrita por el mánager: "${e.texto_aprobado}"
+`).join("\n");
+
+  const prompt = `Actúa como un experto en comunicación de bandas de música independiente dentro de una campaña de booking específica.
+Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos de pitch:
+
+${diffsText}
+
+Extrae de forma ultra-concisa las 3 a 5 REGLAS DE ORO O PREFERENCIAS DE ESTILO que el mánager aplica sistemáticamente PARA ESTA CAMPAÑA ESPECÍFICA.
+
+Devuelve un JSON con este formato exacto:
+{
+  "reglas_aprendidas": ["Regla 1...", "Regla 2...", "Regla 3..."],
+  "palabras_favoritas": ["palabra1", "palabra2"],
+  "palabras_prohibidas": ["palabra1", "palabra2"]
+}`;
+
+  const response = await generateUnifiedAI({ prompt, temperature: 0.2 });
+
+  const jsonMatch = (response.text || "").match(/\{[\s\S]*\}/);
+  const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+  if (parsed.reglas_aprendidas && Array.isArray(parsed.reglas_aprendidas)) {
+    const updatedRules = {
+      reglas_estilo_aprendidas: parsed.reglas_aprendidas,
+      vocabulario_aprendido: parsed.palabras_favoritas || currentRules.vocabulario_aprendido || [],
+      terminos_a_evitar: parsed.palabras_prohibidas || currentRules.terminos_a_evitar || [],
+      actualizado: new Date().toISOString()
+    };
+
+    const { error } = await sb
+      .from("campaigns")
+      .update({ campaign_tone_rules: updatedRules })
+      .eq("id", campaignId)
+      .eq("band_id", cleanId);
+
+    if (!error) {
+      console.log(`[Campaign Tone DNA] Actualizadas ${parsed.reglas_aprendidas.length} reglas de estilo para campaña ${campaignId}`);
+    }
+  }
+}
+
+/**
+ * Dispara el refinamiento automático del ADN de tono de una campaña específica.
+ */
+export async function triggerCampaignToneRefinement(bandId: string, campaignId: string): Promise<void> {
+  const cleanId = cleanBandId(bandId);
+  try {
+    const edits = await fetchCampaignTrainingExamples(cleanId, campaignId);
+    if (edits.length >= 2) {
+      await refineCampaignToneDna(cleanId, campaignId, edits);
+    }
+  } catch (err: any) {
+    console.warn("Notice during triggerCampaignToneRefinement:", err?.message || err);
+  }
+}
+
+/**
+ * Fuerza el entrenamiento manual inmediato del ADN de tono para una campaña activa.
+ * Dispara el análisis de IA si hay al menos 2 ediciones acumuladas.
+ */
+export async function trainCampaignToneDnaManually(bandId: string, campaignId: string): Promise<{ success: boolean; message: string }> {
+  const cleanId = cleanBandId(bandId);
+  try {
+    const edits = await fetchCampaignTrainingExamples(cleanId, campaignId);
+    if (edits.length < 2) {
+      return {
+        success: false,
+        message: `Se necesitan al menos 2 correcciones para entrenar el ADN de tono de la campaña. Actualmente hay ${edits.length}.`
+      };
+    }
+
+    await refineCampaignToneDna(cleanId, campaignId, edits);
+    return {
+      success: true,
+      message: `ADN de tono de la campaña entrenado exitosamente con ${edits.length} ejemplos.`
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      message: `Error al entrenar ADN de tono: ${err?.message || err}`
+    };
+  }
+}
