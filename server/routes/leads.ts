@@ -8,6 +8,7 @@ import placesRouter from "./leads/places.js";
 import importRouter from "./leads/import.js";
 import exampleThreadsRouter from "./leads/exampleThreads.js";
 import replyRouter from "./leads/reply.js";
+import emailValidationRouter from "./leads/emailValidation.js";
 
 export * from "./leads/feedback.js";
 
@@ -22,5 +23,6 @@ router.use(placesRouter);
 router.use(importRouter);
 router.use(exampleThreadsRouter);
 router.use(replyRouter);
+router.use(emailValidationRouter);
 
 export default router;
