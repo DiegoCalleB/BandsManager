@@ -2075,7 +2075,7 @@ export default function BookingCRM({
  </p>
  </div>
 
- {/* Template Tab Selector (6 Categories) */}
+ {/* Template Tab Selector (7 Categories) */}
  <div className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
  isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
  }`}>
@@ -2085,7 +2085,8 @@ export default function BookingCRM({
  { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
  { id: 'medios', label: '📻 Medios', icon: Radio },
  { id: 'grupos', label: '🎸 Grupos', icon: Users },
- { id: 'managements', label: '💼 Managements', icon: Briefcase }
+ { id: 'managements', label: '💼 Managements', icon: Briefcase },
+ { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
  ].map((tab) => {
  const isActive = templateTab === tab.id;
  const IconComp = tab.icon;
@@ -2125,6 +2126,8 @@ export default function BookingCRM({
  ? isStitchLight ? (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]') : 'bg-[#10b981]/15/30 text-[#10b981]'
  : templateTab === 'discotecas'
  ? isStitchLight ? 'bg-purple-50 text-purple-900' : 'bg-purple-500/10 text-purple-300'
+ : templateTab === 'ayuntamientos'
+ ? isStitchLight ? 'bg-amber-50 text-amber-900' : 'bg-amber-500/10 text-amber-300'
  : isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400'
  }`}>
  <div>

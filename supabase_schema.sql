@@ -712,7 +712,7 @@ CREATE POLICY "Permitir acceso total al backend" ON agent_execution_logs FOR ALL
 CREATE TABLE IF NOT EXISTS category_pitch_templates (
   id TEXT PRIMARY KEY,
   band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
-  category TEXT NOT NULL, -- 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements'
+  category TEXT NOT NULL, -- 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos'
   title TEXT DEFAULT '',
   subject TEXT DEFAULT '',
   body TEXT DEFAULT '',
@@ -779,7 +779,7 @@ CREATE POLICY "Permitir acceso total al backend" ON agent_schedule_state FOR ALL
 CREATE TABLE IF NOT EXISTS pitch_example_threads (
   id TEXT PRIMARY KEY,
   band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
-  category TEXT NOT NULL, -- 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements'
+  category TEXT NOT NULL, -- 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos'
   titulo TEXT DEFAULT '',
   mensajes JSONB NOT NULL DEFAULT '[]'::jsonb, -- [{rol: 'banda'|'sala', texto, orden}]
   resultado TEXT DEFAULT 'positiva', -- 'positiva' | 'negativa' | 'neutral'

@@ -10,7 +10,8 @@ export const CATEGORY_LABELS: Record<string, string> = {
   discotecas: "Discotecas y Clubbing Nocturno",
   medios: "Medios de Comunicación, Radio y Prensa",
   grupos: "Grupos y Bandas para Intercambio de Fechas (Co-Booking / Date Swap)",
-  managements: "Agencias de Booking y Management"
+  managements: "Agencias de Booking y Management",
+  ayuntamientos: "Ayuntamientos y Fiestas Patronales"
 };
 
 /** A partir de cuántas valoraciones sin optimizar desde la última vez, se auto-dispara la regeneración. */

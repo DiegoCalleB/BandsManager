@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements';
+export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 export function useEmailTemplates() {
  // Template states for Salas
@@ -97,6 +97,22 @@ Estaríamos encantados de agendar una breve reunión telefónica para valorar po
 Atentamente,
 {bandName} Agent Manager IA`);
  const [aiGuidelinesManagement, setAiGuidelinesManagement] = useState('Tono ejecutivo-musical profesional para mánagers, agencias y agentes de booking. Destaca la profesionalidad técnica, el atractivo comercial, la sencillez logística del cuarteto y los datos positivos de aforo.');
+
+ // Template states for Ayuntamientos y Fiestas Patronales
+ const [subjectTemplateAyuntamiento, setSubjectTemplateAyuntamiento] = useState('Propuesta de concierto para fiestas patronales: {bandName} en {{nombre_sala}}');
+ const [bodyTemplateAyuntamiento, setBodyTemplateAyuntamiento] = useState(`Estimados responsables del Área de Cultura y Festejos de {{nombre_sala}},
+
+Nos dirigimos a ustedes desde la representación de {bandName} para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales de la próxima temporada.
+
+Ofrecemos un espectáculo de alta energía, familiar, participativo y muy bailable, ideal para plazas públicas y eventos al aire libre. Contamos con amplia solvencia técnica, facturación oficial y rigurosa puntualidad de producción.
+
+Material promocional, dossier y rider técnico: {enlace_videos}
+
+Quedamos a su entera disposición para remitirles nuestro rider técnico y propuesta presupuestaria formal.
+
+Cordialmente,
+{bandName} Agent Manager IA`);
+ const [aiGuidelinesAyuntamiento, setAiGuidelinesAyuntamiento] = useState('Tono formal e institucional, mucho más protocolario que el de una sala de conciertos: dirígete a "ustedes"/"responsables del Área de Cultura", no tutees. Destaca la solvencia técnica, la facturación oficial (factura, no taquilla) y el carácter festivo pero intergeneracional. Nunca uses jerga informal ni emojis.');
 
  // Selected template category in Editor
  const [templateTab, setTemplateTab] = useState<TemplateCategory>('salas');
@@ -227,6 +243,17 @@ ${data.optimized.body}`);
  title: '💼 Editando Plantilla para Agencias de Booking y Management',
  desc: 'Propuestas corporativas para coproducción, representación de gira e inclusión en catálogo.'
  };
+ case 'ayuntamientos':
+ return {
+ subject: subjectTemplateAyuntamiento,
+ body: bodyTemplateAyuntamiento,
+ guidelines: aiGuidelinesAyuntamiento,
+ setSubject: setSubjectTemplateAyuntamiento,
+ setBody: setBodyTemplateAyuntamiento,
+ setGuidelines: setAiGuidelinesAyuntamiento,
+ title: '🏛️ Editando Plantilla para Ayuntamientos y Fiestas Patronales',
+ desc: 'Registro formal e institucional para programación cultural, fiestas patronales y eventos municipales.'
+ };
  }
  };
 
@@ -309,6 +336,11 @@ ${data.optimized.body}`);
             setSubjectTemplateManagement(t.managements.subject);
             setBodyTemplateManagement(t.managements.body);
             setAiGuidelinesManagement(t.managements.guidelines);
+          }
+          if (t.ayuntamientos) {
+            setSubjectTemplateAyuntamiento(t.ayuntamientos.subject);
+            setBodyTemplateAyuntamiento(t.ayuntamientos.body);
+            setAiGuidelinesAyuntamiento(t.ayuntamientos.guidelines);
           }
         }
       } catch (err) {

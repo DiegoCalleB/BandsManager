@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star } from 'lucide-react';
+import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ExampleThreadsSection } from './ExampleThreadsSection';
 
-export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements';
+export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
 export interface ActiveTemplateData {
   title: string;
@@ -94,7 +94,7 @@ export function TemplateConfigSection({
           </p>
         </div>
 
-        {/* Template Tab Selector (6 Categories) */}
+        {/* Template Tab Selector (7 Categories) */}
         <div
           className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
             isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
@@ -107,6 +107,7 @@ export function TemplateConfigSection({
             { id: 'medios', label: '📻 Medios', icon: Radio },
             { id: 'grupos', label: '🎸 Grupos', icon: Users },
             { id: 'managements', label: '💼 Managements', icon: Briefcase },
+            { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
           ].map((tab) => {
             const isActive = templateTab === tab.id;
             const IconComp = tab.icon;

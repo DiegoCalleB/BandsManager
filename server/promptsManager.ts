@@ -59,7 +59,7 @@ export interface TemplateFeedbackLog {
 }
 
 export interface CategoryTemplateConfig {
-  category: string; // 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements'
+  category: string; // 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos'
   title: string;
   subject: string;
   body: string;
@@ -74,11 +74,14 @@ export interface CategoryTemplateConfig {
 /**
  * A qué categoría de plantilla pertenece un lead según su `tipo`, con el mismo criterio difuso
  * que ya usa buildEnhancedPitchSystemPrompt para adaptar el enfoque por tipo de destinatario.
- * No hay categoría de plantilla para "ayuntamiento" ni el resto de tipos sueltos: caen en
- * "salas" (la plantilla genérica) en vez de fallar o quedarse sin pautas.
+ * "ayuntamiento" tiene su propia categoría (registro mucho más formal e institucional que una
+ * sala de conciertos) en vez de caer en "salas": antes de esta categoría, las correcciones del
+ * mánager a pitches de ayuntamientos se mezclaban con las de salas normales en el mismo cubo de
+ * aprendizaje (self-refining tone DNA), contaminando ambos estilos.
  */
 export function mapLeadTipoToTemplateCategory(leadTipo: string | undefined | null): string {
   const tipo = String(leadTipo || "").toLowerCase();
+  if (tipo.includes("ayunt") || tipo.includes("municip") || tipo.includes("fiesta")) return "ayuntamientos";
   if (tipo.includes("medio") || tipo.includes("prensa") || tipo.includes("radio") || tipo.includes("podcast")) return "medios";
   if (tipo.includes("festiv")) return "festivales";
   if (tipo.includes("disco") || tipo.includes("club")) return "discotecas";
@@ -241,6 +244,29 @@ Atentamente,
     customInstruction: "",
     feedbackLogs: [],
     updatedAt: new Date().toISOString()
+  },
+  ayuntamientos: {
+    category: "ayuntamientos",
+    title: "Ayuntamientos y Fiestas Patronales",
+    subject: "Propuesta de concierto para fiestas patronales: {{nombre_banda}} en {{nombre_sala}}",
+    body: `Estimados responsables del Área de Cultura y Festejos de {{nombre_sala}},
+
+Nos dirigimos a ustedes desde la representación de {{nombre_banda}} ({{estilo}}) para presentar nuestra propuesta de concierto en directo de cara a la programación cultural y fiestas patronales de la próxima temporada.
+
+Ofrecemos un espectáculo de alta energía, familiar, participativo y muy bailable, ideal para plazas públicas y eventos al aire libre. Contamos con amplia solvencia técnica, facturación oficial y rigurosa puntualidad de producción.
+
+Material promocional, dossier y rider técnico: {{website}}
+
+Quedamos a su entera disposición para remitirles nuestro rider técnico y propuesta presupuestaria formal.
+
+Cordialmente,
+{{nombre_banda}} Agent Manager IA`,
+    guidelines: "Tono formal e institucional, mucho más protocolario que el de una sala de conciertos: dirígete a \"ustedes\"/\"responsables del Área de Cultura\", no tutees. Destaca la solvencia técnica, la facturación oficial (factura, no taquilla) y el carácter festivo pero intergeneracional (apto para todos los públicos). Nunca uses jerga informal ni emojis.",
+    toneRating: 5,
+    contentRating: 5,
+    customInstruction: "",
+    feedbackLogs: [],
+    updatedAt: new Date().toISOString()
   }
 };
 
@@ -251,7 +277,7 @@ export function ensureCategoryTemplatesInState(state: any): Record<string, Categ
   if (!state.categoryTemplates) {
     state.categoryTemplates = JSON.parse(JSON.stringify(DEFAULT_CATEGORY_TEMPLATES));
   } else {
-    // Ensure all 6 categories exist
+    // Ensure all categories exist
     for (const [catKey, defaultVal] of Object.entries(DEFAULT_CATEGORY_TEMPLATES)) {
       if (!state.categoryTemplates[catKey]) {
         state.categoryTemplates[catKey] = JSON.parse(JSON.stringify(defaultVal));

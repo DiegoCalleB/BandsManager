@@ -22,7 +22,8 @@ const CATEGORY_PREVIEW_LEAD: Record<string, { tipo: string; nombre_sala: string 
   discotecas: { tipo: "discoteca", nombre_sala: "Discoteca Ejemplo" },
   medios: { tipo: "medio", nombre_sala: "Medio Ejemplo" },
   grupos: { tipo: "grupo", nombre_sala: "Banda Ejemplo" },
-  managements: { tipo: "management", nombre_sala: "Agencia Ejemplo" }
+  managements: { tipo: "management", nombre_sala: "Agencia Ejemplo" },
+  ayuntamientos: { tipo: "ayuntamiento", nombre_sala: "Ayuntamiento Ejemplo" }
 };
 
 router.get("/templates", requireAuth, async (req, res) => {

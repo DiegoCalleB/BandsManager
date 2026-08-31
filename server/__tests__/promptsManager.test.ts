@@ -23,8 +23,13 @@ describe('mapLeadTipoToTemplateCategory', () => {
     expect(mapLeadTipoToTemplateCategory('sello')).toBe('managements');
   });
 
-  it('cae en "salas" para tipos sin categoría propia (ayuntamiento, sala, vacío)', () => {
-    expect(mapLeadTipoToTemplateCategory('ayuntamiento')).toBe('salas');
+  it('mapea ayuntamientos, municipios y fiestas patronales a "ayuntamientos"', () => {
+    expect(mapLeadTipoToTemplateCategory('ayuntamiento')).toBe('ayuntamientos');
+    expect(mapLeadTipoToTemplateCategory('municipio')).toBe('ayuntamientos');
+    expect(mapLeadTipoToTemplateCategory('fiestas patronales')).toBe('ayuntamientos');
+  });
+
+  it('cae en "salas" para tipos sin categoría propia (sala, vacío)', () => {
     expect(mapLeadTipoToTemplateCategory('sala')).toBe('salas');
     expect(mapLeadTipoToTemplateCategory(undefined)).toBe('salas');
     expect(mapLeadTipoToTemplateCategory('')).toBe('salas');

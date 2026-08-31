@@ -11,7 +11,8 @@ const CATEGORY_LABELS: Record<string, string> = {
   discotecas: '🪩 Discotecas',
   medios: '📻 Medios',
   grupos: '🎸 Grupos',
-  managements: '💼 Managements'
+  managements: '💼 Managements',
+  ayuntamientos: '🎉 Ayuntamientos'
 };
 
 export interface ToneAnalysisData {
