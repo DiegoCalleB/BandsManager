@@ -160,9 +160,12 @@ export function CampaignManagerModal({
   };
 
   const handlePitchTemplateChange = (category: PitchTemplateCategory, value: string) => {
+    console.log('🔴 handlePitchTemplateChange called:', { category, value, currentState: formData.customPitchTemplates });
+    const newTemplates = { ...(formData.customPitchTemplates || {}), [category]: value };
+    console.log('🔴 New templates:', newTemplates);
     setFormData({
       ...formData,
-      customPitchTemplates: { ...(formData.customPitchTemplates || {}), [category]: value }
+      customPitchTemplates: newTemplates
     });
   };
 
