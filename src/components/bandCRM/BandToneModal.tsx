@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
-import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw } from 'lucide-react';
+import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  salas: '🏛️ Salas',
+  festivales: '🎪 Festivales',
+  discotecas: '🪩 Discotecas',
+  medios: '📻 Medios',
+  grupos: '🎸 Grupos',
+  managements: '💼 Managements'
+};
 
 export interface ToneAnalysisData {
   nombre_entidad?: string;
@@ -22,6 +32,13 @@ export interface ToneAnalysisData {
   puntos_fuertes_para_conectar?: string;
   recomendacion_pitch?: string;
   pitch_personalizado_ejemplo?: string;
+  /** Self-Refining Tone DNA: reglas que la IA extrae sola de las correcciones del mánager a los pitches, separadas por categoría de destinatario. Solo lectura aquí. */
+  reglas_por_categoria?: Record<string, {
+    reglas_estilo_aprendidas?: string[];
+    vocabulario_aprendido?: string[];
+    terminos_a_evitar?: string[];
+    actualizado?: string;
+  }>;
 }
 
 /** Borrador de edición manual: los campos de lista se editan como texto y se parten al guardar. */
@@ -82,6 +99,11 @@ interface BandToneModalProps {
   onUseTailoredPitch?: (text: string) => void;
   /** Se llama tras guardar una edición manual, con el ADN ya actualizado. */
   onSaved?: (data: ToneAnalysisData) => void;
+  /**
+   * Refresca solo las reglas de estilo aprendidas automáticamente (dna_expresion.reglas_por_categoria)
+   * sin relanzar el rastreo caro de redes sociales que sí hace onReAnalyze.
+   */
+  onRefreshLearnedRules?: () => Promise<void>;
 }
 
 export const BandToneModal: React.FC<BandToneModalProps> = ({
@@ -95,15 +117,33 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   editable = false,
   onReAnalyze,
   onUseTailoredPitch,
-  onSaved
+  onSaved,
+  onRefreshLearnedRules
 }) => {
   const [copied, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState<ToneDraft>(() => toDraft(toneData));
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isTraining, setIsTraining] = useState(false);
+  const [trainMessage, setTrainMessage] = useState<string | null>(null);
 
   if (!isOpen || !band) return null;
+
+  const handleTrainToneDna = async () => {
+    setIsTraining(true);
+    setTrainMessage(null);
+    try {
+      const res = await api.trainToneDna();
+      setTrainMessage(res.message || (res.success ? 'Entrenamiento ejecutado.' : 'No se pudo entrenar el ADN de tono.'));
+      if (res.success) await onRefreshLearnedRules?.();
+    } catch (err: any) {
+      console.error('Error entrenando el ADN de tono:', err);
+      setTrainMessage(err?.message || 'Error de conexión al entrenar el ADN de tono.');
+    } finally {
+      setIsTraining(false);
+    }
+  };
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -549,6 +589,63 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   >
                     <Sparkles className="w-3.5 h-3.5" /> Usar este Pitch Personalizado en Co-Booking
                   </button>
+                )}
+              </div>
+            )}
+
+            {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
+            {editable && (
+              <div className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? 'bg-violet-50/50 border-violet-200' : 'bg-violet-950/20 border-violet-900/40'}`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+                    <Brain className="w-3.5 h-3.5" /> Reglas Aprendidas de tus Correcciones (Self-Refining Tone DNA)
+                  </span>
+                  <button
+                    onClick={handleTrainToneDna}
+                    disabled={isTraining}
+                    className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 font-mono text-[9px] font-bold flex items-center gap-1 cursor-pointer transition-colors disabled:opacity-50"
+                    title="Fuerza el análisis de tus correcciones acumuladas ahora mismo, en vez de esperar al refinamiento automático"
+                  >
+                    {isTraining ? <RefreshCw className="w-3 h-3 animate-spin" /> : <GraduationCap className="w-3 h-3" />}
+                    {isTraining ? 'Entrenando...' : 'Entrenar ADN de tono ahora'}
+                  </button>
+                </div>
+
+                {trainMessage && (
+                  <p className="text-[10px] font-mono text-violet-300/90">{trainMessage}</p>
+                )}
+
+                {toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0 ? (
+                  <div className="space-y-2">
+                    {Object.entries(toneData.reglas_por_categoria).map(([cat, reglas]) => (
+                      <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-violet-900/30 space-y-1.5">
+                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
+                          {CATEGORY_LABELS[cat] || cat}
+                        </span>
+                        {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
+                          <ul className="space-y-0.5">
+                            {reglas.reglas_estilo_aprendidas.map((r, idx) => (
+                              <li key={idx} className="text-[10px] font-sans text-neutral-300">⭐ {r}</li>
+                            ))}
+                          </ul>
+                        )}
+                        {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
+                          <p className="text-[9px] font-mono text-emerald-400/80">
+                            Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
+                          </p>
+                        )}
+                        {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
+                          <p className="text-[9px] font-mono text-red-400/80">
+                            Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-[10px] font-mono text-neutral-500">
+                    Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora".
+                  </p>
                 )}
               </div>
             )}

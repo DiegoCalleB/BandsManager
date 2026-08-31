@@ -166,6 +166,21 @@ export default function ReelsCenter({
    await handleAnalyzeBakandeyaTone();
  };
 
+ // Refresca solo lo guardado en Supabase (incluidas las reglas de Self-Refining Tone DNA
+ // recién generadas por "Entrenar ADN de tono ahora"), sin relanzar el rastreo de redes.
+ const handleRefreshLearnedRules = async () => {
+   try {
+     const res = await apiFetch('/api/bands/tone-dna');
+     const json = res as any;
+     if (json?.success && json.data) {
+       setBakandeyaToneData(json.data);
+       setToneAnalysisSaved(true);
+     }
+   } catch (err) {
+     console.error('Error refrescando el ADN de tono aprendido:', err);
+   }
+ };
+
  // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
  // usando la app: el botón "Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
  // Instagram del fundador en vez de la suya propia.
@@ -3997,6 +4012,7 @@ export default function ReelsCenter({
       setToneAnalysisSaved(true);
     }}
     onReAnalyze={handleAnalyzeBakandeyaTone}
+    onRefreshLearnedRules={handleRefreshLearnedRules}
   />
 
  </div>

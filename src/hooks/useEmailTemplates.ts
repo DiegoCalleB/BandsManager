@@ -230,93 +230,41 @@ ${data.optimized.body}`);
  }
  };
 
- const handleTestPrompt = () => {
+ const handleTestPrompt = async () => {
  setIsTestingPrompt(true);
  setTestPromptResult('');
- 
+
  const activeData = getActiveTemplateData();
- 
- setTimeout(() => {
- if (templateTab === 'medios') {
- setTestPromptResult(`Asunto: [Nota de Prensa / Radio 3] Bakandeya presenta su gira y single 2026
 
-Hola equipo de redacción de Radio 3 / Revista Musical,
-
-Os enviamos la nota de prensa de Bakandeya para su difusión en medios. Siguiendo las directrices de prensa ("${activeData.guidelines.substring(0, 55)}..."), destacamos nuestro concepto sonoro que fusiona balkan-ska, violín enérgico, loops y percusión reciclada con electrónica.
-
-Nos encantaría ponernos a vuestra disposición para una entrevista en estudio, un acústico en directo o la presentación del nuevo videoclip.
-
-Adjuntamos fotos en alta resolución, bio y enlace al videoclip: https://youtube.com/bakandeya_live
-
-Un saludo muy atento,
-Bakandeya Agent Manager IA`);
- } else if (templateTab === 'festivales') {
- setTestPromptResult(`Asunto: Propuesta de Cartel / Booking Festival: Bakandeya (Balkan Ska & Electronic Live)
-
-Hola equipo de producción y booking del Festival Ejemplo,
-
-Escribimos de parte de Bakandeya para presentar la propuesta de nuestro show directo de alta energía. Siguiendo las directrices de festival ("${activeData.guidelines.substring(0, 50)}..."), hemos optimizado la logística del escenario.
-
-Disponemos de un cuarteto con violín virtuosístico, loops y sintetizadores en tiempo real ideal para escenarios principales de tarde/noche.
-
-Dossier y vídeo promocional: https://youtube.com/bakandeya_live
-
-Quedamos a su disposición.
-
-Atentamente,
-Bakandeya Agent Manager IA`);
- } else if (templateTab === 'discotecas') {
- setTestPromptResult(`Asunto: Propuesta Live Performance & Clubbing: Bakandeya
-
-Hola equipo de programación de Discoteca Ejemplo,
-
-Os contactamos desde Bakandeya para proponer una sesión en vivo de electro-balkan & ska instrumental en horario nocturno. Siguiendo las pautas de clubbing ("${activeData.guidelines.substring(0, 50)}..."), nuestro set mantiene la pista en tensión constante.
-
-Vídeo promocional: https://youtube.com/bakandeya_live
-
-¿Tenéis fechas libres para un live set nocturno?
-
-Un saludo,
-Bakandeya Agent Manager IA`);
- } else if (templateTab === 'grupos') {
- setTestPromptResult(`Asunto: Propuesta de concierto compartido e intercambio de fechas: Bakandeya x Banda Ejemplo
-
-¡Buenas chavales de Banda Ejemplo!
-
-Os escribimos desde Bakandeya. Siguiendo las pautas de co-booking entre bandas ("${activeData.guidelines.substring(0, 50)}..."), nos mola mucho vuestro proyecto y queremos proponer un INTERCAMBIO DE FECHAS (Date Swap):
-
-1. Os invitamos a tocar con nosotros en Madrid/Sevilla compartiendo taquilla al 50%.
-2. Montamos fecha conjunta en vuestra ciudad natal para llenar el local sumando ambas aficiones y compartir furgoneta.
-
-¿Cómo lo veis? ¿Hablamos esta semana?
-
-¡Un abrazo!
-Bakandeya Agent Manager IA`);
- } else if (templateTab === 'managements') {
- setTestPromptResult(`Asunto: Propuesta de colaboración / Roster 2026: Bakandeya
-
-Estimado equipo de Agencia Ejemplo,
-
-Nos dirigimos a vuestra oficina para presentar la propuesta de Bakandeya con vista a posibles coproducciones o inclusión en catálogo. Siguiendo las pautas de agencias ("${activeData.guidelines.substring(0, 50)}..."), destacamos la solidez de nuestro cuarteto con violín solista.
-
-Dossier corporativo: https://youtube.com/bakandeya_live
-
-Atentamente,
-Bakandeya Agent Manager IA`);
- } else {
- setTestPromptResult(`Asunto: Propuesta de concierto: Bakandeya en Sala Ejemplo
-
-Hola equipo de booking de Sala Ejemplo,
-
-Le escribimos de parte de Bakandeya. Siguiendo sus pautas de directo ("${activeData.guidelines.substring(0, 50)}..."), hemos adaptado nuestro show para vuestro aforo. Disponemos de un cuarteto con violín enérgico, loops, percusión reciclada y una electrónica demoledora en directo.
-
-¿Qué os parece el viernes 23 de Octubre de 2026?
-
-Atentamente,
-Bakandeya Agent Manager IA`);
+ try {
+   const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+   if (token) {
+     headers['Authorization'] = `Bearer ${token}`;
+     headers['x-auth-token'] = token;
+   }
+   const res = await fetch('/api/templates/preview', {
+     method: 'POST',
+     headers,
+     body: JSON.stringify({
+       category: templateTab,
+       subject: activeData.subject,
+       body: activeData.body,
+       guidelines: activeData.guidelines
+     })
+   });
+   const data = await res.json();
+   if (res.ok && data.success) {
+     setTestPromptResult(`Asunto: ${data.subject}\n\n${data.body}`);
+   } else {
+     setTestPromptResult(`⚠️ ${data.error || 'No se pudo simular la plantilla.'}`);
+   }
+ } catch (err) {
+   console.error('Error testing prompt:', err);
+   setTestPromptResult('⚠️ Error de conexión al simular la plantilla.');
+ } finally {
+   setIsTestingPrompt(false);
  }
- setIsTestingPrompt(false);
- }, 1200);
  };
 
   useEffect(() => {

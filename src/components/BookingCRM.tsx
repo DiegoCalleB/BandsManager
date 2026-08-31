@@ -21,6 +21,7 @@ import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
 import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
 import { ExcelImportModal } from './booking/ExcelImportModal';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
+import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
 import { LeadsTable } from './booking/LeadsTable';
 import { VenueDetailPanel } from './booking/VenueDetailPanel';
@@ -2283,6 +2284,8 @@ export default function BookingCRM({
  💡 Califica con estrellas el tono y el contenido e introduce comentarios. Al hacer clic abajo en <strong>Regenerar</strong>, la IA usará tus valoraciones para optimizar la plantilla.
  </div>
  </div>
+
+ <ExampleThreadsSection category={templateTab} isStitchLight={isStitchLight} textSub={textSub} />
 
  <div className="flex flex-wrap gap-2 pt-2">
  <button
