@@ -11,6 +11,7 @@ export interface DbCampaign {
   target_dates: string[];
   target_dates_text?: string;
   notes?: string;
+  custom_pitch_template?: string;
   is_active: boolean;
   color?: string;
   created_at?: string;
@@ -57,6 +58,7 @@ export function normalizeCampaignFromDb(c: any) {
     targetDates,
     targetDatesText: c.target_dates_text || c.targetDatesText || "",
     notes: c.notes || "",
+    customPitchTemplate: c.custom_pitch_template || c.customPitchTemplate || "",
     isActive: Boolean(c.is_active ?? c.isActive ?? false),
     color: c.color || "#8b5cf6",
     created_at: c.created_at || c.createdAt || new Date().toISOString()
@@ -115,6 +117,7 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     target_dates: Array.isArray(campaign.targetDates) ? campaign.targetDates : [],
     target_dates_text: campaign.targetDatesText || "",
     notes: campaign.notes || "",
+    custom_pitch_template: campaign.customPitchTemplate || "",
     is_active: Boolean(campaign.isActive),
     color: campaign.color || "#8b5cf6"
   };
