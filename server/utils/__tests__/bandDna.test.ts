@@ -156,9 +156,29 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     const dna = getBandDnaProfile(state, 'banda-test', lead);
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
 
-    expect(prompt).toContain('PAUTAS ESPECÍFICAS PARA "Salas y Teatros"');
+    expect(prompt).toContain('PAUTAS Y PLANTILLA DE REFERENCIA PARA "Salas y Teatros"');
     expect(prompt).toContain('Destaca siempre el montaje rápido.');
     expect(prompt).toContain('Evitar mencionar cachés altos');
+  });
+
+  it('incluye el cuerpo de la plantilla de categoría como modelo de referencia, no solo las guidelines', () => {
+    const state = {
+      registeredBands: [{ band_id: 'banda-test' }],
+      categoryTemplates: {
+        salas: {
+          title: 'Salas y Teatros',
+          guidelines: 'Tono festivo.',
+          body: 'Hola equipo de {{nombre_sala}}, somos {{nombre_banda}} y montamos rápido.',
+        },
+      },
+    };
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    expect(dna.categoryTemplateBody).toContain('montamos rápido');
+
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+    expect(prompt).toContain('Plantilla de referencia guardada a mano por el mánager');
+    expect(prompt).toContain('montamos rápido');
+    expect(prompt).toContain('NUNCA la copies literal');
   });
 
   it('sigue incluyendo el bloque de campaña activa junto con el ADN de voz', () => {

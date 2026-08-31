@@ -56,6 +56,8 @@ export interface BandDnaProfile {
   categoryTemplateTitle?: string;
   categoryTemplateGuidelines?: string;
   categoryTemplateCustomInstruction?: string;
+  categoryTemplateBody?: string;
+  categoryTemplateSubject?: string;
 }
 
 function strOrUndef(v: any): string | undefined {
@@ -212,10 +214,16 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   // (server/routes/leads/templates.ts, category_pitch_templates). Antes esto ni persistía de
   // verdad ni llegaba aquí: el mánager editaba "pautas para salas" y no tenía ningún efecto
   // real en los pitches generados para salas.
+  // El asunto/cuerpo de la plantilla (a diferencia de guidelines/customInstruction) tampoco se
+  // leía nunca aquí: el mánager podía pulir el cuerpo de la plantilla de "salas" a mano en el
+  // panel y esos cambios de redacción no llegaban al Redactor - solo el texto libre de
+  // "guidelines" influía en el pitch generado, nunca la plantilla en sí.
   const categoryTemplate = state?.categoryTemplates?.[categoryKey];
   const categoryTemplateTitle = strOrUndef(categoryTemplate?.title);
   const categoryTemplateGuidelines = strOrUndef(categoryTemplate?.guidelines);
   const categoryTemplateCustomInstruction = strOrUndef(categoryTemplate?.customInstruction);
+  const categoryTemplateBody = strOrUndef(categoryTemplate?.body);
+  const categoryTemplateSubject = strOrUndef(categoryTemplate?.subject);
 
   return {
     bandId,
@@ -259,7 +267,9 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     recomendacionPitch,
     categoryTemplateTitle,
     categoryTemplateGuidelines,
-    categoryTemplateCustomInstruction
+    categoryTemplateCustomInstruction,
+    categoryTemplateBody,
+    categoryTemplateSubject
   };
 }
 
@@ -359,12 +369,16 @@ ${lead?.notas ? `- Notas previas registradas: "${lead.notas}"` : ""}
 🧠 HISTORIAL DE FEEDBACK Y APRENDIZAJE DEL MÁNAGER:
 ═════════════════════════════════════════════════════════════════════
 ${globalMemory || "Sin historial previo. Mantener tono bailable, directo, profesional y fresco sin instrumentos de viento."}
-${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction) ? `
+${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction || bandDna.categoryTemplateBody) ? `
 ═════════════════════════════════════════════════════════════════════
-📋 PAUTAS ESPECÍFICAS PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
+📋 PAUTAS Y PLANTILLA DE REFERENCIA PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
 ═════════════════════════════════════════════════════════════════════
 ${bandDna.categoryTemplateGuidelines ? bandDna.categoryTemplateGuidelines : ""}
 ${bandDna.categoryTemplateCustomInstruction ? `Instrucción específica reciente del mánager para esta categoría: "${bandDna.categoryTemplateCustomInstruction}"` : ""}
+${bandDna.categoryTemplateBody ? `Plantilla de referencia guardada a mano por el mánager para esta categoría - úsala como modelo real de estructura, ritmo de frase y vocabulario (es la voz más fiel que existe de cómo debe sonar este pitch). NUNCA la copies literal: sustituye cualquier fecha, sala, hito o dato concreto que contenga por los datos reales de este destinatario y de la campaña activa de arriba (si no hay campaña activa, omite fechas concretas en vez de reutilizar las de la plantilla).
+"""
+${bandDna.categoryTemplateBody}
+"""` : ""}
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):
