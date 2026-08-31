@@ -423,7 +423,10 @@ export function CampaignManagerModal({
                   key={activePitchCategory}
                   rows={3}
                   value={formData.customPitchTemplates?.[activePitchCategory] || ''}
-                  onChange={e => handlePitchTemplateChange(activePitchCategory, e.target.value)}
+                  onChange={(e) => {
+                    console.log('🟣 textarea onChange triggered:', { category: activePitchCategory, value: e.target.value });
+                    handlePitchTemplateChange(activePitchCategory, e.target.value);
+                  }}
                   placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para "${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
                   className="w-full bg-[#181716] border border-neutral-700 rounded-xl px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
                 />
