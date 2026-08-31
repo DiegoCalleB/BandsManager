@@ -3,6 +3,7 @@ import { BandContact } from '../../types';
 import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { apiFetch } from '../../utils/api';
+import { api } from '../../services/api';
 
 export interface ToneAnalysisData {
   nombre_entidad?: string;
@@ -22,6 +23,12 @@ export interface ToneAnalysisData {
   puntos_fuertes_para_conectar?: string;
   recomendacion_pitch?: string;
   pitch_personalizado_ejemplo?: string;
+  reglas_por_categoria?: Record<string, {
+    reglas_estilo_aprendidas?: string[];
+    vocabulario_aprendido?: string[];
+    terminos_a_evitar?: string[];
+    actualizado?: string;
+  }>;
 }
 
 /** Borrador de edición manual: los campos de lista se editan como texto y se parten al guardar. */
@@ -511,6 +518,108 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 </p>
               </div>
             </div>
+
+            {/* 3b. Learned Rules from Corrections (Self-Refining Tone DNA) */}
+            {editable && toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0 && (
+              <div className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-green-950/20 border-green-900/40'}`}>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className={`w-3.5 h-3.5 ${isStitchLight ? 'text-slate-600' : 'text-green-400'}`} />
+                  <span className={isStitchLight ? 'text-slate-800' : 'text-green-300'}>🧠 Reglas Aprendidas de tus Correcciones</span>
+                </span>
+                <p className={`text-[9px] ${isStitchLight ? 'text-slate-600' : 'text-green-300/80'}`}>
+                  El sistema aprende automáticamente de tus correcciones. Cuando acumulas 2+ ajustes para una categoría, extrae patrones de estilo:
+                </p>
+                <div className="space-y-2">
+                  {Object.entries(toneData.reglas_por_categoria).map(([cat, rules]) => (
+                    <div key={cat} className={`p-2 rounded-lg border ${isStitchLight ? 'bg-white border-slate-200' : 'bg-black/30 border-green-900/60'}`}>
+                      <p className={`text-[9px] font-mono font-bold uppercase mb-1.5 ${isStitchLight ? 'text-slate-700' : 'text-green-400'}`}>
+                        📌 {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      </p>
+                      {rules.reglas_estilo_aprendidas && rules.reglas_estilo_aprendidas.length > 0 && (
+                        <div className="mb-1">
+                          <p className={`text-[8px] font-mono uppercase tracking-wider ${isStitchLight ? 'text-slate-500' : 'text-green-300/70'}`}>
+                            Estilo:
+                          </p>
+                          <ul className="ml-2">
+                            {rules.reglas_estilo_aprendidas.map((rule, idx) => (
+                              <li key={idx} className={`text-[9px] ${isStitchLight ? 'text-slate-700' : 'text-green-200'}`}>
+                                • {rule}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {rules.vocabulario_aprendido && rules.vocabulario_aprendido.length > 0 && (
+                        <div className="mb-1">
+                          <p className={`text-[8px] font-mono uppercase tracking-wider ${isStitchLight ? 'text-slate-500' : 'text-green-300/70'}`}>
+                            Vocabulario:
+                          </p>
+                          <div className="flex flex-wrap gap-1 ml-2">
+                            {rules.vocabulario_aprendido.map((word, idx) => (
+                              <span key={idx} className={`px-1.5 py-0.5 rounded text-[8px] font-mono ${isStitchLight ? 'bg-green-100 text-green-800' : 'bg-green-900/50 text-green-300'}`}>
+                                {word}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {rules.terminos_a_evitar && rules.terminos_a_evitar.length > 0 && (
+                        <div>
+                          <p className={`text-[8px] font-mono uppercase tracking-wider ${isStitchLight ? 'text-slate-500' : 'text-red-300/70'}`}>
+                            Evitar:
+                          </p>
+                          <div className="flex flex-wrap gap-1 ml-2">
+                            {rules.terminos_a_evitar.map((term, idx) => (
+                              <span key={idx} className={`px-1.5 py-0.5 rounded text-[8px] font-mono line-through ${isStitchLight ? 'bg-red-100 text-red-800' : 'bg-red-900/50 text-red-300'}`}>
+                                {term}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {rules.actualizado && (
+                        <p className={`text-[8px] mt-1 ${isStitchLight ? 'text-slate-500' : 'text-green-300/60'}`}>
+                          ⏱ Actualizado: {new Date(rules.actualizado).toLocaleDateString('es-ES')}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Training Button */}
+            {editable && (
+              <button
+                onClick={async () => {
+                  try {
+                    setIsSaving(true);
+                    const result = await api.trainToneDna();
+                    if (result?.success) {
+                      alert(`✅ ${result.message}`);
+                      onReAnalyze(); // Refresh to show updated rules
+                    } else {
+                      alert(`⚠️ ${result?.error || 'Error al entrenar el ADN'}`);
+                    }
+                  } catch (err: any) {
+                    console.error('Error training tone DNA:', err);
+                    alert(`Error: ${err?.message}`);
+                  } finally {
+                    setIsSaving(false);
+                  }
+                }}
+                disabled={isSaving}
+                className={`w-full py-2 px-3 rounded-lg font-mono text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                  isStitchLight
+                    ? 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 border border-blue-500/30'
+                    : 'bg-blue-950/30 hover:bg-blue-900/50 text-blue-300 border border-blue-900/50'
+                } disabled:opacity-50`}
+                title="Ejecuta el refinamiento automático de ADN de tono si hay suficientes correcciones acumuladas (mínimo 2 por categoría)"
+              >
+                <Sparkles className={`w-3.5 h-3.5 ${isSaving ? 'animate-spin' : ''}`} />
+                {isSaving ? 'Entrenando ADN...' : '🧠 Entrenar ADN de Tono Ahora'}
+              </button>
+            )}
 
             {/* 4. Tailored Pitch Example */}
             {toneData.pitch_personalizado_ejemplo && (
