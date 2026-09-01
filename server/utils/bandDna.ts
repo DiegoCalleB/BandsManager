@@ -73,7 +73,7 @@ export function isCampaignActive(campaign: any): boolean {
  * Extrae el perfil de ADN completo y multidimensional de cualquier banda registrada
  * o de Bakandeya a partir del estado de la aplicación.
  */
-export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandDnaProfile {
+export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 'pitch' | 'reply' = 'pitch'): BandDnaProfile {
   const cleanId = (bandId || "band-bakandeya").replace(/^(band|reg)-/, "");
   const isBakandeya = cleanId.toLowerCase() === "bakandeya" || cleanId === "";
 
@@ -184,18 +184,21 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
 
   // DNA aprendido automáticamente (Self-Refining Tone DNA), separado por categoría de lead
   // (server/db/pitchLearning.ts) para no mezclar "cómo corrijo a un medio" con "cómo corrijo
-  // a una sala". Con fallback a los campos planos antiguos (una única bolsa para toda la banda)
-  // para bandas que aún no tengan reglas aprendidas específicas de esta categoría.
-  const reglasPorCategoria = dnaExpresion.reglas_por_categoria?.[categoryKey];
+  // a una sala". Además separado por modo (pitch vs reply): corregir cómo se responde a una
+  // negociación no debe enseñarle al sistema a redactar mal el primer contacto, y viceversa -
+  // antes ambos aprendizajes caían en el mismo cubo `reglas_por_categoria`. Con fallback a los
+  // campos planos antiguos solo en modo pitch (nunca existieron específicos de respuesta).
+  const reglasBucketKey = mode === 'reply' ? 'reglas_por_categoria_respuesta' : 'reglas_por_categoria';
+  const reglasPorCategoria = dnaExpresion[reglasBucketKey]?.[categoryKey];
   const reglasEstiloAprendidas = Array.isArray(reglasPorCategoria?.reglas_estilo_aprendidas)
     ? reglasPorCategoria.reglas_estilo_aprendidas
-    : (Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined);
+    : (mode === 'pitch' && Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined);
   const vocabularioAprendido = Array.isArray(reglasPorCategoria?.vocabulario_aprendido)
     ? reglasPorCategoria.vocabulario_aprendido
-    : (Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined);
+    : (mode === 'pitch' && Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined);
   const terminosAEvitar = Array.isArray(reglasPorCategoria?.terminos_a_evitar)
     ? reglasPorCategoria.terminos_a_evitar
-    : (Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined);
+    : (mode === 'pitch' && Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined);
 
   // ADN de voz entrenado a mano por el mánager en BandToneModal (POST /api/bands/analyze-tone,
   // PATCH /api/bands/tone-dna). Hasta ahora solo alimentaba Reels/chat (bandProfile.ts) y nunca
@@ -433,9 +436,13 @@ ${bandDna.fewShotSection || ""}`;
  * objetivo (responder, no presentar) y las fuentes de estilo (hilo real + ejemplos de
  * respuestas pasadas, en vez de campaña + directrices de primer contacto).
  *
- * Ahora soporta respuestas condicionales: puede adaptar el tono y enfoque basado en el tipo
- * de respuesta detectada (negociación, confirmación, rechazo, etc.) y las preferencias
- * configuradas por la banda para ese tipo de respuesta.
+ * Adapta el enfoque según el tipo de respuesta detectado (negociación, confirmación, rechazo,
+ * seguimiento - ver detectResponseType en replyDrafting.ts): usa la guía que la banda haya
+ * configurado a mano para ese tipo (ver AgentAutonomySettingsModal.tsx > "Estrategias de
+ * Respuesta") si existe, o si no una guía automática fija de código. Además aprende de verdad
+ * de las correcciones reales de la banda vía Self-Refining Tone DNA (bandDna.reglasEstiloAprendidas
+ * en modo 'reply' - ver server/db/pitchLearning.ts): ambos mecanismos son complementarios, no
+ * alternativos - la configuración manual es el punto de partida, el aprendizaje lo va afinando.
  */
 export function buildReplySystemPrompt(
   bandDna: BandDnaProfile,
@@ -444,14 +451,16 @@ export function buildReplySystemPrompt(
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
   replyFewShotSection: string,
   responseType?: string,
-  responseStrategy?: any
+  responseStrategy?: any,
+  feedbackDetails?: string[]
 ): string {
   const languageHint = detectPitchLanguage(lead);
   const historialTexto = threadSoFar.length > 0
     ? threadSoFar.map((m) => `[${m.remitente === "banda" ? bandDna.bandName : (lead?.nombre_sala || "Sala")}]: "${m.mensaje}"`).join("\n\n")
     : "Sin mensajes previos registrados en el hilo (es la primera respuesta que se les envía tras el contacto inicial).";
 
-  // Construir sección de guidance condicional basada en el tipo de respuesta detectado
+  // Construir sección de guidance condicional basada en el tipo de respuesta detectado: la
+  // configuración manual de la banda (si existe) manda sobre la guía automática genérica.
   let conditionalGuidanceSection = "";
   if (responseType && responseStrategy?.guidancePrompt) {
     conditionalGuidanceSection = `
@@ -462,7 +471,6 @@ ${responseStrategy.tone ? `TONO RECOMENDADO: ${responseStrategy.tone}` : ""}
 ${responseStrategy.mentionLinks !== false ? `MENCIONAR ENLACES: Sí, incluye referencias al EPK/Dossier cuando proceda.` : `MENCIONAR ENLACES: No, mantén el email enfocado únicamente en responder la pregunta.`}
 `;
   } else if (responseType) {
-    // Proporcionar guía automática basada en el tipo de respuesta, aunque no haya estrategia configurada
     const autoGuidance: Record<string, string> = {
       price_negotiation: `Tu objetivo es demostrar que la banda es flexible en condiciones económicas. Menciona brevemente el modelo de contratación (taquilla compartida, caché variable, co-booking). No entres en cifras concretas a menos que sea absolutamente necesario - esos detalles van en un documento separado o llamada.`,
       confirmation: `El tono debe ser muy positivo y entusiasta. Confirma lo que ellos proponen, expresa emoción de la banda, y asegúrate de que queda claro que ya hay acuerdo. Ofrece coordinación técnica o logística si es necesario.`,
@@ -479,6 +487,18 @@ TIPO DETECTADO: "${responseType}"
 ${autoGuide}
 `;
     }
+  }
+
+  // Instrucciones puntuales del mánager al pulsar "Regenerar con feedback" sobre este borrador
+  // concreto (estrellas de tono/contenido + comentario libre - ver VenueDetailPanel.tsx). No es
+  // persistente por sí solo: lo que de verdad queda aprendido para el futuro es la corrección
+  // final vs. el borrador, vía Self-Refining Tone DNA (dbRecordPitchHumanEdit).
+  let feedbackSection = "";
+  if (feedbackDetails && feedbackDetails.length > 0) {
+    feedbackSection = `
+🛠️ INSTRUCCIONES DEL MÁNAGER PARA ESTA REGENERACIÓN CONCRETA:
+${feedbackDetails.join("\n")}
+`;
   }
 
   return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".
@@ -523,7 +543,7 @@ ${historialTexto}
 📩 MENSAJE ENTRANTE AL QUE HAY QUE RESPONDER AHORA:
 ═════════════════════════════════════════════════════════════════════
 "${incomingMessage}"
-${replyFewShotSection}${conditionalGuidanceSection}
+${replyFewShotSection}${conditionalGuidanceSection}${feedbackSection}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE LA RESPUESTA:
 ═════════════════════════════════════════════════════════════════════

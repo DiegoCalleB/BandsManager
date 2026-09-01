@@ -15,10 +15,16 @@ export interface PitchHumanEditRecord {
   texto_aprobado: string;
   tuvo_edicion: boolean;
   diferencia_longitud?: number;
-  tipo_accion: "aprobado_propuesta" | "aprobado_respuesta" | "regenerado_con_feedback";
+  tipo_accion: "aprobado_propuesta" | "aprobado_respuesta" | "regenerado_con_feedback" | "regenerado_respuesta_con_feedback";
   resultado_respuesta?: "pendiente" | "positiva" | "negativa" | "sin_respuesta";
   fecha_aprobacion: string;
 }
+
+// tipo_accion que corresponde a una edición de RESPUESTA (contestación a una sala que ya
+// escribió) frente a una edición de PITCH (primer contacto) - separa qué correcciones
+// alimentan el aprendizaje de cada modo (ver getBandDnaProfile(..., mode) en bandDna.ts).
+const TIPOS_ACCION_RESPUESTA = ["aprobado_respuesta", "regenerado_respuesta_con_feedback"];
+const TIPOS_ACCION_PITCH = ["aprobado_propuesta", "regenerado_con_feedback"];
 
 /**
  * Registra en Supabase la comparación entre el borrador que propuso la IA y la
@@ -34,7 +40,7 @@ export async function dbRecordPitchHumanEdit(record: {
   ciudad?: string;
   borrador_ia: string;
   texto_aprobado: string;
-  tipo_accion: "aprobado_propuesta" | "aprobado_respuesta" | "regenerado_con_feedback";
+  tipo_accion: "aprobado_propuesta" | "aprobado_respuesta" | "regenerado_con_feedback" | "regenerado_respuesta_con_feedback";
   resultado_respuesta?: "pendiente" | "positiva" | "negativa" | "sin_respuesta";
 }): Promise<boolean> {
   const cleanId = cleanBandId(record.band_id);
@@ -69,8 +75,10 @@ export async function dbRecordPitchHumanEdit(record: {
 
     // Disparar en segundo plano el refinamiento automático de ADN si hay suficientes ediciones
     // para ESTA categoría de lead (sala, medio, festival...), no para toda la banda a la vez.
+    // Separado por modo (pitch vs respuesta) para no mezclar ambos aprendizajes.
     const category = mapLeadTipoToTemplateCategory(record.tipo_entidad);
-    triggerSelfRefiningToneDnaBackground(cleanId, category).catch(err => {
+    const esRespuesta = TIPOS_ACCION_RESPUESTA.includes(record.tipo_accion);
+    triggerSelfRefiningToneDnaBackground(cleanId, category, esRespuesta).catch(err => {
       console.warn("Background self-refining tone DNA notice:", err);
     });
 
@@ -297,14 +305,17 @@ ${formatted}
 
 type PitchEditRow = { borrador_ia: string; texto_aprobado: string; nombre_sala: string; tipo_entidad: string };
 
-/** Ediciones humanas recientes de la banda (hasta 40), tal cual vienen de Supabase. */
-async function fetchRecentEditedExamples(cleanId: string): Promise<PitchEditRow[]> {
+/** Ediciones humanas recientes de la banda (hasta 40), tal cual vienen de Supabase, filtradas
+ * a pitches (primer contacto) o a respuestas (contestaciones a una sala que ya escribió) según
+ * `esRespuesta` - ver TIPOS_ACCION_RESPUESTA/TIPOS_ACCION_PITCH arriba. */
+async function fetchRecentEditedExamples(cleanId: string, esRespuesta: boolean): Promise<PitchEditRow[]> {
   const sb = getSupabase();
   const { data } = await sb
     .from("pitch_learning_examples")
     .select("borrador_ia, texto_aprobado, nombre_sala, tipo_entidad")
     .eq("band_id", cleanId)
     .eq("tuvo_edicion", true)
+    .in("tipo_accion", esRespuesta ? TIPOS_ACCION_RESPUESTA : TIPOS_ACCION_PITCH)
     .order("fecha_aprobacion", { ascending: false })
     .limit(40);
   return data || [];
@@ -312,15 +323,17 @@ async function fetchRecentEditedExamples(cleanId: string): Promise<PitchEditRow[
 
 /**
  * Analiza los diffs de una categoría concreta y actualiza `dna_expresion.reglas_por_categoria`
- * para esa categoría. Requiere al menos 2 ediciones para inferir patrones; si no hay
- * suficientes, no hace nada (no es un error, solo "todavía no hay señal suficiente").
+ * (pitches) o `dna_expresion.reglas_por_categoria_respuesta` (respuestas) para esa categoría.
+ * Requiere al menos 2 ediciones para inferir patrones; si no hay suficientes, no hace nada
+ * (no es un error, solo "todavía no hay señal suficiente").
  */
-async function refineToneDnaForCategory(cleanId: string, targetCategory: string, edits: PitchEditRow[]): Promise<void> {
+async function refineToneDnaForCategory(cleanId: string, targetCategory: string, edits: PitchEditRow[], esRespuesta: boolean): Promise<void> {
   if (edits.length < 2) return;
 
   const registered = await dbGetRegisteredBandById(cleanId);
   const currentDna = registered?.dna_expresion || {};
-  const reglasPorCategoria = { ...(currentDna.reglas_por_categoria || {}) };
+  const bucketKey = esRespuesta ? "reglas_por_categoria_respuesta" : "reglas_por_categoria";
+  const reglasPorCategoria = { ...(currentDna[bucketKey] || {}) };
 
   const diffsText = edits.slice(0, 8).map((e, idx) => `
 Caso ${idx + 1} (${e.nombre_sala}):
@@ -328,8 +341,12 @@ Caso ${idx + 1} (${e.nombre_sala}):
 - Versión final escrita por el mánager: "${e.texto_aprobado}"
 `).join("\n");
 
+  const contexto = esRespuesta
+    ? `TODOS son CONTESTACIONES a un mensaje que ya envió el mismo tipo de destinatario ("${targetCategory}") - no primeros contactos.`
+    : `TODOS son correos de PRIMER CONTACTO dirigidos al mismo tipo de destinatario ("${targetCategory}").`;
+
   const prompt = `Actúa como un lingüista experto en comunicación de bandas de música independiente.
-Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos, TODOS dirigidos al mismo tipo de destinatario ("${targetCategory}"):
+Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos. ${contexto}
 
 ${diffsText}
 
@@ -357,10 +374,10 @@ Devuelve un JSON con este formato exacto:
 
     await dbUpdateBandToneDna(cleanId, {
       ...currentDna,
-      reglas_por_categoria: reglasPorCategoria,
+      [bucketKey]: reglasPorCategoria,
       ultimo_auto_refinamiento: new Date().toISOString()
     });
-    console.log(`[Self-Refining Tone DNA] Actualizadas ${parsed.reglas_aprendidas.length} reglas de estilo para ${cleanId} / categoría "${targetCategory}"`);
+    console.log(`[Self-Refining Tone DNA] Actualizadas ${parsed.reglas_aprendidas.length} reglas de estilo (${esRespuesta ? "respuestas" : "pitches"}) para ${cleanId} / categoría "${targetCategory}"`);
   }
 }
 
@@ -369,21 +386,22 @@ Devuelve un JSON con este formato exacto:
  * Analiza los diffs entre borradores y versiones aprobadas para extraer reglas de estilo
  * recurrentes y actualizar el perfil de la banda.
  *
- * Las reglas se guardan separadas por categoría de lead (`dna_expresion.reglas_por_categoria`):
- * antes eran una única bolsa por banda, así que corregir 5 pitches de medios y 5 de salas
- * mezclaba ambos aprendizajes en las mismas reglas, aplicándolas por igual a todo tipo de
- * destinatario aunque el registro que corresponda sea muy distinto.
+ * Las reglas se guardan separadas por categoría de lead (`dna_expresion.reglas_por_categoria`)
+ * Y por modo pitch/respuesta (`esRespuesta`): antes todo caía en la misma bolsa por categoría,
+ * así que corregir un pitch de salas y una respuesta a una sala mezclaba ambos aprendizajes,
+ * aplicándolos por igual aunque el registro correcto de cada uno sea muy distinto (un primer
+ * contacto no suena igual que una contestación a una negociación ya en marcha).
  */
-export async function triggerSelfRefiningToneDnaBackground(bandId: string, category?: string): Promise<void> {
+export async function triggerSelfRefiningToneDnaBackground(bandId: string, category?: string, esRespuesta = false): Promise<void> {
   const cleanId = cleanBandId(bandId);
   try {
-    const recentEdits = await fetchRecentEditedExamples(cleanId);
+    const recentEdits = await fetchRecentEditedExamples(cleanId, esRespuesta);
     if (recentEdits.length === 0) return;
 
     const targetCategory = category || mapLeadTipoToTemplateCategory(recentEdits[0]?.tipo_entidad);
     const edits = recentEdits.filter((e) => mapLeadTipoToTemplateCategory(e.tipo_entidad) === targetCategory);
 
-    await refineToneDnaForCategory(cleanId, targetCategory, edits);
+    await refineToneDnaForCategory(cleanId, targetCategory, edits, esRespuesta);
   } catch (err: any) {
     console.warn("Notice during triggerSelfRefiningToneDnaBackground:", err?.message || err);
   }
@@ -391,30 +409,32 @@ export async function triggerSelfRefiningToneDnaBackground(bandId: string, categ
 
 /**
  * Igual que triggerSelfRefiningToneDnaBackground, pero refina TODAS las categorías que tengan
- * señal suficiente de una vez, en vez de solo la más reciente. Pensado para el botón manual
- * "entrenar ADN de tono" (POST /api/leads/train-tone-dna), donde el mánager espera que se
- * aprovechen todas las correcciones acumuladas, no solo las del último pitch corregido.
+ * señal suficiente de una vez (tanto de pitches como de respuestas), en vez de solo la más
+ * reciente. Pensado para el botón manual "entrenar ADN de tono" (POST /api/leads/train-tone-dna),
+ * donde el mánager espera que se aprovechen todas las correcciones acumuladas.
  */
 export async function refineAllToneDnaCategoriesForBand(bandId: string): Promise<string[]> {
   const cleanId = cleanBandId(bandId);
   const refinedCategories: string[] = [];
   try {
-    const recentEdits = await fetchRecentEditedExamples(cleanId);
-    if (recentEdits.length === 0) return refinedCategories;
+    for (const esRespuesta of [false, true]) {
+      const recentEdits = await fetchRecentEditedExamples(cleanId, esRespuesta);
+      if (recentEdits.length === 0) continue;
 
-    const byCategory = new Map<string, PitchEditRow[]>();
-    for (const edit of recentEdits) {
-      const cat = mapLeadTipoToTemplateCategory(edit.tipo_entidad);
-      if (!byCategory.has(cat)) byCategory.set(cat, []);
-      byCategory.get(cat)!.push(edit);
-    }
+      const byCategory = new Map<string, PitchEditRow[]>();
+      for (const edit of recentEdits) {
+        const cat = mapLeadTipoToTemplateCategory(edit.tipo_entidad);
+        if (!byCategory.has(cat)) byCategory.set(cat, []);
+        byCategory.get(cat)!.push(edit);
+      }
 
-    // Secuencial a propósito: cada categoría con señal dispara una llamada a IA, y no queremos
-    // lanzar varias en paralelo contra el mismo proveedor por una sola pulsación del mánager.
-    for (const [cat, edits] of byCategory) {
-      if (edits.length < 2) continue;
-      await refineToneDnaForCategory(cleanId, cat, edits);
-      refinedCategories.push(cat);
+      // Secuencial a propósito: cada categoría con señal dispara una llamada a IA, y no queremos
+      // lanzar varias en paralelo contra el mismo proveedor por una sola pulsación del mánager.
+      for (const [cat, edits] of byCategory) {
+        if (edits.length < 2) continue;
+        await refineToneDnaForCategory(cleanId, cat, edits, esRespuesta);
+        refinedCategories.push(esRespuesta ? `${cat} (respuestas)` : cat);
+      }
     }
     return refinedCategories;
   } catch (err: any) {

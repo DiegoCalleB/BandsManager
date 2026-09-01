@@ -169,7 +169,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         headers['Authorization'] = `Bearer ${token}`;
         headers['x-auth-token'] = token;
       }
-      const res = await fetch(`/api/leads/${selectedLead.id}/regenerate-pitch`, {
+      // En etapa de respuesta usa el endpoint del Contestador (prompt con el mensaje entrante
+      // real y el hilo) en vez del de pitch inicial - antes ambos casos llamaban al mismo
+      // endpoint de pitch, perdiendo el contexto de a qué estaba respondiendo la banda.
+      const endpoint = isReplyStage
+        ? `/api/leads/${selectedLead.id}/regenerate-reply`
+        : `/api/leads/${selectedLead.id}/regenerate-pitch`;
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify({

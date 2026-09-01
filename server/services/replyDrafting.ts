@@ -55,17 +55,23 @@ export async function generarBorradorRespuesta(
   lead: any,
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
-  provider?: string
+  provider?: string,
+  feedbackDetails?: string[]
 ): Promise<DraftReplyResult> {
   const state = loadState();
-  const bandDna = getBandDnaProfile(state, bandId, lead);
+  // Modo 'reply': lee reglas de estilo aprendidas del cubo de RESPUESTAS, no del de pitches
+  // (ver getBandDnaProfile en bandDna.ts) - corregir cómo se responde a una negociación no debe
+  // enseñarle al sistema a redactar mal el primer contacto, y viceversa.
+  const bandDna = getBandDnaProfile(state, bandId, lead, 'reply');
   const category = mapLeadTipoToTemplateCategory(lead.tipo);
 
-  // Detectar tipo de respuesta entrante
+  // Detectar tipo de respuesta entrante (guía automática de código, ver buildReplySystemPrompt)
   const responseType = detectResponseType(incomingMessage);
   console.log(`[Contestador] Tipo de respuesta detectado: ${responseType}`);
 
-  // Obtener estrategias de respuesta configuradas por la banda
+  // Guía condicional configurada a mano por la banda para este tipo de respuesta (opcional -
+  // ver AgentAutonomySettingsModal.tsx > "Estrategias de Respuesta"). Si no hay ninguna, cae a
+  // la guía automática fija de código dentro de buildReplySystemPrompt.
   let responseStrategy = null;
   try {
     const autonomyConfig = await dbGetAutonomyConfig(bandId);
@@ -85,7 +91,7 @@ export async function generarBorradorRespuesta(
     console.warn("Notice cargando ejemplos de respuesta para el Contestador:", err);
   }
 
-  const systemPrompt = buildReplySystemPrompt(bandDna, lead, incomingMessage, threadSoFar, replyFewShotSection, responseType, responseStrategy);
+  const systemPrompt = buildReplySystemPrompt(bandDna, lead, incomingMessage, threadSoFar, replyFewShotSection, responseType, responseStrategy, feedbackDetails);
   const prompt = `Redacta la respuesta al mensaje entrante indicado en las instrucciones del sistema. Devuelve ÚNICAMENTE el cuerpo del email, sin asunto.`;
 
   const pitchLinks = { spotify: bandDna.spotifyUrl, youtube: bandDna.youtubeUrl, epk: bandDna.epkUrl };

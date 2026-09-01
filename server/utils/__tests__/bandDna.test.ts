@@ -247,6 +247,68 @@ describe('buildReplySystemPrompt - Contestador', () => {
     const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], '');
     expect(prompt).toContain('Sin mensajes previos registrados');
   });
+
+  it('usa la guía configurada a mano por el mánager cuando existe para el tipo detectado', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const responseStrategy = { guidancePrompt: 'Nunca des cifras concretas por email.', tone: 'neutral', mentionLinks: false };
+    const prompt = buildReplySystemPrompt(dna, lead, '¿Cuánto cobráis?', [], '', 'price_negotiation', responseStrategy);
+
+    expect(prompt).toContain('GUÍA CONDICIONAL PARA ESTE TIPO DE RESPUESTA (configurada por el mánager)');
+    expect(prompt).toContain('Nunca des cifras concretas por email.');
+    expect(prompt).not.toContain('GUÍA AUTOMÁTICA PARA ESTE TIPO DE RESPUESTA');
+  });
+
+  it('cae a la guía automática de código si no hay estrategia configurada para el tipo detectado', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const prompt = buildReplySystemPrompt(dna, lead, '¿Cuánto cobráis?', [], '', 'price_negotiation');
+
+    expect(prompt).toContain('GUÍA AUTOMÁTICA PARA ESTE TIPO DE RESPUESTA');
+    expect(prompt).not.toContain('configurada por el mánager');
+  });
+
+  it('incluye las instrucciones puntuales de una regeneración con feedback', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const prompt = buildReplySystemPrompt(
+      dna, lead, 'Perfecto, adelante', [], '', 'confirmation', undefined,
+      ['Puntuación de tono deseado: 5/5', 'Instrucciones específicas de esta respuesta: "Hazlo más corto"']
+    );
+
+    expect(prompt).toContain('INSTRUCCIONES DEL MÁNAGER PARA ESTA REGENERACIÓN CONCRETA');
+    expect(prompt).toContain('Hazlo más corto');
+  });
+});
+
+describe('getBandDnaProfile - separación de reglas aprendidas entre pitch y respuesta', () => {
+  it('en modo pitch (por defecto) lee reglas_por_categoria, no reglas_por_categoria_respuesta', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Regla de pitch para salas'] } },
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Regla de respuesta para salas'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' });
+    expect(dna.reglasEstiloAprendidas).toEqual(['Regla de pitch para salas']);
+  });
+
+  it('en modo reply lee reglas_por_categoria_respuesta, no reglas_por_categoria', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Regla de pitch para salas'] } },
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Regla de respuesta para salas'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' }, 'reply');
+    expect(dna.reglasEstiloAprendidas).toEqual(['Regla de respuesta para salas']);
+  });
+
+  it('en modo reply no cae a los campos planos antiguos de pitch (nunca fueron de respuesta)', () => {
+    const state = stateConBanda({
+      reglas_estilo_aprendidas: ['Regla plana antigua de pitch'],
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' }, 'reply');
+    expect(dna.reglasEstiloAprendidas).toBeUndefined();
+  });
+
+  it('en modo reply sin ninguna regla de respuesta aprendida no revienta', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-reglas', { tipo: 'sala' }, 'reply');
+    expect(dna.reglasEstiloAprendidas).toBeUndefined();
+  });
 });
 
 describe('formatReplyFewShotForPrompt', () => {

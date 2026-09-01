@@ -4,7 +4,7 @@ import {
   Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
   Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
   ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download,
-  MessageSquare, TrendingUp, ThumbsUp, ThumbsDown, HelpCircle
+  MessageSquare, ThumbsUp, ThumbsDown, HelpCircle
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { BandSchedule } from '../../types';
