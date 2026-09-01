@@ -204,22 +204,25 @@ export async function runEnviadorAgent(opts: {
         continue;
       }
 
+      let messageId: string;
       if (usarGmailOAuth) {
-        await enviarEmailGmailApi(opts.bandId, {
+        const result = await enviarEmailGmailApi(opts.bandId, {
           to: emailContacto,
           subject: asunto,
           body: emailText,
           html: emailHtml,
           inReplyTo: lead.thread_id || undefined
         });
+        messageId = result.messageId;
       } else {
-        await enviarEmail(opts.bandId, {
+        const result = await enviarEmail(opts.bandId, {
           to: emailContacto,
           subject: asunto,
           body: emailText,
           html: emailHtml,
           inReplyTo: lead.thread_id || undefined
         });
+        messageId = result.messageId;
       }
 
       const nextState = isRespuesta ? "negociando" : "contactado";
@@ -228,7 +231,7 @@ export async function runEnviadorAgent(opts: {
       await sb.from("leads").update({ estado: nextState, fecha_envio: nowIso, notas: newNote, gmail_draft_id: null }).eq("id", lead.id);
 
       await sb.from("lead_messages").insert({
-        id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+        id: `imap-${messageId}`,
         lead_id: lead.id,
         band_id: lead.band_id || opts.bandId,
         remitente: "banda",
@@ -326,7 +329,7 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
   const nowIso = new Date().toISOString();
 
   for (const lead of leads) {
-    let resultado: { existe: boolean; status: number; cuerpo?: string };
+    let resultado: { existe: boolean; status: number; messageId?: string; cuerpo?: string };
     try {
       resultado = await comprobarBorradorEnviadoConDetalle(bandId, lead.gmail_draft_id);
     } catch (e: any) {
@@ -346,7 +349,7 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
 
     await sb.from("leads").update({ estado: "contactado", fecha_envio: nowIso, notas: newNote, gmail_draft_id: null }).eq("id", lead.id);
     await sb.from("lead_messages").insert({
-      id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      id: resultado.messageId ? `imap-${resultado.messageId}` : `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       lead_id: lead.id,
       band_id: bandId,
       remitente: "banda",
