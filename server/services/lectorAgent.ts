@@ -11,7 +11,8 @@
 import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
-import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, getSupabase } from "../db.js";
+import { generarBorradorRespuesta } from "./replyDrafting.js";
+import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 
 // Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
@@ -158,6 +159,12 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     const messageRowId = `imap-${msg.messageId}`;
     const yaRegistrado = await dbLeadMessageExists(messageRowId);
     if (!yaRegistrado) {
+      // El hilo previo (antes de registrar este mensaje) es lo que el Contestador necesita
+      // como contexto de conversación - se pide ANTES de dbCreateLeadMessage para no tener que
+      // filtrar luego el mensaje que acabamos de insertar.
+      const hiloPrevio = await dbGetLeadMessages(String(lead.id), bandId);
+      const threadSoFar = hiloPrevio.map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
+
       await dbCreateLeadMessage({
         id: messageRowId,
         lead_id: lead.id,
@@ -169,14 +176,42 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         fecha: (msg.date || new Date()).toISOString()
       });
 
-      const nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text);
-      if (nuevoEstado !== lead.estado || !lead.fecha_ultima_respuesta) {
-        await dbUpsertLead({
-          ...lead,
-          estado: nuevoEstado,
-          fecha_ultima_respuesta: (msg.date || new Date()).toISOString()
-        }, bandId);
+      // Auto-Contestador: en vez de dejar el lead solo clasificado (negociando/respondido) sin
+      // nada más que hacer, se intenta redactar ya mismo la respuesta con IA (mismo motor que
+      // server/routes/leads/reply.ts) y se deja en 'pendiente_aprobacion' - el mismo estado que
+      // ya usa el pitch inicial para el botón "Aprobar" en VenueDetailPanel.tsx. Nunca se envía
+      // sola: sigue haciendo falta la aprobación humana (aprobado_respuesta) antes del Enviador.
+      // Si la IA falla, se cae al comportamiento de antes (solo clasificar) para no dejar el
+      // lead sin estado por un fallo de la IA.
+      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text);
+      let borradorGenerado: string | null = null;
+      try {
+        const { draftReply } = await generarBorradorRespuesta(bandId, lead, msg.text, threadSoFar);
+        borradorGenerado = draftReply;
+        nuevoEstado = "pendiente_aprobacion";
+      } catch (draftErr) {
+        console.warn(`[Lector] No se pudo autogenerar la respuesta para el lead ${lead.id}:`, draftErr);
       }
+
+      await dbUpsertLead({
+        ...lead,
+        estado: nuevoEstado,
+        ...(borradorGenerado ? { pitch_generado: borradorGenerado } : {}),
+        fecha_ultima_respuesta: (msg.date || new Date()).toISOString()
+      }, bandId);
+
+      // RFC 5322: la próxima respuesta nuestra debe citar el Message-ID de ESTE mensaje entrante
+      // (no el de nuestro propio envío anterior) para que Gmail/el cliente de la sala lo agrupe
+      // bien en el hilo. dbUpsertLead no toca esta columna (ver server/db/leads.ts), así que se
+      // actualiza aparte, igual que ya hace agentEngine.ts con gmail_message_id/gmail_thread_id.
+      if (msg.messageId) {
+        try {
+          await getSupabase().from("leads").update({ gmail_message_id: msg.messageId }).eq("id", lead.id);
+        } catch (idErr) {
+          console.warn(`[Lector] No se pudo actualizar gmail_message_id para el lead ${lead.id}:`, idErr);
+        }
+      }
+
       leadsActualizados.push(String(lead.id));
     }
 

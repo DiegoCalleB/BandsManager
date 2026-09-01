@@ -183,7 +183,7 @@ export async function runEnviadorAgent(opts: {
             subject: asunto,
             body: emailText,
             html: emailHtml,
-            inReplyTo: lead.thread_id || undefined
+            inReplyTo: lead.gmail_message_id || undefined
           });
           draftPath = creado.draftPath;
           draftId = creado.draftId;
@@ -193,7 +193,7 @@ export async function runEnviadorAgent(opts: {
             subject: asunto,
             body: emailText,
             html: emailHtml,
-            inReplyTo: lead.thread_id || undefined
+            inReplyTo: lead.gmail_message_id || undefined
           })).draftPath;
         }
 
@@ -212,7 +212,7 @@ export async function runEnviadorAgent(opts: {
           subject: asunto,
           body: emailText,
           html: emailHtml,
-          inReplyTo: lead.thread_id || undefined
+          inReplyTo: lead.gmail_message_id || undefined
         });
         messageId = result.messageId;
         threadId = result.threadId;
@@ -222,7 +222,7 @@ export async function runEnviadorAgent(opts: {
           subject: asunto,
           body: emailText,
           html: emailHtml,
-          inReplyTo: lead.thread_id || undefined
+          inReplyTo: lead.gmail_message_id || undefined
         });
         messageId = result.messageId;
       }

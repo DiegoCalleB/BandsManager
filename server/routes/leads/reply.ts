@@ -1,11 +1,8 @@
 import express from "express";
 import { loadState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbGetLeadMessages } from "../../db.js";
-import { generateUnifiedAI } from "../../ai.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
-import { getBandDnaProfile, buildReplySystemPrompt, formatReplyFewShotForPrompt } from "../../utils/bandDna.js";
-import { dbGetReplyFewShotThreads } from "../../db/pitchLearning.js";
-import { mapLeadTipoToTemplateCategory } from "../../promptsManager.js";
+import { generarBorradorRespuesta } from "../../services/replyDrafting.js";
 
 const router = express.Router();
 
@@ -50,42 +47,7 @@ router.post("/leads/:id/generate-reply", requireAuth, async (req, res) => {
       .filter((m) => m !== ultimoMensajeSala || Boolean(incomingMessageOverride))
       .map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
 
-    const bandDna = getBandDnaProfile(state, bandId, lead);
-    const category = mapLeadTipoToTemplateCategory(lead.tipo);
-
-    let replyFewShotSection = "";
-    try {
-      const threads = await dbGetReplyFewShotThreads(bandId, category, 2);
-      replyFewShotSection = formatReplyFewShotForPrompt(threads);
-    } catch (err) {
-      console.warn("Notice cargando ejemplos de respuesta para el Contestador:", err);
-    }
-
-    const systemPrompt = buildReplySystemPrompt(bandDna, lead, incomingMessage, threadSoFar, replyFewShotSection);
-    const prompt = `Redacta la respuesta al mensaje entrante indicado en las instrucciones del sistema. Devuelve ÚNICAMENTE el cuerpo del email, sin asunto.`;
-
-    const pitchLinks = { spotify: bandDna.spotifyUrl, youtube: bandDna.youtubeUrl, epk: bandDna.epkUrl };
-
-    let draftReply = "";
-    let isSimulated = false;
-    try {
-      const unifiedRes = await generateUnifiedAI({
-        prompt,
-        systemPrompt,
-        provider: provider || "gemini",
-        permitirPitchLocal: true,
-        links: pitchLinks,
-        contactEmail: bandDna.contactoEmail
-      });
-      if (unifiedRes?.text) draftReply = unifiedRes.text.trim();
-    } catch (aiErr: any) {
-      console.warn("Fallo IA al generar respuesta:", aiErr?.message || aiErr);
-    }
-
-    if (!draftReply) {
-      isSimulated = true;
-      draftReply = `Hola ${lead.contacto_nombre ? lead.contacto_nombre.split(" ")[0] : "equipo de " + (lead.nombre_sala || "la sala")},\n\nMuchas gracias por vuestra respuesta. Nos encantaría seguir hablando para cuadrar los detalles.\n\n¿Cómo tenéis la agenda para coordinar una llamada o cerrar los últimos detalles?\n\n¡Un saludo!`;
-    }
+    const { draftReply, isSimulated } = await generarBorradorRespuesta(bandId, lead, incomingMessage, threadSoFar, provider);
 
     res.json({
       success: true,
