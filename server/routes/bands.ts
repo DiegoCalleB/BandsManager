@@ -6,8 +6,12 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import responseStrategiesRouter from "./bands/responseStrategies.js";
 
 const router = express.Router();
+
+// Montar router de response strategies
+router.use(responseStrategiesRouter);
 
 // Helper to check if URL is a generic directory or social profile
 function isBadDirectoryUrl(url: string): boolean {
