@@ -21,6 +21,12 @@ describe('detectarEstadoTrasRespuesta', () => {
   it('es insensible a mayúsculas', () => {
     expect(detectarEstadoTrasRespuesta('contactado', '¿CUÁNTO CACHÉ PEDÍS?')).toBe('negociando');
   });
+
+  it('detecta negociación en el idioma del lead, no solo en español', () => {
+    expect(detectarEstadoTrasRespuesta('contactado', 'What is your fee for this show?', 'en')).toBe('negociando');
+    expect(detectarEstadoTrasRespuesta('contactado', 'Quel est votre budget pour cette date?', 'fr')).toBe('negociando');
+    expect(detectarEstadoTrasRespuesta('esperando_respuesta', 'Danke für eure Nachricht, wir melden uns.', 'de')).toBe('respondido');
+  });
 });
 
 describe('puedeGenerarBorradorIA', () => {

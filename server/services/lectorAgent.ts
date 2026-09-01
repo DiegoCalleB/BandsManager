@@ -11,24 +11,20 @@
 import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
-import { generarBorradorRespuesta, PRICE_KEYWORDS } from "./replyDrafting.js";
+import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword } from "./replyDrafting.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
+import { detectPitchLanguage } from "../utils/leadLanguage.js";
 
 // Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
 // entrar aquí no bloquea el hilo, y una clasificación de más no hace daño (el mánager siempre
-// puede corregir el estado a mano). Las palabras de precio se comparten con replyDrafting.ts
-// (PRICE_KEYWORDS) para que ambos clasificadores no diverjan con el tiempo; aquí se añaden
-// además señales de fecha/logística, porque esta comprobación decide algo más amplio ("¿esto
-// abre negociación?") que la de replyDrafting.ts ("¿es específicamente una pregunta de precio?").
-const PALABRAS_NEGOCIACION = [
-  ...PRICE_KEYWORDS,
-  "fecha", "disponibilidad", "cuándo", "cuando podéis", "contrato", "rider"
-];
-
-export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string): string {
+// puede corregir el estado a mano). Las palabras se comparten con replyDrafting.ts
+// (getNegotiationKeywords) para que ambos clasificadores no diverjan con el tiempo, y ahora
+// están indexadas por idioma - antes eran 100% en español, así que una sala francesa/italiana/
+// etc. preguntando por precio o fecha nunca hacía que el lead pasara a "negociando".
+export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string, languageCode?: string): string {
   const t = (textoRespuesta || "").toLowerCase();
-  if (PALABRAS_NEGOCIACION.some((k) => t.includes(k))) return "negociando";
+  if (getNegotiationKeywords(languageCode).some((k) => matchesKeyword(t, k))) return "negociando";
   if (estadoActual === "contactado" || estadoActual === "esperando_respuesta") return "respondido";
   return estadoActual;
 }
@@ -68,6 +64,13 @@ export interface LectorAgentResult {
   borradoresTodaviaSinEnviar: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }>;
   erroresComprobandoBorradores: Array<{ leadId: string; draftId: string; error: string }>;
   cuentaGmailReal: string | null;
+  // Actividad del Contestador automático (generarBorradorRespuesta) durante este tick - antes
+  // era invisible: un fallo de la IA solo dejaba un console.warn, y el tope de
+  // puedeGenerarBorradorIA ni eso lo registraba en ningún sitio que un mánager pudiera ver. Estos
+  // tres contadores son los que runLectorTick (agentScheduler.ts) vuelca en agent_execution_logs.
+  borradorIaGenerados: number;
+  borradorIaFallidos: number;
+  borradorIaBloqueadosPorLimite: number;
 }
 
 export async function runLectorAgent(bandId: string): Promise<LectorAgentResult> {
@@ -109,12 +112,15 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   }
 
   if (mensajes.length === 0) {
-    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal };
+    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0 };
   }
 
   const leads = await dbGetLeads(bandId);
   const uidsProcesados: Array<number | string> = [];
   let sinEmparejar = 0;
+  let borradorIaGenerados = 0;
+  let borradorIaFallidos = 0;
+  let borradorIaBloqueadosPorLimite = 0;
 
   for (const msg of mensajes) {
     // Un bounce/NDR llega DESPUÉS de que el Enviador ya diera el pitch por enviado (Gmail acepta
@@ -210,18 +216,21 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       // sola: sigue haciendo falta la aprobación humana (aprobado_respuesta) antes del Enviador.
       // Si la IA falla, se cae al comportamiento de antes (solo clasificar) para no dejar el
       // lead sin estado por un fallo de la IA.
-      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text);
+      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text, detectPitchLanguage(lead).code);
       let borradorGenerado: string | null = null;
       if (puedeGenerarBorradorIA(bandId)) {
         try {
           const { draftReply } = await generarBorradorRespuesta(bandId, lead, msg.text, threadSoFar);
           borradorGenerado = draftReply;
           nuevoEstado = "pendiente_aprobacion";
+          borradorIaGenerados++;
         } catch (draftErr) {
           console.warn(`[Lector] No se pudo autogenerar la respuesta para el lead ${lead.id}:`, draftErr);
+          borradorIaFallidos++;
         }
       } else {
         console.warn(`[Lector] Tope de borradores IA alcanzado para la banda ${bandId} esta hora - lead ${lead.id} queda solo clasificado, sin redactar.`);
+        borradorIaBloqueadosPorLimite++;
       }
 
       await dbUpsertLead({
@@ -258,5 +267,5 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     });
   }
 
-  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal };
+  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite };
 }

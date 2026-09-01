@@ -63,3 +63,36 @@ describe('detectResponseType', () => {
     expect(detectResponseType('Nos parece bien, ok.')).toBe('confirmation');
   });
 });
+
+describe('detectResponseType con leads en otros idiomas', () => {
+  it('detecta negociación de precio en inglés, italiano, francés y alemán', () => {
+    expect(detectResponseType('What is your fee for this show?', 'en')).toBe('price_negotiation');
+    expect(detectResponseType('Qual è il vostro cachet?', 'it')).toBe('price_negotiation');
+    expect(detectResponseType('Quel est votre cachet pour la date?', 'fr')).toBe('price_negotiation');
+    expect(detectResponseType('Wie viel ist eure Gage?', 'de')).toBe('price_negotiation');
+  });
+
+  it('detecta confirmación en varios idiomas sin depender del español', () => {
+    expect(detectResponseType('Perfect, sounds great, we confirm the date.', 'en')).toBe('confirmation');
+    expect(detectResponseType('Perfetto, confermiamo la data.', 'it')).toBe('confirmation');
+    expect(detectResponseType('Parfait, nous confirmons la date.', 'fr')).toBe('confirmation');
+  });
+
+  it('detecta rechazo en varios idiomas sin depender del español', () => {
+    expect(detectResponseType('Unfortunately this is not possible for us.', 'en')).toBe('rejection');
+    expect(detectResponseType('Purtroppo non è possibile in questo momento.', 'it')).toBe('rejection');
+    expect(detectResponseType('Malheureusement ce n\'est pas possible.', 'fr')).toBe('rejection');
+  });
+
+  it('cae a español si el idioma no está soportado o no se indica', () => {
+    expect(detectResponseType('¿Cuánto cobráis?')).toBe('price_negotiation');
+    expect(detectResponseType('¿Cuánto cobráis?', 'xx')).toBe('price_negotiation');
+  });
+
+  it('no confunde palabras cortas de otros idiomas con substrings ("ja" en "januari")', () => {
+    // "januari" (enero, en neerlandés) contiene "ja" ("sí") como substring - no debe disparar
+    // "confirmation" solo por mencionar un mes.
+    expect(detectResponseType('We hebben pas plek in januari.', 'nl')).toBe('neutral');
+    expect(detectResponseType('Ja, dat past ons goed.', 'nl')).toBe('confirmation');
+  });
+});
