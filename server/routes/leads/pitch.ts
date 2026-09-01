@@ -42,6 +42,7 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
 
     const bandDna = getBandDnaProfile(state, userBandId, lead);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const bandMinCache = state.autonomyConfig?.minCacheByType;
 
     // Dynamic Few-Shot In-Context Learning: recuperar ejemplos reales aprobados
     try {
@@ -58,7 +59,7 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
     if (contenido_rating) feedbackDetails.push(`Puntuación de contenido: ${contenido_rating}/5`);
     if (comentario && comentario.trim()) feedbackDetails.push(`Instrucciones específicas del mánager: "${comentario.trim()}"`);
 
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache);
 
     const prompt = `Redacta una propuesta comercial y artística de concierto para "${lead.nombre_sala}" en ${lead.ciudad || 'España'} (Tipo: ${lead.tipo || 'sala'}, Aforo: ${lead.aforo || 'N/D'}).
 ${feedbackDetails.length > 0 ? `\nINSTRUCCIONES ADICIONALES DEL MÁNAGER:\n${feedbackDetails.join('\n')}` : ''}
@@ -144,6 +145,7 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     }
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const bandMinCache = state.autonomyConfig?.minCacheByType;
 
     // Dynamic Few-Shot In-Context Learning: recuperar ejemplos reales aprobados
     try {
@@ -155,7 +157,7 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
       console.warn("Few-shot examples lookup notice:", err);
     }
 
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache);
 
     const prompt = `Reescribe y perfecciona el correo de pitch para "${lead.nombre_sala}" en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}).
 

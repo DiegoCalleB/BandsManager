@@ -72,6 +72,27 @@ export function isCampaignActive(campaign: any): boolean {
 }
 
 /**
+ * Resuelve el caché mínimo por tipo de recinto, priorizando campaña activa sobre banda.
+ * Retorna objeto con tipos que aplican + sus cachés (tipos con caché 0 o undefined se filtran).
+ */
+export function resolveMinCacheByType(activeCampaign: any, bandMinCache?: any): Record<string, number> {
+  const cacheToUse = (activeCampaign && isCampaignActive(activeCampaign) && activeCampaign.minCacheByType)
+    ? activeCampaign.minCacheByType
+    : (bandMinCache || {});
+
+  // Filtrar tipos con caché > 0 (aplican a esta campaña/banda)
+  const applicable: Record<string, number> = {};
+  const tipos = ['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'];
+  for (const tipo of tipos) {
+    const cache = cacheToUse[tipo];
+    if (cache && cache > 0) {
+      applicable[tipo] = cache;
+    }
+  }
+  return applicable;
+}
+
+/**
  * Extrae el perfil de ADN completo y multidimensional de cualquier banda registrada
  * o de Bakandeya a partir del estado de la aplicación.
  */
@@ -290,8 +311,9 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
  * Construye un prompt completo y multidimensional que integra todos los ADNs de la banda,
  * el perfil del recinto/medio receptor, el historial de aprendizaje del mánager y las directrices
  * de idioma y tono sin fórmulas clichés de IA.
+ * bandMinCache: cachés mínimos generales de la banda (usados si no hay campaña activa).
  */
-export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any): string {
+export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any, bandMinCache?: any): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
@@ -321,6 +343,19 @@ ${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.len
 `;
     }
 
+    const applicableCaches = resolveMinCacheByType(activeCampaign, bandMinCache);
+    let cacheSection = "";
+    if (Object.keys(applicableCaches).length > 0) {
+      const cacheLines = Object.entries(applicableCaches)
+        .map(([tipo, cache]) => `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: mínimo ${cache}€`)
+        .join("\n");
+      cacheSection = `
+💰 NEGOCIACIÓN - CACHÉS MÍNIMOS POR TIPO DE RECINTO:
+${cacheLines}
+INSTRUCCIÓN CRÍTICA: En la negociación de condiciones económicas, NUNCA bajes de estos cachés mínimos. Estos son los pisos de tu banda para cada tipo de recinto. Ofrece flexibilidad en taquilla compartida, co-booking o modelos alternativos, pero el caché base no es negociable.
+`;
+    }
+
     campaignSection = `
 ═════════════════════════════════════════════════════════════════════
 🎯 CAMPAÑA DE BOOKING ACTIVA: "${cName}" (PRIORIDAD MÁXIMA DE AGENDA)
@@ -330,10 +365,27 @@ ${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.len
 ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
 ${campaignToneSection}
+${cacheSection}
 * DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona de forma natural y sin repeticiones que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking. IMPORTANTE: evita repetir las fechas múltiples veces; menciónlas UNA SOLA VEZ de forma clara y directa.
 * PERSONALIZACIÓN REQUERIDA: Adapta el tono y enfoque específicamente al tipo de recinto destinatario. Menciona detalles concretos de ${lead?.nombre_sala || "la sala"} si los conoces (su género de programación, su audiencia, su reputación). Haz que sienta que la propuesta es PARA ÉL/ELLA específicamente, no un mensaje genérico para 100 salas.
 ${cTemplate ? `* DIRECTIVA DE PLANTILLA: La plantilla/mensaje clave de esta campaña ("${cTemplate}") DEBE estar incorporada de forma natural en tu propuesta. Úsala como base o referencia obligatoria para mantener coherencia con la estrategia de la campaña.` : ''}
 `;
+  } else {
+    // Si no hay campaña activa, mostrar cachés generales de banda
+    const applicableCaches = resolveMinCacheByType(undefined, bandMinCache);
+    if (Object.keys(applicableCaches).length > 0) {
+      const cacheLines = Object.entries(applicableCaches)
+        .map(([tipo, cache]) => `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: mínimo ${cache}€`)
+        .join("\n");
+      campaignSection = `
+═════════════════════════════════════════════════════════════════════
+💰 NEGOCIACIÓN - CACHÉS MÍNIMOS POR TIPO DE RECINTO (CONFIGURACIÓN GENERAL DE BANDA):
+═════════════════════════════════════════════════════════════════════
+${cacheLines}
+
+INSTRUCCIÓN CRÍTICA: En la negociación de condiciones económicas, NUNCA bajes de estos cachés mínimos. Estos son los pisos de tu banda para cada tipo de recinto. Ofrece flexibilidad en taquilla compartida, co-booking o modelos alternativos, pero el caché base no es negociable.
+`;
+    }
   }
 
   return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".

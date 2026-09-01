@@ -136,8 +136,9 @@ router.post("/templates/preview", requireAuth, async (req, res) => {
     bandDna.categoryTemplateTitle = DEFAULT_CATEGORY_TEMPLATES[category].title;
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const bandMinCache = state.autonomyConfig?.minCacheByType;
 
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, syntheticLead as any);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, syntheticLead as any, undefined, bandMinCache);
 
     const prompt = `Redacta una propuesta comercial y artística de concierto para "${syntheticLead.nombre_sala}" en ${syntheticLead.ciudad} (Tipo: ${syntheticLead.tipo}, Aforo: ${syntheticLead.aforo}).
 

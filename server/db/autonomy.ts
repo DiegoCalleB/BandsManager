@@ -35,6 +35,20 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
 
   if (error) throw new Error(`Supabase Error (autonomy_configs): ${error.message}`);
   if (!data) return null;
+
+  let minCacheByType: any = {};
+  const rawMinCache = data.min_cache_by_type;
+  if (rawMinCache && typeof rawMinCache === "object" && !Array.isArray(rawMinCache)) {
+    minCacheByType = rawMinCache;
+  } else if (typeof rawMinCache === "string" && rawMinCache) {
+    try {
+      const parsed = JSON.parse(rawMinCache);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) minCacheByType = parsed;
+    } catch {
+      // Ignora JSON malformado
+    }
+  }
+
   return {
     dispatchLevel: data.dispatch_level,
     negotiationDepth: data.negotiation_depth,
@@ -44,7 +58,8 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
     notifyOnEveryProposal: data.notify_on_every_proposal,
     requireHumanForFinalSignOff: data.require_human_for_final_sign_off,
     dispatchMode: data.dispatch_mode,
-    responseStrategies: data.response_strategies || {}
+    responseStrategies: data.response_strategies || {},
+    minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined
   };
 }
 
@@ -67,7 +82,10 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
     // Ver AGENTS.md sección 3 y el comentario junto a ENVIO_REAL_HABILITADO_GLOBALMENTE en
     // server/services/agentEngine.ts.
     dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail",
-    response_strategies: config.responseStrategies || config.response_strategies || {}
+    response_strategies: config.responseStrategies || config.response_strategies || {},
+    min_cache_by_type: (config.minCacheByType && typeof config.minCacheByType === "object")
+      ? config.minCacheByType
+      : undefined
   };
 
   const { data, error } = await sb.from("autonomy_configs").upsert(payload).select().single();

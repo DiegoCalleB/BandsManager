@@ -274,7 +274,8 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
     const state = loadState();
     const bandDna = getBandDnaProfile(state, userBandId, lead);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+    const bandMinCache = state.autonomyConfig?.minCacheByType;
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, undefined, bandMinCache);
 
     const pitchLinks = {
       spotify: bandDna.spotifyUrl,

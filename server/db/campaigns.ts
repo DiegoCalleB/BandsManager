@@ -12,6 +12,14 @@ export interface DbCampaign {
   target_dates_text?: string;
   notes?: string;
   custom_pitch_templates?: Record<string, string>;
+  min_cache_by_type?: {
+    salas?: number;
+    festivales?: number;
+    discotecas?: number;
+    ayuntamientos?: number;
+    medios?: number;
+    grupos?: number;
+  };
   campaign_tone_rules?: {
     reglas_estilo_aprendidas?: string[];
     vocabulario_aprendido?: string[];
@@ -80,6 +88,19 @@ export function normalizeCampaignFromDb(c: any) {
     }
   }
 
+  let minCacheByType: any = {};
+  const rawMinCache = c.min_cache_by_type ?? c.minCacheByType;
+  if (rawMinCache && typeof rawMinCache === "object" && !Array.isArray(rawMinCache)) {
+    minCacheByType = rawMinCache;
+  } else if (typeof rawMinCache === "string" && rawMinCache) {
+    try {
+      const parsed = JSON.parse(rawMinCache);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) minCacheByType = parsed;
+    } catch {
+      // Ignora JSON malformado
+    }
+  }
+
   return {
     id: String(c.id),
     band_id: c.band_id || c.bandId,
@@ -91,6 +112,7 @@ export function normalizeCampaignFromDb(c: any) {
     targetDatesText: c.target_dates_text || c.targetDatesText || "",
     notes: c.notes || "",
     customPitchTemplates,
+    minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
     campaignToneRules,
     isActive: Boolean(c.is_active ?? c.isActive ?? false),
     color: c.color || "#8b5cf6",
@@ -153,6 +175,9 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     custom_pitch_templates: (campaign.customPitchTemplates && typeof campaign.customPitchTemplates === "object")
       ? campaign.customPitchTemplates
       : {},
+    min_cache_by_type: (campaign.minCacheByType && typeof campaign.minCacheByType === "object")
+      ? campaign.minCacheByType
+      : undefined,
     campaign_tone_rules: (campaign.campaignToneRules && typeof campaign.campaignToneRules === "object")
       ? campaign.campaignToneRules
       : undefined,
