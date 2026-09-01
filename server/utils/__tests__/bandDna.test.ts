@@ -134,7 +134,7 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     const dna = getBandDnaProfile(state, 'banda-test');
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
 
-    expect(prompt).toContain('ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER');
+    expect(prompt).toContain('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
     expect(prompt).toContain('Cercano y directo');
     expect(prompt).toContain('bolo, currárnoslo');
     expect(prompt).toContain('Abrir mencionando la fecha concreta');
@@ -143,7 +143,7 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
   it('omite el bloque de ADN de voz si no hay ningún campo entrenado', () => {
     const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn');
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
-    expect(prompt).not.toContain('ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER');
+    expect(prompt).not.toContain('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
   });
 
   it('incluye las pautas de la plantilla de categoría cuando existen', () => {
@@ -227,6 +227,43 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     expect(prompt).toContain('REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER');
     expect(prompt).toContain('🔒 Firma siempre como "el equipo de Booking"');
   });
+
+  // El mánager pidió explícitamente que los hilos reales de email (y las reglas aprendidas de
+  // corrección real, misma clase de señal) pesen al MÁXIMO para el tono, y que el ADN de voz de
+  // redes sociales sea solo enriquecimiento - antes era al revés (el ADN de voz decía "MANDA
+  // SOBRE EL TONO GENÉRICO" y los ejemplos reales quedaban al final del prompt sin ninguna
+  // prioridad declarada).
+  it('el estilo aprendido de correcciones reales manda explícitamente sobre el ADN de voz de redes, y aparece antes en el prompt', () => {
+    const state = stateConBanda({
+      tono_comunicacion: 'Gamberro y directo, como en Instagram',
+      vocabulario_clave: ['pogo', 'familia'],
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Usar registro formal con ayuntamientos'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('CÓMO ESCRIBE ESTA BANDA DE VERDAD');
+    expect(prompt).toContain('MÁXIMA PRIORIDAD DE ESTILO Y TONO');
+    expect(prompt).toContain('gana SIEMPRE el punto 6');
+
+    const idxEstiloReal = prompt.indexOf('CÓMO ESCRIBE ESTA BANDA DE VERDAD');
+    const idxAdnRedes = prompt.indexOf('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
+    expect(idxEstiloReal).toBeGreaterThan(-1);
+    expect(idxAdnRedes).toBeGreaterThan(-1);
+    expect(idxEstiloReal).toBeLessThan(idxAdnRedes);
+  });
+
+  it('los hilos de ejemplo reales (fewShotSection) se inyectan junto a las reglas aprendidas, con prioridad máxima declarada', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    dna.fewShotSection = '\nEJEMPLO REAL: "Hola equipo de Sala X, os proponemos fecha..."\n';
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('CÓMO ESCRIBE ESTA BANDA DE VERDAD');
+    expect(prompt).toContain('Hola equipo de Sala X, os proponemos fecha');
+    const idxFewShot = prompt.indexOf('Hola equipo de Sala X');
+    const idxDirectrices = prompt.indexOf('DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN');
+    expect(idxFewShot).toBeLessThan(idxDirectrices);
+  });
 });
 
 describe('buildReplySystemPrompt - Contestador', () => {
@@ -303,6 +340,26 @@ describe('buildReplySystemPrompt - Contestador', () => {
     expect(prompt).toContain('REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER');
     expect(prompt).toContain('🔒 Nunca prometas fecha exacta sin confirmar con el resto de la banda');
     expect(prompt).toContain('⭐ Sé breve');
+  });
+
+  it('los hilos reales de respuesta y las reglas aprendidas mandan sobre el ADN de voz de redes, y aparecen antes en el prompt', () => {
+    const state = stateConBanda({
+      tono_comunicacion: 'Gamberro, como en TikTok',
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Confirmar la fecha en la primera línea'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead, 'reply');
+    const replyFewShot = '\nEJEMPLO REAL: [Sala]: "¿Cuánto pedís?" [Banda]: "Nuestro caché es flexible..."\n';
+    const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], replyFewShot);
+
+    expect(prompt).toContain('CÓMO RESPONDE ESTA BANDA DE VERDAD');
+    expect(prompt).toContain('MÁXIMA PRIORIDAD DE ESTILO Y TONO');
+    expect(prompt).toContain('Nuestro caché es flexible');
+
+    const idxEstiloReal = prompt.indexOf('CÓMO RESPONDE ESTA BANDA DE VERDAD');
+    const idxAdnRedes = prompt.indexOf('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
+    expect(idxEstiloReal).toBeGreaterThan(-1);
+    expect(idxAdnRedes).toBeGreaterThan(-1);
+    expect(idxEstiloReal).toBeLessThan(idxAdnRedes);
   });
 });
 

@@ -362,26 +362,27 @@ ${campaignSection}
 4. CONDICIONES ECONÓMICAS Y CO-BOOKING:
    - Modelo: ${bandDna.flexibilidadEconomica}
    - Co-booking: ${bandDna.propuestaCoBooking}
-${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || bandDna.nivelEnergia || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || (bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0) || bandDna.puntosFuertesConectar || bandDna.recomendacionPitch) ? `
-5. ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER (MANDA SOBRE EL TONO GENÉRICO DE MÁS ABAJO):
-${bandDna.tonoComunicacion ? `   - Tono de comunicación habitual: ${bandDna.tonoComunicacion}` : ""}
-${bandDna.tratamientoHabitual ? `   - Tratamiento habitual: ${bandDna.tratamientoHabitual}` : ""}
-${bandDna.nivelEnergia ? `   - Nivel de energía: ${bandDna.nivelEnergia}` : ""}
-${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `   - Vocabulario propio (úsalo de verdad en el texto, no lo dejes solo como referencia): ${bandDna.vocabularioClave.join(", ")}` : ""}
-${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `   - Frases/expresiones emblemáticas suyas (cuélalas tal cual si encajan de forma natural): ${bandDna.frasesEmblematicas.map(f => `"${f}"`).join(" | ")}` : ""}
-${bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0 ? `   - Emojis que usan de verdad, solo si el registro del correo los admite con moderación profesional: ${bandDna.emojisFrecuentes.join(" ")}` : ""}
-${bandDna.puntosFuertesConectar ? `   - Puntos fuertes para conectar con el destinatario: ${bandDna.puntosFuertesConectar}` : ""}
-${bandDna.recomendacionPitch ? `   - Recomendación de enfoque de pitch para esta banda (análisis de IA sobre su ADN real): ${bandDna.recomendacionPitch}` : ""}
-` : ""}
 ${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
-6. REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER PARA "${categoryKey.toUpperCase()}" (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
+5. REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER PARA "${categoryKey.toUpperCase()}" (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
 ${bandDna.reglasManuales.map(r => `   - 🔒 ${r}`).join("\n")}
 ` : ""}
-${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-7. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS PARA "${categoryKey.toUpperCase()}" (SELF-REFINING TONE DNA):
-${bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n")}
-${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
+${(bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0) || bandDna.fewShotSection ? `
+6. CÓMO ESCRIBE ESTA BANDA DE VERDAD EN CORREOS DE BOOKING PARA "${categoryKey.toUpperCase()}" (MÁXIMA PRIORIDAD DE ESTILO Y TONO - manda sobre el contexto de identidad de redes sociales del punto 7, que es solo enriquecimiento):
+${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n") : ""}
+${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas en emails reales: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
 ${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
+${bandDna.fewShotSection || ""}
+` : ""}
+${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || bandDna.nivelEnergia || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || (bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0) || bandDna.puntosFuertesConectar || bandDna.recomendacionPitch) ? `
+7. CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA (de análisis de redes sociales y directo - úsalo SOLO para enriquecer la personalidad y dar color; si contradice el estilo real mostrado en el punto 6, gana SIEMPRE el punto 6. Cómo habla esta banda con sus fans en redes o sobre el escenario no es necesariamente cómo debe sonar un email profesional a una sala, un ayuntamiento o un management):
+${bandDna.tonoComunicacion ? `   - Tono de comunicación en redes sociales: ${bandDna.tonoComunicacion}` : ""}
+${bandDna.tratamientoHabitual ? `   - Tratamiento habitual en redes: ${bandDna.tratamientoHabitual}` : ""}
+${bandDna.nivelEnergia ? `   - Nivel de energía en redes/directo: ${bandDna.nivelEnergia}` : ""}
+${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `   - Vocabulario propio de redes sociales (cuélalo solo si encaja de forma natural en el registro profesional y no contradice el punto 6): ${bandDna.vocabularioClave.join(", ")}` : ""}
+${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `   - Frases/expresiones emblemáticas de redes o directo (úsalas con moderación, solo si el registro del email las admite): ${bandDna.frasesEmblematicas.map(f => `"${f}"`).join(" | ")}` : ""}
+${bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0 ? `   - Emojis que usan en redes, solo si el registro del correo los admite con moderación profesional: ${bandDna.emojisFrecuentes.join(" ")}` : ""}
+${bandDna.puntosFuertesConectar ? `   - Puntos fuertes para conectar con el destinatario: ${bandDna.puntosFuertesConectar}` : ""}
+${bandDna.recomendacionPitch ? `   - Recomendación de enfoque de pitch para esta banda (análisis de IA sobre su ADN real): ${bandDna.recomendacionPitch}` : ""}
 ` : ""}
 8. ENLACES Y DOSSIER:
    - REGLA DE ORO DE ENLACES: No saturar el cuerpo del correo con enlaces a plataformas de streaming en medio del texto. En el cuerpo del correo únicamente se hace referencia elegante al Dossier Oficial / EPK y Rider Técnico adjunto al pie de la firma (${bandDna.epkUrl}), donde el programador encontrará toda la información, vídeos en directo, temas y rider.
@@ -439,8 +440,7 @@ ${bandDna.categoryTemplateBody}
    - NO incluir enlaces a Spotify/YouTube en el texto del cuerpo; toda la referencia se canaliza a través del dossier oficial en la firma.
    - NUNCA menciones "aforos de X-Y personas" ni hagas referencias genéricas a "salas de aforo medio". Personaliza SIEMPRE a la sala específica del destinatario.
    - PROHIBIDO repetir fechas múltiples veces en el mismo email. Menciona las fechas de campaña UNA SOLA VEZ, de forma clara y directa. Si hay variedad de opciones, lístalasde forma compacta ("4, 5, 11 o 12 de diciembre") pero NO repitas la misma información en párrafos diferentes.
-   - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.
-${bandDna.fewShotSection || ""}`;
+   - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.`;
 }
 
 /**
@@ -526,22 +526,22 @@ Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}"
 - Formato escénico: ${bandDna.formato} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
 - Modelo económico: ${bandDna.flexibilidadEconomica}
 - Co-booking: ${bandDna.propuestaCoBooking}
-${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || bandDna.recomendacionPitch) ? `
-ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER (MANDA SOBRE EL TONO GENÉRICO):
-${bandDna.tonoComunicacion ? `- Tono de comunicación habitual: ${bandDna.tonoComunicacion}` : ""}
-${bandDna.tratamientoHabitual ? `- Tratamiento habitual: ${bandDna.tratamientoHabitual}` : ""}
-${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `- Vocabulario propio (úsalo de verdad): ${bandDna.vocabularioClave.join(", ")}` : ""}
-${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `- Frases/expresiones emblemáticas suyas: ${bandDna.frasesEmblematicas.map((f) => `"${f}"`).join(" | ")}` : ""}
-${bandDna.recomendacionPitch ? `- Recomendación de enfoque para esta banda: ${bandDna.recomendacionPitch}` : ""}
-` : ""}
 ${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
 REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
 ${bandDna.reglasManuales.map((r) => `- 🔒 ${r}`).join("\n")}
 ` : ""}
-${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-REGLAS DE ESTILO APRENDIDAS DE CORRECCIONES PREVIAS:
-${bandDna.reglasEstiloAprendidas.map((r) => `- ⭐ ${r}`).join("\n")}
+${(bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0) || replyFewShotSection ? `
+CÓMO RESPONDE ESTA BANDA DE VERDAD (MÁXIMA PRIORIDAD DE ESTILO Y TONO - manda sobre el contexto de identidad de redes sociales de más abajo, que es solo enriquecimiento):
+${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? bandDna.reglasEstiloAprendidas.map((r) => `- ⭐ ${r}`).join("\n") : ""}
 ${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `- Expresiones prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
+${replyFewShotSection}` : ""}
+${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || bandDna.recomendacionPitch) ? `
+CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA (de análisis de redes sociales y directo - úsalo SOLO para enriquecer, nunca para contradecir el estilo real mostrado arriba. Cómo habla esta banda con sus fans en redes no es necesariamente cómo debe sonar respondiendo a una sala, un ayuntamiento o un management):
+${bandDna.tonoComunicacion ? `- Tono de comunicación en redes sociales: ${bandDna.tonoComunicacion}` : ""}
+${bandDna.tratamientoHabitual ? `- Tratamiento habitual en redes: ${bandDna.tratamientoHabitual}` : ""}
+${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `- Vocabulario propio de redes sociales (solo si no contradice el estilo real de arriba): ${bandDna.vocabularioClave.join(", ")}` : ""}
+${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `- Frases/expresiones emblemáticas de redes o directo: ${bandDna.frasesEmblematicas.map((f) => `"${f}"`).join(" | ")}` : ""}
+${bandDna.recomendacionPitch ? `- Recomendación de enfoque para esta banda: ${bandDna.recomendacionPitch}` : ""}
 ` : ""}
 
 ═════════════════════════════════════════════════════════════════════
@@ -561,14 +561,14 @@ ${historialTexto}
 📩 MENSAJE ENTRANTE AL QUE HAY QUE RESPONDER AHORA:
 ═════════════════════════════════════════════════════════════════════
 "${incomingMessage}"
-${replyFewShotSection}${conditionalGuidanceSection}${feedbackSection}
+${conditionalGuidanceSection}${feedbackSection}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE LA RESPUESTA:
 ═════════════════════════════════════════════════════════════════════
 1. ${languageHint.instruction}
 2. Responde específicamente a lo que dice el mensaje entrante: si pide fecha, propón o confirma fecha; si pregunta precio/condiciones, responde con el modelo económico de la banda; si pone objeciones, gestiónalas sin ser insistente; si es un rechazo claro, agradece con cortesía y deja la puerta abierta sin insistir.
 3. NO repitas la presentación completa de la banda como si fuera el primer contacto: ya la tienen, ve al grano de esta respuesta concreta.
-4. Mantén el mismo tono y vocabulario que ya viene usando la banda en su ADN de voz y en los ejemplos reales de respuestas anteriores, si los hay.
+4. Mantén el mismo tono y vocabulario que muestran los ejemplos reales de respuestas anteriores y las reglas de estilo aprendidas, si los hay (máxima prioridad); usa el contexto de identidad de redes sociales solo como enriquecimiento de fondo.
 5. REGLA DE NO DOBLE FIRMA: no escribas bloques de firma manuales al final; el sistema añade la firma automáticamente.
 6. Devuelve ÚNICAMENTE el cuerpo del email de respuesta, sin asunto ni metadatos.`;
 }
@@ -594,9 +594,9 @@ export function formatReplyFewShotForPrompt(threads: Array<{
 
   return `
 ═════════════════════════════════════════════════════════════════════
-💎 EJEMPLOS REALES DE CÓMO ESTA BANDA HA GESTIONADO CONVERSACIONES SIMILARES:
+💎 EJEMPLOS REALES DE ESTA BANDA RESPONDIENDO - MÁXIMA PRIORIDAD DE ESTILO:
 ═════════════════════════════════════════════════════════════════════
-Imita el tono, la cadencia y el estilo de respuesta de estos hilos reales, adaptándolo a este caso concreto:
+Esto es exactamente cómo responde esta banda de verdad. El tono, la cadencia y el estilo de estos hilos reales MANDAN sobre cualquier otra guía de tono de este prompt (incluido el ADN de voz de redes sociales de más arriba, que es solo contexto de identidad, no una referencia de cómo se escribe a salas/ayuntamientos/managements). Adáptalo a este caso concreto, pero si algo de ahí arriba contradice lo que ves aquí, ignóralo e imita esto:
 
 ${formatted}
 `;

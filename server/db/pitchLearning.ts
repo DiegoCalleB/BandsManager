@@ -295,9 +295,9 @@ export function formatFewShotExamplesForPrompt(examples: Array<{
 
   return `
 ═════════════════════════════════════════════════════════════════════
-💎 EJEMPLOS DE ENTRENAMIENTO REAL (DYNAMIC FEW-SHOT IN-CONTEXT):
+💎 EJEMPLOS DE ENTRENAMIENTO REAL - MÁXIMA PRIORIDAD DE ESTILO (DYNAMIC FEW-SHOT IN-CONTEXT):
 ═════════════════════════════════════════════════════════════════════
-Imita el vocabulario, la cadencia, el nivel de cercanía y la estructura exacta de estos correos aprobados y validados por la banda:
+Esto es exactamente cómo escribe esta banda de verdad en correos de booking reales. El vocabulario, la cadencia, el nivel de cercanía/formalidad y la estructura de estos correos MANDAN sobre cualquier otra guía de tono de este prompt (incluido el ADN de voz de redes sociales de más arriba, que es solo contexto de identidad, no una referencia de cómo se escribe a salas/ayuntamientos/managements). Si algo de ahí arriba contradice lo que ves aquí, ignóralo e imita esto:
 
 ${formatted}
 `;
