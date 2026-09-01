@@ -33,9 +33,14 @@ export type ResponseType = "price_negotiation" | "confirmation" | "rejection" | 
 export function detectResponseType(incomingMessage: string): ResponseType {
   const text = (incomingMessage || "").toLowerCase();
 
+  // Orden deliberado: precio ANTES que confirmación. Un mensaje real y frecuente en español
+  // abre con una afirmación positiva antes de la pregunta de verdad ("Sí, nos encaja, ¿cuál
+  // sería el caché?") - si confirmación se comprobara primero, ese "sí" ganaría y la guía
+  // resultante ("sé entusiasta, no menciones cifras") contradice justo lo que preguntan.
+  // La pregunta de precio es la señal más específica y accionable, así que manda.
   if (REJECTION_KEYWORDS.some(k => text.includes(k))) return "rejection";
-  if (CONFIRMATION_KEYWORDS.some(k => text.includes(k))) return "confirmation";
   if (PRICE_NEGOTIATION_KEYWORDS.some(k => text.includes(k))) return "price_negotiation";
+  if (CONFIRMATION_KEYWORDS.some(k => text.includes(k))) return "confirmation";
 
   // Si pregunta algo relacionado con el directo, fechas, etc.
   const followUpKeywords = ["cuándo", "cuando", "fecha", "disponibilidad", "directo", "show",

@@ -40,4 +40,13 @@ describe('detectResponseType', () => {
     expect(detectResponseType('¿CUÁNTO COBRÁIS?')).toBe('price_negotiation');
     expect(detectResponseType('PERFECTO, ADELANTE')).toBe('confirmation');
   });
+
+  it('prioriza la pregunta de precio sobre una afirmación positiva previa', () => {
+    // Caso real y frecuente: el mensaje abre con una palabra de confirmación pero la
+    // pregunta de fondo es sobre precio - la guía de "no menciones cifras" no debe ganar
+    // sobre la pregunta explícita de cuánto cuesta.
+    expect(detectResponseType('Sí, nos encaja la fecha, ¿cuál sería el caché?')).toBe('price_negotiation');
+    expect(detectResponseType('Perfecto, nos interesa. ¿Cuánto cobráis?')).toBe('price_negotiation');
+    expect(detectResponseType('Genial, ¿qué presupuesto manejáis?')).toBe('price_negotiation');
+  });
 });

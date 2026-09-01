@@ -1231,19 +1231,24 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   onChange={(e) => setEditedPitch(e.target.value)}
                   className="w-full p-3 bg-black/60 rounded-xl border border-amber-500/50 text-xs text-zinc-100 font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
                 />
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => setIsEditingPitch(false)}
-                    className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded text-xs hover:bg-zinc-700 cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSavePitch}
-                    className="px-3 py-1 bg-amber-500 text-black font-bold rounded text-xs hover:bg-amber-400 cursor-pointer"
-                  >
-                    Guardar y Aprobar
-                  </button>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] text-zinc-500 font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa 'Regenerar' con estrellas/comentario y marca 'Solo para esta sala' en vez de editar aquí.">
+                    ✏️ Esta edición se usará también para entrenar al Redactor
+                  </span>
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      onClick={() => setIsEditingPitch(false)}
+                      className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded text-xs hover:bg-zinc-700 cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSavePitch}
+                      className="px-3 py-1 bg-amber-500 text-black font-bold rounded text-xs hover:bg-amber-400 cursor-pointer"
+                    >
+                      Guardar y Aprobar
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
