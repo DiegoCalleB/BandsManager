@@ -16,8 +16,14 @@ export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'adv
 export interface AgentAutonomyConfig {
   dispatchLevel: DispatchAutonomyLevel;
   negotiationDepth: NegotiationDepthLevel;
-  minCacheThreshold: number;
-  maxCacheThreshold: number;
+  minCacheByType?: {
+    salas?: number;
+    festivales?: number;
+    discotecas?: number;
+    ayuntamientos?: number;
+    medios?: number;
+    grupos?: number;
+  };
   autoDeclineUnderMinCache: boolean;
   notifyOnEveryProposal: boolean;
   requireHumanForFinalSignOff: boolean;
@@ -61,6 +67,16 @@ export const DAYS_OF_WEEK = [
   { id: 6, name: 'Sábado', short: 'Sáb', initial: 'S', description: 'Bajo (Conciertos en vivo)', recommended: false },
   { id: 7, name: 'Domingo', short: 'Dom', initial: 'D', description: 'Bajo (Descanso y cierre)', recommended: false }
 ];
+
+const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
+  salas: '🏛️ Salas',
+  festivales: '🎪 Festivales',
+  discotecas: '🪩 Discotecas',
+  medios: '📻 Medios',
+  grupos: '🎸 Grupos',
+  managements: '💼 Managements',
+  ayuntamientos: '🎉 Ayuntamientos'
+};
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
@@ -134,8 +150,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   const [config, setConfig] = useState<AgentAutonomyConfig>({
     dispatchLevel: initialConfig?.dispatchLevel || 'draft_only',
     negotiationDepth: initialConfig?.negotiationDepth || 'filter_conditions',
-    minCacheThreshold: initialConfig?.minCacheThreshold || 300,
-    maxCacheThreshold: initialConfig?.maxCacheThreshold || 800,
+    minCacheByType: initialConfig?.minCacheByType || {},
     autoDeclineUnderMinCache: initialConfig?.autoDeclineUnderMinCache ?? false,
     notifyOnEveryProposal: initialConfig?.notifyOnEveryProposal ?? true,
     requireHumanForFinalSignOff: true,
@@ -203,8 +218,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             ...prev,
             dispatchLevel: serverAutonomy.dispatchLevel || prev.dispatchLevel,
             negotiationDepth: serverAutonomy.negotiationDepth || prev.negotiationDepth,
-            minCacheThreshold: serverAutonomy.minCacheThreshold ?? prev.minCacheThreshold,
-            maxCacheThreshold: serverAutonomy.maxCacheThreshold ?? prev.maxCacheThreshold,
+            minCacheByType: serverAutonomy.minCacheByType ?? prev.minCacheByType,
             autoDeclineUnderMinCache: !!serverAutonomy.autoDeclineUnderMinCache,
             notifyOnEveryProposal: serverAutonomy.notifyOnEveryProposal !== false,
             pitchTone: serverAutonomy.pitchTone || prev.pitchTone,
@@ -699,49 +713,41 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
               {/* 3. PARÁMETROS ECONÓMICOS */}
               <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">
                 <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                  <Euro className="w-4 h-4" /> 3. Umbrales Económicos de Negociación para {bandName}
+                  <Euro className="w-4 h-4" /> 3. Caché Mínimo por Tipo de Recinto para {bandName}
                 </h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                      Caché Mínimo Aceptable (€)
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        disabled={!isAdmin}
-                        value={config.minCacheThreshold}
-                        onChange={(e) => setConfig({ ...config, minCacheThreshold: Number(e.target.value) })}
-                        className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                        placeholder="300"
-                      />
-                      <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">EUR</span>
-                    </div>
-                    <p className="text-[10px] text-neutral-500">
-                      Si una sala ofrece menos de este importe, el agente no aceptará sin tu validación.
-                    </p>
-                  </div>
+                <p className="text-xs text-neutral-400">
+                  Define el caché mínimo aceptable para cada tipo de recinto. Dejar un campo vacío significa que ese tipo no aplica a tus negociaciones.
+                </p>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                      Caché Objetivo / Ideal (€)
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        disabled={!isAdmin}
-                        value={config.maxCacheThreshold}
-                        onChange={(e) => setConfig({ ...config, maxCacheThreshold: Number(e.target.value) })}
-                        className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                        placeholder="800"
-                      />
-                      <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">EUR</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => (
+                    <div key={type} className="space-y-1.5">
+                      <label className="text-xs font-mono text-neutral-400 font-semibold block">
+                        {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          disabled={!isAdmin}
+                          value={config.minCacheByType?.[type] || ''}
+                          onChange={(e) => {
+                            const val = e.target.value ? Number(e.target.value) : undefined;
+                            setConfig({
+                              ...config,
+                              minCacheByType: {
+                                ...config.minCacheByType,
+                                [type]: val
+                              }
+                            });
+                          }}
+                          className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
+                          placeholder="—"
+                        />
+                        <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
+                      </div>
                     </div>
-                    <p className="text-[10px] text-neutral-500">
-                      Cifra inicial que el agente utilizará en la primera propuesta de contratación.
-                    </p>
-                  </div>
+                  ))}
                 </div>
 
                 <div className="pt-2 border-t border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
@@ -753,7 +759,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                       onChange={(e) => setConfig({ ...config, autoDeclineUnderMinCache: e.target.checked })}
                       className="rounded border-neutral-700 bg-neutral-900 text-amber-500 focus:ring-amber-500 disabled:opacity-60"
                     />
-                    <span>Rechazar amablemente si la sala no llega al caché mínimo</span>
+                    <span>Rechazar amablemente si no se alcanza el caché mínimo</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer text-neutral-300 font-sans">
