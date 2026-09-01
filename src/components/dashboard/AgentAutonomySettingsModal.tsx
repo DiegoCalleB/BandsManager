@@ -508,7 +508,20 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Sliders className="w-4 h-4" />
-            <span>1. Autonomía & Líneas Rojas</span>
+            <span>1. Autonomía</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('response_strategies')}
+            className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'response_strategies'
+                ? 'border-amber-400 text-amber-400'
+                : 'border-transparent text-neutral-400 hover:text-zinc-200'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-purple-400" />
+            <span>2. Estrategias de Respuesta</span>
           </button>
 
           <button
@@ -521,7 +534,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Mail className="w-4 h-4 text-sky-400" />
-            <span>2. Email & Buzón de Agentes</span>
+            <span>3. Email & Buzón</span>
             {emailAccountConnected && (
               <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-sm"></span>
             )}
@@ -537,7 +550,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>3. Horarios & Workflows</span>
+            <span>4. Horarios</span>
           </button>
 
           <button
@@ -550,20 +563,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            <span>4. Tono & Identidad</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('response_strategies')}
-            className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'response_strategies'
-                ? 'border-amber-400 text-amber-400'
-                : 'border-transparent text-neutral-400 hover:text-zinc-200'
-            }`}
-          >
-            <MessageSquare className="w-4 h-4 text-purple-400" />
-            <span>5. Estrategias de Respuesta</span>
+            <span>5. Tono & Identidad</span>
           </button>
 
           <button
@@ -576,7 +576,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Activity className="w-4 h-4 text-emerald-400" />
-            <span>6. Auditoría & Trazabilidad</span>
+            <span>6. Auditoría</span>
             {auditLogs.length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-emerald-500/20 text-emerald-300 font-mono">
                 {auditLogs.length}
@@ -870,7 +870,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 2: EMAIL & BUZÓN DE DESPACHO */}
+          {/* TAB 3: EMAIL & BUZÓN DE DESPACHO */}
           {activeTab === 'email_dispatch' && (
             <div className="space-y-6">
               {/* Header Info */}
@@ -1012,7 +1012,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 3: HORARIOS & WORKFLOWS */}
+          {/* TAB 4: HORARIOS & WORKFLOWS */}
           {activeTab === 'schedules' && (
             <div className="space-y-6">
               
@@ -1350,7 +1350,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 3: TONO & IDENTIDAD */}
+          {/* TAB 5: TONO & IDENTIDAD */}
           {activeTab === 'tone' && (
             <div className="space-y-6">
               
@@ -1438,7 +1438,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 5: ESTRATEGIAS DE RESPUESTA (guía condicional del Contestador según el tipo
+          {/* TAB 2: ESTRATEGIAS DE RESPUESTA (guía condicional del Contestador según el tipo
               de mensaje que la sala responda - ver server/services/replyDrafting.ts) */}
           {activeTab === 'response_strategies' && (
             <div className="space-y-6">
