@@ -278,7 +278,13 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
  * el perfil del recinto/medio receptor, el historial de aprendizaje del mánager y las directrices
  * de idioma y tono sin fórmulas clichés de IA.
  */
-export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any): string {
+export function buildEnhancedPitchSystemPrompt(
+  bandDna: BandDnaProfile,
+  globalMemory: string,
+  lead: any,
+  activeCampaign?: any,
+  bandMinCache?: Record<string, number>
+): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
@@ -307,6 +313,21 @@ ${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.len
 `;
     }
 
+    const campaignMinCache = activeCampaign.minCacheByType || {};
+    let cacheSection = "";
+    if (Object.keys(campaignMinCache).length > 0) {
+      const cacheLines = Object.entries(campaignMinCache)
+        .filter(([_, val]) => typeof val === 'number' && val > 0)
+        .map(([type, val]) => `   - ${type}: mínimo €${val}`)
+        .join("\n");
+      if (cacheLines) {
+        cacheSection = `
+💰 CACHÉS MÍNIMOS POR TIPO DE RECINTO (CAMPAÑA-ESPECÍFICO):
+${cacheLines}
+REGLA DE NEGOCIACIÓN: NUNCA aceptes bolos por debajo de estos cachés mínimos. Si una sala ofrece menos, propón co-booking, taquilla o explora alternativas creativas, pero NO cierres por menos de lo establecido.`;
+      }
+    }
+
     campaignSection = `
 ═════════════════════════════════════════════════════════════════════
 🎯 CAMPAÑA DE BOOKING ACTIVA: "${cName}" (PRIORIDAD MÁXIMA DE AGENDA)
@@ -316,6 +337,7 @@ ${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.len
 ${capInfo ? `- ${capInfo}` : ''}
 ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
+${cacheSection ? cacheSection : ''}
 ${campaignToneSection}
 * DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
 `;
@@ -394,6 +416,24 @@ ${bandDna.categoryTemplateBody ? `Plantilla de referencia guardada a mano por el
 """
 ${bandDna.categoryTemplateBody}
 """` : ""}
+` : ""}
+${bandMinCache && Object.keys(bandMinCache).length > 0 ? `
+═════════════════════════════════════════════════════════════════════
+🔒 GUÍA INTERNA DE NEGOCIACIÓN (NO MENCIONEAR A LA SALA):
+═════════════════════════════════════════════════════════════════════
+Cachés mínimos internos por tipo de recinto (usar solo para evaluación estratégica, NUNCA mencionar explícitamente a la sala):
+${Object.entries(bandMinCache)
+  .filter(([_, val]) => typeof val === 'number' && val > 0)
+  .map(([type, val]) => `   - ${type}: mínimo €${val}`)
+  .join("\n")}
+
+ESTRATEGIA DE NEGOCIACIÓN (confidencial para ti):
+- Si el recinto ofrece una cantidad sensiblemente menor a estos mínimos, NO cierres el trato por escrito.
+- En lugar de aceptar una oferta baja directamente, sugiere una conversación por teléfono o WhatsApp para "explorar opciones creativas" (co-booking, taquilla compartida, merchandise, sponsor local).
+- El objetivo es mantener la flexibilidad en boca sin comprometerse por escrito en una cifra insuficiente.
+- Si el recinto responde positivamente a la llamada, entonces sí se puede cerrar con los términos reales.
+
+NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas explícitamente "no bajamos de X euros". La estrategia funciona por sugerencia y exploración, no por ultimátum.
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):
