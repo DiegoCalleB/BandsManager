@@ -283,7 +283,8 @@ export function buildEnhancedPitchSystemPrompt(
   globalMemory: string,
   lead: any,
   activeCampaign?: any,
-  bandMinCache?: Record<string, number>
+  bandMinCache?: Record<string, number>,
+  negotiationStartCacheByType?: Record<string, number>
 ): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
@@ -434,9 +435,17 @@ ESTRATEGIA DE NEGOCIACIÓN (confidencial para ti):
 - Si el recinto responde positivamente a la llamada, entonces sí se puede cerrar con los términos reales.
 
 ⚠️ SI LA SALA PREGUNTA EXPLÍCITAMENTE POR EL CACHÉ/PRECIO:
-- Responde con una cifra 15-20% superior al mínimo guardado en esta guía para ese tipo de recinto.
+${negotiationStartCacheByType && Object.keys(negotiationStartCacheByType).length > 0
+  ? `- Responde con el caché de inicio de negociación configurado para este tipo de recinto:
+${Object.entries(negotiationStartCacheByType)
+  .filter(([type, val]) => typeof val === 'number' && val > 0 && bandMinCache?.[type])
+  .map(([type, val]) => `      • ${type}: di €${val} (el mínimo real es €${bandMinCache?.[type]}, tienes €${val - (bandMinCache?.[type] || 0)} de margen)`)
+  .join("\n")}
+- Esto te da margen para negociar hacia abajo sin llegar por debajo del mínimo real.`
+  : `- Responde con una cifra 15-20% superior al mínimo guardado en esta guía para ese tipo de recinto.
 - Ejemplo: si el mínimo es €600, responde ~€700-720.
-- Esto te da margen para negociar hacia abajo sin llegar por debajo del mínimo real.
+- Esto te da margen para negociar hacia abajo sin llegar por debajo del mínimo real.`
+}
 - Mantén el tono amable y abierto a negociación: "Nuestro estándar es X, pero somos flexibles según el contexto del evento y el público que traes".
 
 NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas explícitamente "no bajamos de X euros". La estrategia funciona por sugerencia y exploración, no por ultimátum.

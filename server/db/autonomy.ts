@@ -25,6 +25,14 @@ export interface AutonomyConfig {
     medios?: number;
     grupos?: number;
   };
+  negotiationStartCacheByType?: {
+    salas?: number;
+    festivales?: number;
+    discotecas?: number;
+    ayuntamientos?: number;
+    medios?: number;
+    grupos?: number;
+  };
 }
 
 export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfig | null> {
@@ -51,6 +59,19 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
     }
   }
 
+  let negotiationStartCacheByType: any = {};
+  const rawNegotiationStartCache = data.negotiation_start_cache_by_type;
+  if (rawNegotiationStartCache && typeof rawNegotiationStartCache === "object" && !Array.isArray(rawNegotiationStartCache)) {
+    negotiationStartCacheByType = rawNegotiationStartCache;
+  } else if (typeof rawNegotiationStartCache === "string" && rawNegotiationStartCache) {
+    try {
+      const parsed = JSON.parse(rawNegotiationStartCache);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) negotiationStartCacheByType = parsed;
+    } catch {
+      // Ignora JSON malformado
+    }
+  }
+
   return {
     dispatchLevel: data.dispatch_level,
     negotiationDepth: data.negotiation_depth,
@@ -59,7 +80,8 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
     requireHumanForFinalSignOff: data.require_human_for_final_sign_off,
     dispatchMode: data.dispatch_mode,
     responseStrategies: data.response_strategies || {},
-    minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined
+    minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
+    negotiationStartCacheByType: Object.keys(negotiationStartCacheByType).length > 0 ? negotiationStartCacheByType : undefined
   };
 }
 
@@ -83,6 +105,9 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
     response_strategies: config.responseStrategies || config.response_strategies || {},
     min_cache_by_type: (config.minCacheByType && typeof config.minCacheByType === "object")
       ? config.minCacheByType
+      : undefined,
+    negotiation_start_cache_by_type: (config.negotiationStartCacheByType && typeof config.negotiationStartCacheByType === "object")
+      ? config.negotiationStartCacheByType
       : undefined
   };
 

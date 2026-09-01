@@ -1,5 +1,5 @@
 import express from "express";
-import { requireAuth, loadState } from "../../state.js";
+import { requireAuth, loadState, getAutonomyConfigForBand } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { DEFAULT_CATEGORY_TEMPLATES } from "../../promptsManager.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
@@ -136,9 +136,11 @@ router.post("/templates/preview", requireAuth, async (req, res) => {
     bandDna.categoryTemplateTitle = DEFAULT_CATEGORY_TEMPLATES[category].title;
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const bandMinCache = state.autonomyConfig?.minCacheByType;
+    const autonomyConfig = getAutonomyConfigForBand(state, bandId);
+    const bandMinCache = autonomyConfig?.minCacheByType;
+    const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
 
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, syntheticLead as any, undefined, bandMinCache);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, syntheticLead as any, undefined, bandMinCache, negotiationStartCacheByType);
 
     const prompt = `Redacta una propuesta comercial y artística de concierto para "${syntheticLead.nombre_sala}" en ${syntheticLead.ciudad} (Tipo: ${syntheticLead.tipo}, Aforo: ${syntheticLead.aforo}).
 
@@ -271,8 +273,10 @@ router.post("/templates/preview", requireAuth, async (req, res) => {
     bandDna.categoryTemplateGuidelines = guidelines ?? current?.guidelines;
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const bandMinCache = state.autonomyConfig?.minCacheByType;
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, previewLead, undefined, bandMinCache);
+    const autonomyConfig = getAutonomyConfigForBand(state, bandId);
+    const bandMinCache = autonomyConfig?.minCacheByType;
+    const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, previewLead, undefined, bandMinCache, negotiationStartCacheByType);
 
     const prompt = `Redacta una propuesta comercial y artística de concierto para "${previewLead.nombre_sala}" en ${previewLead.ciudad} (Tipo: ${previewLead.tipo}, Aforo: ${previewLead.aforo}).
 ${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"${body}"` : ""}`;
