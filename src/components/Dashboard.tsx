@@ -1427,6 +1427,9 @@ export default function Dashboard({
    onOpenTemplatesSection={() => {
      if (onNavigate) onNavigate('booking');
    }}
+   onOpenBandProfile={() => {
+     if (onNavigate) onNavigate('bandas');
+   }}
  />
 
  </div>

@@ -754,7 +754,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </div>
                 ) : (
                   <p className="text-[10px] font-mono text-neutral-500">
-                    Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora".
+                    Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente conversaciones reales buenas en <strong className="text-violet-300">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
                   </p>
                 )}
                 <p className="text-[9px] font-mono text-neutral-600">
@@ -864,7 +864,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </div>
                 ) : (
                   <p className="text-[10px] font-mono text-neutral-500">
-                    Todavía no hay reglas aprendidas de respuestas. Corrige al menos 2 respuestas para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora".
+                    Todavía no hay reglas aprendidas de respuestas. Corrige al menos 2 respuestas para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora". Para no esperar a eso, puedes pegar directamente conversaciones reales buenas en <strong className="text-sky-300">Booking CRM → Plantillas de Email → Hilos de Email de Ejemplo</strong>.
                   </p>
                 )}
                 <p className="text-[9px] font-mono text-neutral-600">

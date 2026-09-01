@@ -40,9 +40,6 @@ export interface AgentAutonomyConfig {
   autoDeclineUnderMinCache: boolean;
   notifyOnEveryProposal: boolean;
   requireHumanForFinalSignOff: boolean;
-  pitchTone?: string;
-  bioSummary?: string;
-  epkUrl?: string;
   agentSenderEmail?: string;
   agentSenderName?: string;
   agentReplyToEmail?: string;
@@ -59,6 +56,13 @@ interface AgentAutonomySettingsModalProps {
   initialConfig?: Partial<AgentAutonomyConfig>;
   onSaveConfig?: (config: AgentAutonomyConfig) => void;
   onOpenTemplatesSection?: () => void;
+  // Navega a Gestión de Banda (BandCRM), donde vive de verdad el ADN de Tono (BandToneModal) y
+  // el EPK - antes esta modal tenía sus propios campos "Tono"/"Biografía"/"EPK" en la pestaña
+  // Tono & Identidad que parecían configurar el Redactor pero no llegaban a persistirse ni a
+  // leerse en ningún sitio (dbUpsertAutonomyConfig los descartaba y bandDna.ts nunca los leía).
+  // Opcional porque no todos los sitios desde los que se abre esta modal saben navegar fuera de
+  // su propia pantalla (ver el mismo patrón ya existente en onOpenTemplatesSection).
+  onOpenBandProfile?: () => void;
 }
 
 const TIMEZONES = [
@@ -92,7 +96,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   isStitchLight = false,
   initialConfig,
   onSaveConfig,
-  onOpenTemplatesSection
+  onOpenTemplatesSection,
+  onOpenBandProfile
 }) => {
   // Navigation Tabs
   const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'response_strategies' | 'audit_logs'>('autonomy');
@@ -158,9 +163,6 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     autoDeclineUnderMinCache: initialConfig?.autoDeclineUnderMinCache ?? false,
     notifyOnEveryProposal: initialConfig?.notifyOnEveryProposal ?? true,
     requireHumanForFinalSignOff: true,
-    pitchTone: initialConfig?.pitchTone || 'Cercano y Profesional (Indie/Rock)',
-    bioSummary: initialConfig?.bioSummary || 'Proyecto de directo potente con fusión electrónica y ska/balkan.',
-    epkUrl: initialConfig?.epkUrl || 'https://bandmanager.app/epk/bakandeya',
     agentSenderEmail: initialConfig?.agentSenderEmail || '',
     agentSenderName: initialConfig?.agentSenderName || `${bandName} Management`,
     agentReplyToEmail: initialConfig?.agentReplyToEmail || '',
@@ -238,6 +240,18 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   const [learnedResponseRules, setLearnedResponseRules] = useState<Record<string, LearnedRuleBucket>>({});
   const [isSavingStrategies, setIsSavingStrategies] = useState(false);
   const [strategiesFeedback, setStrategiesFeedback] = useState<string | null>(null);
+
+  // Checklist de arranque ("¿está esto listo para que el Redactor escriba bien?"): tres señales
+  // que se pueden comprobar de verdad sin inventar datos ni añadir endpoints nuevos.
+  // - toneTrained: dna_expresion.tono_comunicacion o vocabulario_clave rellenados en ADN de Tono
+  //   (mismo endpoint que ya se consulta para learnedResponseRules, un campo más).
+  // - templateCustomized: category_pitch_templates tiene customInstruction no vacío en alguna
+  //   categoría - a diferencia de "guidelines" (que SIEMPRE viene pre-rellenado de fábrica en
+  //   DEFAULT_CATEGORY_TEMPLATES), customInstruction empieza vacío en las 7 categorías y solo se
+  //   rellena si el mánager escribe algo, así que es una señal fiable de personalización real.
+  // No incluye "hilos de ejemplo": comprobarlo de verdad requeriría una llamada por categoría (7
+  // peticiones) solo para un checkbox - mejor un aviso (ya añadido arriba) que un dato a medias.
+  const [startupChecklist, setStartupChecklist] = useState({ toneTrained: false, templateCustomized: false });
 
   const getStrategyOrDefault = (typeKey: string): ResponseStrategyForm => {
     const found = responseStrategies[typeKey];
@@ -328,9 +342,6 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             maxCacheThreshold: serverAutonomy.maxCacheThreshold ?? prev.maxCacheThreshold,
             autoDeclineUnderMinCache: !!serverAutonomy.autoDeclineUnderMinCache,
             notifyOnEveryProposal: serverAutonomy.notifyOnEveryProposal !== false,
-            pitchTone: serverAutonomy.pitchTone || prev.pitchTone,
-            bioSummary: serverAutonomy.bioSummary || prev.bioSummary,
-            epkUrl: serverAutonomy.epkUrl || prev.epkUrl,
             agentSenderEmail: serverAutonomy.agentSenderEmail || prev.agentSenderEmail,
             agentSenderName: serverAutonomy.agentSenderName || prev.agentSenderName,
             agentReplyToEmail: serverAutonomy.agentReplyToEmail || prev.agentReplyToEmail,
@@ -366,10 +377,31 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
         }
 
         // 3b. Fetch reglas aprendidas de respuestas (Self-Refining Tone DNA) - mismo endpoint
-        // que ya usa BandToneModal.tsx, solo nos quedamos con la parte de respuestas.
+        // que ya usa BandToneModal.tsx, solo nos quedamos con la parte de respuestas. De paso,
+        // reutilizamos la misma llamada para la señal "ADN de voz entrenado" de la checklist.
         const toneDnaRes = await apiFetch('/api/bands/tone-dna').catch(() => null);
         if (isMounted && toneDnaRes?.data?.reglas_por_categoria_respuesta) {
           setLearnedResponseRules(toneDnaRes.data.reglas_por_categoria_respuesta);
+        }
+        const toneDnaData = toneDnaRes?.data;
+        const toneTrained = Boolean(
+          (toneDnaData?.tono_comunicacion && String(toneDnaData.tono_comunicacion).trim()) ||
+          (Array.isArray(toneDnaData?.vocabulario_clave) && toneDnaData.vocabulario_clave.length > 0)
+        );
+
+        // 3c. Fetch plantillas de categoría, solo para la señal "plantilla personalizada" de la
+        // checklist: customInstruction empieza vacío en las 7 categorías por defecto (a
+        // diferencia de guidelines, que ya viene pre-rellenado de fábrica), así que si alguna
+        // tiene contenido es que el mánager escribió una instrucción propia de verdad.
+        const templatesRes = await apiFetch('/api/templates').catch(() => null);
+        const templateCustomized = Boolean(
+          templatesRes?.templates &&
+          Object.values(templatesRes.templates as Record<string, { customInstruction?: string }>)
+            .some((t) => t.customInstruction && t.customInstruction.trim())
+        );
+
+        if (isMounted) {
+          setStartupChecklist({ toneTrained, templateCustomized });
         }
 
         // 4. Fetch Band Schedule (Lector & Enviador crons)
@@ -649,6 +681,55 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
           {/* TAB 1: AUTONOMÍA & LÍNEAS ROJAS */}
           {activeTab === 'autonomy' && (
             <div className="space-y-6">
+              {/* Checklist de arranque: solo se muestra mientras falte algo por hacer - una vez
+                  todo listo desaparece sola, para no molestar a un mánager que ya lo configuró
+                  todo. Las tres señales se comprueban de verdad (ver startupChecklist arriba),
+                  no son un adorno - por eso solo hay tres y no más: cualquier señal que no se
+                  pudiera verificar con fiabilidad (como los Hilos de Ejemplo) se dejó fuera en
+                  vez de fingir que se comprueba. */}
+              {!emailAccountConnected || !startupChecklist.toneTrained || !startupChecklist.templateCustomized ? (
+                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2.5">
+                  <span className="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Lo mínimo para que el Redactor escriba bien
+                  </span>
+                  <div className="space-y-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('email_dispatch')}
+                      className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
+                    >
+                      <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+                        {emailAccountConnected ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />}
+                        Conectar el buzón de la banda
+                      </span>
+                      {!emailAccountConnected && <span className="text-[10px] text-emerald-400 group-hover:underline shrink-0">Ir ➔</span>}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('tone')}
+                      className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
+                    >
+                      <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+                        {startupChecklist.toneTrained ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />}
+                        Entrenar el ADN de voz de la banda
+                      </span>
+                      {!startupChecklist.toneTrained && <span className="text-[10px] text-emerald-400 group-hover:underline shrink-0">Ir ➔</span>}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('tone')}
+                      className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
+                    >
+                      <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+                        {startupChecklist.templateCustomized ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />}
+                        Personalizar al menos una plantilla de categoría
+                      </span>
+                      {!startupChecklist.templateCustomized && <span className="text-[10px] text-emerald-400 group-hover:underline shrink-0">Ir ➔</span>}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               {/* REGLA NO NEGOCIABLE NOTICE */}
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3">
                 <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
@@ -1398,65 +1479,53 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 5: TONO & IDENTIDAD */}
+          {/* TAB 5: TONO & IDENTIDAD
+              Antes esta pestaña tenía sus propios campos "Tono", "Biografía" y "URL del EPK"
+              que parecían configurar al Redactor pero no hacían nada real: dbUpsertAutonomyConfig
+              los descartaba al guardar (ni siquiera llegaban a Supabase) y bandDna.ts - el código
+              que de verdad construye los prompts de pitch/respuesta - nunca los leía. Un mánager
+              podía rellenarlos de buena fe pensando que así entrenaba el tono de sus emails, sin
+              ningún efecto. El tono real se entrena en ADN de Tono (BandToneModal, dentro de
+              Gestión de Banda) y la biografía/EPK en la configuración del propio EPK - esta
+              pestaña ahora solo señala hacia ahí en vez de duplicar una configuración fantasma. */}
           {activeTab === 'tone' && (
             <div className="space-y-6">
-              
-              {/* Estilo y Tono */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                  Tono de Comunicación de la Banda
-                </label>
-                <select
-                  disabled={!isAdmin}
-                  value={config.pitchTone}
-                  onChange={(e) => setConfig({ ...config, pitchTone: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                >
-                  <option value="Cercano y Profesional (Indie/Rock)">🎸 Cercano y Profesional (Indie / Rock / Alternativo)</option>
-                  <option value="Festivo y Enérgico (Ska / Balkan / Mestizaje)">🎺 Festivo, Alegre y Enérgico (Ska / Balkan / Mestizaje)</option>
-                  <option value="Directo y Rebelde (Punk / Hardcore / Metal)">⚡ Directo, Contundente y Sin Filtros (Punk / Rock / Metal)</option>
-                  <option value="Elegante y Corporativo (Jazz / Acústico / Fusión)">🎻 Elegante, Exquisito y Formal (Jazz / Fusión / Clásica)</option>
-                  <option value="Urbano y Moderno (Trap / Hip-Hop / Electrónica)">🎧 Urbano, Fresco y Contemporáneo (Electrónica / Urbano)</option>
-                </select>
-                <p className="text-[10px] text-neutral-500">
-                  Define la personalidad y el vocabulario que el Agente Redactor aplicará al redactar para las salas.
-                </p>
-              </div>
-
-              {/* Bio Resumen */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                  Biografía Resumen para Pitches (Elevator Pitch)
-                </label>
-                <textarea
-                  disabled={!isAdmin}
-                  value={config.bioSummary}
-                  onChange={(e) => setConfig({ ...config, bioSummary: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-sans focus:border-amber-500 focus:outline-none disabled:opacity-60 leading-relaxed"
-                  placeholder="Ej: Banda de 6 músicos con potente directo que fusiona sección de vientos con bases electrónicas..."
-                />
-              </div>
-
-              {/* URL del EPK */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                  Enlace Oficial al Dossier EPK / Prensa
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    disabled={!isAdmin}
-                    value={config.epkUrl}
-                    onChange={(e) => setConfig({ ...config, epkUrl: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                    placeholder="https://bandmanager.app/epk/bakandeya"
-                  />
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div className="space-y-1 leading-relaxed">
+                  <strong className="font-bold text-amber-200">El tono y la biografía se entrenan en Gestión de Banda</strong>
+                  <p className="text-neutral-300 text-[11px]">
+                    Para que el Agente Redactor escriba con la voz real de {bandName}, el tono de comunicación, vocabulario propio y biografía se configuran en <strong className="text-zinc-100">ADN de Tono</strong>, dentro de la ficha de la banda - no aquí. Ese es el único sitio donde esos datos llegan de verdad a los pitches y respuestas generados.
+                  </p>
                 </div>
-                <p className="text-[10px] text-neutral-500">
-                  Este enlace se insertará automáticamente en los correos salientes hacia promotores y medios.
-                </p>
+              </div>
+
+              {/* Enlace a ADN de Tono */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
+                    ¿Quieres entrenar el tono de voz de la banda?
+                  </h4>
+                  <p className="text-[11px] text-neutral-300 font-sans mt-0.5">
+                    Analiza automáticamente vuestras redes sociales, o edita a mano el tono, tratamiento y vocabulario propio en ADN de Tono, dentro de Gestión de Banda.
+                  </p>
+                </div>
+                {onOpenBandProfile ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenBandProfile();
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+                  >
+                    Ir a Gestión de Banda ➔
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-neutral-500 font-mono shrink-0 max-w-[160px] text-right">
+                    Búscalo en Gestión de Banda ➔ ADN de Tono
+                  </span>
+                )}
               </div>
 
               {/* Enlace rápido a plantillas en Booking */}
@@ -1546,6 +1615,41 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                   </div>
                 </div>
               )}
+
+              {/* Atajo hacia Hilos de Email de Ejemplo (ExampleThreadsSection, dentro de Booking
+                  CRM > Plantillas de Email > por categoría): es la forma más rápida de arrancar
+                  con calidad desde el día 1 - a diferencia de las reglas de arriba (que necesitan
+                  2+ correcciones reales acumuladas para generarse solas), pegar 2-3 conversaciones
+                  reales ya buenas alimenta el few-shot de pitches Y respuestas al instante. Sin
+                  este aviso, esta herramienta es fácil de no descubrir nunca (vive dentro de una
+                  sub-pestaña de una sub-pestaña de otra pantalla). Reutiliza el mismo callback
+                  onOpenTemplatesSection que ya usan la pestaña Autonomía y Tono para lo mismo. */}
+              <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider">
+                    ¿Quieres que aprenda rápido, sin esperar a corregir borradores?
+                  </h4>
+                  <p className="text-[11px] text-neutral-300 font-sans mt-0.5">
+                    Pega 2-3 conversaciones reales (vuestro mensaje + la respuesta de la sala) en Hilos de Email de Ejemplo. Alimentan al instante tanto el pitch inicial como las respuestas, sin esperar a acumular correcciones.
+                  </p>
+                </div>
+                {onOpenTemplatesSection ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenTemplatesSection();
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+                  >
+                    Ver Hilos de Ejemplo ➔
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-neutral-500 font-mono shrink-0 max-w-[160px] text-right">
+                    Búscalo en Plantillas de Email
+                  </span>
+                )}
+              </div>
 
               {RESPONSE_TYPES.map((type) => {
                 const strategy = getStrategyOrDefault(type.key);
