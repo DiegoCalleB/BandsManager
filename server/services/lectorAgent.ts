@@ -11,7 +11,7 @@
 import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
-import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage } from "../db.js";
+import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 
 // Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
@@ -109,10 +109,34 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       continue;
     }
 
+    // Intenta emparejar de 2 formas:
+    // 1. Por email exacto (método original)
+    // 2. Por In-Reply-To header → busca en lead_messages quién envió ese message-id (más robusto)
     const fromLower = (msg.from || "").toLowerCase().trim();
-    const lead = fromLower
+    let lead = fromLower
       ? leads.find((l: any) => (l.email_contacto || "").toLowerCase().trim() === fromLower)
       : null;
+
+    // Si no empareja por email, intenta por In-Reply-To (respuesta a un email que enviamos)
+    if (!lead && msg.inReplyTo) {
+      console.log(`[Lector] Email no emparejó por email, buscando por In-Reply-To: ${msg.inReplyTo}`);
+      try {
+        const sb = getSupabase();
+        const { data: originalMsg } = await sb
+          .from("lead_messages")
+          .select("lead_id")
+          .eq("band_id", bandId)
+          .eq("id", `imap-${msg.inReplyTo}`)
+          .maybeSingle();
+
+        if (originalMsg) {
+          lead = leads.find((l: any) => l.id === originalMsg.lead_id);
+          console.log(`[Lector] Emparejado por In-Reply-To: Lead ${lead?.id}`);
+        }
+      } catch (e) {
+        console.warn(`[Lector] Error buscando por In-Reply-To:`, e);
+      }
+    }
 
     console.log(`[Lector] Procesando: ${msg.from} -> ${lead ? `Lead ${lead.id}` : "SIN EMPAREJAR"}`);
 

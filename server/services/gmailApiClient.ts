@@ -299,9 +299,10 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): P
     const dateHeader = headerValue(headers, "Date");
     const subject = headerValue(headers, "Subject");
     const messageId = headerValue(headers, "Message-ID") || `gmail-${id}`;
+    const inReplyTo = headerValue(headers, "In-Reply-To");
     const text = extraerTextoPlano(msg.payload).trim();
 
-    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, Text length=${text.length}`);
+    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, InReplyTo=${inReplyTo?.substring(0, 20)}, Text length=${text.length}`);
 
     resultados.push({
       uid: id,
@@ -309,7 +310,8 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): P
       from: fromAddress,
       subject,
       text,
-      date: dateHeader ? new Date(dateHeader) : null
+      date: dateHeader ? new Date(dateHeader) : null,
+      inReplyTo: inReplyTo || undefined
     });
   }
 
