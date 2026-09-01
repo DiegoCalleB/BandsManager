@@ -156,7 +156,7 @@ export async function crearBorradorGmailApi(bandId: string, params: { to: string
 // de autonomía (server/db/autonomy.ts) y la plataforma tiene AGENT_EMAIL_MODE=send. Misma firma
 // que enviarEmail en emailAgentClient.ts a propósito, para que agentEngine.ts elija entre las
 // dos sin duplicar el resto de la lógica de despacho.
-export async function enviarEmailGmailApi(bandId: string, params: { to: string; subject: string; body: string; html?: string; inReplyTo?: string }): Promise<{ messageId: string }> {
+export async function enviarEmailGmailApi(bandId: string, params: { to: string; subject: string; body: string; html?: string; inReplyTo?: string }): Promise<{ messageId: string; threadId?: string }> {
   const accessToken = await getValidAccessToken(bandId);
 
   const raw = await new MailComposer({
@@ -190,7 +190,7 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
   }
 
   const data = await res.json();
-  return { messageId: data.id };
+  return { messageId: data.id, threadId: data.threadId };
 }
 
 // Comprueba si un borrador creado por crearBorradorGmailApi sigue existiendo como borrador.

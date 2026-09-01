@@ -205,6 +205,7 @@ export async function runEnviadorAgent(opts: {
       }
 
       let messageId: string;
+      let threadId: string | undefined;
       if (usarGmailOAuth) {
         const result = await enviarEmailGmailApi(opts.bandId, {
           to: emailContacto,
@@ -214,6 +215,7 @@ export async function runEnviadorAgent(opts: {
           inReplyTo: lead.thread_id || undefined
         });
         messageId = result.messageId;
+        threadId = result.threadId;
       } else {
         const result = await enviarEmail(opts.bandId, {
           to: emailContacto,
@@ -228,7 +230,14 @@ export async function runEnviadorAgent(opts: {
       const nextState = isRespuesta ? "negociando" : "contactado";
       const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto} por el Agente Enviador (email real) ***\n` + (lead.notas || "");
 
-      await sb.from("leads").update({ estado: nextState, fecha_envio: nowIso, notas: newNote, gmail_draft_id: null }).eq("id", lead.id);
+      await sb.from("leads").update({
+        estado: nextState,
+        fecha_envio: nowIso,
+        notas: newNote,
+        gmail_draft_id: null,
+        gmail_message_id: messageId,
+        gmail_thread_id: threadId
+      }).eq("id", lead.id);
 
       await sb.from("lead_messages").insert({
         id: `imap-${messageId}`,
