@@ -262,10 +262,15 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
 // Igual que leerRespuestasEntrantes (emailAgentClient.ts) pero vía la API de Gmail en vez de
 // IMAP - lo que usa el Agente Lector cuando la banda conectó Gmail por OAuth sin contraseña de
 // aplicación, camino que hasta ahora no tenía forma de leer respuestas entrantes en absoluto.
+// Busca emails sin leer O ya leídos (últimas 24h) en la bandeja para no perder respuestas que
+// se marcan como leídas automáticamente o por sincronización.
 export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
   const accessToken = await getValidAccessToken(bandId);
 
-  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${encodeURIComponent("is:unread in:inbox")}&maxResults=${maxResults}`, {
+  // Busca: emails sin leer + emails leídos del último día (en caso de que se marquen automáticamente)
+  // El filtro "newer_than:1d" cubre 24h atrás para no perder respuestas que llegaron ayer
+  const query = encodeURIComponent("(is:unread OR newer_than:1d) in:inbox");
+  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${maxResults}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   if (!listRes.ok) {
