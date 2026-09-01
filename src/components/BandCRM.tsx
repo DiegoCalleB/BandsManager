@@ -222,11 +222,29 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
 
      const resData = await res.json();
      if (resData.success && resData.data) {
-       setToneData(resData.data);
+       let finalData = resData.data;
+
+       // Also load learned rules from tone-dna endpoint to ensure we have the latest reglas_por_categoria
+       try {
+         const toneDnaRes = await fetch('/api/bands/tone-dna', {
+           headers: getAuthHeaders()
+         });
+         const toneDnaData = await toneDnaRes.json();
+         if (toneDnaRes.ok && toneDnaData.data?.reglas_por_categoria) {
+           finalData = {
+             ...finalData,
+             reglas_por_categoria: toneDnaData.data.reglas_por_categoria
+           };
+         }
+       } catch (err) {
+         console.warn('Could not load learned rules:', err);
+       }
+
+       setToneData(finalData);
        setBands(prev => prev.map(b => b.id === band.id ? {
          ...b,
-         estilo_comunicacion: resData.data.tono_comunicacion || b.estilo_comunicacion,
-         dna_expresion: resData.data
+         estilo_comunicacion: finalData.tono_comunicacion || b.estilo_comunicacion,
+         dna_expresion: finalData
        } : b));
      } else {
        alert(resData.error || 'No se pudo obtener el análisis de tono.');

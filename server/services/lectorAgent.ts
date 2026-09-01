@@ -12,6 +12,7 @@ import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js"
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage } from "../db.js";
+import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 
 // Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
 // entrar aquí no bloquea el hilo, y una clasificación de más no hace daño (el mánager siempre
@@ -88,6 +89,26 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   let sinEmparejar = 0;
 
   for (const msg of mensajes) {
+    // Un bounce/NDR llega DESPUÉS de que el Enviador ya diera el pitch por enviado (Gmail acepta
+    // el mensaje al enviarlo y solo el servidor destino lo rechaza más tarde), y su remitente es
+    // mailer-daemon, no el lead - así que nunca empareja por "from" como una respuesta normal.
+    // Hay que detectarlo aparte y sacar la dirección fallida del cuerpo del propio bounce.
+    if (isBounceMessage(msg.subject || "", msg.from || "")) {
+      const emailFallido = extractFailedRecipientEmail(msg.text || "");
+      const leadBounce = emailFallido
+        ? leads.find((l: any) => (l.email_contacto || "").toLowerCase().trim() === emailFallido)
+        : null;
+      if (leadBounce && !(leadBounce.notas || "").includes("[Email Rechazado]")) {
+        await dbUpsertLead({
+          ...leadBounce,
+          notas: `${leadBounce.notas || ""}\n[Email Rechazado] Usuario no existe en ${emailFallido} - no reintentar`.trim()
+        }, bandId);
+        leadsActualizados.push(String(leadBounce.id));
+      }
+      uidsProcesados.push(msg.uid);
+      continue;
+    }
+
     const fromLower = (msg.from || "").toLowerCase().trim();
     const lead = fromLower
       ? leads.find((l: any) => (l.email_contacto || "").toLowerCase().trim() === fromLower)

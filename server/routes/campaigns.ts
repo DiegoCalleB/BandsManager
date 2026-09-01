@@ -5,7 +5,9 @@ import {
   dbGetCampaigns,
   dbUpsertCampaign,
   dbDeleteCampaign,
-  dbSetActiveCampaign
+  dbSetActiveCampaign,
+  dbRecordCampaignPitchTraining,
+  trainCampaignToneDnaManually
 } from "../db.js";
 
 const router = express.Router();
@@ -89,6 +91,59 @@ router.post("/campaigns/active", requireAuth, async (req, res) => {
   } catch (error: any) {
     console.error("Error in POST /api/campaigns/active:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al activar campaña" });
+  }
+});
+
+// POST /api/campaigns/:id/record-training
+// Records campaign-specific pitch training (for tone/content refinement)
+router.post("/campaigns/:id/record-training", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { id } = req.params;
+    const { borrador_ia, texto_aprobado } = req.body;
+
+    if (!borrador_ia || !texto_aprobado) {
+      return res.status(400).json({ success: false, error: "Se requieren borrador_ia y texto_aprobado" });
+    }
+
+    const success = await dbRecordCampaignPitchTraining({
+      band_id: userBandId,
+      campaign_id: id,
+      borrador_ia,
+      texto_aprobado
+    });
+
+    res.json({
+      success,
+      message: success
+        ? "Entrenamiento de campaña registrado correctamente. Se analizarán los patrones automáticamente."
+        : "No se pudo registrar el entrenamiento, pero la campaña continúa funcionando."
+    });
+  } catch (error: any) {
+    console.error(`Error in POST /api/campaigns/${req.params.id}/record-training:`, error);
+    res.status(500).json({ success: false, error: error?.message || "Error al registrar entrenamiento de campaña" });
+  }
+});
+
+// POST /api/campaigns/:id/train-tone-dna
+// Forces immediate campaign tone DNA training if enough examples exist
+router.post("/campaigns/:id/train-tone-dna", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { id } = req.params;
+
+    const result = await trainCampaignToneDnaManually(userBandId, id);
+
+    if (result.success) {
+      const campaigns = await dbGetCampaigns(userBandId);
+      const updated = campaigns.find(c => c.id === id) || null;
+      return res.json({ success: true, message: result.message, campaign: updated });
+    } else {
+      return res.status(400).json({ success: false, error: result.message });
+    }
+  } catch (error: any) {
+    console.error(`Error in POST /api/campaigns/${req.params.id}/train-tone-dna:`, error);
+    res.status(500).json({ success: false, error: error?.message || "Error al entrenar ADN de tono de campaña" });
   }
 });
 

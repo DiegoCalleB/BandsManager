@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { BookingCampaign } from '../../types';
-import { 
-  Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Sparkles, 
-  ChevronRight, Compass, ArrowRight, ShieldCheck, Flame
+import { BookingCampaign, PitchTemplateCategory } from '../../types';
+import {
+  Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Sparkles,
+  ChevronRight, Compass, ArrowRight, ShieldCheck, Flame,
+  Building2, Tent, Disc3, Radio, Briefcase, Landmark
 } from 'lucide-react';
+
+// Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
+// (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
+// caso de uso está editando dentro de la campaña.
+const PITCH_CATEGORIES: { id: PitchTemplateCategory; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'salas', label: '🏛️ Salas', icon: Building2 },
+  { id: 'festivales', label: '🎪 Festivales', icon: Tent },
+  { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
+  { id: 'medios', label: '📻 Medios', icon: Radio },
+  { id: 'grupos', label: '🎸 Grupos', icon: Users },
+  { id: 'managements', label: '💼 Managements', icon: Briefcase },
+  { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark },
+];
 
 interface CampaignManagerModalProps {
   isOpen: boolean;
@@ -35,10 +49,12 @@ export function CampaignManagerModal({
     maxCapacity: 500,
     targetDates: ['2026-12-04', '2026-12-05'],
     notes: '',
+    customPitchTemplates: {},
     color: '#8b5cf6',
     isActive: true
   });
   const [newCityInput, setNewCityInput] = useState('');
+  const [activePitchCategory, setActivePitchCategory] = useState<PitchTemplateCategory>('salas');
 
   if (!isOpen) return null;
 
@@ -51,9 +67,11 @@ export function CampaignManagerModal({
       maxCapacity: 500,
       targetDates: ['2026-12-04', '2026-12-05'],
       notes: 'Búsqueda de salas y fechas para la gira.',
+      customPitchTemplates: {},
       color: '#8b5cf6',
       isActive: true
     });
+    setActivePitchCategory('salas');
     setIsEditing(true);
   };
 
@@ -67,9 +85,11 @@ export function CampaignManagerModal({
       targetDates: [...(camp.targetDates || [])],
       targetDatesText: camp.targetDatesText || '',
       notes: camp.notes || '',
+      customPitchTemplates: { ...(camp.customPitchTemplates || {}) },
       color: camp.color || '#8b5cf6',
       isActive: camp.isActive
     });
+    setActivePitchCategory('salas');
     setIsEditing(true);
   };
 
@@ -85,7 +105,7 @@ export function CampaignManagerModal({
       return d;
     }).join(', ');
 
-    await onSaveCampaign({
+    const payload = {
       id: editingCampaignId || undefined,
       name: formData.name.trim(),
       targetCities: formData.targetCities || [],
@@ -94,9 +114,13 @@ export function CampaignManagerModal({
       targetDates: dates,
       targetDatesText: formattedDatesText,
       notes: formData.notes || '',
+      customPitchTemplates: formData.customPitchTemplates || {},
       color: formData.color || '#8b5cf6',
       isActive: formData.isActive ?? true
-    });
+    };
+
+
+    await onSaveCampaign(payload);
 
     setIsEditing(false);
     setEditingCampaignId(null);
@@ -132,6 +156,15 @@ export function CampaignManagerModal({
       targetCities: (formData.targetCities || []).filter(c => c !== city)
     });
   };
+
+  const handlePitchTemplateChange = (category: PitchTemplateCategory, value: string) => {
+    setFormData({
+      ...formData,
+      customPitchTemplates: { ...(formData.customPitchTemplates || {}), [category]: value }
+    });
+  };
+
+  const filledPitchCategoriesCount = Object.values(formData.customPitchTemplates || {}).filter(v => (v || '').trim()).length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
@@ -349,6 +382,51 @@ export function CampaignManagerModal({
                 />
               </div>
 
+              {/* Campaign-specific pitch templates, one per lead use case */}
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1 flex items-center gap-2">
+                  Plantilla de Pitch de Campaña por Caso de Uso (opcional)
+                  {filledPitchCategoriesCount > 0 && (
+                    <span className="text-[9px] font-mono font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                      {filledPitchCategoriesCount}/{PITCH_CATEGORIES.length} definidas
+                    </span>
+                  )}
+                </label>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {PITCH_CATEGORIES.map(cat => {
+                    const hasContent = !!(formData.customPitchTemplates?.[cat.id] || '').trim();
+                    const isSelected = activePitchCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setActivePitchCategory(cat.id)}
+                        className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-lg border transition-colors ${
+                          isSelected
+                            ? 'bg-purple-600/30 text-purple-200 border-purple-500/60'
+                            : 'bg-[#181716] text-neutral-400 border-neutral-700 hover:text-neutral-200 hover:border-neutral-600'
+                        }`}
+                      >
+                        <cat.icon className="w-3 h-3" />
+                        {cat.label}
+                        {hasContent && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                      </button>
+                    );
+                  })}
+                </div>
+                <textarea
+                  key={activePitchCategory}
+                  rows={3}
+                  value={formData.customPitchTemplates?.[activePitchCategory] || ''}
+                  onChange={e => handlePitchTemplateChange(activePitchCategory, e.target.value)}
+                  placeholder={`Ej: Mensaje clave que el Redactor IA debe priorizar para "${PITCH_CATEGORIES.find(c => c.id === activePitchCategory)?.label}" mientras esta campaña esté activa. Déjalo vacío para usar solo la plantilla habitual de este tipo.`}
+                  className="w-full bg-[#181716] border border-neutral-700 rounded-xl px-3 py-2 text-xs text-zinc-100 placeholder-neutral-500 focus:border-purple-500"
+                />
+                <p className="text-[11px] text-neutral-400 italic mt-1">
+                  💡 Cada caso de uso tiene su propio mensaje. Mientras esta campaña esté activa, el Redactor IA prioriza el mensaje de la categoría del lead sobre la plantilla habitual; las categorías sin mensaje definido siguen usando solo la plantilla habitual.
+                </p>
+              </div>
+
               {/* Action buttons */}
               <div className="flex justify-end gap-2 pt-3 border-t border-neutral-800">
                 <button
@@ -484,6 +562,12 @@ export function CampaignManagerModal({
                               <Calendar className="w-3.5 h-3.5 text-pink-400" />
                               {camp.targetDates?.length || 0} fechas ({camp.targetDatesText || 'Sin definir'})
                             </span>
+                            {Object.values(camp.customPitchTemplates || {}).some(v => (v || '').trim()) && (
+                              <span className="flex items-center gap-1 text-purple-300">
+                                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                                {Object.values(camp.customPitchTemplates || {}).filter(v => (v || '').trim()).length} plantilla(s) propia(s)
+                              </span>
+                            )}
                           </div>
 
                           {camp.notes && (

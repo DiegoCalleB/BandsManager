@@ -125,6 +125,32 @@ export function isBounceMessage(subject: string, from: string): boolean {
 }
 
 /**
+ * Extrae el email del destinatario que falló de un mensaje de bounce/NDR.
+ * El remitente de un bounce es mailer-daemon, nunca el lead, así que hay que sacar la
+ * dirección fallida del cuerpo del mensaje para poder emparejarla con un lead.
+ */
+export function extractFailedRecipientEmail(bodyText: string): string | null {
+  if (!bodyText) return null;
+
+  const patterns = [
+    /Final-Recipient:\s*rfc822;\s*([^\s<>]+@[^\s<>]+)/i,
+    /Original-Recipient:\s*rfc822;\s*([^\s<>]+@[^\s<>]+)/i,
+    /wasn'?t delivered to\s*:?\s*([^\s<>]+@[^\s<>]+)/i,
+    /couldn'?t be delivered to\s*:?\s*([^\s<>]+@[^\s<>]+)/i,
+    /delivery to the following recipient(?:s)? failed[\s\S]{0,120}?([^\s<>]+@[^\s<>]+)/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = bodyText.match(pattern);
+    if (match && match[1]) {
+      return match[1].replace(/[.,;:]+$/, '').toLowerCase();
+    }
+  }
+
+  return null;
+}
+
+/**
  * Genera descripción legible del error
  */
 export function getReadableFailureMessage(reason: EmailDeliveryFailureReason): string {

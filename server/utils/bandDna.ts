@@ -56,6 +56,8 @@ export interface BandDnaProfile {
   categoryTemplateTitle?: string;
   categoryTemplateGuidelines?: string;
   categoryTemplateCustomInstruction?: string;
+  categoryTemplateBody?: string;
+  categoryTemplateSubject?: string;
 }
 
 function strOrUndef(v: any): string | undefined {
@@ -212,10 +214,16 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   // (server/routes/leads/templates.ts, category_pitch_templates). Antes esto ni persistía de
   // verdad ni llegaba aquí: el mánager editaba "pautas para salas" y no tenía ningún efecto
   // real en los pitches generados para salas.
+  // El asunto/cuerpo de la plantilla (a diferencia de guidelines/customInstruction) tampoco se
+  // leía nunca aquí: el mánager podía pulir el cuerpo de la plantilla de "salas" a mano en el
+  // panel y esos cambios de redacción no llegaban al Redactor - solo el texto libre de
+  // "guidelines" influía en el pitch generado, nunca la plantilla en sí.
   const categoryTemplate = state?.categoryTemplates?.[categoryKey];
   const categoryTemplateTitle = strOrUndef(categoryTemplate?.title);
   const categoryTemplateGuidelines = strOrUndef(categoryTemplate?.guidelines);
   const categoryTemplateCustomInstruction = strOrUndef(categoryTemplate?.customInstruction);
+  const categoryTemplateBody = strOrUndef(categoryTemplate?.body);
+  const categoryTemplateSubject = strOrUndef(categoryTemplate?.subject);
 
   return {
     bandId,
@@ -259,7 +267,9 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     recomendacionPitch,
     categoryTemplateTitle,
     categoryTemplateGuidelines,
-    categoryTemplateCustomInstruction
+    categoryTemplateCustomInstruction,
+    categoryTemplateBody,
+    categoryTemplateSubject
   };
 }
 
@@ -278,11 +288,25 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const cName = activeCampaign.name || "Campaña de Booking";
     const cDates = activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign.target_dates) ? activeCampaign.target_dates.join(', ') : 'próximas semanas/meses'));
     const cCities = Array.isArray(activeCampaign.targetCities) && activeCampaign.targetCities.length > 0 ? activeCampaign.targetCities.join(', ') : (Array.isArray(activeCampaign.target_cities) ? activeCampaign.target_cities.join(', ') : 'España');
-    const cTemplate = activeCampaign.custom_pitch_template || activeCampaign.customPitchTemplate || '';
+    // Leer plantilla específica de la categoría del lead desde customPitchTemplates (objeto con claves por categoría)
+    const customTemplates = activeCampaign.customPitchTemplates || activeCampaign.custom_pitch_templates || {};
+    const cTemplate = customTemplates[categoryKey] || '';
     const cNotes = activeCampaign.notes || '';
     const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
     const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
-    const capInfo = cMax > 0 ? `Aforo objetivo de sala para esta campaña: ${cMin}-${cMax} personas.` : '';
+    // Removed capInfo - avoid mentioning capacity in pitch unless explicitly needed
+    const capInfo = '';
+
+    const campaignToneRules = activeCampaign.campaignToneRules || activeCampaign.campaign_tone_rules;
+    let campaignToneSection = "";
+    if (campaignToneRules?.reglas_estilo_aprendidas && campaignToneRules.reglas_estilo_aprendidas.length > 0) {
+      campaignToneSection = `
+🎨 REGLAS DE TONO APRENDIDAS ESPECÍFICAMENTE PARA ESTA CAMPAÑA:
+${campaignToneRules.reglas_estilo_aprendidas.map((r: string) => `   - ⭐ ${r}`).join("\n")}
+${campaignToneRules.vocabulario_aprendido && campaignToneRules.vocabulario_aprendido.length > 0 ? `   - Vocabulario clave para esta campaña: ${campaignToneRules.vocabulario_aprendido.join(", ")}` : ""}
+${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.length > 0 ? `   - Expresiones prohibidas en esta campaña: ${campaignToneRules.terminos_a_evitar.join(", ")}` : ""}
+`;
+    }
 
     campaignSection = `
 ═════════════════════════════════════════════════════════════════════
@@ -290,10 +314,12 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
 ═════════════════════════════════════════════════════════════════════
 - Fechas de concierto deseadas: ${cDates}
 - Ciudades / Rutas objetivo: ${cCities}
-${capInfo ? `- ${capInfo}` : ''}
 ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
-* DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
+${campaignToneSection}
+* DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona de forma natural y sin repeticiones que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking. IMPORTANTE: evita repetir las fechas múltiples veces; menciónlas UNA SOLA VEZ de forma clara y directa.
+* PERSONALIZACIÓN REQUERIDA: Adapta el tono y enfoque específicamente al tipo de recinto destinatario. Menciona detalles concretos de ${lead?.nombre_sala || "la sala"} si los conoces (su género de programación, su audiencia, su reputación). Haz que sienta que la propuesta es PARA ÉL/ELLA específicamente, no un mensaje genérico para 100 salas.
+${cTemplate ? `* DIRECTIVA DE PLANTILLA: La plantilla/mensaje clave de esta campaña ("${cTemplate}") DEBE estar incorporada de forma natural en tu propuesta. Úsala como base o referencia obligatoria para mantener coherencia con la estrategia de la campaña.` : ''}
 `;
   }
 
@@ -358,21 +384,27 @@ ${lead?.notas ? `- Notas previas registradas: "${lead.notas}"` : ""}
 🧠 HISTORIAL DE FEEDBACK Y APRENDIZAJE DEL MÁNAGER:
 ═════════════════════════════════════════════════════════════════════
 ${globalMemory || "Sin historial previo. Mantener tono bailable, directo, profesional y fresco sin instrumentos de viento."}
-${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction) ? `
+${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction || bandDna.categoryTemplateSubject || bandDna.categoryTemplateBody) ? `
 ═════════════════════════════════════════════════════════════════════
-📋 PAUTAS ESPECÍFICAS PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
+📋 PAUTAS Y PLANTILLA DE REFERENCIA PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
 ═════════════════════════════════════════════════════════════════════
 ${bandDna.categoryTemplateGuidelines ? bandDna.categoryTemplateGuidelines : ""}
 ${bandDna.categoryTemplateCustomInstruction ? `Instrucción específica reciente del mánager para esta categoría: "${bandDna.categoryTemplateCustomInstruction}"` : ""}
+${bandDna.categoryTemplateSubject ? `Estructura recomendada para el Asunto del email (úsalo como patrón, personaliza los datos):
+   Ejemplo de asunto: "${bandDna.categoryTemplateSubject}"` : ""}
+${bandDna.categoryTemplateBody ? `Plantilla de referencia guardada a mano por el mánager para esta categoría - úsala como modelo real de estructura, ritmo de frase y vocabulario (es la voz más fiel que existe de cómo debe sonar este pitch). NUNCA la copies literal: sustituye cualquier fecha, sala, hito o dato concreto que contenga por los datos reales de este destinatario y de la campaña activa de arriba (si no hay campaña activa, omite fechas concretas en vez de reutilizar las de la plantilla).
+"""
+${bandDna.categoryTemplateBody}
+"""` : ""}
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):
 ═════════════════════════════════════════════════════════════════════
 1. ${languageHint.instruction}
-2. ADAPTACIÓN DE ENFOQUE POR TIPO:
-   - SALAS / CLUB DE DIRECTO: Destaca que el show es festivo, bailable y garantiza consumo de barra; ofrece montaje rápido y flexibilidad en taquilla o co-booking con banda local de la ciudad.
+2. ADAPTACIÓN DE ENFOQUE POR TIPO (MÁXIMA PERSONALIZACIÓN AL RECINTO):
+   - SALAS / CLUB DE DIRECTO: Enfoque directo a ese público local específico. Destaca que el show es festivo, bailable y garantiza consumo de barra; ofrece montaje rápido y flexibilidad en taquilla o co-booking con banda local. PROHIBIDO: no menciones "aforos de 300-500 personas" — habla de la sala ESPECÍFICA.
    - FESTIVALES: Resalta la conexión masiva, el alto impacto en horarios nocturnos/tardes y la agilidad en cambio de set.
-   - DISCOTECAS / CLUBS: Presenta el show como Live Set nocturno bailable de madrugada entre DJs.
+   - DISCOTECAS / CLUBS: Presenta el show como Live Set nocturno bailable de madrugada entre DJs. Personaliza el enfoque: ¿qué público tiene esa discoteca? ¿Qué vibe? Menciona cómo el directo encaja en su programación específica.
    - MEDIOS / RADIO / PRENSA: Enfoque informativo y de colaboración cultural; ofrece temas en calidad broadcast (WAV), entrevistas o acústicos (¡JAMÁS pedir bolos ni taquilla a un medio!).
    - GRUPOS / ARTISTAS: Enfoque de colega de profesión para compartir concierto, fecha doble o intercambio (Date Swap en su ciudad y en la nuestra).
    - AYUNTAMIENTOS / FIESTAS: Destaca el carácter festivo e intergeneracional, la solvencia técnica y la facturación formal.
@@ -388,6 +420,8 @@ ${bandDna.categoryTemplateCustomInstruction ? `Instrucción específica reciente
    - NUNCA inventar instrumentos de viento (trompetas, saxos, trombones) para Bakandeya.
    - PROHIBIDAS las frases hechas y clichés ("espero que te encuentres bien", "en el competitivo panorama actual", "una experiencia inolvidable").
    - NO incluir enlaces a Spotify/YouTube en el texto del cuerpo; toda la referencia se canaliza a través del dossier oficial en la firma.
+   - NUNCA menciones "aforos de X-Y personas" ni hagas referencias genéricas a "salas de aforo medio". Personaliza SIEMPRE a la sala específica del destinatario.
+   - PROHIBIDO repetir fechas múltiples veces en el mismo email. Menciona las fechas de campaña UNA SOLA VEZ, de forma clara y directa. Si hay variedad de opciones, lístalasde forma compacta ("4, 5, 11 o 12 de diciembre") pero NO repitas la misma información en párrafos diferentes.
    - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.
 ${bandDna.fewShotSection || ""}`;
 }

@@ -434,6 +434,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       targetDates: dates,
       targetDatesText: formattedDatesText,
       notes: campaignData.notes || '',
+      customPitchTemplates: campaignData.customPitchTemplates || {},
       isActive: Boolean(campaignData.isActive),
       color: campaignData.color || '#8b5cf6',
       created_at: campaignData.created_at || new Date().toISOString()

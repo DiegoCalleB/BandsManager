@@ -11,6 +11,13 @@ export interface DbCampaign {
   target_dates: string[];
   target_dates_text?: string;
   notes?: string;
+  custom_pitch_templates?: Record<string, string>;
+  campaign_tone_rules?: {
+    reglas_estilo_aprendidas?: string[];
+    vocabulario_aprendido?: string[];
+    terminos_a_evitar?: string[];
+    actualizado?: string;
+  };
   is_active: boolean;
   color?: string;
   created_at?: string;
@@ -47,6 +54,32 @@ export function normalizeCampaignFromDb(c: any) {
     targetDates = c.targetDates;
   }
 
+  let customPitchTemplates: Record<string, string> = {};
+  const rawTemplates = c.custom_pitch_templates ?? c.customPitchTemplates;
+  if (rawTemplates && typeof rawTemplates === "object" && !Array.isArray(rawTemplates)) {
+    customPitchTemplates = rawTemplates;
+  } else if (typeof rawTemplates === "string" && rawTemplates) {
+    try {
+      const parsed = JSON.parse(rawTemplates);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) customPitchTemplates = parsed;
+    } catch {
+      // Ignora JSON malformado y se queda con el mapa vacío por defecto.
+    }
+  }
+
+  let campaignToneRules = undefined;
+  const rawToneRules = c.campaign_tone_rules ?? c.campaignToneRules;
+  if (rawToneRules && typeof rawToneRules === "object" && !Array.isArray(rawToneRules)) {
+    campaignToneRules = rawToneRules;
+  } else if (typeof rawToneRules === "string" && rawToneRules) {
+    try {
+      const parsed = JSON.parse(rawToneRules);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) campaignToneRules = parsed;
+    } catch {
+      // Ignora JSON malformado
+    }
+  }
+
   return {
     id: String(c.id),
     band_id: c.band_id || c.bandId,
@@ -57,6 +90,8 @@ export function normalizeCampaignFromDb(c: any) {
     targetDates,
     targetDatesText: c.target_dates_text || c.targetDatesText || "",
     notes: c.notes || "",
+    customPitchTemplates,
+    campaignToneRules,
     isActive: Boolean(c.is_active ?? c.isActive ?? false),
     color: c.color || "#8b5cf6",
     created_at: c.created_at || c.createdAt || new Date().toISOString()
@@ -115,9 +150,16 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     target_dates: Array.isArray(campaign.targetDates) ? campaign.targetDates : [],
     target_dates_text: campaign.targetDatesText || "",
     notes: campaign.notes || "",
+    custom_pitch_templates: (campaign.customPitchTemplates && typeof campaign.customPitchTemplates === "object")
+      ? campaign.customPitchTemplates
+      : {},
+    campaign_tone_rules: (campaign.campaignToneRules && typeof campaign.campaignToneRules === "object")
+      ? campaign.campaignToneRules
+      : undefined,
     is_active: Boolean(campaign.isActive),
     color: campaign.color || "#8b5cf6"
   };
+
 
   try {
     // Try inserting into 'campaigns' table first
