@@ -216,6 +216,17 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     expect(prompt).toContain('4 y 5 de diciembre');
     expect(prompt).toContain('Ir directo al grano');
   });
+
+  it('incluye las reglas manuales del pitch marcadas como fijas, aunque no haya reglas auto-aprendidas', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_manuales: ['Firma siempre como "el equipo de Booking"'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER');
+    expect(prompt).toContain('🔒 Firma siempre como "el equipo de Booking"');
+  });
 });
 
 describe('buildReplySystemPrompt - Contestador', () => {
@@ -276,6 +287,23 @@ describe('buildReplySystemPrompt - Contestador', () => {
     expect(prompt).toContain('INSTRUCCIONES DEL MÁNAGER PARA ESTA REGENERACIÓN CONCRETA');
     expect(prompt).toContain('Hazlo más corto');
   });
+
+  it('incluye las reglas manuales marcadas como fijas, por encima de las auto-aprendidas', () => {
+    const state = stateConBanda({
+      reglas_por_categoria_respuesta: {
+        salas: {
+          reglas_manuales: ['Nunca prometas fecha exacta sin confirmar con el resto de la banda'],
+          reglas_estilo_aprendidas: ['Sé breve'],
+        },
+      },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead, 'reply');
+    const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], '');
+
+    expect(prompt).toContain('REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER');
+    expect(prompt).toContain('🔒 Nunca prometas fecha exacta sin confirmar con el resto de la banda');
+    expect(prompt).toContain('⭐ Sé breve');
+  });
 });
 
 describe('getBandDnaProfile - separación de reglas aprendidas entre pitch y respuesta', () => {
@@ -308,6 +336,20 @@ describe('getBandDnaProfile - separación de reglas aprendidas entre pitch y res
   it('en modo reply sin ninguna regla de respuesta aprendida no revienta', () => {
     const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-reglas', { tipo: 'sala' }, 'reply');
     expect(dna.reglasEstiloAprendidas).toBeUndefined();
+  });
+
+  it('lee reglas_manuales por separado de las auto-aprendidas, en ambos modos', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Auto pitch'], reglas_manuales: ['Manual pitch'] } },
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Auto respuesta'], reglas_manuales: ['Manual respuesta'] } },
+    });
+    const dnaPitch = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' });
+    expect(dnaPitch.reglasManuales).toEqual(['Manual pitch']);
+    expect(dnaPitch.reglasEstiloAprendidas).toEqual(['Auto pitch']);
+
+    const dnaReply = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' }, 'reply');
+    expect(dnaReply.reglasManuales).toEqual(['Manual respuesta']);
+    expect(dnaReply.reglasEstiloAprendidas).toEqual(['Auto respuesta']);
   });
 });
 

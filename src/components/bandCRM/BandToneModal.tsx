@@ -33,9 +33,10 @@ export interface ToneAnalysisData {
   puntos_fuertes_para_conectar?: string;
   recomendacion_pitch?: string;
   pitch_personalizado_ejemplo?: string;
-  /** Self-Refining Tone DNA: reglas que la IA extrae sola de las correcciones del mánager a los pitches (primer contacto), separadas por categoría de destinatario. Solo lectura aquí. */
+  /** Self-Refining Tone DNA: reglas que la IA extrae sola de las correcciones del mánager a los pitches (primer contacto), separadas por categoría de destinatario. `reglas_estilo_aprendidas` se fusiona (no se sobreescribe) en cada refinamiento; `reglas_manuales` la escribe el mánager y NUNCA la toca el refinamiento automático. */
   reglas_por_categoria?: Record<string, {
     reglas_estilo_aprendidas?: string[];
+    reglas_manuales?: string[];
     vocabulario_aprendido?: string[];
     terminos_a_evitar?: string[];
     actualizado?: string;
@@ -45,6 +46,7 @@ export interface ToneAnalysisData {
    * responde a una negociación no debe enseñarle al sistema a redactar mal el primer contacto. */
   reglas_por_categoria_respuesta?: Record<string, {
     reglas_estilo_aprendidas?: string[];
+    reglas_manuales?: string[];
     vocabulario_aprendido?: string[];
     terminos_a_evitar?: string[];
     actualizado?: string;
@@ -147,13 +149,18 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   const getLearnedBucket = (mode: 'pitch' | 'reply') =>
     (mode === 'reply' ? toneData?.reglas_por_categoria_respuesta : toneData?.reglas_por_categoria) || {};
 
-  const handleDeleteLearnedRule = async (mode: 'pitch' | 'reply', category: string, ruleIndex: number) => {
-    const current = getLearnedBucket(mode)[category]?.reglas_estilo_aprendidas || [];
+  // 'auto' = reglas_estilo_aprendidas (las infiere la IA, se fusionan - no se sobreescriben -
+  // en cada refinamiento automático). 'manual' = reglas_manuales (las escribe el mánager, el
+  // refinamiento automático nunca las toca ni las borra por su cuenta).
+  const handleDeleteLearnedRule = async (mode: 'pitch' | 'reply', category: string, source: 'auto' | 'manual', ruleIndex: number) => {
+    const bucket = getLearnedBucket(mode)[category];
+    const field = source === 'manual' ? 'reglas_manuales' : 'reglas_estilo_aprendidas';
+    const current = bucket?.[field] || [];
     const updated = current.filter((_, i) => i !== ruleIndex);
-    const key = `${mode}:${category}`;
+    const key = `${mode}:${category}:${source}`;
     setSavingRuleKey(key);
     try {
-      await api.updateLearnedToneRules({ mode, category, reglas_estilo_aprendidas: updated });
+      await api.updateLearnedToneRules({ mode, category, [field]: updated });
       await onRefreshLearnedRules?.();
     } catch (err) {
       console.error('Error borrando regla aprendida:', err);
@@ -162,18 +169,21 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
     }
   };
 
+  // Añadir siempre escribe en reglas_manuales, nunca en reglas_estilo_aprendidas: así lo que el
+  // mánager mete a mano queda protegido del refinamiento automático para siempre, en vez de
+  // arriesgarse a que la IA lo sustituya en el siguiente "Entrenar ADN de tono ahora".
   const handleAddLearnedRule = async (mode: 'pitch' | 'reply', category: string) => {
-    const key = `${mode}:${category}`;
+    const key = `${mode}:${category}:manual`;
     const text = (newRuleText[key] || '').trim();
     if (!text) return;
-    const current = getLearnedBucket(mode)[category]?.reglas_estilo_aprendidas || [];
+    const current = getLearnedBucket(mode)[category]?.reglas_manuales || [];
     setSavingRuleKey(key);
     try {
-      await api.updateLearnedToneRules({ mode, category, reglas_estilo_aprendidas: [...current, text] });
+      await api.updateLearnedToneRules({ mode, category, reglas_manuales: [...current, text] });
       setNewRuleText(prev => ({ ...prev, [key]: '' }));
       await onRefreshLearnedRules?.();
     } catch (err) {
-      console.error('Error añadiendo regla aprendida:', err);
+      console.error('Error añadiendo regla manual:', err);
     } finally {
       setSavingRuleKey(null);
     }
@@ -664,24 +674,43 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   <p className="text-[10px] font-mono text-violet-300/90">{trainMessage}</p>
                 )}
 
-                {toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0 ? (
+                {(toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0) ? (
                   <div className="space-y-2">
                     {Object.entries(toneData.reglas_por_categoria).map(([cat, reglas]) => {
-                      const key = `pitch:${cat}`;
-                      const savingThis = savingRuleKey === key;
+                      const autoKey = `pitch:${cat}:auto`;
+                      const manualKey = `pitch:${cat}:manual`;
+                      const savingAuto = savingRuleKey === autoKey;
+                      const savingManual = savingRuleKey === manualKey;
                       return (
                         <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-violet-900/30 space-y-1.5">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
                             {CATEGORY_LABELS[cat] || cat}
                           </span>
+                          {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
+                            <ul className="space-y-0.5">
+                              {reglas.reglas_manuales.map((r, idx) => (
+                                <li key={idx} className="text-[10px] font-sans text-amber-200 flex items-start justify-between gap-1.5 group">
+                                  <span>🔒 {r}</span>
+                                  <button
+                                    onClick={() => handleDeleteLearnedRule('pitch', cat, 'manual', idx)}
+                                    disabled={savingManual}
+                                    title="Quitar esta regla manual"
+                                    className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                  >
+                                    ✕
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                           {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
                             <ul className="space-y-0.5">
                               {reglas.reglas_estilo_aprendidas.map((r, idx) => (
                                 <li key={idx} className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group">
                                   <span>⭐ {r}</span>
                                   <button
-                                    onClick={() => handleDeleteLearnedRule('pitch', cat, idx)}
-                                    disabled={savingThis}
+                                    onClick={() => handleDeleteLearnedRule('pitch', cat, 'auto', idx)}
+                                    disabled={savingAuto}
                                     title="Quitar esta regla (p. ej. si contradice tu configuración manual)"
                                     className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
                                   >
@@ -704,19 +733,19 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           <div className="flex items-center gap-1.5 pt-1">
                             <input
                               type="text"
-                              value={newRuleText[key] || ''}
-                              onChange={(e) => setNewRuleText(prev => ({ ...prev, [key]: e.target.value }))}
+                              value={newRuleText[manualKey] || ''}
+                              onChange={(e) => setNewRuleText(prev => ({ ...prev, [manualKey]: e.target.value }))}
                               onKeyDown={(e) => { if (e.key === 'Enter') handleAddLearnedRule('pitch', cat); }}
-                              placeholder="+ añadir regla manual..."
-                              disabled={savingThis}
+                              placeholder="🔒 + añadir regla manual (protegida)..."
+                              disabled={savingManual}
                               className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-violet-500 disabled:opacity-50"
                             />
                             <button
                               onClick={() => handleAddLearnedRule('pitch', cat)}
-                              disabled={savingThis || !(newRuleText[key] || '').trim()}
+                              disabled={savingManual || !(newRuleText[manualKey] || '').trim()}
                               className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                             >
-                              {savingThis ? '...' : 'Añadir'}
+                              {savingManual ? '...' : 'Añadir'}
                             </button>
                           </div>
                         </div>
@@ -728,6 +757,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     Todavía no hay reglas aprendidas. Corrige al menos 2 pitches para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora".
                   </p>
                 )}
+                <p className="text-[9px] font-mono text-neutral-600">
+                  🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo anterior en cada re-entrenamiento
+                </p>
               </div>
             )}
 
@@ -752,24 +784,43 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                   </button>
                 </div>
 
-                {toneData.reglas_por_categoria_respuesta && Object.keys(toneData.reglas_por_categoria_respuesta).length > 0 ? (
+                {(toneData.reglas_por_categoria_respuesta && Object.keys(toneData.reglas_por_categoria_respuesta).length > 0) ? (
                   <div className="space-y-2">
                     {Object.entries(toneData.reglas_por_categoria_respuesta).map(([cat, reglas]) => {
-                      const key = `reply:${cat}`;
-                      const savingThis = savingRuleKey === key;
+                      const autoKey = `reply:${cat}:auto`;
+                      const manualKey = `reply:${cat}:manual`;
+                      const savingAuto = savingRuleKey === autoKey;
+                      const savingManual = savingRuleKey === manualKey;
                       return (
                         <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-sky-900/30 space-y-1.5">
                           <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-300">
                             {CATEGORY_LABELS[cat] || cat}
                           </span>
+                          {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
+                            <ul className="space-y-0.5">
+                              {reglas.reglas_manuales.map((r, idx) => (
+                                <li key={idx} className="text-[10px] font-sans text-amber-200 flex items-start justify-between gap-1.5 group">
+                                  <span>🔒 {r}</span>
+                                  <button
+                                    onClick={() => handleDeleteLearnedRule('reply', cat, 'manual', idx)}
+                                    disabled={savingManual}
+                                    title="Quitar esta regla manual"
+                                    className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                  >
+                                    ✕
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                           {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
                             <ul className="space-y-0.5">
                               {reglas.reglas_estilo_aprendidas.map((r, idx) => (
                                 <li key={idx} className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group">
                                   <span>⭐ {r}</span>
                                   <button
-                                    onClick={() => handleDeleteLearnedRule('reply', cat, idx)}
-                                    disabled={savingThis}
+                                    onClick={() => handleDeleteLearnedRule('reply', cat, 'auto', idx)}
+                                    disabled={savingAuto}
                                     title="Quitar esta regla (p. ej. si contradice tu configuración manual de Estrategias de Respuesta)"
                                     className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
                                   >
@@ -792,19 +843,19 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                           <div className="flex items-center gap-1.5 pt-1">
                             <input
                               type="text"
-                              value={newRuleText[key] || ''}
-                              onChange={(e) => setNewRuleText(prev => ({ ...prev, [key]: e.target.value }))}
+                              value={newRuleText[manualKey] || ''}
+                              onChange={(e) => setNewRuleText(prev => ({ ...prev, [manualKey]: e.target.value }))}
                               onKeyDown={(e) => { if (e.key === 'Enter') handleAddLearnedRule('reply', cat); }}
-                              placeholder="+ añadir regla manual..."
-                              disabled={savingThis}
+                              placeholder="🔒 + añadir regla manual (protegida)..."
+                              disabled={savingManual}
                               className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-sky-500 disabled:opacity-50"
                             />
                             <button
                               onClick={() => handleAddLearnedRule('reply', cat)}
-                              disabled={savingThis || !(newRuleText[key] || '').trim()}
+                              disabled={savingManual || !(newRuleText[manualKey] || '').trim()}
                               className="px-2 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
                             >
-                              {savingThis ? '...' : 'Añadir'}
+                              {savingManual ? '...' : 'Añadir'}
                             </button>
                           </div>
                         </div>
@@ -816,6 +867,9 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     Todavía no hay reglas aprendidas de respuestas. Corrige al menos 2 respuestas para la misma categoría (Salas, Festivales...) y se generarán solas, o pulsa "Entrenar ADN de tono ahora".
                   </p>
                 )}
+                <p className="text-[9px] font-mono text-neutral-600">
+                  🔒 = regla escrita a mano, nunca se pierde al re-entrenar &nbsp;·&nbsp; ⭐ = detectada por la IA, se fusiona con lo anterior en cada re-entrenamiento
+                </p>
               </div>
             )}
           </div>

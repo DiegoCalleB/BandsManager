@@ -801,6 +801,7 @@ export const api = {
     mode: 'pitch' | 'reply';
     category: string;
     reglas_estilo_aprendidas?: string[];
+    reglas_manuales?: string[];
     vocabulario_aprendido?: string[];
     terminos_a_evitar?: string[];
   }): Promise<{ success: boolean; data?: any; error?: string }> {

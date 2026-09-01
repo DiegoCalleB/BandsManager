@@ -24,6 +24,7 @@ const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
 
 interface LearnedRuleBucket {
   reglas_estilo_aprendidas?: string[];
+  reglas_manuales?: string[];
   vocabulario_aprendido?: string[];
   terminos_a_evitar?: string[];
 }
@@ -1508,13 +1509,20 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-300">
                           {RESPONSE_LEARNED_CATEGORY_LABELS[cat] || cat}
                         </span>
+                        {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
+                          <ul className="space-y-0.5">
+                            {reglas.reglas_manuales.map((r, idx) => (
+                              <li key={idx} className="text-[10px] font-sans text-amber-200">🔒 {r}</li>
+                            ))}
+                          </ul>
+                        )}
                         {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 ? (
                           <ul className="space-y-0.5">
                             {reglas.reglas_estilo_aprendidas.map((r, idx) => (
                               <li key={idx} className="text-[10px] font-sans text-neutral-300">⭐ {r}</li>
                             ))}
                           </ul>
-                        ) : (
+                        ) : (!reglas.reglas_manuales || reglas.reglas_manuales.length === 0) && (
                           <p className="text-[10px] font-mono text-neutral-500">Sin reglas todavía.</p>
                         )}
                       </div>

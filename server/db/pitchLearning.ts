@@ -321,11 +321,25 @@ async function fetchRecentEditedExamples(cleanId: string, esRespuesta: boolean):
   return data || [];
 }
 
+// Techo de reglas AI-derivadas por categoría: sin límite, una banda de un año de correcciones
+// acumularía docenas de "reglas de oro" que dejarían de ser oro (prompt enorme, ruido, reglas
+// redundantes o ya obsoletas compitiendo por atención). El propio LLM ya prioriza al fusionar
+// (ver prompt de abajo); este es solo el cinturón de seguridad si aun así se pasa.
+const MAX_REGLAS_IA_POR_CATEGORIA = 12;
+
 /**
  * Analiza los diffs de una categoría concreta y actualiza `dna_expresion.reglas_por_categoria`
  * (pitches) o `dna_expresion.reglas_por_categoria_respuesta` (respuestas) para esa categoría.
  * Requiere al menos 2 ediciones para inferir patrones; si no hay suficientes, no hace nada
  * (no es un error, solo "todavía no hay señal suficiente").
+ *
+ * FUSIONA con lo que ya había en vez de sobreescribirlo: antes, cada refinamiento generaba la
+ * lista de reglas SOLO a partir de los últimos 8 casos, así que una regla válida aprendida hace
+ * meses (o una añadida a mano por el mánager) podía desaparecer sin más si no volvía a aparecer
+ * reflejada en los ejemplos más recientes. Ahora se le pasan a la IA las reglas actuales y se le
+ * pide explícitamente conservarlas salvo que los casos nuevos las contradigan de verdad.
+ * `reglas_manuales` (añadidas a mano por el mánager) ni se leen ni se tocan aquí - son del
+ * mánager, nunca las toca el refinamiento automático.
  */
 async function refineToneDnaForCategory(cleanId: string, targetCategory: string, edits: PitchEditRow[], esRespuesta: boolean): Promise<void> {
   if (edits.length < 2) return;
@@ -334,6 +348,8 @@ async function refineToneDnaForCategory(cleanId: string, targetCategory: string,
   const currentDna = registered?.dna_expresion || {};
   const bucketKey = esRespuesta ? "reglas_por_categoria_respuesta" : "reglas_por_categoria";
   const reglasPorCategoria = { ...(currentDna[bucketKey] || {}) };
+  const entradaActual = reglasPorCategoria[targetCategory] || {};
+  const reglasPrevias: string[] = entradaActual.reglas_estilo_aprendidas || [];
 
   const diffsText = edits.slice(0, 8).map((e, idx) => `
 Caso ${idx + 1} (${e.nombre_sala}):
@@ -345,12 +361,17 @@ Caso ${idx + 1} (${e.nombre_sala}):
     ? `TODOS son CONTESTACIONES a un mensaje que ya envió el mismo tipo de destinatario ("${targetCategory}") - no primeros contactos.`
     : `TODOS son correos de PRIMER CONTACTO dirigidos al mismo tipo de destinatario ("${targetCategory}").`;
 
+  const reglasPreviasSection = reglasPrevias.length > 0
+    ? `\nREGLAS QUE YA TENÍAS VALIDADAS DE ANÁLISIS ANTERIORES (mantenlas TODAS salvo que los casos nuevos de abajo las contradigan claramente - no las quites solo porque no aparezcan reflejadas en estos casos concretos):\n${reglasPrevias.map((r) => `- ${r}`).join("\n")}\n`
+    : '';
+
   const prompt = `Actúa como un lingüista experto en comunicación de bandas de música independiente.
 Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos. ${contexto}
-
+${reglasPreviasSection}
+CASOS NUEVOS A ANALIZAR:
 ${diffsText}
 
-Extrae de forma ultra-concisa las 3 a 5 REGLAS DE ORO O PREFERENCIAS DE ESTILO que el mánager aplica sistemáticamente PARA ESTE TIPO DE DESTINATARIO (por ejemplo: expresiones que elimina, cómo saluda, qué datos añade, nivel de formalidad, cómo pide fechas).
+Tu tarea es devolver la lista ACTUALIZADA y FUSIONADA de reglas de oro para este tipo de destinatario: conserva las reglas previas que sigan aplicando, añade las nuevas que detectes en estos casos, funde en una sola las que digan básicamente lo mismo, y elimina solo las que estos casos nuevos contradigan de forma clara. Máximo ${MAX_REGLAS_IA_POR_CATEGORIA} reglas en total - si hay más señal de la que cabe, prioriza las más repetidas y las más recientes.
 
 Devuelve un JSON con este formato exacto:
 {
@@ -366,9 +387,11 @@ Devuelve un JSON con este formato exacto:
   const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
   if (parsed.reglas_aprendidas && Array.isArray(parsed.reglas_aprendidas)) {
     reglasPorCategoria[targetCategory] = {
-      reglas_estilo_aprendidas: parsed.reglas_aprendidas,
-      vocabulario_aprendido: parsed.palabras_favoritas || reglasPorCategoria[targetCategory]?.vocabulario_aprendido || [],
-      terminos_a_evitar: parsed.palabras_prohibidas || reglasPorCategoria[targetCategory]?.terminos_a_evitar || [],
+      reglas_estilo_aprendidas: parsed.reglas_aprendidas.slice(0, MAX_REGLAS_IA_POR_CATEGORIA),
+      // reglas_manuales nunca se pisa aquí: se preserva tal cual estuviera, sea lo que sea.
+      reglas_manuales: entradaActual.reglas_manuales || [],
+      vocabulario_aprendido: parsed.palabras_favoritas || entradaActual.vocabulario_aprendido || [],
+      terminos_a_evitar: parsed.palabras_prohibidas || entradaActual.terminos_a_evitar || [],
       actualizado: new Date().toISOString()
     };
 

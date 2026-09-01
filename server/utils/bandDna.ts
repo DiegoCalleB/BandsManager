@@ -41,6 +41,8 @@ export interface BandDnaProfile {
   reglasEstiloAprendidas?: string[];
   vocabularioAprendido?: string[];
   terminosAEvitar?: string[];
+  // Reglas añadidas A MANO por el mánager, nunca tocadas por el refinamiento automático.
+  reglasManuales?: string[];
   fewShotSection?: string;
   // ADN de voz y tono entrenado manualmente por el mánager (BandToneModal / dna_expresion)
   tonoComunicacion?: string;
@@ -199,6 +201,13 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   const terminosAEvitar = Array.isArray(reglasPorCategoria?.terminos_a_evitar)
     ? reglasPorCategoria.terminos_a_evitar
     : (mode === 'pitch' && Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined);
+  // Reglas añadidas A MANO por el mánager (no las toca nunca el refinamiento automático de
+  // pitchLearning.ts - ver el comentario junto a MAX_REGLAS_IA_POR_CATEGORIA allí). Se muestran
+  // siempre, con prioridad sobre las auto-aprendidas, para garantizar que un entrenamiento
+  // manual nunca se pierde por mucho que se vuelva a entrenar el ADN de tono automáticamente.
+  const reglasManuales = Array.isArray(reglasPorCategoria?.reglas_manuales)
+    ? reglasPorCategoria.reglas_manuales
+    : undefined;
 
   // ADN de voz entrenado a mano por el mánager en BandToneModal (POST /api/bands/analyze-tone,
   // PATCH /api/bands/tone-dna). Hasta ahora solo alimentaba Reels/chat (bandProfile.ts) y nunca
@@ -260,6 +269,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     reglasEstiloAprendidas,
     vocabularioAprendido,
     terminosAEvitar,
+    reglasManuales,
     tonoComunicacion,
     tratamientoHabitual,
     nivelEnergia,
@@ -363,13 +373,17 @@ ${bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0 ? `   - Emojis
 ${bandDna.puntosFuertesConectar ? `   - Puntos fuertes para conectar con el destinatario: ${bandDna.puntosFuertesConectar}` : ""}
 ${bandDna.recomendacionPitch ? `   - Recomendación de enfoque de pitch para esta banda (análisis de IA sobre su ADN real): ${bandDna.recomendacionPitch}` : ""}
 ` : ""}
+${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
+6. REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER PARA "${categoryKey.toUpperCase()}" (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
+${bandDna.reglasManuales.map(r => `   - 🔒 ${r}`).join("\n")}
+` : ""}
 ${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-6. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS PARA "${categoryKey.toUpperCase()}" (SELF-REFINING TONE DNA):
+7. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS PARA "${categoryKey.toUpperCase()}" (SELF-REFINING TONE DNA):
 ${bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n")}
 ${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
 ${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
 ` : ""}
-7. ENLACES Y DOSSIER:
+8. ENLACES Y DOSSIER:
    - REGLA DE ORO DE ENLACES: No saturar el cuerpo del correo con enlaces a plataformas de streaming en medio del texto. En el cuerpo del correo únicamente se hace referencia elegante al Dossier Oficial / EPK y Rider Técnico adjunto al pie de la firma (${bandDna.epkUrl}), donde el programador encontrará toda la información, vídeos en directo, temas y rider.
 
 ═════════════════════════════════════════════════════════════════════
@@ -519,6 +533,10 @@ ${bandDna.tratamientoHabitual ? `- Tratamiento habitual: ${bandDna.tratamientoHa
 ${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `- Vocabulario propio (úsalo de verdad): ${bandDna.vocabularioClave.join(", ")}` : ""}
 ${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `- Frases/expresiones emblemáticas suyas: ${bandDna.frasesEmblematicas.map((f) => `"${f}"`).join(" | ")}` : ""}
 ${bandDna.recomendacionPitch ? `- Recomendación de enfoque para esta banda: ${bandDna.recomendacionPitch}` : ""}
+` : ""}
+${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
+REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
+${bandDna.reglasManuales.map((r) => `- 🔒 ${r}`).join("\n")}
 ` : ""}
 ${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
 REGLAS DE ESTILO APRENDIDAS DE CORRECCIONES PREVIAS:

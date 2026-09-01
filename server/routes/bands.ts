@@ -576,10 +576,17 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
 // manual, ni de añadir una corrección puntual sin esperar a que se acumulen 2+ correcciones
 // reales. Endpoint separado del PATCH genérico de arriba porque la forma de editar es distinta
 // (una categoría concreta dentro de un mapa anidado, no un campo plano de la banda).
+//
+// `reglas_manuales` es un campo aparte de `reglas_estilo_aprendidas`: las manuales las escribe
+// el mánager y NUNCA las toca el refinamiento automático (ver refineToneDnaForCategory), así
+// que sirven de garantía de que "lo que yo añadí a mano no se pierde nunca" aunque se vuelva a
+// entrenar. Las `reglas_estilo_aprendidas` sí las puede modificar la IA en el siguiente
+// refinamiento (ahora por fusión, no por sobreescritura - ver pitchLearning.ts), pero también se
+// pueden editar/borrar aquí a mano en cualquier momento.
 router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
-    const { mode, category, reglas_estilo_aprendidas, vocabulario_aprendido, terminos_a_evitar } = req.body || {};
+    const { mode, category, reglas_estilo_aprendidas, reglas_manuales, vocabulario_aprendido, terminos_a_evitar } = req.body || {};
 
     if (mode !== "pitch" && mode !== "reply") {
       return res.status(400).json({ error: "mode debe ser 'pitch' o 'reply'." });
@@ -597,6 +604,9 @@ router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
       reglas_estilo_aprendidas: reglas_estilo_aprendidas !== undefined
         ? limpiarListaTono(reglas_estilo_aprendidas, 20)
         : (existente.reglas_estilo_aprendidas || []),
+      reglas_manuales: reglas_manuales !== undefined
+        ? limpiarListaTono(reglas_manuales, 20)
+        : (existente.reglas_manuales || []),
       vocabulario_aprendido: vocabulario_aprendido !== undefined
         ? limpiarListaTono(vocabulario_aprendido, 20)
         : (existente.vocabulario_aprendido || []),
