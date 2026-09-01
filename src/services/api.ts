@@ -282,6 +282,24 @@ export const api = {
     });
   },
 
+  // Response Strategies (guía condicional del Contestador por tipo de mensaje entrante)
+  async getResponseStrategies(): Promise<{ responseStrategies: Record<string, any> }> {
+    return request('/api/response-strategies');
+  },
+
+  async updateResponseStrategies(strategies: Record<string, any>): Promise<any> {
+    return request('/api/response-strategies', {
+      method: 'POST',
+      body: JSON.stringify({ strategies })
+    });
+  },
+
+  async deleteResponseStrategy(responseType: string): Promise<any> {
+    return request(`/api/response-strategies/${encodeURIComponent(responseType)}`, {
+      method: 'DELETE'
+    });
+  },
+
   // Leads
   async getLeads(params?: { page?: number; limit?: number; estado?: string; search?: string; ciudad?: string; sortBy?: string; sortOrder?: string }): Promise<{ leads: Lead[]; pagination?: { page: number; limit: number; total: number; totalPages: number } }> {
     const query = new URLSearchParams();

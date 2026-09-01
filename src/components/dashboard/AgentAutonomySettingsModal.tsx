@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles, 
+import {
+  Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles,
   Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
   Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
-  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download
+  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download,
+  MessageSquare, TrendingUp, ThumbsUp, ThumbsDown, HelpCircle
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { BandSchedule } from '../../types';
@@ -76,7 +77,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   onOpenTemplatesSection
 }) => {
   // Navigation Tabs
-  const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'audit_logs'>('autonomy');
+  const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'response_strategies' | 'audit_logs'>('autonomy');
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [loadingAuditLogs, setLoadingAuditLogs] = useState<boolean>(false);
   const [auditAgentFilter, setAuditAgentFilter] = useState<string>('all');
@@ -171,6 +172,85 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     return () => { isMounted = false; };
   }, [isOpen, bandId, currentUser]);
 
+  // State: Response Strategies (guía condicional del Contestador por tipo de respuesta
+  // detectada en el mensaje entrante de la sala - ver server/services/replyDrafting.ts)
+  type ResponseTone = 'neutral' | 'enthusiastic' | 'cautious';
+  interface ResponseStrategyForm {
+    guidancePrompt: string;
+    tone: ResponseTone;
+    mentionLinks: boolean;
+  }
+  const RESPONSE_TYPES: Array<{ key: string; label: string; description: string; icon: React.ReactNode; defaultTone: ResponseTone }> = [
+    {
+      key: 'price_negotiation',
+      label: 'Negociación de Precio',
+      description: 'La sala pregunta por caché, presupuesto, tarifa o condiciones económicas.',
+      icon: <Euro className="w-4 h-4" />,
+      defaultTone: 'neutral'
+    },
+    {
+      key: 'confirmation',
+      label: 'Confirmación',
+      description: 'La sala confirma, aprueba o expresa interés claro en seguir adelante.',
+      icon: <ThumbsUp className="w-4 h-4" />,
+      defaultTone: 'enthusiastic'
+    },
+    {
+      key: 'rejection',
+      label: 'Rechazo',
+      description: 'La sala declina la propuesta o indica que no tiene disponibilidad.',
+      icon: <ThumbsDown className="w-4 h-4" />,
+      defaultTone: 'cautious'
+    },
+    {
+      key: 'follow_up',
+      label: 'Pregunta de Seguimiento',
+      description: 'La sala pide más información, fechas o detalles concretos.',
+      icon: <HelpCircle className="w-4 h-4" />,
+      defaultTone: 'neutral'
+    }
+  ];
+  const [responseStrategies, setResponseStrategies] = useState<Record<string, ResponseStrategyForm>>({});
+  const [isSavingStrategies, setIsSavingStrategies] = useState(false);
+  const [strategiesFeedback, setStrategiesFeedback] = useState<string | null>(null);
+
+  const getStrategyOrDefault = (typeKey: string): ResponseStrategyForm => {
+    const found = responseStrategies[typeKey];
+    const defaultTone = RESPONSE_TYPES.find(t => t.key === typeKey)?.defaultTone || 'neutral';
+    return found || { guidancePrompt: '', tone: defaultTone, mentionLinks: true };
+  };
+
+  const updateStrategyField = <K extends keyof ResponseStrategyForm>(typeKey: string, field: K, value: ResponseStrategyForm[K]) => {
+    setResponseStrategies(prev => ({
+      ...prev,
+      [typeKey]: { ...getStrategyOrDefault(typeKey), [field]: value }
+    }));
+  };
+
+  const handleSaveResponseStrategies = async () => {
+    if (!isAdmin) return;
+    setIsSavingStrategies(true);
+    setStrategiesFeedback(null);
+    try {
+      // Solo persiste estrategias con guía real escrita por el mánager - una entrada vacía
+      // no aporta nada al prompt condicional y solo ensuciaría el JSON guardado.
+      const toSave: Record<string, ResponseStrategyForm> = {};
+      for (const [key, strategy] of Object.entries(responseStrategies)) {
+        if (strategy.guidancePrompt && strategy.guidancePrompt.trim()) {
+          toSave[key] = strategy;
+        }
+      }
+      await api.updateResponseStrategies(toSave);
+      setStrategiesFeedback('✅ Estrategias de respuesta guardadas correctamente.');
+      setTimeout(() => setStrategiesFeedback(null), 3000);
+    } catch (e) {
+      console.error('Error guardando estrategias de respuesta:', e);
+      setStrategiesFeedback('⚠️ Error al guardar las estrategias de respuesta.');
+    } finally {
+      setIsSavingStrategies(false);
+    }
+  };
+
   // State: Band Schedules (Lector & Enviador)
   const [timezone, setTimezone] = useState<string>('Europe/Madrid');
   const [horasLector, setHorasLector] = useState<number[]>([8, 12, 16, 20]);
@@ -238,7 +318,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
           // ignore
         }
 
-        // 3. Fetch Band Schedule (Lector & Enviador crons)
+        // 3. Fetch Response Strategies (guía condicional del Contestador)
+        const serverStrategies = await api.getResponseStrategies().catch(() => null);
+        if (isMounted && serverStrategies?.responseStrategies) {
+          setResponseStrategies(serverStrategies.responseStrategies as Record<string, ResponseStrategyForm>);
+        }
+
+        // 4. Fetch Band Schedule (Lector & Enviador crons)
         const serverSchedule: BandSchedule = await api.getBandSchedule(targetBand).catch(() => null);
         if (isMounted && serverSchedule) {
           if (serverSchedule.timezone) setTimezone(serverSchedule.timezone);
@@ -469,6 +555,19 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
 
           <button
             type="button"
+            onClick={() => setActiveTab('response_strategies')}
+            className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'response_strategies'
+                ? 'border-amber-400 text-amber-400'
+                : 'border-transparent text-neutral-400 hover:text-zinc-200'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-purple-400" />
+            <span>5. Estrategias de Respuesta</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab('audit_logs')}
             className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'audit_logs'
@@ -477,7 +576,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Activity className="w-4 h-4 text-emerald-400" />
-            <span>5. Auditoría & Trazabilidad</span>
+            <span>6. Auditoría & Trazabilidad</span>
             {auditLogs.length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-emerald-500/20 text-emerald-300 font-mono">
                 {auditLogs.length}
@@ -1339,7 +1438,120 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 5: AUDITORÍA & TRAZABILIDAD */}
+          {/* TAB 5: ESTRATEGIAS DE RESPUESTA (guía condicional del Contestador según el tipo
+              de mensaje que la sala responda - ver server/services/replyDrafting.ts) */}
+          {activeTab === 'response_strategies' && (
+            <div className="space-y-6">
+              <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs flex items-start gap-3">
+                <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+                <div className="space-y-1 leading-relaxed">
+                  <strong className="font-bold text-purple-200">¿Cómo debe responder el agente cuando una sala contesta?</strong>
+                  <p className="text-neutral-300 text-[11px]">
+                    Cuando una sala responde a un correo, el Agente Lector detecta automáticamente de qué tipo de mensaje se trata y redacta un borrador. Aquí puedes darle instrucciones concretas para cada tipo de situación, además del tono a aplicar. El borrador siempre queda pendiente de tu aprobación antes de enviarse.
+                  </p>
+                </div>
+              </div>
+
+              {RESPONSE_TYPES.map((type) => {
+                const strategy = getStrategyOrDefault(type.key);
+                return (
+                  <div key={type.key} className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300">
+                        {type.icon}
+                      </span>
+                      <div>
+                        <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
+                          {type.label}
+                        </h4>
+                        <p className="text-[10px] text-neutral-400 font-sans">{type.description}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-mono text-neutral-400 font-semibold block">
+                        Instrucción para la IA (opcional)
+                      </label>
+                      <textarea
+                        disabled={!isAdmin}
+                        rows={2}
+                        value={strategy.guidancePrompt}
+                        onChange={(e) => updateStrategyField(type.key, 'guidancePrompt', e.target.value)}
+                        placeholder={`Ej: ${
+                          type.key === 'price_negotiation'
+                            ? 'Menciona que somos flexibles con taquilla compartida, pero no des cifras concretas por email.'
+                            : type.key === 'confirmation'
+                            ? 'Pide directamente los datos técnicos del rider y el horario de la prueba de sonido.'
+                            : type.key === 'rejection'
+                            ? 'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
+                            : 'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
+                        }`}
+                        className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-sans focus:border-purple-500 focus:outline-none disabled:opacity-60 resize-none"
+                      />
+                      <p className="text-[10px] text-neutral-500">
+                        Si lo dejas vacío, el agente usa una guía automática genérica para este tipo de respuesta.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                      <div className="space-y-1 flex-1">
+                        <label className="text-[10px] font-mono text-neutral-500 font-semibold block">Tono</label>
+                        <div className="flex gap-1.5">
+                          {(['neutral', 'enthusiastic', 'cautious'] as ResponseTone[]).map((toneOption) => (
+                            <button
+                              key={toneOption}
+                              type="button"
+                              disabled={!isAdmin}
+                              onClick={() => updateStrategyField(type.key, 'tone', toneOption)}
+                              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold border transition-all ${
+                                !isAdmin ? 'cursor-default' : 'cursor-pointer'
+                              } ${
+                                strategy.tone === toneOption
+                                  ? 'bg-purple-500/20 border-purple-500 text-purple-200'
+                                  : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-zinc-200'
+                              }`}
+                            >
+                              {toneOption === 'neutral' ? 'Neutral' : toneOption === 'enthusiastic' ? 'Entusiasta' : 'Prudente'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <label className="flex items-center gap-2 cursor-pointer text-neutral-300 font-sans text-[11px]">
+                        <input
+                          type="checkbox"
+                          disabled={!isAdmin}
+                          checked={strategy.mentionLinks}
+                          onChange={(e) => updateStrategyField(type.key, 'mentionLinks', e.target.checked)}
+                          className="rounded border-neutral-700 bg-neutral-900 text-purple-500 focus:ring-purple-500 disabled:opacity-60"
+                        />
+                        <span>Mencionar enlace al Dossier/EPK si procede</span>
+                      </label>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {isAdmin && (
+                <div className="flex items-center justify-between gap-3 pt-1">
+                  {strategiesFeedback && (
+                    <span className="text-[11px] font-mono text-neutral-300">{strategiesFeedback}</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleSaveResponseStrategies}
+                    disabled={isSavingStrategies}
+                    className="ml-auto px-4 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
+                  >
+                    {isSavingStrategies ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    <span>{isSavingStrategies ? 'Guardando...' : 'Guardar Estrategias de Respuesta'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 6: AUDITORÍA & TRAZABILIDAD */}
           {activeTab === 'audit_logs' && (
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
