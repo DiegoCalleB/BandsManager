@@ -313,7 +313,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
  * de idioma y tono sin fórmulas clichés de IA.
  * bandMinCache: cachés mínimos generales de la banda (usados si no hay campaña activa).
  */
-export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any, bandMinCache?: any): string {
+export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any, bandMinCache?: any, negotiationStartCacheByType?: any): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
@@ -343,19 +343,6 @@ ${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.len
 `;
     }
 
-    const applicableCaches = resolveMinCacheByType(activeCampaign, bandMinCache);
-    let cacheSection = "";
-    if (Object.keys(applicableCaches).length > 0) {
-      const cacheLines = Object.entries(applicableCaches)
-        .map(([tipo, cache]) => `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: mínimo ${cache}€`)
-        .join("\n");
-      cacheSection = `
-💰 NEGOCIACIÓN - CACHÉS MÍNIMOS POR TIPO DE RECINTO:
-${cacheLines}
-INSTRUCCIÓN CRÍTICA: En la negociación de condiciones económicas, NUNCA bajes de estos cachés mínimos. Estos son los pisos de tu banda para cada tipo de recinto. Ofrece flexibilidad en taquilla compartida, co-booking o modelos alternativos, pero el caché base no es negociable.
-`;
-    }
-
     campaignSection = `
 ═════════════════════════════════════════════════════════════════════
 🎯 CAMPAÑA DE BOOKING ACTIVA: "${cName}" (PRIORIDAD MÁXIMA DE AGENDA)
@@ -365,26 +352,20 @@ INSTRUCCIÓN CRÍTICA: En la negociación de condiciones económicas, NUNCA baje
 ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
 ${campaignToneSection}
-${cacheSection}
 * DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona de forma natural y sin repeticiones que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking. IMPORTANTE: evita repetir las fechas múltiples veces; menciónlas UNA SOLA VEZ de forma clara y directa.
 * PERSONALIZACIÓN REQUERIDA: Adapta el tono y enfoque específicamente al tipo de recinto destinatario. Menciona detalles concretos de ${lead?.nombre_sala || "la sala"} si los conoces (su género de programación, su audiencia, su reputación). Haz que sienta que la propuesta es PARA ÉL/ELLA específicamente, no un mensaje genérico para 100 salas.
 ${cTemplate ? `* DIRECTIVA DE PLANTILLA: La plantilla/mensaje clave de esta campaña ("${cTemplate}") DEBE estar incorporada de forma natural en tu propuesta. Úsala como base o referencia obligatoria para mantener coherencia con la estrategia de la campaña.` : ''}
 `;
-  } else {
-    // Si no hay campaña activa, mostrar cachés generales de banda
-    const applicableCaches = resolveMinCacheByType(undefined, bandMinCache);
-    if (Object.keys(applicableCaches).length > 0) {
-      const cacheLines = Object.entries(applicableCaches)
-        .map(([tipo, cache]) => `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: mínimo ${cache}€`)
-        .join("\n");
-      campaignSection = `
-═════════════════════════════════════════════════════════════════════
-💰 NEGOCIACIÓN - CACHÉS MÍNIMOS POR TIPO DE RECINTO (CONFIGURACIÓN GENERAL DE BANDA):
-═════════════════════════════════════════════════════════════════════
-${cacheLines}
+  }
 
-INSTRUCCIÓN CRÍTICA: En la negociación de condiciones económicas, NUNCA bajes de estos cachés mínimos. Estos son los pisos de tu banda para cada tipo de recinto. Ofrece flexibilidad en taquilla compartida, co-booking o modelos alternativos, pero el caché base no es negociable.
-`;
+  // Cachés: nunca se revelan explícitamente en el pitch (ver sección interna de negociación
+  // más abajo). Se resuelven aquí para poder inyectarlos solo en la guía interna del Redactor.
+  const applicableCaches = resolveMinCacheByType(activeCampaign, bandMinCache);
+  const applicableNegotiationStartCaches: Record<string, number> = {};
+  if (negotiationStartCacheByType && typeof negotiationStartCacheByType === "object") {
+    for (const tipo of ['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos']) {
+      const val = negotiationStartCacheByType[tipo];
+      if (typeof val === 'number' && val > 0) applicableNegotiationStartCaches[tipo] = val;
     }
   }
 
@@ -466,6 +447,32 @@ ${bandDna.categoryTemplateBody ? `Plantilla de referencia guardada a mano por el
 """
 ${bandDna.categoryTemplateBody}
 """` : ""}
+` : ""}
+${Object.keys(applicableCaches).length > 0 ? `
+═════════════════════════════════════════════════════════════════════
+🔒 GUÍA INTERNA DE NEGOCIACIÓN (NO MENCIONAR A LA SALA):
+═════════════════════════════════════════════════════════════════════
+Cachés mínimos internos por tipo de recinto (usar solo para evaluación estratégica, NUNCA mencionar explícitamente a la sala):
+${Object.entries(applicableCaches).map(([tipo, cache]) => `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: mínimo real ${cache}€`).join("\n")}
+
+ESTRATEGIA DE NEGOCIACIÓN (confidencial para ti):
+- Si el recinto ofrece una cantidad sensiblemente menor a estos mínimos, NO cierres el trato por escrito.
+- En lugar de aceptar una oferta baja directamente, sugiere una conversación por teléfono o WhatsApp para "explorar opciones creativas" o "afinar los detalles económicos", sin comprometerte a una cifra en el email.
+- El objetivo es mantener la flexibilidad en boca sin comprometerse por escrito a un caché que no cubre el mínimo real de la banda.
+- Si el recinto responde positivamente a la llamada, entonces sí se puede cerrar con los términos reales una vez acordados por teléfono.
+
+⚠️ SI LA SALA PREGUNTA EXPLÍCITAMENTE POR EL CACHÉ/PRECIO:
+${Object.keys(applicableNegotiationStartCaches).length > 0
+  ? Object.entries(applicableCaches).map(([tipo, cache]) => {
+      const negStart = applicableNegotiationStartCaches[tipo];
+      return negStart
+        ? `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: responde con ${negStart}€ (mínimo real ${cache}€, margen de negociación de ${negStart - cache}€)`
+        : `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: no hay cifra de inicio de negociación configurada; responde con una cifra un 15-20% superior al mínimo real (${cache}€) para dejar margen`;
+    }).join("\n")
+  : `   - No hay cifras de inicio de negociación configuradas; si preguntan, responde con una cifra un 15-20% superior al mínimo real correspondiente para dejar margen de negociación.`}
+- Mantén el tono amable y abierto a negociación; nunca presentes la cifra como cerrada o no negociable.
+
+NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas explícitamente "no bajamos de X euros". Estas cifras son SOLO para tu propia evaluación estratégica y para responder si preguntan directamente.
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):

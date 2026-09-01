@@ -43,6 +43,16 @@ export interface AgentAutonomyConfig {
     medios?: number;
     grupos?: number;
   };
+  // Caché de inicio de negociación (opcional): si la sala pregunta directamente por el caché,
+  // el agente responde con esta cifra en vez del mínimo real, dejando margen para negociar.
+  negotiationStartCacheByType?: {
+    salas?: number;
+    festivales?: number;
+    discotecas?: number;
+    ayuntamientos?: number;
+    medios?: number;
+    grupos?: number;
+  };
   autoDeclineUnderMinCache: boolean;
   notifyOnEveryProposal: boolean;
   requireHumanForFinalSignOff: boolean;
@@ -165,6 +175,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     dispatchLevel: initialConfig?.dispatchLevel || 'draft_only',
     negotiationDepth: initialConfig?.negotiationDepth || 'filter_conditions',
     minCacheByType: initialConfig?.minCacheByType || {},
+    negotiationStartCacheByType: initialConfig?.negotiationStartCacheByType || {},
     autoDeclineUnderMinCache: initialConfig?.autoDeclineUnderMinCache ?? false,
     notifyOnEveryProposal: initialConfig?.notifyOnEveryProposal ?? true,
     requireHumanForFinalSignOff: true,
@@ -344,6 +355,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             dispatchLevel: serverAutonomy.dispatchLevel || prev.dispatchLevel,
             negotiationDepth: serverAutonomy.negotiationDepth || prev.negotiationDepth,
             minCacheByType: serverAutonomy.minCacheByType ?? prev.minCacheByType,
+            negotiationStartCacheByType: serverAutonomy.negotiationStartCacheByType ?? prev.negotiationStartCacheByType,
             autoDeclineUnderMinCache: !!serverAutonomy.autoDeclineUnderMinCache,
             notifyOnEveryProposal: serverAutonomy.notifyOnEveryProposal !== false,
             agentSenderEmail: serverAutonomy.agentSenderEmail || prev.agentSenderEmail,
@@ -966,6 +978,50 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                       </div>
                     </div>
                   ))}
+                </div>
+
+                <div className="pt-3 border-t border-neutral-800 space-y-2">
+                  <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
+                    <Euro className="w-3.5 h-3.5" /> Caché de Inicio de Negociación (opcional)
+                  </h5>
+                  <p className="text-xs text-neutral-400">
+                    Si la sala pregunta directamente por el caché, el agente responderá con esta cifra en vez del mínimo real, dejando margen para negociar a la baja sin bajar nunca del mínimo. Déjalo vacío para que el agente no mencione cifras salvo que le pregunten.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => {
+                      const minVal = config.minCacheByType?.[type];
+                      const negStartVal = config.negotiationStartCacheByType?.[type];
+                      const isBelowMin = typeof minVal === 'number' && typeof negStartVal === 'number' && negStartVal < minVal;
+                      return (
+                        <div key={type} className="space-y-1.5">
+                          <label className="text-xs font-mono text-neutral-400 font-semibold block">
+                            {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
+                          </label>
+                          <div className="relative">
+                            <input
+                              type="number"
+                              disabled={!isAdmin}
+                              value={negStartVal || ''}
+                              onChange={(e) => {
+                                const val = e.target.value ? Number(e.target.value) : undefined;
+                                setConfig({
+                                  ...config,
+                                  negotiationStartCacheByType: {
+                                    ...config.negotiationStartCacheByType,
+                                    [type]: val
+                                  }
+                                });
+                              }}
+                              className={`w-full px-3 py-2 rounded-xl bg-neutral-900 border text-zinc-100 text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ? 'border-red-600' : 'border-neutral-700'}`}
+                              placeholder="—"
+                            />
+                            <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
+                          </div>
+                          {isBelowMin && <p className="text-[10px] text-red-400 font-mono">Por debajo del mínimo real (€{minVal})</p>}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="pt-2 border-t border-neutral-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
