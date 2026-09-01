@@ -281,28 +281,39 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): P
   const ids: string[] = (listData.messages || []).map((m: any) => m.id);
 
   const resultados: RespuestaEntrante[] = [];
+  console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes en Gmail`);
+
   for (const id of ids) {
     const msgRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}/${id}?format=full`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
-    if (!msgRes.ok) continue;
+    if (!msgRes.ok) {
+      console.warn(`[Gmail API] No se pudo leer mensaje ${id}: ${msgRes.status}`);
+      continue;
+    }
     const msg = await msgRes.json();
     const headers = msg.payload?.headers;
     const fromRaw = headerValue(headers, "From");
     const fromMatch = fromRaw.match(/<([^>]+)>/);
     const fromAddress = (fromMatch ? fromMatch[1] : fromRaw).toLowerCase().trim();
     const dateHeader = headerValue(headers, "Date");
+    const subject = headerValue(headers, "Subject");
+    const messageId = headerValue(headers, "Message-ID") || `gmail-${id}`;
+    const text = extraerTextoPlano(msg.payload).trim();
+
+    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, Text length=${text.length}`);
 
     resultados.push({
       uid: id,
-      messageId: headerValue(headers, "Message-ID") || `gmail-${id}`,
+      messageId,
       from: fromAddress,
-      subject: headerValue(headers, "Subject"),
-      text: extraerTextoPlano(msg.payload).trim(),
+      subject,
+      text,
       date: dateHeader ? new Date(dateHeader) : null
     });
   }
 
+  console.log(`[Gmail API] Procesados ${resultados.length} mensajes exitosamente`);
   return resultados;
 }
 

@@ -74,6 +74,11 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
 
   const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
 
+  console.log(`[Lector] Banda ${bandId}: encontrados ${mensajes.length} mensaje(s). Usando ${usarGmailOAuth ? "Gmail API" : "IMAP"}`);
+  if (mensajes.length > 0) {
+    mensajes.forEach((m, i) => console.log(`  [${i}] From: ${m.from}, Subject: ${m.subject?.substring(0, 50)}`));
+  }
+
   if (mensajes.length === 0) {
     return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal };
   }
@@ -87,6 +92,8 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     const lead = fromLower
       ? leads.find((l: any) => (l.email_contacto || "").toLowerCase().trim() === fromLower)
       : null;
+
+    console.log(`[Lector] Procesando: ${msg.from} -> ${lead ? `Lead ${lead.id}` : "SIN EMPAREJAR"}`);
 
     if (!lead) {
       // No se marca como leído a propósito: puede ser una respuesta de un contacto todavía sin
