@@ -432,18 +432,54 @@ ${bandDna.fewShotSection || ""}`;
  * contacto. Comparte el ADN de la banda con buildEnhancedPitchSystemPrompt, pero cambia el
  * objetivo (responder, no presentar) y las fuentes de estilo (hilo real + ejemplos de
  * respuestas pasadas, en vez de campaña + directrices de primer contacto).
+ *
+ * Ahora soporta respuestas condicionales: puede adaptar el tono y enfoque basado en el tipo
+ * de respuesta detectada (negociación, confirmación, rechazo, etc.) y las preferencias
+ * configuradas por la banda para ese tipo de respuesta.
  */
 export function buildReplySystemPrompt(
   bandDna: BandDnaProfile,
   lead: any,
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
-  replyFewShotSection: string
+  replyFewShotSection: string,
+  responseType?: string,
+  responseStrategy?: any
 ): string {
   const languageHint = detectPitchLanguage(lead);
   const historialTexto = threadSoFar.length > 0
     ? threadSoFar.map((m) => `[${m.remitente === "banda" ? bandDna.bandName : (lead?.nombre_sala || "Sala")}]: "${m.mensaje}"`).join("\n\n")
     : "Sin mensajes previos registrados en el hilo (es la primera respuesta que se les envía tras el contacto inicial).";
+
+  // Construir sección de guidance condicional basada en el tipo de respuesta detectado
+  let conditionalGuidanceSection = "";
+  if (responseType && responseStrategy?.guidancePrompt) {
+    conditionalGuidanceSection = `
+🎯 GUÍA CONDICIONAL PARA ESTE TIPO DE RESPUESTA (configurada por el mánager):
+TIPO DETECTADO: "${responseType}"
+INSTRUCCIONES ESPECÍFICAS: ${responseStrategy.guidancePrompt}
+${responseStrategy.tone ? `TONO RECOMENDADO: ${responseStrategy.tone}` : ""}
+${responseStrategy.mentionLinks !== false ? `MENCIONAR ENLACES: Sí, incluye referencias al EPK/Dossier cuando proceda.` : `MENCIONAR ENLACES: No, mantén el email enfocado únicamente en responder la pregunta.`}
+`;
+  } else if (responseType) {
+    // Proporcionar guía automática basada en el tipo de respuesta, aunque no haya estrategia configurada
+    const autoGuidance: Record<string, string> = {
+      price_negotiation: `Tu objetivo es demostrar que la banda es flexible en condiciones económicas. Menciona brevemente el modelo de contratación (taquilla compartida, caché variable, co-booking). No entres en cifras concretas a menos que sea absolutamente necesario - esos detalles van en un documento separado o llamada.`,
+      confirmation: `El tono debe ser muy positivo y entusiasta. Confirma lo que ellos proponen, expresa emoción de la banda, y asegúrate de que queda claro que ya hay acuerdo. Ofrece coordinación técnica o logística si es necesario.`,
+      rejection: `El tono debe ser cálido, profesional y sin frustración. Agradece sinceramente su tiempo y consideración, respeta su decisión, y deja siempre la puerta abierta para futuras colaboraciones sin ser insistente.`,
+      follow_up: `Responde directamente a las preguntas específicas. Si piden información, proporciona lo que necesitan del Dossier o del modelo de la banda. Mantén la respuesta enfocada y breve.`,
+      neutral: `Responde de forma amable, profesional y breve sin asumir nada sobre las intenciones de quien escribe.`
+    };
+
+    const autoGuide = autoGuidance[responseType] || "";
+    if (autoGuide) {
+      conditionalGuidanceSection = `
+🎯 GUÍA AUTOMÁTICA PARA ESTE TIPO DE RESPUESTA:
+TIPO DETECTADO: "${responseType}"
+${autoGuide}
+`;
+    }
+  }
 
   return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".
 Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}" a una propuesta que ya les enviasteis. Tu tarea es redactar la CONTESTACIÓN a ese mensaje, no un pitch nuevo desde cero: responde específicamente a lo que dicen, sin repetir toda la presentación de la banda desde el principio.
@@ -487,7 +523,7 @@ ${historialTexto}
 📩 MENSAJE ENTRANTE AL QUE HAY QUE RESPONDER AHORA:
 ═════════════════════════════════════════════════════════════════════
 "${incomingMessage}"
-${replyFewShotSection}
+${replyFewShotSection}${conditionalGuidanceSection}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE LA RESPUESTA:
 ═════════════════════════════════════════════════════════════════════

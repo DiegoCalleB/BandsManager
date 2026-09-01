@@ -1,7 +1,27 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
-export async function dbGetAutonomyConfig(bandId: string) {
+export interface ResponseStrategy {
+  responseType: "price_negotiation" | "confirmation" | "rejection" | "follow_up" | "conditional";
+  guidancePrompt?: string;
+  autoRespond?: boolean;
+  mentionLinks?: boolean;
+  tone?: "neutral" | "enthusiastic" | "cautious";
+}
+
+export interface AutonomyConfig {
+  dispatchLevel: string;
+  negotiationDepth: string;
+  minCacheThreshold: number;
+  maxCacheThreshold: number;
+  autoDeclineUnderMinCache: boolean;
+  notifyOnEveryProposal: boolean;
+  requireHumanForFinalSignOff: boolean;
+  dispatchMode: string;
+  responseStrategies?: Record<string, ResponseStrategy>;
+}
+
+export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfig | null> {
   const sb = getSupabase();
   const { data, error } = await sb
     .from("autonomy_configs")
@@ -19,7 +39,8 @@ export async function dbGetAutonomyConfig(bandId: string) {
     autoDeclineUnderMinCache: data.auto_decline_under_min_cache,
     notifyOnEveryProposal: data.notify_on_every_proposal,
     requireHumanForFinalSignOff: data.require_human_for_final_sign_off,
-    dispatchMode: data.dispatch_mode
+    dispatchMode: data.dispatch_mode,
+    responseStrategies: data.response_strategies || {}
   };
 }
 
@@ -41,7 +62,8 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
     // obligatorio, sin relación con esto): dejar borrador en Gmail o despachar directamente.
     // Ver AGENTS.md sección 3 y el comentario junto a ENVIO_REAL_HABILITADO_GLOBALMENTE en
     // server/services/agentEngine.ts.
-    dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail"
+    dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail",
+    response_strategies: config.responseStrategies || config.response_strategies || {}
   };
 
   const { data, error } = await sb.from("autonomy_configs").upsert(payload).select().single();
