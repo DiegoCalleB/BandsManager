@@ -4,12 +4,29 @@ import {
   Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
   Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
   ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download,
-  MessageSquare, ThumbsUp, ThumbsDown, HelpCircle
+  MessageSquare, ThumbsUp, ThumbsDown, HelpCircle, Brain
 } from 'lucide-react';
 import { api } from '../../services/api';
+import { apiFetch } from '../../utils/api';
 import { BandSchedule } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { EmailAccountConfig } from '../EmailAccountConfig';
+
+const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
+  salas: '🏛️ Salas',
+  festivales: '🎪 Festivales',
+  discotecas: '🪩 Discotecas',
+  medios: '📻 Medios',
+  grupos: '🎸 Grupos',
+  managements: '💼 Managements',
+  ayuntamientos: '🎉 Ayuntamientos'
+};
+
+interface LearnedRuleBucket {
+  reglas_estilo_aprendidas?: string[];
+  vocabulario_aprendido?: string[];
+  terminos_a_evitar?: string[];
+}
 
 export type DispatchAutonomyLevel = 'draft_only' | 'scheduled_window' | 'autonomous_first_contact';
 export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'advanced_negotiation';
@@ -211,6 +228,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     }
   ];
   const [responseStrategies, setResponseStrategies] = useState<Record<string, ResponseStrategyForm>>({});
+  // Reglas de estilo que el sistema ha aprendido SOLO de tus correcciones reales a respuestas
+  // (Self-Refining Tone DNA, dna_expresion.reglas_por_categoria_respuesta - ver
+  // server/db/pitchLearning.ts). Se muestran junto a la configuración manual de arriba para que
+  // el mánager pueda detectar a simple vista si se contradicen entre sí: la manual está
+  // organizada por TIPO de respuesta, esta por TIPO de sala, así que no hay un cruce automático,
+  // pero verlas juntas es lo que permite pillar el choque.
+  const [learnedResponseRules, setLearnedResponseRules] = useState<Record<string, LearnedRuleBucket>>({});
   const [isSavingStrategies, setIsSavingStrategies] = useState(false);
   const [strategiesFeedback, setStrategiesFeedback] = useState<string | null>(null);
 
@@ -322,6 +346,13 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
         const serverStrategies = await api.getResponseStrategies().catch(() => null);
         if (isMounted && serverStrategies?.responseStrategies) {
           setResponseStrategies(serverStrategies.responseStrategies as Record<string, ResponseStrategyForm>);
+        }
+
+        // 3b. Fetch reglas aprendidas de respuestas (Self-Refining Tone DNA) - mismo endpoint
+        // que ya usa BandToneModal.tsx, solo nos quedamos con la parte de respuestas.
+        const toneDnaRes = await apiFetch('/api/bands/tone-dna').catch(() => null);
+        if (isMounted && toneDnaRes?.data?.reglas_por_categoria_respuesta) {
+          setLearnedResponseRules(toneDnaRes.data.reglas_por_categoria_respuesta);
         }
 
         // 4. Fetch Band Schedule (Lector & Enviador crons)
@@ -1451,6 +1482,46 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                   </p>
                 </div>
               </div>
+
+              {/* Reglas aprendidas automáticamente de tus correcciones reales (Self-Refining
+                  Tone DNA), mostradas AQUÍ MISMO junto a la configuración manual de abajo para
+                  que sea fácil pillar si se contradicen: la config manual está organizada por
+                  TIPO de respuesta (negociación, confirmación...), esto por TIPO de sala (salas,
+                  festivales...) - no hay un cruce automático entre ambas, así que la detección
+                  de conflicto depende de que lo veas tú al leerlas juntas. */}
+              {Object.keys(learnedResponseRules).length > 0 && (
+                <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 space-y-2.5">
+                  <div className="flex items-start gap-2">
+                    <Brain className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <span className="text-xs font-bold text-sky-200 block">
+                        Lo que el sistema ya ha aprendido solo de tus respuestas reales
+                      </span>
+                      <p className="text-[11px] text-neutral-300 leading-relaxed">
+                        Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice "sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    {Object.entries(learnedResponseRules).map(([cat, reglas]) => (
+                      <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-sky-900/30 space-y-1">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-300">
+                          {RESPONSE_LEARNED_CATEGORY_LABELS[cat] || cat}
+                        </span>
+                        {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 ? (
+                          <ul className="space-y-0.5">
+                            {reglas.reglas_estilo_aprendidas.map((r, idx) => (
+                              <li key={idx} className="text-[10px] font-sans text-neutral-300">⭐ {r}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-[10px] font-mono text-neutral-500">Sin reglas todavía.</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {RESPONSE_TYPES.map((type) => {
                 const strategy = getStrategyOrDefault(type.key);
