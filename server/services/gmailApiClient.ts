@@ -267,9 +267,9 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
 export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
   const accessToken = await getValidAccessToken(bandId);
 
-  // Busca: emails sin leer + emails leídos del último día (en caso de que se marquen automáticamente)
-  // El filtro "newer_than:1d" cubre 24h atrás para no perder respuestas que llegaron ayer
-  const query = encodeURIComponent("(is:unread OR newer_than:1d) in:inbox");
+  // Busca: todos los emails en la bandeja de los últimos 2 días (leídos o sin leer)
+  // Así no se pierden respuestas que se marcan como leídas automáticamente al abrir
+  const query = encodeURIComponent("in:inbox newer_than:2d");
   const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${maxResults}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
