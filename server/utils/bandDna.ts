@@ -433,6 +433,12 @@ ESTRATEGIA DE NEGOCIACIÓN (confidencial para ti):
 - El objetivo es mantener la flexibilidad en boca sin comprometerse por escrito en una cifra insuficiente.
 - Si el recinto responde positivamente a la llamada, entonces sí se puede cerrar con los términos reales.
 
+⚠️ SI LA SALA PREGUNTA EXPLÍCITAMENTE POR EL CACHÉ/PRECIO:
+- Responde con una cifra 15-20% superior al mínimo guardado en esta guía para ese tipo de recinto.
+- Ejemplo: si el mínimo es €600, responde ~€700-720.
+- Esto te da margen para negociar hacia abajo sin llegar por debajo del mínimo real.
+- Mantén el tono amable y abierto a negociación: "Nuestro estándar es X, pero somos flexibles según el contexto del evento y el público que traes".
+
 NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas explícitamente "no bajamos de X euros". La estrategia funciona por sugerencia y exploración, no por ultimátum.
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
