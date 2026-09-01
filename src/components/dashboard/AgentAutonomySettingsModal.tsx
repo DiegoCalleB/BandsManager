@@ -260,12 +260,28 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
       // Solo persiste estrategias con guía real escrita por el mánager - una entrada vacía
       // no aporta nada al prompt condicional y solo ensuciaría el JSON guardado.
       const toSave: Record<string, ResponseStrategyForm> = {};
+      const toDelete: string[] = [];
       for (const [key, strategy] of Object.entries(responseStrategies)) {
         if (strategy.guidancePrompt && strategy.guidancePrompt.trim()) {
           toSave[key] = strategy;
+        } else {
+          // El backend guarda por FUSIÓN (POST hace {...actual, ...nuevo}), así que enviar solo
+          // las que tienen contenido nunca borra las vacías: si antes había una guía guardada y
+          // ahora se ha limpiado el campo, había que borrarla explícitamente o se queda huérfana
+          // en Supabase - el mánager ve el campo vacío en pantalla pero el Contestador sigue
+          // usando la guía antigua para ese tipo de respuesta hasta que se borre de verdad.
+          toDelete.push(key);
         }
       }
-      await api.updateResponseStrategies(toSave);
+      if (Object.keys(toSave).length > 0) {
+        await api.updateResponseStrategies(toSave);
+      }
+      // Un 404 aquí solo significa "todavía no había nada guardado para esta banda" (primera
+      // vez que se abre esta pestaña) - no es un fallo real, así que no debe tumbar el guardado
+      // de arriba ni mostrarse como error al mánager.
+      await Promise.all(toDelete.map((key) => api.deleteResponseStrategy(key).catch((err: any) => {
+        if (err?.status !== 404) throw err;
+      })));
       setStrategiesFeedback('✅ Estrategias de respuesta guardadas correctamente.');
       setTimeout(() => setStrategiesFeedback(null), 3000);
     } catch (e) {

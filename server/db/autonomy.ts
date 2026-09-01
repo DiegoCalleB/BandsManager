@@ -1,8 +1,12 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
+// Los tipos válidos de respuesta y tono son responsabilidad de
+// server/routes/bands/responseStrategies.ts (VALID_RESPONSE_TYPES/VALID_TONES) - esta interfaz
+// solo describe la forma que devuelve/acepta la capa de datos, no valida nada por su cuenta.
+// Antes tenía un "conditional" en responseType que la validación real del endpoint nunca aceptó.
 export interface ResponseStrategy {
-  responseType: "price_negotiation" | "confirmation" | "rejection" | "follow_up" | "conditional";
+  responseType: "price_negotiation" | "confirmation" | "rejection" | "follow_up";
   guidancePrompt?: string;
   autoRespond?: boolean;
   mentionLinks?: boolean;

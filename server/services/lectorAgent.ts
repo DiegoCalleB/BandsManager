@@ -11,15 +11,18 @@
 import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
-import { generarBorradorRespuesta } from "./replyDrafting.js";
+import { generarBorradorRespuesta, PRICE_KEYWORDS } from "./replyDrafting.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 
 // Heurística ligera y barata (sin llamada a IA) para decidir si una respuesta abre negociación:
 // entrar aquí no bloquea el hilo, y una clasificación de más no hace daño (el mánager siempre
-// puede corregir el estado a mano).
+// puede corregir el estado a mano). Las palabras de precio se comparten con replyDrafting.ts
+// (PRICE_KEYWORDS) para que ambos clasificadores no diverjan con el tiempo; aquí se añaden
+// además señales de fecha/logística, porque esta comprobación decide algo más amplio ("¿esto
+// abre negociación?") que la de replyDrafting.ts ("¿es específicamente una pregunta de precio?").
 const PALABRAS_NEGOCIACION = [
-  "precio", "cache", "caché", "presupuesto", "condiciones", "tarifa", "cuánto", "cuanto cobr",
+  ...PRICE_KEYWORDS,
   "fecha", "disponibilidad", "cuándo", "cuando podéis", "contrato", "rider"
 ];
 
@@ -28,6 +31,30 @@ export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta
   if (PALABRAS_NEGOCIACION.some((k) => t.includes(k))) return "negociando";
   if (estadoActual === "contactado" || estadoActual === "esperando_respuesta") return "respondido";
   return estadoActual;
+}
+
+// Tope de borradores de respuesta generados con IA por banda y hora: a diferencia de los
+// endpoints HTTP que llaman a IA (protegidos con iaRateLimiter, middleware de Express), el Lector
+// corre en un bucle interno del scheduler sin request/response al que enganchar ese middleware.
+// Sin ningún tope, cada mensaje entrante que empareje con un lead (por email exacto o por
+// In-Reply-To) dispara una llamada de pago, tick tras tick - un email spoofeado con el
+// email_contacto de un lead real, o simplemente muchas respuestas legítimas seguidas, agotaría
+// la cuota de IA de la banda sin ningún freno. Si se supera el tope, el lead se queda solo
+// clasificado (igual que si la IA fallara) - nunca se bloquea la detección en sí.
+const CONTADOR_BORRADORES_IA: Record<string, { count: number; resetTime: number }> = {};
+const MAX_BORRADORES_IA_POR_HORA = 20;
+const VENTANA_BORRADORES_IA_MS = 60 * 60 * 1000;
+
+export function puedeGenerarBorradorIA(bandId: string): boolean {
+  const ahora = Date.now();
+  const entrada = CONTADOR_BORRADORES_IA[bandId];
+  if (!entrada || entrada.resetTime < ahora) {
+    CONTADOR_BORRADORES_IA[bandId] = { count: 1, resetTime: ahora + VENTANA_BORRADORES_IA_MS };
+    return true;
+  }
+  if (entrada.count >= MAX_BORRADORES_IA_POR_HORA) return false;
+  entrada.count += 1;
+  return true;
 }
 
 export interface LectorAgentResult {
@@ -185,12 +212,16 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       // lead sin estado por un fallo de la IA.
       let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text);
       let borradorGenerado: string | null = null;
-      try {
-        const { draftReply } = await generarBorradorRespuesta(bandId, lead, msg.text, threadSoFar);
-        borradorGenerado = draftReply;
-        nuevoEstado = "pendiente_aprobacion";
-      } catch (draftErr) {
-        console.warn(`[Lector] No se pudo autogenerar la respuesta para el lead ${lead.id}:`, draftErr);
+      if (puedeGenerarBorradorIA(bandId)) {
+        try {
+          const { draftReply } = await generarBorradorRespuesta(bandId, lead, msg.text, threadSoFar);
+          borradorGenerado = draftReply;
+          nuevoEstado = "pendiente_aprobacion";
+        } catch (draftErr) {
+          console.warn(`[Lector] No se pudo autogenerar la respuesta para el lead ${lead.id}:`, draftErr);
+        }
+      } else {
+        console.warn(`[Lector] Tope de borradores IA alcanzado para la banda ${bandId} esta hora - lead ${lead.id} queda solo clasificado, sin redactar.`);
       }
 
       await dbUpsertLead({

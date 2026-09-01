@@ -49,4 +49,17 @@ describe('detectResponseType', () => {
     expect(detectResponseType('Perfecto, nos interesa. ¿Cuánto cobráis?')).toBe('price_negotiation');
     expect(detectResponseType('Genial, ¿qué presupuesto manejáis?')).toBe('price_negotiation');
   });
+
+  it('no confunde "sí" ni "ok" con palabras que las contienen como substring', () => {
+    // "así" contiene "sí" y "booking" contiene "ok" - con un simple .includes() ambos mensajes
+    // se clasificaban como "confirmation" sin que nadie hubiera confirmado nada.
+    expect(detectResponseType('Así que os contestamos en unos días con más detalles del rider.')).toBe('follow_up');
+    expect(detectResponseType('Nuestro departamento de booking revisará la propuesta.')).toBe('neutral');
+  });
+
+  it('sigue detectando "sí" y "ok" cuando aparecen como palabra suelta', () => {
+    expect(detectResponseType('Sí, adelante.')).toBe('confirmation');
+    expect(detectResponseType('OK, genial.')).toBe('confirmation');
+    expect(detectResponseType('Nos parece bien, ok.')).toBe('confirmation');
+  });
 });

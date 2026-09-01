@@ -1,160 +1,62 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as autonomyDb from '../../db/autonomy.js';
+import { describe, it, expect } from 'vitest';
+import { validateResponseStrategies, VALID_RESPONSE_TYPES, VALID_TONES } from '../bands/responseStrategies.js';
 
-// Mock modules
-vi.mock('../../db/autonomy.js');
-
-describe('Response Strategies Endpoints', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+// Estos tests ejercitan la validación REAL del router (validateResponseStrategies), no una copia
+// aparte de las listas de tipos/tonos válidos - antes este archivo redeclaraba esas listas a
+// mano y las probaba a ellas, así que un cambio real en responseStrategies.ts podía desincronizar
+// la validación sin que ningún test se enterara.
+describe('validateResponseStrategies', () => {
+  it('acepta un objeto vacío', () => {
+    expect(validateResponseStrategies({})).toEqual({ ok: true });
   });
 
-  describe('GET /api/bands/response-strategies', () => {
-    it('retorna estrategias vacías si no hay config', async () => {
-      vi.mocked(autonomyDb.dbGetAutonomyConfig).mockResolvedValueOnce(null);
-
-      // En un test real haríamos request a Express, pero aquí testeamos la lógica
-      const result = { responseStrategies: {} };
-      expect(result.responseStrategies).toEqual({});
+  it('acepta una estrategia válida completa', () => {
+    const result = validateResponseStrategies({
+      price_negotiation: { guidancePrompt: 'Sé flexible', tone: 'neutral', mentionLinks: false }
     });
-
-    it('retorna estrategias configuradas', async () => {
-      const mockConfig = {
-        dispatchLevel: 'draft_only',
-        negotiationDepth: 'filter_conditions',
-        minCacheThreshold: 300,
-        maxCacheThreshold: 800,
-        autoDeclineUnderMinCache: false,
-        notifyOnEveryProposal: true,
-        requireHumanForFinalSignOff: true,
-        dispatchMode: 'draft_gmail',
-        responseStrategies: {
-          price_negotiation: {
-            responseType: 'price_negotiation' as const,
-            guidancePrompt: 'Emphasize flexibility',
-            tone: 'neutral' as const
-          }
-        }
-      };
-
-      vi.mocked(autonomyDb.dbGetAutonomyConfig).mockResolvedValueOnce(mockConfig);
-
-      expect(mockConfig.responseStrategies).toEqual({
-        price_negotiation: expect.objectContaining({
-          guidancePrompt: 'Emphasize flexibility'
-        })
-      });
-    });
+    expect(result).toEqual({ ok: true });
   });
 
-  describe('POST /api/bands/response-strategies', () => {
-    it('valida tipos de respuesta válidos', () => {
-      const validTypes = ["price_negotiation", "confirmation", "rejection", "follow_up"];
-      const testType = "price_negotiation";
-
-      expect(validTypes).toContain(testType);
-    });
-
-    it('rechaza tipos de respuesta inválidos', () => {
-      const validTypes = ["price_negotiation", "confirmation", "rejection", "follow_up"];
-      const invalidType = "invalid_type";
-
-      expect(validTypes).not.toContain(invalidType);
-    });
-
-    it('valida valores de tone permitidos', () => {
-      const validTones = ["neutral", "enthusiastic", "cautious"];
-      const testTone = "enthusiastic";
-
-      expect(validTones).toContain(testTone);
-    });
-
-    it('rechaza tones inválidos', () => {
-      const validTones = ["neutral", "enthusiastic", "cautious"];
-      const invalidTone = "aggressive";
-
-      expect(validTones).not.toContain(invalidTone);
-    });
-
-    it('fusiona estrategias nuevas con existentes', () => {
-      const existingStrategies = {
-        price_negotiation: {
-          responseType: 'price_negotiation' as const,
-          tone: 'neutral' as const
-        }
-      };
-
-      const newStrategies = {
-        confirmation: {
-          responseType: 'confirmation' as const,
-          tone: 'enthusiastic' as const
-        }
-      };
-
-      const merged = {
-        ...existingStrategies,
-        ...newStrategies
-      };
-
-      expect(Object.keys(merged)).toContain('price_negotiation');
-      expect(Object.keys(merged)).toContain('confirmation');
-    });
+  it('rechaza un formato que no sea objeto', () => {
+    expect(validateResponseStrategies(null)).toEqual({ ok: false, error: 'Invalid strategies format' });
+    expect(validateResponseStrategies('texto')).toEqual({ ok: false, error: 'Invalid strategies format' });
+    expect(validateResponseStrategies(undefined)).toEqual({ ok: false, error: 'Invalid strategies format' });
   });
 
-  describe('DELETE /api/bands/response-strategies/:responseType', () => {
-    it('elimina estrategia específica', () => {
-      const strategies = {
-        price_negotiation: {
-          responseType: 'price_negotiation' as const,
-          tone: 'neutral' as const
-        },
-        confirmation: {
-          responseType: 'confirmation' as const,
-          tone: 'enthusiastic' as const
-        }
-      };
-
-      const { price_negotiation, ...remaining } = strategies;
-
-      expect(remaining).not.toHaveProperty('price_negotiation');
-      expect(remaining).toHaveProperty('confirmation');
-    });
-
-    it('rechaza tipos de respuesta inválidos en delete', () => {
-      const validTypes = ["price_negotiation", "confirmation", "rejection", "follow_up"];
-      const invalidType = "invalid_type";
-
-      expect(validTypes).not.toContain(invalidType);
-    });
+  it('rechaza una clave de tipo de respuesta que no sea válida', () => {
+    const result = validateResponseStrategies({ tipo_inventado: { guidancePrompt: 'x' } });
+    expect(result).toEqual({ ok: false, error: 'Invalid response type: tipo_inventado' });
   });
 
-  describe('Estructura de ResponseStrategy', () => {
-    it('permite guidancePrompt como string', () => {
-      const strategy = {
-        responseType: 'price_negotiation' as const,
-        guidancePrompt: 'Este es el texto de guía'
-      };
+  it('rechaza un tono que no sea válido', () => {
+    const result = validateResponseStrategies({ confirmation: { tone: 'agresivo' } });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain('Invalid tone');
+  });
 
-      expect(typeof strategy.guidancePrompt).toBe('string');
-    });
+  it('rechaza guidancePrompt que no sea string', () => {
+    const result = validateResponseStrategies({ rejection: { guidancePrompt: 123 as any } });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain('guidancePrompt must be string');
+  });
 
-    it('permite tone como uno de los valores válidos', () => {
-      const validTones = ['neutral', 'enthusiastic', 'cautious'];
-      const strategy = {
-        responseType: 'confirmation' as const,
-        tone: 'enthusiastic' as const
-      };
+  it('rechaza mentionLinks que no sea boolean', () => {
+    const result = validateResponseStrategies({ follow_up: { mentionLinks: 'sí' as any } });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toContain('mentionLinks must be boolean');
+  });
 
-      expect(validTones).toContain(strategy.tone);
-    });
+  it('acepta todos los VALID_RESPONSE_TYPES declarados', () => {
+    for (const type of VALID_RESPONSE_TYPES) {
+      const result = validateResponseStrategies({ [type]: { guidancePrompt: 'ok' } });
+      expect(result).toEqual({ ok: true });
+    }
+  });
 
-    it('permite mentionLinks como boolean', () => {
-      const strategy = {
-        responseType: 'follow_up' as const,
-        mentionLinks: false
-      };
-
-      expect(typeof strategy.mentionLinks).toBe('boolean');
-    });
+  it('acepta todos los VALID_TONES declarados', () => {
+    for (const tone of VALID_TONES) {
+      const result = validateResponseStrategies({ confirmation: { tone } });
+      expect(result).toEqual({ ok: true });
+    }
   });
 });

@@ -10,11 +10,17 @@ import { dbGetReplyFewShotThreads } from "../db/pitchLearning.js";
 import { dbGetAutonomyConfig } from "../db/autonomy.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 
-// Palabras clave para detectar el tipo de respuesta entrante
-const PRICE_NEGOTIATION_KEYWORDS = [
+// Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
+// (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
+// diverjan con el tiempo - lectorAgent.ts añade además señales de fecha/logística que aquí caen
+// bajo "follow_up", porque decide una cosa distinta (si el estado pasa a "negociando"), más
+// amplia que "¿es esto una pregunta de precio?".
+export const PRICE_KEYWORDS = [
   "precio", "cache", "caché", "presupuesto", "condiciones", "tarifa", "cuánto",
   "cuanto cobr", "cifra", "propuesta económica", "honorarios", "presupuestario"
 ];
+
+const PRICE_NEGOTIATION_KEYWORDS = PRICE_KEYWORDS;
 
 const CONFIRMATION_KEYWORDS = [
   "confirm", "listo", "perfecto", "ok", "genial", "excelente",
@@ -28,6 +34,23 @@ const REJECTION_KEYWORDS = [
   "no tenemos disponibilidad", "no procede", "no aplica"
 ];
 
+// Palabras cortas y de uso corriente cuyo `includes()` como substring genera falsos positivos
+// reales: "sí" está contenido en "así" (muy común: "así que...", "así lo vemos..."), y "ok" está
+// contenido en "booking" (un email de una sala que menciona su propio "departamento de booking"
+// se clasificaría como "confirmation" sin que nadie haya confirmado nada). Para estas se exige
+// que aparezcan como palabra suelta (no como substring de otra palabra); el resto de keywords
+// (stems deliberados como "rechaz", o frases largas) siguen comprobándose como substring normal,
+// que es justo el comportamiento que necesitan (para pillar "rechazamos", "rechazando", etc.).
+const WHOLE_WORD_ONLY = new Set(["sí", "ok"]);
+
+function matchesKeyword(text: string, keyword: string): boolean {
+  if (WHOLE_WORD_ONLY.has(keyword)) {
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(^|[^\\p{L}\\p{N}])${escaped}([^\\p{L}\\p{N}]|$)`, "u").test(text);
+  }
+  return text.includes(keyword);
+}
+
 export type ResponseType = "price_negotiation" | "confirmation" | "rejection" | "follow_up" | "neutral";
 
 export function detectResponseType(incomingMessage: string): ResponseType {
@@ -38,14 +61,14 @@ export function detectResponseType(incomingMessage: string): ResponseType {
   // sería el caché?") - si confirmación se comprobara primero, ese "sí" ganaría y la guía
   // resultante ("sé entusiasta, no menciones cifras") contradice justo lo que preguntan.
   // La pregunta de precio es la señal más específica y accionable, así que manda.
-  if (REJECTION_KEYWORDS.some(k => text.includes(k))) return "rejection";
-  if (PRICE_NEGOTIATION_KEYWORDS.some(k => text.includes(k))) return "price_negotiation";
-  if (CONFIRMATION_KEYWORDS.some(k => text.includes(k))) return "confirmation";
+  if (REJECTION_KEYWORDS.some(k => matchesKeyword(text, k))) return "rejection";
+  if (PRICE_NEGOTIATION_KEYWORDS.some(k => matchesKeyword(text, k))) return "price_negotiation";
+  if (CONFIRMATION_KEYWORDS.some(k => matchesKeyword(text, k))) return "confirmation";
 
   // Si pregunta algo relacionado con el directo, fechas, etc.
   const followUpKeywords = ["cuándo", "cuando", "fecha", "disponibilidad", "directo", "show",
                             "más información", "preguntas", "detalles", "cómo"];
-  if (followUpKeywords.some(k => text.includes(k))) return "follow_up";
+  if (followUpKeywords.some(k => matchesKeyword(text, k))) return "follow_up";
 
   return "neutral";
 }

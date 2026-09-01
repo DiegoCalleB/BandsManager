@@ -9,6 +9,42 @@ import { dbGetAutonomyConfig, dbUpsertAutonomyConfig } from "../../db/autonomy.j
 
 const router = Router();
 
+// Única fuente de verdad para los tipos/tonos válidos - antes vivía repetida inline en el POST
+// y en el DELETE de este mismo archivo (y desincronizada del todo con el tipo ResponseStrategy
+// de server/db/autonomy.ts, que incluía un "conditional" que esta validación real nunca aceptó).
+// Exportadas para que el test de este archivo pueda comprobar el comportamiento real del router
+// en vez de mantener su propia copia aparte de estas listas.
+export const VALID_RESPONSE_TYPES = ["price_negotiation", "confirmation", "rejection", "follow_up"] as const;
+export const VALID_TONES = ["neutral", "enthusiastic", "cautious"] as const;
+
+export interface ResponseStrategy {
+  responseType?: typeof VALID_RESPONSE_TYPES[number];
+  guidancePrompt?: string;
+  tone?: typeof VALID_TONES[number];
+  mentionLinks?: boolean;
+}
+
+export function validateResponseStrategies(strategies: unknown): { ok: boolean; error?: string } {
+  if (!strategies || typeof strategies !== "object") {
+    return { ok: false, error: "Invalid strategies format" };
+  }
+  for (const [key, strategy] of Object.entries(strategies as Record<string, ResponseStrategy>)) {
+    if (!(VALID_RESPONSE_TYPES as readonly string[]).includes(key)) {
+      return { ok: false, error: `Invalid response type: ${key}` };
+    }
+    if (strategy.tone && !(VALID_TONES as readonly string[]).includes(strategy.tone)) {
+      return { ok: false, error: `Invalid tone for ${key}: ${strategy.tone}` };
+    }
+    if (strategy.guidancePrompt !== undefined && typeof strategy.guidancePrompt !== "string") {
+      return { ok: false, error: `guidancePrompt must be string for ${key}` };
+    }
+    if (strategy.mentionLinks !== undefined && typeof strategy.mentionLinks !== "boolean") {
+      return { ok: false, error: `mentionLinks must be boolean for ${key}` };
+    }
+  }
+  return { ok: true };
+}
+
 // GET /api/bands/response-strategies
 // Obtener las estrategias de respuesta configuradas de la banda
 router.get("/response-strategies", requireAuth, async (req, res) => {
@@ -31,13 +67,6 @@ router.get("/response-strategies", requireAuth, async (req, res) => {
 
 // POST /api/bands/response-strategies
 // Guardar/actualizar estrategias de respuesta para la banda
-interface ResponseStrategy {
-  responseType: "price_negotiation" | "confirmation" | "rejection" | "follow_up";
-  guidancePrompt?: string;
-  tone?: "neutral" | "enthusiastic" | "cautious";
-  mentionLinks?: boolean;
-}
-
 interface UpdateResponseStrategiesBody {
   strategies: Record<string, ResponseStrategy>;
 }
@@ -47,30 +76,9 @@ router.post("/response-strategies", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const { strategies } = req.body as UpdateResponseStrategiesBody;
 
-    if (!strategies || typeof strategies !== "object") {
-      return res.status(400).json({ error: "Invalid strategies format" });
-    }
-
-    // Validar estructura de cada estrategia
-    const validTypes = ["price_negotiation", "confirmation", "rejection", "follow_up"];
-    const validTones = ["neutral", "enthusiastic", "cautious"];
-
-    for (const [key, strategy] of Object.entries(strategies)) {
-      if (!validTypes.includes(key)) {
-        return res.status(400).json({ error: `Invalid response type: ${key}` });
-      }
-
-      if (strategy.tone && !validTones.includes(strategy.tone)) {
-        return res.status(400).json({ error: `Invalid tone for ${key}: ${strategy.tone}` });
-      }
-
-      if (strategy.guidancePrompt && typeof strategy.guidancePrompt !== "string") {
-        return res.status(400).json({ error: `guidancePrompt must be string for ${key}` });
-      }
-
-      if (strategy.mentionLinks !== undefined && typeof strategy.mentionLinks !== "boolean") {
-        return res.status(400).json({ error: `mentionLinks must be boolean for ${key}` });
-      }
+    const validation = validateResponseStrategies(strategies);
+    if (!validation.ok) {
+      return res.status(400).json({ error: validation.error });
     }
 
     // Obtener config actual y fusionar estrategias
@@ -104,8 +112,7 @@ router.delete("/response-strategies/:responseType", requireAuth, async (req, res
     const bandId = getTargetBandId(req);
     const { responseType } = req.params;
 
-    const validTypes = ["price_negotiation", "confirmation", "rejection", "follow_up"];
-    if (!validTypes.includes(responseType)) {
+    if (!(VALID_RESPONSE_TYPES as readonly string[]).includes(responseType)) {
       return res.status(400).json({ error: `Invalid response type: ${responseType}` });
     }
 
