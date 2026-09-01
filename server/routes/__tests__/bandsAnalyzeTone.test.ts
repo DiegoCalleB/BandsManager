@@ -30,9 +30,11 @@ vi.mock('../../db.js', () => ({
   dbGetBandEmailAccount: async () => null,
   dbUpsertBandEmailAccount: async () => ({}),
   toSafeEmailAccountResponse: (v: any) => v,
-  dbUpdateBandToneDna: async (bandId: string, dna: any) => {
-    guardadoEnSupabase.set(bandId, dna);
-    return true;
+  dbUpdateBandDnaExpresion: async (bandId: string, mutate: (current: any) => any) => {
+    const current = guardadoEnSupabase.get(bandId) || {};
+    const next = await mutate(current);
+    if (next !== current) guardadoEnSupabase.set(bandId, next);
+    return { ok: true, dna: next };
   },
   dbGetRegisteredBandById: async (bandId: string) => ({
     nombre_banda: 'Ruta 66',
@@ -130,6 +132,35 @@ describe('POST /api/bands/analyze-tone', () => {
 
     expect(body.savedPermanently).toBe(false);
     expect(guardadoEnSupabase.size).toBe(0);
+  });
+
+  // Bug real encontrado en auditoría: `data` (la respuesta de la IA) solo trae los campos del
+  // análisis de redes (tono_comunicacion, vocabulario_clave...) y NUNCA reglas_por_categoria /
+  // reglas_por_categoria_respuesta (Self-Refining Tone DNA) ni reglas_manuales. Guardarlo tal
+  // cual sobreescribiendo dna_expresion entero borraba silenciosamente TODO lo aprendido de
+  // correcciones reales y lo escrito a mano cada vez que el mánager pulsaba "Analizar Tono" para
+  // refrescar el análisis de redes - justo el tipo de pérdida de entrenamiento que no debe pasar.
+  it('re-analizar el tono NUNCA borra reglas_por_categoria ni reglas_manuales ya aprendidas', async () => {
+    guardadoEnSupabase.set('band-ruta-66', {
+      tono_comunicacion: 'Análisis viejo',
+      reglas_por_categoria: {
+        salas: { reglas_estilo_aprendidas: ['No usar la palabra rider en el primer párrafo'], reglas_manuales: ['Nunca tutear a ayuntamientos'] }
+      },
+      reglas_por_categoria_respuesta: {
+        salas: { reglas_estilo_aprendidas: ['Confirmar fecha en la primera línea'] }
+      },
+      historial_feedback_reels: [{ nota: 'feedback previo' }]
+    });
+
+    const { body } = await post('/api/bands/analyze-tone', { nombre_entidad: 'Ruta 66', is_sender: true });
+
+    expect(body.savedPermanently).toBe(true);
+    const guardado = guardadoEnSupabase.get('band-ruta-66');
+    expect(guardado.tono_comunicacion).toBe('Directo y gamberro'); // el análisis nuevo sí se aplica
+    expect(guardado.reglas_por_categoria.salas.reglas_estilo_aprendidas).toEqual(['No usar la palabra rider en el primer párrafo']);
+    expect(guardado.reglas_por_categoria.salas.reglas_manuales).toEqual(['Nunca tutear a ayuntamientos']);
+    expect(guardado.reglas_por_categoria_respuesta.salas.reglas_estilo_aprendidas).toEqual(['Confirmar fecha en la primera línea']);
+    expect(guardado.historial_feedback_reels).toEqual([{ nota: 'feedback previo' }]);
   });
 });
 

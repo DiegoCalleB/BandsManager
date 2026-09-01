@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -464,7 +464,20 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
         if (frasesDirectoExistentes.length) {
           data.frases_directo_extraidas = frasesDirectoExistentes;
         }
-        savedOwnBandDna = await dbUpdateBandToneDna(ownBandId, data);
+        // FUSIONA con lo que ya había en vez de sobreescribir toda la columna: `data` es
+        // exclusivamente el resultado del análisis de IA (tono_comunicacion, vocabulario_clave,
+        // etc.) y NUNCA incluye reglas_por_categoria / reglas_por_categoria_respuesta (Self-
+        // Refining Tone DNA) ni reglas_manuales ni historial_feedback_reels - guardarlo tal cual
+        // con dbUpdateBandToneDna (que sobrescribe la columna entera) borraba sin más TODO lo
+        // aprendido de correcciones reales y lo escrito a mano por el mánager cada vez que se
+        // pulsaba "Analizar Tono" para refrescar el análisis de redes. dbUpdateBandDnaExpresion
+        // además serializa esta escritura frente a cualquier otra concurrente sobre la misma
+        // banda (ver server/db/bands.ts).
+        const { ok } = await dbUpdateBandDnaExpresion(ownBandId, (dnaActual) => ({
+          ...dnaActual,
+          ...data
+        }));
+        savedOwnBandDna = ok;
       } catch (e: any) {
         console.warn("[analyze-tone] No se pudo guardar el ADN de la banda emisora:", e?.message || e);
       }
@@ -536,28 +549,27 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const cambios = req.body || {};
 
-    const actual = (await dbGetRegisteredBandById(bandId))?.dna_expresion || {};
-    const actualizado: any = { ...actual };
-
-    for (const campo of CAMPOS_TONO_EDITABLES) {
-      if (!(campo in cambios)) continue;
-      if (
-        campo === "vocabulario_clave" ||
-        campo === "frases_emblematicas_extraidas" ||
-        campo === "emojis_frecuentes" ||
-        campo === "reglas_estilo_aprendidas" ||
-        campo === "vocabulario_aprendido" ||
-        campo === "terminos_a_evitar"
-      ) {
-        actualizado[campo] = limpiarListaTono(cambios[campo], 20);
-      } else if (campo === "matices_por_red") {
-        actualizado[campo] = limpiarMaticesPorRed(cambios[campo]);
-      } else {
-        actualizado[campo] = String(cambios[campo] ?? "").trim();
+    const { ok: guardado, dna: actualizado } = await dbUpdateBandDnaExpresion(bandId, (actual) => {
+      const siguiente: any = { ...actual };
+      for (const campo of CAMPOS_TONO_EDITABLES) {
+        if (!(campo in cambios)) continue;
+        if (
+          campo === "vocabulario_clave" ||
+          campo === "frases_emblematicas_extraidas" ||
+          campo === "emojis_frecuentes" ||
+          campo === "reglas_estilo_aprendidas" ||
+          campo === "vocabulario_aprendido" ||
+          campo === "terminos_a_evitar"
+        ) {
+          siguiente[campo] = limpiarListaTono(cambios[campo], 20);
+        } else if (campo === "matices_por_red") {
+          siguiente[campo] = limpiarMaticesPorRed(cambios[campo]);
+        } else {
+          siguiente[campo] = String(cambios[campo] ?? "").trim();
+        }
       }
-    }
-
-    const guardado = await dbUpdateBandToneDna(bandId, actualizado);
+      return siguiente;
+    });
     if (!guardado) {
       return res.status(500).json({ error: "No se pudo guardar la edición del ADN de tono." });
     }
@@ -595,29 +607,34 @@ router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "category es requerida." });
     }
 
-    const actual = (await dbGetRegisteredBandById(bandId))?.dna_expresion || {};
     const bucketKey = mode === "reply" ? "reglas_por_categoria_respuesta" : "reglas_por_categoria";
-    const reglasPorCategoria = { ...(actual[bucketKey] || {}) };
-    const existente = reglasPorCategoria[category] || {};
 
-    reglasPorCategoria[category] = {
-      reglas_estilo_aprendidas: reglas_estilo_aprendidas !== undefined
-        ? limpiarListaTono(reglas_estilo_aprendidas, 20)
-        : (existente.reglas_estilo_aprendidas || []),
-      reglas_manuales: reglas_manuales !== undefined
-        ? limpiarListaTono(reglas_manuales, 20)
-        : (existente.reglas_manuales || []),
-      vocabulario_aprendido: vocabulario_aprendido !== undefined
-        ? limpiarListaTono(vocabulario_aprendido, 20)
-        : (existente.vocabulario_aprendido || []),
-      terminos_a_evitar: terminos_a_evitar !== undefined
-        ? limpiarListaTono(terminos_a_evitar, 20)
-        : (existente.terminos_a_evitar || []),
-      actualizado: new Date().toISOString()
-    };
+    // dbUpdateBandDnaExpresion lee+escribe dna_expresion como una operación atómica por banda
+    // (server/db/bands.ts) - antes esta ruta leía, modificaba en memoria y sobrescribía la
+    // columna entera por su cuenta, así que una edición manual aquí podía perder un refinamiento
+    // automático en vuelo (o viceversa) si ambos caían casi a la vez.
+    const { ok: guardado, dna: actualizado } = await dbUpdateBandDnaExpresion(bandId, (actual) => {
+      const reglasPorCategoria = { ...(actual[bucketKey] || {}) };
+      const existente = reglasPorCategoria[category] || {};
 
-    const actualizado = { ...actual, [bucketKey]: reglasPorCategoria };
-    const guardado = await dbUpdateBandToneDna(bandId, actualizado);
+      reglasPorCategoria[category] = {
+        reglas_estilo_aprendidas: reglas_estilo_aprendidas !== undefined
+          ? limpiarListaTono(reglas_estilo_aprendidas, 20)
+          : (existente.reglas_estilo_aprendidas || []),
+        reglas_manuales: reglas_manuales !== undefined
+          ? limpiarListaTono(reglas_manuales, 20)
+          : (existente.reglas_manuales || []),
+        vocabulario_aprendido: vocabulario_aprendido !== undefined
+          ? limpiarListaTono(vocabulario_aprendido, 20)
+          : (existente.vocabulario_aprendido || []),
+        terminos_a_evitar: terminos_a_evitar !== undefined
+          ? limpiarListaTono(terminos_a_evitar, 20)
+          : (existente.terminos_a_evitar || []),
+        actualizado: new Date().toISOString()
+      };
+
+      return { ...actual, [bucketKey]: reglasPorCategoria };
+    });
     if (!guardado) {
       return res.status(500).json({ error: "No se pudo guardar la edición de las reglas aprendidas." });
     }

@@ -1,7 +1,7 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { getBandDnaProfile } from "../utils/bandDna.js";
 import { generateUnifiedAI } from "../ai.js";
-import { dbGetRegisteredBandById, dbUpdateBandToneDna } from "./bands.js";
+import { dbUpdateBandDnaExpresion } from "./bands.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 
 export interface PitchHumanEditRecord {
@@ -344,12 +344,7 @@ const MAX_REGLAS_IA_POR_CATEGORIA = 12;
 async function refineToneDnaForCategory(cleanId: string, targetCategory: string, edits: PitchEditRow[], esRespuesta: boolean): Promise<void> {
   if (edits.length < 2) return;
 
-  const registered = await dbGetRegisteredBandById(cleanId);
-  const currentDna = registered?.dna_expresion || {};
   const bucketKey = esRespuesta ? "reglas_por_categoria_respuesta" : "reglas_por_categoria";
-  const reglasPorCategoria = { ...(currentDna[bucketKey] || {}) };
-  const entradaActual = reglasPorCategoria[targetCategory] || {};
-  const reglasPrevias: string[] = entradaActual.reglas_estilo_aprendidas || [];
 
   const diffsText = edits.slice(0, 8).map((e, idx) => `
 Caso ${idx + 1} (${e.nombre_sala}):
@@ -361,11 +356,22 @@ Caso ${idx + 1} (${e.nombre_sala}):
     ? `TODOS son CONTESTACIONES a un mensaje que ya envió el mismo tipo de destinatario ("${targetCategory}") - no primeros contactos.`
     : `TODOS son correos de PRIMER CONTACTO dirigidos al mismo tipo de destinatario ("${targetCategory}").`;
 
-  const reglasPreviasSection = reglasPrevias.length > 0
-    ? `\nREGLAS QUE YA TENÍAS VALIDADAS DE ANÁLISIS ANTERIORES (mantenlas TODAS salvo que los casos nuevos de abajo las contradigan claramente - no las quites solo porque no aparezcan reflejadas en estos casos concretos):\n${reglasPrevias.map((r) => `- ${r}`).join("\n")}\n`
-    : '';
+  let reglasAprendidasCount = 0;
 
-  const prompt = `Actúa como un lingüista experto en comunicación de bandas de música independiente.
+  // dbUpdateBandDnaExpresion lee dna_expresion, deja que este callback lo transforme y escribe
+  // el resultado como una operación atómica por banda (server/db/bands.ts) - la lectura de
+  // reglasPrevias y la escritura final quedan así garantizadas sobre la MISMA foto de datos,
+  // incluso si otro refinamiento o una edición manual de BandToneModal caen casi a la vez.
+  await dbUpdateBandDnaExpresion(cleanId, async (currentDna) => {
+    const reglasPorCategoria = { ...(currentDna[bucketKey] || {}) };
+    const entradaActual = reglasPorCategoria[targetCategory] || {};
+    const reglasPrevias: string[] = entradaActual.reglas_estilo_aprendidas || [];
+
+    const reglasPreviasSection = reglasPrevias.length > 0
+      ? `\nREGLAS QUE YA TENÍAS VALIDADAS DE ANÁLISIS ANTERIORES (mantenlas TODAS salvo que los casos nuevos de abajo las contradigan claramente - no las quites solo porque no aparezcan reflejadas en estos casos concretos):\n${reglasPrevias.map((r) => `- ${r}`).join("\n")}\n`
+      : '';
+
+    const prompt = `Actúa como un lingüista experto en comunicación de bandas de música independiente.
 Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos. ${contexto}
 ${reglasPreviasSection}
 CASOS NUEVOS A ANALIZAR:
@@ -381,11 +387,14 @@ Devuelve un JSON con este formato exacto:
   "ajuste_tono_recomendado": "directo_y_profesional"
 }`;
 
-  const response = await generateUnifiedAI({ prompt, temperature: 0.2 });
+    const response = await generateUnifiedAI({ prompt, temperature: 0.2 });
 
-  const jsonMatch = (response.text || "").match(/\{[\s\S]*\}/);
-  const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
-  if (parsed.reglas_aprendidas && Array.isArray(parsed.reglas_aprendidas)) {
+    const jsonMatch = (response.text || "").match(/\{[\s\S]*\}/);
+    const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+    if (!parsed.reglas_aprendidas || !Array.isArray(parsed.reglas_aprendidas)) {
+      return currentDna; // Nada que guardar: misma referencia = dbUpdateBandDnaExpresion no escribe.
+    }
+
     reglasPorCategoria[targetCategory] = {
       reglas_estilo_aprendidas: parsed.reglas_aprendidas.slice(0, MAX_REGLAS_IA_POR_CATEGORIA),
       // reglas_manuales nunca se pisa aquí: se preserva tal cual estuviera, sea lo que sea.
@@ -394,13 +403,17 @@ Devuelve un JSON con este formato exacto:
       terminos_a_evitar: parsed.palabras_prohibidas || entradaActual.terminos_a_evitar || [],
       actualizado: new Date().toISOString()
     };
+    reglasAprendidasCount = parsed.reglas_aprendidas.length;
 
-    await dbUpdateBandToneDna(cleanId, {
+    return {
       ...currentDna,
       [bucketKey]: reglasPorCategoria,
       ultimo_auto_refinamiento: new Date().toISOString()
-    });
-    console.log(`[Self-Refining Tone DNA] Actualizadas ${parsed.reglas_aprendidas.length} reglas de estilo (${esRespuesta ? "respuestas" : "pitches"}) para ${cleanId} / categoría "${targetCategory}"`);
+    };
+  });
+
+  if (reglasAprendidasCount > 0) {
+    console.log(`[Self-Refining Tone DNA] Actualizadas ${reglasAprendidasCount} reglas de estilo (${esRespuesta ? "respuestas" : "pitches"}) para ${cleanId} / categoría "${targetCategory}"`);
   }
 }
 
@@ -563,6 +576,7 @@ async function refineCampaignToneDna(cleanId: string, campaignId: string, edits:
     .single();
 
   const currentRules = campaignData?.campaign_tone_rules || {};
+  const reglasPrevias: string[] = currentRules.reglas_estilo_aprendidas || [];
 
   const diffsText = edits.slice(0, 8).map((e, idx) => `
 Caso ${idx + 1}:
@@ -570,12 +584,21 @@ Caso ${idx + 1}:
 - Versión final escrita por el mánager: "${e.texto_aprobado}"
 `).join("\n");
 
+  // Mismo arreglo que refineToneDnaForCategory (ver arriba): sin pasarle las reglas previas y
+  // pedirle explícitamente que las conserve, cada refinamiento generaba la lista SOLO a partir de
+  // los últimos 8 casos, así que una regla aprendida en un refinamiento anterior de esta misma
+  // campaña podía desaparecer sin más si no volvía a aparecer reflejada en los casos más recientes.
+  const reglasPreviasSection = reglasPrevias.length > 0
+    ? `\nREGLAS QUE YA TENÍAS VALIDADAS DE ANÁLISIS ANTERIORES DE ESTA CAMPAÑA (mantenlas TODAS salvo que los casos nuevos de abajo las contradigan claramente - no las quites solo porque no aparezcan reflejadas en estos casos concretos):\n${reglasPrevias.map((r) => `- ${r}`).join("\n")}\n`
+    : '';
+
   const prompt = `Actúa como un experto en comunicación de bandas de música independiente dentro de una campaña de booking específica.
 Analiza las diferencias entre lo que la IA propuso y lo que el mánager/músico corrigió manualmente en estos correos de pitch:
-
+${reglasPreviasSection}
+CASOS NUEVOS A ANALIZAR:
 ${diffsText}
 
-Extrae de forma ultra-concisa las 3 a 5 REGLAS DE ORO O PREFERENCIAS DE ESTILO que el mánager aplica sistemáticamente PARA ESTA CAMPAÑA ESPECÍFICA.
+Tu tarea es devolver la lista ACTUALIZADA y FUSIONADA de REGLAS DE ORO O PREFERENCIAS DE ESTILO que el mánager aplica sistemáticamente PARA ESTA CAMPAÑA ESPECÍFICA: conserva las reglas previas que sigan aplicando, añade las nuevas que detectes en estos casos, funde en una sola las que digan básicamente lo mismo, y elimina solo las que estos casos nuevos contradigan de forma clara. Máximo 5 reglas en total.
 
 Devuelve un JSON con este formato exacto:
 {
@@ -590,7 +613,7 @@ Devuelve un JSON con este formato exacto:
   const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
   if (parsed.reglas_aprendidas && Array.isArray(parsed.reglas_aprendidas)) {
     const updatedRules = {
-      reglas_estilo_aprendidas: parsed.reglas_aprendidas,
+      reglas_estilo_aprendidas: parsed.reglas_aprendidas.slice(0, 5),
       vocabulario_aprendido: parsed.palabras_favoritas || currentRules.vocabulario_aprendido || [],
       terminos_a_evitar: parsed.palabras_prohibidas || currentRules.terminos_a_evitar || [],
       actualizado: new Date().toISOString()
