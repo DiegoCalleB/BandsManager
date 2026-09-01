@@ -356,7 +356,13 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
     const newNote = `*** [${dateTag}] Borrador de Gmail detectado como ENVIADO (ya no está en Borradores de Gmail) ***\n` + (lead.notas || "");
 
-    await sb.from("leads").update({ estado: "contactado", fecha_envio: nowIso, notas: newNote, gmail_draft_id: null }).eq("id", lead.id);
+    await sb.from("leads").update({
+      estado: "contactado",
+      fecha_envio: nowIso,
+      notas: newNote,
+      gmail_draft_id: null,
+      gmail_message_id: resultado.messageId
+    }).eq("id", lead.id);
     await sb.from("lead_messages").insert({
       id: resultado.messageId ? `imap-${resultado.messageId}` : `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       lead_id: lead.id,
