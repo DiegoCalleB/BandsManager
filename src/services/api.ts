@@ -794,6 +794,22 @@ export const api = {
     });
   },
 
+  // Edita a mano las reglas de estilo APRENDIDAS AUTOMÁTICAMENTE para una categoría concreta
+  // (quitar una que resulte contradictoria, o añadir una corrección puntual sin esperar a que
+  // se acumulen 2+ correcciones reales). mode 'pitch' o 'reply', ver dna_expresion.reglas_por_categoria(_respuesta).
+  async updateLearnedToneRules(params: {
+    mode: 'pitch' | 'reply';
+    category: string;
+    reglas_estilo_aprendidas?: string[];
+    vocabulario_aprendido?: string[];
+    terminos_a_evitar?: string[];
+  }): Promise<{ success: boolean; data?: any; error?: string }> {
+    return request('/api/bands/tone-dna/learned-rules', {
+      method: 'PATCH',
+      body: JSON.stringify(params)
+    });
+  },
+
   // Record campaign-specific pitch training for tone/content refinement
   async recordCampaignTraining(
     campaignId: string,

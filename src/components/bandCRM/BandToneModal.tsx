@@ -137,8 +137,47 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isTraining, setIsTraining] = useState(false);
   const [trainMessage, setTrainMessage] = useState<string | null>(null);
+  // Edición manual de reglas aprendidas: clave compuesta "mode:categoria" (ej. "reply:salas")
+  // para poder tener en curso ediciones de pitch y de respuesta a la vez sin pisarse.
+  const [savingRuleKey, setSavingRuleKey] = useState<string | null>(null);
+  const [newRuleText, setNewRuleText] = useState<Record<string, string>>({});
 
   if (!isOpen || !band) return null;
+
+  const getLearnedBucket = (mode: 'pitch' | 'reply') =>
+    (mode === 'reply' ? toneData?.reglas_por_categoria_respuesta : toneData?.reglas_por_categoria) || {};
+
+  const handleDeleteLearnedRule = async (mode: 'pitch' | 'reply', category: string, ruleIndex: number) => {
+    const current = getLearnedBucket(mode)[category]?.reglas_estilo_aprendidas || [];
+    const updated = current.filter((_, i) => i !== ruleIndex);
+    const key = `${mode}:${category}`;
+    setSavingRuleKey(key);
+    try {
+      await api.updateLearnedToneRules({ mode, category, reglas_estilo_aprendidas: updated });
+      await onRefreshLearnedRules?.();
+    } catch (err) {
+      console.error('Error borrando regla aprendida:', err);
+    } finally {
+      setSavingRuleKey(null);
+    }
+  };
+
+  const handleAddLearnedRule = async (mode: 'pitch' | 'reply', category: string) => {
+    const key = `${mode}:${category}`;
+    const text = (newRuleText[key] || '').trim();
+    if (!text) return;
+    const current = getLearnedBucket(mode)[category]?.reglas_estilo_aprendidas || [];
+    setSavingRuleKey(key);
+    try {
+      await api.updateLearnedToneRules({ mode, category, reglas_estilo_aprendidas: [...current, text] });
+      setNewRuleText(prev => ({ ...prev, [key]: '' }));
+      await onRefreshLearnedRules?.();
+    } catch (err) {
+      console.error('Error añadiendo regla aprendida:', err);
+    } finally {
+      setSavingRuleKey(null);
+    }
+  };
 
   const handleTrainToneDna = async () => {
     setIsTraining(true);
@@ -627,30 +666,62 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                 {toneData.reglas_por_categoria && Object.keys(toneData.reglas_por_categoria).length > 0 ? (
                   <div className="space-y-2">
-                    {Object.entries(toneData.reglas_por_categoria).map(([cat, reglas]) => (
-                      <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-violet-900/30 space-y-1.5">
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
-                          {CATEGORY_LABELS[cat] || cat}
-                        </span>
-                        {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
-                          <ul className="space-y-0.5">
-                            {reglas.reglas_estilo_aprendidas.map((r, idx) => (
-                              <li key={idx} className="text-[10px] font-sans text-neutral-300">⭐ {r}</li>
-                            ))}
-                          </ul>
-                        )}
-                        {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
-                          <p className="text-[9px] font-mono text-emerald-400/80">
-                            Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
-                          </p>
-                        )}
-                        {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
-                          <p className="text-[9px] font-mono text-red-400/80">
-                            Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                    {Object.entries(toneData.reglas_por_categoria).map(([cat, reglas]) => {
+                      const key = `pitch:${cat}`;
+                      const savingThis = savingRuleKey === key;
+                      return (
+                        <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-violet-900/30 space-y-1.5">
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-violet-300">
+                            {CATEGORY_LABELS[cat] || cat}
+                          </span>
+                          {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
+                            <ul className="space-y-0.5">
+                              {reglas.reglas_estilo_aprendidas.map((r, idx) => (
+                                <li key={idx} className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group">
+                                  <span>⭐ {r}</span>
+                                  <button
+                                    onClick={() => handleDeleteLearnedRule('pitch', cat, idx)}
+                                    disabled={savingThis}
+                                    title="Quitar esta regla (p. ej. si contradice tu configuración manual)"
+                                    className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                  >
+                                    ✕
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
+                            <p className="text-[9px] font-mono text-emerald-400/80">
+                              Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
+                            </p>
+                          )}
+                          {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
+                            <p className="text-[9px] font-mono text-red-400/80">
+                              Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-1.5 pt-1">
+                            <input
+                              type="text"
+                              value={newRuleText[key] || ''}
+                              onChange={(e) => setNewRuleText(prev => ({ ...prev, [key]: e.target.value }))}
+                              onKeyDown={(e) => { if (e.key === 'Enter') handleAddLearnedRule('pitch', cat); }}
+                              placeholder="+ añadir regla manual..."
+                              disabled={savingThis}
+                              className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-violet-500 disabled:opacity-50"
+                            />
+                            <button
+                              onClick={() => handleAddLearnedRule('pitch', cat)}
+                              disabled={savingThis || !(newRuleText[key] || '').trim()}
+                              className="px-2 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                            >
+                              {savingThis ? '...' : 'Añadir'}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
                   <p className="text-[10px] font-mono text-neutral-500">
@@ -683,30 +754,62 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
 
                 {toneData.reglas_por_categoria_respuesta && Object.keys(toneData.reglas_por_categoria_respuesta).length > 0 ? (
                   <div className="space-y-2">
-                    {Object.entries(toneData.reglas_por_categoria_respuesta).map(([cat, reglas]) => (
-                      <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-sky-900/30 space-y-1.5">
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-300">
-                          {CATEGORY_LABELS[cat] || cat}
-                        </span>
-                        {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
-                          <ul className="space-y-0.5">
-                            {reglas.reglas_estilo_aprendidas.map((r, idx) => (
-                              <li key={idx} className="text-[10px] font-sans text-neutral-300">⭐ {r}</li>
-                            ))}
-                          </ul>
-                        )}
-                        {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
-                          <p className="text-[9px] font-mono text-emerald-400/80">
-                            Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
-                          </p>
-                        )}
-                        {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
-                          <p className="text-[9px] font-mono text-red-400/80">
-                            Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                    {Object.entries(toneData.reglas_por_categoria_respuesta).map(([cat, reglas]) => {
+                      const key = `reply:${cat}`;
+                      const savingThis = savingRuleKey === key;
+                      return (
+                        <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-sky-900/30 space-y-1.5">
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-sky-300">
+                            {CATEGORY_LABELS[cat] || cat}
+                          </span>
+                          {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 && (
+                            <ul className="space-y-0.5">
+                              {reglas.reglas_estilo_aprendidas.map((r, idx) => (
+                                <li key={idx} className="text-[10px] font-sans text-neutral-300 flex items-start justify-between gap-1.5 group">
+                                  <span>⭐ {r}</span>
+                                  <button
+                                    onClick={() => handleDeleteLearnedRule('reply', cat, idx)}
+                                    disabled={savingThis}
+                                    title="Quitar esta regla (p. ej. si contradice tu configuración manual de Estrategias de Respuesta)"
+                                    className="shrink-0 opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400 transition-opacity cursor-pointer disabled:opacity-50"
+                                  >
+                                    ✕
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {reglas.vocabulario_aprendido && reglas.vocabulario_aprendido.length > 0 && (
+                            <p className="text-[9px] font-mono text-emerald-400/80">
+                              Vocabulario favorito: {reglas.vocabulario_aprendido.join(', ')}
+                            </p>
+                          )}
+                          {reglas.terminos_a_evitar && reglas.terminos_a_evitar.length > 0 && (
+                            <p className="text-[9px] font-mono text-red-400/80">
+                              Términos prohibidos: {reglas.terminos_a_evitar.join(', ')}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-1.5 pt-1">
+                            <input
+                              type="text"
+                              value={newRuleText[key] || ''}
+                              onChange={(e) => setNewRuleText(prev => ({ ...prev, [key]: e.target.value }))}
+                              onKeyDown={(e) => { if (e.key === 'Enter') handleAddLearnedRule('reply', cat); }}
+                              placeholder="+ añadir regla manual..."
+                              disabled={savingThis}
+                              className="flex-1 px-2 py-1 rounded bg-black/40 border border-neutral-800 text-[10px] text-zinc-200 font-sans focus:outline-none focus:border-sky-500 disabled:opacity-50"
+                            />
+                            <button
+                              onClick={() => handleAddLearnedRule('reply', cat)}
+                              disabled={savingThis || !(newRuleText[key] || '').trim()}
+                              className="px-2 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-[10px] font-bold cursor-pointer disabled:opacity-40 disabled:cursor-default"
+                            >
+                              {savingThis ? '...' : 'Añadir'}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
                   <p className="text-[10px] font-mono text-neutral-500">

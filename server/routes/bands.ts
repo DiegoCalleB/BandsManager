@@ -568,6 +568,56 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
   }
 });
 
+// Edita a mano las reglas de estilo APRENDIDAS AUTOMÁTICAMENTE por categoría (Self-Refining
+// Tone DNA, dna_expresion.reglas_por_categoria / reglas_por_categoria_respuesta - ver
+// server/db/pitchLearning.ts). Hasta ahora esas reglas solo se podían regenerar en bloque
+// pulsando "Entrenar ADN de tono ahora" (que las sobrescribe todas para esa categoría) - no
+// había forma de quitar una regla concreta que resultara contradictoria con la configuración
+// manual, ni de añadir una corrección puntual sin esperar a que se acumulen 2+ correcciones
+// reales. Endpoint separado del PATCH genérico de arriba porque la forma de editar es distinta
+// (una categoría concreta dentro de un mapa anidado, no un campo plano de la banda).
+router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { mode, category, reglas_estilo_aprendidas, vocabulario_aprendido, terminos_a_evitar } = req.body || {};
+
+    if (mode !== "pitch" && mode !== "reply") {
+      return res.status(400).json({ error: "mode debe ser 'pitch' o 'reply'." });
+    }
+    if (!category || typeof category !== "string") {
+      return res.status(400).json({ error: "category es requerida." });
+    }
+
+    const actual = (await dbGetRegisteredBandById(bandId))?.dna_expresion || {};
+    const bucketKey = mode === "reply" ? "reglas_por_categoria_respuesta" : "reglas_por_categoria";
+    const reglasPorCategoria = { ...(actual[bucketKey] || {}) };
+    const existente = reglasPorCategoria[category] || {};
+
+    reglasPorCategoria[category] = {
+      reglas_estilo_aprendidas: reglas_estilo_aprendidas !== undefined
+        ? limpiarListaTono(reglas_estilo_aprendidas, 20)
+        : (existente.reglas_estilo_aprendidas || []),
+      vocabulario_aprendido: vocabulario_aprendido !== undefined
+        ? limpiarListaTono(vocabulario_aprendido, 20)
+        : (existente.vocabulario_aprendido || []),
+      terminos_a_evitar: terminos_a_evitar !== undefined
+        ? limpiarListaTono(terminos_a_evitar, 20)
+        : (existente.terminos_a_evitar || []),
+      actualizado: new Date().toISOString()
+    };
+
+    const actualizado = { ...actual, [bucketKey]: reglasPorCategoria };
+    const guardado = await dbUpdateBandToneDna(bandId, actualizado);
+    if (!guardado) {
+      return res.status(500).json({ error: "No se pudo guardar la edición de las reglas aprendidas." });
+    }
+    res.json({ success: true, data: actualizado });
+  } catch (err: any) {
+    console.error("Error updating learned tone rules:", err);
+    res.status(500).json({ error: err?.message || "No se pudo actualizar las reglas aprendidas." });
+  }
+});
+
 // --------------------------------------------------
 // BAND SCHEDULES (Smart Gate - Python agent config)
 // --------------------------------------------------

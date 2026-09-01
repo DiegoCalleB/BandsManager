@@ -1498,7 +1498,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                         Lo que el sistema ya ha aprendido solo de tus respuestas reales
                       </span>
                       <p className="text-[11px] text-neutral-300 leading-relaxed">
-                        Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice "sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio.
+                        Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice "sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
                       </p>
                     </div>
                   </div>
