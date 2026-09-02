@@ -1325,6 +1325,7 @@ export default function App() {
         onCreateLead={handleAddLeadWithLimitCheck}
         onAddRehearsal={handleAddRehearsal}
         onAddConcert={handleAddConcert}
+        onNavigate={handleNavigate}
         isFloating={false}
         userRole={currentUser?.role}
         currentUser={currentUser}
@@ -1620,6 +1621,7 @@ export default function App() {
          onCreateLead={handleAddLeadWithLimitCheck}
          onAddRehearsal={handleAddRehearsal}
          onAddConcert={handleAddConcert}
+         onNavigate={handleNavigate}
          isFloating={true}
          onClose={() => setIsFloatingChatOpen(false)}
          userRole={currentUser?.role}

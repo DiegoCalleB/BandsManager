@@ -79,6 +79,7 @@ interface ChatbotProps {
   onCreateLead?: (lead: Lead) => void;
   onAddRehearsal: (rehearsal: Rehearsal) => void;
   onAddConcert?: (concert: Concert) => void;
+  onNavigate?: (view: string, options?: any) => void;
   isFloating?: boolean;
   onClose?: () => void;
   userRole?: string;
@@ -87,7 +88,7 @@ interface ChatbotProps {
   onLoadingChange?: (isLoading: boolean) => void;
 }
 
-export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig, onUpdateLead, onCreateLead, onAddRehearsal, onAddConcert, isFloating, onClose, userRole, currentUser, activeBandName, onLoadingChange }: ChatbotProps) {
+export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig, onUpdateLead, onCreateLead, onAddRehearsal, onAddConcert, onNavigate, isFloating, onClose, userRole, currentUser, activeBandName, onLoadingChange }: ChatbotProps) {
   const isAdmin = userRole === 'admin' || userRole === 'leader' || (currentUser?.role as string) === 'admin' || currentUser?.role === 'leader';
   const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
   const bandDisplayName = activeBandName || currentUser?.bandName || 'vuestra banda';
@@ -1234,59 +1235,70 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  setMessages(prev => [...prev, successMsg]);
 
  } else if (action.type === 'propose_add_lead' || action.lead) {
-    const activeBandId = currentUser?.band_id || 'band-bakandeya';
-    const newLeadData: Lead = {
-      id: action.lead?.id || `lead-${Date.now()}`,
-      band_id: action.lead?.band_id || currentUser?.band_id || activeBandId,
-      nombre_sala: action.lead?.nombre_sala || action.leadName || 'Nuevo Lead',
-      ciudad: action.lead?.ciudad || 'Madrid',
-      region: action.lead?.region || action.lead?.ciudad || 'Madrid',
-      aforo: Number(action.lead?.aforo) || 0,
-      genero: action.lead?.genero || 'Variado',
-      tipo: action.lead?.tipo || 'sala',
-      email_contacto: action.lead?.email_contacto || '',
-      telefono: action.lead?.telefono || '',
-      website: action.lead?.website || '',
-      instagram: action.lead?.instagram || '',
-      fuente: action.lead?.fuente || 'Chatbot AI',
-      estado: action.lead?.estado || 'nuevo',
-      notas: action.lead?.notas || 'Creado directamente vía Chatbot AI',
-      pitch_generado: action.lead?.pitch_generado || '',
-      fecha_envio: action.lead?.fecha_envio || '',
-      fecha_ultima_respuesta: ''
-    };
+ const activeBandId = currentUser?.band_id || 'band-bakandeya';
+ const isMedio = (action.lead?.tipo === 'medio' || action.lead?.tipo === 'radio' || action.lead?.tipo === 'prensa');
+ const newLeadData: Lead = {
+ id: action.lead?.id || `lead-${Date.now()}`,
+ band_id: action.lead?.band_id || currentUser?.band_id || activeBandId,
+ nombre_sala: action.lead?.nombre_sala || action.leadName || 'Nuevo Lead',
+ ciudad: action.lead?.ciudad || 'Madrid',
+ region: action.lead?.region || action.lead?.ciudad || 'Madrid',
+ aforo: Number(action.lead?.aforo) || 0,
+ genero: action.lead?.genero || 'Variado',
+ tipo: action.lead?.tipo || 'sala',
+ email_contacto: action.lead?.email_contacto || '',
+ telefono: action.lead?.telefono || '',
+ website: action.lead?.website || '',
+ instagram: action.lead?.instagram || '',
+ fuente: action.lead?.fuente || 'Chatbot AI',
+ estado: action.lead?.estado || 'nuevo',
+ notas: action.lead?.notas || 'Creado directamente vía Chatbot AI',
+ pitch_generado: action.lead?.pitch_generado || '',
+ fecha_envio: action.lead?.fecha_envio || '',
+ fecha_ultima_respuesta: ''
+ };
 
-    try {
-      if (onCreateLead) {
-        await onCreateLead(newLeadData);
-      } else {
-        await api.createLead(newLeadData);
-      }
-    } catch (e) {
-      console.error("Error creating lead from chatbot:", e);
-    }
+ let createdLead: Lead = newLeadData;
+ try {
+ if (onCreateLead) {
+ await onCreateLead(newLeadData);
+ } else {
+ const res: any = await api.createLead(newLeadData);
+ if (res?.lead) createdLead = res.lead;
+ }
+ } catch (e) {
+ console.error("Error creating lead from chatbot:", e);
+ }
 
-    try {
-      window.dispatchEvent(new Event('app-data-updated'));
-    } catch (_) {}
+ try {
+ window.dispatchEvent(new Event('app-data-updated'));
+ } catch (_) {}
 
-    setMessages(prev => prev.map(m => {
-      if (m.id === msgId) {
-        const updatedActions = (m.proposedActions || []).map((a, idx) =>
-          idx === actionIndex ? { ...a, status: 'applied' as const } : a
-        );
-        return { ...m, actionStatus: 'applied', proposedActions: updatedActions };
-      }
-      return m;
-    }));
+ setMessages(prev => prev.map(m => {
+ if (m.id === msgId) {
+ const updatedActions = (m.proposedActions || []).map((a, idx) =>
+ idx === actionIndex ? { ...a, status: 'applied' as const } : a
+ );
+ return { ...m, actionStatus: 'applied', proposedActions: updatedActions };
+ }
+ return m;
+ }));
 
-    const addSuccessMsg: ChatMessage = {
-      id: `sys-${Date.now()}`,
-      sender: 'bot',
-      text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.`,
-      timestamp: new Date()
-    };
-    setMessages(prev => [...prev, addSuccessMsg]);
+ if (onNavigate) {
+ onNavigate(isMedio ? 'medios' : 'booking', {
+ sectionTab: isMedio ? 'medios' : 'salas',
+ statusFilter: 'todos',
+ initialSelectedLeadId: createdLead.id
+ });
+ }
+
+ const addSuccessMsg: ChatMessage = {
+ id: `sys-${Date.now()}`,
+ sender: 'bot',
+ text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.`,
+ timestamp: new Date()
+ };
+ setMessages(prev => [...prev, addSuccessMsg]);
 
  } else if (action.type === 'propose_update_lead' && action.leadId) {
  const targetLead = leads.find(l => l.id === action.leadId);
