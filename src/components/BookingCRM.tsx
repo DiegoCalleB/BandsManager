@@ -27,7 +27,7 @@ import { LeadsTable } from './booking/LeadsTable';
 import { VenueDetailPanel } from './booking/VenueDetailPanel';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { isLeadVerificado } from '../utils/leadReliability';
-import { leadMatchesCampaignCity, leadMatchesCampaignCapacity } from '../utils/campaignMatch';
+import { leadMatchesCampaignCity, leadMatchesCampaignCapacity, leadMatchesCampaignDates } from '../utils/campaignMatch';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
@@ -433,7 +433,7 @@ export default function BookingCRM({
         // la barra superior daba un ±30% de margen), así que el número de la barra prometía más
         // salas de las que aparecían aquí al filtrar. No se usa leadMatchesCampaign directamente
         // porque esa además descarta medios/prensa, y aquí ya se filtra por tipo vía sectionTab.
-        if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign)) return false;
+        if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign) || !leadMatchesCampaignDates(lead, activeCampaign)) return false;
      }
 
      const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 

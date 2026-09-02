@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaign } from '../campaignMatch';
+import { leadMatchesCampaignCapacity, leadMatchesCampaignCity, leadMatchesCampaignDates, leadMatchesCampaign } from '../campaignMatch';
 import { BookingCampaign, Lead } from '../../types';
 
 const baseCampaign: BookingCampaign = {
@@ -8,7 +8,7 @@ const baseCampaign: BookingCampaign = {
   targetCities: ['Madrid'],
   minCapacity: 300,
   maxCapacity: 500,
-  targetDates: [],
+  targetDates: ['2026-12-04', '2026-12-05', '2026-12-11', '2026-12-12'],
   isActive: true
 };
 
@@ -26,8 +26,6 @@ describe('leadMatchesCampaignCapacity', () => {
   });
 
   it('rejects a venue below the minimum, even within a ±30% margin', () => {
-    // 250 is >= 300*0.7 (210), which the old GlobalCampaignBar formula would have accepted -
-    // this is exactly the mismatch that made the "Salas (N)" counter disagree with the actual list.
     expect(leadMatchesCampaignCapacity(baseLead({ aforo: 250 }), baseCampaign)).toBe(false);
   });
 
@@ -56,6 +54,28 @@ describe('leadMatchesCampaignCity', () => {
   });
 });
 
+describe('leadMatchesCampaignDates', () => {
+  it('descarta un festival en junio de 2027 cuando la campaña es para diciembre de 2026', () => {
+    const festival = baseLead({
+      nombre_sala: 'ReggaeMad Fest',
+      tipo: 'festival' as any,
+      festival_start_date: '05/06/2027',
+      festival_end_date: '06/06/2027'
+    });
+    expect(leadMatchesCampaignDates(festival, baseCampaign)).toBe(false);
+  });
+
+  it('acepta un festival cuyas fechas en diciembre coinciden con el rango de la campaña', () => {
+    const festival = baseLead({
+      nombre_sala: 'Festival de Invierno',
+      tipo: 'festival' as any,
+      festival_start_date: '05/12/2026',
+      festival_end_date: '06/12/2026'
+    });
+    expect(leadMatchesCampaignDates(festival, baseCampaign)).toBe(true);
+  });
+});
+
 describe('leadMatchesCampaign', () => {
   it('excludes media/press leads even if city and capacity match', () => {
     const medio = baseLead({ tipo: 'medio' as any, ciudad: 'Madrid', aforo: 400 });
@@ -66,3 +86,4 @@ describe('leadMatchesCampaign', () => {
     expect(leadMatchesCampaign(baseLead({ ciudad: 'Madrid', aforo: 350 }), baseCampaign)).toBe(true);
   });
 });
+
