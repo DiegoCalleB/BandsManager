@@ -9,7 +9,7 @@ import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string }> {
+async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string }> {
   if (!lead.nombre_sala || !lead.ciudad) return {};
 
   // STAGE 1: Búsqueda en base de datos local (muy rápida)
@@ -21,7 +21,14 @@ async function extractFestivalDates(lead: any): Promise<{ startDate?: string; en
       console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${lead.nombre_sala}" → ${dates.start} a ${dates.end}`);
       return {
         startDate: dates.start,
-        endDate: dates.end
+        endDate: dates.end,
+        email: localMatch.email,
+        telefono: localMatch.telefono,
+        website: localMatch.website,
+        instagram: localMatch.instagram,
+        genero: localMatch.genero,
+        aforo: localMatch.aforo,
+        region: localMatch.region
       };
     }
   } catch (e) {
@@ -371,13 +378,43 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
     console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '${lead.nombre_sala}' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`);
   }
 
-  // STAGE 4: Festival/Event Dates Extraction (detect festivals & extract their dates)
-  if (!lead.festival_start_date && !lead.festival_end_date && lead.tipo !== 'sala') {
+  // STAGE 4: Festival/Event Data Extraction (detect festivals & extract all data)
+  if ((lead.tipo === 'festival' || lead.tipo === 'ayuntamiento' || !lead.email_contacto) && (!lead.festival_start_date || !lead.festival_end_date)) {
     const festivalInfo = await extractFestivalDates(lead);
     if (festivalInfo.startDate && festivalInfo.endDate) {
       lead.festival_start_date = festivalInfo.startDate;
       lead.festival_end_date = festivalInfo.endDate;
       modified = true;
+
+      // Enriquecer otros campos con datos del festival
+      if (festivalInfo.email && !lead.email_contacto) {
+        lead.email_contacto = festivalInfo.email;
+        modified = true;
+      }
+      if (festivalInfo.telefono && !lead.telefono) {
+        lead.telefono = festivalInfo.telefono;
+        modified = true;
+      }
+      if (festivalInfo.website && !lead.website) {
+        lead.website = festivalInfo.website;
+        modified = true;
+      }
+      if (festivalInfo.instagram && !lead.instagram) {
+        lead.instagram = festivalInfo.instagram;
+        modified = true;
+      }
+      if (festivalInfo.genero && !lead.genero) {
+        lead.genero = festivalInfo.genero;
+        modified = true;
+      }
+      if (festivalInfo.aforo && (!lead.aforo || lead.aforo === 0)) {
+        lead.aforo = festivalInfo.aforo;
+        modified = true;
+      }
+      if (festivalInfo.region && !lead.region) {
+        lead.region = festivalInfo.region;
+        modified = true;
+      }
     }
   }
 
