@@ -403,21 +403,22 @@ export default function BookingCRM({
  }
  };
 
- // Filter leads by active section tab ('salas' vs 'medios' vs 'grupos')
+ // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
-   const seen = new Set<string>();
-   return (leads || []).filter(lead => {
-     if (!lead) return false;
-     const leadKey = lead.id ? String(lead.id).trim() : null;
-     if (leadKey && seen.has(leadKey)) return false;
-     if (leadKey) seen.add(leadKey);
+    const seen = new Set<string>();
+    const isGruposType = (norm: string) => ['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(norm);
+    return (leads || []).filter(lead => {
+      if (!lead) return false;
+      const leadKey = lead.id ? String(lead.id).trim() : null;
+      if (leadKey && seen.has(leadKey)) return false;
+      if (leadKey) seen.add(leadKey);
 
-     const norm = normalizeType(lead.tipo);
-     if (sectionTab === 'medios') return norm === 'medio';
-     if (sectionTab === 'grupos') return norm === 'grupo';
-     return norm !== 'medio' && norm !== 'grupo';
-   });
- }, [leads, sectionTab]);
+      const norm = normalizeType(lead.tipo);
+      if (sectionTab === 'medios') return norm === 'medio';
+      if (sectionTab === 'grupos') return isGruposType(norm);
+      return norm !== 'medio' && !isGruposType(norm);
+    });
+  }, [leads, sectionTab]);
 
  const filteredLeads = useMemo(() => {
    const seen = new Set<string>();
@@ -426,13 +427,9 @@ export default function BookingCRM({
      if (seen.has(leadKey)) return false;
      seen.add(leadKey);
 
-     if (filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
-        // Mismo criterio de ciudad/aforo que el contador "Salas (N)" de GlobalCampaignBar
-        // (leadMatchesCampaignCity/Capacity en utils/campaignMatch): antes cada uno tenía su
-        // propia copia de esta lógica con reglas ligeramente distintas (esta era estricta, la de
-        // la barra superior daba un ±30% de margen), así que el número de la barra prometía más
-        // salas de las que aparecían aquí al filtrar. No se usa leadMatchesCampaign directamente
-        // porque esa además descarta medios/prensa, y aquí ya se filtra por tipo vía sectionTab.
+     if (sectionTab === 'salas' && filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
+        // El filtrado por aforo, fechas y ciudad de campaña solo aplica a recintos y festivales (salas),
+        // ya que los medios de comunicación y bandas no tienen aforo ni fechas de evento en campaña.
         if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign) || !leadMatchesCampaignDates(lead, activeCampaign)) return false;
      }
 
@@ -1317,24 +1314,98 @@ export default function BookingCRM({
        <span>Detalles</span>
      </button>
      <button
-       id="crm-view-map"
-       type="button"
-       onClick={() => setViewMode('map')}
-       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-         viewMode === 'map'
-           ? 'bg-sky-500 text-slate-950 font-bold shadow-md shadow-sky-500/20'
-           : isStitchLight
-           ? 'bg-sky-50 text-sky-700 border border-sky-300 hover:bg-sky-100 shadow-sm'
-           : 'bg-sky-500/15 text-sky-300 border border-sky-500/40 hover:bg-sky-500/25'
-       }`}
-       title="Vista en Mapa GPS Interactivo"
-     >
-       <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-slate-950' : 'text-sky-400'}`} />
-       <span>Mapa</span>
-     </button>
-   </div>
- </div>
- </div>
+        id="crm-view-map"
+        type="button"
+        onClick={() => setViewMode('map')}
+        className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+          viewMode === 'map'
+            ? 'bg-sky-500 text-slate-950 font-bold shadow-md shadow-sky-500/20'
+            : isStitchLight
+            ? 'bg-sky-50 text-sky-700 border border-sky-300 hover:bg-sky-100 shadow-sm'
+            : 'bg-sky-500/15 text-sky-300 border border-sky-500/40 hover:bg-sky-500/25'
+        }`}
+        title="Vista en Mapa GPS Interactivo"
+      >
+        <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-slate-950' : 'text-sky-400'}`} />
+        <span>Mapa</span>
+      </button>
+    </div>
+  </div>
+
+      {/* Quick Type Filter Bar (Always visible across all tabs) */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs">
+        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider shrink-0 mr-1">
+          {sectionTab === 'salas' ? 'Tipo de sala:' : sectionTab === 'grupos' ? 'Tipo de entidad:' : 'Tipo de medio:'}
+        </span>
+        {(sectionTab === 'medios'
+          ? [
+              { key: 'todos', label: '🌟 Todos' },
+              { key: 'radio', label: '📻 Radio' },
+              { key: 'tv', label: '📺 TV' },
+              { key: 'prensa', label: '📰 Prensa' },
+              { key: 'redes', label: '📱 Redes' },
+              { key: 'podcast', label: '🎙️ Podcasts' }
+            ] as const
+          : sectionTab === 'grupos'
+          ? [
+              { key: 'todos', label: '🌟 Todos' },
+              { key: 'grupo', label: '🎸 Grupos' },
+              { key: 'agencia', label: '💼 Agencias' },
+              { key: 'manager', label: '👔 Mánagers' },
+              { key: 'productora', label: '🎬 Productoras' },
+              { key: 'sello', label: '💿 Sellos' }
+            ] as const
+          : [
+              { key: 'todos', label: '🌟 Todos' },
+              { key: 'sala', label: '🏛️ Salas' },
+              { key: 'festival', label: '🎪 Festivales' },
+              { key: 'discoteca', label: '🪩 Discotecas' },
+              { key: 'ayuntamiento', label: '🎆 Ayuntamientos' }
+            ] as const
+        ).map(t => {
+          const isSelected = typeFilter === t.key;
+          const count = t.key === 'todos'
+            ? sectionLeads.length
+            : sectionTab === 'medios'
+            ? sectionLeads.filter(l => {
+                const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
+                if (t.key === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
+                if (t.key === 'tv') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
+                if (t.key === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
+                if (t.key === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
+                if (t.key === 'podcast') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
+                return true;
+              }).length
+            : sectionLeads.filter(l => normalizeType(l.tipo) === t.key).length;
+
+          return (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTypeFilter(t.key)}
+              className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                isSelected
+                  ? isStitchLight
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-sm border border-[#f2ca50]'
+                  : isStitchLight
+                  ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+                  : 'bg-[#181716] text-zinc-300 hover:text-white hover:bg-zinc-800 border border-zinc-800'
+              }`}
+            >
+              <span>{t.label}</span>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                isSelected
+                  ? 'bg-black/20 text-[#3c2f00]'
+                  : 'bg-zinc-800 text-amber-300/90'
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
 
   {/* Enrich Status Banner */}
   {enrichStatusMsg && (
