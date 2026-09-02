@@ -30,6 +30,8 @@ export interface BookingCampaign {
   maxCapacity: number;
   targetDates: string[]; // e.g., ['2026-12-04', '2026-12-05', '2027-04-11', '2027-04-12']
   targetDatesText?: string; // e.g., "4 o 5 de diciembre, o 11 y 12 de abril"
+  campaignStartDate?: string; // YYYY-MM-DD: start date for filtering festival leads
+  campaignEndDate?: string; // YYYY-MM-DD: end date for filtering festival leads
   notes?: string;
   // Mensaje clave por caso de uso (salas/festivales/discotecas/...) que el Redactor prioriza
   // sobre la plantilla general de esa categoría mientras la campaña esté activa. Las categorías
@@ -152,6 +154,8 @@ export interface Lead {
   pitch_feedback_contenido?: number;
   pitch_feedback_comentario?: string;
   historial_feedback_pitch?: PitchFeedbackLog[];
+  festival_start_date?: string;
+  festival_end_date?: string;
 }
 
 export interface Rehearsal {

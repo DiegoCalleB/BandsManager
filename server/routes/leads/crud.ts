@@ -2,7 +2,7 @@ import express from "express";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
-import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages } from "../../db.js";
+import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
@@ -10,6 +10,7 @@ import { checkRecordLimit } from "../../utils/planLimits.js";
 import { getBandDnaProfile, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
 import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
+import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 
 const router = express.Router();
 
@@ -49,6 +50,12 @@ router.get("/leads", requireAuth, async (req, res) => {
       pagination = (page !== undefined || limit !== undefined) ? paginated.pagination : undefined;
     } else {
       leadsList = await dbGetLeads(userBandId);
+    }
+
+    // Apply active campaign date filter if no explicit search filters
+    const activeCampaign = await dbGetActiveCampaign(userBandId);
+    if (activeCampaign && !estado && !search && !ciudad && !sortBy && !page) {
+      leadsList = filterLeadsByActiveCampaign(leadsList, activeCampaign);
     }
 
     const leads = leadsList.map((l: any) => {

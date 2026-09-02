@@ -9,6 +9,115 @@ import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
+async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string }> {
+  if (!lead.nombre_sala || !lead.ciudad) return {};
+
+  // STAGE 1: Búsqueda en base de datos local (muy rápida)
+  try {
+    const { searchFestivalByName, formatFestivalDates } = await import("./utils/spanishFestivalsDB.js");
+    const localMatch = searchFestivalByName(lead.nombre_sala, lead.ciudad);
+    if (localMatch) {
+      const dates = formatFestivalDates(localMatch);
+      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${lead.nombre_sala}" → ${dates.start} a ${dates.end}`);
+      return {
+        startDate: dates.start,
+        endDate: dates.end,
+        email: localMatch.email,
+        telefono: localMatch.telefono,
+        website: localMatch.website,
+        instagram: localMatch.instagram,
+        genero: localMatch.genero,
+        aforo: localMatch.aforo,
+        region: localMatch.region
+      };
+    }
+  } catch (e) {
+    console.warn(`[FestivalDates] Error en búsqueda local:`, e);
+  }
+
+  // STAGE 2: Web scraping (Wikipedia + festivalesdemusica.com)
+  try {
+    const { scrapeFestivalDatesFromWikipedia, scrapeFestivalFromFestivalesDeMusica } = await import("./utils/festivalScraper.js");
+
+    console.log(`[FestivalDates] Intentando scraping para "${lead.nombre_sala}"...`);
+
+    const wikiDates = await scrapeFestivalDatesFromWikipedia(lead.nombre_sala, lead.ciudad);
+    if (wikiDates) {
+      console.log(`[FestivalDates] ✓ FOUND EN WIKIPEDIA: "${lead.nombre_sala}" → ${wikiDates.start} a ${wikiDates.end}`);
+      return {
+        startDate: wikiDates.start,
+        endDate: wikiDates.end
+      };
+    }
+
+    const festivalesDates = await scrapeFestivalFromFestivalesDeMusica(lead.nombre_sala);
+    if (festivalesDates) {
+      console.log(`[FestivalDates] ✓ FOUND EN FESTIVALESDEMUSICA.COM: "${lead.nombre_sala}" → ${festivalesDates.start} a ${festivalesDates.end}`);
+      return {
+        startDate: festivalesDates.start,
+        endDate: festivalesDates.end
+      };
+    }
+  } catch (e) {
+    console.warn(`[FestivalDates] Error en scraping:`, e);
+  }
+
+  // STAGE 3: AI Fallback (último recurso, solo si las anteriores fallaron)
+  const client = getAiClient();
+  if (!client) return {};
+
+  const prompt = `Busca información sobre si "${lead.nombre_sala}" en ${lead.ciudad} (España) es un festival, fiestas populares o evento periódico, y extrae sus fechas.
+
+Devuelve ÚNICAMENTE un JSON con esta estructura:
+{
+  "es_festival": true o false,
+  "festival_start_date": "YYYY-MM-DD" (primera fecha del evento, o null si no es festival),
+  "festival_end_date": "YYYY-MM-DD" (última fecha del evento, o null si no es festival)
+}
+
+Si no es un festival/evento periódico, devuelve es_festival: false y las fechas como null.`;
+
+  try {
+    console.log(`[FestivalDates] Fallback a AI para "${lead.nombre_sala}"...`);
+    let response: any = null;
+    try {
+      response = await generateContentWithFallback(client, {
+        contents: prompt,
+        config: {
+          tools: [{ googleSearch: {} }]
+        }
+      });
+    } catch (searchErr: any) {
+      response = await generateContentWithFallback(client, {
+        contents: prompt
+      });
+    }
+
+    const text = response.text || "{}";
+    const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const jsonStart = cleanedText.indexOf('{');
+    const jsonEnd = cleanedText.lastIndexOf('}');
+    let data: any = {};
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
+    } else {
+      data = JSON.parse(cleanedText);
+    }
+
+    if (data.es_festival && data.festival_start_date && data.festival_end_date) {
+      console.log(`[FestivalDates] ✓ AI FOUND: "${lead.nombre_sala}" → ${data.festival_start_date} a ${data.festival_end_date}`);
+      return {
+        startDate: data.festival_start_date,
+        endDate: data.festival_end_date
+      };
+    }
+  } catch (err: any) {
+    console.warn(`[FestivalDates] Error en AI fallback:`, err?.message || err);
+  }
+
+  return {};
+}
+
 async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
   if (!websiteUrl || !websiteUrl.startsWith("http")) return {};
 
@@ -267,6 +376,46 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
     }
   } else {
     console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '${lead.nombre_sala}' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`);
+  }
+
+  // STAGE 4: Festival/Event Data Extraction (detect festivals & extract all data)
+  if ((lead.tipo === 'festival' || lead.tipo === 'ayuntamiento' || !lead.email_contacto) && (!lead.festival_start_date || !lead.festival_end_date)) {
+    const festivalInfo = await extractFestivalDates(lead);
+    if (festivalInfo.startDate && festivalInfo.endDate) {
+      lead.festival_start_date = festivalInfo.startDate;
+      lead.festival_end_date = festivalInfo.endDate;
+      modified = true;
+
+      // Enriquecer otros campos con datos del festival
+      if (festivalInfo.email && !lead.email_contacto) {
+        lead.email_contacto = festivalInfo.email;
+        modified = true;
+      }
+      if (festivalInfo.telefono && !lead.telefono) {
+        lead.telefono = festivalInfo.telefono;
+        modified = true;
+      }
+      if (festivalInfo.website && !lead.website) {
+        lead.website = festivalInfo.website;
+        modified = true;
+      }
+      if (festivalInfo.instagram && !lead.instagram) {
+        lead.instagram = festivalInfo.instagram;
+        modified = true;
+      }
+      if (festivalInfo.genero && !lead.genero) {
+        lead.genero = festivalInfo.genero;
+        modified = true;
+      }
+      if (festivalInfo.aforo && (!lead.aforo || lead.aforo === 0)) {
+        lead.aforo = festivalInfo.aforo;
+        modified = true;
+      }
+      if (festivalInfo.region && !lead.region) {
+        lead.region = festivalInfo.region;
+        modified = true;
+      }
+    }
   }
 
   // Ensure initial pitch is generated if missing

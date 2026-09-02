@@ -187,7 +187,9 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     pitch_feedback_comentario: lead.pitch_feedback_comentario || lead.pitchFeedbackComentario || existingRecord?.pitch_feedback_comentario || "",
     historial_feedback_pitch: lead.historial_feedback_pitch || lead.historialFeedbackPitch || existingRecord?.historial_feedback_pitch || [],
     historial_contacto: lead.historial_contacto || lead.historialContacto || existingRecord?.historial_contacto || [],
-    hilo_emails: lead.hilo_emails || existingRecord?.hilo_emails || []
+    hilo_emails: lead.hilo_emails || existingRecord?.hilo_emails || [],
+    festival_start_date: lead.festival_start_date || lead.festivalStartDate || existingRecord?.festival_start_date || null,
+    festival_end_date: lead.festival_end_date || lead.festivalEndDate || existingRecord?.festival_end_date || null
   };
 
   const { data, error } = await sb.from("leads").upsert(payload).select().single();

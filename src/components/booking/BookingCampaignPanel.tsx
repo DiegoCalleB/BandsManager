@@ -57,9 +57,11 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
       maxCapacity: campaignForm.maxCapacity || 0,
       targetDates: dates,
       targetDatesText: formatDateText(dates),
+      campaignStartDate: campaignForm.campaignStartDate,
+      campaignEndDate: campaignForm.campaignEndDate,
       isActive: true
     };
-    
+
     setActiveCampaign(newCampaign);
     localStorage.setItem('bandmanager_active_campaign', JSON.stringify(newCampaign));
     onCampaignChange(newCampaign);
@@ -195,6 +197,31 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
               Puedes hacer clic en cualquier fecha para editarla en el calendario o añadir nuevas fechas. Los agentes mencionarán automáticamente estas fechas ({formatDateText(campaignForm.targetDates || [])}) en las propuestas.
             </p>
           </div>
+
+          <div className="md:col-span-2 lg:col-span-3">
+            <label className="block text-xs text-gray-500 font-medium mb-2 uppercase tracking-wider">🎪 Rango de Fechas para Filtrar Festivales/Eventos</label>
+            <p className="text-xs text-gray-400 mb-2">Define el rango de fechas para mostrar solo los festivales y fiestas que coincidan con esta campaña.</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Desde</label>
+                <input
+                  type="date"
+                  value={campaignForm.campaignStartDate || ''}
+                  onChange={e => setCampaignForm({...campaignForm, campaignStartDate: e.target.value})}
+                  className="w-full text-sm border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Hasta</label>
+                <input
+                  type="date"
+                  value={campaignForm.campaignEndDate || ''}
+                  onChange={e => setCampaignForm({...campaignForm, campaignEndDate: e.target.value})}
+                  className="w-full text-sm border-gray-300 rounded-lg focus:ring-amber-500 focus:border-amber-500"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
@@ -262,6 +289,8 @@ export default function BookingCampaignPanel({ onCampaignChange }: BookingCampai
                 maxCapacity: activeCampaign.maxCapacity,
                 targetDates: [...(activeCampaign.targetDates || [])],
                 targetDatesText: activeCampaign.targetDatesText,
+                campaignStartDate: activeCampaign.campaignStartDate,
+                campaignEndDate: activeCampaign.campaignEndDate,
                 notes: activeCampaign.notes
               });
             }
