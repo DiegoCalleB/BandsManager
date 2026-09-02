@@ -2,12 +2,12 @@ import express from "express";
 
 /**
  * Features access by plan
- * free: EPK (dossier) + Fans capture only
- * pro: Everything (CRM, Agentes, Reels, Finanzas, Repertorio, etc)
+ * free: EPK (dossier) + Fans capture + Calendar ONLY
+ * pro: Everything (CRM, Agentes, Reels, Finanzas, Repertorio, Tours, Rehearsals, etc)
  */
 export const PLAN_FEATURES: Record<string, string[]> = {
-  free: ["epk", "fans"],
-  pro: ["epk", "fans", "crm", "leads", "agentes", "repertorio", "reels", "finanzas", "tours", "rehearsals"],
+  free: ["epk", "fans", "calendar"],
+  pro: ["epk", "fans", "calendar", "crm", "leads", "agentes", "repertorio", "reels", "finanzas", "tours", "rehearsals"],
 };
 
 export function createPlanMiddleware(allowedFeatures: string[]) {

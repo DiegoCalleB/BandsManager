@@ -3,7 +3,9 @@
 ## Overview
 
 Two-tier freemium model:
-- **Free**: EPK (Dossier) + Fans capture only
+- **Free**: EPK (Dossier) + Fans capture + Calendar ONLY
+  - No CRM, No Agentes, No Reels, No Finanzas, No Repertorio, No Tours, No Rehearsals, No Plan Upgrade UI
+  - Minimal interface: just the essentials for a festival band
 - **Pro**: Everything (CRM, Leads, Agentes, Reels, Finanzas, Repertorio, Tours, Rehearsals)
 
 ## Current State
@@ -73,40 +75,55 @@ router.post("/api/leads", requirePlanAccess("crm", "leads"), (req, res) => {
 
 ### 4. Routes That Remain FREE
 
-**Always accessible:**
+**Always accessible (free + pro):**
 - `/epk` (public, read-only dossier)
 - `/api/epk` (band's EPK data)
 - `/api/fans` (capture + list fans)
+- `/api/calendar` (read/write concerts & rehearsals)
+- `/api/concerts/*` (read/write - linked to calendar)
+- `/api/rehearsals/*` (read/write - linked to calendar)
 - `/api/state` (general app state)
 - `/api/auth/*` (login, register, etc)
 
-### 5. Frontend: Hide Premium Features
+### 5. Frontend: Hide ALL Premium Features for Free Plan
 
-In React components, check band.plan before rendering premium sections:
+Free plan should have a **minimal, clean interface** with NO visible upgrade prompts or premium sections:
 
 ```typescript
-// Example in src/components/Dashboard.tsx
+// Example in src/components/App.tsx or main navigation
 const { band } = useContext(AuthContext);
+const isFree = band.plan === 'free';
 
 return (
-  <>
-    <EPKSection /> {/* Always visible */}
-    <FansSection /> {/* Always visible */}
+  <nav>
+    {/* Always show */}
+    <NavLink to="/epk">Dossier</NavLink>
+    <NavLink to="/fans">Fans</NavLink>
+    <NavLink to="/calendar">Calendario</NavLink>
     
-    {band.plan === 'pro' && (
+    {/* FREE PLAN: HIDE EVERYTHING ELSE */}
+    {!isFree && (
       <>
-        <CRMSection />
-        <ReelsSection />
-        <FinanzasSection />
+        <NavLink to="/crm">CRM</NavLink>
+        <NavLink to="/booking">Agentes</NavLink>
+        <NavLink to="/repertorio">Repertorio</NavLink>
+        <NavLink to="/reels">Reels</NavLink>
+        <NavLink to="/finanzas">Finanzas</NavLink>
+        <NavLink to="/tours">Tours</NavLink>
+        <NavLink to="/settings">Configuración</NavLink>
+        <NavLink to="/upgrade">Upgrade Plan</NavLink>
       </>
     )}
-    
-    {band.plan === 'free' && (
-      <UpgradePrompt message="Upgrade to Pro to access CRM, Booking Agents, Reels, and more" />
-    )}
-  </>
+  </nav>
 );
 ```
+
+**Key points:**
+- NO "Upgrade to Pro" buttons or prompts for free users
+- NO grayed-out premium sections
+- Just: Dossier, Fans, Calendar
+- Clean, simple, no friction
+- They see exactly what they get
 
 ### 6. Upgrade Flow
 
