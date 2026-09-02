@@ -4,10 +4,10 @@ import { Song, SetlistItem } from '../../types';
 
 describe('energyPacingUtils', () => {
   it('getEnergyInfo asigna correctamente la categoría según el valor numérico', () => {
-    expect(getEnergyInfo(3).category).toBe('balada');
-    expect(getEnergyInfo(6).category).toBe('media');
-    expect(getEnergyInfo(9).category).toBe('alta');
-    expect(getEnergyInfo(10).category).toBe('explosiva');
+    expect(getEnergyInfo(6).category).toBe('balada');
+    expect(getEnergyInfo(12).category).toBe('media');
+    expect(getEnergyInfo(18).category).toBe('alta');
+    expect(getEnergyInfo(20).category).toBe('explosiva');
   });
 
   it('getEnergyInfo deduce energía según BPM cuando no tiene energía asignada', () => {
@@ -20,10 +20,10 @@ describe('energyPacingUtils', () => {
 
   it('analyzeSetlistEnergy detecta valles de energía consecutiva (3+ baladas)', () => {
     const songs: Song[] = [
-      { id: 's1', titulo: 'Balada 1', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 70, energia: 3 },
-      { id: 's2', titulo: 'Balada 2', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 75, energia: 3 },
-      { id: 's3', titulo: 'Balada 3', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 80, energia: 3 },
-      { id: 's4', titulo: 'Hit', duracion: '3:00', duracionSegundos: 180, tonalidad: 'E', bpm: 150, energia: 10 }
+      { id: 's1', titulo: 'Balada 1', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 70, energia: 6 },
+      { id: 's2', titulo: 'Balada 2', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 75, energia: 6 },
+      { id: 's3', titulo: 'Balada 3', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 80, energia: 6 },
+      { id: 's4', titulo: 'Hit', duracion: '3:00', duracionSegundos: 180, tonalidad: 'E', bpm: 150, energia: 20 }
     ];
 
     const items: SetlistItem[] = [
@@ -42,10 +42,10 @@ describe('energyPacingUtils', () => {
 
   it('analyzeSetlistEnergy detecta un show In Crescendo', () => {
     const songs: Song[] = [
-      { id: 's1', titulo: 'Intro Suave', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 80, energia: 3 },
-      { id: 's2', titulo: 'Medio Tempo', duracion: '3:00', duracionSegundos: 180, tonalidad: 'G', bpm: 110, energia: 6 },
-      { id: 's3', titulo: 'Cañera', duracion: '3:00', duracionSegundos: 180, tonalidad: 'D', bpm: 140, energia: 9 },
-      { id: 's4', titulo: 'Traca Final', duracion: '3:00', duracionSegundos: 180, tonalidad: 'E', bpm: 160, energia: 10 }
+      { id: 's1', titulo: 'Intro Suave', duracion: '3:00', duracionSegundos: 180, tonalidad: 'Am', bpm: 80, energia: 6 },
+      { id: 's2', titulo: 'Medio Tempo', duracion: '3:00', duracionSegundos: 180, tonalidad: 'G', bpm: 110, energia: 12 },
+      { id: 's3', titulo: 'Cañera', duracion: '3:00', duracionSegundos: 180, tonalidad: 'D', bpm: 140, energia: 18 },
+      { id: 's4', titulo: 'Traca Final', duracion: '3:00', duracionSegundos: 180, tonalidad: 'E', bpm: 160, energia: 20 }
     ];
 
     const items: SetlistItem[] = [

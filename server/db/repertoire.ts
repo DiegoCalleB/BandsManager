@@ -1,7 +1,44 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { analizarEnergiaAudio, medirVariacionInterna } from "../utils/audioEnergy.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
+
+/**
+ * Analiza y persiste la dinámica interna del audio de un tema. Usada tanto por el disparo
+ * automático (en segundo plano tras guardar) como por la repesca manual de todo el repertorio.
+ * Nunca lanza: si ffmpeg falla o el audio no es analizable, la canción se queda sin variación,
+ * exactamente igual que si nunca se hubiera subido audio.
+ */
+export async function analizarYGuardarDinamicaCancion(
+  songId: string,
+  audioUrl: string,
+  bandId: string
+): Promise<{ variacion: number; audioAnalizable: boolean }> {
+  const curva = await analizarEnergiaAudio(audioUrl, { timeoutMs: 90_000 });
+  const variacion = medirVariacionInterna(curva);
+
+  // UPDATE (no dbUpsertSong): dbUpsertSong reescribe la fila entera con sus valores por
+  // defecto para cualquier campo que no venga en el objeto — perfecto para un guardado desde
+  // el formulario (que manda la canción completa), pero borraría título/audio/bpm/etc. si se
+  // usara aquí con solo estos dos campos. Un UPDATE solo toca las columnas indicadas.
+  const sb = getSupabase();
+  const { error } = await sb
+    .from("songs")
+    .update({ energia_variacion: variacion, energia_variacion_calculada_en: new Date().toISOString() })
+    .eq("id", songId)
+    .eq("band_id", cleanBandId(bandId));
+  if (error) throw new Error(`Supabase Error (guardar dinámica interna): ${error.message}`);
+
+  return { variacion, audioAnalizable: curva.length > 1 };
+}
+
+/** Igual que `analizarYGuardarDinamicaCancion`, pero sin bloquear al llamador ni propagar errores. */
+function dispararAnalisisDinamicaEnSegundoPlano(songId: string, audioUrl: string, bandId: string): void {
+  analizarYGuardarDinamicaCancion(songId, audioUrl, bandId).catch((err) => {
+    console.error(`[Repertorio] No se pudo analizar la dinámica interna de la canción ${songId}:`, err?.message || err);
+  });
+}
 
 export function mapSongRecord(s: any) {
   if (!s || typeof s !== "object") return s;
@@ -30,7 +67,11 @@ export function mapSongRecord(s: any) {
     genero: s.genero || "Mestizaje",
     tipo: s.tipo || "original",
     estado: s.estado || "ensayando",
-    energia: Number(s.energia || 5),
+    energia: Number(s.energia || 10),
+    energiaVariacion: typeof s.energia_variacion === "number" ? s.energia_variacion : (typeof s.energiaVariacion === "number" ? s.energiaVariacion : undefined),
+    energia_variacion: typeof s.energia_variacion === "number" ? s.energia_variacion : (typeof s.energiaVariacion === "number" ? s.energiaVariacion : undefined),
+    energiaVariacionCalculadaEn: s.energia_variacion_calculada_en || s.energiaVariacionCalculadaEn || undefined,
+    energia_variacion_calculada_en: s.energia_variacion_calculada_en || s.energiaVariacionCalculadaEn || undefined,
     portadaUrl: portada,
     portada_url: portada,
     favoritoGeneral: Boolean(s.favorito_general ?? s.favoritoGeneral),
@@ -100,10 +141,13 @@ export async function dbUpsertSong(song: any, bandId: string) {
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
   // usuario no se reutiliza nunca.
   let finalSongId = song.id;
+  let existing: { id: string; band_id: string; audio_principal_url?: string } | null = null;
   if (finalSongId) {
-    const { data: existing } = await sb.from("songs").select("id, band_id").eq("id", finalSongId).maybeSingle();
+    const { data } = await sb.from("songs").select("id, band_id, audio_principal_url").eq("id", finalSongId).maybeSingle();
+    existing = data;
     if (existing && existing.band_id !== targetBandId) {
       finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+      existing = null;
     }
   }
 
@@ -123,7 +167,15 @@ export async function dbUpsertSong(song: any, bandId: string) {
     genero: song.genero || "Mestizaje",
     tipo: song.tipo || "original",
     estado: song.estado || "ensayando",
-    energia: Number(song.energia || 5),
+    energia: Number(song.energia || 10),
+    // Solo se incluyen si vienen con un valor real: no queremos que un guardado normal del
+    // formulario (que no toca este campo) borre una variación ya analizada del audio.
+    ...(typeof (song.energia_variacion ?? song.energiaVariacion) === "number"
+      ? { energia_variacion: Number(song.energia_variacion ?? song.energiaVariacion) }
+      : {}),
+    ...(typeof (song.energia_variacion_calculada_en ?? song.energiaVariacionCalculadaEn) === "string"
+      ? { energia_variacion_calculada_en: song.energia_variacion_calculada_en ?? song.energiaVariacionCalculadaEn }
+      : {}),
     portada_url: song.portada_url || song.portadaUrl || "",
     favorito_general: Boolean(song.favorito_general ?? song.favoritoGeneral),
     estado_tema: song.estado_tema || song.estadoTema || "ensayando",
@@ -143,12 +195,15 @@ export async function dbUpsertSong(song: any, bandId: string) {
   if (error && error.message && (
     error.message.toLowerCase().includes("notas_miembros") ||
     error.message.toLowerCase().includes("notas_por_miembro") ||
-    error.message.toLowerCase().includes("notas_repertorio")
+    error.message.toLowerCase().includes("notas_repertorio") ||
+    error.message.toLowerCase().includes("energia_variacion")
   )) {
     const fallbackPayload = { ...payload };
     delete fallbackPayload.notas_miembros;
     delete fallbackPayload.notas_por_miembro;
     delete fallbackPayload.notas_repertorio;
+    delete fallbackPayload.energia_variacion;
+    delete fallbackPayload.energia_variacion_calculada_en;
     const retry = await sb.from("songs").upsert(fallbackPayload).select().single();
     if (retry.error) throw new Error(`Supabase Error (upsert song fallback): ${retry.error.message}`);
     data = retry.data;
@@ -156,6 +211,15 @@ export async function dbUpsertSong(song: any, bandId: string) {
   } else if (error) {
     throw new Error(`Supabase Error (upsert song): ${error.message}`);
   }
+
+  // Detección automática de dinámica interna (partes lentas/rápidas del tema): si el audio
+  // principal es nuevo o ha cambiado, se analiza solo, sin que el usuario tenga que hacer nada.
+  const audioNuevo = payload.audio_principal_url;
+  const audioCambio = !existing || existing.audio_principal_url !== audioNuevo;
+  if (audioNuevo && audioCambio) {
+    dispararAnalisisDinamicaEnSegundoPlano(finalSongId, audioNuevo, targetBandId);
+  }
+
   return mapSongRecord(data || payload);
 }
 

@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { 
  Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
- Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, Headphones,
+ Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
@@ -38,6 +38,7 @@ import {
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
+import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip } from 'recharts';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -473,6 +474,8 @@ export default function RepertorioSetlists({
 
  // Selected item in active setlist (for intelligent insertion beneath selected song)
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
+ // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
+ const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
 
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
@@ -1970,6 +1973,37 @@ export default function RepertorioSetlists({
   {/* LIVE METRICS & ENERGY MAP BAR */}
   {(() => {
     const energyAnalysis = analyzeSetlistEnergy(activeSetlist.items, songs);
+
+    const chartData = energyAnalysis.points.map((pt, idx) => ({
+      idx,
+      id: pt.item.id,
+      name: pt.title,
+      score: pt.score,
+      range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
+      color: pt.info.hexColor,
+      icon: pt.info.icon,
+      label: pt.info.label,
+      variance: pt.variance,
+      isSong: pt.isSong
+    }));
+
+    // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
+    // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
+    let yDomain: [number, number] = [1, 20];
+    if (chartData.length > 0) {
+      const allValues = chartData.flatMap((d) => d.range);
+      const minVal = Math.min(...allValues);
+      const maxVal = Math.max(...allValues);
+      let lo = Math.max(1, minVal - 2);
+      let hi = Math.min(20, maxVal + 2);
+      if (hi - lo < 6) {
+        const mid = (hi + lo) / 2;
+        lo = Math.max(1, mid - 3);
+        hi = Math.min(20, mid + 3);
+      }
+      yDomain = [lo, hi];
+    }
+
     return (
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
@@ -1999,7 +2033,7 @@ export default function RepertorioSetlists({
           </div>
         </div>
 
-        {/* VISUAL ENERGY CURVE / SPARKLINE BAR CHART */}
+        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
         {energyAnalysis.points.length > 0 && (
           <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
             <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
@@ -2007,66 +2041,146 @@ export default function RepertorioSetlists({
                 <span>📈 Mapa de Dinámica y Energía del Show</span>
                 <span className="text-[9px] text-neutral-500 font-normal">(Curva tema a tema)</span>
               </span>
-              <div className="flex items-center gap-2 text-[9px]">
-                <span className="flex items-center gap-1 text-sky-400">🌙 Balada</span>
-                <span className="flex items-center gap-1 text-emerald-400">🎵 Media</span>
-                <span className="flex items-center gap-1 text-amber-400">🔥 Alta</span>
-                <span className="flex items-center gap-1 text-rose-400">💣 Explosiva</span>
-              </div>
-            </div>
-
-            {/* SVG Sparkline / Bar Chart */}
-            <div className="h-10 flex items-end gap-1 px-1 py-1 bg-black/60 rounded-lg overflow-x-auto">
-              {energyAnalysis.points.map((pt, idx) => {
-                const heightPct = Math.max(15, Math.min(100, (pt.score / 10) * 100));
-                return (
-                  <div
-                    key={`${pt.item.id}-${idx}`}
-                    className="flex-1 min-w-[12px] h-full flex flex-col justify-end items-center group relative cursor-pointer"
-                    onClick={() => setSelectedSetlistItemId(pt.item.id)}
-                  >
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full mb-1 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                      <div className="bg-black text-white text-[9px] font-mono py-1 px-2 rounded shadow-xl whitespace-nowrap border border-neutral-700">
-                        <p className="font-bold text-[#d1b375]">#{idx + 1} {pt.title}</p>
-                        <p className="text-[8.5px] text-neutral-300 flex items-center gap-1">
-                          <span>{pt.info.icon}</span> {pt.info.label} ({pt.score}/10)
-                        </p>
-                      </div>
-                    </div>
-
-                    <div
-                      className="w-full rounded-t transition-all group-hover:brightness-125"
-                      style={{
-                        height: `${heightPct}%`,
-                        backgroundColor: pt.info.hexColor,
-                        opacity: pt.isSong ? 1 : 0.4
-                      }}
-                    />
+              <div className="flex items-center gap-2">
+                {showEnergyMap && (
+                  <div className="hidden sm:flex items-center gap-2 text-[9px]">
+                    <span className="flex items-center gap-1 text-sky-400">🌙 Balada</span>
+                    <span className="flex items-center gap-1 text-emerald-400">🎵 Media</span>
+                    <span className="flex items-center gap-1 text-amber-400">🔥 Alta</span>
+                    <span className="flex items-center gap-1 text-rose-400">💣 Explosiva</span>
                   </div>
-                );
-              })}
+                )}
+                <button
+                  type="button"
+                  onClick={() => setShowEnergyMap((v) => !v)}
+                  className="p-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+                  title={showEnergyMap ? 'Ocultar el mapa de energía' : 'Mostrar el mapa de energía'}
+                >
+                  {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                </button>
+              </div>
             </div>
 
-            {/* Warnings & Suggestions */}
-            {energyAnalysis.warnings.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                {energyAnalysis.warnings.map((w, i) => (
-                  <span
-                    key={i}
-                    className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border ${
-                      w.type === 'warning'
-                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                        : w.type === 'success'
-                        ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                        : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
-                    }`}
-                  >
-                    <span>{w.icon}</span>
-                    <span>{w.message}</span>
-                  </span>
-                ))}
-              </div>
+            {showEnergyMap && (
+              <>
+                <div className="h-56 w-full bg-black/60 rounded-lg overflow-hidden">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart key={activeSetlist.id} data={chartData} margin={{ top: 14, right: 14, left: -18, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="energyStrokeGradient" x1="0" y1="0" x2="1" y2="0">
+                          {chartData.map((d, i) => (
+                            <stop
+                              key={d.id}
+                              offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
+                              stopColor={d.color}
+                            />
+                          ))}
+                        </linearGradient>
+                        <linearGradient id="energyFillGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#d1b375" stopOpacity={0.35} />
+                          <stop offset="95%" stopColor="#d1b375" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+
+                      <XAxis
+                        dataKey="idx"
+                        tickFormatter={(v: number) => `#${v + 1}`}
+                        stroke="#666666"
+                        fontSize={9}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis domain={yDomain} stroke="#666666" fontSize={9} tickLine={false} axisLine={false} width={22} />
+
+                      <RechartsTooltip
+                        cursor={{ stroke: '#666', strokeDasharray: '3 3' }}
+                        content={({ active, payload }: any) => {
+                          if (!active || !payload?.length) return null;
+                          const d = payload[0].payload;
+                          return (
+                            <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[180px]">
+                              <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
+                              <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
+                                <span>{d.icon}</span> {d.label} ({d.score}/20)
+                              </p>
+                              {d.variance > 0 && (
+                                <p className="text-sky-300 mt-0.5">
+                                  🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
+                                </p>
+                              )}
+                            </div>
+                          );
+                        }}
+                      />
+
+                      {/* Banda de dinámica interna detectada del audio (temas "anchos" varían mucho por dentro) */}
+                      <Area
+                        type="monotone"
+                        dataKey="range"
+                        stroke="none"
+                        fill="#d1b375"
+                        fillOpacity={0.12}
+                        isAnimationActive
+                        animationDuration={900}
+                        animationEasing="ease-out"
+                      />
+
+                      {/* Curva principal de energía tema a tema */}
+                      <Area
+                        type="monotone"
+                        dataKey="score"
+                        stroke="url(#energyStrokeGradient)"
+                        strokeWidth={3}
+                        fill="url(#energyFillGradient)"
+                        fillOpacity={1}
+                        isAnimationActive
+                        animationDuration={900}
+                        animationEasing="ease-out"
+                        activeDot={{ r: 7, strokeWidth: 2, stroke: '#ffffff' }}
+                        dot={(dotProps: any) => {
+                          const { cx, cy, payload, index } = dotProps;
+                          if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
+                          const isSelected = payload.id === selectedSetlistItemId;
+                          return (
+                            <circle
+                              key={`dot-${payload.id}`}
+                              cx={cx}
+                              cy={cy}
+                              r={isSelected ? 7 : 4.5}
+                              fill={payload.color}
+                              stroke={isSelected ? '#ffffff' : '#0a0a0a'}
+                              strokeWidth={isSelected ? 2 : 1.5}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => setSelectedSetlistItemId(payload.id)}
+                            />
+                          );
+                        }}
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Warnings & Suggestions */}
+                {energyAnalysis.warnings.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {energyAnalysis.warnings.map((w, i) => (
+                      <span
+                        key={i}
+                        className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border ${
+                          w.type === 'warning'
+                            ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                            : w.type === 'success'
+                            ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                            : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+                        }`}
+                      >
+                        <span>{w.icon}</span>
+                        <span>{w.message}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

@@ -4,6 +4,7 @@ import {
   ventanasConMasEnergia,
   resumirEnergiaParaPrompt,
   analizarEnergiaAudio,
+  medirVariacionInterna,
   DB_SILENCIO,
   type PuntoEnergia,
 } from '../audioEnergy';
@@ -124,6 +125,32 @@ describe('resumirEnergiaParaPrompt', () => {
 
   it('sin tramos no mete ruido en el prompt', () => {
     expect(resumirEnergiaParaPrompt([])).toBe('');
+  });
+});
+
+describe('medirVariacionInterna', () => {
+  it('un tema plano (mismo volumen todo el rato) no tiene variación interna', () => {
+    const plana: PuntoEnergia[] = Array.from({ length: 30 }, (_, t) => ({ t, db: -20 }));
+    expect(medirVariacionInterna(plana)).toBe(0);
+  });
+
+  it('un tema con contraste real (baladea y luego explota) da variación alta', () => {
+    const contraste: PuntoEnergia[] = [];
+    for (let t = 0; t < 60; t++) contraste.push({ t, db: t % 20 < 10 ? -45 : -10 });
+    expect(medirVariacionInterna(contraste)).toBeGreaterThanOrEqual(6);
+  });
+
+  it('nunca pasa de 10 ni de 0, por muy extrema que sea la curva', () => {
+    const extrema: PuntoEnergia[] = Array.from({ length: 40 }, (_, t) => ({ t, db: t % 2 === 0 ? DB_SILENCIO : 0 }));
+    const v = medirVariacionInterna(extrema);
+    expect(v).toBeLessThanOrEqual(10);
+    expect(v).toBeGreaterThanOrEqual(0);
+  });
+
+  it('sin curva medible (audio no analizable) devuelve 0', () => {
+    expect(medirVariacionInterna([])).toBe(0);
+    expect(medirVariacionInterna(null as any)).toBe(0);
+    expect(medirVariacionInterna([{ t: 0, db: -20 }])).toBe(0);
   });
 });
 

@@ -4,7 +4,7 @@ export type SongEnergyCategory = 'balada' | 'media' | 'alta' | 'explosiva';
 
 export interface EnergyInfo {
   category: SongEnergyCategory;
-  score: number; // 1 to 10 scale
+  score: number; // 1 to 20 scale
   label: string;
   icon: string;
   hexColor: string;
@@ -21,6 +21,8 @@ export interface SetlistEnergyPoint {
   title: string;
   score: number;
   info: EnergyInfo;
+  /** 0-10: cuánto varía la energía dentro del propio tema (detectado automáticamente del audio). 0 para eventos/bis. */
+  variance: number;
 }
 
 export type EnergyProfileType = 'in_crescendo' | 'equilibrada' | 'traca_directa' | 'acustico_calma' | 'irregular';
@@ -48,7 +50,7 @@ export interface SetlistEnergyAnalysis {
   * Devuelve la información de energía para un valor numérico o una canción dada.
   */
 export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
-  let score = 6; // Default to mid-tempo if undefined
+  let score = 12; // Default to mid-tempo if undefined
 
   if (typeof scoreOrSong === 'number') {
     score = scoreOrSong;
@@ -58,13 +60,13 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     } else {
       // Intento de deducir energía según BPM si no se especificó
       const bpm = scoreOrSong.bpm || 120;
-      if (bpm >= 140) score = 9;
-      else if (bpm <= 95) score = 3;
-      else score = 6;
+      if (bpm >= 140) score = 18;
+      else if (bpm <= 95) score = 6;
+      else score = 12;
     }
   }
 
-  if (score <= 4) {
+  if (score <= 8) {
     return {
       category: 'balada',
       score: Math.max(1, score),
@@ -77,7 +79,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     };
   }
 
-  if (score <= 7) {
+  if (score <= 14) {
     return {
       category: 'media',
       score,
@@ -90,7 +92,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     };
   }
 
-  if (score <= 9) {
+  if (score <= 18) {
     return {
       category: 'alta',
       score,
@@ -105,7 +107,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
 
   return {
     category: 'explosiva',
-    score: Math.min(10, score),
+    score: Math.min(20, score),
     label: 'Explosiva / Clímax',
     icon: '💣',
     hexColor: '#f43f5e',
@@ -141,6 +143,10 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       else if (info.category === 'alta') highEnergyCount++;
       else if (info.category === 'explosiva') explosiveCount++;
 
+      const variance = typeof song?.energiaVariacion === 'number' && Number.isFinite(song.energiaVariacion)
+        ? Math.max(0, Math.min(10, song.energiaVariacion))
+        : 0;
+
       points.push({
         index,
         item,
@@ -148,18 +154,20 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
         isSong: true,
         title: song?.titulo || 'Canción',
         score: info.score,
-        info
+        info,
+        variance
       });
     } else {
       // Evento o bloque del show
       const isBis = item.tipoItem === 'bis';
-      const score = isBis ? 10 : 2;
+      const score = isBis ? 20 : 4;
       points.push({
         index,
         item,
         isSong: false,
         title: item.tituloCustom || item.tipoItem || 'Evento',
         score,
+        variance: 0,
         info: {
           category: isBis ? 'explosiva' : 'balada',
           score,
@@ -199,7 +207,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       const firstHalfAvg = songPoints.slice(0, Math.floor(songPoints.length / 2)).reduce((a, b) => a + b.score, 0) / Math.floor(songPoints.length / 2);
       const secondHalfAvg = songPoints.slice(Math.floor(songPoints.length / 2)).reduce((a, b) => a + b.score, 0) / Math.ceil(songPoints.length / 2);
 
-      if (secondHalfAvg - firstHalfAvg >= 1.5) {
+      if (secondHalfAvg - firstHalfAvg >= 3) {
         profileType = 'in_crescendo';
         profileLabel = '🔥 Show In Crescendo';
         profileIcon = '🔥';
@@ -236,13 +244,13 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     const songPoints = points.filter(p => p.isSong);
     if (songPoints.length >= 2) {
       const initialAvg = (songPoints[0].score + songPoints[1].score) / 2;
-      if (initialAvg <= 4) {
+      if (initialAvg <= 8) {
         warnings.push({
           type: 'warning',
           icon: '💤',
           message: 'Arranque de show suave: los 2 primeros temas son de energía baja.'
         });
-      } else if (initialAvg >= 8) {
+      } else if (initialAvg >= 16) {
         warnings.push({
           type: 'success',
           icon: '🔥',
@@ -254,13 +262,13 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     // 3. Verificar cierre del show (último tema)
     const lastSong = songPoints[songPoints.length - 1];
     if (lastSong) {
-      if (lastSong.score >= 8) {
+      if (lastSong.score >= 16) {
         warnings.push({
           type: 'success',
           icon: '💣',
           message: `Cierre en alto: "${lastSong.title}" remata el show en punto máximo.`
         });
-      } else if (lastSong.score <= 4 && songPoints.length > 2) {
+      } else if (lastSong.score <= 8 && songPoints.length > 2) {
         warnings.push({
           type: 'tip',
           icon: '💡',

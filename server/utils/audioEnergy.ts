@@ -120,6 +120,30 @@ export function ventanasConMasEnergia(
   return elegidas.sort((a, b) => a.start - b.start);
 }
 
+/**
+ * Cuánto varía la energía DENTRO de un único tema (partes lentas y rápidas del mismo tema),
+ * en vez de comparar entre temas distintos como hace `ventanasConMasEnergia`.
+ *
+ * Se normaliza igual que ahí (0-100 relativo al propio tema, nunca dB absolutos) y se mide
+ * la desviación típica de esa serie: un tema plano da ~0, uno con contrastes reales de
+ * verdad (una balada que revienta en el estribillo) da varios puntos sobre 10.
+ */
+export function medirVariacionInterna(curva: PuntoEnergia[]): number {
+  if (!Array.isArray(curva) || curva.length < 2) return 0;
+
+  const dbs = curva.map((c) => c.db);
+  const min = Math.min(...dbs);
+  const max = Math.max(...dbs);
+  const rango = max - min;
+  const normalizados = rango < 0.5 ? dbs.map(() => 50) : dbs.map((d) => ((d - min) / rango) * 100);
+
+  const media = normalizados.reduce((a, b) => a + b, 0) / normalizados.length;
+  const varianza = normalizados.reduce((a, b) => a + (b - media) ** 2, 0) / normalizados.length;
+  const stdDev = Math.sqrt(varianza);
+
+  return Math.max(0, Math.min(10, stdDev / 5));
+}
+
 function mmss(segundos: number): string {
   const s = Math.max(0, Math.floor(segundos));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;

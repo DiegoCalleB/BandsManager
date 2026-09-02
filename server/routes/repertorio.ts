@@ -10,7 +10,8 @@ import {
   dbDeleteSong,
   dbGetSetlists,
   dbUpsertSetlist,
-  dbDeleteSetlist
+  dbDeleteSetlist,
+  analizarYGuardarDinamicaCancion
 } from "../db.js";
 
 import { getTargetBandId } from "../utils/bandAccess.js";
@@ -65,6 +66,27 @@ router.put("/songs/:id", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error updating song:", err);
     res.status(500).json({ error: "Error al actualizar la canción." });
+  }
+});
+
+// POST analizar dinámica interna del audio de un tema (partes lentas/rápidas dentro del mismo
+// tema). Normalmente esto se dispara solo al guardar la canción con audio nuevo (ver
+// dbUpsertSong); esta ruta es la repesca manual para canciones antiguas ya subidas antes de
+// que existiera esta feature, usada por el botón "Analizar dinámica de todo el repertorio".
+router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = getTargetBandId(req);
+    const audioUrl = req.body?.audioUrl;
+    if (!audioUrl) {
+      return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
+    }
+
+    const { variacion, audioAnalizable } = await analizarYGuardarDinamicaCancion(id, audioUrl, userBandId);
+    res.json({ success: true, variacionDetectada: variacion, audioAnalizable });
+  } catch (err: any) {
+    console.error("Error analizando dinámica interna de la canción:", err);
+    res.status(500).json({ error: "No se pudo analizar la dinámica del audio." });
   }
 });
 
