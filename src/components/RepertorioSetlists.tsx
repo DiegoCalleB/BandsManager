@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { 
  Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
- Sparkles, Sliders, CheckCircle2, ChevronRight, HelpCircle, Eye, Headphones,
+ Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
@@ -359,6 +359,7 @@ export default function RepertorioSetlists({
  // Navigation tab inside module
  const [showPdfPreview, setShowPdfPreview] = useState(false);
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
+ const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
 
  // Songs Repertoire State
  const [songs, setSongs] = useState<Song[]>(() => {
@@ -1717,163 +1718,187 @@ export default function RepertorioSetlists({
  };
 
  return (
- <div className="space-y-5">
- {/* MODULE HEADER BAR */}
- <div className={`p-4 sm:p-5 rounded-2xl flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 ${colors.card} `}>
+  <div className="space-y-3">
+  {/* MODULE HEADER BAR */}
+  <div className={`p-3 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
        {/* HEADER / TITULO PRINCIPAL */}
-      <div className="mb-4 xl:mb-0 shrink-0">
-        <h1 className={`text-4xl md:text-5xl font-display font-bold tracking-tight mb-2 ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
-        <p className={`text-sm font-mono uppercase tracking-widest ${isStitchLight ? 'text-slate-500' : 'text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists y Documentos')}</p>
+      <div className="shrink-0 flex items-center gap-3">
+        <h1 className={`text-xl sm:text-2xl font-display font-black tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
+        <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
       </div>
 
- {/* NAVIGATION SUBTABS */}
- <div className="flex items-center gap-2 p-1 bg-[#121212] border border-white/5 rounded-full w-full xl:w-auto overflow-x-auto shadow-lg">
- <button
- id="tab-setlists"
- onClick={() => setActiveTab('setlists')}
- className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'setlists'
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
- }`}
- >
- <Layers className="w-4 h-4" />
- <span>Setlists & Directos ({setlists.length})</span>
- </button>
+  {/* NAVIGATION SUBTABS */}
+  <div className="flex items-center gap-1.5 p-1 bg-[#121212] border border-white/5 rounded-full w-full md:w-auto overflow-x-auto shadow-lg">
+  <button
+  id="tab-setlists"
+  onClick={() => setActiveTab('setlists')}
+  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+  activeTab === 'setlists'
+  ? 'bg-[#1db954] text-black shadow-md'
+  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
+  }`}
+  >
+  <Layers className="w-3.5 h-3.5" />
+  <span>Setlists ({setlists.length})</span>
+  </button>
 
- <button
- id="tab-catalogo"
- onClick={() => setActiveTab('catalogo')}
- className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'catalogo'
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
- }`}
- >
- <Music className="w-4 h-4" />
- <span>Catálogo ({songs.length})</span>
- </button>
+  <button
+  id="tab-catalogo"
+  onClick={() => setActiveTab('catalogo')}
+  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+  activeTab === 'catalogo'
+  ? 'bg-[#1db954] text-black shadow-md'
+  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
+  }`}
+  >
+  <Music className="w-3.5 h-3.5" />
+  <span>Catálogo ({songs.length})</span>
+  </button>
 
- <button
- id="tab-discografia"
- onClick={() => setActiveTab('discografia')}
- className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'discografia'
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
- }`}
- >
- <Disc3 className="w-4 h-4" />
- <span>Discografía ({albumsList.filter(a => a !== "todos").length})</span>
- </button>
+  <button
+  id="tab-discografia"
+  onClick={() => setActiveTab('discografia')}
+  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+  activeTab === 'discografia'
+  ? 'bg-[#1db954] text-black shadow-md'
+  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
+  }`}
+  >
+  <Disc3 className="w-3.5 h-3.5" />
+  <span>Discografía ({albumsList.filter(a => a !== "todos").length})</span>
+  </button>
 
- <button
- id="tab-escenario"
- onClick={() => setActiveTab('escenario')}
- className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
- activeTab === 'escenario'
- ? 'bg-[#1db954] text-black shadow-md'
- : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
- }`}
- >
- <Eye className="w-4 h-4" />
- <span>Modo Escenario ({activeSetlist ? activeSetlist.items.length : 0})</span>
- </button>
- </div>
-</div>
-
- {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
- {activeTab === 'setlists' && (
- <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
- {/* SIDEBAR: LIST OF SAVED SETLISTS */}
- <div className={`lg:col-span-4 p-4 rounded-2xl space-y-4 ${colors.card} `}>
- <div className="flex justify-between items-center">
- <h3 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-2">
- <Layers className="w-4 h-4 text-[#d1b375]/80" />
- <span>Repertorios Guardados</span>
- </h3>
- <button
- id="btn-create-setlist"
- onClick={handleCreateSetlist}
- className={`px-2 py-1 rounded-lg text-[10px] font-mono font-medium flex items-center gap-1 cursor-pointer transition-all ${
- isStitchLight ? 'bg-slate-900 text-white hover:bg-slate-800' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100'
- }`}
- title="Crear un nuevo setlist"
- >
- <Plus className="w-3.5 h-3.5" />
- <span>Nuevo</span>
- </button>
+  <button
+  id="tab-escenario"
+  onClick={() => setActiveTab('escenario')}
+  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
+  activeTab === 'escenario'
+  ? 'bg-[#1db954] text-black shadow-md'
+  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
+  }`}
+  >
+  <Eye className="w-3.5 h-3.5" />
+  <span>Modo Escenario ({activeSetlist ? activeSetlist.items.length : 0})</span>
+  </button>
+  </div>
  </div>
 
- <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
- {setlists.map(st => {
- const isSelected = st.id === activeSetlistId;
- const songItemsCount = st.items.filter(i => i.tipoItem === 'cancion').length;
- 
- return (
- <div
- key={st.id}
- onClick={() => setActiveSetlistId(st.id)}
- className={`p-3 rounded-xl transition-all cursor-pointer ${
- isSelected 
- ? isStitchLight 
- ? 'bg-sky-500/15 ring-1 ring-indigo-500/30' 
- : 'bg-[#d1b375]/15 ring-1 ring-[#f2ca50]/30'
- : isStitchLight
- ? 'bg-white hover:border-slate-300'
- : 'bg-[#131313] hover:border-neutral-700'
- }`}
- >
- <div className="flex justify-between items-start gap-2">
- <h4 className={`text-[10px] font-mono font-bold ${isSelected ? (isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]') : colors.text}`}>
- {st.nombre}
- </h4>
- <span className={`text-[10px] font-mono uppercase px-2 py-1 rounded font-bold shrink-0 ${
- st.tipoFormato === 'festival' 
- ? 'bg-[#d1b375]/15 text-[#d1b375]'
- : st.tipoFormato === 'sala_larga'
- ? 'bg-sky-500/15 text-sky-400'
- : (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]')
- }`}>
- {st.tipoFormato}
- </span>
- </div>
+  {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
+  {activeTab === 'setlists' && (
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+  {/* SIDEBAR: LIST OF SAVED SETLISTS */}
+  {!isSidebarCollapsed ? (
+  <div className={`lg:col-span-3 p-3 rounded-2xl space-y-3 ${colors.card} `}>
+  <div className="flex justify-between items-center">
+  <h3 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
+  <Layers className="w-3.5 h-3.5 text-[#d1b375]/80" />
+  <span>Setlists Guardados</span>
+  </h3>
+  <div className="flex items-center gap-1">
+  <button
+  id="btn-create-setlist"
+  onClick={handleCreateSetlist}
+  className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
+  isStitchLight ? 'bg-slate-900 text-white hover:bg-slate-800' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100'
+  }`}
+  title="Crear un nuevo setlist"
+  >
+  <Plus className="w-3 h-3" />
+  <span>Nuevo</span>
+  </button>
+  <button
+  onClick={() => setIsSidebarCollapsed(true)}
+  className="p-1 text-neutral-400 hover:text-white rounded hover:bg-neutral-800 cursor-pointer"
+  title="Colapsar panel lateral para ampliar editor"
+  >
+  <ChevronLeft className="w-4 h-4" />
+  </button>
+  </div>
+  </div>
 
- <p className="text-[10px] text-neutral-400 line-clamp-1 mt-1 font-sans">
- {st.descripcion || 'Sin descripción'}
- </p>
+  <div className="space-y-1.5 max-h-[calc(85vh-180px)] min-h-[450px] overflow-y-auto pr-1">
+  {setlists.map(st => {
+  const isSelected = st.id === activeSetlistId;
+  const songItemsCount = st.items.filter(i => i.tipoItem === 'cancion').length;
+  
+  return (
+  <div
+  key={st.id}
+  onClick={() => setActiveSetlistId(st.id)}
+  className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+  isSelected 
+  ? isStitchLight 
+  ? 'bg-sky-500/15 ring-1 ring-indigo-500/30' 
+  : 'bg-[#d1b375]/15 ring-1 ring-[#f2ca50]/30'
+  : isStitchLight
+  ? 'bg-white hover:border-slate-300'
+  : 'bg-[#131313] hover:border-neutral-700'
+  }`}
+  >
+  <div className="flex justify-between items-start gap-2">
+  <h4 className={`text-[10px] font-mono font-bold truncate ${isSelected ? (isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]') : colors.text}`}>
+  {st.nombre}
+  </h4>
+  <span className={`text-[9px] font-mono uppercase px-1.5 py-0.5 rounded font-bold shrink-0 ${
+  st.tipoFormato === 'festival' 
+  ? 'bg-[#d1b375]/15 text-[#d1b375]'
+  : st.tipoFormato === 'sala_larga'
+  ? 'bg-sky-500/15 text-sky-400'
+  : (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]')
+  }`}>
+  {st.tipoFormato}
+  </span>
+  </div>
 
- <div className="flex items-center justify-between mt-2 pt-2 text-[10px] font-mono text-neutral-400">
- <span className="flex items-center gap-1">
- <Music className="w-3 h-3 text-[#d1b375]" />
- <span>{songItemsCount} temas</span>
- </span>
+  <p className="text-[9px] text-neutral-400 line-clamp-1 mt-0.5 font-sans">
+  {st.descripcion || 'Sin descripción'}
+  </p>
 
- <div className="flex items-center gap-1.5">
- <button
- onClick={(e) => { e.stopPropagation(); handleDuplicateSetlist(st); }}
- className="p-1 text-neutral-400 hover:text-white rounded hover:bg-neutral-800"
- title="Duplicar Setlist"
- >
- <Copy className="w-3 h-3" />
- </button>
- <button
- onClick={(e) => { e.stopPropagation(); handleDeleteSetlist(st.id); }}
- className="p-1 text-neutral-400 hover:text-rose-400 rounded hover:bg-neutral-800"
- title="Eliminar Setlist"
- >
- <Trash2 className="w-3 h-3" />
- </button>
- </div>
- </div>
- </div>
- );
- })}
- </div>
- </div>
+  <div className="flex items-center justify-between mt-1.5 pt-1 border-t border-white/5 text-[9px] font-mono text-neutral-400">
+  <span className="flex items-center gap-1">
+  <Music className="w-3 h-3 text-[#d1b375]" />
+  <span>{songItemsCount} temas</span>
+  </span>
 
- {/* MAIN EDITOR FOR ACTIVE SETLIST */}
- <div className={`lg:col-span-8 p-4 sm:p-5 rounded-2xl space-y-4 ${colors.card} `}>
+  <div className="flex items-center gap-1">
+  <button
+  onClick={(e) => { e.stopPropagation(); handleDuplicateSetlist(st); }}
+  className="p-0.5 text-neutral-400 hover:text-white rounded hover:bg-neutral-800"
+  title="Duplicar Setlist"
+  >
+  <Copy className="w-3 h-3" />
+  </button>
+  <button
+  onClick={(e) => { e.stopPropagation(); handleDeleteSetlist(st.id); }}
+  className="p-0.5 text-neutral-400 hover:text-rose-400 rounded hover:bg-neutral-800"
+  title="Eliminar Setlist"
+  >
+  <Trash2 className="w-3 h-3" />
+  </button>
+  </div>
+  </div>
+  </div>
+  );
+  })}
+  </div>
+  </div>
+  ) : (
+  <div className="lg:col-span-1 flex flex-col items-center py-3 bg-[#131313] border border-white/5 rounded-2xl shrink-0">
+    <button
+      onClick={() => setIsSidebarCollapsed(false)}
+      className="p-2 text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-xl cursor-pointer flex flex-col items-center gap-2"
+      title="Mostrar lista de setlists guardados"
+    >
+      <ChevronRight className="w-5 h-5 text-[#d1b375]" />
+      <span className="writing-vertical text-[10px] font-mono font-bold tracking-wider text-neutral-400 uppercase">
+        Setlists ({setlists.length})
+      </span>
+    </button>
+  </div>
+  )}
+
+  {/* MAIN EDITOR FOR ACTIVE SETLIST */}
+  <div className={`${isSidebarCollapsed ? 'lg:col-span-11' : 'lg:col-span-9'} p-3.5 sm:p-4 rounded-2xl space-y-3 ${colors.card} `}>
  {activeSetlist ? (
  <>
  {/* ACTIVE SETLIST HEADER & CONTROLS */}
@@ -1931,216 +1956,211 @@ export default function RepertorioSetlists({
  className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
  isStitchLight 
  ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
- : 'bg-neutral-900 text-[#d1b375] hover:bg-neutral-800'
+ : 'bg-neutral-900 text-[#d1b375]'
  }`}
  title="Exportar hoja de escenario"
  >
  <Printer className="w-3.5 h-3.5" />
  <span>Imprimir / PDF</span>
  </button>
- </div>
- </div>
+  </div>
+  </div>
 
- {/* LIVE METRICS BAR */}
- <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 p-3 rounded-xl bg-black/30">
- <div>
- <span className="text-[10px] font-mono text-neutral-400 uppercase block">Canciones</span>
- <span className="text-sm font-bold font-mono text-white">{activeSetlistMetrics.songCount} temas</span>
- </div>
- <div>
- <span className="text-[10px] font-mono text-neutral-400 uppercase block">Eventos Show</span>
- <span className="text-sm font-bold font-mono text-sky-400">{activeSetlistMetrics.eventCount} interludios</span>
- </div>
- <div>
- <span className="text-[10px] font-mono text-neutral-400 uppercase block">Bloques</span>
- <span className="text-sm font-bold font-mono text-[#f2ca50]">{activeSetlistMetrics.blockCount} secciones</span>
- </div>
- <div>
- <span className="text-[10px] font-mono text-neutral-400 uppercase block">Duración Total</span>
- <span className="text-sm font-bold font-mono text-[#d1b375]">{activeSetlistMetrics.formattedTime}</span>
- </div>
- <div>
- <span className="text-[10px] font-mono text-neutral-400 uppercase block">BPM Promedio</span>
- <span className="text-sm font-bold font-mono text-[#10b981]">{activeSetlistMetrics.avgBpm} BPM</span>
- </div>
- </div>
+  {/* COMPACT LIVE METRICS BAR */}
+  <div className="flex flex-wrap items-center gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
+  <span className="px-2.5 py-0.5 rounded-lg bg-white/10 text-white font-bold flex items-center gap-1.5">
+  🎵 <strong>{activeSetlistMetrics.songCount}</strong> temas
+  </span>
+  <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-[#d1b375] font-bold flex items-center gap-1.5 border border-amber-500/20">
+  ⏱️ <strong>{activeSetlistMetrics.formattedTime}</strong>
+  </span>
+  <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-[#10b981] font-bold flex items-center gap-1.5 border border-emerald-500/20">
+  ⚡ <strong>{activeSetlistMetrics.avgBpm} BPM avg</strong>
+  </span>
+  <span className="px-2.5 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold flex items-center gap-1.5 border border-sky-500/20">
+  💬 <strong>{activeSetlistMetrics.eventCount}</strong> interludios
+  </span>
+  <span className="px-2.5 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold flex items-center gap-1.5 border border-yellow-500/20">
+  ⚡ <strong>{activeSetlistMetrics.blockCount}</strong> bloques
+  </span>
+  </div>
 
- {/* ADD ITEMS ACTION BAR */}
- <div className="space-y-2 pt-1">
- {/* Selected Song / Item Insertion Indicator */}
- {selectedSetlistItemId && (
-   <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-mono animate-fadeIn">
-     <div className="flex items-center gap-2 min-w-0">
-       <span className="shrink-0 text-amber-400 font-bold">📌 Modo Inserción Activo:</span>
-       <span className="truncate font-semibold text-white">
-         Los nuevos temas se insertarán justo <u>debajo</u> de: <strong>{
-           (() => {
-             const sel = activeSetlist.items.find(x => x.id === selectedSetlistItemId);
-             if (!sel) return 'elemento seleccionado';
-             if (sel.tipoItem === 'cancion' && sel.songId) {
-               return songs.find(s => s.id === sel.songId)?.titulo || 'Canción seleccionada';
-             }
-             return sel.tituloCustom || 'Evento seleccionado';
-           })()
-         }</strong>
-       </span>
-     </div>
-     <button
-       onClick={() => setSelectedSetlistItemId(null)}
-       className="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-[10px] font-mono whitespace-nowrap cursor-pointer transition-colors"
-       title="Deseleccionar e insertar al final de la lista"
-     >
-       ✕ Deseleccionar (insertar al final)
-     </button>
-   </div>
- )}
+  {/* ADD ITEMS ACTION BAR */}
+  <div className="space-y-1.5 pt-0.5">
+  {/* Selected Song / Item Insertion Indicator */}
+  {selectedSetlistItemId && (
+    <div className="flex items-center justify-between gap-2 px-3 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-mono animate-fadeIn">
+      <div className="flex items-center gap-2 min-w-0">
+        <span className="shrink-0 text-amber-400 font-bold">📌 Modo Inserción Activo:</span>
+        <span className="truncate font-semibold text-white">
+          Insertar debajo de: <strong>{
+            (() => {
+              const sel = activeSetlist.items.find(x => x.id === selectedSetlistItemId);
+              if (!sel) return 'elemento seleccionado';
+              if (sel.tipoItem === 'cancion' && sel.songId) {
+                return songs.find(s => s.id === sel.songId)?.titulo || 'Canción seleccionada';
+              }
+              return sel.tituloCustom || 'Evento seleccionado';
+            })()
+          }</strong>
+        </span>
+      </div>
+      <button
+        onClick={() => setSelectedSetlistItemId(null)}
+        className="px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-[9px] font-mono whitespace-nowrap cursor-pointer transition-colors"
+        title="Deseleccionar e insertar al final de la lista"
+      >
+        ✕ Deseleccionar
+      </button>
+    </div>
+  )}
 
- <div className="flex items-center gap-2 overflow-x-auto pb-1">
- <span className="text-[10px] font-mono text-neutral-400 uppercase whitespace-nowrap font-bold">Añadir al Repertorio:</span>
- 
- {/* Select song from catalog */}
- <select
- onChange={(e) => {
- if (e.target.value) {
- handleAddItemToSetlist(e.target.value, 'cancion');
- e.target.value = '';
- }
- }}
- className={`text-[10px] font-mono py-1.5 px-3 rounded-lg focus:outline-none cursor-pointer border border-neutral-800 font-bold ${
- isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-[#d1b375]'
- }`}
- >
- <option value="">+ Seleccionar Tema de Discografía...</option>
- {sortedSongsByAlbumAndOrder.map((s, idx) => {
-   const albumLabel = s.albumDisco || s.album || 'Single';
-   return (
-     <option key={`${s.id}-${idx}`} value={s.id}>
-       [{albumLabel}] {s.titulo} ({s.tonalidad ? `${s.tonalidad} • ` : ''}{s.duracion || '0:00'})
-     </option>
-   );
- })}
- </select>
+  <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
+  <span className="text-[9px] font-mono text-neutral-400 uppercase whitespace-nowrap font-bold">Añadir:</span>
+  
+  {/* Select song from catalog */}
+  <select
+  onChange={(e) => {
+  if (e.target.value) {
+  handleAddItemToSetlist(e.target.value, 'cancion');
+  e.target.value = '';
+  }
+  }}
+  className={`text-[10px] font-mono py-1 px-2.5 rounded-lg focus:outline-none cursor-pointer border border-neutral-800 font-bold ${
+  isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-[#d1b375]'
+  }`}
+  >
+  <option value="">+ 1 Tema Individual...</option>
+  {sortedSongsByAlbumAndOrder.map((s, idx) => {
+    const albumLabel = s.albumDisco || s.album || 'Single';
+    return (
+      <option key={`${s.id}-${idx}`} value={s.id}>
+        [{albumLabel}] {s.titulo} ({s.tonalidad ? `${s.tonalidad} • ` : ''}{s.duracion || '0:00'})
+      </option>
+    );
+  })}
+  </select>
 
- <button
- onClick={() => setIsAddSongsModalOpen(true)}
- className="px-2.5 py-1.5 text-[10px] font-mono rounded-lg bg-[#1db954]/20 text-[#1db954] border border-[#1db954]/40 hover:bg-[#1db954]/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
- title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
- >
- <ListPlus className="w-3.5 h-3.5" />
- <span>Añadir Varias Canciones</span>
- </button>
+  <button
+  onClick={() => setIsAddSongsModalOpen(true)}
+  className="px-2.5 py-1 text-[10px] font-mono rounded-lg bg-[#1db954]/20 text-[#1db954] border border-[#1db954]/40 hover:bg-[#1db954]/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
+  title="Seleccionar y añadir varias canciones del catálogo de una sola vez"
+  >
+  <ListPlus className="w-3.5 h-3.5" />
+  <span>Añadir Varios Temas</span>
+  </button>
 
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'bloque_header', '⚡ Bloque Nuevo')}
- className="px-2.5 py-1.5 text-[10px] font-mono rounded-lg bg-[#d1b375]/20 text-[#d1b375] border border-[#f2ca50]/40 hover:bg-[#d1b375]/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
- >
- <span>⚡</span>
- <span>+ Encabezado de Bloque</span>
- </button>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'bloque_header', '⚡ Bloque Nuevo')}
+  className="px-2.5 py-1 text-[10px] font-mono rounded-lg bg-[#d1b375]/20 text-[#d1b375] border border-[#f2ca50]/40 hover:bg-[#d1b375]/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
+  >
+  <span>⚡</span>
+  <span>+ Bloque</span>
+  </button>
 
- <button
- onClick={() => { setEditingShowItem(null); setShowShowItemModal(true); }}
- className="px-2.5 py-1.5 text-[10px] font-mono rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 hover:bg-sky-500/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
- >
- <Zap className="w-3 h-3 text-sky-400" />
- <span>+ Personalizar Evento...</span>
- </button>
- </div>
+  <button
+  onClick={() => { setEditingShowItem(null); setShowShowItemModal(true); }}
+  className="px-2.5 py-1 text-[10px] font-mono rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30 hover:bg-sky-500/30 whitespace-nowrap cursor-pointer font-bold flex items-center gap-1"
+  >
+  <Zap className="w-3 h-3 text-sky-400" />
+  <span>+ Evento...</span>
+  </button>
+  </div>
 
- {/* QUICK SHOW PRESET CHIPS */}
- <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] font-mono">
- <span className="text-neutral-500 text-[9px] uppercase whitespace-nowrap">Accesos Rápidos:</span>
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'presentacion')}
- className="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer"
- >
- 🎤 Presentación Banda (2m)
- </button>
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'beatbox')}
- className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 whitespace-nowrap cursor-pointer"
- >
- 🥁 Beatbox Filgue (2m)
- </button>
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'intro_tema')}
- className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer"
- >
- 🗣️ Intro a Tema (1m)
- </button>
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'cambio_instrumento')}
- className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 whitespace-nowrap cursor-pointer"
- >
- 🔧 Cambio Guitarra (1m)
- </button>
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'chapa')}
- className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 whitespace-nowrap cursor-pointer"
- >
- 💬 Chapa / Público (2m)
- </button>
- <button
- onClick={() => handleAddItemToSetlist(undefined, 'bis')}
- className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 whitespace-nowrap cursor-pointer"
- >
- 💣 BIS Final (1m)
- </button>
- </div>
- </div>
+  {/* QUICK SHOW PRESET CHIPS */}
+  <div className="flex items-center gap-1 overflow-x-auto text-[9px] font-mono">
+  <span className="text-neutral-500 text-[8.5px] uppercase whitespace-nowrap">Rápidos:</span>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'presentacion')}
+  className="px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 whitespace-nowrap cursor-pointer"
+  >
+  🎤 Presentación
+  </button>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'beatbox')}
+  className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 whitespace-nowrap cursor-pointer"
+  >
+  🥁 Solo Filgue
+  </button>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'intro_tema')}
+  className="px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 whitespace-nowrap cursor-pointer"
+  >
+  🗣️ Intro Tema
+  </button>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'cambio_instrumento')}
+  className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 whitespace-nowrap cursor-pointer"
+  >
+  🔧 Cambio Instrumento
+  </button>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'chapa')}
+  className="px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 whitespace-nowrap cursor-pointer"
+  >
+  💬 Chapa / Público
+  </button>
+  <button
+  onClick={() => handleAddItemToSetlist(undefined, 'bis')}
+  className="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 whitespace-nowrap cursor-pointer"
+  >
+  💣 BIS Final
+  </button>
+  </div>
+  </div>
 
- {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
- <div className="space-y-2 max-h-[440px] overflow-y-auto pr-1">
- {activeSetlist.items.length === 0 ? (
- <div className="text-center py-10 border-dashed rounded-xl text-neutral-500 text-[10px] font-mono">
- No hay canciones en este repertorio. Usa el menú de arriba para añadir temas.
- </div>
- ) : (
- activeSetlist.items.map((it, index) => {
- const isSelected = selectedSetlistItemId === it.id;
- const isDragging = draggedItemIndex === index;
- const isDragOver = dragOverItemIndex === index;
+  {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
+  <div className="space-y-1.5 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
+  {activeSetlist.items.length === 0 ? (
+  <div className="text-center py-10 border-dashed rounded-xl text-neutral-500 text-[10px] font-mono">
+  No hay canciones en este repertorio. Usa el menú de arriba para añadir temas.
+  </div>
+  ) : (
+  activeSetlist.items.map((it, index) => {
+  const isSelected = selectedSetlistItemId === it.id;
+  const isDragging = draggedItemIndex === index;
+  const isDragOver = dragOverItemIndex === index;
 
- if (it.tipoItem === 'cancion' && it.songId) {
- const song = songs.find(s => s.id === it.songId);
- if (!song) return null;
+  if (it.tipoItem === 'cancion' && it.songId) {
+  const song = songs.find(s => s.id === it.songId);
+  if (!song) return null;
 
- // Check if this song has member notes
- const memberNotesCount = song.notasMiembros
-   ? Object.values(song.notasMiembros).filter(v => typeof v === 'string' && v.trim().length > 0).length
-   : 0;
+  // Check if this song has member notes
+  const memberNotesCount = song.notasMiembros
+    ? Object.values(song.notasMiembros).filter(v => typeof v === 'string' && v.trim().length > 0).length
+    : 0;
 
- return (
- <div
- key={it.id}
- draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
- onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
- onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
- onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
- onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
- onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
- className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
- isDragging ? 'opacity-40 scale-[0.98]' : ''
- } ${
- isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
- } ${
- isSelected 
-   ? 'border-amber-400 ring-2 ring-amber-400/30 bg-amber-500/10 shadow-md' 
-   : isStitchLight 
-     ? 'bg-white border-slate-200 hover:border-slate-300' 
-     : 'bg-neutral-900/80 border-neutral-800/80 hover:border-neutral-700'
- }`}
- >
- <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
- {/* Drag Handle */}
- <div 
-   className="cursor-grab active:cursor-grabbing p-1 text-neutral-500 hover:text-amber-400 transition-colors shrink-0" 
-   title="Arrastrar y soltar para reordenar"
-   onClick={(e) => e.stopPropagation()}
- >
-   <GripVertical className="w-4 h-4" />
- </div>
+  return (
+  <div
+  key={it.id}
+  draggable={true}
+  onDragStart={() => setDraggedItemIndex(index)}
+  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
+  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
+  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
+  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
+  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
+  className={`p-2 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
+  isDragging ? 'opacity-40 scale-[0.98]' : ''
+  } ${
+  isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
+  } ${
+  isSelected 
+    ? 'border-amber-400 ring-2 ring-amber-400/30 bg-amber-500/10 shadow-md' 
+    : isStitchLight 
+      ? 'bg-white border-slate-200 hover:border-slate-300' 
+      : 'bg-neutral-900/80 border-neutral-800/80 hover:border-neutral-700'
+  }`}
+  >
+  <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
+  {/* Drag Handle */}
+  <div 
+    className="cursor-grab active:cursor-grabbing p-1 text-neutral-500 hover:text-amber-400 transition-colors shrink-0" 
+    title="Arrastrar y soltar para reordenar"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <GripVertical className="w-4 h-4" />
+  </div>
 
  <span className="w-6 text-center font-mono font-bold text-[10px] text-[#d1b375] shrink-0">
  {index + 1}

@@ -26,7 +26,7 @@ export function AddSongsToSetlistModal({
   const [search, setSearch] = useState('');
   const [onlyFavoritos, setOnlyFavoritos] = useState(false);
   const [albumFilter, setAlbumFilter] = useState('todos');
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const existingSet = useMemo(() => new Set(existingSongIds), [existingSongIds]);
 
@@ -53,30 +53,37 @@ export function AddSongsToSetlistModal({
 
   const toggleSong = (id: string) => {
     setSelectedIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
+      if (prev.includes(id)) {
+        return prev.filter(x => x !== id);
+      } else {
+        return [...prev, id];
+      }
     });
   };
 
   const selectAllFiltered = () => {
     setSelectedIds(prev => {
-      const next = new Set(prev);
-      filteredSongs.forEach(s => next.add(s.id));
+      const next = [...prev];
+      filteredSongs.forEach(s => {
+        if (!next.includes(s.id)) {
+          next.push(s.id);
+        }
+      });
       return next;
     });
   };
 
-  const clearSelection = () => setSelectedIds(new Set());
+  const clearSelection = () => setSelectedIds([]);
+
+  const selectedSet = new Set(selectedIds);
 
   const selectedDurationSeconds = songs
-    .filter(s => selectedIds.has(s.id))
+    .filter(s => selectedSet.has(s.id))
     .reduce((acc, s) => acc + (s.duracionSegundos || 0), 0);
 
   const handleSubmit = () => {
-    if (selectedIds.size === 0) return;
-    onAddSongs(Array.from(selectedIds));
+    if (selectedIds.length === 0) return;
+    onAddSongs(selectedIds);
     onClose();
   };
 
@@ -144,7 +151,7 @@ export function AddSongsToSetlistModal({
                 Seleccionar todo lo filtrado ({filteredSongs.length})
               </button>
 
-              {selectedIds.size > 0 && (
+              {selectedIds.length > 0 && (
                 <button
                   type="button"
                   onClick={clearSelection}
@@ -163,7 +170,8 @@ export function AddSongsToSetlistModal({
               </div>
             ) : (
               filteredSongs.map(s => {
-                const isSelected = selectedIds.has(s.id);
+                const selectedIndex = selectedIds.indexOf(s.id);
+                const isSelected = selectedIndex !== -1;
                 const alreadyInSetlist = existingSet.has(s.id);
                 return (
                   <button
@@ -178,10 +186,10 @@ export function AddSongsToSetlistModal({
                         : 'bg-neutral-900 border-neutral-800 hover:bg-neutral-800'
                     }`}
                   >
-                    <div className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
-                      isSelected ? 'bg-[#1db954] border-[#1db954]' : 'border-neutral-600'
+                    <div className={`w-6 h-6 rounded-md border flex items-center justify-center shrink-0 font-mono text-xs font-black transition-all ${
+                      isSelected ? 'bg-[#1db954] border-[#1db954] text-black shadow-sm scale-105' : 'border-neutral-600 text-neutral-500'
                     }`}>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-black stroke-[3]" />}
+                      {isSelected ? (selectedIndex + 1) : null}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
@@ -190,6 +198,11 @@ export function AddSongsToSetlistModal({
                         {alreadyInSetlist && (
                           <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-neutral-700 text-neutral-300 shrink-0">
                             Ya en el repertorio
+                          </span>
+                        )}
+                        {isSelected && (
+                          <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#1db954]/20 text-[#1db954] font-extrabold shrink-0 ml-auto border border-[#1db954]/40">
+                            #{selectedIndex + 1} en orden
                           </span>
                         )}
                       </div>
@@ -205,8 +218,8 @@ export function AddSongsToSetlistModal({
 
           <div className="pt-3 mt-2 border-t border-white/10 flex items-center justify-between gap-3 shrink-0">
             <span className="text-[10px] font-mono text-neutral-400">
-              {selectedIds.size > 0
-                ? `${selectedIds.size} seleccionadas · ${formatSecondsToMmSs(selectedDurationSeconds)}`
+              {selectedIds.length > 0
+                ? `${selectedIds.length} seleccionadas (en orden 1..${selectedIds.length}) · ${formatSecondsToMmSs(selectedDurationSeconds)}`
                 : 'Ninguna canción seleccionada'}
             </span>
             <div className="flex gap-2">
@@ -219,12 +232,12 @@ export function AddSongsToSetlistModal({
               </button>
               <button
                 type="button"
-                disabled={selectedIds.size === 0}
+                disabled={selectedIds.length === 0}
                 onClick={handleSubmit}
                 className="px-5 py-2 rounded-xl text-xs font-bold bg-[#1db954] hover:bg-[#1ed760] disabled:opacity-40 disabled:cursor-not-allowed text-black transition-transform active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5"
               >
                 <ListPlus className="w-4 h-4 stroke-[3]" />
-                <span>Añadir {selectedIds.size > 0 ? selectedIds.size : ''} Canciones</span>
+                <span>Añadir {selectedIds.length > 0 ? `${selectedIds.length} Canciones en Orden` : 'Canciones'}</span>
               </button>
             </div>
           </div>

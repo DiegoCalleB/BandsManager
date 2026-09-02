@@ -995,11 +995,7 @@ export function PdfExportModal({
                           >
                             <span className="font-bold">{memberNote}</span>
                           </div>
-                        ) : (
-                          <div className="pl-9 text-[10pt] font-mono text-neutral-300 italic">
-                            (Sin anotación específica)
-                          </div>
-                        )}
+                        ) : null}
 
                         {/* Setlist cue notes */}
                         {showSetlistNotes && setlistNote && (
