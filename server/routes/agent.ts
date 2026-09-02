@@ -1,9 +1,9 @@
 import express from "express";
 import { getRegionForCity } from "../../src/constants/regions.js";
-import { prepararLeadsDescubiertos } from "../utils/scoutLeads.js";
+import { prepararLeadsDescubiertos, limpiarCampoContacto } from "../utils/scoutLeads.js";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES } from "../../src/db_seed.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand, getEpkConfigForBand, BAKANDEYA_BAND_ID } from "../state.js";
-import { dbUpsertLead, getSupabase } from "../db.js";
+import { dbUpsertLead, dbCheckDeletedLead, getSupabase } from "../db.js";
 import { getAiClient, generateContentWithFallback, buildPitchLinksFromEpkConfig } from "../ai.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { runEnviadorAgent, logAgentExecution } from "../services/agentEngine.js";
@@ -12,6 +12,7 @@ import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitc
 import { runLectorAgent } from "../services/lectorAgent.js";
 import { EmailAgentError } from "../services/emailAgentClient.js";
 import { autoEnrichLead } from "../auto_enrichment.js";
+import { normalizeVenueName } from "./leads/places.js";
 
 const router = express.Router();
 
@@ -296,70 +297,211 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
     }
   }
 
-  // --- EJECUCIÓN NATIVA SUPABASE PARA EL AGENTE SCOUT ---
+  // --- EJECUCIÓN NATIVA SUPABASE PARA EL AGENTE SCOUT DESCUBRIDOR ---
   if (normalizedAgentName === "scout" || normalizedAgentName === "scout_descubridor") {
     try {
       const sb = getSupabase();
 
       const targetLoc = params?.ciudad || params?.region || "Huelva";
       const tipo = params?.tipo || "sala";
+      const limit = Math.max(2, Math.min(10, Number(params?.limit) || 4));
       const ai = getAiClient();
-      let discoveredLeads: any[] = [];
+      const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
+      const rawCandidates: any[] = [];
 
-      if (ai) {
+      // 1. CARGA DE LEADS EXISTENTES EN SUPABASE PARA DEDUPLICACIÓN DE EXACTITUD
+      const { data: existingLeads } = await sb.from("leads").select("id, nombre_sala, place_id, website, telefono").eq("band_id", targetBandId);
+      const existingPlaceIds = new Set<string>();
+      const existingNames = new Set<string>();
+      const existingWebsites = new Set<string>();
+
+      (existingLeads || []).forEach((l: any) => {
+        if (l.place_id) existingPlaceIds.add(l.place_id);
+        if (l.nombre_sala) existingNames.add(normalizeVenueName(l.nombre_sala));
+        if (l.website) {
+          try {
+            const domain = new URL(l.website).hostname.replace(/^www\./, '');
+            if (domain) existingWebsites.add(domain);
+          } catch (_) {}
+        }
+      });
+
+      // 2. MOTOR 1: GOOGLE PLACES API (New) (para recintos físicos reales: salas, festivales, discotecas, ayuntamientos, teatros)
+      const isPhysicalPlace = ['sala', 'festival', 'ayuntamiento', 'discoteca', 'teatro', 'local'].includes(tipo.toLowerCase());
+      if (isPhysicalPlace && placesApiKey && placesApiKey.trim() !== "") {
         try {
-          const prompt = `Actúa como el Agente Scout Descubridor de salas y recintos musicales.
-Busca y extrae entre 2 y 4 salas de conciertos, teatros, festivales o recintos musicales que EXISTAN DE VERDAD en la ciudad/región: "${targetLoc}". Tipo: "${tipo}".
+          const placesQuery = tipo === 'ayuntamiento' 
+            ? `Ayuntamiento de ${targetLoc}, España`
+            : `${tipo} recintos salas de conciertos festejos en ${targetLoc}, España`;
 
-REGLAS INNEGOCIABLES:
-1. Solo recintos REALES que puedas identificar por su nombre propio. NO inventes ni completes con nombres verosímiles: un recinto que no existe hace que la banda escriba a una dirección falsa.
-2. NO inventes emails, teléfonos, webs ni cuentas de Instagram. Si no conoces el dato con certeza, devuelve la cadena vacía "" en ese campo. Un hueco vacío es correcto; un dato inventado no.
-3. Si no conoces ningún recinto real de esa zona, devuelve un array vacío []. Es una respuesta válida y preferible a rellenar.
-4. El aforo, si no lo sabes, déjalo en 0.
-
-Devuelve estrictamente un array JSON con esta estructura exacta:
-[
-  {
-    "nombre_sala": "Nombre de la sala",
-    "ciudad": "${targetLoc}",
-    "region": "${targetLoc}",
-    "aforo": 350,
-    "genero": "Rock / Indie / Mestizaje",
-    "tipo": "${tipo}",
-    "email_contacto": "booking@sala.com",
-    "telefono": "+34 900 000 000",
-    "instagram": "@sala_oficial",
-    "website": "https://sala.com",
-    "notas": "Descripción breve del recinto y programación."
-  }
-]`;
-
-          const resp = await generateContentWithFallback(ai, {
-            contents: prompt,
-            config: { responseMimeType: "application/json" }
+          console.log(`[Agente Scout] Motor 1 (Google Places API): Consultando "${placesQuery}"...`);
+          const placesRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Goog-Api-Key": placesApiKey,
+              "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.types,places.photos,places.businessStatus"
+            },
+            body: JSON.stringify({
+              textQuery: placesQuery,
+              languageCode: "es",
+              pageSize: Math.min(20, limit * 2)
+            })
           });
-          const text = resp?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            discoveredLeads = JSON.parse(text);
+
+          if (placesRes.ok) {
+            const placesData: any = await placesRes.json();
+            if (Array.isArray(placesData.places)) {
+              for (const place of placesData.places) {
+                if (place.businessStatus === "CLOSED_PERMANENTLY" || place.businessStatus === "CLOSED_TEMPORARILY") continue;
+
+                let photoUrl = "";
+                if (place.photos && place.photos.length > 0 && place.photos[0].name) {
+                  photoUrl = `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=600&maxWidthPx=800&key=${placesApiKey}`;
+                }
+                const domain = place.websiteUri ? new URL(place.websiteUri).hostname.replace(/^www\./, '') : "";
+                if (!photoUrl && domain) {
+                  photoUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+                }
+
+                rawCandidates.push({
+                  place_id: place.id,
+                  nombre_sala: place.displayName?.text || "Recinto Musical",
+                  ciudad: targetLoc,
+                  region: targetLoc,
+                  direccion: place.formattedAddress || "",
+                  telefono: place.nationalPhoneNumber || place.internationalPhoneNumber || "",
+                  website: place.websiteUri || "",
+                  rating: place.rating || null,
+                  aforo: 0,
+                  tipo: tipo,
+                  genero: "Música en Directo / Variado",
+                  imagen_url: photoUrl,
+                  icono: tipo === 'festival' ? '🎪' : tipo === 'discoteca' ? '🪩' : tipo === 'ayuntamiento' ? '🎆' : '🏛️',
+                  email_contacto: "",
+                  notas: `Descubierto por Agente Scout vía Google Places en ${targetLoc}.`
+                });
+              }
+            }
           }
-        } catch (aiErr) {
-          console.warn("AI Scout error, using curated fallback:", aiErr);
+        } catch (pErr: any) {
+          console.warn("[Agente Scout] Advertencia en Motor 1 Google Places:", pErr?.message || pErr);
         }
       }
 
-      // Antes, si la IA fallaba o no devolvía nada, aquí se FABRICABA una sala con nombre,
-      // email y teléfono inventados y se insertaba en Supabase marcada como "descubierta
-      // automáticamente". De ahí pasaba a estado 'nuevo', el Redactor le escribía un pitch real
-      // y acababa en un correo a una dirección que no existe. Ya no: si no hay nada real que
-      // guardar, no se guarda nada y se dice claramente.
-      const leadsValidos = prepararLeadsDescubiertos(discoveredLeads, targetLoc, tipo || "sala");
+      // 3. MOTOR 2: GEMINI SEARCH GROUNDING (búsqueda web en vivo con googleSearch: {})
+      if (ai) {
+        try {
+          console.log(`[Agente Scout] Motor 2 (Gemini Live Search Grounding): Buscando en web en vivo para "${targetLoc}" (Tipo: ${tipo})...`);
+          const prompt = `Actúa como el Agente Scout Descubridor de recintos y entidades musicales en España.
+Busca y extrae entre ${limit} y 6 entidades REALES, ACTIVAS Y OPERATIVAS en la ciudad/región: "${targetLoc}". Tipo objetivo: "${tipo}".
 
-      if (leadsValidos.length === 0) {
-        const avisoMsg = `El Agente Scout no ha podido descubrir recintos verificables en ${targetLoc}. No se ha creado ningún lead: es preferible no tener nada a tener un contacto inventado.`;
+REGLAS INNEGOCIABLES DE CALIDAD:
+1. Solo recintos, agencias, salas, festivales, ayuntamientos o bandas REALES que existan en ${targetLoc}. NUNCA inventes nombres ni datos.
+2. NUNCA inventes emails, teléfonos o webs. Si no sabes el dato exacto, devuelve cadena vacía "".
+3. Si el tipo es 'grupo' o 'banda', devuelve grupos de música reales en activo de ${targetLoc}. NUNCA devuelvas empresas hosteleras o discotecas.
+
+Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
+{
+  "results": [
+    {
+      "nombre_sala": "Nombre oficial exacto",
+      "ciudad": "${targetLoc}",
+      "region": "${targetLoc}",
+      "aforo": 350,
+      "genero": "Estilo musical o línea de programación",
+      "tipo": "${tipo}",
+      "email_contacto": "",
+      "telefono": "+34 900 000 000",
+      "instagram": "@usuario_oficial",
+      "website": "https://sitio-oficial.com",
+      "notas": "Descripción breve del recinto o entidad."
+    }
+  ]
+}`;
+
+          let response: any = null;
+          try {
+            response = await generateContentWithFallback(ai, {
+              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              config: {
+                tools: [{ googleSearch: {} }]
+              }
+            });
+          } catch (searchErr) {
+            response = await generateContentWithFallback(ai, {
+              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              config: { responseMimeType: "application/json" }
+            });
+          }
+
+          const textResult = response?.text || "{}";
+          const cleanedText = textResult.replace(/```json/g, "").replace(/```/g, "").trim();
+          let parsedData: any = {};
+          try {
+            const jsonStart = cleanedText.indexOf('{');
+            const jsonEnd = cleanedText.lastIndexOf('}');
+            if (jsonStart !== -1 && jsonEnd !== -1) {
+              parsedData = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
+            } else {
+              parsedData = JSON.parse(cleanedText);
+            }
+          } catch (_) {
+            if (Array.isArray(cleanedText)) parsedData = { results: cleanedText };
+          }
+
+          const geminiResults = Array.isArray(parsedData?.results) ? parsedData.results : (Array.isArray(parsedData) ? parsedData : []);
+          for (const item of geminiResults) {
+            rawCandidates.push(item);
+          }
+        } catch (aiErr) {
+          console.warn("[Agente Scout] Advertencia en Motor 2 Gemini Grounding:", aiErr);
+        }
+      }
+
+      // 4. PREPARACIÓN, DEPURACIÓN Y DEDUPLICACIÓN CONTRA SUPABASE
+      const leadsValidos = prepararLeadsDescubiertos(rawCandidates, targetLoc, tipo || "sala");
+
+      const deduplicatedLeads: any[] = [];
+      for (const cand of leadsValidos) {
+        const normName = normalizeVenueName(cand.nombre_sala);
+        if (!normName) continue;
+
+        // Comprobar si ya existe en Supabase
+        if (existingNames.has(normName)) {
+          console.log(`[Agente Scout] Omitiendo lead ya existente en CRM: "${cand.nombre_sala}"`);
+          continue;
+        }
+
+        // Comprobar si el usuario la eliminó previamente
+        const isDeleted = await dbCheckDeletedLead(cand.nombre_sala, targetBandId);
+        if (isDeleted) {
+          console.log(`[Agente Scout] Omitiendo lead previamente descartado/eliminado por el usuario: "${cand.nombre_sala}"`);
+          continue;
+        }
+
+        if (cand.website) {
+          try {
+            const domain = new URL(cand.website).hostname.replace(/^www\./, '');
+            if (domain && existingWebsites.has(domain)) {
+              console.log(`[Agente Scout] Omitiendo lead con dominio web ya registrado: "${cand.website}"`);
+              continue;
+            }
+          } catch (_) {}
+        }
+
+        // Si sobrevive todas las comprobaciones, es un lead nuevo y real
+        deduplicatedLeads.push(cand);
+        existingNames.add(normName);
+        if (deduplicatedLeads.length >= limit) break;
+      }
+
+      if (deduplicatedLeads.length === 0) {
+        const avisoMsg = `El Agente Scout ha completado el rastreo en ${targetLoc} (Motor Google Places + Gemini Web Grounding) y no ha encontrado nuevos recintos reales que no tuvieses ya en tu CRM. No se ha duplicado ningún registro.`;
         await logExecution({
           band_id: targetBandId,
           agente: "scout",
-          motor: "supabase_edge",
+          motor: "hybrid_places_gemini",
           disparado_por_tipo: triggerType,
           usuario_id: userId,
           usuario_email: userEmail,
@@ -367,27 +509,24 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
           mensaje: avisoMsg,
           leads_afectados: [],
           conteo_afectados: 0,
-          detalles: { params, targetLoc, motivo: ai ? "la IA no devolvió recintos utilizables" : "no hay ninguna clave de IA configurada" }
+          detalles: { params, targetLoc }
         });
+
         return res.json({
           success: true,
           agent: "Scout",
-          engine: "Supabase Native Agent Engine",
+          engine: "Supabase Native Agent Engine (Google Places + Gemini Grounding)",
           message: avisoMsg,
           results: []
         });
       }
 
-      discoveredLeads = leadsValidos;
-
+      // 5. INSERCIÓN EN SUPABASE Y ENRIQUECIMIENTO EN SEGUNDO PLANO
       const results: any[] = [];
-      for (const raw of discoveredLeads) {
+      for (const raw of deduplicatedLeads) {
         const newLead = {
           id: `lead-scout-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           band_id: targetBandId,
-          // Ya viene validado y normalizado por prepararLeadsDescubiertos: sin nombres de
-          // relleno y sin contacto inventado (los huecos se quedan vacíos a propósito, para
-          // que los rellene el enriquecimiento posterior o una persona, con datos reales).
           nombre_sala: raw.nombre_sala,
           ciudad: raw.ciudad,
           region: raw.region,
@@ -401,24 +540,24 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
           fuente: `Agente Scout: ${targetLoc}`,
           estado: "nuevo",
           pitch_generado: "",
-          notas: raw.notas || `Descubierto por Agente Scout para ${targetLoc}.`
+          notas: raw.notas || `Descubierto por Agente Scout (Google Places + Gemini Grounding) para ${targetLoc}.`
         };
 
-        await sb.from("leads").insert(newLead);
-        results.push(newLead);
+        const saved = await dbUpsertLead(newLead, targetBandId);
+        results.push(saved);
 
-        // Trigger autoEnrichLead in background (festival dates, contact info, etc.)
-        autoEnrichLead(newLead, targetBandId).catch(err =>
-          console.error(`Error enriching Scout-discovered lead ${newLead.id}:`, err)
+        // Disparar autoEnrichLead en segundo plano (scrapea emails mailto, favicons, fechas de festivales, pitch inteligente)
+        autoEnrichLead(saved, targetBandId).catch(err =>
+          console.error(`Error autoEnrichLead tras Scout ${saved.id}:`, err)
         );
       }
 
-      const successMsg = `¡Agente Scout ejecutado con éxito en Supabase! Se han descubierto y guardado ${results.length} nuevo(s) recinto(s) en ${targetLoc} en estado 'nuevo'.`;
+      const successMsg = `¡Agente Scout ejecutado con éxito! Se han descubierto y guardado ${results.length} nuevo(s) recinto(s) verificado(s) en ${targetLoc} (${tipo}) en estado 'nuevo' y enviado a enriquecimiento automático.`;
 
       await logExecution({
         band_id: targetBandId,
         agente: "scout",
-        motor: "supabase_edge",
+        motor: "hybrid_places_gemini",
         disparado_por_tipo: triggerType,
         usuario_id: userId,
         usuario_email: userEmail,
@@ -426,13 +565,13 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
         mensaje: successMsg,
         leads_afectados: results,
         conteo_afectados: results.length,
-        detalles: { params, targetLoc }
+        detalles: { params, targetLoc, tipo }
       });
 
       return res.json({
         success: true,
         agent: "Scout",
-        engine: "Supabase Native Agent Engine",
+        engine: "Supabase Native Agent Engine (Google Places + Gemini Grounding)",
         message: successMsg,
         results
       });

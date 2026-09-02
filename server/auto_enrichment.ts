@@ -5,6 +5,7 @@ import { detectPitchLanguage } from "./utils/leadLanguage.js";
 import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
+import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
@@ -362,8 +363,10 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         if (data.aforo && (!lead.aforo || lead.aforo === 0)) { lead.aforo = Number(data.aforo) || 0; modified = true; }
         if (data.genero && !lead.genero) { lead.genero = data.genero; modified = true; }
         if (data.tipo && (!lead.tipo || lead.tipo === 'sala')) { lead.tipo = data.tipo; modified = true; }
-        if (data.email_contacto && !lead.email_contacto) { lead.email_contacto = data.email_contacto; modified = true; }
-        if (data.telefono && !lead.telefono) { lead.telefono = data.telefono; modified = true; }
+        const cleanEmail = limpiarCampoContacto(data.email_contacto);
+        if (cleanEmail && !lead.email_contacto) { lead.email_contacto = cleanEmail; modified = true; }
+        const cleanPhone = limpiarCampoContacto(data.telefono);
+        if (cleanPhone && !lead.telefono) { lead.telefono = cleanPhone; modified = true; }
         if (data.website && !lead.website) { lead.website = data.website; modified = true; }
         if (data.instagram && !lead.instagram) { lead.instagram = data.instagram; modified = true; }
         if (data.contacto_nombre && !lead.contacto_nombre) { lead.contacto_nombre = data.contacto_nombre; modified = true; }
