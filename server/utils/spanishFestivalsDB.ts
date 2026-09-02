@@ -176,6 +176,78 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     aforo: 3000
   },
   {
+    nombre: "Inverfest Madrid",
+    aliases: ["Inverfest", "Inverfest Festival", "Ciclo Inverfest"],
+    ciudad: "Madrid",
+    region: "Comunidad de Madrid",
+    mes_inicio: 1, dia_inicio: 9, mes_fin: 2, dia_fin: 8,
+    website: "https://inverfest.com",
+    email: "info@inverfest.com",
+    instagram: "@inverfest",
+    genero: "Indie, Rock, Pop, Flamenco, Canción de Autor",
+    aforo: 15000
+  },
+  {
+    nombre: "Noches del Botánico",
+    aliases: ["Noches del Botanico", "Botanico Madrid"],
+    ciudad: "Madrid",
+    region: "Comunidad de Madrid",
+    mes_inicio: 6, dia_inicio: 4, mes_fin: 7, dia_fin: 31,
+    website: "https://www.nochesdelbotanico.com",
+    email: "info@nochesdelbotanico.com",
+    instagram: "@nochesbotanico",
+    genero: "Jazz, Rock, Pop, Flamenco, Fusion",
+    aforo: 4000
+  },
+  {
+    nombre: "Sonorama Ribera",
+    aliases: ["Sonorama", "Sonorama Aranda"],
+    ciudad: "Aranda de Duero",
+    region: "Castilla y León",
+    mes_inicio: 8, dia_inicio: 7, mes_fin: 8, dia_fin: 11,
+    website: "https://sonorama-aranda.com",
+    email: "booking@sonorama-aranda.com",
+    instagram: "@sonoramaribera",
+    genero: "Indie, Pop, Rock, Rap",
+    aforo: 30000
+  },
+  {
+    nombre: "Warm Up Estrella de Levante",
+    aliases: ["Warm Up", "Warmup Murcia", "Warm Up Festival"],
+    ciudad: "Murcia",
+    region: "Región de Murcia",
+    mes_inicio: 5, dia_inicio: 3, mes_fin: 5, dia_fin: 4,
+    website: "https://warmupfestival.es",
+    email: "info@warmupfestival.es",
+    instagram: "@warmupfestival",
+    genero: "Indie, Electrónica, Rock, Pop",
+    aforo: 20000
+  },
+  {
+    nombre: "SanSan Festival",
+    aliases: ["SanSan", "SanSan Benicassim"],
+    ciudad: "Benicàssim",
+    region: "Comunidad Valenciana",
+    mes_inicio: 3, dia_inicio: 28, mes_fin: 3, dia_fin: 30,
+    website: "https://sansanfestival.com",
+    email: "info@sansanfestival.com",
+    instagram: "@sansanfestival",
+    genero: "Indie, Pop, Rock",
+    aforo: 18000
+  },
+  {
+    nombre: "Interestelar Sevilla",
+    aliases: ["Interestelar", "Interestelar Festival"],
+    ciudad: "Sevilla",
+    region: "Andalucía",
+    mes_inicio: 5, dia_inicio: 17, mes_fin: 5, dia_fin: 18,
+    website: "https://interestelarsevilla.weebly.com",
+    email: "info@interestelarsevilla.com",
+    instagram: "@interestelarsevilla",
+    genero: "Indie, Pop, Rock",
+    aforo: 20000
+  },
+  {
     nombre: "Festival Pirata Madrid",
     aliases: ["Pirata Madrid", "Pirata Rock Madrid", "Pirata Festival Madrid"],
     ciudad: "Madrid",

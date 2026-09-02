@@ -12,6 +12,7 @@ import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitc
 import { runLectorAgent } from "../services/lectorAgent.js";
 import { EmailAgentError } from "../services/emailAgentClient.js";
 import { autoEnrichLead } from "../auto_enrichment.js";
+import { searchFestivalByName, formatFestivalDates } from "../utils/spanishFestivalsDB.js";
 import { normalizeVenueName } from "./leads/places.js";
 
 const router = express.Router();
@@ -529,6 +530,18 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       // 5. INSERCIÓN EN SUPABASE Y ENRIQUECIMIENTO EN SEGUNDO PLANO
       const results: any[] = [];
       for (const raw of deduplicatedLeads) {
+        let startD: string | undefined = raw.festival_start_date;
+        let endD: string | undefined = raw.festival_end_date;
+
+        if (!startD || !endD) {
+          const localFest = searchFestivalByName(raw.nombre_sala, raw.ciudad);
+          if (localFest) {
+            const d = formatFestivalDates(localFest);
+            startD = d.start;
+            endD = d.end;
+          }
+        }
+
         const newLead = {
           id: `lead-scout-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           band_id: targetBandId,
@@ -542,6 +555,8 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           telefono: raw.telefono,
           instagram: raw.instagram,
           website: raw.website,
+          festival_start_date: startD,
+          festival_end_date: endD,
           fuente: `Agente Scout: ${targetLoc}`,
           estado: "nuevo",
           pitch_generado: "",

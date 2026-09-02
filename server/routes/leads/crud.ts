@@ -4,7 +4,7 @@ import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
-import { autoEnrichLead } from "../../auto_enrichment.js";
+import { autoEnrichLead, extractFestivalDates } from "../../auto_enrichment.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
 import { checkRecordLimit } from "../../utils/planLimits.js";
 import { getBandDnaProfile, generateSmartDnaPitchFallback } from "../../utils/bandDna.js";
@@ -213,10 +213,10 @@ router.post("/leads", requireAuth, async (req, res) => {
       });
     }
 
-    // Fast synchronous Stage 1 Festival lookup (< 1 ms)
+    // Fast synchronous Festival lookup (Stage 1 local + Stage 3 AI fallback)
     if (
       (!newLead.festival_start_date || !newLead.festival_end_date) &&
-      (newLead.tipo === 'festival' || newLead.tipo === 'ayuntamiento' || (newLead.nombre_sala && /festival|fest|pirata|fiesta/i.test(newLead.nombre_sala)))
+      (newLead.tipo === 'festival' || newLead.tipo === 'ayuntamiento' || (newLead.nombre_sala && /fest|festival|inverfest|pirata|fiesta|ciclo|feria/i.test(newLead.nombre_sala)))
     ) {
       try {
         const localFestival = searchFestivalByName(newLead.nombre_sala, newLead.ciudad);
@@ -228,6 +228,20 @@ router.post("/leads", requireAuth, async (req, res) => {
           if (localFestival.instagram && !newLead.instagram) newLead.instagram = localFestival.instagram;
           if (localFestival.website && !newLead.website) newLead.website = localFestival.website;
           if (localFestival.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = localFestival.aforo;
+        } else {
+          // Fallback síncrono a extractFestivalDates con timeout de 3.5s
+          const festInfo = await Promise.race([
+            extractFestivalDates(newLead),
+            new Promise<any>(resolve => setTimeout(() => resolve({}), 3500))
+          ]);
+          if (festInfo && festInfo.startDate) {
+            newLead.festival_start_date = festInfo.startDate;
+            newLead.festival_end_date = festInfo.endDate || festInfo.startDate;
+            if (festInfo.email && !newLead.email_contacto) newLead.email_contacto = festInfo.email;
+            if (festInfo.instagram && !newLead.instagram) newLead.instagram = festInfo.instagram;
+            if (festInfo.website && !newLead.website) newLead.website = festInfo.website;
+            if (festInfo.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = festInfo.aforo;
+          }
         }
       } catch (festErr) {
         console.warn("Fast festival lookup warning:", festErr);

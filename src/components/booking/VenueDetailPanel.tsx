@@ -106,6 +106,34 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [enrichStatusMsg, setEnrichStatusMsg] = useState<string | null>(null);
   const [isCreatingDraft, setIsCreatingDraft] = useState(false);
   const [draftError, setDraftError] = useState<string | null>(null);
+  const [isExtractingDates, setIsExtractingDates] = useState(false);
+
+  const handleAutoExtractFestivalDates = async () => {
+    if (!selectedLead) return;
+    try {
+      setIsExtractingDates(true);
+      const res: any = await apiFetch('/api/leads/enrich-lead', {
+        method: 'POST',
+        body: JSON.stringify({ leadId: selectedLead.id, force: true })
+      });
+      if (res?.lead) {
+        if (res.lead.festival_start_date) {
+          setEditedLeadInfo(prev => ({
+            ...prev,
+            festival_start_date: res.lead.festival_start_date,
+            festival_end_date: res.lead.festival_end_date || res.lead.festival_start_date
+          }));
+        }
+        if (onUpdateLead) {
+          onUpdateLead(selectedLead.id, res.lead);
+        }
+      }
+    } catch (err: any) {
+      console.warn('Error enriqueciendo fechas:', err);
+    } finally {
+      setIsExtractingDates(false);
+    }
+  };
 
   // Historial real de conversación (lead_messages, escrito por el Enviador/Lector) - independiente
   // de selectedLead.hilo_emails, que solo lo rellena el sync manual de Gmail del cliente. Sin esto,
@@ -1150,11 +1178,27 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block text-[10px] uppercase font-mono text-amber-400 mb-1">
-                      🎪 Inicio Festival (dd/mm/yyyy)
-                    </label>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-amber-400">
+                      🎪 Fechas del Festival (Inicio / Fin)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleAutoExtractFestivalDates}
+                      disabled={isExtractingDates}
+                      className="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
+                      title="Buscar fechas del festival automáticamente con IA y base de datos de festivales"
+                    >
+                      <Sparkles className="w-3 h-3 text-amber-400" />
+                      <span>{isExtractingDates ? 'Buscando fechas...' : '⚡ Rellenar Fechas con IA'}</span>
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
+                        Inicio Festival (dd/mm/yyyy)
+                      </label>
                     <input
                       type="date"
                       value={toIsoDateString(editedLeadInfo.festival_start_date)}
@@ -1176,6 +1220,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       }
                       className="w-full p-2 rounded bg-zinc-900 border border-amber-500/40 text-zinc-100 focus:outline-none"
                     />
+                  </div>
                   </div>
                 </div>
 

@@ -7,10 +7,26 @@ import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitc
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 
+function toIsoDateString(val?: string | null): string {
+  if (!val || typeof val !== 'string') return '';
+  const trimmed = val.trim();
+  if (!trimmed) return '';
+  if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) return trimmed.substring(0, 10);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (ddmmyyyy) {
+    return `${ddmmyyyy[3]}-${ddmmyyyy[2].padStart(2, '0')}-${ddmmyyyy[1].padStart(2, '0')}`;
+  }
+  const d = new Date(trimmed);
+  if (!isNaN(d.getTime())) {
+    return d.toISOString().substring(0, 10);
+  }
+  return '';
+}
+
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string }> {
+export async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string }> {
   if (!lead.nombre_sala || !lead.ciudad) return {};
 
   // STAGE 1: Búsqueda en base de datos local (muy rápida)
@@ -67,16 +83,16 @@ async function extractFestivalDates(lead: any): Promise<{ startDate?: string; en
   const client = getAiClient();
   if (!client) return {};
 
-  const prompt = `Busca información sobre si "${lead.nombre_sala}" en ${lead.ciudad} (España) es un festival, fiestas populares o evento periódico, y extrae sus fechas.
+  const prompt = `Busca información sobre el festival, ciclo de conciertos, fiestas populares o evento periódico "${lead.nombre_sala}" en ${lead.ciudad} (España), y extrae sus fechas reales de celebración en formato ISO (YYYY-MM-DD).
 
-Devuelve ÚNICAMENTE un JSON con esta estructura:
+Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
 {
-  "es_festival": true o false,
-  "festival_start_date": "YYYY-MM-DD" (primera fecha del evento, o null si no es festival),
-  "festival_end_date": "YYYY-MM-DD" (última fecha del evento, o null si no es festival)
+  "es_festival": true,
+  "festival_start_date": "YYYY-MM-DD",
+  "festival_end_date": "YYYY-MM-DD"
 }
 
-Si no es un festival/evento periódico, devuelve es_festival: false y las fechas como null.`;
+REGLA DE CICLOS: Si es un ciclo de conciertos o festival extenso que se prolonga varias semanas o meses (como Inverfest, Noches del Botánico, Fiestas Patronales, etc.), indica el primer día de conciertos como festival_start_date y el último día como festival_end_date.`;
 
   try {
     console.log(`[FestivalDates] Fallback a AI para "${lead.nombre_sala}"...`);
@@ -105,11 +121,17 @@ Si no es un festival/evento periódico, devuelve es_festival: false y las fechas
       data = JSON.parse(cleanedText);
     }
 
-    if (data.es_festival && data.festival_start_date && data.festival_end_date) {
-      console.log(`[FestivalDates] ✓ AI FOUND: "${lead.nombre_sala}" → ${data.festival_start_date} a ${data.festival_end_date}`);
+    const rawStart = data.festival_start_date || data.startDate || data.start_date;
+    const rawEnd = data.festival_end_date || data.endDate || data.end_date || rawStart;
+
+    const startIso = toIsoDateString(rawStart);
+    const endIso = toIsoDateString(rawEnd) || startIso;
+
+    if (startIso) {
+      console.log(`[FestivalDates] ✓ AI FOUND: "${lead.nombre_sala}" → ${startIso} a ${endIso}`);
       return {
-        startDate: data.festival_start_date,
-        endDate: data.festival_end_date
+        startDate: startIso,
+        endDate: endIso
       };
     }
   } catch (err: any) {
@@ -382,7 +404,13 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
   }
 
   // STAGE 4: Festival/Event Data Extraction (detect festivals & extract all data)
-  if ((lead.tipo === 'festival' || lead.tipo === 'ayuntamiento' || !lead.email_contacto) && (!lead.festival_start_date || !lead.festival_end_date)) {
+  const isFestivalOrEvent =
+    lead.tipo === 'festival' ||
+    lead.tipo === 'ayuntamiento' ||
+    /fest|festival|inverfest|pirata|fiesta|ciclo|feria/i.test(lead.nombre_sala || '') ||
+    !lead.email_contacto;
+
+  if (isFestivalOrEvent && (!lead.festival_start_date || !lead.festival_end_date)) {
     const festivalInfo = await extractFestivalDates(lead);
     if (festivalInfo.startDate && festivalInfo.endDate) {
       lead.festival_start_date = festivalInfo.startDate;
