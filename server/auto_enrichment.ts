@@ -12,6 +12,50 @@ import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string }> {
   if (!lead.nombre_sala || !lead.ciudad) return {};
 
+  // STAGE 1: Búsqueda en base de datos local (muy rápida)
+  try {
+    const { searchFestivalByName, formatFestivalDates } = await import("./utils/spanishFestivalsDB.js");
+    const localMatch = searchFestivalByName(lead.nombre_sala, lead.ciudad);
+    if (localMatch) {
+      const dates = formatFestivalDates(localMatch);
+      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${lead.nombre_sala}" → ${dates.start} a ${dates.end}`);
+      return {
+        startDate: dates.start,
+        endDate: dates.end
+      };
+    }
+  } catch (e) {
+    console.warn(`[FestivalDates] Error en búsqueda local:`, e);
+  }
+
+  // STAGE 2: Web scraping (Wikipedia + festivalesdemusica.com)
+  try {
+    const { scrapeFestivalDatesFromWikipedia, scrapeFestivalFromFestivalesDeMusica } = await import("./utils/festivalScraper.js");
+
+    console.log(`[FestivalDates] Intentando scraping para "${lead.nombre_sala}"...`);
+
+    const wikiDates = await scrapeFestivalDatesFromWikipedia(lead.nombre_sala, lead.ciudad);
+    if (wikiDates) {
+      console.log(`[FestivalDates] ✓ FOUND EN WIKIPEDIA: "${lead.nombre_sala}" → ${wikiDates.start} a ${wikiDates.end}`);
+      return {
+        startDate: wikiDates.start,
+        endDate: wikiDates.end
+      };
+    }
+
+    const festivalesDates = await scrapeFestivalFromFestivalesDeMusica(lead.nombre_sala);
+    if (festivalesDates) {
+      console.log(`[FestivalDates] ✓ FOUND EN FESTIVALESDEMUSICA.COM: "${lead.nombre_sala}" → ${festivalesDates.start} a ${festivalesDates.end}`);
+      return {
+        startDate: festivalesDates.start,
+        endDate: festivalesDates.end
+      };
+    }
+  } catch (e) {
+    console.warn(`[FestivalDates] Error en scraping:`, e);
+  }
+
+  // STAGE 3: AI Fallback (último recurso, solo si las anteriores fallaron)
   const client = getAiClient();
   if (!client) return {};
 
@@ -21,15 +65,13 @@ Devuelve ÚNICAMENTE un JSON con esta estructura:
 {
   "es_festival": true o false,
   "festival_start_date": "YYYY-MM-DD" (primera fecha del evento, o null si no es festival),
-  "festival_end_date": "YYYY-MM-DD" (última fecha del evento, o null si no es festival),
-  "notas": "Breve descripción del evento (ej: 'Festival anual en agosto', 'Fiestas de San Fermín en julio')"
+  "festival_end_date": "YYYY-MM-DD" (última fecha del evento, o null si no es festival)
 }
 
-Si no es un festival/evento periódico, devuelve es_festival: false y las fechas como null.
-Si las fechas no están confirmadas para este año, usa las del año anterior o próximo si están documentadas.`;
+Si no es un festival/evento periódico, devuelve es_festival: false y las fechas como null.`;
 
   try {
-    console.log(`[FestivalDates] Detectando si "${lead.nombre_sala}" es festival/evento periódico...`);
+    console.log(`[FestivalDates] Fallback a AI para "${lead.nombre_sala}"...`);
     let response: any = null;
     try {
       response = await generateContentWithFallback(client, {
@@ -39,7 +81,6 @@ Si las fechas no están confirmadas para este año, usa las del año anterior o 
         }
       });
     } catch (searchErr: any) {
-      console.warn(`[FestivalDates] Google Search no disponible, reintentando...`);
       response = await generateContentWithFallback(client, {
         contents: prompt
       });
@@ -57,14 +98,14 @@ Si las fechas no están confirmadas para este año, usa las del año anterior o 
     }
 
     if (data.es_festival && data.festival_start_date && data.festival_end_date) {
-      console.log(`[FestivalDates] ✓ "${lead.nombre_sala}" es un festival/evento: ${data.festival_start_date} a ${data.festival_end_date}`);
+      console.log(`[FestivalDates] ✓ AI FOUND: "${lead.nombre_sala}" → ${data.festival_start_date} a ${data.festival_end_date}`);
       return {
         startDate: data.festival_start_date,
         endDate: data.festival_end_date
       };
     }
   } catch (err: any) {
-    console.warn(`[FestivalDates] Error detectando fechas:`, err?.message || err);
+    console.warn(`[FestivalDates] Error en AI fallback:`, err?.message || err);
   }
 
   return {};
