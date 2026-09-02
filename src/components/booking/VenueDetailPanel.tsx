@@ -10,7 +10,7 @@ import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
 import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
-import { formatFestivalDateRange } from '../../utils/festivalDateFormat';
+import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
 import {
   Edit3,
   X,
@@ -1157,7 +1157,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </label>
                     <input
                       type="date"
-                      value={editedLeadInfo.festival_start_date ? editedLeadInfo.festival_start_date.substring(0, 10) : ''}
+                      value={toIsoDateString(editedLeadInfo.festival_start_date)}
                       onChange={(e) =>
                         setEditedLeadInfo({ ...editedLeadInfo, festival_start_date: e.target.value || undefined })
                       }
@@ -1170,7 +1170,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </label>
                     <input
                       type="date"
-                      value={editedLeadInfo.festival_end_date ? editedLeadInfo.festival_end_date.substring(0, 10) : ''}
+                      value={toIsoDateString(editedLeadInfo.festival_end_date)}
                       onChange={(e) =>
                         setEditedLeadInfo({ ...editedLeadInfo, festival_end_date: e.target.value || undefined })
                       }

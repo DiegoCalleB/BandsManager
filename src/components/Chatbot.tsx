@@ -1250,6 +1250,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  telefono: action.lead?.telefono || '',
  website: action.lead?.website || '',
  instagram: action.lead?.instagram || '',
+ festival_start_date: action.lead?.festival_start_date || (action.lead as any)?.festivalStartDate || '',
+ festival_end_date: action.lead?.festival_end_date || (action.lead as any)?.festivalEndDate || '',
  fuente: action.lead?.fuente || 'Chatbot AI',
  estado: action.lead?.estado || 'nuevo',
  notas: action.lead?.notas || 'Creado directamente vía Chatbot AI',

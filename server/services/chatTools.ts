@@ -228,6 +228,8 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
             telefono: { type: Type.STRING, description: "Teléfono de contacto." },
             website: { type: Type.STRING, description: "Sitio web oficial." },
             instagram: { type: Type.STRING, description: "Perfil de Instagram." },
+            festival_start_date: { type: Type.STRING, description: "Fecha de inicio del festival o evento en formato YYYY-MM-DD (ej: 2026-10-04)." },
+            festival_end_date: { type: Type.STRING, description: "Fecha de fin del festival o evento en formato YYYY-MM-DD (ej: 2026-10-05)." },
             fuente: { type: Type.STRING, description: "Origen del contacto (por defecto 'Chatbot')." },
             estado: { type: Type.STRING, description: "Estado inicial ('nuevo' | 'pendiente_aprobacion')." },
             notas: { type: Type.STRING, description: "Notas o detalles de contacto." }

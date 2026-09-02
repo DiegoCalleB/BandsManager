@@ -165,6 +165,28 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     aforo: 3000
   },
   {
+    nombre: "Festival Pirata Madrid",
+    ciudad: "Madrid",
+    region: "Comunidad de Madrid",
+    mes_inicio: 10, dia_inicio: 4, mes_fin: 10, dia_fin: 5,
+    website: "https://piratafestival.com",
+    email: "info@piratafestival.com",
+    instagram: "@piratafestival",
+    genero: "Rock, Punk, Ska, Rap, Mestizaje",
+    aforo: 15000
+  },
+  {
+    nombre: "Pirata Rock",
+    ciudad: "Gandía",
+    region: "Valencia",
+    mes_inicio: 7, dia_inicio: 18, mes_fin: 7, dia_fin: 20,
+    website: "https://piratafestival.com",
+    email: "info@piratafestival.com",
+    instagram: "@piratafestival",
+    genero: "Rock, Punk, Ska, Mestizaje",
+    aforo: 20000
+  },
+  {
     nombre: "Festival de Flamenco de Córdoba",
     ciudad: "Córdoba",
     region: "Andalucía",
