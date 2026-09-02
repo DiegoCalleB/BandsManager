@@ -37,6 +37,7 @@ import {
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
+import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -1966,24 +1967,112 @@ export default function RepertorioSetlists({
   </div>
   </div>
 
-  {/* COMPACT LIVE METRICS BAR */}
-  <div className="flex flex-wrap items-center gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
-  <span className="px-2.5 py-0.5 rounded-lg bg-white/10 text-white font-bold flex items-center gap-1.5">
-  🎵 <strong>{activeSetlistMetrics.songCount}</strong> temas
-  </span>
-  <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-[#d1b375] font-bold flex items-center gap-1.5 border border-amber-500/20">
-  ⏱️ <strong>{activeSetlistMetrics.formattedTime}</strong>
-  </span>
-  <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-[#10b981] font-bold flex items-center gap-1.5 border border-emerald-500/20">
-  ⚡ <strong>{activeSetlistMetrics.avgBpm} BPM avg</strong>
-  </span>
-  <span className="px-2.5 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold flex items-center gap-1.5 border border-sky-500/20">
-  💬 <strong>{activeSetlistMetrics.eventCount}</strong> interludios
-  </span>
-  <span className="px-2.5 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold flex items-center gap-1.5 border border-yellow-500/20">
-  ⚡ <strong>{activeSetlistMetrics.blockCount}</strong> bloques
-  </span>
-  </div>
+  {/* LIVE METRICS & ENERGY MAP BAR */}
+  {(() => {
+    const energyAnalysis = analyzeSetlistEnergy(activeSetlist.items, songs);
+    return (
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-lg bg-white/10 text-white font-bold flex items-center gap-1.5">
+              🎵 <strong>{activeSetlistMetrics.songCount}</strong> temas
+            </span>
+            <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-[#d1b375] font-bold flex items-center gap-1.5 border border-amber-500/20">
+              ⏱️ <strong>{activeSetlistMetrics.formattedTime}</strong>
+            </span>
+            <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-[#10b981] font-bold flex items-center gap-1.5 border border-emerald-500/20">
+              ⚡ <strong>{activeSetlistMetrics.avgBpm} BPM avg</strong>
+            </span>
+            <span className="px-2.5 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold flex items-center gap-1.5 border border-sky-500/20">
+              💬 <strong>{activeSetlistMetrics.eventCount}</strong> interludios
+            </span>
+            <span className="px-2.5 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold flex items-center gap-1.5 border border-yellow-500/20">
+              ⚡ <strong>{activeSetlistMetrics.blockCount}</strong> bloques
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-lg bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold flex items-center gap-1.5">
+              <span>{energyAnalysis.profileIcon}</span>
+              <span>{energyAnalysis.profileLabel}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* VISUAL ENERGY CURVE / SPARKLINE BAR CHART */}
+        {energyAnalysis.points.length > 0 && (
+          <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
+            <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
+              <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+                <span>📈 Mapa de Dinámica y Energía del Show</span>
+                <span className="text-[9px] text-neutral-500 font-normal">(Curva tema a tema)</span>
+              </span>
+              <div className="flex items-center gap-2 text-[9px]">
+                <span className="flex items-center gap-1 text-sky-400">🌙 Balada</span>
+                <span className="flex items-center gap-1 text-emerald-400">🎵 Media</span>
+                <span className="flex items-center gap-1 text-amber-400">🔥 Alta</span>
+                <span className="flex items-center gap-1 text-rose-400">💣 Explosiva</span>
+              </div>
+            </div>
+
+            {/* SVG Sparkline / Bar Chart */}
+            <div className="h-10 flex items-end gap-1 px-1 py-1 bg-black/60 rounded-lg overflow-x-auto">
+              {energyAnalysis.points.map((pt, idx) => {
+                const heightPct = Math.max(15, Math.min(100, (pt.score / 10) * 100));
+                return (
+                  <div
+                    key={`${pt.item.id}-${idx}`}
+                    className="flex-1 min-w-[12px] h-full flex flex-col justify-end items-center group relative cursor-pointer"
+                    onClick={() => setSelectedSetlistItemId(pt.item.id)}
+                  >
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full mb-1 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
+                      <div className="bg-black text-white text-[9px] font-mono py-1 px-2 rounded shadow-xl whitespace-nowrap border border-neutral-700">
+                        <p className="font-bold text-[#d1b375]">#{idx + 1} {pt.title}</p>
+                        <p className="text-[8.5px] text-neutral-300 flex items-center gap-1">
+                          <span>{pt.info.icon}</span> {pt.info.label} ({pt.score}/10)
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      className="w-full rounded-t transition-all group-hover:brightness-125"
+                      style={{
+                        height: `${heightPct}%`,
+                        backgroundColor: pt.info.hexColor,
+                        opacity: pt.isSong ? 1 : 0.4
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Warnings & Suggestions */}
+            {energyAnalysis.warnings.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                {energyAnalysis.warnings.map((w, i) => (
+                  <span
+                    key={i}
+                    className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border ${
+                      w.type === 'warning'
+                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                        : w.type === 'success'
+                        ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                        : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+                    }`}
+                  >
+                    <span>{w.icon}</span>
+                    <span>{w.message}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  })()}
 
   {/* ADD ITEMS ACTION BAR */}
   <div className="space-y-1.5 pt-0.5">
@@ -2180,6 +2269,15 @@ export default function RepertorioSetlists({
  <span className="text-[10px] font-mono text-[#d1b375] font-bold">
  {song.duracion || '0:00'}
  </span>
+ {(() => {
+    const energy = getEnergyInfo(song);
+    return (
+      <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold flex items-center gap-1 border ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`} title={`Energía: ${energy.label}`}>
+        <span>{energy.icon}</span>
+        <span className="capitalize">{energy.category}</span>
+      </span>
+    );
+  })()}
 
  {isSelected && (
    <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500 text-black animate-pulse">

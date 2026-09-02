@@ -99,13 +99,14 @@ export function SongModal({
   const finalAlbumValue = selectedAlbum === '__CUSTOM__' ? customAlbumInput : selectedAlbum;
 
   // La energía se almacena como número (1-10). Mapeamos el valor guardado al tramo
-  // más cercano de los tres que ofrece el selector.
+  // más cercano de los cuatro que ofrece el selector.
   const energiaDefault = (() => {
     const raw = Number(editingSong?.energia);
     if (!editingSong || !Number.isFinite(raw) || raw <= 0) return '9';
     if (raw <= 4) return '3';
     if (raw <= 7) return '6';
-    return '9';
+    if (raw <= 9) return '9';
+    return '10';
   })();
 
   return (
@@ -331,8 +332,9 @@ export function SongModal({
                     isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                   }`}
                 >
+                  <option value="10">💣 Explosiva / Clímax (Hit)</option>
                   <option value="9">🔥 Alta (Traca / Caña)</option>
-                  <option value="6">⚡ Media (Groove / Ritmo)</option>
+                  <option value="6">🎵 Media (Groove / Ritmo)</option>
                   <option value="3">🌙 Balada / Acústica</option>
                 </select>
               </div>
