@@ -218,10 +218,16 @@ export default function BookingCRM({
 
   const [filterByCampaign, setFilterByCampaign] = useState(Boolean(activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)));
 
-  // Automatically activate campaign filter whenever an active campaign is present or selected
+  // Automatically activate campaign filter & reset conflicting manual search filters whenever a campaign is active
   useEffect(() => {
     if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
       setFilterByCampaign(true);
+      setSectionTab('salas');
+      setSelectedCityFilter('');
+      setMinCapacityFilter(0);
+      setTypeFilter('todos');
+      setStatusFilter('todos');
+      setSearchTerm('');
     }
   }, [activeCampaign?.id, activeCampaign?.isActive, (activeCampaign as any)?.is_active]);
 
