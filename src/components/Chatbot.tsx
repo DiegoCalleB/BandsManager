@@ -1483,6 +1483,10 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  }
  }
 
+ try {
+    window.dispatchEvent(new Event('app-data-updated'));
+  } catch (_) {}
+
  } else if (action.type === 'propose_agent_trigger' && action.agentName) {
  try {
  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';

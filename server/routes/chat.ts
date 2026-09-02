@@ -447,6 +447,13 @@ Se rellenarán automáticamente todos los datos públicos disponibles (email de 
 
 **REGLA DE FILTRADO POR CAMPAÑA ACTIVA**: Si hay una campaña activa con un rango de fechas definido (campaignStartDate y campaignEndDate), y el nuevo lead es de tipo 'festival' o 'ayuntamiento' con fechas de evento extraídas (festival_start_date y festival_end_date), la plataforma detecta automáticamente si las fechas del evento se solapan con el rango de la campaña. Los leads de festivales/ayuntamientos se mostrarán priorizados si coinciden con la ventana de la campaña activa en el panel de CRM.
 
+REGLA DE ASISTENCIA PROACTIVA Y SUGERENCIA DE PRÓXIMOS PASOS (SMART NEXT STEPS):
+Al final de tu respuesta conversacional (en el campo 'text'), SIEMPRE que identifiques una oportunidad lógica de flujo de trabajo, sugiere de manera proactiva al mánager el siguiente paso recomendado con sus botones interactivos:
+1. Si hay leads en estado 'nuevo' sin propuesta redactada: Sugiere ejecutar el **Agente Redactor** para generar los borradores personalizados.
+2. Si hay propuestas en 'pendiente_aprobacion' listas para revisar: Sugiere aprobarlas o ejecutar el **Agente Enviador**.
+3. Si el usuario acaba de añadir una sala o grupo nuevo: Sugiere redactar el correo inicial o investigar sus datos con el **Agente Scout**.
+4. Si un bolo se ha marcado como 'confirmado': Sugiere incluir la fecha en el calendario de la banda mediante 'propose_concert' o planificar la gira mediante 'propose_tour'.
+
 REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un concierto o bolo (por ejemplo "añade concierto en Sala Villanos" o "hemos cerrado bolo"), SIEMPRE debes incluir una acción 'propose_concert' con el objeto 'concert' relleno. No te limites solo a cambiar el estado del lead, crea la acción 'propose_concert' para que el concierto se guarde en la tabla 'conciertos' de Supabase.
 
 Si no hay ninguna acción lógica que proponer, devuelve 'proposedActions' como una lista vacía [].

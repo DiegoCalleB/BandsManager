@@ -220,24 +220,38 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
 
         let generatedPitch = "";
         if (ai) {
-          try {
             const prompt = `${systemPrompt}
 
-TAREA ESPECÍFICA:
-Redacta una propuesta de concierto (pitch) cercana, profesional y atractiva para la sala o programador:
-- Sala: ${lead.nombre_sala} (${lead.ciudad || 'España'})
-- Género/Estilo habitual: ${lead.genero || 'Música en directo'}
-- Aforo: ${lead.aforo ? `${lead.aforo} personas` : 'No especificado / Estándar'}
+TAREA ESPECÍFICA DE REDACCIÓN DE ALTA CONVERSIÓN:
+Redacta una propuesta de concierto (pitch) cercana, altamente personalizada, profesional y atractiva para la sala, festival o programador:
+- Sala/Recinto: ${lead.nombre_sala} (${lead.ciudad || 'España'})
+- Género/Estilo del recinto: ${lead.genero || 'Música en directo'}
+- Aforo: ${lead.aforo ? `${lead.aforo} personas` : 'Estándar'}
 - Tipo: ${lead.tipo || 'sala'}
+${lead.website ? `- Web/Redes oficiales: ${lead.website}` : ''}
 ${activeCampaign ? `\nCONTEXTO CRÍTICO DE CAMPAÑA ACTIVA "${activeCampaign.name || 'Campaña de Conciertos'}": Proponer fechas deseadas (${activeCampaign.target_dates_text || (activeCampaign.target_dates ? activeCampaign.target_dates.join(', ') : 'próximas fechas')}).` : ''}
 
-Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el usuario.`;
+REGLA DE HIPER-PERSONALIZACIÓN CON BÚSQUEDA EN VIVO:
+Si está disponible, utiliza la búsqueda en vivo para identificar brevemente el tipo de programación o conciertos afines de "${lead.nombre_sala}" en ${lead.ciudad || 'España'} e incluir un guiño o mención relevante en el saludo/introducción.
 
-            const resp = await generateContentWithFallback(ai, { contents: prompt, permitirPitchLocal: true, links: pitchLinks });
-            generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-          } catch (err) {
-            console.warn("AI fallback for pitch generation:", err);
-          }
+Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado por el mánager.`;
+
+            let resp: any = null;
+            try {
+              resp = await generateContentWithFallback(ai, {
+                contents: prompt,
+                config: { tools: [{ googleSearch: {} }] },
+                permitirPitchLocal: true,
+                links: pitchLinks
+              });
+            } catch (_) {
+              resp = await generateContentWithFallback(ai, {
+                contents: prompt,
+                permitirPitchLocal: true,
+                links: pitchLinks
+              });
+            }
+            generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || resp?.text || "";
         }
 
         let pitchEsPlantilla = false;
@@ -305,6 +319,11 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       const targetLoc = params?.ciudad || params?.region || "Huelva";
       const tipo = params?.tipo || "sala";
       const limit = Math.max(2, Math.min(10, Number(params?.limit) || 4));
+      const aforoMin = params?.aforoMin ? Number(params.aforoMin) : null;
+      const aforoMax = params?.aforoMax ? Number(params.aforoMax) : null;
+      const state = loadState();
+      const bandDna = getBandDnaProfile(state, targetBandId);
+      const generoBanda = params?.genero || bandDna.genero || "Música en Directo / Variado";
       const ai = getAiClient();
       const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
       const rawCandidates: any[] = [];
