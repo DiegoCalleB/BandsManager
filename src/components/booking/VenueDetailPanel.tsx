@@ -169,7 +169,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         headers['Authorization'] = `Bearer ${token}`;
         headers['x-auth-token'] = token;
       }
-      const res = await fetch(`/api/leads/${selectedLead.id}/regenerate-pitch`, {
+      // En etapa de respuesta usa el endpoint del Contestador (prompt con el mensaje entrante
+      // real y el hilo) en vez del de pitch inicial - antes ambos casos llamaban al mismo
+      // endpoint de pitch, perdiendo el contexto de a qué estaba respondiendo la banda.
+      const endpoint = isReplyStage
+        ? `/api/leads/${selectedLead.id}/regenerate-reply`
+        : `/api/leads/${selectedLead.id}/regenerate-pitch`;
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -352,7 +358,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     onUpdateLead(selectedLead.id, { estado: newStatus });
   };
 
-  const isReplyStage = (selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0) || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
+  // hiloCompleto (lead_messages real + hilo_emails manual) es la señal fiable de que ya hubo
+  // conversación con la sala - antes solo se miraba hilo_emails (el campo legado que solo rellena
+  // el sync manual de Gmail) y el estado, así que un lead cuya respuesta el Lector auto-redactó
+  // (estado 'pendiente_aprobacion', ver server/services/lectorAgent.ts) dejaba de detectarse como
+  // "en fase de respuesta" y el botón "Aprobar" mandaba aprobado_propuesta en vez de
+  // aprobado_respuesta, haciendo que el Enviador lo tratase como pitch nuevo (asunto sin "Re:",
+  // vuelta a 'contactado' en vez de 'negociando').
+  const isReplyStage = hiloCompleto.length > 0 || selectedLead.estado === 'respondido' || selectedLead.estado === 'negociando';
 
   // Al aprobar se dispara el Agente Enviador en el servidor para este lead concreto
   // (POST /api/trigger-agent, el mismo endpoint que usa el scheduler) en vez de crear el
@@ -369,11 +382,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     setIsCreatingDraft(true);
     setDraftError(null);
 
-    if (alsoSavePitch) {
-      // El Enviador lee pitch_generado directamente de Supabase, así que el texto editado
-      // tiene que quedar guardado antes de disparar el agente o vería la versión anterior.
-      await onUpdateLead(selectedLead.id, { pitch_generado: pitchText });
-    }
+    // El Enviador (server/services/agentEngine.ts), cuando se dispara para un lead concreto como
+    // aquí, lo busca por id SIN filtrar por estado - decide si es respuesta (asunto "Re:",
+    // pasa a 'negociando' al enviar) mirando lead.estado === 'aprobado_respuesta' en Supabase EN
+    // ESE MOMENTO. Antes esto solo se guardaba si la petición fallaba, así que en el camino
+    // normal el Enviador seguía viendo el estado anterior (p.ej. 'pendiente_aprobacion') y
+    // trataba cualquier respuesta aprobada como si fuera un pitch nuevo. Hace falta escribirlo
+    // (y esperar a que el PATCH llegue a Supabase) ANTES de disparar el agente.
+    const updates: Partial<Lead> = { estado: approvalState };
+    if (alsoSavePitch) updates.pitch_generado = pitchText;
+    await onUpdateLead(selectedLead.id, updates);
 
     let draftError = '';
     try {
@@ -397,8 +415,9 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     }
 
     if (draftError) {
+      // El estado ya quedó en approvalState (guardado arriba) - el mánager puede reintentar la
+      // aprobación sin perderla.
       setDraftError(draftError);
-      onUpdateLead(selectedLead.id, { estado: approvalState });
     }
 
     setIsCreatingDraft(false);
@@ -1212,19 +1231,24 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   onChange={(e) => setEditedPitch(e.target.value)}
                   className="w-full p-3 bg-black/60 rounded-xl border border-amber-500/50 text-xs text-zinc-100 font-sans focus:outline-none focus:ring-1 focus:ring-amber-400"
                 />
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => setIsEditingPitch(false)}
-                    className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded text-xs hover:bg-zinc-700 cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleSavePitch}
-                    className="px-3 py-1 bg-amber-500 text-black font-bold rounded text-xs hover:bg-amber-400 cursor-pointer"
-                  >
-                    Guardar y Aprobar
-                  </button>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] text-zinc-500 font-mono" title="Esta corrección se suma a las demás para refinar automáticamente cómo escribe la IA en esta categoría (ver ADN de Tono > Reglas Aprendidas). Si es un caso puntual y no quieres que influya, usa 'Regenerar' con estrellas/comentario y marca 'Solo para esta sala' en vez de editar aquí.">
+                    ✏️ Esta edición se usará también para entrenar al Redactor
+                  </span>
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      onClick={() => setIsEditingPitch(false)}
+                      className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded text-xs hover:bg-zinc-700 cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleSavePitch}
+                      className="px-3 py-1 bg-amber-500 text-black font-bold rounded text-xs hover:bg-amber-400 cursor-pointer"
+                    >
+                      Guardar y Aprobar
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (

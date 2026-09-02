@@ -282,6 +282,24 @@ export const api = {
     });
   },
 
+  // Response Strategies (guía condicional del Contestador por tipo de mensaje entrante)
+  async getResponseStrategies(): Promise<{ responseStrategies: Record<string, any> }> {
+    return request('/api/response-strategies');
+  },
+
+  async updateResponseStrategies(strategies: Record<string, any>): Promise<any> {
+    return request('/api/response-strategies', {
+      method: 'POST',
+      body: JSON.stringify({ strategies })
+    });
+  },
+
+  async deleteResponseStrategy(responseType: string): Promise<any> {
+    return request(`/api/response-strategies/${encodeURIComponent(responseType)}`, {
+      method: 'DELETE'
+    });
+  },
+
   // Leads
   async getLeads(params?: { page?: number; limit?: number; estado?: string; search?: string; ciudad?: string; sortBy?: string; sortOrder?: string }): Promise<{ leads: Lead[]; pagination?: { page: number; limit: number; total: number; totalPages: number } }> {
     const query = new URLSearchParams();
@@ -772,6 +790,42 @@ export const api = {
   // Trigger manual o automático del refinamiento del ADN de Tono (Self-Refining Tone DNA)
   async trainToneDna(): Promise<{ success: boolean; message?: string; error?: string }> {
     return request('/api/leads/train-tone-dna', {
+      method: 'POST'
+    });
+  },
+
+  // Edita a mano las reglas de estilo APRENDIDAS AUTOMÁTICAMENTE para una categoría concreta
+  // (quitar una que resulte contradictoria, o añadir una corrección puntual sin esperar a que
+  // se acumulen 2+ correcciones reales). mode 'pitch' o 'reply', ver dna_expresion.reglas_por_categoria(_respuesta).
+  async updateLearnedToneRules(params: {
+    mode: 'pitch' | 'reply';
+    category: string;
+    reglas_estilo_aprendidas?: string[];
+    reglas_manuales?: string[];
+    vocabulario_aprendido?: string[];
+    terminos_a_evitar?: string[];
+  }): Promise<{ success: boolean; data?: any; error?: string }> {
+    return request('/api/bands/tone-dna/learned-rules', {
+      method: 'PATCH',
+      body: JSON.stringify(params)
+    });
+  },
+
+  // Record campaign-specific pitch training for tone/content refinement
+  async recordCampaignTraining(
+    campaignId: string,
+    borrador_ia: string,
+    texto_aprobado: string
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
+    return request(`/api/campaigns/${campaignId}/record-training`, {
+      method: 'POST',
+      body: JSON.stringify({ borrador_ia, texto_aprobado })
+    });
+  },
+
+  // Force immediate campaign tone DNA training if enough examples exist
+  async trainCampaignToneDna(campaignId: string): Promise<{ success: boolean; campaign?: BookingCampaign; message?: string; error?: string }> {
+    return request(`/api/campaigns/${campaignId}/train-tone-dna`, {
       method: 'POST'
     });
   }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { MessageSquareText, Plus, Trash2, Loader2 } from 'lucide-react';
+import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import type { TemplateCategory } from './TemplateConfigSection';
 
@@ -34,6 +34,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [titulo, setTitulo] = useState('');
   const [resultado, setResultado] = useState<'positiva' | 'negativa' | 'neutral'>('positiva');
   const [mensajes, setMensajes] = useState<ThreadMessage[]>([
@@ -61,12 +62,32 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
   }, [loadThreads]);
 
   const resetForm = () => {
+    setEditingId(null);
     setTitulo('');
     setResultado('positiva');
     setMensajes([
       { rol: 'banda', texto: '', orden: 0 },
       { rol: 'sala', texto: '', orden: 1 },
     ]);
+  };
+
+  const handleEdit = (thread: ExampleThread) => {
+    setEditingId(thread.id);
+    setTitulo(thread.titulo);
+    setResultado(thread.resultado);
+    setMensajes(thread.mensajes.length > 0 ? thread.mensajes : [{ rol: 'banda', texto: '', orden: 0 }]);
+    setError(null);
+    setShowForm(true);
+  };
+
+  const handleToggleForm = () => {
+    if (showForm) {
+      resetForm();
+      setShowForm(false);
+    } else {
+      resetForm();
+      setShowForm(true);
+    }
   };
 
   const handleAddMessageRow = () => {
@@ -94,10 +115,15 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
     }
     setIsSaving(true);
     try {
-      const res = await apiFetch('/api/example-threads', {
-        method: 'POST',
-        body: JSON.stringify({ category, titulo, mensajes: mensajesConTexto, resultado }),
-      });
+      const res = editingId
+        ? await apiFetch(`/api/example-threads/${editingId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ titulo, mensajes: mensajesConTexto, resultado }),
+          })
+        : await apiFetch('/api/example-threads', {
+            method: 'POST',
+            body: JSON.stringify({ category, titulo, mensajes: mensajesConTexto, resultado }),
+          });
       if (res.success) {
         resetForm();
         setShowForm(false);
@@ -129,7 +155,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
         </label>
         <button
           type="button"
-          onClick={() => setShowForm((v) => !v)}
+          onClick={handleToggleForm}
           className="text-[9px] font-bold text-sky-400 hover:underline cursor-pointer flex items-center gap-1"
         >
           <Plus className="w-3 h-3" /> {showForm ? 'Cancelar' : 'Pegar un hilo'}
@@ -145,19 +171,34 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
       ) : threads.length > 0 ? (
         <div className="space-y-1.5">
           {threads.map((t) => (
-            <div key={t.id} className="flex items-center justify-between p-2 rounded-lg bg-[#131313] border border-sky-500/10 text-[10px]">
+            <div
+              key={t.id}
+              onClick={() => handleEdit(t)}
+              className="flex items-center justify-between p-2 rounded-lg bg-[#131313] border border-sky-500/10 text-[10px] cursor-pointer hover:border-sky-500/40 transition-colors"
+              title="Abrir para ver o editar este hilo"
+            >
               <div className="min-w-0">
                 <span className="font-bold text-neutral-200">{t.titulo || 'Sin título'}</span>
                 <span className="text-neutral-500 ml-2">{t.mensajes.length} mensaje(s) · {RESULTADO_LABEL[t.resultado] || t.resultado}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => handleDelete(t.id)}
-                className="p-1 text-neutral-500 hover:text-red-400 cursor-pointer shrink-0"
-                title="Borrar este hilo de ejemplo"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleEdit(t); }}
+                  className="p-1 text-neutral-500 hover:text-sky-400 cursor-pointer"
+                  title="Ver / editar este hilo"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
+                  className="p-1 text-neutral-500 hover:text-red-400 cursor-pointer"
+                  title="Borrar este hilo de ejemplo"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -167,6 +208,9 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
 
       {showForm && (
         <div className="space-y-2.5 pt-2 border-t border-sky-500/20">
+          {editingId && (
+            <div className="text-[9px] text-sky-400 font-sans font-bold">Editando hilo guardado</div>
+          )}
           <input
             type="text"
             value={titulo}
@@ -231,7 +275,7 @@ export function ExampleThreadsSection({ category, isStitchLight, textSub }: Exam
             className="w-full py-1.5 px-3 bg-sky-500 hover:bg-sky-400 text-black font-bold text-[10px] rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-            <span>{isSaving ? 'Guardando...' : 'Guardar hilo de ejemplo'}</span>
+            <span>{isSaving ? 'Guardando...' : editingId ? 'Guardar cambios' : 'Guardar hilo de ejemplo'}</span>
           </button>
         </div>
       )}

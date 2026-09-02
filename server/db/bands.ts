@@ -135,6 +135,46 @@ export async function dbUpdateBandToneDna(bandId: string, dna: any): Promise<boo
   }
 }
 
+// Serializa lecturas+escrituras de dna_expresion por banda: es una única columna JSONB que se
+// lee entera, se modifica en memoria y se sobrescribe entera (dbUpdateBandToneDna no hace merge
+// a nivel de base de datos - ver arriba). Sin este candado, dos escrituras casi simultáneas para
+// la misma banda (dos refinamientos automáticos en segundo plano tras aprobar dos leads seguidos
+// de categorías distintas, o una edición manual de reglas en BandToneModal mientras hay un
+// refinamiento en vuelo) parten de la misma foto inicial y la que escribe último borra por
+// completo los cambios de la otra - un escenario real, no un caso extremo: un mánager revisando
+// y aprobando varios leads en una sola sesión lo dispara con normalidad. Solo sirve dentro de UNA
+// instancia del proceso Node (no es un lock distribuido) - suficiente mientras el servidor corra
+// como una sola instancia, como es el caso hoy (ver railway.json).
+const dnaExpresionQueues = new Map<string, Promise<unknown>>();
+
+async function withBandDnaLock<T>(bandId: string, fn: () => Promise<T>): Promise<T> {
+  const key = cleanBandId(bandId);
+  const previous = dnaExpresionQueues.get(key) || Promise.resolve();
+  const result = previous.then(fn, fn);
+  // Encadena SIEMPRE (nunca rechaza) para que un fallo en una tarea de la cola no bloquee para
+  // siempre las siguientes de la misma banda; el resultado real (éxito o error) lo sigue viendo
+  // quien llamó a esta tarea a través de `result`, que sí propaga el rechazo si lo hubo.
+  dnaExpresionQueues.set(key, result.catch(() => undefined));
+  return result;
+}
+
+/**
+ * Lee, modifica y escribe `dna_expresion` como una operación atómica por banda (ver
+ * withBandDnaLock arriba). `mutate` recibe el dna_expresion actual (objeto, nunca null/undefined)
+ * y debe devolver el objeto completo a guardar - o la MISMA referencia recibida si no hay nada
+ * que cambiar, en cuyo caso no se escribe nada en Supabase.
+ */
+export async function dbUpdateBandDnaExpresion(bandId: string, mutate: (current: any) => any | Promise<any>): Promise<{ ok: boolean; dna: any }> {
+  return withBandDnaLock(bandId, async () => {
+    const registered = await dbGetRegisteredBandById(bandId);
+    const current = (registered?.dna_expresion && typeof registered.dna_expresion === "object") ? registered.dna_expresion : {};
+    const next = await mutate(current);
+    if (next === current) return { ok: true, dna: current };
+    const ok = await dbUpdateBandToneDna(bandId, next);
+    return { ok, dna: next };
+  });
+}
+
 /**
  * Acumula frases reales de directo (lo que la banda dice ENTRE canciones al público: saludos,
  * bromas, agradecimientos) extraídas por la IA de transcripciones de vídeos ya analizados en el
@@ -151,28 +191,17 @@ export async function dbAppendBandSpeechPhrases(bandId: string, nuevasFrases: st
   if (!targetBandId || !limpias.length) return true;
 
   try {
-    const sb = getSupabase();
-    const actual = await dbGetRegisteredBandById(targetBandId);
-    const dnaActual = actual?.dna_expresion && typeof actual.dna_expresion === "object" ? actual.dna_expresion : {};
-    const existentes: string[] = Array.isArray(dnaActual.frases_directo_extraidas) ? dnaActual.frases_directo_extraidas : [];
-
-    const combinadas = [...existentes];
-    for (const frase of limpias) {
-      if (!combinadas.some((f) => f.toLowerCase() === frase.toLowerCase())) combinadas.push(frase);
-    }
-    const acotadas = combinadas.slice(-25);
-
     await ensureRegisteredBandExists(targetBandId);
-    const { error } = await sb
-      .from("registered_bands")
-      .update({ dna_expresion: { ...dnaActual, frases_directo_extraidas: acotadas }, updated_at: new Date().toISOString() })
-      .eq("band_id", targetBandId);
-
-    if (error) {
-      console.warn(`Supabase warning (append frases_directo_extraidas): ${error.message}`);
-      return false;
-    }
-    return true;
+    const { ok } = await dbUpdateBandDnaExpresion(targetBandId, (dnaActual) => {
+      const existentes: string[] = Array.isArray(dnaActual.frases_directo_extraidas) ? dnaActual.frases_directo_extraidas : [];
+      const combinadas = [...existentes];
+      for (const frase of limpias) {
+        if (!combinadas.some((f) => f.toLowerCase() === frase.toLowerCase())) combinadas.push(frase);
+      }
+      const acotadas = combinadas.slice(-25);
+      return { ...dnaActual, frases_directo_extraidas: acotadas };
+    });
+    return ok;
   } catch (err: any) {
     console.warn("[registered_bands] No se pudieron guardar las frases de directo:", err?.message || err);
     return false;
@@ -192,24 +221,13 @@ export async function dbLogReelFeedback(bandId: string, entry: Record<string, an
   if (!targetBandId || !entry) return false;
 
   try {
-    const sb = getSupabase();
-    const actual = await dbGetRegisteredBandById(targetBandId);
-    const dnaActual = actual?.dna_expresion && typeof actual.dna_expresion === "object" ? actual.dna_expresion : {};
-    const existentes: any[] = Array.isArray(dnaActual.historial_feedback_reels) ? dnaActual.historial_feedback_reels : [];
-
-    const actualizados = [entry, ...existentes].slice(0, 30);
-
     await ensureRegisteredBandExists(targetBandId);
-    const { error } = await sb
-      .from("registered_bands")
-      .update({ dna_expresion: { ...dnaActual, historial_feedback_reels: actualizados }, updated_at: new Date().toISOString() })
-      .eq("band_id", targetBandId);
-
-    if (error) {
-      console.warn(`Supabase warning (log historial_feedback_reels): ${error.message}`);
-      return false;
-    }
-    return true;
+    const { ok } = await dbUpdateBandDnaExpresion(targetBandId, (dnaActual) => {
+      const existentes: any[] = Array.isArray(dnaActual.historial_feedback_reels) ? dnaActual.historial_feedback_reels : [];
+      const actualizados = [entry, ...existentes].slice(0, 30);
+      return { ...dnaActual, historial_feedback_reels: actualizados };
+    });
+    return ok;
   } catch (err: any) {
     console.warn("[registered_bands] No se pudo guardar el feedback del Reel:", err?.message || err);
     return false;

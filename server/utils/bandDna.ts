@@ -41,6 +41,8 @@ export interface BandDnaProfile {
   reglasEstiloAprendidas?: string[];
   vocabularioAprendido?: string[];
   terminosAEvitar?: string[];
+  // Reglas añadidas A MANO por el mánager, nunca tocadas por el refinamiento automático.
+  reglasManuales?: string[];
   fewShotSection?: string;
   // ADN de voz y tono entrenado manualmente por el mánager (BandToneModal / dna_expresion)
   tonoComunicacion?: string;
@@ -56,6 +58,8 @@ export interface BandDnaProfile {
   categoryTemplateTitle?: string;
   categoryTemplateGuidelines?: string;
   categoryTemplateCustomInstruction?: string;
+  categoryTemplateBody?: string;
+  categoryTemplateSubject?: string;
 }
 
 function strOrUndef(v: any): string | undefined {
@@ -68,10 +72,31 @@ export function isCampaignActive(campaign: any): boolean {
 }
 
 /**
+ * Resuelve el caché mínimo por tipo de recinto, priorizando campaña activa sobre banda.
+ * Retorna objeto con tipos que aplican + sus cachés (tipos con caché 0 o undefined se filtran).
+ */
+export function resolveMinCacheByType(activeCampaign: any, bandMinCache?: any): Record<string, number> {
+  const cacheToUse = (activeCampaign && isCampaignActive(activeCampaign) && activeCampaign.minCacheByType)
+    ? activeCampaign.minCacheByType
+    : (bandMinCache || {});
+
+  // Filtrar tipos con caché > 0 (aplican a esta campaña/banda)
+  const applicable: Record<string, number> = {};
+  const tipos = ['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'];
+  for (const tipo of tipos) {
+    const cache = cacheToUse[tipo];
+    if (cache && cache > 0) {
+      applicable[tipo] = cache;
+    }
+  }
+  return applicable;
+}
+
+/**
  * Extrae el perfil de ADN completo y multidimensional de cualquier banda registrada
  * o de Bakandeya a partir del estado de la aplicación.
  */
-export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandDnaProfile {
+export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 'pitch' | 'reply' = 'pitch'): BandDnaProfile {
   const cleanId = (bandId || "band-bakandeya").replace(/^(band|reg)-/, "");
   const isBakandeya = cleanId.toLowerCase() === "bakandeya" || cleanId === "";
 
@@ -182,18 +207,28 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
 
   // DNA aprendido automáticamente (Self-Refining Tone DNA), separado por categoría de lead
   // (server/db/pitchLearning.ts) para no mezclar "cómo corrijo a un medio" con "cómo corrijo
-  // a una sala". Con fallback a los campos planos antiguos (una única bolsa para toda la banda)
-  // para bandas que aún no tengan reglas aprendidas específicas de esta categoría.
-  const reglasPorCategoria = dnaExpresion.reglas_por_categoria?.[categoryKey];
+  // a una sala". Además separado por modo (pitch vs reply): corregir cómo se responde a una
+  // negociación no debe enseñarle al sistema a redactar mal el primer contacto, y viceversa -
+  // antes ambos aprendizajes caían en el mismo cubo `reglas_por_categoria`. Con fallback a los
+  // campos planos antiguos solo en modo pitch (nunca existieron específicos de respuesta).
+  const reglasBucketKey = mode === 'reply' ? 'reglas_por_categoria_respuesta' : 'reglas_por_categoria';
+  const reglasPorCategoria = dnaExpresion[reglasBucketKey]?.[categoryKey];
   const reglasEstiloAprendidas = Array.isArray(reglasPorCategoria?.reglas_estilo_aprendidas)
     ? reglasPorCategoria.reglas_estilo_aprendidas
-    : (Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined);
+    : (mode === 'pitch' && Array.isArray(dnaExpresion.reglas_estilo_aprendidas) ? dnaExpresion.reglas_estilo_aprendidas : undefined);
   const vocabularioAprendido = Array.isArray(reglasPorCategoria?.vocabulario_aprendido)
     ? reglasPorCategoria.vocabulario_aprendido
-    : (Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined);
+    : (mode === 'pitch' && Array.isArray(dnaExpresion.vocabulario_aprendido) ? dnaExpresion.vocabulario_aprendido : undefined);
   const terminosAEvitar = Array.isArray(reglasPorCategoria?.terminos_a_evitar)
     ? reglasPorCategoria.terminos_a_evitar
-    : (Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined);
+    : (mode === 'pitch' && Array.isArray(dnaExpresion.terminos_a_evitar) ? dnaExpresion.terminos_a_evitar : undefined);
+  // Reglas añadidas A MANO por el mánager (no las toca nunca el refinamiento automático de
+  // pitchLearning.ts - ver el comentario junto a MAX_REGLAS_IA_POR_CATEGORIA allí). Se muestran
+  // siempre, con prioridad sobre las auto-aprendidas, para garantizar que un entrenamiento
+  // manual nunca se pierde por mucho que se vuelva a entrenar el ADN de tono automáticamente.
+  const reglasManuales = Array.isArray(reglasPorCategoria?.reglas_manuales)
+    ? reglasPorCategoria.reglas_manuales
+    : undefined;
 
   // ADN de voz entrenado a mano por el mánager en BandToneModal (POST /api/bands/analyze-tone,
   // PATCH /api/bands/tone-dna). Hasta ahora solo alimentaba Reels/chat (bandProfile.ts) y nunca
@@ -212,10 +247,16 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
   // (server/routes/leads/templates.ts, category_pitch_templates). Antes esto ni persistía de
   // verdad ni llegaba aquí: el mánager editaba "pautas para salas" y no tenía ningún efecto
   // real en los pitches generados para salas.
+  // El asunto/cuerpo de la plantilla (a diferencia de guidelines/customInstruction) tampoco se
+  // leía nunca aquí: el mánager podía pulir el cuerpo de la plantilla de "salas" a mano en el
+  // panel y esos cambios de redacción no llegaban al Redactor - solo el texto libre de
+  // "guidelines" influía en el pitch generado, nunca la plantilla en sí.
   const categoryTemplate = state?.categoryTemplates?.[categoryKey];
   const categoryTemplateTitle = strOrUndef(categoryTemplate?.title);
   const categoryTemplateGuidelines = strOrUndef(categoryTemplate?.guidelines);
   const categoryTemplateCustomInstruction = strOrUndef(categoryTemplate?.customInstruction);
+  const categoryTemplateBody = strOrUndef(categoryTemplate?.body);
+  const categoryTemplateSubject = strOrUndef(categoryTemplate?.subject);
 
   return {
     bandId,
@@ -249,6 +290,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     reglasEstiloAprendidas,
     vocabularioAprendido,
     terminosAEvitar,
+    reglasManuales,
     tonoComunicacion,
     tratamientoHabitual,
     nivelEnergia,
@@ -259,7 +301,9 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
     recomendacionPitch,
     categoryTemplateTitle,
     categoryTemplateGuidelines,
-    categoryTemplateCustomInstruction
+    categoryTemplateCustomInstruction,
+    categoryTemplateBody,
+    categoryTemplateSubject
   };
 }
 
@@ -267,8 +311,9 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any): BandD
  * Construye un prompt completo y multidimensional que integra todos los ADNs de la banda,
  * el perfil del recinto/medio receptor, el historial de aprendizaje del mánager y las directrices
  * de idioma y tono sin fórmulas clichés de IA.
+ * bandMinCache: cachés mínimos generales de la banda (usados si no hay campaña activa).
  */
-export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any): string {
+export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any, bandMinCache?: any, negotiationStartCacheByType?: any): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
@@ -278,11 +323,25 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const cName = activeCampaign.name || "Campaña de Booking";
     const cDates = activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign.target_dates) ? activeCampaign.target_dates.join(', ') : 'próximas semanas/meses'));
     const cCities = Array.isArray(activeCampaign.targetCities) && activeCampaign.targetCities.length > 0 ? activeCampaign.targetCities.join(', ') : (Array.isArray(activeCampaign.target_cities) ? activeCampaign.target_cities.join(', ') : 'España');
-    const cTemplate = activeCampaign.custom_pitch_template || activeCampaign.customPitchTemplate || '';
+    // Leer plantilla específica de la categoría del lead desde customPitchTemplates (objeto con claves por categoría)
+    const customTemplates = activeCampaign.customPitchTemplates || activeCampaign.custom_pitch_templates || {};
+    const cTemplate = customTemplates[categoryKey] || '';
     const cNotes = activeCampaign.notes || '';
     const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
     const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
-    const capInfo = cMax > 0 ? `Aforo objetivo de sala para esta campaña: ${cMin}-${cMax} personas.` : '';
+    // Removed capInfo - avoid mentioning capacity in pitch unless explicitly needed
+    const capInfo = '';
+
+    const campaignToneRules = activeCampaign.campaignToneRules || activeCampaign.campaign_tone_rules;
+    let campaignToneSection = "";
+    if (campaignToneRules?.reglas_estilo_aprendidas && campaignToneRules.reglas_estilo_aprendidas.length > 0) {
+      campaignToneSection = `
+🎨 REGLAS DE TONO APRENDIDAS ESPECÍFICAMENTE PARA ESTA CAMPAÑA:
+${campaignToneRules.reglas_estilo_aprendidas.map((r: string) => `   - ⭐ ${r}`).join("\n")}
+${campaignToneRules.vocabulario_aprendido && campaignToneRules.vocabulario_aprendido.length > 0 ? `   - Vocabulario clave para esta campaña: ${campaignToneRules.vocabulario_aprendido.join(", ")}` : ""}
+${campaignToneRules.terminos_a_evitar && campaignToneRules.terminos_a_evitar.length > 0 ? `   - Expresiones prohibidas en esta campaña: ${campaignToneRules.terminos_a_evitar.join(", ")}` : ""}
+`;
+    }
 
     campaignSection = `
 ═════════════════════════════════════════════════════════════════════
@@ -290,11 +349,24 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
 ═════════════════════════════════════════════════════════════════════
 - Fechas de concierto deseadas: ${cDates}
 - Ciudades / Rutas objetivo: ${cCities}
-${capInfo ? `- ${capInfo}` : ''}
 ${cTemplate ? `- Mensaje clave / Plantilla de la campaña: "${cTemplate}"` : ''}
 ${cNotes ? `- Notas estratégicas de la campaña: "${cNotes}"` : ''}
-* DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona explícitamente y con total naturalidad que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad en sala para esas fechas concretas. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking.
+${campaignToneSection}
+* DIRECTIVA CRÍTICA: En el cuerpo de la propuesta, menciona de forma natural y sin repeticiones que la banda está cuadrando la ruta para las fechas "${cDates}" y solicita disponibilidad. Si procede, menciona la apertura a compartir cartel con otra banda para co-booking. IMPORTANTE: evita repetir las fechas múltiples veces; menciónlas UNA SOLA VEZ de forma clara y directa.
+* PERSONALIZACIÓN REQUERIDA: Adapta el tono y enfoque específicamente al tipo de recinto destinatario. Menciona detalles concretos de ${lead?.nombre_sala || "la sala"} si los conoces (su género de programación, su audiencia, su reputación). Haz que sienta que la propuesta es PARA ÉL/ELLA específicamente, no un mensaje genérico para 100 salas.
+${cTemplate ? `* DIRECTIVA DE PLANTILLA: La plantilla/mensaje clave de esta campaña ("${cTemplate}") DEBE estar incorporada de forma natural en tu propuesta. Úsala como base o referencia obligatoria para mantener coherencia con la estrategia de la campaña.` : ''}
 `;
+  }
+
+  // Cachés: nunca se revelan explícitamente en el pitch (ver sección interna de negociación
+  // más abajo). Se resuelven aquí para poder inyectarlos solo en la guía interna del Redactor.
+  const applicableCaches = resolveMinCacheByType(activeCampaign, bandMinCache);
+  const applicableNegotiationStartCaches: Record<string, number> = {};
+  if (negotiationStartCacheByType && typeof negotiationStartCacheByType === "object") {
+    for (const tipo of ['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos']) {
+      const val = negotiationStartCacheByType[tipo];
+      if (typeof val === 'number' && val > 0) applicableNegotiationStartCaches[tipo] = val;
+    }
   }
 
   return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".
@@ -323,24 +395,29 @@ ${campaignSection}
 4. CONDICIONES ECONÓMICAS Y CO-BOOKING:
    - Modelo: ${bandDna.flexibilidadEconomica}
    - Co-booking: ${bandDna.propuestaCoBooking}
+${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
+5. REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER PARA "${categoryKey.toUpperCase()}" (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
+${bandDna.reglasManuales.map(r => `   - 🔒 ${r}`).join("\n")}
+` : ""}
+${(bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0) || bandDna.fewShotSection ? `
+6. CÓMO ESCRIBE ESTA BANDA DE VERDAD EN CORREOS DE BOOKING PARA "${categoryKey.toUpperCase()}" (MÁXIMA PRIORIDAD DE ESTILO Y TONO - manda sobre el contexto de identidad de redes sociales del punto 7, que es solo enriquecimiento):
+${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n") : ""}
+${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas en emails reales: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
+${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
+${bandDna.fewShotSection || ""}
+` : ""}
 ${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || bandDna.nivelEnergia || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || (bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0) || bandDna.puntosFuertesConectar || bandDna.recomendacionPitch) ? `
-5. ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER (MANDA SOBRE EL TONO GENÉRICO DE MÁS ABAJO):
-${bandDna.tonoComunicacion ? `   - Tono de comunicación habitual: ${bandDna.tonoComunicacion}` : ""}
-${bandDna.tratamientoHabitual ? `   - Tratamiento habitual: ${bandDna.tratamientoHabitual}` : ""}
-${bandDna.nivelEnergia ? `   - Nivel de energía: ${bandDna.nivelEnergia}` : ""}
-${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `   - Vocabulario propio (úsalo de verdad en el texto, no lo dejes solo como referencia): ${bandDna.vocabularioClave.join(", ")}` : ""}
-${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `   - Frases/expresiones emblemáticas suyas (cuélalas tal cual si encajan de forma natural): ${bandDna.frasesEmblematicas.map(f => `"${f}"`).join(" | ")}` : ""}
-${bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0 ? `   - Emojis que usan de verdad, solo si el registro del correo los admite con moderación profesional: ${bandDna.emojisFrecuentes.join(" ")}` : ""}
+7. CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA (de análisis de redes sociales y directo - úsalo SOLO para enriquecer la personalidad y dar color; si contradice el estilo real mostrado en el punto 6, gana SIEMPRE el punto 6. Cómo habla esta banda con sus fans en redes o sobre el escenario no es necesariamente cómo debe sonar un email profesional a una sala, un ayuntamiento o un management):
+${bandDna.tonoComunicacion ? `   - Tono de comunicación en redes sociales: ${bandDna.tonoComunicacion}` : ""}
+${bandDna.tratamientoHabitual ? `   - Tratamiento habitual en redes: ${bandDna.tratamientoHabitual}` : ""}
+${bandDna.nivelEnergia ? `   - Nivel de energía en redes/directo: ${bandDna.nivelEnergia}` : ""}
+${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `   - Vocabulario propio de redes sociales (cuélalo solo si encaja de forma natural en el registro profesional y no contradice el punto 6): ${bandDna.vocabularioClave.join(", ")}` : ""}
+${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `   - Frases/expresiones emblemáticas de redes o directo (úsalas con moderación, solo si el registro del email las admite): ${bandDna.frasesEmblematicas.map(f => `"${f}"`).join(" | ")}` : ""}
+${bandDna.emojisFrecuentes && bandDna.emojisFrecuentes.length > 0 ? `   - Emojis que usan en redes, solo si el registro del correo los admite con moderación profesional: ${bandDna.emojisFrecuentes.join(" ")}` : ""}
 ${bandDna.puntosFuertesConectar ? `   - Puntos fuertes para conectar con el destinatario: ${bandDna.puntosFuertesConectar}` : ""}
 ${bandDna.recomendacionPitch ? `   - Recomendación de enfoque de pitch para esta banda (análisis de IA sobre su ADN real): ${bandDna.recomendacionPitch}` : ""}
 ` : ""}
-${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-6. REGLAS DE ESTILO APRENDIDAS AUTOMÁTICAMENTE DE CORRECCIONES PREVIAS PARA "${categoryKey.toUpperCase()}" (SELF-REFINING TONE DNA):
-${bandDna.reglasEstiloAprendidas.map(r => `   - ⭐ ${r}`).join("\n")}
-${bandDna.vocabularioAprendido && bandDna.vocabularioAprendido.length > 0 ? `   - Vocabulario y expresiones predilectas: ${bandDna.vocabularioAprendido.join(", ")}` : ""}
-${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `   - Expresiones terminantemente prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
-` : ""}
-7. ENLACES Y DOSSIER:
+8. ENLACES Y DOSSIER:
    - REGLA DE ORO DE ENLACES: No saturar el cuerpo del correo con enlaces a plataformas de streaming en medio del texto. En el cuerpo del correo únicamente se hace referencia elegante al Dossier Oficial / EPK y Rider Técnico adjunto al pie de la firma (${bandDna.epkUrl}), donde el programador encontrará toda la información, vídeos en directo, temas y rider.
 
 ═════════════════════════════════════════════════════════════════════
@@ -358,21 +435,53 @@ ${lead?.notas ? `- Notas previas registradas: "${lead.notas}"` : ""}
 🧠 HISTORIAL DE FEEDBACK Y APRENDIZAJE DEL MÁNAGER:
 ═════════════════════════════════════════════════════════════════════
 ${globalMemory || "Sin historial previo. Mantener tono bailable, directo, profesional y fresco sin instrumentos de viento."}
-${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction) ? `
+${(bandDna.categoryTemplateGuidelines || bandDna.categoryTemplateCustomInstruction || bandDna.categoryTemplateSubject || bandDna.categoryTemplateBody) ? `
 ═════════════════════════════════════════════════════════════════════
-📋 PAUTAS ESPECÍFICAS PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
+📋 PAUTAS Y PLANTILLA DE REFERENCIA PARA "${bandDna.categoryTemplateTitle || leadTipo}" (ENTRENADAS POR EL MÁNAGER PARA ESTE TIPO DE DESTINATARIO):
 ═════════════════════════════════════════════════════════════════════
 ${bandDna.categoryTemplateGuidelines ? bandDna.categoryTemplateGuidelines : ""}
 ${bandDna.categoryTemplateCustomInstruction ? `Instrucción específica reciente del mánager para esta categoría: "${bandDna.categoryTemplateCustomInstruction}"` : ""}
+${bandDna.categoryTemplateSubject ? `Estructura recomendada para el Asunto del email (úsalo como patrón, personaliza los datos):
+   Ejemplo de asunto: "${bandDna.categoryTemplateSubject}"` : ""}
+${bandDna.categoryTemplateBody ? `Plantilla de referencia guardada a mano por el mánager para esta categoría - úsala como modelo real de estructura, ritmo de frase y vocabulario (es la voz más fiel que existe de cómo debe sonar este pitch). NUNCA la copies literal: sustituye cualquier fecha, sala, hito o dato concreto que contenga por los datos reales de este destinatario y de la campaña activa de arriba (si no hay campaña activa, omite fechas concretas en vez de reutilizar las de la plantilla).
+"""
+${bandDna.categoryTemplateBody}
+"""` : ""}
+` : ""}
+${Object.keys(applicableCaches).length > 0 ? `
+═════════════════════════════════════════════════════════════════════
+🔒 GUÍA INTERNA DE NEGOCIACIÓN (NO MENCIONAR A LA SALA):
+═════════════════════════════════════════════════════════════════════
+Cachés mínimos internos por tipo de recinto (usar solo para evaluación estratégica, NUNCA mencionar explícitamente a la sala):
+${Object.entries(applicableCaches).map(([tipo, cache]) => `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: mínimo real ${cache}€`).join("\n")}
+
+ESTRATEGIA DE NEGOCIACIÓN (confidencial para ti):
+- Si el recinto ofrece una cantidad sensiblemente menor a estos mínimos, NO cierres el trato por escrito.
+- En lugar de aceptar una oferta baja directamente, sugiere una conversación por teléfono o WhatsApp para "explorar opciones creativas" o "afinar los detalles económicos", sin comprometerte a una cifra en el email.
+- El objetivo es mantener la flexibilidad en boca sin comprometerse por escrito a un caché que no cubre el mínimo real de la banda.
+- Si el recinto responde positivamente a la llamada, entonces sí se puede cerrar con los términos reales una vez acordados por teléfono.
+
+⚠️ SI LA SALA PREGUNTA EXPLÍCITAMENTE POR EL CACHÉ/PRECIO:
+${Object.keys(applicableNegotiationStartCaches).length > 0
+  ? Object.entries(applicableCaches).map(([tipo, cache]) => {
+      const negStart = applicableNegotiationStartCaches[tipo];
+      return negStart
+        ? `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: responde con ${negStart}€ (mínimo real ${cache}€, margen de negociación de ${negStart - cache}€)`
+        : `   - ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}: no hay cifra de inicio de negociación configurada; responde con una cifra un 15-20% superior al mínimo real (${cache}€) para dejar margen`;
+    }).join("\n")
+  : `   - No hay cifras de inicio de negociación configuradas; si preguntan, responde con una cifra un 15-20% superior al mínimo real correspondiente para dejar margen de negociación.`}
+- Mantén el tono amable y abierto a negociación; nunca presentes la cifra como cerrada o no negociable.
+
+NORMA ORO: Nunca escribas en el pitch los números de caché mínimo ni digas explícitamente "no bajamos de X euros". Estas cifras son SOLO para tu propia evaluación estratégica y para responder si preguntan directamente.
 ` : ""}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN (ANTI-AI SLOP):
 ═════════════════════════════════════════════════════════════════════
 1. ${languageHint.instruction}
-2. ADAPTACIÓN DE ENFOQUE POR TIPO:
-   - SALAS / CLUB DE DIRECTO: Destaca que el show es festivo, bailable y garantiza consumo de barra; ofrece montaje rápido y flexibilidad en taquilla o co-booking con banda local de la ciudad.
+2. ADAPTACIÓN DE ENFOQUE POR TIPO (MÁXIMA PERSONALIZACIÓN AL RECINTO):
+   - SALAS / CLUB DE DIRECTO: Enfoque directo a ese público local específico. Destaca que el show es festivo, bailable y garantiza consumo de barra; ofrece montaje rápido y flexibilidad en taquilla o co-booking con banda local. PROHIBIDO: no menciones "aforos de 300-500 personas" — habla de la sala ESPECÍFICA.
    - FESTIVALES: Resalta la conexión masiva, el alto impacto en horarios nocturnos/tardes y la agilidad en cambio de set.
-   - DISCOTECAS / CLUBS: Presenta el show como Live Set nocturno bailable de madrugada entre DJs.
+   - DISCOTECAS / CLUBS: Presenta el show como Live Set nocturno bailable de madrugada entre DJs. Personaliza el enfoque: ¿qué público tiene esa discoteca? ¿Qué vibe? Menciona cómo el directo encaja en su programación específica.
    - MEDIOS / RADIO / PRENSA: Enfoque informativo y de colaboración cultural; ofrece temas en calidad broadcast (WAV), entrevistas o acústicos (¡JAMÁS pedir bolos ni taquilla a un medio!).
    - GRUPOS / ARTISTAS: Enfoque de colega de profesión para compartir concierto, fecha doble o intercambio (Date Swap en su ciudad y en la nuestra).
    - AYUNTAMIENTOS / FIESTAS: Destaca el carácter festivo e intergeneracional, la solvencia técnica y la facturación formal.
@@ -388,8 +497,9 @@ ${bandDna.categoryTemplateCustomInstruction ? `Instrucción específica reciente
    - NUNCA inventar instrumentos de viento (trompetas, saxos, trombones) para Bakandeya.
    - PROHIBIDAS las frases hechas y clichés ("espero que te encuentres bien", "en el competitivo panorama actual", "una experiencia inolvidable").
    - NO incluir enlaces a Spotify/YouTube en el texto del cuerpo; toda la referencia se canaliza a través del dossier oficial en la firma.
-   - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.
-${bandDna.fewShotSection || ""}`;
+   - NUNCA menciones "aforos de X-Y personas" ni hagas referencias genéricas a "salas de aforo medio". Personaliza SIEMPRE a la sala específica del destinatario.
+   - PROHIBIDO repetir fechas múltiples veces en el mismo email. Menciona las fechas de campaña UNA SOLA VEZ, de forma clara y directa. Si hay variedad de opciones, lístalasde forma compacta ("4, 5, 11 o 12 de diciembre") pero NO repitas la misma información en párrafos diferentes.
+   - Devuelve ÚNICAMENTE el cuerpo redactado del email listo para ser enviado, sin asuntos, encabezados ni metadatos extra.`;
 }
 
 /**
@@ -398,18 +508,71 @@ ${bandDna.fewShotSection || ""}`;
  * contacto. Comparte el ADN de la banda con buildEnhancedPitchSystemPrompt, pero cambia el
  * objetivo (responder, no presentar) y las fuentes de estilo (hilo real + ejemplos de
  * respuestas pasadas, en vez de campaña + directrices de primer contacto).
+ *
+ * Adapta el enfoque según el tipo de respuesta detectado (negociación, confirmación, rechazo,
+ * seguimiento - ver detectResponseType en replyDrafting.ts): usa la guía que la banda haya
+ * configurado a mano para ese tipo (ver AgentAutonomySettingsModal.tsx > "Estrategias de
+ * Respuesta") si existe, o si no una guía automática fija de código. Además aprende de verdad
+ * de las correcciones reales de la banda vía Self-Refining Tone DNA (bandDna.reglasEstiloAprendidas
+ * en modo 'reply' - ver server/db/pitchLearning.ts): ambos mecanismos son complementarios, no
+ * alternativos - la configuración manual es el punto de partida, el aprendizaje lo va afinando.
  */
 export function buildReplySystemPrompt(
   bandDna: BandDnaProfile,
   lead: any,
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
-  replyFewShotSection: string
+  replyFewShotSection: string,
+  responseType?: string,
+  responseStrategy?: any,
+  feedbackDetails?: string[]
 ): string {
   const languageHint = detectPitchLanguage(lead);
   const historialTexto = threadSoFar.length > 0
     ? threadSoFar.map((m) => `[${m.remitente === "banda" ? bandDna.bandName : (lead?.nombre_sala || "Sala")}]: "${m.mensaje}"`).join("\n\n")
     : "Sin mensajes previos registrados en el hilo (es la primera respuesta que se les envía tras el contacto inicial).";
+
+  // Construir sección de guidance condicional basada en el tipo de respuesta detectado: la
+  // configuración manual de la banda (si existe) manda sobre la guía automática genérica.
+  let conditionalGuidanceSection = "";
+  if (responseType && responseStrategy?.guidancePrompt) {
+    conditionalGuidanceSection = `
+🎯 GUÍA CONDICIONAL PARA ESTE TIPO DE RESPUESTA (configurada por el mánager):
+TIPO DETECTADO: "${responseType}"
+INSTRUCCIONES ESPECÍFICAS: ${responseStrategy.guidancePrompt}
+${responseStrategy.tone ? `TONO RECOMENDADO: ${responseStrategy.tone}` : ""}
+${responseStrategy.mentionLinks !== false ? `MENCIONAR ENLACES: Sí, incluye referencias al EPK/Dossier cuando proceda.` : `MENCIONAR ENLACES: No, mantén el email enfocado únicamente en responder la pregunta.`}
+`;
+  } else if (responseType) {
+    const autoGuidance: Record<string, string> = {
+      price_negotiation: `Tu objetivo es demostrar que la banda es flexible en condiciones económicas. Menciona brevemente el modelo de contratación (taquilla compartida, caché variable, co-booking). No entres en cifras concretas a menos que sea absolutamente necesario - esos detalles van en un documento separado o llamada.`,
+      confirmation: `El tono debe ser muy positivo y entusiasta. Confirma lo que ellos proponen, expresa emoción de la banda, y asegúrate de que queda claro que ya hay acuerdo. Ofrece coordinación técnica o logística si es necesario.`,
+      rejection: `El tono debe ser cálido, profesional y sin frustración. Agradece sinceramente su tiempo y consideración, respeta su decisión, y deja siempre la puerta abierta para futuras colaboraciones sin ser insistente.`,
+      follow_up: `Responde directamente a las preguntas específicas. Si piden información, proporciona lo que necesitan del Dossier o del modelo de la banda. Mantén la respuesta enfocada y breve.`,
+      neutral: `Responde de forma amable, profesional y breve sin asumir nada sobre las intenciones de quien escribe.`
+    };
+
+    const autoGuide = autoGuidance[responseType] || "";
+    if (autoGuide) {
+      conditionalGuidanceSection = `
+🎯 GUÍA AUTOMÁTICA PARA ESTE TIPO DE RESPUESTA:
+TIPO DETECTADO: "${responseType}"
+${autoGuide}
+`;
+    }
+  }
+
+  // Instrucciones puntuales del mánager al pulsar "Regenerar con feedback" sobre este borrador
+  // concreto (estrellas de tono/contenido + comentario libre - ver VenueDetailPanel.tsx). No es
+  // persistente por sí solo: lo que de verdad queda aprendido para el futuro es la corrección
+  // final vs. el borrador, vía Self-Refining Tone DNA (dbRecordPitchHumanEdit).
+  let feedbackSection = "";
+  if (feedbackDetails && feedbackDetails.length > 0) {
+    feedbackSection = `
+🛠️ INSTRUCCIONES DEL MÁNAGER PARA ESTA REGENERACIÓN CONCRETA:
+${feedbackDetails.join("\n")}
+`;
+  }
 
   return `Eres el Director de Booking y Mánager de Comunicación de la banda "${bandDna.bandName}".
 Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}" a una propuesta que ya les enviasteis. Tu tarea es redactar la CONTESTACIÓN a ese mensaje, no un pitch nuevo desde cero: responde específicamente a lo que dicen, sin repetir toda la presentación de la banda desde el principio.
@@ -422,18 +585,22 @@ Te acaba de llegar una respuesta REAL de "${lead?.nombre_sala || "un contacto"}"
 - Formato escénico: ${bandDna.formato} (${bandDna.numMusicos} músicos en escenario). ${bandDna.reglaDeOroInstrumentos}
 - Modelo económico: ${bandDna.flexibilidadEconomica}
 - Co-booking: ${bandDna.propuestaCoBooking}
-${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || bandDna.recomendacionPitch) ? `
-ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER (MANDA SOBRE EL TONO GENÉRICO):
-${bandDna.tonoComunicacion ? `- Tono de comunicación habitual: ${bandDna.tonoComunicacion}` : ""}
-${bandDna.tratamientoHabitual ? `- Tratamiento habitual: ${bandDna.tratamientoHabitual}` : ""}
-${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `- Vocabulario propio (úsalo de verdad): ${bandDna.vocabularioClave.join(", ")}` : ""}
-${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `- Frases/expresiones emblemáticas suyas: ${bandDna.frasesEmblematicas.map((f) => `"${f}"`).join(" | ")}` : ""}
-${bandDna.recomendacionPitch ? `- Recomendación de enfoque para esta banda: ${bandDna.recomendacionPitch}` : ""}
+${bandDna.reglasManuales && bandDna.reglasManuales.length > 0 ? `
+REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER (MANDAN SOBRE CUALQUIER OTRA GUÍA DE ESTE PROMPT):
+${bandDna.reglasManuales.map((r) => `- 🔒 ${r}`).join("\n")}
 ` : ""}
-${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? `
-REGLAS DE ESTILO APRENDIDAS DE CORRECCIONES PREVIAS:
-${bandDna.reglasEstiloAprendidas.map((r) => `- ⭐ ${r}`).join("\n")}
+${(bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0) || replyFewShotSection ? `
+CÓMO RESPONDE ESTA BANDA DE VERDAD (MÁXIMA PRIORIDAD DE ESTILO Y TONO - manda sobre el contexto de identidad de redes sociales de más abajo, que es solo enriquecimiento):
+${bandDna.reglasEstiloAprendidas && bandDna.reglasEstiloAprendidas.length > 0 ? bandDna.reglasEstiloAprendidas.map((r) => `- ⭐ ${r}`).join("\n") : ""}
 ${bandDna.terminosAEvitar && bandDna.terminosAEvitar.length > 0 ? `- Expresiones prohibidas: ${bandDna.terminosAEvitar.join(", ")}` : ""}
+${replyFewShotSection}` : ""}
+${(bandDna.tonoComunicacion || bandDna.tratamientoHabitual || (bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0) || (bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0) || bandDna.recomendacionPitch) ? `
+CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA (de análisis de redes sociales y directo - úsalo SOLO para enriquecer, nunca para contradecir el estilo real mostrado arriba. Cómo habla esta banda con sus fans en redes no es necesariamente cómo debe sonar respondiendo a una sala, un ayuntamiento o un management):
+${bandDna.tonoComunicacion ? `- Tono de comunicación en redes sociales: ${bandDna.tonoComunicacion}` : ""}
+${bandDna.tratamientoHabitual ? `- Tratamiento habitual en redes: ${bandDna.tratamientoHabitual}` : ""}
+${bandDna.vocabularioClave && bandDna.vocabularioClave.length > 0 ? `- Vocabulario propio de redes sociales (solo si no contradice el estilo real de arriba): ${bandDna.vocabularioClave.join(", ")}` : ""}
+${bandDna.frasesEmblematicas && bandDna.frasesEmblematicas.length > 0 ? `- Frases/expresiones emblemáticas de redes o directo: ${bandDna.frasesEmblematicas.map((f) => `"${f}"`).join(" | ")}` : ""}
+${bandDna.recomendacionPitch ? `- Recomendación de enfoque para esta banda: ${bandDna.recomendacionPitch}` : ""}
 ` : ""}
 
 ═════════════════════════════════════════════════════════════════════
@@ -453,14 +620,14 @@ ${historialTexto}
 📩 MENSAJE ENTRANTE AL QUE HAY QUE RESPONDER AHORA:
 ═════════════════════════════════════════════════════════════════════
 "${incomingMessage}"
-${replyFewShotSection}
+${conditionalGuidanceSection}${feedbackSection}
 ═════════════════════════════════════════════════════════════════════
 📐 DIRECTRICES DE LA RESPUESTA:
 ═════════════════════════════════════════════════════════════════════
 1. ${languageHint.instruction}
 2. Responde específicamente a lo que dice el mensaje entrante: si pide fecha, propón o confirma fecha; si pregunta precio/condiciones, responde con el modelo económico de la banda; si pone objeciones, gestiónalas sin ser insistente; si es un rechazo claro, agradece con cortesía y deja la puerta abierta sin insistir.
 3. NO repitas la presentación completa de la banda como si fuera el primer contacto: ya la tienen, ve al grano de esta respuesta concreta.
-4. Mantén el mismo tono y vocabulario que ya viene usando la banda en su ADN de voz y en los ejemplos reales de respuestas anteriores, si los hay.
+4. Mantén el mismo tono y vocabulario que muestran los ejemplos reales de respuestas anteriores y las reglas de estilo aprendidas, si los hay (máxima prioridad); usa el contexto de identidad de redes sociales solo como enriquecimiento de fondo.
 5. REGLA DE NO DOBLE FIRMA: no escribas bloques de firma manuales al final; el sistema añade la firma automáticamente.
 6. Devuelve ÚNICAMENTE el cuerpo del email de respuesta, sin asunto ni metadatos.`;
 }
@@ -486,9 +653,9 @@ export function formatReplyFewShotForPrompt(threads: Array<{
 
   return `
 ═════════════════════════════════════════════════════════════════════
-💎 EJEMPLOS REALES DE CÓMO ESTA BANDA HA GESTIONADO CONVERSACIONES SIMILARES:
+💎 EJEMPLOS REALES DE ESTA BANDA RESPONDIENDO - MÁXIMA PRIORIDAD DE ESTILO:
 ═════════════════════════════════════════════════════════════════════
-Imita el tono, la cadencia y el estilo de respuesta de estos hilos reales, adaptándolo a este caso concreto:
+Esto es exactamente cómo responde esta banda de verdad. El tono, la cadencia y el estilo de estos hilos reales MANDAN sobre cualquier otra guía de tono de este prompt (incluido el ADN de voz de redes sociales de más arriba, que es solo contexto de identidad, no una referencia de cómo se escribe a salas/ayuntamientos/managements). Adáptalo a este caso concreto, pero si algo de ahí arriba contradice lo que ves aquí, ignóralo e imita esto:
 
 ${formatted}
 `;

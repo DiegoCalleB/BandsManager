@@ -124,15 +124,23 @@ async function runLectorTick(bandId: string): Promise<void> {
   try {
     const resultado = await runLectorAgent(bandId);
     // Solo se audita cuando hay algo que contar - de lo contrario, correr cada minuto llenaría
-    // agent_execution_logs de miles de entradas "0 mensajes, 0 leads" al día por banda.
-    if (resultado.mensajesLeidos === 0 && resultado.borradoresEnviadosDetectados === 0) return;
+    // agent_execution_logs de miles de entradas "0 mensajes, 0 leads" al día por banda. Un tope de
+    // borradores IA alcanzado SÍ cuenta como "algo que contar" aunque no haya leads actualizados:
+    // antes era invisible (solo un console.warn en lectorAgent.ts) y una banda podía tener el
+    // Contestador automático bloqueado durante horas sin ninguna pista en Auditoría.
+    if (resultado.mensajesLeidos === 0 && resultado.borradoresEnviadosDetectados === 0 && resultado.borradorIaBloqueadosPorLimite === 0) return;
+    const partesBorrador: string[] = [];
+    if (resultado.borradoresEnviadosDetectados > 0) partesBorrador.push(`${resultado.borradoresEnviadosDetectados} por borrador de Gmail enviado a mano`);
+    if (resultado.borradorIaGenerados > 0) partesBorrador.push(`${resultado.borradorIaGenerados} respuesta(s) redactada(s) por IA (Contestador, pendiente de aprobación)`);
+    if (resultado.borradorIaFallidos > 0) partesBorrador.push(`${resultado.borradorIaFallidos} fallo(s) redactando con IA`);
+    if (resultado.borradorIaBloqueadosPorLimite > 0) partesBorrador.push(`${resultado.borradorIaBloqueadosPorLimite} lead(s) sin redactar por tope de IA/hora alcanzado`);
     await logAgentExecution({
       band_id: bandId,
       agente: "lector",
       motor: "node_email_engine",
       disparado_por_tipo: "scheduler",
-      estado: "success",
-      mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s)${resultado.borradoresEnviadosDetectados > 0 ? ` (${resultado.borradoresEnviadosDetectados} de ellos por borrador de Gmail enviado a mano)` : ""} en la bandeja de ${bandId}.`,
+      estado: resultado.borradorIaBloqueadosPorLimite > 0 || resultado.borradorIaFallidos > 0 ? "warning" : "success",
+      mensaje: `Agente Lector: ${resultado.mensajesLeidos} mensaje(s) revisado(s), ${resultado.leadsActualizados.length} lead(s) actualizado(s)${partesBorrador.length > 0 ? ` (${partesBorrador.join(", ")})` : ""} en la bandeja de ${bandId}.`,
       conteo_afectados: resultado.leadsActualizados.length,
       duracion_ms: Date.now() - startTime,
       detalles: resultado

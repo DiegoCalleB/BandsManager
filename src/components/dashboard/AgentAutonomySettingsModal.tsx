@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles, 
+import {
+  Bot, ShieldCheck, Sliders, CheckCircle2, AlertTriangle, X, Sparkles,
   Send, FileEdit, Clock, Euro, Calendar, Lock, ShieldAlert, ArrowRight, Save, Loader2,
   Radio, Mail, FileText, Check, Globe, RefreshCw, Activity, Terminal, ExternalLink,
-  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download
+  ChevronRight, Volume2, Music, CheckSquare, Square, AtSign, UserCheck, Download,
+  MessageSquare, ThumbsUp, ThumbsDown, HelpCircle, Brain
 } from 'lucide-react';
 import { api } from '../../services/api';
+import { apiFetch } from '../../utils/api';
 import { BandSchedule } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { EmailAccountConfig } from '../EmailAccountConfig';
+
+const RESPONSE_LEARNED_CATEGORY_LABELS: Record<string, string> = {
+  salas: '🏛️ Salas',
+  festivales: '🎪 Festivales',
+  discotecas: '🪩 Discotecas',
+  medios: '📻 Medios',
+  grupos: '🎸 Grupos',
+  managements: '💼 Managements',
+  ayuntamientos: '🎉 Ayuntamientos'
+};
+
+interface LearnedRuleBucket {
+  reglas_estilo_aprendidas?: string[];
+  reglas_manuales?: string[];
+  vocabulario_aprendido?: string[];
+  terminos_a_evitar?: string[];
+}
 
 export type DispatchAutonomyLevel = 'draft_only' | 'scheduled_window' | 'autonomous_first_contact';
 export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'advanced_negotiation';
@@ -16,14 +35,27 @@ export type NegotiationDepthLevel = 'outreach_only' | 'filter_conditions' | 'adv
 export interface AgentAutonomyConfig {
   dispatchLevel: DispatchAutonomyLevel;
   negotiationDepth: NegotiationDepthLevel;
-  minCacheThreshold: number;
-  maxCacheThreshold: number;
+  minCacheByType?: {
+    salas?: number;
+    festivales?: number;
+    discotecas?: number;
+    ayuntamientos?: number;
+    medios?: number;
+    grupos?: number;
+  };
+  // Caché de inicio de negociación (opcional): si la sala pregunta directamente por el caché,
+  // el agente responde con esta cifra en vez del mínimo real, dejando margen para negociar.
+  negotiationStartCacheByType?: {
+    salas?: number;
+    festivales?: number;
+    discotecas?: number;
+    ayuntamientos?: number;
+    medios?: number;
+    grupos?: number;
+  };
   autoDeclineUnderMinCache: boolean;
   notifyOnEveryProposal: boolean;
   requireHumanForFinalSignOff: boolean;
-  pitchTone?: string;
-  bioSummary?: string;
-  epkUrl?: string;
   agentSenderEmail?: string;
   agentSenderName?: string;
   agentReplyToEmail?: string;
@@ -40,6 +72,13 @@ interface AgentAutonomySettingsModalProps {
   initialConfig?: Partial<AgentAutonomyConfig>;
   onSaveConfig?: (config: AgentAutonomyConfig) => void;
   onOpenTemplatesSection?: () => void;
+  // Navega a Gestión de Banda (BandCRM), donde vive de verdad el ADN de Tono (BandToneModal) y
+  // el EPK - antes esta modal tenía sus propios campos "Tono"/"Biografía"/"EPK" en la pestaña
+  // Tono & Identidad que parecían configurar el Redactor pero no llegaban a persistirse ni a
+  // leerse en ningún sitio (dbUpsertAutonomyConfig los descartaba y bandDna.ts nunca los leía).
+  // Opcional porque no todos los sitios desde los que se abre esta modal saben navegar fuera de
+  // su propia pantalla (ver el mismo patrón ya existente en onOpenTemplatesSection).
+  onOpenBandProfile?: () => void;
 }
 
 const TIMEZONES = [
@@ -73,10 +112,11 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   isStitchLight = false,
   initialConfig,
   onSaveConfig,
-  onOpenTemplatesSection
+  onOpenTemplatesSection,
+  onOpenBandProfile
 }) => {
   // Navigation Tabs
-  const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'audit_logs'>('autonomy');
+  const [activeTab, setActiveTab] = useState<'autonomy' | 'email_dispatch' | 'schedules' | 'tone' | 'response_strategies' | 'audit_logs'>('autonomy');
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
   const [loadingAuditLogs, setLoadingAuditLogs] = useState<boolean>(false);
   const [auditAgentFilter, setAuditAgentFilter] = useState<string>('all');
@@ -134,14 +174,11 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   const [config, setConfig] = useState<AgentAutonomyConfig>({
     dispatchLevel: initialConfig?.dispatchLevel || 'draft_only',
     negotiationDepth: initialConfig?.negotiationDepth || 'filter_conditions',
-    minCacheThreshold: initialConfig?.minCacheThreshold || 300,
-    maxCacheThreshold: initialConfig?.maxCacheThreshold || 800,
+    minCacheByType: initialConfig?.minCacheByType || {},
+    negotiationStartCacheByType: initialConfig?.negotiationStartCacheByType || {},
     autoDeclineUnderMinCache: initialConfig?.autoDeclineUnderMinCache ?? false,
     notifyOnEveryProposal: initialConfig?.notifyOnEveryProposal ?? true,
     requireHumanForFinalSignOff: true,
-    pitchTone: initialConfig?.pitchTone || 'Cercano y Profesional (Indie/Rock)',
-    bioSummary: initialConfig?.bioSummary || 'Proyecto de directo potente con fusión electrónica y ska/balkan.',
-    epkUrl: initialConfig?.epkUrl || 'https://bandmanager.app/epk/bakandeya',
     agentSenderEmail: initialConfig?.agentSenderEmail || '',
     agentSenderName: initialConfig?.agentSenderName || `${bandName} Management`,
     agentReplyToEmail: initialConfig?.agentReplyToEmail || '',
@@ -170,6 +207,120 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
     checkEmailAccountConnected();
     return () => { isMounted = false; };
   }, [isOpen, bandId, currentUser]);
+
+  // State: Response Strategies (guía condicional del Contestador por tipo de respuesta
+  // detectada en el mensaje entrante de la sala - ver server/services/replyDrafting.ts)
+  type ResponseTone = 'neutral' | 'enthusiastic' | 'cautious';
+  interface ResponseStrategyForm {
+    guidancePrompt: string;
+    tone: ResponseTone;
+    mentionLinks: boolean;
+  }
+  const RESPONSE_TYPES: Array<{ key: string; label: string; description: string; icon: React.ReactNode; defaultTone: ResponseTone }> = [
+    {
+      key: 'price_negotiation',
+      label: 'Negociación de Precio',
+      description: 'La sala pregunta por caché, presupuesto, tarifa o condiciones económicas.',
+      icon: <Euro className="w-4 h-4" />,
+      defaultTone: 'neutral'
+    },
+    {
+      key: 'confirmation',
+      label: 'Confirmación',
+      description: 'La sala confirma, aprueba o expresa interés claro en seguir adelante.',
+      icon: <ThumbsUp className="w-4 h-4" />,
+      defaultTone: 'enthusiastic'
+    },
+    {
+      key: 'rejection',
+      label: 'Rechazo',
+      description: 'La sala declina la propuesta o indica que no tiene disponibilidad.',
+      icon: <ThumbsDown className="w-4 h-4" />,
+      defaultTone: 'cautious'
+    },
+    {
+      key: 'follow_up',
+      label: 'Pregunta de Seguimiento',
+      description: 'La sala pide más información, fechas o detalles concretos.',
+      icon: <HelpCircle className="w-4 h-4" />,
+      defaultTone: 'neutral'
+    }
+  ];
+  const [responseStrategies, setResponseStrategies] = useState<Record<string, ResponseStrategyForm>>({});
+  // Reglas de estilo que el sistema ha aprendido SOLO de tus correcciones reales a respuestas
+  // (Self-Refining Tone DNA, dna_expresion.reglas_por_categoria_respuesta - ver
+  // server/db/pitchLearning.ts). Se muestran junto a la configuración manual de arriba para que
+  // el mánager pueda detectar a simple vista si se contradicen entre sí: la manual está
+  // organizada por TIPO de respuesta, esta por TIPO de sala, así que no hay un cruce automático,
+  // pero verlas juntas es lo que permite pillar el choque.
+  const [learnedResponseRules, setLearnedResponseRules] = useState<Record<string, LearnedRuleBucket>>({});
+  const [isSavingStrategies, setIsSavingStrategies] = useState(false);
+  const [strategiesFeedback, setStrategiesFeedback] = useState<string | null>(null);
+
+  // Checklist de arranque ("¿está esto listo para que el Redactor escriba bien?"): tres señales
+  // que se pueden comprobar de verdad sin inventar datos ni añadir endpoints nuevos.
+  // - toneTrained: dna_expresion.tono_comunicacion o vocabulario_clave rellenados en ADN de Tono
+  //   (mismo endpoint que ya se consulta para learnedResponseRules, un campo más).
+  // - templateCustomized: category_pitch_templates tiene customInstruction no vacío en alguna
+  //   categoría - a diferencia de "guidelines" (que SIEMPRE viene pre-rellenado de fábrica en
+  //   DEFAULT_CATEGORY_TEMPLATES), customInstruction empieza vacío en las 7 categorías y solo se
+  //   rellena si el mánager escribe algo, así que es una señal fiable de personalización real.
+  // No incluye "hilos de ejemplo": comprobarlo de verdad requeriría una llamada por categoría (7
+  // peticiones) solo para un checkbox - mejor un aviso (ya añadido arriba) que un dato a medias.
+  const [startupChecklist, setStartupChecklist] = useState({ toneTrained: false, templateCustomized: false });
+
+  const getStrategyOrDefault = (typeKey: string): ResponseStrategyForm => {
+    const found = responseStrategies[typeKey];
+    const defaultTone = RESPONSE_TYPES.find(t => t.key === typeKey)?.defaultTone || 'neutral';
+    return found || { guidancePrompt: '', tone: defaultTone, mentionLinks: true };
+  };
+
+  const updateStrategyField = <K extends keyof ResponseStrategyForm>(typeKey: string, field: K, value: ResponseStrategyForm[K]) => {
+    setResponseStrategies(prev => ({
+      ...prev,
+      [typeKey]: { ...getStrategyOrDefault(typeKey), [field]: value }
+    }));
+  };
+
+  const handleSaveResponseStrategies = async () => {
+    if (!isAdmin) return;
+    setIsSavingStrategies(true);
+    setStrategiesFeedback(null);
+    try {
+      // Solo persiste estrategias con guía real escrita por el mánager - una entrada vacía
+      // no aporta nada al prompt condicional y solo ensuciaría el JSON guardado.
+      const toSave: Record<string, ResponseStrategyForm> = {};
+      const toDelete: string[] = [];
+      for (const [key, strategy] of Object.entries(responseStrategies)) {
+        if (strategy.guidancePrompt && strategy.guidancePrompt.trim()) {
+          toSave[key] = strategy;
+        } else {
+          // El backend guarda por FUSIÓN (POST hace {...actual, ...nuevo}), así que enviar solo
+          // las que tienen contenido nunca borra las vacías: si antes había una guía guardada y
+          // ahora se ha limpiado el campo, había que borrarla explícitamente o se queda huérfana
+          // en Supabase - el mánager ve el campo vacío en pantalla pero el Contestador sigue
+          // usando la guía antigua para ese tipo de respuesta hasta que se borre de verdad.
+          toDelete.push(key);
+        }
+      }
+      if (Object.keys(toSave).length > 0) {
+        await api.updateResponseStrategies(toSave);
+      }
+      // Un 404 aquí solo significa "todavía no había nada guardado para esta banda" (primera
+      // vez que se abre esta pestaña) - no es un fallo real, así que no debe tumbar el guardado
+      // de arriba ni mostrarse como error al mánager.
+      await Promise.all(toDelete.map((key) => api.deleteResponseStrategy(key).catch((err: any) => {
+        if (err?.status !== 404) throw err;
+      })));
+      setStrategiesFeedback('✅ Estrategias de respuesta guardadas correctamente.');
+      setTimeout(() => setStrategiesFeedback(null), 3000);
+    } catch (e) {
+      console.error('Error guardando estrategias de respuesta:', e);
+      setStrategiesFeedback('⚠️ Error al guardar las estrategias de respuesta.');
+    } finally {
+      setIsSavingStrategies(false);
+    }
+  };
 
   // State: Band Schedules (Lector & Enviador)
   const [timezone, setTimezone] = useState<string>('Europe/Madrid');
@@ -203,13 +354,10 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             ...prev,
             dispatchLevel: serverAutonomy.dispatchLevel || prev.dispatchLevel,
             negotiationDepth: serverAutonomy.negotiationDepth || prev.negotiationDepth,
-            minCacheThreshold: serverAutonomy.minCacheThreshold ?? prev.minCacheThreshold,
-            maxCacheThreshold: serverAutonomy.maxCacheThreshold ?? prev.maxCacheThreshold,
+            minCacheByType: serverAutonomy.minCacheByType ?? prev.minCacheByType,
+            negotiationStartCacheByType: serverAutonomy.negotiationStartCacheByType ?? prev.negotiationStartCacheByType,
             autoDeclineUnderMinCache: !!serverAutonomy.autoDeclineUnderMinCache,
             notifyOnEveryProposal: serverAutonomy.notifyOnEveryProposal !== false,
-            pitchTone: serverAutonomy.pitchTone || prev.pitchTone,
-            bioSummary: serverAutonomy.bioSummary || prev.bioSummary,
-            epkUrl: serverAutonomy.epkUrl || prev.epkUrl,
             agentSenderEmail: serverAutonomy.agentSenderEmail || prev.agentSenderEmail,
             agentSenderName: serverAutonomy.agentSenderName || prev.agentSenderName,
             agentReplyToEmail: serverAutonomy.agentReplyToEmail || prev.agentReplyToEmail,
@@ -238,7 +386,41 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
           // ignore
         }
 
-        // 3. Fetch Band Schedule (Lector & Enviador crons)
+        // 3. Fetch Response Strategies (guía condicional del Contestador)
+        const serverStrategies = await api.getResponseStrategies().catch(() => null);
+        if (isMounted && serverStrategies?.responseStrategies) {
+          setResponseStrategies(serverStrategies.responseStrategies as Record<string, ResponseStrategyForm>);
+        }
+
+        // 3b. Fetch reglas aprendidas de respuestas (Self-Refining Tone DNA) - mismo endpoint
+        // que ya usa BandToneModal.tsx, solo nos quedamos con la parte de respuestas. De paso,
+        // reutilizamos la misma llamada para la señal "ADN de voz entrenado" de la checklist.
+        const toneDnaRes = await apiFetch('/api/bands/tone-dna').catch(() => null);
+        if (isMounted && toneDnaRes?.data?.reglas_por_categoria_respuesta) {
+          setLearnedResponseRules(toneDnaRes.data.reglas_por_categoria_respuesta);
+        }
+        const toneDnaData = toneDnaRes?.data;
+        const toneTrained = Boolean(
+          (toneDnaData?.tono_comunicacion && String(toneDnaData.tono_comunicacion).trim()) ||
+          (Array.isArray(toneDnaData?.vocabulario_clave) && toneDnaData.vocabulario_clave.length > 0)
+        );
+
+        // 3c. Fetch plantillas de categoría, solo para la señal "plantilla personalizada" de la
+        // checklist: customInstruction empieza vacío en las 7 categorías por defecto (a
+        // diferencia de guidelines, que ya viene pre-rellenado de fábrica), así que si alguna
+        // tiene contenido es que el mánager escribió una instrucción propia de verdad.
+        const templatesRes = await apiFetch('/api/templates').catch(() => null);
+        const templateCustomized = Boolean(
+          templatesRes?.templates &&
+          Object.values(templatesRes.templates as Record<string, { customInstruction?: string }>)
+            .some((t) => t.customInstruction && t.customInstruction.trim())
+        );
+
+        if (isMounted) {
+          setStartupChecklist({ toneTrained, templateCustomized });
+        }
+
+        // 4. Fetch Band Schedule (Lector & Enviador crons)
         const serverSchedule: BandSchedule = await api.getBandSchedule(targetBand).catch(() => null);
         if (isMounted && serverSchedule) {
           if (serverSchedule.timezone) setTimezone(serverSchedule.timezone);
@@ -422,7 +604,20 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Sliders className="w-4 h-4" />
-            <span>1. Autonomía & Líneas Rojas</span>
+            <span>1. Autonomía</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('response_strategies')}
+            className={`py-3 px-3.5 text-xs font-mono font-bold flex items-center gap-2 border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'response_strategies'
+                ? 'border-amber-400 text-amber-400'
+                : 'border-transparent text-neutral-400 hover:text-zinc-200'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 text-purple-400" />
+            <span>2. Estrategias de Respuesta</span>
           </button>
 
           <button
@@ -435,7 +630,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Mail className="w-4 h-4 text-sky-400" />
-            <span>2. Email & Buzón de Agentes</span>
+            <span>3. Email & Buzón</span>
             {emailAccountConnected && (
               <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-sm"></span>
             )}
@@ -451,7 +646,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Clock className="w-4 h-4" />
-            <span>3. Horarios & Workflows</span>
+            <span>4. Horarios</span>
           </button>
 
           <button
@@ -464,7 +659,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Sparkles className="w-4 h-4" />
-            <span>4. Tono & Identidad</span>
+            <span>5. Tono & Identidad</span>
           </button>
 
           <button
@@ -477,7 +672,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             }`}
           >
             <Activity className="w-4 h-4 text-emerald-400" />
-            <span>5. Auditoría & Trazabilidad</span>
+            <span>6. Auditoría</span>
             {auditLogs.length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-emerald-500/20 text-emerald-300 font-mono">
                 {auditLogs.length}
@@ -502,6 +697,55 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
           {/* TAB 1: AUTONOMÍA & LÍNEAS ROJAS */}
           {activeTab === 'autonomy' && (
             <div className="space-y-6">
+              {/* Checklist de arranque: solo se muestra mientras falte algo por hacer - una vez
+                  todo listo desaparece sola, para no molestar a un mánager que ya lo configuró
+                  todo. Las tres señales se comprueban de verdad (ver startupChecklist arriba),
+                  no son un adorno - por eso solo hay tres y no más: cualquier señal que no se
+                  pudiera verificar con fiabilidad (como los Hilos de Ejemplo) se dejó fuera en
+                  vez de fingir que se comprueba. */}
+              {!emailAccountConnected || !startupChecklist.toneTrained || !startupChecklist.templateCustomized ? (
+                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2.5">
+                  <span className="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Lo mínimo para que el Redactor escriba bien
+                  </span>
+                  <div className="space-y-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('email_dispatch')}
+                      className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
+                    >
+                      <span className={`text-[11px] font-sans flex items-center gap-1.5 ${emailAccountConnected ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+                        {emailAccountConnected ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />}
+                        Conectar el buzón de la banda
+                      </span>
+                      {!emailAccountConnected && <span className="text-[10px] text-emerald-400 group-hover:underline shrink-0">Ir ➔</span>}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('tone')}
+                      className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
+                    >
+                      <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.toneTrained ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+                        {startupChecklist.toneTrained ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />}
+                        Entrenar el ADN de voz de la banda
+                      </span>
+                      {!startupChecklist.toneTrained && <span className="text-[10px] text-emerald-400 group-hover:underline shrink-0">Ir ➔</span>}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('tone')}
+                      className="w-full flex items-center justify-between gap-2 text-left cursor-pointer group"
+                    >
+                      <span className={`text-[11px] font-sans flex items-center gap-1.5 ${startupChecklist.templateCustomized ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+                        {startupChecklist.templateCustomized ? <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> : <span className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />}
+                        Personalizar al menos una plantilla de categoría
+                      </span>
+                      {!startupChecklist.templateCustomized && <span className="text-[10px] text-emerald-400 group-hover:underline shrink-0">Ir ➔</span>}
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               {/* REGLA NO NEGOCIABLE NOTICE */}
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3">
                 <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
@@ -699,48 +943,84 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
               {/* 3. PARÁMETROS ECONÓMICOS */}
               <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-4">
                 <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                  <Euro className="w-4 h-4" /> 3. Umbrales Económicos de Negociación para {bandName}
+                  <Euro className="w-4 h-4" /> 3. Caché Mínimo por Tipo de Recinto para {bandName}
                 </h4>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                      Caché Mínimo Aceptable (€)
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        disabled={!isAdmin}
-                        value={config.minCacheThreshold}
-                        onChange={(e) => setConfig({ ...config, minCacheThreshold: Number(e.target.value) })}
-                        className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                        placeholder="300"
-                      />
-                      <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">EUR</span>
-                    </div>
-                    <p className="text-[10px] text-neutral-500">
-                      Si una sala ofrece menos de este importe, el agente no aceptará sin tu validación.
-                    </p>
-                  </div>
+                <p className="text-xs text-neutral-400">
+                  Define el caché mínimo aceptable para cada tipo de recinto. Dejar un campo vacío significa que ese tipo no aplica a tus negociaciones.
+                </p>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                      Caché Objetivo / Ideal (€)
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        disabled={!isAdmin}
-                        value={config.maxCacheThreshold}
-                        onChange={(e) => setConfig({ ...config, maxCacheThreshold: Number(e.target.value) })}
-                        className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                        placeholder="800"
-                      />
-                      <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">EUR</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => (
+                    <div key={type} className="space-y-1.5">
+                      <label className="text-xs font-mono text-neutral-400 font-semibold block">
+                        {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          disabled={!isAdmin}
+                          value={config.minCacheByType?.[type] || ''}
+                          onChange={(e) => {
+                            const val = e.target.value ? Number(e.target.value) : undefined;
+                            setConfig({
+                              ...config,
+                              minCacheByType: {
+                                ...config.minCacheByType,
+                                [type]: val
+                              }
+                            });
+                          }}
+                          className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
+                          placeholder="—"
+                        />
+                        <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
+                      </div>
                     </div>
-                    <p className="text-[10px] text-neutral-500">
-                      Cifra inicial que el agente utilizará en la primera propuesta de contratación.
-                    </p>
+                  ))}
+                </div>
+
+                <div className="pt-3 border-t border-neutral-800 space-y-2">
+                  <h5 className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
+                    <Euro className="w-3.5 h-3.5" /> Caché de Inicio de Negociación (opcional)
+                  </h5>
+                  <p className="text-xs text-neutral-400">
+                    Si la sala pregunta directamente por el caché, el agente responderá con esta cifra en vez del mínimo real, dejando margen para negociar a la baja sin bajar nunca del mínimo. Déjalo vacío para que el agente no mencione cifras salvo que le pregunten.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {(['salas', 'festivales', 'discotecas', 'ayuntamientos', 'medios', 'grupos'] as const).map((type) => {
+                      const minVal = config.minCacheByType?.[type];
+                      const negStartVal = config.negotiationStartCacheByType?.[type];
+                      const isBelowMin = typeof minVal === 'number' && typeof negStartVal === 'number' && negStartVal < minVal;
+                      return (
+                        <div key={type} className="space-y-1.5">
+                          <label className="text-xs font-mono text-neutral-400 font-semibold block">
+                            {RESPONSE_LEARNED_CATEGORY_LABELS[type]}
+                          </label>
+                          <div className="relative">
+                            <input
+                              type="number"
+                              disabled={!isAdmin}
+                              value={negStartVal || ''}
+                              onChange={(e) => {
+                                const val = e.target.value ? Number(e.target.value) : undefined;
+                                setConfig({
+                                  ...config,
+                                  negotiationStartCacheByType: {
+                                    ...config.negotiationStartCacheByType,
+                                    [type]: val
+                                  }
+                                });
+                              }}
+                              className={`w-full px-3 py-2 rounded-xl bg-neutral-900 border text-zinc-100 text-xs font-mono focus:border-sky-500 focus:outline-none disabled:opacity-60 ${isBelowMin ? 'border-red-600' : 'border-neutral-700'}`}
+                              placeholder="—"
+                            />
+                            <span className="absolute right-3 top-2.5 text-xs text-neutral-500 font-mono">€</span>
+                          </div>
+                          {isBelowMin && <p className="text-[10px] text-red-400 font-mono">Por debajo del mínimo real (€{minVal})</p>}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -753,7 +1033,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                       onChange={(e) => setConfig({ ...config, autoDeclineUnderMinCache: e.target.checked })}
                       className="rounded border-neutral-700 bg-neutral-900 text-amber-500 focus:ring-amber-500 disabled:opacity-60"
                     />
-                    <span>Rechazar amablemente si la sala no llega al caché mínimo</span>
+                    <span>Rechazar amablemente si no se alcanza el caché mínimo</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer text-neutral-300 font-sans">
@@ -771,7 +1051,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 2: EMAIL & BUZÓN DE DESPACHO */}
+          {/* TAB 3: EMAIL & BUZÓN DE DESPACHO */}
           {activeTab === 'email_dispatch' && (
             <div className="space-y-6">
               {/* Header Info */}
@@ -913,7 +1193,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 3: HORARIOS & WORKFLOWS */}
+          {/* TAB 4: HORARIOS & WORKFLOWS */}
           {activeTab === 'schedules' && (
             <div className="space-y-6">
               
@@ -1251,65 +1531,53 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 3: TONO & IDENTIDAD */}
+          {/* TAB 5: TONO & IDENTIDAD
+              Antes esta pestaña tenía sus propios campos "Tono", "Biografía" y "URL del EPK"
+              que parecían configurar al Redactor pero no hacían nada real: dbUpsertAutonomyConfig
+              los descartaba al guardar (ni siquiera llegaban a Supabase) y bandDna.ts - el código
+              que de verdad construye los prompts de pitch/respuesta - nunca los leía. Un mánager
+              podía rellenarlos de buena fe pensando que así entrenaba el tono de sus emails, sin
+              ningún efecto. El tono real se entrena en ADN de Tono (BandToneModal, dentro de
+              Gestión de Banda) y la biografía/EPK en la configuración del propio EPK - esta
+              pestaña ahora solo señala hacia ahí en vez de duplicar una configuración fantasma. */}
           {activeTab === 'tone' && (
             <div className="space-y-6">
-              
-              {/* Estilo y Tono */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                  Tono de Comunicación de la Banda
-                </label>
-                <select
-                  disabled={!isAdmin}
-                  value={config.pitchTone}
-                  onChange={(e) => setConfig({ ...config, pitchTone: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                >
-                  <option value="Cercano y Profesional (Indie/Rock)">🎸 Cercano y Profesional (Indie / Rock / Alternativo)</option>
-                  <option value="Festivo y Enérgico (Ska / Balkan / Mestizaje)">🎺 Festivo, Alegre y Enérgico (Ska / Balkan / Mestizaje)</option>
-                  <option value="Directo y Rebelde (Punk / Hardcore / Metal)">⚡ Directo, Contundente y Sin Filtros (Punk / Rock / Metal)</option>
-                  <option value="Elegante y Corporativo (Jazz / Acústico / Fusión)">🎻 Elegante, Exquisito y Formal (Jazz / Fusión / Clásica)</option>
-                  <option value="Urbano y Moderno (Trap / Hip-Hop / Electrónica)">🎧 Urbano, Fresco y Contemporáneo (Electrónica / Urbano)</option>
-                </select>
-                <p className="text-[10px] text-neutral-500">
-                  Define la personalidad y el vocabulario que el Agente Redactor aplicará al redactar para las salas.
-                </p>
-              </div>
-
-              {/* Bio Resumen */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                  Biografía Resumen para Pitches (Elevator Pitch)
-                </label>
-                <textarea
-                  disabled={!isAdmin}
-                  value={config.bioSummary}
-                  onChange={(e) => setConfig({ ...config, bioSummary: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-sans focus:border-amber-500 focus:outline-none disabled:opacity-60 leading-relaxed"
-                  placeholder="Ej: Banda de 6 músicos con potente directo que fusiona sección de vientos con bases electrónicas..."
-                />
-              </div>
-
-              {/* URL del EPK */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-400 font-semibold block">
-                  Enlace Oficial al Dossier EPK / Prensa
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    disabled={!isAdmin}
-                    value={config.epkUrl}
-                    onChange={(e) => setConfig({ ...config, epkUrl: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-mono focus:border-amber-500 focus:outline-none disabled:opacity-60"
-                    placeholder="https://bandmanager.app/epk/bakandeya"
-                  />
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3">
+                <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <div className="space-y-1 leading-relaxed">
+                  <strong className="font-bold text-amber-200">El tono y la biografía se entrenan en Gestión de Banda</strong>
+                  <p className="text-neutral-300 text-[11px]">
+                    Para que el Agente Redactor escriba con la voz real de {bandName}, el tono de comunicación, vocabulario propio y biografía se configuran en <strong className="text-zinc-100">ADN de Tono</strong>, dentro de la ficha de la banda - no aquí. Ese es el único sitio donde esos datos llegan de verdad a los pitches y respuestas generados.
+                  </p>
                 </div>
-                <p className="text-[10px] text-neutral-500">
-                  Este enlace se insertará automáticamente en los correos salientes hacia promotores y medios.
-                </p>
+              </div>
+
+              {/* Enlace a ADN de Tono */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider">
+                    ¿Quieres entrenar el tono de voz de la banda?
+                  </h4>
+                  <p className="text-[11px] text-neutral-300 font-sans mt-0.5">
+                    Analiza automáticamente vuestras redes sociales, o edita a mano el tono, tratamiento y vocabulario propio en ADN de Tono, dentro de Gestión de Banda.
+                  </p>
+                </div>
+                {onOpenBandProfile ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenBandProfile();
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+                  >
+                    Ir a Gestión de Banda ➔
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-neutral-500 font-mono shrink-0 max-w-[160px] text-right">
+                    Búscalo en Gestión de Banda ➔ ADN de Tono
+                  </span>
+                )}
               </div>
 
               {/* Enlace rápido a plantillas en Booking */}
@@ -1339,7 +1607,202 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
             </div>
           )}
 
-          {/* TAB 5: AUDITORÍA & TRAZABILIDAD */}
+          {/* TAB 2: ESTRATEGIAS DE RESPUESTA (guía condicional del Contestador según el tipo
+              de mensaje que la sala responda - ver server/services/replyDrafting.ts) */}
+          {activeTab === 'response_strategies' && (
+            <div className="space-y-6">
+              <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs flex items-start gap-3">
+                <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+                <div className="space-y-1 leading-relaxed">
+                  <strong className="font-bold text-purple-200">¿Cómo debe responder el agente cuando una sala contesta?</strong>
+                  <p className="text-neutral-300 text-[11px]">
+                    Cuando una sala responde a un correo, el Agente Lector detecta automáticamente de qué tipo de mensaje se trata y redacta un borrador. Aquí puedes darle instrucciones concretas para cada tipo de situación, además del tono a aplicar. El borrador siempre queda pendiente de tu aprobación antes de enviarse.
+                  </p>
+                </div>
+              </div>
+
+              {/* Reglas aprendidas automáticamente de tus correcciones reales (Self-Refining
+                  Tone DNA), mostradas AQUÍ MISMO junto a la configuración manual de abajo para
+                  que sea fácil pillar si se contradicen: la config manual está organizada por
+                  TIPO de respuesta (negociación, confirmación...), esto por TIPO de sala (salas,
+                  festivales...) - no hay un cruce automático entre ambas, así que la detección
+                  de conflicto depende de que lo veas tú al leerlas juntas. */}
+              {Object.keys(learnedResponseRules).length > 0 && (
+                <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 space-y-2.5">
+                  <div className="flex items-start gap-2">
+                    <Brain className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <span className="text-xs font-bold text-sky-200 block">
+                        Lo que el sistema ya ha aprendido solo de tus respuestas reales
+                      </span>
+                      <p className="text-[11px] text-neutral-300 leading-relaxed">
+                        Compara esto con lo que configures abajo: si se contradicen (p. ej. aquí dice "sé breve" pero abajo pides explicar mucho), la guía manual de abajo tiene prioridad, pero mejor evitar la contradicción desde el principio. Si una regla concreta no encaja, puedes quitarla desde <strong className="text-sky-200">ADN de Tono → Reglas Aprendidas de tus Respuestas</strong> (ahí también se pueden borrar o añadir a mano).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    {Object.entries(learnedResponseRules).map(([cat, reglas]) => (
+                      <div key={cat} className="p-2.5 rounded-lg bg-black/30 border border-sky-900/30 space-y-1">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-300">
+                          {RESPONSE_LEARNED_CATEGORY_LABELS[cat] || cat}
+                        </span>
+                        {reglas.reglas_manuales && reglas.reglas_manuales.length > 0 && (
+                          <ul className="space-y-0.5">
+                            {reglas.reglas_manuales.map((r, idx) => (
+                              <li key={idx} className="text-[10px] font-sans text-amber-200">🔒 {r}</li>
+                            ))}
+                          </ul>
+                        )}
+                        {reglas.reglas_estilo_aprendidas && reglas.reglas_estilo_aprendidas.length > 0 ? (
+                          <ul className="space-y-0.5">
+                            {reglas.reglas_estilo_aprendidas.map((r, idx) => (
+                              <li key={idx} className="text-[10px] font-sans text-neutral-300">⭐ {r}</li>
+                            ))}
+                          </ul>
+                        ) : (!reglas.reglas_manuales || reglas.reglas_manuales.length === 0) && (
+                          <p className="text-[10px] font-mono text-neutral-500">Sin reglas todavía.</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Atajo hacia Hilos de Email de Ejemplo (ExampleThreadsSection, dentro de Booking
+                  CRM > Plantillas de Email > por categoría): es la forma más rápida de arrancar
+                  con calidad desde el día 1 - a diferencia de las reglas de arriba (que necesitan
+                  2+ correcciones reales acumuladas para generarse solas), pegar 2-3 conversaciones
+                  reales ya buenas alimenta el few-shot de pitches Y respuestas al instante. Sin
+                  este aviso, esta herramienta es fácil de no descubrir nunca (vive dentro de una
+                  sub-pestaña de una sub-pestaña de otra pantalla). Reutiliza el mismo callback
+                  onOpenTemplatesSection que ya usan la pestaña Autonomía y Tono para lo mismo. */}
+              <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-mono font-bold text-sky-300 uppercase tracking-wider">
+                    ¿Quieres que aprenda rápido, sin esperar a corregir borradores?
+                  </h4>
+                  <p className="text-[11px] text-neutral-300 font-sans mt-0.5">
+                    Pega 2-3 conversaciones reales (vuestro mensaje + la respuesta de la sala) en Hilos de Email de Ejemplo. Alimentan al instante tanto el pitch inicial como las respuestas, sin esperar a acumular correcciones.
+                  </p>
+                </div>
+                {onOpenTemplatesSection ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenTemplatesSection();
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer shrink-0"
+                  >
+                    Ver Hilos de Ejemplo ➔
+                  </button>
+                ) : (
+                  <span className="text-[10px] text-neutral-500 font-mono shrink-0 max-w-[160px] text-right">
+                    Búscalo en Plantillas de Email
+                  </span>
+                )}
+              </div>
+
+              {RESPONSE_TYPES.map((type) => {
+                const strategy = getStrategyOrDefault(type.key);
+                return (
+                  <div key={type.key} className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300">
+                        {type.icon}
+                      </span>
+                      <div>
+                        <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-100">
+                          {type.label}
+                        </h4>
+                        <p className="text-[10px] text-neutral-400 font-sans">{type.description}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-mono text-neutral-400 font-semibold block">
+                        Instrucción para la IA (opcional)
+                      </label>
+                      <textarea
+                        disabled={!isAdmin}
+                        rows={2}
+                        value={strategy.guidancePrompt}
+                        onChange={(e) => updateStrategyField(type.key, 'guidancePrompt', e.target.value)}
+                        placeholder={`Ej: ${
+                          type.key === 'price_negotiation'
+                            ? 'Menciona que somos flexibles con taquilla compartida, pero no des cifras concretas por email.'
+                            : type.key === 'confirmation'
+                            ? 'Pide directamente los datos técnicos del rider y el horario de la prueba de sonido.'
+                            : type.key === 'rejection'
+                            ? 'Pregunta si hay otras fechas disponibles más adelante en la temporada.'
+                            : 'Responde de forma breve y concreta a lo que pregunten, sin extenderte.'
+                        }`}
+                        className="w-full px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-700 text-zinc-100 text-xs font-sans focus:border-purple-500 focus:outline-none disabled:opacity-60 resize-none"
+                      />
+                      <p className="text-[10px] text-neutral-500">
+                        Si lo dejas vacío, el agente usa una guía automática genérica para este tipo de respuesta.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+                      <div className="space-y-1 flex-1">
+                        <label className="text-[10px] font-mono text-neutral-500 font-semibold block">Tono</label>
+                        <div className="flex gap-1.5">
+                          {(['neutral', 'enthusiastic', 'cautious'] as ResponseTone[]).map((toneOption) => (
+                            <button
+                              key={toneOption}
+                              type="button"
+                              disabled={!isAdmin}
+                              onClick={() => updateStrategyField(type.key, 'tone', toneOption)}
+                              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold border transition-all ${
+                                !isAdmin ? 'cursor-default' : 'cursor-pointer'
+                              } ${
+                                strategy.tone === toneOption
+                                  ? 'bg-purple-500/20 border-purple-500 text-purple-200'
+                                  : 'bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-zinc-200'
+                              }`}
+                            >
+                              {toneOption === 'neutral' ? 'Neutral' : toneOption === 'enthusiastic' ? 'Entusiasta' : 'Prudente'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <label className="flex items-center gap-2 cursor-pointer text-neutral-300 font-sans text-[11px]">
+                        <input
+                          type="checkbox"
+                          disabled={!isAdmin}
+                          checked={strategy.mentionLinks}
+                          onChange={(e) => updateStrategyField(type.key, 'mentionLinks', e.target.checked)}
+                          className="rounded border-neutral-700 bg-neutral-900 text-purple-500 focus:ring-purple-500 disabled:opacity-60"
+                        />
+                        <span>Mencionar enlace al Dossier/EPK si procede</span>
+                      </label>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {isAdmin && (
+                <div className="flex items-center justify-between gap-3 pt-1">
+                  {strategiesFeedback && (
+                    <span className="text-[11px] font-mono text-neutral-300">{strategiesFeedback}</span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleSaveResponseStrategies}
+                    disabled={isSavingStrategies}
+                    className="ml-auto px-4 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50 transition-all"
+                  >
+                    {isSavingStrategies ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    <span>{isSavingStrategies ? 'Guardando...' : 'Guardar Estrategias de Respuesta'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 6: AUDITORÍA & TRAZABILIDAD */}
           {activeTab === 'audit_logs' && (
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">

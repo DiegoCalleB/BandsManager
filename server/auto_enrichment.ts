@@ -1,6 +1,6 @@
 import { getAiClient, generateContentWithFallback } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
-import { loadState, saveState } from "./state.js";
+import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
 import { detectPitchLanguage } from "./utils/leadLanguage.js";
 import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
@@ -274,7 +274,10 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
     const state = loadState();
     const bandDna = getBandDnaProfile(state, userBandId, lead);
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead);
+    const autonomyConfig = getAutonomyConfigForBand(state, userBandId);
+    const bandMinCache = autonomyConfig?.minCacheByType;
+    const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, undefined, bandMinCache, negotiationStartCacheByType);
 
     const pitchLinks = {
       spotify: bandDna.spotifyUrl,

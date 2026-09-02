@@ -75,6 +75,33 @@ export async function dbCreateExampleThread(bandId: string, thread: {
   return normalizeFromDb(data);
 }
 
+export async function dbUpdateExampleThread(id: string, bandId: string, thread: {
+  titulo?: string;
+  mensajes: ExampleThreadMessage[];
+  resultado?: "positiva" | "negativa" | "neutral";
+  notas?: string;
+}): Promise<ExampleThread> {
+  const cleanId = cleanBandId(bandId);
+
+  const payload = {
+    titulo: thread.titulo || "",
+    mensajes: thread.mensajes || [],
+    resultado: thread.resultado || "positiva",
+    notas: thread.notas || ""
+  };
+
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("pitch_example_threads")
+    .update(payload)
+    .eq("id", id)
+    .eq("band_id", cleanId)
+    .select()
+    .single();
+  if (error) throw new Error(`Supabase Error (update example thread): ${error.message}`);
+  return normalizeFromDb(data);
+}
+
 export async function dbDeleteExampleThread(id: string, bandId: string): Promise<boolean> {
   const cleanId = cleanBandId(bandId);
   const sb = getSupabase();

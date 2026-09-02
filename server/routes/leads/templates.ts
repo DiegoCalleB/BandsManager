@@ -1,5 +1,5 @@
 import express from "express";
-import { requireAuth, loadState } from "../../state.js";
+import { requireAuth, loadState, getAutonomyConfigForBand } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { DEFAULT_CATEGORY_TEMPLATES } from "../../promptsManager.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
@@ -90,6 +90,91 @@ router.post("/templates/save", requireAuth, async (req, res) => {
   } catch (error: any) {
     console.error("Error in POST /api/templates/save:", error);
     res.status(500).json({ success: false, error: "Error al guardar las plantillas y pautas de IA." });
+  }
+});
+
+// Preview how AI will write using current template settings (without saving)
+// Used for the "Probar Prompt" button to show a real-time sample before committing
+router.post("/templates/preview", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { category, subject, body, guidelines } = req.body;
+
+    if (!category || !DEFAULT_CATEGORY_TEMPLATES[category]) {
+      return res.status(400).json({ success: false, error: "Categoría de plantilla no válida." });
+    }
+
+    const state = loadState();
+    const { bandName, bandBio } = resolveBandNameAndBio(state, bandId);
+
+    // Create a synthetic lead representative of this category
+    const categoryToType: Record<string, string> = {
+      salas: 'sala',
+      festivales: 'festival',
+      discotecas: 'discoteca',
+      medios: 'medio',
+      grupos: 'grupo',
+      managements: 'management',
+      ayuntamientos: 'ayuntamiento'
+    };
+
+    const syntheticLead = {
+      id: 'preview-synth',
+      nombre_sala: category.charAt(0).toUpperCase() + category.slice(1) + ' Ejemplo',
+      ciudad: 'Madrid',
+      tipo: categoryToType[category] || category,
+      aforo: 500,
+      band_id: bandId
+    };
+
+    // Build band DNA with the current template settings (not saved)
+    const bandDna = getBandDnaProfile(state, bandId, syntheticLead as any);
+    // Override with the current unsaved template values
+    bandDna.categoryTemplateGuidelines = guidelines;
+    bandDna.categoryTemplateBody = body;
+    bandDna.categoryTemplateSubject = subject;
+    bandDna.categoryTemplateTitle = DEFAULT_CATEGORY_TEMPLATES[category].title;
+
+    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+    const autonomyConfig = getAutonomyConfigForBand(state, bandId);
+    const bandMinCache = autonomyConfig?.minCacheByType;
+    const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
+
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, syntheticLead as any, undefined, bandMinCache, negotiationStartCacheByType);
+
+    const prompt = `Redacta una propuesta comercial y artística de concierto para "${syntheticLead.nombre_sala}" en ${syntheticLead.ciudad} (Tipo: ${syntheticLead.tipo}, Aforo: ${syntheticLead.aforo}).
+
+INSTRUCCIONES CLAVE:
+1. Aplica el ADN completo de la banda y las pautas de esta categoría.
+2. Devuelve ÚNICAMENTE el texto final redactado del nuevo pitch, sin asuntos, encabezados ni metadatos extra.`;
+
+    const pitchLinks = {
+      spotify: bandDna.spotifyUrl,
+      youtube: bandDna.youtubeUrl,
+      epk: bandDna.epkUrl
+    };
+
+    const previewResult = await generateUnifiedAI({
+      prompt,
+      systemPrompt,
+      provider: 'gemini',
+      permitirPitchLocal: true,
+      links: pitchLinks,
+      contactEmail: bandDna.contactoEmail
+    });
+
+    const previewSubject = subject || DEFAULT_CATEGORY_TEMPLATES[category].subject || `Propuesta de concierto para ${syntheticLead.nombre_sala}`;
+    const previewBody = previewResult?.text?.trim() || '';
+
+    res.json({
+      success: true,
+      category,
+      subject: previewSubject,
+      body: previewBody
+    });
+  } catch (error: any) {
+    console.error("Error in POST /api/templates/preview:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al generar vista previa del pitch." });
   }
 });
 
@@ -188,7 +273,8 @@ router.post("/templates/preview", requireAuth, async (req, res) => {
     bandDna.categoryTemplateGuidelines = guidelines ?? current?.guidelines;
 
     const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, previewLead);
+    const autonomyConfig = getAutonomyConfigForBand(state, bandId);
+    const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, previewLead, undefined, autonomyConfig?.minCacheByType, autonomyConfig?.negotiationStartCacheByType);
 
     const prompt = `Redacta una propuesta comercial y artística de concierto para "${previewLead.nombre_sala}" en ${previewLead.ciudad} (Tipo: ${previewLead.tipo}, Aforo: ${previewLead.aforo}).
 ${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"${body}"` : ""}`;

@@ -156,7 +156,7 @@ export async function crearBorradorGmailApi(bandId: string, params: { to: string
 // de autonomía (server/db/autonomy.ts) y la plataforma tiene AGENT_EMAIL_MODE=send. Misma firma
 // que enviarEmail en emailAgentClient.ts a propósito, para que agentEngine.ts elija entre las
 // dos sin duplicar el resto de la lógica de despacho.
-export async function enviarEmailGmailApi(bandId: string, params: { to: string; subject: string; body: string; html?: string; inReplyTo?: string }): Promise<{ messageId: string }> {
+export async function enviarEmailGmailApi(bandId: string, params: { to: string; subject: string; body: string; html?: string; inReplyTo?: string }): Promise<{ messageId: string; threadId?: string }> {
   const accessToken = await getValidAccessToken(bandId);
 
   const raw = await new MailComposer({
@@ -190,7 +190,7 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
   }
 
   const data = await res.json();
-  return { messageId: data.id };
+  return { messageId: data.id, threadId: data.threadId };
 }
 
 // Comprueba si un borrador creado por crearBorradorGmailApi sigue existiendo como borrador.
@@ -262,10 +262,15 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
 // Igual que leerRespuestasEntrantes (emailAgentClient.ts) pero vía la API de Gmail en vez de
 // IMAP - lo que usa el Agente Lector cuando la banda conectó Gmail por OAuth sin contraseña de
 // aplicación, camino que hasta ahora no tenía forma de leer respuestas entrantes en absoluto.
+// Busca emails sin leer O ya leídos (últimas 24h) en la bandeja para no perder respuestas que
+// se marcan como leídas automáticamente o por sincronización.
 export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
   const accessToken = await getValidAccessToken(bandId);
 
-  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${encodeURIComponent("is:unread in:inbox")}&maxResults=${maxResults}`, {
+  // Busca: todos los emails en la bandeja de los últimos 2 días (leídos o sin leer)
+  // Así no se pierden respuestas que se marcan como leídas automáticamente al abrir
+  const query = encodeURIComponent("in:inbox newer_than:2d");
+  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${maxResults}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   if (!listRes.ok) {
@@ -276,28 +281,41 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 20): P
   const ids: string[] = (listData.messages || []).map((m: any) => m.id);
 
   const resultados: RespuestaEntrante[] = [];
+  console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes en Gmail`);
+
   for (const id of ids) {
     const msgRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}/${id}?format=full`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
-    if (!msgRes.ok) continue;
+    if (!msgRes.ok) {
+      console.warn(`[Gmail API] No se pudo leer mensaje ${id}: ${msgRes.status}`);
+      continue;
+    }
     const msg = await msgRes.json();
     const headers = msg.payload?.headers;
     const fromRaw = headerValue(headers, "From");
     const fromMatch = fromRaw.match(/<([^>]+)>/);
     const fromAddress = (fromMatch ? fromMatch[1] : fromRaw).toLowerCase().trim();
     const dateHeader = headerValue(headers, "Date");
+    const subject = headerValue(headers, "Subject");
+    const messageId = headerValue(headers, "Message-ID") || `gmail-${id}`;
+    const inReplyTo = headerValue(headers, "In-Reply-To");
+    const text = extraerTextoPlano(msg.payload).trim();
+
+    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, InReplyTo=${inReplyTo?.substring(0, 20)}, Text length=${text.length}`);
 
     resultados.push({
       uid: id,
-      messageId: headerValue(headers, "Message-ID") || `gmail-${id}`,
+      messageId,
       from: fromAddress,
-      subject: headerValue(headers, "Subject"),
-      text: extraerTextoPlano(msg.payload).trim(),
-      date: dateHeader ? new Date(dateHeader) : null
+      subject,
+      text,
+      date: dateHeader ? new Date(dateHeader) : null,
+      inReplyTo: inReplyTo || undefined
     });
   }
 
+  console.log(`[Gmail API] Procesados ${resultados.length} mensajes exitosamente`);
   return resultados;
 }
 

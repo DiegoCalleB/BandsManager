@@ -26,14 +26,31 @@ vi.mock('../emailAgentClient.js', () => ({
   marcarComoLeido: vi.fn()
 }));
 
+const dbGetLeadsMock = vi.fn();
+const dbUpsertLeadMock = vi.fn();
+const dbLeadMessageExistsMock = vi.fn();
+const dbCreateLeadMessageMock = vi.fn();
+const dbGetLeadMessagesMock = vi.fn();
+const getSupabaseMock = vi.fn();
 vi.mock('../../db.js', () => ({
-  dbGetLeads: vi.fn(),
-  dbUpsertLead: vi.fn(),
-  dbLeadMessageExists: vi.fn(),
-  dbCreateLeadMessage: vi.fn()
+  dbGetLeads: (...args: any[]) => dbGetLeadsMock(...args),
+  dbUpsertLead: (...args: any[]) => dbUpsertLeadMock(...args),
+  dbLeadMessageExists: (...args: any[]) => dbLeadMessageExistsMock(...args),
+  dbCreateLeadMessage: (...args: any[]) => dbCreateLeadMessageMock(...args),
+  dbGetLeadMessages: (...args: any[]) => dbGetLeadMessagesMock(...args),
+  getSupabase: (...args: any[]) => getSupabaseMock(...args)
 }));
 
-import { runLectorAgent } from '../lectorAgent';
+const generarBorradorRespuestaMock = vi.fn();
+vi.mock('../replyDrafting.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../replyDrafting.js')>();
+  return {
+    ...actual,
+    generarBorradorRespuesta: (...args: any[]) => generarBorradorRespuestaMock(...args)
+  };
+});
+
+import { runLectorAgent, puedeGenerarBorradorIA } from '../lectorAgent';
 
 describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que leerRespuestasGmailApi funcione', () => {
   beforeEach(() => {
@@ -62,5 +79,79 @@ describe('runLectorAgent: comprobarBorradoresGmailEnviados no depende de que lee
 
     expect(result.borradoresEnviadosDetectados).toBe(1);
     expect(result.leadsActualizados).toContain('lead-1');
+  });
+});
+
+// Antes de este cambio, el Contestador automático era invisible para un mánager: un fallo de la
+// IA solo dejaba un console.warn, y el tope de puedeGenerarBorradorIA ni eso - runLectorAgent
+// devuelve ahora borradorIaGenerados/borradorIaFallidos/borradorIaBloqueadosPorLimite, que
+// agentScheduler.ts vuelca en agent_execution_logs (Auditoría & Trazabilidad).
+describe('runLectorAgent: visibilidad de la actividad del Contestador automático', () => {
+  const leadBase = {
+    id: 'lead-1',
+    email_contacto: 'sala@example.com',
+    estado: 'contactado',
+    nombre_sala: 'Sala Test',
+    tipo: 'sala'
+  };
+  const mensajeEntrante = {
+    from: 'sala@example.com',
+    subject: 'Re: propuesta',
+    text: 'Gracias por vuestro mensaje, lo revisamos.',
+    date: new Date(),
+    messageId: 'msg-1',
+    uid: 1
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    tieneGmailOAuthConectadoMock.mockResolvedValue(true);
+    comprobarBorradoresGmailEnviadosMock.mockResolvedValue({ revisados: 0, confirmadosEnviados: [] });
+    dbGetLeadsMock.mockResolvedValue([leadBase]);
+    dbLeadMessageExistsMock.mockResolvedValue(false);
+    dbCreateLeadMessageMock.mockResolvedValue(undefined);
+    dbGetLeadMessagesMock.mockResolvedValue([]);
+    dbUpsertLeadMock.mockResolvedValue(undefined);
+    marcarComoLeidoGmailApiMock.mockResolvedValue(undefined);
+    getSupabaseMock.mockReturnValue({
+      from: () => ({ update: () => ({ eq: () => Promise.resolve({ data: null, error: null }) }) })
+    });
+  });
+
+  it('cuenta un borrador generado con éxito', async () => {
+    leerRespuestasGmailApiMock.mockResolvedValue([mensajeEntrante]);
+    generarBorradorRespuestaMock.mockResolvedValue({ draftReply: 'Hola, gracias por escribir.', isSimulated: false });
+
+    const result = await runLectorAgent(`band-generado-${Date.now()}`);
+
+    expect(result.borradorIaGenerados).toBe(1);
+    expect(result.borradorIaFallidos).toBe(0);
+    expect(result.borradorIaBloqueadosPorLimite).toBe(0);
+  });
+
+  it('cuenta un fallo cuando generarBorradorRespuesta lanza una excepción', async () => {
+    leerRespuestasGmailApiMock.mockResolvedValue([mensajeEntrante]);
+    generarBorradorRespuestaMock.mockRejectedValue(new Error('IA no disponible'));
+
+    const result = await runLectorAgent(`band-fallo-${Date.now()}`);
+
+    expect(result.borradorIaGenerados).toBe(0);
+    expect(result.borradorIaFallidos).toBe(1);
+    expect(result.borradorIaBloqueadosPorLimite).toBe(0);
+  });
+
+  it('cuenta un bloqueo cuando se alcanza el tope de puedeGenerarBorradorIA', async () => {
+    leerRespuestasGmailApiMock.mockResolvedValue([mensajeEntrante]);
+    generarBorradorRespuestaMock.mockResolvedValue({ draftReply: 'no debería llamarse', isSimulated: false });
+
+    const bandId = `band-tope-${Date.now()}`;
+    for (let i = 0; i < 20; i++) puedeGenerarBorradorIA(bandId); // agota el cupo de esta banda
+
+    const result = await runLectorAgent(bandId);
+
+    expect(result.borradorIaGenerados).toBe(0);
+    expect(result.borradorIaFallidos).toBe(0);
+    expect(result.borradorIaBloqueadosPorLimite).toBe(1);
+    expect(generarBorradorRespuestaMock).not.toHaveBeenCalled();
   });
 });

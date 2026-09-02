@@ -207,6 +207,7 @@ export interface RespuestaEntrante {
   subject: string;
   text: string;
   date: Date | null;
+  inReplyTo?: string; // Header In-Reply-To para emparejar respuestas con emails originales
 }
 
 // Igual que leerNoLeidos, pero trae el CUERPO real del mensaje (parseado con mailparser a
@@ -245,7 +246,8 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 20): 
           from: fromAddress,
           subject: parsed.subject || "",
           text: (parsed.text || "").trim(),
-          date: parsed.date || null
+          date: parsed.date || null,
+          inReplyTo: parsed.inReplyTo || undefined
         });
       }
     } finally {

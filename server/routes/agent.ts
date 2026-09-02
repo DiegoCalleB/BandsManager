@@ -203,6 +203,9 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
       const ai = getAiClient();
       const state = loadState();
       const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
+      const autonomyConfig = getAutonomyConfigForBand(state, targetBandId);
+      const bandMinCache = autonomyConfig?.minCacheByType;
+      const negotiationStartCacheByType = autonomyConfig?.negotiationStartCacheByType;
 
       for (const lead of leadsToDraft) {
         const bandDna = getBandDnaProfile(state, targetBandId, lead);
@@ -211,7 +214,7 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
           youtube: bandDna.youtubeUrl,
           epk: bandDna.epkUrl
         };
-        const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign);
+        const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache, negotiationStartCacheByType);
 
         let generatedPitch = "";
         if (ai) {

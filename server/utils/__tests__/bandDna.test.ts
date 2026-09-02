@@ -134,7 +134,7 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     const dna = getBandDnaProfile(state, 'banda-test');
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
 
-    expect(prompt).toContain('ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER');
+    expect(prompt).toContain('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
     expect(prompt).toContain('Cercano y directo');
     expect(prompt).toContain('bolo, currárnoslo');
     expect(prompt).toContain('Abrir mencionando la fecha concreta');
@@ -143,7 +143,7 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
   it('omite el bloque de ADN de voz si no hay ningún campo entrenado', () => {
     const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn');
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
-    expect(prompt).not.toContain('ADN DE VOZ Y CARÁCTER ENTRENADO POR EL MÁNAGER');
+    expect(prompt).not.toContain('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
   });
 
   it('incluye las pautas de la plantilla de categoría cuando existen', () => {
@@ -156,11 +156,50 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     const dna = getBandDnaProfile(state, 'banda-test', lead);
     const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
 
-    expect(prompt).toContain('PAUTAS ESPECÍFICAS PARA "Salas y Teatros"');
+    expect(prompt).toContain('PAUTAS Y PLANTILLA DE REFERENCIA PARA "Salas y Teatros"');
     expect(prompt).toContain('Destaca siempre el montaje rápido.');
     expect(prompt).toContain('Evitar mencionar cachés altos');
   });
 
+  it('incluye el cuerpo de la plantilla de categoría como modelo de referencia, no solo las guidelines', () => {
+    const state = {
+      registeredBands: [{ band_id: 'banda-test' }],
+      categoryTemplates: {
+        salas: {
+          title: 'Salas y Teatros',
+          guidelines: 'Tono festivo.',
+          body: 'Hola equipo de {{nombre_sala}}, somos {{nombre_banda}} y montamos rápido.',
+        },
+      },
+    };
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    expect(dna.categoryTemplateBody).toContain('montamos rápido');
+
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+    expect(prompt).toContain('Plantilla de referencia guardada a mano por el mánager');
+    expect(prompt).toContain('montamos rápido');
+    expect(prompt).toContain('NUNCA la copies literal');
+  });
+
+  it('incluye el asunto de la plantilla de categoría como patrón para el email', () => {
+    const state = {
+      registeredBands: [{ band_id: 'banda-test' }],
+      categoryTemplates: {
+        salas: {
+          title: 'Salas y Teatros',
+          guidelines: 'Tono festivo y bailable.',
+          subject: 'Somos {{nombre_banda}}: directo para {{nombre_sala}}',
+          body: 'Hola equipo de {{nombre_sala}}, somos {{nombre_banda}}.',
+        },
+      },
+    };
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    expect(dna.categoryTemplateSubject).toBe('Somos {{nombre_banda}}: directo para {{nombre_sala}}');
+
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+    expect(prompt).toContain('Estructura recomendada para el Asunto del email');
+    expect(prompt).toContain('Somos {{nombre_banda}}: directo para {{nombre_sala}}');
+  });
   it('sigue incluyendo el bloque de campaña activa junto con el ADN de voz', () => {
     const state = stateConBanda({ recomendacion_pitch: 'Ir directo al grano' });
     const dna = getBandDnaProfile(state, 'banda-test');
@@ -176,6 +215,54 @@ describe('buildEnhancedPitchSystemPrompt - inyección del ADN de voz entrenado',
     expect(prompt).toContain('CAMPAÑA DE BOOKING ACTIVA: "Gira Primavera"');
     expect(prompt).toContain('4 y 5 de diciembre');
     expect(prompt).toContain('Ir directo al grano');
+  });
+
+  it('incluye las reglas manuales del pitch marcadas como fijas, aunque no haya reglas auto-aprendidas', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_manuales: ['Firma siempre como "el equipo de Booking"'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER');
+    expect(prompt).toContain('🔒 Firma siempre como "el equipo de Booking"');
+  });
+
+  // El mánager pidió explícitamente que los hilos reales de email (y las reglas aprendidas de
+  // corrección real, misma clase de señal) pesen al MÁXIMO para el tono, y que el ADN de voz de
+  // redes sociales sea solo enriquecimiento - antes era al revés (el ADN de voz decía "MANDA
+  // SOBRE EL TONO GENÉRICO" y los ejemplos reales quedaban al final del prompt sin ninguna
+  // prioridad declarada).
+  it('el estilo aprendido de correcciones reales manda explícitamente sobre el ADN de voz de redes, y aparece antes en el prompt', () => {
+    const state = stateConBanda({
+      tono_comunicacion: 'Gamberro y directo, como en Instagram',
+      vocabulario_clave: ['pogo', 'familia'],
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Usar registro formal con ayuntamientos'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead);
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('CÓMO ESCRIBE ESTA BANDA DE VERDAD');
+    expect(prompt).toContain('MÁXIMA PRIORIDAD DE ESTILO Y TONO');
+    expect(prompt).toContain('gana SIEMPRE el punto 6');
+
+    const idxEstiloReal = prompt.indexOf('CÓMO ESCRIBE ESTA BANDA DE VERDAD');
+    const idxAdnRedes = prompt.indexOf('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
+    expect(idxEstiloReal).toBeGreaterThan(-1);
+    expect(idxAdnRedes).toBeGreaterThan(-1);
+    expect(idxEstiloReal).toBeLessThan(idxAdnRedes);
+  });
+
+  it('los hilos de ejemplo reales (fewShotSection) se inyectan junto a las reglas aprendidas, con prioridad máxima declarada', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    dna.fewShotSection = '\nEJEMPLO REAL: "Hola equipo de Sala X, os proponemos fecha..."\n';
+    const prompt = buildEnhancedPitchSystemPrompt(dna, '', lead);
+
+    expect(prompt).toContain('CÓMO ESCRIBE ESTA BANDA DE VERDAD');
+    expect(prompt).toContain('Hola equipo de Sala X, os proponemos fecha');
+    const idxFewShot = prompt.indexOf('Hola equipo de Sala X');
+    const idxDirectrices = prompt.indexOf('DIRECTRICES DE REDACCIÓN DE ALTA CONVERSIÓN');
+    expect(idxFewShot).toBeLessThan(idxDirectrices);
   });
 });
 
@@ -207,6 +294,119 @@ describe('buildReplySystemPrompt - Contestador', () => {
     const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
     const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], '');
     expect(prompt).toContain('Sin mensajes previos registrados');
+  });
+
+  it('usa la guía configurada a mano por el mánager cuando existe para el tipo detectado', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const responseStrategy = { guidancePrompt: 'Nunca des cifras concretas por email.', tone: 'neutral', mentionLinks: false };
+    const prompt = buildReplySystemPrompt(dna, lead, '¿Cuánto cobráis?', [], '', 'price_negotiation', responseStrategy);
+
+    expect(prompt).toContain('GUÍA CONDICIONAL PARA ESTE TIPO DE RESPUESTA (configurada por el mánager)');
+    expect(prompt).toContain('Nunca des cifras concretas por email.');
+    expect(prompt).not.toContain('GUÍA AUTOMÁTICA PARA ESTE TIPO DE RESPUESTA');
+  });
+
+  it('cae a la guía automática de código si no hay estrategia configurada para el tipo detectado', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const prompt = buildReplySystemPrompt(dna, lead, '¿Cuánto cobráis?', [], '', 'price_negotiation');
+
+    expect(prompt).toContain('GUÍA AUTOMÁTICA PARA ESTE TIPO DE RESPUESTA');
+    expect(prompt).not.toContain('configurada por el mánager');
+  });
+
+  it('incluye las instrucciones puntuales de una regeneración con feedback', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-adn', lead);
+    const prompt = buildReplySystemPrompt(
+      dna, lead, 'Perfecto, adelante', [], '', 'confirmation', undefined,
+      ['Puntuación de tono deseado: 5/5', 'Instrucciones específicas de esta respuesta: "Hazlo más corto"']
+    );
+
+    expect(prompt).toContain('INSTRUCCIONES DEL MÁNAGER PARA ESTA REGENERACIÓN CONCRETA');
+    expect(prompt).toContain('Hazlo más corto');
+  });
+
+  it('incluye las reglas manuales marcadas como fijas, por encima de las auto-aprendidas', () => {
+    const state = stateConBanda({
+      reglas_por_categoria_respuesta: {
+        salas: {
+          reglas_manuales: ['Nunca prometas fecha exacta sin confirmar con el resto de la banda'],
+          reglas_estilo_aprendidas: ['Sé breve'],
+        },
+      },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead, 'reply');
+    const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], '');
+
+    expect(prompt).toContain('REGLAS FIJAS ESCRITAS A MANO POR EL MÁNAGER');
+    expect(prompt).toContain('🔒 Nunca prometas fecha exacta sin confirmar con el resto de la banda');
+    expect(prompt).toContain('⭐ Sé breve');
+  });
+
+  it('los hilos reales de respuesta y las reglas aprendidas mandan sobre el ADN de voz de redes, y aparecen antes en el prompt', () => {
+    const state = stateConBanda({
+      tono_comunicacion: 'Gamberro, como en TikTok',
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Confirmar la fecha en la primera línea'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', lead, 'reply');
+    const replyFewShot = '\nEJEMPLO REAL: [Sala]: "¿Cuánto pedís?" [Banda]: "Nuestro caché es flexible..."\n';
+    const prompt = buildReplySystemPrompt(dna, lead, 'Nos interesa, contadnos más.', [], replyFewShot);
+
+    expect(prompt).toContain('CÓMO RESPONDE ESTA BANDA DE VERDAD');
+    expect(prompt).toContain('MÁXIMA PRIORIDAD DE ESTILO Y TONO');
+    expect(prompt).toContain('Nuestro caché es flexible');
+
+    const idxEstiloReal = prompt.indexOf('CÓMO RESPONDE ESTA BANDA DE VERDAD');
+    const idxAdnRedes = prompt.indexOf('CONTEXTO DE IDENTIDAD Y PERSONALIDAD DE LA BANDA');
+    expect(idxEstiloReal).toBeGreaterThan(-1);
+    expect(idxAdnRedes).toBeGreaterThan(-1);
+    expect(idxEstiloReal).toBeLessThan(idxAdnRedes);
+  });
+});
+
+describe('getBandDnaProfile - separación de reglas aprendidas entre pitch y respuesta', () => {
+  it('en modo pitch (por defecto) lee reglas_por_categoria, no reglas_por_categoria_respuesta', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Regla de pitch para salas'] } },
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Regla de respuesta para salas'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' });
+    expect(dna.reglasEstiloAprendidas).toEqual(['Regla de pitch para salas']);
+  });
+
+  it('en modo reply lee reglas_por_categoria_respuesta, no reglas_por_categoria', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Regla de pitch para salas'] } },
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Regla de respuesta para salas'] } },
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' }, 'reply');
+    expect(dna.reglasEstiloAprendidas).toEqual(['Regla de respuesta para salas']);
+  });
+
+  it('en modo reply no cae a los campos planos antiguos de pitch (nunca fueron de respuesta)', () => {
+    const state = stateConBanda({
+      reglas_estilo_aprendidas: ['Regla plana antigua de pitch'],
+    });
+    const dna = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' }, 'reply');
+    expect(dna.reglasEstiloAprendidas).toBeUndefined();
+  });
+
+  it('en modo reply sin ninguna regla de respuesta aprendida no revienta', () => {
+    const dna = getBandDnaProfile({ registeredBands: [] }, 'banda-sin-reglas', { tipo: 'sala' }, 'reply');
+    expect(dna.reglasEstiloAprendidas).toBeUndefined();
+  });
+
+  it('lee reglas_manuales por separado de las auto-aprendidas, en ambos modos', () => {
+    const state = stateConBanda({
+      reglas_por_categoria: { salas: { reglas_estilo_aprendidas: ['Auto pitch'], reglas_manuales: ['Manual pitch'] } },
+      reglas_por_categoria_respuesta: { salas: { reglas_estilo_aprendidas: ['Auto respuesta'], reglas_manuales: ['Manual respuesta'] } },
+    });
+    const dnaPitch = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' });
+    expect(dnaPitch.reglasManuales).toEqual(['Manual pitch']);
+    expect(dnaPitch.reglasEstiloAprendidas).toEqual(['Auto pitch']);
+
+    const dnaReply = getBandDnaProfile(state, 'banda-test', { tipo: 'sala' }, 'reply');
+    expect(dnaReply.reglasManuales).toEqual(['Manual respuesta']);
+    expect(dnaReply.reglasEstiloAprendidas).toEqual(['Auto respuesta']);
   });
 });
 

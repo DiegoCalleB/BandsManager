@@ -1,13 +1,17 @@
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandToneDna, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import responseStrategiesRouter from "./bands/responseStrategies.js";
 
 const router = express.Router();
+
+// Montar router de response strategies
+router.use(responseStrategiesRouter);
 
 // Helper to check if URL is a generic directory or social profile
 function isBadDirectoryUrl(url: string): boolean {
@@ -460,7 +464,20 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
         if (frasesDirectoExistentes.length) {
           data.frases_directo_extraidas = frasesDirectoExistentes;
         }
-        savedOwnBandDna = await dbUpdateBandToneDna(ownBandId, data);
+        // FUSIONA con lo que ya había en vez de sobreescribir toda la columna: `data` es
+        // exclusivamente el resultado del análisis de IA (tono_comunicacion, vocabulario_clave,
+        // etc.) y NUNCA incluye reglas_por_categoria / reglas_por_categoria_respuesta (Self-
+        // Refining Tone DNA) ni reglas_manuales ni historial_feedback_reels - guardarlo tal cual
+        // con dbUpdateBandToneDna (que sobrescribe la columna entera) borraba sin más TODO lo
+        // aprendido de correcciones reales y lo escrito a mano por el mánager cada vez que se
+        // pulsaba "Analizar Tono" para refrescar el análisis de redes. dbUpdateBandDnaExpresion
+        // además serializa esta escritura frente a cualquier otra concurrente sobre la misma
+        // banda (ver server/db/bands.ts).
+        const { ok } = await dbUpdateBandDnaExpresion(ownBandId, (dnaActual) => ({
+          ...dnaActual,
+          ...data
+        }));
+        savedOwnBandDna = ok;
       } catch (e: any) {
         console.warn("[analyze-tone] No se pudo guardar el ADN de la banda emisora:", e?.message || e);
       }
@@ -532,28 +549,27 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const cambios = req.body || {};
 
-    const actual = (await dbGetRegisteredBandById(bandId))?.dna_expresion || {};
-    const actualizado: any = { ...actual };
-
-    for (const campo of CAMPOS_TONO_EDITABLES) {
-      if (!(campo in cambios)) continue;
-      if (
-        campo === "vocabulario_clave" ||
-        campo === "frases_emblematicas_extraidas" ||
-        campo === "emojis_frecuentes" ||
-        campo === "reglas_estilo_aprendidas" ||
-        campo === "vocabulario_aprendido" ||
-        campo === "terminos_a_evitar"
-      ) {
-        actualizado[campo] = limpiarListaTono(cambios[campo], 20);
-      } else if (campo === "matices_por_red") {
-        actualizado[campo] = limpiarMaticesPorRed(cambios[campo]);
-      } else {
-        actualizado[campo] = String(cambios[campo] ?? "").trim();
+    const { ok: guardado, dna: actualizado } = await dbUpdateBandDnaExpresion(bandId, (actual) => {
+      const siguiente: any = { ...actual };
+      for (const campo of CAMPOS_TONO_EDITABLES) {
+        if (!(campo in cambios)) continue;
+        if (
+          campo === "vocabulario_clave" ||
+          campo === "frases_emblematicas_extraidas" ||
+          campo === "emojis_frecuentes" ||
+          campo === "reglas_estilo_aprendidas" ||
+          campo === "vocabulario_aprendido" ||
+          campo === "terminos_a_evitar"
+        ) {
+          siguiente[campo] = limpiarListaTono(cambios[campo], 20);
+        } else if (campo === "matices_por_red") {
+          siguiente[campo] = limpiarMaticesPorRed(cambios[campo]);
+        } else {
+          siguiente[campo] = String(cambios[campo] ?? "").trim();
+        }
       }
-    }
-
-    const guardado = await dbUpdateBandToneDna(bandId, actualizado);
+      return siguiente;
+    });
     if (!guardado) {
       return res.status(500).json({ error: "No se pudo guardar la edición del ADN de tono." });
     }
@@ -561,6 +577,71 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error updating tone DNA:", err);
     res.status(500).json({ error: err?.message || "No se pudo actualizar el ADN de tono." });
+  }
+});
+
+// Edita a mano las reglas de estilo APRENDIDAS AUTOMÁTICAMENTE por categoría (Self-Refining
+// Tone DNA, dna_expresion.reglas_por_categoria / reglas_por_categoria_respuesta - ver
+// server/db/pitchLearning.ts). Hasta ahora esas reglas solo se podían regenerar en bloque
+// pulsando "Entrenar ADN de tono ahora" (que las sobrescribe todas para esa categoría) - no
+// había forma de quitar una regla concreta que resultara contradictoria con la configuración
+// manual, ni de añadir una corrección puntual sin esperar a que se acumulen 2+ correcciones
+// reales. Endpoint separado del PATCH genérico de arriba porque la forma de editar es distinta
+// (una categoría concreta dentro de un mapa anidado, no un campo plano de la banda).
+//
+// `reglas_manuales` es un campo aparte de `reglas_estilo_aprendidas`: las manuales las escribe
+// el mánager y NUNCA las toca el refinamiento automático (ver refineToneDnaForCategory), así
+// que sirven de garantía de que "lo que yo añadí a mano no se pierde nunca" aunque se vuelva a
+// entrenar. Las `reglas_estilo_aprendidas` sí las puede modificar la IA en el siguiente
+// refinamiento (ahora por fusión, no por sobreescritura - ver pitchLearning.ts), pero también se
+// pueden editar/borrar aquí a mano en cualquier momento.
+router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const { mode, category, reglas_estilo_aprendidas, reglas_manuales, vocabulario_aprendido, terminos_a_evitar } = req.body || {};
+
+    if (mode !== "pitch" && mode !== "reply") {
+      return res.status(400).json({ error: "mode debe ser 'pitch' o 'reply'." });
+    }
+    if (!category || typeof category !== "string") {
+      return res.status(400).json({ error: "category es requerida." });
+    }
+
+    const bucketKey = mode === "reply" ? "reglas_por_categoria_respuesta" : "reglas_por_categoria";
+
+    // dbUpdateBandDnaExpresion lee+escribe dna_expresion como una operación atómica por banda
+    // (server/db/bands.ts) - antes esta ruta leía, modificaba en memoria y sobrescribía la
+    // columna entera por su cuenta, así que una edición manual aquí podía perder un refinamiento
+    // automático en vuelo (o viceversa) si ambos caían casi a la vez.
+    const { ok: guardado, dna: actualizado } = await dbUpdateBandDnaExpresion(bandId, (actual) => {
+      const reglasPorCategoria = { ...(actual[bucketKey] || {}) };
+      const existente = reglasPorCategoria[category] || {};
+
+      reglasPorCategoria[category] = {
+        reglas_estilo_aprendidas: reglas_estilo_aprendidas !== undefined
+          ? limpiarListaTono(reglas_estilo_aprendidas, 20)
+          : (existente.reglas_estilo_aprendidas || []),
+        reglas_manuales: reglas_manuales !== undefined
+          ? limpiarListaTono(reglas_manuales, 20)
+          : (existente.reglas_manuales || []),
+        vocabulario_aprendido: vocabulario_aprendido !== undefined
+          ? limpiarListaTono(vocabulario_aprendido, 20)
+          : (existente.vocabulario_aprendido || []),
+        terminos_a_evitar: terminos_a_evitar !== undefined
+          ? limpiarListaTono(terminos_a_evitar, 20)
+          : (existente.terminos_a_evitar || []),
+        actualizado: new Date().toISOString()
+      };
+
+      return { ...actual, [bucketKey]: reglasPorCategoria };
+    });
+    if (!guardado) {
+      return res.status(500).json({ error: "No se pudo guardar la edición de las reglas aprendidas." });
+    }
+    res.json({ success: true, data: actualizado });
+  } catch (err: any) {
+    console.error("Error updating learned tone rules:", err);
+    res.status(500).json({ error: err?.message || "No se pudo actualizar las reglas aprendidas." });
   }
 });
 
