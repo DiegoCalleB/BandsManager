@@ -226,6 +226,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     setLeads(prev => dedupeById([...prev.filter(l => l.id !== newLead.id), newLead]));
     try {
       const res: any = await api.createLead(newLead);
+      const serverLead = res?.lead || (res?.id ? res : null);
+      if (serverLead) {
+        setLeads(prev => dedupeById([...prev.filter(l => l.id !== newLead.id && l.id !== serverLead.id), serverLead]));
+      }
       if (res?.warning) {
         alert(res.warning);
       }
