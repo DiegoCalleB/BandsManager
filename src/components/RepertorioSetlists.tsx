@@ -1,6 +1,6 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal } from '../types';
+import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
  Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
@@ -407,6 +407,15 @@ export default function RepertorioSetlists({
 
  const activeSetlist = useMemo(() => setlists.find(s => s.id === activeSetlistId) || setlists[0] || null, [setlists, activeSetlistId]);
 
+ // Custom "quick add" shortcuts the band created itself for the "Rápidos" row below, on top of
+ // the built-in ones (Presentación, Chapa, BIS...). Persisted per band in Supabase via
+ // /api/setlist-shortcuts so every member of the band sees the same set.
+ const [customShortcuts, setCustomShortcuts] = useState<SetlistShortcut[]>([]);
+ const [isAddingShortcut, setIsAddingShortcut] = useState(false);
+ const [newShortcutIcon, setNewShortcutIcon] = useState('⭐');
+ const [newShortcutLabel, setNewShortcutLabel] = useState('');
+ const [newShortcutMinutes, setNewShortcutMinutes] = useState<number>(1);
+
  const {
    shareModalData, setShareModalData,
    handleShareSetlist,
@@ -652,7 +661,27 @@ export default function RepertorioSetlists({
  saveSetlistsToLocalStorageSafely(setlists, bandId);
  }, [setlists, bandId]);
 
-
+ // Load this band's own custom setlist shortcuts
+ useEffect(() => {
+  let isCancelled = false;
+  setCustomShortcuts([]);
+  const fetchShortcuts = async () => {
+    try {
+      const res = await fetch('/api/setlist-shortcuts', { headers: getHeaders() });
+      if (isCancelled) return;
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.shortcuts)) {
+          setCustomShortcuts(data.shortcuts);
+        }
+      }
+    } catch (err) {
+      console.warn('No se pudieron cargar los accesos rápidos de repertorio:', err);
+    }
+  };
+  fetchShortcuts();
+  return () => { isCancelled = true; };
+ }, [bandId]);
 
  // Microphone recording for Show Items (Presentaciones/Chapas)
  const handleStartRecordingShowItem = async () => {
@@ -1367,7 +1396,7 @@ export default function RepertorioSetlists({
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
    } else if (tipoItem === 'beatbox') {
-    newItem.tituloCustom = 'Performance Beatbox Filgue';
+    newItem.tituloCustom = 'Solo de Batería / Percusión';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
    } else if (tipoItem === 'intro_tema') {
@@ -1424,6 +1453,51 @@ export default function RepertorioSetlists({
   });
   syncSetlistToBackend(updatedSetlist);
   setSelectedSetlistItemId(newItem.id);
+ };
+
+ // Inserts a band-created custom shortcut into the active setlist as a generic ('otro') item
+ const handleUseCustomShortcut = (sc: SetlistShortcut) => {
+  handleAddItemToSetlist(undefined, 'otro', sc.tituloCustom, sc.duracionEstimadaMinutos, sc.duracionEstimadaSegundos, sc.notaTema);
+ };
+
+ const handleCreateShortcut = async () => {
+  const etiqueta = newShortcutLabel.trim();
+  if (!etiqueta) return;
+  try {
+    const res = await fetch('/api/setlist-shortcuts', {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({
+        icono: newShortcutIcon.trim() || '⭐',
+        etiqueta,
+        tituloCustom: etiqueta,
+        duracionEstimadaMinutos: newShortcutMinutes,
+        duracionEstimadaSegundos: newShortcutMinutes * 60
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.shortcut) {
+        setCustomShortcuts(prev => [...prev, data.shortcut]);
+      }
+    }
+  } catch (err) {
+    console.error('Error al crear el acceso rápido:', err);
+  } finally {
+    setNewShortcutLabel('');
+    setNewShortcutIcon('⭐');
+    setNewShortcutMinutes(1);
+    setIsAddingShortcut(false);
+  }
+ };
+
+ const handleDeleteShortcut = async (id: string) => {
+  setCustomShortcuts(prev => prev.filter(sc => sc.id !== id));
+  try {
+    await fetch(`/api/setlist-shortcuts/${id}`, { method: 'DELETE', headers: getHeaders() });
+  } catch (err) {
+    console.error('Error al eliminar el acceso rápido:', err);
+  }
  };
 
  // Add several catalog songs to the active setlist in a single action/save
@@ -2169,7 +2243,7 @@ export default function RepertorioSetlists({
   onClick={() => handleAddItemToSetlist(undefined, 'beatbox')}
   className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 whitespace-nowrap cursor-pointer"
   >
-  🥁 Solo Filgue
+  🥁 Solo Batería
   </button>
   <button
   onClick={() => handleAddItemToSetlist(undefined, 'intro_tema')}
@@ -2195,6 +2269,68 @@ export default function RepertorioSetlists({
   >
   💣 BIS Final
   </button>
+
+  {/* Band's own custom shortcuts, on top of the typical ones above */}
+  {customShortcuts.map(sc => (
+    <button
+    key={sc.id}
+    onClick={() => handleUseCustomShortcut(sc)}
+    className="group/sc relative px-1.5 py-0.5 pr-4 rounded bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 whitespace-nowrap cursor-pointer"
+    title={sc.tituloCustom}
+    >
+    {sc.icono} {sc.etiqueta}
+    <span
+    onClick={(e) => { e.stopPropagation(); handleDeleteShortcut(sc.id); }}
+    className="absolute right-0.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/sc:opacity-100 text-rose-400 hover:text-rose-300 px-0.5"
+    title="Eliminar este acceso rápido"
+    >
+    ×
+    </span>
+    </button>
+  ))}
+
+  {isAddingShortcut ? (
+    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-neutral-800/60 border border-neutral-700">
+    <input
+    value={newShortcutIcon}
+    onChange={(e) => setNewShortcutIcon(e.target.value)}
+    maxLength={2}
+    placeholder="⭐"
+    className="w-6 bg-transparent text-center text-[10px] focus:outline-none"
+    />
+    <input
+    value={newShortcutLabel}
+    onChange={(e) => setNewShortcutLabel(e.target.value)}
+    placeholder="Nombre del acceso rápido"
+    maxLength={30}
+    autoFocus
+    onKeyDown={(e) => { if (e.key === 'Enter') handleCreateShortcut(); if (e.key === 'Escape') setIsAddingShortcut(false); }}
+    className="w-32 bg-transparent text-[10px] focus:outline-none placeholder:text-neutral-600"
+    />
+    <input
+    type="number"
+    min={0}
+    value={newShortcutMinutes}
+    onChange={(e) => setNewShortcutMinutes(Math.max(0, parseInt(e.target.value, 10) || 0))}
+    title="Duración estimada (minutos)"
+    className="w-9 bg-transparent text-[10px] text-center focus:outline-none"
+    />
+    <button onClick={handleCreateShortcut} disabled={!newShortcutLabel.trim()} className="text-emerald-400 hover:text-emerald-300 disabled:opacity-40 disabled:cursor-not-allowed" title="Guardar acceso rápido">
+    <Check className="w-3 h-3" />
+    </button>
+    <button onClick={() => setIsAddingShortcut(false)} className="text-neutral-500 hover:text-neutral-300" title="Cancelar">
+    <X className="w-3 h-3" />
+    </button>
+    </div>
+  ) : (
+    <button
+    onClick={() => setIsAddingShortcut(true)}
+    className="px-1.5 py-0.5 rounded border border-dashed border-neutral-700 text-neutral-500 hover:text-neutral-300 hover:border-neutral-500 whitespace-nowrap cursor-pointer flex items-center gap-0.5"
+    title="Crear tu propio acceso rápido para este grupo"
+    >
+    <Plus className="w-3 h-3" /> Nuevo
+    </button>
+  )}
   </div>
   </div>
 

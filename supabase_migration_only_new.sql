@@ -263,3 +263,22 @@ CREATE INDEX IF NOT EXISTS idx_reel_analyses_band_video ON public.reel_analyses(
 ALTER TABLE public.reel_analyses ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.reel_analyses;
 CREATE POLICY "Permitir acceso total al backend" ON public.reel_analyses FOR ALL USING (true);
+
+-- Accesos rápidos propios de cada banda en el editor de repertorio (server/routes/repertorio.ts,
+-- server/db/repertoire.ts, src/components/RepertorioSetlists.tsx) - ver supabase_schema.sql
+-- para el comentario completo (tabla 33, setlist_shortcuts).
+CREATE TABLE IF NOT EXISTS public.setlist_shortcuts (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES public.registered_bands(band_id) ON DELETE CASCADE,
+  icono TEXT NOT NULL DEFAULT '⚡',
+  etiqueta TEXT NOT NULL,
+  titulo_custom TEXT NOT NULL,
+  duracion_estimada_minutos INTEGER,
+  duracion_estimada_segundos INTEGER,
+  nota_tema TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_setlist_shortcuts_band ON public.setlist_shortcuts(band_id);
+ALTER TABLE public.setlist_shortcuts ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.setlist_shortcuts;
+CREATE POLICY "Permitir acceso total al backend" ON public.setlist_shortcuts FOR ALL USING (true);

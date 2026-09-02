@@ -812,3 +812,26 @@ CREATE INDEX IF NOT EXISTS idx_pitch_example_threads_band_cat ON pitch_example_t
 ALTER TABLE pitch_example_threads ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON pitch_example_threads FOR ALL USING (true);
 
+-- 33. setlist_shortcuts (Accesos rápidos propios de cada banda en el editor de repertorio)
+--
+-- server/routes/repertorio.ts, server/db/repertoire.ts, src/components/RepertorioSetlists.tsx.
+-- Los "Rápidos" del editor de repertorio (Presentación, Chapa, BIS...) eran botones fijos en
+-- el propio componente y uno de ellos ("Solo Filgue") nombraba directamente a un músico de
+-- Bakandeya, apareciendo así en el repertorio de cualquier otra banda. Esta tabla permite que
+-- cada banda cree sus propios accesos rápidos (icono + etiqueta + texto/duración del ítem que
+-- se inserta) sin tocar código.
+CREATE TABLE IF NOT EXISTS setlist_shortcuts (
+  id TEXT PRIMARY KEY,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  icono TEXT NOT NULL DEFAULT '⚡',
+  etiqueta TEXT NOT NULL,
+  titulo_custom TEXT NOT NULL,
+  duracion_estimada_minutos INTEGER,
+  duracion_estimada_segundos INTEGER,
+  nota_tema TEXT DEFAULT '',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_setlist_shortcuts_band ON setlist_shortcuts(band_id);
+ALTER TABLE setlist_shortcuts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON setlist_shortcuts FOR ALL USING (true);
+

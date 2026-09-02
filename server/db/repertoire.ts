@@ -231,4 +231,65 @@ export async function dbDeleteSetlist(id: string, bandId: string) {
   return true;
 }
 
+// --- SETLIST SHORTCUTS (per-band custom "quick add" presets, see RepertorioSetlists.tsx) ---
+export async function dbGetSetlistShortcuts(bandId: string) {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("setlist_shortcuts")
+    .select("*")
+    .eq("band_id", cleanBandId(bandId))
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(`Supabase Error (setlist_shortcuts): ${error.message}`);
+  return (data || []).map(sc => ({
+    id: sc.id,
+    band_id: sc.band_id,
+    icono: sc.icono,
+    etiqueta: sc.etiqueta,
+    tituloCustom: sc.titulo_custom,
+    duracionEstimadaMinutos: sc.duracion_estimada_minutos,
+    duracionEstimadaSegundos: sc.duracion_estimada_segundos,
+    notaTema: sc.nota_tema || ""
+  }));
+}
+
+export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
+  const sb = getSupabase();
+  // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); ver la misma
+  // nota en dbUpsertSong/dbUpsertSetlist más arriba.
+  const targetBandId = cleanBandId(bandId);
+  await ensureRegisteredBandExists(targetBandId);
+
+  const payload = {
+    id: shortcut.id || `shortcut-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    band_id: targetBandId,
+    icono: shortcut.icono || '⚡',
+    etiqueta: shortcut.etiqueta || 'Atajo',
+    titulo_custom: shortcut.titulo_custom || shortcut.tituloCustom || shortcut.etiqueta || 'Atajo',
+    duracion_estimada_minutos: shortcut.duracion_estimada_minutos ?? shortcut.duracionEstimadaMinutos ?? null,
+    duracion_estimada_segundos: shortcut.duracion_estimada_segundos ?? shortcut.duracionEstimadaSegundos ?? null,
+    nota_tema: shortcut.nota_tema || shortcut.notaTema || ""
+  };
+
+  const { data, error } = await sb.from("setlist_shortcuts").upsert(payload).select().single();
+  if (error) throw new Error(`Supabase Error (upsert setlist_shortcut): ${error.message}`);
+  return {
+    id: data.id,
+    band_id: data.band_id,
+    icono: data.icono,
+    etiqueta: data.etiqueta,
+    tituloCustom: data.titulo_custom,
+    duracionEstimadaMinutos: data.duracion_estimada_minutos,
+    duracionEstimadaSegundos: data.duracion_estimada_segundos,
+    notaTema: data.nota_tema || ""
+  };
+}
+
+export async function dbDeleteSetlistShortcut(id: string, bandId: string) {
+  const sb = getSupabase();
+  const { error } = await sb.from("setlist_shortcuts").delete().eq("id", id).eq("band_id", cleanBandId(bandId));
+  if (error) throw new Error(`Supabase Error (delete setlist_shortcut): ${error.message}`);
+  return true;
+}
+
 // --- EPK CONFIGS ---
