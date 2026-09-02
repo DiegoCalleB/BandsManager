@@ -32,6 +32,29 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
 import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+const matchesMedioType = (l: Lead, filter: string): boolean => {
+  if (!filter || filter === 'todos') return true;
+  const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
+  if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
+  if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
+  if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
+  if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
+  if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
+  return true;
+};
+
+const matchesGruposType = (l: Lead, filter: string): boolean => {
+  if (!filter || filter === 'todos') return true;
+  const norm = normalizeType(l.tipo);
+  if (norm === filter) return true;
+  const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
+  if (filter === 'grupo') return norm === 'grupo' || txt.includes('grupo') || txt.includes('banda') || txt.includes('artista') || txt.includes('co-booking') || txt.includes('músico') || txt.includes('musico') || txt.includes('🎸');
+  if (filter === 'agencia') return norm === 'agencia' || txt.includes('agencia') || txt.includes('agency') || txt.includes('booking') || txt.includes('promotora') || txt.includes('💼');
+  if (filter === 'manager') return norm === 'manager' || txt.includes('manager') || txt.includes('mánager') || txt.includes('management') || txt.includes('representante') || txt.includes('👔');
+  if (filter === 'productora') return norm === 'productora' || txt.includes('productora') || txt.includes('producciones') || txt.includes('production') || txt.includes('eventos') || txt.includes('🎬');
+  if (filter === 'sello') return norm === 'sello' || txt.includes('sello') || txt.includes('discográfica') || txt.includes('discografica') || txt.includes('record') || txt.includes('label') || txt.includes('💿');
+  return true;
+};
 
 interface BookingCRMProps {
   leads: Lead[];
@@ -441,21 +464,13 @@ export default function BookingCRM({
      const matchesStatus = statusFilter === 'todos' || 
        normSt === statusFilter || 
        (statusFilter === 'pendiente_aprobacion' && normSt === 'nuevo' && !!lead.pitch_generado);
-     const matchesMedioType = (l: Lead, filter: string): boolean => {
-       if (!filter || filter === 'todos') return true;
-       const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
-       if (filter === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
-       if (filter === 'tv' || filter === 'television') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
-       if (filter === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
-       if (filter === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
-       if (filter === 'podcast' || filter === 'podcasts') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
-       return true;
-     };
 
      const matchesType = typeFilter === 'todos'
        ? true
        : sectionTab === 'medios'
        ? matchesMedioType(lead, typeFilter)
+       : sectionTab === 'grupos'
+       ? matchesGruposType(lead, typeFilter)
        : normalizeType(lead.tipo) === typeFilter;
      const matchesCity = !selectedCityFilter || 
        (lead.ciudad || '').toLowerCase().includes(selectedCityFilter.toLowerCase()) || 
@@ -1367,15 +1382,9 @@ export default function BookingCRM({
           const count = t.key === 'todos'
             ? sectionLeads.length
             : sectionTab === 'medios'
-            ? sectionLeads.filter(l => {
-                const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
-                if (t.key === 'radio') return txt.includes('radio') || txt.includes('emisora') || txt.includes('fm') || txt.includes('am') || txt.includes('ser') || txt.includes('cope') || txt.includes('ondacero') || txt.includes('📻');
-                if (t.key === 'tv') return txt.includes('tv') || txt.includes('televis') || txt.includes('rtv') || txt.includes('tele') || txt.includes('canal') || txt.includes('📺');
-                if (t.key === 'prensa') return txt.includes('prensa') || txt.includes('revista') || txt.includes('periódico') || txt.includes('periodico') || txt.includes('diario') || txt.includes('blog') || txt.includes('magazine') || txt.includes('fanzine') || txt.includes('web') || txt.includes('noticias') || txt.includes('redacción') || txt.includes('redaccion') || txt.includes('📰');
-                if (t.key === 'redes') return txt.includes('redes') || txt.includes('social') || txt.includes('instagram') || txt.includes('youtube') || txt.includes('tiktok') || txt.includes('twitter') || txt.includes('influencer') || txt.includes('creador') || txt.includes('📱');
-                if (t.key === 'podcast') return txt.includes('podcast') || txt.includes('entrevista') || txt.includes('ivoox') || txt.includes('spotify') || txt.includes('audio') || txt.includes('🎙️');
-                return true;
-              }).length
+            ? sectionLeads.filter(l => matchesMedioType(l, t.key)).length
+            : sectionTab === 'grupos'
+            ? sectionLeads.filter(l => matchesGruposType(l, t.key)).length
             : sectionLeads.filter(l => normalizeType(l.tipo) === t.key).length;
 
           return (
@@ -1914,6 +1923,7 @@ export default function BookingCRM({
               status: 'success',
               detail: res.simulated ? 'Propuesta lista (motor local ADN)' : 'Propuesta redactada'
             };
+
           } else {
             updatedItems[i] = { ...updatedItems[i], status: 'error', detail: res.error || 'No se pudo generar la propuesta' };
           }
