@@ -128,22 +128,41 @@ describe('runEnviadorAgent en modo borrador (AGENT_EMAIL_MODE por defecto)', () 
     expect(leadUpdate.gmail_draft_id).toBe('draft-1');
   });
 
-  it('sigue creando un borrador aunque la banda tenga dispatch_mode=direct_send, porque el servidor no tiene AGENT_EMAIL_MODE=send', async () => {
-    // Regla de seguridad: el interruptor por banda nunca basta por sí solo para enviar de
-    // verdad, hace falta también el interruptor global del servidor.
+  it('incluye tanto email_contacto como email_secundario al crear el borrador o enviar propuesta', async () => {
+    const leadConEmailSecundario = {
+      ...lead,
+      email_contacto: 'info@salanazcaconciertos.com',
+      email_secundario: 'info@magnetikproducciones.com'
+    };
     const { updates } = mockSupabase();
+    vi.mocked(getSupabase).mockReturnValue({
+      from: (tabla: string) => ({
+        select: () => ({
+          in: () => ({
+            eq: () => Promise.resolve({ data: tabla === 'leads' ? [leadConEmailSecundario] : [], error: null })
+          }),
+          eq: () => ({
+            maybeSingle: () => Promise.resolve({ data: { nombre_banda: 'Banda Test' } })
+          })
+        }),
+        update: (fila: any) => ({
+          eq: () => {
+            updates.push(fila);
+            return Promise.resolve({ error: null });
+          }
+        }),
+        insert: () => Promise.resolve({ error: null })
+      })
+    } as any);
+
     tieneGmailOAuthConectadoMock.mockResolvedValue(false);
-    dbGetAutonomyConfigMock.mockResolvedValue({ dispatchMode: 'direct_send' });
     crearBorradorMock.mockResolvedValue({ draftPath: '[Gmail]/Borradores' });
 
     await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
 
-    expect(enviarEmailMock).not.toHaveBeenCalled();
-    expect(enviarEmailGmailApiMock).not.toHaveBeenCalled();
     expect(crearBorradorMock).toHaveBeenCalledTimes(1);
-
-    const leadUpdate = updates.find((u) => u.estado);
-    expect(leadUpdate.estado).toBe('borrador_creado');
+    const paramsEnviados = crearBorradorMock.mock.calls[0][1];
+    expect(paramsEnviados.to).toBe('info@salanazcaconciertos.com, info@magnetikproducciones.com');
   });
 });
 

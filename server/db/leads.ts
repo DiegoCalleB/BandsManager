@@ -166,6 +166,7 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     genero: lead.genero || existingRecord?.genero || "",
     tipo: lead.tipo || existingRecord?.tipo || "sala",
     email_contacto: lead.email_contacto || lead.emailContacto || existingRecord?.email_contacto || "",
+    email_secundario: lead.email_secundario || lead.emailSecundario || existingRecord?.email_secundario || "",
     telefono: lead.telefono || existingRecord?.telefono || "",
     website: lead.website || existingRecord?.website || "",
     instagram: lead.instagram || existingRecord?.instagram || "",

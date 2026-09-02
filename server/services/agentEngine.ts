@@ -141,7 +141,13 @@ export async function runEnviadorAgent(opts: {
   const nowIso = new Date().toISOString();
 
   for (const lead of approvedLeads) {
-    const emailContacto = lead.email_contacto || lead.email;
+    const rawEmails = [lead.email_contacto || lead.email, lead.email_secundario || lead.emailSecundario]
+      .filter(Boolean)
+      .flatMap(e => String(e).split(/[,;]/))
+      .map(e => e.trim())
+      .filter(esEmailValido);
+
+    const emailContacto = rawEmails.length > 0 ? rawEmails.join(", ") : (lead.email_contacto || lead.email);
     const rawPitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
     const { html: emailHtml, text: emailText, cleanPitch } = buildServerEmailHtml({
       pitchText: rawPitch,
@@ -156,9 +162,8 @@ export async function runEnviadorAgent(opts: {
       ? `Re: Concierto ${bandName} en ${lead.nombre_sala}`
       : `Propuesta de concierto: ${bandName} en ${lead.nombre_sala}`;
 
-    // Última línea de defensa. Antes solo comprobaba que no fuera vacío, así que un "n/a",
-    // un "-" o un espacio en blanco llegaban hasta nodemailer.
-    if (!esEmailValido(emailContacto)) {
+    // Última línea de defensa.
+    if (rawEmails.length === 0) {
       results.push({
         id: lead.id,
         nombre_sala: lead.nombre_sala,

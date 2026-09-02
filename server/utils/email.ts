@@ -47,8 +47,8 @@ export function puedeEntrarEnColaDeEnvio(
   if (!entraAhora) return { ok: true };
 
   const fusionado = { ...(leadExistente || {}), ...(camposActualizados || {}) };
-  const email = fusionado.email_contacto || fusionado.email;
-  if (esEmailValido(email)) return { ok: true };
+  const email = fusionado.email_contacto || fusionado.email_secundario || fusionado.email;
+  if (esEmailValido(email) || esEmailValido(fusionado.email_contacto) || esEmailValido(fusionado.email_secundario)) return { ok: true };
 
   const nombre = fusionado.nombre_sala || fusionado.nombre_medio || 'esta sala';
   return {

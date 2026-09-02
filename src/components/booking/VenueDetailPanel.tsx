@@ -737,10 +737,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           <p className="text-[10px] font-sans font-bold uppercase tracking-wider text-zinc-400">
             Ficha de Contacto & Ubicación
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-end">
             {selectedLead.email_contacto && (
-              <span className="text-xs text-amber-300 font-mono font-medium truncate max-w-[160px] notranslate" translate="no">
-                {selectedLead.email_contacto}
+              <span className="text-xs text-amber-300 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Principal: ${selectedLead.email_contacto}`}>
+                ✉️ {selectedLead.email_contacto}
+              </span>
+            )}
+            {selectedLead.email_secundario && (
+              <span className="text-xs text-amber-400/80 font-mono font-medium truncate max-w-[200px] notranslate" translate="no" title={`Email Secundario / Promotora: ${selectedLead.email_secundario}`}>
+                ✉️2 {selectedLead.email_secundario}
               </span>
             )}
             <button
@@ -1070,11 +1075,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                   </div>
                   <div>
                     <label className="block text-[10px] uppercase font-mono text-zinc-400 mb-1">
-                      Email
+                      Email Principal (Contratación)
                     </label>
                     <input
                       type="email"
-                      placeholder="contacto@sala.com"
+                      placeholder="info@salanazcaconciertos.com"
                       value={editedLeadInfo.email_contacto || ''}
                       onChange={(e) =>
                         setEditedLeadInfo({ ...editedLeadInfo, email_contacto: e.target.value })
@@ -1082,6 +1087,21 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       className="w-full p-2 rounded bg-zinc-900 border border-zinc-700 text-zinc-100 focus:outline-none"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase font-mono text-amber-400 font-bold mb-1">
+                    ✉️ Email Secundario / Promotora / Alternativo
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="info@magnetikproducciones.com (o varios separados por coma)"
+                    value={editedLeadInfo.email_secundario || ''}
+                    onChange={(e) =>
+                      setEditedLeadInfo({ ...editedLeadInfo, email_secundario: e.target.value })
+                    }
+                    className="w-full p-2 rounded bg-zinc-900 border border-amber-500/40 text-amber-200 focus:outline-none text-xs"
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">

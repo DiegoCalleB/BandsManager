@@ -14,6 +14,7 @@ export interface NewLeadDataState {
   roster?: string;
   tipo?: LeadType;
   email_contacto: string;
+  email_secundario?: string;
   telefono: string;
   website?: string;
   instagram: string;
@@ -331,20 +332,38 @@ export function AddLeadModal({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
-                Correo de Contacto (Opcional)
+                Email Principal (Contratación)
               </label>
               <input
                 type="email"
-                placeholder="contacto@medio.com (o deja en blank)"
+                placeholder="info@salanazcaconciertos.com"
                 value={newLeadData.email_contacto}
                 onChange={e => setNewLeadData(prev => ({ ...prev, email_contacto: e.target.value }))}
                 className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
                   isStitchLight
-                    ? 'bg-slate-50 text-slate-800 focus:ring-indigo-500'
+                    ? 'bg-slate-50 text-[#e5e2e1] focus:ring-indigo-500'
                     : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
                 }`}
               />
             </div>
+
+            <div>
+              <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
+                Email Secundario / Promotora
+              </label>
+              <input
+                type="email"
+                placeholder="info@magnetikproducciones.com"
+                value={newLeadData.email_secundario || ''}
+                onChange={e => setNewLeadData(prev => ({ ...prev, email_secundario: e.target.value }))}
+                className={`w-full rounded-xl px-2 py-1 text-[10px] focus:outline-none font-sans ${
+                  isStitchLight
+                    ? 'bg-slate-50 text-[#e5e2e1] focus:ring-indigo-500'
+                    : 'bg-[#121215] text-[#e5e2e1] focus:ring-[#f2ca50]'
+                }`}
+              />
+            </div>
+          </div>
 
             <div>
               <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>

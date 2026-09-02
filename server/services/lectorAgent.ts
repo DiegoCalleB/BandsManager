@@ -148,7 +148,12 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     // 2. Por In-Reply-To header → busca en lead_messages quién envió ese message-id (más robusto)
     const fromLower = (msg.from || "").toLowerCase().trim();
     let lead = fromLower
-      ? leads.find((l: any) => (l.email_contacto || "").toLowerCase().trim() === fromLower)
+      ? leads.find((l: any) => {
+          const mainEmail = (l.email_contacto || "").toLowerCase().trim();
+          const secEmail = (l.email_secundario || "").toLowerCase().trim();
+          return (mainEmail && (mainEmail === fromLower || mainEmail.includes(fromLower))) ||
+                 (secEmail && (secEmail === fromLower || secEmail.includes(fromLower)));
+        })
       : null;
 
     // Si no empareja por email, intenta por In-Reply-To (respuesta a un email que enviamos)

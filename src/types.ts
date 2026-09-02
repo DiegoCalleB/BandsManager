@@ -129,6 +129,7 @@ export interface Lead {
   roster?: string;
   tipo?: LeadType | string;
   email_contacto: string;
+  email_secundario?: string;
   telefono: string;
   website?: string;
   instagram: string;
