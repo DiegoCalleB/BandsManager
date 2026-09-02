@@ -79,6 +79,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [isEditingLeadInfo, setIsEditingLeadInfo] = useState(false);
   const [editedLeadInfo, setEditedLeadInfo] = useState<Partial<Lead>>({ ...selectedLead });
 
+  useEffect(() => {
+    setEditedLeadInfo({ ...selectedLead });
+  }, [selectedLead]);
+
   // Pitch Editing & Feedback State
   const [isEditingPitch, setIsEditingPitch] = useState(false);
   const [editedPitch, setEditedPitch] = useState(selectedLead?.pitch_generado || '');
@@ -998,7 +1002,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       <img
                         src={editedLeadInfo.imagen_url}
                         alt="Logo"
-                        className="w-10 h-10 rounded-lg object-cover border border-amber-500/50 shrink-0"
+                        className="w-10 h-10 rounded-lg object-contain bg-zinc-900 border border-amber-500/50 shrink-0"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] text-zinc-300 font-bold truncate">

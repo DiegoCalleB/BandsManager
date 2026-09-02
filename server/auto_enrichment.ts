@@ -26,16 +26,20 @@ function toIsoDateString(val?: string | null): string {
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-export async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string }> {
-  if (!lead.nombre_sala || !lead.ciudad) return {};
+export async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
+  if (!lead.nombre_sala) return {};
 
-  // STAGE 1: Búsqueda en base de datos local (muy rápida)
+  const cleanCity = (lead.ciudad || '').replace(/\s*\([^)]*\)/g, '').trim();
+  const cleanVenue = (lead.nombre_sala || '').trim();
+
+  // STAGE 1: Búsqueda en base de datos local (ultra-rápida, < 1 ms)
   try {
     const { searchFestivalByName, formatFestivalDates } = await import("./utils/spanishFestivalsDB.js");
-    const localMatch = searchFestivalByName(lead.nombre_sala, lead.ciudad);
+    const localMatch = searchFestivalByName(cleanVenue, cleanCity) || searchFestivalByName(cleanVenue);
     if (localMatch) {
       const dates = formatFestivalDates(localMatch);
-      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${lead.nombre_sala}" → ${dates.start} a ${dates.end}`);
+      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${cleanVenue}" → ${dates.start} a ${dates.end}`);
+      const fallbackFavicon = localMatch.website ? `https://www.google.com/s2/favicons?domain=${localMatch.website.replace(/^https?:\/\//, '').split('/')[0]}&sz=128` : undefined;
       return {
         startDate: dates.start,
         endDate: dates.end,
@@ -45,57 +49,32 @@ export async function extractFestivalDates(lead: any): Promise<{ startDate?: str
         instagram: localMatch.instagram,
         genero: localMatch.genero,
         aforo: localMatch.aforo,
-        region: localMatch.region
+        region: localMatch.region,
+        imagen_url: localMatch.imagen_url || fallbackFavicon
       };
     }
   } catch (e) {
     console.warn(`[FestivalDates] Error en búsqueda local:`, e);
   }
 
-  // STAGE 2: Web scraping (Wikipedia + festivalesdemusica.com)
-  try {
-    const { scrapeFestivalDatesFromWikipedia, scrapeFestivalFromFestivalesDeMusica } = await import("./utils/festivalScraper.js");
-
-    console.log(`[FestivalDates] Intentando scraping para "${lead.nombre_sala}"...`);
-
-    const wikiDates = await scrapeFestivalDatesFromWikipedia(lead.nombre_sala, lead.ciudad);
-    if (wikiDates) {
-      console.log(`[FestivalDates] ✓ FOUND EN WIKIPEDIA: "${lead.nombre_sala}" → ${wikiDates.start} a ${wikiDates.end}`);
-      return {
-        startDate: wikiDates.start,
-        endDate: wikiDates.end
-      };
-    }
-
-    const festivalesDates = await scrapeFestivalFromFestivalesDeMusica(lead.nombre_sala);
-    if (festivalesDates) {
-      console.log(`[FestivalDates] ✓ FOUND EN FESTIVALESDEMUSICA.COM: "${lead.nombre_sala}" → ${festivalesDates.start} a ${festivalesDates.end}`);
-      return {
-        startDate: festivalesDates.start,
-        endDate: festivalesDates.end
-      };
-    }
-  } catch (e) {
-    console.warn(`[FestivalDates] Error en scraping:`, e);
-  }
-
-  // STAGE 3: AI Fallback (último recurso, solo si las anteriores fallaron)
+  // STAGE 2: AI Fallback directo con Google Search Grounding
   const client = getAiClient();
   if (!client) return {};
 
-  const prompt = `Busca información sobre el festival, ciclo de conciertos, fiestas populares o evento periódico "${lead.nombre_sala}" en ${lead.ciudad} (España), y extrae sus fechas reales de celebración en formato ISO (YYYY-MM-DD).
+  const prompt = `Busca información oficial en internet sobre las fechas de celebración del festival o ciclo de conciertos "${cleanVenue}" ${cleanCity ? `en ${cleanCity}` : ''} (España).
 
-Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
+Devuelve ÚNICAMENTE un objeto JSON con esta estructura exactas:
 {
   "es_festival": true,
   "festival_start_date": "YYYY-MM-DD",
   "festival_end_date": "YYYY-MM-DD"
 }
 
-REGLA DE CICLOS: Si es un ciclo de conciertos o festival extenso que se prolonga varias semanas o meses (como Inverfest, Noches del Botánico, Fiestas Patronales, etc.), indica el primer día de conciertos como festival_start_date y el último día como festival_end_date.`;
+Ejemplo para festival del 5 al 6 de julio de 2026:
+{"es_festival": true, "festival_start_date": "2026-07-05", "festival_end_date": "2026-07-06"}`;
 
   try {
-    console.log(`[FestivalDates] Fallback a AI para "${lead.nombre_sala}"...`);
+    console.log(`[FestivalDates] Consulta a Gemini AI para "${cleanVenue}" (${cleanCity})...`);
     let response: any = null;
     try {
       response = await generateContentWithFallback(client, {
@@ -116,19 +95,38 @@ REGLA DE CICLOS: Si es un ciclo de conciertos o festival extenso que se prolonga
     const jsonEnd = cleanedText.lastIndexOf('}');
     let data: any = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
-      data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
-    } else {
-      data = JSON.parse(cleanedText);
+      try {
+        data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
+      } catch (_) { data = {}; }
     }
 
-    const rawStart = data.festival_start_date || data.startDate || data.start_date;
-    const rawEnd = data.festival_end_date || data.endDate || data.end_date || rawStart;
+    let rawStart = data.festival_start_date || data.startDate || data.start_date;
+    let rawEnd = data.festival_end_date || data.endDate || data.end_date || rawStart;
+
+    // Fallback: Si Gemini devolvió texto natural con fechas
+    if (!rawStart) {
+      const year = new Date().getFullYear();
+      const monthMap: Record<string, string> = {
+        enero: '01', febrero: '02', marzo: '03', abril: '04', mayo: '05', junio: '06',
+        julio: '07', agosto: '08', septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
+      };
+      const textMatch = text.match(/(\d{1,2})\s*(?:al?|-|y)\s*(\d{1,2})\s*de\s*([a-z]+)/i);
+      if (textMatch) {
+        const d1 = textMatch[1].padStart(2, '0');
+        const d2 = textMatch[2].padStart(2, '0');
+        const m = monthMap[textMatch[3].toLowerCase()];
+        if (m) {
+          rawStart = `${year}-${m}-${d1}`;
+          rawEnd = `${year}-${m}-${d2}`;
+        }
+      }
+    }
 
     const startIso = toIsoDateString(rawStart);
     const endIso = toIsoDateString(rawEnd) || startIso;
 
     if (startIso) {
-      console.log(`[FestivalDates] ✓ AI FOUND: "${lead.nombre_sala}" → ${startIso} a ${endIso}`);
+      console.log(`[FestivalDates] ✓ AI FOUND: "${cleanVenue}" → ${startIso} a ${endIso}`);
       return {
         startDate: startIso,
         endDate: endIso
@@ -442,8 +440,8 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         lead.aforo = festivalInfo.aforo;
         modified = true;
       }
-      if (festivalInfo.region && !lead.region) {
-        lead.region = festivalInfo.region;
+      if (festivalInfo.imagen_url && (!lead.imagen_url || lead.imagen_url.includes('image.jpg'))) {
+        lead.imagen_url = festivalInfo.imagen_url;
         modified = true;
       }
     }

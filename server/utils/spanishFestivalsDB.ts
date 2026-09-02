@@ -17,6 +17,7 @@ export interface FestivalEntry {
   direccion?: string;
   aforo?: number;
   genero?: string;
+  imagen_url?: string;
   notas?: string;
 }
 
@@ -174,6 +175,102 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     email: "info@festivalneria.com",
     genero: "Clásica, Ópera, Cámara",
     aforo: 3000
+  },
+  {
+    nombre: "Alterna Festival",
+    aliases: ["Alterna", "Alterna Fest", "Festival Alterna", "Alterna El Bonillo"],
+    ciudad: "El Bonillo",
+    region: "Castilla-La Mancha",
+    mes_inicio: 7, dia_inicio: 5, mes_fin: 7, dia_fin: 6,
+    website: "https://alternafestival.es",
+    email: "info@alternafestival.es",
+    instagram: "@alternafestival",
+    genero: "Rock, Punk, Ska, Rap, Metal, Mestizaje",
+    aforo: 8000
+  },
+  {
+    nombre: "Aúpa Lumbreiras",
+    aliases: ["Aupa Lumbreiras", "Aúpa Lumbreiras!!", "Aupa Lumbreiras Villena", "Lumbreiras"],
+    ciudad: "Villena",
+    region: "Comunidad Valenciana",
+    mes_inicio: 8, dia_inicio: 14, mes_fin: 8, dia_fin: 16,
+    website: "http://www.aupalumbreiras.com",
+    email: "info@aupalumbreiras.com",
+    instagram: "@aupalumbreiras",
+    genero: "Punk, Rock, Ska, Hardcore, Metal",
+    aforo: 15000
+  },
+  {
+    nombre: "Leyendas del Rock",
+    aliases: ["Leyendas", "Leyendas del Rock Villena"],
+    ciudad: "Villena",
+    region: "Comunidad Valenciana",
+    mes_inicio: 8, dia_inicio: 7, mes_fin: 8, dia_fin: 10,
+    website: "https://www.leyendasdelrockfestival.com",
+    email: "info@leyendasdelrockfestival.com",
+    instagram: "@leyendasdelrock_oficial",
+    genero: "Heavy Metal, Hard Rock, Power Metal, Folk Metal",
+    aforo: 18000
+  },
+  {
+    nombre: "Cabo de Plata",
+    aliases: ["Cabo de Plata Barbate", "Festival Cabo de Plata"],
+    ciudad: "Barbate",
+    region: "Andalucía",
+    mes_inicio: 7, dia_inicio: 24, mes_fin: 7, dia_fin: 27,
+    website: "https://www.cabodeplata.com",
+    email: "info@cabodeplata.com",
+    instagram: "@cabodeplata",
+    genero: "Reggae, Rap, Mestizaje, Rock, Fusion",
+    aforo: 30000
+  },
+  {
+    nombre: "O Son do Camiño",
+    aliases: ["Son do Camiño", "O Son do Camino", "O Son do Camiño Santiago"],
+    ciudad: "Santiago de Compostela",
+    region: "Galicia",
+    mes_inicio: 5, dia_inicio: 30, mes_fin: 6, dia_fin: 1,
+    website: "https://www.osondocamino.es",
+    email: "info@osondocamino.es",
+    instagram: "@osondocamino",
+    genero: "Rock, Pop, Indie, Electrónica",
+    aforo: 40000
+  },
+  {
+    nombre: "Canela Party",
+    aliases: ["Canela Party Torremolinos", "Canela Fest"],
+    ciudad: "Torremolinos",
+    region: "Andalucía",
+    mes_inicio: 8, dia_inicio: 21, mes_fin: 8, dia_fin: 24,
+    website: "https://canelaparty.com",
+    email: "info@canelaparty.com",
+    instagram: "@canelaparty",
+    genero: "Indie, Rock, Punk, Pop",
+    aforo: 10000
+  },
+  {
+    nombre: "Low Festival",
+    aliases: ["Low Festival Benidorm", "Low Fest"],
+    ciudad: "Benidorm",
+    region: "Comunidad Valenciana",
+    mes_inicio: 7, dia_inicio: 26, mes_fin: 7, dia_fin: 28,
+    website: "https://lowfestival.es",
+    email: "info@lowfestival.es",
+    instagram: "@lowfestival",
+    genero: "Indie, Rock, Electrónica, Pop",
+    aforo: 25000
+  },
+  {
+    nombre: "Palencia Sonora",
+    aliases: ["Festival Palencia Sonora"],
+    ciudad: "Palencia",
+    region: "Castilla y León",
+    mes_inicio: 6, dia_inicio: 6, mes_fin: 6, dia_fin: 9,
+    website: "https://www.palenciasonora.com",
+    email: "info@palenciasonora.com",
+    instagram: "@palenciasonora",
+    genero: "Indie, Pop, Rock",
+    aforo: 8000
   },
   {
     nombre: "Inverfest Madrid",
