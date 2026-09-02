@@ -5,7 +5,7 @@ import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyCon
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
@@ -244,7 +244,9 @@ router.post("/chat", requireAuth, async (req, res) => {
         notas: l.notas,
         fecha_envio: l.fecha_envio,
         fecha_ultima_respuesta: l.fecha_ultima_respuesta,
-        hasPitch: !!l.pitch_generado
+        hasPitch: !!l.pitch_generado,
+        festival_start_date: l.festival_start_date,
+        festival_end_date: l.festival_end_date
       })),
       bands: (state.bands || []).filter(matchBand).map((b: any) => ({
         id: b.id,
@@ -284,6 +286,21 @@ router.post("/chat", requireAuth, async (req, res) => {
     const epkConfigData = getEpkConfigForBand(state, bandIdForEpk, userReq?.bandName || 'tu banda', userReq?.email);
     stateSummary.epkConfig = epkConfigData;
     stateSummary.globalPitchFeedback = getGlobalPitchFeedbackSummary(state.leads.filter(matchBand));
+
+    // Add active campaign info with date range filtering
+    const activeCampaign = await dbGetActiveCampaign(bandIdForEpk);
+    if (activeCampaign) {
+      stateSummary.activeCampaign = {
+        id: activeCampaign.id,
+        name: activeCampaign.name,
+        targetCities: activeCampaign.targetCities,
+        minCapacity: activeCampaign.minCapacity,
+        maxCapacity: activeCampaign.maxCapacity,
+        targetDates: activeCampaign.targetDates,
+        campaignStartDate: activeCampaign.campaignStartDate,
+        campaignEndDate: activeCampaign.campaignEndDate
+      };
+    }
 
     // ADN musical: tempo/tonalidad/género dominantes del repertorio real + instrumentación real
     // de los miembros, para que 'propose_accompaniment' proponga bases rítmicas coherentes con
@@ -397,7 +414,7 @@ Puedes proponer acciones como:
 5. 'propose_band' para añadir o actualizar una banda en el CRM (incluye 'description' y un objeto 'band' con { id: 'opcional-id-existente', nombre_banda: '...', estilo_musical: '...', localizacion: '...', estado_relacion: 'nuevo', contacto_nombre: '', email: '', telefono: '', instagram: '', notas_colaboracion: '' }). Si la banda ya existe, se actualizarán sus datos sin crear duplicados.
 6. 'propose_tour' para planificar o guardar una gira en el gestor de giras y Supabase (incluye 'description' y un objeto 'tour' con { id: 'tour-...', nombre: 'Gira ...', vehiculo: 'Furgoneta 9 Plazas', estado: 'planificacion', fechaInicio: 'YYYY-MM-DD', fechaFin: 'YYYY-MM-DD', presupuestoLogistica: 500, stops: [] }).
 7. 'propose_update_logo' para buscar, asignar o actualizar el logo de una sala, medio, festival o banda. Incluye 'targetType' ('lead' o 'band'), 'leadId' o 'bandId', 'targetName', 'imagen_url', 'icono' y 'description'.
-8. 'propose_add_lead' para guardar y añadir un NUEVO lead, sala, medio de comunicación, festival o ayuntamiento directamente en la base de datos Supabase. Incluye 'description', 'leadName' y 'lead' con { nombre_sala: '...', ciudad: '...', region: '...', aforo: 300, genero: '...', tipo: 'sala'|'medio'|'festival'|'ayuntamiento'|'discoteca', email_contacto: '...', telefono: '...', website: '...', instagram: '...', fuente: 'Chatbot', estado: 'nuevo'|'pendiente_aprobacion', notas: '...' }. REGLA ESTRICTA DE TIPO: Clasifica con precisión el campo 'tipo': usa 'sala' para salas de conciertos, teatros, cafés conciertos y recintos en vivo; 'festival' para festivales; 'discoteca' para clubs nocturnos; 'ayuntamiento' para áreas municipales o festejos; y reserva 'medio' ÚNICAMENTE para medios de comunicación, periódicos, revistas, radio, TV, blogs y podcasts. NUNCA asignes 'medio' a una sala de conciertos o recinto.
+8. 'propose_add_lead' para guardar y añadir un NUEVO lead, sala, medio de comunicación, festival o ayuntamiento directamente en la base de datos Supabase. Incluye 'description', 'leadName' y 'lead' con { nombre_sala: '...', ciudad: '...', region: '...', aforo: 300, genero: '...', tipo: 'sala'|'medio'|'festival'|'ayuntamiento'|'discoteca', email_contacto: '...', telefono: '...', website: '...', instagram: '...', fuente: 'Chatbot', estado: 'nuevo'|'pendiente_aprobacion', notas: '...' }. REGLA ESTRICTA DE TIPO: Clasifica con precisión el campo 'tipo': usa 'sala' para salas de conciertos, teatros, cafés conciertos y recintos en vivo; 'festival' para festivales; 'discoteca' para clubs nocturnos; 'ayuntamiento' para áreas municipales o festejos; y reserva 'medio' ÚNICAMENTE para medios de comunicación, periódicos, revistas, radio, TV, blogs y podcasts. NUNCA asignes 'medio' a una sala de conciertos o recinto. **IMPORTANTE: NO NECESITAS RELLENAR festival_start_date ni festival_end_date al crear un lead de tipo 'festival' o 'ayuntamiento' — la plataforma los completará automáticamente a través del sistema de enriquecimiento híbrido (BD local → scraping → Gemini) en segundo plano.**
 9. 'propose_update_lead' para modificar campos de un lead/sala/medio existente. Incluye 'description', 'leadId', 'leadName' y 'updatedFields' (un objeto con los campos a modificar, ej: { estado: 'interesado', notas: '...', email_contacto: '...' }).
 10. 'propose_draft_email' para crear y guardar un borrador de correo electrónico/pitch para una sala o medio. Incluye 'description', 'leadId', 'leadName', 'subject', 'body' y 'attachDossier' (boolean, por defecto true).
 11. 'propose_send_email' para enviar o registrar el envío oficial de un correo a un lead, actualizar la fecha de envío e incluir la firma personalizada con redes sociales y dossier. Incluye 'description', 'leadId', 'leadName', 'subject', 'body', 'senderName', 'attachDossier' (true), 'incluirFirmaRedes' (true).
@@ -418,7 +435,17 @@ PODER ABSOLUTO DE ESCRITURA EN BASE DE DATOS Y CORREOS: Tienes autorización y p
 
 REGLA DE LOGOS E IMÁGENES: Si el usuario te pide buscar, asignar o completar los logos o imágenes de salas, medios o bandas, o si detectas que falta un logo, puedes proponer acciones 'propose_update_logo' para asignar la URL del logo (imagen_url) o un icono emoji (icono). Se guardará automáticamente en Supabase.
 
-ENRIQUECIMIENTO AUTOMÁTICO INTELIGENTE: Al añadir o registrar cualquier nuevo lead, sala, medio, festival, ayuntamiento o banda contactada (mediante 'propose_add_lead', 'propose_band' o creación en la interfaz), la plataforma ejecuta en segundo plano un enriquecimiento en tiempo real con IA (Gemini + Google Search). Se buscarán y rellenarán automáticamente todos los datos públicos disponibles (email de contacto/booking, teléfono, sitio web, Instagram, aforo estimado, géneros musicales, persona de contacto, logo/imagen pública y emoji), sin necesidad de que el usuario lo solicite ni tenga que rellenarlo a mano.
+ENRIQUECIMIENTO AUTOMÁTICO INTELIGENTE: Al añadir o registrar cualquier nuevo lead, sala, medio, festival, ayuntamiento o banda contactada (mediante 'propose_add_lead', 'propose_band' o creación en la interfaz), la plataforma ejecuta en segundo plano un enriquecimiento en tiempo real HÍBRIDO que combina tres fuentes:
+
+1. **Base de Datos Local de Festivales Españoles** (~1ms): Búsqueda instantánea por nombre normalizado contra una BD local de 15+ festivales principales españoles (BBK Live, Mad Cool Festival, Primavera Sound, Sónar, Benicàssim, Cruïlla, Arenal Sound, etc.) para detectar y rellenar fechas exactas, email, teléfono, web, Instagram, aforo, género y región.
+
+2. **Web Scraping Seguro** (~500ms): Si no hay coincidencia local, se hace scraping de Wikipedia español y festivalesdemusica.com para extraer patrones de fechas españoles ("15-18 de julio", "del 10 al 25 de agosto") y otros datos públicos.
+
+3. **Gemini AI + Google Search** (fallback): Si el scraping no encuentra datos, Gemini enriquece con búsquedas de Google para completar email, teléfono, web, Instagram, aforo estimado, género musical y región.
+
+Se rellenarán automáticamente todos los datos públicos disponibles (email de contacto/booking, teléfono, sitio web, Instagram, aforo estimado, géneros musicales, persona de contacto, logo/imagen pública, emoji, **y fechas de inicio/fin de festival si es de tipo 'festival' o 'ayuntamiento'**), sin necesidad de que el usuario lo solicite ni tenga que rellenarlo a mano.
+
+**REGLA DE FILTRADO POR CAMPAÑA ACTIVA**: Si hay una campaña activa con un rango de fechas definido (campaignStartDate y campaignEndDate), y el nuevo lead es de tipo 'festival' o 'ayuntamiento' con fechas de evento extraídas (festival_start_date y festival_end_date), la plataforma detecta automáticamente si las fechas del evento se solapan con el rango de la campaña. Los leads de festivales/ayuntamientos se mostrarán priorizados si coinciden con la ventana de la campaña activa en el panel de CRM.
 
 REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un concierto o bolo (por ejemplo "añade concierto en Sala Villanos" o "hemos cerrado bolo"), SIEMPRE debes incluir una acción 'propose_concert' con el objeto 'concert' relleno. No te limites solo a cambiar el estado del lead, crea la acción 'propose_concert' para que el concierto se guarde en la tabla 'conciertos' de Supabase.
 
