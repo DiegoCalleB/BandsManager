@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { BookingCampaign, Lead } from '../../types';
-import { 
-  Target, Calendar, MapPin, Users, X, Settings2, Building2, 
-  ChevronRight, ChevronDown, ChevronUp, Sparkles, Flame, CheckCircle2 
+import { leadMatchesCampaign } from '../../utils/campaignMatch';
+import {
+  Target, Calendar, MapPin, Users, X, Settings2, Building2,
+  ChevronRight, ChevronDown, ChevronUp, Sparkles, Flame, CheckCircle2
 } from 'lucide-react';
 
 interface GlobalCampaignBarProps {
@@ -24,24 +25,10 @@ export function GlobalCampaignBar({
 }: GlobalCampaignBarProps) {
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
 
-  // Count matching venues for this campaign
-  const targetCitiesLower = (campaign.targetCities || []).map(c => c.toLowerCase().trim());
-  const matchingLeads = allLeads.filter(l => {
-    const isMedio = l.tipo && (String(l.tipo).includes('medio') || String(l.tipo).includes('prensa') || String(l.tipo).includes('radio'));
-    if (isMedio) return false;
-    
-    // Check city match
-    const city = (l.ciudad || l.region || '').toLowerCase().trim();
-    const cityMatch = targetCitiesLower.length === 0 || targetCitiesLower.some(tc => city.includes(tc) || tc.includes(city));
-    
-    // Check capacity match
-    const aforo = Number(l.aforo) || 0;
-    const minCap = campaign.minCapacity || 0;
-    const maxCap = campaign.maxCapacity || 999999;
-    const capMatch = aforo === 0 || (aforo >= (minCap * 0.7) && aforo <= (maxCap * 1.3));
-
-    return cityMatch && capMatch;
-  });
+  // Recuento de salas objetivo de la campaña: usa exactamente el mismo criterio que el listado
+  // real de Booking Salas (leadMatchesCampaign), para que este número nunca prometa más salas de
+  // las que luego aparecen al pulsar el botón.
+  const matchingLeads = allLeads.filter(l => leadMatchesCampaign(l, campaign));
 
   const firstTargetDate = campaign.targetDates?.[0];
 

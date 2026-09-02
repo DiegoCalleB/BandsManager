@@ -27,6 +27,7 @@ import { LeadsTable } from './booking/LeadsTable';
 import { VenueDetailPanel } from './booking/VenueDetailPanel';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { isLeadVerificado } from '../utils/leadReliability';
+import { leadMatchesCampaignCity, leadMatchesCampaignCapacity } from '../utils/campaignMatch';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
@@ -426,33 +427,13 @@ export default function BookingCRM({
      seen.add(leadKey);
 
      if (filterByCampaign && activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
-        const targetCities = (activeCampaign.targetCities || (activeCampaign as any).target_cities || []);
-        const targetRegions = ((activeCampaign as any).targetRegions || (activeCampaign as any).target_regions || []);
-        const leadCityLower = (lead.ciudad || '').toLowerCase().trim();
-        const leadRegionLower = (lead.region || '').toLowerCase().trim();
-        
-        const hasLocationFilter = targetCities.length > 0 || targetRegions.length > 0;
-        const matchesTargetCity = !hasLocationFilter || 
-          targetCities.some((city: string) => {
-            if (!city) return false;
-            const c = city.toLowerCase().trim();
-            return leadCityLower.includes(c) || leadRegionLower.includes(c) || (c.includes('madrid') && (leadCityLower.includes('madrid') || leadRegionLower.includes('madrid')));
-          }) ||
-          targetRegions.some((reg: string) => {
-            if (!reg) return false;
-            const r = reg.toLowerCase().trim();
-            return leadCityLower.includes(r) || leadRegionLower.includes(r);
-          });
-
-        const cap = Number(lead.aforo) || 0;
-        const minCap = Number(activeCampaign.minCapacity || (activeCampaign as any).min_capacity || 0);
-        const maxCap = Number(activeCampaign.maxCapacity || (activeCampaign as any).max_capacity || Infinity);
-        
-        const matchesTargetCapacity = cap > 0 
-          ? (cap >= minCap && cap <= maxCap) 
-          : (minCap === 0 || cap === 0);
-
-        if (!matchesTargetCity || !matchesTargetCapacity) return false;
+        // Mismo criterio de ciudad/aforo que el contador "Salas (N)" de GlobalCampaignBar
+        // (leadMatchesCampaignCity/Capacity en utils/campaignMatch): antes cada uno tenía su
+        // propia copia de esta lógica con reglas ligeramente distintas (esta era estricta, la de
+        // la barra superior daba un ±30% de margen), así que el número de la barra prometía más
+        // salas de las que aparecían aquí al filtrar. No se usa leadMatchesCampaign directamente
+        // porque esa además descarta medios/prensa, y aquí ya se filtra por tipo vía sectionTab.
+        if (!leadMatchesCampaignCity(lead, activeCampaign) || !leadMatchesCampaignCapacity(lead, activeCampaign)) return false;
      }
 
      const matchesSearch = (lead.nombre_sala || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
