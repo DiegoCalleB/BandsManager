@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Mail, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot } from 'lucide-react';
+import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot } from 'lucide-react';
 import { User, ThemeName } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
@@ -8,8 +8,7 @@ import { api, getAuthHeaders } from '../services/api';
 import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 import { ModalPortal } from './common/ModalPortal';
-import { BandScheduleConfig } from './BandScheduleConfig';
-import { EmailAccountConfig } from './EmailAccountConfig';
+import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 
 interface UserProfileModalProps {
  currentUser: User;
@@ -917,32 +916,31 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  )}
 
- {/* Collapsible Agent Configuration (Horarios + Cuenta de Email) */}
+ {/* Agent Configuration Entry Point (Autonomía, Horarios & Email) - un único modal
+     centralizado (AgentAutonomySettingsModal, el mismo que usan Dashboard/Chatbot/BookingCRM)
+     en vez de duplicar aquí el formulario de horarios (antes BandScheduleConfig, ahora
+     eliminado) y de email. EmailAccountConfig sigue siendo el mismo componente compartido,
+     solo que ahora se llega a él siempre por el mismo camino. */}
+ {currentUser.band_id && (
  <div className="pt-3 border-t border-neutral-800/80">
  <button
  type="button"
- onClick={() => setShowAgentConfig(!showAgentConfig)}
+ onClick={() => setShowAgentConfig(true)}
  className={`w-full p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
  isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
  }`}
  >
  <div className="flex items-center gap-2">
  <Bot className="w-4 h-4 text-amber-400" />
- <span className="text-xs font-mono font-semibold">Configuración de Agentes IA (Horarios y Cuenta de Email)</span>
+ <span className="text-xs font-mono font-semibold">Configuración de Agentes IA (Autonomía, Horarios y Email)</span>
  </div>
- <div className="flex items-center gap-1 text-[11px] font-mono text-neutral-400">
- <span>{showAgentConfig ? 'Ocultar' : 'Configurar'}</span>
- <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showAgentConfig ? 'rotate-180 text-amber-400' : ''}`} />
- </div>
+ <span className="text-[11px] font-mono font-bold text-amber-400 flex items-center gap-1">
+ <span>Abrir</span>
+ <ChevronDown className="w-3.5 h-3.5 -rotate-90" />
+ </span>
  </button>
-
- {showAgentConfig && currentUser.band_id && (
- <div className="mt-3 space-y-4 animate-in fade-in duration-200">
- <BandScheduleConfig bandId={currentUser.band_id} isStitchLight={isStitchLight} />
- <EmailAccountConfig bandId={currentUser.band_id} isStitchLight={isStitchLight} />
  </div>
  )}
- </div>
 
  <div className="pt-2 -neutral-800/80 space-y-3">
  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400">
@@ -1286,6 +1284,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
  </ModalPortal>
+ )}
+
+ {/* Panel de Control de Agentes IA (Autonomía, Email & Buzón, Horarios, Tono, Auditoría) */}
+ {currentUser.band_id && (
+ <AgentAutonomySettingsModal
+ isOpen={showAgentConfig}
+ onClose={() => setShowAgentConfig(false)}
+ bandName={activeBandName || currentUser.bandName}
+ bandId={currentUser.band_id}
+ currentUser={currentUser}
+ isStitchLight={isStitchLight}
+ />
  )}
  </div>
  </ModalPortal>
