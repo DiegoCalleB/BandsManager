@@ -11,6 +11,7 @@ import { getTargetBandId, puedeEscribirEnBanda, bandaDelAgente } from "../utils/
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "../utils/bandDna.js";
 import { runLectorAgent } from "../services/lectorAgent.js";
 import { EmailAgentError } from "../services/emailAgentClient.js";
+import { autoEnrichLead } from "../auto_enrichment.js";
 
 const router = express.Router();
 
@@ -405,6 +406,11 @@ Devuelve estrictamente un array JSON con esta estructura exacta:
 
         await sb.from("leads").insert(newLead);
         results.push(newLead);
+
+        // Trigger autoEnrichLead in background (festival dates, contact info, etc.)
+        autoEnrichLead(newLead, targetBandId).catch(err =>
+          console.error(`Error enriching Scout-discovered lead ${newLead.id}:`, err)
+        );
       }
 
       const successMsg = `¡Agente Scout ejecutado con éxito en Supabase! Se han descubierto y guardado ${results.length} nuevo(s) recinto(s) en ${targetLoc} en estado 'nuevo'.`;
