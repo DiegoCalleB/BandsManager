@@ -11,6 +11,7 @@ import { getBandDnaProfile, generateSmartDnaPitchFallback } from "../../utils/ba
 import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
+import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
 
 const router = express.Router();
 
@@ -210,6 +211,27 @@ router.post("/leads", requireAuth, async (req, res) => {
         bandDna,
         lead: newLead
       });
+    }
+
+    // Fast synchronous Stage 1 Festival lookup (< 1 ms)
+    if (
+      (!newLead.festival_start_date || !newLead.festival_end_date) &&
+      (newLead.tipo === 'festival' || newLead.tipo === 'ayuntamiento' || (newLead.nombre_sala && /festival|fest|pirata|fiesta/i.test(newLead.nombre_sala)))
+    ) {
+      try {
+        const localFestival = searchFestivalByName(newLead.nombre_sala, newLead.ciudad);
+        if (localFestival) {
+          const dates = formatFestivalDates(localFestival);
+          newLead.festival_start_date = dates.start;
+          newLead.festival_end_date = dates.end;
+          if (localFestival.email && !newLead.email_contacto) newLead.email_contacto = localFestival.email;
+          if (localFestival.instagram && !newLead.instagram) newLead.instagram = localFestival.instagram;
+          if (localFestival.website && !newLead.website) newLead.website = localFestival.website;
+          if (localFestival.aforo && (!newLead.aforo || newLead.aforo === 0)) newLead.aforo = localFestival.aforo;
+        }
+      } catch (festErr) {
+        console.warn("Fast festival lookup warning:", festErr);
+      }
     }
     
     // Check if this venue was previously deleted

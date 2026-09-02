@@ -3,6 +3,7 @@
 
 export interface FestivalEntry {
   nombre: string;
+  aliases?: string[];
   ciudad: string;
   region?: string;
   mes_inicio: number; // 1-12
@@ -23,6 +24,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   // JULIO-AGOSTO - PRINCIPALES
   {
     nombre: "Festival de Benicàssim",
+    aliases: ["FIB", "Benicassim", "Benicàssim Festival"],
     ciudad: "Benicàssim",
     region: "Valencia",
     mes_inicio: 7, dia_inicio: 15, mes_fin: 7, dia_fin: 22,
@@ -35,6 +37,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "BBK Live",
+    aliases: ["Bilbao BBK Live", "BBK"],
     ciudad: "Bilbao",
     region: "País Vasco",
     mes_inicio: 7, dia_inicio: 10, mes_fin: 7, dia_fin: 13,
@@ -46,6 +49,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Mad Cool Festival",
+    aliases: ["Mad Cool"],
     ciudad: "Madrid",
     region: "Madrid",
     mes_inicio: 7, dia_inicio: 1, mes_fin: 7, dia_fin: 7,
@@ -57,6 +61,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Primavera Sound Barcelona",
+    aliases: ["Primavera Sound", "Primavera Sound BCN"],
     ciudad: "Barcelona",
     region: "Cataluña",
     mes_inicio: 6, dia_inicio: 1, mes_fin: 6, dia_fin: 10,
@@ -68,6 +73,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Sónar Barcelona",
+    aliases: ["Sonar", "Sonar Barcelona"],
     ciudad: "Barcelona",
     region: "Cataluña",
     mes_inicio: 6, dia_inicio: 13, mes_fin: 6, dia_fin: 15,
@@ -79,6 +85,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Festival Cruïlla",
+    aliases: ["Cruilla", "Cruïlla Barcelona"],
     ciudad: "Barcelona",
     region: "Cataluña",
     mes_inicio: 7, dia_inicio: 15, mes_fin: 7, dia_fin: 25,
@@ -90,7 +97,8 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Arenal Sound",
-    ciudad: "Jávea",
+    aliases: ["Arenal Sound Burriana", "Arenal"],
+    ciudad: "Burriana",
     region: "Valencia",
     mes_inicio: 8, dia_inicio: 1, mes_fin: 8, dia_fin: 10,
     website: "https://www.arenalsound.com/",
@@ -101,6 +109,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Tomavistas",
+    aliases: ["Festival Tomavistas"],
     ciudad: "Madrid",
     region: "Madrid",
     mes_inicio: 8, dia_inicio: 15, mes_fin: 8, dia_fin: 25,
@@ -112,6 +121,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Festival de Jazz de Vitoria",
+    aliases: ["Vitoria Jazz"],
     ciudad: "Vitoria",
     region: "País Vasco",
     mes_inicio: 8, dia_inicio: 1, mes_fin: 8, dia_fin: 20,
@@ -135,6 +145,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Azkena Rock Festival",
+    aliases: ["Azkena", "ARF"],
     ciudad: "Vitoria",
     region: "País Vasco",
     mes_inicio: 6, dia_inicio: 15, mes_fin: 6, dia_fin: 18,
@@ -166,6 +177,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
   },
   {
     nombre: "Festival Pirata Madrid",
+    aliases: ["Pirata Madrid", "Pirata Rock Madrid", "Pirata Festival Madrid"],
     ciudad: "Madrid",
     region: "Comunidad de Madrid",
     mes_inicio: 10, dia_inicio: 4, mes_fin: 10, dia_fin: 5,
@@ -176,15 +188,52 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     aforo: 15000
   },
   {
-    nombre: "Pirata Rock",
+    nombre: "Pirata Beach Festival",
+    aliases: ["Pirata Beach", "Pirata Rock", "Pirata Festival", "Pirata Gandia", "Pirata Rock Gandia", "Pirata Beach Gandia"],
     ciudad: "Gandía",
-    region: "Valencia",
+    region: "Comunidad Valenciana",
     mes_inicio: 7, dia_inicio: 18, mes_fin: 7, dia_fin: 20,
     website: "https://piratafestival.com",
-    email: "info@piratafestival.com",
-    instagram: "@piratafestival",
-    genero: "Rock, Punk, Ska, Mestizaje",
-    aforo: 20000
+    email: "booking@piratafestival.com",
+    instagram: "@piratarockfestival",
+    genero: "Rock, Punk, Ska, Mestizaje, Rap",
+    aforo: 25000
+  },
+  {
+    nombre: "Viña Rock",
+    aliases: ["Vina Rock", "Vinarock", "Festival Viña Rock"],
+    ciudad: "Villarrobledo",
+    region: "Castilla-La Mancha",
+    mes_inicio: 4, dia_inicio: 28, mes_fin: 5, dia_fin: 1,
+    website: "https://www.vina-rock.com",
+    email: "info@vina-rock.com",
+    instagram: "@vinarockoficial",
+    genero: "Rock, Punk, Ska, Rap, Mestizaje",
+    aforo: 60000
+  },
+  {
+    nombre: "Resurrection Fest",
+    aliases: ["Resu", "Resurrection Fest Viveiro", "Resurrection"],
+    ciudad: "Viveiro",
+    region: "Galicia",
+    mes_inicio: 6, dia_inicio: 26, mes_fin: 6, dia_fin: 29,
+    website: "https://www.resurrectionfest.es",
+    email: "info@resurrectionfest.es",
+    instagram: "@resurrectionfest",
+    genero: "Metal, Hardcore, Punk, Rock",
+    aforo: 30000
+  },
+  {
+    nombre: "Rototom Sunsplash",
+    aliases: ["Rototom", "Rototom Benicassim"],
+    ciudad: "Benicàssim",
+    region: "Comunidad Valenciana",
+    mes_inicio: 8, dia_inicio: 16, mes_fin: 8, dia_fin: 21,
+    website: "https://rototomsunsplash.com",
+    email: "info@rototom.com",
+    instagram: "@rototomsunsplash",
+    genero: "Reggae, Dub, Ska, Dancehall",
+    aforo: 30000
   },
   {
     nombre: "Festival de Flamenco de Córdoba",
@@ -195,7 +244,7 @@ export const SPANISH_FESTIVALS: FestivalEntry[] = [
     email: "info@flamencocordoba.com",
     genero: "Flamenco",
     aforo: 2000
-  },
+  }
 ];
 
 // Normaliza nombres para búsqueda (elimina acentos, espacios extras, etc.)
@@ -213,16 +262,44 @@ export function searchFestivalByName(venueName: string, ciudad?: string): Festiv
   if (!venueName) return null;
 
   const normalized = normalizeFestivalName(venueName);
+  const normalizedCity = ciudad ? normalizeFestivalName(ciudad) : "";
 
-  // Búsqueda exacta o parcial
-  const match = SPANISH_FESTIVALS.find(f => {
-    const fNormalized = normalizeFestivalName(f.nombre);
-    const cityMatch = !ciudad || normalizeFestivalName(ciudad).includes(normalizeFestivalName(f.ciudad));
+  // 1. Exact or Alias match with City check
+  for (const f of SPANISH_FESTIVALS) {
+    const fNorm = normalizeFestivalName(f.nombre);
+    const aliases = (f.aliases || []).map(normalizeFestivalName);
+    const allNames = [fNorm, ...aliases];
+    const fCityNorm = normalizeFestivalName(f.ciudad);
 
-    return (fNormalized.includes(normalized) || normalized.includes(fNormalized)) && cityMatch;
-  });
+    const cityMatches = !normalizedCity || normalizedCity.includes(fCityNorm) || fCityNorm.includes(normalizedCity);
 
-  return match || null;
+    const nameMatches = allNames.some(alias => 
+      alias === normalized || alias.includes(normalized) || normalized.includes(alias)
+    );
+
+    if (nameMatches && cityMatches) {
+      return f;
+    }
+  }
+
+  // 2. Token overlap match (brand keyword + city match or brand keyword in venueName)
+  for (const f of SPANISH_FESTIVALS) {
+    const fNorm = normalizeFestivalName(f.nombre);
+    const aliases = (f.aliases || []).map(normalizeFestivalName);
+    const allNames = [fNorm, ...aliases];
+    const fCityNorm = normalizeFestivalName(f.ciudad);
+
+    const brandKeywords = allNames.map(n => n.replace(/festival|rock|beach|sound|live|music|fest/gi, '').trim()).filter(b => b.length >= 4);
+
+    for (const kw of brandKeywords) {
+      if (kw && normalized.includes(kw)) {
+        const cityMatches = !normalizedCity || normalizedCity.includes(fCityNorm) || fCityNorm.includes(normalizedCity);
+        if (cityMatches) return f;
+      }
+    }
+  }
+
+  return null;
 }
 
 export function formatFestivalDates(festival: FestivalEntry): { start: string; end: string } {
