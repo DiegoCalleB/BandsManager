@@ -408,7 +408,6 @@ export function AddLeadModal({
                 </select>
               )}
             </div>
-          </div>
 
           {(newLeadData.tipo === 'agencia' || newLeadData.tipo === 'manager' || newLeadData.tipo === 'productora' || newLeadData.tipo === 'sello' || newLeadData.tipo === 'grupo' || sectionTab === 'grupos') && (
             <div>
