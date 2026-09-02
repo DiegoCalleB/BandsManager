@@ -1,4 +1,4 @@
-export type SubscriptionPlanId = 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | 'emergente' | 'profesional' | 'elite' | 'manager360';
+export type SubscriptionPlanId = 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | 'emergente' | 'profesional' | 'elite' | 'manager360';
 
 export interface PlanFeature {
   id: string;
@@ -6,7 +6,7 @@ export interface PlanFeature {
 }
 
 export interface PlanDefinition {
-  id: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel';
+  id: 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel';
   name: string;
   badge: string;
   color: string;
@@ -22,7 +22,24 @@ export interface PlanDefinition {
   features: string[];
 }
 
-export const PLANS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanDefinition> = {
+export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanDefinition> = {
+  promo: {
+    id: 'promo',
+    name: 'Promo',
+    badge: 'Festivales',
+    color: '#a1a1aa', // Zinc claro
+    price: '0€ / para siempre',
+    credits: '0 créditos IA',
+    creditsSub: 'Sin funciones de IA',
+    description: 'Para bandas que solo necesitan su dossier, QR y calendario en un festival o showcase.',
+    allowedModules: ['resumen', 'bandas', 'calendario', 'epk', 'fans'],
+    features: [
+      'Dossier de Prensa Interactivo (EPK)',
+      'QR de contacto y difusión',
+      'Captación de fans con QR',
+      'Calendario de conciertos y ensayos',
+    ],
+  },
   ensayo: {
     id: 'ensayo',
     name: 'Ensayo',
@@ -115,10 +132,10 @@ export const PLANS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', 
   },
 };
 
-export function normalizePlan(rawPlan?: string): 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
+export function normalizePlan(rawPlan?: string): 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
   if (!rawPlan) return 'ensayo';
   const clean = rawPlan.toLowerCase().trim();
-  
+
   if (clean === 'cabeza_de_cartel' || clean === 'cabeza de cartel' || clean === 'elite' || clean === 'manager360' || clean === 'pro_plus' || clean === '360' || clean === 'manager 360' || clean === 'elite 360') {
     return 'cabeza_de_cartel';
   }
@@ -128,10 +145,13 @@ export function normalizePlan(rawPlan?: string): 'ensayo' | 'local' | 'de_gira' 
   if (clean === 'local') {
     return 'local';
   }
+  if (clean === 'promo' || clean === 'buskers' || clean === 'festival') {
+    return 'promo';
+  }
   if (clean === 'ensayo' || clean === 'emergente' || clean === 'gratis' || clean === 'free' || clean === 'basico') {
     return 'ensayo';
   }
-  
+
   return 'ensayo';
 }
 
@@ -149,7 +169,8 @@ export function getPlanTierLevel(rawPlan?: string): number {
   if (norm === 'cabeza_de_cartel') return 4;
   if (norm === 'de_gira') return 3;
   if (norm === 'local') return 2;
-  return 1;
+  if (norm === 'ensayo') return 1;
+  return 0; // promo
 }
 
 export function getPlanChangeType(currentPlan?: string, targetPlan?: string): 'current' | 'upgrade' | 'downgrade' {
@@ -170,7 +191,15 @@ export interface PlanLimits {
   monthlyCredits: number;
 }
 
-export const PLAN_LIMITS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+export const PLAN_LIMITS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+  promo: {
+    maxLeads: 0,
+    maxPressContacts: 0,
+    maxBands: 1,
+    maxSongs: 0,
+    maxFans: 250,
+    monthlyCredits: 0
+  },
   ensayo: {
     maxLeads: 10,
     maxPressContacts: 0,
