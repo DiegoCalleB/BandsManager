@@ -11,7 +11,10 @@ import {
   dbGetSetlists,
   dbUpsertSetlist,
   dbDeleteSetlist,
-  analizarYGuardarDinamicaCancion
+  analizarYGuardarDinamicaCancion,
+  dbGetSetlistShortcuts,
+  dbUpsertSetlistShortcut,
+  dbDeleteSetlistShortcut
 } from "../db.js";
 
 import { getTargetBandId } from "../utils/bandAccess.js";
@@ -171,6 +174,50 @@ router.delete("/setlists/:id", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error deleting setlist:", err);
     res.status(500).json({ error: "Error al eliminar el repertorio." });
+  }
+});
+
+// GET all custom "quick add" shortcuts for the active band
+router.get("/setlist-shortcuts", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const shortcuts = await dbGetSetlistShortcuts(userBandId);
+    res.json({ success: true, shortcuts });
+  } catch (err: any) {
+    console.error("Error fetching setlist shortcuts:", err);
+    res.status(500).json({ error: "Error al obtener los accesos rápidos", shortcuts: [] });
+  }
+});
+
+// POST new custom shortcut
+router.post("/setlist-shortcuts", requireAuth, async (req, res) => {
+  try {
+    const { icono, etiqueta, tituloCustom, duracionEstimadaMinutos, duracionEstimadaSegundos, notaTema } = req.body;
+    if (!etiqueta || !String(etiqueta).trim()) {
+      return res.status(400).json({ error: "La etiqueta del acceso rápido es obligatoria." });
+    }
+    const userBandId = getTargetBandId(req);
+    const saved = await dbUpsertSetlistShortcut(
+      { icono, etiqueta, tituloCustom, duracionEstimadaMinutos, duracionEstimadaSegundos, notaTema },
+      userBandId
+    );
+    res.json({ success: true, shortcut: saved });
+  } catch (err: any) {
+    console.error("Error creating setlist shortcut:", err);
+    res.status(500).json({ error: "Error al guardar el acceso rápido." });
+  }
+});
+
+// DELETE custom shortcut
+router.delete("/setlist-shortcuts/:id", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = getTargetBandId(req);
+    await dbDeleteSetlistShortcut(id, userBandId);
+    res.json({ success: true, id });
+  } catch (err: any) {
+    console.error("Error deleting setlist shortcut:", err);
+    res.status(500).json({ error: "Error al eliminar el acceso rápido." });
   }
 });
 

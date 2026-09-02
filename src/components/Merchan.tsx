@@ -99,17 +99,34 @@ const SHIRT_COLORS = [
   { id: '#7f1d1d', name: 'Rojo Vino' },
   { id: '#1e3a8a', name: 'Azul Marino' },
   { id: '#14532d', name: 'Verde Bosque' },
-  { id: '#f59e0b', name: 'Ámbar (Bakandeya)' }
+  { id: '#f59e0b', name: 'Ámbar Dorado' }
 ];
 
 interface MerchanProps {
   colors: ThemeColors;
   currentTheme: ThemeName;
+  bandId?: string;
+  bandName?: string;
+  bandLogoUrl?: string;
 }
 
-export default function Merchan({ colors, currentTheme }: MerchanProps) {
+export default function Merchan({ colors, currentTheme, bandId, bandName, bandLogoUrl }: MerchanProps) {
   const isStitchLight = false;
-  
+
+  // La plantilla de Bakandeya (logo/álbumes/catálogo de temas de demo) solo debe verse en la
+  // propia Bakandeya: mismo criterio que RepertorioSetlists.tsx (ver "isBakandeya" ahí) para no
+  // filtrar el logo, redes sociales o discografía de la banda de demo al taller de cualquier
+  // otra banda.
+  const cleanBand = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+  const isBakandeya = cleanBand === 'bakandeya';
+  const displayBandName = bandName || 'Tu Banda';
+  const bandInitials = displayBandName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(w => w[0]?.toUpperCase() || '')
+    .join('') || 'TB';
+
   const [productType, setProductType] = useState<'camiseta' | 'pegatina'>('camiseta');
   const [assetType, setAssetType] = useState<'logo' | 'portada' | 'custom'>('logo');
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
@@ -118,9 +135,9 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedAlbumIndex, setSelectedAlbumIndex] = useState(0);
-  const [qrUrl, setQrUrl] = useState('https://instagram.com/bakandeya');
+  const [qrUrl, setQrUrl] = useState('');
   const [shirtColor, setShirtColor] = useState('#121111');
-  
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedDesigns, setGeneratedDesigns] = useState<{
     id: string;
@@ -133,19 +150,16 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
     shirtColor?: string;
     qrUrl?: string;
     date: string;
-  }[]>(() => {
-    try {
-      const saved = localStorage.getItem('bakandeya_merchan_designs');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  }[]>([]);
 
-  const [albums, setAlbums] = useState<{name: string, url: string}[]>([
-    { name: "Bakandeya (2025)", url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80" },
-    { name: "EP Cacharros", url: "https://images.unsplash.com/photo-1493225457124-a1a2a5f590bc?w=500&q=80" }
-  ]);
+  const [albums, setAlbums] = useState<{name: string, url: string}[]>(
+    isBakandeya
+      ? [
+          { name: "Bakandeya (2025)", url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80" },
+          { name: "EP Cacharros", url: "https://images.unsplash.com/photo-1493225457124-a1a2a5f590bc?w=500&q=80" }
+        ]
+      : []
+  );
 
   // Regalo de bienvenida: Estado de canje de pack de pegatinas
   const [hasGiftPending, setHasGiftPending] = useState(true);
@@ -166,7 +180,11 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('bakandeya_songs_catalog');
+      // Mismo caché que RepertorioSetlists.tsx (band_songs_<banda>), nunca el catálogo global de
+      // Bakandeya: de lo contrario cualquier banda que compartiese navegador con una sesión de
+      // Bakandeya veía sus portadas de álbum en el selector del taller.
+      const key = `band_songs_${cleanBand || 'default'}`;
+      const saved = localStorage.getItem(key) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
       if (saved) {
         const songs = JSON.parse(saved);
         const albumsMap = new Map<string, string>();
@@ -177,7 +195,7 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
             }
           }
         });
-        
+
         if (albumsMap.size > 0) {
           const loadedAlbums = Array.from(albumsMap.entries()).map(([name, url]) => ({ name, url }));
           setAlbums(loadedAlbums);
@@ -186,11 +204,25 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [cleanBand, isBakandeya]);
+
+  // Galería de diseños generados, cacheada por banda (misma convención que el resto del módulo
+  // de repertorio: ver `band_songs_${cleanBand}` arriba) para que una banda nunca vea los diseños
+  // de merchandising de otra.
+  useEffect(() => {
+    try {
+      const key = `merchan_designs_${cleanBand || 'default'}`;
+      const saved = localStorage.getItem(key);
+      setGeneratedDesigns(saved ? JSON.parse(saved) : []);
+    } catch {
+      setGeneratedDesigns([]);
+    }
+  }, [cleanBand]);
 
   useEffect(() => {
-    localStorage.setItem('bakandeya_merchan_designs', JSON.stringify(generatedDesigns));
-  }, [generatedDesigns]);
+    const key = `merchan_designs_${cleanBand || 'default'}`;
+    localStorage.setItem(key, JSON.stringify(generatedDesigns));
+  }, [generatedDesigns, cleanBand]);
 
   const handleDelete = (id: string) => {
     setGeneratedDesigns(prev => prev.filter(d => d.id !== id));
@@ -230,7 +262,7 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
   const handleGenerate = async () => {
     setIsGenerating(true);
 
-    let rawGraphicUrl = '/logo_bakandeya.jpg';
+    let rawGraphicUrl = bandLogoUrl || '';
     if (assetType === 'portada' && albums[selectedAlbumIndex]) {
       rawGraphicUrl = albums[selectedAlbumIndex].url;
     } else if (assetType === 'custom' && customImageUrl) {
@@ -529,7 +561,7 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
                 type="url"
                 value={qrUrl}
                 onChange={(e) => setQrUrl(e.target.value)}
-                placeholder="https://instagram.com/bakandeya"
+                placeholder="https://instagram.com/tu_banda"
                 className={`w-full rounded-lg px-3 py-2 text-xs font-mono focus:outline-none ${
                   isStitchLight 
                     ? 'bg-white border-indigo-200 text-slate-800 focus:border-indigo-500' 
@@ -612,15 +644,17 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
                           )}
                           <div className="h-16 w-full bg-white flex items-center justify-between px-3 border-t border-slate-100">
                             <div className="font-mono text-[10px] text-neutral-900 uppercase font-black leading-tight">
-                              BAKANDEYA<br/><span className="text-amber-600">SCAN QR</span>
+                              {displayBandName.toUpperCase()}<br/><span className="text-amber-600">SCAN QR</span>
                             </div>
                             <div className="relative w-12 h-12 flex items-center justify-center">
                               <QRCode value={design.qrUrl || qrUrl} size={44} level="H" />
-                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="w-3.5 h-3.5 bg-white rounded-sm flex items-center justify-center overflow-hidden border border-white p-0.5">
-                                  <img src="/logo_bakandeya.jpg" alt="Logo" className="w-full h-full object-cover rounded-sm" />
+                              {bandLogoUrl && (
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                  <div className="w-3.5 h-3.5 bg-white rounded-sm flex items-center justify-center overflow-hidden border border-white p-0.5">
+                                    <img src={bandLogoUrl} alt="Logo" className="w-full h-full object-cover rounded-sm" />
+                                  </div>
                                 </div>
-                              </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -659,7 +693,7 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
                         <button 
                           onClick={() => {
                             const link = document.createElement('a');
-                            link.download = `merchan-bakandeya-${design.id}.png`;
+                            link.download = `merchan-${cleanBand || 'banda'}-${design.id}.png`;
                             link.href = displayGraphic;
                             link.click();
                           }}
@@ -741,15 +775,15 @@ export default function Merchan({ colors, currentTheme }: MerchanProps) {
                       {/* Sticker Preview visual */}
                       <div className="relative w-28 h-28 shrink-0 rounded-2xl bg-neutral-900 border-4 border-white shadow-xl p-2 flex flex-col items-center justify-center transform -rotate-3">
                         <div className="w-10 h-10 rounded-lg bg-amber-400 text-black font-black flex items-center justify-center text-lg font-display mb-1">
-                          BK
+                          {bandInitials}
                         </div>
-                        <span className="text-[9px] font-black font-display text-white uppercase tracking-wider">BAKANDEYA</span>
+                        <span className="text-[9px] font-black font-display text-white uppercase tracking-wider">{displayBandName.toUpperCase()}</span>
                         <span className="text-[7px] font-mono text-amber-400 font-bold">Oficial Vinyl</span>
                       </div>
 
                       <div className="flex-1 text-center sm:text-left space-y-1">
                         <div className="flex items-center justify-center sm:justify-start gap-2">
-                          <span className="text-xs font-bold text-zinc-100">Logo Bakandeya (Oficial)</span>
+                          <span className="text-xs font-bold text-zinc-100">Logo {displayBandName} (Oficial)</span>
                           <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                             Alta resolución 300 DPI
                           </span>

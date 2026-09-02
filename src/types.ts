@@ -664,6 +664,20 @@ export interface Setlist {
   fechaUltimaEdicion: string;
 }
 
+// A band's own custom "quick add" preset for the setlist editor, alongside the built-in ones
+// (Presentación, Intro Tema, Chapa...). Always inserted as tipoItem 'otro' — the icon/label are
+// what the band picks, tituloCustom/duracion are what gets pre-filled into the setlist item.
+export interface SetlistShortcut {
+  id: string;
+  band_id?: string;
+  icono: string; // single emoji
+  etiqueta: string; // short chip label, e.g. "Solo Batería"
+  tituloCustom: string; // text used for the created setlist item
+  duracionEstimadaMinutos?: number;
+  duracionEstimadaSegundos?: number;
+  notaTema?: string;
+}
+
 export interface ThemeColors {
   name: string;
   bg: string;

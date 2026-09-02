@@ -142,12 +142,16 @@ export interface BandMemberOption {
   avatarColor?: string;
 }
 
+// Fallback genérico usado por resolveBandMembers cuando una banda todavía no tiene
+// miembros/usuarios cargados: nombres de puesto, no de una persona real, para no filtrar la
+// formación de Bakandeya (banda de demo de la propia app) al resto de bandas (ver el mismo
+// bug ya corregido para "accesos rápidos" en RepertorioSetlists.tsx).
 export const DEFAULT_BAND_MEMBERS: BandMemberOption[] = [
-  { id: 'usr-diego', name: 'Diego', instrument: 'Trompeta / Voz', avatarColor: '#10b981' },
-  { id: 'usr-filgue', name: 'Filgue', instrument: 'Batería / Beatbox', avatarColor: '#3b82f6' },
-  { id: 'usr-jon', name: 'Jon', instrument: 'Guitarra / Sintes', avatarColor: '#f59e0b' },
-  { id: 'usr-jose', name: 'Jose', instrument: 'Bajo / Coros', avatarColor: '#8b5cf6' },
-  { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Vientos', avatarColor: '#ec4899' }
+  { id: 'miembro-1', name: 'Voz', instrument: 'Voz Principal', avatarColor: '#10b981' },
+  { id: 'miembro-2', name: 'Guitarra', instrument: 'Guitarra', avatarColor: '#3b82f6' },
+  { id: 'miembro-3', name: 'Bajo', instrument: 'Bajo', avatarColor: '#f59e0b' },
+  { id: 'miembro-4', name: 'Batería', instrument: 'Batería', avatarColor: '#8b5cf6' },
+  { id: 'miembro-5', name: 'Teclados', instrument: 'Teclados / Sintes', avatarColor: '#ec4899' }
 ];
 
 /**

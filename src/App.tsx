@@ -1229,7 +1229,13 @@ export default function App() {
  />
  )}
 {currentView === 'merchan' && (
- <Merchan colors={colors} currentTheme={currentTheme} />
+ <Merchan
+ colors={colors}
+ currentTheme={currentTheme}
+ bandId={currentActiveBandId}
+ bandName={currentActiveBandName}
+ bandLogoUrl={currentActiveBandLogo}
+ />
  )}
         {currentView === 'epk' && (
           <ErrorBoundary fallbackTitle="EPK / Dossier Promocional">
