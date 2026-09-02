@@ -221,8 +221,8 @@ export const chatFunctionDeclarations: FunctionDeclaration[] = [
             genero: { type: Type.STRING, description: "Géneros musicales habituales." },
             tipo: {
               type: Type.STRING,
-              description: "Categoría del lead ('sala' | 'festival' | 'ayuntamiento' | 'medio' | 'discoteca').",
-              enum: ["sala", "festival", "ayuntamiento", "medio", "discoteca", "grupo", "productora"]
+              description: "Categoría del lead ('sala' | 'festival' | 'ayuntamiento' | 'medio' | 'discoteca' | 'grupo' | 'agencia' | 'manager' | 'productora' | 'sello').",
+              enum: ["sala", "festival", "ayuntamiento", "medio", "discoteca", "grupo", "agencia", "manager", "productora", "sello"]
             },
             email_contacto: { type: Type.STRING, description: "Correo electrónico de booking o prensa." },
             telefono: { type: Type.STRING, description: "Teléfono de contacto." },

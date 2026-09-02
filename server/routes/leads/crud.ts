@@ -172,15 +172,16 @@ router.post("/leads", requireAuth, async (req, res) => {
       (newLead as any).band_id = userBandId;
     }
 
-    // Auto-correct lead type if a venue or festival name was wrongly classified as "medio"
+    // Auto-correct lead type if a venue or festival name was wrongly classified as "medio" or "productora"
     if (newLead.nombre_sala) {
       const lowerName = newLead.nombre_sala.toLowerCase();
-      const isVenue = lowerName.includes('sala') || lowerName.includes('teatro') || lowerName.includes('discoteca') || lowerName.includes('club') || lowerName.includes('sótano') || lowerName.includes('sotano') || lowerName.includes('recinto');
+      const isVenue = lowerName.includes('sala') || lowerName.includes('teatro') || lowerName.includes('discoteca') || lowerName.includes('club') || lowerName.includes('sótano') || lowerName.includes('sotano') || lowerName.includes('recinto') || lowerName.includes('live') || lowerName.includes('studios');
       const isFestival = lowerName.includes('festiv') || lowerName.includes('fest');
-      if (isVenue && String(newLead.tipo || '').toLowerCase().includes('medio')) {
+      const currentTipo = String(newLead.tipo || '').toLowerCase();
+      if (isVenue && (currentTipo.includes('medio') || currentTipo.includes('productora') || currentTipo.includes('agencia'))) {
         newLead.tipo = 'sala';
         newLead.icono = '🏛️';
-      } else if (isFestival && String(newLead.tipo || '').toLowerCase().includes('medio')) {
+      } else if (isFestival && (currentTipo.includes('medio') || currentTipo.includes('productora'))) {
         newLead.tipo = 'festival';
         newLead.icono = '🎪';
       }

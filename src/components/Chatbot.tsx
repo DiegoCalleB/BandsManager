@@ -1255,7 +1255,8 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  };
 
  if (onCreateLead) {
- onCreateLead(newLeadData);
+ await onCreateLead(newLeadData);
+ window.dispatchEvent(new Event('app-data-updated'));
  } else {
  try {
  const token = localStorage.getItem('bakandeya_token');
