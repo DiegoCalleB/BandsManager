@@ -220,38 +220,24 @@ router.post("/trigger-agent", requireCronOrAuth, async (req, res) => {
 
         let generatedPitch = "";
         if (ai) {
+          try {
             const prompt = `${systemPrompt}
 
-TAREA ESPECÍFICA DE REDACCIÓN DE ALTA CONVERSIÓN:
-Redacta una propuesta de concierto (pitch) cercana, altamente personalizada, profesional y atractiva para la sala, festival o programador:
-- Sala/Recinto: ${lead.nombre_sala} (${lead.ciudad || 'España'})
-- Género/Estilo del recinto: ${lead.genero || 'Música en directo'}
-- Aforo: ${lead.aforo ? `${lead.aforo} personas` : 'Estándar'}
+TAREA ESPECÍFICA:
+Redacta una propuesta de concierto (pitch) cercana, profesional y atractiva para la sala o programador:
+- Sala: ${lead.nombre_sala} (${lead.ciudad || 'España'})
+- Género/Estilo habitual: ${lead.genero || 'Música en directo'}
+- Aforo: ${lead.aforo ? `${lead.aforo} personas` : 'No especificado / Estándar'}
 - Tipo: ${lead.tipo || 'sala'}
-${lead.website ? `- Web/Redes oficiales: ${lead.website}` : ''}
 ${activeCampaign ? `\nCONTEXTO CRÍTICO DE CAMPAÑA ACTIVA "${activeCampaign.name || 'Campaña de Conciertos'}": Proponer fechas deseadas (${activeCampaign.target_dates_text || (activeCampaign.target_dates ? activeCampaign.target_dates.join(', ') : 'próximas fechas')}).` : ''}
 
-REGLA DE HIPER-PERSONALIZACIÓN CON BÚSQUEDA EN VIVO:
-Si está disponible, utiliza la búsqueda en vivo para identificar brevemente el tipo de programación o conciertos afines de "${lead.nombre_sala}" en ${lead.ciudad || 'España'} e incluir un guiño o mención relevante en el saludo/introducción.
+Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el usuario.`;
 
-Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado por el mánager.`;
-
-            let resp: any = null;
-            try {
-              resp = await generateContentWithFallback(ai, {
-                contents: prompt,
-                config: { tools: [{ googleSearch: {} }] },
-                permitirPitchLocal: true,
-                links: pitchLinks
-              });
-            } catch (_) {
-              resp = await generateContentWithFallback(ai, {
-                contents: prompt,
-                permitirPitchLocal: true,
-                links: pitchLinks
-              });
-            }
-            generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || resp?.text || "";
+            const resp = await generateContentWithFallback(ai, { contents: prompt, permitirPitchLocal: true, links: pitchLinks });
+            generatedPitch = resp?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          } catch (err) {
+            console.warn("AI fallback for pitch generation:", err);
+          }
         }
 
         let pitchEsPlantilla = false;
