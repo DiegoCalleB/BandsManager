@@ -620,6 +620,8 @@ export interface Song {
   tipo?: string;
   estado?: string;
   energia?: number;
+  energiaVariacion?: number; // 0-10, cuánto varía la energía dentro del tema (subidas/bajadas internas), detectado automáticamente del audio
+  energiaVariacionCalculadaEn?: string; // ISO timestamp del último análisis automático de dinámica interna
   cantantePrincipal?: string; // Lead vocalist for this song (shown in the setlist and searchable)
   artista?: string; // Performing artist/band name (written on bulk album upload, shown in the player)
   portadaUrl?: string;

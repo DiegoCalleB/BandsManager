@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Song, ThemeColors } from '../../types';
-import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText } from 'lucide-react';
+import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2 } from 'lucide-react';
 import { AlbumCover } from '../AlbumCover';
 import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
 import { apiFetch } from '../../utils/api';
@@ -75,6 +75,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   const [isLiveConcertModalOpen, setIsLiveConcertModalOpen] = useState(false);
   const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
   const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{ name: string; songs: Song[] } | null>(null);
+  const [dynamicsAnalysis, setDynamicsAnalysis] = useState<{ running: boolean; done: number; total: number } | null>(null);
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -203,6 +204,51 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     });
   };
 
+  // Repesca manual: analiza la dinámica interna (partes lentas/rápidas) de las canciones con
+  // audio que todavía no se han analizado. Lo normal es que esto ya haya pasado solo al
+  // guardar cada tema (ver dbUpsertSong en el servidor); esto es solo para ponerse al día con
+  // canciones subidas antes de que existiera esta feature.
+  const songsPendingDynamicsAnalysis = safeSongs.filter((s) => {
+    const audio = s.audioPrincipalUrl || (s as any).audioUrl;
+    return Boolean(audio) && !s.energiaVariacionCalculadaEn;
+  });
+
+  const handleAnalyzeAllDynamics = async () => {
+    const pending = songsPendingDynamicsAnalysis;
+    if (pending.length === 0 || dynamicsAnalysis?.running) return;
+
+    setDynamicsAnalysis({ running: true, done: 0, total: pending.length });
+
+    const CONCURRENCIA = 2;
+    let siguiente = 0;
+    let completadas = 0;
+
+    const trabajador = async () => {
+      while (siguiente < pending.length) {
+        const song = pending[siguiente++];
+        const audio = song.audioPrincipalUrl || (song as any).audioUrl;
+        try {
+          const result = await apiFetch<{ variacionDetectada: number }>(`/api/songs/${song.id}/analizar-dinamica`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ audioUrl: audio }),
+          });
+          const ahora = new Date().toISOString();
+          setSongs((prev) =>
+            prev.map((s) => (s.id === song.id ? { ...s, energiaVariacion: result.variacionDetectada, energiaVariacionCalculadaEn: ahora } : s))
+          );
+        } catch (err) {
+          console.warn(`No se pudo analizar la dinámica interna de "${song.titulo}":`, err);
+        }
+        completadas++;
+        setDynamicsAnalysis({ running: true, done: completadas, total: pending.length });
+      }
+    };
+
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCIA, pending.length) }, trabajador));
+    setDynamicsAnalysis({ running: false, done: pending.length, total: pending.length });
+  };
+
   return (
     <div
       className={`p-6 sm:p-8 rounded-3xl shadow-2xl transition-all ${
@@ -279,6 +325,28 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             >
               <Layers className="w-3.5 h-3.5 text-[#1db954]" />
               <span>{areAllExpanded ? 'Plegar Todos' : 'Desplegar Todos'}</span>
+            </button>
+          )}
+
+          {songsPendingDynamicsAnalysis.length > 0 && (
+            <button
+              type="button"
+              onClick={handleAnalyzeAllDynamics}
+              disabled={dynamicsAnalysis?.running}
+              className="px-4 py-2 rounded-full bg-sky-600 hover:bg-sky-500 disabled:opacity-70 disabled:cursor-wait text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
+              title="Detecta automáticamente, a partir del audio, qué temas tienen subidas y bajadas de energía internas (para el Mapa de Energía del Show)"
+            >
+              {dynamicsAnalysis?.running ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Analizando {dynamicsAnalysis.done}/{dynamicsAnalysis.total}...</span>
+                </>
+              ) : (
+                <>
+                  <Headphones className="w-4 h-4" />
+                  <span>🎧 Analizar Dinámica del Repertorio ({songsPendingDynamicsAnalysis.length})</span>
+                </>
+              )}
             </button>
           )}
 

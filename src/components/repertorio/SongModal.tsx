@@ -98,15 +98,15 @@ export function SongModal({
 
   const finalAlbumValue = selectedAlbum === '__CUSTOM__' ? customAlbumInput : selectedAlbum;
 
-  // La energía se almacena como número (1-10). Mapeamos el valor guardado al tramo
+  // La energía se almacena como número (1-20). Mapeamos el valor guardado al tramo
   // más cercano de los cuatro que ofrece el selector.
   const energiaDefault = (() => {
     const raw = Number(editingSong?.energia);
-    if (!editingSong || !Number.isFinite(raw) || raw <= 0) return '9';
-    if (raw <= 4) return '3';
-    if (raw <= 7) return '6';
-    if (raw <= 9) return '9';
-    return '10';
+    if (!editingSong || !Number.isFinite(raw) || raw <= 0) return '18';
+    if (raw <= 8) return '6';
+    if (raw <= 14) return '12';
+    if (raw <= 18) return '18';
+    return '20';
   })();
 
   return (
@@ -323,7 +323,7 @@ export function SongModal({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-neutral-400 mb-1">Energía / Intensidad</label>
-                {/* La energía se guarda como número (1-10) en la BD, así que el selector
+                {/* La energía se guarda como número (1-20) en la BD, así que el selector
                     emite números en vez de etiquetas de texto. */}
                 <select
                   name="energia"
@@ -332,10 +332,10 @@ export function SongModal({
                     isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                   }`}
                 >
-                  <option value="10">💣 Explosiva / Clímax (Hit)</option>
-                  <option value="9">🔥 Alta (Traca / Caña)</option>
-                  <option value="6">🎵 Media (Groove / Ritmo)</option>
-                  <option value="3">🌙 Balada / Acústica</option>
+                  <option value="20">💣 Explosiva / Clímax (Hit)</option>
+                  <option value="18">🔥 Alta (Traca / Caña)</option>
+                  <option value="12">🎵 Media (Groove / Ritmo)</option>
+                  <option value="6">🌙 Balada / Acústica</option>
                 </select>
               </div>
 
