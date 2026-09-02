@@ -165,6 +165,65 @@ export async function dbGetEpkConfig(bandId: string) {
   };
 }
 
+/**
+ * Logo de cada banda, en una sola consulta, para pintar el selector de bandas estilo Netflix.
+ *
+ * buildAvailableBandsForUser (server/routes/users.ts) resolvía el logo de cada banda NO activa
+ * leyendo el caché en memoria state.epkConfigsByBand, que solo se rellena para una banda cuando
+ * esa banda ha sido la activa en ESTE proceso (vía /api/state). Recién logueado, o tras un
+ * redeploy, o simplemente porque nunca ha tocado esa banda en esta instancia del servidor, el
+ * caché estaba vacío y el logo se quedaba fuera aunque existiera en Supabase. Esta consulta trae
+ * el logo real de todas las bandas del usuario de una vez, sin depender de ese caché.
+ */
+export async function dbGetEpkLogosMap(bandIds: string[]): Promise<Record<string, string>> {
+  const cleanIds = Array.from(new Set(bandIds.map(id => (id || '').replace(/^(band|reg)-/, '').toLowerCase().trim()).filter(Boolean)));
+  if (cleanIds.length === 0) return {};
+
+  const candidateIds = Array.from(new Set(
+    cleanIds.flatMap(clean => [clean, `band-${clean}`, `reg-${clean}`])
+  ));
+
+  const sb = getSupabase();
+  const result: Record<string, string> = {};
+
+  try {
+    const { data, error } = await sb.from("epk_configs").select("band_id, logo_url").in("band_id", candidateIds);
+    if (error) throw error;
+    (data || []).forEach((row: any) => {
+      const clean = (row.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      if (clean && row.logo_url && row.logo_url.trim() && !result[clean]) {
+        result[clean] = row.logo_url.trim();
+      }
+    });
+  } catch (_) {
+    // Non-blocking: si falla, el llamador se queda con el resto de fallbacks que ya tenía.
+  }
+
+  // Rellena huecos con registered_bands.logo_url para bandas sin fila propia en epk_configs.
+  const missing = cleanIds.filter(clean => !result[clean]);
+  if (missing.length > 0) {
+    try {
+      const { data, error } = await sb.from("registered_bands").select("band_id, id, logo_url, imagen_url").or(
+        candidateIds.map(id => `band_id.eq.${id}`).join(",") + "," + candidateIds.map(id => `id.eq.${id}`).join(",")
+      );
+      if (error) throw error;
+      (data || []).forEach((row: any) => {
+        const cleanBid = (row.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+        const cleanId = (row.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+        const logo = (row.logo_url && row.logo_url.trim()) || (row.imagen_url && row.imagen_url.trim()) || '';
+        if (!logo) return;
+        [cleanBid, cleanId].forEach(clean => {
+          if (clean && !result[clean]) result[clean] = logo;
+        });
+      });
+    } catch (_) {
+      // Non-blocking
+    }
+  }
+
+  return result;
+}
+
 export async function dbUpsertEpkConfig(bandId: string, config: any) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);

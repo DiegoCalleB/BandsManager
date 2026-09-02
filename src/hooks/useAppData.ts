@@ -86,13 +86,21 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       setBandUsers(dedupeById(data.users || []));
       setFans(dedupeById(data.fans || []));
       setEpkConfig(data.epkConfig || {});
-      if (Array.isArray((data as any).campaigns) && (data as any).campaigns.length > 0) {
-        setCampaigns((data as any).campaigns);
-        localStorage.setItem('bandmanager_campaigns', JSON.stringify((data as any).campaigns));
-        const active = (data as any).campaigns.find((c: BookingCampaign) => c.isActive);
+      // Antes solo se sincronizaba cuando el array venía con datos, así que una banda sin ninguna
+      // campaña propia (p. ej. recién creada) se quedaba mostrando la campaña de la banda anterior
+      // (o la de la caché de localStorage, compartida entre bandas): "cero campañas" nunca se
+      // distinguía de "todavía no ha llegado la respuesta". Ahora se sincroniza siempre con lo que
+      // devuelva el servidor, incluida la lista vacía.
+      if (Array.isArray((data as any).campaigns)) {
+        const fetchedCampaigns = (data as any).campaigns as BookingCampaign[];
+        setCampaigns(fetchedCampaigns);
+        localStorage.setItem('bandmanager_campaigns', JSON.stringify(fetchedCampaigns));
+        const active = fetchedCampaigns.find((c: BookingCampaign) => c.isActive) || null;
+        setActiveCampaign(active);
         if (active) {
-          setActiveCampaign(active);
           localStorage.setItem('bandmanager_active_campaign', JSON.stringify(active));
+        } else {
+          localStorage.removeItem('bandmanager_active_campaign');
         }
       }
       setSyncStatus('synced');
@@ -117,9 +125,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
 
   useEffect(() => {
     if (isLoggedIn) {
-      // Evita que el EPK de la banda anterior quede visible/editable mientras
-      // se cargan los datos de la nueva banda tras un cambio de banda activa.
+      // Evita que el EPK (y la campaña activa, mismo problema) de la banda anterior queden
+      // visibles mientras se cargan los datos de la nueva banda tras un cambio de banda activa.
       setEpkConfig({});
+      setActiveCampaign(null);
       fetchState();
     }
   }, [isLoggedIn, bandId, fetchState]);
