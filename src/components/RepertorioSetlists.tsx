@@ -38,7 +38,7 @@ import {
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
-import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip } from 'recharts';
+import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea } from 'recharts';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -2078,6 +2078,17 @@ export default function RepertorioSetlists({
       yDomain = [lo, hi];
     }
 
+    // Bandas de fondo por categoría de energía (mismos umbrales que getEnergyInfo) — es lo
+    // que convierte la curva en un "mapa" de verdad: se ve a simple vista en qué zona cae
+    // cada canción, no solo por el color del punto sino por el propio fondo del chart.
+    const ZONAS_ENERGIA = [
+      { min: 1, max: 8, color: '#0284c7' },
+      { min: 9, max: 14, color: '#059669' },
+      { min: 15, max: 18, color: '#a16207' },
+      { min: 19, max: 20, color: '#a21caf' }
+    ].map((z) => ({ ...z, y1: Math.max(z.min, yDomain[0]), y2: Math.min(z.max, yDomain[1]) }))
+      .filter((z) => z.y1 < z.y2);
+
     return (
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
@@ -2117,11 +2128,11 @@ export default function RepertorioSetlists({
               </span>
               <div className="flex items-center gap-2">
                 {showEnergyMap && (
-                  <div className="hidden sm:flex items-center gap-2 text-[9px]">
-                    <span className="flex items-center gap-1 text-sky-400">🌙 Balada</span>
-                    <span className="flex items-center gap-1 text-emerald-400">🎵 Media</span>
-                    <span className="flex items-center gap-1 text-amber-400">🔥 Alta</span>
-                    <span className="flex items-center gap-1 text-rose-400">💣 Explosiva</span>
+                  <div className="hidden sm:flex items-center gap-2.5 text-[9px] text-neutral-300">
+                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
+                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
+                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
+                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
                   </div>
                 )}
                 <button
@@ -2137,7 +2148,13 @@ export default function RepertorioSetlists({
 
             {showEnergyMap && (
               <>
-                <div className="h-56 w-full bg-black/60 rounded-lg overflow-hidden">
+                {/* El glow del trazo y de cada punto es CSS puro sobre las clases que recharts
+                    ya pone en el SVG — más fiable entre navegadores que un <filter> SVG anidado
+                    dentro de un componente que se remonta al cambiar de setlist. */}
+                <style>{`
+                  .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(255,255,255,0.25)) drop-shadow(0 0 10px rgba(255,255,255,0.12)); }
+                `}</style>
+                <div className="energy-map-glow h-64 w-full bg-black/70 rounded-lg overflow-hidden">
                   <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart key={activeSetlist.id} data={chartData} margin={{ top: 14, right: 14, left: -18, bottom: 0 }}>
                       <defs>
@@ -2150,11 +2167,26 @@ export default function RepertorioSetlists({
                             />
                           ))}
                         </linearGradient>
-                        <linearGradient id="energyFillGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#d1b375" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="#d1b375" stopOpacity={0} />
+                        {/* El relleno bajo la curva usa los mismos colores por canción que el trazo
+                            (a opacidad baja) en vez de un dorado plano fijo — así el "aura" bajo la
+                            curva también cambia de color según la categoría de energía. */}
+                        <linearGradient id="energyFillGradient" x1="0" y1="0" x2="1" y2="0">
+                          {chartData.map((d, i) => (
+                            <stop
+                              key={d.id}
+                              offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
+                              stopColor={d.color}
+                              stopOpacity={0.22}
+                            />
+                          ))}
                         </linearGradient>
                       </defs>
+
+                      {ZONAS_ENERGIA.map((z) => (
+                        <ReferenceArea key={z.min} y1={z.y1} y2={z.y2} fill={z.color} fillOpacity={0.07} stroke="none" ifOverflow="hidden" />
+                      ))}
+
+                      <CartesianGrid horizontal vertical={false} stroke="#2c2c2a" strokeDasharray="0" />
 
                       <XAxis
                         dataKey="idx"
@@ -2195,7 +2227,7 @@ export default function RepertorioSetlists({
                         fill="#d1b375"
                         fillOpacity={0.12}
                         isAnimationActive
-                        animationDuration={900}
+                        animationDuration={1200}
                         animationEasing="ease-out"
                       />
 
@@ -2208,9 +2240,9 @@ export default function RepertorioSetlists({
                         fill="url(#energyFillGradient)"
                         fillOpacity={1}
                         isAnimationActive
-                        animationDuration={900}
+                        animationDuration={1200}
                         animationEasing="ease-out"
-                        activeDot={{ r: 7, strokeWidth: 2, stroke: '#ffffff' }}
+                        activeDot={{ r: 8, strokeWidth: 2, stroke: '#ffffff' }}
                         dot={(dotProps: any) => {
                           const { cx, cy, payload, index } = dotProps;
                           if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
@@ -2220,11 +2252,11 @@ export default function RepertorioSetlists({
                               key={`dot-${payload.id}`}
                               cx={cx}
                               cy={cy}
-                              r={isSelected ? 7 : 4.5}
+                              r={isSelected ? 8 : 5.5}
                               fill={payload.color}
                               stroke={isSelected ? '#ffffff' : '#0a0a0a'}
                               strokeWidth={isSelected ? 2 : 1.5}
-                              style={{ cursor: 'pointer' }}
+                              style={{ cursor: 'pointer', filter: `drop-shadow(0 0 5px ${payload.color}bb)` }}
                               onClick={() => setSelectedSetlistItemId(payload.id)}
                             />
                           );

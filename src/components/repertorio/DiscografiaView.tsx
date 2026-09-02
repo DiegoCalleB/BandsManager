@@ -75,7 +75,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   const [isLiveConcertModalOpen, setIsLiveConcertModalOpen] = useState(false);
   const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
   const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{ name: string; songs: Song[] } | null>(null);
-  const [dynamicsAnalysis, setDynamicsAnalysis] = useState<{ running: boolean; done: number; total: number } | null>(null);
+  const [dynamicsAnalysis, setDynamicsAnalysis] = useState<{ running: boolean; done: number; total: number; failedTitles: string[] } | null>(null);
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -217,36 +217,44 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     const pending = songsPendingDynamicsAnalysis;
     if (pending.length === 0 || dynamicsAnalysis?.running) return;
 
-    setDynamicsAnalysis({ running: true, done: 0, total: pending.length });
+    setDynamicsAnalysis({ running: true, done: 0, total: pending.length, failedTitles: [] });
 
     const CONCURRENCIA = 2;
     let siguiente = 0;
     let completadas = 0;
+    const fallidas: string[] = [];
 
     const trabajador = async () => {
       while (siguiente < pending.length) {
         const song = pending[siguiente++];
         const audio = song.audioPrincipalUrl || (song as any).audioUrl;
         try {
-          const result = await apiFetch<{ variacionDetectada: number }>(`/api/songs/${song.id}/analizar-dinamica`, {
+          const result = await apiFetch<{ variacionDetectada: number; audioAnalizable: boolean }>(`/api/songs/${song.id}/analizar-dinamica`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ audioUrl: audio }),
           });
+          // El backend no marca "analizado" cuando el audio no fue analizable (por ejemplo si
+          // la descarga falló) — aquí tampoco: si se hiciera, la canción quedaría marcada como
+          // analizada para siempre y la próxima repesca nunca la reintentaría.
+          if (!result.audioAnalizable) {
+            throw new Error('El audio no se pudo analizar (no accesible o formato no soportado)');
+          }
           const ahora = new Date().toISOString();
           setSongs((prev) =>
             prev.map((s) => (s.id === song.id ? { ...s, energiaVariacion: result.variacionDetectada, energiaVariacionCalculadaEn: ahora } : s))
           );
         } catch (err) {
           console.warn(`No se pudo analizar la dinámica interna de "${song.titulo}":`, err);
+          fallidas.push(song.titulo);
         }
         completadas++;
-        setDynamicsAnalysis({ running: true, done: completadas, total: pending.length });
+        setDynamicsAnalysis({ running: true, done: completadas, total: pending.length, failedTitles: fallidas });
       }
     };
 
     await Promise.all(Array.from({ length: Math.min(CONCURRENCIA, pending.length) }, trabajador));
-    setDynamicsAnalysis({ running: false, done: pending.length, total: pending.length });
+    setDynamicsAnalysis({ running: false, done: pending.length, total: pending.length, failedTitles: fallidas });
   };
 
   return (
@@ -329,25 +337,40 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           )}
 
           {songsPendingDynamicsAnalysis.length > 0 && (
-            <button
-              type="button"
-              onClick={handleAnalyzeAllDynamics}
-              disabled={dynamicsAnalysis?.running}
-              className="px-4 py-2 rounded-full bg-sky-600 hover:bg-sky-500 disabled:opacity-70 disabled:cursor-wait text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
-              title="Detecta automáticamente, a partir del audio, qué temas tienen subidas y bajadas de energía internas (para el Mapa de Energía del Show)"
-            >
-              {dynamicsAnalysis?.running ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Analizando {dynamicsAnalysis.done}/{dynamicsAnalysis.total}...</span>
-                </>
-              ) : (
-                <>
-                  <Headphones className="w-4 h-4" />
-                  <span>🎧 Analizar Dinámica del Repertorio ({songsPendingDynamicsAnalysis.length})</span>
-                </>
+            <div className="flex flex-col items-end gap-1">
+              <button
+                type="button"
+                onClick={handleAnalyzeAllDynamics}
+                disabled={dynamicsAnalysis?.running}
+                className="px-4 py-2 rounded-full bg-sky-600 hover:bg-sky-500 disabled:opacity-70 disabled:cursor-wait text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
+                title="Detecta automáticamente, a partir del audio, qué temas tienen subidas y bajadas de energía internas (para el Mapa de Energía del Show)"
+              >
+                {dynamicsAnalysis?.running ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Analizando {dynamicsAnalysis.done}/{dynamicsAnalysis.total}...</span>
+                  </>
+                ) : (
+                  <>
+                    <Headphones className="w-4 h-4" />
+                    <span>🎧 Analizar Dinámica del Repertorio ({songsPendingDynamicsAnalysis.length})</span>
+                  </>
+                )}
+              </button>
+              {/* Resumen del último análisis: los fallos ya no se pierden en la consola — si
+                  algo no se pudo persistir (audio inaccesible, band_id antiguo, etc.) se ve aquí. */}
+              {!dynamicsAnalysis?.running && dynamicsAnalysis && dynamicsAnalysis.done > 0 && (
+                dynamicsAnalysis.failedTitles.length > 0 ? (
+                  <span className="text-[10px] font-mono text-amber-400 max-w-[280px] text-right">
+                    ⚠️ {dynamicsAnalysis.done - dynamicsAnalysis.failedTitles.length} analizadas · {dynamicsAnalysis.failedTitles.length} fallaron: {dynamicsAnalysis.failedTitles.join(', ')}
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-mono text-emerald-400">
+                    ✅ {dynamicsAnalysis.done} canciones analizadas correctamente
+                  </span>
+                )
               )}
-            </button>
+            </div>
           )}
 
           <button

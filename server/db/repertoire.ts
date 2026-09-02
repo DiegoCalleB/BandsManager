@@ -16,21 +16,48 @@ export async function analizarYGuardarDinamicaCancion(
   bandId: string
 ): Promise<{ variacion: number; audioAnalizable: boolean }> {
   const curva = await analizarEnergiaAudio(audioUrl, { timeoutMs: 90_000 });
-  const variacion = medirVariacionInterna(curva);
+  const audioAnalizable = curva.length > 1;
+  const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
+
+  // Si el audio no se pudo analizar (descarga fallida, ffmpeg sin salida, etc.) NO se marca
+  // energia_variacion_calculada_en: dejar la canción "sin analizar" para que la próxima repesca
+  // la reintente, en vez de guardar un 0 falso que la deja marcada como analizada para siempre.
+  if (!audioAnalizable) {
+    return { variacion: 0, audioAnalizable: false };
+  }
 
   // UPDATE (no dbUpsertSong): dbUpsertSong reescribe la fila entera con sus valores por
   // defecto para cualquier campo que no venga en el objeto — perfecto para un guardado desde
   // el formulario (que manda la canción completa), pero borraría título/audio/bpm/etc. si se
   // usara aquí con solo estos dos campos. Un UPDATE solo toca las columnas indicadas.
+  //
+  // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
+  // canciones antiguas pueden tener el band_id guardado con o sin prefijo band-/reg-, y un
+  // .eq() con un único formato exacto puede no matchear ninguna fila. Un UPDATE de Supabase que
+  // no matchea nada NO lanza error — devuelve éxito con 0 filas afectadas, así que sin esto el
+  // "reanálisis" de canciones antiguas parece funcionar (200 OK) pero nunca persiste nada.
   const sb = getSupabase();
-  const { error } = await sb
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([
+    rawClean,
+    noPrefix,
+    `band-${noPrefix}`,
+    `reg-${noPrefix}`
+  ])).filter(Boolean);
+
+  const { data, error } = await sb
     .from("songs")
     .update({ energia_variacion: variacion, energia_variacion_calculada_en: new Date().toISOString() })
     .eq("id", songId)
-    .eq("band_id", cleanBandId(bandId));
+    .in("band_id", candidateIds)
+    .select("id");
   if (error) throw new Error(`Supabase Error (guardar dinámica interna): ${error.message}`);
+  if (!data || data.length === 0) {
+    throw new Error(`No se encontró la canción ${songId} para esta banda (posible band_id en formato antiguo)`);
+  }
 
-  return { variacion, audioAnalizable: curva.length > 1 };
+  return { variacion, audioAnalizable: true };
 }
 
 /** Igual que `analizarYGuardarDinamicaCancion`, pero sin bloquear al llamador ni propagar errores. */

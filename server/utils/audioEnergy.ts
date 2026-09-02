@@ -9,6 +9,9 @@
  * Todo lo de este fichero es puro salvo `analizarEnergiaAudio`, que llama a ffmpeg.
  */
 
+import fs from "fs";
+import path from "path";
+import os from "os";
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
 
@@ -172,6 +175,14 @@ export function resumirEnergiaParaPrompt(ventanas: VentanaEnergia[]): string {
  * dé una medición por segundo: `reset` cuenta frames, no tiempo, y sin esto una hora de bolo
  * salían decenas de miles de líneas de 23 ms.
  *
+ * Para una `fuente` remota, se descarga primero a un fichero temporal en vez de pasarle la URL
+ * directamente a `-i`: el ffmpeg-static empaquetado aquí crashea (segfault, verificado a mano)
+ * leyendo ciertas URLs https de storage en streaming — el mismo motivo por el que
+ * `getAudioSnippetPath` (server/routes/concert_to_album.ts) ya hace fetch+fichero temporal en
+ * vez de darle la URL cruda a ffmpeg. Sin esto, el análisis fallaba en TODAS las canciones con
+ * audio remoto y el catch de abajo lo tragaba en silencio, guardando variación=0 como si el
+ * análisis hubiera ido bien.
+ *
  * Nunca lanza: si no se puede medir, se devuelve una curva vacía y el análisis sigue con la
  * transcripción como antes.
  */
@@ -182,12 +193,31 @@ export async function analizarEnergiaAudio(
   const binario = ffmpegStatic as unknown as string;
   if (!binario || !fuente) return [];
 
+  let rutaLocal = fuente;
+  let ficheroTemporal: string | null = null;
+  if (/^https?:\/\//i.test(fuente)) {
+    try {
+      const resp = await fetch(fuente);
+      if (!resp.ok) {
+        console.error(`[Audio] No se pudo descargar el audio (HTTP ${resp.status}): ${fuente}`);
+        return [];
+      }
+      const buffer = Buffer.from(await resp.arrayBuffer());
+      ficheroTemporal = path.join(os.tmpdir(), `energia_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.audio`);
+      fs.writeFileSync(ficheroTemporal, buffer);
+      rutaLocal = ficheroTemporal;
+    } catch (err: any) {
+      console.error("[Audio] No se pudo descargar el audio para analizarlo:", String(err?.message || err).substring(0, 200));
+      return [];
+    }
+  }
+
   const args: string[] = ["-hide_banner", "-nostdin"];
   if (opciones.maxDuracion && opciones.maxDuracion > 0) {
     args.push("-t", String(Math.floor(opciones.maxDuracion)));
   }
   args.push(
-    "-i", fuente,
+    "-i", rutaLocal,
     "-vn",
     "-af", "aresample=8000,asetnsamples=n=8000:p=0,astats=metadata=1:reset=1,ametadata=print:key=lavfi.astats.Overall.RMS_level:file=-",
     "-f", "null",
@@ -201,7 +231,11 @@ export async function analizarEnergiaAudio(
     });
     return parseRmsCurve(stdout);
   } catch (err: any) {
-    console.log("[Audio] No se pudo medir la energía del audio:", String(err?.message || err).substring(0, 200));
+    console.error("[Audio] No se pudo medir la energía del audio:", String(err?.message || err).substring(0, 200));
     return [];
+  } finally {
+    if (ficheroTemporal) {
+      fs.unlink(ficheroTemporal, () => {});
+    }
   }
 }

@@ -89,7 +89,7 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
     res.json({ success: true, variacionDetectada: variacion, audioAnalizable });
   } catch (err: any) {
     console.error("Error analizando dinámica interna de la canción:", err);
-    res.status(500).json({ error: "No se pudo analizar la dinámica del audio." });
+    res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
   }
 });
 

@@ -72,7 +72,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       score: Math.max(1, score),
       label: 'Balada / Acústica',
       icon: '🌙',
-      hexColor: '#38bdf8',
+      hexColor: '#0284c7',
       bgClass: 'bg-sky-500/15',
       textClass: 'text-sky-400',
       borderClass: 'border-sky-500/30'
@@ -85,7 +85,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       score,
       label: 'Media / Groove',
       icon: '🎵',
-      hexColor: '#10b981',
+      hexColor: '#059669',
       bgClass: 'bg-emerald-500/15',
       textClass: 'text-emerald-400',
       borderClass: 'border-emerald-500/30'
@@ -98,7 +98,7 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
       score,
       label: 'Alta / Cañera',
       icon: '🔥',
-      hexColor: '#f59e0b',
+      hexColor: '#a16207',
       bgClass: 'bg-amber-500/15',
       textClass: 'text-amber-400',
       borderClass: 'border-amber-500/30'
@@ -110,10 +110,10 @@ export function getEnergyInfo(scoreOrSong?: number | Song | null): EnergyInfo {
     score: Math.min(20, score),
     label: 'Explosiva / Clímax',
     icon: '💣',
-    hexColor: '#f43f5e',
-    bgClass: 'bg-rose-500/15',
-    textClass: 'text-rose-400',
-    borderClass: 'border-rose-500/30'
+    hexColor: '#a21caf',
+    bgClass: 'bg-fuchsia-500/15',
+    textClass: 'text-fuchsia-400',
+    borderClass: 'border-fuchsia-500/30'
   };
 }
 
@@ -173,10 +173,10 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           score,
           label: item.tituloCustom || 'Evento Show',
           icon: isBis ? '💣' : '💬',
-          hexColor: isBis ? '#f43f5e' : '#64748b',
-          bgClass: isBis ? 'bg-rose-500/15' : 'bg-slate-700/30',
-          textClass: isBis ? 'text-rose-400' : 'text-slate-400',
-          borderClass: isBis ? 'border-rose-500/30' : 'border-slate-700/40'
+          hexColor: isBis ? '#a21caf' : '#64748b',
+          bgClass: isBis ? 'bg-fuchsia-500/15' : 'bg-slate-700/30',
+          textClass: isBis ? 'text-fuchsia-400' : 'text-slate-400',
+          borderClass: isBis ? 'border-fuchsia-500/30' : 'border-slate-700/40'
         }
       });
     }
