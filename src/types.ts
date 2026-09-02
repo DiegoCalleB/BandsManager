@@ -25,6 +25,8 @@ export interface BookingCampaign {
   maxCapacity: number;
   targetDates: string[]; // e.g., ['2026-12-04', '2026-12-05', '2027-04-11', '2027-04-12']
   targetDatesText?: string; // e.g., "4 o 5 de diciembre, o 11 y 12 de abril"
+  campaignStartDate?: string; // YYYY-MM-DD: start date for filtering festival leads
+  campaignEndDate?: string; // YYYY-MM-DD: end date for filtering festival leads
   notes?: string;
   isActive: boolean;
   color?: string; // Hex color for badge styling (e.g. '#8b5cf6', '#f59e0b', '#06b6d4')
@@ -143,6 +145,8 @@ export interface Lead {
   pitch_feedback_contenido?: number;
   pitch_feedback_comentario?: string;
   historial_feedback_pitch?: PitchFeedbackLog[];
+  festival_start_date?: string;
+  festival_end_date?: string;
 }
 
 export interface Rehearsal {

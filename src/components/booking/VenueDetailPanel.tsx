@@ -10,6 +10,7 @@ import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
 import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
+import { formatFestivalDateRange } from '../../utils/festivalDateFormat';
 import {
   Edit3,
   X,
@@ -485,12 +486,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               </div>
               <p className="text-xs sm:text-sm font-sans mt-0.5 text-zinc-300">
                 {selectedLead.ciudad} • {selectedLead.genero || 'Variado'} •{' '}
-                {selectedLead.roster 
-                  ? `Róster: ${selectedLead.roster}` 
+                {selectedLead.roster
+                  ? `Róster: ${selectedLead.roster}`
                   : (['agencia', 'manager', 'productora', 'sello'].includes(String(selectedLead.tipo || '').toLowerCase())
                       ? 'Agencia de Booking'
                       : (selectedLead.aforo ? `${selectedLead.aforo} pax` : 'Aforo n/d'))}
               </p>
+              {selectedLead.festival_start_date && selectedLead.festival_end_date && (
+                <p className="text-xs sm:text-sm font-sans mt-1 text-amber-400 flex items-center gap-1.5">
+                  <span className="text-lg">🎪</span>
+                  <span className="font-semibold">Festival/Evento:</span>
+                  <span>{formatFestivalDateRange(selectedLead.festival_start_date, selectedLead.festival_end_date)}</span>
+                </p>
+              )}
             </div>
           </div>
 
@@ -1101,6 +1109,35 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     }
                     className="w-full p-2 rounded bg-zinc-900 border border-amber-500/40 text-amber-200 focus:outline-none text-xs"
                   />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] uppercase font-mono text-amber-400 mb-1">
+                      🎪 Inicio Festival (dd/mm/yyyy)
+                    </label>
+                    <input
+                      type="date"
+                      value={editedLeadInfo.festival_start_date ? editedLeadInfo.festival_start_date.substring(0, 10) : ''}
+                      onChange={(e) =>
+                        setEditedLeadInfo({ ...editedLeadInfo, festival_start_date: e.target.value || undefined })
+                      }
+                      className="w-full p-2 rounded bg-zinc-900 border border-amber-500/40 text-zinc-100 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-mono text-amber-400 mb-1">
+                      🎪 Fin Festival (dd/mm/yyyy)
+                    </label>
+                    <input
+                      type="date"
+                      value={editedLeadInfo.festival_end_date ? editedLeadInfo.festival_end_date.substring(0, 10) : ''}
+                      onChange={(e) =>
+                        setEditedLeadInfo({ ...editedLeadInfo, festival_end_date: e.target.value || undefined })
+                      }
+                      className="w-full p-2 rounded bg-zinc-900 border border-amber-500/40 text-zinc-100 focus:outline-none"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">

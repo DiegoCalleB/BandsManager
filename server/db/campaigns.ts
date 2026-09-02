@@ -10,6 +10,8 @@ export interface DbCampaign {
   max_capacity: number;
   target_dates: string[];
   target_dates_text?: string;
+  campaign_start_date?: string;
+  campaign_end_date?: string;
   notes?: string;
   is_active: boolean;
   color?: string;
@@ -56,6 +58,8 @@ export function normalizeCampaignFromDb(c: any) {
     maxCapacity: Number(c.max_capacity ?? c.maxCapacity ?? 0),
     targetDates,
     targetDatesText: c.target_dates_text || c.targetDatesText || "",
+    campaignStartDate: c.campaign_start_date || c.campaignStartDate || "",
+    campaignEndDate: c.campaign_end_date || c.campaignEndDate || "",
     notes: c.notes || "",
     isActive: Boolean(c.is_active ?? c.isActive ?? false),
     color: c.color || "#8b5cf6",
@@ -114,6 +118,8 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     max_capacity: Number(campaign.maxCapacity || 0),
     target_dates: Array.isArray(campaign.targetDates) ? campaign.targetDates : [],
     target_dates_text: campaign.targetDatesText || "",
+    campaign_start_date: campaign.campaignStartDate || campaign.campaign_start_date || "",
+    campaign_end_date: campaign.campaignEndDate || campaign.campaign_end_date || "",
     notes: campaign.notes || "",
     is_active: Boolean(campaign.isActive),
     color: campaign.color || "#8b5cf6"

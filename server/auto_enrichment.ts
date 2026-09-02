@@ -9,6 +9,67 @@ import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
+async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string }> {
+  if (!lead.nombre_sala || !lead.ciudad) return {};
+
+  const client = getAiClient();
+  if (!client) return {};
+
+  const prompt = `Busca información sobre si "${lead.nombre_sala}" en ${lead.ciudad} (España) es un festival, fiestas populares o evento periódico, y extrae sus fechas.
+
+Devuelve ÚNICAMENTE un JSON con esta estructura:
+{
+  "es_festival": true o false,
+  "festival_start_date": "YYYY-MM-DD" (primera fecha del evento, o null si no es festival),
+  "festival_end_date": "YYYY-MM-DD" (última fecha del evento, o null si no es festival),
+  "notas": "Breve descripción del evento (ej: 'Festival anual en agosto', 'Fiestas de San Fermín en julio')"
+}
+
+Si no es un festival/evento periódico, devuelve es_festival: false y las fechas como null.
+Si las fechas no están confirmadas para este año, usa las del año anterior o próximo si están documentadas.`;
+
+  try {
+    console.log(`[FestivalDates] Detectando si "${lead.nombre_sala}" es festival/evento periódico...`);
+    let response: any = null;
+    try {
+      response = await generateContentWithFallback(client, {
+        contents: prompt,
+        config: {
+          tools: [{ googleSearch: {} }]
+        }
+      });
+    } catch (searchErr: any) {
+      console.warn(`[FestivalDates] Google Search no disponible, reintentando...`);
+      response = await generateContentWithFallback(client, {
+        contents: prompt
+      });
+    }
+
+    const text = response.text || "{}";
+    const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const jsonStart = cleanedText.indexOf('{');
+    const jsonEnd = cleanedText.lastIndexOf('}');
+    let data: any = {};
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
+    } else {
+      data = JSON.parse(cleanedText);
+    }
+
+    if (data.es_festival && data.festival_start_date && data.festival_end_date) {
+      console.log(`[FestivalDates] ✓ "${lead.nombre_sala}" es un festival/evento: ${data.festival_start_date} a ${data.festival_end_date}`);
+      return {
+        startDate: data.festival_start_date,
+        endDate: data.festival_end_date
+      };
+    }
+  } catch (err: any) {
+    console.warn(`[FestivalDates] Error detectando fechas:`, err?.message || err);
+  }
+
+  return {};
+}
+
 async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
   if (!websiteUrl || !websiteUrl.startsWith("http")) return {};
 
@@ -267,6 +328,16 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
     }
   } else {
     console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '${lead.nombre_sala}' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`);
+  }
+
+  // STAGE 4: Festival/Event Dates Extraction (detect festivals & extract their dates)
+  if (!lead.festival_start_date && !lead.festival_end_date && lead.tipo !== 'sala') {
+    const festivalInfo = await extractFestivalDates(lead);
+    if (festivalInfo.startDate && festivalInfo.endDate) {
+      lead.festival_start_date = festivalInfo.startDate;
+      lead.festival_end_date = festivalInfo.endDate;
+      modified = true;
+    }
   }
 
   // Ensure initial pitch is generated if missing
