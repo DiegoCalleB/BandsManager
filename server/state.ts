@@ -220,7 +220,24 @@ export function ensureBakandeyaBandId(state: any): boolean {
     const initialSeedUserIds = new Set(['user-jose', 'user-diego', 'user-jon', 'user-elyar', 'user-raul']);
     for (const u of state.users) {
       if (initialSeedUserIds.has(u.id)) {
-        if (u.band_id !== BAKANDEYA_BAND_ID) {
+        // Estos 5 ids son las cuentas fundadoras de Bakandeya (incluido user-diego, la cuenta real
+        // que usa la app). Antes esto forzaba SIEMPRE band_id de vuelta a Bakandeya en cada
+        // loadState() -y loadState() se llama en casi cada petición-, así que un cambio de banda
+        // válido hecho con /auth/switch-band o /users/create-band se deshacía solo en la
+        // siguientísima petición: era imposible que estas cuentas se quedaran en ninguna otra
+        // banda (STOMP, SWINDIGENTES...) aunque la tuvieran legítimamente vinculada en userBands.
+        // Ahora solo se repara si band_id falta o apunta a una banda a la que el usuario ya no
+        // tiene acceso real, en vez de pisar siempre un cambio de banda que sigue siendo válido.
+        const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
+        const uEmailSeed = (u.email || u.username || '').toLowerCase();
+        const hasValidAccess =
+          cleanCurrent === 'bakandeya' ||
+          (state.userBands || []).some((ub: any) => ub.user_id === u.id && (ub.band_id || '').replace(/^(band|reg)-/, '') === cleanCurrent) ||
+          (state.registeredBands || []).some((b: any) =>
+            (b.user_id === u.id || (uEmailSeed && b.email?.toLowerCase() === uEmailSeed)) &&
+            ((b.band_id || '').replace(/^(band|reg)-/, '') === cleanCurrent || (b.id || '').replace(/^(band|reg)-/, '') === cleanCurrent)
+          );
+        if (!u.band_id || !hasValidAccess) {
           u.band_id = BAKANDEYA_BAND_ID;
           u.bandName = "Bakandeya";
           changed = true;
