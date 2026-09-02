@@ -14,6 +14,7 @@ import {
   dbUpsertRegisteredBand,
   dbDeleteRegisteredBand,
   dbUpsertEpkConfig,
+  dbGetEpkLogosMap,
   normalizePlan,
   dbMigrateAllPlansToNewTiers
 } from "../db.js";
@@ -33,7 +34,7 @@ export function cleanBandId(bandId?: string): string {
   return bandId.replace(/^(band|reg)-/, '');
 }
 
-export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
+export async function buildAvailableBandsForUser(state: any, targetUser: any): Promise<any[]> {
   if (!targetUser) return [];
   if (!state.userBands) state.userBands = [];
   
@@ -43,15 +44,20 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
   const getLogoForBand = (bandId: string, defaultName: string) => {
     const epk = getEpkConfigForBand(state, bandId, defaultName);
     if (epk?.logoUrl && epk.logoUrl.trim().length > 0) return epk.logoUrl;
-    const bandInfo = (state.registeredBands || []).find((b: any) =>
-      b.band_id === bandId || b.id === bandId ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === bandId.replace(/^(band|reg)-/, '')) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === bandId.replace(/^(band|reg)-/, ''))
-    );
+    // Comparación case-insensitive: el badge de plan (getPlanForBand, más abajo) ya normaliza a
+    // minúsculas antes de comparar; esta buscaba con match exacto, así que una banda cuyo band_id
+    // llevara mayúsculas (p. ej. registrada como "STOMP") no encontraba su propia fila en
+    // registeredBands aquí, aunque sí la encontraba para el plan. Resultado: el badge de plan salía
+    // bien pero el logo se quedaba vacío para cualquier banda que no fuera 'bakandeya'.
+    const cleanId = bandId.replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const bandInfo = (state.registeredBands || []).find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      return b.band_id === bandId || b.id === bandId || bBid === cleanId || bId === cleanId;
+    });
     if (bandInfo?.logo_url && bandInfo.logo_url.trim().length > 0) return bandInfo.logo_url;
     if (bandInfo?.imagen_url && bandInfo.imagen_url.trim().length > 0) return bandInfo.imagen_url;
-    const clean = bandId.replace(/^(band|reg)-/, '');
-    if (clean === 'bakandeya') return '/logo_bakandeya_bueno_sin_fondo.png';
+    if (cleanId === 'bakandeya') return '/logo_bakandeya_bueno_sin_fondo.png';
     return '';
   };
 
@@ -166,6 +172,23 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
       logoUrl: getLogoForBand(currentBid, bName),
       is_main: cleanCurrent === mainClean
     });
+  }
+
+  // Trae de Supabase, de una sola vez, el logo real de cada banda de la lista. getLogoForBand ya
+  // resuelve casi todos los casos con lo que hay en memoria (state.epkConfigsByBand/registeredBands),
+  // pero ese caché en memoria solo tiene una banda si ya ha sido la activa en ESTE proceso: recién
+  // logueado, tras un redeploy, o si el usuario nunca la ha tenido activa en esta instancia, se
+  // quedaba vacío aunque el logo existiera en Supabase. Esta consulta no depende de ese caché.
+  try {
+    const logosMap = await dbGetEpkLogosMap(availableBands.map(b => b.band_id));
+    availableBands.forEach(b => {
+      const clean = b.band_id.replace(/^(band|reg)-/, '').toLowerCase().trim();
+      if (logosMap[clean]) {
+        b.logoUrl = logosMap[clean];
+      }
+    });
+  } catch (_) {
+    // Non-blocking: si Supabase falla aquí, se queda con lo que ya había resuelto getLogoForBand.
   }
 
   // Sort available bands:
@@ -378,7 +401,7 @@ router.post("/auth/register", async (req, res) => {
   }
 
   // Calculate availableBands dynamically
-  const availableBands = buildAvailableBandsForUser(state, userToUse);
+  const availableBands = await buildAvailableBandsForUser(state, userToUse);
 
   res.cookie("bakandeya_token", token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -762,7 +785,7 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
 
   saveState(state);
 
-  const availableBands = buildAvailableBandsForUser(state, user);
+  const availableBands = await buildAvailableBandsForUser(state, user);
   const { passwordHash: _, salt: __, ...safeUser } = user;
 
   res.cookie("bakandeya_token", token, {
@@ -866,7 +889,7 @@ router.post("/auth/login", loginRateLimiter, async (req, res) => {
   saveState(state);
 
   // Recalculate availableBands
-  const availableBands = buildAvailableBandsForUser(state, selectedUser);
+  const availableBands = await buildAvailableBandsForUser(state, selectedUser);
 
   res.cookie("bakandeya_token", token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -1046,7 +1069,7 @@ router.get("/auth/me", async (req, res) => {
   }
 
   // Recalculate availableBands
-  const availableBands = buildAvailableBandsForUser(state, user);
+  const availableBands = await buildAvailableBandsForUser(state, user);
 
   const { passwordHash, salt, ...safeUser } = user;
   res.json({ token, user: safeUser, availableBands, multipleBands: availableBands.length > 1 });
@@ -1157,6 +1180,15 @@ router.post("/auth/switch-band", async (req, res) => {
   if (!state.sessions) state.sessions = {};
   state.sessions[effectiveToken] = session;
   saveState(state);
+  // Sin esto, el cambio de banda solo vivía en el data.json local (efímero, no compartido entre
+  // instancias/redeploys de Railway): cualquier ruta que releyera al usuario desde Supabase después
+  // (login, /auth/me sirviendo desde otra instancia, etc.) devolvía band_id sin actualizar, y la
+  // app "volvía sola" a la banda anterior aunque el switch hubiera funcionado un momento antes.
+  try {
+    await dbUpsertUser(targetUser);
+  } catch (err) {
+    console.warn("Could not sync switched band to Supabase:", err);
+  }
 
   res.cookie("bakandeya_token", effectiveToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -1166,7 +1198,7 @@ router.post("/auth/switch-band", async (req, res) => {
   });
 
   // Recalculate availableBands dynamically using userBands
-  const availableBands = buildAvailableBandsForUser(state, targetUser);
+  const availableBands = await buildAvailableBandsForUser(state, targetUser);
 
   const { passwordHash, salt, ...safeUser } = targetUser;
   res.json({ token: effectiveToken, user: safeUser, availableBands });
@@ -1256,7 +1288,7 @@ router.post(['/set-main-band', '/users/set-main-band'], requireAuth, async (req,
       console.warn("Could not sync main band to Supabase:", err);
     }
 
-    const availableBands = buildAvailableBandsForUser(state, user);
+    const availableBands = await buildAvailableBandsForUser(state, user);
     const { passwordHash, salt, ...safeUser } = user;
     res.json({ success: true, user: safeUser, availableBands });
   } catch (err: any) {
@@ -1297,7 +1329,7 @@ router.post(['/set-band-order', '/users/set-band-order'], requireAuth, async (re
       console.warn("Could not sync band order to Supabase:", err);
     }
 
-    const availableBands = buildAvailableBandsForUser(state, user);
+    const availableBands = await buildAvailableBandsForUser(state, user);
     const { passwordHash, salt, ...safeUser } = user;
     res.json({ success: true, user: safeUser, availableBands });
   } catch (err: any) {
@@ -1472,7 +1504,7 @@ router.post(['/create-band', '/users/create-band'], requireAuth, async (req, res
       console.warn("Notice: Band saved locally, Supabase sync pending:", err);
     }
 
-    const availableBands = buildAvailableBandsForUser(state, user);
+    const availableBands = await buildAvailableBandsForUser(state, user);
     const { passwordHash, salt, ...safeUser } = user;
 
     res.status(201).json({
@@ -1532,7 +1564,10 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
 
     // 3. Clear from any other accounts of the same user with that band_id
     if (state.users && Array.isArray(state.users)) {
-      state.users.forEach((u: any) => {
+      // for...of (no .forEach) porque el cuerpo necesita await buildAvailableBandsForUser: un
+      // callback de .forEach no se puede esperar, así que el resto de la ruta seguiría antes de
+      // que la promesa resolviera.
+      for (const u of state.users) {
         const matchesUser = u.id === user_id || (userEmail && (u.email?.toLowerCase() === userEmail || u.username?.toLowerCase() === userEmail));
         if (matchesUser) {
           const uBandClean = u.band_id ? u.band_id.replace(/^(band|reg)-/, '') : '';
@@ -1541,7 +1576,7 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
             u.band_order = u.band_order.filter((id: string) => id.replace(/^(band|reg)-/, '') !== cleanTarget);
           }
           if (uBandClean === cleanTarget || uMainClean === cleanTarget) {
-            const remBands = buildAvailableBandsForUser(state, u).filter((b: any) => b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
+            const remBands = (await buildAvailableBandsForUser(state, u)).filter((b: any) => b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
             if (uMainClean === cleanTarget) {
               u.main_band_id = remBands.length > 0 ? remBands[0].band_id : undefined;
             }
@@ -1560,14 +1595,14 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
             }
           }
         }
-      });
+      }
     }
 
     // 4. Update current user instance
     if (user) {
       const activeClean = user.band_id ? user.band_id.replace(/^(band|reg)-/, '') : '';
       const mainClean = user.main_band_id ? user.main_band_id.replace(/^(band|reg)-/, '') : '';
-      const remainingBands = buildAvailableBandsForUser(state, user).filter((b: any) => b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
+      const remainingBands = (await buildAvailableBandsForUser(state, user)).filter((b: any) => b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
 
       if (Array.isArray(user.band_order)) {
         user.band_order = user.band_order.filter((id: string) => id.replace(/^(band|reg)-/, '') !== cleanTarget);
@@ -1606,7 +1641,7 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
     }
 
     const updatedUser = user ? state.users?.find((u: any) => u.id === user_id) || user : null;
-    const updatedAvailableBands = updatedUser ? buildAvailableBandsForUser(state, updatedUser) : [];
+    const updatedAvailableBands = updatedUser ? await buildAvailableBandsForUser(state, updatedUser) : [];
 
     res.json({
       success: true,
@@ -2018,7 +2053,7 @@ router.delete("/users/:id", requireAuth, requireLeader, async (req, res) => {
   } else if (targetUserObj) {
     const activeClean = targetUserObj.band_id ? targetUserObj.band_id.replace(/^(band|reg)-/, '') : '';
     const mainClean = targetUserObj.main_band_id ? targetUserObj.main_band_id.replace(/^(band|reg)-/, '') : '';
-    const remainingBands = buildAvailableBandsForUser(state, targetUserObj);
+    const remainingBands = await buildAvailableBandsForUser(state, targetUserObj);
 
     if (Array.isArray(targetUserObj.band_order)) {
       targetUserObj.band_order = targetUserObj.band_order.filter((bId: string) => bId.replace(/^(band|reg)-/, '') !== cleanTarget);

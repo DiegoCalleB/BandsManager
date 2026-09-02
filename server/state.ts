@@ -220,7 +220,24 @@ export function ensureBakandeyaBandId(state: any): boolean {
     const initialSeedUserIds = new Set(['user-jose', 'user-diego', 'user-jon', 'user-elyar', 'user-raul']);
     for (const u of state.users) {
       if (initialSeedUserIds.has(u.id)) {
-        if (u.band_id !== BAKANDEYA_BAND_ID) {
+        // Estos 5 ids son las cuentas fundadoras de Bakandeya (incluido user-diego, la cuenta real
+        // que usa la app). Antes esto forzaba SIEMPRE band_id de vuelta a Bakandeya en cada
+        // loadState() -y loadState() se llama en casi cada petición-, así que un cambio de banda
+        // válido hecho con /auth/switch-band o /users/create-band se deshacía solo en la
+        // siguientísima petición: era imposible que estas cuentas se quedaran en ninguna otra
+        // banda (STOMP, SWINDIGENTES...) aunque la tuvieran legítimamente vinculada en userBands.
+        // Ahora solo se repara si band_id falta o apunta a una banda a la que el usuario ya no
+        // tiene acceso real, en vez de pisar siempre un cambio de banda que sigue siendo válido.
+        const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
+        const uEmailSeed = (u.email || u.username || '').toLowerCase();
+        const hasValidAccess =
+          cleanCurrent === 'bakandeya' ||
+          (state.userBands || []).some((ub: any) => ub.user_id === u.id && (ub.band_id || '').replace(/^(band|reg)-/, '') === cleanCurrent) ||
+          (state.registeredBands || []).some((b: any) =>
+            (b.user_id === u.id || (uEmailSeed && b.email?.toLowerCase() === uEmailSeed)) &&
+            ((b.band_id || '').replace(/^(band|reg)-/, '') === cleanCurrent || (b.id || '').replace(/^(band|reg)-/, '') === cleanCurrent)
+          );
+        if (!u.band_id || !hasValidAccess) {
           u.band_id = BAKANDEYA_BAND_ID;
           u.bandName = "Bakandeya";
           changed = true;
@@ -677,16 +694,20 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
 
   // Ensure logoUrl fallback if missing or empty
   if (!existing.logoUrl || existing.logoUrl.trim() === '' || existing.logoUrl.includes('sin_fondo')) {
-    const regBand = (state.registeredBands || []).find((b: any) =>
-      b.band_id === bandId || b.id === bandId ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanId) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === cleanId)
-    );
+    // Comparación case-insensitive (igual que en buildAvailableBandsForUser/getPlanForBand): un
+    // band_id con mayúsculas (p. ej. "band-STOMP") no encontraba aquí su propia fila en
+    // registeredBands por comparación exacta, dejando el logo vacío aunque sí existiera guardado.
+    const cleanIdLower = cleanId.toLowerCase().trim();
+    const regBand = (state.registeredBands || []).find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      return b.band_id === bandId || b.id === bandId || bBid === cleanIdLower || bId === cleanIdLower;
+    });
     if (regBand?.logo_url && regBand.logo_url.trim().length > 0) {
       existing.logoUrl = regBand.logo_url;
     } else if (regBand?.imagen_url && regBand.imagen_url.trim().length > 0) {
       existing.logoUrl = regBand.imagen_url;
-    } else if (cleanId === 'bakandeya') {
+    } else if (cleanIdLower === 'bakandeya') {
       existing.logoUrl = '/logo_bakandeya.jpg';
     }
   }
