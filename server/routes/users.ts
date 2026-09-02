@@ -43,15 +43,20 @@ export function buildAvailableBandsForUser(state: any, targetUser: any): any[] {
   const getLogoForBand = (bandId: string, defaultName: string) => {
     const epk = getEpkConfigForBand(state, bandId, defaultName);
     if (epk?.logoUrl && epk.logoUrl.trim().length > 0) return epk.logoUrl;
-    const bandInfo = (state.registeredBands || []).find((b: any) =>
-      b.band_id === bandId || b.id === bandId ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === bandId.replace(/^(band|reg)-/, '')) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === bandId.replace(/^(band|reg)-/, ''))
-    );
+    // Comparación case-insensitive: el badge de plan (getPlanForBand, más abajo) ya normaliza a
+    // minúsculas antes de comparar; esta buscaba con match exacto, así que una banda cuyo band_id
+    // llevara mayúsculas (p. ej. registrada como "STOMP") no encontraba su propia fila en
+    // registeredBands aquí, aunque sí la encontraba para el plan. Resultado: el badge de plan salía
+    // bien pero el logo se quedaba vacío para cualquier banda que no fuera 'bakandeya'.
+    const cleanId = bandId.replace(/^(band|reg)-/, '').toLowerCase().trim();
+    const bandInfo = (state.registeredBands || []).find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      return b.band_id === bandId || b.id === bandId || bBid === cleanId || bId === cleanId;
+    });
     if (bandInfo?.logo_url && bandInfo.logo_url.trim().length > 0) return bandInfo.logo_url;
     if (bandInfo?.imagen_url && bandInfo.imagen_url.trim().length > 0) return bandInfo.imagen_url;
-    const clean = bandId.replace(/^(band|reg)-/, '');
-    if (clean === 'bakandeya') return '/logo_bakandeya_bueno_sin_fondo.png';
+    if (cleanId === 'bakandeya') return '/logo_bakandeya_bueno_sin_fondo.png';
     return '';
   };
 
@@ -1157,6 +1162,15 @@ router.post("/auth/switch-band", async (req, res) => {
   if (!state.sessions) state.sessions = {};
   state.sessions[effectiveToken] = session;
   saveState(state);
+  // Sin esto, el cambio de banda solo vivía en el data.json local (efímero, no compartido entre
+  // instancias/redeploys de Railway): cualquier ruta que releyera al usuario desde Supabase después
+  // (login, /auth/me sirviendo desde otra instancia, etc.) devolvía band_id sin actualizar, y la
+  // app "volvía sola" a la banda anterior aunque el switch hubiera funcionado un momento antes.
+  try {
+    await dbUpsertUser(targetUser);
+  } catch (err) {
+    console.warn("Could not sync switched band to Supabase:", err);
+  }
 
   res.cookie("bakandeya_token", effectiveToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,

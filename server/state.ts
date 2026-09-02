@@ -677,16 +677,20 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
 
   // Ensure logoUrl fallback if missing or empty
   if (!existing.logoUrl || existing.logoUrl.trim() === '' || existing.logoUrl.includes('sin_fondo')) {
-    const regBand = (state.registeredBands || []).find((b: any) =>
-      b.band_id === bandId || b.id === bandId ||
-      (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanId) ||
-      (b.id && b.id.replace(/^(band|reg)-/, '') === cleanId)
-    );
+    // Comparación case-insensitive (igual que en buildAvailableBandsForUser/getPlanForBand): un
+    // band_id con mayúsculas (p. ej. "band-STOMP") no encontraba aquí su propia fila en
+    // registeredBands por comparación exacta, dejando el logo vacío aunque sí existiera guardado.
+    const cleanIdLower = cleanId.toLowerCase().trim();
+    const regBand = (state.registeredBands || []).find((b: any) => {
+      const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
+      return b.band_id === bandId || b.id === bandId || bBid === cleanIdLower || bId === cleanIdLower;
+    });
     if (regBand?.logo_url && regBand.logo_url.trim().length > 0) {
       existing.logoUrl = regBand.logo_url;
     } else if (regBand?.imagen_url && regBand.imagen_url.trim().length > 0) {
       existing.logoUrl = regBand.imagen_url;
-    } else if (cleanId === 'bakandeya') {
+    } else if (cleanIdLower === 'bakandeya') {
       existing.logoUrl = '/logo_bakandeya.jpg';
     }
   }
