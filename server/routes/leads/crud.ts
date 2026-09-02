@@ -222,12 +222,24 @@ router.post("/leads", requireAuth, async (req, res) => {
       }
     }
 
-    const saved = await dbUpsertLead(newLead, userBandId);
+    let saved: Lead;
+    try {
+      saved = await dbUpsertLead(newLead, userBandId);
+    } catch (dbErr: any) {
+      console.error("Supabase upsert failed in POST /api/leads, saving to local state fallback:", dbErr);
+      const fallbackId = newLead.id || `lead-${Date.now()}`;
+      saved = {
+        ...newLead,
+        id: fallbackId,
+        band_id: userBandId
+      };
+      warningMsg = `⚠️ No se pudo sincronizar inmediatamente con Supabase (${dbErr?.message || 'error de conexión'}). Se ha guardado en el estado local de la sesión.`;
+    }
 
     // Also update state immediately so UI state reflects new lead
     const freshState = loadState();
     freshState.leads = freshState.leads || [];
-    const idx = freshState.leads.findIndex((l: any) => l.id === saved.id);
+    const idx = freshState.leads.findIndex((l: any) => l.id === saved.id || (l.nombre_sala && saved.nombre_sala && l.nombre_sala.toLowerCase().trim() === saved.nombre_sala.toLowerCase().trim()));
     if (idx !== -1) {
       freshState.leads[idx] = saved;
     } else {

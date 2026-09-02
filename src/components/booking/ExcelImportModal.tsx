@@ -262,8 +262,18 @@ export function ExcelImportModal({
       const address = mapping.direccion ? String(row[mapping.direccion] || '').trim() : '';
       const email = mapping.email_contacto ? String(row[mapping.email_contacto] || '').trim() : '';
       const phone = mapping.telefono ? String(row[mapping.telefono] || '').trim() : '';
-      const ig = mapping.instagram ? String(row[mapping.instagram] || '').trim() : '';
-      const web = mapping.website ? String(row[mapping.website] || '').trim() : '';
+      const rawIg = mapping.instagram ? String(row[mapping.instagram] || '').trim() : '';
+      const rawWeb = mapping.website ? String(row[mapping.website] || '').trim() : '';
+      
+      const cleanField = (val: string) => {
+        const lower = val.toLowerCase();
+        if (lower.startsWith('asunto:') || lower.startsWith('re:') || lower.startsWith('fw:') || lower.startsWith('¡buenas') || lower.includes('bakandeya') || lower === '0' || lower === 'null') return '';
+        if (val.includes('\n') || (val.includes(' ') && !val.includes('http'))) return '';
+        return val;
+      };
+
+      const ig = cleanField(rawIg);
+      const web = cleanField(rawWeb);
       const contact = mapping.contacto_nombre ? String(row[mapping.contacto_nombre] || '').trim() : '';
       const genre = mapping.genero ? String(row[mapping.genero] || '').trim() : 'Música en Directo / Variado';
       const notes = mapping.notas ? String(row[mapping.notas] || '').trim() : '';

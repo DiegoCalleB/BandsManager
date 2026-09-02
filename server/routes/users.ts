@@ -16,11 +16,13 @@ import {
   dbUpsertEpkConfig,
   dbGetEpkLogosMap,
   normalizePlan,
-  dbMigrateAllPlansToNewTiers
+  dbMigrateAllPlansToNewTiers,
+  dbCleanCorruptedLeadFields
 } from "../db.js";
 
-// Run asynchronous migration check on database records
+// Run asynchronous migration & cleanup checks on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
+dbCleanCorruptedLeadFields().catch(() => {});
 
 // Normaliza un band_id para comparar/ordenar (quita el prefijo band-/reg-). Se usa sobre datos
 // ya en memoria (listas de bandas disponibles, band_order), no como filtro de escritura en

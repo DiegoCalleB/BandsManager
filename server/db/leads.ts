@@ -1,6 +1,97 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
+export function sanitizeWebsiteUrl(val: unknown): string {
+  if (!val || typeof val !== 'string') return '';
+  const str = val.trim();
+  if (!str) return '';
+  const lower = str.toLowerCase();
+  
+  if (
+    lower.startsWith('asunto:') ||
+    lower.startsWith('re:') ||
+    lower.startsWith('fw:') ||
+    lower.startsWith('fwd:') ||
+    lower.startsWith('¡buenas') ||
+    lower.startsWith('hola') ||
+    lower.startsWith('estimado') ||
+    lower.includes('bakandeya') ||
+    lower === '0' ||
+    lower === 'null' ||
+    lower === 'undefined'
+  ) {
+    return '';
+  }
+
+  if (str.includes('\n') || str.includes('\r') || (str.includes(' ') && !str.includes('http'))) {
+    return '';
+  }
+
+  if (str.includes('@') && !str.includes('/')) return '';
+  return str;
+}
+
+export function sanitizeInstagramHandle(val: unknown): string {
+  if (!val || typeof val !== 'string') return '';
+  const str = val.trim();
+  if (!str) return '';
+  const lower = str.toLowerCase();
+
+  if (
+    lower.startsWith('asunto:') ||
+    lower.startsWith('re:') ||
+    lower.startsWith('fw:') ||
+    lower.startsWith('fwd:') ||
+    lower.startsWith('¡buenas') ||
+    lower.startsWith('hola') ||
+    lower.startsWith('estimado') ||
+    lower.includes('bakandeya') ||
+    lower === '0' ||
+    lower === 'null' ||
+    lower === 'undefined'
+  ) {
+    return '';
+  }
+
+  if (str.includes('\n') || str.includes('\r') || str.includes(' ')) {
+    return '';
+  }
+
+  return str;
+}
+
+export async function dbCleanCorruptedLeadFields(): Promise<number> {
+  try {
+    const sb = getSupabase();
+    const { data: leads, error } = await sb
+      .from("leads")
+      .select("id, website, instagram");
+
+    if (error || !leads) return 0;
+
+    let cleanedCount = 0;
+    for (const lead of leads) {
+      const cleanWeb = sanitizeWebsiteUrl(lead.website);
+      const cleanIg = sanitizeInstagramHandle(lead.instagram);
+
+      if (cleanWeb !== (lead.website || '') || cleanIg !== (lead.instagram || '')) {
+        await sb.from("leads").update({
+          website: cleanWeb,
+          instagram: cleanIg
+        }).eq("id", lead.id);
+        cleanedCount++;
+      }
+    }
+    if (cleanedCount > 0) {
+      console.log(`[DB Cleanup] Saneadas ${cleanedCount} filas con metadatos basura en website/instagram.`);
+    }
+    return cleanedCount;
+  } catch (err) {
+    console.error("Error in dbCleanCorruptedLeadFields:", err);
+    return 0;
+  }
+}
+
 export interface GetLeadsOptions {
   page?: number;
   limit?: number;
@@ -168,8 +259,8 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     email_contacto: lead.email_contacto || lead.emailContacto || existingRecord?.email_contacto || "",
     email_secundario: lead.email_secundario || lead.emailSecundario || existingRecord?.email_secundario || "",
     telefono: lead.telefono || existingRecord?.telefono || "",
-    website: lead.website || existingRecord?.website || "",
-    instagram: lead.instagram || existingRecord?.instagram || "",
+    website: sanitizeWebsiteUrl(lead.website || existingRecord?.website || ""),
+    instagram: sanitizeInstagramHandle(lead.instagram || existingRecord?.instagram || ""),
     contacto_nombre: lead.contacto_nombre || lead.contactoNombre || existingRecord?.contacto_nombre || "",
     fuente: lead.fuente || existingRecord?.fuente || "manual",
     estado: lead.estado || existingRecord?.estado || "nuevo",
@@ -193,8 +284,36 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     festival_end_date: lead.festival_end_date || lead.festivalEndDate || existingRecord?.festival_end_date || null
   };
 
-  const { data, error } = await sb.from("leads").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert lead): ${error.message}`);
+  const { data, error } = await sb.from("leads").upsert(payload).select().maybeSingle();
+  if (error) {
+    console.warn("Primary Supabase upsert failed, retrying with core columns:", error.message);
+    const corePayload = {
+      id: finalId,
+      band_id: targetBandId,
+      nombre_sala: payload.nombre_sala,
+      ciudad: payload.ciudad,
+      region: payload.region,
+      direccion: payload.direccion,
+      aforo: payload.aforo,
+      genero: payload.genero,
+      tipo: payload.tipo,
+      email_contacto: payload.email_contacto,
+      telefono: payload.telefono,
+      website: payload.website,
+      instagram: payload.instagram,
+      fuente: payload.fuente,
+      estado: payload.estado,
+      pitch_generado: payload.pitch_generado,
+      notas: payload.notas,
+      icono: payload.icono,
+      imagen_url: payload.imagen_url
+    };
+    const { data: retryData, error: retryError } = await sb.from("leads").upsert(corePayload).select().single();
+    if (retryError) {
+      throw new Error(`Supabase Error (upsert lead): ${retryError.message}`);
+    }
+    return retryData;
+  }
   return data;
 }
 

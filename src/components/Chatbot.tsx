@@ -1258,47 +1258,64 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  fecha_ultima_respuesta: ''
  };
 
- let createdLead: Lead = newLeadData;
- try {
- if (onCreateLead) {
- await onCreateLead(newLeadData);
- } else {
- const res: any = await api.createLead(newLeadData);
- if (res?.lead) createdLead = res.lead;
- }
- } catch (e) {
- console.error("Error creating lead from chatbot:", e);
- }
+    let createdLead: Lead = newLeadData;
+    let saveSuccess = false;
+    let saveErrorMessage = '';
 
- try {
- window.dispatchEvent(new Event('app-data-updated'));
- } catch (_) {}
+    try {
+      if (onCreateLead) {
+        const result: any = await onCreateLead(newLeadData);
+        if (result && result.id) createdLead = result;
+        saveSuccess = true;
+      } else {
+        const res: any = await api.createLead(newLeadData);
+        if (res?.lead) createdLead = res.lead;
+        saveSuccess = true;
+      }
+    } catch (e: any) {
+      console.error("Error creating lead from chatbot:", e);
+      saveErrorMessage = e?.message || 'Error al conectar con la base de datos Supabase.';
+    }
 
- setMessages(prev => prev.map(m => {
- if (m.id === msgId) {
- const updatedActions = (m.proposedActions || []).map((a, idx) =>
- idx === actionIndex ? { ...a, status: 'applied' as const } : a
- );
- return { ...m, actionStatus: 'applied', proposedActions: updatedActions };
- }
- return m;
- }));
+    if (saveSuccess) {
+      try {
+        window.dispatchEvent(new Event('app-data-updated'));
+      } catch (_) {}
 
- if (onNavigate) {
- onNavigate(isMedio ? 'medios' : 'booking', {
- sectionTab: isMedio ? 'medios' : 'salas',
- statusFilter: 'todos',
- initialSelectedLeadId: createdLead.id
- });
- }
+      setMessages(prev => prev.map(m => {
+        if (m.id === msgId) {
+          const updatedActions = (m.proposedActions || []).map((a, idx) =>
+            idx === actionIndex ? { ...a, status: 'applied' as const } : a
+          );
+          return { ...m, actionStatus: 'applied', proposedActions: updatedActions };
+        }
+        return m;
+      }));
 
- const addSuccessMsg: ChatMessage = {
- id: `sys-${Date.now()}`,
- sender: 'bot',
- text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.`,
- timestamp: new Date()
- };
- setMessages(prev => [...prev, addSuccessMsg]);
+      if (onNavigate) {
+        onNavigate(isMedio ? 'medios' : 'booking', {
+          sectionTab: isMedio ? 'medios' : 'salas',
+          statusFilter: 'todos',
+          initialSelectedLeadId: createdLead.id
+        });
+      }
+
+      const addSuccessMsg: ChatMessage = {
+        id: `sys-${Date.now()}`,
+        sender: 'bot',
+        text: `✨ **Nuevo Lead / Medio Creado con Éxito:**\n\nSe ha guardado e insertado **"${newLeadData.nombre_sala}"** (${newLeadData.ciudad}) en la base de datos y sincronizado directamente con Supabase.\n\n📍 *Te he redirigido al CRM seleccionando la sala directamente.*`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, addSuccessMsg]);
+    } else {
+      const addFailMsg: ChatMessage = {
+        id: `sys-${Date.now()}`,
+        sender: 'bot',
+        text: `⚠️ **No se pudo guardar la sala en Supabase:**\n\n${saveErrorMessage}\n\nRevisa la sesión o intenta añadir la sala manualmente en el CRM.`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, addFailMsg]);
+    }
 
  } else if (action.type === 'propose_update_lead' && action.leadId) {
  const targetLead = leads.find(l => l.id === action.leadId);
