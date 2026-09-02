@@ -3,10 +3,24 @@
 ## Overview
 
 Two-tier freemium model:
-- **Free**: EPK (Dossier) + Fans capture + Calendar ONLY
-  - No CRM, No Agentes, No Reels, No Finanzas, No Repertorio, No Tours, No Rehearsals, No Plan Upgrade UI
-  - Minimal interface: just the essentials for a festival band
-- **Pro**: Everything (CRM, Leads, Agentes, Reels, Finanzas, Repertorio, Tours, Rehearsals)
+
+### Buskers Plan ($0/month)
+Perfect for festival bands & independent musicians
+- EPK (Dossier) - professional press kit
+- Fans capture - collect emails at gigs
+- Calendar - manage concerts & rehearsals
+- **Simple, clean UI** - no noise, no upgrade upsell
+- No CRM, Agentes, Reels, Finanzas, Repertorio, Tours
+
+### Pro Plan ($5-10/month)
+For bands that want professional management & booking automation
+- Everything in Buskers +
+- CRM (manage all your leads/contacts)
+- Agentes (AI-powered booking agents that scout venues & send pitches)
+- Reels (AI social content generator)
+- Finanzas (income tracking)
+- Repertorio (setlist manager)
+- Tours (multi-date organization)
 
 ## Current State
 
@@ -139,45 +153,56 @@ import { describe, it, expect } from "vitest";
 import { requirePlanAccess, PLAN_FEATURES } from "../middleware/planValidator.js";
 
 describe("Plan Access Control", () => {
-  it("free plan has access to epk and fans only", () => {
-    expect(PLAN_FEATURES.free).toContain("epk");
-    expect(PLAN_FEATURES.free).toContain("fans");
-    expect(PLAN_FEATURES.free).not.toContain("crm");
+  it("buskers plan has access to epk, fans, and calendar only", () => {
+    expect(PLAN_FEATURES.buskers).toContain("epk");
+    expect(PLAN_FEATURES.buskers).toContain("fans");
+    expect(PLAN_FEATURES.buskers).toContain("calendar");
+    expect(PLAN_FEATURES.buskers).not.toContain("crm");
+    expect(PLAN_FEATURES.buskers).not.toContain("agentes");
   });
 
   it("pro plan has access to all features", () => {
     expect(PLAN_FEATURES.pro).toContain("crm");
     expect(PLAN_FEATURES.pro).toContain("reels");
     expect(PLAN_FEATURES.pro).toContain("agentes");
+    expect(PLAN_FEATURES.pro).toContain("calendar");
   });
 });
 ```
 
 ## Deployment Strategy
 
-1. **Phase 1**: Deploy middleware + route protection (no UI changes)
-   - Free plan users still see features (not blocked yet)
+1. **Phase 1**: Deploy middleware + route protection (backend)
+   - Buskers plan users can only access EPK, Fans, Calendar
    - Pro plan users work normally
 
-2. **Phase 2**: Update UI to hide premium features for free plans
-   - Show "Upgrade to Pro" prompts
+2. **Phase 2**: Update UI (frontend)
+   - Hide CRM, Agentes, Reels, Finanzas, Tours, Settings from Buskers users
+   - Show only: Dossier, Fans, Calendar navigation
+   - NO upgrade prompts or upsell (clean experience)
 
-3. **Phase 3**: Set all new registrations to plan='free'
-   - Existing users keep plan='pro' (grandfather them in)
+3. **Phase 3**: Launch at Buskers festival
+   - New registrations get `plan='buskers'` by default
+   - Existing pro users keep `plan='pro'`
 
-4. **Phase 4**: Add Stripe/Paddle checkout
-   - Users can self-serve upgrade
+4. **Phase 4**: Add monetization (later)
+   - Stripe/Paddle checkout when 5+ bands ask for Pro features
+   - Self-serve upgrade flow in settings
 
 ## Freemium Economics
 
-**Free tier:** 
-- Costs: Supabase storage (fans list), Edge Functions (EPK rendering)
-- Very low cost per user (~$0.01/month if inactive, $0.10 if active)
+**Buskers tier ($0/month):**
+- Costs: Supabase storage (fans list, calendar), EPK rendering
+- Very low cost per user (~$0.01-0.05/month)
+- No expensive AI calls, no agent runs, no Gemini quota burned
+- Pure acquisition & retention cost
 
 **Pro tier ($5-10/month):**
-- Includes: CRM operations, AI agents (heavy), Reels generation (expensive)
-- Gemini API calls, Gmail API calls, agent runs
-- Breakeven at 50-100 pro users (roughly $250-1000/month revenue vs ~$200 cloud cost)
+- Revenue per user: $60-120/year
+- Costs: CRM operations, AI agents (expensive), Reels generation (Gemini API)
+- Gmail API calls, agent scheduler, storage
+- Breakeven at 20-30 pro users ($1200-3600/year revenue vs ~$200-300/month cloud cost)
+- **Goal**: 5-10 pro users by end of 2026 = €300-600/month sustainable
 
 ## Notes
 

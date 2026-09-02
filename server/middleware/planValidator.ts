@@ -2,11 +2,13 @@ import express from "express";
 
 /**
  * Features access by plan
- * free: EPK (dossier) + Fans capture + Calendar ONLY
+ * buskers: EPK (dossier) + Fans capture + Calendar ONLY
+ *          Perfect for festival bands, simple & clean UI
  * pro: Everything (CRM, Agentes, Reels, Finanzas, Repertorio, Tours, Rehearsals, etc)
+ *      For bands that want booking automation & professional tools
  */
 export const PLAN_FEATURES: Record<string, string[]> = {
-  free: ["epk", "fans", "calendar"],
+  buskers: ["epk", "fans", "calendar"],
   pro: ["epk", "fans", "calendar", "crm", "leads", "agentes", "repertorio", "reels", "finanzas", "tours", "rehearsals"],
 };
 
