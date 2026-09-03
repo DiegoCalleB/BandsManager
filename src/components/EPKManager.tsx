@@ -15,6 +15,8 @@ import { googleSignIn, auth } from '../utils/gmail';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 import { PayPalLogo, BizumLogo } from './SocialPlatformsList';
 
+import { normalizePlan } from '../utils/planPermissions';
+
 interface EPKManagerProps {
   epkConfig?: Partial<EPKConfig>;
   songs?: Song[];
@@ -22,6 +24,7 @@ interface EPKManagerProps {
   colors?: any;
   currentTheme?: any;
   currentUser?: User;
+  isPromoPlan?: boolean;
 }
 
 const DEFAULT_EPK_CONFIG: EPKConfig = {
@@ -163,8 +166,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   epkConfig,
   songs: songsProp,
   onSave,
-  currentUser
+  currentUser,
+  isPromoPlan: isPromoPlanProp
 }) => {
+  const isPromoUser = isPromoPlanProp ?? (normalizePlan(currentUser?.plan) === 'promo');
   // App.tsx monta este componente sin pasarle 'songs', así que el selector de temas
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
   // por prop, se piden al backend igual que hace RepertorioSetlists.
@@ -1209,36 +1214,38 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                 </div>
 
                 {/* Selector de canción del repertorio */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
-                    <span>Elegir tema de vuestro repertorio</span>
-                    {songs.length > 0 && <span className="text-[10px] text-amber-400 font-mono">{songs.length} temas disponibles</span>}
-                  </label>
-                  <select
-                    value={config.audioPreview?.cancionId || ''}
-                    onChange={e => {
-                      const selectedId = e.target.value;
-                      const selectedSong = songs.find(s => s.id === selectedId);
-                      setConfig(prev => ({
-                        ...prev,
-                        audioPreview: {
-                          ...(prev.audioPreview || {}),
-                          cancionId: selectedId,
-                          tituloTema: selectedSong ? selectedSong.titulo : prev.audioPreview?.tituloTema,
-                          audioUrl: selectedSong?.audioPrincipalUrl || prev.audioPreview?.audioUrl || ''
-                        }
-                      }));
-                    }}
-                    className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
-                  >
-                    <option value="">-- Seleccionar tema del repertorio o usar personalizado --</option>
-                    {songs.map(song => (
-                      <option key={song.id} value={song.id}>
-                        {song.titulo} {song.duracion ? `(${song.duracion})` : ''} {song.audioPrincipalUrl ? '🎵 (Con audio subido)' : ''}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {!isPromoUser && (
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+                      <span>Elegir tema de vuestro repertorio</span>
+                      {songs.length > 0 && <span className="text-[10px] text-amber-400 font-mono">{songs.length} temas disponibles</span>}
+                    </label>
+                    <select
+                      value={config.audioPreview?.cancionId || ''}
+                      onChange={e => {
+                        const selectedId = e.target.value;
+                        const selectedSong = songs.find(s => s.id === selectedId);
+                        setConfig(prev => ({
+                          ...prev,
+                          audioPreview: {
+                            ...(prev.audioPreview || {}),
+                            cancionId: selectedId,
+                            tituloTema: selectedSong ? selectedSong.titulo : prev.audioPreview?.tituloTema,
+                            audioUrl: selectedSong?.audioPrincipalUrl || prev.audioPreview?.audioUrl || ''
+                          }
+                        }));
+                      }}
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
+                    >
+                      <option value="">-- Seleccionar tema del repertorio o usar personalizado --</option>
+                      {songs.map(song => (
+                        <option key={song.id} value={song.id}>
+                          {song.titulo} {song.duracion ? `(${song.duracion})` : ''} {song.audioPrincipalUrl ? '🎵 (Con audio subido)' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
                 {/* Título y subtítulo visual del reproductor */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

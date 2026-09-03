@@ -1277,6 +1277,7 @@ export default function App() {
               colors={colors}
               currentTheme={currentTheme}
               currentUser={currentUser}
+              isPromoPlan={isPromoPlan}
             />
           </ErrorBoundary>
         )}
