@@ -1856,7 +1856,7 @@ export default function CalendarView({
  <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
  </div>
  )}
- {selectedEventDetails.type === 'concert' && selectedConcert && (() => {
+ {!isPromoPlan && selectedEventDetails.type === 'concert' && selectedConcert && (() => {
  const g = selectedConcert.gastosDetalle;
  const totalG = g ? ((g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)) : (selectedConcert.gastosEstimadosTipicos || 150);
  const net = (selectedConcert.cache || 0) - totalG;
@@ -1983,7 +1983,7 @@ export default function CalendarView({
   })()}
 
  {/* REPERTORIO / SETLIST ASIGNADO */}
- {(selectedConcert || selectedRehearsal) && (
+ {!isPromoPlan && (selectedConcert || selectedRehearsal) && (
  <div className={` pt-2.5 mt-2.5 ${isStitchLight ? '-slate-100' : '-neutral-900'}`}>
  <div className="flex items-center justify-between gap-2 mb-1.5">
  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[#d1b375]">
