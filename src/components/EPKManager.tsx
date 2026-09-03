@@ -11,7 +11,6 @@ import { uploadFileToServer } from '../utils/audioStorage';
 import { EPK_LANGUAGES } from '../i18n/epkTranslations';
 import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
 import { api } from '../services/api';
-import { googleSignIn, auth } from '../utils/gmail';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 import { PayPalLogo, BizumLogo } from './SocialPlatformsList';
 
@@ -1087,42 +1086,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
                     className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none"
                   />
                 </div>
-              </div>
-
-              {/* GMAIL OAUTH AUTHORIZATION FOR CONTACT EMAIL */}
-              <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl space-y-2.5">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Mail className={`w-4 h-4 ${auth.currentUser ? 'text-emerald-400' : 'text-amber-400'}`} />
-                    <span className="text-xs font-bold text-slate-200">
-                      {auth.currentUser ? `Gmail Autorizado (${auth.currentUser.email})` : 'Autorización de Envío Gmail (OAuth)'}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      try {
-                        const res = await googleSignIn();
-                        if (res && res.user.email) {
-                          if (!config.contactoBooking?.email) {
-                            setConfig(prev => ({
-                              ...prev,
-                              contactoBooking: { ...prev.contactoBooking, email: res.user.email || '' }
-                            }));
-                          }
-                        }
-                      } catch (err) {
-                        console.error('Error connecting gmail in EPK:', err);
-                      }
-                    }}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#f2ca50] hover:bg-[#d8b03e] text-[#2c2200] transition-all shadow-sm flex items-center gap-1.5"
-                  >
-                    🔑 {auth.currentUser ? 'Reautorizar Cuenta' : 'Conectar Cuenta para Enviar'}
-                  </button>
-                </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Para que la app envíe correos oficiales o cree borradores en Gmail desde este email, Google requiere permisos <code className="text-amber-300 bg-slate-900 px-1 py-0.5 rounded">gmail.send</code> y <code className="text-amber-300 bg-slate-900 px-1 py-0.5 rounded">gmail.compose</code>. Si Firebase muestra advertencia de app no verificada, pulsa <span className="text-slate-200 font-semibold">"Avanzados" &rarr; "Ir a BandManager"</span>.
-                </p>
               </div>
 
               <div className="pt-3 border-t border-slate-800 space-y-3">

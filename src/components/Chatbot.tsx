@@ -3,8 +3,6 @@ import { api } from '../services/api';
 import { Message as MessageType, Lead, Rehearsal, Concert, ThemeColors, User as UserType, EPKConfig, DrumPatternStyle, SongAudioIdea, MelodicInstrument, MelodicNoteEvent } from '../types';
 import { Send, Bot, Guitar, User, Sparkles, RefreshCw, AlertCircle, CheckCircle, HelpCircle, Calendar, ShieldAlert, X, Activity, ExternalLink, Terminal, Clock, Copy, Key, Sliders, Mail, PlayCircle, Save, Mic, Download } from 'lucide-react';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
-import { sendGmailMessage, getAccessToken, googleSignIn } from '../utils/gmail';
-import { formatEmailWithSignatureAndDossier } from '../utils/emailFormatter';
 import { apiFetch } from '../utils/api';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import { renderMelodicIdeaAudioBlob } from '../utils/instrumentSynth';
@@ -921,45 +919,45 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  };
  setMessages(prev => [...prev, draftMsg]);
  } else {
- // Envío directo (autonomía "Auto 1er Contacto"): sigue yendo por el popup de Google desde
- // el navegador - a diferencia del borrador, esto no lo dispara el Agente Enviador
- // programado, así que no necesita el camino sin popup.
- let gmailId = '';
+ // Envío directo (autonomía "Auto 1er Contacto"): esto abría un popup de Google (Firebase
+ // Auth) y mandaba el correo directo desde el navegador con el token personal de quien
+ // estuviera en el chat - saltándose los dos interruptores de seguridad que sí respeta el
+ // Agente Enviador (AGENT_EMAIL_MODE de la plataforma y el dispatch_mode de la banda, ver
+ // AGENTS.md sección 3): un envío disparado desde aquí podía salir de verdad aunque el
+ // kill switch global siguiera en modo seguro. Mismo arreglo que ya se aplicó a la rama de
+ // "Sólo Borradores" de arriba: dispara el mismo endpoint que usa el scheduler
+ // (POST /api/trigger-agent), que es quien de verdad decide si envía o deja borrador.
+ let enviadoOk = false;
+ let estadoNuevo = '';
+ let fechaEnvioReal = '';
  let gmailError = '';
 
- if (recipientEmail) {
- try {
- let token = await getAccessToken();
- if (!token) {
- const authRes = await googleSignIn();
- token = authRes?.accessToken || null;
- }
- if (token) {
- const formatted = formatEmailWithSignatureAndDossier({
-   pitchText: emailBody,
-   lead: targetLead,
-   epkConfig,
-   senderName: action.senderName || cleanUserName,
-   bandName: bandDisplayName,
-   bandId: effectiveBandId
- });
- const res = await sendGmailMessage(recipientEmail, emailSubject, formatted.html, token, true);
- gmailId = res.id;
- } else {
- gmailError = 'Sin conexión Google OAuth activa.';
- }
- } catch (err: any) {
- console.error('Error processing email on lead approval:', err);
- gmailError = err.message || 'Error al procesar por Gmail API';
- }
- } else {
+ if (!recipientEmail) {
  gmailError = 'La sala no tiene un correo de contacto (email_contacto).';
+ } else {
+ try {
+ if (emailBody && emailBody !== targetLead.pitch_generado) {
+ await onUpdateLead(action.leadId, { pitch_generado: emailBody }, targetLead.estado);
+ }
+ const data = await apiFetch('/api/trigger-agent', {
+ method: 'POST',
+ body: JSON.stringify({ agentName: 'enviador', params: { id: targetLead.id, trigger_type: 'chatbot' } })
+ });
+ const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === targetLead.id) : null;
+ enviadoOk = leadResult?.status === 'enviado';
+ estadoNuevo = leadResult?.estado_nuevo || '';
+ fechaEnvioReal = leadResult?.fecha_envio || '';
+ if (!enviadoOk) gmailError = leadResult?.error || data.message || 'No se pudo enviar el correo.';
+ } catch (err: any) {
+ console.error('Error aprobando lead vía Chatbot:', err);
+ gmailError = err.message || 'Error al aprobar el lead.';
+ }
  }
 
- const updatedNotes = `*** [${nowStr}] Correo APROBADO Y ENVIADO vía Chatbot AI Assistant${gmailId ? ` [Gmail ID: ${gmailId}]` : ''} ***\n${targetLead.notas || ''}`;
+ const updatedNotes = `*** [${nowStr}] Correo APROBADO Y ENVIADO vía Chatbot AI Assistant ***\n${targetLead.notas || ''}`;
  onUpdateLead(action.leadId, {
- estado: 'aprobado',
- fecha_envio: nowStr,
+ estado: (enviadoOk ? (estadoNuevo || 'contactado') : 'pendiente_aprobacion') as Lead['estado'],
+ fecha_envio: enviadoOk ? (fechaEnvioReal || nowStr) : undefined,
  pitch_generado: emailBody || targetLead.pitch_generado,
  notas: updatedNotes
  }, targetLead.estado);
@@ -972,9 +970,9 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const successMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: gmailId
- ? `📧 **¡Correo Enviado con Éxito vía Gmail!**\n\nSe ha enviado el correo oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **ID de Mensaje Gmail:** \`${gmailId}\`\n- **Estado:** Aprobado/Enviado (${nowStr})\n- **Sincronización:** Supabase actualizado.`
- : `✅ **Aprobación Registrada en Supabase:** Se ha marcado como aprobado **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso Gmail:* ${gmailError}` : ''}`,
+ text: enviadoOk
+ ? `📧 **¡Correo Enviado con Éxito!**\n\nSe ha enviado el correo oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Estado:** ${estadoNuevo || 'Enviado'} (${nowStr})\n- **Sincronización:** Supabase actualizado.`
+ : `✅ **Aprobación Registrada en Supabase:** Se ha marcado como aprobado **"${targetLead.nombre_sala}"** en la base de datos.${gmailError ? `\n\n⚠️ *Aviso:* ${gmailError}` : ''}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, successMsg]);
@@ -1456,45 +1454,40 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  };
  setMessages(prev => [...prev, draftOnlyMsg]);
  } else {
- // Envío directo (autonomía "Auto 1er Contacto"): sigue yendo por el popup de Google, ver
- // comentario equivalente en propose_lead_approval.
- let gmailId = '';
+ // Envío directo (autonomía "Auto 1er Contacto"): igual que en propose_lead_approval, esto
+ // abría el popup de Google y enviaba desde el navegador saltándose AGENT_EMAIL_MODE y el
+ // dispatch_mode de la banda. Dispara el mismo endpoint que el scheduler.
+ let enviadoOk = false;
+ let estadoNuevo = '';
+ let fechaEnvioReal = '';
  let gmailError = '';
 
- if (recipientEmail) {
- try {
- let token = await getAccessToken();
- if (!token) {
- const authRes = await googleSignIn();
- token = authRes?.accessToken || null;
- }
- if (token) {
- const emailSubject = action.subject || `Propuesta de Concierto / Presentación - Bakandeya en ${targetLead.nombre_sala}`;
- const formatted = formatEmailWithSignatureAndDossier({
-   pitchText: emailBody,
-   lead: targetLead,
-   epkConfig,
-   senderName: action.senderName || cleanUserName,
-   bandName: bandDisplayName,
-   bandId: effectiveBandId
- });
- const res = await sendGmailMessage(recipientEmail, emailSubject, formatted.html, token, true);
- gmailId = res.id;
- } else {
- gmailError = 'No hay sesión de Google OAuth activa para procesar el correo.';
- }
- } catch (err: any) {
- console.error('Error processing email via Gmail API:', err);
- gmailError = err.message || 'Error en la API de Gmail';
- }
- } else {
+ if (!recipientEmail) {
  gmailError = 'El lead/sala no tiene un correo de contacto definido (email_contacto).';
+ } else {
+ try {
+ if (emailBody && emailBody !== targetLead.pitch_generado) {
+ await onUpdateLead(action.leadId, { pitch_generado: emailBody }, targetLead.estado);
+ }
+ const data = await apiFetch('/api/trigger-agent', {
+ method: 'POST',
+ body: JSON.stringify({ agentName: 'enviador', params: { id: targetLead.id, trigger_type: 'chatbot' } })
+ });
+ const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === targetLead.id) : null;
+ enviadoOk = leadResult?.status === 'enviado';
+ estadoNuevo = leadResult?.estado_nuevo || '';
+ fechaEnvioReal = leadResult?.fecha_envio || '';
+ if (!enviadoOk) gmailError = leadResult?.error || data.message || 'No se pudo enviar el correo.';
+ } catch (err: any) {
+ console.error('Error procesando el correo vía Chatbot:', err);
+ gmailError = err.message || 'Error al aprobar el lead.';
+ }
  }
 
- const updatedNotes = `*** [${nowStr}] Correo ENVIADO a ${recipientEmail || 'sin_email'} por ${action.senderName || 'Mánager Virtual Chatbot'}${gmailId ? ` [Gmail Message ID: ${gmailId}]` : ''} ***\n${targetLead.notas || ''}`;
+ const updatedNotes = `*** [${nowStr}] Correo ENVIADO a ${recipientEmail || 'sin_email'} por ${action.senderName || 'Mánager Virtual Chatbot'} ***\n${targetLead.notas || ''}`;
  onUpdateLead(action.leadId, {
- estado: 'aprobado',
- fecha_envio: nowStr,
+ estado: (enviadoOk ? (estadoNuevo || 'contactado') : 'pendiente_aprobacion') as Lead['estado'],
+ fecha_envio: enviadoOk ? (fechaEnvioReal || nowStr) : undefined,
  pitch_generado: emailBody,
  notas: updatedNotes
  }, targetLead.estado);
@@ -1507,9 +1500,9 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  const sendSuccessMsg: ChatMessage = {
  id: `sys-${Date.now()}`,
  sender: 'bot',
- text: gmailId
- ? `📧 **¡Correo ENVIADO REALMENTE por Gmail!**\n\nEl correo ha sido enviado oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Gmail Message ID:** \`${gmailId}\`\n- **Estado:** Aprobado / Enviado (${nowStr})\n- **Firma & EPK:** Incluidos automáticamente.\n\nSe ha actualizado el estado y registrado la fecha de envío en Supabase.`
- : `📧 **Correo Marcado como Aprobado en Supabase:**\n\nSe ha actualizado el estado de **"${action.leadName || targetLead.nombre_sala}"** a **Aprobado/Enviado** en la base de datos (${nowStr}).\n\n⚠️ **Atención:** ${gmailError}`,
+ text: enviadoOk
+ ? `📧 **¡Correo ENVIADO REALMENTE!**\n\nEl correo ha sido enviado oficialmente a **"${recipientEmail}"** (${targetLead.nombre_sala}).\n- **Estado:** ${estadoNuevo || 'Enviado'} (${nowStr})\n- **Firma & EPK:** Incluidos automáticamente.\n\nSe ha actualizado el estado y registrado la fecha de envío en Supabase.`
+ : `📧 **Correo Marcado como Aprobado en Supabase:**\n\nSe ha actualizado el estado de **"${action.leadName || targetLead.nombre_sala}"** a **Pendiente de Aprobación** en la base de datos (${nowStr}).\n\n⚠️ **Atención:** ${gmailError}`,
  timestamp: new Date()
  };
  setMessages(prev => [...prev, sendSuccessMsg]);
