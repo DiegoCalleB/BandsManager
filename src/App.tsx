@@ -1037,43 +1037,13 @@ export default function App() {
            className={`h-full rounded-full transition-all duration-500 ${
              pct > 85 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : 'bg-gradient-to-r from-amber-400 to-amber-500'
            }`} 
-           style={{ width: `${pct}%` }} 
-         />
-       </div>
-       <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+  <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
          <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
          <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
        </div>
      </div>
    );
  })()}
-
- {/* Widget de Apoyo al Proyecto (Ko-fi) */}
- <div className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-amber-500/10 border border-amber-500/30 hover:border-amber-400 transition-all group shadow-sm">
-   <a
-     href="https://ko-fi.com"
-     target="_blank"
-     rel="noopener noreferrer"
-     className="flex items-center gap-2.5 text-left cursor-pointer"
-     title="Apoya este proyecto para ayudar a más músicos como tú"
-   >
-     <div className="w-8 h-8 rounded-lg overflow-hidden border border-amber-500/40 bg-neutral-950 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-       <img
-         src="/Screenshot_20260824_164054_Google.jpg"
-         alt="Apoyo al Proyecto"
-         className="w-full h-full object-cover scale-110"
-       />
-     </div>
-     <div className="flex flex-col min-w-0">
-       <span className="text-[11px] font-bold text-white leading-tight group-hover:text-amber-300 transition-colors">
-         Apoya este proyecto
-       </span>
-       <span className="text-[9.5px] text-amber-300/90 font-mono truncate">
-         para ayudar a más músicos como tú
-       </span>
-     </div>
-   </a>
- </div>
 
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">

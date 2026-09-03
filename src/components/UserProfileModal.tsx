@@ -415,32 +415,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
 
- {/* Ko-fi Support Project Banner */}
- <div className="p-3.5 rounded-xl border bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-amber-500/10 border-amber-500/30 flex items-center justify-between gap-3 shadow-xs">
-    <div className="flex items-center gap-2.5 min-w-0">
-      <div className="w-9 h-9 rounded-lg overflow-hidden border border-amber-500/40 bg-neutral-950 flex items-center justify-center shrink-0 shadow-xs">
-        <img
-          src="/Screenshot_20260824_164054_Google.jpg"
-          alt="Apoyo al Proyecto"
-          className="w-full h-full object-cover scale-110"
-        />
-      </div>
-      <div className="min-w-0">
-        <p className="text-xs font-bold text-white">Apoya este proyecto</p>
-        <p className="text-[10px] text-amber-300/90 font-mono truncate">para ayudar a más músicos como tú</p>
-      </div>
-    </div>
-    <a
-      href="https://ko-fi.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-white font-bold font-mono text-[11px] transition-all cursor-pointer shadow-md shrink-0 flex items-center gap-1.5 hover:scale-105 active:scale-95"
-    >
-      <span>Colaborar</span>
-      <ExternalLink className="w-3 h-3" />
-    </a>
-  </div>
-
  <div className="space-y-1">
  <label className="text-xs font-mono font-semibold text-neutral-400 flex items-center gap-1.5">
  <UserIcon className="w-3.5 h-3.5 text-emerald-400" />
