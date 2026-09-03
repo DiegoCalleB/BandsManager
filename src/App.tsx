@@ -213,6 +213,7 @@ export default function App() {
     selectedLeadId?: string;
     selectedEventId?: string;
     selectedDate?: string;
+    concertId?: string;
   }>({});
 
   const handleNavigate = (
@@ -223,6 +224,7 @@ export default function App() {
       selectedLeadId?: string;
       selectedEventId?: string;
       selectedDate?: string;
+      concertId?: string;
     }
   ) => {
     // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
