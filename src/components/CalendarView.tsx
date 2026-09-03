@@ -1762,6 +1762,7 @@ export default function CalendarView({
  type="button"
  onClick={() => {
  if (window.confirm(`¿Eliminar el concierto en ${selectedConcert.sala}? Esta acción no se puede deshacer.`)) {
+ setSelectedEventId(null);
  onDeleteConcert(selectedConcert.id);
  }
  }}
@@ -1775,6 +1776,7 @@ export default function CalendarView({
  type="button"
  onClick={() => {
  if (window.confirm(`¿Eliminar este ensayo en ${selectedRehearsal.lugar}? Esta acción no se puede deshacer.`)) {
+ setSelectedEventId(null);
  onDeleteRehearsal(selectedRehearsal.id);
  }
  }}

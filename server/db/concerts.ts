@@ -114,7 +114,9 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
 
 export async function dbDeleteConcert(id: string, bandId: string) {
   const sb = getSupabase();
-  const { error } = await sb.from("concerts").delete().eq("id", id).eq("band_id", cleanBandId(bandId));
+  const cleanId = cleanBandId(bandId);
+  const possibleBandIds = Array.from(new Set([bandId, cleanId, `band-${cleanId}`, `reg-${cleanId}`])).filter(Boolean);
+  const { error } = await sb.from("concerts").delete().eq("id", id).in("band_id", possibleBandIds);
   if (error) throw new Error(`Supabase Error (delete concert): ${error.message}`);
   return true;
 }

@@ -2,7 +2,7 @@ import express from "express";
 import crypto from "crypto";
 import { Rehearsal, Concert, Payment, Message } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader } from "../state.js";
-import { puedeEscribirEnBanda } from "../utils/bandAccess.js";
+import { getTargetBandId, puedeEscribirEnBanda } from "../utils/bandAccess.js";
 import {
   dbGetRehearsals,
   dbUpsertRehearsal,
@@ -50,16 +50,16 @@ function firmaCoincide(esperada: string, recibida: unknown): boolean {
 // Update rehearsal
 router.put("/rehearsals/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const { id } = req.params;
     const updated = { ...req.body, id };
     const saved = await dbUpsertRehearsal(updated, userBandId);
     
     const state = loadState();
-    const idx = state.rehearsals.findIndex((r: Rehearsal) => r.id === id);
+    const idx = state.rehearsals?.findIndex((r: Rehearsal) => r.id === id) ?? -1;
     if (idx !== -1) {
       state.rehearsals[idx] = saved as any;
-    } else {
+    } else if (state.rehearsals) {
       state.rehearsals.push(saved as any);
     }
     saveState(state);
@@ -73,7 +73,7 @@ router.put("/rehearsals/:id", requireAuth, async (req, res) => {
 // Create rehearsal
 router.post("/rehearsals", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const newRehearsal: Rehearsal = req.body;
     if (!(newRehearsal as any).band_id) {
       (newRehearsal as any).band_id = userBandId;
@@ -81,7 +81,9 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
     const saved = await dbUpsertRehearsal(newRehearsal, userBandId);
     
     const state = loadState();
-    state.rehearsals.push(saved as any);
+    if (state.rehearsals) {
+      state.rehearsals.push(saved as any);
+    }
     saveState(state);
     res.json({ success: true, rehearsal: saved });
   } catch (err: any) {
@@ -93,28 +95,29 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
 // Delete rehearsal
 router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    const userBandId = getTargetBandId(req);
+    if (!puedeEscribirEnBanda(req, userBandId)) {
+      return res.status(403).json({ error: "No puedes eliminar un ensayo de esta banda." });
     }
     const { id } = req.params;
     const state = loadState();
-    const rehearsal = state.rehearsals.find((r: Rehearsal) => r.id === id);
-    if (!rehearsal) {
-      return res.status(404).json({ error: "Ensayo no encontrado." });
-    }
-    if (!puedeEscribirEnBanda(req, (rehearsal as any).band_id || userBandId)) {
+    const rehearsal = state.rehearsals?.find((r: Rehearsal) => r.id === id);
+    const targetBand = (rehearsal as any)?.band_id || userBandId;
+
+    if (targetBand && !puedeEscribirEnBanda(req, targetBand)) {
       return res.status(403).json({ error: "No puedes eliminar un ensayo de otra banda." });
     }
 
     try {
-      await dbDeleteRehearsal(id, (rehearsal as any).band_id || userBandId);
+      await dbDeleteRehearsal(id, targetBand);
     } catch (err) {
       console.warn("No se pudo eliminar el ensayo en Supabase:", err);
     }
 
-    state.rehearsals = state.rehearsals.filter((r: Rehearsal) => r.id !== id);
-    saveState(state);
+    if (state.rehearsals) {
+      state.rehearsals = state.rehearsals.filter((r: Rehearsal) => r.id !== id);
+      saveState(state);
+    }
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting rehearsal:", err);
@@ -125,16 +128,16 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
 // Update concert
 router.put("/concerts/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const { id } = req.params;
     const updated = { ...req.body, id };
     const saved = await dbUpsertConcert(updated, userBandId);
 
     const state = loadState();
-    const idx = state.concerts.findIndex((c: Concert) => c.id === id);
+    const idx = state.concerts?.findIndex((c: Concert) => c.id === id) ?? -1;
     if (idx !== -1) {
       state.concerts[idx] = saved as any;
-    } else {
+    } else if (state.concerts) {
       state.concerts.push(saved as any);
     }
     saveState(state);
@@ -148,7 +151,7 @@ router.put("/concerts/:id", requireAuth, async (req, res) => {
 // Create concert
 router.post("/concerts", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const newConcert: Concert = req.body;
     if (!(newConcert as any).band_id) {
       (newConcert as any).band_id = userBandId;
@@ -156,7 +159,9 @@ router.post("/concerts", requireAuth, async (req, res) => {
     const saved = await dbUpsertConcert(newConcert, userBandId);
 
     const state = loadState();
-    state.concerts.push(saved as any);
+    if (state.concerts) {
+      state.concerts.push(saved as any);
+    }
     saveState(state);
     res.json({ success: true, concert: saved });
   } catch (err: any) {
@@ -168,28 +173,29 @@ router.post("/concerts", requireAuth, async (req, res) => {
 // Delete concert
 router.delete("/concerts/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
+    const userBandId = getTargetBandId(req);
+    if (!puedeEscribirEnBanda(req, userBandId)) {
+      return res.status(403).json({ error: "No puedes eliminar un concierto de esta banda." });
     }
     const { id } = req.params;
     const state = loadState();
-    const concert = state.concerts.find((c: Concert) => c.id === id);
-    if (!concert) {
-      return res.status(404).json({ error: "Concierto no encontrado." });
-    }
-    if (!puedeEscribirEnBanda(req, (concert as any).band_id || userBandId)) {
+    const concert = state.concerts?.find((c: Concert) => c.id === id);
+    const targetBand = (concert as any)?.band_id || userBandId;
+
+    if (targetBand && !puedeEscribirEnBanda(req, targetBand)) {
       return res.status(403).json({ error: "No puedes eliminar un concierto de otra banda." });
     }
 
     try {
-      await dbDeleteConcert(id, (concert as any).band_id || userBandId);
+      await dbDeleteConcert(id, targetBand);
     } catch (err) {
       console.warn("No se pudo eliminar el concierto en Supabase:", err);
     }
 
-    state.concerts = state.concerts.filter((c: Concert) => c.id !== id);
-    saveState(state);
+    if (state.concerts) {
+      state.concerts = state.concerts.filter((c: Concert) => c.id !== id);
+      saveState(state);
+    }
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting concert:", err);
