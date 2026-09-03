@@ -1271,7 +1271,7 @@ export default function App() {
           </ErrorBoundary>
         )}
         {currentView === 'fans' && (
-          <FansPanel 
+          <FansPanel
             fans={fans}
             concerts={activeBandConcerts}
             epkConfig={epkConfig}
@@ -1290,6 +1290,7 @@ export default function App() {
             colors={colors}
             isStitchLight={false}
             onNavigate={handleNavigate}
+            isPromo={isPromoPlan}
           />
         )}
         {currentView === 'giras' && (

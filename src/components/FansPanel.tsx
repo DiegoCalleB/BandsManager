@@ -40,6 +40,7 @@ interface FansPanelProps {
   colors?: ThemeColors;
   isStitchLight?: boolean;
   onNavigate?: (view: 'epk') => void;
+  isPromo?: boolean;
 }
 
 const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
@@ -66,12 +67,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   isSyncingMetrics,
   colors,
   isStitchLight,
-  onNavigate
+  onNavigate,
+  isPromo = false
 }) => {
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
   const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
-  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>('metrics');
+  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(isPromo ? 'qr' : 'metrics');
   const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>('feed');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOrigen, setFilterOrigen] = useState<string>('');
@@ -500,8 +502,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs (metrics tab hidden for Promo) */}
       <div className="flex overflow-x-auto border-b border-slate-800 hide-scrollbar gap-1">
+        {!isPromo && (
         <button
           id="tab-btn-fans-metrics"
           onClick={() => setActiveTab('metrics')}
@@ -509,23 +512,24 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         >
           <TrendingUp className="w-4 h-4 text-amber-500" /> 1. Seguimiento & Métricas de Redes
         </button>
+        )}
         <button
           onClick={() => setActiveTab('qr')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'qr' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <QrCode className="w-4 h-4 text-amber-500" /> 2. Captura en Vivo & QR
+          <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ? '1' : '2'}. Captura en Vivo & QR
         </button>
         <button
           onClick={() => setActiveTab('dashboard')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <Heart className="w-4 h-4 text-amber-500" /> 3. Dashboard & Analítica
+          <Heart className="w-4 h-4 text-amber-500" /> {isPromo ? '2' : '3'}. Dashboard & Analítica
         </button>
         <button
           onClick={() => setActiveTab('fans')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
-          <Users className="w-4 h-4 text-amber-500" /> 4. Comunidad & Red Social ({fans.length})
+          <Users className="w-4 h-4 text-amber-500" /> {isPromo ? '3' : '4'}. Comunidad & Red Social ({fans.length})
         </button>
       </div>
 
