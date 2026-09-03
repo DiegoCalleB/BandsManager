@@ -479,11 +479,11 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <div>
           <h2 className="text-2xl font-black text-white font-display flex items-center gap-3">
-            <TrendingUp className="w-8 h-8 text-amber-500" />
-            Seguidores & Redes
+            <QrCode className="w-8 h-8 text-amber-500" />
+            Captura QR & Fans
           </h2>
           <p className="text-slate-400 font-mono text-sm mt-1">
-            Métricas de redes sociales y streaming en tiempo real, comunidad de fans interactiva, fidelización y captura en directo.
+            Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

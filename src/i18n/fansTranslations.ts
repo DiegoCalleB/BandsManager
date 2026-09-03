@@ -275,8 +275,8 @@ const es: FanFormDict = {
   shareCardPrompt: '¿Conoces a alguien a quien le mole la buena música? Comparte este enlace directo para que también disfrute de los temas exclusivos.',
   whatsappShareMessage: '¡Ey! Échale un ojo a {bandName} y únete a su comunidad para conseguir temas inéditos y descuentos: {url}',
   upcomingShowsTitle: 'Próximos Conciertos',
-  musicianBannerTitle: '¿Eres músico o tienes una banda?',
-  musicianBannerSubtitle: 'Tú piensa en tu música, ¡BandManager.ai se encarga de todo lo demás!',
+  musicianBannerTitle: '¿Tienes una banda o eres músico?',
+  musicianBannerSubtitle: 'Organiza vuestro Calendario, capta fans con QRs en directo y comparte vuestro Dossier EPK y Bio.',
   musicianBannerCTA: 'Quiero unirme a la lista de espera →',
 };
 
@@ -398,7 +398,7 @@ const en: FanFormDict = {
   whatsappShareMessage: 'Hey! Check out {bandName} and join their community to get unreleased tracks and discounts: {url}',
   upcomingShowsTitle: 'Upcoming Shows',
   musicianBannerTitle: 'Are you a musician or in a band?',
-  musicianBannerSubtitle: 'You focus on the music, BandManager.ai takes care of everything else.',
+  musicianBannerSubtitle: 'Manage your Calendar, capture fans with live QRs, and share your EPK Dossier & Bio.',
   musicianBannerCTA: 'Join the musician waitlist →',
 };
 
@@ -520,8 +520,8 @@ const it: FanFormDict = {
   whatsappShareMessage: 'Ehi! Dai un\'occhiata a {bandName} e unisciti alla community per ottenere brani inediti e sconti: {url}',
   upcomingShowsTitle: 'Prossimi Concerti',
   musicianBannerTitle: 'Sei un musicista o hai una band?',
-  musicianBannerSubtitle: 'Tu pensa alla musica, BandManager.ai si occupa di tutto il resto.',
-  musicianBannerCTA: 'Unisciti alla lista d\'attesa per musicisti →',
+  musicianBannerSubtitle: 'Gestisci il tuo Calendario, cattura i fan con i QR nei concerti e condividi il Dossier EPK e la Bio.',
+  musicianBannerCTA: 'Unisciti alla lista d\'attesa →',
 };
 
 const cs: FanFormDict = {
@@ -642,8 +642,8 @@ const cs: FanFormDict = {
   whatsappShareMessage: 'Ahoj! Koukni na {bandName} a přidej se k jejich komunitě pro nevydané skladby a slevy: {url}',
   upcomingShowsTitle: 'Nadcházející koncerty',
   musicianBannerTitle: 'Jsi hudebník nebo máš kapelu?',
-  musicianBannerSubtitle: 'Ty se soustřeď na hudbu, BandManager.ai se postará o všechno ostatní.',
-  musicianBannerCTA: 'Chci se přidat na čekací listinu pro kapely →',
+  musicianBannerSubtitle: 'Spravujte svůj Kalendář, získávejte fanoušky pomocí QR kódů na koncertech a sdílejte EPK Dossier & Bio.',
+  musicianBannerCTA: 'Chci se přidat na čekací listinu →',
 };
 
 export const FAN_FORM_TRANSLATIONS: Record<FanFormLanguage, FanFormDict> = { es, en, it, cs };

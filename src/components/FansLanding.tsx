@@ -1069,6 +1069,29 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           )}
 
+          {/* Banner para músicos y bandas */}
+          <div className="pt-4 border-t border-neutral-800 text-left">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-neutral-950 via-neutral-900 to-amber-950/20 border border-amber-500/20 shadow-lg space-y-2.5">
+              <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>{t('musicianBannerTitle')}</span>
+              </div>
+              <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
+                {t('musicianBannerSubtitle')}
+              </p>
+              <div className="pt-1">
+                <a
+                  href="/musicos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono text-xs font-bold transition-all hover:scale-[1.01]"
+                >
+                  {t('musicianBannerCTA')}
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* Enlace a Inicio */}
           <div className="pt-2">
             <a href="/" className="text-xs font-mono text-neutral-500 hover:text-amber-500 underline transition-colors">
@@ -1569,6 +1592,29 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           </div>
         )}
+
+        {/* Banner para músicos y bandas al final del formulario */}
+        <div className="pt-4 border-t border-neutral-800 text-left">
+          <div className="p-4 rounded-xl bg-gradient-to-br from-neutral-950 via-neutral-900 to-amber-950/20 border border-amber-500/20 shadow-lg space-y-2.5">
+            <div className="flex items-center gap-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>{t('musicianBannerTitle')}</span>
+            </div>
+            <p className="text-[11px] font-mono text-neutral-300 leading-relaxed">
+              {t('musicianBannerSubtitle')}
+            </p>
+            <div className="pt-1">
+              <a
+                href="/musicos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono text-xs font-bold transition-all hover:scale-[1.01]"
+              >
+                {t('musicianBannerCTA')}
+              </a>
+            </div>
+          </div>
+        </div>
 
       </div>
 
