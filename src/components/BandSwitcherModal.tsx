@@ -8,6 +8,12 @@ import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermis
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 import { ModalPortal } from './common/ModalPortal';
 
+// Fase beta: crear una banda nueva desde aquí va directa al plan Promo, sin pasar por la
+// parrilla de planes de pago (mismo criterio que SimplePromoLoginModal.tsx). El selector de
+// planes de este modal (paso 2) se conserva intacto más abajo para cuando se quiera reabrir
+// la creación de bandas con todos los planes — basta con volver a poner esto a false.
+const SIMPLE_PROMO_ONLY_BAND_CREATION = true;
+
 interface BandSwitcherModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -186,6 +192,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       return;
     }
     setErrorMessage(null);
+    if (SIMPLE_PROMO_ONLY_BAND_CREATION) {
+      handleSelectPlanForCreation('promo');
+      return;
+    }
     setCreateBandStep(2);
   };
 
@@ -220,7 +230,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         }
 
         // If paid plan, redirect to Stripe Checkout!
-        if (planKey !== 'ensayo' && res.band_id) {
+        if (planKey !== 'ensayo' && planKey !== 'promo' && res.band_id) {
           try {
             await api.startCheckout({
               planId: planKey,
@@ -637,28 +647,43 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </h3>
                   </div>
 
-                  {/* Plan Badge (Clickable to Upgrade/Downgrade) */}
+                  {/* Plan Badge (Clickable to Upgrade/Downgrade, unless Promo) */}
                   <div className="mt-1 flex items-center justify-center">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setSelectedBandForUpgrade(band);
-                        setShowUpgradeModal(true);
-                      }}
-                      className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border hover:scale-105 transition-all cursor-pointer shadow-xs group/plan"
-                      style={{
-                        backgroundColor: `${planDef.color}18`,
-                        color: planDef.color,
-                        borderColor: `${planDef.color}40`,
-                      }}
-                      title={`Plan actual: ${planDef.name}. Clic para Cambiar Plan (Upgrade / Downgrade)`}
-                    >
-                      <Crown className="w-2.5 h-2.5" />
-                      <span>{planDef.name}</span>
-                      <ArrowUpDown className="w-2.5 h-2.5 opacity-60 group-hover/plan:opacity-100" />
-                    </button>
+                    {band.plan === 'promo' ? (
+                      <span
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shadow-xs"
+                        style={{
+                          backgroundColor: `${planDef.color}18`,
+                          color: planDef.color,
+                          borderColor: `${planDef.color}40`,
+                        }}
+                        title={`Plan actual: ${planDef.name}`}
+                      >
+                        <Crown className="w-2.5 h-2.5" />
+                        <span>{planDef.name}</span>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          setSelectedBandForUpgrade(band);
+                          setShowUpgradeModal(true);
+                        }}
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border hover:scale-105 transition-all cursor-pointer shadow-xs group/plan"
+                        style={{
+                          backgroundColor: `${planDef.color}18`,
+                          color: planDef.color,
+                          borderColor: `${planDef.color}40`,
+                        }}
+                        title={`Plan actual: ${planDef.name}. Clic para Cambiar Plan (Upgrade / Downgrade)`}
+                      >
+                        <Crown className="w-2.5 h-2.5" />
+                        <span>{planDef.name}</span>
+                        <ArrowUpDown className="w-2.5 h-2.5 opacity-60 group-hover/plan:opacity-100" />
+                      </button>
+                    )}
                   </div>
 
                   {/* Active Status Badge (Only when active) */}
@@ -720,7 +745,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </div>
                     <div>
                       <h3 className="font-bold text-base text-white font-display tracking-wide">Añadir Nuevo Proyecto Musical</h3>
-                      <p className="text-xs text-amber-400/80 font-mono">Paso 1 de 2 • Información del proyecto</p>
+                      <p className="text-xs text-amber-400/80 font-mono">{SIMPLE_PROMO_ONLY_BAND_CREATION ? 'Información del proyecto' : 'Paso 1 de 2 • Información del proyecto'}</p>
                     </div>
                   </div>
                   <button
@@ -809,11 +834,27 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </button>
                     <button
                       type="submit"
-                      disabled={!newBandName.trim()}
+                      disabled={!newBandName.trim() || (SIMPLE_PROMO_ONLY_BAND_CREATION && isCreatingBand)}
                       className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <span>Continuar a Elegir Plan</span>
-                      <ArrowRight className="w-4 h-4" />
+                      {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
+                        isCreatingBand ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Creando...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Crear Proyecto</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </>
+                        )
+                      ) : (
+                        <>
+                          <span>Continuar a Elegir Plan</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>

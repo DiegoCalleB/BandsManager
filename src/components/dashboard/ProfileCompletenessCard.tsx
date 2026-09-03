@@ -274,13 +274,15 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
-          <button
-            onClick={() => onOpenAutonomyModal && onOpenAutonomyModal()}
-            className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
-          >
-            <Sliders className="w-3.5 h-3.5 text-purple-400" />
-            <span className="hidden xs:inline">Autonomía IA</span>
-          </button>
+          {onOpenAutonomyModal && (
+            <button
+              onClick={() => onOpenAutonomyModal()}
+              className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+            >
+              <Sliders className="w-3.5 h-3.5 text-purple-400" />
+              <span className="hidden xs:inline">Autonomía IA</span>
+            </button>
+          )}
 
           <button
             onClick={() => setShowAuditModal(true)}

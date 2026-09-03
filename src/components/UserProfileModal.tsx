@@ -5,10 +5,16 @@ import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
-import { getPlanDefinition, getPlanChangeType, PLANS } from '../utils/planPermissions';
+import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from '../utils/planPermissions';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 import { ModalPortal } from './common/ModalPortal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
+
+// Fase beta: crear un proyecto adicional desde aquí va directo al plan Promo, sin pasar por
+// este selector legacy de 3 planes de pago (mismo criterio que BandSwitcherModal.tsx y
+// SimplePromoLoginModal.tsx). El selector se conserva intacto más abajo para cuando se quiera
+// reabrir la creación de bandas con todos los planes — basta con volver a poner esto a false.
+const SIMPLE_PROMO_ONLY_BAND_CREATION = true;
 
 interface UserProfileModalProps {
  currentUser: User;
@@ -86,6 +92,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  
  const currentPlanDef = getPlanDefinition(currentUser.plan);
  const isHighestPlan = currentPlanDef.id === 'cabeza_de_cartel';
+ // Plan Promo (fase beta, festivales): sin agentes IA ni cambio de plan visible.
+ const isPromoUser = normalizePlan(currentUser.plan) === 'promo';
  
  // Password change state
  const [newPassword, setNewPassword] = useState('');
@@ -144,7 +152,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [createBandLeaderName, setCreateBandLeaderName] = useState(currentUser.name || currentUser.username || '');
  const [createBandStyle, setCreateBandStyle] = useState('');
  const [createBandLocation, setCreateBandLocation] = useState('España');
- const [createBandPlan, setCreateBandPlan] = useState<'emergente' | 'profesional' | 'elite'>('profesional');
+ const [createBandPlan, setCreateBandPlan] = useState<'emergente' | 'profesional' | 'elite' | 'promo'>('profesional');
  const [isCreatingBand, setIsCreatingBand] = useState(false);
 
  // Band deletion inside Profile Modal
@@ -160,11 +168,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
    setIsCreatingBand(true);
    setError(null);
    setSuccessMsg(null);
+   const effectivePlan = SIMPLE_PROMO_ONLY_BAND_CREATION ? 'promo' : createBandPlan;
    try {
      const res = await api.createBand({
        bandName: createBandName.trim(),
        leaderName: createBandLeaderName.trim() || currentUser.name || currentUser.username || 'Líder',
-       plan: createBandPlan,
+       plan: effectivePlan,
        estilo_musical: createBandStyle.trim() || undefined,
        localizacion: createBandLocation.trim() || undefined
      });
@@ -182,10 +191,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
        }
 
        // Redirect to Stripe Checkout for paid plans
-       if (createBandPlan && (createBandPlan as string) !== 'ensayo' && res.band_id) {
+       if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && res.band_id) {
          try {
            await api.startCheckout({
-             planId: createBandPlan,
+             planId: effectivePlan,
              billingInterval: 'monthly',
              bandId: res.band_id,
              userEmail: (currentUser?.email && currentUser.email.includes('@')) ? currentUser.email : undefined
@@ -393,7 +402,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
 
- {!isHighestPlan && (
+ {!isHighestPlan && !isPromoUser && (
  <button
  type="button"
  onClick={() => setShowUpgradeModal(true)}
@@ -483,6 +492,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div>
  <div className="flex items-center gap-2 flex-wrap">
  <p className="text-xs font-bold text-white">{activeBandName || currentUser.bandName || 'Tu Banda'}</p>
+ {isPromoUser ? (
+ <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300 border border-amber-400/30">
+   <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+   <span>{currentPlanDef.name}</span>
+ </span>
+ ) : (
  <button
    type="button"
    onClick={() => setShowUpgradeModal(true)}
@@ -493,6 +508,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
    <span>{currentPlanDef.name}</span>
    <ArrowUpDown className="w-2.5 h-2.5 text-amber-400 ml-0.5" />
  </button>
+ )}
  </div>
  <p className="text-[10px] text-neutral-400 font-mono">Avatar / Logo oficial de la banda</p>
  </div>
@@ -614,6 +630,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
            </div>
          </div>
 
+         {SIMPLE_PROMO_ONLY_BAND_CREATION ? (
+           <p className="text-[10px] font-mono text-neutral-500">
+             Se creará en el plan <span className="text-amber-400 font-bold">Promo</span> (dossier, calendario y fans).
+           </p>
+         ) : (
          <div>
            <label className="text-[10px] font-mono text-neutral-400 block mb-1.5">Plan Inicial del Proyecto</label>
            <div className="grid grid-cols-3 gap-1.5">
@@ -640,6 +661,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
              })}
            </div>
          </div>
+         )}
 
          <div className="pt-1 flex items-center justify-end gap-2">
            <button
@@ -921,7 +943,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
      en vez de duplicar aquí el formulario de horarios (antes BandScheduleConfig, ahora
      eliminado) y de email. EmailAccountConfig sigue siendo el mismo componente compartido,
      solo que ahora se llega a él siempre por el mismo camino. */}
- {currentUser.band_id && (
+ {currentUser.band_id && !isPromoUser && (
  <div className="pt-3 border-t border-neutral-800/80">
  <button
  type="button"
@@ -1287,7 +1309,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
 
  {/* Panel de Control de Agentes IA (Autonomía, Email & Buzón, Horarios, Tono, Auditoría) */}
- {currentUser.band_id && (
+ {currentUser.band_id && !isPromoUser && (
  <AgentAutonomySettingsModal
  isOpen={showAgentConfig}
  onClose={() => setShowAgentConfig(false)}

@@ -10,6 +10,7 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
+import { normalizePlan } from '../utils/planPermissions';
 import { 
  Search, MapPin, Music, Mic, DoorClosed, Globe, Phone, Instagram, 
  Plus, X, Calendar, AlertCircle, Sparkles, Loader2, Check, RefreshCw, 
@@ -400,6 +401,93 @@ export default function Dashboard({
  const urgentRepliesNeeded = leads.filter(l => l.estado === 'interesado' || l.estado === 'negociando');
  const urgentApprovalsNeeded = leads.filter(l => l.estado === 'pendiente_aprobacion' || (l.pitch_generado && l.estado === 'nuevo'));
 
+ // Plan Promo (fase beta, festivales): el dashboard completo enseña CRM, caché, agentes IA,
+ // reels y upsells de plan por todas partes — demasiadas cosas para intentar taparlas una a
+ // una sin dejarse alguna (ya pasó: la sección de "Acciones Rápidas" y el botón flotante de
+ // Agente IA se colaban). Así que en vez de parchear el dashboard grande, Promo tiene su
+ // propio resumen reducido, aparte, que solo usa lo que ese plan permite: EPK, calendario y fans.
+ const isPromo = normalizePlan(currentUser?.plan) === 'promo';
+ if (isPromo) {
+   return (
+     <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
+       <div className="mb-2">
+         <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
+         <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Panel de {activeBandName}</p>
+       </div>
+
+       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+         <button
+           type="button"
+           onClick={() => onNavigate && onNavigate('epk')}
+           className="text-left p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800 hover:border-amber-500/40 transition-all cursor-pointer"
+         >
+           <div className="flex items-center gap-2 text-amber-400 mb-2">
+             <FileText className="w-4 h-4" />
+             <span className="text-xs font-mono font-bold uppercase tracking-wider">Dossier (EPK)</span>
+           </div>
+           <p className="text-xs text-neutral-400">Tu presentación pública: bio, fotos, contacto y enlaces para salas y prensa.</p>
+           <span className="inline-flex items-center gap-1 mt-3 text-xs font-mono font-bold text-amber-400">
+             Editar dossier <ArrowRight className="w-3.5 h-3.5" />
+           </span>
+         </button>
+
+         <button
+           type="button"
+           onClick={() => onNavigate && onNavigate('calendario')}
+           className="text-left p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800 hover:border-amber-500/40 transition-all cursor-pointer"
+         >
+           <div className="flex items-center gap-2 text-amber-400 mb-2">
+             <Calendar className="w-4 h-4" />
+             <span className="text-xs font-mono font-bold uppercase tracking-wider">Calendario</span>
+           </div>
+           <p className="text-xs text-neutral-400">
+             {upcomingEvents.length > 0
+               ? `${upcomingEvents.length} próxima${upcomingEvents.length === 1 ? '' : 's'} fecha${upcomingEvents.length === 1 ? '' : 's'} (conciertos y ensayos).`
+               : 'Sin fechas programadas todavía.'}
+           </p>
+           <span className="inline-flex items-center gap-1 mt-3 text-xs font-mono font-bold text-amber-400">
+             Ver agenda <ArrowRight className="w-3.5 h-3.5" />
+           </span>
+         </button>
+
+         <button
+           type="button"
+           onClick={() => onNavigate && onNavigate('fans')}
+           className="text-left p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800 hover:border-amber-500/40 transition-all cursor-pointer"
+         >
+           <div className="flex items-center gap-2 text-amber-400 mb-2">
+             <Users className="w-4 h-4" />
+             <span className="text-xs font-mono font-bold uppercase tracking-wider">Fans</span>
+           </div>
+           <p className="text-xs text-neutral-400">
+             {fans.length > 0 ? `${fans.length} fan${fans.length === 1 ? '' : 's'} captado${fans.length === 1 ? '' : 's'} vía QR.` : 'Aún no has captado fans. Comparte tu QR.'}
+           </p>
+           <span className="inline-flex items-center gap-1 mt-3 text-xs font-mono font-bold text-amber-400">
+             Ver fans <ArrowRight className="w-3.5 h-3.5" />
+           </span>
+         </button>
+       </div>
+
+       {upcomingEvents.length > 0 && (
+         <div className="p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800">
+           <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100 mb-3">Próximas fechas</h3>
+           <div className="space-y-2">
+             {upcomingEvents.slice(0, 5).map((ev, i) => (
+               <div key={i} className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-neutral-900/60 border border-neutral-800/80">
+                 <div>
+                   <p className="font-semibold text-neutral-200">{ev.title}</p>
+                   <p className="text-neutral-500 font-mono">{ev.location}</p>
+                 </div>
+                 <span className="text-neutral-400 font-mono">{ev.day} {ev.month}</span>
+               </div>
+             ))}
+           </div>
+         </div>
+       )}
+     </div>
+   );
+ }
+
  return (
  <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
  
@@ -426,7 +514,7 @@ export default function Dashboard({
       </div>
 
       {/* BARRA DE SALUD Y COMPLETITUD DEL PERFIL */}
-      <ProfileCompletenessCard 
+      <ProfileCompletenessCard
         epkConfig={epkConfig}
         leads={leads}
         concerts={concerts}

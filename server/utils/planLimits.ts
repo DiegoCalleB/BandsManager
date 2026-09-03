@@ -11,7 +11,14 @@ export interface PlanLimits {
   maxFans: number;
 }
 
-const PLAN_LIMITS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+const PLAN_LIMITS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+  promo: {
+    maxLeads: 0,
+    maxPressContacts: 0,
+    maxBands: 1,
+    maxSongs: 0,
+    maxFans: 250,
+  },
   ensayo: {
     maxLeads: 10,
     maxPressContacts: 0,
@@ -42,12 +49,12 @@ const PLAN_LIMITS: Record<'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', P
   },
 };
 
-export function getPlanLimits(normalizedPlan: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel'): PlanLimits {
+export function getPlanLimits(normalizedPlan: 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel'): PlanLimits {
   return PLAN_LIMITS[normalizedPlan] || PLAN_LIMITS.ensayo;
 }
 
 export function checkRecordLimit(
-  normalizedPlan: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel',
+  normalizedPlan: 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel',
   recordType: 'leads' | 'medios' | 'fans' | 'songs' | 'bands',
   currentCount: number
 ): { allowed: boolean; max: number; message?: string } {
