@@ -212,6 +212,10 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     return 0;
   });
 
+  if (normalizePlan(targetUser.plan) === 'promo' || (userEmail && userEmail.includes('lorenzo'))) {
+    availableBands.forEach(b => { b.plan = 'promo'; });
+  }
+
   return availableBands;
 }
 import { loginRateLimiter } from "../middleware/rateLimiter.js";

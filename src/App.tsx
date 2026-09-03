@@ -142,6 +142,9 @@ export default function App() {
   };
 
   const currentActiveBandPlan = React.useMemo(() => {
+    if (normalizePlan(currentUser?.plan) === 'promo') {
+      return 'promo';
+    }
     if (availableBands && Array.isArray(availableBands) && availableBands.length > 0) {
       const match = availableBands.find((b: any) =>
         isSameBand(b.band_id || b.id, currentActiveBandId, b.bandName || b.nombre_banda || b.name, currentActiveBandName)
@@ -150,7 +153,7 @@ export default function App() {
         return normalizePlan(match.plan);
       }
     }
-    return normalizePlan(currentUser?.plan || 'ensayo');
+    return normalizePlan(currentUser?.plan || 'promo');
   }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
 
   // Plan Promo (fase beta, festivales): a diferencia del resto de planes, que enseñan los
