@@ -20,6 +20,9 @@ export interface AutonomyConfig {
   notifyOnEveryProposal: boolean;
   requireHumanForFinalSignOff: boolean;
   dispatchMode: string;
+  agentSenderEmail?: string;
+  agentSenderName?: string;
+  agentReplyToEmail?: string;
   responseStrategies?: Record<string, ResponseStrategy>;
   minCacheByType?: {
     salas?: number;
@@ -87,6 +90,9 @@ export async function dbGetAutonomyConfig(bandId: string): Promise<AutonomyConfi
     notifyOnEveryProposal: data.notify_on_every_proposal,
     requireHumanForFinalSignOff: data.require_human_for_final_sign_off,
     dispatchMode: data.dispatch_mode,
+    agentSenderEmail: data.agent_sender_email || undefined,
+    agentSenderName: data.agent_sender_name || undefined,
+    agentReplyToEmail: data.agent_reply_to_email || undefined,
     responseStrategies: data.response_strategies || {},
     minCacheByType: Object.keys(minCacheByType).length > 0 ? minCacheByType : undefined,
     negotiationStartCacheByType: Object.keys(negotiationStartCacheByType).length > 0 ? negotiationStartCacheByType : undefined
@@ -98,17 +104,13 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload = {
+  const payload: any = {
     band_id: targetBandId,
     dispatch_level: config.dispatchLevel || config.dispatch_level || "draft_only",
     negotiation_depth: config.negotiationDepth || config.negotiation_depth || "filter_conditions",
     auto_decline_under_min_cache: Boolean(config.autoDeclineUnderMinCache ?? config.auto_decline_under_min_cache),
     notify_on_every_proposal: Boolean(config.notifyOnEveryProposal ?? config.notify_on_every_proposal ?? true),
     require_human_for_final_sign_off: Boolean(config.requireHumanForFinalSignOff ?? config.require_human_for_final_sign_off ?? true),
-    // Qué hace el Enviador justo tras la aprobación humana del lead (paso 1, siempre
-    // obligatorio, sin relación con esto): dejar borrador en Gmail o despachar directamente.
-    // Ver AGENTS.md sección 3 y el comentario junto a ENVIO_REAL_HABILITADO_GLOBALMENTE en
-    // server/services/agentEngine.ts.
     dispatch_mode: (config.dispatchMode || config.dispatch_mode) === "direct_send" ? "direct_send" : "draft_gmail",
     response_strategies: config.responseStrategies || config.response_strategies || {},
     min_cache_by_type: (config.minCacheByType && typeof config.minCacheByType === "object")
@@ -116,12 +118,37 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
       : undefined,
     negotiation_start_cache_by_type: (config.negotiationStartCacheByType && typeof config.negotiationStartCacheByType === "object")
       ? config.negotiationStartCacheByType
-      : undefined
+      : undefined,
+    agent_sender_email: config.agentSenderEmail || config.agent_sender_email || undefined,
+    agent_sender_name: config.agentSenderName || config.agent_sender_name || undefined,
+    agent_reply_to_email: config.agentReplyToEmail || config.agent_reply_to_email || undefined
   };
 
-  const { data, error } = await sb.from("autonomy_configs").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert autonomy_configs): ${error.message}`);
-  return data;
+  try {
+    const { data, error } = await sb.from("autonomy_configs").upsert(payload).select().single();
+    if (error) {
+      // Si la tabla en Supabase no tiene aún las nuevas columnas de sender email, reintentar sin ellas
+      if (error.message?.includes("agent_sender_") || error.code === "PGRST204" || error.message?.includes("column")) {
+        delete payload.agent_sender_email;
+        delete payload.agent_sender_name;
+        delete payload.agent_reply_to_email;
+        const { data: retryData, error: retryErr } = await sb.from("autonomy_configs").upsert(payload).select().single();
+        if (retryErr) throw new Error(`Supabase Error (upsert autonomy_configs): ${retryErr.message}`);
+        return retryData;
+      }
+      throw new Error(`Supabase Error (upsert autonomy_configs): ${error.message}`);
+    }
+    return data;
+  } catch (err: any) {
+    if (err.message?.includes("agent_sender_")) {
+      delete payload.agent_sender_email;
+      delete payload.agent_sender_name;
+      delete payload.agent_reply_to_email;
+      const { data: retryData } = await sb.from("autonomy_configs").upsert(payload).select().single();
+      return retryData;
+    }
+    throw err;
+  }
 }
 
 // --- FANS ---

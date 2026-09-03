@@ -370,7 +370,8 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
         try {
           const appState = await api.getState().catch(() => null);
           if (isMounted && appState?.bands) {
-            const currentBandObj = appState.bands.find(b => b.id === targetBand) || appState.bands[0];
+            const cleanTarget = (targetBand || '').replace(/^(band|reg)-/, '').toLowerCase();
+            const currentBandObj = appState.bands.find(b => (b.id || '').replace(/^(band|reg)-/, '').toLowerCase() === cleanTarget);
             if (currentBandObj) {
               const defaultEmail = currentBandObj.email || currentBandObj.contacto_booking?.email;
               if (defaultEmail) {

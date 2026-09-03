@@ -403,6 +403,9 @@ CREATE TABLE IF NOT EXISTS autonomy_configs (
     -- aprobación humana en sí (server/services/agentEngine.ts) - y solo tiene efecto si además
     -- el servidor entero tiene AGENT_EMAIL_MODE=send (si no, siempre se queda en borrador).
     dispatch_mode TEXT DEFAULT 'draft_gmail',
+    agent_sender_email TEXT,
+    agent_sender_name TEXT,
+    agent_reply_to_email TEXT,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
