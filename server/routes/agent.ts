@@ -14,6 +14,8 @@ import { EmailAgentError } from "../services/emailAgentClient.js";
 import { autoEnrichLead } from "../auto_enrichment.js";
 import { searchFestivalByName, formatFestivalDates } from "../utils/spanishFestivalsDB.js";
 import { normalizeVenueName } from "./leads/places.js";
+import { dbGetRegisteredBands, dbGetLeads, dbGetBandEmailAccount, dbGetBandGmailOAuth } from "../db.js";
+import { computeAgentFunnel, type FunnelBandInput } from "../utils/agentFunnel.js";
 
 const router = express.Router();
 
@@ -893,6 +895,47 @@ router.post("/agent-logs", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error al insertar en agent-logs:", err);
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Embudo de los agentes de booking a nivel de plataforma: cuántas bandas conectan email, reciben
+// leads del Scout, ven un pitch aprobado, consiguen que el Enviador despache de verdad, y
+// obtienen respuesta de una sala. Sin esto, decidir si invertir en más agentes o en arreglar la
+// conversión del embudo actual era una apuesta a ciegas. Solo para el admin de la plataforma:
+// agrega datos de TODAS las bandas, no de una banda concreta.
+router.get("/admin/agent-funnel", requireAuth, async (req, res) => {
+  try {
+    const user = (req as any).user;
+    if (user?.role !== "admin") {
+      return res.status(403).json({ success: false, error: "Solo el admin de la plataforma puede ver el embudo de agentes." });
+    }
+
+    const bandas = await dbGetRegisteredBands();
+    const entradas: FunnelBandInput[] = await Promise.all(
+      (bandas || []).map(async (b: any): Promise<FunnelBandInput> => {
+        const bandId = b.band_id || b.id;
+        try {
+          const [gmailOAuth, emailAccount, leads] = await Promise.all([
+            dbGetBandGmailOAuth(bandId),
+            dbGetBandEmailAccount(bandId),
+            dbGetLeads(bandId)
+          ]);
+          return {
+            bandId,
+            emailConectado: Boolean(gmailOAuth || emailAccount),
+            leadsEstados: (leads || []).map((l: any) => l.estado)
+          };
+        } catch (err) {
+          console.warn(`[agent-funnel] No se pudieron leer los datos de ${bandId}, se excluye del cómputo:`, err);
+          return { bandId, emailConectado: false, leadsEstados: [] };
+        }
+      })
+    );
+
+    res.json({ success: true, funnel: computeAgentFunnel(entradas) });
+  } catch (err: any) {
+    console.error("Error calculando agent-funnel:", err);
+    res.status(500).json({ success: false, error: err.message || "Error calculando el embudo de agentes." });
   }
 });
 
