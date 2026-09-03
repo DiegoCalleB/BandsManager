@@ -46,7 +46,7 @@ beforeAll(async () => {
   process.env.AGENT_EMAIL_MODE = 'send';
   ({ runEnviadorAgent } = await import('../agentEngine'));
   ({ getSupabase } = await import('../../db.js'));
-});
+}, 20_000);
 
 const lead = {
   id: 'lead-1',

@@ -186,7 +186,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     name: foundUser.name || activeBandName || foundUser.bandName,
     bandName: activeBandName,
     band_id: activeBandId,
-    plan: normalizePlan(bandObj?.plan || foundUser.plan || 'ensayo'),
+    plan: normalizePlan(bandObj?.plan || foundUser.plan || 'promo'),
     allowedBandIds: Array.from(allowedBandIds)
   };
 }

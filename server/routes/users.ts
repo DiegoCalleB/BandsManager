@@ -279,7 +279,7 @@ router.post("/auth/register", async (req, res) => {
   }
 
   const isExistingUser = existingUsersWithEmail.length > 0;
-  const selectedPlan = normalizePlan(plan || 'ensayo');
+  const selectedPlan = normalizePlan(plan || 'promo');
 
   // Gather existing IDs across state to prevent duplicate collisions
   const existingIds = new Set<string>();
@@ -729,7 +729,7 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
       nombre_banda: finalBandName,
       contacto_nombre: cleanName,
       email: cleanEmail,
-      plan: 'ensayo',
+      plan: 'promo',
       fecha_registro: new Date().toISOString(),
       estado_cuenta: 'activo',
       notas: 'Registrado con Google OAuth'
@@ -747,7 +747,7 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
       main_band_id: bandId,
       band_order: [cleanBandId(bandId)],
       role: "leader",
-      plan: "ensayo",
+      plan: "promo",
       createdAt: new Date().toISOString(),
       googleUid: uid,
       authProvider: "google"

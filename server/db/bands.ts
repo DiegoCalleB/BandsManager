@@ -14,12 +14,20 @@ export async function dbMigrateAllPlansToNewTiers() {
       }
     }
     // 2. Migrate users
-    const { data: users } = await sb.from("users").select("id, plan");
+    const { data: users } = await sb.from("users").select("id, plan, email, band_id");
     if (users && users.length > 0) {
       for (const u of users) {
         const norm = normalizePlan(u.plan);
         if (u.plan !== norm) {
           await sb.from("users").update({ plan: norm }).eq("id", u.id);
+        }
+        // Force promo plan for lorenzo@gmail.com / promo test accounts
+        if (u.email && u.email.toLowerCase().includes("lorenzo")) {
+          await sb.from("users").update({ plan: "promo" }).eq("id", u.id);
+          if (u.band_id) {
+            const cleanBId = u.band_id.replace(/^(band|reg)-/, '');
+            await sb.from("registered_bands").update({ plan: "promo" }).eq("band_id", cleanBId);
+          }
         }
       }
     }
@@ -44,7 +52,7 @@ export async function ensureRegisteredBandExists(bandId: string, nombreBanda?: s
         band_id: cleanId,
         nombre_banda: resolvedName,
         email: "contacto@banda.com",
-        plan: "ensayo",
+        plan: "promo",
         contacto_nombre: "Contacto",
         estado_cuenta: "activo"
       };
