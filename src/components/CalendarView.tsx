@@ -27,6 +27,7 @@ interface CalendarViewProps {
  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
  bandUsers?: Array<{ id: string; name: string; username?: string; role?: string; instrument?: string; band_id?: string; bandName?: string }>;
  currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string; plan?: string };
+ isPromoPlan?: boolean;
 }
 
 interface RunOfShowItem {
@@ -61,9 +62,13 @@ export default function CalendarView({
  currentBandName = '',
  availableBands = [],
  bandUsers = [],
- currentUser
+ currentUser,
+ isPromoPlan: isPromoPlanProp
 }: CalendarViewProps) {
- const isPromoPlan = normalizePlan(currentUser?.plan) === 'promo';
+ const isPromoPlan = isPromoPlanProp ?? (
+   normalizePlan(currentUser?.plan) === 'promo' ||
+   Boolean(availableBands.find(b => (b.band_id === currentBandId || (b as any).id === currentBandId) && normalizePlan((b as any).plan) === 'promo'))
+ );
  const realToday = new Date();
  const [viewDate, setViewDate] = useState<Date>(() => new Date(realToday.getFullYear(), realToday.getMonth(), 1));
  const [selectedDate, setSelectedDate] = useState<Date>(() => realToday);

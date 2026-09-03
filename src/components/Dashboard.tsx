@@ -45,6 +45,7 @@ interface DashboardProps {
   posts?: SocialPost[];
   onNavigate?: (view: any, options?: NavigationOptions) => void;
   onOpenProfileModal?: () => void;
+  isPromoPlan?: boolean;
 }
 
 const isMedio = (l?: Lead | null) => {
@@ -70,7 +71,8 @@ export default function Dashboard({
  fans = [],
   posts = [],
   onNavigate,
-  onOpenProfileModal
+  onOpenProfileModal,
+  isPromoPlan: isPromoPlanProp
 }: DashboardProps) {
  const [searchTerm, setSearchTerm] = useState('');
  const [cityFilter, setCityFilter] = useState('todos');
@@ -406,7 +408,10 @@ export default function Dashboard({
  // una sin dejarse alguna (ya pasó: la sección de "Acciones Rápidas" y el botón flotante de
  // Agente IA se colaban). Así que en vez de parchear el dashboard grande, Promo tiene su
  // propio resumen reducido, aparte, que solo usa lo que ese plan permite: EPK, calendario y fans.
- const isPromo = normalizePlan(currentUser?.plan) === 'promo';
+  const isPromo = isPromoPlanProp ?? (
+    normalizePlan(currentUser?.plan) === 'promo' ||
+    Boolean(availableBands && availableBands.find(b => (b.band_id === currentBandId || (b as any).id === currentBandId) && normalizePlan((b as any).plan) === 'promo'))
+  );
  if (isPromo) {
     return (
       <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>

@@ -1168,6 +1168,7 @@ export default function App() {
  tours={tours}
  fans={fans}
  posts={posts}
+ isPromoPlan={isPromoPlan}
  />
  )}
  {(currentView === 'booking' || currentView === 'medios') && (
@@ -1221,6 +1222,7 @@ export default function App() {
  availableBands={availableBands}
  bandUsers={bandUsers}
  currentUser={currentUser}
+ isPromoPlan={isPromoPlan}
  />
  )}
  {currentView === 'reels' && (
