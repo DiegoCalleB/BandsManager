@@ -27,6 +27,47 @@ export interface FansLandingProps {
   onClosePreview?: () => void;
 }
 
+const FlagIcon: React.FC<{ code: FanFormLanguage; className?: string }> = ({ code, className = "w-4 h-3" }) => {
+  if (code === 'es') {
+    return (
+      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+        <path fill="#c60b1e" d="M0 0h640v480H0z"/>
+        <path fill="#ffc400" d="M0 120h640v240H0z"/>
+      </svg>
+    );
+  }
+  if (code === 'en') {
+    return (
+      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+        <path fill="#012169" d="M0 0h640v480H0z"/>
+        <path fill="#fff" d="m75 0 245 180L565 0h75v55L415 240l225 185v55h-75L320 300 75 480H0v-55l225-185L0 55V0z"/>
+        <path fill="#c8102e" d="m425 240 215 175v25h-35L390 265zm-210 0L0 415v25h35l215-175zm210 0L640 65V40h-35L390 215zm-210 0L0 65V40h35l215 175z"/>
+        <path fill="#fff" d="M240 0v480h160V0zM0 160v160h640V160z"/>
+        <path fill="#c8102e" d="M270 0v480h100V0zM0 190v100h640V190z"/>
+      </svg>
+    );
+  }
+  if (code === 'it') {
+    return (
+      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+        <path fill="#009246" d="M0 0h213.3v480H0z"/>
+        <path fill="#fff" d="M213.3 0h213.4v480H213.3z"/>
+        <path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/>
+      </svg>
+    );
+  }
+  if (code === 'cs') {
+    return (
+      <svg className={`${className} rounded-xs shadow-xs object-cover border border-white/20 shrink-0`} viewBox="0 0 640 480">
+        <path fill="#d7141a" d="M0 0h640v480H0z"/>
+        <path fill="#fff" d="M0 0h640v240H0z"/>
+        <path fill="#11457e" d="M0 0l320 240L0 480z"/>
+      </svg>
+    );
+  }
+  return null;
+};
+
 const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (lang: FanFormLanguage) => void; languages: typeof FAN_FORM_LANGUAGES }> = ({ language, onChange, languages }) => (
   <div className="flex items-center justify-center gap-1.5">
     {languages.map(l => (
@@ -35,13 +76,14 @@ const FanFormLanguageSwitcher: React.FC<{ language: FanFormLanguage; onChange: (
         type="button"
         onClick={() => onChange(l.code)}
         title={l.label}
-        className={`w-8 h-8 rounded-lg text-base flex items-center justify-center border transition-all ${
+        className={`px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 border transition-all cursor-pointer ${
           language === l.code
-            ? 'bg-amber-500/15 border-amber-500/50 shadow-inner'
-            : 'bg-neutral-950 border-neutral-800 hover:border-neutral-700 opacity-70 hover:opacity-100'
+            ? 'bg-amber-500/20 border-amber-500/60 text-amber-300 shadow-sm scale-105'
+            : 'bg-neutral-950/80 border-neutral-800 text-neutral-400 hover:border-neutral-700 hover:text-white opacity-80 hover:opacity-100'
         }`}
       >
-        {l.flag}
+        <FlagIcon code={l.code} className="w-4 h-3 shrink-0" />
+        <span className="uppercase">{l.code === 'en' ? 'GB' : l.code.toUpperCase()}</span>
       </button>
     ))}
   </div>
