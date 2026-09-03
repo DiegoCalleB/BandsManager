@@ -32,7 +32,7 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
     credits: '0 créditos IA',
     creditsSub: 'Sin funciones de IA',
     description: 'Para bandas que solo necesitan su dossier, QR y calendario en un festival o showcase.',
-    allowedModules: ['resumen', 'bandas', 'calendario', 'epk', 'fans'],
+    allowedModules: ['calendario', 'epk', 'fans'],
     features: [
       'Dossier de Prensa Interactivo (EPK)',
       'QR de contacto y difusión',

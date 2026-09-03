@@ -703,7 +703,8 @@ export default function App() {
  })}
  </nav>
 
- {/* Drawer Quick Tools (Metrónomo y Afinador) */}
+ {/* Drawer Quick Tools (Metrónomo y Afinador) — ocultos en plan Promo */}
+ {!isPromoPlan && (
  <div className="px-3 py-2 border-t border-[#22211F]/60 space-y-1.5">
    <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-1">Herramientas</p>
    <div className="grid grid-cols-2 gap-2">
@@ -732,6 +733,7 @@ export default function App() {
      </button>
    </div>
  </div>
+ )}
 
  {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
  {!isPromoPlan && (
@@ -975,6 +977,7 @@ export default function App() {
      </span>
    </button>
    )}
+   {!isPromoPlan && (
    <div className="grid grid-cols-2 gap-1.5">
      <button
        onClick={() => setShowMetronomeModal(true)}
@@ -1004,6 +1007,7 @@ export default function App() {
        </div>
      </button>
    </div>
+   )}
  </div>
 
  {/* Sidebar AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}

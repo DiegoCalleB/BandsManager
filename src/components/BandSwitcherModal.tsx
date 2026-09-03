@@ -647,28 +647,43 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </h3>
                   </div>
 
-                  {/* Plan Badge (Clickable to Upgrade/Downgrade) */}
+                  {/* Plan Badge (Clickable to Upgrade/Downgrade, unless Promo) */}
                   <div className="mt-1 flex items-center justify-center">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setSelectedBandForUpgrade(band);
-                        setShowUpgradeModal(true);
-                      }}
-                      className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border hover:scale-105 transition-all cursor-pointer shadow-xs group/plan"
-                      style={{
-                        backgroundColor: `${planDef.color}18`,
-                        color: planDef.color,
-                        borderColor: `${planDef.color}40`,
-                      }}
-                      title={`Plan actual: ${planDef.name}. Clic para Cambiar Plan (Upgrade / Downgrade)`}
-                    >
-                      <Crown className="w-2.5 h-2.5" />
-                      <span>{planDef.name}</span>
-                      <ArrowUpDown className="w-2.5 h-2.5 opacity-60 group-hover/plan:opacity-100" />
-                    </button>
+                    {band.plan === 'promo' ? (
+                      <span
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shadow-xs"
+                        style={{
+                          backgroundColor: `${planDef.color}18`,
+                          color: planDef.color,
+                          borderColor: `${planDef.color}40`,
+                        }}
+                        title={`Plan actual: ${planDef.name}`}
+                      >
+                        <Crown className="w-2.5 h-2.5" />
+                        <span>{planDef.name}</span>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          setSelectedBandForUpgrade(band);
+                          setShowUpgradeModal(true);
+                        }}
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border hover:scale-105 transition-all cursor-pointer shadow-xs group/plan"
+                        style={{
+                          backgroundColor: `${planDef.color}18`,
+                          color: planDef.color,
+                          borderColor: `${planDef.color}40`,
+                        }}
+                        title={`Plan actual: ${planDef.name}. Clic para Cambiar Plan (Upgrade / Downgrade)`}
+                      >
+                        <Crown className="w-2.5 h-2.5" />
+                        <span>{planDef.name}</span>
+                        <ArrowUpDown className="w-2.5 h-2.5 opacity-60 group-hover/plan:opacity-100" />
+                      </button>
+                    )}
                   </div>
 
                   {/* Active Status Badge (Only when active) */}
