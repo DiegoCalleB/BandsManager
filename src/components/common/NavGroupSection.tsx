@@ -15,6 +15,9 @@ interface NavGroupSectionProps {
   onToggleOpen: () => void;
   t: (key: string, fallback: string) => string;
   variant: 'desktop' | 'mobile';
+  /** Contenido extra (no-navegación, ej. accesos a Metrónomo/Afinador) mostrado
+   *  al final del grupo, solo mientras está abierto. */
+  children?: React.ReactNode;
 }
 
 export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
@@ -28,6 +31,7 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
   onToggleOpen,
   t,
   variant,
+  children,
 }) => {
   const items = group.itemIds.map((id) => NAV_ITEMS[id]).filter((item) => !item.adminOnly || isAdmin);
   if (items.length === 0) return null;
@@ -47,20 +51,23 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
       </button>
 
       {isOpen && (
-        <div className={variant === 'desktop' ? 'flex flex-col gap-0.5' : 'flex flex-col gap-1'}>
-          {items.map((item) => (
-            <NavItemButton
-              key={item.id}
-              item={item}
-              label={t(item.labelKey, item.labelDefault)}
-              isSelected={currentView === item.id}
-              isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
-              badge={navBadges[item.id]}
-              onNavigate={() => onNavigate(item.id)}
-              variant={variant}
-            />
-          ))}
-        </div>
+        <>
+          <div className={variant === 'desktop' ? 'flex flex-col gap-0.5' : 'flex flex-col gap-1'}>
+            {items.map((item) => (
+              <NavItemButton
+                key={item.id}
+                item={item}
+                label={t(item.labelKey, item.labelDefault)}
+                isSelected={currentView === item.id}
+                isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+                badge={navBadges[item.id]}
+                onNavigate={() => onNavigate(item.id)}
+                variant={variant}
+              />
+            ))}
+          </div>
+          {children}
+        </>
       )}
     </div>
   );

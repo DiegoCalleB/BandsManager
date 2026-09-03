@@ -38,12 +38,19 @@ describe('navGroups config', () => {
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
-    expect(findNavGroupIdForItem('calendario')).toBe('musica');
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
-    expect(findNavGroupIdForItem('booking')).toBe('booking-gestion');
-    expect(findNavGroupIdForItem('epk')).toBe('difusion-contenido');
+    expect(findNavGroupIdForItem('chat')).toBe('musica');
+    expect(findNavGroupIdForItem('booking')).toBe('contactos');
+    expect(findNavGroupIdForItem('epk')).toBe('promocion');
+    expect(findNavGroupIdForItem('giras')).toBe('negocio');
+    // Resumen y Calendario están fijos arriba, fuera de cualquier grupo colapsable.
     expect(findNavGroupIdForItem('resumen')).toBeUndefined();
+    expect(findNavGroupIdForItem('calendario')).toBeUndefined();
     expect(findNavGroupIdForItem('no-existe')).toBeUndefined();
+  });
+
+  it('pins exactly resumen and calendario outside any group', () => {
+    expect(new Set(NAV_PINNED_TOP_IDS)).toEqual(new Set(['resumen', 'calendario']));
   });
 
   it('threshold matches the intended split: only `promo` stays ungrouped', () => {

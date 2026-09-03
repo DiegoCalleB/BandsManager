@@ -40,10 +40,11 @@ import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, ge
 import { NAV_ITEMS, NAV_GROUPS, NAV_PINNED_TOP_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
+import { MusicToolsQuickLinks } from './components/common/MusicToolsQuickLinks';
 import { useLanguage } from './context/LanguageContext';
 import {
   Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
-  FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
+  FileCheck, CheckSquare, MessageSquareCode, RefreshCw,
   Settings, X, Bot, Guitar, Flame, Type, Heart, ChevronDown, Lock, Zap, Target
 } from 'lucide-react';
 
@@ -665,7 +666,15 @@ export default function App() {
        onToggleOpen={() => toggleNavGroup(group.id)}
        t={t}
        variant="mobile"
-     />
+     >
+       {group.id === 'musica' && (
+         <MusicToolsQuickLinks
+           variant="mobile"
+           onOpenMetronome={() => { setShowMetronomeModal(true); setIsMobileMenuOpen(false); }}
+           onOpenTuner={() => { setShowTunerModal(true); setIsMobileMenuOpen(false); }}
+         />
+       )}
+     </NavGroupSection>
    ))
  ) : (
    FLAT_NAV_ORDER_IDS
@@ -686,38 +695,6 @@ export default function App() {
      ))
  )}
  </nav>
-
- {/* Drawer Quick Tools (Metrónomo y Afinador) — ocultos en plan Promo */}
- {!isPromoPlan && (
- <div className="px-3 py-2 border-t border-[#22211F]/60 space-y-1.5">
-   <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-1">Herramientas</p>
-   <div className="grid grid-cols-2 gap-2">
-     <button
-       onClick={() => { setShowMetronomeModal(true); setIsMobileMenuOpen(false); }}
-       className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 transition-all cursor-pointer text-left active:scale-95"
-       title="Abrir Metrónomo WebAudio Pro"
-     >
-       <Clock className="w-4 h-4 text-amber-400 shrink-0" />
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
-         <span className="text-[9px] text-amber-400/70 font-mono truncate">Tap Tempo</span>
-       </div>
-     </button>
-
-     <button
-       onClick={() => { setShowTunerModal(true); setIsMobileMenuOpen(false); }}
-       className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-300 transition-all cursor-pointer text-left active:scale-95"
-       title="Abrir Afinador de Guitarra, Bajo y Ukelele"
-     >
-       <Guitar className="w-4 h-4 text-emerald-400 shrink-0" />
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-         <span className="text-[9px] text-emerald-400/70 font-mono truncate">Guitar, Bass & Uke</span>
-       </div>
-     </button>
-   </div>
- </div>
- )}
 
  {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
  {!isPromoPlan && (
@@ -876,7 +853,15 @@ export default function App() {
        onToggleOpen={() => toggleNavGroup(group.id)}
        t={t}
        variant="desktop"
-     />
+     >
+       {group.id === 'musica' && (
+         <MusicToolsQuickLinks
+           variant="desktop"
+           onOpenMetronome={() => setShowMetronomeModal(true)}
+           onOpenTuner={() => setShowTunerModal(true)}
+         />
+       )}
+     </NavGroupSection>
    ))
  ) : (
    FLAT_NAV_ORDER_IDS
@@ -898,19 +883,18 @@ export default function App() {
  )}
  </nav>
 
- {/* Bottom Quick Tools (Metrónomo y Afinador) (oculto en plan Promo) */}
+ {/* Campañas de Booking (oculto en plan Promo, no tiene acceso a Booking) */}
  {!isPromoPlan && (
    <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
      <div className="flex items-center justify-between px-1">
-       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Herramientas</p>
-       {/* Campañas de Booking: oculto en plan Promo, no tiene acceso a Booking */}
+       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Campañas</p>
        <button
          onClick={() => setShowCampaignModal(true)}
          className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
          title="Gestionar Campañas de Booking"
        >
          <Target className="w-3 h-3" />
-         <span>Campañas</span>
+         <span>Configurar</span>
        </button>
      </div>
 
@@ -941,36 +925,6 @@ export default function App() {
          {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
        </span>
      </button>
-
-     <div className="grid grid-cols-2 gap-1.5">
-       <button
-         onClick={() => setShowMetronomeModal(true)}
-         className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all cursor-pointer text-left active:scale-95 group"
-         title="Abrir Metrónomo WebAudio Pro"
-       >
-         <div className="p-1 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
-           <Clock className="w-3.5 h-3.5" />
-         </div>
-         <div className="flex flex-col min-w-0">
-           <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
-           <span className="text-[9px] text-amber-400/80 font-mono truncate">Click & Tap</span>
-         </div>
-       </button>
-
-       <button
-         onClick={() => setShowTunerModal(true)}
-         className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all cursor-pointer text-left active:scale-95 group"
-         title="Abrir Afinador de Guitarra, Bajo y Ukelele"
-       >
-         <div className="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
-           <Guitar className="w-3.5 h-3.5" />
-         </div>
-         <div className="flex flex-col min-w-0">
-           <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-           <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar, Bass & Uke</span>
-         </div>
-       </button>
-     </div>
    </div>
  )}
 

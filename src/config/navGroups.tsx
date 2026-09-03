@@ -39,32 +39,43 @@ export interface NavGroupDef {
   itemIds: NavItemId[];
 }
 
-/** Ítem fijo que siempre se muestra arriba, fuera de cualquier grupo colapsable. */
-export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen'];
+/**
+ * Ítems fijos que siempre se muestran arriba, fuera de cualquier grupo colapsable.
+ * Resumen y Calendario son las dos vistas que más se abren — quedan siempre a un
+ * clic, nunca escondidas dentro de un grupo cerrado.
+ */
+export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen', 'calendario'];
 
 /**
  * Agrupación usada cuando el plan de la banda desbloquea suficientes módulos
  * (ver MIN_MODULES_FOR_GROUPED_NAV) para justificar un menú por secciones
- * colapsables en vez de una lista plana.
+ * colapsables en vez de una lista plana. Agrupado por tipo de objeto que se
+ * gestiona (a quién le hablas / qué produces), no por "quién lo usa".
  */
 export const NAV_GROUPS: NavGroupDef[] = [
   {
-    id: 'booking-gestion',
-    titleKey: 'navGroup.bookingGestion',
-    titleDefault: 'Booking & Gestión',
-    itemIds: ['booking', 'medios', 'bandas', 'giras', 'finanzas', 'merchan'],
+    id: 'contactos',
+    titleKey: 'navGroup.contactos',
+    titleDefault: 'Contactos',
+    itemIds: ['booking', 'medios', 'bandas'],
   },
   {
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['calendario', 'repertorio', 'chat'],
+    itemIds: ['repertorio', 'chat'],
   },
   {
-    id: 'difusion-contenido',
-    titleKey: 'navGroup.difusionContenido',
-    titleDefault: 'Difusión & Contenido',
+    id: 'promocion',
+    titleKey: 'navGroup.promocion',
+    titleDefault: 'Promoción',
     itemIds: ['epk', 'fans', 'reels'],
+  },
+  {
+    id: 'negocio',
+    titleKey: 'navGroup.negocio',
+    titleDefault: 'Negocio',
+    itemIds: ['giras', 'finanzas', 'merchan'],
   },
 ];
 
