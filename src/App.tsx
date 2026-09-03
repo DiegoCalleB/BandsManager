@@ -935,84 +935,81 @@ export default function App() {
  })}
  </nav>
 
- {/* Bottom Quick Tools (Metrónomo y Afinador) */}
- <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
-   <div className="flex items-center justify-between px-1">
-     <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Herramientas</p>
-     {/* Campañas de Booking: oculto en plan Promo, no tiene acceso a Booking */}
-     {!isPromoPlan && (
+ {/* Bottom Quick Tools (Metrónomo y Afinador) (oculto en plan Promo) */}
+ {!isPromoPlan && (
+   <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
+     <div className="flex items-center justify-between px-1">
+       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Herramientas</p>
+       {/* Campañas de Booking: oculto en plan Promo, no tiene acceso a Booking */}
+       <button
+         onClick={() => setShowCampaignModal(true)}
+         className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
+         title="Gestionar Campañas de Booking"
+       >
+         <Target className="w-3 h-3" />
+         <span>Campañas</span>
+       </button>
+     </div>
+
+     {/* Quick Campaign Switcher / Status */}
      <button
        onClick={() => setShowCampaignModal(true)}
-       className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
-       title="Gestionar Campañas de Booking"
+       className={`w-full flex items-center justify-between p-2 rounded-xl border text-left transition-all cursor-pointer group ${
+         activeCampaign
+           ? 'bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-xs'
+           : 'bg-[#181716] border-[#22211F] hover:border-neutral-700 text-neutral-400 hover:text-neutral-200'
+       }`}
+       title="Configurar y activar campañas de booking con fechas objetivo"
      >
-       <Target className="w-3 h-3" />
-       <span>Campañas</span>
+       <div className="flex items-center gap-2 min-w-0">
+         <div className={`p-1 rounded-lg ${activeCampaign ? 'bg-purple-500/30 text-purple-300' : 'bg-neutral-800 text-neutral-400'}`}>
+           <Target className="w-3.5 h-3.5" />
+         </div>
+         <div className="flex flex-col min-w-0">
+           <span className="text-[11px] font-bold truncate leading-tight">
+             {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
+           </span>
+           <span className="text-[9px] font-mono text-neutral-500 truncate">
+             {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
+           </span>
+         </div>
+       </div>
+       <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 shrink-0">
+         {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
+       </span>
      </button>
-     )}
-   </div>
 
-   {/* Quick Campaign Switcher / Status (oculto en plan Promo) */}
-   {!isPromoPlan && (
-   <button
-     onClick={() => setShowCampaignModal(true)}
-     className={`w-full flex items-center justify-between p-2 rounded-xl border text-left transition-all cursor-pointer group ${
-       activeCampaign
-         ? 'bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-xs'
-         : 'bg-[#181716] border-[#22211F] hover:border-neutral-700 text-neutral-400 hover:text-neutral-200'
-     }`}
-     title="Configurar y activar campañas de booking con fechas objetivo"
-   >
-     <div className="flex items-center gap-2 min-w-0">
-       <div className={`p-1 rounded-lg ${activeCampaign ? 'bg-purple-500/30 text-purple-300' : 'bg-neutral-800 text-neutral-400'}`}>
-         <Target className="w-3.5 h-3.5" />
-       </div>
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">
-           {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
-         </span>
-         <span className="text-[9px] font-mono text-neutral-500 truncate">
-           {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
-         </span>
-       </div>
+     <div className="grid grid-cols-2 gap-1.5">
+       <button
+         onClick={() => setShowMetronomeModal(true)}
+         className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all cursor-pointer text-left active:scale-95 group"
+         title="Abrir Metrónomo WebAudio Pro"
+       >
+         <div className="p-1 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
+           <Clock className="w-3.5 h-3.5" />
+         </div>
+         <div className="flex flex-col min-w-0">
+           <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
+           <span className="text-[9px] text-amber-400/80 font-mono truncate">Click & Tap</span>
+         </div>
+       </button>
+
+       <button
+         onClick={() => setShowTunerModal(true)}
+         className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all cursor-pointer text-left active:scale-95 group"
+         title="Abrir Afinador de Guitarra, Bajo y Ukelele"
+       >
+         <div className="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
+           <Guitar className="w-3.5 h-3.5" />
+         </div>
+         <div className="flex flex-col min-w-0">
+           <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
+           <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar, Bass & Uke</span>
+         </div>
+       </button>
      </div>
-     <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 shrink-0">
-       {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
-     </span>
-   </button>
-   )}
-   {!isPromoPlan && (
-   <div className="grid grid-cols-2 gap-1.5">
-     <button
-       onClick={() => setShowMetronomeModal(true)}
-       className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all cursor-pointer text-left active:scale-95 group"
-       title="Abrir Metrónomo WebAudio Pro"
-     >
-       <div className="p-1 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
-         <Clock className="w-3.5 h-3.5" />
-       </div>
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
-         <span className="text-[9px] text-amber-400/80 font-mono truncate">Click & Tap</span>
-       </div>
-     </button>
-
-     <button
-       onClick={() => setShowTunerModal(true)}
-       className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all cursor-pointer text-left active:scale-95 group"
-       title="Abrir Afinador de Guitarra, Bajo y Ukelele"
-     >
-       <div className="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
-         <Guitar className="w-3.5 h-3.5" />
-       </div>
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-         <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar, Bass & Uke</span>
-       </div>
-     </button>
    </div>
-   )}
- </div>
+ )}
 
  {/* Sidebar AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
  {!isPromoPlan && (() => {
@@ -1050,6 +1047,33 @@ export default function App() {
      </div>
    );
  })()}
+
+ {/* Widget de Apoyo al Proyecto (Ko-fi) */}
+ <div className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-amber-500/10 border border-amber-500/30 hover:border-amber-400 transition-all group shadow-sm">
+   <a
+     href="https://ko-fi.com"
+     target="_blank"
+     rel="noopener noreferrer"
+     className="flex items-center gap-2.5 text-left cursor-pointer"
+     title="Apoya este proyecto para ayudar a más músicos como tú"
+   >
+     <div className="w-8 h-8 rounded-lg overflow-hidden border border-amber-500/40 bg-neutral-950 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+       <img
+         src="/Screenshot_20260824_164054_Google.jpg"
+         alt="Apoyo al Proyecto"
+         className="w-full h-full object-cover scale-110"
+       />
+     </div>
+     <div className="flex flex-col min-w-0">
+       <span className="text-[11px] font-bold text-white leading-tight group-hover:text-amber-300 transition-colors">
+         Apoya este proyecto
+       </span>
+       <span className="text-[9.5px] text-amber-300/90 font-mono truncate">
+         para ayudar a más músicos como tú
+       </span>
+     </div>
+   </a>
+ </div>
 
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">

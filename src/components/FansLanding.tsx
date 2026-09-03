@@ -1087,7 +1087,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
         </div>
 
         {/* REPRODUCTOR AUDIO PREVIEW DIRECTO (Single / Adelanto) */}
-        {audioPreviewConfig?.habilitado !== false && (
+        {audioPreviewConfig?.habilitado !== false && Boolean(audioPreviewConfig?.audioUrl?.trim()) && (
           <div className="p-3 rounded-2xl bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border border-amber-500/30 shadow-lg flex items-center justify-between gap-3 text-left">
             <button
               type="button"
