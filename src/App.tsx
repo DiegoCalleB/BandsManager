@@ -549,9 +549,8 @@ export default function App() {
  { id: 'repertorio', label: t('nav.repertorio', 'Temas'), icon: Disc3 },
  { id: 'chat', label: t('nav.chat', 'Agente AI'), icon: Guitar },
  ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchan'), icon: Sparkles }] : []),
- { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '🎁 Regalo' },
  ];
- })().filter((item) => !isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)).map((item) => {
+ })().filter((item) => item.id !== 'planes' && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id))).map((item) => {
  const isSelected = currentView === item.id;
  const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
@@ -663,7 +662,7 @@ export default function App() {
  ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
  { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
  ];
- })().filter((item) => !isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)).map((item) => {
+ })().filter((item) => item.id !== 'planes' && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id))).map((item) => {
  const isSelected = currentView === item.id;
  const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
@@ -895,7 +894,7 @@ export default function App() {
  ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
  { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
  ];
- })().filter((item) => !isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)).map((item) => {
+ })().filter((item) => item.id !== 'planes' && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id))).map((item) => {
  const isSelected = currentView === item.id;
  const IconComp = item.icon;
  
