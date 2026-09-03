@@ -44,8 +44,7 @@ On every push/PR, CI runs, in order: `npx tsc --noEmit` (see gate below), `npm r
 
 - **Frontend**: React 19 + Vite, entry `src/main.tsx` → `src/App.tsx`. Path alias `@/*` maps to the repo root (see `vite.config.ts` / `tsconfig.json`).
 - **Backend**: Express app defined in `server.ts` at the repo root, with routers mounted under `/api/*` from `server/routes/*.ts`. `npm run build` bundles `server.ts` to `dist/server.cjs` (via esbuild) alongside the Vite-built static frontend; `npm start` runs that single bundle, which serves both the API and the static assets.
-- **Deploy targets**: Railway (`railway.json`, `nixpacks.toml`, healthcheck at `/api/health`) is the primary target. `api/index.ts` (`export default app` from `server.ts`) exists for Vercel's serverless function convention (`vercel.json` rewrites `/api/*` there); don't assume both are equally maintained.
-- **`app/applet/`** and `assets/.aistudio/` are Google AI Studio applet scaffolding (the project originated as an AI Studio applet — see `metadata.json`, `.env.example`'s references to `APP_URL`/AI Studio secret injection). Treat these as legacy/parallel packaging, not the primary app path.
+- **Deploy target**: Railway (`railway.json`, `nixpacks.toml`, healthcheck at `/api/health`) is the only deploy target. The project originated as a Google AI Studio applet and briefly carried a parallel Vercel serverless entrypoint (`api/index.ts`/`vercel.json`) and AI Studio scaffolding (`app/applet/`, `assets/.aistudio/`, `metadata.json`) — all confirmed unused (no live deployment on either) and removed 2026-09-03. `.env.example`'s `APP_URL`/AI Studio secret-injection comments are the one remaining trace of that origin.
 
 ### Data layer: Supabase is the only source of truth
 
