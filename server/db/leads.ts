@@ -298,6 +298,8 @@ export async function dbUpsertLead(lead: any, bandId: string) {
       genero: payload.genero,
       tipo: payload.tipo,
       email_contacto: payload.email_contacto,
+      email_secundario: payload.email_secundario,
+      contacto_nombre: payload.contacto_nombre,
       telefono: payload.telefono,
       website: payload.website,
       instagram: payload.instagram,
@@ -310,6 +312,12 @@ export async function dbUpsertLead(lead: any, bandId: string) {
     };
     const { data: retryData, error: retryError } = await sb.from("leads").upsert(corePayload).select().single();
     if (retryError) {
+      if (retryError.message.includes("email_secundario")) {
+        const { email_secundario, ...withoutSec } = corePayload;
+        const { data: legacyData, error: legacyError } = await sb.from("leads").upsert(withoutSec).select().single();
+        if (legacyError) throw new Error(`Supabase Error (upsert lead): ${legacyError.message}`);
+        return legacyData;
+      }
       throw new Error(`Supabase Error (upsert lead): ${retryError.message}`);
     }
     return retryData;

@@ -647,9 +647,9 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                     </h3>
                   </div>
 
-                  {/* Plan Badge (Clickable to Upgrade/Downgrade, unless Promo) */}
+                  {/* Plan Badge (Static in beta/promo mode) */}
                   <div className="mt-1 flex items-center justify-center">
-                    {band.plan === 'promo' ? (
+                    {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' ? (
                       <span
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shadow-xs"
                         style={{
@@ -1233,7 +1233,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-3">
-                {Object.values(PLANS).map((plan) => {
+                {Object.values(PLANS).filter(p => !SIMPLE_PROMO_ONLY_BAND_CREATION || p.id === 'promo').map((plan) => {
                   const isCurrent = currentPlanDef.id === plan.id;
                   return (
                     <div

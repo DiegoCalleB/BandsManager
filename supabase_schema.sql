@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS leads (
     genero TEXT,
     tipo TEXT DEFAULT 'sala',
     email_contacto TEXT,
+    email_secundario TEXT DEFAULT '',
     telefono TEXT,
     website TEXT,
     instagram TEXT,

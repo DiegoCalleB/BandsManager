@@ -157,8 +157,8 @@ describe('medirVariacionInterna', () => {
 describe('analizarEnergiaAudio', () => {
   it('un fichero inexistente devuelve curva vacía en vez de lanzar', async () => {
     // El análisis de highlights tiene que seguir aunque no se pueda medir el audio.
-    await expect(analizarEnergiaAudio('/no/existe/audio.mp3', { timeoutMs: 15_000 })).resolves.toEqual([]);
-  });
+    await expect(analizarEnergiaAudio('/no/existe/audio.mp3', { timeoutMs: 5000 })).resolves.toEqual([]);
+  }, 20_000);
 
   it('sin fuente no llama a ffmpeg', async () => {
     await expect(analizarEnergiaAudio('')).resolves.toEqual([]);

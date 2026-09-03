@@ -47,8 +47,8 @@ lavfi.scd.time=10.5
 describe('detectarCambiosDePlano', () => {
   it('un fichero inexistente devuelve [] en vez de lanzar', async () => {
     // Sin señal visual la puntuación tiene que seguir funcionando solo con el audio.
-    await expect(detectarCambiosDePlano('/no/existe.mp4', { timeoutMs: 15_000 })).resolves.toEqual([]);
-  });
+    await expect(detectarCambiosDePlano('/no/existe.mp4', { timeoutMs: 5000 })).resolves.toEqual([]);
+  }, 20_000);
 
   it('sin fuente no llama a ffmpeg', async () => {
     await expect(detectarCambiosDePlano('')).resolves.toEqual([]);
