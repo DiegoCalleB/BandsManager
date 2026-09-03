@@ -1037,7 +1037,10 @@ export default function App() {
            className={`h-full rounded-full transition-all duration-500 ${
              pct > 85 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : 'bg-gradient-to-r from-amber-400 to-amber-500'
            }`} 
-  <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+           style={{ width: `${pct}%` }} 
+         />
+       </div>
+       <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
          <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
          <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
        </div>
