@@ -18,7 +18,6 @@ const TourManager = lazy(() => import('./components/TourManager'));
 const RepertorioSetlists = lazy(() => import('./components/RepertorioSetlists'));
 const Merchan = lazy(() => import('./components/Merchan'));
 const Chatbot = lazy(() => import('./components/Chatbot'));
-const GithubWorkflowTracker = lazy(() => import('./components/GithubWorkflowTracker'));
 const EPKManager = lazy(() => import('./components/EPKManager'));
 const FansPanel = lazy(() => import('./components/FansPanel'));
 const FansLanding = lazy(() => import('./components/FansLanding'));
@@ -42,7 +41,7 @@ import { useLanguage } from './context/LanguageContext';
 import { 
   Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
   Table, FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
-  Settings, Key, Github, X, CalendarRange, Bot, Guitar, Flame, Video, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Sliders, Target, QrCode
+  Settings, X, CalendarRange, Bot, Guitar, Flame, Video, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Target, QrCode
 } from 'lucide-react';
 
 export default function App() {
@@ -293,23 +292,6 @@ export default function App() {
     applyFontPreset(newFont);
   };
 
-  // GitHub Settings State
-  const [showGithubSettings, setShowGithubSettings] = useState(false);
-  const [githubPat, setGithubPat] = useState(() => localStorage.getItem('bakandeya_github_pat') || '');
-  const [githubOwner, setGithubOwner] = useState(() => localStorage.getItem('bakandeya_github_owner') || '');
-  const [githubRepo, setGithubRepo] = useState(() => localStorage.getItem('bakandeya_github_repo') || '');
-  const [githubRef, setGithubRef] = useState(() => localStorage.getItem('bakandeya_github_ref') || 'main');
-
-  useEffect(() => {
-    const handleRefUpdate = () => {
-      setGithubRef(localStorage.getItem('bakandeya_github_ref') || 'main');
-    };
-    window.addEventListener('github-ref-updated', handleRefUpdate);
-    return () => {
-      window.removeEventListener('github-ref-updated', handleRefUpdate);
-    };
-  }, []);
-
   // Handle Stripe Payment Redirect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -364,15 +346,6 @@ export default function App() {
     localStorage.setItem('bakandeya_theme', theme);
   };
 
- const handleSaveGithubSettings = (e: React.FormEvent) => {
- e.preventDefault();
- localStorage.setItem('bakandeya_github_pat', githubPat);
- localStorage.setItem('bakandeya_github_owner', githubOwner);
- localStorage.setItem('bakandeya_github_repo', githubRepo);
- localStorage.setItem('bakandeya_github_ref', githubRef);
- setShowGithubSettings(false);
- alert('¡Configuración de GitHub guardada con éxito! Ahora el chatbot y los disparadores usarán estas credenciales de forma segura.');
- };
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter(c => {
       if (!c.band_id && !c.bandName) return isSameBand(currentActiveBandId, "band-bakandeya", "", currentActiveBandName);
@@ -1388,208 +1361,6 @@ export default function App() {
  )}
  </div>
  </main>
-
- {/* GitHub Actions Settings Modal */}
- {showGithubSettings && (
- <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
- <div className={`w-full max-w-xl rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl relative overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200 ${
- false 
- ? 'bg-white border-slate-200 text-slate-800' 
- : 'bg-[#1c1b1b] border-[#f2ca50]/30 text-neutral-100'
- }`}>
- <div className={`absolute top-0 right-0 w-40 h-40 xl:w-48 xl:h-48 rounded-full blur-3xl pointer-events-none ${
- false ? 'bg-indigo-500/5' : 'bg-[#f2ca50]/5'
- }`} />
- 
- <div className="flex items-start justify-between">
- <div className="space-y-1">
- <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono tracking-wider uppercase font-bold ${
- false
- ? 'bg-indigo-50 border-indigo-100 text-indigo-600'
- : 'bg-[#f2ca50]/10 border-[#f2ca50]/20 text-[#f2ca50]'
- }`}>
- <Sliders className="w-3 h-3" /> Configuración Motor de Agentes
- </div>
- <h3 className={`text-lg font-black tracking-wider uppercase font-display ${
- false ? 'text-slate-900' : 'text-neutral-100'
- }`}>MOTOR DE AGENTES SUPABASE</h3>
- </div>
- <button 
- onClick={() => setShowGithubSettings(false)}
- className={`p-1 rounded-lg transition-colors active:scale-95 ${
- false
- ? 'hover:bg-slate-100 text-slate-400 hover:text-slate-600'
- : 'hover:bg-neutral-800 text-neutral-500 hover:text-neutral-300'
- }`}
- >
- <X className="w-5 h-5" />
- </button>
- </div>
-
- <p className={`text-xs leading-relaxed ${
- false ? 'text-slate-500' : 'text-neutral-400'
- }`}>
- Los agentes de Bakandeya (**Scout**, **Scout Descubridor**, **Redactor**, **Enviador** y **Lector de bandeja**) operan de forma nativa sobre **Supabase (PostgreSQL)**. Configura aquí los parámetros de ejecución y credenciales para lanzarlos desde el chatbot o panel de control.
- </p>
-
- <form onSubmit={handleSaveGithubSettings} className="space-y-4 font-sans">
- <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- false ? 'text-slate-500' : 'text-neutral-400'
- }`}>
- GitHub Personal Access Token (PAT)
- </label>
- <div className="relative">
- <span className={`absolute inset-y-0 left-0 pl-3 flex items-center ${
- false ? 'text-slate-400' : 'text-neutral-600'
- }`}>
- <Key className="w-4 h-4" />
- </span>
- <input
- type="password"
- value={githubPat}
- onChange={(e) => setGithubPat(e.target.value)}
- placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
- className={`w-full rounded-lg pl-9 pr-3 py-2 text-xs font-mono focus:outline-none ${
- false
- ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500 placeholder:text-slate-300'
- : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50] placeholder:text-neutral-800'
- }`}
- />
- </div>
- </div>
-
- <div className="grid grid-cols-3 gap-3">
- <div className="space-y-1.5">
- <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- false ? 'text-slate-500' : 'text-neutral-400'
- }`}>
- Propietario (Owner)
- </label>
- <input
- type="text"
- required
- value={githubOwner}
- onChange={(e) => setGithubOwner(e.target.value)}
- placeholder="DiegoCalleB"
- className={`w-full rounded-lg px-2.5 py-2 text-xs font-mono focus:outline-none ${
- false
- ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500'
- : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50]'
- }`}
- />
- </div>
- <div className="space-y-1.5 col-span-1">
- <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- false ? 'text-slate-500' : 'text-neutral-400'
- }`}>
- Repositorio (Repo)
- </label>
- <input
- type="text"
- required
- value={githubRepo}
- onChange={(e) => setGithubRepo(e.target.value)}
- placeholder="bakandeya-agent-manager"
- className={`w-full rounded-lg px-2.5 py-2 text-xs font-mono focus:outline-none ${
- false
- ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500'
- : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50]'
- }`}
- />
- </div>
- <div className="space-y-1.5 col-span-1">
- <label className={`block text-[10px] uppercase font-mono tracking-wider ${
- false ? 'text-slate-500' : 'text-neutral-400'
- }`}>
- Rama / Ref (Branch)
- </label>
- <input
- type="text"
- required
- value={githubRef}
- onChange={(e) => setGithubRef(e.target.value)}
- placeholder="main"
- className={`w-full rounded-lg px-2.5 py-2 text-xs font-mono focus:outline-none ${
- false
- ? 'bg-slate-50 border-slate-200 text-slate-800 focus:border-indigo-500'
- : 'bg-neutral-950 border-neutral-800 text-neutral-100 focus:border-[#f2ca50]'
- }`}
- />
- </div>
- </div>
-
- <div className={`p-3 rounded-xl flex gap-2.5 items-start ${
- false
- ? 'bg-slate-50 border-slate-200'
- : 'bg-neutral-950 border-neutral-800'
- }`}>
- <ShieldAlert className={`w-4 h-4 mt-0.5 shrink-0 ${
- false ? 'text-indigo-600' : 'text-[#f2ca50]'
- }`} />
- <p className={`text-[10px] leading-relaxed font-mono ${
- false ? 'text-slate-500' : 'text-neutral-400'
- }`}>
- <strong>Seguridad Local:</strong> Tus credenciales se guardan de forma segura temporal en el almacenamiento local de tu propio navegador (<code className={
- false ? 'text-indigo-600 font-bold' : 'text-[#f2ca50] font-mono'
- }>localStorage</code>). Nunca se guardan de forma permanente en servidores de terceros ni viajan públicamente.
- </p>
- </div>
-
- <div className="flex gap-3 pt-2">
- <button
- type="button"
- onClick={() => {
- // Antes este botón de "borrar tokens" reseteaba owner/repo al repositorio personal del
- // desarrollador (DiegoCalleB/bakandeya-agent-manager) en vez de dejarlos vacíos.
- setGithubPat('');
- setGithubOwner('');
- setGithubRepo('');
- setGithubRef('main');
- localStorage.removeItem('bakandeya_github_pat');
- localStorage.removeItem('bakandeya_github_owner');
- localStorage.removeItem('bakandeya_github_repo');
- localStorage.setItem('bakandeya_github_ref', 'main');
- setShowGithubSettings(false);
- // Dispatch custom event to notify state of ref update
- window.dispatchEvent(new Event('github-ref-updated'));
- alert('Se han borrado los tokens del almacenamiento local.');
- }}
- className={`px-4 py-2 font-mono text-xs rounded-lg transition-all cursor-pointer active:scale-95 ${
- false
- ? 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-700'
- : 'bg-neutral-950 hover:bg-neutral-800 border-neutral-800 hover:border-neutral-700 text-neutral-400 hover:text-neutral-200'
- }`}
- >
- Limpiar Claves
- </button>
- <button
- type="submit"
- className={`flex-1 py-2 font-mono font-bold text-xs tracking-wider uppercase rounded-lg transition-all cursor-pointer text-center active:scale-95 ${
- false
- ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/10'
- : 'bg-[#f2ca50] hover:bg-[#ffe088] text-[#3c2f00] shadow-lg shadow-[#f2ca50]/10'
- }`}
- >
- Guardar Configuración
- </button>
- </div>
- </form>
-
- {/* Workflow Action runs and Agent activity tracker */}
- <Suspense fallback={null}>
- <GithubWorkflowTracker
- githubPat={githubPat}
- githubOwner={githubOwner}
- githubRepo={githubRepo}
- githubRef={githubRef}
- colors={colors}
- currentTheme={currentTheme}
- />
- </Suspense>
- </div>
- </div>
- )}
 
  {/* User Management Modal for Band Leader */}
  {showUserManagementModal && isAdmin && !isPromoPlan && (

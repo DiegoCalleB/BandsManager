@@ -21,14 +21,6 @@ export async function dbMigrateAllPlansToNewTiers() {
         if (u.plan !== norm) {
           await sb.from("users").update({ plan: norm }).eq("id", u.id);
         }
-        // Force promo plan for lorenzo@gmail.com / promo test accounts
-        if (u.email && u.email.toLowerCase().includes("lorenzo")) {
-          await sb.from("users").update({ plan: "promo" }).eq("id", u.id);
-          if (u.band_id) {
-            const cleanBId = u.band_id.replace(/^(band|reg)-/, '');
-            await sb.from("registered_bands").update({ plan: "promo" }).eq("band_id", cleanBId);
-          }
-        }
       }
     }
   } catch (err) {
