@@ -1588,7 +1588,7 @@ export default function App() {
  )}
 
  {/* User Management Modal for Band Leader */}
- {showUserManagementModal && isAdmin && (
+ {showUserManagementModal && isAdmin && !isPromoPlan && (
  <UserManagementModal
  currentUser={currentUser}
  users={bandUsers}
@@ -1610,7 +1610,7 @@ export default function App() {
  }}
  isStitchLight={false}
  isAdmin={isAdmin}
- onOpenBandManagement={() => setShowUserManagementModal(true)}
+ onOpenBandManagement={!isPromoPlan ? () => setShowUserManagementModal(true) : undefined}
  currentTheme={currentTheme}
  onThemeChange={handleThemeChange}
  currentFont={currentFont}

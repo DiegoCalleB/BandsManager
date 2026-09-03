@@ -1004,7 +1004,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
 
  {/* Admin Band Management Section inside Profile */}
- {isAdmin && onOpenBandManagement && (
+ {isAdmin && onOpenBandManagement && !isPromoUser && (
  <div className="pt-2 -neutral-800/80 space-y-2">
  <label className="text-xs font-mono font-semibold text-neutral-400 flex items-center justify-between">
  <span className="flex items-center gap-1.5">
@@ -1062,7 +1062,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <div className={`px-6 py-3 flex justify-between items-center ${
  isStitchLight ? '-slate-200 bg-slate-50' : '-neutral-800 bg-neutral-950/60'
  }`}>
- {isAdmin && onOpenBandManagement ? (
+ {isAdmin && onOpenBandManagement && !isPromoUser ? (
  <button
  onClick={() => {
  onClose();

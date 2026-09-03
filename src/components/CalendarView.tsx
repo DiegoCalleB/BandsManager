@@ -5,6 +5,7 @@ import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, Refres
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
 import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
+import { normalizePlan } from '../utils/planPermissions';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -25,7 +26,7 @@ interface CalendarViewProps {
  currentBandName?: string;
  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
  bandUsers?: Array<{ id: string; name: string; username?: string; role?: string; instrument?: string; band_id?: string; bandName?: string }>;
- currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string };
+ currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string; plan?: string };
 }
 
 interface RunOfShowItem {
@@ -62,6 +63,7 @@ export default function CalendarView({
  bandUsers = [],
  currentUser
 }: CalendarViewProps) {
+ const isPromoPlan = normalizePlan(currentUser?.plan) === 'promo';
  const realToday = new Date();
  const [viewDate, setViewDate] = useState<Date>(() => new Date(realToday.getFullYear(), realToday.getMonth(), 1));
  const [selectedDate, setSelectedDate] = useState<Date>(() => realToday);
@@ -1232,25 +1234,29 @@ export default function CalendarView({
           <span>+ Concierto</span>
         </button>
 
-        <button
-          id="export-ics-btn"
-          onClick={() => setShowSyncModal(true)}
-          className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
-            isStitchLight
-              ? "bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300/80"
-              : "bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-500/30"
-          }`}
-          title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
-        >
-          <Radio className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-          <span>Sincronizar Calendario</span>
-        </button>
+        {!isPromoPlan && (
+          <>
+            <button
+              id="export-ics-btn"
+              onClick={() => setShowSyncModal(true)}
+              className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
+                isStitchLight
+                  ? "bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300/80"
+                  : "bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-500/30"
+              }`}
+              title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
+            >
+              <Radio className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>Sincronizar Calendario</span>
+            </button>
 
-        <span className={`hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold ${
-          isStitchLight ? "bg-sky-500/15 text-sky-400" : "bg-[#b8d6b8]/10 text-[#b8d6b8]"
-        }`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping shrink-0" /> Sync Auto
-        </span>
+            <span className={`hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold ${
+              isStitchLight ? "bg-sky-500/15 text-sky-400" : "bg-[#b8d6b8]/10 text-[#b8d6b8]"
+            }`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping shrink-0" /> Sync Auto
+            </span>
+          </>
+        )}
       </div>
     </div>
 
@@ -1874,7 +1880,7 @@ export default function CalendarView({
   </div>
   )}
 
-  {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
+  {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
  <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-neutral-800/60 mt-2">
  <Users className="w-4 h-4 text-sky-400 shrink-0" />
  <span className={`font-mono ${textSub}`}>Convocatoria:</span>
