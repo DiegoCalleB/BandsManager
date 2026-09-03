@@ -1,7 +1,7 @@
 import express from "express";
 import crypto from "crypto";
 import { ACTIVE_SESSIONS, verifyPassword, hashPassword, getSafeUsers } from "../auth.js";
-import { loadState, saveState, requireAuth, requireLeader, getEpkConfigForBand, BAKANDEYA_BAND_ID, getUserFromRequestLocal } from "../state.js";
+import { loadState, saveState, requireAuth, requireLeader, getEpkConfigForBand, getUserFromRequestLocal } from "../state.js";
 import {
   dbGetUsers,
   dbUpsertUser,
@@ -77,7 +77,11 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     return normalizePlan(regBand?.plan || fallbackPlan || 'ensayo');
   };
 
-  const mainClean = (targetUser.main_band_id || targetUser.band_id || BAKANDEYA_BAND_ID).replace(/^(band|reg)-/, '');
+  // cleanBandId ya resuelve el caso de un usuario sin main_band_id NI band_id con un centinela
+  // que no coincide con ninguna banda real (ver su comentario más arriba), en vez de caer en
+  // BAKANDEYA_BAND_ID: una cuenta rota sin banda asignada no debe etiquetarse como perteneciente
+  // a la banda insignia del fundador.
+  const mainClean = cleanBandId(targetUser.main_band_id || targetUser.band_id);
 
   // 1. Bands from state.userBands
   const userBandsList = state.userBands.filter((ub: any) =>
@@ -160,11 +164,13 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
   });
 
   // 4. Current active band
-  const currentBid = targetUser.band_id || BAKANDEYA_BAND_ID;
-  const cleanCurrent = currentBid.replace(/^(band|reg)-/, '');
+  // Mismo criterio que mainClean más arriba: una cuenta sin band_id es un dato roto, no un
+  // motivo para sintetizar una banda "actual" con la identidad real de Bakandeya.
+  const currentBid = targetUser.band_id || `band-${cleanBandId(undefined)}`;
+  const cleanCurrent = cleanBandId(currentBid);
   if (!seenCleanBandIds.has(cleanCurrent)) {
     seenCleanBandIds.add(cleanCurrent);
-    const bName = targetUser.bandName || targetUser.name || "BAKANDEYA";
+    const bName = targetUser.bandName || targetUser.name || "Banda";
     availableBands.push({
       band_id: currentBid,
       bandName: bName,
@@ -212,7 +218,7 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     return 0;
   });
 
-  if (normalizePlan(targetUser.plan) === 'promo' || (userEmail && userEmail.includes('lorenzo'))) {
+  if (normalizePlan(targetUser.plan) === 'promo') {
     availableBands.forEach(b => { b.plan = 'promo'; });
   }
 
