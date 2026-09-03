@@ -918,8 +918,33 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
   const state = loadState();
   const cleanInput = emailOrUsername.trim().toLowerCase();
 
+  // Sync users from Supabase to support persistent logins across serverless restarts
+  try {
+    const dbUsers = await dbGetUsers();
+    if (dbUsers && dbUsers.length > 0) {
+      dbUsers.forEach((su: any) => {
+        const idx = state.users.findIndex(
+          (u: any) =>
+            u.id === su.id ||
+            (u.username && u.username.toLowerCase().trim() === su.username?.toLowerCase().trim()) ||
+            (u.email && u.email.toLowerCase().trim() === su.email?.toLowerCase().trim())
+        );
+        if (idx !== -1) {
+          state.users[idx] = { ...state.users[idx], ...su };
+        } else {
+          state.users.push(su);
+        }
+      });
+      saveState(state);
+    }
+  } catch (err) {
+    // Continue with memory state if database call fails
+  }
+
   const user = (state.users || []).find(
-    (u: any) => u.username.toLowerCase() === cleanInput || u.email?.toLowerCase() === cleanInput
+    (u: any) =>
+      (u.username && u.username.toLowerCase().trim() === cleanInput) ||
+      (u.email && u.email.toLowerCase().trim() === cleanInput)
   );
 
   if (!user) {
@@ -931,14 +956,27 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
   const expiresAt = Date.now() + 15 * 60 * 1000; // 15 mins
 
   // Store reset code on user object(s) with matching email/username
-  (state.users || []).forEach((u: any) => {
-    if (u.username.toLowerCase() === cleanInput || u.email?.toLowerCase() === cleanInput) {
-      u.resetCode = code;
-      u.resetCodeExpires = expiresAt;
-    }
+  const matchingUsers = (state.users || []).filter(
+    (u: any) =>
+      (u.username && u.username.toLowerCase().trim() === cleanInput) ||
+      (u.email && u.email.toLowerCase().trim() === cleanInput)
+  );
+
+  matchingUsers.forEach((u: any) => {
+    u.resetCode = code;
+    u.resetCodeExpires = expiresAt;
   });
 
   saveState(state);
+
+  // Sync reset code to Supabase asynchronously
+  for (const u of matchingUsers) {
+    try {
+      await dbUpsertUser(u);
+    } catch (e) {
+      // Non-blocking
+    }
+  }
 
   // Mask email for privacy display
   const userEmail = user.email || user.username;
@@ -953,10 +991,6 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
 
   return res.json({
     success: true,
-    // TODO: el envío real por email todavía no está integrado (no hay proveedor
-    // de email configurado) - se devuelve el código directamente en la respuesta
-    // para que el frontend lo muestre en pantalla, en vez de prometer un envío
-    // que nunca llega.
     message: `Código de verificación generado para ${maskedEmail}`,
     emailMasked: maskedEmail,
     code
@@ -979,8 +1013,33 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
   const cleanInput = emailOrUsername.trim().toLowerCase();
   const cleanCode = String(code).trim();
 
+  // Sync users from Supabase first
+  try {
+    const dbUsers = await dbGetUsers();
+    if (dbUsers && dbUsers.length > 0) {
+      dbUsers.forEach((su: any) => {
+        const idx = state.users.findIndex(
+          (u: any) =>
+            u.id === su.id ||
+            (u.username && u.username.toLowerCase().trim() === su.username?.toLowerCase().trim()) ||
+            (u.email && u.email.toLowerCase().trim() === su.email?.toLowerCase().trim())
+        );
+        if (idx !== -1) {
+          state.users[idx] = { ...state.users[idx], ...su };
+        } else {
+          state.users.push(su);
+        }
+      });
+      saveState(state);
+    }
+  } catch (err) {
+    // Continue
+  }
+
   const matchingUsers = (state.users || []).filter(
-    (u: any) => u.username.toLowerCase() === cleanInput || u.email?.toLowerCase() === cleanInput
+    (u: any) =>
+      (u.username && u.username.toLowerCase().trim() === cleanInput) ||
+      (u.email && u.email.toLowerCase().trim() === cleanInput)
   );
 
   if (matchingUsers.length === 0) {
@@ -996,13 +1055,18 @@ router.post("/auth/reset-password/confirm", loginRateLimiter, async (req, res) =
   // Hash new password
   const { hash, salt } = hashPassword(newPassword.trim());
 
-  // Update password for all user records sharing this email/username
-  matchingUsers.forEach((u: any) => {
+  // Update password for all user records sharing this email/username and sync to Supabase
+  for (const u of matchingUsers) {
     u.passwordHash = hash;
     u.salt = salt;
     delete u.resetCode;
     delete u.resetCodeExpires;
-  });
+    try {
+      await dbUpsertUser(u);
+    } catch (e) {
+      console.warn("Could not sync updated password to Supabase:", e);
+    }
+  }
 
   saveState(state);
 
