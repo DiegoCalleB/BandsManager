@@ -57,5 +57,37 @@ jobs:
       - name: Build check (bundle con esbuild)
         run: npm run lint
 
+      - name: ESLint ratchet
+        run: |
+          set +e
+          npx eslint . -f json > /tmp/eslint_output.json
+          set -e
+
+          TOTAL=$(node -e "const fs=require('fs'); const d=JSON.parse(fs.readFileSync('/tmp/eslint_output.json','utf8')); console.log(d.reduce((n,f)=>n+f.messages.length,0));")
+          HOOKS_ROTOS=$(node -e "const fs=require('fs'); const d=JSON.parse(fs.readFileSync('/tmp/eslint_output.json','utf8')); console.log(d.reduce((n,f)=>n+f.messages.filter(m=>m.ruleId==='react-hooks/rules-of-hooks').length,0));")
+          echo "Total hallazgos de eslint: $TOTAL"
+          echo "Violaciones de rules-of-hooks (hooks condicionales/tras return - cuentan cambia entre renders): $HOOKS_ROTOS"
+
+          # Tolerancia cero para rules-of-hooks: un hook llamado tras un return condicional o
+          # dentro de un condicional no es un aviso de estilo, es un bug garantizado en cuanto
+          # cambie el número de hooks entre renders. CLAUDE.md documenta que ya se corrigieron
+          # los 7 componentes que lo tenían (recuento real 2026-09-03: 0) - que no vuelva a subir.
+          if [ "$HOOKS_ROTOS" -gt 0 ]; then
+            echo "::error::Hay $HOOKS_ROTOS violaciones de react-hooks/rules-of-hooks - esto rompe el render, no es solo un lint nit. Revisa el log de arriba."
+            exit 1
+          fi
+
+          # Ratchet: no dejar que la deuda general de eslint (sobre todo no-explicit-any /
+          # no-unused-vars heredados de AI Studio, ver CLAUDE.md - arreglarlo de golpe es un
+          # esfuerzo aparte, deliberadamente no incluido aquí) crezca por encima del baseline
+          # conocido (2026-09-03: recuento real 2736). Baja este número cuando arregles hallazgos
+          # existentes; nunca lo subas sin justificar por qué. Margen de 20 para no romper CI por
+          # una sola actualización menor de eslint/typescript-eslint.
+          BASELINE=2756
+          if [ "$TOTAL" -gt "$BASELINE" ]; then
+            echo "::error::El total de hallazgos de eslint ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear - no hace falta arreglar la deuda existente, pero no añadas más."
+            exit 1
+          fi
+
       - name: Tests
         run: npm test
