@@ -1,6 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
-import { analizarEnergiaAudio, medirVariacionInterna } from "../utils/audioEnergy.js";
+import { analizarEnergiaAudio, medirVariacionInterna, calcularNivelEnergiaGlobal } from "../utils/audioEnergy.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 
@@ -18,6 +18,7 @@ export async function analizarYGuardarDinamicaCancion(
   const curva = await analizarEnergiaAudio(audioUrl, { timeoutMs: 90_000 });
   const audioAnalizable = curva.length > 1;
   const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
+  const energia = audioAnalizable ? calcularNivelEnergiaGlobal(curva) : 10;
 
   // Si el audio no se pudo analizar (descarga fallida, ffmpeg sin salida, etc.) NO se marca
   // energia_variacion_calculada_en: dejar la canción "sin analizar" para que la próxima repesca
@@ -48,7 +49,7 @@ export async function analizarYGuardarDinamicaCancion(
 
   const { data, error } = await sb
     .from("songs")
-    .update({ energia_variacion: variacion, energia_variacion_calculada_en: new Date().toISOString() })
+    .update({ energia, energia_variacion: variacion, energia_variacion_calculada_en: new Date().toISOString() })
     .eq("id", songId)
     .in("band_id", candidateIds)
     .select("id");
