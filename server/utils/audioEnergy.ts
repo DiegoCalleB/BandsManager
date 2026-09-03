@@ -147,6 +147,36 @@ export function medirVariacionInterna(curva: PuntoEnergia[]): number {
   return Math.max(0, Math.min(10, stdDev / 5));
 }
 
+/**
+ * Calcula la energía global (1-20) de un audio basada en su RMS promedio.
+ *
+ * Mapea el nivel de volumen característico del audio a la escala 1-20:
+ * - 1-8: balada (muy tranquilo, -50 a -35 dB)
+ * - 9-14: media (groove estable, -35 a -20 dB)
+ * - 15-18: alta (caña, -20 a -10 dB)
+ * - 19-20: explosiva (muy alto, > -10 dB)
+ *
+ * Usa la media de RMS (no relativo al tema, sino dB absoluto músical), mapeado a 1-20
+ * con una escala que asume rango típico de -50 a 0 dB en archivos de audio reales.
+ */
+export function calcularNivelEnergiaGlobal(curva: PuntoEnergia[]): number {
+  if (!Array.isArray(curva) || curva.length === 0) return 10; // default medio
+
+  const rmsValues = curva
+    .map((p) => p.db)
+    .filter((db) => db > DB_SILENCIO + 10); // -80 dB threshold: descarta silencio absoluto
+
+  if (rmsValues.length === 0) return 1; // todo silencio
+
+  const avgDb = rmsValues.reduce((a, b) => a + b, 0) / rmsValues.length;
+
+  // Mapeo lineal: -50 dB → 1, 0 dB → 20
+  // Formula: energia = 1 + ((avgDb + 50) / 50) * 19
+  const energia = 1 + ((avgDb + 50) / 50) * 19;
+
+  return Math.max(1, Math.min(20, Math.round(energia)));
+}
+
 function mmss(segundos: number): string {
   const s = Math.max(0, Math.floor(segundos));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
