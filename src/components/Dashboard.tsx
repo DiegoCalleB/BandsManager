@@ -408,85 +408,121 @@ export default function Dashboard({
  // propio resumen reducido, aparte, que solo usa lo que ese plan permite: EPK, calendario y fans.
  const isPromo = normalizePlan(currentUser?.plan) === 'promo';
  if (isPromo) {
-   return (
-     <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
-       <div className="mb-2">
-         <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
-         <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Panel de {activeBandName}</p>
-       </div>
+    return (
+      <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
+        <div className="mb-2 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
+            <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Panel de {activeBandName}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onNavigate && onNavigate('calendario')}
+            className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+          >
+            <Calendar className="w-4 h-4" />
+            <span>Ver Calendario Completo</span>
+          </button>
+        </div>
 
-       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-         <button
-           type="button"
-           onClick={() => onNavigate && onNavigate('epk')}
-           className="text-left p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800 hover:border-amber-500/40 transition-all cursor-pointer"
-         >
-           <div className="flex items-center gap-2 text-amber-400 mb-2">
-             <FileText className="w-4 h-4" />
-             <span className="text-xs font-mono font-bold uppercase tracking-wider">Dossier (EPK)</span>
-           </div>
-           <p className="text-xs text-neutral-400">Tu presentación pública: bio, fotos, contacto y enlaces para salas y prensa.</p>
-           <span className="inline-flex items-center gap-1 mt-3 text-xs font-mono font-bold text-amber-400">
-             Editar dossier <ArrowRight className="w-3.5 h-3.5" />
-           </span>
-         </button>
+        {/* 1. SECCIÓN ÚNICA: PRÓXIMAS FECHAS Y AGENDA */}
+        <div className="p-6 rounded-2xl bg-[#18181b]/90 border border-neutral-800/80 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold font-display uppercase tracking-wider text-neutral-100">
+                  Próximas Fechas y Agenda
+                </h3>
+                <p className="text-xs font-mono text-neutral-400">
+                  Conciertos y ensayos programados para {activeBandName}.
+                </p>
+              </div>
+            </div>
 
-         <button
-           type="button"
-           onClick={() => onNavigate && onNavigate('calendario')}
-           className="text-left p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800 hover:border-amber-500/40 transition-all cursor-pointer"
-         >
-           <div className="flex items-center gap-2 text-amber-400 mb-2">
-             <Calendar className="w-4 h-4" />
-             <span className="text-xs font-mono font-bold uppercase tracking-wider">Calendario</span>
-           </div>
-           <p className="text-xs text-neutral-400">
-             {upcomingEvents.length > 0
-               ? `${upcomingEvents.length} próxima${upcomingEvents.length === 1 ? '' : 's'} fecha${upcomingEvents.length === 1 ? '' : 's'} (conciertos y ensayos).`
-               : 'Sin fechas programadas todavía.'}
-           </p>
-           <span className="inline-flex items-center gap-1 mt-3 text-xs font-mono font-bold text-amber-400">
-             Ver agenda <ArrowRight className="w-3.5 h-3.5" />
-           </span>
-         </button>
+            <button
+              type="button"
+              onClick={() => onNavigate && onNavigate('calendario')}
+              className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+            >
+              <span>Ver agenda completa</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-         <button
-           type="button"
-           onClick={() => onNavigate && onNavigate('fans')}
-           className="text-left p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800 hover:border-amber-500/40 transition-all cursor-pointer"
-         >
-           <div className="flex items-center gap-2 text-amber-400 mb-2">
-             <Users className="w-4 h-4" />
-             <span className="text-xs font-mono font-bold uppercase tracking-wider">Fans</span>
-           </div>
-           <p className="text-xs text-neutral-400">
-             {fans.length > 0 ? `${fans.length} fan${fans.length === 1 ? '' : 's'} captado${fans.length === 1 ? '' : 's'} vía QR.` : 'Aún no has captado fans. Comparte tu QR.'}
-           </p>
-           <span className="inline-flex items-center gap-1 mt-3 text-xs font-mono font-bold text-amber-400">
-             Ver fans <ArrowRight className="w-3.5 h-3.5" />
-           </span>
-         </button>
-       </div>
+          {upcomingEvents.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+              {upcomingEvents.slice(0, 6).map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: item.id, selectedDate: item.dateStr })}
+                  className="p-4 rounded-xl bg-[#121214] border border-neutral-800/90 hover:border-amber-500/40 transition-all flex flex-col justify-between cursor-pointer hover:scale-[1.01]"
+                >
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-12 h-12 rounded-xl bg-[#1c1b1b] text-neutral-100 flex flex-col items-center justify-center shrink-0 shadow-sm border border-neutral-800">
+                      <span className="text-lg font-mono font-black leading-none text-amber-400">
+                        {item.day}
+                      </span>
+                      <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-300 mt-0.5">
+                        {item.month}
+                      </span>
+                    </div>
 
-       {upcomingEvents.length > 0 && (
-         <div className="p-5 rounded-2xl bg-[#18181b]/90 border border-neutral-800">
-           <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100 mb-3">Próximas fechas</h3>
-           <div className="space-y-2">
-             {upcomingEvents.slice(0, 5).map((ev, i) => (
-               <div key={i} className="flex items-center justify-between text-xs p-2.5 rounded-xl bg-neutral-900/60 border border-neutral-800/80">
-                 <div>
-                   <p className="font-semibold text-neutral-200">{ev.title}</p>
-                   <p className="text-neutral-500 font-mono">{ev.location}</p>
-                 </div>
-                 <span className="text-neutral-400 font-mono">{ev.day} {ev.month}</span>
-               </div>
-             ))}
-           </div>
-         </div>
-       )}
-     </div>
-   );
- }
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
+                          item.type === 'concierto'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                        }`}>
+                          {item.type}
+                        </span>
+                        <span className="text-[10px] font-mono text-neutral-400">
+                          • {item.badge}
+                        </span>
+                      </div>
+
+                      <h4 className="text-base font-bold font-display tracking-wide mt-1.5 text-neutral-100 truncate">
+                        {item.title}
+                      </h4>
+
+                      <p className="text-xs font-semibold mt-1 flex items-center gap-1 text-zinc-300 truncate">
+                        <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                        <span>{item.location}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 pt-2.5 border-t border-neutral-800 text-xs font-mono text-neutral-400 flex items-center justify-between">
+                    <span className="truncate">{item.details}</span>
+                    <ArrowRight className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-8 rounded-xl bg-[#121214] border border-neutral-800/80 text-center space-y-3">
+              <Calendar className="w-8 h-8 text-neutral-500 mx-auto" />
+              <div>
+                <p className="text-sm font-bold text-neutral-200 font-display">No hay próximas fechas programadas</p>
+                <p className="text-xs font-mono text-neutral-400 mt-0.5">Añade conciertos o ensayos desde el calendario para ver tu agenda aquí.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('calendario')}
+                className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Ir al Calendario</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
  return (
  <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
