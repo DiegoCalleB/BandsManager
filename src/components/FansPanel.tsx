@@ -41,6 +41,8 @@ interface FansPanelProps {
   isStitchLight?: boolean;
   onNavigate?: (view: 'epk') => void;
   isPromo?: boolean;
+  onUpdateConcert?: (id: string, updates: Partial<Concert>) => void;
+  initialConcertId?: string;
 }
 
 const COLORS = ['#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#64748b'];
@@ -68,18 +70,30 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   colors,
   isStitchLight,
   onNavigate,
-  isPromo = false
+  isPromo = false,
+  onUpdateConcert,
+  initialConcertId
 }) => {
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
   const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
-  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(isPromo ? 'qr' : 'metrics');
+  const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(
+    initialConcertId || isPromo ? 'qr' : 'metrics'
+  );
   const [viewMode, setViewMode] = useState<'feed' | 'grid' | 'table' | 'map'>('feed');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOrigen, setFilterOrigen] = useState<string>('');
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('');
   const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>('');
-  const [selectedConcertId, setSelectedConcertId] = useState<string>('');
+  const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId || '');
+  const [savedToConcertFeedback, setSavedToConcertFeedback] = useState(false);
+
+  useEffect(() => {
+    if (initialConcertId) {
+      setSelectedConcertId(initialConcertId);
+      setActiveTab('qr');
+    }
+  }, [initialConcertId]);
 
   // Configurable City Tabs state (synced with DB epkConfig.ciudadesConfig)
   const [customCityChips, setCustomCityChips] = useState<string[]>(() => {
@@ -1307,6 +1321,29 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <p className="font-mono text-amber-300 font-bold break-all bg-slate-950 p-2 rounded-lg border border-slate-800 text-[11px]">
                     {qrConcertUrl}
                   </p>
+
+                  {selectedConcert && onUpdateConcert && (
+                    <div className="pt-2 border-t border-slate-800/80">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onUpdateConcert(selectedConcert.id, { customQrUrl: qrConcertUrl });
+                          setSavedToConcertFeedback(true);
+                          setTimeout(() => setSavedToConcertFeedback(false), 3500);
+                        }}
+                        className={`w-full py-2.5 px-3 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-md ${
+                          savedToConcertFeedback
+                            ? 'bg-emerald-500 text-slate-950'
+                            : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+                        }`}
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                        {savedToConcertFeedback 
+                          ? '¡QR Asignado a este Concierto en el Calendario!' 
+                          : '💾 Asignar este QR a este Concierto en el Calendario'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Rehearsal, Concert, ThemeColors, BookingCampaign } from '../types';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings } from 'lucide-react';
+import QRCode from 'react-qr-code';
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
 import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
@@ -76,6 +77,7 @@ export default function CalendarView({
  // ve en el panel de detalle. Sin esto, el panel siempre mostraba el primero del array y el resto
  // era invisible salvo el pequeño acceso directo de "editar ficha" en las chapas del día.
  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+ const [copiedQrId, setCopiedQrId] = useState<string | null>(null);
 
  // Band view filter state: 'active' (Solo la banda activa) vs 'all' (Todas las bandas asignadas)
  const [filterBandMode, setFilterBandMode] = useState<'active' | 'all'>('active');
@@ -1888,16 +1890,97 @@ export default function CalendarView({
   )}
 
   {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
- <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-neutral-800/60 mt-2">
- <Users className="w-4 h-4 text-sky-400 shrink-0" />
- <span className={`font-mono ${textSub}`}>Convocatoria:</span>
- <span className="font-bold font-mono text-sky-400">
- {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
- ? 'Banda Completa'
- : `Parcial (${(selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres || []).join(', ') || 'Seleccionados'})`}
- </span>
- </div>
- )}
+  <div className="flex items-center gap-2 text-[10px] pt-2 border-t border-neutral-800/60 mt-2">
+  <Users className="w-4 h-4 text-sky-400 shrink-0" />
+  <span className={`font-mono ${textSub}`}>Convocatoria:</span>
+  <span className="font-bold font-mono text-sky-400">
+  {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
+  ? 'Banda Completa'
+  : `Parcial (${(selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres || []).join(', ') || 'Seleccionados'})`}
+  </span>
+  </div>
+  )}
+
+  {/* WIDGET QR DEL CONCIERTO (ACCESO RÁPIDO & CONFIGURACIÓN) */}
+  {selectedConcert && (() => {
+  const host = typeof window !== 'undefined' ? window.location.origin : 'https://bands-manager.up.railway.app';
+  const cleanCity = (selectedConcert.ciudad || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanSala = (selectedConcert.sala || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const bandCode = (selectedConcert.band_id || currentBandId || activeBandId || '').replace(/^(band|reg)-/, '');
+  const defaultUrl = `${host}/unete${cleanCity || cleanSala ? `/${cleanCity}-${cleanSala}` : ''}${bandCode ? `?band=${encodeURIComponent(bandCode)}` : ''}`;
+  const targetQrUrl = selectedConcert.customQrUrl || defaultUrl;
+
+  return (
+  <div className={`mt-3 pt-3 border-t ${isStitchLight ? 'border-slate-200' : 'border-neutral-800/80'}`}>
+  <div className="flex items-center justify-between gap-1 mb-2">
+  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400">
+  <QrCode className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+  <span>QR Bolo & Captación Fans:</span>
+  </div>
+  {onNavigate && (
+  <button
+  type="button"
+  onClick={() => onNavigate('fans', { concertId: selectedConcert.id })}
+  className="text-[9px] font-mono text-amber-400/90 hover:text-amber-300 hover:underline flex items-center gap-1 cursor-pointer font-bold"
+  title="Configurar el QR y la experiencia del fan para este concierto"
+  >
+  <Settings className="w-3 h-3 text-amber-400" />
+  <span>Configurar</span>
+  </button>
+  )}
+  </div>
+
+  <div className={`p-2 rounded-xl border flex items-center gap-2.5 ${
+  isStitchLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-neutral-950/80 border-neutral-800'
+  }`}>
+  <div 
+  onClick={() => onNavigate?.('fans', { concertId: selectedConcert.id })}
+  className="p-1 bg-white rounded-lg shadow border border-amber-500/40 shrink-0 cursor-pointer hover:scale-105 transition-transform"
+  title="Haz clic para abrir la configuración del QR"
+  >
+  <QRCode value={targetQrUrl} size={58} level="M" />
+  </div>
+
+  <div className="flex-1 min-w-0 space-y-1.5">
+  <p className="text-[9px] font-mono text-slate-400 truncate break-all bg-slate-900/60 p-1 rounded border border-slate-800/60 text-amber-300 font-semibold" title={targetQrUrl}>
+  {targetQrUrl}
+  </p>
+  <div className="flex items-center gap-1.5">
+  <a
+  href={targetQrUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="px-2 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-amber-500/30 transition-colors"
+  >
+  <ExternalLink className="w-2.5 h-2.5" /> Abrir
+  </a>
+  <button
+  type="button"
+  onClick={() => {
+  navigator.clipboard.writeText(targetQrUrl);
+  setCopiedQrId(selectedConcert.id);
+  setTimeout(() => setCopiedQrId(null), 2000);
+  }}
+  className="px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-[9px] font-mono font-bold flex items-center gap-1 border border-slate-700 transition-colors cursor-pointer"
+  >
+  {copiedQrId === selectedConcert.id ? (
+  <>
+  <Check className="w-2.5 h-2.5 text-emerald-400" />
+  <span className="text-emerald-400">¡Copiado!</span>
+  </>
+  ) : (
+  <>
+  <Copy className="w-2.5 h-2.5 text-slate-400" />
+  <span>Copiar</span>
+  </>
+  )}
+  </button>
+  </div>
+  </div>
+  </div>
+  </div>
+  );
+  })()}
 
  {/* REPERTORIO / SETLIST ASIGNADO */}
  {(selectedConcert || selectedRehearsal) && (

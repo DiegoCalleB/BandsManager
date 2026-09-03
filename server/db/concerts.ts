@@ -26,7 +26,8 @@ export async function dbGetConcerts(bandId: string | string[]) {
     convocados_nombres: c.convocados_nombres || c.convocadosNombres || [],
     giraId: c.gira_id || c.giraId || undefined,
     giraNombre: c.gira_nombre || c.giraNombre || undefined,
-    idioma: c.idioma || undefined
+    idioma: c.idioma || undefined,
+    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined
   }));
 }
 
@@ -43,8 +44,9 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   // que no pertenece a la banda del usuario no se reutiliza nunca.
   let finalConcertId = concert.id;
   if (finalConcertId) {
-    const { data: existing } = await sb.from("concerts").select("id, band_id").eq("id", finalConcertId).maybeSingle();
-    if (existing && existing.band_id !== targetBandId) {
+    const existing = await sb.from("concerts").select("band_id").eq("id", finalConcertId).maybeSingle();
+    if (existing.data && existing.data.band_id && cleanBandId(existing.data.band_id) !== targetBandId) {
+      console.warn(`[dbUpsertConcert] Conflicto de band_id en id ${finalConcertId}. Se generará un id nuevo.`);
       finalConcertId = `cnc-${Date.now()}`;
     }
   }
@@ -72,7 +74,8 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     convocados_nombres: concert.convocados_nombres || concert.convocadosNombres || [],
     gira_id: concert.gira_id || concert.giraId || null,
     gira_nombre: concert.gira_nombre || concert.giraNombre || null,
-    idioma: concert.idioma || ""
+    idioma: concert.idioma || "",
+    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null
   };
 
   let data: any = null;

@@ -211,6 +211,8 @@ export interface Concert {
   giraId?: string;
   giraNombre?: string;
   idioma?: string;
+  customQrUrl?: string;
+  customQrSlug?: string;
 }
 
 export interface EmailSignatureConfig {

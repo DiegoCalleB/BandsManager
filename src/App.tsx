@@ -1302,6 +1302,8 @@ export default function App() {
             isStitchLight={false}
             onNavigate={handleNavigate}
             isPromo={isPromoPlan}
+            onUpdateConcert={handleUpdateConcert}
+            initialConcertId={bookingOptions.concertId}
           />
         )}
         {currentView === 'giras' && (
