@@ -12,6 +12,7 @@ import { dbGetAgentLastRun, dbSetAgentLastRun } from "../db/agentSchedule.js";
 import { EmailAgentError } from "./emailAgentClient.js";
 import { runLectorAgent } from "./lectorAgent.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
+import { captureError } from "../utils/errorTracking.js";
 
 const TICK_MS = 60 * 1000;
 let schedulerHandle: NodeJS.Timeout | null = null;
@@ -78,7 +79,11 @@ async function tick() {
     try {
       bands = await dbGetRegisteredBands();
     } catch (e) {
+      // Sin bandId todavía, así que no hay banda a la que asociar un registro en
+      // agent_execution_logs - sin esto, un Supabase caído deja el scheduler entero mudo, en
+      // cada tick, sin ningún rastro en ningún sitio.
       console.warn("[AgentScheduler] No se pudo obtener la lista de bandas activas:", e);
+      captureError(e, { fase: "dbGetRegisteredBands" });
       return;
     }
 
@@ -165,9 +170,15 @@ async function runLectorTick(bandId: string): Promise<void> {
 export function startAgentScheduler(): void {
   if (schedulerHandle) return;
   console.log("[AgentScheduler] Iniciado - tick cada 60s.");
-  tick().catch((e) => console.error("[AgentScheduler] Error en el primer tick:", e));
+  tick().catch((e) => {
+    console.error("[AgentScheduler] Error en el primer tick:", e);
+    captureError(e, { fase: "primer tick" });
+  });
   schedulerHandle = setInterval(() => {
-    tick().catch((e) => console.error("[AgentScheduler] Error en tick:", e));
+    tick().catch((e) => {
+      console.error("[AgentScheduler] Error en tick:", e);
+      captureError(e, { fase: "tick" });
+    });
   }, TICK_MS);
 }
 

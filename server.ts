@@ -11,6 +11,7 @@ import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } fro
 import { loadStateFromSupabase } from "./server/db.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
+import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 
 import usersRouter from "./server/routes/users.js";
 import postsRouter from "./server/routes/posts.js";
@@ -35,6 +36,9 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+// Pasivo sin SENTRY_DSN en el entorno - ver server/utils/errorTracking.ts.
+initErrorTracking();
+
 // Red de seguridad: en Node 22, una promesa rechazada sin capturar (p. ej. un
 // fallo de Supabase dentro de un handler async sin try/catch) tumba TODO el
 // proceso por defecto -> caída del servidor para TODAS las bandas, no solo
@@ -45,6 +49,7 @@ dotenv.config();
 // sin responder, pero el resto de la app sigue funcionando.
 process.on("unhandledRejection", (reason) => {
   console.error("[unhandledRejection] Promesa rechazada sin capturar:", reason);
+  captureError(reason instanceof Error ? reason : new Error(String(reason)));
 });
 
 const app = express();
@@ -462,6 +467,17 @@ app.use("/clips", express.static(path.join(process.cwd(), "public", "clips")));
 // 404 catch-all for API endpoints to prevent returning index.html for missing routes
 app.use("/api/*", (req, res) => {
   res.status(404).json({ error: `Ruta de API no encontrada: ${req.method} ${req.originalUrl}` });
+});
+
+// Red de errores para /api/*: hasta ahora, un throw síncrono o un next(err) en cualquier router
+// caía en el manejador por defecto de Express (responde 500 pero no deja ningún rastro propio,
+// ni en consola con contexto ni en Sentry). Va DESPUÉS de las rutas para que Express lo enrute
+// aquí en cuanto algo llama a next(err) o lanza de forma síncrona.
+app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(`[UnhandledRouteError] ${req.method} ${req.originalUrl}:`, err);
+  captureError(err, { method: req.method, url: req.originalUrl });
+  if (res.headersSent) return;
+  res.status(500).json({ error: "Error interno del servidor." });
 });
 
 // Vite middleware integration for full-stack SPA

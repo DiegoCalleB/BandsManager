@@ -25,7 +25,7 @@ const PLAN_CREDITS: Record<string, number> = {
 const processedEvents = new Map<string, number>();
 const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-async function isEventProcessed(eventId: string): Promise<boolean> {
+export async function isEventProcessed(eventId: string): Promise<boolean> {
   const now = Date.now();
   // Periodic cleanup of old events
   if (processedEvents.size > 1000) {
@@ -80,7 +80,7 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
   return undefined;
 }
 
-function findBandInState(state: any, bandId?: string, customerEmail?: string) {
+export function findBandInState(state: any, bandId?: string, customerEmail?: string) {
   if (!state.registeredBands) state.registeredBands = [];
   const cleanBandId = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
   const cleanEmail = (customerEmail || '').toLowerCase().trim();
@@ -397,7 +397,7 @@ export async function handleInvoicePaid(bandId: string, customerEmail?: string, 
 }
 
 // Helper: Determine origin URL
-function getOriginHost(req: express.Request): string {
+export function getOriginHost(req: express.Request): string {
   let host = req.body?.originUrl || req.headers.origin;
   if (!host || host === "null") {
     if (req.headers.referer) {
@@ -424,7 +424,7 @@ function getOriginHost(req: express.Request): string {
  * tal cual, así que servía para colgar una redirección a un dominio ajeno de una URL de Stripe
  * legítima. Solo se admite si apunta al mismo origen que ya sirve la app.
  */
-function urlDeVueltaSegura(req: express.Request, returnUrl?: unknown): string {
+export function urlDeVueltaSegura(req: express.Request, returnUrl?: unknown): string {
   const origen = getOriginHost(req);
   if (typeof returnUrl !== "string" || !returnUrl) return origen;
   try {
