@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { generateContentWithFallback, callDeepSeek, TIMEOUT_IA_MS } from '../ai';
+import { generateContentWithFallback, generateSmartLocalPitchFallback, callDeepSeek, TIMEOUT_IA_MS } from '../ai';
 
 /**
  * Lo que se prueba aquí es el cambio de contrato: cuando se agotan todos los proveedores,
@@ -91,6 +91,28 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
     ).rejects.toThrow();
     const primeraLlamada = clienteQueSiempreFalla.models.generateContent.mock.calls[0][0];
     expect(primeraLlamada.config?.abortSignal).toBeInstanceOf(AbortSignal);
+  });
+});
+
+describe('generateSmartLocalPitchFallback: no se presenta con el nombre de otra banda real', () => {
+  it('cuando no puede extraer el nombre de la banda del texto, usa un genérico en vez de "Bakandeya"', () => {
+    const texto = generateSmartLocalPitchFallback({
+      prompt: 'Escribe un pitch para la SALA: Sala Caracol',
+    });
+    expect(texto.toLowerCase()).not.toContain('bakandeya');
+    // El bug original no solo ponía el nombre equivocado: al no encontrar banda, isBakandeya se
+    // activaba y con él el estilo/formato real de Bakandeya (Balkan-Ska, violín solista...) se
+    // colaba en el pitch de CUALQUIER banda que cayera en este generador de emergencia.
+    expect(texto.toLowerCase()).not.toContain('balkan');
+    expect(texto.toLowerCase()).not.toContain('violín solista');
+  });
+
+  it('sí usa el nombre real de la banda cuando el texto lo trae', () => {
+    const texto = generateSmartLocalPitchFallback({
+      prompt: 'Escribe un pitch para la SALA: Sala Caracol\nBanda: Los Tigres del Ritmo',
+    });
+    expect(texto).toContain('Los Tigres del Ritmo');
+    expect(texto.toLowerCase()).not.toContain('bakandeya');
   });
 });
 

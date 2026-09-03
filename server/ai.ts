@@ -381,8 +381,11 @@ export function generateSmartLocalPitchFallback(params: {
     aforo = aforoMatch[1].trim();
   }
 
-  // Extract band name cleanly
-  let bandName = "Bakandeya";
+  // Extract band name cleanly. Antes, si el regex de abajo no encontraba nada, el pitch de
+  // emergencia se enviaba a la sala presentándose como "Bakandeya" - con su estilo musical real
+  // (ver isBakandeya más abajo) - aunque el generador estuviera redactando para otra banda. Un
+  // genérico sin nombre propio es mucho mejor que mentir con el nombre real de otro cliente.
+  let bandName = "nuestra banda";
   const bandMatch = text.match(/(?:Banda|Nombre de la banda|Artista)\s*[:=]\s*([^\n,\.]+)/i) ||
                     text.match(/(?:de la banda\s+)"([^"]+)"/i);
   if (bandMatch && bandMatch[1]) {
