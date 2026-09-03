@@ -26,6 +26,7 @@ const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLa
 const PublicEPK = lazy(() => import('./components/PublicEPK').then(m => ({ default: m.PublicEPK })));
 const Planes = lazy(() => import('./components/Planes'));
 import { LoginModal } from './components/LoginModal';
+import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
 import { UserProfileModal } from './components/UserProfileModal';
 import { FontSelectorModal } from './components/FontSelectorModal';
@@ -151,6 +152,11 @@ export default function App() {
     }
     return normalizePlan(currentUser?.plan || 'ensayo');
   }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
+
+  // Plan Promo (fase beta, festivales): a diferencia del resto de planes, que enseñan los
+  // módulos no incluidos con un candado "Plan" (invitando a mejorar), Promo no debe ni
+  // enseñar que esos módulos existen — así que el nav los oculta del todo en vez de bloquearlos.
+  const isPromoPlan = currentActiveBandPlan === 'promo';
 
   // Soft Limit Modal State
   const [planLimitModal, setPlanLimitModal] = useState<{
@@ -421,9 +427,17 @@ export default function App() {
   }
 
  // Auth Screen Render
+ // Fase beta: ventana de acceso simplificada (login + alta directa en plan Promo, sin
+ // selector de planes) para los primeros usuarios (bandas del festival Buskers). El
+ // LoginModal completo (con la parrilla de 4 planes) se conserva intacto para cuando se
+ // quiera reabrir el registro público con todos los planes — basta con volver a poner
+ // esta constante a false.
+ const USE_SIMPLE_LOGIN = true;
  if (!isLoggedIn) {
- return (
- <LoginModal 
+ return USE_SIMPLE_LOGIN ? (
+ <SimplePromoLoginModal onLoginSuccess={handleLoginSuccess} />
+ ) : (
+ <LoginModal
  onLoginSuccess={handleLoginSuccess}
  isStitchLight={false}
  />
@@ -480,6 +494,7 @@ export default function App() {
   </div>
  </div>
  <div className="flex items-center gap-2">
+  {!isPromoPlan && (
   <button
    onClick={() => setShowCampaignModal(true)}
    className={`px-2 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
@@ -492,6 +507,7 @@ export default function App() {
    <Target className="w-3.5 h-3.5 text-purple-400" />
    <span className="text-[10px] hidden xs:inline font-mono">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
   </button>
+  )}
   <button
   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
   className="p-2 text-neutral-300 hover:text-white rounded-lg bg-[#1A1918] border-[#22211F] cursor-pointer active:scale-95 transition-all"
@@ -535,7 +551,7 @@ export default function App() {
  ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchan'), icon: Sparkles }] : []),
  { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '🎁 Regalo' },
  ];
- })().map((item) => {
+ })().filter((item) => !isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)).map((item) => {
  const isSelected = currentView === item.id;
  const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
@@ -647,7 +663,7 @@ export default function App() {
  ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
  { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
  ];
- })().map((item) => {
+ })().filter((item) => !isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)).map((item) => {
  const isSelected = currentView === item.id;
  const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
@@ -717,8 +733,9 @@ export default function App() {
    </div>
  </div>
 
- {/* Mobile AI Credits Widget */}
- <div 
+ {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
+ {!isPromoPlan && (
+ <div
    onClick={() => { handleNavigate('planes'); setIsMobileMenuOpen(false); }}
    className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
    title="Ver uso de créditos IA y planes"
@@ -738,6 +755,7 @@ export default function App() {
      <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
    </div>
  </div>
+ )}
 
  {/* Drawer User Footer */}
  <div className="p-4 mt-auto border-[#22211F]/50">
@@ -875,7 +893,7 @@ export default function App() {
  ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
  { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
  ];
- })().map((item) => {
+ })().filter((item) => !isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)).map((item) => {
  const isSelected = currentView === item.id;
  const IconComp = item.icon;
  
@@ -915,7 +933,9 @@ export default function App() {
  <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
    <div className="flex items-center justify-between px-1">
      <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Herramientas</p>
-     <button 
+     {/* Campañas de Booking: oculto en plan Promo, no tiene acceso a Booking */}
+     {!isPromoPlan && (
+     <button
        onClick={() => setShowCampaignModal(true)}
        className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
        title="Gestionar Campañas de Booking"
@@ -923,9 +943,11 @@ export default function App() {
        <Target className="w-3 h-3" />
        <span>Campañas</span>
      </button>
+     )}
    </div>
 
-   {/* Quick Campaign Switcher / Status */}
+   {/* Quick Campaign Switcher / Status (oculto en plan Promo) */}
+   {!isPromoPlan && (
    <button
      onClick={() => setShowCampaignModal(true)}
      className={`w-full flex items-center justify-between p-2 rounded-xl border text-left transition-all cursor-pointer group ${
@@ -952,6 +974,7 @@ export default function App() {
        {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
      </span>
    </button>
+   )}
    <div className="grid grid-cols-2 gap-1.5">
      <button
        onClick={() => setShowMetronomeModal(true)}
@@ -983,8 +1006,8 @@ export default function App() {
    </div>
  </div>
 
- {/* Sidebar AI Credits Widget */}
- {(() => {
+ {/* Sidebar AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
+ {!isPromoPlan && (() => {
    const userPlan = currentActiveBandPlan;
    const pDef = getPlanDefinition(userPlan);
    const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
@@ -1634,7 +1657,7 @@ export default function App() {
  )}
 
  {/* Floating Chatbot Trigger Button */}
- {currentView !== 'chat' && (
+ {currentView !== 'chat' && !isPromoPlan && (
  <button
  id="floating-chat-trigger-btn"
  onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
