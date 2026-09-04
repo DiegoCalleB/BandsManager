@@ -214,6 +214,7 @@ export function mapSongRecord(s: any) {
     tipo: s.tipo || "original",
     estado: s.estado || "ensayando",
     energia: Number(s.energia || 10),
+    energiaManual: Boolean(s.energia_manual ?? s.energiaManual ?? false),
     energiaVariacion: typeof s.energia_variacion === "number" ? s.energia_variacion : (typeof s.energiaVariacion === "number" ? s.energiaVariacion : undefined),
     energia_variacion: typeof s.energia_variacion === "number" ? s.energia_variacion : (typeof s.energiaVariacion === "number" ? s.energiaVariacion : undefined),
     energiaVariacionCalculadaEn: s.energia_variacion_calculada_en || s.energiaVariacionCalculadaEn || undefined,

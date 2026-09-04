@@ -622,6 +622,7 @@ export interface Song {
   tipo?: string;
   estado?: string;
   energia?: number;
+  energiaManual?: boolean; // true si el usuario fijó la energía a mano (1-20) — el recalibrado automático desde audio ya no la toca
   energiaVariacion?: number; // 0-10, cuánto varía la energía dentro del tema (subidas/bajadas internas), detectado automáticamente del audio
   energiaVariacionCalculadaEn?: string; // ISO timestamp del último análisis automático de dinámica interna
   cantantePrincipal?: string; // Lead vocalist for this song (shown in the setlist and searchable)

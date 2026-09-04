@@ -592,6 +592,40 @@ export default function RepertorioSetlists({
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
  const [expandedSetlistItemIds, setExpandedSetlistItemIds] = useState<Set<string>>(new Set());
+ // Popover de energía manual (1-10 en UI, se guarda ×2 como energia 1-20): qué item de setlist
+ // tiene el selector abierto ahora mismo, y estado de guardado para deshabilitar mientras dura.
+ const [editingEnergyItemId, setEditingEnergyItemId] = useState<string | null>(null);
+ const [savingEnergyItemId, setSavingEnergyItemId] = useState<string | null>(null);
+
+ useEffect(() => {
+   if (!editingEnergyItemId) return;
+   const handleClickOutside = (e: MouseEvent) => {
+     if (!(e.target as HTMLElement)?.closest?.('[data-energy-popover]')) {
+       setEditingEnergyItemId(null);
+     }
+   };
+   document.addEventListener('mousedown', handleClickOutside);
+   return () => document.removeEventListener('mousedown', handleClickOutside);
+ }, [editingEnergyItemId]);
+
+ const handleSetEnergiaManual = async (song: Song, itemId: string, valor1a10: number) => {
+   const nuevaEnergia = valor1a10 * 2;
+   setSavingEnergyItemId(itemId);
+   // Optimista: refleja el cambio ya mismo en la UI y en el gráfico, sin esperar al servidor.
+   setSongs(prev => prev.map(s => s.id === song.id ? { ...s, energia: nuevaEnergia, energiaManual: true } : s));
+   try {
+     await fetch(`/api/songs/${song.id}/energia`, {
+       method: 'PATCH',
+       headers: getHeaders(),
+       body: JSON.stringify({ energia: nuevaEnergia })
+     });
+   } catch (err) {
+     console.error('Error guardando energía manual:', err);
+   } finally {
+     setSavingEnergyItemId(null);
+     setEditingEnergyItemId(null);
+   }
+ };
 
  // Deletion Confirmation Modal State
  const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
@@ -2556,10 +2590,49 @@ export default function RepertorioSetlists({
 
     {(() => {
       const energy = getEnergyInfo(song);
+      const currentVal1a10 = Math.max(1, Math.min(10, Math.round((song.energia || 10) / 2)));
+      const isEditingThis = editingEnergyItemId === it.id;
       return (
-        <span className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`} title={`Energía: ${energy.label}`}>
-          <span>{energy.icon}</span>
-        </span>
+        <div className="relative shrink-0">
+          <button
+            type="button"
+            data-energy-popover
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditingEnergyItemId(isEditingThis ? null : it.id);
+            }}
+            className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`}
+            title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? ' — fijada a mano' : ''}. Clic para cambiarla.`}
+          >
+            <span>{energy.icon}</span>
+            {song.energiaManual && <span className="ml-0.5" title="Energía fijada a mano">✋</span>}
+          </button>
+          {isEditingThis && (
+            // Selector 1-10 (más fácil de puntuar que 1-20 directamente) — se guarda como
+            // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
+            <div
+              data-energy-popover
+              className="absolute z-30 top-full left-0 mt-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl p-1.5 flex items-center gap-0.5"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {Array.from({ length: 10 }, (_, i) => i + 1).map(val => (
+                <button
+                  key={val}
+                  type="button"
+                  disabled={savingEnergyItemId === it.id}
+                  onClick={() => handleSetEnergiaManual(song, it.id, val)}
+                  className={`w-5 h-5 rounded text-[9px] font-mono font-bold flex items-center justify-center transition disabled:opacity-50 ${
+                    currentVal1a10 === val
+                      ? 'bg-amber-500 text-black'
+                      : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                  }`}
+                >
+                  {val}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       );
     })()}
 

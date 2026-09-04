@@ -12,6 +12,7 @@ import {
   dbUpsertSetlist,
   dbDeleteSetlist,
   analizarYGuardarDinamicaCancion,
+  dbSetSongEnergiaManual,
   dbGetSetlistShortcuts,
   dbUpsertSetlistShortcut,
   dbDeleteSetlistShortcut
@@ -93,6 +94,26 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error analizando dinámica interna de la canción:", err);
     res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
+  }
+});
+
+// PATCH fijar a mano la energía (1-20) de una canción. El frontend expone una escala 1-10 (más
+// fácil de puntuar), duplicada a 1-20 antes de llegar aquí. Marca energia_manual: true para que
+// el recalibrado automático desde audio (recalibrarEnergiasDelRepertorio) deje de tocar esta
+// canción en futuros análisis de otros temas del repertorio.
+router.patch("/songs/:id/energia", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = getTargetBandId(req);
+    const energia = Number(req.body?.energia);
+    if (!Number.isFinite(energia) || energia < 1 || energia > 20) {
+      return res.status(400).json({ error: "Energía inválida (debe ser 1-20)." });
+    }
+    const saved = await dbSetSongEnergiaManual(id, Math.round(energia), userBandId);
+    res.json({ success: true, song: saved });
+  } catch (err: any) {
+    console.error("Error fijando energía manual de la canción:", err);
+    res.status(500).json({ error: err?.message || "No se pudo actualizar la energía." });
   }
 });
 
