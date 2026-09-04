@@ -40,7 +40,6 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
 
   const handleHeaderClick = () => {
     onToggleOpen();
-    onNavigate(items[0].id);
   };
 
   return (
