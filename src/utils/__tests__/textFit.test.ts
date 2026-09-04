@@ -49,28 +49,38 @@ describe('fitStackedNoteSegments', () => {
     expect(result.lines.length).toBe(2);
   });
 
-  it('parte en dos líneas SOLO la nota concreta que ni al tamaño mínimo cabe, sin tocar las demás', () => {
+  it('trunca (nunca parte en dos líneas) la nota concreta que ni al tamaño mínimo cabe, sin tocar las demás', () => {
     const segments: NoteSegment[] = [
       { text: 'entrada en el compas ocho con sordina y cambio de afinacion completo del instrumento', className: 'note-member' },
       { text: 'corta', className: 'note-cue' }
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 150 });
     expect(result.fontSizePx).toBe(10);
-    // La nota de miembro (larga) se parte en 2 líneas; la de cue (corta) sigue en una sola.
+    // La nota de miembro (larga) se trunca con "…", nunca se parte en dos líneas; la de cue (corta) queda intacta.
     const memberLines = result.lines.filter(l => l.className === 'note-member');
     const cueLines = result.lines.filter(l => l.className === 'note-cue');
-    expect(memberLines.length).toBe(2);
+    expect(memberLines.length).toBe(1);
+    expect(memberLines[0].text.endsWith('…')).toBe(true);
     expect(cueLines.length).toBe(1);
     expect(cueLines[0].text).toBe('corta');
   });
 
-  it('trunca con "…" solo como último recurso, cuando una nota ni en dos líneas cabe entera', () => {
+  it('trunca con "…" una nota que ni al tamaño mínimo cabe entera, sin partirla nunca en dos líneas', () => {
     const segments: NoteSegment[] = [
-      { text: 'una nota de miembro absurdamente larga que jamas cabria en dos lineas de un repertorio impreso normal', className: 'note-member' }
+      { text: 'una nota de miembro absurdamente larga que jamas cabria en una sola linea de un repertorio impreso normal', className: 'note-member' }
     ];
     const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 60 });
+    expect(result.lines.length).toBe(1);
+    expect(result.lines[0].text.endsWith('…')).toBe(true);
+  });
+
+  it('nunca genera más de una línea por nota, ni siquiera con notas larguísimas', () => {
+    const segments: NoteSegment[] = [
+      { text: 'esta nota es tan larga que en el diseño anterior se hubiera partido en dos lineas', className: 'note-member' },
+      { text: 'esta otra tambien es bastante larga y tampoco deberia partirse jamas', className: 'note-general' }
+    ];
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 100 });
     expect(result.lines.length).toBe(2);
-    expect(result.lines[1].text.endsWith('…')).toBe(true);
   });
 
   it('no suelta ninguna nota: todas aparecen siempre, cada una en su línea', () => {

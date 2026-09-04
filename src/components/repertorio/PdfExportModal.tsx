@@ -58,8 +58,9 @@ interface NoteLayoutResult {
  * Decide, para una fila de canción concreta, si la nota (miembro, nota del bolo, nota general)
  * cabe en una columna a la derecha del título o si esa fila necesita caer a una línea propia
  * debajo — y calcula, con fitStackedNoteSegments, el tamaño de fuente común y las líneas ya
- * apiladas (una por nota, cada una en su propia línea; una nota concreta solo se parte en dos
- * líneas si ni al tamaño mínimo cabe entera). Devuelve null si no hay ninguna nota que mostrar.
+ * apiladas (una por nota, cada una en su propia línea; una nota nunca se parte en dos líneas,
+ * si ni al tamaño mínimo cabe entera se trunca con "…"). Devuelve null si no hay ninguna nota
+ * que mostrar.
  */
 function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   const segments: NoteSegment[] = [];
@@ -1217,9 +1218,9 @@ export function PdfExportModal({
                             )}
                           </div>
 
-                          {/* Nota "escrita a mano" a la derecha, cuando cabe con hueco de sobra
-                              (ver computeNoteLayout) — tamaño y posible segunda línea ya
-                              decididos por textFit, aquí solo se pinta. */}
+                          {/* Notas "escritas a mano" a la derecha, cuando cabe con hueco de sobra
+                              (ver computeNoteLayout) — apiladas, una por línea, tamaño ya
+                              decidido por textFit, aquí solo se pintan. */}
                           {noteLayout && noteLayout.mode === 'inline' && (
                             <div
                               className="flex flex-col items-end shrink-0 overflow-hidden"
