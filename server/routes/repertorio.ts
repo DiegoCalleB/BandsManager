@@ -525,9 +525,26 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     // Llamar a análisis IA
     const analysis = await analyzeSetlistWithAI(setlistSongs);
 
+    // Crear firma del setlist para detectar cambios posteriores
+    const setlistSignature = setlist.items.map((i: any) => i.id).join('|');
+
+    // Añadir firma al análisis para cambio-detección
+    const analysisWithSignature = {
+      ...analysis,
+      setlist_signature: setlistSignature
+    };
+
+    // Guardar análisis en Supabase
+    const updatedSetlist = {
+      ...setlist,
+      ai_analysis_json: analysisWithSignature,
+      ai_analysis_generated_at: new Date().toISOString()
+    };
+    await dbUpsertSetlist(updatedSetlist, userBandId);
+
     res.json({
       success: true,
-      analysis
+      analysis: analysisWithSignature
     });
   } catch (err: any) {
     console.error("Error in analyze-setlist-with-ai:", err);

@@ -664,6 +664,8 @@ export interface Setlist {
   items: SetlistItem[];
   fechaCreacion: string;
   fechaUltimaEdicion: string;
+  ai_analysis_json?: any;
+  ai_analysis_generated_at?: string;
 }
 
 // A band's own custom "quick add" preset for the setlist editor, alongside the built-in ones

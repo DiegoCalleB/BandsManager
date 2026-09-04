@@ -447,6 +447,15 @@ export default function RepertorioSetlists({
  return minOnly * 60;
  };
 
+ // Detectar si el análisis IA está desactualizado (setlist cambió)
+ const isAIAnalysisOutdated = (setlist: Setlist, analysis: any) => {
+ if (!analysis || !setlist) return false;
+ // Crear firma del setlist actual: número de items + sus IDs en orden
+ const currentSignature = setlist.items.map(i => i.id).join('|');
+ // Comparar con firma guardada en el análisis (si existe)
+ return !analysis.setlist_signature || analysis.setlist_signature !== currentSignature;
+ };
+
  const {
    stageAudioRef,
    stagePlayingIndex, setStagePlayingIndex,
@@ -491,6 +500,8 @@ export default function RepertorioSetlists({
  // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
  const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
+ // Detectar si el análisis está desactualizado (setlist cambió desde el análisis)
+ const [aiAnalysisOutdated, setAiAnalysisOutdated] = useState(false);
 
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
@@ -692,10 +703,24 @@ export default function RepertorioSetlists({
   return () => { isCancelled = true; };
  }, [bandId]);
 
- // Cuando cambia el setlist activo, limpiar el análisis IA guardado (ya no es válido)
+ // Cuando cambia el setlist activo, cargar análisis guardado si existe
  useEffect(() => {
-  setAiAnalysisResult(null);
- }, [activeSetlistId]);
+  if (!activeSetlist) {
+    setAiAnalysisResult(null);
+    setAiAnalysisOutdated(false);
+    return;
+  }
+  // Cargar análisis guardado en el setlist
+  if (activeSetlist.ai_analysis_json) {
+    setAiAnalysisResult(activeSetlist.ai_analysis_json);
+    // Detectar si está desactualizado
+    const outdated = isAIAnalysisOutdated(activeSetlist, activeSetlist.ai_analysis_json);
+    setAiAnalysisOutdated(outdated);
+  } else {
+    setAiAnalysisResult(null);
+    setAiAnalysisOutdated(false);
+  }
+ }, [activeSetlist]);
 
  // Microphone recording for Show Items (Presentaciones/Chapas)
  const handleStartRecordingShowItem = async () => {
@@ -2129,10 +2154,11 @@ export default function RepertorioSetlists({
             <button
               type="button"
               onClick={() => setShowAIAnalysisModal(true)}
-              className="p-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer"
-              title="Análisis avanzado con IA"
+              className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
+              title={aiAnalysisOutdated ? "Análisis desactualizado - Pulse para re-analizar" : "Análisis avanzado con IA"}
             >
-              🧠
+              🧠 Análisis IA
+              {aiAnalysisOutdated && <span className="text-[10px] text-red-400 font-bold">●</span>}
             </button>
           </div>
         </div>
@@ -2308,21 +2334,38 @@ export default function RepertorioSetlists({
 
                 {/* AI Analysis Summary (if available) */}
                 {aiAnalysisResult && (
-                  <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                  <div className={`rounded-lg p-3 space-y-2 border ${aiAnalysisOutdated ? 'bg-amber-900/20 border-amber-700' : 'bg-purple-900/20 border-purple-700'}`}>
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className={`text-xs font-bold flex items-center gap-1.5 ${aiAnalysisOutdated ? 'text-amber-300' : 'text-purple-300'}`}>
                         <span>🧠 Análisis IA</span>
-                        <span className="text-2xl font-bold text-purple-400">{aiAnalysisResult.overallScore}/100</span>
+                        <span className={`text-2xl font-bold ${aiAnalysisOutdated ? 'text-amber-400' : 'text-purple-400'}`}>{aiAnalysisResult.overallScore}/100</span>
+                        {aiAnalysisOutdated && <span className="text-[10px] font-bold text-amber-400 ml-1">DESACTUALIZADO</span>}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setShowAIAnalysisModal(true)}
-                        className="px-2 py-0.5 rounded text-[9px] bg-purple-700/50 hover:bg-purple-700 text-purple-200 transition"
-                      >
-                        Ver detalles
-                      </button>
+                      <div className="flex items-center gap-1">
+                        {aiAnalysisOutdated && (
+                          <button
+                            type="button"
+                            onClick={() => setShowAIAnalysisModal(true)}
+                            className="px-2 py-0.5 rounded text-[9px] bg-amber-700/50 hover:bg-amber-700 text-amber-200 transition font-medium"
+                          >
+                            🔄 Re-analizar
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => setShowAIAnalysisModal(true)}
+                          className="px-2 py-0.5 rounded text-[9px] bg-purple-700/50 hover:bg-purple-700 text-purple-200 transition"
+                        >
+                          Ver detalles
+                        </button>
+                      </div>
                     </div>
-                    {aiAnalysisResult.suggestions?.length > 0 && (
+                    {aiAnalysisOutdated && (
+                      <p className="text-[9px] text-amber-300 italic">
+                        El setlist ha cambiado desde el último análisis. Pulse "Re-analizar" para actualizar.
+                      </p>
+                    )}
+                    {aiAnalysisResult.suggestions?.length > 0 && !aiAnalysisOutdated && (
                       <div className="text-[9px] text-purple-200 space-y-1">
                         <p className="font-semibold">Sugerencias principales:</p>
                         {aiAnalysisResult.suggestions.slice(0, 2).map((s: any, i: number) => (
@@ -3855,6 +3898,7 @@ export default function RepertorioSetlists({
     setlistName={activeSetlist?.nombre}
     onAnalysisComplete={(analysis) => {
       setAiAnalysisResult(analysis);
+      setAiAnalysisOutdated(false);
       setAiAnalysisLoading(false);
     }}
   />
