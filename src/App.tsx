@@ -1199,6 +1199,7 @@ export default function App() {
  onUpdateConcert={handleUpdateConcert}
  onUpdateRehearsal={handleUpdateRehearsal}
  view={currentView as any}
+ currentUser={currentUser}
  />
  )}
 {currentView === 'merchan' && (

@@ -51,6 +51,7 @@ interface RepertorioSetlistsProps {
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
  view?: 'repertorio' | 'catalogo' | 'discografia' | 'directo';
+ currentUser?: any;
 }
 
 // Plantilla de la formación de Bakandeya usada como banda de demostración de la propia
@@ -317,7 +318,8 @@ export default function RepertorioSetlists({
  bandLogoUrl,
  onUpdateConcert,
  onUpdateRehearsal,
- view
+ view,
+ currentUser
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
@@ -2611,6 +2613,30 @@ export default function RepertorioSetlists({
     </button>
   </div>
 
+  {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
+  {(() => {
+    const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name];
+    return (song.notasInternas || it.notaTema || userNote) ? (
+      <div className="px-2.5 py-1 border-t text-[8px] font-mono space-y-0.5">
+        {song.notasInternas && (
+          <div className="text-amber-600/80 truncate" title={song.notasInternas}>
+            📝 {song.notasInternas}
+          </div>
+        )}
+        {userNote && (
+          <div className="text-cyan-600/80 truncate" title={userNote}>
+            👤 {currentUser.name}: {userNote}
+          </div>
+        )}
+        {it.notaTema && (
+          <div className="text-emerald-600/80 truncate" title={it.notaTema}>
+            💡 {it.notaTema}
+          </div>
+        )}
+      </div>
+    ) : null;
+  })()}
+
   {/* EXPANDED DETAILS - Only when isExpanded */}
   {isExpanded && (
     <div className={`border-t px-2.5 py-2 text-[9px] font-mono space-y-1 ${isStitchLight ? 'bg-slate-50' : 'bg-black/20'}`}>
@@ -2630,12 +2656,6 @@ export default function RepertorioSetlists({
         </div>
       )}
 
-      {/* Custom Note Input - only show if expanded */}
-      {it.notaTema && (
-        <div className="text-neutral-300 italic">
-          💡 {it.notaTema}
-        </div>
-      )}
       <input
         type="text"
         placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
@@ -2663,74 +2683,79 @@ export default function RepertorioSetlists({
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
- className={`p-3 rounded-2xl bg-gradient-to-r from-[#d1b375]/30 via-neutral-900 to-black border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md my-1 ${
+ className={`border rounded-lg transition-all cursor-pointer ${
  isDragging ? 'opacity-40 scale-[0.98]' : ''
  } ${
- isDragOver ? 'border-amber-400 border-2 scale-[1.01]' : ''
+ isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
  } ${
- isSelected ? 'border-amber-400 ring-2 ring-amber-400/50' : 'border-[#f2ca50]/50'
+ isSelected
+   ? 'border-[#f2ca50] ring-2 ring-[#f2ca50]/30 bg-[#f2ca50]/10 shadow-md'
+   : 'border-[#f2ca50]/50 bg-[#d1b375]/5 hover:border-[#f2ca50]/70'
  }`}
  >
- <div className="flex items-center gap-2.5 min-w-0 flex-1">
- <div 
-   className="cursor-grab active:cursor-grabbing p-1 text-[#f2ca50]/70 hover:text-[#f2ca50] transition-colors shrink-0" 
-   title="Arrastrar y soltar para reordenar"
-   onClick={(e) => e.stopPropagation()}
- >
-   <GripVertical className="w-4 h-4" />
- </div>
+ <div className="flex items-center gap-2 px-2.5 py-1.5">
+   {/* Drag Handle */}
+   <div
+     className="cursor-grab active:cursor-grabbing text-[#f2ca50]/70 hover:text-[#f2ca50] transition-colors shrink-0"
+     title="Arrastrar y soltar para reordenar"
+     onClick={(e) => e.stopPropagation()}
+   >
+     <GripVertical className="w-3.5 h-3.5" />
+   </div>
 
- <span className="p-1.5 bg-[#f2ca50]/20 text-[#f2ca50] rounded-xl text-base shrink-0">⚡</span>
- <div className="min-w-0 flex-1">
- <input
- type="text"
- value={it.tituloCustom || ''}
- placeholder="Ej: 🔥 BLOQUE 1: CALENTAMIENTO"
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => {
- const val = e.target.value;
- setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
- ...s,
- items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
- } : s));
- }}
- className="bg-transparent text-sm font-extrabold font-mono text-[#f2ca50] border-b border-dashed border-[#f2ca50]/40 focus:outline-none w-full uppercase tracking-wider"
- />
- <span className="text-[10px] font-mono text-neutral-400 block mt-0.5">Sección / Bloque del Concierto</span>
- </div>
- </div>
+   {/* Icon */}
+   <span className="text-[#f2ca50] shrink-0">⚡</span>
 
- <div className="flex items-center gap-1 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
- <button
- onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
- className="p-1.5 text-[#f2ca50] hover:bg-[#f2ca50]/20 rounded-lg cursor-pointer text-xs font-mono"
- title="Editar Bloque"
- >
- <Edit3 className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'up')}
- disabled={index === 0}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover arriba"
- >
- <ArrowUp className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'down')}
- disabled={index === activeSetlist.items.length - 1}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover abajo"
- >
- <ArrowDown className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleRemoveSetlistItem(it.id)}
- className="p-1.5 text-neutral-400 hover:text-rose-400 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Eliminar Bloque"
- >
- <X className="w-3.5 h-3.5" />
- </button>
+   {/* Title input - inline */}
+   <input
+     type="text"
+     value={it.tituloCustom || ''}
+     placeholder="Ej: 🔥 BLOQUE 1: CALENTAMIENTO"
+     onClick={(e) => e.stopPropagation()}
+     onChange={(e) => {
+       const val = e.target.value;
+       setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
+         ...s,
+         items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
+       } : s));
+     }}
+     className="bg-transparent text-[10px] font-extrabold font-mono text-[#f2ca50] border-b border-dashed border-[#f2ca50]/40 focus:outline-none min-w-0 flex-1 uppercase tracking-wider"
+   />
+
+   {/* Spacer */}
+   <div className="flex-1"></div>
+
+   {/* Controls */}
+   <button
+     onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
+     className="p-0.5 text-[#f2ca50] hover:bg-[#f2ca50]/20 rounded transition-colors shrink-0 cursor-pointer"
+     title="Editar Bloque"
+   >
+     <Edit3 className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'up')}
+     disabled={index === 0}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover arriba"
+   >
+     <ArrowUp className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'down')}
+     disabled={index === activeSetlist.items.length - 1}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover abajo"
+   >
+     <ArrowDown className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleRemoveSetlistItem(it.id)}
+     className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
+     title="Eliminar Bloque"
+   >
+     <X className="w-3.5 h-3.5" />
+   </button>
  </div>
  </div>
  );
@@ -2748,98 +2773,98 @@ export default function RepertorioSetlists({
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
- className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${typeConfig.bg} ${typeConfig.border} ${
+ className={`border rounded-lg transition-all cursor-pointer ${typeConfig.bg} ${typeConfig.border} ${
  isDragging ? 'opacity-40 scale-[0.98]' : ''
  } ${
- isDragOver ? 'border-amber-400 border-2 scale-[1.01] shadow-lg' : ''
+ isDragOver ? 'border-2 scale-[1.01] shadow-lg' : ''
  } ${
  isSelected ? 'ring-2 ring-amber-400/60 shadow-md' : ''
  }`}
  >
- <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
- <div 
-   className="cursor-grab active:cursor-grabbing p-1 text-neutral-400 hover:text-amber-400 transition-colors shrink-0" 
-   title="Arrastrar y soltar para reordenar"
-   onClick={(e) => e.stopPropagation()}
- >
-   <GripVertical className="w-4 h-4" />
- </div>
+ <div className="flex items-center gap-2 px-2.5 py-1.5">
+   {/* Drag Handle */}
+   <div
+     className="cursor-grab active:cursor-grabbing text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+     title="Arrastrar y soltar para reordenar"
+     onClick={(e) => e.stopPropagation()}
+   >
+     <GripVertical className="w-3.5 h-3.5" />
+   </div>
 
- <span className="text-xl shrink-0 leading-none pt-0.5 sm:pt-0">{typeConfig.icon}</span>
- 
- <div className="min-w-0 flex-1 space-y-1">
- <div className="flex items-center gap-2 flex-wrap">
- <span className={`text-[10px] font-mono uppercase font-extrabold px-2 py-0.5 rounded-md border ${typeConfig.text} ${typeConfig.border}`}>
- {typeConfig.label}
- </span>
- <span className="text-[10px] font-mono text-[#f2ca50] font-bold">
- ⏱️ {durationText}
- </span>
- {isSelected && (
-   <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500 text-black animate-pulse">
-     📌 Seleccionado (insertar temas debajo)
+   {/* Icon */}
+   <span className="text-base shrink-0">{typeConfig.icon}</span>
+
+   {/* Type Label */}
+   <span className={`text-[8px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded-sm border shrink-0 ${typeConfig.text} ${typeConfig.border}`}>
+     {typeConfig.label}
    </span>
+
+   {/* Duration */}
+   <span className="text-[9px] font-mono text-[#f2ca50] font-bold shrink-0">
+     ⏱️ {durationText}
+   </span>
+
+   {/* Title - inline */}
+   <input
+     type="text"
+     value={it.tituloCustom || ''}
+     placeholder="Título/Descripción..."
+     onClick={(e) => e.stopPropagation()}
+     onChange={(e) => {
+       const val = e.target.value;
+       setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
+         ...s,
+         items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
+       } : s));
+     }}
+     className="bg-transparent border-b border-dashed border-white/20 text-[9px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
+   />
+
+   {isSelected && (
+     <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+       📌
+     </span>
+   )}
+
+   {/* Controls */}
+   <button
+     onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
+     className="p-0.5 text-neutral-400 hover:bg-neutral-800 rounded transition-colors shrink-0"
+     title="Editar detalles"
+   >
+     <Edit3 className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'up')}
+     disabled={index === 0}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover arriba"
+   >
+     <ArrowUp className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'down')}
+     disabled={index === activeSetlist.items.length - 1}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover abajo"
+   >
+     <ArrowDown className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleRemoveSetlistItem(it.id)}
+     className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
+     title="Quitar del setlist"
+   >
+     <X className="w-3.5 h-3.5" />
+   </button>
+ </div>
+
+ {/* SHOW NOTES IF EXIST */}
+ {it.notaTema && (
+   <div className="px-2.5 py-1 border-t text-[8px] font-mono text-white/70 truncate" title={it.notaTema}>
+     💡 {it.notaTema}
+   </div>
  )}
- </div>
-
- <input
- type="text"
- value={it.tituloCustom || ''}
- placeholder="Título / Descripción del evento..."
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => {
- const val = e.target.value;
- setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
- ...s,
- items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
- } : s));
- }}
- className="bg-transparent border-b border-dashed border-white/20 text-xs font-bold font-mono text-white focus:outline-none w-full"
- />
-
- <input
- type="text"
- placeholder="Notas / Cues de luces, sonido o frases para el público..."
- value={it.notaTema || ''}
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
- className="w-full text-[10px] font-mono px-2 py-1 rounded bg-black/40 text-neutral-300 placeholder:text-neutral-500 border border-white/10"
- />
- </div>
- </div>
-
- <div className="flex items-center gap-1 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
- <button
- onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
- className="p-1.5 text-sky-400 hover:bg-sky-500/20 rounded-lg cursor-pointer text-xs font-mono"
- title="Editar detalles del evento"
- >
- <Edit3 className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'up')}
- disabled={index === 0}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover arriba"
- >
- <ArrowUp className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'down')}
- disabled={index === activeSetlist.items.length - 1}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover abajo"
- >
- <ArrowDown className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleRemoveSetlistItem(it.id)}
- className="p-1.5 text-neutral-400 hover:text-rose-400 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Quitar del setlist"
- >
- <X className="w-3.5 h-3.5" />
- </button>
- </div>
  </div>
  );
  }
