@@ -98,9 +98,7 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
 ];
 
 /**
- * Agrupación para móvil: solo 'repertorio' en el grupo Música, sin las
- * 3 subvistas (catalogo, discografia, directo) para mantener el menú
- * compacto en pantallas pequeñas con tamaños de fuente coherentes.
+ * Agrupación para móvil: incluye todos los módulos de música igual que desktop.
  */
 export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
   {
@@ -113,7 +111,7 @@ export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio'],
+    itemIds: ['repertorio', 'catalogo', 'discografia', 'directo'],
   },
   {
     id: 'promocion',
