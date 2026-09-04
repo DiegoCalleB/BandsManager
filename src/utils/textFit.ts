@@ -1,10 +1,11 @@
 // Ajuste de texto a un ancho disponible para las notas manuscritas del repertorio imprimible
 // (PdfExportModal.tsx): cada nota (miembro, nota del bolo, nota general) se pinta en su propia
-// línea, apiladas una encima de otra — no todas seguidas en una sola línea. Se busca un tamaño
-// de fuente común a todas (para que se vean consistentes) encogiendo antes de partir una nota
-// concreta en dos líneas, y partiendo antes de truncar con "…" como último recurso. La función
-// de medición se inyecta para poder testear el algoritmo con vitest sin depender de un <canvas>
-// real (ver textFit.test.ts).
+// línea, apiladas una encima de otra — no todas seguidas en una sola línea, y CADA nota se queda
+// siempre en una única línea (nunca se parte en dos: un salto de línea en una anotación "escrita
+// a mano" no queda natural). Se busca un tamaño de fuente común a todas (para que se vean
+// consistentes) encogiendo tanto como haga falta; si ni al tamaño mínimo cabe una nota concreta,
+// esa nota (solo esa) se trunca con "…". La función de medición se inyecta para poder testear el
+// algoritmo con vitest sin depender de un <canvas> real (ver textFit.test.ts).
 
 export interface NoteSegment {
   text: string;
@@ -31,42 +32,22 @@ export interface FitOptions {
   measure: (text: string, fontSizePx: number) => number;
 }
 
-/** Envuelve un único texto por palabras en como mucho 2 líneas al ancho dado; trunca con "…" la segunda si ni así cabe todo. */
-function wrapSingleSegment(text: string, fontSizePx: number, maxWidthPx: number, measure: FitOptions['measure']): string[] {
-  const words = text.split(/\s+/).filter(Boolean);
-  const lines: string[] = [''];
-  let overflowed = false;
-
-  for (const word of words) {
-    const current = lines[lines.length - 1];
-    const candidate = current ? `${current} ${word}` : word;
-    if (measure(candidate, fontSizePx) <= maxWidthPx || !current) {
-      lines[lines.length - 1] = candidate;
-    } else if (lines.length < 2) {
-      lines.push(word);
-    } else {
-      overflowed = true;
-      break;
-    }
+/** Trunca un texto con "…" al ancho dado, sin partirlo nunca en más de una línea. */
+function truncateToWidth(text: string, fontSizePx: number, maxWidthPx: number, measure: FitOptions['measure']): string {
+  if (measure(text, fontSizePx) <= maxWidthPx) return text;
+  let truncated = text;
+  while (truncated.length > 1 && measure(`${truncated}…`, fontSizePx) > maxWidthPx) {
+    truncated = truncated.slice(0, -1);
   }
-
-  const lastIdx = lines.length - 1;
-  if (overflowed || measure(lines[lastIdx], fontSizePx) > maxWidthPx) {
-    let last = lines[lastIdx];
-    while (last.length > 1 && measure(`${last}…`, fontSizePx) > maxWidthPx) {
-      last = last.slice(0, -1);
-    }
-    lines[lastIdx] = `${last}…`;
-  }
-
-  return lines;
+  return `${truncated}…`;
 }
 
 /**
  * Ajusta cada segmento (nota) a su propia línea, apiladas, con un único tamaño de fuente común
- * a todas (el mayor que permite que CADA nota, individualmente, quepa en una sola línea). Si
- * alguna nota concreta ni al tamaño mínimo cabe en una línea, esa nota (solo esa) se parte en 2
- * líneas; si ni así cabe entera, se trunca con "…" como último recurso — nunca antes.
+ * a todas (el mayor que permite que CADA nota, individualmente, quepa en una sola línea). Cada
+ * nota se queda SIEMPRE en una única línea — nunca se parte en dos, porque un salto de línea en
+ * medio de una anotación "escrita a mano" no se ve natural. Si alguna nota concreta ni al tamaño
+ * mínimo cabe entera, esa nota (solo esa) se trunca con "…".
  */
 export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions): StackedFitResult {
   const nonEmpty = segments.filter(s => s.text && s.text.trim().length > 0);
@@ -84,16 +65,10 @@ export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions
     }
   }
 
-  const lines: NoteLine[] = [];
-  for (const seg of nonEmpty) {
-    if (measure(seg.text, fontSizePx) <= maxWidthPx) {
-      lines.push({ text: seg.text, className: seg.className });
-    } else {
-      wrapSingleSegment(seg.text, fontSizePx, maxWidthPx, measure).forEach(text =>
-        lines.push({ text, className: seg.className })
-      );
-    }
-  }
+  const lines: NoteLine[] = nonEmpty.map(seg => ({
+    text: truncateToWidth(seg.text, fontSizePx, maxWidthPx, measure),
+    className: seg.className
+  }));
 
   return { fontSizePx, lines };
 }
