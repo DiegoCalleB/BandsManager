@@ -114,6 +114,8 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
 
   if (bpms.length === 0 && dbs.length === 0) return;
 
+  // min/max SOLO de canciones con dato real: una canción sin BPM detectable no debe
+  // ensanchar ni desplazar el rango que usa el resto de la banda para normalizarse.
   const bandStats = {
     minBpm: bpms.length > 0 ? Math.min(...bpms) : 120,
     maxBpm: bpms.length > 0 ? Math.max(...bpms) : 120,
@@ -121,10 +123,18 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
     maxDb: dbs.length > 0 ? Math.max(...dbs) : -25
   };
 
+  // Fallback para la canción SIN bpm/db detectado: la mediana real de la banda (no un
+  // 120 fijo), para que esa canción caiga cerca del centro de la distribución real en
+  // vez de en un punto arbitrario que puede quedar fuera del rango observado.
+  const sortedBpms = [...bpms].sort((a, b) => a - b);
+  const medianBpm = sortedBpms.length > 0 ? sortedBpms[Math.floor(sortedBpms.length / 2)] : 120;
+  const sortedDbs = [...dbs].sort((a, b) => a - b);
+  const medianDb = sortedDbs.length > 0 ? sortedDbs[Math.floor(sortedDbs.length / 2)] : -25;
+
   // Mapea cada canción a 1-20 usando la fórmula híbrida
   for (const song of songs) {
-    const bpm = song.energia_bpm_detectado || 120;
-    const db = song.energia_db_promedio || -25;
+    const bpm = song.energia_bpm_detectado ?? medianBpm;
+    const db = song.energia_db_promedio ?? medianDb;
     const energia = calcularEnergiaBpmVolumen(bpm, db, bandStats);
 
     const { error: updateError } = await sb

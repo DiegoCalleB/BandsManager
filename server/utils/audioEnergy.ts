@@ -19,7 +19,7 @@ import { ejecutar } from "./youtubeSource.js";
 export const DB_SILENCIO = -90;
 
 export interface PuntoEnergia {
-  /** Segundo del vídeo. */
+  /** Instante del vídeo, en segundos (fraccional: ~10 muestras/segundo). */
   t: number;
   /** Nivel RMS en dB (negativo; 0 sería el máximo). */
   db: number;
@@ -62,7 +62,10 @@ export function parseRmsCurve(salida?: string | null): PuntoEnergia[] {
         const v = parseFloat(bruto);
         db = Number.isFinite(v) ? Math.max(DB_SILENCIO, v) : DB_SILENCIO;
       }
-      puntos.push({ t: Math.round(tActual), db });
+      // Sin redondear: la detección de BPM necesita el instante real (fraccional) para
+      // medir intervalos entre golpes de menos de un segundo. Ver comentario en
+      // `analizarEnergiaAudio` sobre por qué el muestreo ya no es de 1/segundo.
+      puntos.push({ t: tActual, db });
       tActual = null;
     }
   }
@@ -169,61 +172,104 @@ export function calcularVolumenPromedioAudio(curva: PuntoEnergia[]): number | nu
 }
 
 /**
- * Detecta BPM desde la curva de energía encontrando picos (onsets) y midiendo
- * inter-onset intervals. Funciona analizando dónde sube la energía del audio.
+ * Detecta el tempo (BPM) real del tema a partir de los golpes de energía en el audio.
  *
- * Retorna BPM estimado (60-180 para covers rock), o 120 (default) si no se detectan picos.
+ * La versión anterior de esta función medía sobre una curva de 1 muestra/segundo y
+ * confundía índices de array con tiempo real — con esos datos era imposible distinguir
+ * un golpe de otro en cualquier tema por encima de 60 BPM (un tema a 120 BPM golpea cada
+ * 0.5s, dos veces más rápido que la propia muestra), así que casi todas las canciones
+ * caían en el valor por defecto. Con el muestreo ahora a ~10/segundo (ver
+ * `analizarEnergiaAudio`) esto ya mide golpes de verdad, usando timestamps reales.
+ *
+ * Algoritmo: flujo de energía (subidas de RMS, que es donde ataca una nota) → picos
+ * locales por encima de un umbral adaptativo → intervalos entre picos → moda del
+ * histograma de esos intervalos (más robusto que la media/mediana ante síncopas) →
+ * corrección de octava (doblar/partir por 2 si el tempo cae fuera del rango típico de
+ * un cover de rock, el error de octava clásico de cualquier detector de tempo).
+ *
+ * Devuelve `null` (no un valor inventado) cuando no hay suficientes golpes para fiarse
+ * del resultado — así `recalibrarEnergiasDelRepertorio` no deja que un "120" de relleno
+ * contamine el rango real de la banda.
  */
-export function detectarBpmDesdeAudio(curva: PuntoEnergia[]): number {
-  if (!Array.isArray(curva) || curva.length < 4) return 120; // default
+export function detectarBpmDesdeAudio(curva: PuntoEnergia[]): number | null {
+  if (!Array.isArray(curva) || curva.length < 8) return null;
 
-  // Normalizar a 0-100 para detectar picos independiente del nivel absoluto
-  const dbs = curva.map((p) => p.db).filter((db) => db > DB_SILENCIO + 10);
-  if (dbs.length < 4) return 120;
+  const ordenada = [...curva].sort((a, b) => a.t - b.t);
+  const puntos = ordenada.filter((p) => p.db > DB_SILENCIO + 10); // descarta silencio
+  if (puntos.length < 8) return null;
 
+  const dbs = puntos.map((p) => p.db);
   const min = Math.min(...dbs);
   const max = Math.max(...dbs);
   const rango = max - min;
-  if (rango < 1) return 120; // audio muy uniforme, no hay ritmo detectable
+  if (rango < 1) return null; // audio demasiado uniforme, no hay ritmo que medir
 
-  const normalized = dbs.map((db) => (db - min) / rango);
+  const normalizado = dbs.map((db) => (db - min) / rango);
 
-  // Detectar picos: donde la energía sube abruptamente (onset)
-  // Un onset es donde normalized[i] - normalized[i-1] > threshold
-  const threshold = rango > 2 ? 0.15 : 0.2;
-  const onsets: number[] = [];
+  // Flujo de energía: solo subidas (los ataques de nota), igual que un onset detector
+  // clásico de flujo espectral pero aplicado sobre RMS.
+  const flujo: number[] = [0];
+  for (let i = 1; i < normalizado.length; i++) {
+    flujo.push(Math.max(0, normalizado[i] - normalizado[i - 1]));
+  }
 
-  for (let i = 1; i < normalized.length; i++) {
-    const delta = normalized[i] - normalized[i - 1];
-    if (delta > threshold) {
-      onsets.push(i);
+  const media = flujo.reduce((a, b) => a + b, 0) / flujo.length;
+  const varianza = flujo.reduce((a, b) => a + (b - media) ** 2, 0) / flujo.length;
+  const umbral = media + Math.sqrt(varianza) * 0.5;
+  if (umbral <= 0) return null;
+
+  // Picos locales del flujo, exigiendo 150ms de separación mínima (tope ~400 BPM,
+  // de sobra para cualquier cover de rock) para no contar el mismo golpe dos veces.
+  const SEPARACION_MINIMA = 0.15;
+  const onsetTimes: number[] = [];
+  let ultimoOnset = -Infinity;
+
+  for (let i = 1; i < flujo.length - 1; i++) {
+    const esPicoLocal = flujo[i] >= flujo[i - 1] && flujo[i] >= flujo[i + 1];
+    if (esPicoLocal && flujo[i] > umbral && puntos[i].t - ultimoOnset >= SEPARACION_MINIMA) {
+      onsetTimes.push(puntos[i].t);
+      ultimoOnset = puntos[i].t;
     }
   }
 
-  // Si hay muy pocos onsets, no hay ritmo claro
-  if (onsets.length < 3) return 120;
+  if (onsetTimes.length < 6) return null; // muy pocos golpes detectados para fiarse
 
-  // Calcular inter-onset intervals (IOI en segundos)
+  // Inter-onset intervals reales, en segundos (no índices de array).
   const iois: number[] = [];
-  for (let i = 1; i < onsets.length; i++) {
-    const ioiSegundos = onsets[i] - onsets[i - 1]; // cada punto es 1 segundo
-    if (ioiSegundos > 0.2 && ioiSegundos < 4) {
-      // Rango sensato: 0.2s (300 BPM) a 4s (15 BPM)
-      iois.push(ioiSegundos);
+  for (let i = 1; i < onsetTimes.length; i++) {
+    const ioi = onsetTimes[i] - onsetTimes[i - 1];
+    if (ioi >= 0.25 && ioi <= 1.5) iois.push(ioi); // 40-240 BPM
+  }
+  if (iois.length < 4) return null;
+
+  // Moda del histograma de IOIs (bins de 30ms): el pulso real se repite más que
+  // cualquier síncopa aislada, así que gana el bin con más votos.
+  const BIN = 0.03;
+  const contador = new Map<number, number>();
+  for (const ioi of iois) {
+    const bin = Math.round(ioi / BIN);
+    contador.set(bin, (contador.get(bin) || 0) + 1);
+  }
+  let mejorBin = 0;
+  let mejorCount = 0;
+  for (const [bin, count] of contador) {
+    if (count > mejorCount) {
+      mejorCount = count;
+      mejorBin = bin;
     }
   }
+  if (mejorBin <= 0) return null;
 
-  if (iois.length < 2) return 120;
+  let bpm = 60 / (mejorBin * BIN);
 
-  // Usar la mediana de IOIs para robustez contra outliers
-  const sortedIois = [...iois].sort((a, b) => a - b);
-  const medianIoi = sortedIois[Math.floor(sortedIois.length / 2)];
+  // Corrección de octava: los detectores de tempo confunden fácilmente el pulso con
+  // su doble o su mitad (ej. detectar las corcheas en vez de la negra). Plegar al
+  // rango típico de un cover de rock (70-180) antes de aceptar el resultado.
+  while (bpm < 70) bpm *= 2;
+  while (bpm > 180) bpm /= 2;
 
-  // BPM = 60 / IOI (en segundos)
-  let bpm = Math.round(60 / medianIoi);
-
-  // Clamp a rango sensato (si detectó algo extremo, usar default)
-  if (bpm < 60 || bpm > 180) bpm = 120;
+  bpm = Math.round(bpm);
+  if (bpm < 40 || bpm > 220) return null;
 
   return bpm;
 }
@@ -293,9 +339,13 @@ export function resumirEnergiaParaPrompt(ventanas: VentanaEnergia[]): string {
 /**
  * Mide la energía del audio con ffmpeg. Acepta una ruta local o una URL directa de audio.
  *
- * `asetnsamples` fuerza frames de exactamente un segundo, que es lo que hace que `reset=1`
- * dé una medición por segundo: `reset` cuenta frames, no tiempo, y sin esto una hora de bolo
- * salían decenas de miles de líneas de 23 ms.
+ * `asetnsamples` fuerza el tamaño de frame — sin esto, astats usa el frame nativo del
+ * decodificador (~23ms, variable) y `reset=1` (que cuenta frames, no tiempo) da una
+ * frecuencia irregular. Frames de 100ms (n=800 a 8kHz) dan ~10 mediciones/segundo: es
+ * la resolución mínima que hace falta para que `detectarBpmDesdeAudio` pueda ver golpes
+ * de batería individuales. Antes esto medía 1 vez por segundo, y un tema a 120 BPM golpea
+ * cada 0.5s — la mitad de rápido que la propia muestra, así que la detección de BPM era
+ * físicamente imposible por mucho que se afinara el algoritmo.
  *
  * Para una `fuente` remota, se descarga primero a un fichero temporal en vez de pasarle la URL
  * directamente a `-i`: el ffmpeg-static empaquetado aquí crashea (segfault, verificado a mano)
@@ -341,7 +391,7 @@ export async function analizarEnergiaAudio(
   args.push(
     "-i", rutaLocal,
     "-vn",
-    "-af", "aresample=8000,asetnsamples=n=8000:p=0,astats=metadata=1:reset=1,ametadata=print:key=lavfi.astats.Overall.RMS_level:file=-",
+    "-af", "aresample=8000,asetnsamples=n=800:p=0,astats=metadata=1:reset=1,ametadata=print:key=lavfi.astats.Overall.RMS_level:file=-",
     "-f", "null",
     "-"
   );
