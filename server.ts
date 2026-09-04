@@ -498,9 +498,23 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
+    // index.html nunca debe cachearse en el navegador: es el único archivo del build sin hash
+    // en el nombre, así que si el navegador lo sirve de caché tras un deploy, sigue apuntando a
+    // bundles JS/CSS con hash viejo que el servidor ya no tiene (fueron sustituidos por el build
+    // nuevo) — la SPA se queda "atascada" en la versión anterior indefinidamente aunque el
+    // deploy en sí haya sido correcto. Los assets con hash (bajo /assets) sí pueden cachearse
+    // agresivamente: su nombre cambia en cada build, así que cachearlos para siempre es seguro.
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, {
+      index: false,
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith(".html")) {
+          res.setHeader("Cache-Control", "no-store");
+        }
+      }
+    }));
     app.get("*", (req, res) => {
+      res.setHeader("Cache-Control", "no-store");
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
