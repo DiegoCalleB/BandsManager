@@ -394,7 +394,9 @@ export async function dbUpsertSetlist(setlist: any, bandId: string) {
     descripcion: setlist.descripcion || "",
     tipo_formato: setlist.tipo_formato || setlist.tipoFormato || "festival",
     duracion_total_estimada_minutos: Number(setlist.duracion_total_estimada_minutos || setlist.duracionTotalEstimadaMinutos || 0),
-    items: setlist.items || []
+    items: setlist.items || [],
+    ...(setlist.ai_analysis_json && { ai_analysis_json: setlist.ai_analysis_json }),
+    ...(setlist.ai_analysis_generated_at && { ai_analysis_generated_at: setlist.ai_analysis_generated_at })
   };
 
   const { data, error } = await sb.from("setlists").upsert(payload).select().single();

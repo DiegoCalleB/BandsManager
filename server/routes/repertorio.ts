@@ -501,11 +501,9 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     const userBandId = getTargetBandId(req);
     const { setlistId } = req.params;
 
-    // Obtener el setlist y sus canciones
-    const state = loadState();
-    const setlist = (state.setlists || []).find(
-      (s: any) => s.id === setlistId && s.band_id === userBandId
-    );
+    // Obtener el setlist desde Supabase
+    const allSetlists = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s: any) => s.id === setlistId);
     if (!setlist) {
       return res.status(404).json({ error: "Setlist no encontrado" });
     }
