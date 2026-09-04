@@ -364,6 +364,20 @@ export default function RepertorioSetlists({
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
 
+ // Sync activeTab with the view prop (when navigating from sidebar)
+ useEffect(() => {
+   if (view === 'catalogo') {
+     setActiveTab('catalogo');
+   } else if (view === 'discografia') {
+     setActiveTab('discografia');
+   } else if (view === 'directo') {
+     setActiveTab('escenario');
+   } else {
+     // repertorio or undefined
+     setActiveTab('setlists');
+   }
+ }, [view]);
+
  // Songs Repertoire State
  const [songs, setSongs] = useState<Song[]>(() => {
    try {
@@ -1806,60 +1820,6 @@ export default function RepertorioSetlists({
         <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
       </div>
 
-  {/* NAVIGATION SUBTABS */}
-  <div className="flex items-center gap-1.5 p-1 bg-[#121212] border border-white/5 rounded-full w-full md:w-auto overflow-x-auto shadow-lg">
-  <button
-  id="tab-setlists"
-  onClick={() => setActiveTab('setlists')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'setlists'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Layers className="w-3.5 h-3.5" />
-  <span>Setlists ({setlists.length})</span>
-  </button>
-
-  <button
-  id="tab-catalogo"
-  onClick={() => setActiveTab('catalogo')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'catalogo'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Music className="w-3.5 h-3.5" />
-  <span>Catálogo ({songs.length})</span>
-  </button>
-
-  <button
-  id="tab-discografia"
-  onClick={() => setActiveTab('discografia')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'discografia'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Disc3 className="w-3.5 h-3.5" />
-  <span>Discografía ({albumsList.filter(a => a !== "todos").length})</span>
-  </button>
-
-  <button
-  id="tab-escenario"
-  onClick={() => setActiveTab('escenario')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'escenario'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Eye className="w-3.5 h-3.5" />
-  <span>Modo Escenario ({activeSetlist ? activeSetlist.items.length : 0})</span>
-  </button>
-  </div>
  </div>
 
   {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
