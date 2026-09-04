@@ -538,7 +538,13 @@ export default function RepertorioSetlists({
  const updatedList = songs.map(s => s.id === updatedSong.id ? updatedSong : s);
  setSongs(updatedList);
  saveSongsToLocalStorageSafely(updatedList);
+ // Este handler se reutiliza como "guardar canción" genérico (MemberNotesModal, favorito,
+ // PdfExportModal, SpotifyPlayerBar), no solo desde el propio Song Studio: sin este guard
+ // (mismo patrón que handleUpdateSongFromChords de arriba) forzaba la apertura del Studio en
+ // cualquiera de esos sitios aunque estuviera cerrado, p.ej. al guardar notas por miembro.
+ if (activeStudioSong?.id === updatedSong.id) {
  setActiveStudioSong(updatedSong);
+ }
  if (activePlayerSong?.id === updatedSong.id) {
  setActivePlayerSong(updatedSong);
  }
