@@ -53,7 +53,7 @@ Proporciona un análisis JSON VÁLIDO (sin markdown) con:
       "issue": "Qué pasa ahora",
       "suggestion": "Qué cambiar y cómo",
       "impact": "Qué mejora",
-      "songs_involved": ["Canción A", "Canción B"]
+      "songs_involved": ["Nombre exacto de canción 1", "Nombre exacto de canción 2"]
     }
   ],
   "overallScore": 0-100,
@@ -61,7 +61,11 @@ Proporciona un análisis JSON VÁLIDO (sin markdown) con:
   "areasForImprovement": ["Área 1", "Área 2"]
 }
 
-Máximo 3-4 sugerencias, solo las MÁS IMPORTANTES. Sé específico con nombres de canciones.
+IMPORTANTE:
+- En "songs_involved", usa EXACTAMENTE los títulos de las canciones de la lista (ej: "Bienvenidos", "Solo Batería")
+- Máximo 3-4 sugerencias, solo las MÁS IMPORTANTES
+- Si una sugerencia aplica a múltiples canciones consecutivas, lista todas
+- Si aplica a una sola, puede ser un array de 1 elemento
 `;
 
   try {

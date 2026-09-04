@@ -2238,11 +2238,13 @@ export default function RepertorioSetlists({
                           const { cx, cy, payload, index } = dotProps;
                           if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
                           const isSelected = payload.id === selectedSetlistItemId;
+                          const payloadTitle = (payload.titulo || '').toLowerCase().trim();
                           const isHighlighted = highlightedSongIds.length > 0 && highlightedSongIds.some(songTitle => {
-                            const payloadTitle = payload.titulo || '';
-                            const lowerTitle = payloadTitle.toLowerCase().trim();
-                            const lowerSongTitle = songTitle.toLowerCase().trim();
-                            return lowerTitle === lowerSongTitle || lowerTitle.includes(lowerSongTitle) || lowerSongTitle.includes(lowerTitle);
+                            const lowerSongTitle = (songTitle || '').toLowerCase().trim();
+                            if (!payloadTitle || !lowerSongTitle) return false;
+                            return payloadTitle === lowerSongTitle ||
+                                   payloadTitle.includes(lowerSongTitle) ||
+                                   lowerSongTitle.includes(payloadTitle);
                           });
                           return (
                             <circle
@@ -2250,14 +2252,16 @@ export default function RepertorioSetlists({
                               cx={cx}
                               cy={cy}
                               r={isHighlighted ? 10 : isSelected ? 8 : 5.5}
-                              fill={isHighlighted ? `${payload.color}` : payload.color}
+                              fill={payload.color}
                               stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
                               strokeWidth={isHighlighted ? 3 : isSelected ? 2 : 1.5}
                               style={{
                                 cursor: 'pointer',
+                                opacity: 1,
                                 filter: isHighlighted
                                   ? `drop-shadow(0 0 10px ${payload.color}ff) drop-shadow(0 0 20px ${payload.color}aa)`
-                                  : `drop-shadow(0 0 5px ${payload.color}bb)`
+                                  : `drop-shadow(0 0 5px ${payload.color}bb)`,
+                                transition: 'all 0.2s ease'
                               }}
                               onClick={() => setSelectedSetlistItemId(payload.id)}
                             />
@@ -2304,32 +2308,41 @@ export default function RepertorioSetlists({
                     </div>
                     {aiAnalysisResult.suggestions?.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5">
-                        {aiAnalysisResult.suggestions.map((s: any, i: number) => (
-                          <span
-                            key={i}
-                            className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition cursor-pointer"
-                            style={{
-                              backgroundColor: highlightedSongIds.length > 0 && s.songs_involved?.some((songTitle: string) =>
-                                highlightedSongIds.some(h => h.toLowerCase().includes(songTitle.toLowerCase()) || songTitle.toLowerCase().includes(h.toLowerCase()))
-                              ) ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
-                              borderColor: highlightedSongIds.length > 0 && s.songs_involved?.some((songTitle: string) =>
-                                highlightedSongIds.some(h => h.toLowerCase().includes(songTitle.toLowerCase()) || songTitle.toLowerCase().includes(h.toLowerCase()))
-                              ) ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
-                              color: 'rgb(196 181 253)'
-                            }}
-                            onMouseEnter={() => {
-                              if (s.songs_involved?.length) {
-                                setHighlightedSongIds(s.songs_involved);
-                              }
-                            }}
-                            onMouseLeave={() => setHighlightedSongIds([])}
-                            onClick={() => setShowAIAnalysisModal(true)}
-                            title="Pasa ratón para resaltar en gráfico"
-                          >
-                            <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
-                            <span>{s.title}</span>
-                          </span>
-                        ))}
+                        {aiAnalysisResult.suggestions.map((s: any, i: number) => {
+                          const songsToHighlight = (s.songs_involved && s.songs_involved.length > 0)
+                            ? s.songs_involved
+                            : []; // Si no hay songs_involved, usar array vacío
+                          const isHighlighted = highlightedSongIds.length > 0 && songsToHighlight.some((songTitle: string) => {
+                            const lowerTitle = songTitle.toLowerCase().trim();
+                            return highlightedSongIds.some(h => {
+                              const lowerH = h.toLowerCase().trim();
+                              return lowerTitle === lowerH || lowerTitle.includes(lowerH) || lowerH.includes(lowerTitle);
+                            });
+                          });
+
+                          return (
+                            <span
+                              key={i}
+                              className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition cursor-pointer"
+                              style={{
+                                backgroundColor: isHighlighted ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
+                                borderColor: isHighlighted ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
+                                color: 'rgb(196 181 253)'
+                              }}
+                              onMouseEnter={() => {
+                                if (songsToHighlight && songsToHighlight.length > 0) {
+                                  setHighlightedSongIds(songsToHighlight);
+                                }
+                              }}
+                              onMouseLeave={() => setHighlightedSongIds([])}
+                              onClick={() => setShowAIAnalysisModal(true)}
+                              title="Pasa ratón para resaltar en gráfico"
+                            >
+                              <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
+                              <span>{s.title}</span>
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
