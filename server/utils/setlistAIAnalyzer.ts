@@ -1,5 +1,6 @@
 import { Song, SetlistItem } from "../../src/types.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { tonalidadesSonFiables } from "../../src/utils/harmonicAnalysis.js";
 
 export interface AISetlistSuggestion {
   priority: 'high' | 'medium' | 'low';
@@ -31,15 +32,26 @@ export async function analyzeSetlistWithAI(
     throw new Error("No songs to analyze");
   }
 
-  const songList = songs
-    .sort((a, b) => a.position - b.position)
-    .map((s) => `${s.position}. ${s.titulo} (energía: ${s.energia || 10}/20)`)
+  const sorted = songs.sort((a, b) => a.position - b.position);
+  // Solo se manda la tonalidad al modelo (y se le pide razonar sobre ella) si el repertorio
+  // tiene datos reales de verdad — si la mayoría sigue en "Mim" (el valor con el que la app
+  // rellena el campo cuando nadie lo ha tocado), pedirle a la IA que analice "la secuencia
+  // armónica" sería pedirle que opine sobre datos vacíos disfrazados de reales.
+  const incluirTonalidad = tonalidadesSonFiables(sorted);
+
+  const songList = sorted
+    .map((s) => `${s.position}. ${s.titulo} (energía: ${s.energia || 10}/20${incluirTonalidad && s.tonalidad ? `, tonalidad: ${s.tonalidad}` : ''})`)
     .join('\n');
 
   const prompt = `
 Eres un experto en pacing de conciertos de rock. Analiza este setlist:
 
 ${songList}
+${incluirTonalidad ? `
+Las tonalidades indicadas son datos reales: ten también en cuenta la SECUENCIA ARMÓNICA del
+repertorio (círculo de quintas, relativas mayor/menor). Señala si hay saltos de tonalidad
+bruscos entre temas consecutivos que rompan el flujo armónico del directo, y si un
+reordenamiento razonable lo mejoraría, inclúyelo como una sugerencia más (categoría "contrast").` : ''}
 
 Proporciona un análisis JSON VÁLIDO (sin markdown) con:
 {
