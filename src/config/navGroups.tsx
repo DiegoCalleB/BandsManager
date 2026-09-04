@@ -1,9 +1,10 @@
 import type { LucideIcon } from 'lucide-react';
-import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles } from 'lucide-react';
+import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock } from 'lucide-react';
 
 export type NavItemId =
   | 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'giras'
-  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'chat' | 'finanzas' | 'merchan';
+  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'chat' | 'finanzas' | 'merchan'
+  | 'metronome' | 'tuner';
 
 export interface NavItemDef {
   id: NavItemId;
@@ -30,6 +31,8 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
   finanzas: { id: 'finanzas', icon: Coins, labelKey: 'nav.finanzas', labelDefault: 'Finanzas', adminOnly: true },
   merchan: { id: 'merchan', icon: Sparkles, labelKey: 'nav.merchan', labelDefault: 'Merchandising', adminOnly: true },
+  metronome: { id: 'metronome', icon: Clock, labelKey: 'nav.metronome', labelDefault: 'Metrónomo' },
+  tuner: { id: 'tuner', icon: Guitar, labelKey: 'nav.tuner', labelDefault: 'Afinador' },
 };
 
 export interface NavGroupDef {
@@ -45,6 +48,13 @@ export interface NavGroupDef {
  * clic, nunca escondidas dentro de un grupo cerrado.
  */
 export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen', 'calendario'];
+
+/**
+ * Ítems fijos que siempre se muestran abajo, fuera de cualquier grupo colapsable.
+ * Agente Mánager es accesible también desde el chat flotante, pero merece su propio
+ * botón pinned en el sidebar para acceso rápido.
+ */
+export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
 
 /**
  * Agrupación usada cuando el plan de la banda desbloquea suficientes módulos
@@ -63,7 +73,7 @@ export const NAV_GROUPS: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'chat'],
+    itemIds: ['repertorio'],
   },
   {
     id: 'promocion',
@@ -77,12 +87,19 @@ export const NAV_GROUPS: NavGroupDef[] = [
     titleDefault: 'Negocio',
     itemIds: ['giras', 'finanzas', 'merchan'],
   },
+  {
+    id: 'herramientas',
+    titleKey: 'navGroup.herramientas',
+    titleDefault: 'Herramientas',
+    itemIds: ['metronome', 'tuner'],
+  },
 ];
 
 /**
  * Orden plano actual del <aside> de escritorio y del drawer móvil. Se usa tal cual
  * cuando el plan no supera MIN_MODULES_FOR_GROUPED_NAV (hoy, solo `promo`), para no
- * cambiar nada visualmente en ese caso.
+ * cambiar nada visualmente en ese caso. Incluye todo excepto metronome/tuner que son
+ * herramientas solo en la vista agrupada.
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
   'resumen', 'booking', 'medios', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'chat', 'finanzas', 'merchan',
@@ -91,6 +108,8 @@ export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
 /**
  * Orden propio de la barra de tabs horizontal móvil (fila de scroll, nunca se agrupa
  * ni se colapsa, independientemente del plan).
+ * (Chat está en NAV_PINNED_BOTTOM_IDS en el sidebar, pero la barra de tabs no es un
+ * sidebar — mantiene la lista de módulos principales para scroll horizontal.)
  */
 export const TOP_TABS_ORDER_IDS: NavItemId[] = [
   'resumen', 'booking', 'medios', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'chat', 'finanzas', 'merchan',

@@ -37,10 +37,9 @@ import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
-import { NAV_ITEMS, NAV_GROUPS, NAV_PINNED_TOP_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { NAV_ITEMS, NAV_GROUPS, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
-import { MusicToolsQuickLinks } from './components/common/MusicToolsQuickLinks';
 import { useLanguage } from './context/LanguageContext';
 import {
   Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
@@ -220,7 +219,7 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes',
+    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
     options?: {
       sectionTab?: 'salas' | 'medios';
       statusFilter?: LeadStatus | 'todos';
@@ -230,6 +229,18 @@ export default function App() {
       concertId?: string;
     }
   ) => {
+    // Herramientas (metronome/tuner): abren modal sin cambiar vista
+    if (view === 'metronome') {
+      setShowMetronomeModal(true);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    if (view === 'tuner') {
+      setShowTunerModal(true);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
     // 'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
     // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
@@ -666,15 +677,7 @@ export default function App() {
        onToggleOpen={() => toggleNavGroup(group.id)}
        t={t}
        variant="mobile"
-     >
-       {group.id === 'musica' && (
-         <MusicToolsQuickLinks
-           variant="mobile"
-           onOpenMetronome={() => { setShowMetronomeModal(true); setIsMobileMenuOpen(false); }}
-           onOpenTuner={() => { setShowTunerModal(true); setIsMobileMenuOpen(false); }}
-         />
-       )}
-     </NavGroupSection>
+     />
    ))
  ) : (
    FLAT_NAV_ORDER_IDS
@@ -694,6 +697,21 @@ export default function App() {
        />
      ))
  )}
+ {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.map((id) => {
+   const item = NAV_ITEMS[id];
+   return (
+     <NavItemButton
+       key={item.id}
+       item={item}
+       label={t(item.labelKey, item.labelDefault)}
+       isSelected={currentView === item.id}
+       isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+       badge={navBadges[item.id]}
+       onNavigate={() => handleNavigate(item.id as any)}
+       variant="mobile"
+     />
+   );
+ })}
  </nav>
 
  {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
@@ -853,15 +871,7 @@ export default function App() {
        onToggleOpen={() => toggleNavGroup(group.id)}
        t={t}
        variant="desktop"
-     >
-       {group.id === 'musica' && (
-         <MusicToolsQuickLinks
-           variant="desktop"
-           onOpenMetronome={() => setShowMetronomeModal(true)}
-           onOpenTuner={() => setShowTunerModal(true)}
-         />
-       )}
-     </NavGroupSection>
+     />
    ))
  ) : (
    FLAT_NAV_ORDER_IDS
@@ -881,6 +891,21 @@ export default function App() {
        />
      ))
  )}
+ {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.map((id) => {
+   const item = NAV_ITEMS[id];
+   return (
+     <NavItemButton
+       key={item.id}
+       item={item}
+       label={t(item.labelKey, item.labelDefault)}
+       isSelected={currentView === item.id}
+       isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+       badge={navBadges[item.id]}
+       onNavigate={() => handleNavigate(item.id as any)}
+       variant="desktop"
+     />
+   );
+ })}
  </nav>
 
  {/* Campañas de Booking (oculto en plan Promo, no tiene acceso a Booking) */}

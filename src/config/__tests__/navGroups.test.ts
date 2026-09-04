@@ -3,6 +3,7 @@ import {
   NAV_ITEMS,
   NAV_GROUPS,
   NAV_PINNED_TOP_IDS,
+  NAV_PINNED_BOTTOM_IDS,
   FLAT_NAV_ORDER_IDS,
   TOP_TABS_ORDER_IDS,
   MIN_MODULES_FOR_GROUPED_NAV,
@@ -16,6 +17,7 @@ describe('navGroups config', () => {
     const allKnownIds = new Set(Object.keys(NAV_ITEMS));
     const referenced = [
       ...NAV_PINNED_TOP_IDS,
+      ...NAV_PINNED_BOTTOM_IDS,
       ...NAV_GROUPS.flatMap((g) => g.itemIds),
       ...FLAT_NAV_ORDER_IDS,
       ...TOP_TABS_ORDER_IDS,
@@ -31,26 +33,34 @@ describe('navGroups config', () => {
     expect(new Set(FLAT_NAV_ORDER_IDS)).toEqual(new Set(TOP_TABS_ORDER_IDS));
   });
 
-  it('groups + pinned-top cover every item in FLAT_NAV_ORDER_IDS exactly once', () => {
-    const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
-    expect(new Set(grouped)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
-    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length);
+  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools (metronome/tuner)', () => {
+    // Cuando hay agrupación (planes >6 módulos), mostramos:
+    // - Todos los módulos de FLAT_NAV_ORDER_IDS (pinned-top, pinned-bottom, grupos)
+    // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
+    const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
+    const toolIds: NavItemId[] = ['metronome', 'tuner'];
+    const groupedWithoutTools = grouped.filter(id => !toolIds.includes(id));
+    expect(new Set(groupedWithoutTools)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
+    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
-    expect(findNavGroupIdForItem('chat')).toBe('musica');
+    expect(findNavGroupIdForItem('metronome')).toBe('herramientas');
+    expect(findNavGroupIdForItem('tuner')).toBe('herramientas');
     expect(findNavGroupIdForItem('booking')).toBe('contactos');
     expect(findNavGroupIdForItem('epk')).toBe('promocion');
     expect(findNavGroupIdForItem('giras')).toBe('negocio');
-    // Resumen y Calendario están fijos arriba, fuera de cualquier grupo colapsable.
+    // Resumen, Calendario y Chat están fijos (arriba y abajo), fuera de cualquier grupo colapsable.
     expect(findNavGroupIdForItem('resumen')).toBeUndefined();
     expect(findNavGroupIdForItem('calendario')).toBeUndefined();
+    expect(findNavGroupIdForItem('chat')).toBeUndefined();
     expect(findNavGroupIdForItem('no-existe')).toBeUndefined();
   });
 
-  it('pins exactly resumen and calendario outside any group', () => {
+  it('pins exactly resumen and calendario at top, chat at bottom outside any group', () => {
     expect(new Set(NAV_PINNED_TOP_IDS)).toEqual(new Set(['resumen', 'calendario']));
+    expect(new Set(NAV_PINNED_BOTTOM_IDS)).toEqual(new Set(['chat']));
   });
 
   it('threshold matches the intended split: only `promo` stays ungrouped', () => {
