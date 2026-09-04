@@ -72,6 +72,35 @@ export async function analizarYGuardarDinamicaCancion(
 }
 
 /**
+ * Fija a mano la energía (1-20) de una canción y la marca como energia_manual: true, para que
+ * recalibrarEnergiasDelRepertorio deje de tocarla en futuros análisis de audio de otras
+ * canciones del repertorio — un valor puesto explícitamente por el usuario no debe desaparecer
+ * solo porque se analizó el audio de otro tema distinto.
+ */
+export async function dbSetSongEnergiaManual(songId: string, energia: number, bandId: string) {
+  const sb = getSupabase();
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([
+    rawClean,
+    noPrefix,
+    `band-${noPrefix}`,
+    `reg-${noPrefix}`
+  ])).filter(Boolean);
+
+  const { data, error } = await sb
+    .from("songs")
+    .update({ energia, energia_manual: true })
+    .eq("id", songId)
+    .in("band_id", candidateIds)
+    .select()
+    .single();
+  if (error) throw new Error(`Supabase Error (set energía manual): ${error.message}`);
+  if (!data) throw new Error(`No se encontró la canción ${songId} para esta banda`);
+  return mapSongRecord(data);
+}
+
+/**
  * Normaliza las energías (1-20) de todas las canciones de una banda
  * usando combinación híbrida de BPM detectado + volumen promedio crudo.
  *
@@ -91,11 +120,14 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
     `reg-${noPrefix}`
   ])).filter(Boolean);
 
-  // Obtén todas las canciones con datos de energía calculados
+  // Obtén todas las canciones con datos de energía calculados — excepto las que el usuario fijó
+  // a mano (energia_manual): ese valor es una elección explícita, el recalibrado automático no
+  // debe pisarlo silenciosamente solo porque se analizó el audio de otra canción del repertorio.
   const { data: songs, error: fetchError } = await sb
     .from("songs")
     .select("id, energia_db_promedio, energia_bpm_detectado")
     .in("band_id", candidateIds)
+    .eq("energia_manual", false)
     .or("energia_db_promedio.not.is.null,energia_bpm_detectado.not.is.null");
 
   if (fetchError) {

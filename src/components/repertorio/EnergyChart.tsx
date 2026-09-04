@@ -64,7 +64,9 @@ export function EnergyChart({
   const fontSize = compact ? 8 : 9;
   const dotDefault = compact ? 3.5 : 5.5;
   const dotSelected = compact ? 6 : 8;
-  const dotHighlighted = compact ? 7 : 10;
+  // Highlighted apenas un poco más grande que selected — antes saltaba mucho más (7/10) y el
+  // efecto resultaba chillón al pasar el ratón por varias sugerencias seguidas.
+  const dotHighlighted = compact ? 5 : 7;
 
   // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
   // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
@@ -188,18 +190,6 @@ export function EnergyChart({
             }}
           />
 
-          {/* Banda de dinámica interna detectada del audio (temas "anchos" varían mucho por dentro) */}
-          <Area
-            type="monotone"
-            dataKey="range"
-            stroke="none"
-            fill="#d1b375"
-            fillOpacity={0.12}
-            isAnimationActive={!compact}
-            animationDuration={1200}
-            animationEasing="ease-out"
-          />
-
           {/* Curva principal de energía tema a tema */}
           <Area
             type="monotone"
@@ -211,7 +201,10 @@ export function EnergyChart({
             isAnimationActive={!compact}
             animationDuration={1200}
             animationEasing="ease-out"
-            activeDot={{ r: dotSelected, strokeWidth: 2, stroke: '#ffffff' }}
+            // Recharts dibuja su propio "activeDot" ENCIMA del dot personalizado al pasar el
+            // ratón cerca — con onReorder eso tapa el <circle> real y se traga el mousedown
+            // antes de que llegue a nuestro handler de arrastre, así que se desactiva aquí.
+            activeDot={onReorder ? false : { r: dotSelected, strokeWidth: 2, stroke: '#ffffff' }}
             dot={(dotProps: any) => {
               const { cx, cy, payload, index } = dotProps;
               if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
@@ -226,13 +219,15 @@ export function EnergyChart({
                   r={isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
                   fill={payload.color}
                   stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
-                  strokeWidth={isHighlighted ? 3 : isSelected ? 2 : 1.5}
+                  strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
                   style={{
                     cursor: onReorder ? (isDraggingThis ? 'grabbing' : 'grab') : (onSelectItem ? 'pointer' : 'default'),
                     opacity: isDraggingThis ? 0.5 : 1,
+                    // Glow sutil: antes el highlighted tenía un doble drop-shadow bastante más
+                    // intenso que el resto, chillón al pasar por varias sugerencias seguidas.
                     filter: isHighlighted
-                      ? `drop-shadow(0 0 10px ${payload.color}ff) drop-shadow(0 0 20px ${payload.color}aa)`
-                      : `drop-shadow(0 0 5px ${payload.color}bb)`,
+                      ? `drop-shadow(0 0 6px ${payload.color}cc)`
+                      : `drop-shadow(0 0 4px ${payload.color}99)`,
                     transition: isDraggingThis ? 'none' : 'all 0.2s ease'
                   }}
                   onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
