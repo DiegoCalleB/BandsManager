@@ -2880,15 +2880,15 @@ export default function RepertorioSetlists({
  {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS */}
  {activeTab === 'catalogo' && (
  <div className="space-y-5">
- {/* SPOTIFY PLAYLIST HERO BANNER */}
- <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#1b3e24] via-[#142318] to-[#121212] p-6 sm:p-8 border border-white/10 shadow-2xl">
-   <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-6">
-     <div className="relative shrink-0 w-36 h-36 sm:w-44 sm:h-44 rounded-2xl bg-[#181818] shadow-2xl overflow-hidden border border-white/10 flex items-center justify-center group">
+ {/* SPOTIFY PLAYLIST HERO BANNER — una sola fila compacta: portada pequeña + título/metadata + acciones, en vez del hero apilado de antes que llegaba a ocupar media pantalla en portátil. */}
+ <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1b3e24] via-[#182a1e] to-[#121212] p-3 sm:p-4 border border-white/10 shadow-lg">
+   <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
+     <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#181818] shadow-lg overflow-hidden border border-white/10 flex items-center justify-center group">
        <AlbumCover
          title={`Repertorio ${bName}`}
          artist={bName}
          coverUrl={filteredSongs[0]?.portadaUrl}
-         size={176}
+         size={64}
          onPlay={() => {
            const first = filteredSongs[0];
            if (first) {
@@ -2898,36 +2898,28 @@ export default function RepertorioSetlists({
          isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
        />
        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-         <Sparkles className="w-8 h-8 text-[#1db954] animate-pulse" />
+         <Sparkles className="w-5 h-5 text-[#1db954] animate-pulse" />
        </div>
      </div>
 
-     <div className="flex-1 text-center md:text-left space-y-2">
-       <div className="flex items-center justify-center md:justify-start gap-2 text-xs font-mono font-extrabold uppercase tracking-widest text-[#1db954]">
-         <Disc3 className="w-4 h-4 animate-spin-slow" />
-         <span>Lista de Reproducción • Catálogo Completo</span>
+     <div className="flex-1 min-w-[180px]">
+       <div className="flex items-center gap-1.5 text-[9px] font-mono font-extrabold uppercase tracking-widest text-[#1db954]">
+         <Disc3 className="w-3 h-3 animate-spin-slow" />
+         <span>Catálogo Completo</span>
        </div>
-       <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+       <h1 className="text-base sm:text-lg font-extrabold text-white tracking-tight leading-tight truncate">
          Repertorio & Directos {bName}
        </h1>
-       <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl font-mono leading-relaxed">
-         Catálogo oficial de canciones para ensayos, giras y festivales. Gestiona audios, tonalidades, BPMs, partituras y estado de arreglos.
-       </p>
-       <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs font-mono text-zinc-400 pt-1">
-         <span className="text-white font-bold">{bName}</span>
+       <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-zinc-400 mt-0.5">
+         <span className="text-[#1db954] font-bold">{songs.length} temas</span>
          <span>•</span>
-         <span className="text-[#1db954] font-bold">{songs.length} temas cargados</span>
-         <span>•</span>
-         <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min aprox.</span>
+         <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
          <span>•</span>
          <span className="text-amber-400 font-semibold">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
        </div>
      </div>
-   </div>
 
-   {/* HERO CONTROLS BAR */}
-   <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/10 mt-6">
-     <div className="flex items-center gap-4">
+     <div className="flex items-center gap-2 shrink-0">
        <button
          onClick={() => {
            if (filteredSongs.length > 0) {
@@ -2935,33 +2927,33 @@ export default function RepertorioSetlists({
              handleSelectPlayerSong(first, true);
            }
          }}
-         className="w-14 h-14 rounded-full bg-[#1db954] hover:bg-[#1ed760] hover:scale-105 text-black font-bold flex items-center justify-center shadow-2xl transition-all cursor-pointer active:scale-95"
+         className="w-9 h-9 rounded-full bg-[#1db954] hover:bg-[#1ed760] hover:scale-105 text-black font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer active:scale-95"
          title="Reproducir Catálogo"
        >
-         {activePlayerSong && isPlayerPlaying ? <Pause className="w-7 h-7 fill-current" /> : <Play className="w-7 h-7 fill-current ml-1" />}
+         {activePlayerSong && isPlayerPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
        </button>
 
        <button
          onClick={() => setCatalogStatusFilter(catalogStatusFilter === 'favoritos' ? 'todos' : 'favoritos')}
-         className={`px-4 py-2 rounded-full text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer border ${
+         className={`px-3 py-1.5 rounded-full text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border whitespace-nowrap ${
            catalogStatusFilter === 'favoritos'
              ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/40 shadow-md'
              : 'bg-white/5 text-zinc-300 border-white/10 hover:bg-white/10 hover:text-white'
          }`}
        >
-         <Sparkles className="w-4 h-4 text-[#1db954]" />
-         <span>{catalogStatusFilter === 'favoritos' ? 'Mostrando solo Favoritos' : 'Filtrar Favoritos'}</span>
+         <Sparkles className="w-3 h-3 text-[#1db954]" />
+         <span>{catalogStatusFilter === 'favoritos' ? 'Solo Favoritos' : 'Filtrar Favoritos'}</span>
+       </button>
+
+       <button
+         id="btn-add-song"
+         onClick={() => { setEditingSong(null); setShowSongModal(true); }}
+         className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-[10px] font-mono flex items-center gap-1.5 cursor-pointer shadow-lg transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+       >
+         <Plus className="w-3.5 h-3.5" />
+         <span>Añadir Tema</span>
        </button>
      </div>
-
-     <button
-       id="btn-add-song"
-       onClick={() => { setEditingSong(null); setShowSongModal(true); }}
-       className="px-4 py-2 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs font-mono flex items-center gap-2 cursor-pointer shadow-lg transition-all hover:scale-105 active:scale-95"
-     >
-       <Plus className="w-4 h-4" />
-       <span>Añadir Nuevo Tema</span>
-     </button>
    </div>
  </div>
 
