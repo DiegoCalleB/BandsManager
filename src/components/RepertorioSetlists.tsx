@@ -2118,6 +2118,14 @@ export default function RepertorioSetlists({
               <span>{energyAnalysis.profileIcon}</span>
               <span>{energyAnalysis.profileLabel}</span>
             </span>
+            <button
+              type="button"
+              onClick={() => setShowAIAnalysisModal(true)}
+              className="p-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer"
+              title="Análisis avanzado con IA"
+            >
+              🧠
+            </button>
           </div>
         </div>
 
@@ -2145,14 +2153,6 @@ export default function RepertorioSetlists({
                   title={showEnergyMap ? 'Ocultar el mapa de energía' : 'Mostrar el mapa de energía'}
                 >
                   {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowAIAnalysisModal(true)}
-                  className="p-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer"
-                  title="Análisis avanzado con IA"
-                >
-                  🧠
                 </button>
               </div>
             </div>
