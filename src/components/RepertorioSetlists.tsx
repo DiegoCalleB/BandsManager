@@ -509,6 +509,8 @@ export default function RepertorioSetlists({
  // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
  const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
+ // IDs de canciones a resaltar en el gráfico cuando se interactúa con sugerencias
+ const [highlightedSongIds, setHighlightedSongIds] = useState<string[]>([]);
 
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
@@ -2231,16 +2233,24 @@ export default function RepertorioSetlists({
                           const { cx, cy, payload, index } = dotProps;
                           if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
                           const isSelected = payload.id === selectedSetlistItemId;
+                          const isHighlighted = highlightedSongIds.length > 0 && (
+                            highlightedSongIds.some(songId => payload.titulo?.includes(songId) || payload.id?.includes(songId))
+                          );
                           return (
                             <circle
                               key={`dot-${payload.id}`}
                               cx={cx}
                               cy={cy}
-                              r={isSelected ? 8 : 5.5}
-                              fill={payload.color}
-                              stroke={isSelected ? '#ffffff' : '#0a0a0a'}
-                              strokeWidth={isSelected ? 2 : 1.5}
-                              style={{ cursor: 'pointer', filter: `drop-shadow(0 0 5px ${payload.color}bb)` }}
+                              r={isHighlighted ? 10 : isSelected ? 8 : 5.5}
+                              fill={isHighlighted ? `${payload.color}` : payload.color}
+                              stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
+                              strokeWidth={isHighlighted ? 3 : isSelected ? 2 : 1.5}
+                              style={{
+                                cursor: 'pointer',
+                                filter: isHighlighted
+                                  ? `drop-shadow(0 0 10px ${payload.color}ff) drop-shadow(0 0 20px ${payload.color}aa)`
+                                  : `drop-shadow(0 0 5px ${payload.color}bb)`
+                              }}
                               onClick={() => setSelectedSetlistItemId(payload.id)}
                             />
                           );
@@ -3876,13 +3886,18 @@ export default function RepertorioSetlists({
   {/* AI SETLIST ANALYSIS MODAL */}
   <SetlistAIAnalysisModal
     isOpen={showAIAnalysisModal}
-    onClose={() => setShowAIAnalysisModal(false)}
+    onClose={() => {
+      setShowAIAnalysisModal(false);
+      setHighlightedSongIds([]);
+    }}
     setlistId={activeSetlist?.id || ''}
     setlistName={activeSetlist?.nombre}
     onAnalysisComplete={(analysis) => {
       setAiAnalysisResult(analysis);
       setAiAnalysisLoading(false);
     }}
+    onHighlightSongs={setHighlightedSongIds}
+    highlightedSongIds={highlightedSongIds}
   />
 </div>
  );

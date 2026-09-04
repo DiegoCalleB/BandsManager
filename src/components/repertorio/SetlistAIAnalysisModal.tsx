@@ -8,6 +8,8 @@ interface SetlistAIAnalysisModalProps {
   setlistId: string;
   setlistName?: string;
   onAnalysisComplete?: (analysis: Analysis) => void;
+  onHighlightSongs?: (songIds: string[]) => void;
+  highlightedSongIds?: string[];
 }
 
 interface Suggestion {
@@ -29,7 +31,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, onAnalysisComplete }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [] }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -181,10 +183,24 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                   Sugerencias ({analysis.suggestions.length})
                 </h3>
                 <div className="space-y-3">
-                  {analysis.suggestions.map((sugg, idx) => (
+                  {analysis.suggestions.map((sugg, idx) => {
+                    const isHighlighted = sugg.songs_involved?.some(songName =>
+                      highlightedSongIds.some(id => id.includes(songName))
+                    ) ?? false;
+                    return (
                     <div
                       key={idx}
-                      className="bg-neutral-800 rounded-lg p-4 border border-neutral-700 hover:border-neutral-600 transition"
+                      className={`rounded-lg p-4 border transition cursor-pointer ${
+                        isHighlighted
+                          ? 'bg-purple-900/30 border-purple-500/50 ring-2 ring-purple-400/30'
+                          : 'bg-neutral-800 border-neutral-700 hover:border-neutral-600'
+                      }`}
+                      onMouseEnter={() => {
+                        if (sugg.songs_involved?.length) {
+                          onHighlightSongs?.(sugg.songs_involved);
+                        }
+                      }}
+                      onMouseLeave={() => onHighlightSongs?.([])}
                     >
                       <div className="flex items-start gap-3 mb-2">
                         <span className="text-lg">{getPriorityIcon(sugg.priority)}</span>
@@ -221,7 +237,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                         )}
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
