@@ -148,7 +148,7 @@ export function PdfExportModal({
                 </div>
               ` : ''}
 
-              ${(showSetlistNotes && isMaster && !memberNote && generalRepertorioNote) ? `
+              ${(showSetlistNotes && generalRepertorioNote) ? `
                 <div class="general-cue-note">
                   [Nota General: ${generalRepertorioNote}]
                 </div>
@@ -1004,8 +1004,10 @@ export function PdfExportModal({
                           </div>
                         )}
 
-                        {/* General notes in master view */}
-                        {showSetlistNotes && isCurrentMaster && !memberNote && generalRepertorioNote && (
+                        {/* La nota general (notasRepertorio) se promete "en la hoja individual de
+                            cada músico" en el propio tooltip de MemberNotesModal — no solo en la
+                            hoja Master, y no solo cuando ese músico no tiene nota propia. */}
+                        {showSetlistNotes && generalRepertorioNote && (
                           <div className="pl-9 font-mono text-[10pt] text-neutral-600 italic">
                             [Nota General: {generalRepertorioNote}]
                           </div>

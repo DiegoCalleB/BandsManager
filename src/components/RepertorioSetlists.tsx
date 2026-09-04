@@ -2726,12 +2726,17 @@ export default function RepertorioSetlists({
 
   {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
   {(() => {
-    const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name];
-    return (song.notasInternas || it.notaTema || userNote) ? (
+    // La nota "general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
+    // notasRepertorio, no en notasInternas (un campo distinto, sin UI de edición expuesta aquí)
+    // — mirar notasInternas hacía que esta línea nunca mostrara la nota general recién guardada.
+    // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
+    // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
+    const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name.toLowerCase()];
+    return (song.notasRepertorio || it.notaTema || userNote) ? (
       <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1" onClick={(e) => e.stopPropagation()}>
-        {song.notasInternas && (
-          <div className="text-amber-600/80 truncate" title={song.notasInternas}>
-            📝 {song.notasInternas}
+        {song.notasRepertorio && (
+          <div className="text-amber-600/80 truncate" title={song.notasRepertorio}>
+            📝 {song.notasRepertorio}
           </div>
         )}
         {userNote && (
