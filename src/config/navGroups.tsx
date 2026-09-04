@@ -172,3 +172,30 @@ export const MIN_MODULES_FOR_GROUPED_NAV = 6;
 export function findNavGroupIdForItem(itemId: string): string | undefined {
   return NAV_GROUPS.find((g) => g.itemIds.includes(itemId as NavItemId))?.id;
 }
+
+export interface BottomNavSlotDef {
+  id: string;
+  kind: 'view' | 'group' | 'more';
+  /** Solo para kind 'view': navega directo a este NavItemId. */
+  itemId?: NavItemId;
+  /** Solo para kind 'group': abre un sheet con los itemIds de este NAV_GROUPS_MOBILE. */
+  groupId?: string;
+  labelKey: string;
+  labelDefault: string;
+}
+
+/**
+ * Slots de la bottom tab bar móvil (sustituye la fila de tabs horizontal + el
+ * hamburger). Solo 5 slots fijos, icon-only: Resumen/Calendario navegan directo,
+ * Música/Promoción abren un sheet con sus sub-módulos, y Más abre el drawer
+ * completo con el resto (Contactos, Negocio, Herramientas, Chat, perfil...).
+ * Cinco es el máximo razonable en icon-only sin apelmazar el thumb-reach en
+ * pantallas de 360-400px de ancho.
+ */
+export const NAV_BOTTOM_BAR_SLOTS: BottomNavSlotDef[] = [
+  { id: 'resumen', kind: 'view', itemId: 'resumen', labelKey: 'nav.resumen', labelDefault: 'Resumen' },
+  { id: 'calendario', kind: 'view', itemId: 'calendario', labelKey: 'nav.calendario', labelDefault: 'Calendario' },
+  { id: 'musica', kind: 'group', groupId: 'musica', labelKey: 'navGroup.musica', labelDefault: 'Música' },
+  { id: 'promocion', kind: 'group', groupId: 'promocion', labelKey: 'navGroup.promocion', labelDefault: 'Promoción' },
+  { id: 'more', kind: 'more', labelKey: 'nav.mas', labelDefault: 'Más' },
+];
