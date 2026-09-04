@@ -1,6 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
-import { analizarEnergiaAudio, medirVariacionInterna, calcularNivelEnergiaGlobal } from "../utils/audioEnergy.js";
+import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio } from "../utils/audioEnergy.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 
@@ -18,7 +18,7 @@ export async function analizarYGuardarDinamicaCancion(
   const curva = await analizarEnergiaAudio(audioUrl, { timeoutMs: 90_000 });
   const audioAnalizable = curva.length > 1;
   const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
-  const energia = audioAnalizable ? calcularNivelEnergiaGlobal(curva) : 10;
+  const energiaDbPromedio = audioAnalizable ? calcularVolumenPromedioAudio(curva) : null;
 
   // Si el audio no se pudo analizar (descarga fallida, ffmpeg sin salida, etc.) NO se marca
   // energia_variacion_calculada_en: dejar la canción "sin analizar" para que la próxima repesca
@@ -49,7 +49,11 @@ export async function analizarYGuardarDinamicaCancion(
 
   const { data, error } = await sb
     .from("songs")
-    .update({ energia, energia_variacion: variacion, energia_variacion_calculada_en: new Date().toISOString() })
+    .update({
+      energia_db_promedio: energiaDbPromedio,
+      energia_variacion: variacion,
+      energia_variacion_calculada_en: new Date().toISOString()
+    })
     .eq("id", songId)
     .in("band_id", candidateIds)
     .select("id");
@@ -58,7 +62,76 @@ export async function analizarYGuardarDinamicaCancion(
     throw new Error(`No se encontró la canción ${songId} para esta banda (posible band_id en formato antiguo)`);
   }
 
+  // Tras guardar, recalibrar todas las energías de la banda para que estén normalizadas
+  // relativas unas a otras.
+  await recalibrarEnergiasDelRepertorio(bandId);
+
   return { variacion, audioAnalizable: true };
+}
+
+/**
+ * Normaliza las energías (1-20) de todas las canciones de una banda
+ * relativas unas a otras, basado en el volumen promedio crudo (energia_db_promedio).
+ *
+ * Cuando una canción nueva se analiza, esto recalibra las energías de todo el repertorio
+ * para que reflejen el contraste relativo real, no valores absolutos (que no distinguen
+ * entre covers masterizados uniformemente vs. audios reales con volúmenes distintos).
+ */
+async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
+  const sb = getSupabase();
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([
+    rawClean,
+    noPrefix,
+    `band-${noPrefix}`,
+    `reg-${noPrefix}`
+  ])).filter(Boolean);
+
+  // Obtén todas las canciones con energia_db_promedio calculado
+  const { data: songs, error: fetchError } = await sb
+    .from("songs")
+    .select("id, energia_db_promedio")
+    .in("band_id", candidateIds)
+    .not("energia_db_promedio", "is", null);
+
+  if (fetchError) {
+    console.error("[Repertorio] Error fetching songs for recalibration:", fetchError.message);
+    return;
+  }
+  if (!songs || songs.length === 0) return;
+
+  // Calcula min/max del rango de dB
+  const dbs = songs.map((s) => s.energia_db_promedio as number).filter((db) => typeof db === "number");
+  if (dbs.length === 0) return;
+
+  const min = Math.min(...dbs);
+  const max = Math.max(...dbs);
+  const rango = max - min;
+
+  // Si el rango es muy pequeño, todas quedan a energía media (10)
+  if (rango < 1) {
+    const { error: updateError } = await sb
+      .from("songs")
+      .update({ energia: 10 })
+      .in("band_id", candidateIds)
+      .not("energia_db_promedio", "is", null);
+    if (updateError) console.error("[Repertorio] Error setting uniform energy:", updateError.message);
+    return;
+  }
+
+  // Mapea cada canción a 1-20 relativo al rango del repertorio
+  for (const song of songs) {
+    const db = song.energia_db_promedio as number;
+    const energia = Math.round(1 + ((db - min) / rango) * 19);
+    const { error: updateError } = await sb
+      .from("songs")
+      .update({ energia: Math.max(1, Math.min(20, energia)) })
+      .eq("id", song.id);
+    if (updateError) {
+      console.error(`[Repertorio] Error updating energy for song ${song.id}:`, updateError.message);
+    }
+  }
 }
 
 /** Igual que `analizarYGuardarDinamicaCancion`, pero sin bloquear al llamador ni propagar errores. */

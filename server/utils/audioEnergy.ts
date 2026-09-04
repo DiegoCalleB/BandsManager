@@ -148,33 +148,24 @@ export function medirVariacionInterna(curva: PuntoEnergia[]): number {
 }
 
 /**
- * Calcula la energía global (1-20) de un audio basada en su RMS promedio.
+ * Calcula el volumen promedio (dB crudo) de un audio, filtrado de silencio.
  *
- * Mapea el nivel de volumen característico del audio a la escala 1-20:
- * - 1-8: balada (muy tranquilo, -50 a -35 dB)
- * - 9-14: media (groove estable, -35 a -20 dB)
- * - 15-18: alta (caña, -20 a -10 dB)
- * - 19-20: explosiva (muy alto, > -10 dB)
+ * Devuelve el valor RMS medio en escala dB absoluta (negativo). Este valor se guarda
+ * en `energia_db_promedio` y luego se normaliza relativo a otras canciones de la banda
+ * por `recalibrarEnergiasDelRepertorio` para obtener la energía 1-20 final.
  *
- * Usa la media de RMS (no relativo al tema, sino dB absoluto músical), mapeado a 1-20
- * con una escala que asume rango típico de -50 a 0 dB en archivos de audio reales.
+ * No mapea a ninguna escala — eso ocurre después a nivel de banda.
  */
-export function calcularNivelEnergiaGlobal(curva: PuntoEnergia[]): number {
-  if (!Array.isArray(curva) || curva.length === 0) return 10; // default medio
+export function calcularVolumenPromedioAudio(curva: PuntoEnergia[]): number | null {
+  if (!Array.isArray(curva) || curva.length === 0) return null;
 
   const rmsValues = curva
     .map((p) => p.db)
     .filter((db) => db > DB_SILENCIO + 10); // -80 dB threshold: descarta silencio absoluto
 
-  if (rmsValues.length === 0) return 1; // todo silencio
+  if (rmsValues.length === 0) return null; // todo silencio
 
-  const avgDb = rmsValues.reduce((a, b) => a + b, 0) / rmsValues.length;
-
-  // Mapeo lineal: -50 dB → 1, 0 dB → 20
-  // Formula: energia = 1 + ((avgDb + 50) / 50) * 19
-  const energia = 1 + ((avgDb + 50) / 50) * 19;
-
-  return Math.max(1, Math.min(20, Math.round(energia)));
+  return rmsValues.reduce((a, b) => a + b, 0) / rmsValues.length;
 }
 
 function mmss(segundos: number): string {
