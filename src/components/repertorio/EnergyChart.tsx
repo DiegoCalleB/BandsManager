@@ -96,15 +96,45 @@ export function EnergyChart({
       const from = draggingFromIndexRef.current;
       const to = getIndexFromClientX(e.clientX);
       if (from !== null && from !== to) onReorder?.(from, to);
+      // Soltar en el mismo punto donde se empezó (sin arrastrar) es un tap/clic normal:
+      // selecciona ese tema. La diana táctil que arranca el arrastre tiene pointer-events
+      // encima del punto visible, así que su onClick nativo ya no llega — se resuelve aquí.
+      else if (from !== null) onSelectItem?.(chartData[from]?.id);
+      draggingFromIndexRef.current = null;
+      setDraggingFromIndex(null);
+      setHoverIndex(null);
+    };
+    // Equivalentes táctiles de mousemove/mouseup: mousedown/mousemove/mouseup no disparan en
+    // touch, así que sin esto arrastrar un punto para reordenar solo funcionaba con ratón.
+    // preventDefault en touchmove evita que el gesto haga scroll de la página en vez de mover
+    // el punto — por eso el listener va con { passive: false }.
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      e.preventDefault();
+      setHoverIndex(getIndexFromClientX(touch.clientX));
+    };
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      const from = draggingFromIndexRef.current;
+      const to = touch ? getIndexFromClientX(touch.clientX) : hoverIndex;
+      if (from !== null && to !== null && from !== to) onReorder?.(from, to);
+      else if (from !== null) onSelectItem?.(chartData[from]?.id);
       draggingFromIndexRef.current = null;
       setDraggingFromIndex(null);
       setHoverIndex(null);
     };
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('touchcancel', handleTouchEnd);
     return () => {
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchcancel', handleTouchEnd);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggingFromIndex]);
@@ -225,34 +255,50 @@ export function EnergyChart({
               const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
               const isDraggingThis = draggingFromIndex === payload.idx;
               return (
-                <circle
-                  key={`dot-${payload.id}`}
-                  cx={cx}
-                  cy={cy}
-                  r={isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
-                  fill={payload.color}
-                  stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
-                  strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
-                  style={{
-                    // ew-resize (flechas ↔) en vez de grab: el movimiento es siempre horizontal
-                    // (reordenar), así que las flechas comunican mejor que "se puede arrastrar
-                    // a los lados" que la mano de "grab", que sugiere arrastre libre.
-                    cursor: onReorder ? 'ew-resize' : (onSelectItem ? 'pointer' : 'default'),
-                    opacity: isDraggingThis ? 0.5 : 1,
-                    // Glow sutil: antes el highlighted tenía un doble drop-shadow bastante más
-                    // intenso que el resto, chillón al pasar por varias sugerencias seguidas.
-                    filter: isHighlighted
-                      ? `drop-shadow(0 0 6px ${payload.color}cc)`
-                      : `drop-shadow(0 0 4px ${payload.color}99)`,
-                    transition: isDraggingThis ? 'none' : 'all 0.2s ease'
-                  }}
-                  onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
-                  onMouseDown={(e) => {
-                    if (!onReorder) return;
-                    e.stopPropagation();
-                    startDrag(payload.idx);
-                  }}
-                />
+                <React.Fragment key={`dot-${payload.id}`}>
+                  {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
+                      para tocarlo con el dedo con precisión — este círculo transparente más
+                      grande (r=16) capta el toque/clic sin cambiar el tamaño visual del punto. */}
+                  {onReorder && (
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={16}
+                      fill="transparent"
+                      style={{ cursor: 'ew-resize', touchAction: 'none' }}
+                      onMouseDown={(e) => { e.stopPropagation(); startDrag(payload.idx); }}
+                      onTouchStart={(e) => { e.stopPropagation(); startDrag(payload.idx); }}
+                    />
+                  )}
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
+                    fill={payload.color}
+                    stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
+                    strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
+                    style={{
+                      // ew-resize (flechas ↔) en vez de grab: el movimiento es siempre horizontal
+                      // (reordenar), así que las flechas comunican mejor que "se puede arrastrar
+                      // a los lados" que la mano de "grab", que sugiere arrastre libre.
+                      cursor: onReorder ? 'ew-resize' : (onSelectItem ? 'pointer' : 'default'),
+                      opacity: isDraggingThis ? 0.5 : 1,
+                      // Glow sutil: antes el highlighted tenía un doble drop-shadow bastante más
+                      // intenso que el resto, chillón al pasar por varias sugerencias seguidas.
+                      filter: isHighlighted
+                        ? `drop-shadow(0 0 6px ${payload.color}cc)`
+                        : `drop-shadow(0 0 4px ${payload.color}99)`,
+                      transition: isDraggingThis ? 'none' : 'all 0.2s ease',
+                      pointerEvents: onReorder ? 'none' : 'auto'
+                    }}
+                    onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
+                    onMouseDown={(e) => {
+                      if (!onReorder) return;
+                      e.stopPropagation();
+                      startDrag(payload.idx);
+                    }}
+                  />
+                </React.Fragment>
               );
             }}
           />
