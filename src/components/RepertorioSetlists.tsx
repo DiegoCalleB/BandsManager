@@ -2617,7 +2617,7 @@ export default function RepertorioSetlists({
   {(() => {
     const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name];
     return (song.notasInternas || it.notaTema || userNote) ? (
-      <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1">
+      <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1" onClick={(e) => e.stopPropagation()}>
         {song.notasInternas && (
           <div className="text-amber-600/80 truncate" title={song.notasInternas}>
             📝 {song.notasInternas}
