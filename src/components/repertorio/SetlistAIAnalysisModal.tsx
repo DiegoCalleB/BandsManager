@@ -134,20 +134,20 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     // por si aun así el usuario quiere apartarlo a un lado.
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
       <div
-        className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
+        className="bg-neutral-900 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >
         {/* Header — arrastrable por si hace falta apartar el modal */}
         <div
-          className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-4 flex justify-between items-center cursor-move select-none z-10"
+          className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-3 flex justify-between items-center cursor-move select-none z-10"
           onMouseDown={handleDragStart}
         >
-          <div className="flex items-center gap-3">
-            <Move className="w-4 h-4 text-neutral-600 shrink-0" />
-            <Brain className="w-6 h-6 text-purple-400" />
+          <div className="flex items-center gap-2.5">
+            <Move className="w-3.5 h-3.5 text-neutral-600 shrink-0" />
+            <Brain className="w-5 h-5 text-purple-400" />
             <div>
-              <h2 className="text-xl font-bold">Análisis Avanzado con IA</h2>
-              {setlistName && <p className="text-sm text-neutral-400">{setlistName}</p>}
+              <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
+              {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
             </div>
           </div>
           <button
@@ -155,20 +155,20 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
             onMouseDown={(e) => e.stopPropagation()}
             className="p-2 hover:bg-neutral-800 rounded-lg transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click */}
         {hasChart && (
-          <div className="sticky top-[73px] z-[5] bg-neutral-900 border-b border-neutral-700 p-3">
+          <div className="bg-neutral-900 border-b border-neutral-700 p-3">
             <EnergyChart
               setlistKey={setlistId}
               chartData={chartData!}
               yDomain={yDomain!}
               zonasEnergia={zonasEnergia || []}
               highlightedSongIds={highlightedSongIds}
-              height={120}
+              height={190}
               compact
             />
           </div>
@@ -217,38 +217,38 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
           {analysis && (
             <div className="space-y-6">
               {/* Score */}
-              <div className="bg-neutral-800 rounded-lg p-4 border border-neutral-700">
+              <div className="bg-neutral-800 rounded-lg p-3 border border-neutral-700">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-neutral-300 font-medium">Score General</span>
-                  <span className="text-2xl font-bold text-purple-400">{analysis.overallScore}/100</span>
+                  <span className="text-sm text-neutral-300 font-medium">Score General</span>
+                  <span className="text-lg font-bold text-purple-400">{analysis.overallScore}/100</span>
                 </div>
-                <div className="w-full bg-neutral-700 rounded-full h-2">
+                <div className="w-full bg-neutral-700 rounded-full h-1.5">
                   <div
-                    className="bg-gradient-to-r from-purple-500 to-purple-400 h-2 rounded-full transition-all"
+                    className="bg-gradient-to-r from-purple-500 to-purple-400 h-1.5 rounded-full transition-all"
                     style={{ width: `${analysis.overallScore}%` }}
                   />
                 </div>
               </div>
 
               {/* Narrative Arc */}
-              <div className="bg-neutral-800 rounded-lg p-4 border border-neutral-700">
-                <p className="text-sm text-neutral-400 mb-2">📖 Arco Narrativo</p>
-                <p className="text-neutral-200">{analysis.narrativeArc}</p>
+              <div className="bg-neutral-800 rounded-lg p-3 border border-neutral-700">
+                <p className="text-xs text-neutral-400 mb-1.5">📖 Arco Narrativo</p>
+                <p className="text-sm text-neutral-200">{analysis.narrativeArc}</p>
               </div>
 
               {/* Psychological Flow */}
-              <div className="bg-neutral-800 rounded-lg p-4 border border-neutral-700">
-                <p className="text-sm text-neutral-400 mb-2">🧠 Flujo Psicológico</p>
-                <p className="text-neutral-200">{analysis.psychologicalFlow}</p>
+              <div className="bg-neutral-800 rounded-lg p-3 border border-neutral-700">
+                <p className="text-xs text-neutral-400 mb-1.5">🧠 Flujo Psicológico</p>
+                <p className="text-sm text-neutral-200">{analysis.psychologicalFlow}</p>
               </div>
 
               {/* Strengths */}
               {analysis.strengths.length > 0 && (
-                <div className="bg-green-900/20 rounded-lg p-4 border border-green-700">
-                  <p className="text-sm font-medium text-green-300 mb-2">✓ Fortalezas</p>
+                <div className="bg-green-900/20 rounded-lg p-3 border border-green-700">
+                  <p className="text-xs font-medium text-green-300 mb-1.5">✓ Fortalezas</p>
                   <ul className="space-y-1">
                     {analysis.strengths.map((strength, idx) => (
-                      <li key={idx} className="text-sm text-green-200">• {strength}</li>
+                      <li key={idx} className="text-xs text-green-200">• {strength}</li>
                     ))}
                   </ul>
                 </div>
@@ -256,8 +256,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
               {/* Suggestions */}
               <div>
-                <h3 className="font-semibold text-neutral-200 mb-3 flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-purple-400" />
+                <h3 className="text-sm font-semibold text-neutral-200 mb-3 flex items-center gap-2">
+                  <Zap className="w-3.5 h-3.5 text-purple-400" />
                   Sugerencias ({analysis.suggestions.length})
                 </h3>
                 <div className="space-y-3">
@@ -268,7 +268,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                     return (
                     <div
                       key={idx}
-                      className={`rounded-lg p-4 border transition cursor-pointer ${
+                      className={`rounded-lg p-3 border transition cursor-pointer ${
                         isHighlighted
                           ? 'bg-purple-900/30 border-purple-500/50 ring-2 ring-purple-400/30'
                           : 'bg-neutral-800 border-neutral-700 hover:border-neutral-600'
@@ -280,13 +280,13 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                       }}
                       onMouseLeave={() => onHighlightSongs?.([])}
                     >
-                      <div className="flex items-start gap-3 mb-2">
-                        <span className="text-lg">{getPriorityIcon(sugg.priority)}</span>
+                      <div className="flex items-start gap-2.5 mb-2">
+                        <span className="text-sm">{getPriorityIcon(sugg.priority)}</span>
                         <div className="flex-1">
                           <div className="flex items-start justify-between gap-2">
                             <div>
-                              <p className="font-semibold text-neutral-100">{sugg.title}</p>
-                              <p className="text-xs text-neutral-500 mt-1">
+                              <p className="text-sm font-semibold text-neutral-100">{sugg.title}</p>
+                              <p className="text-[11px] text-neutral-500 mt-0.5">
                                 {getCategoryIcon(sugg.category)} {sugg.category}
                               </p>
                             </div>
@@ -294,7 +294,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                         </div>
                       </div>
 
-                      <div className="space-y-2 text-sm ml-8">
+                      <div className="space-y-1.5 text-xs ml-7">
                         <div>
                           <p className="text-neutral-400">🔍 Problema:</p>
                           <p className="text-neutral-300">{sugg.issue}</p>
@@ -322,11 +322,11 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
 
               {/* Areas for Improvement */}
               {analysis.areasForImprovement.length > 0 && (
-                <div className="bg-amber-900/20 rounded-lg p-4 border border-amber-700">
-                  <p className="text-sm font-medium text-amber-300 mb-2">🎯 Áreas de Mejora</p>
+                <div className="bg-amber-900/20 rounded-lg p-3 border border-amber-700">
+                  <p className="text-xs font-medium text-amber-300 mb-1.5">🎯 Áreas de Mejora</p>
                   <ul className="space-y-1">
                     {analysis.areasForImprovement.map((area, idx) => (
-                      <li key={idx} className="text-sm text-amber-200">• {area}</li>
+                      <li key={idx} className="text-xs text-amber-200">• {area}</li>
                     ))}
                   </ul>
                 </div>
