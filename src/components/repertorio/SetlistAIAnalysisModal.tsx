@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import { api } from '../../services/api';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
+import { PacingWarning } from '../../utils/energyPacingUtils';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -21,6 +22,13 @@ interface SetlistAIAnalysisModalProps {
   chartData?: EnergyChartPoint[];
   yDomain?: [number, number];
   zonasEnergia?: EnergyChartZone[];
+  /** Avisos del análisis básico (heurístico) del setlist activo — se muestran aquí igual que en
+   * el editor de setlist, con su botón "Aplicar" cuando hay un reordenamiento determinista
+   * disponible, para no obligar a cerrar el modal solo para aplicar una sugerencia. */
+  warnings?: PacingWarning[];
+  /** Reordena el setlist (usado tanto por el botón "Aplicar" de los avisos como por arrastrar un
+   * punto en el mini-gráfico de aquí dentro). Si se omite, el mini-gráfico queda solo de lectura. */
+  onReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
 interface Suggestion {
@@ -42,7 +50,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -428,7 +436,53 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 highlightedSongIds={highlightedSongIds}
                 height={190}
                 compact
+                onReorder={onReorder}
               />
+            </div>
+          )}
+
+          {/* Avisos del análisis básico (heurístico) — mismos badges que en el editor de setlist,
+              para poder aplicar un reordenamiento sugerido sin salir del modal. */}
+          {warnings.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 px-3 pb-3">
+              {warnings.map((w, i) => {
+                const hasSongs = !!w.songTitles && w.songTitles.length > 0;
+                const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
+                  w.songTitles!.some(t => titlesMatch(t, highlightedSongIds));
+                return (
+                  <span
+                    key={i}
+                    className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition ${
+                      w.type === 'warning'
+                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                        : w.type === 'success'
+                        ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                        : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+                    } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
+                    style={{ cursor: hasSongs ? 'pointer' : 'default' }}
+                    onMouseEnter={() => { if (hasSongs) onHighlightSongs?.(w.songTitles!); }}
+                    onMouseLeave={() => onHighlightSongs?.([])}
+                    onClick={() => { if (hasSongs) onHighlightSongs?.(isHighlighted ? [] : w.songTitles!); }}
+                    title={hasSongs ? `Resalta: ${w.songTitles!.join(', ')}` : undefined}
+                  >
+                    <span>{w.icon}</span>
+                    <span>{w.message}</span>
+                    {w.suggestedReorder && onReorder && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onReorder(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex);
+                        }}
+                        className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
+                        title={w.suggestedReorder.description}
+                      >
+                        ✓ Aplicar
+                      </button>
+                    )}
+                  </span>
+                );
+              })}
             </div>
           )}
         </div>
