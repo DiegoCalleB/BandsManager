@@ -60,12 +60,11 @@ export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen', 'calendario'];
 export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
 
 /**
- * Agrupación usada cuando el plan de la banda desbloquea suficientes módulos
- * (ver MIN_MODULES_FOR_GROUPED_NAV) para justificar un menú por secciones
- * colapsables en vez de una lista plana. Agrupado por tipo de objeto que se
- * gestiona (a quién le hablas / qué produces), no por "quién lo usa".
+ * Agrupación para desktop: incluye los 4 módulos separados de música
+ * (repertorio, catalogo, discografia, directo) cuando el plan desbloquea
+ * suficientes módulos (ver MIN_MODULES_FOR_GROUPED_NAV).
  */
-export const NAV_GROUPS: NavGroupDef[] = [
+export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
   {
     id: 'contactos',
     titleKey: 'navGroup.contactos',
@@ -97,6 +96,47 @@ export const NAV_GROUPS: NavGroupDef[] = [
     itemIds: ['metronome', 'tuner'],
   },
 ];
+
+/**
+ * Agrupación para móvil: solo 'repertorio' en el grupo Música, sin las
+ * 3 subvistas (catalogo, discografia, directo) para mantener el menú
+ * compacto en pantallas pequeñas con tamaños de fuente coherentes.
+ */
+export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
+  {
+    id: 'contactos',
+    titleKey: 'navGroup.contactos',
+    titleDefault: 'Contactos',
+    itemIds: ['booking', 'medios', 'bandas'],
+  },
+  {
+    id: 'musica',
+    titleKey: 'navGroup.musica',
+    titleDefault: 'Música',
+    itemIds: ['repertorio'],
+  },
+  {
+    id: 'promocion',
+    titleKey: 'navGroup.promocion',
+    titleDefault: 'Promoción',
+    itemIds: ['epk', 'fans', 'reels'],
+  },
+  {
+    id: 'negocio',
+    titleKey: 'navGroup.negocio',
+    titleDefault: 'Negocio',
+    itemIds: ['giras', 'finanzas', 'merchan'],
+  },
+  {
+    id: 'herramientas',
+    titleKey: 'navGroup.herramientas',
+    titleDefault: 'Herramientas',
+    itemIds: ['metronome', 'tuner'],
+  },
+];
+
+// Mantener NAV_GROUPS como alias para compatibilidad (apunta a desktop)
+export const NAV_GROUPS = NAV_GROUPS_DESKTOP;
 
 /**
  * Orden plano actual del <aside> de escritorio y del drawer móvil. Se usa tal cual

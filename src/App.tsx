@@ -37,7 +37,7 @@ import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
-import { NAV_ITEMS, NAV_GROUPS, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
 import { useLanguage } from './context/LanguageContext';
@@ -664,7 +664,7 @@ export default function App() {
    );
  })}
  {shouldGroupNav ? (
-   NAV_GROUPS.map((group) => (
+   NAV_GROUPS_MOBILE.map((group) => (
      <NavGroupSection
        key={group.id}
        group={group}
@@ -858,7 +858,7 @@ export default function App() {
    );
  })}
  {shouldGroupNav ? (
-   NAV_GROUPS.map((group) => (
+   NAV_GROUPS_DESKTOP.map((group) => (
      <NavGroupSection
        key={group.id}
        group={group}
