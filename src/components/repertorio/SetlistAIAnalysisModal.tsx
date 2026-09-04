@@ -252,42 +252,48 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
         className="bg-neutral-900 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >
-        {/* Header — arrastrable por si hace falta apartar el modal */}
-        <div
-          className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-3 flex justify-between items-center cursor-move select-none z-10"
-          onMouseDown={handleDragStart}
-        >
-          <div className="flex items-center gap-2.5">
-            <Move className="w-3.5 h-3.5 text-neutral-600 shrink-0" />
-            <Brain className="w-5 h-5 text-purple-400" />
-            <div>
-              <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
-              {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            onMouseDown={(e) => e.stopPropagation()}
-            className="p-2 hover:bg-neutral-800 rounded-lg transition"
+        {/* Header + Mapa de Energía en un único bloque sticky: así ambos quedan fijos arriba al
+            hacer scroll por las sugerencias, sin depender de calcular a mano la altura del
+            header para un segundo "top" (frágil — ya se rompió una vez al hacer el header más
+            compacto). Un solo contenedor sticky con top-0 no necesita ningún offset. */}
+        <div className="sticky top-0 z-10 bg-neutral-900">
+          {/* Header — arrastrable por si hace falta apartar el modal */}
+          <div
+            className="border-b border-neutral-700 p-3 flex justify-between items-center cursor-move select-none"
+            onMouseDown={handleDragStart}
           >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click */}
-        {hasChart && (
-          <div className="bg-neutral-900 border-b border-neutral-700 p-3">
-            <EnergyChart
-              setlistKey={setlistId}
-              chartData={chartData!}
-              yDomain={yDomain!}
-              zonasEnergia={zonasEnergia || []}
-              highlightedSongIds={highlightedSongIds}
-              height={190}
-              compact
-            />
+            <div className="flex items-center gap-2.5">
+              <Move className="w-3.5 h-3.5 text-neutral-600 shrink-0" />
+              <Brain className="w-5 h-5 text-purple-400" />
+              <div>
+                <h2 className="text-base font-bold">Análisis Avanzado con IA</h2>
+                {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              onMouseDown={(e) => e.stopPropagation()}
+              className="p-2 hover:bg-neutral-800 rounded-lg transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-        )}
+
+          {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click */}
+          {hasChart && (
+            <div className="border-b border-neutral-700 p-3">
+              <EnergyChart
+                setlistKey={setlistId}
+                chartData={chartData!}
+                yDomain={yDomain!}
+                zonasEnergia={zonasEnergia || []}
+                highlightedSongIds={highlightedSongIds}
+                height={190}
+                compact
+              />
+            </div>
+          )}
+        </div>
 
         {/* Content */}
         <div className="p-4 space-y-4">
