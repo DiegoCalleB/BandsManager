@@ -208,7 +208,7 @@ export default function App() {
   };
 
   // Active View State mapping directly to the Stitch Design doc
-  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
+  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
   const [bookingOptions, setBookingOptions] = useState<{
     sectionTab?: 'salas' | 'medios';
     statusFilter?: LeadStatus | 'todos';
@@ -219,7 +219,7 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
+    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
     options?: {
       sectionTab?: 'salas' | 'medios';
       statusFilter?: LeadStatus | 'todos';
@@ -1186,7 +1186,7 @@ export default function App() {
  )}
  />
  )}
- {currentView === 'repertorio' && (
+ {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia' || currentView === 'directo') && (
  <RepertorioSetlists
  key={currentActiveBandId}
  colors={colors}
@@ -1198,6 +1198,7 @@ export default function App() {
  bandLogoUrl={currentActiveBandLogo}
  onUpdateConcert={handleUpdateConcert}
  onUpdateRehearsal={handleUpdateRehearsal}
+ view={currentView as any}
  />
  )}
 {currentView === 'merchan' && (

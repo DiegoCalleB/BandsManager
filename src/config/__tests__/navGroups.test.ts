@@ -33,19 +33,24 @@ describe('navGroups config', () => {
     expect(new Set(FLAT_NAV_ORDER_IDS)).toEqual(new Set(TOP_TABS_ORDER_IDS));
   });
 
-  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools (metronome/tuner)', () => {
+  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus music modules and tools', () => {
     // Cuando hay agrupación (planes >6 módulos), mostramos:
-    // - Todos los módulos de FLAT_NAV_ORDER_IDS (pinned-top, pinned-bottom, grupos)
+    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye 'repertorio' como ítem de menú único)
+    // - Plus los 3 módulos derivados de repertorio: catalogo, discografia, directo (solo vista agrupada)
     // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
     const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
+    const onlyGroupedMusicModules: NavItemId[] = ['catalogo', 'discografia', 'directo'];
     const toolIds: NavItemId[] = ['metronome', 'tuner'];
-    const groupedWithoutTools = grouped.filter(id => !toolIds.includes(id));
-    expect(new Set(groupedWithoutTools)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
-    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
+    const groupedWithoutExtraItems = grouped.filter(id => !onlyGroupedMusicModules.includes(id) && !toolIds.includes(id));
+    expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
+    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + onlyGroupedMusicModules.length + toolIds.length);
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
+    expect(findNavGroupIdForItem('catalogo')).toBe('musica');
+    expect(findNavGroupIdForItem('discografia')).toBe('musica');
+    expect(findNavGroupIdForItem('directo')).toBe('musica');
     expect(findNavGroupIdForItem('metronome')).toBe('herramientas');
     expect(findNavGroupIdForItem('tuner')).toBe('herramientas');
     expect(findNavGroupIdForItem('booking')).toBe('contactos');

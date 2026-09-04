@@ -1,9 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
-import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock } from 'lucide-react';
+import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Film } from 'lucide-react';
 
 export type NavItemId =
   | 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'giras'
-  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'chat' | 'finanzas' | 'merchan'
+  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'chat' | 'finanzas' | 'merchan'
   | 'metronome' | 'tuner';
 
 export interface NavItemDef {
@@ -28,6 +28,9 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR & Fans' },
   reels: { id: 'reels', icon: Video, labelKey: 'nav.reels', labelDefault: 'Reels Center' },
   repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorio' },
+  catalogo: { id: 'catalogo', icon: Music, labelKey: 'nav.catalogo', labelDefault: 'Catálogo' },
+  discografia: { id: 'discografia', icon: Disc2, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
+  directo: { id: 'directo', icon: Film, labelKey: 'nav.directo', labelDefault: 'Directo' },
   chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
   finanzas: { id: 'finanzas', icon: Coins, labelKey: 'nav.finanzas', labelDefault: 'Finanzas', adminOnly: true },
   merchan: { id: 'merchan', icon: Sparkles, labelKey: 'nav.merchan', labelDefault: 'Merchandising', adminOnly: true },
@@ -73,7 +76,7 @@ export const NAV_GROUPS: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio'],
+    itemIds: ['repertorio', 'catalogo', 'discografia', 'directo'],
   },
   {
     id: 'promocion',
@@ -98,8 +101,9 @@ export const NAV_GROUPS: NavGroupDef[] = [
 /**
  * Orden plano actual del <aside> de escritorio y del drawer móvil. Se usa tal cual
  * cuando el plan no supera MIN_MODULES_FOR_GROUPED_NAV (hoy, solo `promo`), para no
- * cambiar nada visualmente en ese caso. Incluye todo excepto metronome/tuner que son
- * herramientas solo en la vista agrupada.
+ * cambiar nada visualmente en ese caso. Incluye 'repertorio' (no los 4 submódulos que
+ * solo aparecen en el grupo Música de la vista agrupada). metronome/tuner también
+ * solo en vista agrupada.
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
   'resumen', 'booking', 'medios', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'chat', 'finanzas', 'merchan',

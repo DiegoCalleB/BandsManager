@@ -50,6 +50,7 @@ interface RepertorioSetlistsProps {
  bandLogoUrl?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
+ view?: 'repertorio' | 'catalogo' | 'discografia' | 'directo';
 }
 
 // Plantilla de la formación de Bakandeya usada como banda de demostración de la propia
