@@ -618,7 +618,13 @@ export default function RepertorioSetlists({
  const updatedList = songs.map(s => s.id === updatedSong.id ? updatedSong : s);
  setSongs(updatedList);
  saveSongsToLocalStorageSafely(updatedList);
+ // Este handler se reutiliza como "guardar canción" genérico (MemberNotesModal, favorito,
+ // PdfExportModal, SpotifyPlayerBar), no solo desde el propio Song Studio: sin este guard
+ // (mismo patrón que handleUpdateSongFromChords de arriba) forzaba la apertura del Studio en
+ // cualquiera de esos sitios aunque estuviera cerrado, p.ej. al guardar notas por miembro.
+ if (activeStudioSong?.id === updatedSong.id) {
  setActiveStudioSong(updatedSong);
+ }
  if (activePlayerSong?.id === updatedSong.id) {
  setActivePlayerSong(updatedSong);
  }
@@ -3523,7 +3529,14 @@ export default function RepertorioSetlists({
  )}
 
  {/* MODAL: ADD / EDIT SONG */}
+ {/* key fuerza un remount por canción: SongModal se queda siempre montado (isOpen controla un
+     `return null` interno, no un desmontaje), así que sin key su useState de notas por miembro
+     (y duración/álbum) solo se inicializa una vez para toda la sesión con el primer editingSong
+     que se vio (normalmente null) y nunca se resincroniza al abrir otra canción — ver notas del
+     bug en SongModal.tsx: memberNotesState quedaba "congelado" y el guardado de notas por
+     miembro sobrescribía siempre con ese valor obsoleto/vacío. */}
  <SongModal
+   key={showSongModal ? (editingSong?.id || 'new-song') : 'closed'}
    isOpen={showSongModal}
     bandMembers={bandRosterMembers}
    editingSong={editingSong}
