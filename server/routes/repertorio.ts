@@ -25,6 +25,8 @@ const router = express.Router();
 router.get("/songs", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
+    const user = (req as any).user;
+    console.log(`[Repertorio] GET /songs para usuario ${user?.email} band: ${userBandId}`);
     const songs = await dbGetSongs(userBandId);
     res.json({ success: true, songs });
   } catch (err: any) {
