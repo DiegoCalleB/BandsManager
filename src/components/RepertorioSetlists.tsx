@@ -1892,7 +1892,10 @@ export default function RepertorioSetlists({
  };
 
  return (
-  <div className="space-y-3">
+  // Cuando el modal de Análisis IA está abierto, se reserva su ancho aquí en vez de dejar que
+  // se superponga: así el gráfico de energía (que es responsive) se redimensiona de verdad para
+  // dejarle sitio, en vez de quedar tapado detrás de un overlay por muy estrecho que sea.
+  <div className={`space-y-3 transition-[margin] duration-200 ${showAIAnalysisModal ? 'lg:mr-[380px]' : ''}`}>
   {/* MODULE HEADER BAR */}
   <div className={`p-3 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
        {/* HEADER / TITULO PRINCIPAL */}

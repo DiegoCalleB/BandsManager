@@ -119,12 +119,14 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
   };
 
   return (
-    // Anclado a la derecha por defecto (no centrado) para que el Mapa de Energía quede visible
-    // a la izquierda sin tener que arrastrar el modal manualmente cada vez que se abre; el
-    // drag (más abajo) sigue disponible por si aun así hace falta reubicarlo.
+    // Anclado a la derecha, ancho fijo (380px, coincide con el lg:mr-[380px] que
+    // RepertorioSetlists reserva en el contenido cuando este modal está abierto). Al ser un
+    // ancho reservado de verdad en el layout, no un overlay superpuesto, el gráfico de energía
+    // se redimensiona para dejar sitio en vez de quedar tapado detrás. El drag (más abajo) sigue
+    // disponible por si aun así hace falta reubicarlo.
     <div className="fixed inset-0 flex items-start justify-end z-50 p-4 pt-12 pointer-events-none">
       <div
-        className="bg-neutral-900 rounded-lg w-full max-w-md max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
+        className="bg-neutral-900 rounded-lg w-[380px] max-w-full max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >
         {/* Header — arrastrable: mueve el modal a un lado para ver el gráfico de energía detrás mientras resaltas sugerencias */}
