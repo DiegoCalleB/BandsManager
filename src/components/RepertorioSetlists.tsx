@@ -2307,9 +2307,24 @@ export default function RepertorioSetlists({
                         {aiAnalysisResult.suggestions.map((s: any, i: number) => (
                           <span
                             key={i}
-                            className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border bg-purple-900/30 text-purple-200 border-purple-600/40 hover:border-purple-500 transition cursor-pointer"
+                            className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition cursor-pointer"
+                            style={{
+                              backgroundColor: highlightedSongIds.length > 0 && s.songs_involved?.some((songTitle: string) =>
+                                highlightedSongIds.some(h => h.toLowerCase().includes(songTitle.toLowerCase()) || songTitle.toLowerCase().includes(h.toLowerCase()))
+                              ) ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
+                              borderColor: highlightedSongIds.length > 0 && s.songs_involved?.some((songTitle: string) =>
+                                highlightedSongIds.some(h => h.toLowerCase().includes(songTitle.toLowerCase()) || songTitle.toLowerCase().includes(h.toLowerCase()))
+                              ) ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
+                              color: 'rgb(196 181 253)'
+                            }}
+                            onMouseEnter={() => {
+                              if (s.songs_involved?.length) {
+                                setHighlightedSongIds(s.songs_involved);
+                              }
+                            }}
+                            onMouseLeave={() => setHighlightedSongIds([])}
                             onClick={() => setShowAIAnalysisModal(true)}
-                            title="Click para ver detalles completos"
+                            title="Pasa ratón para resaltar en gráfico"
                           >
                             <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
                             <span>{s.title}</span>
