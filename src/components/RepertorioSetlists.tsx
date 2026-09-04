@@ -2129,10 +2129,10 @@ export default function RepertorioSetlists({
             <button
               type="button"
               onClick={() => setShowAIAnalysisModal(true)}
-              className="p-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer"
+              className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
               title="Análisis avanzado con IA"
             >
-              🧠
+              🧠 Análisis IA
             </button>
           </div>
         </div>

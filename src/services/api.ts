@@ -832,7 +832,7 @@ export const api = {
 
   // Advanced AI analysis of setlist energy and pacing
   async analyzeSetlistWithAI(setlistId: string): Promise<{ success: boolean; analysis?: any; error?: string }> {
-    return request(`/api/repertorio/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
+    return request(`/api/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
       method: 'POST'
     });
   }
