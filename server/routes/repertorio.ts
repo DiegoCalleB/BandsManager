@@ -523,6 +523,20 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     // Llamar a análisis IA
     const analysis = await analyzeSetlistWithAI(setlistSongs);
 
+    // Crear firma del setlist para detectar cambios
+    const setlistSignature = setlist.items.map((item: any) => item.id).join('|');
+    const analysisWithSignature = { ...analysis, setlist_signature: setlistSignature };
+
+    // Crear objeto actualizado del setlist con análisis guardado
+    const updatedSetlist = {
+      ...setlist,
+      ai_analysis_json: analysisWithSignature,
+      ai_analysis_generated_at: new Date().toISOString()
+    };
+
+    // Guardar en Supabase
+    await dbUpsertSetlist(updatedSetlist, userBandId);
+
     res.json({
       success: true,
       analysis
