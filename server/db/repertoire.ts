@@ -1,6 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
-import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio } from "../utils/audioEnergy.js";
+import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio, detectarBpmDesdeAudio, calcularEnergiaBpmVolumen } from "../utils/audioEnergy.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 
@@ -19,6 +19,7 @@ export async function analizarYGuardarDinamicaCancion(
   const audioAnalizable = curva.length > 1;
   const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
   const energiaDbPromedio = audioAnalizable ? calcularVolumenPromedioAudio(curva) : null;
+  const energiaBpmDetectado = audioAnalizable ? detectarBpmDesdeAudio(curva) : null;
 
   // Si el audio no se pudo analizar (descarga fallida, ffmpeg sin salida, etc.) NO se marca
   // energia_variacion_calculada_en: dejar la canción "sin analizar" para que la próxima repesca
@@ -51,6 +52,7 @@ export async function analizarYGuardarDinamicaCancion(
     .from("songs")
     .update({
       energia_db_promedio: energiaDbPromedio,
+      energia_bpm_detectado: energiaBpmDetectado,
       energia_variacion: variacion,
       energia_variacion_calculada_en: new Date().toISOString()
     })
@@ -63,7 +65,7 @@ export async function analizarYGuardarDinamicaCancion(
   }
 
   // Tras guardar, recalibrar todas las energías de la banda para que estén normalizadas
-  // relativas unas a otras.
+  // relativas unas a otras usando BPM + volumen híbrido.
   await recalibrarEnergiasDelRepertorio(bandId);
 
   return { variacion, audioAnalizable: true };
@@ -71,11 +73,12 @@ export async function analizarYGuardarDinamicaCancion(
 
 /**
  * Normaliza las energías (1-20) de todas las canciones de una banda
- * relativas unas a otras, basado en el volumen promedio crudo (energia_db_promedio).
+ * usando combinación híbrida de BPM detectado + volumen promedio crudo.
  *
  * Cuando una canción nueva se analiza, esto recalibra las energías de todo el repertorio
- * para que reflejen el contraste relativo real, no valores absolutos (que no distinguen
- * entre covers masterizados uniformemente vs. audios reales con volúmenes distintos).
+ * para que reflejen: tempo real (fast = más energía) + contraste de volumen dentro de la banda.
+ * Esto diferencia correctamente entre baladas lentas y uptempo rápido incluso con
+ * masterización uniforme.
  */
 async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
   const sb = getSupabase();
@@ -88,12 +91,12 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
     `reg-${noPrefix}`
   ])).filter(Boolean);
 
-  // Obtén todas las canciones con energia_db_promedio calculado
+  // Obtén todas las canciones con datos de energía calculados
   const { data: songs, error: fetchError } = await sb
     .from("songs")
-    .select("id, energia_db_promedio")
+    .select("id, energia_db_promedio, energia_bpm_detectado")
     .in("band_id", candidateIds)
-    .not("energia_db_promedio", "is", null);
+    .or("energia_db_promedio.not.is.null,energia_bpm_detectado.not.is.null");
 
   if (fetchError) {
     console.error("[Repertorio] Error fetching songs for recalibration:", fetchError.message);
@@ -101,32 +104,32 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
   }
   if (!songs || songs.length === 0) return;
 
-  // Calcula min/max del rango de dB
-  const dbs = songs.map((s) => s.energia_db_promedio as number).filter((db) => typeof db === "number");
-  if (dbs.length === 0) return;
+  // Calcular min/max para normalizar BPM y dB
+  const bpms = songs
+    .map((s) => s.energia_bpm_detectado as number)
+    .filter((bpm) => typeof bpm === "number");
+  const dbs = songs
+    .map((s) => s.energia_db_promedio as number)
+    .filter((db) => typeof db === "number");
 
-  const min = Math.min(...dbs);
-  const max = Math.max(...dbs);
-  const rango = max - min;
+  if (bpms.length === 0 && dbs.length === 0) return;
 
-  // Si el rango es muy pequeño, todas quedan a energía media (10)
-  if (rango < 1) {
-    const { error: updateError } = await sb
-      .from("songs")
-      .update({ energia: 10 })
-      .in("band_id", candidateIds)
-      .not("energia_db_promedio", "is", null);
-    if (updateError) console.error("[Repertorio] Error setting uniform energy:", updateError.message);
-    return;
-  }
+  const bandStats = {
+    minBpm: bpms.length > 0 ? Math.min(...bpms) : 120,
+    maxBpm: bpms.length > 0 ? Math.max(...bpms) : 120,
+    minDb: dbs.length > 0 ? Math.min(...dbs) : -25,
+    maxDb: dbs.length > 0 ? Math.max(...dbs) : -25
+  };
 
-  // Mapea cada canción a 1-20 relativo al rango del repertorio
+  // Mapea cada canción a 1-20 usando la fórmula híbrida
   for (const song of songs) {
-    const db = song.energia_db_promedio as number;
-    const energia = Math.round(1 + ((db - min) / rango) * 19);
+    const bpm = song.energia_bpm_detectado || 120;
+    const db = song.energia_db_promedio || -25;
+    const energia = calcularEnergiaBpmVolumen(bpm, db, bandStats);
+
     const { error: updateError } = await sb
       .from("songs")
-      .update({ energia: Math.max(1, Math.min(20, energia)) })
+      .update({ energia })
       .eq("id", song.id);
     if (updateError) {
       console.error(`[Repertorio] Error updating energy for song ${song.id}:`, updateError.message);

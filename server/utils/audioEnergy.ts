@@ -168,6 +168,107 @@ export function calcularVolumenPromedioAudio(curva: PuntoEnergia[]): number | nu
   return rmsValues.reduce((a, b) => a + b, 0) / rmsValues.length;
 }
 
+/**
+ * Detecta BPM desde la curva de energía encontrando picos (onsets) y midiendo
+ * inter-onset intervals. Funciona analizando dónde sube la energía del audio.
+ *
+ * Retorna BPM estimado (60-180 para covers rock), o 120 (default) si no se detectan picos.
+ */
+export function detectarBpmDesdeAudio(curva: PuntoEnergia[]): number {
+  if (!Array.isArray(curva) || curva.length < 4) return 120; // default
+
+  // Normalizar a 0-100 para detectar picos independiente del nivel absoluto
+  const dbs = curva.map((p) => p.db).filter((db) => db > DB_SILENCIO + 10);
+  if (dbs.length < 4) return 120;
+
+  const min = Math.min(...dbs);
+  const max = Math.max(...dbs);
+  const rango = max - min;
+  if (rango < 1) return 120; // audio muy uniforme, no hay ritmo detectable
+
+  const normalized = dbs.map((db) => (db - min) / rango);
+
+  // Detectar picos: donde la energía sube abruptamente (onset)
+  // Un onset es donde normalized[i] - normalized[i-1] > threshold
+  const threshold = rango > 2 ? 0.15 : 0.2;
+  const onsets: number[] = [];
+
+  for (let i = 1; i < normalized.length; i++) {
+    const delta = normalized[i] - normalized[i - 1];
+    if (delta > threshold) {
+      onsets.push(i);
+    }
+  }
+
+  // Si hay muy pocos onsets, no hay ritmo claro
+  if (onsets.length < 3) return 120;
+
+  // Calcular inter-onset intervals (IOI en segundos)
+  const iois: number[] = [];
+  for (let i = 1; i < onsets.length; i++) {
+    const ioiSegundos = onsets[i] - onsets[i - 1]; // cada punto es 1 segundo
+    if (ioiSegundos > 0.2 && ioiSegundos < 4) {
+      // Rango sensato: 0.2s (300 BPM) a 4s (15 BPM)
+      iois.push(ioiSegundos);
+    }
+  }
+
+  if (iois.length < 2) return 120;
+
+  // Usar la mediana de IOIs para robustez contra outliers
+  const sortedIois = [...iois].sort((a, b) => a - b);
+  const medianIoi = sortedIois[Math.floor(sortedIois.length / 2)];
+
+  // BPM = 60 / IOI (en segundos)
+  let bpm = Math.round(60 / medianIoi);
+
+  // Clamp a rango sensato (si detectó algo extremo, usar default)
+  if (bpm < 60 || bpm > 180) bpm = 120;
+
+  return bpm;
+}
+
+/**
+ * Calcula la energía global (1-20) combinando BPM detectado + volumen promedio,
+ * ambos normalizados relativos a la banda.
+ *
+ * Se usa cuando se recalibra el repertorio: lee bpm y db_promedio de todas las canciones,
+ * normaliza cada uno en su rango de banda, y promedia para la energía final.
+ */
+export function calcularEnergiaBpmVolumen(bpmDetectado: number, dbPromedio: number, bandStats: {
+  minBpm: number;
+  maxBpm: number;
+  minDb: number;
+  maxDb: number;
+}): number {
+  // Si el rango es muy pequeño, usar default
+  if (bandStats.maxBpm - bandStats.minBpm < 5 && bandStats.maxDb - bandStats.minDb < 1) {
+    return 10;
+  }
+
+  // Normalizar BPM a 0-10
+  let bpmNorm = 5; // default si solo hay 1 BPM
+  const bpmRango = bandStats.maxBpm - bandStats.minBpm;
+  if (bpmRango > 5) {
+    bpmNorm = ((bpmDetectado - bandStats.minBpm) / bpmRango) * 10;
+    bpmNorm = Math.max(0, Math.min(10, bpmNorm));
+  }
+
+  // Normalizar volumen a 0-10
+  let dbNorm = 5; // default si solo hay 1 volumen
+  const dbRango = bandStats.maxDb - bandStats.minDb;
+  if (dbRango > 0.5) {
+    dbNorm = ((dbPromedio - bandStats.minDb) / dbRango) * 10;
+    dbNorm = Math.max(0, Math.min(10, dbNorm));
+  }
+
+  // Promediar ambos factores y mapear a 1-20
+  const promedio = (bpmNorm + dbNorm) / 2; // 0-10
+  const energia = Math.round(1 + (promedio / 10) * 19);
+
+  return Math.max(1, Math.min(20, energia));
+}
+
 function mmss(segundos: number): string {
   const s = Math.max(0, Math.floor(segundos));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
