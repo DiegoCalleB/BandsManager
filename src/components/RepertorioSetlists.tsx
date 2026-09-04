@@ -27,6 +27,7 @@ import { SetlistModal } from './repertorio/SetlistModal';
 import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
+import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -485,6 +486,8 @@ export default function RepertorioSetlists({
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
+ // Modal de análisis avanzado con IA
+ const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
 
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
@@ -2143,6 +2146,14 @@ export default function RepertorioSetlists({
                 >
                   {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAIAnalysisModal(true)}
+                  className="p-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer"
+                  title="Análisis avanzado con IA"
+                >
+                  🧠
+                </button>
               </div>
             </div>
 
@@ -3795,6 +3806,14 @@ export default function RepertorioSetlists({
       <span>{statusBanner.text}</span>
     </div>
   )}
+
+  {/* AI SETLIST ANALYSIS MODAL */}
+  <SetlistAIAnalysisModal
+    isOpen={showAIAnalysisModal}
+    onClose={() => setShowAIAnalysisModal(false)}
+    setlistId={activeSetlist?.id || ''}
+    setlistName={activeSetlist?.nombre}
+  />
 </div>
  );
 }
