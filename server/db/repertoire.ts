@@ -294,15 +294,23 @@ export async function dbUpsertSong(song: any, bandId: string) {
     favorito_general: Boolean(song.favorito_general ?? song.favoritoGeneral),
     estado_tema: song.estado_tema || song.estadoTema || "ensayando",
     es_version_covers: Boolean(song.es_version_covers ?? song.esVersionCovers),
-    enlace_acordes: song.enlace_acordes || song.enlaceAcordes || "",
-    notas_internas: song.notas_internas || song.notasInternas || "",
-    notas_repertorio: song.notas_repertorio || song.notasRepertorio || "",
-    notas_miembros: song.notas_miembros || song.notasMiembros || {},
-    notas_por_miembro: song.notas_por_miembro || song.notasPorMiembro || [],
-    audio_principal_url: song.audio_principal_url || song.audioPrincipalUrl || song.audio_url || song.audioUrl || "",
-    audio_ideas: song.audio_ideas || song.audioIdeas || [],
-    cifrado_texto: song.cifrado_texto || song.cifradoTexto || "",
-    guia_sustituto: song.guia_sustituto || song.guiaSustituto || {}
+    enlace_acordes: song.enlaceAcordes || song.enlace_acordes || "",
+    // Prioridad camelCase > snake_case: los editores de la app (SongModal, MemberNotesModal...)
+    // reciben la canción ya mapeada con AMBAS variantes (mapSongRecord duplica cada campo en
+    // los dos formatos) y al guardar hacen `{...song, notasMiembros: nuevoValor}` — solo tocan
+    // la clave camelCase, así que la snake_case se queda con el valor viejo. Antes esto
+    // consultaba snake_case primero con `||`, que para strings vacíos ("") cuela por suerte al
+    // ser falsy, pero para objetos/arrays (notas_miembros, notas_por_miembro, audio_ideas,
+    // guia_sustituto) CUALQUIER objeto es truthy aunque esté "vacío" por dentro — el valor
+    // viejo ganaba siempre y la nota por miembro no se guardaba nunca, ni reintentando.
+    notas_internas: song.notasInternas || song.notas_internas || "",
+    notas_repertorio: song.notasRepertorio || song.notas_repertorio || "",
+    notas_miembros: song.notasMiembros || song.notas_miembros || {},
+    notas_por_miembro: song.notasPorMiembro || song.notas_por_miembro || [],
+    audio_principal_url: song.audioPrincipalUrl || song.audio_principal_url || song.audioUrl || song.audio_url || "",
+    audio_ideas: song.audioIdeas || song.audio_ideas || [],
+    cifrado_texto: song.cifradoTexto || song.cifrado_texto || "",
+    guia_sustituto: song.guiaSustituto || song.guia_sustituto || {}
   };
 
   let { data, error } = await sb.from("songs").upsert(payload).select().single();

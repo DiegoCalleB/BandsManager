@@ -123,6 +123,7 @@ export function PdfExportModal({
           const memberNote = !isMaster ? getSongMemberNote(s, member.id, member.name) : '';
           const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
           const setlistNote = (item as any).notaTema || item.notas || '';
+          const hasAnyNote = Boolean(memberNote || (showSetlistNotes && (setlistNote || generalRepertorioNote)));
 
           return `
             <div class="setlist-song-item">
@@ -134,25 +135,14 @@ export function PdfExportModal({
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
                 </div>
+                ${hasAnyNote ? `
+                  <div class="song-notes-right">
+                    ${memberNote ? `<span class="note-chip note-member">${memberNote}</span>` : ''}
+                    ${(showSetlistNotes && setlistNote) ? `<span class="note-chip note-cue">*** ${setlistNote} ***</span>` : ''}
+                    ${(showSetlistNotes && generalRepertorioNote) ? `<span class="note-chip note-general">[General: ${generalRepertorioNote}]</span>` : ''}
+                  </div>
+                ` : ''}
               </div>
-
-              ${memberNote ? `
-                <div class="handwritten-note">
-                  <span class="note-text">${memberNote}</span>
-                </div>
-              ` : ''}
-
-              ${(showSetlistNotes && setlistNote) ? `
-                <div class="setlist-cue-note">
-                  *** ${setlistNote} ***
-                </div>
-              ` : ''}
-
-              ${(showSetlistNotes && isMaster && !memberNote && generalRepertorioNote) ? `
-                <div class="general-cue-note">
-                  [Nota General: ${generalRepertorioNote}]
-                </div>
-              ` : ''}
             </div>
           `;
         } else if (item.tipoItem === 'bloque_header') {
@@ -376,12 +366,15 @@ export function PdfExportModal({
               display: flex;
               justify-content: space-between;
               align-items: baseline;
+              gap: 10px;
             }
             .song-left {
               display: flex;
               align-items: baseline;
               flex-wrap: wrap;
               gap: 8px;
+              min-width: 0;
+              flex-shrink: 1;
             }
             .song-num {
               font-family: 'Oswald', sans-serif;
@@ -423,36 +416,41 @@ export function PdfExportModal({
               color: #666;
             }
 
-            /* Handwritten Musician Notes (The Star Feature) */
-            .handwritten-note {
+            /* Notes to the right of the song title, not below — saves vertical space so the
+               repertoire doesn't spill onto extra pages. Each type keeps its own color so a
+               glance tells member note / stage cue / general note apart without reading labels. */
+            .song-notes-right {
+              display: flex;
+              align-items: baseline;
+              gap: 10px;
+              min-width: 0;
+              max-width: 58%;
+              justify-content: flex-end;
+              flex-shrink: 0;
+              overflow: hidden;
+            }
+            .note-chip {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .note-member {
               font-family: ${handFont};
               font-size: ${noteFontPx};
               font-weight: 700;
               color: ${inkColor} !important;
-              padding-left: ${showSongNumbers ? '40px' : '6px'};
-              margin-top: -2px;
-              line-height: 1.15;
               letter-spacing: 0.2px;
             }
-            .handwritten-note .note-text {
-              display: inline-block;
-              transform: rotate(-0.3deg);
-            }
-
-            .setlist-cue-note {
-              font-family: monospace;
-              font-size: 10pt;
-              font-weight: 700;
-              color: #b45309;
-              padding-left: ${showSongNumbers ? '40px' : '6px'};
-              margin-top: 1px;
-            }
-
-            .general-cue-note {
+            .note-cue {
               font-family: monospace;
               font-size: 9.5pt;
+              font-weight: 700;
+              color: #b45309;
+            }
+            .note-general {
+              font-family: monospace;
+              font-size: 9pt;
               color: #555;
-              padding-left: ${showSongNumbers ? '40px' : '6px'};
               font-style: italic;
             }
 
@@ -878,26 +876,27 @@ export function PdfExportModal({
               fontFamily: stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif"
             }}
           >
-            {/* Top Sheet Header */}
+            {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
+                menos de riesgo de que el repertorio se desborde a una hoja extra. */}
             <div>
-              <div className="flex items-center justify-between border-b-4 border-black pb-3 mb-6">
-                <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between border-b-[3px] border-black pb-1.5 mb-3">
+                <div className="flex items-center gap-3">
                   {showBandLogo && customLogoUrl && (
                     <img
                       src={customLogoUrl}
                       alt={bandName}
-                      className="max-h-14 max-w-[140px] object-contain filter grayscale contrast-150"
+                      className="max-h-9 max-w-[100px] object-contain filter grayscale contrast-150"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = 'none';
                       }}
                     />
                   )}
                   <div>
-                    <h1 className="text-[30pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
+                    <h1 className="text-[18pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
                       {bandName.toUpperCase()}
                     </h1>
-                    <div className="text-[12pt] font-mono font-bold text-neutral-800 mt-1 flex items-center gap-2">
-                      <span className="bg-black text-white px-2 py-0.5 rounded text-[10pt] uppercase tracking-wider font-['Oswald',sans-serif]">
+                    <div className="text-[9pt] font-mono font-bold text-neutral-800 mt-0.5 flex items-center gap-2">
+                      <span className="bg-black text-white px-1.5 py-0.5 rounded text-[8pt] uppercase tracking-wider font-['Oswald',sans-serif]">
                         {activeSetlist.nombre}
                       </span>
                       {showDuration && <span>• {activeSetlistMetrics.formattedTime}</span>}
@@ -906,14 +905,14 @@ export function PdfExportModal({
                   </div>
                 </div>
 
-                <div className="border-2 border-black bg-white p-2.5 px-4 rounded text-right min-w-[180px] shadow-sm">
-                  <div className="text-[8.5pt] font-mono font-bold text-neutral-500 uppercase tracking-widest">
+                <div className="border-2 border-black bg-white p-1.5 px-3 rounded text-right min-w-[140px] shadow-sm">
+                  <div className="text-[7pt] font-mono font-bold text-neutral-500 uppercase tracking-widest">
                     {!isCurrentMaster ? 'REPERTORIO PERSONALIZADO' : 'COPIA DE CONTROL'}
                   </div>
-                  <div className="text-[19pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif] mt-0.5">
+                  <div className="text-[13pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif] mt-0.5">
                     👤 {currentPreviewMember.name}
                   </div>
-                  <div className="text-[10pt] font-mono font-bold text-neutral-800">
+                  <div className="text-[8pt] font-mono font-bold text-neutral-800">
                     🎵 {currentPreviewMember.instrument}
                   </div>
                 </div>
@@ -932,14 +931,14 @@ export function PdfExportModal({
 
                     return (
                       <div key={item.id} className="group relative py-1">
-                        <div className="flex items-baseline justify-between">
-                          <div className="flex items-baseline flex-wrap gap-2.5">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <div className="flex items-baseline flex-wrap gap-2.5 min-w-0 shrink">
                             {showSongNumbers && (
                               <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px]">
                                 {index + 1}.
                               </span>
                             )}
-                            <span 
+                            <span
                               className={`font-black uppercase tracking-wide text-black leading-none ${
                                 fontSizeScale === 'gigante' ? 'text-[26pt]' : fontSizeScale === 'grande' ? 'text-[22pt]' : 'text-[17pt]'
                               }`}
@@ -967,49 +966,48 @@ export function PdfExportModal({
                             )}
                           </div>
 
+                          {/* Notas a la derecha del título en vez de debajo: ahorra espacio
+                              vertical (menos hojas al imprimir) y cada tipo mantiene su color
+                              para distinguirse de un vistazo. */}
+                          <div className="flex items-baseline gap-2.5 min-w-0 max-w-[55%] justify-end shrink-0 overflow-hidden">
+                            {memberNote && (
+                              <span
+                                className={`font-bold truncate ${
+                                  fontSizeScale === 'gigante' ? 'text-[16pt]' : fontSizeScale === 'grande' ? 'text-[14pt]' : 'text-[11pt]'
+                                }`}
+                                style={{ fontFamily: getHandwritingFontFamily(), color: getInkColorHex() }}
+                                title={memberNote}
+                              >
+                                {memberNote}
+                              </span>
+                            )}
+                            {showSetlistNotes && setlistNote && (
+                              <span className="font-mono text-[9.5pt] font-bold text-amber-800 truncate" title={setlistNote}>
+                                *** {setlistNote} ***
+                              </span>
+                            )}
+                            {/* La nota general (notasRepertorio) se promete "en la hoja individual de
+                                cada músico" en el propio tooltip de MemberNotesModal — no solo en la
+                                hoja Master, y no solo cuando ese músico no tiene nota propia. */}
+                            {showSetlistNotes && generalRepertorioNote && (
+                              <span className="font-mono text-[9pt] text-neutral-600 italic truncate" title={generalRepertorioNote}>
+                                [General: {generalRepertorioNote}]
+                              </span>
+                            )}
+                          </div>
+
                           {/* Quick note edit trigger on hover */}
                           {onUpdateSong && (
                             <button
                               onClick={() => setEditingSongForNotes(s)}
                               title="Editar notas manuscritas de esta canción"
-                              className="opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity"
+                              className="opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
                             >
                               <Edit3 className="w-3 h-3 text-emerald-600" />
                               <span>Editar Nota</span>
                             </button>
                           )}
                         </div>
-
-                        {/* Handwritten Member Note */}
-                        {memberNote ? (
-                          <div 
-                            className={`mt-0.5 pl-9 ${
-                              fontSizeScale === 'gigante' ? 'text-[19pt]' : fontSizeScale === 'grande' ? 'text-[16pt]' : 'text-[13pt]'
-                            }`}
-                            style={{ 
-                              fontFamily: getHandwritingFontFamily(),
-                              color: getInkColorHex(),
-                              lineHeight: 1.15,
-                              transform: 'rotate(-0.3deg)'
-                            }}
-                          >
-                            <span className="font-bold">{memberNote}</span>
-                          </div>
-                        ) : null}
-
-                        {/* Setlist cue notes */}
-                        {showSetlistNotes && setlistNote && (
-                          <div className="pl-9 font-mono text-[10.5pt] font-bold text-amber-800 mt-0.5">
-                            *** {setlistNote} ***
-                          </div>
-                        )}
-
-                        {/* General notes in master view */}
-                        {showSetlistNotes && isCurrentMaster && !memberNote && generalRepertorioNote && (
-                          <div className="pl-9 font-mono text-[10pt] text-neutral-600 italic">
-                            [Nota General: {generalRepertorioNote}]
-                          </div>
-                        )}
                       </div>
                     );
                   } else if (item.tipoItem === 'bloque_header') {
