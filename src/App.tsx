@@ -208,7 +208,29 @@ export default function App() {
   };
 
   // Active View State mapping directly to the Stitch Design doc
-  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
+  type MainView = 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
+  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'reels', 'repertorio', 'catalogo', 'discografia', 'directo', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
+  const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
+  const [currentView, setCurrentView] = useState<MainView>(() => {
+    // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
+    // que hace un deploy nuevo, o simplemente el usuario comprobando algo) manda siempre de
+    // vuelta a "Resumen" perdiendo dónde estaba trabajando.
+    try {
+      const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
+      if (saved && (VALID_VIEWS as string[]).includes(saved)) return saved as MainView;
+    } catch {
+      // localStorage puede no estar disponible (modo privado estricto, etc.) — no es crítico.
+    }
+    return 'resumen';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CURRENT_VIEW_STORAGE_KEY, currentView);
+    } catch {
+      // Ignorado a propósito: perder la persistencia de la vista no debe romper la navegación.
+    }
+  }, [currentView]);
   const [bookingOptions, setBookingOptions] = useState<{
     sectionTab?: 'salas' | 'medios';
     statusFilter?: LeadStatus | 'todos';
