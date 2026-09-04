@@ -113,7 +113,7 @@ export function EnergyChart({
     <div
       ref={containerRef}
       className={compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'}
-      style={{ height, cursor: draggingFromIndex !== null ? 'grabbing' : undefined }}
+      style={{ height, cursor: draggingFromIndex !== null ? 'ew-resize' : undefined }}
     >
       {!compact && (
         <style>{`
@@ -221,7 +221,10 @@ export function EnergyChart({
                   stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
                   strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
                   style={{
-                    cursor: onReorder ? (isDraggingThis ? 'grabbing' : 'grab') : (onSelectItem ? 'pointer' : 'default'),
+                    // ew-resize (flechas ↔) en vez de grab: el movimiento es siempre horizontal
+                    // (reordenar), así que las flechas comunican mejor que "se puede arrastrar
+                    // a los lados" que la mano de "grab", que sugiere arrastre libre.
+                    cursor: onReorder ? 'ew-resize' : (onSelectItem ? 'pointer' : 'default'),
                     opacity: isDraggingThis ? 0.5 : 1,
                     // Glow sutil: antes el highlighted tenía un doble drop-shadow bastante más
                     // intenso que el resto, chillón al pasar por varias sugerencias seguidas.
