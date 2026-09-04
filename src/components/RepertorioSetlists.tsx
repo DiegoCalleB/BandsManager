@@ -51,6 +51,8 @@ interface RepertorioSetlistsProps {
  bandLogoUrl?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
+ view?: 'repertorio' | 'catalogo' | 'discografia' | 'directo';
+ currentUser?: any;
 }
 
 // Plantilla de la formación de Bakandeya usada como banda de demostración de la propia
@@ -316,7 +318,9 @@ export default function RepertorioSetlists({
  bandUsers,
  bandLogoUrl,
  onUpdateConcert,
- onUpdateRehearsal
+ onUpdateRehearsal,
+ view,
+ currentUser
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
@@ -363,6 +367,20 @@ export default function RepertorioSetlists({
  const [showPdfPreview, setShowPdfPreview] = useState(false);
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+
+ // Sync activeTab with the view prop (when navigating from sidebar)
+ useEffect(() => {
+   if (view === 'catalogo') {
+     setActiveTab('catalogo');
+   } else if (view === 'discografia') {
+     setActiveTab('discografia');
+   } else if (view === 'directo') {
+     setActiveTab('escenario');
+   } else {
+     // repertorio or undefined
+     setActiveTab('setlists');
+   }
+ }, [view]);
 
  // Songs Repertoire State
  const [songs, setSongs] = useState<Song[]>(() => {
@@ -495,6 +513,7 @@ export default function RepertorioSetlists({
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
+ const [expandedSetlistItemIds, setExpandedSetlistItemIds] = useState<Set<string>>(new Set());
 
  // Deletion Confirmation Modal State
  const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
@@ -1816,60 +1835,6 @@ export default function RepertorioSetlists({
         <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
       </div>
 
-  {/* NAVIGATION SUBTABS */}
-  <div className="flex items-center gap-1.5 p-1 bg-[#121212] border border-white/5 rounded-full w-full md:w-auto overflow-x-auto shadow-lg">
-  <button
-  id="tab-setlists"
-  onClick={() => setActiveTab('setlists')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'setlists'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Layers className="w-3.5 h-3.5" />
-  <span>Setlists ({setlists.length})</span>
-  </button>
-
-  <button
-  id="tab-catalogo"
-  onClick={() => setActiveTab('catalogo')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'catalogo'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Music className="w-3.5 h-3.5" />
-  <span>Catálogo ({songs.length})</span>
-  </button>
-
-  <button
-  id="tab-discografia"
-  onClick={() => setActiveTab('discografia')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'discografia'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Disc3 className="w-3.5 h-3.5" />
-  <span>Discografía ({albumsList.filter(a => a !== "todos").length})</span>
-  </button>
-
-  <button
-  id="tab-escenario"
-  onClick={() => setActiveTab('escenario')}
-  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-  activeTab === 'escenario'
-  ? 'bg-[#1db954] text-black shadow-md'
-  : 'bg-[#282828] text-zinc-300 hover:text-white hover:bg-[#3e3e3e]'
-  }`}
-  >
-  <Eye className="w-3.5 h-3.5" />
-  <span>Modo Escenario ({activeSetlist ? activeSetlist.items.length : 0})</span>
-  </button>
-  </div>
  </div>
 
   {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
@@ -2551,6 +2516,17 @@ export default function RepertorioSetlists({
     ? Object.values(song.notasMiembros).filter(v => typeof v === 'string' && v.trim().length > 0).length
     : 0;
 
+  const isExpanded = expandedSetlistItemIds.has(it.id);
+  const toggleExpand = () => {
+    const newSet = new Set(expandedSetlistItemIds);
+    if (newSet.has(it.id)) {
+      newSet.delete(it.id);
+    } else {
+      newSet.add(it.id);
+    }
+    setExpandedSetlistItemIds(newSet);
+  };
+
   return (
   <div
   key={it.id}
@@ -2561,143 +2537,189 @@ export default function RepertorioSetlists({
   onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
   onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
   onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
-  className={`p-2 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
+  className={`border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
   isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
   } ${
-  isSelected 
-    ? 'border-amber-400 ring-2 ring-amber-400/30 bg-amber-500/10 shadow-md' 
-    : isStitchLight 
-      ? 'bg-white border-slate-200 hover:border-slate-300' 
+  isSelected
+    ? 'border-amber-400 ring-2 ring-amber-400/30 bg-amber-500/10 shadow-md'
+    : isStitchLight
+      ? 'bg-white border-slate-200 hover:border-slate-300'
       : 'bg-neutral-900/80 border-neutral-800/80 hover:border-neutral-700'
   }`}
   >
-  <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
-  {/* Drag Handle */}
-  <div 
-    className="cursor-grab active:cursor-grabbing p-1 text-neutral-500 hover:text-amber-400 transition-colors shrink-0" 
-    title="Arrastrar y soltar para reordenar"
-    onClick={(e) => e.stopPropagation()}
-  >
-    <GripVertical className="w-4 h-4" />
+  {/* MAIN ROW - COMPACT */}
+  <div className="flex items-center gap-2 px-2.5 py-1.5">
+    {/* Drag Handle */}
+    <div
+      className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-amber-400 transition-colors shrink-0"
+      title="Arrastrar y soltar para reordenar"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <GripVertical className="w-3.5 h-3.5" />
+    </div>
+
+    {/* Index */}
+    <span className="w-5 text-center font-mono font-bold text-[9px] text-[#d1b375] shrink-0">
+      {index + 1}
+    </span>
+
+    {/* Title + metadata in one line */}
+    <span className={`text-[10px] font-bold font-mono ${colors.text} truncate min-w-0`}>
+      {song.titulo}
+    </span>
+
+    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#10b981]/15 text-[#10b981] font-bold shrink-0">
+      {song.tonalidad || '—'}
+    </span>
+
+    <span className="text-[9px] font-mono text-neutral-400 shrink-0">
+      {song.bpm ? `${song.bpm}` : '—'}
+    </span>
+
+    <span className="text-[9px] font-mono text-[#d1b375] font-bold shrink-0">
+      {song.duracion || '0:00'}
+    </span>
+
+    {(() => {
+      const energy = getEnergyInfo(song);
+      return (
+        <span className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`} title={`Energía: ${energy.label}`}>
+          <span>{energy.icon}</span>
+        </span>
+      );
+    })()}
+
+    {isSelected && (
+      <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+        📌
+      </span>
+    )}
+
+    {/* Spacer */}
+    <div className="flex-1"></div>
+
+    {/* Expand button for details */}
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        toggleExpand();
+      }}
+      className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+      title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco y cantante"}
+    >
+      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+    </button>
+
+    {/* CONTROLS */}
+    <button
+      type="button"
+      onClick={() => setActiveMemberNotesSong(song)}
+      className={`p-0.5 shrink-0 transition-colors ${
+        memberNotesCount > 0
+          ? 'text-amber-300 hover:text-amber-400'
+          : 'text-neutral-400 hover:text-amber-300'
+      }`}
+      title="Notas de miembros"
+    >
+      <Users className="w-3.5 h-3.5" />
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setActiveChordsSong(song)}
+      className="p-0.5 text-neutral-400 hover:text-indigo-400 transition-colors shrink-0"
+      title="Ver acordes"
+    >
+      <FileText className="w-3.5 h-3.5" />
+    </button>
+
+    <button
+      onClick={() => handleMoveSetlistItem(index, 'up')}
+      disabled={index === 0}
+      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+      title="Mover arriba"
+    >
+      <ArrowUp className="w-3.5 h-3.5" />
+    </button>
+
+    <button
+      onClick={() => handleMoveSetlistItem(index, 'down')}
+      disabled={index === activeSetlist.items.length - 1}
+      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+      title="Mover abajo"
+    >
+      <ArrowDown className="w-3.5 h-3.5" />
+    </button>
+
+    <button
+      onClick={() => handleRemoveSetlistItem(it.id)}
+      className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
+      title="Quitar del setlist"
+    >
+      <X className="w-3.5 h-3.5" />
+    </button>
   </div>
 
- <span className="w-6 text-center font-mono font-bold text-[10px] text-[#d1b375] shrink-0">
- {index + 1}
- </span>
-
- <div className="min-w-0 flex-1">
- <div className="flex items-center gap-2 flex-wrap">
- <span className={`text-[11px] font-bold font-mono ${colors.text}`}>
- {song.titulo}
- </span>
- <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#10b981]/15 text-[#10b981] font-bold">
- {song.tonalidad || '—'}
- </span>
- <span className="text-[10px] font-mono text-neutral-400">
- {song.bpm ? `${song.bpm} BPM` : '— BPM'}
- </span>
- <span className="text-[10px] font-mono text-[#d1b375] font-bold">
- {song.duracion || '0:00'}
- </span>
- {(() => {
-    const energy = getEnergyInfo(song);
-    return (
-      <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold flex items-center gap-1 border ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`} title={`Energía: ${energy.label}`}>
-        <span>{energy.icon}</span>
-        <span className="capitalize">{energy.category}</span>
-      </span>
-    );
+  {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
+  {(() => {
+    const userNote = currentUser?.name && song.notasMiembros?.[currentUser.name];
+    return (song.notasInternas || it.notaTema || userNote) ? (
+      <div className="px-2.5 py-1.5 border-t text-[10px] font-mono space-y-1" onClick={(e) => e.stopPropagation()}>
+        {song.notasInternas && (
+          <div className="text-amber-600/80 truncate" title={song.notasInternas}>
+            📝 {song.notasInternas}
+          </div>
+        )}
+        {userNote && (
+          <div className="text-cyan-600/80 truncate" title={userNote}>
+            👤 {currentUser.name}: {userNote}
+          </div>
+        )}
+        {it.notaTema && (
+          <div className="text-emerald-600/80 truncate" title={it.notaTema}>
+            💡 {it.notaTema}
+          </div>
+        )}
+      </div>
+    ) : null;
   })()}
 
- {isSelected && (
-   <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500 text-black animate-pulse">
-     📌 Seleccionada (insertar temas debajo)
-   </span>
- )}
- </div>
+  {/* EXPANDED DETAILS - Only when isExpanded */}
+  {isExpanded && (
+    <div className={`border-t px-2.5 py-2 text-[9px] font-mono space-y-1 ${isStitchLight ? 'bg-slate-50' : 'bg-black/20'}`}>
+      {song.cantantePrincipal && (
+        <div className="text-neutral-400">
+          <span className="font-bold text-neutral-500">Cantante:</span> {song.cantantePrincipal}
+        </div>
+      )}
+      {song.afinacion && (
+        <div className="text-neutral-400">
+          <span className="font-bold text-neutral-500">Afinación:</span> {song.afinacion}
+        </div>
+      )}
+      {song.albumDisco && (
+        <div className="text-neutral-400">
+          <span className="font-bold text-neutral-500">Disco:</span> {song.albumDisco}
+        </div>
+      )}
 
- <div className="mt-1 flex items-center gap-2 text-[10px] font-mono text-neutral-500 flex-wrap">
- {song.cantantePrincipal && <span>Cantante: {song.cantantePrincipal}</span>}
- {song.afinacion && <span>• Afinación: {song.afinacion}</span>}
- {song.albumDisco && <span>• Disco: {song.albumDisco}</span>}
- </div>
-
- {/* Custom Note Input for Setlist */}
- <input
- type="text"
- placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
- value={it.notaTema || ''}
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
- className={`mt-1.5 w-full text-[10px] font-mono px-2 py-1 rounded ${
- isStitchLight 
- ? 'bg-slate-50 text-slate-700 placeholder:text-slate-400' 
- : 'bg-black/40 text-neutral-300 placeholder:text-neutral-600 border border-neutral-800'
- }`}
- />
- </div>
- </div>
-
- {/* CONTROLS & MEMBER NOTES */}
- <div className="flex items-center gap-1 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
- {/* Botón Notas Miembros de la Banda */}
- <button
-   type="button"
-   onClick={() => setActiveMemberNotesSong(song)}
-   className={`px-2 py-1 rounded text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
-     memberNotesCount > 0
-       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30'
-       : 'bg-neutral-800/80 text-neutral-400 hover:text-amber-300 hover:bg-neutral-700'
-   }`}
-   title="Editar notas específicas para cada miembro de la banda (Voz, Guitarra, Bajo, Batería...)"
- >
-   <Users className="w-3.5 h-3.5 text-amber-400" />
-   <span className="hidden sm:inline">Notas Miembros</span>
-   {memberNotesCount > 0 && (
-     <span className="px-1 py-0.2 rounded-full bg-amber-400 text-black text-[9px] font-black">
-       {memberNotesCount}
-     </span>
-   )}
- </button>
-
- {/* Botón Ver Acordes */}
- <button
-   type="button"
-   onClick={() => setActiveChordsSong(song)}
-   className="p-1 text-neutral-400 hover:text-indigo-400 rounded hover:bg-neutral-800 cursor-pointer"
-   title="Ver acordes y estructura"
- >
-   <FileText className="w-3.5 h-3.5" />
- </button>
-
- <button
- onClick={() => handleMoveSetlistItem(index, 'up')}
- disabled={index === 0}
- className="p-1 text-neutral-400 hover:text-white disabled:opacity-30 rounded hover:bg-neutral-800 cursor-pointer"
- title="Mover arriba"
- >
- <ArrowUp className="w-3.5 h-3.5" />
- </button>
-
- <button
- onClick={() => handleMoveSetlistItem(index, 'down')}
- disabled={index === activeSetlist.items.length - 1}
- className="p-1 text-neutral-400 hover:text-white disabled:opacity-30 rounded hover:bg-neutral-800 cursor-pointer"
- title="Mover abajo"
- >
- <ArrowDown className="w-3.5 h-3.5" />
- </button>
-
- <button
- onClick={() => handleRemoveSetlistItem(it.id)}
- className="p-1 text-neutral-400 hover:text-rose-400 rounded hover:bg-neutral-800 cursor-pointer ml-1"
- title="Quitar del setlist"
- >
- <X className="w-3.5 h-3.5" />
- </button>
- </div>
+      <input
+        type="text"
+        placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)..."
+        value={it.notaTema || ''}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
+        className={`w-full text-[9px] font-mono px-2 py-1 rounded mt-1 ${
+          isStitchLight
+            ? 'bg-slate-100 text-slate-700 placeholder:text-slate-400'
+            : 'bg-black/40 text-neutral-300 placeholder:text-neutral-600 border border-neutral-800'
+        }`}
+      />
+    </div>
+  )}
  </div>
  );
  } else if (it.tipoItem === 'bloque_header') {
@@ -2711,74 +2733,79 @@ export default function RepertorioSetlists({
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
- className={`p-3 rounded-2xl bg-gradient-to-r from-[#d1b375]/30 via-neutral-900 to-black border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md my-1 ${
+ className={`border rounded-lg transition-all cursor-pointer ${
  isDragging ? 'opacity-40 scale-[0.98]' : ''
  } ${
- isDragOver ? 'border-amber-400 border-2 scale-[1.01]' : ''
+ isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
  } ${
- isSelected ? 'border-amber-400 ring-2 ring-amber-400/50' : 'border-[#f2ca50]/50'
+ isSelected
+   ? 'border-[#f2ca50] ring-2 ring-[#f2ca50]/30 bg-[#f2ca50]/10 shadow-md'
+   : 'border-[#f2ca50]/50 bg-[#d1b375]/5 hover:border-[#f2ca50]/70'
  }`}
  >
- <div className="flex items-center gap-2.5 min-w-0 flex-1">
- <div 
-   className="cursor-grab active:cursor-grabbing p-1 text-[#f2ca50]/70 hover:text-[#f2ca50] transition-colors shrink-0" 
-   title="Arrastrar y soltar para reordenar"
-   onClick={(e) => e.stopPropagation()}
- >
-   <GripVertical className="w-4 h-4" />
- </div>
+ <div className="flex items-center gap-2 px-2.5 py-1.5">
+   {/* Drag Handle */}
+   <div
+     className="cursor-grab active:cursor-grabbing text-[#f2ca50]/70 hover:text-[#f2ca50] transition-colors shrink-0"
+     title="Arrastrar y soltar para reordenar"
+     onClick={(e) => e.stopPropagation()}
+   >
+     <GripVertical className="w-3.5 h-3.5" />
+   </div>
 
- <span className="p-1.5 bg-[#f2ca50]/20 text-[#f2ca50] rounded-xl text-base shrink-0">⚡</span>
- <div className="min-w-0 flex-1">
- <input
- type="text"
- value={it.tituloCustom || ''}
- placeholder="Ej: 🔥 BLOQUE 1: CALENTAMIENTO"
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => {
- const val = e.target.value;
- setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
- ...s,
- items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
- } : s));
- }}
- className="bg-transparent text-sm font-extrabold font-mono text-[#f2ca50] border-b border-dashed border-[#f2ca50]/40 focus:outline-none w-full uppercase tracking-wider"
- />
- <span className="text-[10px] font-mono text-neutral-400 block mt-0.5">Sección / Bloque del Concierto</span>
- </div>
- </div>
+   {/* Icon */}
+   <span className="text-[#f2ca50] shrink-0">⚡</span>
 
- <div className="flex items-center gap-1 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
- <button
- onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
- className="p-1.5 text-[#f2ca50] hover:bg-[#f2ca50]/20 rounded-lg cursor-pointer text-xs font-mono"
- title="Editar Bloque"
- >
- <Edit3 className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'up')}
- disabled={index === 0}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover arriba"
- >
- <ArrowUp className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'down')}
- disabled={index === activeSetlist.items.length - 1}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover abajo"
- >
- <ArrowDown className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleRemoveSetlistItem(it.id)}
- className="p-1.5 text-neutral-400 hover:text-rose-400 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Eliminar Bloque"
- >
- <X className="w-3.5 h-3.5" />
- </button>
+   {/* Title input - inline */}
+   <input
+     type="text"
+     value={it.tituloCustom || ''}
+     placeholder="Ej: 🔥 BLOQUE 1: CALENTAMIENTO"
+     onClick={(e) => e.stopPropagation()}
+     onChange={(e) => {
+       const val = e.target.value;
+       setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
+         ...s,
+         items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
+       } : s));
+     }}
+     className="bg-transparent text-[10px] font-extrabold font-mono text-[#f2ca50] border-b border-dashed border-[#f2ca50]/40 focus:outline-none min-w-0 flex-1 uppercase tracking-wider"
+   />
+
+   {/* Spacer */}
+   <div className="flex-1"></div>
+
+   {/* Controls */}
+   <button
+     onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
+     className="p-0.5 text-[#f2ca50] hover:bg-[#f2ca50]/20 rounded transition-colors shrink-0 cursor-pointer"
+     title="Editar Bloque"
+   >
+     <Edit3 className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'up')}
+     disabled={index === 0}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover arriba"
+   >
+     <ArrowUp className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'down')}
+     disabled={index === activeSetlist.items.length - 1}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover abajo"
+   >
+     <ArrowDown className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleRemoveSetlistItem(it.id)}
+     className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
+     title="Eliminar Bloque"
+   >
+     <X className="w-3.5 h-3.5" />
+   </button>
  </div>
  </div>
  );
@@ -2796,98 +2823,98 @@ export default function RepertorioSetlists({
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
- className={`p-3 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${typeConfig.bg} ${typeConfig.border} ${
+ className={`border rounded-lg transition-all cursor-pointer ${typeConfig.bg} ${typeConfig.border} ${
  isDragging ? 'opacity-40 scale-[0.98]' : ''
  } ${
- isDragOver ? 'border-amber-400 border-2 scale-[1.01] shadow-lg' : ''
+ isDragOver ? 'border-2 scale-[1.01] shadow-lg' : ''
  } ${
  isSelected ? 'ring-2 ring-amber-400/60 shadow-md' : ''
  }`}
  >
- <div className="flex items-start sm:items-center gap-2.5 min-w-0 flex-1">
- <div 
-   className="cursor-grab active:cursor-grabbing p-1 text-neutral-400 hover:text-amber-400 transition-colors shrink-0" 
-   title="Arrastrar y soltar para reordenar"
-   onClick={(e) => e.stopPropagation()}
- >
-   <GripVertical className="w-4 h-4" />
- </div>
+ <div className="flex items-center gap-2 px-2.5 py-1.5">
+   {/* Drag Handle */}
+   <div
+     className="cursor-grab active:cursor-grabbing text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+     title="Arrastrar y soltar para reordenar"
+     onClick={(e) => e.stopPropagation()}
+   >
+     <GripVertical className="w-3.5 h-3.5" />
+   </div>
 
- <span className="text-xl shrink-0 leading-none pt-0.5 sm:pt-0">{typeConfig.icon}</span>
- 
- <div className="min-w-0 flex-1 space-y-1">
- <div className="flex items-center gap-2 flex-wrap">
- <span className={`text-[10px] font-mono uppercase font-extrabold px-2 py-0.5 rounded-md border ${typeConfig.text} ${typeConfig.border}`}>
- {typeConfig.label}
- </span>
- <span className="text-[10px] font-mono text-[#f2ca50] font-bold">
- ⏱️ {durationText}
- </span>
- {isSelected && (
-   <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500 text-black animate-pulse">
-     📌 Seleccionado (insertar temas debajo)
+   {/* Icon */}
+   <span className="text-base shrink-0">{typeConfig.icon}</span>
+
+   {/* Type Label */}
+   <span className={`text-[8px] font-mono uppercase font-extrabold px-1.5 py-0.5 rounded-sm border shrink-0 ${typeConfig.text} ${typeConfig.border}`}>
+     {typeConfig.label}
    </span>
+
+   {/* Duration */}
+   <span className="text-[9px] font-mono text-[#f2ca50] font-bold shrink-0">
+     ⏱️ {durationText}
+   </span>
+
+   {/* Title - inline */}
+   <input
+     type="text"
+     value={it.tituloCustom || ''}
+     placeholder="Título/Descripción..."
+     onClick={(e) => e.stopPropagation()}
+     onChange={(e) => {
+       const val = e.target.value;
+       setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
+         ...s,
+         items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
+       } : s));
+     }}
+     className="bg-transparent border-b border-dashed border-white/20 text-[9px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
+   />
+
+   {isSelected && (
+     <span className="px-1 py-0.5 rounded text-[8px] font-mono font-bold bg-amber-500 text-black shrink-0">
+       📌
+     </span>
+   )}
+
+   {/* Controls */}
+   <button
+     onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
+     className="p-0.5 text-neutral-400 hover:bg-neutral-800 rounded transition-colors shrink-0"
+     title="Editar detalles"
+   >
+     <Edit3 className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'up')}
+     disabled={index === 0}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover arriba"
+   >
+     <ArrowUp className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleMoveSetlistItem(index, 'down')}
+     disabled={index === activeSetlist.items.length - 1}
+     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
+     title="Mover abajo"
+   >
+     <ArrowDown className="w-3.5 h-3.5" />
+   </button>
+   <button
+     onClick={() => handleRemoveSetlistItem(it.id)}
+     className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
+     title="Quitar del setlist"
+   >
+     <X className="w-3.5 h-3.5" />
+   </button>
+ </div>
+
+ {/* SHOW NOTES IF EXIST */}
+ {it.notaTema && (
+   <div className="px-2.5 py-1 border-t text-[8px] font-mono text-white/70 truncate" title={it.notaTema}>
+     💡 {it.notaTema}
+   </div>
  )}
- </div>
-
- <input
- type="text"
- value={it.tituloCustom || ''}
- placeholder="Título / Descripción del evento..."
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => {
- const val = e.target.value;
- setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? {
- ...s,
- items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
- } : s));
- }}
- className="bg-transparent border-b border-dashed border-white/20 text-xs font-bold font-mono text-white focus:outline-none w-full"
- />
-
- <input
- type="text"
- placeholder="Notas / Cues de luces, sonido o frases para el público..."
- value={it.notaTema || ''}
- onClick={(e) => e.stopPropagation()}
- onChange={(e) => handleUpdateItemNote(it.id, e.target.value)}
- className="w-full text-[10px] font-mono px-2 py-1 rounded bg-black/40 text-neutral-300 placeholder:text-neutral-500 border border-white/10"
- />
- </div>
- </div>
-
- <div className="flex items-center gap-1 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
- <button
- onClick={() => { setEditingShowItem(it); setShowShowItemModal(true); }}
- className="p-1.5 text-sky-400 hover:bg-sky-500/20 rounded-lg cursor-pointer text-xs font-mono"
- title="Editar detalles del evento"
- >
- <Edit3 className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'up')}
- disabled={index === 0}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover arriba"
- >
- <ArrowUp className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleMoveSetlistItem(index, 'down')}
- disabled={index === activeSetlist.items.length - 1}
- className="p-1.5 text-neutral-400 hover:text-white disabled:opacity-30 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Mover abajo"
- >
- <ArrowDown className="w-3.5 h-3.5" />
- </button>
- <button
- onClick={() => handleRemoveSetlistItem(it.id)}
- className="p-1.5 text-neutral-400 hover:text-rose-400 rounded-lg hover:bg-neutral-800 cursor-pointer"
- title="Quitar del setlist"
- >
- <X className="w-3.5 h-3.5" />
- </button>
- </div>
  </div>
  );
  }

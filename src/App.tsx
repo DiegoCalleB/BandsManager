@@ -37,11 +37,14 @@ import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
+import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { NavGroupSection } from './components/common/NavGroupSection';
+import { NavItemButton } from './components/common/NavItemButton';
 import { useLanguage } from './context/LanguageContext';
-import { 
-  Menu, Music, Sparkles, LogOut, ShieldAlert, Users, Shield, UserCheck,
-  Table, FileCheck, CheckSquare, MessageSquareCode, RefreshCw, Clock,
-  Settings, X, CalendarRange, Bot, Guitar, Flame, Video, Coins, Disc3, Radio, Building2, Type, Truck, BookOpen, Heart, ChevronDown, Lock, Crown, Zap, Target, QrCode
+import {
+  Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
+  FileCheck, CheckSquare, MessageSquareCode, RefreshCw,
+  Settings, X, Bot, Guitar, Flame, Type, Heart, ChevronDown, Lock, Zap, Target
 } from 'lucide-react';
 
 export default function App() {
@@ -205,7 +208,7 @@ export default function App() {
   };
 
   // Active View State mapping directly to the Stitch Design doc
-  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
+  const [currentView, setCurrentView] = useState<'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes'>('resumen');
   const [bookingOptions, setBookingOptions] = useState<{
     sectionTab?: 'salas' | 'medios';
     statusFilter?: LeadStatus | 'todos';
@@ -216,7 +219,7 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes',
+    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
     options?: {
       sectionTab?: 'salas' | 'medios';
       statusFilter?: LeadStatus | 'todos';
@@ -226,6 +229,18 @@ export default function App() {
       concertId?: string;
     }
   ) => {
+    // Herramientas (metronome/tuner): abren modal sin cambiar vista
+    if (view === 'metronome') {
+      setShowMetronomeModal(true);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    if (view === 'tuner') {
+      setShowTunerModal(true);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
     // 'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
     // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
@@ -240,6 +255,10 @@ export default function App() {
     }
     setCurrentView(view);
     setIsMobileMenuOpen(false);
+    const targetGroupId = findNavGroupIdForItem(view);
+    if (targetGroupId) {
+      setOpenNavGroupIds(prev => (prev[targetGroupId] ? prev : { ...prev, [targetGroupId]: true }));
+    }
     if (options) {
       setBookingOptions(options);
     } else if (view === 'medios') {
@@ -359,6 +378,52 @@ export default function App() {
       return isSameBand(r.band_id, currentActiveBandId, r.bandName, currentActiveBandName);
     });
   }, [rehearsals, currentActiveBandId, currentActiveBandName]);
+
+  // Badges del menú de navegación (booking/medios/calendario), calculados una sola vez
+  // y reutilizados por la barra de tabs móvil, el drawer y el <aside> de escritorio —
+  // antes cada uno recalculaba esto por su cuenta con su propia copia de isMedio/isBanda.
+  const navBadges = React.useMemo(() => {
+    const isMedio = (l: Lead) => {
+      if (!l.tipo) return false;
+      const s = String(l.tipo).trim().toLowerCase();
+      return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
+    };
+    const isBanda = (l: Lead) => {
+      if (!l.tipo) return false;
+      const s = String(l.tipo).trim().toLowerCase();
+      return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
+    };
+    const totalEvents = concerts.length + rehearsals.length;
+    const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
+    return {
+      booking: leads.filter(l => !isMedio(l) && !isBanda(l)).length,
+      medios: leads.filter(l => isMedio(l)).length,
+      calendario: totalEvents === 0 ? 0 : `${activeEvents}/${totalEvents}`,
+    } as Record<string, number | string>;
+  }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals]);
+
+  // Vista agrupada del menú (secciones colapsables) solo para planes con menú largo;
+  // `promo` (4 módulos) ya es corto de por sí y se queda con la lista plana de siempre.
+  const shouldGroupNav = getPlanDefinition(currentActiveBandPlan).allowedModules.length > MIN_MODULES_FOR_GROUPED_NAV;
+
+  const [openNavGroupIds, setOpenNavGroupIds] = useState<Record<string, boolean>>(() => {
+    try {
+      const stored = localStorage.getItem('bm_nav_open_groups');
+      if (stored) return JSON.parse(stored);
+    } catch { /* localStorage no disponible o corrupto: se ignora */ }
+    const initialGroupId = findNavGroupIdForItem('resumen');
+    return initialGroupId ? { [initialGroupId]: true } : {};
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bm_nav_open_groups', JSON.stringify(openNavGroupIds));
+    } catch { /* localStorage no disponible: el toggle sigue funcionando en memoria */ }
+  }, [openNavGroupIds]);
+
+  const toggleNavGroup = (groupId: string) => {
+    setOpenNavGroupIds(prev => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
 
   // Public Landing Routes
   const isFanRoute = React.useMemo(() => {
@@ -498,40 +563,14 @@ export default function App() {
 
  {/* Horizontal Quick Tabs Bar */}
  <div className="flex items-center gap-1.5 px-3 pb-2.5 overflow-x-auto no-scrollbar scroll-smooth">
- {(() => {
- const isMedio = (l: Lead) => {
- if (!l.tipo) return false;
- const s = String(l.tipo).trim().toLowerCase();
- return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
- };
- const isBanda = (l: Lead) => {
- if (!l.tipo) return false;
- const s = String(l.tipo).trim().toLowerCase();
- return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
- };
- return [
- { id: 'resumen', label: t('nav.resumen', 'Resumen'), icon: Table },
- { id: 'booking', label: t('nav.booking', 'Booking'), icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
- { id: 'medios', label: t('nav.medios', 'Medios'), icon: Radio, badge: leads.filter(l => isMedio(l)).length },
- { id: 'calendario', label: t('nav.calendario', 'Calendario'), icon: CalendarRange, badge: (() => {
-    const totalEvents = concerts.length + rehearsals.length;
-    const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
-    if (totalEvents === 0) return 0;
-    return `${activeEvents}/${totalEvents}`;
-  })() },
- { id: 'bandas', label: t('nav.bandas', 'Bandas'), icon: Users },
- { id: 'giras', label: t('nav.giras', 'Giras'), icon: Truck },
- { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
- { id: 'fans', label: t('nav.fans', 'Captura QR & Fans'), icon: QrCode },
- { id: 'reels', label: t('nav.reels', 'Reels'), icon: Video },
- { id: 'repertorio', label: t('nav.repertorio', 'Temas'), icon: Disc3 },
- { id: 'chat', label: t('nav.chat', 'Agente AI'), icon: Guitar },
- ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchan'), icon: Sparkles }] : []),
- ];
- })().filter((item) => item.id !== 'planes' && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id))).map((item) => {
+ {TOP_TABS_ORDER_IDS
+ .map((id) => NAV_ITEMS[id])
+ .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
+ .map((item) => {
  const isSelected = currentView === item.id;
  const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
  const IconComp = item.icon;
+ const badge = navBadges[item.id];
  return (
  <button
  key={`top-tab-${item.id}`}
@@ -545,17 +584,17 @@ export default function App() {
  }`}
  >
  <IconComp className={`w-4 h-4 shrink-0 ${isSelected ? 'text-amber-400' : !isAllowed ? 'text-neutral-500' : 'text-neutral-400'}`} />
- <span>{item.label}</span>
+ <span>{t(item.labelKey, item.labelDefault)}</span>
  {!isAllowed ? (
    <span className="flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
      <Lock className="w-2.5 h-2.5" />
      <span>Plan</span>
    </span>
- ) : item.badge !== undefined && item.badge !== 0 && item.badge !== "0" ? (
+ ) : badge !== undefined && badge !== 0 && badge !== "0" ? (
  <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
  isSelected ? 'bg-amber-500/30 text-amber-200' : 'bg-[#2b2927] text-zinc-400'
  }`}>
- {item.badge}
+ {badge}
  </span>
  ) : null}
  </button>
@@ -609,108 +648,71 @@ export default function App() {
 
  {/* Drawer Nav */}
  <nav className="flex flex-col gap-1 px-3 pt-3 flex-1">
- {(() => {
- const isMedio = (l: Lead) => {
- if (!l.tipo) return false;
- const s = String(l.tipo).trim().toLowerCase();
- return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
- };
- const isBanda = (l: Lead) => {
- if (!l.tipo) return false;
- const s = String(l.tipo).trim().toLowerCase();
- return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
- };
- return [
- { id: 'resumen', label: t('nav.resumen', 'Resumen'), icon: Table },
- { id: 'booking', label: t('nav.booking', 'Booking Salas'), icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
- { id: 'medios', label: t('nav.medios', 'Medios y Prensa'), icon: Radio, badge: leads.filter(l => isMedio(l)).length },
- { id: 'bandas', label: t('nav.bandas', 'Grupos & Agencias'), icon: Users },
- { id: 'calendario', label: t('nav.calendario', 'Calendario'), icon: CalendarRange, badge: (() => {
-    const totalEvents = concerts.length + rehearsals.length;
-    const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
-    if (totalEvents === 0) return 0;
-    return `${activeEvents}/${totalEvents}`;
-  })() },
- { id: 'giras', label: t('nav.giras', 'Tour Manager'), icon: Truck },
- { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
- { id: 'fans', label: t('nav.fans', 'Captura QR & Fans'), icon: QrCode },
- { id: 'reels', label: t('nav.reels', 'Reels Center'), icon: Video },
- { id: 'repertorio', label: t('nav.repertorio', 'Repertorio'), icon: Disc3 },
- { id: 'chat', label: t('nav.chat', 'Agente Mánager'), icon: Guitar },
- ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
- { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
- ];
- })().filter((item) => item.id !== 'planes' && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id))).map((item) => {
- const isSelected = currentView === item.id;
- const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
- const IconComp = item.icon;
- return (
- <button
- key={`mob-nav-${item.id}`}
- onClick={() => handleNavigate(item.id as any)}
- className={`flex items-center justify-between py-3 px-3.5 rounded-xl text-sm font-sans transition-colors cursor-pointer ${
- isSelected 
- ? 'bg-zinc-800/80 text-zinc-100 font-bold border-zinc-700'
- : !isAllowed
- ? 'text-neutral-500 hover:bg-[#22211f]/60'
- : 'text-neutral-300 hover:bg-[#22211f] hover:text-white'
- }`}
- >
- <div className="flex items-center gap-3">
- <IconComp className={`w-4 h-4 shrink-0 ${!isAllowed ? 'opacity-40' : ''}`} />
- <span className="whitespace-nowrap">{item.label}</span>
- </div>
- <div className="flex items-center gap-1.5">
- {!isAllowed && (
- <span className="flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
- <Lock className="w-3 h-3" />
- <span>Upgrade</span>
- </span>
+ {NAV_PINNED_TOP_IDS.map((id) => {
+   const item = NAV_ITEMS[id];
+   return (
+     <NavItemButton
+       key={item.id}
+       item={item}
+       label={t(item.labelKey, item.labelDefault)}
+       isSelected={currentView === item.id}
+       isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+       badge={navBadges[item.id]}
+       onNavigate={() => handleNavigate(item.id as any)}
+       variant="mobile"
+     />
+   );
+ })}
+ {shouldGroupNav ? (
+   NAV_GROUPS_MOBILE.map((group) => (
+     <NavGroupSection
+       key={group.id}
+       group={group}
+       currentView={currentView}
+       currentActiveBandPlan={currentActiveBandPlan}
+       isAdmin={isAdmin}
+       navBadges={navBadges}
+       onNavigate={(id) => handleNavigate(id as any)}
+       isOpen={!!openNavGroupIds[group.id]}
+       onToggleOpen={() => toggleNavGroup(group.id)}
+       t={t}
+       variant="mobile"
+     />
+   ))
+ ) : (
+   FLAT_NAV_ORDER_IDS
+     .filter((id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id))
+     .map((id) => NAV_ITEMS[id])
+     .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
+     .map((item) => (
+       <NavItemButton
+         key={item.id}
+         item={item}
+         label={t(item.labelKey, item.labelDefault)}
+         isSelected={currentView === item.id}
+         isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+         badge={navBadges[item.id]}
+         onNavigate={() => handleNavigate(item.id as any)}
+         variant="mobile"
+       />
+     ))
  )}
- {item.badge !== undefined && isAllowed && (
- <span className={`text-xs px-2 py-0.5 rounded-md font-sans font-bold ${
- isSelected ? 'bg-zinc-700 text-zinc-300' : 'bg-[#22211F] text-neutral-400'
- }`}>
- {item.badge}
- </span>
- )}
- </div>
- </button>
- );
+ {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.map((id) => {
+   const item = NAV_ITEMS[id];
+   return (
+     <NavItemButton
+       key={item.id}
+       item={item}
+       label={t(item.labelKey, item.labelDefault)}
+       isSelected={currentView === item.id}
+       isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+       badge={navBadges[item.id]}
+       onNavigate={() => handleNavigate(item.id as any)}
+       variant="mobile"
+     />
+   );
  })}
  </nav>
-
- {/* Drawer Quick Tools (Metrónomo y Afinador) — ocultos en plan Promo */}
- {!isPromoPlan && (
- <div className="px-3 py-2 border-t border-[#22211F]/60 space-y-1.5">
-   <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 px-1">Herramientas</p>
-   <div className="grid grid-cols-2 gap-2">
-     <button
-       onClick={() => { setShowMetronomeModal(true); setIsMobileMenuOpen(false); }}
-       className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 transition-all cursor-pointer text-left active:scale-95"
-       title="Abrir Metrónomo WebAudio Pro"
-     >
-       <Clock className="w-4 h-4 text-amber-400 shrink-0" />
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
-         <span className="text-[9px] text-amber-400/70 font-mono truncate">Tap Tempo</span>
-       </div>
-     </button>
-
-     <button
-       onClick={() => { setShowTunerModal(true); setIsMobileMenuOpen(false); }}
-       className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-300 transition-all cursor-pointer text-left active:scale-95"
-       title="Abrir Afinador de Guitarra, Bajo y Ukelele"
-     >
-       <Guitar className="w-4 h-4 text-emerald-400 shrink-0" />
-       <div className="flex flex-col min-w-0">
-         <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-         <span className="text-[9px] text-emerald-400/70 font-mono truncate">Guitar, Bass & Uke</span>
-       </div>
-     </button>
-   </div>
- </div>
- )}
 
  {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
  {!isPromoPlan && (
@@ -840,87 +842,84 @@ export default function App() {
 
  {/* Navigation */}
  <nav className="flex flex-col gap-0.5 px-3 pt-2 flex-1">
- {(() => {
- const isMedio = (l: Lead) => {
- if (!l.tipo) return false;
- const s = String(l.tipo).trim().toLowerCase();
- return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
- };
- const isBanda = (l: Lead) => {
- if (!l.tipo) return false;
- const s = String(l.tipo).trim().toLowerCase();
- return s === 'grupo' || s.includes('grup') || s.includes('banda') || s.includes('artist') || s.includes('musico') || s.includes('músico');
- };
-
- return [
- { id: 'resumen', label: t('nav.resumen', 'Resumen'), icon: Table },
- { id: 'booking', label: t('nav.booking', 'Booking Salas'), icon: Building2, badge: leads.filter(l => !isMedio(l) && !isBanda(l)).length },
- { id: 'medios', label: t('nav.medios', 'Medios y Prensa'), icon: Radio, badge: leads.filter(l => isMedio(l)).length },
- { id: 'bandas', label: t('nav.bandas', 'Grupos & Agencias'), icon: Users },
- { id: 'calendario', label: t('nav.calendario', 'Calendario'), icon: CalendarRange, badge: (() => {
-    const totalEvents = concerts.length + rehearsals.length;
-    const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
-    if (totalEvents === 0) return 0;
-    return `${activeEvents}/${totalEvents}`;
-  })() },
- { id: 'giras', label: t('nav.giras', 'Tour Manager'), icon: Truck },
- { id: 'epk', label: t('nav.epk', 'Dossier (EPK)'), icon: BookOpen },
- { id: 'fans', label: t('nav.fans', 'Captura QR & Fans'), icon: QrCode },
- { id: 'reels', label: t('nav.reels', 'Reels Center'), icon: Video },
- { id: 'repertorio', label: t('nav.repertorio', 'Repertorio'), icon: Disc3 },
- { id: 'chat', label: t('nav.chat', 'Agente Mánager'), icon: Guitar },
- ...(isAdmin ? [{ id: 'finanzas', label: t('nav.finanzas', 'Finanzas'), icon: Coins }, { id: 'merchan', label: t('nav.merchan', 'Merchandising'), icon: Sparkles }] : []),
- { id: 'planes', label: t('nav.planes', 'Planes & Precios'), icon: Crown, badge: '-20%' },
- ];
- })().filter((item) => item.id !== 'planes' && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id))).map((item) => {
- const isSelected = currentView === item.id;
- const IconComp = item.icon;
- 
- return (
- <button
- id={`nav-btn-${item.id}`}
- key={item.id}
- onClick={() => handleNavigate(item.id as any)}
- className={`flex items-center justify-between py-2.5 px-3 rounded-xl text-[13px] font-sans transition-all duration-200 cursor-pointer active:scale-95 ${
- isSelected 
- ? 'bg-amber-500/15 text-amber-300 font-bold border border-amber-500/35 shadow-xs'
- : 'text-neutral-300 hover:bg-[#22211f] hover:text-white hover:translate-x-0.5'
- }`}
- >
- <div className="flex items-center gap-3">
- <IconComp className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isSelected ? 'text-amber-400 scale-110' : 'text-neutral-400'}`} />
- <span className="whitespace-nowrap">{item.label}</span>
- </div>
- {!hasModuleAccess(currentActiveBandPlan, item.id) ? (
- <span className="flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
- <Lock className="w-3 h-3" />
- <span>Plan</span>
- </span>
- ) : item.badge !== undefined && (
- <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold transition-colors ${
- isSelected ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-neutral-800 text-neutral-400'
- }`}>
- {item.badge}
- </span>
+ {NAV_PINNED_TOP_IDS.map((id) => {
+   const item = NAV_ITEMS[id];
+   return (
+     <NavItemButton
+       key={item.id}
+       item={item}
+       label={t(item.labelKey, item.labelDefault)}
+       isSelected={currentView === item.id}
+       isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+       badge={navBadges[item.id]}
+       onNavigate={() => handleNavigate(item.id as any)}
+       variant="desktop"
+     />
+   );
+ })}
+ {shouldGroupNav ? (
+   NAV_GROUPS_DESKTOP.map((group) => (
+     <NavGroupSection
+       key={group.id}
+       group={group}
+       currentView={currentView}
+       currentActiveBandPlan={currentActiveBandPlan}
+       isAdmin={isAdmin}
+       navBadges={navBadges}
+       onNavigate={(id) => handleNavigate(id as any)}
+       isOpen={!!openNavGroupIds[group.id]}
+       onToggleOpen={() => toggleNavGroup(group.id)}
+       t={t}
+       variant="desktop"
+     />
+   ))
+ ) : (
+   FLAT_NAV_ORDER_IDS
+     .filter((id) => !(NAV_PINNED_TOP_IDS as NavItemId[]).includes(id))
+     .map((id) => NAV_ITEMS[id])
+     .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
+     .map((item) => (
+       <NavItemButton
+         key={item.id}
+         item={item}
+         label={t(item.labelKey, item.labelDefault)}
+         isSelected={currentView === item.id}
+         isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+         badge={navBadges[item.id]}
+         onNavigate={() => handleNavigate(item.id as any)}
+         variant="desktop"
+       />
+     ))
  )}
- </button>
- );
+ {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.map((id) => {
+   const item = NAV_ITEMS[id];
+   return (
+     <NavItemButton
+       key={item.id}
+       item={item}
+       label={t(item.labelKey, item.labelDefault)}
+       isSelected={currentView === item.id}
+       isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+       badge={navBadges[item.id]}
+       onNavigate={() => handleNavigate(item.id as any)}
+       variant="desktop"
+     />
+   );
  })}
  </nav>
 
- {/* Bottom Quick Tools (Metrónomo y Afinador) (oculto en plan Promo) */}
+ {/* Campañas de Booking (oculto en plan Promo, no tiene acceso a Booking) */}
  {!isPromoPlan && (
    <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
      <div className="flex items-center justify-between px-1">
-       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Herramientas</p>
-       {/* Campañas de Booking: oculto en plan Promo, no tiene acceso a Booking */}
+       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Campañas</p>
        <button
          onClick={() => setShowCampaignModal(true)}
          className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
          title="Gestionar Campañas de Booking"
        >
          <Target className="w-3 h-3" />
-         <span>Campañas</span>
+         <span>Configurar</span>
        </button>
      </div>
 
@@ -951,36 +950,6 @@ export default function App() {
          {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
        </span>
      </button>
-
-     <div className="grid grid-cols-2 gap-1.5">
-       <button
-         onClick={() => setShowMetronomeModal(true)}
-         className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all cursor-pointer text-left active:scale-95 group"
-         title="Abrir Metrónomo WebAudio Pro"
-       >
-         <div className="p-1 rounded-lg bg-amber-500/20 text-amber-400 group-hover:scale-105 transition-transform shrink-0">
-           <Clock className="w-3.5 h-3.5" />
-         </div>
-         <div className="flex flex-col min-w-0">
-           <span className="text-[11px] font-bold truncate leading-tight">Metrónomo</span>
-           <span className="text-[9px] text-amber-400/80 font-mono truncate">Click & Tap</span>
-         </div>
-       </button>
-
-       <button
-         onClick={() => setShowTunerModal(true)}
-         className="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all cursor-pointer text-left active:scale-95 group"
-         title="Abrir Afinador de Guitarra, Bajo y Ukelele"
-       >
-         <div className="p-1 rounded-lg bg-emerald-500/20 text-emerald-400 group-hover:scale-105 transition-transform shrink-0">
-           <Guitar className="w-3.5 h-3.5" />
-         </div>
-         <div className="flex flex-col min-w-0">
-           <span className="text-[11px] font-bold truncate leading-tight">Afinador</span>
-           <span className="text-[9px] text-emerald-400/80 font-mono truncate">Guitar, Bass & Uke</span>
-         </div>
-       </button>
-     </div>
    </div>
  )}
 
@@ -1217,7 +1186,7 @@ export default function App() {
  )}
  />
  )}
- {currentView === 'repertorio' && (
+ {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia' || currentView === 'directo') && (
  <RepertorioSetlists
  key={currentActiveBandId}
  colors={colors}
@@ -1229,6 +1198,8 @@ export default function App() {
  bandLogoUrl={currentActiveBandLogo}
  onUpdateConcert={handleUpdateConcert}
  onUpdateRehearsal={handleUpdateRehearsal}
+ view={currentView as any}
+ currentUser={currentUser}
  />
  )}
 {currentView === 'merchan' && (
