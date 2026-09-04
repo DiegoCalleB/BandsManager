@@ -58,9 +58,11 @@ interface NoteLayoutResult {
  * Decide, para una fila de canción concreta, si la nota (miembro, nota del bolo, nota general)
  * cabe en una columna a la derecha del título o si esa fila necesita caer a una línea propia
  * debajo — y calcula, con fitStackedNoteSegments, el tamaño de fuente común y las líneas ya
- * apiladas (una por nota, cada una en su propia línea; una nota nunca se parte en dos líneas,
- * si ni al tamaño mínimo cabe entera se trunca con "…"). Devuelve null si no hay ninguna nota
- * que mostrar.
+ * apiladas (una por nota, cada una en su propia línea; el texto de una nota nunca se pierde: no
+ * se parte en dos líneas ni se trunca). Si el carril de la derecha obligaría a encoger alguna
+ * nota por debajo del mínimo compartido, se prueba antes con el carril de abajo (mucho más
+ * ancho) en vez de aceptar directamente esa fuente extrema. Devuelve null si no hay ninguna
+ * nota que mostrar.
  */
 function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   const segments: NoteSegment[] = [];
@@ -87,19 +89,31 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   );
   const leftWidthPx = numberWidth + titleWidth + badgesWidth;
   const rightSpaceAvailable = input.rowWidthPx - leftWidthPx - ROW_GAP_PX;
-  const inline = rightSpaceAvailable >= MIN_USEFUL_RIGHT_LANE_PX;
-  const maxWidthPx = inline ? rightSpaceAvailable : input.rowWidthPx - (input.numberText ? 40 : 6);
+  const inlineFits = rightSpaceAvailable >= MIN_USEFUL_RIGHT_LANE_PX;
+  const belowMaxWidthPx = input.rowWidthPx - (input.numberText ? 40 : 6);
 
-  const fit = fitStackedNoteSegments(segments, {
-    maxWidthPx,
-    maxFontSizePx: input.noteMaxFontSizePx,
-    minFontSizePx: input.noteMinFontSizePx,
-    fontFamily: input.noteFontFamily,
-    fontWeight: 700,
-    measure: (text, size) => input.measure(text, size, input.noteFontFamily, 700)
-  });
+  const fitAt = (maxWidthPx: number) =>
+    fitStackedNoteSegments(segments, {
+      maxWidthPx,
+      maxFontSizePx: input.noteMaxFontSizePx,
+      minFontSizePx: input.noteMinFontSizePx,
+      fontFamily: input.noteFontFamily,
+      fontWeight: 700,
+      measure: (text, size) => input.measure(text, size, input.noteFontFamily, 700)
+    });
 
-  return { mode: inline ? 'inline' : 'below', maxWidthPx, fit };
+  if (inlineFits) {
+    const inlineFit = fitAt(rightSpaceAvailable);
+    const neededExtremeShrink = inlineFit.lines.some(l => l.fontSizePx < input.noteMinFontSizePx);
+    if (!neededExtremeShrink) {
+      return { mode: 'inline', maxWidthPx: rightSpaceAvailable, fit: inlineFit };
+    }
+    // Ni al tamaño mínimo compartido cupo al lado del título: mejor caer a la fila de abajo
+    // (mucho más ancha) que aceptar una fuente extremadamente pequeña junto al título.
+    return { mode: 'below', maxWidthPx: belowMaxWidthPx, fit: fitAt(belowMaxWidthPx) };
+  }
+
+  return { mode: 'below', maxWidthPx: belowMaxWidthPx, fit: fitAt(belowMaxWidthPx) };
 }
 
 interface PdfExportModalProps {
@@ -285,9 +299,12 @@ export function PdfExportModal({
           });
 
           const rotationDeg = deterministicRotationDeg(s.id);
-          // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea.
+          // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
+          // tamaño de fuente va por línea (no en el contenedor): la nota excepcional que
+          // necesitó encogerse más que las demás para caber entera lo hace sola, sin afectar
+          // al tamaño de sus vecinas.
           const notesHtml = layout
-            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="font-size:${layout.fit.fontSizePx}px;max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${layout.fit.lines.map(line => `<div class="note-seg ${line.className}">${line.text}</div>`).join('')}</div>`
+            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${layout.fit.lines.map(line => `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;">${line.text}</div>`).join('')}</div>`
             : '';
           // El título solo se fuerza a una sola línea (con "…" si hace falta) cuando de verdad
           // compite por sitio con una nota en la misma fila (layout.mode === 'inline'). Si esa
@@ -597,20 +614,22 @@ export function PdfExportModal({
 
             /* Notas "escritas a mano encima del repertorio ya impreso": las tres (miembro, nota
                del bolo, nota general) comparten la fuente manuscrita y solo se distinguen por su
-               color de tinta. El tamaño de fuente y si van al lado del título o en su propia
-               línea debajo se calculan fila a fila en JS (ver computeNoteLayout/textFit.ts):
-               primero se encoge la fuente, solo si ni así cabe se parte en 2 líneas, y solo se
-               trunca con "…" como último recurso — nunca al revés. Por eso aquí no hay
-               font-size ni max-width fijos: llegan inline por fila. */
+               color de tinta. El tamaño de fuente (por línea, no por bloque) y si van al lado
+               del título o en su propia línea debajo se calculan fila a fila en JS (ver
+               computeNoteLayout/textFit.ts): se encoge la fuente tanto como haga falta — nunca
+               se parte una nota en 2 líneas ni se trunca su texto. Por eso aquí no hay font-size
+               ni max-width fijos: llegan inline por fila/línea. */
             /* Cada nota apilada en su propia línea (no todas seguidas), a la derecha del título
-               cuando hay hueco de sobra. */
+               cuando hay hueco de sobra. overflow:visible a propósito (ver .note-seg): en el
+               caso raro de una nota patológicamente larga que ni encogida al mínimo cabe, se
+               deja que asome un poco fuera de su carril en vez de recortarla sin avisar. */
             .song-notes-right {
               display: flex;
               flex-direction: column;
               align-items: flex-end;
               gap: 1px;
               flex-shrink: 0;
-              overflow: hidden;
+              overflow: visible;
             }
             .song-notes-below {
               display: flex;
@@ -621,8 +640,11 @@ export function PdfExportModal({
               line-height: 1.05;
             }
             .note-seg {
-              overflow: hidden;
-              text-overflow: ellipsis;
+              /* overflow:visible a propósito: el texto nunca se trunca en JS (ver textFit.ts),
+                 así que tampoco debe cortarse aquí con elipsis por un posible desajuste de 1px
+                 entre la medición por canvas y el render real. white-space:nowrap sigue
+                 garantizando que una nota nunca salta a una segunda línea. */
+              overflow: visible;
               white-space: nowrap;
               min-width: 0;
               max-width: 100%;
@@ -1150,15 +1172,21 @@ export function PdfExportModal({
                     const noteRotationDeg = deterministicRotationDeg(s.id);
 
                     // Cada nota (miembro / nota del bolo / general) apilada en su propia línea,
-                    // una encima de otra, en vez de todas seguidas en una sola línea.
+                    // una encima de otra, en vez de todas seguidas en una sola línea. El texto
+                    // nunca se trunca: sin `truncate`/`overflow-hidden` a propósito, para que una
+                    // nota patológicamente larga (caso raro, ya encogida al suelo mínimo en
+                    // computeNoteLayout) pueda asomar un poco fuera de su carril en vez de
+                    // recortarse sin avisar. whitespace-nowrap sí se mantiene: eso es lo que
+                    // garantiza que nunca salta a una segunda línea.
                     const renderNoteLine = (line: NoteLine, key: string) => (
                       <div
                         key={key}
-                        className={`truncate min-w-0 max-w-full font-bold overflow-hidden whitespace-nowrap ${
+                        className={`min-w-0 max-w-full font-bold whitespace-nowrap ${
                           line.className === 'note-general' ? 'italic font-semibold' : ''
                         }`}
                         style={{
                           fontFamily: getHandwritingFontFamily(),
+                          fontSize: line.fontSizePx,
                           color:
                             line.className === 'note-member'
                               ? getInkColorHex()
@@ -1223,8 +1251,8 @@ export function PdfExportModal({
                               decidido por textFit, aquí solo se pintan. */}
                           {noteLayout && noteLayout.mode === 'inline' && (
                             <div
-                              className="flex flex-col items-end shrink-0 overflow-hidden"
-                              style={{ maxWidth: noteLayout.maxWidthPx, fontSize: noteLayout.fit.fontSizePx, transform: `rotate(${noteRotationDeg}deg)` }}
+                              className="flex flex-col items-end shrink-0"
+                              style={{ maxWidth: noteLayout.maxWidthPx, transform: `rotate(${noteRotationDeg}deg)` }}
                             >
                               {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                             </div>
@@ -1248,7 +1276,7 @@ export function PdfExportModal({
                         {noteLayout && noteLayout.mode === 'below' && (
                           <div
                             className="pl-9 -mt-0.5"
-                            style={{ fontSize: noteLayout.fit.fontSizePx, lineHeight: 1.05, transform: `rotate(${noteRotationDeg}deg)` }}
+                            style={{ lineHeight: 1.05, transform: `rotate(${noteRotationDeg}deg)` }}
                           >
                             {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                           </div>

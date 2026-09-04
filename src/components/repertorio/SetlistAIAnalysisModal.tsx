@@ -4,6 +4,7 @@ import html2canvas from 'html2canvas';
 import { api } from '../../services/api';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
+import { PacingWarning } from '../../utils/energyPacingUtils';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -21,8 +22,24 @@ interface SetlistAIAnalysisModalProps {
   chartData?: EnergyChartPoint[];
   yDomain?: [number, number];
   zonasEnergia?: EnergyChartZone[];
-  /** Callback para reordenar canciones arrastrando puntos en el gráfico compacto del modal. */
-  onReorder?: (fromIndex: number, toIndex: number) => void;
+  /** Avisos del análisis básico (heurístico) del setlist activo — se muestran aquí igual que en
+   * el editor de setlist, con su botón "Aplicar" cuando hay un reordenamiento determinista
+   * disponible, para no obligar a cerrar el modal solo para aplicar una sugerencia. */
+  warnings?: PacingWarning[];
+  /** Reordena el setlist (usado tanto por el botón "Aplicar" de los avisos/sugerencias como por
+   * arrastrar un punto en el mini-gráfico de aquí dentro). Si se omite, el mini-gráfico queda solo
+   * de lectura. `sourceKey` identifica qué acción lo pidió (p.ej. "ai-suggestion-2") — así ESE
+   * botón concreto puede saber si es el que "Deshacer" revertiría ahora mismo. */
+  onReorder?: (fromIndex: number, toIndex: number, sourceKey?: string) => void;
+  /** true si hay un último reordenamiento (desde aquí o desde el editor de fondo) que se puede
+   * deshacer. Se muestra un botón "Deshacer" en el modal para no obligar a cerrarlo solo para eso. */
+  canUndo?: boolean;
+  onUndo?: () => void;
+  /** sourceKey de la acción que dejó el snapshot que "Deshacer" revertiría ahora — null si no hay
+   * nada que deshacer. Permite que el botón "Aplicar" de UNA sugerencia concreta se convierta en
+   * "Deshacer" solo mientras siga siendo la acción más reciente (la única que un snapshot de un
+   * solo nivel puede revertir de verdad). */
+  undoSourceKey?: string | null;
 }
 
 interface Suggestion {
@@ -33,6 +50,10 @@ interface Suggestion {
   suggestion: string;
   impact: string;
   songs_involved?: string[];
+  /** Posiciones 1-indexadas (tal como las vio el modelo) del reordenamiento que resolvería esta
+   * sugerencia — ya validadas en el servidor contra la lista real, nunca inventadas por el
+   * frontend. Null/ausente cuando la sugerencia no es sobre mover una canción de sitio. */
+  suggested_reorder?: { from_position: number; to_position: number } | null;
 }
 
 interface Analysis {
@@ -44,7 +65,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, onReorder }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder, canUndo = false, onUndo, undoSourceKey = null }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -57,9 +78,16 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     if (isOpen) {
       setAnalysis(initialAnalysis ?? null);
       setError(null);
+      setAppliedSuggestionIndices(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, setlistId]);
+
+  // Qué sugerencias de la IA ya se aplicaron en esta sesión del modal — sus suggested_reorder
+  // usan posiciones de CUANDO se generó el análisis, así que reaplicar tras un primer "Aplicar"
+  // (que ya cambió el orden real) movería otra cosa. Se deshabilita el botón tras usarlo una vez;
+  // "Deshacer" (arriba) sigue disponible para revertir ese cambio concreto si hace falta.
+  const [appliedSuggestionIndices, setAppliedSuggestionIndices] = useState<Set<number>>(new Set());
 
   // Modal arrastrable: el usuario puede moverlo a un lado para ver el gráfico de energía
   // (con el highlighting) mientras pasa el ratón por las sugerencias dentro del modal.
@@ -409,13 +437,25 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
               </div>
             </div>
-            <button
-              onClick={onClose}
-              onMouseDown={(e) => e.stopPropagation()}
-              className="p-2 hover:bg-neutral-800 rounded-lg transition"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1.5">
+              {canUndo && (
+                <button
+                  onClick={onUndo}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="px-2 py-1 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+                  title="Deshacer el último reordenamiento del setlist"
+                >
+                  ↩️ Deshacer
+                </button>
+              )}
+              <button
+                onClick={onClose}
+                onMouseDown={(e) => e.stopPropagation()}
+                className="p-2 hover:bg-neutral-800 rounded-lg transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click.
@@ -432,6 +472,51 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 compact
                 onReorder={onReorder}
               />
+            </div>
+          )}
+
+          {/* Avisos del análisis básico (heurístico) — mismos badges que en el editor de setlist,
+              para poder aplicar un reordenamiento sugerido sin salir del modal. */}
+          {warnings.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 px-3 pb-3">
+              {warnings.map((w, i) => {
+                const hasSongs = !!w.songTitles && w.songTitles.length > 0;
+                const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
+                  w.songTitles!.some(t => titlesMatch(t, highlightedSongIds));
+                return (
+                  <span
+                    key={i}
+                    className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition ${
+                      w.type === 'warning'
+                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                        : w.type === 'success'
+                        ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                        : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+                    } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
+                    style={{ cursor: hasSongs ? 'pointer' : 'default' }}
+                    onMouseEnter={() => { if (hasSongs) onHighlightSongs?.(w.songTitles!); }}
+                    onMouseLeave={() => onHighlightSongs?.([])}
+                    onClick={() => { if (hasSongs) onHighlightSongs?.(isHighlighted ? [] : w.songTitles!); }}
+                    title={hasSongs ? `Resalta: ${w.songTitles!.join(', ')}` : undefined}
+                  >
+                    <span>{w.icon}</span>
+                    <span>{w.message}</span>
+                    {w.suggestedReorder && onReorder && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onReorder(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
+                        }}
+                        className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
+                        title={w.suggestedReorder.description}
+                      >
+                        ✓ Aplicar
+                      </button>
+                    )}
+                  </span>
+                );
+              })}
             </div>
           )}
         </div>
@@ -552,6 +637,51 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                                 {getCategoryIcon(sugg.category)} {sugg.category}
                               </p>
                             </div>
+                            {sugg.suggested_reorder && onReorder && (() => {
+                              const sourceKey = `ai-suggestion-${idx}`;
+                              // Mientras esta aplicación siga siendo la más reciente, el propio
+                              // botón "Aplicar" se convierte en "Deshacer" — no hace falta ir a
+                              // buscar el botón genérico de arriba para revertir justo esto.
+                              if (undoSourceKey === sourceKey) {
+                                return (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onUndo?.();
+                                      setAppliedSuggestionIndices(prev => {
+                                        const next = new Set(prev);
+                                        next.delete(idx);
+                                        return next;
+                                      });
+                                    }}
+                                    className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+                                    title="Deshacer este cambio de orden"
+                                  >
+                                    ↩️ Deshacer
+                                  </button>
+                                );
+                              }
+                              if (appliedSuggestionIndices.has(idx)) {
+                                // Se aplicó, pero luego se aplicó/arrastró otra cosa encima — el
+                                // snapshot de un solo nivel ya no puede revertir justo esto.
+                                return <span className="text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>;
+                              }
+                              return (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onReorder(sugg.suggested_reorder!.from_position - 1, sugg.suggested_reorder!.to_position - 1, sourceKey);
+                                    setAppliedSuggestionIndices(prev => new Set(prev).add(idx));
+                                  }}
+                                  className="shrink-0 px-2 py-0.5 rounded bg-purple-700/50 hover:bg-purple-600 text-purple-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+                                  title="Mover la canción a la posición sugerida"
+                                >
+                                  ✓ Aplicar
+                                </button>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>

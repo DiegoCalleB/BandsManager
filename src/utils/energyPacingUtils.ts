@@ -1,4 +1,5 @@
 import { Song, SetlistItem } from '../types';
+import { parseTonalidad, evaluarTransicionArmonica, tonalidadesSonFiables } from './harmonicAnalysis';
 
 export type SongEnergyCategory = 'balada' | 'media' | 'alta' | 'explosiva';
 
@@ -375,6 +376,28 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           } : undefined
         });
         break; // Solo 1 warning de este tipo
+      }
+    }
+
+    // 6. Choques armónicos entre temas consecutivos (círculo de quintas). Solo si las
+    // tonalidades del repertorio parecen datos reales — si la mayoría sigue en el valor por
+    // defecto sin rellenar, cualquier "choque" detectado sería ruido, no una lectura real de
+    // cómo suena el repertorio.
+    if (tonalidadesSonFiables(songs)) {
+      let choquesReportados = 0;
+      for (let i = 0; i < songPoints.length - 1 && choquesReportados < 2; i++) {
+        const keyA = parseTonalidad(songPoints[i].song?.tonalidad);
+        const keyB = parseTonalidad(songPoints[i + 1].song?.tonalidad);
+        if (!keyA || !keyB) continue;
+        if (evaluarTransicionArmonica(keyA, keyB) === 'choque') {
+          warnings.push({
+            type: 'tip',
+            icon: '🎸',
+            message: `Choque armónico: "${songPoints[i].title}" (${songPoints[i].song?.tonalidad}) a "${songPoints[i + 1].title}" (${songPoints[i + 1].song?.tonalidad}) es un salto de tonalidad brusco.`,
+            songTitles: [songPoints[i].title, songPoints[i + 1].title]
+          });
+          choquesReportados++;
+        }
       }
     }
   }

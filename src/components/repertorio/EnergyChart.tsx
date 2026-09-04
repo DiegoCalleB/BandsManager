@@ -71,10 +71,23 @@ export function EnergyChart({
   // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
   // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
   // recharts, así que no depende de sus internals de layout/escala.
+  //
+  // Se usa Pointer Events (no mouse+touch por separado): unifica ratón/dedo/lápiz en un solo
+  // modelo, evita que un handler React de touchstart/touchmove sea `passive` por defecto (ahí
+  // `preventDefault` no funciona ni sirve de nada) y evita el "ghost click" de mouse sintético que
+  // los navegadores móviles disparan tras un toque. `setPointerCapture` sustituye a preventDefault
+  // para decirle al navegador que ese puntero ya está siendo gestionado por nosotros.
   const containerRef = useRef<HTMLDivElement>(null);
   const [draggingFromIndex, setDraggingFromIndex] = useState<number | null>(null);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const draggingFromIndexRef = useRef<number | null>(null);
+  const activePointerIdRef = useRef<number | null>(null);
+  const dragStartClientXRef = useRef<number | null>(null);
+
+  // Umbral mínimo antes de considerar el gesto un arrastre real. Sin esto, el jitter normal del
+  // dedo entre el toque y la suelta (aunque la intención fuera un simple tap) podía redondear a un
+  // índice de canción distinto al de partida y reordenar solo sin querer, con "ningún control".
+  const MIN_DRAG_PX = 10;
 
   const getIndexFromClientX = (clientX: number): number => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -83,58 +96,60 @@ export function EnergyChart({
     return Math.max(0, Math.min(chartData.length - 1, Math.round(ratio * (chartData.length - 1))));
   };
 
-  const startDrag = (fromIndex: number) => {
+  const startDrag = (fromIndex: number, clientX: number, pointerId: number) => {
     draggingFromIndexRef.current = fromIndex;
+    dragStartClientXRef.current = clientX;
+    activePointerIdRef.current = pointerId;
     setDraggingFromIndex(fromIndex);
     setHoverIndex(fromIndex);
   };
 
   useEffect(() => {
     if (draggingFromIndex === null) return;
-    const handleMove = (e: MouseEvent) => setHoverIndex(getIndexFromClientX(e.clientX));
-    const handleUp = (e: MouseEvent) => {
+
+    const isActivePointer = (e: PointerEvent) =>
+      activePointerIdRef.current === null || e.pointerId === activePointerIdRef.current;
+
+    const resetDragState = () => {
+      draggingFromIndexRef.current = null;
+      dragStartClientXRef.current = null;
+      activePointerIdRef.current = null;
+      setDraggingFromIndex(null);
+      setHoverIndex(null);
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isActivePointer(e)) return;
+      setHoverIndex(getIndexFromClientX(e.clientX));
+    };
+
+    const handlePointerUp = (e: PointerEvent) => {
+      if (!isActivePointer(e)) return;
       const from = draggingFromIndexRef.current;
       const to = getIndexFromClientX(e.clientX);
-      if (from !== null && from !== to) onReorder?.(from, to);
-      // Soltar en el mismo punto donde se empezó (sin arrastrar) es un tap/clic normal:
+      const movedEnough =
+        dragStartClientXRef.current !== null &&
+        Math.abs(e.clientX - dragStartClientXRef.current) >= MIN_DRAG_PX;
+      if (from !== null && to !== from && movedEnough) onReorder?.(from, to);
+      // Soltar sin moverse lo suficiente (o en el mismo punto de partida) es un tap/clic normal:
       // selecciona ese tema. La diana táctil que arranca el arrastre tiene pointer-events
       // encima del punto visible, así que su onClick nativo ya no llega — se resuelve aquí.
       else if (from !== null) onSelectItem?.(chartData[from]?.id);
-      draggingFromIndexRef.current = null;
-      setDraggingFromIndex(null);
-      setHoverIndex(null);
+      resetDragState();
     };
-    // Equivalentes táctiles de mousemove/mouseup: mousedown/mousemove/mouseup no disparan en
-    // touch, así que sin esto arrastrar un punto para reordenar solo funcionaba con ratón.
-    // preventDefault en touchmove evita que el gesto haga scroll de la página en vez de mover
-    // el punto — por eso el listener va con { passive: false }.
-    const handleTouchMove = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      e.preventDefault();
-      setHoverIndex(getIndexFromClientX(touch.clientX));
+
+    const handlePointerCancel = (e: PointerEvent) => {
+      if (!isActivePointer(e)) return;
+      resetDragState();
     };
-    const handleTouchEnd = (e: TouchEvent) => {
-      const touch = e.changedTouches[0];
-      const from = draggingFromIndexRef.current;
-      const to = touch ? getIndexFromClientX(touch.clientX) : hoverIndex;
-      if (from !== null && to !== null && from !== to) onReorder?.(from, to);
-      else if (from !== null) onSelectItem?.(chartData[from]?.id);
-      draggingFromIndexRef.current = null;
-      setDraggingFromIndex(null);
-      setHoverIndex(null);
-    };
-    window.addEventListener('mousemove', handleMove);
-    window.addEventListener('mouseup', handleUp);
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd);
-    window.addEventListener('touchcancel', handleTouchEnd);
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerCancel);
     return () => {
-      window.removeEventListener('mousemove', handleMove);
-      window.removeEventListener('mouseup', handleUp);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-      window.removeEventListener('touchcancel', handleTouchEnd);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerCancel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggingFromIndex]);
@@ -258,16 +273,23 @@ export function EnergyChart({
                 <React.Fragment key={`dot-${payload.id}`}>
                   {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
                       para tocarlo con el dedo con precisión — este círculo transparente más
-                      grande (r=16) capta el toque/clic sin cambiar el tamaño visual del punto. */}
+                      grande (r=18) capta el toque/clic sin cambiar el tamaño visual del punto.
+                      onPointerDown cubre ratón y dedo con el mismo handler; setPointerCapture
+                      le dice al navegador que este puntero ya lo gestionamos nosotros, en vez de
+                      depender de preventDefault (que en un handler de touch de React es passive
+                      y no tiene efecto). */}
                   {onReorder && (
                     <circle
                       cx={cx}
                       cy={cy}
-                      r={16}
+                      r={18}
                       fill="transparent"
                       style={{ cursor: 'ew-resize', touchAction: 'none' }}
-                      onMouseDown={(e) => { e.stopPropagation(); startDrag(payload.idx); }}
-                      onTouchStart={(e) => { e.stopPropagation(); startDrag(payload.idx); }}
+                      onPointerDown={(e) => {
+                        e.stopPropagation();
+                        (e.target as Element).setPointerCapture?.(e.pointerId);
+                        startDrag(payload.idx, e.clientX, e.pointerId);
+                      }}
                     />
                   )}
                   <circle
@@ -292,11 +314,6 @@ export function EnergyChart({
                       pointerEvents: onReorder ? 'none' : 'auto'
                     }}
                     onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
-                    onMouseDown={(e) => {
-                      if (!onReorder) return;
-                      e.stopPropagation();
-                      startDrag(payload.idx);
-                    }}
                   />
                 </React.Fragment>
               );
