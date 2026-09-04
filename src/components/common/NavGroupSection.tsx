@@ -38,11 +38,16 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
 
   const headerPadding = variant === 'desktop' ? 'px-3' : 'px-3.5';
 
+  const handleHeaderClick = () => {
+    onToggleOpen();
+    onNavigate(items[0].id);
+  };
+
   return (
     <div className="mb-1">
       <button
         type="button"
-        onClick={onToggleOpen}
+        onClick={handleHeaderClick}
         className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer`}
         aria-expanded={isOpen}
       >
