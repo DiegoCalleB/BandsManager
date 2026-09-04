@@ -7,6 +7,7 @@ interface SetlistAIAnalysisModalProps {
   onClose: () => void;
   setlistId: string;
   setlistName?: string;
+  onAnalysisComplete?: (analysis: Analysis) => void;
 }
 
 interface Suggestion {
@@ -28,7 +29,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, onAnalysisComplete }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +41,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
       const result = await api.analyzeSetlistWithAI(setlistId);
       if (result.success && result.analysis) {
         setAnalysis(result.analysis);
+        onAnalysisComplete?.(result.analysis);
       } else {
         setError(result.error || 'Error al analizar el setlist');
       }
