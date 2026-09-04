@@ -2306,33 +2306,32 @@ export default function RepertorioSetlists({
                   </div>
                 )}
 
-                {/* AI Analysis Summary (if available) */}
+                {/* AI Analysis Summary (if available) - as badges like warnings */}
                 {aiAnalysisResult && (
-                  <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-3 space-y-2">
+                  <div className="space-y-2 pt-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-purple-300 flex items-center gap-1.5">
-                        <span>🧠 Análisis IA</span>
-                        <span className="text-2xl font-bold text-purple-400">{aiAnalysisResult.overallScore}/100</span>
-                      </span>
+                      <span className="text-xs font-bold text-purple-300">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
                       <button
                         type="button"
                         onClick={() => setShowAIAnalysisModal(true)}
-                        className="px-2 py-0.5 rounded text-[9px] bg-purple-700/50 hover:bg-purple-700 text-purple-200 transition"
+                        className="px-2 py-0.5 rounded text-[9px] bg-purple-700/50 hover:bg-purple-600 text-purple-200 transition font-medium"
                       >
-                        Ver detalles
+                        Ver análisis completo
                       </button>
                     </div>
                     {aiAnalysisResult.suggestions?.length > 0 && (
-                      <div className="text-[9px] text-purple-200 space-y-1">
-                        <p className="font-semibold">Sugerencias principales:</p>
-                        {aiAnalysisResult.suggestions.slice(0, 2).map((s: any, i: number) => (
-                          <p key={i} className="text-purple-300">
-                            {s.priority === 'high' && '🔴'} {s.priority === 'medium' && '🟠'} {s.priority === 'low' && '🟡'} {s.title}
-                          </p>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {aiAnalysisResult.suggestions.map((s: any, i: number) => (
+                          <span
+                            key={i}
+                            className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border bg-purple-900/30 text-purple-200 border-purple-600/40 hover:border-purple-500 transition cursor-pointer"
+                            onClick={() => setShowAIAnalysisModal(true)}
+                            title="Click para ver detalles completos"
+                          >
+                            <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
+                            <span>{s.title}</span>
+                          </span>
                         ))}
-                        {aiAnalysisResult.suggestions.length > 2 && (
-                          <p className="text-purple-400 italic">+{aiAnalysisResult.suggestions.length - 2} más...</p>
-                        )}
                       </div>
                     )}
                   </div>

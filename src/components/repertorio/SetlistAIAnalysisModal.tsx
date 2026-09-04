@@ -75,10 +75,10 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-neutral-700">
+    <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-4 pt-12">
+      <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700">
         {/* Header */}
-        <div className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-6 flex justify-between items-center">
+        <div className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Brain className="w-6 h-6 text-purple-400" />
             <div>
@@ -95,7 +95,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 space-y-4">
           {!analysis && !loading && !error && (
             <div className="text-center py-8">
               <Brain className="w-12 h-12 text-purple-400/50 mx-auto mb-4" />
