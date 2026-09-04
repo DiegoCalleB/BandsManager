@@ -1461,17 +1461,15 @@ export default function RepertorioSetlists({
  });
  };
 
- // Setlist Item Manipulation & Agile Reordering (Drag & Drop)
- const handleDropItem = (targetIndex: number) => {
-   if (draggedItemIndex === null || draggedItemIndex === targetIndex || !activeSetlist) {
-     setDraggedItemIndex(null);
-     setDragOverItemIndex(null);
-     return;
-   }
+ // Setlist Item Manipulation & Agile Reordering (Drag & Drop) — lógica pura, parametrizada por
+ // índices en vez de leer el estado de arrastre de la lista (draggedItemIndex), para poder
+ // reutilizarla también desde el drag horizontal sobre el Mapa de Energía (ver EnergyChart).
+ const reorderSetlistItems = (fromIndex: number, toIndex: number) => {
+   if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
 
    const newItems = [...activeSetlist.items];
-   const [movedItem] = newItems.splice(draggedItemIndex, 1);
-   newItems.splice(targetIndex, 0, movedItem);
+   const [movedItem] = newItems.splice(fromIndex, 1);
+   newItems.splice(toIndex, 0, movedItem);
 
    const updatedSetlist: Setlist = {
      ...activeSetlist,
@@ -1485,6 +1483,10 @@ export default function RepertorioSetlists({
      return next;
    });
    syncSetlistToBackend(updatedSetlist);
+ };
+
+ const handleDropItem = (targetIndex: number) => {
+   if (draggedItemIndex !== null) reorderSetlistItems(draggedItemIndex, targetIndex);
    setDraggedItemIndex(null);
    setDragOverItemIndex(null);
  };
@@ -2154,7 +2156,7 @@ export default function RepertorioSetlists({
             <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
               <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
                 <span>📈 Mapa de Dinámica y Energía del Show</span>
-                <span className="text-[9px] text-neutral-500 font-normal">(Curva tema a tema)</span>
+                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto para reordenar el setlist)</span>
               </span>
               <div className="flex items-center gap-2">
                 {showEnergyMap && (
@@ -2186,6 +2188,7 @@ export default function RepertorioSetlists({
                   highlightedSongIds={highlightedSongIds}
                   selectedSetlistItemId={selectedSetlistItemId}
                   onSelectItem={setSelectedSetlistItemId}
+                  onReorder={reorderSetlistItems}
                   height={256}
                 />
 

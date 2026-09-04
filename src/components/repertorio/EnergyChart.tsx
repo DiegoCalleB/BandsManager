@@ -1,5 +1,5 @@
-import React from 'react';
-import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea } from 'recharts';
+import React, { useState, useRef, useEffect } from 'react';
+import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { titlesMatch } from '../../utils/songTitleMatch';
 
 export interface EnergyChartPoint {
@@ -36,6 +36,10 @@ interface EnergyChartProps {
   height?: number;
   /** Versión reducida para espacios pequeños (p.ej. dentro del modal de Análisis IA): sin glow, ejes/puntos más pequeños. */
   compact?: boolean;
+  /** Si se pasa, arrastrar un punto horizontalmente reordena el setlist a esa posición — la
+   * altura del punto sigue sin poder tocarse (es la energía calculada, no un valor editable).
+   * Se omite en el gráfico compacto del modal de Análisis IA, donde solo es lectura. */
+  onReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
 /**
@@ -53,7 +57,8 @@ export function EnergyChart({
   selectedSetlistItemId = null,
   onSelectItem,
   height = 256,
-  compact = false
+  compact = false,
+  onReorder
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;
@@ -61,10 +66,52 @@ export function EnergyChart({
   const dotSelected = compact ? 6 : 8;
   const dotHighlighted = compact ? 7 : 10;
 
+  // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
+  // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
+  // recharts, así que no depende de sus internals de layout/escala.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [draggingFromIndex, setDraggingFromIndex] = useState<number | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const draggingFromIndexRef = useRef<number | null>(null);
+
+  const getIndexFromClientX = (clientX: number): number => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect || chartData.length === 0) return 0;
+    const ratio = (clientX - rect.left) / rect.width;
+    return Math.max(0, Math.min(chartData.length - 1, Math.round(ratio * (chartData.length - 1))));
+  };
+
+  const startDrag = (fromIndex: number) => {
+    draggingFromIndexRef.current = fromIndex;
+    setDraggingFromIndex(fromIndex);
+    setHoverIndex(fromIndex);
+  };
+
+  useEffect(() => {
+    if (draggingFromIndex === null) return;
+    const handleMove = (e: MouseEvent) => setHoverIndex(getIndexFromClientX(e.clientX));
+    const handleUp = (e: MouseEvent) => {
+      const from = draggingFromIndexRef.current;
+      const to = getIndexFromClientX(e.clientX);
+      if (from !== null && from !== to) onReorder?.(from, to);
+      draggingFromIndexRef.current = null;
+      setDraggingFromIndex(null);
+      setHoverIndex(null);
+    };
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draggingFromIndex]);
+
   return (
     <div
+      ref={containerRef}
       className={compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'}
-      style={{ height }}
+      style={{ height, cursor: draggingFromIndex !== null ? 'grabbing' : undefined }}
     >
       {!compact && (
         <style>{`
@@ -103,6 +150,11 @@ export function EnergyChart({
           ))}
 
           <CartesianGrid horizontal vertical={false} stroke="#2c2c2a" strokeDasharray="0" />
+
+          {/* Mientras se arrastra un punto, esta línea marca dónde caería la canción al soltar. */}
+          {draggingFromIndex !== null && hoverIndex !== null && (
+            <ReferenceLine x={hoverIndex} stroke="#fbbf24" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
+          )}
 
           <XAxis
             dataKey="idx"
@@ -165,24 +217,30 @@ export function EnergyChart({
               if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
               const isSelected = payload.id === selectedSetlistItemId;
               const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
+              const isDraggingThis = draggingFromIndex === payload.idx;
               return (
                 <circle
                   key={`dot-${payload.id}`}
                   cx={cx}
                   cy={cy}
-                  r={isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
+                  r={isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
                   fill={payload.color}
                   stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
                   strokeWidth={isHighlighted ? 3 : isSelected ? 2 : 1.5}
                   style={{
-                    cursor: onSelectItem ? 'pointer' : 'default',
-                    opacity: 1,
+                    cursor: onReorder ? (isDraggingThis ? 'grabbing' : 'grab') : (onSelectItem ? 'pointer' : 'default'),
+                    opacity: isDraggingThis ? 0.5 : 1,
                     filter: isHighlighted
                       ? `drop-shadow(0 0 10px ${payload.color}ff) drop-shadow(0 0 20px ${payload.color}aa)`
                       : `drop-shadow(0 0 5px ${payload.color}bb)`,
-                    transition: 'all 0.2s ease'
+                    transition: isDraggingThis ? 'none' : 'all 0.2s ease'
                   }}
-                  onClick={() => onSelectItem?.(payload.id)}
+                  onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
+                  onMouseDown={(e) => {
+                    if (!onReorder) return;
+                    e.stopPropagation();
+                    startDrag(payload.idx);
+                  }}
                 />
               );
             }}
