@@ -2569,7 +2569,7 @@ export default function RepertorioSetlists({
   }`}
   >
   {/* MAIN ROW - COMPACT */}
-  <div className="flex items-center gap-2 px-2.5 py-1.5">
+  <div className="flex items-center gap-2 px-2.5 py-1.5 overflow-x-auto">
     {/* Drag Handle */}
     <div
       className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-amber-400 transition-colors shrink-0"
@@ -2584,8 +2584,12 @@ export default function RepertorioSetlists({
       {index + 1}
     </span>
 
-    {/* Title + metadata in one line */}
-    <span className={`text-[13px] font-bold font-mono ${colors.text} truncate min-w-0`}>
+    {/* Title + metadata in one line — shrink-0 con tope máximo: antes era el único elemento
+        "encogible" de la fila (todo lo demás es shrink-0), así que en móvil, con tantos
+        badges + 5 iconos de acción compitiendo por sitio, se comía todo el hueco negativo
+        y acababa en 0px de ancho (título invisible). Con shrink-0 + max-width nunca baja de
+        su contenido hasta ese tope, y el overflow-x-auto de la fila absorbe el resto. */}
+    <span className={`text-[13px] font-bold font-mono ${colors.text} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={song.titulo}>
       {song.titulo}
     </span>
 
