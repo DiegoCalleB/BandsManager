@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move } from 'lucide-react';
+import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer } from 'lucide-react';
 import { api } from '../../services/api';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
@@ -123,6 +123,121 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
       case 'contrast': return '⚡';
       default: return '📌';
     }
+  };
+
+  const escapeHtml = (text: string) =>
+    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Exporta el análisis a una hoja imprimible/PDF (mismo patrón que la Hoja de Escenario del
+  // repertorio: una ventana nueva con HTML autocontenido + window.print()). El gráfico de
+  // energía es un SVG de recharts — en vez de intentar capturarlo (necesitaría html2canvas, una
+  // dependencia nueva), se recrea como un mini-gráfico de barras en CSS puro a partir de los
+  // mismos chartData, que es igual de fiel para una hoja impresa en blanco y negro/color.
+  const handlePrintAnalysis = () => {
+    if (!analysis) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const barsHtml = (chartData || []).map(d => {
+      const heightPct = Math.max(4, Math.round((d.score / 20) * 100));
+      return `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:0;">
+          <div style="width:100%; max-width:18px; height:90px; display:flex; align-items:flex-end;">
+            <div style="width:100%; height:${heightPct}%; background:${d.color}; border-radius:3px 3px 0 0;"></div>
+          </div>
+          <span style="font-size:9px; color:#888; font-family:monospace;">#${d.idx + 1}</span>
+        </div>
+      `;
+    }).join('');
+
+    const suggestionsHtml = analysis.suggestions.map(sugg => `
+      <div style="border:1px solid #333; border-radius:8px; padding:14px; margin-bottom:12px; break-inside:avoid;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span>${getPriorityIcon(sugg.priority)}</span>
+          <strong style="font-size:15px;">${escapeHtml(sugg.title)}</strong>
+          <span style="font-size:11px; color:#888; margin-left:auto;">${getCategoryIcon(sugg.category)} ${escapeHtml(sugg.category)}</span>
+        </div>
+        <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🔍 Problema:</strong> ${escapeHtml(sugg.issue)}</p>
+        <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">💡 Sugerencia:</strong> ${escapeHtml(sugg.suggestion)}</p>
+        <p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">⭐ Impacto:</strong> ${escapeHtml(sugg.impact)}</p>
+        ${sugg.songs_involved?.length ? `<p style="font-size:12px; color:#aaa; margin:4px 0;"><strong style="color:#ccc;">🎵 Canciones:</strong> ${escapeHtml(sugg.songs_involved.join(', '))}</p>` : ''}
+      </div>
+    `).join('');
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Análisis IA - ${escapeHtml(setlistName || setlistId)}</title>
+        <style>
+          body { font-family: system-ui, -apple-system, sans-serif; margin: 24px; background: #0a0a0a; color: #eee; }
+          .header { border-bottom: 3px solid #a855f7; padding-bottom: 14px; margin-bottom: 20px; }
+          h1 { font-size: 26px; margin: 0; color: #c084fc; letter-spacing: 0.5px; }
+          .meta { font-size: 13px; font-family: monospace; color: #999; margin-top: 4px; }
+          .score-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+          .score-bar-bg { width: 100%; background: #333; border-radius: 999px; height: 8px; margin-top: 6px; }
+          .score-bar-fill { height: 8px; border-radius: 999px; background: linear-gradient(90deg, #a855f7, #c084fc); }
+          .chart-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; display: flex; align-items: flex-end; gap: 3px; }
+          .info-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+          .info-box p.label { font-size: 12px; color: #999; margin: 0 0 6px 0; }
+          .info-box p.value { font-size: 14px; color: #eee; margin: 0; line-height: 1.5; }
+          .strengths { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+          .improvements { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.4); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+          ul { margin: 6px 0 0 0; padding-left: 18px; font-size: 13px; }
+          .footer { margin-top: 24px; font-size: 11px; font-family: monospace; color: #666; text-align: center; }
+          @media print { body { background: #fff; color: #111; } .score-box, .chart-box, .info-box { background: #f5f5f5; border-color: #ccc; } .strengths { background: #ecfdf5; } .improvements { background: #fffbeb; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>🧠 Análisis Avanzado con IA</h1>
+          <div class="meta">${escapeHtml(setlistName || setlistId)} • ${new Date().toLocaleDateString('es-ES')}</div>
+        </div>
+
+        <div class="score-box">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13px; color:#999;">Score General</span>
+            <strong style="font-size:20px; color:#c084fc;">${analysis.overallScore}/100</strong>
+          </div>
+          <div class="score-bar-bg"><div class="score-bar-fill" style="width:${analysis.overallScore}%;"></div></div>
+        </div>
+
+        ${barsHtml ? `<div class="chart-box">${barsHtml}</div>` : ''}
+
+        <div class="info-box">
+          <p class="label">📖 Arco Narrativo</p>
+          <p class="value">${escapeHtml(analysis.narrativeArc)}</p>
+        </div>
+
+        <div class="info-box">
+          <p class="label">🧠 Flujo Psicológico</p>
+          <p class="value">${escapeHtml(analysis.psychologicalFlow)}</p>
+        </div>
+
+        ${analysis.strengths.length > 0 ? `
+        <div class="strengths">
+          <p class="label" style="color:#10b981;">✓ Fortalezas</p>
+          <ul>${analysis.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+        </div>` : ''}
+
+        <h2 style="font-size:16px; margin-bottom:10px;">⚡ Sugerencias (${analysis.suggestions.length})</h2>
+        ${suggestionsHtml}
+
+        ${analysis.areasForImprovement.length > 0 ? `
+        <div class="improvements">
+          <p class="label" style="color:#f59e0b;">🎯 Áreas de Mejora</p>
+          <ul>${analysis.areasForImprovement.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
+        </div>` : ''}
+
+        <div class="footer">Análisis IA exportado • BandManager.ai</div>
+
+        <script>
+          window.onload = function() { window.print(); }
+        </script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
   };
 
   const hasChart = !!chartData && chartData.length > 0 && !!yDomain;
@@ -339,6 +454,14 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                   className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
                 >
                   🔄 Re-analizar
+                </button>
+                <button
+                  onClick={handlePrintAnalysis}
+                  className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm flex items-center justify-center gap-1.5"
+                  title="Exportar el análisis a PDF/impresión"
+                >
+                  <Printer className="w-4 h-4" />
+                  Imprimir / PDF
                 </button>
                 <button
                   onClick={onClose}
