@@ -316,7 +316,8 @@ export default function RepertorioSetlists({
  bandUsers,
  bandLogoUrl,
  onUpdateConcert,
- onUpdateRehearsal
+ onUpdateRehearsal,
+ view
 }: RepertorioSetlistsProps) {
  const { t } = useLanguage();
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
