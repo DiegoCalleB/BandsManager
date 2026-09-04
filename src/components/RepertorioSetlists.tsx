@@ -2226,7 +2226,7 @@ export default function RepertorioSetlists({
             <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
               <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
                 <span>📈 Mapa de Dinámica y Energía del Show</span>
-                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto para reordenar el setlist)</span>
+                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto, o selecciónalo y usa las flechas, para reordenar el setlist)</span>
               </span>
               <div className="flex items-center gap-2">
                 {showEnergyMap && (
@@ -2271,6 +2271,39 @@ export default function RepertorioSetlists({
                   onReorder={reorderSetlistItems}
                   height={256}
                 />
+
+                {/* Mover el punto seleccionado un paso atrás/adelante con flechas — alternativa al
+                    arrastre para cuando se quiere precisión (un puesto exacto) o simplemente en
+                    móvil, donde apuntar con el dedo a "justo un puesto más allá" es más difícil. */}
+                {selectedSetlistItemId && (() => {
+                  const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
+                  if (selectedIndex === -1) return null;
+                  return (
+                    <div className="flex items-center justify-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        disabled={selectedIndex <= 0}
+                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
+                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
+                        title="Mover una posición hacia atrás"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span className="text-[10px] font-mono text-neutral-400 max-w-[50%] truncate">
+                        🎯 {chartData[selectedIndex].name}
+                      </span>
+                      <button
+                        type="button"
+                        disabled={selectedIndex >= chartData.length - 1}
+                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
+                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
+                        title="Mover una posición hacia adelante"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })()}
 
                 {/* Warnings & Suggestions (Heuristic) */}
                 {energyAnalysis.warnings.length > 0 && (
