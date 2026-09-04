@@ -2323,20 +2323,23 @@ export default function RepertorioSetlists({
                           return (
                             <span
                               key={i}
-                              className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition cursor-pointer"
+                              className="px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition"
                               style={{
                                 backgroundColor: isHighlighted ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
                                 borderColor: isHighlighted ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
-                                color: 'rgb(196 181 253)'
+                                color: 'rgb(196 181 253)',
+                                cursor: 'default'
                               }}
                               onMouseEnter={() => {
                                 if (songsToHighlight && songsToHighlight.length > 0) {
+                                  console.log('Highlighting songs:', songsToHighlight);
                                   setHighlightedSongIds(songsToHighlight);
+                                } else {
+                                  console.log('No songs to highlight:', { songs_involved: s.songs_involved });
                                 }
                               }}
                               onMouseLeave={() => setHighlightedSongIds([])}
-                              onClick={() => setShowAIAnalysisModal(true)}
-                              title="Pasa ratón para resaltar en gráfico"
+                              title={songsToHighlight.length > 0 ? `Resalta: ${songsToHighlight.join(', ')}` : s.title}
                             >
                               <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
                               <span>{s.title}</span>
