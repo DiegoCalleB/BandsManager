@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { X, Loader, AlertCircle, Brain, TrendingUp, Zap } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move } from 'lucide-react';
 import { api } from '../../services/api';
+import { titlesMatch } from '../../utils/songTitleMatch';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
   onClose: () => void;
   setlistId: string;
   setlistName?: string;
+  /** Análisis ya guardado para este setlist (si existe), para no obligar a re-analizar solo para verlo. */
+  initialAnalysis?: Analysis | null;
   onAnalysisComplete?: (analysis: Analysis) => void;
   onHighlightSongs?: (songIds: string[]) => void;
   highlightedSongIds?: string[];
@@ -31,10 +34,49 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [] }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [] }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Al abrir, si ya hay un análisis guardado para este setlist, mostrarlo directamente en vez
+  // de forzar al usuario a pulsar "Iniciar Análisis IA" solo para ver lo que ya se calculó.
+  useEffect(() => {
+    if (isOpen) {
+      setAnalysis(initialAnalysis ?? null);
+      setError(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, setlistId]);
+
+  // Modal arrastrable: el usuario puede moverlo a un lado para ver el gráfico de energía
+  // (con el highlighting) mientras pasa el ratón por las sugerencias dentro del modal.
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const dragStateRef = useRef<{ startX: number; startY: number; originX: number; originY: number } | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) setDragOffset({ x: 0, y: 0 });
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      if (!dragStateRef.current) return;
+      const dx = e.clientX - dragStateRef.current.startX;
+      const dy = e.clientY - dragStateRef.current.startY;
+      setDragOffset({ x: dragStateRef.current.originX + dx, y: dragStateRef.current.originY + dy });
+    };
+    const handleUp = () => { dragStateRef.current = null; };
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+    };
+  }, []);
+
+  const handleDragStart = (e: React.MouseEvent) => {
+    dragStateRef.current = { startX: e.clientX, startY: e.clientY, originX: dragOffset.x, originY: dragOffset.y };
+  };
 
   const handleAnalyze = async () => {
     setLoading(true);
@@ -77,11 +119,18 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-4 pt-12">
-      <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700">
-        {/* Header */}
-        <div className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-4 flex justify-between items-center">
+    <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
+      <div
+        className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
+        style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
+      >
+        {/* Header — arrastrable: mueve el modal a un lado para ver el gráfico de energía detrás mientras resaltas sugerencias */}
+        <div
+          className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-4 flex justify-between items-center cursor-move select-none"
+          onMouseDown={handleDragStart}
+        >
           <div className="flex items-center gap-3">
+            <Move className="w-4 h-4 text-neutral-600 shrink-0" />
             <Brain className="w-6 h-6 text-purple-400" />
             <div>
               <h2 className="text-xl font-bold">Análisis Avanzado con IA</h2>
@@ -90,6 +139,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
           </div>
           <button
             onClick={onClose}
+            onMouseDown={(e) => e.stopPropagation()}
             className="p-2 hover:bg-neutral-800 rounded-lg transition"
           >
             <X className="w-5 h-5" />
@@ -185,7 +235,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 <div className="space-y-3">
                   {analysis.suggestions.map((sugg, idx) => {
                     const isHighlighted = sugg.songs_involved?.some(songName =>
-                      highlightedSongIds.some(id => id.includes(songName))
+                      titlesMatch(songName, highlightedSongIds)
                     ) ?? false;
                     return (
                     <div

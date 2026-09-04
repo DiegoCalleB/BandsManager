@@ -40,24 +40,7 @@ import {
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
 import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea } from 'recharts';
-
-/** Minúsculas, sin tildes/diacríticos, sin espacios extra — para que "Traca Final" case con "traca final" o "Traca Fínal" sin fallar por acentuación. */
-function normalizeSongTitle(title?: string | null): string {
-  return (title || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
-}
-
-/** true si algún título de `haystack` coincide (exacto o parcial) con algún título de `needles`. */
-function titlesMatch(haystackTitle: string, needles: string[]): boolean {
-  const normalizedHaystack = normalizeSongTitle(haystackTitle);
-  if (!normalizedHaystack) return false;
-  return needles.some(needle => {
-    const normalizedNeedle = normalizeSongTitle(needle);
-    if (!normalizedNeedle) return false;
-    return normalizedHaystack === normalizedNeedle ||
-           normalizedHaystack.includes(normalizedNeedle) ||
-           normalizedNeedle.includes(normalizedHaystack);
-  });
-}
+import { titlesMatch } from '../utils/songTitleMatch';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -529,6 +512,58 @@ export default function RepertorioSetlists({
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
  // IDs de canciones a resaltar en el gráfico cuando se interactúa con sugerencias
  const [highlightedSongIds, setHighlightedSongIds] = useState<string[]>([]);
+
+ // Datos del Mapa de Energía, memoizados por setlist/repertorio real — si se recalculan en
+ // cada render (p.ej. cada vez que cambia highlightedSongIds al hacer hover), Recharts ve un
+ // array `data` con nueva referencia y remonta la animación entera desde cero (su `animationId`
+ // depende de identidad de referencia, no de contenido), cancelando cualquier highlighting a
+ // medio camino. Al depender solo de activeSetlist/songs, el gráfico no se re-anima por
+ // interacciones de UI que no cambian los datos reales.
+ const { energyAnalysis, chartData, yDomain, ZONAS_ENERGIA } = useMemo(() => {
+  const analysis = analyzeSetlistEnergy(activeSetlist?.items || [], songs);
+  const data = analysis.points.map((pt, idx) => ({
+   idx,
+   id: pt.item.id,
+   name: pt.title,
+   score: pt.score,
+   range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
+   color: pt.info.hexColor,
+   icon: pt.info.icon,
+   label: pt.info.label,
+   variance: pt.variance,
+   isSong: pt.isSong
+  }));
+
+  // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
+  // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
+  let domain: [number, number] = [1, 20];
+  if (data.length > 0) {
+   const allValues = data.flatMap((d) => d.range);
+   const minVal = Math.min(...allValues);
+   const maxVal = Math.max(...allValues);
+   let lo = Math.max(1, minVal - 2);
+   let hi = Math.min(20, maxVal + 2);
+   if (hi - lo < 6) {
+    const mid = (hi + lo) / 2;
+    lo = Math.max(1, mid - 3);
+    hi = Math.min(20, mid + 3);
+   }
+   domain = [lo, hi];
+  }
+
+  // Bandas de fondo por categoría de energía (mismos umbrales que getEnergyInfo) — es lo
+  // que convierte la curva en un "mapa" de verdad: se ve a simple vista en qué zona cae
+  // cada canción, no solo por el color del punto sino por el propio fondo del chart.
+  const zonas = [
+   { min: 1, max: 8, color: '#0284c7' },
+   { min: 9, max: 14, color: '#059669' },
+   { min: 15, max: 18, color: '#a16207' },
+   { min: 19, max: 20, color: '#a21caf' }
+  ].map((z) => ({ ...z, y1: Math.max(z.min, domain[0]), y2: Math.min(z.max, domain[1]) }))
+   .filter((z) => z.y1 < z.y2);
+
+  return { energyAnalysis: analysis, chartData: data, yDomain: domain, ZONAS_ENERGIA: zonas };
+ }, [activeSetlist, songs]);
 
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
@@ -2047,49 +2082,6 @@ export default function RepertorioSetlists({
 
   {/* LIVE METRICS & ENERGY MAP BAR */}
   {(() => {
-    const energyAnalysis = analyzeSetlistEnergy(activeSetlist.items, songs);
-
-    const chartData = energyAnalysis.points.map((pt, idx) => ({
-      idx,
-      id: pt.item.id,
-      name: pt.title,
-      score: pt.score,
-      range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
-      color: pt.info.hexColor,
-      icon: pt.info.icon,
-      label: pt.info.label,
-      variance: pt.variance,
-      isSong: pt.isSong
-    }));
-
-    // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
-    // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
-    let yDomain: [number, number] = [1, 20];
-    if (chartData.length > 0) {
-      const allValues = chartData.flatMap((d) => d.range);
-      const minVal = Math.min(...allValues);
-      const maxVal = Math.max(...allValues);
-      let lo = Math.max(1, minVal - 2);
-      let hi = Math.min(20, maxVal + 2);
-      if (hi - lo < 6) {
-        const mid = (hi + lo) / 2;
-        lo = Math.max(1, mid - 3);
-        hi = Math.min(20, mid + 3);
-      }
-      yDomain = [lo, hi];
-    }
-
-    // Bandas de fondo por categoría de energía (mismos umbrales que getEnergyInfo) — es lo
-    // que convierte la curva en un "mapa" de verdad: se ve a simple vista en qué zona cae
-    // cada canción, no solo por el color del punto sino por el propio fondo del chart.
-    const ZONAS_ENERGIA = [
-      { min: 1, max: 8, color: '#0284c7' },
-      { min: 9, max: 14, color: '#059669' },
-      { min: 15, max: 18, color: '#a16207' },
-      { min: 19, max: 20, color: '#a21caf' }
-    ].map((z) => ({ ...z, y1: Math.max(z.min, yDomain[0]), y2: Math.min(z.max, yDomain[1]) }))
-      .filter((z) => z.y1 < z.y2);
-
     return (
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
@@ -3945,6 +3937,7 @@ export default function RepertorioSetlists({
     }}
     setlistId={activeSetlist?.id || ''}
     setlistName={activeSetlist?.nombre}
+    initialAnalysis={aiAnalysisResult}
     onAnalysisComplete={(analysis) => {
       setAiAnalysisResult(analysis);
       setAiAnalysisLoading(false);
