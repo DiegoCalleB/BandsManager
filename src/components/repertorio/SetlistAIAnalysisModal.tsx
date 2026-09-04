@@ -46,6 +46,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [exportingImage, setExportingImage] = useState(false);
 
   // Al abrir, si ya hay un análisis guardado para este setlist, mostrarlo directamente en vez
   // de forzar al usuario a pulsar "Iniciar Análisis IA" solo para ver lo que ya se calculó.
@@ -275,9 +277,6 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     `);
     printWindow.document.close();
   };
-
-  const [sharing, setSharing] = useState(false);
-  const [exportingImage, setExportingImage] = useState(false);
 
   /** Texto resumen del análisis, usado tanto por Web Share como por el fallback de WhatsApp. */
   const buildShareText = (a: Analysis) => {
