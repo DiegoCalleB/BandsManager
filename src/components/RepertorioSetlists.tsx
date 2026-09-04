@@ -2238,7 +2238,7 @@ export default function RepertorioSetlists({
                           const { cx, cy, payload, index } = dotProps;
                           if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
                           const isSelected = payload.id === selectedSetlistItemId;
-                          const payloadTitle = (payload.titulo || '').toLowerCase().trim();
+                          const payloadTitle = (payload.name || '').toLowerCase().trim();
                           const isHighlighted = highlightedSongIds.length > 0 && highlightedSongIds.some(songTitle => {
                             const lowerSongTitle = (songTitle || '').toLowerCase().trim();
                             if (!payloadTitle || !lowerSongTitle) return false;
@@ -2320,6 +2320,7 @@ export default function RepertorioSetlists({
                             });
                           });
 
+                          const hasSongs = songsToHighlight.length > 0;
                           return (
                             <span
                               key={i}
@@ -2328,18 +2329,16 @@ export default function RepertorioSetlists({
                                 backgroundColor: isHighlighted ? 'rgb(168 85 247 / 0.4)' : 'rgb(126 34 206 / 0.3)',
                                 borderColor: isHighlighted ? 'rgb(168 85 247 / 0.8)' : 'rgb(147 51 234 / 0.4)',
                                 color: 'rgb(196 181 253)',
-                                cursor: 'default'
+                                cursor: hasSongs ? 'pointer' : 'default'
                               }}
                               onMouseEnter={() => {
-                                if (songsToHighlight && songsToHighlight.length > 0) {
-                                  console.log('Highlighting songs:', songsToHighlight);
-                                  setHighlightedSongIds(songsToHighlight);
-                                } else {
-                                  console.log('No songs to highlight:', { songs_involved: s.songs_involved });
-                                }
+                                if (hasSongs) setHighlightedSongIds(songsToHighlight);
                               }}
                               onMouseLeave={() => setHighlightedSongIds([])}
-                              title={songsToHighlight.length > 0 ? `Resalta: ${songsToHighlight.join(', ')}` : s.title}
+                              onClick={() => {
+                                if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : songsToHighlight);
+                              }}
+                              title={hasSongs ? `Resalta: ${songsToHighlight.join(', ')}` : s.title}
                             >
                               <span>{s.priority === 'high' && '🔴'}{s.priority === 'medium' && '🟠'}{s.priority === 'low' && '🟡'}</span>
                               <span>{s.title}</span>
