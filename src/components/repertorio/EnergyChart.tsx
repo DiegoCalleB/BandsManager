@@ -112,13 +112,26 @@ export function EnergyChart({
   return (
     <div
       ref={containerRef}
-      className={compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'}
+      className={`relative ${compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'}`}
       style={{ height, cursor: draggingFromIndex !== null ? 'ew-resize' : undefined }}
     >
       {!compact && (
         <style>{`
           .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(255,255,255,0.25)) drop-shadow(0 0 10px rgba(255,255,255,0.12)); }
         `}</style>
+      )}
+      {/* Nombre de la canción que se arrastra + destino, para saber qué se está reordenando sin
+          tener que leer el número de posición en el eje X. */}
+      {draggingFromIndex !== null && hoverIndex !== null && (
+        <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 border border-amber-400/60 rounded-lg px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap">
+          <span className="text-amber-300 font-bold">{chartData[draggingFromIndex]?.name}</span>
+          {hoverIndex !== draggingFromIndex && (
+            <>
+              <span className="text-neutral-500"> → posición de </span>
+              <span className="text-emerald-300">"{chartData[hoverIndex]?.name}"</span>
+            </>
+          )}
+        </div>
       )}
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart key={setlistKey} data={chartData} margin={compact ? { top: 8, right: 8, left: -22, bottom: 0 } : { top: 14, right: 14, left: -18, bottom: 0 }}>
