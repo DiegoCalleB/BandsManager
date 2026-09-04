@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move } from 'lucide-react';
 import { api } from '../../services/api';
 import { titlesMatch } from '../../utils/songTitleMatch';
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -13,6 +14,12 @@ interface SetlistAIAnalysisModalProps {
   onAnalysisComplete?: (analysis: Analysis) => void;
   onHighlightSongs?: (songIds: string[]) => void;
   highlightedSongIds?: string[];
+  /** Datos del Mapa de Energía para mostrar un mini-gráfico integrado en el modal — así no hace
+   * falta ver el modal y el gráfico grande a la vez sin que se tapen: las sugerencias resaltan
+   * directamente sobre esta versión compacta. */
+  chartData?: EnergyChartPoint[];
+  yDomain?: [number, number];
+  zonasEnergia?: EnergyChartZone[];
 }
 
 interface Suggestion {
@@ -34,7 +41,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [] }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -118,20 +125,21 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     }
   };
 
+  const hasChart = !!chartData && chartData.length > 0 && !!yDomain;
+
   return (
-    // Anclado a la derecha, ancho fijo (380px, coincide con el lg:mr-[380px] que
-    // RepertorioSetlists reserva en el contenido cuando este modal está abierto). Al ser un
-    // ancho reservado de verdad en el layout, no un overlay superpuesto, el gráfico de energía
-    // se redimensiona para dejar sitio en vez de quedar tapado detrás. El drag (más abajo) sigue
-    // disponible por si aun así hace falta reubicarlo.
-    <div className="fixed inset-0 flex items-start justify-end z-50 p-4 pt-12 pointer-events-none">
+    // Centrado y con el Mapa de Energía integrado dentro (justo debajo del header) — así las
+    // sugerencias resaltan directamente sobre este mini-gráfico en vez de depender de ver el
+    // modal y el gráfico grande de fondo a la vez sin que se tapen. El drag (más abajo) se deja
+    // por si aun así el usuario quiere apartarlo a un lado.
+    <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
       <div
-        className="bg-neutral-900 rounded-lg w-[380px] max-w-full max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
+        className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >
-        {/* Header — arrastrable: mueve el modal a un lado para ver el gráfico de energía detrás mientras resaltas sugerencias */}
+        {/* Header — arrastrable por si hace falta apartar el modal */}
         <div
-          className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-4 flex justify-between items-center cursor-move select-none"
+          className="sticky top-0 bg-neutral-900 border-b border-neutral-700 p-4 flex justify-between items-center cursor-move select-none z-10"
           onMouseDown={handleDragStart}
         >
           <div className="flex items-center gap-3">
@@ -150,6 +158,21 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click */}
+        {hasChart && (
+          <div className="sticky top-[73px] z-[5] bg-neutral-900 border-b border-neutral-700 p-3">
+            <EnergyChart
+              setlistKey={setlistId}
+              chartData={chartData!}
+              yDomain={yDomain!}
+              zonasEnergia={zonasEnergia || []}
+              highlightedSongIds={highlightedSongIds}
+              height={120}
+              compact
+            />
+          </div>
+        )}
 
         {/* Content */}
         <div className="p-4 space-y-4">

@@ -39,7 +39,7 @@ import {
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
-import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea } from 'recharts';
+import { EnergyChart } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
 
 interface RepertorioSetlistsProps {
@@ -1892,10 +1892,7 @@ export default function RepertorioSetlists({
  };
 
  return (
-  // Cuando el modal de Análisis IA está abierto, se reserva su ancho aquí en vez de dejar que
-  // se superponga: así el gráfico de energía (que es responsive) se redimensiona de verdad para
-  // dejarle sitio, en vez de quedar tapado detrás de un overlay por muy estrecho que sea.
-  <div className={`space-y-3 transition-[margin] duration-200 ${showAIAnalysisModal ? 'lg:mr-[380px]' : ''}`}>
+  <div className="space-y-3">
   {/* MODULE HEADER BAR */}
   <div className={`p-3 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
        {/* HEADER / TITULO PRINCIPAL */}
@@ -2158,131 +2155,16 @@ export default function RepertorioSetlists({
 
             {showEnergyMap && (
               <>
-                {/* El glow del trazo y de cada punto es CSS puro sobre las clases que recharts
-                    ya pone en el SVG — más fiable entre navegadores que un <filter> SVG anidado
-                    dentro de un componente que se remonta al cambiar de setlist. */}
-                <style>{`
-                  .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(255,255,255,0.25)) drop-shadow(0 0 10px rgba(255,255,255,0.12)); }
-                `}</style>
-                <div className="energy-map-glow h-64 w-full bg-black/70 rounded-lg overflow-hidden">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart key={activeSetlist.id} data={chartData} margin={{ top: 14, right: 14, left: -18, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="energyStrokeGradient" x1="0" y1="0" x2="1" y2="0">
-                          {chartData.map((d, i) => (
-                            <stop
-                              key={d.id}
-                              offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
-                              stopColor={d.color}
-                            />
-                          ))}
-                        </linearGradient>
-                        {/* El relleno bajo la curva usa los mismos colores por canción que el trazo
-                            (a opacidad baja) en vez de un dorado plano fijo — así el "aura" bajo la
-                            curva también cambia de color según la categoría de energía. */}
-                        <linearGradient id="energyFillGradient" x1="0" y1="0" x2="1" y2="0">
-                          {chartData.map((d, i) => (
-                            <stop
-                              key={d.id}
-                              offset={`${chartData.length > 1 ? (i / (chartData.length - 1)) * 100 : 0}%`}
-                              stopColor={d.color}
-                              stopOpacity={0.22}
-                            />
-                          ))}
-                        </linearGradient>
-                      </defs>
-
-                      {ZONAS_ENERGIA.map((z) => (
-                        <ReferenceArea key={z.min} y1={z.y1} y2={z.y2} fill={z.color} fillOpacity={0.07} stroke="none" ifOverflow="hidden" />
-                      ))}
-
-                      <CartesianGrid horizontal vertical={false} stroke="#2c2c2a" strokeDasharray="0" />
-
-                      <XAxis
-                        dataKey="idx"
-                        tickFormatter={(v: number) => `#${v + 1}`}
-                        stroke="#666666"
-                        fontSize={9}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis domain={yDomain} stroke="#666666" fontSize={9} tickLine={false} axisLine={false} width={22} />
-
-                      <RechartsTooltip
-                        cursor={{ stroke: '#666', strokeDasharray: '3 3' }}
-                        content={({ active, payload }: any) => {
-                          if (!active || !payload?.length) return null;
-                          const d = payload[0].payload;
-                          return (
-                            <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[180px]">
-                              <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
-                              <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
-                                <span>{d.icon}</span> {d.label} ({d.score}/20)
-                              </p>
-                              {d.variance > 0 && (
-                                <p className="text-sky-300 mt-0.5">
-                                  🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
-                                </p>
-                              )}
-                            </div>
-                          );
-                        }}
-                      />
-
-                      {/* Banda de dinámica interna detectada del audio (temas "anchos" varían mucho por dentro) */}
-                      <Area
-                        type="monotone"
-                        dataKey="range"
-                        stroke="none"
-                        fill="#d1b375"
-                        fillOpacity={0.12}
-                        isAnimationActive
-                        animationDuration={1200}
-                        animationEasing="ease-out"
-                      />
-
-                      {/* Curva principal de energía tema a tema */}
-                      <Area
-                        type="monotone"
-                        dataKey="score"
-                        stroke="url(#energyStrokeGradient)"
-                        strokeWidth={3}
-                        fill="url(#energyFillGradient)"
-                        fillOpacity={1}
-                        isAnimationActive
-                        animationDuration={1200}
-                        animationEasing="ease-out"
-                        activeDot={{ r: 8, strokeWidth: 2, stroke: '#ffffff' }}
-                        dot={(dotProps: any) => {
-                          const { cx, cy, payload, index } = dotProps;
-                          if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
-                          const isSelected = payload.id === selectedSetlistItemId;
-                          const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
-                          return (
-                            <circle
-                              key={`dot-${payload.id}`}
-                              cx={cx}
-                              cy={cy}
-                              r={isHighlighted ? 10 : isSelected ? 8 : 5.5}
-                              fill={payload.color}
-                              stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
-                              strokeWidth={isHighlighted ? 3 : isSelected ? 2 : 1.5}
-                              style={{
-                                cursor: 'pointer',
-                                opacity: 1,
-                                filter: isHighlighted
-                                  ? `drop-shadow(0 0 10px ${payload.color}ff) drop-shadow(0 0 20px ${payload.color}aa)`
-                                  : `drop-shadow(0 0 5px ${payload.color}bb)`,
-                                transition: 'all 0.2s ease'
-                              }}
-                              onClick={() => setSelectedSetlistItemId(payload.id)}
-                            />
-                          );
-                        }}
-                      />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </div>
+                <EnergyChart
+                  setlistKey={activeSetlist.id}
+                  chartData={chartData}
+                  yDomain={yDomain}
+                  zonasEnergia={ZONAS_ENERGIA}
+                  highlightedSongIds={highlightedSongIds}
+                  selectedSetlistItemId={selectedSetlistItemId}
+                  onSelectItem={setSelectedSetlistItemId}
+                  height={256}
+                />
 
                 {/* Warnings & Suggestions (Heuristic) */}
                 {energyAnalysis.warnings.length > 0 && (
@@ -3960,6 +3842,9 @@ export default function RepertorioSetlists({
     }}
     onHighlightSongs={setHighlightedSongIds}
     highlightedSongIds={highlightedSongIds}
+    chartData={chartData}
+    yDomain={yDomain}
+    zonasEnergia={ZONAS_ENERGIA}
   />
 </div>
  );
