@@ -2251,6 +2251,19 @@ export default function RepertorioSetlists({
                         >
                           <span>{w.icon}</span>
                           <span>{w.message}</span>
+                          {w.suggestedReorder && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex);
+                              }}
+                              className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
+                              title={w.suggestedReorder.description}
+                            >
+                              ✓ Aplicar
+                            </button>
+                          )}
                         </span>
                       );
                     })}

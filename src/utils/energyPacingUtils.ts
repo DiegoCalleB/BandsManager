@@ -33,6 +33,10 @@ export interface PacingWarning {
   icon: string;
   /** Títulos exactos de las canciones a las que se refiere este aviso, para poder resaltarlas en el gráfico. */
   songTitles?: string[];
+  /** Reordenamiento concreto que resolvería este aviso (índices absolutos dentro de items),
+   * calculado con una regla determinista — solo se ofrece cuando hay un movimiento razonable
+   * disponible en el propio setlist (nunca inventa canciones ni sugiere "añade algo nuevo"). */
+  suggestedReorder?: { fromIndex: number; toIndex: number; description: string };
 }
 
 export interface SetlistEnergyAnalysis {
@@ -236,11 +240,24 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       }
     });
     if (longestLowStreak.length >= 3) {
+      // Intercalar: la canción de mayor energía del resto del setlist (que no sea ya balada) va
+      // al medio del valle, partiéndolo en dos tramos más cortos en vez de uno largo.
+      const streakIndices = new Set(longestLowStreak.map(p => p.index));
+      const candidate = songPoints
+        .filter(p => !streakIndices.has(p.index) && p.info.category !== 'balada')
+        .sort((a, b) => b.score - a.score)[0];
+      const midOfStreak = longestLowStreak[Math.floor(longestLowStreak.length / 2)];
+
       warnings.push({
         type: 'warning',
         icon: '⚠️',
         message: `Valle detectado: ${longestLowStreak.length} baladas seguidas. Considera intercalar con algo más energético.`,
-        songTitles: longestLowStreak.map(p => p.title)
+        songTitles: longestLowStreak.map(p => p.title),
+        suggestedReorder: candidate ? {
+          fromIndex: candidate.index,
+          toIndex: midOfStreak.index,
+          description: `Intercalar "${candidate.title}" en medio del valle`
+        } : undefined
       });
     }
 
@@ -249,11 +266,19 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       const opener = [songPoints[0], songPoints[1]];
       const initialAvg = (opener[0].score + opener[1].score) / 2;
       if (initialAvg <= 8) {
+        // La canción de mayor energía del resto del repertorio (tras los 2 primeros) pasa a
+        // ocupar la posición 2 — solo si realmente sube el promedio de apertura.
+        const candidate = songPoints.slice(2).sort((a, b) => b.score - a.score)[0];
         warnings.push({
           type: 'warning',
           icon: '💤',
           message: 'Arranque suave: primeros 2 temas bajos. Considera mover algo más rápido a posición 2.',
-          songTitles: opener.map(p => p.title)
+          songTitles: opener.map(p => p.title),
+          suggestedReorder: (candidate && candidate.score > opener[1].score) ? {
+            fromIndex: candidate.index,
+            toIndex: opener[1].index,
+            description: `Mover "${candidate.title}" a la posición 2`
+          } : undefined
         });
       } else if (initialAvg >= 16) {
         warnings.push({
@@ -270,11 +295,20 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       const closer = [songPoints[songPoints.length - 2], songPoints[songPoints.length - 1]];
       const closingAvg = (closer[0].score + closer[1].score) / 2;
       if (closingAvg <= 8) {
+        // La canción de mayor energía del setlist (que no sea ya parte del cierre) pasa al
+        // final absoluto de items — no solo al final de songPoints, por si hay un bis/evento
+        // después de la última canción.
+        const candidate = songPoints.slice(0, songPoints.length - 2).sort((a, b) => b.score - a.score)[0];
         warnings.push({
           type: 'tip',
           icon: '💡',
           message: 'Cierre débil: últimos temas en balada. Termina en explosiva para que la gente se vaya energizada.',
-          songTitles: closer.map(p => p.title)
+          songTitles: closer.map(p => p.title),
+          suggestedReorder: (candidate && candidate.score > closingAvg) ? {
+            fromIndex: candidate.index,
+            toIndex: items.length - 1,
+            description: `Mover "${candidate.title}" al cierre`
+          } : undefined
         });
       } else if (closingAvg >= 16) {
         warnings.push({
@@ -298,22 +332,47 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       }
     });
     if (longestMediumStreak.length >= 5) {
+      // Una canción de contraste real (balada o explosiva, no otra media) del resto del
+      // repertorio se intercala en medio de la racha plana.
+      const streakIndices = new Set(longestMediumStreak.map(p => p.index));
+      const candidate = songPoints
+        .filter(p => !streakIndices.has(p.index) && (p.info.category === 'balada' || p.info.category === 'explosiva'))
+        .sort((a, b) => Math.abs(b.score - 11) - Math.abs(a.score - 11))[0]; // el de contraste más extremo primero
+      const midOfStreak = longestMediumStreak[Math.floor(longestMediumStreak.length / 2)];
+
       warnings.push({
         type: 'warning',
         icon: '📊',
         message: `Zona plana: ${longestMediumStreak.length} canciones medias seguidas. Añade contraste (balada o explosiva).`,
-        songTitles: longestMediumStreak.map(p => p.title)
+        songTitles: longestMediumStreak.map(p => p.title),
+        suggestedReorder: candidate ? {
+          fromIndex: candidate.index,
+          toIndex: midOfStreak.index,
+          description: `Intercalar "${candidate.title}" en la zona plana`
+        } : undefined
       });
     }
 
     // 5. Anticlímax: pico explosiva seguido de caída brusca
     for (let i = 0; i < songPoints.length - 2; i++) {
       if (songPoints[i].score >= 17 && songPoints[i + 1].score <= 9) {
+        // Una canción de energía intermedia (la más cercana al punto medio entre pico y caída)
+        // se coloca entre ambas para suavizar la transición.
+        const targetEnergy = (songPoints[i].score + songPoints[i + 1].score) / 2;
+        const candidate = songPoints
+          .filter((_, idx) => idx !== i && idx !== i + 1)
+          .sort((a, b) => Math.abs(a.score - targetEnergy) - Math.abs(b.score - targetEnergy))[0];
+
         warnings.push({
           type: 'tip',
           icon: '⬇️',
           message: `Post-pico: "${songPoints[i].title}" (explosiva) cae bruscamente a "${songPoints[i + 1].title}". Gradúa la bajada más suavemente.`,
-          songTitles: [songPoints[i].title, songPoints[i + 1].title]
+          songTitles: [songPoints[i].title, songPoints[i + 1].title],
+          suggestedReorder: candidate ? {
+            fromIndex: candidate.index,
+            toIndex: songPoints[i + 1].index,
+            description: `Graduar la bajada con "${candidate.title}"`
+          } : undefined
         });
         break; // Solo 1 warning de este tipo
       }
