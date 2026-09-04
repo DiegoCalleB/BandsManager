@@ -3391,7 +3391,14 @@ export default function RepertorioSetlists({
  )}
 
  {/* MODAL: ADD / EDIT SONG */}
+ {/* key fuerza un remount por canción: SongModal se queda siempre montado (isOpen controla un
+     `return null` interno, no un desmontaje), así que sin key su useState de notas por miembro
+     (y duración/álbum) solo se inicializa una vez para toda la sesión con el primer editingSong
+     que se vio (normalmente null) y nunca se resincroniza al abrir otra canción — ver notas del
+     bug en SongModal.tsx: memberNotesState quedaba "congelado" y el guardado de notas por
+     miembro sobrescribía siempre con ese valor obsoleto/vacío. */}
  <SongModal
+   key={showSongModal ? (editingSong?.id || 'new-song') : 'closed'}
    isOpen={showSongModal}
     bandMembers={bandRosterMembers}
    editingSong={editingSong}
