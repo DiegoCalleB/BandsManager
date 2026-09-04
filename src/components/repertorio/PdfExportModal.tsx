@@ -135,14 +135,14 @@ export function PdfExportModal({
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
                 </div>
-                ${hasAnyNote ? `
-                  <div class="song-notes-right">
-                    ${memberNote ? `<span class="note-chip note-member">${memberNote}</span>` : ''}
-                    ${(showSetlistNotes && setlistNote) ? `<span class="note-chip note-cue">*** ${setlistNote} ***</span>` : ''}
-                    ${(showSetlistNotes && generalRepertorioNote) ? `<span class="note-chip note-general">[General: ${generalRepertorioNote}]</span>` : ''}
-                  </div>
-                ` : ''}
               </div>
+              ${hasAnyNote ? `
+                <div class="song-notes-row">
+                  ${memberNote ? `<span class="note-chip note-member">${memberNote}</span>` : ''}
+                  ${(showSetlistNotes && setlistNote) ? `<span class="note-chip note-cue">*** ${setlistNote} ***</span>` : ''}
+                  ${(showSetlistNotes && generalRepertorioNote) ? `<span class="note-chip note-general">[General: ${generalRepertorioNote}]</span>` : ''}
+                </div>
+              ` : ''}
             </div>
           `;
         } else if (item.tipoItem === 'bloque_header') {
@@ -366,15 +366,12 @@ export function PdfExportModal({
               display: flex;
               justify-content: space-between;
               align-items: baseline;
-              gap: 10px;
             }
             .song-left {
               display: flex;
               align-items: baseline;
               flex-wrap: wrap;
               gap: 8px;
-              min-width: 0;
-              flex-shrink: 1;
             }
             .song-num {
               font-family: 'Oswald', sans-serif;
@@ -419,20 +416,19 @@ export function PdfExportModal({
             /* Notes to the right of the song title, not below — saves vertical space so the
                repertoire doesn't spill onto extra pages. Each type keeps its own color so a
                glance tells member note / stage cue / general note apart without reading labels. */
-            .song-notes-right {
+            .song-notes-row {
               display: flex;
               align-items: baseline;
+              flex-wrap: wrap;
               gap: 10px;
-              min-width: 0;
-              max-width: 58%;
-              justify-content: flex-end;
-              flex-shrink: 0;
-              overflow: hidden;
+              padding-left: ${showSongNumbers ? '40px' : '6px'};
+              margin-top: -1px;
             }
             .note-chip {
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
+              max-width: 100%;
             }
             .note-member {
               font-family: ${handFont};
@@ -931,8 +927,8 @@ export function PdfExportModal({
 
                     return (
                       <div key={item.id} className="group relative py-1">
-                        <div className="flex items-baseline justify-between gap-3">
-                          <div className="flex items-baseline flex-wrap gap-2.5 min-w-0 shrink">
+                        <div className="flex items-baseline justify-between">
+                          <div className="flex items-baseline flex-wrap gap-2.5">
                             {showSongNumbers && (
                               <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px]">
                                 {index + 1}.
@@ -966,36 +962,6 @@ export function PdfExportModal({
                             )}
                           </div>
 
-                          {/* Notas a la derecha del título en vez de debajo: ahorra espacio
-                              vertical (menos hojas al imprimir) y cada tipo mantiene su color
-                              para distinguirse de un vistazo. */}
-                          <div className="flex items-baseline gap-2.5 min-w-0 max-w-[55%] justify-end shrink-0 overflow-hidden">
-                            {memberNote && (
-                              <span
-                                className={`font-bold truncate ${
-                                  fontSizeScale === 'gigante' ? 'text-[16pt]' : fontSizeScale === 'grande' ? 'text-[14pt]' : 'text-[11pt]'
-                                }`}
-                                style={{ fontFamily: getHandwritingFontFamily(), color: getInkColorHex() }}
-                                title={memberNote}
-                              >
-                                {memberNote}
-                              </span>
-                            )}
-                            {showSetlistNotes && setlistNote && (
-                              <span className="font-mono text-[9.5pt] font-bold text-amber-800 truncate" title={setlistNote}>
-                                *** {setlistNote} ***
-                              </span>
-                            )}
-                            {/* La nota general (notasRepertorio) se promete "en la hoja individual de
-                                cada músico" en el propio tooltip de MemberNotesModal — no solo en la
-                                hoja Master, y no solo cuando ese músico no tiene nota propia. */}
-                            {showSetlistNotes && generalRepertorioNote && (
-                              <span className="font-mono text-[9pt] text-neutral-600 italic truncate" title={generalRepertorioNote}>
-                                [General: {generalRepertorioNote}]
-                              </span>
-                            )}
-                          </div>
-
                           {/* Quick note edit trigger on hover */}
                           {onUpdateSong && (
                             <button
@@ -1008,6 +974,38 @@ export function PdfExportModal({
                             </button>
                           )}
                         </div>
+
+                        {/* Las tres notas en una sola fila debajo del título (en vez de una línea
+                            cada una): ahorra espacio vertical sin arriesgar que el título largo
+                            tenga que compartir línea con ellas y se rompa el layout. */}
+                        {(memberNote || (showSetlistNotes && (setlistNote || generalRepertorioNote))) && (
+                          <div className="flex items-baseline flex-wrap gap-x-3 gap-y-0.5 pl-9 mt-0.5">
+                            {memberNote && (
+                              <span
+                                className={`font-bold truncate max-w-full ${
+                                  fontSizeScale === 'gigante' ? 'text-[16pt]' : fontSizeScale === 'grande' ? 'text-[14pt]' : 'text-[11pt]'
+                                }`}
+                                style={{ fontFamily: getHandwritingFontFamily(), color: getInkColorHex() }}
+                                title={memberNote}
+                              >
+                                {memberNote}
+                              </span>
+                            )}
+                            {showSetlistNotes && setlistNote && (
+                              <span className="font-mono text-[9.5pt] font-bold text-amber-800 truncate max-w-full" title={setlistNote}>
+                                *** {setlistNote} ***
+                              </span>
+                            )}
+                            {/* La nota general (notasRepertorio) se promete "en la hoja individual de
+                                cada músico" en el propio tooltip de MemberNotesModal — no solo en la
+                                hoja Master, y no solo cuando ese músico no tiene nota propia. */}
+                            {showSetlistNotes && generalRepertorioNote && (
+                              <span className="font-mono text-[9pt] text-neutral-600 italic truncate max-w-full" title={generalRepertorioNote}>
+                                [General: {generalRepertorioNote}]
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   } else if (item.tipoItem === 'bloque_header') {
