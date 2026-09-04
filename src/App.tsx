@@ -37,7 +37,7 @@ import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
-import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
 import { useLanguage } from './context/LanguageContext';
@@ -293,6 +293,7 @@ export default function App() {
   };
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openGroupSheetId, setOpenGroupSheetId] = useState<string | null>(null);
   const [isFloatingChatOpen, setIsFloatingChatOpen] = useState(false);
   const [isChatLoading, setIsChatLoading] = useState(false);
   const handleChatLoadingChange = useCallback((loading: boolean) => {
@@ -573,57 +574,94 @@ export default function App() {
    <span className="text-[10px] hidden xs:inline font-mono">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
   </button>
   )}
-  <button
-  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-  className="p-2 text-neutral-300 hover:text-white rounded-lg bg-[#1A1918] border-[#22211F] cursor-pointer active:scale-95 transition-all"
-  aria-label="Menu"
-  >
-  {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-  </button>
  </div>
  </div>
+ </header>
 
- {/* Horizontal Quick Tabs Bar */}
- <div className="flex items-center gap-1.5 px-3 pb-2.5 overflow-x-auto no-scrollbar scroll-smooth">
- {TOP_TABS_ORDER_IDS
- .map((id) => NAV_ITEMS[id])
- .filter((item) => (!item.adminOnly || isAdmin) && (!isPromoPlan || hasModuleAccess(currentActiveBandPlan, item.id)))
- .map((item) => {
- const isSelected = currentView === item.id;
- const isAllowed = hasModuleAccess(currentActiveBandPlan, item.id);
- const IconComp = item.icon;
- const badge = navBadges[item.id];
+ {/* MOBILE BOTTOM TAB BAR — sustituye la fila de tabs + el hamburger de antes: 5
+     slots fijos, solo iconos (sin texto), siempre visibles sin scroll ni gestos.
+     Resumen/Calendario navegan directo; Música/Promoción abren un sheet con sus
+     sub-módulos; Más abre el drawer completo (Contactos, Negocio, Herramientas,
+     Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
+ <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[#121110] border-t border-[#22211F] shadow-[0_-6px_20px_rgba(0,0,0,0.35)]">
+ {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
+ const isGroupOpen = slot.kind === 'group' && openGroupSheetId === slot.groupId;
+ const isMoreActive = slot.kind === 'more' && isMobileMenuOpen;
+ const isDirectSelected = slot.kind === 'view' && currentView === slot.itemId;
+ const belongsToGroup = slot.kind === 'group' && findNavGroupIdForItem(currentView) === slot.groupId;
+ const isActive = isGroupOpen || isMoreActive || isDirectSelected || belongsToGroup;
+ const IconComp = slot.kind === 'view'
+ ? NAV_ITEMS[slot.itemId as NavItemId].icon
+ : slot.kind === 'group'
+ ? NAV_ITEMS[NAV_GROUPS_MOBILE.find(g => g.id === slot.groupId)!.itemIds[0]].icon
+ : Menu;
+ const slotLabel = t(slot.labelKey, slot.labelDefault);
  return (
  <button
- key={`top-tab-${item.id}`}
- onClick={() => handleNavigate(item.id as any)}
- className={`flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-mono font-medium whitespace-nowrap shrink-0 transition-all duration-150 cursor-pointer active:scale-95 ${
- isSelected
- ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-xs'
- : !isAllowed
- ? 'bg-[#151413] text-neutral-500 border border-[#22211F]/60 hover:bg-[#1a1918]'
- : 'bg-[#1A1918] text-neutral-300 border border-[#22211F] hover:bg-[#22211F] hover:text-white'
- }`}
+ key={slot.id}
+ type="button"
+ onClick={() => {
+ if (slot.kind === 'view') {
+ setOpenGroupSheetId(null);
+ handleNavigate(slot.itemId as any);
+ } else if (slot.kind === 'group') {
+ setOpenGroupSheetId(prev => (prev === slot.groupId ? null : (slot.groupId as string)));
+ } else {
+ setOpenGroupSheetId(null);
+ setIsMobileMenuOpen(prev => !prev);
+ }
+ }}
+ className="flex-1 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+ aria-label={slotLabel}
+ title={slotLabel}
  >
- <IconComp className={`w-4 h-4 shrink-0 ${isSelected ? 'text-amber-400' : !isAllowed ? 'text-neutral-500' : 'text-neutral-400'}`} />
- <span>{t(item.labelKey, item.labelDefault)}</span>
- {!isAllowed ? (
-   <span className="flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400/90 border border-amber-500/20">
-     <Lock className="w-2.5 h-2.5" />
-     <span>Plan</span>
-   </span>
- ) : badge !== undefined && badge !== 0 && badge !== "0" ? (
- <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
- isSelected ? 'bg-amber-500/30 text-amber-200' : 'bg-[#2b2927] text-zinc-400'
+ <span className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
+ isActive ? 'bg-amber-500/20 text-amber-400' : 'text-neutral-400'
  }`}>
- {badge}
+ <IconComp className="w-5 h-5" />
  </span>
- ) : null}
  </button>
  );
  })}
+ </nav>
+
+ {/* MOBILE GROUP SHEET (Música / Promoción): lista los itemIds del grupo tocado
+     en la bottom bar, reusando NavItemButton tal cual lo usa el drawer completo. */}
+ {openGroupSheetId && (() => {
+ const group = NAV_GROUPS_MOBILE.find(g => g.id === openGroupSheetId);
+ if (!group) return null;
+ return (
+ <>
+ <div
+ className="md:hidden fixed inset-x-0 top-0 bottom-16 z-40 bg-black/70"
+ onClick={() => setOpenGroupSheetId(null)}
+ />
+ <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[#121110] border-t border-[#22211F] rounded-t-2xl shadow-2xl">
+ <div className="w-9 h-1 rounded-full bg-[#33302a] mx-auto mt-2.5 mb-1" />
+ <div className="px-4 pt-1 pb-2 text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+ {t(group.titleKey, group.titleDefault)}
  </div>
- </header>
+ <div className="px-3 pb-4 flex flex-col gap-1">
+ {group.itemIds.map((id) => {
+ const item = NAV_ITEMS[id];
+ return (
+ <NavItemButton
+ key={item.id}
+ item={item}
+ label={t(item.labelKey, item.labelDefault)}
+ isSelected={currentView === item.id}
+ isAllowed={hasModuleAccess(currentActiveBandPlan, item.id)}
+ badge={navBadges[item.id]}
+ onNavigate={() => { handleNavigate(item.id as any); setOpenGroupSheetId(null); }}
+ variant="mobile"
+ />
+ );
+ })}
+ </div>
+ </div>
+ </>
+ );
+ })()}
 
  {/* MOBILE SLIDE-OVER DRAWER */}
  {isMobileMenuOpen && (
@@ -1068,7 +1106,7 @@ export default function App() {
  </aside>
 
  {/* Main Content Area */}
- <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] p-3 sm:p-5 md:p-8">
+ <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
  {/* Global Active Campaign Banner */}
  {activeCampaign && (
    <GlobalCampaignBar
@@ -1409,7 +1447,7 @@ export default function App() {
  {/* Floating Chatbot Overlay */}
  {currentView !== 'chat' && (
    <div
-     className={`fixed bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] shadow-2xl transition-all duration-200 ${
+     className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] shadow-2xl transition-all duration-200 ${
        isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
      }`}
    >
@@ -1442,7 +1480,7 @@ export default function App() {
  <button
  id="floating-chat-trigger-btn"
  onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
- className={`fixed bottom-5 right-5 z-40 p-3.5 rounded-full shadow-2xl flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
+ className={`fixed bottom-20 md:bottom-5 right-5 z-40 p-3.5 rounded-full shadow-2xl flex items-center gap-2.5 transition-all duration-300 cursor-pointer active:scale-95 group ${
  isFloatingChatOpen
  ? 'bg-rose-600 text-white hover:bg-rose-700'
  : isChatLoading
