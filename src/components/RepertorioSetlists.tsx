@@ -367,7 +367,10 @@ export default function RepertorioSetlists({
  // Navigation tab inside module
  const [showPdfPreview, setShowPdfPreview] = useState(false);
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
- const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+ // Plegado por defecto: la lista de setlists guardados ocupaba espacio permanentemente aunque
+ // el usuario normalmente ya sabe con cuál está trabajando (ver activeSetlistId más abajo, que
+ // recuerda el último setlist activo entre sesiones) — se despliega con un clic cuando hace falta.
+ const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
 
  // Sync activeTab with the view prop (when navigating from sidebar)
  useEffect(() => {
@@ -422,9 +425,29 @@ export default function RepertorioSetlists({
  });
 
  // Selected Active Setlist ID
+ // Recuerda el último setlist con el que se trabajó entre sesiones/recargas, para no tener que
+ // volver a buscarlo cada vez que se entra al módulo. Si el id guardado ya no existe (se borró
+ // el setlist, o `setlists` aún no ha cargado en este render), activeSetlist más abajo ya cae a
+ // setlists[0] como fallback — no hace falta validar aquí.
+ const ACTIVE_SETLIST_STORAGE_KEY = 'bandmanager_active_setlist_id';
  const [activeSetlistId, setActiveSetlistId] = useState<string>(() => {
+ try {
+ const saved = localStorage.getItem(ACTIVE_SETLIST_STORAGE_KEY);
+ if (saved) return saved;
+ } catch {
+ // localStorage puede no estar disponible (modo privado estricto, etc.)
+ }
  return setlists[0]?.id || '';
  });
+
+ useEffect(() => {
+ if (!activeSetlistId) return;
+ try {
+ localStorage.setItem(ACTIVE_SETLIST_STORAGE_KEY, activeSetlistId);
+ } catch {
+ // Ignorado a propósito: perder la persistencia no debe romper la navegación.
+ }
+ }, [activeSetlistId]);
 
  const activeSetlist = useMemo(() => setlists.find(s => s.id === activeSetlistId) || setlists[0] || null, [setlists, activeSetlistId]);
 
@@ -2512,7 +2535,7 @@ export default function RepertorioSetlists({
     </span>
 
     {/* Title + metadata in one line */}
-    <span className={`text-[10px] font-bold font-mono ${colors.text} truncate min-w-0`}>
+    <span className={`text-[13px] font-bold font-mono ${colors.text} truncate min-w-0`}>
       {song.titulo}
     </span>
 
@@ -2715,7 +2738,7 @@ export default function RepertorioSetlists({
          items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
        } : s));
      }}
-     className="bg-transparent text-[10px] font-extrabold font-mono text-[#f2ca50] border-b border-dashed border-[#f2ca50]/40 focus:outline-none min-w-0 flex-1 uppercase tracking-wider"
+     className="bg-transparent text-[13px] font-extrabold font-mono text-[#f2ca50] border-b border-dashed border-[#f2ca50]/40 focus:outline-none min-w-0 flex-1 uppercase tracking-wider"
    />
 
    {/* Spacer */}
@@ -2813,7 +2836,7 @@ export default function RepertorioSetlists({
          items: s.items.map(x => x.id === it.id ? { ...x, tituloCustom: val } : x)
        } : s));
      }}
-     className="bg-transparent border-b border-dashed border-white/20 text-[9px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
+     className="bg-transparent border-b border-dashed border-white/20 text-[13px] font-bold font-mono text-white focus:outline-none min-w-0 flex-1"
    />
 
    {isSelected && (
