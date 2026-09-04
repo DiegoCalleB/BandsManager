@@ -29,6 +29,10 @@ interface SetlistAIAnalysisModalProps {
   /** Reordena el setlist (usado tanto por el botón "Aplicar" de los avisos como por arrastrar un
    * punto en el mini-gráfico de aquí dentro). Si se omite, el mini-gráfico queda solo de lectura. */
   onReorder?: (fromIndex: number, toIndex: number) => void;
+  /** true si hay un último reordenamiento (desde aquí o desde el editor de fondo) que se puede
+   * deshacer. Se muestra un botón "Deshacer" en el modal para no obligar a cerrarlo solo para eso. */
+  canUndo?: boolean;
+  onUndo?: () => void;
 }
 
 interface Suggestion {
@@ -39,6 +43,10 @@ interface Suggestion {
   suggestion: string;
   impact: string;
   songs_involved?: string[];
+  /** Posiciones 1-indexadas (tal como las vio el modelo) del reordenamiento que resolvería esta
+   * sugerencia — ya validadas en el servidor contra la lista real, nunca inventadas por el
+   * frontend. Null/ausente cuando la sugerencia no es sobre mover una canción de sitio. */
+  suggested_reorder?: { from_position: number; to_position: number } | null;
 }
 
 interface Analysis {
@@ -50,7 +58,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder, canUndo = false, onUndo }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -63,9 +71,16 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     if (isOpen) {
       setAnalysis(initialAnalysis ?? null);
       setError(null);
+      setAppliedSuggestionIndices(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, setlistId]);
+
+  // Qué sugerencias de la IA ya se aplicaron en esta sesión del modal — sus suggested_reorder
+  // usan posiciones de CUANDO se generó el análisis, así que reaplicar tras un primer "Aplicar"
+  // (que ya cambió el orden real) movería otra cosa. Se deshabilita el botón tras usarlo una vez;
+  // "Deshacer" (arriba) sigue disponible para revertir ese cambio concreto si hace falta.
+  const [appliedSuggestionIndices, setAppliedSuggestionIndices] = useState<Set<number>>(new Set());
 
   // Modal arrastrable: el usuario puede moverlo a un lado para ver el gráfico de energía
   // (con el highlighting) mientras pasa el ratón por las sugerencias dentro del modal.
@@ -415,13 +430,25 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
               </div>
             </div>
-            <button
-              onClick={onClose}
-              onMouseDown={(e) => e.stopPropagation()}
-              className="p-2 hover:bg-neutral-800 rounded-lg transition"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1.5">
+              {canUndo && (
+                <button
+                  onClick={onUndo}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="px-2 py-1 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+                  title="Deshacer el último reordenamiento del setlist"
+                >
+                  ↩️ Deshacer
+                </button>
+              )}
+              <button
+                onClick={onClose}
+                onMouseDown={(e) => e.stopPropagation()}
+                className="p-2 hover:bg-neutral-800 rounded-lg transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click.
@@ -603,6 +630,24 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                                 {getCategoryIcon(sugg.category)} {sugg.category}
                               </p>
                             </div>
+                            {sugg.suggested_reorder && onReorder && (
+                              appliedSuggestionIndices.has(idx) ? (
+                                <span className="text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onReorder(sugg.suggested_reorder!.from_position - 1, sugg.suggested_reorder!.to_position - 1);
+                                    setAppliedSuggestionIndices(prev => new Set(prev).add(idx));
+                                  }}
+                                  className="shrink-0 px-2 py-0.5 rounded bg-purple-700/50 hover:bg-purple-600 text-purple-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+                                  title="Mover la canción a la posición sugerida"
+                                >
+                                  ✓ Aplicar
+                                </button>
+                              )
+                            )}
                           </div>
                         </div>
                       </div>
