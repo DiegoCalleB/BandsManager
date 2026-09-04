@@ -31,6 +31,8 @@ export interface PacingWarning {
   type: 'warning' | 'tip' | 'success';
   message: string;
   icon: string;
+  /** Títulos exactos de las canciones a las que se refiere este aviso, para poder resaltarlas en el gráfico. */
+  songTitles?: string[];
 }
 
 export interface SetlistEnergyAnalysis {
@@ -221,77 +223,86 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
   if (songCount > 0) {
     const songPoints = points.filter(p => p.isSong);
 
-    // 1. Valles de energía (3+ baladas seguidas)
-    let consecutiveLow = 0;
-    let maxConsecutiveLow = 0;
+    // 1. Valles de energía (3+ baladas seguidas) — se guarda el tramo concreto más largo,
+    // no solo el conteo, para poder señalarlo en el gráfico.
+    let consecutiveLow: SetlistEnergyPoint[] = [];
+    let longestLowStreak: SetlistEnergyPoint[] = [];
     songPoints.forEach(p => {
       if (p.info.category === 'balada') {
-        consecutiveLow++;
-        if (consecutiveLow > maxConsecutiveLow) maxConsecutiveLow = consecutiveLow;
+        consecutiveLow.push(p);
+        if (consecutiveLow.length > longestLowStreak.length) longestLowStreak = [...consecutiveLow];
       } else {
-        consecutiveLow = 0;
+        consecutiveLow = [];
       }
     });
-    if (maxConsecutiveLow >= 3) {
+    if (longestLowStreak.length >= 3) {
       warnings.push({
         type: 'warning',
         icon: '⚠️',
-        message: `Valle detectado: ${maxConsecutiveLow} baladas seguidas. Considera intercalar con algo más energético.`
+        message: `Valle detectado: ${longestLowStreak.length} baladas seguidas. Considera intercalar con algo más energético.`,
+        songTitles: longestLowStreak.map(p => p.title)
       });
     }
 
     // 2. Arranque del show
     if (songPoints.length >= 2) {
-      const initialAvg = (songPoints[0].score + songPoints[1].score) / 2;
+      const opener = [songPoints[0], songPoints[1]];
+      const initialAvg = (opener[0].score + opener[1].score) / 2;
       if (initialAvg <= 8) {
         warnings.push({
           type: 'warning',
           icon: '💤',
-          message: 'Arranque suave: primeros 2 temas bajos. Considera mover algo más rápido a posición 2.'
+          message: 'Arranque suave: primeros 2 temas bajos. Considera mover algo más rápido a posición 2.',
+          songTitles: opener.map(p => p.title)
         });
       } else if (initialAvg >= 16) {
         warnings.push({
           type: 'success',
           icon: '🔥',
-          message: '✓ Arranque potente: el show engancha desde el inicio.'
+          message: '✓ Arranque potente: el show engancha desde el inicio.',
+          songTitles: opener.map(p => p.title)
         });
       }
     }
 
     // 3. Cierre del show (últimos 2 temas)
     if (songPoints.length >= 2) {
-      const closingAvg = (songPoints[songPoints.length - 2].score + songPoints[songPoints.length - 1].score) / 2;
+      const closer = [songPoints[songPoints.length - 2], songPoints[songPoints.length - 1]];
+      const closingAvg = (closer[0].score + closer[1].score) / 2;
       if (closingAvg <= 8) {
         warnings.push({
           type: 'tip',
           icon: '💡',
-          message: 'Cierre débil: últimos temas en balada. Termina en explosiva para que la gente se vaya energizada.'
+          message: 'Cierre débil: últimos temas en balada. Termina en explosiva para que la gente se vaya energizada.',
+          songTitles: closer.map(p => p.title)
         });
       } else if (closingAvg >= 16) {
         warnings.push({
           type: 'success',
           icon: '💣',
-          message: '✓ Cierre potente: el show termina en fuego.'
+          message: '✓ Cierre potente: el show termina en fuego.',
+          songTitles: closer.map(p => p.title)
         });
       }
     }
 
     // 4. Demasiadas medias seguidas (>4)
-    let consecutiveMedium = 0;
-    let maxConsecutiveMedium = 0;
+    let consecutiveMedium: SetlistEnergyPoint[] = [];
+    let longestMediumStreak: SetlistEnergyPoint[] = [];
     songPoints.forEach(p => {
       if (p.info.category === 'media') {
-        consecutiveMedium++;
-        if (consecutiveMedium > maxConsecutiveMedium) maxConsecutiveMedium = consecutiveMedium;
+        consecutiveMedium.push(p);
+        if (consecutiveMedium.length > longestMediumStreak.length) longestMediumStreak = [...consecutiveMedium];
       } else {
-        consecutiveMedium = 0;
+        consecutiveMedium = [];
       }
     });
-    if (maxConsecutiveMedium >= 5) {
+    if (longestMediumStreak.length >= 5) {
       warnings.push({
         type: 'warning',
         icon: '📊',
-        message: `Zona plana: ${maxConsecutiveMedium} canciones medias seguidas. Añade contraste (balada o explosiva).`
+        message: `Zona plana: ${longestMediumStreak.length} canciones medias seguidas. Añade contraste (balada o explosiva).`,
+        songTitles: longestMediumStreak.map(p => p.title)
       });
     }
 
@@ -301,7 +312,8 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
         warnings.push({
           type: 'tip',
           icon: '⬇️',
-          message: `Post-pico: "${songPoints[i].title}" (explosiva) cae bruscamente a "${songPoints[i + 1].title}". Gradúa la bajada más suavemente.`
+          message: `Post-pico: "${songPoints[i].title}" (explosiva) cae bruscamente a "${songPoints[i + 1].title}". Gradúa la bajada más suavemente.`,
+          songTitles: [songPoints[i].title, songPoints[i + 1].title]
         });
         break; // Solo 1 warning de este tipo
       }

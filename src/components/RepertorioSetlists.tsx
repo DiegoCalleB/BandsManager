@@ -41,6 +41,24 @@ import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../
 import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
 import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea } from 'recharts';
 
+/** Minúsculas, sin tildes/diacríticos, sin espacios extra — para que "Traca Final" case con "traca final" o "Traca Fínal" sin fallar por acentuación. */
+function normalizeSongTitle(title?: string | null): string {
+  return (title || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+}
+
+/** true si algún título de `haystack` coincide (exacto o parcial) con algún título de `needles`. */
+function titlesMatch(haystackTitle: string, needles: string[]): boolean {
+  const normalizedHaystack = normalizeSongTitle(haystackTitle);
+  if (!normalizedHaystack) return false;
+  return needles.some(needle => {
+    const normalizedNeedle = normalizeSongTitle(needle);
+    if (!normalizedNeedle) return false;
+    return normalizedHaystack === normalizedNeedle ||
+           normalizedHaystack.includes(normalizedNeedle) ||
+           normalizedNeedle.includes(normalizedHaystack);
+  });
+}
+
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
  concerts: Concert[];
@@ -2238,14 +2256,7 @@ export default function RepertorioSetlists({
                           const { cx, cy, payload, index } = dotProps;
                           if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
                           const isSelected = payload.id === selectedSetlistItemId;
-                          const payloadTitle = (payload.name || '').toLowerCase().trim();
-                          const isHighlighted = highlightedSongIds.length > 0 && highlightedSongIds.some(songTitle => {
-                            const lowerSongTitle = (songTitle || '').toLowerCase().trim();
-                            if (!payloadTitle || !lowerSongTitle) return false;
-                            return payloadTitle === lowerSongTitle ||
-                                   payloadTitle.includes(lowerSongTitle) ||
-                                   lowerSongTitle.includes(payloadTitle);
-                          });
+                          const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
                           return (
                             <circle
                               key={`dot-${payload.id}`}
@@ -2275,21 +2286,31 @@ export default function RepertorioSetlists({
                 {/* Warnings & Suggestions (Heuristic) */}
                 {energyAnalysis.warnings.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {energyAnalysis.warnings.map((w, i) => (
-                      <span
-                        key={i}
-                        className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border ${
-                          w.type === 'warning'
-                            ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                            : w.type === 'success'
-                            ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                            : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
-                        }`}
-                      >
-                        <span>{w.icon}</span>
-                        <span>{w.message}</span>
-                      </span>
-                    ))}
+                    {energyAnalysis.warnings.map((w, i) => {
+                      const hasSongs = !!w.songTitles && w.songTitles.length > 0;
+                      const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
+                        w.songTitles!.some(t => titlesMatch(t, highlightedSongIds));
+                      return (
+                        <span
+                          key={i}
+                          className={`px-2 py-0.5 rounded text-[9.5px] font-mono font-medium flex items-center gap-1 border transition ${
+                            w.type === 'warning'
+                              ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                              : w.type === 'success'
+                              ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                              : 'bg-sky-500/10 text-sky-300 border-sky-500/30'
+                          } ${isHighlighted ? 'ring-2 ring-white/60' : ''}`}
+                          style={{ cursor: hasSongs ? 'pointer' : 'default' }}
+                          onMouseEnter={() => { if (hasSongs) setHighlightedSongIds(w.songTitles!); }}
+                          onMouseLeave={() => setHighlightedSongIds([])}
+                          onClick={() => { if (hasSongs) setHighlightedSongIds(isHighlighted ? [] : w.songTitles!); }}
+                          title={hasSongs ? `Resalta: ${w.songTitles!.join(', ')}` : undefined}
+                        >
+                          <span>{w.icon}</span>
+                          <span>{w.message}</span>
+                        </span>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -2309,18 +2330,12 @@ export default function RepertorioSetlists({
                     {aiAnalysisResult.suggestions?.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5">
                         {aiAnalysisResult.suggestions.map((s: any, i: number) => {
-                          const songsToHighlight = (s.songs_involved && s.songs_involved.length > 0)
+                          const songsToHighlight: string[] = (s.songs_involved && s.songs_involved.length > 0)
                             ? s.songs_involved
                             : []; // Si no hay songs_involved, usar array vacío
-                          const isHighlighted = highlightedSongIds.length > 0 && songsToHighlight.some((songTitle: string) => {
-                            const lowerTitle = songTitle.toLowerCase().trim();
-                            return highlightedSongIds.some(h => {
-                              const lowerH = h.toLowerCase().trim();
-                              return lowerTitle === lowerH || lowerTitle.includes(lowerH) || lowerH.includes(lowerTitle);
-                            });
-                          });
-
                           const hasSongs = songsToHighlight.length > 0;
+                          const isHighlighted = hasSongs && highlightedSongIds.length > 0 &&
+                            songsToHighlight.some((songTitle: string) => titlesMatch(songTitle, highlightedSongIds));
                           return (
                             <span
                               key={i}
