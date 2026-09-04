@@ -135,14 +135,14 @@ export function PdfExportModal({
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
                 </div>
+                ${hasAnyNote ? `
+                  <div class="song-notes-right">
+                    ${memberNote ? `<span class="note-chip note-member">${memberNote}</span>` : ''}
+                    ${(showSetlistNotes && setlistNote) ? `<span class="note-chip note-cue">*** ${setlistNote} ***</span>` : ''}
+                    ${(showSetlistNotes && generalRepertorioNote) ? `<span class="note-chip note-general">[General: ${generalRepertorioNote}]</span>` : ''}
+                  </div>
+                ` : ''}
               </div>
-              ${hasAnyNote ? `
-                <div class="song-notes-row">
-                  ${memberNote ? `<span class="note-chip note-member">${memberNote}</span>` : ''}
-                  ${(showSetlistNotes && setlistNote) ? `<span class="note-chip note-cue">*** ${setlistNote} ***</span>` : ''}
-                  ${(showSetlistNotes && generalRepertorioNote) ? `<span class="note-chip note-general">[General: ${generalRepertorioNote}]</span>` : ''}
-                </div>
-              ` : ''}
             </div>
           `;
         } else if (item.tipoItem === 'bloque_header') {
@@ -362,16 +362,24 @@ export function PdfExportModal({
               padding: 2px 0;
             }
 
+            /* .song-line nunca envuelve: el título se trunca con "..." antes de saltar a una
+               segunda línea, así la fila mide siempre lo mismo y nada se monta encima de la
+               canción anterior, sea cual sea la longitud del título o de las notas. */
             .song-line {
               display: flex;
               justify-content: space-between;
               align-items: baseline;
+              gap: 10px;
+              flex-wrap: nowrap;
             }
             .song-left {
               display: flex;
               align-items: baseline;
-              flex-wrap: wrap;
+              flex-wrap: nowrap;
               gap: 8px;
+              min-width: 0;
+              flex: 1 1 auto;
+              overflow: hidden;
             }
             .song-num {
               font-family: 'Oswald', sans-serif;
@@ -379,6 +387,7 @@ export function PdfExportModal({
               font-weight: 800;
               color: #444;
               min-width: 32px;
+              flex-shrink: 0;
             }
             .song-title {
               font-family: ${stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif"};
@@ -387,9 +396,14 @@ export function PdfExportModal({
               letter-spacing: 0.5px;
               color: #000;
               line-height: 1.1;
+              min-width: 0;
+              flex-shrink: 1;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
 
-            /* Badges */
+            /* Badges: nunca se encogen ni desaparecen — el título es el único que cede espacio */
             .tag-tonality {
               font-family: monospace;
               font-size: 11pt;
@@ -399,15 +413,18 @@ export function PdfExportModal({
               border-radius: 3px;
               background: #fff;
               color: #000;
+              flex-shrink: 0;
             }
             .tag-bpm {
               font-family: monospace;
               font-size: 10pt;
               font-weight: 700;
               color: #444;
+              flex-shrink: 0;
             }
             .tag-dur {
               font-family: monospace;
+              flex-shrink: 0;
               font-size: 10pt;
               font-weight: 700;
               color: #666;
@@ -415,20 +432,25 @@ export function PdfExportModal({
 
             /* Notes to the right of the song title, not below — saves vertical space so the
                repertoire doesn't spill onto extra pages. Each type keeps its own color so a
-               glance tells member note / stage cue / general note apart without reading labels. */
-            .song-notes-row {
+               glance tells member note / stage cue / general note apart without reading labels.
+               Ancho fijo + nowrap + ellipsis: si el título ya se comió su parte y sobra poco
+               sitio, la nota se trunca, nunca envuelve — así la fila nunca crece de alto ni se
+               monta sobre la canción de arriba (el bug que se reportó la vez anterior). */
+            .song-notes-right {
               display: flex;
               align-items: baseline;
-              flex-wrap: wrap;
+              flex-wrap: nowrap;
               gap: 10px;
-              padding-left: ${showSongNumbers ? '40px' : '6px'};
-              margin-top: -1px;
+              max-width: 46%;
+              flex-shrink: 0;
+              overflow: hidden;
+              justify-content: flex-end;
             }
             .note-chip {
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
-              max-width: 100%;
+              min-width: 0;
             }
             .note-member {
               font-family: ${handFont};
@@ -927,15 +949,19 @@ export function PdfExportModal({
 
                     return (
                       <div key={item.id} className="group relative py-1">
-                        <div className="flex items-baseline justify-between">
-                          <div className="flex items-baseline flex-wrap gap-2.5">
+                        {/* flex-nowrap en toda la fila: el título se trunca con "..." (min-w-0 +
+                            truncate) en vez de saltar de línea, así la fila nunca crece de alto
+                            ni se monta sobre la canción de arriba, sea cual sea la longitud del
+                            título o de las notas — eso fue justo lo que se rompió la vez anterior. */}
+                        <div className="flex items-baseline justify-between gap-3 flex-nowrap">
+                          <div className="flex items-baseline gap-2.5 min-w-0 flex-1 flex-nowrap overflow-hidden">
                             {showSongNumbers && (
-                              <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px]">
+                              <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px] shrink-0">
                                 {index + 1}.
                               </span>
                             )}
                             <span
-                              className={`font-black uppercase tracking-wide text-black leading-none ${
+                              className={`font-black uppercase tracking-wide text-black leading-none truncate min-w-0 ${
                                 fontSizeScale === 'gigante' ? 'text-[26pt]' : fontSizeScale === 'grande' ? 'text-[22pt]' : 'text-[17pt]'
                               }`}
                               style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
@@ -944,23 +970,54 @@ export function PdfExportModal({
                             </span>
 
                             {showTonality && s.tonalidad && (
-                              <span className="font-mono text-[11pt] font-black border-2 border-black px-1.5 py-0.5 rounded bg-white text-black leading-none ml-1">
+                              <span className="font-mono text-[11pt] font-black border-2 border-black px-1.5 py-0.5 rounded bg-white text-black leading-none ml-1 shrink-0">
                                 {s.tonalidad}
                               </span>
                             )}
 
                             {showBpm && s.bpm && (
-                              <span className="font-mono text-[10.5pt] font-bold text-neutral-600 ml-1">
+                              <span className="font-mono text-[10.5pt] font-bold text-neutral-600 ml-1 shrink-0">
                                 {s.bpm} BPM
                               </span>
                             )}
 
                             {showDuration && s.duracion && (
-                              <span className="font-mono text-[10.5pt] font-bold text-neutral-500 ml-1">
+                              <span className="font-mono text-[10.5pt] font-bold text-neutral-500 ml-1 shrink-0">
                                 {s.duracion}
                               </span>
                             )}
                           </div>
+
+                          {/* Notas a la derecha con ancho reservado: si no caben, se truncan con
+                              "...", nunca envuelven a una segunda línea. */}
+                          {(memberNote || (showSetlistNotes && (setlistNote || generalRepertorioNote))) && (
+                            <div className="flex items-baseline gap-2.5 min-w-0 max-w-[46%] justify-end shrink-0 overflow-hidden flex-nowrap">
+                              {memberNote && (
+                                <span
+                                  className={`font-bold truncate min-w-0 ${
+                                    fontSizeScale === 'gigante' ? 'text-[16pt]' : fontSizeScale === 'grande' ? 'text-[14pt]' : 'text-[11pt]'
+                                  }`}
+                                  style={{ fontFamily: getHandwritingFontFamily(), color: getInkColorHex() }}
+                                  title={memberNote}
+                                >
+                                  {memberNote}
+                                </span>
+                              )}
+                              {showSetlistNotes && setlistNote && (
+                                <span className="font-mono text-[9.5pt] font-bold text-amber-800 truncate min-w-0" title={setlistNote}>
+                                  *** {setlistNote} ***
+                                </span>
+                              )}
+                              {/* La nota general (notasRepertorio) se promete "en la hoja individual de
+                                  cada músico" en el propio tooltip de MemberNotesModal — no solo en la
+                                  hoja Master, y no solo cuando ese músico no tiene nota propia. */}
+                              {showSetlistNotes && generalRepertorioNote && (
+                                <span className="font-mono text-[9pt] text-neutral-600 italic truncate min-w-0" title={generalRepertorioNote}>
+                                  [General: {generalRepertorioNote}]
+                                </span>
+                              )}
+                            </div>
+                          )}
 
                           {/* Quick note edit trigger on hover */}
                           {onUpdateSong && (
@@ -974,38 +1031,6 @@ export function PdfExportModal({
                             </button>
                           )}
                         </div>
-
-                        {/* Las tres notas en una sola fila debajo del título (en vez de una línea
-                            cada una): ahorra espacio vertical sin arriesgar que el título largo
-                            tenga que compartir línea con ellas y se rompa el layout. */}
-                        {(memberNote || (showSetlistNotes && (setlistNote || generalRepertorioNote))) && (
-                          <div className="flex items-baseline flex-wrap gap-x-3 gap-y-0.5 pl-9 mt-0.5">
-                            {memberNote && (
-                              <span
-                                className={`font-bold truncate max-w-full ${
-                                  fontSizeScale === 'gigante' ? 'text-[16pt]' : fontSizeScale === 'grande' ? 'text-[14pt]' : 'text-[11pt]'
-                                }`}
-                                style={{ fontFamily: getHandwritingFontFamily(), color: getInkColorHex() }}
-                                title={memberNote}
-                              >
-                                {memberNote}
-                              </span>
-                            )}
-                            {showSetlistNotes && setlistNote && (
-                              <span className="font-mono text-[9.5pt] font-bold text-amber-800 truncate max-w-full" title={setlistNote}>
-                                *** {setlistNote} ***
-                              </span>
-                            )}
-                            {/* La nota general (notasRepertorio) se promete "en la hoja individual de
-                                cada músico" en el propio tooltip de MemberNotesModal — no solo en la
-                                hoja Master, y no solo cuando ese músico no tiene nota propia. */}
-                            {showSetlistNotes && generalRepertorioNote && (
-                              <span className="font-mono text-[9pt] text-neutral-600 italic truncate max-w-full" title={generalRepertorioNote}>
-                                [General: {generalRepertorioNote}]
-                              </span>
-                            )}
-                          </div>
-                        )}
                       </div>
                     );
                   } else if (item.tipoItem === 'bloque_header') {
