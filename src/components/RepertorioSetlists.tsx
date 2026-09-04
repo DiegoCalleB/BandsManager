@@ -713,10 +713,15 @@ export default function RepertorioSetlists({
   return () => { isCancelled = true; };
  }, [bandId]);
 
- // Cuando cambia el setlist activo, limpiar el análisis IA guardado (ya no es válido)
+ // Cuando cambia el setlist activo, cargar el análisis IA guardado si existe
  useEffect(() => {
-  setAiAnalysisResult(null);
- }, [activeSetlistId]);
+  if (activeSetlist?.ai_analysis_json) {
+    setAiAnalysisResult(activeSetlist.ai_analysis_json);
+  } else {
+    setAiAnalysisResult(null);
+  }
+  setHighlightedSongIds([]);
+ }, [activeSetlist?.id, activeSetlist?.ai_analysis_json]);
 
  // Microphone recording for Show Items (Presentaciones/Chapas)
  const handleStartRecordingShowItem = async () => {
@@ -2233,9 +2238,12 @@ export default function RepertorioSetlists({
                           const { cx, cy, payload, index } = dotProps;
                           if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
                           const isSelected = payload.id === selectedSetlistItemId;
-                          const isHighlighted = highlightedSongIds.length > 0 && (
-                            highlightedSongIds.some(songId => payload.titulo?.includes(songId) || payload.id?.includes(songId))
-                          );
+                          const isHighlighted = highlightedSongIds.length > 0 && highlightedSongIds.some(songTitle => {
+                            const payloadTitle = payload.titulo || '';
+                            const lowerTitle = payloadTitle.toLowerCase().trim();
+                            const lowerSongTitle = songTitle.toLowerCase().trim();
+                            return lowerTitle === lowerSongTitle || lowerTitle.includes(lowerSongTitle) || lowerSongTitle.includes(lowerTitle);
+                          });
                           return (
                             <circle
                               key={`dot-${payload.id}`}
