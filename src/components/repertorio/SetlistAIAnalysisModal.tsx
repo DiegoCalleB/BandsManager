@@ -26,13 +26,20 @@ interface SetlistAIAnalysisModalProps {
    * el editor de setlist, con su botón "Aplicar" cuando hay un reordenamiento determinista
    * disponible, para no obligar a cerrar el modal solo para aplicar una sugerencia. */
   warnings?: PacingWarning[];
-  /** Reordena el setlist (usado tanto por el botón "Aplicar" de los avisos como por arrastrar un
-   * punto en el mini-gráfico de aquí dentro). Si se omite, el mini-gráfico queda solo de lectura. */
-  onReorder?: (fromIndex: number, toIndex: number) => void;
+  /** Reordena el setlist (usado tanto por el botón "Aplicar" de los avisos/sugerencias como por
+   * arrastrar un punto en el mini-gráfico de aquí dentro). Si se omite, el mini-gráfico queda solo
+   * de lectura. `sourceKey` identifica qué acción lo pidió (p.ej. "ai-suggestion-2") — así ESE
+   * botón concreto puede saber si es el que "Deshacer" revertiría ahora mismo. */
+  onReorder?: (fromIndex: number, toIndex: number, sourceKey?: string) => void;
   /** true si hay un último reordenamiento (desde aquí o desde el editor de fondo) que se puede
    * deshacer. Se muestra un botón "Deshacer" en el modal para no obligar a cerrarlo solo para eso. */
   canUndo?: boolean;
   onUndo?: () => void;
+  /** sourceKey de la acción que dejó el snapshot que "Deshacer" revertiría ahora — null si no hay
+   * nada que deshacer. Permite que el botón "Aplicar" de UNA sugerencia concreta se convierta en
+   * "Deshacer" solo mientras siga siendo la acción más reciente (la única que un snapshot de un
+   * solo nivel puede revertir de verdad). */
+  undoSourceKey?: string | null;
 }
 
 interface Suggestion {
@@ -58,7 +65,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder, canUndo = false, onUndo }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder, canUndo = false, onUndo, undoSourceKey = null }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -499,7 +506,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          onReorder(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex);
+                          onReorder(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
                         }}
                         className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
                         title={w.suggestedReorder.description}
@@ -630,15 +637,42 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                                 {getCategoryIcon(sugg.category)} {sugg.category}
                               </p>
                             </div>
-                            {sugg.suggested_reorder && onReorder && (
-                              appliedSuggestionIndices.has(idx) ? (
-                                <span className="text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>
-                              ) : (
+                            {sugg.suggested_reorder && onReorder && (() => {
+                              const sourceKey = `ai-suggestion-${idx}`;
+                              // Mientras esta aplicación siga siendo la más reciente, el propio
+                              // botón "Aplicar" se convierte en "Deshacer" — no hace falta ir a
+                              // buscar el botón genérico de arriba para revertir justo esto.
+                              if (undoSourceKey === sourceKey) {
+                                return (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onUndo?.();
+                                      setAppliedSuggestionIndices(prev => {
+                                        const next = new Set(prev);
+                                        next.delete(idx);
+                                        return next;
+                                      });
+                                    }}
+                                    className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
+                                    title="Deshacer este cambio de orden"
+                                  >
+                                    ↩️ Deshacer
+                                  </button>
+                                );
+                              }
+                              if (appliedSuggestionIndices.has(idx)) {
+                                // Se aplicó, pero luego se aplicó/arrastró otra cosa encima — el
+                                // snapshot de un solo nivel ya no puede revertir justo esto.
+                                return <span className="text-[10px] text-emerald-400 font-mono font-medium whitespace-nowrap">✓ Aplicado</span>;
+                              }
+                              return (
                                 <button
                                   type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    onReorder(sugg.suggested_reorder!.from_position - 1, sugg.suggested_reorder!.to_position - 1);
+                                    onReorder(sugg.suggested_reorder!.from_position - 1, sugg.suggested_reorder!.to_position - 1, sourceKey);
                                     setAppliedSuggestionIndices(prev => new Set(prev).add(idx));
                                   }}
                                   className="shrink-0 px-2 py-0.5 rounded bg-purple-700/50 hover:bg-purple-600 text-purple-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
@@ -646,8 +680,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                                 >
                                   ✓ Aplicar
                                 </button>
-                              )
-                            )}
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>

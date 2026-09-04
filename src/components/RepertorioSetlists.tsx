@@ -538,7 +538,10 @@ export default function RepertorioSetlists({
  // Snapshot del orden de items justo antes del ÚLTIMO reordenamiento (manual arrastrando, o por
  // "Aplicar" de un aviso/sugerencia) — permite un único "Deshacer" sobre ese cambio concreto.
  // Se sobrescribe con cada nuevo reordenamiento, así que solo cubre el más reciente, no un historial.
- const [undoReorderSnapshot, setUndoReorderSnapshot] = useState<{ setlistId: string; items: Setlist['items'] } | null>(null);
+ // `sourceKey` identifica QUÉ acción generó este snapshot (p.ej. "ai-suggestion-2") — así el botón
+ // "Aplicar" de esa sugerencia concreta puede convertirse en "Deshacer" solo mientras siga siendo
+ // la acción más reciente (la única que este snapshot de un solo nivel puede revertir de verdad).
+ const [undoReorderSnapshot, setUndoReorderSnapshot] = useState<{ setlistId: string; items: Setlist['items']; sourceKey: string } | null>(null);
 
  // Datos del Mapa de Energía, memoizados por setlist/repertorio real — si se recalculan en
  // cada render (p.ej. cada vez que cambia highlightedSongIds al hacer hover), Recharts ve un
@@ -1502,13 +1505,13 @@ export default function RepertorioSetlists({
  // Setlist Item Manipulation & Agile Reordering (Drag & Drop) — lógica pura, parametrizada por
  // índices en vez de leer el estado de arrastre de la lista (draggedItemIndex), para poder
  // reutilizarla también desde el drag horizontal sobre el Mapa de Energía (ver EnergyChart).
- const reorderSetlistItems = (fromIndex: number, toIndex: number) => {
+ const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
    if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
 
    // Snapshot del orden ANTES de tocarlo — es lo que restaura "Deshacer". Se guarda aquí, en el
    // único punto que de verdad reordena, para que cubra igual el arrastre manual que un "Aplicar"
    // de un aviso heurístico o de una sugerencia de la IA.
-   setUndoReorderSnapshot({ setlistId: activeSetlist.id, items: activeSetlist.items });
+   setUndoReorderSnapshot({ setlistId: activeSetlist.id, items: activeSetlist.items, sourceKey });
 
    const newItems = [...activeSetlist.items];
    const [movedItem] = newItems.splice(fromIndex, 1);
@@ -1529,6 +1532,10 @@ export default function RepertorioSetlists({
  };
 
  const canUndoReorder = !!undoReorderSnapshot && undoReorderSnapshot.setlistId === activeSetlist?.id;
+ // Qué acción concreta es la que "Deshacer" revertiría ahora mismo — null si no hay nada que
+ // deshacer, o si el setlist activo cambió desde entonces. Solo la acción que dejó este snapshot
+ // (la más reciente) puede mostrar su propio botón como "Deshacer" en vez de "Aplicar"/"Aplicado".
+ const undoSourceKey = canUndoReorder ? undoReorderSnapshot!.sourceKey : null;
 
  const undoLastReorder = () => {
    if (!activeSetlist || !undoReorderSnapshot || undoReorderSnapshot.setlistId !== activeSetlist.id) return;
@@ -2295,7 +2302,7 @@ export default function RepertorioSetlists({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex);
+                                reorderSetlistItems(w.suggestedReorder!.fromIndex, w.suggestedReorder!.toIndex, `warning-${i}`);
                               }}
                               className="ml-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/25 text-white font-bold transition"
                               title={w.suggestedReorder.description}
@@ -4001,6 +4008,7 @@ export default function RepertorioSetlists({
     onReorder={reorderSetlistItems}
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}
+    undoSourceKey={undoSourceKey}
   />
 </div>
  );
