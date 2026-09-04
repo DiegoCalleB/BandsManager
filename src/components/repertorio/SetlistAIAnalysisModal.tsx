@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer } from 'lucide-react';
+import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
 import { api } from '../../services/api';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
@@ -85,6 +86,50 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     dragStateRef.current = { startX: e.clientX, startY: e.clientY, originX: dragOffset.x, originY: dragOffset.y };
   };
 
+  // Referencia al contenedor del mini-gráfico para poder capturar su SVG real (con gradientes y
+  // colores exactos) al exportar/compartir, en vez de recrearlo aproximadamente en CSS.
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  // Referencia al bloque completo (header + gráfico + score + arco narrativo + sugerencias +
+  // áreas de mejora) para exportarlo entero como una única imagen con html2canvas — a diferencia
+  // del PDF (que es texto real seleccionable), esto es lo que hace falta para compartir de un
+  // vistazo por WhatsApp: una captura tal cual se ve en pantalla.
+  const analysisContentRef = useRef<HTMLDivElement>(null);
+
+  /** Serializa el SVG del gráfico ya renderizado a un data: URI, listo para <img src="..."> o para dibujar en un canvas. Null si el gráfico no está montado (p.ej. setlist vacío). */
+  const getChartSvgDataUrl = (): string | null => {
+    const svgEl = chartContainerRef.current?.querySelector('svg');
+    if (!svgEl) return null;
+    const clone = svgEl.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    if (!clone.getAttribute('width')) clone.setAttribute('width', String(svgEl.clientWidth || 600));
+    if (!clone.getAttribute('height')) clone.setAttribute('height', String(svgEl.clientHeight || 200));
+    const svgString = new XMLSerializer().serializeToString(clone);
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
+  };
+
+  /** Convierte el SVG del gráfico a PNG (dibujándolo en un <canvas>) para compartir como archivo de imagen — la Web Share API y WhatsApp entienden PNG universalmente, no todos los destinos aceptan SVG. Resuelve null si no hay gráfico o el navegador bloquea el canvas (raro, pero posible en algunos navegadores muy restrictivos). */
+  const getChartPngBlob = (): Promise<Blob | null> => {
+    return new Promise((resolve) => {
+      const svgDataUrl = getChartSvgDataUrl();
+      if (!svgDataUrl) return resolve(null);
+      const img = new Image();
+      img.onload = () => {
+        const scale = 2; // más nítido al compartir/imprimir que el tamaño real en pantalla
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(null);
+        ctx.fillStyle = '#0a0a0a';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => resolve(blob), 'image/png');
+      };
+      img.onerror = () => resolve(null);
+      img.src = svgDataUrl;
+    });
+  };
+
   const handleAnalyze = async () => {
     setLoading(true);
     setError(null);
@@ -129,26 +174,16 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // Exporta el análisis a una hoja imprimible/PDF (mismo patrón que la Hoja de Escenario del
-  // repertorio: una ventana nueva con HTML autocontenido + window.print()). El gráfico de
-  // energía es un SVG de recharts — en vez de intentar capturarlo (necesitaría html2canvas, una
-  // dependencia nueva), se recrea como un mini-gráfico de barras en CSS puro a partir de los
-  // mismos chartData, que es igual de fiel para una hoja impresa en blanco y negro/color.
+  // repertorio: una ventana nueva con HTML autocontenido + window.print()). El gráfico se
+  // incrusta como el SVG real ya renderizado (mismos gradientes y colores exactos que en
+  // pantalla) en vez de recrearlo aproximadamente — capturarlo así no necesita html2canvas ni
+  // ninguna dependencia nueva, un SVG se sirve tal cual como imagen.
   const handlePrintAnalysis = () => {
     if (!analysis) return;
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const barsHtml = (chartData || []).map(d => {
-      const heightPct = Math.max(4, Math.round((d.score / 20) * 100));
-      return `
-        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; min-width:0;">
-          <div style="width:100%; max-width:18px; height:90px; display:flex; align-items:flex-end;">
-            <div style="width:100%; height:${heightPct}%; background:${d.color}; border-radius:3px 3px 0 0;"></div>
-          </div>
-          <span style="font-size:9px; color:#888; font-family:monospace;">#${d.idx + 1}</span>
-        </div>
-      `;
-    }).join('');
+    const chartSvgUrl = getChartSvgDataUrl();
 
     const suggestionsHtml = analysis.suggestions.map(sugg => `
       <div style="border:1px solid #333; border-radius:8px; padding:14px; margin-bottom:12px; break-inside:avoid;">
@@ -177,7 +212,8 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
           .score-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
           .score-bar-bg { width: 100%; background: #333; border-radius: 999px; height: 8px; margin-top: 6px; }
           .score-bar-fill { height: 8px; border-radius: 999px; background: linear-gradient(90deg, #a855f7, #c084fc); }
-          .chart-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; display: flex; align-items: flex-end; gap: 3px; }
+          .chart-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+          .chart-box img { width: 100%; height: auto; display: block; }
           .info-box { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
           .info-box p.label { font-size: 12px; color: #999; margin: 0 0 6px 0; }
           .info-box p.value { font-size: 14px; color: #eee; margin: 0; line-height: 1.5; }
@@ -202,7 +238,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
           <div class="score-bar-bg"><div class="score-bar-fill" style="width:${analysis.overallScore}%;"></div></div>
         </div>
 
-        ${barsHtml ? `<div class="chart-box">${barsHtml}</div>` : ''}
+        ${chartSvgUrl ? `<div class="chart-box"><img src="${chartSvgUrl}" alt="Mapa de Energía" /></div>` : ''}
 
         <div class="info-box">
           <p class="label">📖 Arco Narrativo</p>
@@ -240,6 +276,104 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     printWindow.document.close();
   };
 
+  const [sharing, setSharing] = useState(false);
+  const [exportingImage, setExportingImage] = useState(false);
+
+  /** Texto resumen del análisis, usado tanto por Web Share como por el fallback de WhatsApp. */
+  const buildShareText = (a: Analysis) => {
+    const topSuggestions = a.suggestions.slice(0, 3)
+      .map(s => `• ${s.title}: ${s.suggestion}`)
+      .join('\n');
+    return [
+      `🧠 Análisis IA — ${setlistName || 'Setlist'}`,
+      `Score: ${a.overallScore}/100`,
+      '',
+      `📖 ${a.narrativeArc}`,
+      '',
+      topSuggestions ? `Top sugerencias:\n${topSuggestions}` : ''
+    ].filter(Boolean).join('\n');
+  };
+
+  /** Captura TODO el bloque de análisis (header, gráfico, score, arco, sugerencias, áreas de
+   * mejora) tal como se ve en pantalla, en una sola imagen PNG — a diferencia del PDF (texto
+   * real), esto es lo que hace falta para compartir de un vistazo por WhatsApp. */
+  const getFullAnalysisImageBlob = async (): Promise<Blob | null> => {
+    if (!analysisContentRef.current) return null;
+    const canvas = await html2canvas(analysisContentRef.current, {
+      backgroundColor: '#171717',
+      scale: 2,
+      useCORS: true
+    });
+    return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/png'));
+  };
+
+  const downloadBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  /** Guarda la captura completa como PNG — el camino que funciona siempre, incluido en
+   * escritorio, donde la Web Share API con archivos casi nunca está disponible. */
+  const handleDownloadImage = async () => {
+    if (!analysis) return;
+    setExportingImage(true);
+    try {
+      const blob = await getFullAnalysisImageBlob();
+      if (blob) downloadBlob(blob, `analisis-ia-${setlistId}.png`);
+    } finally {
+      setExportingImage(false);
+    }
+  };
+
+  // Compartir: usa la Web Share API nativa cuando el navegador la soporta con archivos (Chrome
+  // y Safari en móvil, principalmente) para adjuntar directamente la imagen completa del
+  // análisis + texto resumen a WhatsApp/Telegram/Mail/lo que sea — es el propio sistema el que
+  // ofrece las apps instaladas, no hay forma de "elegir WhatsApp" desde web sin ese selector
+  // nativo. En escritorio esa API casi nunca soporta archivos, así que ahí se descarga la
+  // imagen directamente y se abre wa.me con el texto para poder adjuntarla a mano.
+  const handleShareAnalysis = async () => {
+    if (!analysis) return;
+    setSharing(true);
+    try {
+      const text = buildShareText(analysis);
+      const imageBlob = await getFullAnalysisImageBlob();
+      const shareTitle = `Análisis IA — ${setlistName || 'Setlist'}`;
+
+      if (imageBlob && typeof navigator.share === 'function') {
+        const file = new File([imageBlob], `analisis-ia-${setlistId}.png`, { type: 'image/png' });
+        const canShareFiles = typeof navigator.canShare === 'function' && navigator.canShare({ files: [file] });
+        if (canShareFiles) {
+          await navigator.share({ title: shareTitle, text, files: [file] });
+          return;
+        }
+      }
+      if (typeof navigator.share === 'function') {
+        // Sin soporte de archivos pero sí de texto (algunos navegadores) — igual de válido.
+        try {
+          await navigator.share({ title: shareTitle, text });
+          return;
+        } catch {
+          // el usuario canceló el share sheet, o falló — sigue al fallback de abajo
+        }
+      }
+      // Fallback de escritorio: descarga la imagen y abre WhatsApp Web con el texto — wa.me no
+      // admite adjuntar archivos por URL, así que la imagen hay que arrastrarla a mano al chat.
+      if (imageBlob) downloadBlob(imageBlob, `analisis-ia-${setlistId}.png`);
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    } catch (err: any) {
+      // AbortError = el usuario cerró el selector de compartir sin elegir nada: no es un fallo.
+      if (err?.name !== 'AbortError') {
+        window.open(`https://wa.me/?text=${encodeURIComponent(buildShareText(analysis))}`, '_blank');
+      }
+    } finally {
+      setSharing(false);
+    }
+  };
+
   const hasChart = !!chartData && chartData.length > 0 && !!yDomain;
 
   return (
@@ -252,6 +386,10 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
         className="bg-neutral-900 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >
+        {/* Todo lo de aquí dentro (header, gráfico, score, arco, sugerencias, áreas de mejora) es
+            lo que se captura al exportar/compartir como imagen — los Action Buttons quedan fuera
+            del ref, más abajo, para no salir en la captura. */}
+        <div ref={analysisContentRef}>
         {/* Header + Mapa de Energía en un único bloque sticky: así ambos quedan fijos arriba al
             hacer scroll por las sugerencias, sin depender de calcular a mano la altura del
             header para un segundo "top" (frágil — ya se rompió una vez al hacer el header más
@@ -279,9 +417,10 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
             </button>
           </div>
 
-          {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click */}
+          {/* Mapa de Energía integrado: las sugerencias de abajo resaltan aquí mismo al hacer hover/click.
+              El ref permite capturar el SVG real (gradientes y colores incluidos) al exportar/compartir. */}
           {hasChart && (
-            <div className="border-b border-neutral-700 p-3">
+            <div ref={chartContainerRef} className="border-b border-neutral-700 p-3">
               <EnergyChart
                 setlistKey={setlistId}
                 chartData={chartData!}
@@ -453,32 +592,58 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={handleAnalyze}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
-                >
-                  🔄 Re-analizar
-                </button>
-                <button
-                  onClick={handlePrintAnalysis}
-                  className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm flex items-center justify-center gap-1.5"
-                  title="Exportar el análisis a PDF/impresión"
-                >
-                  <Printer className="w-4 h-4" />
-                  Imprimir / PDF
-                </button>
-                <button
-                  onClick={onClose}
-                  className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
-                >
-                  Cerrar
-                </button>
-              </div>
             </div>
           )}
         </div>
+        </div>
+        {/* Action Buttons — deliberadamente FUERA de analysisContentRef: no deben salir en la
+            imagen/PDF exportado. */}
+        {analysis && (
+          <div className="px-4 pb-4 space-y-2">
+            <div className="flex gap-2">
+              <button
+                onClick={handlePrintAnalysis}
+                className="flex-1 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-neutral-200 px-3 py-2 rounded-lg transition font-medium text-sm flex items-center justify-center gap-1.5"
+                title="Exportar el análisis a PDF/impresión"
+              >
+                <Printer className="w-4 h-4" />
+                Imprimir / PDF
+              </button>
+              <button
+                onClick={handleDownloadImage}
+                disabled={exportingImage}
+                className="flex-1 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-neutral-200 px-3 py-2 rounded-lg transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
+                title="Descargar el análisis completo como imagen PNG"
+              >
+                {exportingImage ? <Loader className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                Imagen
+              </button>
+              <button
+                onClick={handleShareAnalysis}
+                disabled={sharing}
+                className="flex-1 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-neutral-200 px-3 py-2 rounded-lg transition font-medium text-sm flex items-center justify-center gap-1.5 disabled:opacity-60"
+                title="Compartir por WhatsApp u otra app"
+              >
+                {sharing ? <Loader className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
+                Compartir
+              </button>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleAnalyze}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+              >
+                🔄 Re-analizar
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
