@@ -828,6 +828,13 @@ export const api = {
     return request(`/api/campaigns/${campaignId}/train-tone-dna`, {
       method: 'POST'
     });
+  },
+
+  // Advanced AI analysis of setlist energy and pacing
+  async analyzeSetlistWithAI(setlistId: string): Promise<{ success: boolean; analysis?: any; error?: string }> {
+    return request(`/api/repertorio/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
+      method: 'POST'
+    });
   }
 };
 

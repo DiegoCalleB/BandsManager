@@ -215,15 +215,16 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     }
   }
 
-  // Generación de advertencias y consejos de pacing
+  // Generación de advertencias y consejos de pacing (Nivel 1: Heurístico)
   const warnings: PacingWarning[] = [];
 
   if (songCount > 0) {
-    // 1. Verificar valles de energía consecutiva (3 o más baladas seguidas)
+    const songPoints = points.filter(p => p.isSong);
+
+    // 1. Valles de energía (3+ baladas seguidas)
     let consecutiveLow = 0;
     let maxConsecutiveLow = 0;
-
-    points.filter(p => p.isSong).forEach(p => {
+    songPoints.forEach(p => {
       if (p.info.category === 'balada') {
         consecutiveLow++;
         if (consecutiveLow > maxConsecutiveLow) maxConsecutiveLow = consecutiveLow;
@@ -231,49 +232,78 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
         consecutiveLow = 0;
       }
     });
-
     if (maxConsecutiveLow >= 3) {
       warnings.push({
         type: 'warning',
         icon: '⚠️',
-        message: `Detección de valle de energía: hay ${maxConsecutiveLow} canciones lentas/baladas seguidas.`
+        message: `Valle detectado: ${maxConsecutiveLow} baladas seguidas. Considera intercalar con algo más energético.`
       });
     }
 
-    // 2. Verificar arranque del show
-    const songPoints = points.filter(p => p.isSong);
+    // 2. Arranque del show
     if (songPoints.length >= 2) {
       const initialAvg = (songPoints[0].score + songPoints[1].score) / 2;
       if (initialAvg <= 8) {
         warnings.push({
           type: 'warning',
           icon: '💤',
-          message: 'Arranque de show suave: los 2 primeros temas son de energía baja.'
+          message: 'Arranque suave: primeros 2 temas bajos. Considera mover algo más rápido a posición 2.'
         });
       } else if (initialAvg >= 16) {
         warnings.push({
           type: 'success',
           icon: '🔥',
-          message: 'Arranque potente: el show empieza con máxima energía.'
+          message: '✓ Arranque potente: el show engancha desde el inicio.'
         });
       }
     }
 
-    // 3. Verificar cierre del show (último tema)
-    const lastSong = songPoints[songPoints.length - 1];
-    if (lastSong) {
-      if (lastSong.score >= 16) {
-        warnings.push({
-          type: 'success',
-          icon: '💣',
-          message: `Cierre en alto: "${lastSong.title}" remata el show en punto máximo.`
-        });
-      } else if (lastSong.score <= 8 && songPoints.length > 2) {
+    // 3. Cierre del show (últimos 2 temas)
+    if (songPoints.length >= 2) {
+      const closingAvg = (songPoints[songPoints.length - 2].score + songPoints[songPoints.length - 1].score) / 2;
+      if (closingAvg <= 8) {
         warnings.push({
           type: 'tip',
           icon: '💡',
-          message: 'Consejo: El último tema es una balada. Considera terminar con un hit o bis cañero.'
+          message: 'Cierre débil: últimos temas en balada. Termina en explosiva para que la gente se vaya energizada.'
         });
+      } else if (closingAvg >= 16) {
+        warnings.push({
+          type: 'success',
+          icon: '💣',
+          message: '✓ Cierre potente: el show termina en fuego.'
+        });
+      }
+    }
+
+    // 4. Demasiadas medias seguidas (>4)
+    let consecutiveMedium = 0;
+    let maxConsecutiveMedium = 0;
+    songPoints.forEach(p => {
+      if (p.info.category === 'media') {
+        consecutiveMedium++;
+        if (consecutiveMedium > maxConsecutiveMedium) maxConsecutiveMedium = consecutiveMedium;
+      } else {
+        consecutiveMedium = 0;
+      }
+    });
+    if (maxConsecutiveMedium >= 5) {
+      warnings.push({
+        type: 'warning',
+        icon: '📊',
+        message: `Zona plana: ${maxConsecutiveMedium} canciones medias seguidas. Añade contraste (balada o explosiva).`
+      });
+    }
+
+    // 5. Anticlímax: pico explosiva seguido de caída brusca
+    for (let i = 0; i < songPoints.length - 2; i++) {
+      if (songPoints[i].score >= 17 && songPoints[i + 1].score <= 9) {
+        warnings.push({
+          type: 'tip',
+          icon: '⬇️',
+          message: `Post-pico: "${songPoints[i].title}" (explosiva) cae bruscamente a "${songPoints[i + 1].title}". Gradúa la bajada más suavemente.`
+        });
+        break; // Solo 1 warning de este tipo
       }
     }
   }

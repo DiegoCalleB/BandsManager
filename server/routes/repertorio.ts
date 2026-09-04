@@ -18,6 +18,7 @@ import {
 } from "../db.js";
 
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { analyzeSetlistWithAI } from "../utils/setlistAIAnalyzer.js";
 
 const router = express.Router();
 
@@ -491,6 +492,46 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
   } catch (err: any) {
     console.error("Error in ai-composer-arrangement:", err);
     res.status(500).json({ error: err?.message || "Error al generar arreglo con IA." });
+  }
+});
+
+// POST analyze setlist with AI (advanced level)
+router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { setlistId } = req.params;
+
+    // Obtener el setlist y sus canciones
+    const state = loadState();
+    const setlist = (state.setlists || []).find(
+      (s: any) => s.id === setlistId && s.band_id === userBandId
+    );
+    if (!setlist) {
+      return res.status(404).json({ error: "Setlist no encontrado" });
+    }
+
+    const allSongs = await dbGetSongs(userBandId);
+    const setlistSongs = setlist.items
+      .map((item: SetlistItem, idx: number) => {
+        const song = allSongs.find((s) => s.id === item.songId);
+        return song ? { ...song, position: idx + 1 } : null;
+      })
+      .filter(Boolean);
+
+    if (setlistSongs.length === 0) {
+      return res.status(400).json({ error: "El setlist no tiene canciones" });
+    }
+
+    // Llamar a análisis IA
+    const analysis = await analyzeSetlistWithAI(setlistSongs);
+
+    res.json({
+      success: true,
+      analysis
+    });
+  } catch (err: any) {
+    console.error("Error in analyze-setlist-with-ai:", err);
+    res.status(500).json({ error: err?.message || "Error al analizar setlist con IA" });
   }
 });
 
