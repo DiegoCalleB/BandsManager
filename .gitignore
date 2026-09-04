@@ -15,3 +15,4 @@ bun.lock
 # producción (emails, teléfonos de contacto de bandas/salas). Nunca debe versionarse.
 data.json
 public/clips/
+supabase/.temp/
