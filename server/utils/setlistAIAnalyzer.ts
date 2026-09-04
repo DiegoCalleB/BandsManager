@@ -1,5 +1,5 @@
 import { Song, SetlistItem } from "../../src/types.js";
-import { getAiClient } from "../ai.js";
+import { getAiClient, generateContentWithFallback } from "../ai.js";
 
 export interface AISetlistSuggestion {
   priority: 'high' | 'medium' | 'low';
@@ -66,8 +66,17 @@ Máximo 3-4 sugerencias, solo las MÁS IMPORTANTES. Sé específico con nombres 
 
   try {
     const client = getAiClient();
-    const response = await client.generateContent(prompt);
-    const text = response.response.text();
+    const response = await generateContentWithFallback(client, {
+      contents: [{
+        role: 'user',
+        parts: [{ text: prompt }]
+      }]
+    });
+
+    const text = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    if (!text) {
+      throw new Error("No response from AI");
+    }
 
     // Extraer JSON del response (puede venir con markdown o puro)
     let jsonStr = text;

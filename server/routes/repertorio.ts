@@ -1,5 +1,5 @@
 import express from "express";
-import { Song, Setlist } from "../../src/types.js";
+import { Song, Setlist, SetlistItem } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
