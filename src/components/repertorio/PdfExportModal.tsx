@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Printer, X, Users, User, FileText, Settings, Eye, Check,
   ChevronLeft, ChevronRight, Edit3, Music, Sparkles, Image as ImageIcon,
@@ -42,6 +42,9 @@ interface NoteLayoutInput {
   noteFontFamily: string;
   noteMaxFontSizePx: number;
   noteMinFontSizePx: number;
+  // Ancho real de contenido disponible en ESE renderizado concreto (impresión vs vista previa
+  // tienen paddings distintos — ver Ronda 2 del plan, no asumir un ancho fijo compartido).
+  rowWidthPx: number;
   measure: (text: string, fontSizePx: number, fontFamily: string, fontWeight?: string | number) => number;
 }
 
@@ -82,9 +85,9 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
     0
   );
   const leftWidthPx = numberWidth + titleWidth + badgesWidth;
-  const rightSpaceAvailable = PAGE_CONTENT_WIDTH_PX - leftWidthPx - ROW_GAP_PX;
+  const rightSpaceAvailable = input.rowWidthPx - leftWidthPx - ROW_GAP_PX;
   const inline = rightSpaceAvailable >= MIN_USEFUL_RIGHT_LANE_PX;
-  const maxWidthPx = inline ? rightSpaceAvailable : PAGE_CONTENT_WIDTH_PX - (input.numberText ? 40 : 6);
+  const maxWidthPx = inline ? rightSpaceAvailable : input.rowWidthPx - (input.numberText ? 40 : 6);
 
   const fit = fitNoteSegments(segments, {
     maxWidthPx,
@@ -166,6 +169,29 @@ export function PdfExportModal({
     if (typeof document === 'undefined' || !document.fonts) return;
     document.fonts.ready.then(() => setFontsReadyTick(t => t + 1));
   }, []);
+
+  // Ancho REAL de contenido de la hoja en la vista previa, medido del DOM en vez de asumido en
+  // mm: a diferencia del HTML de impresión (dimensiones fijas de @page), este contenedor tiene
+  // padding responsive de Tailwind (p-8 sm:p-12), así que una constante fija sobrestimaba el
+  // hueco libre y hacía que el título se aplastara en vez de la nota caer a la línea de abajo
+  // (Ronda 2 del plan). Se mide el ancho de la hoja y se le resta el padding calculado.
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const [previewContentWidthPx, setPreviewContentWidthPx] = useState<number>(PAGE_CONTENT_WIDTH_PX);
+  useEffect(() => {
+    const el = sheetRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const measure = () => {
+      const rect = el.getBoundingClientRect();
+      const cs = window.getComputedStyle(el);
+      const paddingX = parseFloat(cs.paddingLeft || '0') + parseFloat(cs.paddingRight || '0');
+      const width = rect.width - paddingX;
+      if (width > 0) setPreviewContentWidthPx(width);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isOpen]);
 
   // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
   // guard vivía antes de ellos, así que abrir/cerrar el modal o cambiar de repertorio activo
@@ -253,6 +279,7 @@ export function PdfExportModal({
             noteFontFamily: handFont,
             noteMaxFontSizePx,
             noteMinFontSizePx,
+            rowWidthPx: PAGE_CONTENT_WIDTH_PX,
             measure
           });
 
@@ -263,13 +290,18 @@ export function PdfExportModal({
           const notesHtml = layout
             ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="font-size:${layout.fit.fontSizePx}px;max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${renderLine(layout.fit.lineOneSegments)}${layout.fit.lineTwoSegments.length ? renderLine(layout.fit.lineTwoSegments) : ''}</div>`
             : '';
+          // El título solo se fuerza a una sola línea (con "…" si hace falta) cuando de verdad
+          // compite por sitio con una nota en la misma fila (layout.mode === 'inline'). Si esa
+          // fila no tiene nota, o la nota cae debajo, el título vuelve a poder ocupar toda su
+          // anchura natural — nunca se pidió tocarlo salvo por esa convivencia.
+          const titleStyle = layout && layout.mode === 'inline' ? '' : ' style="white-space:normal;overflow:visible;text-overflow:clip;"';
 
           return `
             <div class="setlist-song-item">
               <div class="song-line">
                 <div class="song-left">
                   ${numberText ? `<span class="song-num">${numberText}</span>` : ''}
-                  <span class="song-title">${s.titulo.toUpperCase()}</span>
+                  <span class="song-title"${titleStyle}>${s.titulo.toUpperCase()}</span>
                   ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ''}
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
@@ -1032,6 +1064,7 @@ export function PdfExportModal({
         >
           {/* Authentic Real Stage Paper Sheet */}
           <div
+            ref={sheetRef}
             className="bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border border-neutral-300 transition-all"
             style={{ 
               width: '210mm', 
@@ -1114,6 +1147,7 @@ export function PdfExportModal({
                       noteFontFamily: getHandwritingFontFamily(),
                       noteMaxFontSizePx: ptToPx(noteFontPt),
                       noteMinFontSizePx: 11,
+                      rowWidthPx: previewContentWidthPx,
                       measure: measureText
                     });
                     const noteRotationDeg = deterministicRotationDeg(s.id);
@@ -1156,8 +1190,13 @@ export function PdfExportModal({
                                 {index + 1}.
                               </span>
                             )}
+                            {/* truncate/min-w-0 solo cuando de verdad hay una nota compitiendo
+                                por sitio en esta fila (noteLayout.mode === 'inline'); si no,
+                                el título vuelve a poder ocupar toda su anchura natural. */}
                             <span
-                              className={`font-black uppercase tracking-wide text-black leading-none truncate min-w-0 ${
+                              className={`font-black uppercase tracking-wide text-black leading-none ${
+                                noteLayout && noteLayout.mode === 'inline' ? 'truncate min-w-0' : ''
+                              } ${
                                 fontSizeScale === 'gigante' ? 'text-[26pt]' : fontSizeScale === 'grande' ? 'text-[22pt]' : 'text-[17pt]'
                               }`}
                               style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
