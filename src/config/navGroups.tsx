@@ -98,9 +98,11 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
 ];
 
 /**
- * Agrupación para móvil: solo 'repertorio' en el grupo Música, sin las
- * 3 subvistas (catalogo, discografia, directo) para mantener el menú
- * compacto en pantallas pequeñas con tamaños de fuente coherentes.
+ * Agrupación para móvil: mismos 4 módulos de música que desktop (repertorio,
+ * catalogo, discografia, directo). Antes el grupo solo traía 'repertorio' para
+ * mantener el drawer compacto, pero eso dejaba catalogo/discografia/directo
+ * sin ninguna forma de llegar a ellos en móvil (App.tsx los renderiza igual
+ * que en desktop) — se igualan para que sigan siendo alcanzables.
  */
 export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
   {
@@ -113,7 +115,7 @@ export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio'],
+    itemIds: ['repertorio', 'catalogo', 'discografia', 'directo'],
   },
   {
     id: 'promocion',
