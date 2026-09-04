@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fitNoteSegments, NoteSegment } from '../textFit';
+import { fitStackedNoteSegments, NoteSegment } from '../textFit';
 
 // Medidor determinista y falso: cada carácter mide `fontSizePx * 0.5` de ancho. No depende de canvas.
 const fakeMeasure = (text: string, fontSizePx: number) => text.length * fontSizePx * 0.5;
@@ -11,71 +11,88 @@ const baseOpts = {
   measure: fakeMeasure
 };
 
-describe('fitNoteSegments', () => {
+describe('fitStackedNoteSegments', () => {
   it('devuelve vacío si no hay segmentos con texto', () => {
-    const result = fitNoteSegments([{ text: '', className: 'a' }], { ...baseOpts, maxWidthPx: 500 });
-    expect(result.lineOneSegments).toEqual([]);
-    expect(result.wrapped).toBe(false);
+    const result = fitStackedNoteSegments([{ text: '', className: 'a' }], { ...baseOpts, maxWidthPx: 500 });
+    expect(result.lines).toEqual([]);
   });
 
-  it('usa el tamaño máximo cuando el texto cabe de sobra', () => {
-    const segments: NoteSegment[] = [{ text: 'hola', className: 'note-member' }];
-    const result = fitNoteSegments(segments, { ...baseOpts, maxWidthPx: 1000 });
-    expect(result.fontSizePx).toBe(20);
-    expect(result.wrapped).toBe(false);
-    expect(result.lineOneSegments).toEqual(segments);
-  });
-
-  it('encoge la fuente antes de partir en dos líneas', () => {
-    // A 20px, "hola mundo desde el escenario" (30 chars) mide 300px; con maxWidthPx=200 no cabe
-    // a 20px pero sí a un tamaño menor sin necesidad de partir línea.
-    const segments: NoteSegment[] = [{ text: 'hola mundo desde el escenario', className: 'note-member' }];
-    const result = fitNoteSegments(segments, { ...baseOpts, maxWidthPx: 200 });
-    expect(result.wrapped).toBe(false);
-    expect(result.fontSizePx).toBeLessThan(20);
-    expect(result.fontSizePx).toBeGreaterThanOrEqual(10);
-  });
-
-  it('parte en dos líneas antes de soltar un segmento, cuando ni encogiendo cabe en una línea', () => {
+  it('apila cada nota en su propia línea, sin combinarlas', () => {
     const segments: NoteSegment[] = [
-      { text: 'entrada en el compas ocho con sordina y cambio de afinacion completo', className: 'note-member' },
+      { text: 'nota de fer', className: 'note-member' },
       { text: 'cue de luces', className: 'note-cue' }
     ];
-    const result = fitNoteSegments(segments, { ...baseOpts, maxWidthPx: 220 });
-    expect(result.wrapped).toBe(true);
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 1000 });
+    expect(result.lines.length).toBe(2);
+    expect(result.lines[0]).toEqual({ text: 'nota de fer', className: 'note-member' });
+    expect(result.lines[1]).toEqual({ text: 'cue de luces', className: 'note-cue' });
+  });
+
+  it('usa un tamaño de fuente común (el máximo) cuando todas las notas caben de sobra', () => {
+    const segments: NoteSegment[] = [
+      { text: 'hola', className: 'note-member' },
+      { text: 'adios', className: 'note-general' }
+    ];
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 1000 });
+    expect(result.fontSizePx).toBe(20);
+  });
+
+  it('encoge el tamaño común antes de partir cualquier nota en dos líneas', () => {
+    const segments: NoteSegment[] = [
+      { text: 'una nota bastante larga aqui!', className: 'note-member' },
+      { text: 'corta', className: 'note-cue' }
+    ];
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 220 });
+    expect(result.fontSizePx).toBeLessThan(20);
+    expect(result.fontSizePx).toBeGreaterThanOrEqual(10);
+    // Ninguna línea se parte todavía, porque encoger fue suficiente.
+    expect(result.lines.length).toBe(2);
+  });
+
+  it('trunca (nunca parte en dos líneas) la nota concreta que ni al tamaño mínimo cabe, sin tocar las demás', () => {
+    const segments: NoteSegment[] = [
+      { text: 'entrada en el compas ocho con sordina y cambio de afinacion completo del instrumento', className: 'note-member' },
+      { text: 'corta', className: 'note-cue' }
+    ];
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 150 });
     expect(result.fontSizePx).toBe(10);
-    expect(result.lineOneSegments.length).toBe(1);
-    expect(result.lineTwoSegments.length).toBe(1);
+    // La nota de miembro (larga) se trunca con "…", nunca se parte en dos líneas; la de cue (corta) queda intacta.
+    const memberLines = result.lines.filter(l => l.className === 'note-member');
+    const cueLines = result.lines.filter(l => l.className === 'note-cue');
+    expect(memberLines.length).toBe(1);
+    expect(memberLines[0].text.endsWith('…')).toBe(true);
+    expect(cueLines.length).toBe(1);
+    expect(cueLines[0].text).toBe('corta');
   });
 
-  it('suelta el segmento de menor prioridad (el último) cuando ni en dos líneas cabe todo', () => {
+  it('trunca con "…" una nota que ni al tamaño mínimo cabe entera, sin partirla nunca en dos líneas', () => {
     const segments: NoteSegment[] = [
-      { text: 'nota de miembro corta', className: 'note-member' },
-      { text: 'una nota de bolo bastante larga que ocupa mucho sitio en la fila', className: 'note-cue' },
-      { text: 'nota general tambien larga que no deberia caber junto a las otras dos', className: 'note-general' }
+      { text: 'una nota de miembro absurdamente larga que jamas cabria en una sola linea de un repertorio impreso normal', className: 'note-member' }
     ];
-    const result = fitNoteSegments(segments, { ...baseOpts, maxWidthPx: 150 });
-    // Solo debe sobrevivir contenido del segmento de mayor prioridad (note-member), el resto se soltó.
-    const survivingClasses = new Set([...result.lineOneSegments, ...result.lineTwoSegments].map(s => s.className));
-    expect(survivingClasses.has('note-general')).toBe(false);
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 60 });
+    expect(result.lines.length).toBe(1);
+    expect(result.lines[0].text.endsWith('…')).toBe(true);
   });
 
-  it('trunca con "…" solo como último recurso, cuando incluso el único segmento restante no cabe', () => {
+  it('nunca genera más de una línea por nota, ni siquiera con notas larguísimas', () => {
     const segments: NoteSegment[] = [
-      { text: 'una nota de miembro absurdamente larga que jamas cabria en una fila normal de un repertorio impreso', className: 'note-member' }
+      { text: 'esta nota es tan larga que en el diseño anterior se hubiera partido en dos lineas', className: 'note-member' },
+      { text: 'esta otra tambien es bastante larga y tampoco deberia partirse jamas', className: 'note-general' }
     ];
-    const result = fitNoteSegments(segments, { ...baseOpts, maxWidthPx: 60 });
-    expect(result.lineOneSegments.length).toBe(1);
-    expect(result.lineOneSegments[0].text.endsWith('…')).toBe(true);
-    expect(result.lineTwoSegments).toEqual([]);
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 100 });
+    expect(result.lines.length).toBe(2);
   });
 
-  it('nunca corta un segmento a la mitad salvo en el caso de truncado final', () => {
+  it('no suelta ninguna nota: todas aparecen siempre, cada una en su línea', () => {
     const segments: NoteSegment[] = [
-      { text: 'miembro', className: 'note-member' },
-      { text: 'bolo', className: 'note-cue' }
+      { text: 'nota de miembro larga que ocupa bastante sitio en la fila del repertorio', className: 'note-member' },
+      { text: 'una nota de bolo tambien bastante larga que ocupa mucho sitio', className: 'note-cue' },
+      { text: 'nota general tambien larga que antes se hubiera soltado por prioridad', className: 'note-general' }
     ];
-    const result = fitNoteSegments(segments, { ...baseOpts, maxWidthPx: 1000 });
-    expect(result.lineOneSegments.map(s => s.text)).toEqual(['miembro', 'bolo']);
+    const result = fitStackedNoteSegments(segments, { ...baseOpts, maxWidthPx: 150 });
+    const classes = new Set(result.lines.map(l => l.className));
+    expect(classes.has('note-member')).toBe(true);
+    expect(classes.has('note-cue')).toBe(true);
+    expect(classes.has('note-general')).toBe(true);
   });
 });
