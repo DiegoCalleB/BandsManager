@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Printer, X, Users, User, FileText, Settings, Eye, Check, 
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Printer, X, Users, User, FileText, Settings, Eye, Check,
   ChevronLeft, ChevronRight, Edit3, Music, Sparkles, Image as ImageIcon,
   Sliders, Type, Palette, ShieldCheck, Zap
 } from 'lucide-react';
@@ -8,6 +8,95 @@ import { Setlist, Song, ThemeColors } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 import { MemberNotesModal } from './MemberNotesModal';
 import { ModalPortal } from '../common/ModalPortal';
+import { fitNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, NoteSegment, FitResult } from '../../utils/textFit';
+
+const ptToPx = (pt: number) => (pt * 96) / 72;
+
+// Ancho de la hoja A4 disponible para contenido: 210mm - 2x10mm de margen del @page - el padding
+// de 4px de .sheet-page a cada lado (ver handlePrint). Se usa tanto en el HTML de impresión real
+// como en la vista previa en directo para decidir, fila a fila, si la nota cabe al lado del
+// título o si esa fila concreta necesita caer a una línea propia debajo (ver textFit.ts).
+const PAGE_CONTENT_WIDTH_PX = mmToPx(190) - 8;
+const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
+const ROW_GAP_PX = 10;
+
+interface NoteLayoutBadge {
+  text: string;
+  fontSizePx: number;
+  fontFamily?: string;
+  fontWeight?: string | number;
+  extraWidthPx?: number; // borde/padding que measureText no contempla
+}
+
+interface NoteLayoutInput {
+  memberNote: string;
+  setlistNote: string;
+  generalNote: string;
+  showSetlistNotes: boolean;
+  numberText: string;
+  numberFontSizePx: number;
+  titleText: string;
+  titleFontSizePx: number;
+  titleFontFamily: string;
+  badges: NoteLayoutBadge[];
+  noteFontFamily: string;
+  noteMaxFontSizePx: number;
+  noteMinFontSizePx: number;
+  measure: (text: string, fontSizePx: number, fontFamily: string, fontWeight?: string | number) => number;
+}
+
+interface NoteLayoutResult {
+  mode: 'inline' | 'below';
+  maxWidthPx: number;
+  fit: FitResult;
+}
+
+/**
+ * Decide, para una fila de canción concreta, si la nota (miembro + nota del bolo + nota general,
+ * en ese orden de prioridad) cabe en una columna a la derecha del título o si esa fila necesita
+ * caer a una línea propia debajo — y calcula el tamaño de fuente/posible partido en dos líneas
+ * con fitNoteSegments (encoger antes de partir, partir antes de soltar segmentos de baja
+ * prioridad). Devuelve null si no hay ninguna nota que mostrar.
+ */
+function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
+  const segments: NoteSegment[] = [];
+  if (input.memberNote) segments.push({ text: input.memberNote, className: 'note-member' });
+  if (input.showSetlistNotes && input.setlistNote) {
+    segments.push({ text: `*** ${input.setlistNote} ***`, className: 'note-cue' });
+  }
+  if (input.showSetlistNotes && input.generalNote) {
+    segments.push({ text: `[General: ${input.generalNote}]`, className: 'note-general' });
+  }
+  if (segments.length === 0) return null;
+
+  const numberWidth = input.numberText
+    ? input.measure(input.numberText, input.numberFontSizePx, 'Oswald, sans-serif', 800) + ROW_GAP_PX
+    : 0;
+  const titleWidth = input.measure(input.titleText, input.titleFontSizePx, input.titleFontFamily, 900);
+  const badgesWidth = input.badges.reduce(
+    (sum, b) =>
+      sum +
+      input.measure(b.text, b.fontSizePx, b.fontFamily || 'monospace', b.fontWeight ?? 800) +
+      ROW_GAP_PX +
+      (b.extraWidthPx || 0),
+    0
+  );
+  const leftWidthPx = numberWidth + titleWidth + badgesWidth;
+  const rightSpaceAvailable = PAGE_CONTENT_WIDTH_PX - leftWidthPx - ROW_GAP_PX;
+  const inline = rightSpaceAvailable >= MIN_USEFUL_RIGHT_LANE_PX;
+  const maxWidthPx = inline ? rightSpaceAvailable : PAGE_CONTENT_WIDTH_PX - (input.numberText ? 40 : 6);
+
+  const fit = fitNoteSegments(segments, {
+    maxWidthPx,
+    maxFontSizePx: input.noteMaxFontSizePx,
+    minFontSizePx: input.noteMinFontSizePx,
+    fontFamily: input.noteFontFamily,
+    fontWeight: 700,
+    measure: (text, size) => input.measure(text, size, input.noteFontFamily, 700)
+  });
+
+  return { mode: inline ? 'inline' : 'below', maxWidthPx, fit };
+}
 
 interface PdfExportModalProps {
   isOpen: boolean;
@@ -65,6 +154,19 @@ export function PdfExportModal({
   // Quick edit note state
   const [editingSongForNotes, setEditingSongForNotes] = useState<Song | null>(null);
 
+  // Medidor de texto (canvas) para el ajuste de notas manuscritas de la vista previa — se crea
+  // una sola vez y se reutiliza en cada canción del repertorio (ver computeNoteLayout/textFit.ts).
+  const measureText = useMemo(() => makeCanvasMeasurer(), []);
+  // Las fuentes web (Caveat, Permanent Marker...) tardan en cargar de forma asíncrona; si se mide
+  // antes de que terminen de cargar, el canvas usa la fuente de reserva del sistema y el ajuste
+  // sale descuadrado. Este contador fuerza un recálculo (nuevo `measureText` con las métricas
+  // reales) en cuanto document.fonts confirma que ya están listas.
+  const [, setFontsReadyTick] = useState(0);
+  useEffect(() => {
+    if (typeof document === 'undefined' || !document.fonts) return;
+    document.fonts.ready.then(() => setFontsReadyTick(t => t + 1));
+  }, []);
+
   // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
   // guard vivía antes de ellos, así que abrir/cerrar el modal o cambiar de repertorio activo
   // cambiaba cuántos hooks corrían entre renders.
@@ -107,10 +209,17 @@ export function PdfExportModal({
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const fontPx = fontSizeScale === 'gigante' ? '28pt' : fontSizeScale === 'grande' ? '22pt' : '17pt';
-    const noteFontPx = fontSizeScale === 'gigante' ? '19pt' : fontSizeScale === 'grande' ? '16pt' : '13pt';
+    const measure = makeCanvasMeasurer();
+    const titleFontPt = fontSizeScale === 'gigante' ? 28 : fontSizeScale === 'grande' ? 22 : 17;
+    const noteFontPt = fontSizeScale === 'gigante' ? 19 : fontSizeScale === 'grande' ? 16 : 13;
+    const fontPx = `${titleFontPt}pt`;
+    const titleFontSizePx = ptToPx(titleFontPt);
+    const noteMaxFontSizePx = ptToPx(noteFontPt);
+    const noteMinFontSizePx = 11;
+    const songNumFontSizePx = ptToPx(fontSizeScale === 'gigante' ? 22 : 18);
     const inkColor = getInkColorHex();
     const handFont = getHandwritingFontFamily();
+    const titleFontFamily = stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif";
 
     const pagesHtml = membersToExport.map((member, mIdx) => {
       const isMaster = member.id === 'master';
@@ -123,26 +232,51 @@ export function PdfExportModal({
           const memberNote = !isMaster ? getSongMemberNote(s, member.id, member.name) : '';
           const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
           const setlistNote = (item as any).notaTema || item.notas || '';
-          const hasAnyNote = Boolean(memberNote || (showSetlistNotes && (setlistNote || generalRepertorioNote)));
+          const numberText = showSongNumbers ? `${idx + 1}.` : '';
+          const badges: NoteLayoutBadge[] = [
+            ...(showTonality && s.tonalidad ? [{ text: s.tonalidad, fontSizePx: ptToPx(11), extraWidthPx: 14 }] : []),
+            ...(showBpm && s.bpm ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(10) }] : []),
+            ...(showDuration && s.duracion ? [{ text: s.duracion, fontSizePx: ptToPx(10) }] : [])
+          ];
+
+          const layout = computeNoteLayout({
+            memberNote,
+            setlistNote,
+            generalNote: generalRepertorioNote,
+            showSetlistNotes,
+            numberText,
+            numberFontSizePx: songNumFontSizePx,
+            titleText: s.titulo.toUpperCase(),
+            titleFontSizePx,
+            titleFontFamily,
+            badges,
+            noteFontFamily: handFont,
+            noteMaxFontSizePx,
+            noteMinFontSizePx,
+            measure
+          });
+
+          const rotationDeg = deterministicRotationDeg(s.id);
+          const renderLine = (segs: NoteSegment[]) =>
+            `<div class="note-line">${segs.map(seg => `<span class="note-seg ${seg.className}">${seg.text}</span>`).join('')}</div>`;
+
+          const notesHtml = layout
+            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="font-size:${layout.fit.fontSizePx}px;max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${renderLine(layout.fit.lineOneSegments)}${layout.fit.lineTwoSegments.length ? renderLine(layout.fit.lineTwoSegments) : ''}</div>`
+            : '';
 
           return `
             <div class="setlist-song-item">
               <div class="song-line">
                 <div class="song-left">
-                  ${showSongNumbers ? `<span class="song-num">${idx + 1}.</span>` : ''}
+                  ${numberText ? `<span class="song-num">${numberText}</span>` : ''}
                   <span class="song-title">${s.titulo.toUpperCase()}</span>
                   ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ''}
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
                 </div>
-                ${hasAnyNote ? `
-                  <div class="song-notes-right">
-                    ${memberNote ? `<span class="note-chip note-member">${memberNote}</span>` : ''}
-                    ${(showSetlistNotes && setlistNote) ? `<span class="note-chip note-cue">*** ${setlistNote} ***</span>` : ''}
-                    ${(showSetlistNotes && generalRepertorioNote) ? `<span class="note-chip note-general">[General: ${generalRepertorioNote}]</span>` : ''}
-                  </div>
-                ` : ''}
+                ${layout && layout.mode === 'inline' ? notesHtml : ''}
               </div>
+              ${layout && layout.mode === 'below' ? notesHtml : ''}
             </div>
           `;
         } else if (item.tipoItem === 'bloque_header') {
@@ -430,23 +564,35 @@ export function PdfExportModal({
               color: #666;
             }
 
-            /* Notes to the right of the song title, not below — saves vertical space so the
-               repertoire doesn't spill onto extra pages. Each type keeps its own color so a
-               glance tells member note / stage cue / general note apart without reading labels.
-               Ancho fijo + nowrap + ellipsis: si el título ya se comió su parte y sobra poco
-               sitio, la nota se trunca, nunca envuelve — así la fila nunca crece de alto ni se
-               monta sobre la canción de arriba (el bug que se reportó la vez anterior). */
+            /* Notas "escritas a mano encima del repertorio ya impreso": las tres (miembro, nota
+               del bolo, nota general) comparten la fuente manuscrita y solo se distinguen por su
+               color de tinta. El tamaño de fuente y si van al lado del título o en su propia
+               línea debajo se calculan fila a fila en JS (ver computeNoteLayout/textFit.ts):
+               primero se encoge la fuente, solo si ni así cabe se parte en 2 líneas, y solo se
+               trunca con "…" como último recurso — nunca al revés. Por eso aquí no hay
+               font-size ni max-width fijos: llegan inline por fila. */
             .song-notes-right {
               display: flex;
               align-items: baseline;
               flex-wrap: nowrap;
-              gap: 10px;
-              max-width: 46%;
+              gap: 8px;
               flex-shrink: 0;
               overflow: hidden;
               justify-content: flex-end;
             }
-            .note-chip {
+            .song-notes-below {
+              padding-left: ${showSongNumbers ? '40px' : '6px'};
+              margin-top: -1px;
+              line-height: 1.05;
+            }
+            .note-line {
+              display: flex;
+              align-items: baseline;
+              gap: 8px;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+            .note-seg {
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
@@ -454,22 +600,21 @@ export function PdfExportModal({
             }
             .note-member {
               font-family: ${handFont};
-              font-size: ${noteFontPx};
               font-weight: 700;
               color: ${inkColor} !important;
               letter-spacing: 0.2px;
             }
             .note-cue {
-              font-family: monospace;
-              font-size: 9.5pt;
+              font-family: ${handFont};
               font-weight: 700;
               color: #b45309;
+              letter-spacing: 0.2px;
             }
             .note-general {
-              font-family: monospace;
-              font-size: 9pt;
+              font-family: ${handFont};
+              font-weight: 600;
               color: #555;
-              font-style: italic;
+              letter-spacing: 0.2px;
             }
 
             /* Dividers & Interludes */
@@ -947,12 +1092,63 @@ export function PdfExportModal({
                     const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
                     const setlistNote = (item as any).notaTema || item.notas || '';
 
+                    const titleFontPt = fontSizeScale === 'gigante' ? 26 : fontSizeScale === 'grande' ? 22 : 17;
+                    const noteFontPt = fontSizeScale === 'gigante' ? 16 : fontSizeScale === 'grande' ? 14 : 11;
+                    const numberText = showSongNumbers ? `${index + 1}.` : '';
+                    const badges: NoteLayoutBadge[] = [
+                      ...(showTonality && s.tonalidad ? [{ text: s.tonalidad, fontSizePx: ptToPx(11), extraWidthPx: 14 }] : []),
+                      ...(showBpm && s.bpm ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(10.5) }] : []),
+                      ...(showDuration && s.duracion ? [{ text: s.duracion, fontSizePx: ptToPx(10.5) }] : [])
+                    ];
+                    const noteLayout = computeNoteLayout({
+                      memberNote,
+                      setlistNote,
+                      generalNote: generalRepertorioNote,
+                      showSetlistNotes,
+                      numberText,
+                      numberFontSizePx: ptToPx(20),
+                      titleText: s.titulo,
+                      titleFontSizePx: ptToPx(titleFontPt),
+                      titleFontFamily: "'Anton', 'Oswald', sans-serif",
+                      badges,
+                      noteFontFamily: getHandwritingFontFamily(),
+                      noteMaxFontSizePx: ptToPx(noteFontPt),
+                      noteMinFontSizePx: 11,
+                      measure: measureText
+                    });
+                    const noteRotationDeg = deterministicRotationDeg(s.id);
+
+                    const renderNoteLine = (segs: NoteSegment[], key: string) => (
+                      <div key={key} className="flex items-baseline gap-2 overflow-hidden whitespace-nowrap">
+                        {segs.map((seg, i) => (
+                          <span
+                            key={i}
+                            className={`truncate min-w-0 font-bold ${
+                              seg.className === 'note-general' ? 'italic font-semibold' : ''
+                            }`}
+                            style={{
+                              fontFamily: getHandwritingFontFamily(),
+                              color:
+                                seg.className === 'note-member'
+                                  ? getInkColorHex()
+                                  : seg.className === 'note-cue'
+                                    ? '#b45309'
+                                    : '#555'
+                            }}
+                          >
+                            {seg.text}
+                          </span>
+                        ))}
+                      </div>
+                    );
+
                     return (
                       <div key={item.id} className="group relative py-1">
-                        {/* flex-nowrap en toda la fila: el título se trunca con "..." (min-w-0 +
+                        {/* flex-nowrap en la fila del título: se trunca con "..." (min-w-0 +
                             truncate) en vez de saltar de línea, así la fila nunca crece de alto
-                            ni se monta sobre la canción de arriba, sea cual sea la longitud del
-                            título o de las notas — eso fue justo lo que se rompió la vez anterior. */}
+                            ni se monta sobre la canción de arriba. Las notas van aparte, ver
+                            noteLayout más abajo (computeNoteLayout decide si caben al lado o si
+                            esta fila en concreto necesita una línea propia debajo). */}
                         <div className="flex items-baseline justify-between gap-3 flex-nowrap">
                           <div className="flex items-baseline gap-2.5 min-w-0 flex-1 flex-nowrap overflow-hidden">
                             {showSongNumbers && (
@@ -988,34 +1184,16 @@ export function PdfExportModal({
                             )}
                           </div>
 
-                          {/* Notas a la derecha con ancho reservado: si no caben, se truncan con
-                              "...", nunca envuelven a una segunda línea. */}
-                          {(memberNote || (showSetlistNotes && (setlistNote || generalRepertorioNote))) && (
-                            <div className="flex items-baseline gap-2.5 min-w-0 max-w-[46%] justify-end shrink-0 overflow-hidden flex-nowrap">
-                              {memberNote && (
-                                <span
-                                  className={`font-bold truncate min-w-0 ${
-                                    fontSizeScale === 'gigante' ? 'text-[16pt]' : fontSizeScale === 'grande' ? 'text-[14pt]' : 'text-[11pt]'
-                                  }`}
-                                  style={{ fontFamily: getHandwritingFontFamily(), color: getInkColorHex() }}
-                                  title={memberNote}
-                                >
-                                  {memberNote}
-                                </span>
-                              )}
-                              {showSetlistNotes && setlistNote && (
-                                <span className="font-mono text-[9.5pt] font-bold text-amber-800 truncate min-w-0" title={setlistNote}>
-                                  *** {setlistNote} ***
-                                </span>
-                              )}
-                              {/* La nota general (notasRepertorio) se promete "en la hoja individual de
-                                  cada músico" en el propio tooltip de MemberNotesModal — no solo en la
-                                  hoja Master, y no solo cuando ese músico no tiene nota propia. */}
-                              {showSetlistNotes && generalRepertorioNote && (
-                                <span className="font-mono text-[9pt] text-neutral-600 italic truncate min-w-0" title={generalRepertorioNote}>
-                                  [General: {generalRepertorioNote}]
-                                </span>
-                              )}
+                          {/* Nota "escrita a mano" a la derecha, cuando cabe con hueco de sobra
+                              (ver computeNoteLayout) — tamaño y posible segunda línea ya
+                              decididos por textFit, aquí solo se pinta. */}
+                          {noteLayout && noteLayout.mode === 'inline' && (
+                            <div
+                              className="flex flex-col items-end shrink-0 overflow-hidden"
+                              style={{ maxWidth: noteLayout.maxWidthPx, fontSize: noteLayout.fit.fontSizePx, transform: `rotate(${noteRotationDeg}deg)` }}
+                            >
+                              {renderNoteLine(noteLayout.fit.lineOneSegments, 'l1')}
+                              {noteLayout.fit.lineTwoSegments.length > 0 && renderNoteLine(noteLayout.fit.lineTwoSegments, 'l2')}
                             </div>
                           )}
 
@@ -1031,6 +1209,18 @@ export function PdfExportModal({
                             </button>
                           )}
                         </div>
+
+                        {/* Excepción rara y controlada: el título de esta fila concreta no dejó
+                            hueco razonable al lado, así que la nota cae aquí debajo, compacta. */}
+                        {noteLayout && noteLayout.mode === 'below' && (
+                          <div
+                            className="pl-9 -mt-0.5"
+                            style={{ fontSize: noteLayout.fit.fontSizePx, lineHeight: 1.05, transform: `rotate(${noteRotationDeg}deg)` }}
+                          >
+                            {renderNoteLine(noteLayout.fit.lineOneSegments, 'l1')}
+                            {noteLayout.fit.lineTwoSegments.length > 0 && renderNoteLine(noteLayout.fit.lineTwoSegments, 'l2')}
+                          </div>
+                        )}
                       </div>
                     );
                   } else if (item.tipoItem === 'bloque_header') {
