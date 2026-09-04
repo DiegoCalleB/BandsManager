@@ -3958,6 +3958,7 @@ export default function RepertorioSetlists({
     chartData={chartData}
     yDomain={yDomain}
     zonasEnergia={ZONAS_ENERGIA}
+    onReorder={reorderSetlistItems}
   />
 </div>
  );

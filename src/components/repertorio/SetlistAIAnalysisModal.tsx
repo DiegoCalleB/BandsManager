@@ -21,6 +21,8 @@ interface SetlistAIAnalysisModalProps {
   chartData?: EnergyChartPoint[];
   yDomain?: [number, number];
   zonasEnergia?: EnergyChartZone[];
+  /** Callback para reordenar canciones arrastrando puntos en el gráfico compacto del modal. */
+  onReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
 interface Suggestion {
@@ -42,7 +44,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, onReorder }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -428,6 +430,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 highlightedSongIds={highlightedSongIds}
                 height={190}
                 compact
+                onReorder={onReorder}
               />
             </div>
           )}
