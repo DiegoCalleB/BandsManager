@@ -123,6 +123,10 @@ export function EnergyChart({
   // el useEffect se re-suscriba a los listeners en cada pointermove (el state es solo para pintar
   // la burbuja en pantalla).
   const liveEnergyScoreRef = useRef<number | null>(null);
+  // Posición del puntero (relativa al contenedor) mientras se arrastra en vertical, para pintar la
+  // burbuja de energía justo al lado del dedo/cursor en vez de fija arriba en el centro — así se
+  // ve claramente el número subir/bajar a la altura real a la que se está arrastrando.
+  const [dragPointerPos, setDragPointerPos] = useState<{ x: number; y: number } | null>(null);
 
   // Umbral mínimo antes de considerar el gesto un arrastre real. Sin esto, el jitter normal del
   // dedo entre el toque y la suelta (aunque la intención fuera un simple tap) podía redondear a un
@@ -160,6 +164,7 @@ export function EnergyChart({
     setHoverIndex(fromIndex);
     setDragAxis(null);
     setLiveEnergyScore(null);
+    setDragPointerPos(null);
   };
 
   useEffect(() => {
@@ -180,6 +185,7 @@ export function EnergyChart({
       setHoverIndex(null);
       setDragAxis(null);
       setLiveEnergyScore(null);
+      setDragPointerPos(null);
     };
 
     const handlePointerMove = (e: PointerEvent) => {
@@ -210,6 +216,8 @@ export function EnergyChart({
         const clamped = Math.max(1, Math.min(20, Math.round(rawScore)));
         liveEnergyScoreRef.current = clamped;
         setLiveEnergyScore(clamped);
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (rect) setDragPointerPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
       } else {
         setHoverIndex(getIndexFromClientX(e.clientX));
       }
@@ -269,18 +277,29 @@ export function EnergyChart({
           .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(255,255,255,0.25)) drop-shadow(0 0 10px rgba(255,255,255,0.12)); }
         `}</style>
       )}
-      {/* Arrastrando en vertical: burbuja con la energía en vivo (icono + etiqueta + score),
-          coloreada según la categoría que le tocaría al soltar ahí. */}
-      {draggingFromIndex !== null && dragAxis === 'y' && liveEnergyScore !== null && (() => {
+      {/* Arrastrando en vertical: burbuja con la energía en vivo, pegada al dedo/cursor (no fija
+          arriba en el centro) para que se note claramente cómo sube y baja el número al mover.
+          Se coloca a un lado (izquierda o derecha según de qué mitad del gráfico se tire) para no
+          quedar tapada por el propio dedo/cursor que la arrastra. */}
+      {draggingFromIndex !== null && dragAxis === 'y' && liveEnergyScore !== null && dragPointerPos && (() => {
         const info = getEnergyInfo(liveEnergyScore);
+        const containerWidth = containerRef.current?.clientWidth ?? 300;
+        const sideGap = 20;
+        const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
         return (
           <div
-            className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 bg-black/90 rounded-lg px-3 py-1.5 text-[11px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap"
-            style={{ border: `1px solid ${info.hexColor}99` }}
+            className="absolute z-20 bg-black/90 rounded-lg px-3 py-1.5 text-[12px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap"
+            style={{
+              border: `1px solid ${info.hexColor}99`,
+              top: dragPointerPos.y,
+              transform: 'translateY(-50%)',
+              ...(placeOnLeft
+                ? { right: containerWidth - dragPointerPos.x + sideGap }
+                : { left: dragPointerPos.x + sideGap })
+            }}
           >
-            <span style={{ color: info.hexColor }} className="font-bold">{chartData[draggingFromIndex]?.name}</span>
-            <span className="text-neutral-500"> — </span>
-            <span>{info.icon} {info.label} · {liveEnergyScore}/20</span>
+            <span className="font-bold text-base" style={{ color: info.hexColor }}>{info.icon} {liveEnergyScore}</span>
+            <span className="text-neutral-400">/20 · {info.label}</span>
           </div>
         );
       })()}
