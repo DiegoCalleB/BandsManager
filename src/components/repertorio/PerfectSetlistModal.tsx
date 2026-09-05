@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 
 /** Feedback opcional que el usuario deja al pedir un plan (nuevo o "Regenerar"): valorar con
  * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
@@ -56,6 +57,15 @@ interface PerfectSetlistModalProps {
   canUndo?: boolean;
   onUndo?: () => void;
   undoSourceKey?: string | null;
+  /** Datos del Mapa de Energía para mostrar un mini-gráfico integrado en el modal, igual que en el
+   * Análisis IA — así se ve de un vistazo el efecto de aplicar cada acción sin tener que cerrar el
+   * modal para mirar el gráfico grande de fondo. */
+  chartData?: EnergyChartPoint[];
+  yDomain?: [number, number];
+  zonasEnergia?: EnergyChartZone[];
+  /** Arrastrar un punto del mini-gráfico reordena el setlist directamente, igual que en el gráfico
+   * grande — independiente de aplicar acciones del plan una a una. */
+  onReorder?: (fromIndex: number, toIndex: number, sourceKey?: string) => void;
 }
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
@@ -125,7 +135,7 @@ function describeAction(a: PerfectSetlistAction): { icon: string; label: string 
   }
 }
 
-export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null }: PerfectSetlistModalProps) {
+export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null, chartData, yDomain, zonasEnergia, onReorder }: PerfectSetlistModalProps) {
   // Copia local de las acciones del plan que SÍ se reajusta tras cada "Aplicar" — el plan en sí
   // (prop) se queda fijo con las posiciones de cuando se generó, pero aplicar una acción cambia el
   // array real del setlist, y las demás acciones pendientes seguían apuntando a la posición VIEJA.
@@ -215,31 +225,53 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
     }
   };
 
+  const hasChart = !!chartData && chartData.length > 0 && !!yDomain;
+
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
       <div className="bg-neutral-900 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto">
-        <div className="sticky top-0 z-10 bg-neutral-900 border-b border-neutral-700 p-3 flex justify-between items-center">
-          <div className="flex items-center gap-2.5">
-            <Wand2 className="w-5 h-5 text-emerald-400" />
-            <div>
-              <h2 className="text-base font-bold">Setlist Perfecto</h2>
-              {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
+        {/* Header + Mapa de Energía en un único bloque sticky, mismo patrón que el Análisis IA —
+            así el gráfico se ve siempre arriba mientras se hace scroll por las acciones del plan. */}
+        <div className="sticky top-0 z-10 bg-neutral-900">
+          <div className="border-b border-neutral-700 p-3 flex justify-between items-center">
+            <div className="flex items-center gap-2.5">
+              <Wand2 className="w-5 h-5 text-emerald-400" />
+              <div>
+                <h2 className="text-base font-bold">Setlist Perfecto</h2>
+                {setlistName && <p className="text-xs text-neutral-400">{setlistName}</p>}
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {canUndo && (
+                <button
+                  onClick={onUndo}
+                  className="px-2 py-1 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
+                  title="Deshacer el último cambio del setlist"
+                >
+                  ↩️ Deshacer
+                </button>
+              )}
+              <button onClick={onClose} className="p-2 hover:bg-neutral-800 rounded-lg transition">
+                <X className="w-4 h-4" />
+              </button>
             </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            {canUndo && (
-              <button
-                onClick={onUndo}
-                className="px-2 py-1 rounded-lg bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 transition text-[11px] font-mono font-medium flex items-center gap-1"
-                title="Deshacer el último cambio del setlist"
-              >
-                ↩️ Deshacer
-              </button>
-            )}
-            <button onClick={onClose} className="p-2 hover:bg-neutral-800 rounded-lg transition">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+
+          {/* Mapa de Energía integrado: arrastrar un punto reordena el setlist directamente, igual
+              que en el gráfico grande de fuera. */}
+          {hasChart && (
+            <div className="border-b border-neutral-700 p-3">
+              <EnergyChart
+                setlistKey="perfect-setlist"
+                chartData={chartData!}
+                yDomain={yDomain!}
+                zonasEnergia={zonasEnergia || []}
+                height={190}
+                compact
+                onReorder={onReorder}
+              />
+            </div>
+          )}
         </div>
 
         <div className="p-4 space-y-4">

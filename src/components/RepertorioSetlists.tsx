@@ -4303,6 +4303,10 @@ export default function RepertorioSetlists({
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}
     undoSourceKey={undoSourceKey}
+    chartData={chartData}
+    yDomain={yDomain}
+    zonasEnergia={ZONAS_ENERGIA}
+    onReorder={reorderSetlistItems}
   />
 </div>
  );
