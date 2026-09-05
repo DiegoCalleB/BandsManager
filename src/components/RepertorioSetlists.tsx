@@ -1,9 +1,10 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
- Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
+ Disc3, Music, Plus, Search, X, Edit3, Trash2, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
  Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
@@ -603,6 +604,12 @@ export default function RepertorioSetlists({
  // tiene el selector abierto ahora mismo, y estado de guardado para deshabilitar mientras dura.
  const [editingEnergyItemId, setEditingEnergyItemId] = useState<string | null>(null);
  const [savingEnergyItemId, setSavingEnergyItemId] = useState<string | null>(null);
+ // Posición del popover, calculada al abrirlo a partir del botón real (getBoundingClientRect) y
+ // pintada vía portal con position:fixed — antes el popover era position:absolute dentro de la
+ // lista con scroll (overflow-y-auto), así que en canciones cerca del final del scroll quedaba
+ // recortado/oculto por ese overflow ("hay que bajar" para verlo). openUpward se decide según si
+ // queda hueco debajo del botón en el viewport.
+ const [energyPopoverPos, setEnergyPopoverPos] = useState<{ top: number; left: number; openUpward: boolean } | null>(null);
 
  useEffect(() => {
    if (!editingEnergyItemId) return;
@@ -611,8 +618,15 @@ export default function RepertorioSetlists({
        setEditingEnergyItemId(null);
      }
    };
+   // Cerrar en scroll (de la lista o de la página): con position:fixed calculado una sola vez al
+   // abrir, si el usuario sigue haciendo scroll el popover dejaría de estar junto a su botón.
+   const handleScroll = () => setEditingEnergyItemId(null);
    document.addEventListener('mousedown', handleClickOutside);
-   return () => document.removeEventListener('mousedown', handleClickOutside);
+   window.addEventListener('scroll', handleScroll, true);
+   return () => {
+     document.removeEventListener('mousedown', handleClickOutside);
+     window.removeEventListener('scroll', handleScroll, true);
+   };
  }, [editingEnergyItemId]);
 
  const handleSetEnergiaManual = async (song: Song, itemId: string, valor1a10: number) => {
@@ -1784,26 +1798,6 @@ export default function RepertorioSetlists({
   setShowItemAudioUrl('');
  };
 
- const handleMoveSetlistItem = (index: number, direction: 'up' | 'down') => {
- if (!activeSetlist) return;
- const targetIndex = direction === 'up' ? index - 1 : index + 1;
- if (targetIndex < 0 || targetIndex >= activeSetlist.items.length) return;
-
- const newItems = [...activeSetlist.items];
- const temp = newItems[index];
- newItems[index] = newItems[targetIndex];
- newItems[targetIndex] = temp;
-
- const updatedSetlist: Setlist = {
- ...activeSetlist,
- fechaUltimaEdicion: new Date().toISOString().split('T')[0],
- items: newItems
- };
-
- setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
- syncSetlistToBackend(updatedSetlist);
- };
-
  const handleRemoveSetlistItem = (itemId: string) => {
  if (!activeSetlist) return;
  const updatedSetlist: Setlist = {
@@ -2655,6 +2649,10 @@ export default function RepertorioSetlists({
       const energy = getEnergyInfo(song);
       const currentVal1a10 = Math.max(1, Math.min(10, Math.round((song.energia || 10) / 2)));
       const isEditingThis = editingEnergyItemId === it.id;
+      // Alto aproximado del popover (10 botones de 20px + padding) para decidir si hay hueco
+      // debajo en el viewport o si hay que abrirlo hacia arriba.
+      const POPOVER_HEIGHT_PX = 36;
+      const POPOVER_WIDTH_PX = 220;
       return (
         <div className="relative shrink-0">
           <button
@@ -2662,7 +2660,18 @@ export default function RepertorioSetlists({
             data-energy-popover
             onClick={(e) => {
               e.stopPropagation();
-              setEditingEnergyItemId(isEditingThis ? null : it.id);
+              if (isEditingThis) {
+                setEditingEnergyItemId(null);
+                return;
+              }
+              const rect = e.currentTarget.getBoundingClientRect();
+              const openUpward = window.innerHeight - rect.bottom < POPOVER_HEIGHT_PX + 8;
+              setEnergyPopoverPos({
+                top: openUpward ? rect.top - POPOVER_HEIGHT_PX - 4 : rect.bottom + 4,
+                left: Math.min(rect.left, window.innerWidth - POPOVER_WIDTH_PX - 8),
+                openUpward
+              });
+              setEditingEnergyItemId(it.id);
             }}
             className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`}
             title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? ' — fijada a mano' : ''}. Clic para cambiarla.`}
@@ -2670,12 +2679,18 @@ export default function RepertorioSetlists({
             <span>{energy.icon}</span>
             {song.energiaManual && <span className="ml-0.5" title="Energía fijada a mano">✋</span>}
           </button>
-          {isEditingThis && (
+          {/* Portal + position:fixed a propósito: la fila vive dentro de una lista con
+              overflow-y-auto (ver contenedor "ITEMS LIST"), así que un popover position:absolute
+              quedaba recortado/oculto por ese overflow en canciones cerca del final del scroll —
+              de ahí que "hubiera que bajar" para verlo. Con fixed + posición calculada al abrir
+              (arriba o abajo según el hueco real en el viewport) escapa a ese clipping. */}
+          {isEditingThis && energyPopoverPos && createPortal(
             // Selector 1-10 (más fácil de puntuar que 1-20 directamente) — se guarda como
             // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
             <div
               data-energy-popover
-              className="absolute z-30 top-full left-0 mt-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl p-1.5 flex items-center gap-0.5"
+              className="fixed z-[100] bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl p-1.5 flex items-center gap-0.5"
+              style={{ top: energyPopoverPos.top, left: energyPopoverPos.left }}
               onClick={(e) => e.stopPropagation()}
             >
               {Array.from({ length: 10 }, (_, i) => i + 1).map(val => (
@@ -2693,7 +2708,8 @@ export default function RepertorioSetlists({
                   {val}
                 </button>
               ))}
-            </div>
+            </div>,
+            document.body
           )}
         </div>
       );
@@ -2755,24 +2771,6 @@ export default function RepertorioSetlists({
       title="Ver acordes"
     >
       <FileText className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      onClick={() => handleMoveSetlistItem(index, 'up')}
-      disabled={index === 0}
-      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-      title="Mover arriba"
-    >
-      <ArrowUp className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      onClick={() => handleMoveSetlistItem(index, 'down')}
-      disabled={index === activeSetlist.items.length - 1}
-      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-      title="Mover abajo"
-    >
-      <ArrowDown className="w-3.5 h-3.5" />
     </button>
 
     <button
@@ -2910,22 +2908,6 @@ export default function RepertorioSetlists({
      <Edit3 className="w-3.5 h-3.5" />
    </button>
    <button
-     onClick={() => handleMoveSetlistItem(index, 'up')}
-     disabled={index === 0}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover arriba"
-   >
-     <ArrowUp className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'down')}
-     disabled={index === activeSetlist.items.length - 1}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover abajo"
-   >
-     <ArrowDown className="w-3.5 h-3.5" />
-   </button>
-   <button
      onClick={() => handleRemoveSetlistItem(it.id)}
      className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
      title="Eliminar Bloque"
@@ -3009,22 +2991,6 @@ export default function RepertorioSetlists({
      title="Editar detalles"
    >
      <Edit3 className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'up')}
-     disabled={index === 0}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover arriba"
-   >
-     <ArrowUp className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'down')}
-     disabled={index === activeSetlist.items.length - 1}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover abajo"
-   >
-     <ArrowDown className="w-3.5 h-3.5" />
    </button>
    <button
      onClick={() => handleRemoveSetlistItem(it.id)}
