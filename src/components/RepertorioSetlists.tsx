@@ -533,6 +533,17 @@ export default function RepertorioSetlists({
  // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
  // propio toggle porque puede distraer una vez que ya conoces bien tu propio repertorio.
  const [showIdealCurve, setShowIdealCurve] = useState<boolean>(true);
+ // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
+ // "⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
+ // justo la queja: "estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
+ const [showChartSettingsMenu, setShowChartSettingsMenu] = useState(false);
+ // Punto de entrada único al asistente IA del repertorio — antes había dos botones lado a lado
+ // (Análisis IA / Setlist Perfecto) sin que quedara claro cuál usar; ahora un solo botón abre un
+ // selector con las dos opciones explicadas, cada una sigue siendo el flujo ya existente.
+ const [showAssistantChooser, setShowAssistantChooser] = useState(false);
+ // Avisos heurísticos plegados por defecto — antes ocupaban una fila siempre visible en pantalla
+ // aunque no hubiera nada urgente que mirar.
+ const [showHeuristicWarnings, setShowHeuristicWarnings] = useState(false);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
@@ -2368,26 +2379,47 @@ export default function RepertorioSetlists({
               <span>{energyAnalysis.profileIcon}</span>
               <span>{energyAnalysis.profileLabel}</span>
             </span>
-            <button
-              type="button"
-              onClick={() => setShowAIAnalysisModal(true)}
-              className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
-              title="Análisis avanzado con IA"
-            >
-              🧠 Análisis IA
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setPerfectSetlistPlan(null);
-                setPerfectSetlistError(null);
-                setShowPerfectSetlistModal(true);
-              }}
-              className="px-3 py-0.5 rounded-lg bg-emerald-800/50 hover:bg-emerald-700 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
-              title="Generar un plan hacia el setlist perfecto (reordenar, añadir/quitar canciones del catálogo, sugerir bloques) — se aplica sobre una copia, nunca sobre este setlist"
-            >
-              🪄 Setlist Perfecto
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowAssistantChooser((v) => !v)}
+                className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
+                title="Asistente IA del repertorio"
+              >
+                🧠 Asistente IA
+              </button>
+              {showAssistantChooser && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
+                  <div className="absolute right-0 top-full mt-1.5 z-40 w-72 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAssistantChooser(false);
+                        setShowAIAnalysisModal(true);
+                      }}
+                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer"
+                    >
+                      <span className="text-sm font-medium text-purple-300 flex items-center gap-1.5">📖 Ver análisis</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas — sin tocar nada por su cuenta.</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAssistantChooser(false);
+                        setPerfectSetlistPlan(null);
+                        setPerfectSetlistError(null);
+                        setShowPerfectSetlistModal(true);
+                      }}
+                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer"
+                    >
+                      <span className="text-sm font-medium text-emerald-300 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Reordena, añade/quita canciones del catálogo y sugiere bloques — sobre una copia, nunca sobre este setlist.</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -2400,14 +2432,6 @@ export default function RepertorioSetlists({
                 <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto, o selecciónalo y usa las flechas, para reordenar el setlist)</span>
               </span>
               <div className="flex items-center gap-2">
-                {showEnergyMap && (
-                  <div className="hidden sm:flex items-center gap-2.5 text-[9px] text-neutral-300">
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
-                  </div>
-                )}
                 {canUndoReorder && (
                   <button
                     type="button"
@@ -2419,18 +2443,40 @@ export default function RepertorioSetlists({
                   </button>
                 )}
                 {showEnergyMap && (
-                  <button
-                    type="button"
-                    onClick={() => setShowIdealCurve((v) => !v)}
-                    className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1 ${
-                      showIdealCurve
-                        ? 'bg-neutral-700 text-neutral-200 hover:bg-neutral-600'
-                        : 'bg-neutral-800 text-neutral-500 hover:text-neutral-300'
-                    }`}
-                    title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio, para ver de un vistazo dónde se aleja más la curva real"
-                  >
-                    〰️ Curva ideal
-                  </button>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowChartSettingsMenu((v) => !v)}
+                      className="p-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+                      title="Ajustes del gráfico (leyenda de colores, curva ideal)"
+                    >
+                      <Sliders className="w-3.5 h-3.5" />
+                    </button>
+                    {showChartSettingsMenu && (
+                      <>
+                        <div className="fixed inset-0 z-30" onClick={() => setShowChartSettingsMenu(false)} />
+                        <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-2.5 space-y-2.5">
+                          <button
+                            type="button"
+                            onClick={() => setShowIdealCurve((v) => !v)}
+                            className={`w-full px-2 py-1 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+                              showIdealCurve ? 'bg-neutral-700 text-neutral-200' : 'bg-neutral-800 text-neutral-500'
+                            }`}
+                            title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
+                          >
+                            <span>〰️ Curva ideal</span>
+                            <span>{showIdealCurve ? 'ON' : 'OFF'}</span>
+                          </button>
+                          <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t border-neutral-800">
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
                 <button
                   type="button"
@@ -2491,8 +2537,22 @@ export default function RepertorioSetlists({
                   );
                 })()}
 
+                {/* Avisos y sugerencias — plegados por defecto, con un solo toggle que resume
+                    cuántos hay entre los heurísticos y los del último Análisis IA, en vez de dos
+                    filas de badges siempre desplegadas ocupando pantalla. */}
+                {(energyAnalysis.warnings.length > 0 || (aiAnalysisResult?.suggestions?.length ?? 0) > 0) && (
+                  <button
+                    type="button"
+                    onClick={() => setShowHeuristicWarnings((v) => !v)}
+                    className="w-full flex items-center justify-between px-2 py-1 rounded-lg bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-[10px] font-mono transition-all cursor-pointer"
+                  >
+                    <span>⚠️ Avisos y sugerencias ({energyAnalysis.warnings.length + (aiAnalysisResult?.suggestions?.length ?? 0)})</span>
+                    <span>{showHeuristicWarnings ? '▲' : '▼'}</span>
+                  </button>
+                )}
+
                 {/* Warnings & Suggestions (Heuristic) */}
-                {energyAnalysis.warnings.length > 0 && (
+                {showHeuristicWarnings && energyAnalysis.warnings.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     {energyAnalysis.warnings.map((w, i) => {
                       const hasSongs = !!w.songTitles && w.songTitles.length > 0;
@@ -2536,7 +2596,7 @@ export default function RepertorioSetlists({
                 )}
 
                 {/* AI Analysis Summary (if available) - as badges like warnings */}
-                {aiAnalysisResult && (
+                {showHeuristicWarnings && aiAnalysisResult && (
                   <div className="space-y-2 pt-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-purple-300">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
