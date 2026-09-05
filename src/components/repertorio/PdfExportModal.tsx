@@ -376,7 +376,10 @@ export function PdfExportModal({
                 const seed = `${s.id}-${line.className}`;
                 const lineRotationDeg = deterministicRotationDeg(seed, 3);
                 const lineOffsetXPx = deterministicOffsetPx(`${seed}-x`, 2);
-                const lineOffsetYPx = deterministicOffsetPx(`${seed}-y`, 2.5);
+                // Solo hacia arriba (o recta), nunca hacia abajo: un desplazamiento positivo se
+                // veía como un salto de línea/desalineación entre notas — justo el efecto que se
+                // había quitado a propósito (ver line-height:1 más arriba).
+                const lineOffsetYPx = -Math.abs(deterministicOffsetPx(`${seed}-y`, 2));
                 const lineTransform = `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`;
                 return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;transform:${lineTransform};">${arrow}${line.text}</div>`;
               }).join('')}</div>`
@@ -1286,7 +1289,10 @@ export function PdfExportModal({
                       const seed = `${s.id}-${line.className}`;
                       const lineRotationDeg = deterministicRotationDeg(seed, 3);
                       const lineOffsetXPx = deterministicOffsetPx(`${seed}-x`, 2);
-                      const lineOffsetYPx = deterministicOffsetPx(`${seed}-y`, 2.5);
+                      // Solo hacia arriba (o recta), nunca hacia abajo: un desplazamiento positivo se
+                // veía como un salto de línea/desalineación entre notas — justo el efecto que se
+                // había quitado a propósito (ver line-height:1 más arriba).
+                const lineOffsetYPx = -Math.abs(deterministicOffsetPx(`${seed}-y`, 2));
                       return (
                         <div
                           key={key}
