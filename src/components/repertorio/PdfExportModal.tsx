@@ -54,6 +54,30 @@ interface NoteLayoutResult {
   mode: 'inline' | 'below';
   maxWidthPx: number;
   fit: StackedFitResult;
+  /** Presente solo si el título se truncó para dejar hueco a la nota al lado (modo 'inline') —
+   *  nunca por debajo de MIN_TITLE_CHARS, para que la canción siga siendo reconocible. */
+  truncatedTitle?: string;
+}
+
+// Mínimo de caracteres visibles del título cuando se trunca para hacer hueco a una nota al
+// lado — un músico debe poder reconocer la canción en escena aunque el título se acorte.
+const MIN_TITLE_CHARS = 16;
+
+function truncateTitleToWidth(
+  titleText: string,
+  maxWidthPx: number,
+  titleFontSizePx: number,
+  titleFontFamily: string,
+  measure: NoteLayoutInput['measure']
+): string {
+  const minLen = Math.min(MIN_TITLE_CHARS, titleText.length);
+  for (let len = titleText.length; len >= minLen; len--) {
+    const candidate = len === titleText.length ? titleText : `${titleText.slice(0, len).trimEnd()}…`;
+    if (measure(candidate, titleFontSizePx, titleFontFamily, 900) <= maxWidthPx) {
+      return candidate;
+    }
+  }
+  return `${titleText.slice(0, minLen).trimEnd()}…`;
 }
 
 /**
@@ -61,10 +85,12 @@ interface NoteLayoutResult {
  * cabe en una columna a la derecha del título o si esa fila necesita caer a una línea propia
  * debajo — y calcula, con fitStackedNoteSegments, el tamaño de fuente común y las líneas ya
  * apiladas (una por nota, cada una en su propia línea; el texto de una nota nunca se pierde: no
- * se parte en dos líneas ni se trunca). Si el carril de la derecha obligaría a encoger alguna
- * nota por debajo del mínimo compartido, se prueba antes con el carril de abajo (mucho más
- * ancho) en vez de aceptar directamente esa fuente extrema. Devuelve null si no hay ninguna
- * nota que mostrar.
+ * se parte en dos líneas ni se trunca). Si el título completo no deja hueco útil al lado, se
+ * intenta truncarlo (nunca por debajo de MIN_TITLE_CHARS) antes de rendirse: la mayoría de las
+ * canciones así consigue quedarse en modo 'inline' con el título ligeramente acortado, en vez de
+ * caer a 'below'. Solo si ni truncando el título al mínimo cabe la nota, esta cae a su propia
+ * línea debajo (con flecha hacia el título, ver render) — excepción rara y controlada. Devuelve
+ * null si no hay ninguna nota que mostrar.
  */
 function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   const segments: NoteSegment[] = [];
@@ -80,7 +106,6 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   const numberWidth = input.numberText
     ? input.measure(input.numberText, input.numberFontSizePx, 'Oswald, sans-serif', 800) + ROW_GAP_PX
     : 0;
-  const titleWidth = input.measure(input.titleText, input.titleFontSizePx, input.titleFontFamily, 900);
   const badgesWidth = input.badges.reduce(
     (sum, b) =>
       sum +
@@ -89,9 +114,7 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
       (b.extraWidthPx || 0),
     0
   );
-  const leftWidthPx = numberWidth + titleWidth + badgesWidth;
-  const rightSpaceAvailable = input.rowWidthPx - leftWidthPx - ROW_GAP_PX;
-  const inlineFits = rightSpaceAvailable >= MIN_USEFUL_RIGHT_LANE_PX;
+  const fixedLeftWidthPx = numberWidth + badgesWidth;
   const belowMaxWidthPx = input.rowWidthPx - (input.numberText ? 40 : 6);
 
   const fitAt = (maxWidthPx: number) =>
@@ -104,17 +127,49 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
       measure: (text, size) => input.measure(text, size, input.noteFontFamily, 700)
     });
 
-  if (inlineFits) {
+  // Intenta modo inline con un ancho de título dado; null si no deja hueco útil o si obligaría
+  // a encoger la nota por debajo del mínimo compartido.
+  const tryInline = (titleWidthPx: number) => {
+    const rightSpaceAvailable = input.rowWidthPx - fixedLeftWidthPx - titleWidthPx - ROW_GAP_PX;
+    if (rightSpaceAvailable < MIN_USEFUL_RIGHT_LANE_PX) return null;
     const inlineFit = fitAt(rightSpaceAvailable);
-    const neededExtremeShrink = inlineFit.lines.some(l => l.fontSizePx < input.noteMinFontSizePx);
-    if (!neededExtremeShrink) {
-      return { mode: 'inline', maxWidthPx: rightSpaceAvailable, fit: inlineFit };
-    }
-    // Ni al tamaño mínimo compartido cupo al lado del título: mejor caer a la fila de abajo
-    // (mucho más ancha) que aceptar una fuente extremadamente pequeña junto al título.
-    return { mode: 'below', maxWidthPx: belowMaxWidthPx, fit: fitAt(belowMaxWidthPx) };
+    if (inlineFit.lines.some(l => l.fontSizePx < input.noteMinFontSizePx)) return null;
+    return { rightSpaceAvailable, inlineFit };
+  };
+
+  const fullTitleWidth = input.measure(input.titleText, input.titleFontSizePx, input.titleFontFamily, 900);
+  const fullAttempt = tryInline(fullTitleWidth);
+  if (fullAttempt) {
+    return { mode: 'inline', maxWidthPx: fullAttempt.rightSpaceAvailable, fit: fullAttempt.inlineFit };
   }
 
+  // El título completo no deja hueco útil: probar a truncarlo hasta el mínimo legible antes de
+  // rendirse y mandar la nota a su propia línea debajo.
+  const maxTitleWidthForNote = input.rowWidthPx - fixedLeftWidthPx - ROW_GAP_PX - MIN_USEFUL_RIGHT_LANE_PX;
+  if (maxTitleWidthForNote > 0) {
+    const truncatedTitle = truncateTitleToWidth(
+      input.titleText,
+      maxTitleWidthForNote,
+      input.titleFontSizePx,
+      input.titleFontFamily,
+      input.measure
+    );
+    if (truncatedTitle !== input.titleText) {
+      const truncatedTitleWidth = input.measure(truncatedTitle, input.titleFontSizePx, input.titleFontFamily, 900);
+      const truncatedAttempt = tryInline(truncatedTitleWidth);
+      if (truncatedAttempt) {
+        return {
+          mode: 'inline',
+          maxWidthPx: truncatedAttempt.rightSpaceAvailable,
+          fit: truncatedAttempt.inlineFit,
+          truncatedTitle
+        };
+      }
+    }
+  }
+
+  // Ni truncando el título al mínimo legible cupo la nota al lado: excepción rara y controlada,
+  // la nota cae a su propia línea debajo con flecha hacia el título (ver render).
   return { mode: 'below', maxWidthPx: belowMaxWidthPx, fit: fitAt(belowMaxWidthPx) };
 }
 
@@ -330,7 +385,7 @@ export function PdfExportModal({
               <div class="song-line">
                 <div class="song-left">
                   ${numberText ? `<span class="song-num">${numberText}</span>` : ''}
-                  <span class="song-title"${titleStyle}>${s.titulo.toUpperCase()}</span>
+                  <span class="song-title"${titleStyle}>${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
                   ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ''}
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
@@ -1272,7 +1327,7 @@ export function PdfExportModal({
                               }`}
                               style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
                             >
-                              {s.titulo}
+                              {noteLayout?.truncatedTitle ?? s.titulo}
                             </span>
 
                             {showTonality && s.tonalidad && (
