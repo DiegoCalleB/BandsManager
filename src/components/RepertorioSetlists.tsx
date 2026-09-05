@@ -1,6 +1,6 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import { api } from '../services/api';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
@@ -42,7 +42,7 @@ import {
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
-import { EnergyChart } from './repertorio/EnergyChart';
+import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
 
 interface RepertorioSetlistsProps {
@@ -599,6 +599,7 @@ export default function RepertorioSetlists({
    return {
     idx,
     id: pt.item.id,
+    songId: isSpeechEvent ? undefined : pt.song?.id,
     name: pt.title,
     score: isSpeechEvent ? null : pt.score,
     idealScore: isSpeechEvent ? null : idealCurve[idx],
@@ -666,8 +667,10 @@ export default function RepertorioSetlists({
    return () => document.removeEventListener('mousedown', handleClickOutside);
  }, [editingEnergyItemId]);
 
- const handleSetEnergiaManual = async (song: Song, itemId: string, valor1a10: number) => {
-   const nuevaEnergia = valor1a10 * 2;
+ // Núcleo compartido: fija a mano la energía (1-20) de una canción, tanto desde el popover 1-10
+ // de la fila (handleSetEnergiaManual) como desde el arrastre vertical en el propio gráfico
+ // (handleEnergyChartDrag) — un solo sitio que llama al PATCH y actualiza el estado optimista.
+ const handleSetEnergiaManualValue = async (song: Song, itemId: string, nuevaEnergia: number) => {
    setSavingEnergyItemId(itemId);
    // Optimista: refleja el cambio ya mismo en la UI y en el gráfico, sin esperar al servidor.
    setSongs(prev => prev.map(s => s.id === song.id ? { ...s, energia: nuevaEnergia, energiaManual: true } : s));
@@ -684,6 +687,19 @@ export default function RepertorioSetlists({
      setEditingEnergyItemId(null);
    }
  };
+
+ const handleSetEnergiaManual = (song: Song, itemId: string, valor1a10: number) =>
+   handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
+
+ // Arrastrar un punto en vertical en el Mapa de Energía cambia su energía (1-20) directamente —
+ // mismo resultado que el popover 1-10 de la fila, pero sin salir del gráfico. EnergyChart ya
+ // filtra esto a puntos con songId (canciones reales, nunca eventos de "speech"/bis).
+ const handleEnergyChartDrag = useCallback((point: EnergyChartPoint, newScore: number) => {
+   if (!point.songId) return;
+   const song = songs.find(s => s.id === point.songId);
+   if (song) handleSetEnergiaManualValue(song, point.id, newScore);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [songs]);
 
  // Deletion Confirmation Modal State
  const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
@@ -2542,6 +2558,7 @@ export default function RepertorioSetlists({
                   selectedSetlistItemId={selectedSetlistItemId}
                   onSelectItem={setSelectedSetlistItemId}
                   onReorder={reorderSetlistItems}
+                  onEnergyChange={handleEnergyChartDrag}
                   height={256}
                   showIdealCurve={showIdealCurve}
                 />
@@ -4327,6 +4344,7 @@ export default function RepertorioSetlists({
     zonasEnergia={ZONAS_ENERGIA}
     warnings={energyAnalysis.warnings}
     onReorder={reorderSetlistItems}
+    onEnergyChange={handleEnergyChartDrag}
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}
     undoSourceKey={undoSourceKey}
@@ -4349,6 +4367,7 @@ export default function RepertorioSetlists({
     yDomain={yDomain}
     zonasEnergia={ZONAS_ENERGIA}
     onReorder={reorderSetlistItems}
+    onEnergyChange={handleEnergyChartDrag}
   />
 
   {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}
