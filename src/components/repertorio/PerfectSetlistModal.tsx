@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader, AlertCircle, Wand2 } from 'lucide-react';
+import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
@@ -58,6 +59,44 @@ const BLOCK_TYPE_LABELS: Record<string, string> = {
   otro: 'Bloque'
 };
 
+/** Qué desplazamiento sufre el resto del array de items al ejecutar esta acción — se usa para
+ * reajustar las posiciones de las demás acciones pendientes justo después de aplicar esta. */
+function changeFromAction(a: PerfectSetlistAction): IndexChange | null {
+  switch (a.type) {
+    case 'reorder':
+      return a.from_position != null && a.to_position != null
+        ? { type: 'move', from: a.from_position - 1, to: a.to_position - 1 }
+        : null;
+    case 'remove_song':
+      return a.item_position != null ? { type: 'remove', at: a.item_position - 1 } : null;
+    case 'add_song':
+    case 'add_block':
+      return a.insert_at_position != null ? { type: 'insert', at: a.insert_at_position - 1 } : null;
+    default:
+      return null;
+  }
+}
+
+/** Reajusta las 4 posibles posiciones de UNA acción pendiente tras el cambio que dejó otra acción
+ * ya aplicada. Devuelve null si alguna posición que esta acción necesita señalaba justo el item
+ * que la otra acción acaba de quitar — en ese caso ya no hay forma correcta de ejecutarla. */
+function adjustActionAfterChange(a: PerfectSetlistAction, change: IndexChange): PerfectSetlistAction | null {
+  const from_position = adjustPosition1(a.from_position, change);
+  const to_position = adjustPosition1(a.to_position, change);
+  const item_position = adjustPosition1(a.item_position, change);
+  const insert_at_position = adjustPosition1(a.insert_at_position, change);
+  if (from_position === null || to_position === null || item_position === null || insert_at_position === null) {
+    return null;
+  }
+  return {
+    ...a,
+    from_position: from_position ?? undefined,
+    to_position: to_position ?? undefined,
+    item_position: item_position ?? undefined,
+    insert_at_position: insert_at_position ?? undefined
+  };
+}
+
 function describeAction(a: PerfectSetlistAction): { icon: string; label: string } {
   switch (a.type) {
     case 'reorder':
@@ -74,18 +113,67 @@ function describeAction(a: PerfectSetlistAction): { icon: string; label: string 
 }
 
 export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null }: PerfectSetlistModalProps) {
-  // Qué acciones ya se aplicaron en esta sesión del modal — igual que en el Análisis IA, tras
-  // aplicar una el botón pasa a "Deshacer" solo mientras siga siendo la acción más reciente (el
-  // snapshot de undo de un solo nivel no puede revertir nada anterior a eso). Se reinicia cuando
-  // llega un plan NUEVO (objeto distinto), no cuando cambia setlistName — así aplicar una acción
-  // (que cambia qué setlist está activo, y por tanto este nombre) no borra el progreso a medio camino.
+  // Copia local de las acciones del plan que SÍ se reajusta tras cada "Aplicar" — el plan en sí
+  // (prop) se queda fijo con las posiciones de cuando se generó, pero aplicar una acción cambia el
+  // array real del setlist, y las demás acciones pendientes seguían apuntando a la posición VIEJA.
+  // Antes esto hacía que solo se pudiera aplicar una con confianza: la segunda podía mover/quitar
+  // el item equivocado sin avisar. Ahora, justo después de aplicar una, se reajustan las posiciones
+  // de las que quedan pendientes (ver adjustActionAfterChange) para que apliquen sobre el item
+  // correcto — o se marcan como ya no aplicables si la acción anterior quitó justo ese item.
+  const [liveActions, setLiveActions] = useState<PerfectSetlistAction[] | null>(null);
   const [appliedActionIndices, setAppliedActionIndices] = useState<Set<number>>(new Set());
+  const [invalidActionIndices, setInvalidActionIndices] = useState<Set<number>>(new Set());
+  // Foto de liveActions/invalidActionIndices justo ANTES de la última acción aplicada — "Deshacer"
+  // no solo debe revertir el setlist real (eso ya lo hace onUndo), también debe devolver las
+  // demás acciones pendientes a las posiciones que tenían antes de que ESTA las reajustara. Un
+  // solo nivel, igual que el propio snapshot de undo del setlist (solo la más reciente es deshacible).
+  const [preApplySnapshot, setPreApplySnapshot] = useState<{ liveActions: PerfectSetlistAction[]; invalidActionIndices: Set<number> } | null>(null);
 
   useEffect(() => {
+    setLiveActions(plan ? plan.actions : null);
     setAppliedActionIndices(new Set());
+    setInvalidActionIndices(new Set());
+    setPreApplySnapshot(null);
   }, [plan]);
 
   if (!isOpen) return null;
+
+  const handleApply = (idx: number) => {
+    if (!liveActions) return;
+    const action = liveActions[idx];
+    const sourceKey = `perfect-setlist-${idx}`;
+
+    setPreApplySnapshot({ liveActions, invalidActionIndices: new Set(invalidActionIndices) });
+    onApplyAction(action, sourceKey);
+    setAppliedActionIndices(prev => new Set(prev).add(idx));
+
+    const change = changeFromAction(action);
+    if (!change) return;
+    const next = [...liveActions];
+    const nextInvalid = new Set(invalidActionIndices);
+    for (let i = 0; i < next.length; i++) {
+      if (i === idx || appliedActionIndices.has(i) || invalidActionIndices.has(i)) continue;
+      const adjusted = adjustActionAfterChange(next[i], change);
+      if (adjusted === null) nextInvalid.add(i);
+      else next[i] = adjusted;
+    }
+    setLiveActions(next);
+    setInvalidActionIndices(nextInvalid);
+  };
+
+  const handleUndo = (idx: number) => {
+    onUndo?.();
+    setAppliedActionIndices(prev => {
+      const next = new Set(prev);
+      next.delete(idx);
+      return next;
+    });
+    if (preApplySnapshot) {
+      setLiveActions(preApplySnapshot.liveActions);
+      setInvalidActionIndices(preApplySnapshot.invalidActionIndices);
+      setPreApplySnapshot(null);
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
@@ -155,44 +243,42 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
             </div>
           )}
 
-          {plan && (
+          {plan && liveActions && (
             <div className="space-y-4">
               <div className="bg-neutral-800 rounded-lg p-3 border border-neutral-700">
                 <p className="text-xs text-neutral-400 mb-1.5">🪄 Resumen del plan</p>
                 <p className="text-sm text-neutral-200">{plan.summary}</p>
               </div>
 
-              {plan.actions.length === 0 && (
+              {liveActions.length === 0 && (
                 <p className="text-sm text-neutral-400 text-center py-4">
                   Este setlist ya está bien construido — no hay cambios que proponer ahora mismo.
                 </p>
               )}
 
               <div className="space-y-2">
-                {plan.actions.map((action, idx) => {
+                {liveActions.map((action, idx) => {
                   const { icon, label } = describeAction(action);
                   const sourceKey = `perfect-setlist-${idx}`;
                   const isCurrentUndo = undoSourceKey === sourceKey;
                   const isApplied = appliedActionIndices.has(idx);
+                  const isInvalid = invalidActionIndices.has(idx);
 
                   return (
-                    <div key={idx} className="rounded-lg p-3 border bg-neutral-800 border-neutral-700 flex items-start gap-2.5">
+                    <div key={idx} className={`rounded-lg p-3 border flex items-start gap-2.5 ${isInvalid ? 'bg-neutral-900 border-neutral-800 opacity-50' : 'bg-neutral-800 border-neutral-700'}`}>
                       <span className="text-sm mt-0.5">{icon}</span>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-neutral-100">{label}</p>
                         <p className="text-xs text-neutral-400 mt-0.5">{action.reason}</p>
                       </div>
-                      {isCurrentUndo ? (
+                      {isInvalid ? (
+                        <span className="shrink-0 text-[10px] text-neutral-500 font-mono font-medium whitespace-nowrap" title="Un cambio anterior afectó al item que esta acción necesitaba">
+                          ⚠️ Ya no aplica
+                        </span>
+                      ) : isCurrentUndo ? (
                         <button
                           type="button"
-                          onClick={() => {
-                            onUndo?.();
-                            setAppliedActionIndices(prev => {
-                              const next = new Set(prev);
-                              next.delete(idx);
-                              return next;
-                            });
-                          }}
+                          onClick={() => handleUndo(idx)}
                           className="shrink-0 px-2 py-0.5 rounded bg-amber-900/40 hover:bg-amber-800/60 text-amber-300 hover:text-amber-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
                           title="Deshacer este cambio"
                         >
@@ -203,10 +289,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                       ) : (
                         <button
                           type="button"
-                          onClick={() => {
-                            onApplyAction(action, sourceKey);
-                            setAppliedActionIndices(prev => new Set(prev).add(idx));
-                          }}
+                          onClick={() => handleApply(idx)}
                           className="shrink-0 px-2 py-0.5 rounded bg-emerald-700/50 hover:bg-emerald-600 text-emerald-100 font-bold text-[10px] font-mono transition whitespace-nowrap"
                           title="Aplicar este cambio al setlist"
                         >
