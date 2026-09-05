@@ -95,6 +95,21 @@ export function EnergyChart({
   // efecto resultaba chillón al pasar el ratón por varias sugerencias seguidas.
   const dotHighlighted = compact ? 5 : 7;
 
+  // La curva anima despacio (1200ms) SOLO justo al montar/cambiar de setlist, para que se note el
+  // efecto "wow" al abrirlo. El resto del tiempo —cada click del joystick subiendo/bajando energía,
+  // cada arrastre, cada reordenamiento— usa una animación mucho más rápida: antes reutilizaba los
+  // mismos 1200ms también para estos cambios sueltos, y esperar más de un segundo por cada click
+  // se sentía lentísimo. `setlistKey` es lo único que fuerza un remount real (ver key en
+  // ComposedChart más abajo), así que es la señal correcta de "esto es una apertura, no una edición".
+  const [fastAnimation, setFastAnimation] = useState(false);
+  useEffect(() => {
+    setFastAnimation(false);
+    const t = setTimeout(() => setFastAnimation(true), 1300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setlistKey]);
+  const curveAnimationDuration = fastAnimation ? 180 : 1200;
+
   // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
   // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
   // recharts, así que no depende de sus internals de layout/escala.
@@ -449,7 +464,7 @@ export function EnergyChart({
               dot={false}
               activeDot={false}
               isAnimationActive={!compact}
-              animationDuration={1200}
+              animationDuration={curveAnimationDuration}
               legendType="none"
               connectNulls
             />
@@ -467,7 +482,7 @@ export function EnergyChart({
             fillOpacity={1}
             connectNulls
             isAnimationActive={!compact}
-            animationDuration={1200}
+            animationDuration={curveAnimationDuration}
             animationEasing="ease-out"
             // Recharts dibuja su propio "activeDot" ENCIMA del dot personalizado al pasar el
             // ratón cerca — con onReorder eso tapa el <circle> real y se traga el mousedown
