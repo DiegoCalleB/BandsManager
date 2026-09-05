@@ -2604,7 +2604,7 @@ export default function RepertorioSetlists({
                         {/* Nombre del tema anterior/siguiente junto a la flecha que lleva hasta él —
                             así se sabe con qué canción se va a intercambiar posición antes de
                             pulsar, sin tener que mirar el gráfico para ubicarla. */}
-                        <span className="w-16 sm:w-24 truncate text-[9px] text-neutral-500 font-mono text-right">
+                        <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-right leading-tight">
                           {prevName || ''}
                         </span>
                         <button
@@ -2645,7 +2645,7 @@ export default function RepertorioSetlists({
                         >
                           <ChevronRight className="w-4 h-4" />
                         </button>
-                        <span className="w-16 sm:w-24 truncate text-[9px] text-neutral-500 font-mono text-left">
+                        <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-left leading-tight">
                           {nextName || ''}
                         </span>
                       </div>
