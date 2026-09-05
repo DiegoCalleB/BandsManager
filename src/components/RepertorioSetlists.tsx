@@ -585,25 +585,36 @@ export default function RepertorioSetlists({
   // este repertorio) — se pinta como segunda línea en el gráfico para ver de un vistazo dónde se
   // aleja más la curva real, sin depender de leer el texto del análisis.
   const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
-  const data = analysis.points.map((pt, idx) => ({
-   idx,
-   id: pt.item.id,
-   name: pt.title,
-   score: pt.score,
-   idealScore: idealCurve[idx],
-   range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
-   color: pt.info.hexColor,
-   icon: pt.info.icon,
-   label: pt.info.label,
-   variance: pt.variance,
-   isSong: pt.isSong
-  }));
+  const data = analysis.points.map((pt, idx) => {
+   // Chapa/presentación/interludio/pausa/etc. — cualquier evento que no sea canción ni bis — no
+   // representan energía real del show: contarlos como un punto más de la curva (con su score de
+   // relleno, 4/20) dibujaba un "bajón" ahí que no es tal, solo un momento hablado. Se marcan en
+   // el gráfico con su propia línea vertical (ver EnergyChart) en vez de ensuciar la curva.
+   const isSpeechEvent = !pt.isSong && pt.item.tipoItem !== 'bis';
+   return {
+    idx,
+    id: pt.item.id,
+    name: pt.title,
+    score: isSpeechEvent ? null : pt.score,
+    idealScore: isSpeechEvent ? null : idealCurve[idx],
+    range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
+    color: pt.info.hexColor,
+    icon: pt.info.icon,
+    label: pt.info.label,
+    variance: pt.variance,
+    isSong: pt.isSong,
+    isSpeechEvent
+   };
+  });
 
   // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
   // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
+  // Los eventos de "speech" quedan fuera del cálculo — su rango de relleno (4±0) no debe estrechar
+  // ni desplazar la escala pensada para las canciones reales.
   let domain: [number, number] = [1, 20];
-  if (data.length > 0) {
-   const allValues = data.flatMap((d) => d.range);
+  const dataParaDominio = data.filter((d) => !d.isSpeechEvent);
+  if (dataParaDominio.length > 0) {
+   const allValues = dataParaDominio.flatMap((d) => d.range);
    const minVal = Math.min(...allValues);
    const maxVal = Math.max(...allValues);
    let lo = Math.max(1, minVal - 2);

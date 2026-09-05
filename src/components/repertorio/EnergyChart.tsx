@@ -6,16 +6,24 @@ export interface EnergyChartPoint {
   idx: number;
   id: string;
   name: string;
-  score: number;
+  /** null en los eventos de "speech" (chapa, presentación, interludio...) — no tienen una energía
+   * real que valga la pena dibujar en la curva, y contarlos como un bajón sería un falso positivo.
+   * Con `connectNulls` en el Area/Line, la curva pasa por encima de ellos sin dibujar un valle. */
+  score: number | null;
   /** Curva de energía "ideal" de referencia para este mismo punto (ver calcularCurvaEnergiaIdeal)
-   * — se pinta por debajo de la curva real para ver de un vistazo dónde se aleja más. */
-  idealScore?: number;
+   * — se pinta por debajo de la curva real para ver de un vistazo dónde se aleja más. También
+   * null en los eventos de "speech", por la misma razón que `score`. */
+  idealScore?: number | null;
   range: [number, number];
   color: string;
   icon: string;
   label: string;
   variance: number;
   isSong: boolean;
+  /** true en chapa/presentación/interludio/pausa/etc. — cualquier evento que no sea una canción
+   * ni el bis (el bis sí representa energía real de cierre). Se marcan en el gráfico con una
+   * línea vertical propia en vez de contar como un punto más de la curva de energía. */
+  isSpeechEvent?: boolean;
 }
 
 export interface EnergyChartZone {
@@ -223,6 +231,20 @@ export function EnergyChart({
             <ReferenceLine x={hoverIndex} stroke="#fbbf24" strokeWidth={2} strokeDasharray="4 3" ifOverflow="extendDomain" />
           )}
 
+          {/* Eventos de "speech" (chapa, presentación, interludio...): no cuentan como un bajón de
+              energía (score null + connectNulls en la curva de abajo), pero se marcan con su
+              propia línea vertical para que sigan siendo visibles en el gráfico. */}
+          {chartData.filter((d) => d.isSpeechEvent).map((d) => (
+            <ReferenceLine
+              key={`speech-${d.id}`}
+              x={d.idx}
+              stroke="#52525b"
+              strokeDasharray="2 3"
+              ifOverflow="extendDomain"
+              label={compact ? undefined : { value: d.icon, position: 'insideTop', fontSize: 11, fill: '#a1a1aa' }}
+            />
+          ))}
+
           <XAxis
             dataKey="idx"
             tickFormatter={(v: number) => `#${v + 1}`}
@@ -242,18 +264,26 @@ export function EnergyChart({
               return (
                 <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[180px]">
                   <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
-                  <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
-                    <span>{d.icon}</span> {d.label} ({d.score}/20)
-                  </p>
-                  {d.variance > 0 && (
-                    <p className="text-sky-300 mt-0.5">
-                      🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
+                  {d.isSpeechEvent ? (
+                    <p className="text-neutral-400 flex items-center gap-1 mt-0.5">
+                      <span>{d.icon}</span> Interludio — no cuenta como energía
                     </p>
-                  )}
-                  {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
-                    <p className="text-neutral-400 mt-0.5">
-                      〰️ Ideal aquí: ~{d.idealScore}/20
-                    </p>
+                  ) : (
+                    <>
+                      <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
+                        <span>{d.icon}</span> {d.label} ({d.score}/20)
+                      </p>
+                      {d.variance > 0 && (
+                        <p className="text-sky-300 mt-0.5">
+                          🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
+                        </p>
+                      )}
+                      {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
+                        <p className="text-neutral-400 mt-0.5">
+                          〰️ Ideal aquí: ~{d.idealScore}/20
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               );
@@ -276,10 +306,13 @@ export function EnergyChart({
               isAnimationActive={!compact}
               animationDuration={1200}
               legendType="none"
+              connectNulls
             />
           )}
 
-          {/* Curva principal de energía tema a tema */}
+          {/* Curva principal de energía tema a tema — connectNulls hace que la curva pase por
+              encima de los eventos de "speech" (score null) sin dibujar un bajón ahí, uniendo
+              directamente las canciones real de antes y de después. */}
           <Area
             type="monotone"
             dataKey="score"
@@ -287,6 +320,7 @@ export function EnergyChart({
             strokeWidth={compact ? 2 : 3}
             fill={`url(#energyFillGradient${gradientSuffix})`}
             fillOpacity={1}
+            connectNulls
             isAnimationActive={!compact}
             animationDuration={1200}
             animationEasing="ease-out"
@@ -296,7 +330,11 @@ export function EnergyChart({
             activeDot={onReorder ? false : { r: dotSelected, strokeWidth: 2, stroke: '#ffffff' }}
             dot={(dotProps: any) => {
               const { cx, cy, payload, index } = dotProps;
-              if (cx == null || cy == null) return <React.Fragment key={`dot-${index}`} />;
+              // payload.score null (eventos de "speech") no tiene una posición real que dibujar —
+              // Number.isNaN cubre el caso de que recharts calcule cy como NaN en vez de null/undefined.
+              if (cx == null || cy == null || Number.isNaN(cx) || Number.isNaN(cy) || payload?.isSpeechEvent) {
+                return <React.Fragment key={`dot-${index}`} />;
+              }
               const isSelected = payload.id === selectedSetlistItemId;
               const isHighlighted = highlightedSongIds.length > 0 && titlesMatch(payload.name, highlightedSongIds);
               const isDraggingThis = draggingFromIndex === payload.idx;
