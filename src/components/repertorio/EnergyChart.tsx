@@ -225,7 +225,21 @@ export function EnergyChart({
             axisLine={false}
             hide={compact}
           />
-          <YAxis domain={yDomain} stroke="#666666" fontSize={fontSize} tickLine={false} axisLine={false} width={compact ? 0 : 22} hide={compact} />
+          {/* tickFormatter a propósito: los datos y el dominio siguen en la escala interna 1-20
+              (energia se guarda así en toda la app — ver getEnergyInfo/handleSetEnergiaManual),
+              pero de cara al usuario el gráfico debe leerse en 1-10, igual que el popover de
+              energía del grid. Es una transformación puramente de presentación (÷2 en la
+              etiqueta), no cambia la posición real de la curva. */}
+          <YAxis
+            domain={yDomain}
+            tickFormatter={(v: number) => `${Math.round(v / 2)}`}
+            stroke="#666666"
+            fontSize={fontSize}
+            tickLine={false}
+            axisLine={false}
+            width={compact ? 0 : 22}
+            hide={compact}
+          />
 
           <RechartsTooltip
             cursor={{ stroke: '#666', strokeDasharray: '3 3' }}
@@ -236,7 +250,7 @@ export function EnergyChart({
                 <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[180px]">
                   <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
                   <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
-                    <span>{d.icon}</span> {d.label} ({d.score}/20)
+                    <span>{d.icon}</span> {d.label} ({Math.round(d.score / 2)}/10)
                   </p>
                   {d.variance > 0 && (
                     <p className="text-sky-300 mt-0.5">
