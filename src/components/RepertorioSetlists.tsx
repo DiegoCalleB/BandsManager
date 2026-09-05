@@ -2579,13 +2579,15 @@ export default function RepertorioSetlists({
                     const next = Math.max(1, Math.min(20, point.score + delta));
                     if (next !== point.score) handleEnergyChartDrag(point, next);
                   };
-                  const dirBtnClass = "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed";
+                  const dirBtnClass = "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
                   const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 border border-amber-500/30 hover:border-amber-400/60`;
                   const energyBtnStyle = info
                     ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background: 'rgba(23,23,23,0.8)' }
                     : undefined;
+                  const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
+                  const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
                   return (
-                    <div className="flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
+                    <div className="w-full flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
                       {canEditEnergy && (
                         <button
                           type="button"
@@ -2598,13 +2600,19 @@ export default function RepertorioSetlists({
                           <ChevronUp className="w-4 h-4" />
                         </button>
                       )}
-                      <div className="flex items-center gap-3">
+                      <div className="w-full flex items-center justify-center gap-2">
+                        {/* Nombre del tema anterior/siguiente junto a la flecha que lleva hasta él —
+                            así se sabe con qué canción se va a intercambiar posición antes de
+                            pulsar, sin tener que mirar el gráfico para ubicarla. */}
+                        <span className="w-16 sm:w-24 truncate text-[9px] text-neutral-500 font-mono text-right">
+                          {prevName || ''}
+                        </span>
                         <button
                           type="button"
                           disabled={selectedIndex <= 0}
                           onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
                           className={reorderBtnClass}
-                          title="Mover una posición hacia atrás"
+                          title={prevName ? `Mover antes de "${prevName}"` : 'Mover una posición hacia atrás'}
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </button>
@@ -2633,10 +2641,13 @@ export default function RepertorioSetlists({
                           disabled={selectedIndex >= chartData.length - 1}
                           onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
                           className={reorderBtnClass}
-                          title="Mover una posición hacia adelante"
+                          title={nextName ? `Mover después de "${nextName}"` : 'Mover una posición hacia adelante'}
                         >
                           <ChevronRight className="w-4 h-4" />
                         </button>
+                        <span className="w-16 sm:w-24 truncate text-[9px] text-neutral-500 font-mono text-left">
+                          {nextName || ''}
+                        </span>
                       </div>
                       {canEditEnergy && (
                         <button
