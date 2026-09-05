@@ -18,7 +18,9 @@ const ptToPx = (pt: number) => (pt * 96) / 72;
 // título o si esa fila concreta necesita caer a una línea propia debajo (ver textFit.ts).
 const PAGE_CONTENT_WIDTH_PX = mmToPx(190) - 8;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
-const ROW_GAP_PX = 10;
+// Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
+// parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
+const ROW_GAP_PX = 5;
 
 interface NoteLayoutBadge {
   text: string;
@@ -531,27 +533,32 @@ export function PdfExportModal({
               color: #333;
             }
 
-            /* Setlist Container */
+            /* Setlist Container: el ritmo vertical "sin nota" es el de una lista impresa normal
+               y apretada (como si se hubiera impreso ANTES de añadir ninguna anotación) — el
+               espacio para las notas manuscritas no se reserva aquí, se aprovecha el hueco que
+               ya deja el propio interlineado del título (ver .song-notes-below más abajo). */
             .setlist-items-container {
               flex: 1;
               display: flex;
               flex-direction: column;
               justify-content: flex-start;
-              gap: 6px;
+              gap: 2px;
             }
 
             .setlist-song-item {
-              padding: 2px 0;
+              padding: 0;
             }
 
             /* .song-line nunca envuelve: el título se trunca con "..." antes de saltar a una
                segunda línea, así la fila mide siempre lo mismo y nada se monta encima de la
-               canción anterior, sea cual sea la longitud del título o de las notas. */
+               canción anterior, sea cual sea la longitud del título o de las notas. Sin
+               justify-content:space-between a propósito: la nota debe quedar pegada justo detrás
+               del título (como un boli escribiendo a continuación), no flotando contra el margen
+               derecho de la hoja con un hueco en blanco en medio. */
             .song-line {
               display: flex;
-              justify-content: space-between;
               align-items: baseline;
-              gap: 10px;
+              gap: 5px;
               flex-wrap: nowrap;
             }
             .song-left {
@@ -560,7 +567,7 @@ export function PdfExportModal({
               flex-wrap: nowrap;
               gap: 8px;
               min-width: 0;
-              flex: 1 1 auto;
+              flex: 0 1 auto;
               overflow: hidden;
             }
             .song-num {
@@ -619,25 +626,30 @@ export function PdfExportModal({
                computeNoteLayout/textFit.ts): se encoge la fuente tanto como haga falta — nunca
                se parte una nota en 2 líneas ni se trunca su texto. Por eso aquí no hay font-size
                ni max-width fijos: llegan inline por fila/línea. */
-            /* Cada nota apilada en su propia línea (no todas seguidas), a la derecha del título
-               cuando hay hueco de sobra. overflow:visible a propósito (ver .note-seg): en el
-               caso raro de una nota patológicamente larga que ni encogida al mínimo cabe, se
-               deja que asome un poco fuera de su carril en vez de recortarla sin avisar. */
+            /* Cada nota apilada en su propia línea (no todas seguidas), justo detrás del título
+               (align-items:flex-start: el texto arranca pegado al título, no alineado contra el
+               margen derecho del carril calculado — eso dejaba un hueco en blanco en medio).
+               overflow:visible a propósito (ver .note-seg): en el caso raro de una nota
+               patológicamente larga que ni encogida al mínimo cabe, se deja que asome un poco
+               fuera de su carril en vez de recortarla sin avisar. */
             .song-notes-right {
               display: flex;
               flex-direction: column;
-              align-items: flex-end;
-              gap: 1px;
+              align-items: flex-start;
+              gap: 0px;
               flex-shrink: 0;
               overflow: visible;
             }
+            /* margin-top negativo a propósito: "muerde" el hueco que ya deja el descendente/
+               interlineado del título de arriba, para que la nota parezca escrita justo pegada
+               a la línea impresa en vez de maquetada como una fila nueva con su propio aire. */
             .song-notes-below {
               display: flex;
               flex-direction: column;
-              gap: 1px;
+              gap: 0px;
               padding-left: ${showSongNumbers ? '40px' : '6px'};
-              margin-top: -1px;
-              line-height: 1.05;
+              margin-top: -4px;
+              line-height: 1;
             }
             .note-seg {
               /* overflow:visible a propósito: el texto nunca se trunca en JS (ver textFit.ts),
@@ -1133,8 +1145,10 @@ export function PdfExportModal({
                 </div>
               </div>
 
-              {/* Setlist Song List (Large High-Impact Typography) */}
-              <div className="space-y-3">
+              {/* Setlist Song List (Large High-Impact Typography). El ritmo vertical "sin nota"
+                  es el de una lista impresa apretada — no se reserva hueco para notas aquí, se
+                  aprovecha el que ya deja el interlineado del título (ver modo 'below' abajo). */}
+              <div className="space-y-0.5">
                 {activeSetlist.items.map((item, index) => {
                   if (item.tipoItem === 'cancion') {
                     const s = songs.find(x => x.id === item.songId);
@@ -1200,14 +1214,15 @@ export function PdfExportModal({
                     );
 
                     return (
-                      <div key={item.id} className="group relative py-1">
+                      <div key={item.id} className="group relative">
                         {/* flex-nowrap en la fila del título: se trunca con "..." (min-w-0 +
                             truncate) en vez de saltar de línea, así la fila nunca crece de alto
-                            ni se monta sobre la canción de arriba. Las notas van aparte, ver
-                            noteLayout más abajo (computeNoteLayout decide si caben al lado o si
-                            esta fila en concreto necesita una línea propia debajo). */}
-                        <div className="flex items-baseline justify-between gap-3 flex-nowrap">
-                          <div className="flex items-baseline gap-2.5 min-w-0 flex-1 flex-nowrap overflow-hidden">
+                            ni se monta sobre la canción de arriba. Sin justify-between a
+                            propósito: la nota debe quedar pegada justo detrás del título (como
+                            un boli escribiendo a continuación), no flotando contra el margen
+                            derecho con un hueco en blanco en medio (ver noteLayout más abajo). */}
+                        <div className="flex items-baseline gap-1.5 flex-nowrap">
+                          <div className="flex items-baseline gap-2.5 min-w-0 flex-nowrap overflow-hidden">
                             {showSongNumbers && (
                               <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px] shrink-0">
                                 {index + 1}.
@@ -1251,19 +1266,21 @@ export function PdfExportModal({
                               decidido por textFit, aquí solo se pintan. */}
                           {noteLayout && noteLayout.mode === 'inline' && (
                             <div
-                              className="flex flex-col items-end shrink-0"
+                              className="flex flex-col items-start shrink-0"
                               style={{ maxWidth: noteLayout.maxWidthPx, transform: `rotate(${noteRotationDeg}deg)` }}
                             >
                               {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                             </div>
                           )}
 
-                          {/* Quick note edit trigger on hover */}
+                          {/* Quick note edit trigger on hover — ml-auto lo mantiene pegado al
+                              margen derecho ahora que el título y la nota ya no usan
+                              justify-between entre sí (ver arriba). */}
                           {onUpdateSong && (
                             <button
                               onClick={() => setEditingSongForNotes(s)}
                               title="Editar notas manuscritas de esta canción"
-                              className="opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
+                              className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded font-mono text-neutral-800 flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
                             >
                               <Edit3 className="w-3 h-3 text-emerald-600" />
                               <span>Editar Nota</span>
@@ -1272,11 +1289,14 @@ export function PdfExportModal({
                         </div>
 
                         {/* Excepción rara y controlada: el título de esta fila concreta no dejó
-                            hueco razonable al lado, así que la nota cae aquí debajo, compacta. */}
+                            hueco razonable al lado. La nota no abre una fila nueva con su propio
+                            aire: muerde (margin-top negativo) el hueco que ya deja el
+                            interlineado del título de arriba, para parecer escrita a mano justo
+                            pegada a la línea impresa. */}
                         {noteLayout && noteLayout.mode === 'below' && (
                           <div
-                            className="pl-9 -mt-0.5"
-                            style={{ lineHeight: 1.05, transform: `rotate(${noteRotationDeg}deg)` }}
+                            className="pl-9"
+                            style={{ lineHeight: 1, marginTop: '-4px', transform: `rotate(${noteRotationDeg}deg)` }}
                           >
                             {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                           </div>
