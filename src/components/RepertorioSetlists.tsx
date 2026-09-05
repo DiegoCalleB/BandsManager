@@ -2724,6 +2724,19 @@ export default function RepertorioSetlists({
     {/* CONTROLS */}
     <button
       type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        setEditingSong(song);
+        setShowSongModal(true);
+      }}
+      className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+      title="Editar Canción (tonalidad, BPM, duración...)"
+    >
+      <Edit3 className="w-3.5 h-3.5" />
+    </button>
+
+    <button
+      type="button"
       onClick={() => setActiveMemberNotesSong(song)}
       className={`p-0.5 shrink-0 transition-colors ${
         memberNotesCount > 0
