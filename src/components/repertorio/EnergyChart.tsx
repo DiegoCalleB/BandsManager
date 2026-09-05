@@ -20,9 +20,10 @@ export interface EnergyChartPoint {
   label: string;
   variance: number;
   isSong: boolean;
-  /** true en chapa/presentación/interludio/pausa/etc. — cualquier evento que no sea una canción
-   * ni el bis (el bis sí representa energía real de cierre). Se marcan en el gráfico con una
-   * línea vertical propia en vez de contar como un punto más de la curva de energía. */
+  /** true en cualquier evento que no sea una canción (chapa, presentación, interludio, pausa,
+   * bis...) — el "bis" en sí es solo la marca de "aquí empieza", no una canción con energía
+   * propia (las canciones reales del bis puntúan por su cuenta justo después). Se marcan en el
+   * gráfico con una línea vertical propia en vez de contar como un punto más de la curva. */
   isSpeechEvent?: boolean;
 }
 

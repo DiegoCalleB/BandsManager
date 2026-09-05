@@ -165,9 +165,15 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
         variance
       });
     } else {
-      // Evento o bloque del show
+      // Evento o bloque del show — el "bis" en sí es solo una marca de "aquí empieza el bis", no
+      // una canción con energía propia: las canciones reales que forman el bis ya puntúan como
+      // canciones normales justo después de este marcador. Ponerle un score de 20 aquí sería
+      // inventar un pico que no sale de ningún dato real — por eso todos los eventos (bis
+      // incluido) comparten el mismo score de relleno bajo; el gráfico los excluye igual de la
+      // curva de energía (ver isSpeechEvent en RepertorioSetlists.tsx), solo cambia el icono para
+      // poder distinguir visualmente dónde empieza el bis.
       const isBis = item.tipoItem === 'bis';
-      const score = isBis ? 20 : 4;
+      const score = 4;
       points.push({
         index,
         item,
@@ -176,7 +182,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
         score,
         variance: 0,
         info: {
-          category: isBis ? 'explosiva' : 'balada',
+          category: 'balada',
           score,
           label: item.tituloCustom || 'Evento Show',
           icon: isBis ? '💣' : '💬',

@@ -586,11 +586,13 @@ export default function RepertorioSetlists({
   // aleja más la curva real, sin depender de leer el texto del análisis.
   const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
   const data = analysis.points.map((pt, idx) => {
-   // Chapa/presentación/interludio/pausa/etc. — cualquier evento que no sea canción ni bis — no
-   // representan energía real del show: contarlos como un punto más de la curva (con su score de
-   // relleno, 4/20) dibujaba un "bajón" ahí que no es tal, solo un momento hablado. Se marcan en
-   // el gráfico con su propia línea vertical (ver EnergyChart) en vez de ensuciar la curva.
-   const isSpeechEvent = !pt.isSong && pt.item.tipoItem !== 'bis';
+   // Chapa/presentación/interludio/pausa/bis/etc. — cualquier evento que no sea canción — no
+   // representa energía real del show: el "bis" en concreto es solo la marca de "aquí empieza",
+   // no una canción en sí (las canciones reales del bis puntúan por su cuenta justo después).
+   // Contarlos como un punto más de la curva (con su score de relleno) dibujaba un "bajón" o un
+   // pico falso ahí. Se marcan en el gráfico con su propia línea vertical (ver EnergyChart) en
+   // vez de ensuciar la curva con un valor inventado.
+   const isSpeechEvent = !pt.isSong;
    return {
     idx,
     id: pt.item.id,
