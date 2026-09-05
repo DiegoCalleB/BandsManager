@@ -1,4 +1,5 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
+import { api } from '../services/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -9,7 +10,7 @@ import {
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
-  GripVertical
+  GripVertical, ImagePlus
 } from 'lucide-react';
 import SongStudioModal from './SongStudioModal';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
@@ -28,6 +29,8 @@ import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
+import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
+import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -38,7 +41,7 @@ import {
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
-import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
+import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { EnergyChart } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
 
@@ -528,8 +531,38 @@ export default function RepertorioSetlists({
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
+ // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
+ // propio toggle porque puede distraer una vez que ya conoces bien tu propio repertorio.
+ const [showIdealCurve, setShowIdealCurve] = useState<boolean>(true);
+ // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
+ // "⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
+ // justo la queja: "estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
+ const [showChartSettingsMenu, setShowChartSettingsMenu] = useState(false);
+ // Punto de entrada único al asistente IA del repertorio — antes había dos botones lado a lado
+ // (Análisis IA / Setlist Perfecto) sin que quedara claro cuál usar; ahora un solo botón abre un
+ // selector con las dos opciones explicadas, cada una sigue siendo el flujo ya existente.
+ const [showAssistantChooser, setShowAssistantChooser] = useState(false);
+ // Avisos heurísticos plegados por defecto — antes ocupaban una fila siempre visible en pantalla
+ // aunque no hubiera nada urgente que mirar.
+ const [showHeuristicWarnings, setShowHeuristicWarnings] = useState(false);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
+ // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
+ const [showPerfectSetlistModal, setShowPerfectSetlistModal] = useState(false);
+ // Modal para importar un repertorio ya impreso desde una foto o PDF, analizado con IA
+ const [showImportSetlistModal, setShowImportSetlistModal] = useState(false);
+ // El plan se genera y aplica sobre una COPIA del setlist activo (ver handleGeneratePerfectSetlist),
+ // nunca sobre el original — este estado vive en el padre, no en el modal, precisamente porque
+ // generar el plan cambia qué setlist está activo (duplicado) y el modal no debe reiniciarse
+ // (perder el plan a medio aplicar) solo porque activeSetlistId cambió por su propia acción.
+ const [perfectSetlistPlan, setPerfectSetlistPlan] = useState<PerfectSetlistPlan | null>(null);
+ const [perfectSetlistLoading, setPerfectSetlistLoading] = useState(false);
+ const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(null);
+ // Qué copia de trabajo ya existe para esta ronda de "Setlist Perfecto" — Diego pidió que
+ // "Regenerar" no crease una copia nueva cada vez, así que se recuerda cuál ya se creó (por
+ // ambos ids: el original del que salió y el propio id de la copia) y se reutiliza mientras no se
+ // pida explícitamente una copia nueva. Solo se recuerda LA MÁS RECIENTE, no un historial por setlist.
+ const [perfectSetlistDraft, setPerfectSetlistDraft] = useState<{ originalSetlistId: string; draftSetlistId: string } | null>(null);
  // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
  const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
@@ -551,24 +584,42 @@ export default function RepertorioSetlists({
  // interacciones de UI que no cambian los datos reales.
  const { energyAnalysis, chartData, yDomain, ZONAS_ENERGIA } = useMemo(() => {
   const analysis = analyzeSetlistEnergy(activeSetlist?.items || [], songs);
-  const data = analysis.points.map((pt, idx) => ({
-   idx,
-   id: pt.item.id,
-   name: pt.title,
-   score: pt.score,
-   range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
-   color: pt.info.hexColor,
-   icon: pt.info.icon,
-   label: pt.info.label,
-   variance: pt.variance,
-   isSong: pt.isSong
-  }));
+  // Curva de energía "ideal" de referencia (arco de pacing clásico, escalado al rango real de
+  // este repertorio) — se pinta como segunda línea en el gráfico para ver de un vistazo dónde se
+  // aleja más la curva real, sin depender de leer el texto del análisis.
+  const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
+  const data = analysis.points.map((pt, idx) => {
+   // Chapa/presentación/interludio/pausa/bis/etc. — cualquier evento que no sea canción — no
+   // representa energía real del show: el "bis" en concreto es solo la marca de "aquí empieza",
+   // no una canción en sí (las canciones reales del bis puntúan por su cuenta justo después).
+   // Contarlos como un punto más de la curva (con su score de relleno) dibujaba un "bajón" o un
+   // pico falso ahí. Se marcan en el gráfico con su propia línea vertical (ver EnergyChart) en
+   // vez de ensuciar la curva con un valor inventado.
+   const isSpeechEvent = !pt.isSong;
+   return {
+    idx,
+    id: pt.item.id,
+    name: pt.title,
+    score: isSpeechEvent ? null : pt.score,
+    idealScore: isSpeechEvent ? null : idealCurve[idx],
+    range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
+    color: pt.info.hexColor,
+    icon: pt.info.icon,
+    label: pt.info.label,
+    variance: pt.variance,
+    isSong: pt.isSong,
+    isSpeechEvent
+   };
+  });
 
   // Dominio Y dinámico: se escala al propio setlist (no siempre 1-20) para que las
   // diferencias de energía entre temas se noten de verdad, no se aplasten en un rango fijo.
+  // Los eventos de "speech" quedan fuera del cálculo — su rango de relleno (4±0) no debe estrechar
+  // ni desplazar la escala pensada para las canciones reales.
   let domain: [number, number] = [1, 20];
-  if (data.length > 0) {
-   const allValues = data.flatMap((d) => d.range);
+  const dataParaDominio = data.filter((d) => !d.isSpeechEvent);
+  if (dataParaDominio.length > 0) {
+   const allValues = dataParaDominio.flatMap((d) => d.range);
    const minVal = Math.min(...allValues);
    const maxVal = Math.max(...allValues);
    let lo = Math.max(1, minVal - 2);
@@ -1378,6 +1429,25 @@ export default function RepertorioSetlists({
    setSetlistModalData({ isOpen: true, setlistToEdit: null });
  };
 
+ // El modal de importación ya hizo el POST tanto de las canciones nuevas como del setlist —
+ // aquí solo se actualiza el estado local y se cambia a verlo, igual que tras crear/duplicar
+ // un setlist a mano.
+ const handleSetlistImported = (setlist: Setlist, newSongs: Song[]) => {
+   if (newSongs.length > 0) {
+     setSongs((prev) => {
+       const next = [...prev, ...newSongs];
+       saveSongsToLocalStorageSafely(next);
+       return next;
+     });
+   }
+   setSetlists((prev) => {
+     const next = [setlist, ...prev];
+     saveSetlistsToLocalStorageSafely(next);
+     return next;
+   });
+   setActiveSetlistId(setlist.id);
+ };
+
  const handleSaveSetlistModal = (setlistData: {
    id?: string;
    nombre: string;
@@ -1463,11 +1533,11 @@ export default function RepertorioSetlists({
  }).catch(err => console.error('Error creating setlist on server:', err));
  };
 
- const handleDuplicateSetlist = (st: Setlist) => {
+ const handleDuplicateSetlist = (st: Setlist, nameSuffix: string = '(Copia)'): Setlist => {
  const duplicated: Setlist = {
  ...st,
  id: `setlist-${Date.now()}`,
- nombre: `${st.nombre} (Copia)`,
+ nombre: `${st.nombre} ${nameSuffix}`,
  fechaCreacion: new Date().toISOString().split('T')[0],
  fechaUltimaEdicion: new Date().toISOString().split('T')[0],
  items: st.items.map(it => ({ ...it, id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 5)}` }))
@@ -1480,6 +1550,8 @@ export default function RepertorioSetlists({
  headers: getHeaders(),
  body: JSON.stringify(duplicated)
  }).catch(err => console.error('Error duplicating setlist on server:', err));
+
+ return duplicated;
  };
 
  const handleDeleteSetlist = (stId: string) => {
@@ -1493,6 +1565,11 @@ export default function RepertorioSetlists({
  if (activeSetlistId === stId) {
  setActiveSetlistId(remaining[0]?.id || '');
  }
+ // Si se borra justo la copia de trabajo de "Setlist Perfecto" (o su original), esa referencia
+ // ya no vale — la próxima vez que se pida el plan, se creará una copia nueva desde cero.
+ if (perfectSetlistDraft && (perfectSetlistDraft.draftSetlistId === stId || perfectSetlistDraft.originalSetlistId === stId)) {
+ setPerfectSetlistDraft(null);
+ }
 
  fetch(`/api/setlists/${stId}`, {
  method: 'DELETE',
@@ -1505,17 +1582,15 @@ export default function RepertorioSetlists({
  // Setlist Item Manipulation & Agile Reordering (Drag & Drop) — lógica pura, parametrizada por
  // índices en vez de leer el estado de arrastre de la lista (draggedItemIndex), para poder
  // reutilizarla también desde el drag horizontal sobre el Mapa de Energía (ver EnergyChart).
- const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
-   if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+ //
+ // Punto único que de verdad escribe un array de items nuevo — reordenar, quitar una canción,
+ // añadir una del catálogo o insertar un bloque son todos casos de "sustituir items por otro
+ // array", así que todos pasan por aquí para compartir el snapshot de "Deshacer" (sourceKey
+ // identifica qué acción lo generó) y el guardado/sync.
+ const applySetlistItemsChange = (newItems: SetlistItem[], sourceKey: string) => {
+   if (!activeSetlist) return;
 
-   // Snapshot del orden ANTES de tocarlo — es lo que restaura "Deshacer". Se guarda aquí, en el
-   // único punto que de verdad reordena, para que cubra igual el arrastre manual que un "Aplicar"
-   // de un aviso heurístico o de una sugerencia de la IA.
    setUndoReorderSnapshot({ setlistId: activeSetlist.id, items: activeSetlist.items, sourceKey });
-
-   const newItems = [...activeSetlist.items];
-   const [movedItem] = newItems.splice(fromIndex, 1);
-   newItems.splice(toIndex, 0, movedItem);
 
    const updatedSetlist: Setlist = {
      ...activeSetlist,
@@ -1529,6 +1604,136 @@ export default function RepertorioSetlists({
      return next;
    });
    syncSetlistToBackend(updatedSetlist);
+ };
+
+ const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
+   if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+   const newItems = [...activeSetlist.items];
+   const [movedItem] = newItems.splice(fromIndex, 1);
+   newItems.splice(toIndex, 0, movedItem);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Quita el item en `index` (usado por el plan de "Setlist Perfecto" para retirar una canción que
+ // no encaja — a diferencia de handleRemoveSetlistItem, que borra por id desde la lista visual,
+ // esto trabaja por índice porque así es como el plan referencia sus posiciones).
+ const removeSetlistItemAtIndex = (index: number, sourceKey: string) => {
+   if (!activeSetlist || index < 0 || index >= activeSetlist.items.length) return;
+   const newItems = activeSetlist.items.filter((_, i) => i !== index);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Inserta una canción del catálogo en `insertIndex` — variante de handleAddItemToSetlist que
+ // inserta en una posición concreta (la que propuso el plan) en vez de tras el item seleccionado.
+ const insertSongAtIndex = (songId: string, insertIndex: number, sourceKey: string) => {
+   if (!activeSetlist) return;
+   const newItem: SetlistItem = {
+     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+     tipoItem: 'cancion',
+     songId
+   };
+   const newItems = [...activeSetlist.items];
+   const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
+   newItems.splice(clampedIndex, 0, newItem);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Inserta un bloque (presentación, pausa, bis...) en `insertIndex` — el plan de "Setlist
+ // Perfecto" ya viene con block_type validado contra los tipoItem reales, así que aquí no hace
+ // falta repetir los defaults por tipo que sí tiene handleAddItemToSetlist para el editor manual.
+ const insertBlockAtIndex = (
+   tipoItem: SetlistItem['tipoItem'],
+   tituloCustom: string,
+   duracionEstimadaMinutos: number | undefined,
+   insertIndex: number,
+   sourceKey: string
+ ) => {
+   if (!activeSetlist) return;
+   const newItem: SetlistItem = {
+     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+     tipoItem,
+     tituloCustom,
+     duracionEstimadaMinutos,
+     duracionEstimadaSegundos: duracionEstimadaMinutos ? Math.round(duracionEstimadaMinutos * 60) : undefined
+   };
+   const newItems = [...activeSetlist.items];
+   const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
+   newItems.splice(clampedIndex, 0, newItem);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Ejecuta UNA acción concreta del plan de "Setlist Perfecto" — cada acción ya viene validada por
+ // el servidor (posiciones dentro de rango, catalog_index resuelto a un song_id real, block_type
+ // dentro del enum), así que aquí solo se traduce cada tipo a la función que ya mueve/inserta/quita.
+ const applyPerfectSetlistAction = (action: PerfectSetlistAction, sourceKey: string) => {
+   switch (action.type) {
+     case 'reorder':
+       if (action.from_position != null && action.to_position != null) {
+         reorderSetlistItems(action.from_position - 1, action.to_position - 1, sourceKey);
+       }
+       break;
+     case 'remove_song':
+       if (action.item_position != null) {
+         removeSetlistItemAtIndex(action.item_position - 1, sourceKey);
+       }
+       break;
+     case 'add_song':
+       if (action.song_id && action.insert_at_position != null) {
+         insertSongAtIndex(action.song_id, action.insert_at_position - 1, sourceKey);
+       }
+       break;
+     case 'add_block':
+       if (action.block_type && action.insert_at_position != null) {
+         insertBlockAtIndex(action.block_type as SetlistItem['tipoItem'], action.title || 'Nuevo bloque', action.duracion_minutos, action.insert_at_position - 1, sourceKey);
+       }
+       break;
+   }
+ };
+
+ // Genera el plan de "Setlist Perfecto" y, la PRIMERA vez, duplica el setlist ANTES de que se
+ // pueda aplicar ninguna acción — para no arriesgar el original. Pero "Regenerar" no debe crear
+ // una copia nueva cada vez (eso fue justo la queja: demasiadas copias) — mientras el usuario siga
+ // trabajando sobre el mismo original (o ya esté sobre la copia), se reutiliza esa misma copia y
+ // el plan nuevo se calcula contra SU estado actual (con lo que ya se haya aplicado). Solo se crea
+ // una copia nueva si no existe ninguna todavía para este setlist, o si se pide explícitamente
+ // (`forceNewCopy`, botón "Nueva copia" del modal).
+ const handleGeneratePerfectSetlist = async (forceNewCopy: boolean = false, feedback?: SetlistFeedbackInput) => {
+   if (!activeSetlist) return;
+
+   const existingDraft = !forceNewCopy && perfectSetlistDraft && (
+     perfectSetlistDraft.draftSetlistId === activeSetlist.id ||
+     perfectSetlistDraft.originalSetlistId === activeSetlist.id
+   ) ? perfectSetlistDraft : null;
+
+   // Si el usuario volvió al setlist ORIGINAL (no a la copia) pero ya existe una copia de una
+   // ronda anterior, se retoma esa copia en vez de generar/duplicar desde el original de nuevo.
+   let targetSetlist = activeSetlist;
+   if (existingDraft && existingDraft.draftSetlistId !== activeSetlist.id) {
+     const draft = setlists.find(s => s.id === existingDraft.draftSetlistId);
+     if (draft) {
+       targetSetlist = draft;
+       setActiveSetlistId(draft.id);
+     }
+   }
+
+   setPerfectSetlistLoading(true);
+   setPerfectSetlistError(null);
+   try {
+     const result = await api.generatePerfectSetlist(targetSetlist.id, feedback);
+     if (result.success && result.plan) {
+       if (!existingDraft) {
+         const copy = handleDuplicateSetlist(targetSetlist, '(Setlist Perfecto)');
+         setPerfectSetlistDraft({ originalSetlistId: targetSetlist.id, draftSetlistId: copy.id });
+       }
+       setPerfectSetlistPlan(result.plan);
+     } else {
+       setPerfectSetlistError(result.error || 'Error al generar el plan');
+     }
+   } catch (err: any) {
+     setPerfectSetlistError(err.message || 'Error desconocido');
+   } finally {
+     setPerfectSetlistLoading(false);
+   }
  };
 
  const canUndoReorder = !!undoReorderSnapshot && undoReorderSnapshot.setlistId === activeSetlist?.id;
@@ -2000,7 +2205,7 @@ export default function RepertorioSetlists({
 
   {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
   {activeTab === 'setlists' && (
-  <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-1.5">
   {/* SIDEBAR: LIST OF SAVED SETLISTS */}
   {!isSidebarCollapsed ? (
   <div className={`lg:col-span-3 p-3 rounded-2xl space-y-3 ${colors.card} `}>
@@ -2020,6 +2225,13 @@ export default function RepertorioSetlists({
   >
   <Plus className="w-3 h-3" />
   <span>Nuevo</span>
+  </button>
+  <button
+  onClick={() => setShowImportSetlistModal(true)}
+  className="p-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all cursor-pointer"
+  title="Importar repertorio desde una foto o PDF ya impreso"
+  >
+  <ImagePlus className="w-3.5 h-3.5" />
   </button>
   <button
   onClick={() => setIsSidebarCollapsed(true)}
@@ -2209,14 +2421,47 @@ export default function RepertorioSetlists({
               <span>{energyAnalysis.profileIcon}</span>
               <span>{energyAnalysis.profileLabel}</span>
             </span>
-            <button
-              type="button"
-              onClick={() => setShowAIAnalysisModal(true)}
-              className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
-              title="Análisis avanzado con IA"
-            >
-              🧠 Análisis IA
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowAssistantChooser((v) => !v)}
+                className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
+                title="Asistente IA del repertorio"
+              >
+                🧠 Asistente IA
+              </button>
+              {showAssistantChooser && (
+                <>
+                  <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
+                  <div className="absolute right-0 top-full mt-1.5 z-40 w-72 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAssistantChooser(false);
+                        setShowAIAnalysisModal(true);
+                      }}
+                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer"
+                    >
+                      <span className="text-sm font-medium text-purple-300 flex items-center gap-1.5">📖 Ver análisis</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas — sin tocar nada por su cuenta.</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAssistantChooser(false);
+                        setPerfectSetlistPlan(null);
+                        setPerfectSetlistError(null);
+                        setShowPerfectSetlistModal(true);
+                      }}
+                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer"
+                    >
+                      <span className="text-sm font-medium text-emerald-300 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Reordena, añade/quita canciones del catálogo y sugiere bloques — sobre una copia, nunca sobre este setlist.</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -2226,17 +2471,9 @@ export default function RepertorioSetlists({
             <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
               <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
                 <span>📈 Mapa de Dinámica y Energía del Show</span>
-                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto para reordenar el setlist)</span>
+                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto, o selecciónalo y usa las flechas, para reordenar el setlist)</span>
               </span>
               <div className="flex items-center gap-2">
-                {showEnergyMap && (
-                  <div className="hidden sm:flex items-center gap-2.5 text-[9px] text-neutral-300">
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
-                    <span className="flex items-center gap-1"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
-                  </div>
-                )}
                 {canUndoReorder && (
                   <button
                     type="button"
@@ -2246,6 +2483,42 @@ export default function RepertorioSetlists({
                   >
                     ↩️ Deshacer
                   </button>
+                )}
+                {showEnergyMap && (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowChartSettingsMenu((v) => !v)}
+                      className="p-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+                      title="Ajustes del gráfico (leyenda de colores, curva ideal)"
+                    >
+                      <Sliders className="w-3.5 h-3.5" />
+                    </button>
+                    {showChartSettingsMenu && (
+                      <>
+                        <div className="fixed inset-0 z-30" onClick={() => setShowChartSettingsMenu(false)} />
+                        <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-2.5 space-y-2.5">
+                          <button
+                            type="button"
+                            onClick={() => setShowIdealCurve((v) => !v)}
+                            className={`w-full px-2 py-1 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+                              showIdealCurve ? 'bg-neutral-700 text-neutral-200' : 'bg-neutral-800 text-neutral-500'
+                            }`}
+                            title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio"
+                          >
+                            <span>〰️ Curva ideal</span>
+                            <span>{showIdealCurve ? 'ON' : 'OFF'}</span>
+                          </button>
+                          <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t border-neutral-800">
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a16207' }} />🔥 Alta</span>
+                            <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#a21caf' }} />💣 Explosiva</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 )}
                 <button
                   type="button"
@@ -2270,10 +2543,58 @@ export default function RepertorioSetlists({
                   onSelectItem={setSelectedSetlistItemId}
                   onReorder={reorderSetlistItems}
                   height={256}
+                  showIdealCurve={showIdealCurve}
                 />
 
+                {/* Mover el punto seleccionado un paso atrás/adelante con flechas — alternativa al
+                    arrastre para cuando se quiere precisión (un puesto exacto) o simplemente en
+                    móvil, donde apuntar con el dedo a "justo un puesto más allá" es más difícil. */}
+                {selectedSetlistItemId && (() => {
+                  const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
+                  if (selectedIndex === -1) return null;
+                  return (
+                    <div className="flex items-center justify-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        disabled={selectedIndex <= 0}
+                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
+                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
+                        title="Mover una posición hacia atrás"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span className="text-[10px] font-mono text-neutral-400 max-w-[50%] truncate">
+                        🎯 {chartData[selectedIndex].name}
+                      </span>
+                      <button
+                        type="button"
+                        disabled={selectedIndex >= chartData.length - 1}
+                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
+                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
+                        title="Mover una posición hacia adelante"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })()}
+
+                {/* Avisos y sugerencias — plegados por defecto, con un solo toggle que resume
+                    cuántos hay entre los heurísticos y los del último Análisis IA, en vez de dos
+                    filas de badges siempre desplegadas ocupando pantalla. */}
+                {(energyAnalysis.warnings.length > 0 || (aiAnalysisResult?.suggestions?.length ?? 0) > 0) && (
+                  <button
+                    type="button"
+                    onClick={() => setShowHeuristicWarnings((v) => !v)}
+                    className="w-full flex items-center justify-between px-2 py-1 rounded-lg bg-neutral-800/60 hover:bg-neutral-800 text-neutral-300 text-[10px] font-mono transition-all cursor-pointer"
+                  >
+                    <span>⚠️ Avisos y sugerencias ({energyAnalysis.warnings.length + (aiAnalysisResult?.suggestions?.length ?? 0)})</span>
+                    <span>{showHeuristicWarnings ? '▲' : '▼'}</span>
+                  </button>
+                )}
+
                 {/* Warnings & Suggestions (Heuristic) */}
-                {energyAnalysis.warnings.length > 0 && (
+                {showHeuristicWarnings && energyAnalysis.warnings.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     {energyAnalysis.warnings.map((w, i) => {
                       const hasSongs = !!w.songTitles && w.songTitles.length > 0;
@@ -2317,7 +2638,7 @@ export default function RepertorioSetlists({
                 )}
 
                 {/* AI Analysis Summary (if available) - as badges like warnings */}
-                {aiAnalysisResult && (
+                {showHeuristicWarnings && aiAnalysisResult && (
                   <div className="space-y-2 pt-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-purple-300">🧠 Análisis IA: {aiAnalysisResult.overallScore}/100</span>
@@ -4009,6 +4330,33 @@ export default function RepertorioSetlists({
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}
     undoSourceKey={undoSourceKey}
+  />
+
+  {/* PERFECT SETLIST PLAN MODAL */}
+  <PerfectSetlistModal
+    isOpen={showPerfectSetlistModal}
+    onClose={() => setShowPerfectSetlistModal(false)}
+    setlistName={activeSetlist?.nombre}
+    loading={perfectSetlistLoading}
+    plan={perfectSetlistPlan}
+    error={perfectSetlistError}
+    onGenerate={handleGeneratePerfectSetlist}
+    onApplyAction={applyPerfectSetlistAction}
+    canUndo={canUndoReorder}
+    onUndo={undoLastReorder}
+    undoSourceKey={undoSourceKey}
+    chartData={chartData}
+    yDomain={yDomain}
+    zonasEnergia={ZONAS_ENERGIA}
+    onReorder={reorderSetlistItems}
+  />
+
+  {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}
+  <ImportSetlistModal
+    isOpen={showImportSetlistModal}
+    onClose={() => setShowImportSetlistModal(false)}
+    catalogSongs={songs}
+    onCreated={handleSetlistImported}
   />
 </div>
  );

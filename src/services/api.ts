@@ -835,6 +835,14 @@ export const api = {
     return request(`/api/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
       method: 'POST'
     });
+  },
+
+  // Plan de cambios (reordenar, quitar/añadir canciones del catálogo, añadir bloques) hacia el "setlist perfecto"
+  async generatePerfectSetlist(setlistId: string, feedback?: any): Promise<{ success: boolean; plan?: any; error?: string }> {
+    return request(`/api/setlists/${encodeURIComponent(setlistId)}/generate-perfect-setlist`, {
+      method: 'POST',
+      body: JSON.stringify({ feedback })
+    });
   }
 };
 
