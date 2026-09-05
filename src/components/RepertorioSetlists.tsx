@@ -1,4 +1,5 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
+import { api } from '../services/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
@@ -28,7 +29,7 @@ import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
-import { PerfectSetlistModal, PerfectSetlistAction } from './repertorio/PerfectSetlistModal';
+import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan } from './repertorio/PerfectSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -533,6 +534,13 @@ export default function RepertorioSetlists({
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
  const [showPerfectSetlistModal, setShowPerfectSetlistModal] = useState(false);
+ // El plan se genera y aplica sobre una COPIA del setlist activo (ver handleGeneratePerfectSetlist),
+ // nunca sobre el original — este estado vive en el padre, no en el modal, precisamente porque
+ // generar el plan cambia qué setlist está activo (duplicado) y el modal no debe reiniciarse
+ // (perder el plan a medio aplicar) solo porque activeSetlistId cambió por su propia acción.
+ const [perfectSetlistPlan, setPerfectSetlistPlan] = useState<PerfectSetlistPlan | null>(null);
+ const [perfectSetlistLoading, setPerfectSetlistLoading] = useState(false);
+ const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(null);
  // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
  const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
@@ -1466,11 +1474,11 @@ export default function RepertorioSetlists({
  }).catch(err => console.error('Error creating setlist on server:', err));
  };
 
- const handleDuplicateSetlist = (st: Setlist) => {
+ const handleDuplicateSetlist = (st: Setlist, nameSuffix: string = '(Copia)'): Setlist => {
  const duplicated: Setlist = {
  ...st,
  id: `setlist-${Date.now()}`,
- nombre: `${st.nombre} (Copia)`,
+ nombre: `${st.nombre} ${nameSuffix}`,
  fechaCreacion: new Date().toISOString().split('T')[0],
  fechaUltimaEdicion: new Date().toISOString().split('T')[0],
  items: st.items.map(it => ({ ...it, id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 5)}` }))
@@ -1483,6 +1491,8 @@ export default function RepertorioSetlists({
  headers: getHeaders(),
  body: JSON.stringify(duplicated)
  }).catch(err => console.error('Error duplicating setlist on server:', err));
+
+ return duplicated;
  };
 
  const handleDeleteSetlist = (stId: string) => {
@@ -1613,6 +1623,31 @@ export default function RepertorioSetlists({
          insertBlockAtIndex(action.block_type as SetlistItem['tipoItem'], action.title || 'Nuevo bloque', action.duracion_minutos, action.insert_at_position - 1, sourceKey);
        }
        break;
+   }
+ };
+
+ // Genera el plan de "Setlist Perfecto" contra el setlist activo (sin tocarlo) y, si sale bien,
+ // duplica ese setlist ANTES de que se pueda aplicar ninguna acción — Diego pidió esto para no
+ // arriesgar el original: el plan se generó con esas posiciones/canciones exactas, así que la
+ // copia se crea en ese mismo instante (misma foto que vio la IA), y de ahí en adelante todo lo
+ // que el modal "Aplique" cae sobre la copia porque handleDuplicateSetlist ya cambió cuál es el
+ // setlist activo (reorderSetlistItems/insertSongAtIndex/etc. siempre operan sobre `activeSetlist`).
+ const handleGeneratePerfectSetlist = async () => {
+   if (!activeSetlist) return;
+   setPerfectSetlistLoading(true);
+   setPerfectSetlistError(null);
+   try {
+     const result = await api.generatePerfectSetlist(activeSetlist.id);
+     if (result.success && result.plan) {
+       handleDuplicateSetlist(activeSetlist, '(Setlist Perfecto)');
+       setPerfectSetlistPlan(result.plan);
+     } else {
+       setPerfectSetlistError(result.error || 'Error al generar el plan');
+     }
+   } catch (err: any) {
+     setPerfectSetlistError(err.message || 'Error desconocido');
+   } finally {
+     setPerfectSetlistLoading(false);
    }
  };
 
@@ -2304,9 +2339,13 @@ export default function RepertorioSetlists({
             </button>
             <button
               type="button"
-              onClick={() => setShowPerfectSetlistModal(true)}
+              onClick={() => {
+                setPerfectSetlistPlan(null);
+                setPerfectSetlistError(null);
+                setShowPerfectSetlistModal(true);
+              }}
               className="px-3 py-0.5 rounded-lg bg-emerald-800/50 hover:bg-emerald-700 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
-              title="Generar un plan hacia el setlist perfecto (reordenar, añadir/quitar canciones del catálogo, sugerir bloques)"
+              title="Generar un plan hacia el setlist perfecto (reordenar, añadir/quitar canciones del catálogo, sugerir bloques) — se aplica sobre una copia, nunca sobre este setlist"
             >
               🪄 Setlist Perfecto
             </button>
@@ -4141,8 +4180,11 @@ export default function RepertorioSetlists({
   <PerfectSetlistModal
     isOpen={showPerfectSetlistModal}
     onClose={() => setShowPerfectSetlistModal(false)}
-    setlistId={activeSetlist?.id || ''}
     setlistName={activeSetlist?.nombre}
+    loading={perfectSetlistLoading}
+    plan={perfectSetlistPlan}
+    error={perfectSetlistError}
+    onGenerate={handleGeneratePerfectSetlist}
     onApplyAction={applyPerfectSetlistAction}
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}

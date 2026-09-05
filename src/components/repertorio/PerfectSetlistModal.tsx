@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader, AlertCircle, Wand2 } from 'lucide-react';
-import { api } from '../../services/api';
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
@@ -26,11 +25,19 @@ export interface PerfectSetlistPlan {
 interface PerfectSetlistModalProps {
   isOpen: boolean;
   onClose: () => void;
-  setlistId: string;
+  /** Nombre del setlist sobre el que se está trabajando AHORA — tras generar un plan esto pasa a
+   * ser la copia ("... (Setlist Perfecto)"), nunca el original, para que quede claro dónde caen
+   * las acciones que se apliquen. */
   setlistName?: string;
-  /** Ejecuta la acción concreta (reordena/quita/añade canción o bloque) contra el setlist activo.
-   * `sourceKey` identifica esta acción para que su propio botón se convierta en "Deshacer"
-   * mientras siga siendo la más reciente, igual que en el Análisis IA. */
+  loading: boolean;
+  plan: PerfectSetlistPlan | null;
+  error: string | null;
+  /** Pide un plan nuevo. Generarlo con éxito duplica el setlist activo ANTES de que se pueda
+   * aplicar ninguna acción (lo gestiona el padre) — el original nunca se toca. */
+  onGenerate: () => void;
+  /** Ejecuta la acción concreta (reordena/quita/añade canción o bloque) contra el setlist activo
+   * (la copia). `sourceKey` identifica esta acción para que su propio botón se convierta en
+   * "Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
   onApplyAction: (action: PerfectSetlistAction, sourceKey: string) => void;
   canUndo?: boolean;
   onUndo?: () => void;
@@ -66,42 +73,19 @@ function describeAction(a: PerfectSetlistAction): { icon: string; label: string 
   }
 }
 
-export function PerfectSetlistModal({ isOpen, onClose, setlistId, setlistName, onApplyAction, canUndo = false, onUndo, undoSourceKey = null }: PerfectSetlistModalProps) {
-  const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState<PerfectSetlistPlan | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null }: PerfectSetlistModalProps) {
   // Qué acciones ya se aplicaron en esta sesión del modal — igual que en el Análisis IA, tras
-  // aplicar una el botón pasa a "Deshacer" solo mientras siga siendo la acción más reciente
-  // (el snapshot de undo de un solo nivel no puede revertir nada anterior a eso).
+  // aplicar una el botón pasa a "Deshacer" solo mientras siga siendo la acción más reciente (el
+  // snapshot de undo de un solo nivel no puede revertir nada anterior a eso). Se reinicia cuando
+  // llega un plan NUEVO (objeto distinto), no cuando cambia setlistName — así aplicar una acción
+  // (que cambia qué setlist está activo, y por tanto este nombre) no borra el progreso a medio camino.
   const [appliedActionIndices, setAppliedActionIndices] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    if (isOpen) {
-      setPlan(null);
-      setError(null);
-      setAppliedActionIndices(new Set());
-    }
-  }, [isOpen, setlistId]);
+    setAppliedActionIndices(new Set());
+  }, [plan]);
 
   if (!isOpen) return null;
-
-  const handleGenerate = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await api.generatePerfectSetlist(setlistId);
-      if (result.success && result.plan) {
-        setPlan(result.plan);
-        setAppliedActionIndices(new Set());
-      } else {
-        setError(result.error || 'Error al generar el plan');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Error desconocido');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
@@ -134,13 +118,16 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistId, setlistName, o
           {!plan && !loading && !error && (
             <div className="text-center py-8">
               <Wand2 className="w-12 h-12 text-emerald-400/50 mx-auto mb-4" />
-              <p className="text-neutral-300 mb-6">
+              <p className="text-neutral-300 mb-3">
                 Deja que la IA revise este setlist Y el resto de tu catálogo, y te proponga un plan
                 de cambios: reordenar canciones, quitar las que no encajen, añadir otras del
                 repertorio que sí, y sugerir bloques (presentación, pausa, bis...) donde falten.
               </p>
+              <p className="text-xs text-neutral-500 mb-6">
+                No se toca este setlist: en cuanto se genere el plan, se trabaja sobre una copia nueva.
+              </p>
               <button
-                onClick={handleGenerate}
+                onClick={onGenerate}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition font-medium"
               >
                 Generar Plan
@@ -161,7 +148,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistId, setlistName, o
               <div>
                 <p className="font-medium text-red-200">Error</p>
                 <p className="text-sm text-red-300">{error}</p>
-                <button onClick={handleGenerate} className="mt-3 text-sm text-red-300 hover:text-red-200 underline">
+                <button onClick={onGenerate} className="mt-3 text-sm text-red-300 hover:text-red-200 underline">
                   Reintentar
                 </button>
               </div>
@@ -237,7 +224,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistId, setlistName, o
         {plan && (
           <div className="px-4 pb-4 flex gap-3">
             <button
-              onClick={handleGenerate}
+              onClick={onGenerate}
               className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
             >
               🔄 Regenerar
