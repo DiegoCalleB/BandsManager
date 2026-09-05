@@ -599,6 +599,70 @@ export default function RepertorioSetlists({
  // Drag and Drop state for setlist items
  const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
  const [dragOverItemIndex, setDragOverItemIndex] = useState<number | null>(null);
+ // Arrastrar el handle (GripVertical) de una fila con Pointer Events, no la API HTML5 Drag and
+ // Drop nativa (draggable=true + onDragStart/...) que se usaba antes: esa API no dispara eventos
+ // táctiles fiables en la mayoría de navegadores móviles, así que en el móvil solo se podía
+ // reordenar desde el Mapa de Energía (que ya usa Pointer Events, ver EnergyChart.tsx) y no desde
+ // esta lista. Mismo patrón que allí: un puntero activo, listeners globales mientras se arrastra,
+ // y aquí el destino se resuelve con elementFromPoint + un data-attribute por fila (en vez de un
+ // ratio sobre el ancho, que solo tiene sentido para el eje horizontal del gráfico).
+ const dragPointerIdRef = useRef<number | null>(null);
+
+ const startSetlistItemDrag = (index: number, pointerId: number) => {
+   dragPointerIdRef.current = pointerId;
+   setDraggedItemIndex(index);
+   setDragOverItemIndex(index);
+ };
+
+ useEffect(() => {
+   if (draggedItemIndex === null) return;
+
+   const isActivePointer = (e: PointerEvent) =>
+     dragPointerIdRef.current === null || e.pointerId === dragPointerIdRef.current;
+
+   const resetDrag = () => {
+     dragPointerIdRef.current = null;
+     setDraggedItemIndex(null);
+     setDragOverItemIndex(null);
+   };
+
+   const getRowIndexAt = (clientX: number, clientY: number): number | null => {
+     const el = document.elementFromPoint(clientX, clientY)?.closest('[data-setlist-row-index]');
+     const raw = el?.getAttribute('data-setlist-row-index');
+     return raw !== null && raw !== undefined ? parseInt(raw, 10) : null;
+   };
+
+   const handlePointerMove = (e: PointerEvent) => {
+     if (!isActivePointer(e)) return;
+     const idx = getRowIndexAt(e.clientX, e.clientY);
+     if (idx !== null) setDragOverItemIndex(idx);
+   };
+
+   const handlePointerUp = (e: PointerEvent) => {
+     if (!isActivePointer(e)) return;
+     const to = getRowIndexAt(e.clientX, e.clientY);
+     if (draggedItemIndex !== null && to !== null && to !== draggedItemIndex) {
+       reorderSetlistItems(draggedItemIndex, to);
+     }
+     resetDrag();
+   };
+
+   const handlePointerCancel = (e: PointerEvent) => {
+     if (!isActivePointer(e)) return;
+     resetDrag();
+   };
+
+   window.addEventListener('pointermove', handlePointerMove);
+   window.addEventListener('pointerup', handlePointerUp);
+   window.addEventListener('pointercancel', handlePointerCancel);
+   return () => {
+     window.removeEventListener('pointermove', handlePointerMove);
+     window.removeEventListener('pointerup', handlePointerUp);
+     window.removeEventListener('pointercancel', handlePointerCancel);
+   };
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [draggedItemIndex]);
+
  const [expandedSetlistItemIds, setExpandedSetlistItemIds] = useState<Set<string>>(new Set());
  // Popover de energía manual (1-10 en UI, se guarda ×2 como energia 1-20): qué item de setlist
  // tiene el selector abierto ahora mismo, y estado de guardado para deshabilitar mientras dura.
@@ -1567,12 +1631,6 @@ export default function RepertorioSetlists({
    });
    syncSetlistToBackend(restoredSetlist);
    setUndoReorderSnapshot(null);
- };
-
- const handleDropItem = (targetIndex: number) => {
-   if (draggedItemIndex !== null) reorderSetlistItems(draggedItemIndex, targetIndex);
-   setDraggedItemIndex(null);
-   setDragOverItemIndex(null);
  };
 
  const handleAddItemToSetlist = (
@@ -2589,12 +2647,7 @@ export default function RepertorioSetlists({
   return (
   <div
   key={it.id}
-  draggable={true}
-  onDragStart={() => setDraggedItemIndex(index)}
-  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
-  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
-  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
-  onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
+  data-setlist-row-index={index}
   onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
   className={`border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
@@ -2610,11 +2663,19 @@ export default function RepertorioSetlists({
   >
   {/* MAIN ROW - COMPACT */}
   <div className="flex items-center gap-2 px-2.5 py-1.5 overflow-x-auto">
-    {/* Drag Handle */}
+    {/* Drag Handle: Pointer Events (no HTML5 draggable) para que funcione también en
+        móvil/táctil — ver startSetlistItemDrag. touchAction:none evita que el navegador
+        intente hacer scroll de la página en vez de iniciar el arrastre. */}
     <div
       className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-amber-400 transition-colors shrink-0"
       title="Arrastrar y soltar para reordenar"
+      style={{ touchAction: 'none' }}
       onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        (e.target as Element).setPointerCapture?.(e.pointerId);
+        startSetlistItemDrag(index, e.pointerId);
+      }}
     >
       <GripVertical className="w-3.5 h-3.5" />
     </div>
@@ -2850,12 +2911,7 @@ export default function RepertorioSetlists({
  return (
  <div
  key={it.id}
- draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
- onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
- onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
- onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
- onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
+ data-setlist-row-index={index}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
  className={`border rounded-lg transition-all cursor-pointer ${
  isDragging ? 'opacity-40 scale-[0.98]' : ''
@@ -2868,11 +2924,17 @@ export default function RepertorioSetlists({
  }`}
  >
  <div className="flex items-center gap-2 px-2.5 py-1.5">
-   {/* Drag Handle */}
+   {/* Drag Handle: Pointer Events, ver startSetlistItemDrag */}
    <div
      className="cursor-grab active:cursor-grabbing text-[#f2ca50]/70 hover:text-[#f2ca50] transition-colors shrink-0"
      title="Arrastrar y soltar para reordenar"
+     style={{ touchAction: 'none' }}
      onClick={(e) => e.stopPropagation()}
+     onPointerDown={(e) => {
+       e.stopPropagation();
+       (e.target as Element).setPointerCapture?.(e.pointerId);
+       startSetlistItemDrag(index, e.pointerId);
+     }}
    >
      <GripVertical className="w-3.5 h-3.5" />
    </div>
@@ -2924,12 +2986,7 @@ export default function RepertorioSetlists({
  return (
  <div
  key={it.id}
- draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
- onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
- onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
- onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
- onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
+ data-setlist-row-index={index}
  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
  className={`border rounded-lg transition-all cursor-pointer ${typeConfig.bg} ${typeConfig.border} ${
  isDragging ? 'opacity-40 scale-[0.98]' : ''
@@ -2940,11 +2997,17 @@ export default function RepertorioSetlists({
  }`}
  >
  <div className="flex items-center gap-2 px-2.5 py-1.5">
-   {/* Drag Handle */}
+   {/* Drag Handle: Pointer Events, ver startSetlistItemDrag */}
    <div
      className="cursor-grab active:cursor-grabbing text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
      title="Arrastrar y soltar para reordenar"
+     style={{ touchAction: 'none' }}
      onClick={(e) => e.stopPropagation()}
+     onPointerDown={(e) => {
+       e.stopPropagation();
+       (e.target as Element).setPointerCapture?.(e.pointerId);
+       startSetlistItemDrag(index, e.pointerId);
+     }}
    >
      <GripVertical className="w-3.5 h-3.5" />
    </div>
