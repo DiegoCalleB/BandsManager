@@ -53,9 +53,16 @@ export function computeAutoFitPlan(
     return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0] };
   }
 
-  // 1. El repertorio completo, ¿cabe en una sola página a alguno de los tamaños candidatos?
+  // 1. El repertorio completo, ¿cabe en una sola página a alguno de los tamaños candidatos? En
+  // el tamaño MÍNIMO se admite un pequeño margen de tolerancia (MIN_SIZE_OVERFLOW_TOLERANCE):
+  // sin él, un repertorio que casi cabe pero se pasa por poco (p.ej. una única canción con mucha
+  // nota que no llegó a caber del todo) saltaría a una segunda hoja entera para esa canción sola
+  // — justo el caso que se pidió evitar. En los tamaños mayores no se da tolerancia: si no caben
+  // sin más, hay margen real para probar un tamaño menor antes de aceptar cualquier desborde.
+  const MIN_SIZE_OVERFLOW_TOLERANCE = 0.08;
   for (const pt of candidateTitleFontPt) {
-    if (measureFn(pt, 0, totalItems) <= pageAvailableHeightPx) {
+    const limit = pt === minFontPt ? pageAvailableHeightPx * (1 + MIN_SIZE_OVERFLOW_TOLERANCE) : pageAvailableHeightPx;
+    if (measureFn(pt, 0, totalItems) <= limit) {
       return { titleFontPt: pt, pageItemCounts: [totalItems] };
     }
   }
@@ -107,6 +114,27 @@ export function computeAutoFitPlan(
   }
   if (cursor < totalItems) {
     pageItemCounts.push(totalItems - cursor);
+  }
+
+  // 4. Red de seguridad: el reparto equilibrado por altura puede aun así dejar la ÚLTIMA página
+  // con muy pocos items (p.ej. una sola canción con muchas notas, que no cupo en el objetivo de
+  // la página anterior y se queda sola en la siguiente) — una hoja entera casi vacía por un
+  // resto pequeño. Si fusionarla con la penúltima página SIGUE cabiendo dentro del alto REAL
+  // disponible (no el objetivo equilibrado, que es más estricto), se fusionan; se repite por si
+  // el resultado vuelve a quedar disperso. Nunca se fusiona si no cabe de verdad: eso generaría
+  // un desborde real de la página en la impresión.
+  const SPARSE_LAST_PAGE_RATIO = 0.4;
+  while (pageItemCounts.length > 1) {
+    const lastCount = pageItemCounts[pageItemCounts.length - 1];
+    const avgCount = totalItems / pageItemCounts.length;
+    if (lastCount >= avgCount * SPARSE_LAST_PAGE_RATIO) break;
+
+    const secondLastCount = pageItemCounts[pageItemCounts.length - 2];
+    const mergedStart = totalItems - lastCount - secondLastCount;
+    const mergedHeight = measureFn(titleFontPt, mergedStart, totalItems);
+    if (mergedHeight > pageAvailableHeightPx) break;
+
+    pageItemCounts.splice(pageItemCounts.length - 2, 2, secondLastCount + lastCount);
   }
 
   return { titleFontPt, pageItemCounts };

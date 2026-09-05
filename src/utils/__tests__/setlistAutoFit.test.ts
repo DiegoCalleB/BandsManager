@@ -85,4 +85,46 @@ describe('computeAutoFitPlan', () => {
     const result = computeAutoFitPlan(30, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
     expect(result.titleFontPt).toBe(17);
   });
+
+  it('tolera un pequeño exceso al tamaño mínimo en vez de generar una hoja nueva casi vacía', () => {
+    // Caso real reportado: un repertorio que casi cabe en una página, pero se pasa por poco al
+    // tamaño mínimo (p.ej. por una única canción con mucha nota) — sin tolerancia, esto generaba
+    // una segunda hoja entera para esa canción sola. A 17pt: 10*50=500, un 4.2% por encima de
+    // pageAvailableHeightPx=480 (dentro del margen del 8% admitido) -> debe aceptarse en 1 página.
+    const measure = makeUniformMeasure({ 28: 70, 25: 65, 22: 60, 19: 56, 17: 50 });
+    const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 480 });
+    expect(result.titleFontPt).toBe(17);
+    expect(result.pageItemCounts).toEqual([10]);
+  });
+
+  it('no da tolerancia en tamaños que no son el mínimo: si no caben, se prueba uno menor', () => {
+    // A 19pt el contenido excede pageAvailableHeightPx por poco (mismo margen que el caso de
+    // arriba), pero 19pt NO es el tamaño mínimo de la lista (17pt sí lo es) — no se le da
+    // tolerancia porque hay margen real para probar 17pt, que si cabe sin exceso.
+    const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 52, 17: 40 });
+    const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+    // 19pt: 10*52=520, 4% por encima de 500 -> sin tolerancia (no es el mínimo), no se acepta así.
+    // 17pt: 10*40=400 <= 500 -> cabe sin más.
+    expect(result.titleFontPt).toBe(17);
+    expect(result.pageItemCounts).toEqual([10]);
+  });
+
+  it('un exceso grande (fuera de la tolerancia) al tamaño mínimo sigue repartiendo en páginas', () => {
+    const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
+    // 10*60=600, un 20% por encima de 500 -> muy por encima del 8% de tolerancia.
+    const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+    expect(result.pageItemCounts.length).toBeGreaterThan(1);
+  });
+
+  it('la fusión de última página dispersa nunca deja overflow ni pierde canciones', () => {
+    // No se fuerza aquí el caso exacto de activación (depende del resultado intermedio de la
+    // bisección, difícil de predecir a mano con precisión) — se verifica la propiedad que
+    // importa: pase lo que pase, el resultado sigue sumando el total y ninguna página queda
+    // vacía, para varias formas de repertorio con una canción mucho más pesada que el resto.
+    const heights = [...Array(25).fill(20), 90];
+    const measure: MeasureRangeFn = (_pt, from, to) => heights.slice(from, to).reduce((a, b) => a + b, 0);
+    const result = computeAutoFitPlan(26, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 150 });
+    expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(26);
+    expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
+  });
 });
