@@ -8,7 +8,7 @@ import { Setlist, Song, ThemeColors } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
 import { MemberNotesModal } from './MemberNotesModal';
 import { ModalPortal } from '../common/ModalPortal';
-import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, NoteSegment, NoteLine, StackedFitResult } from '../../utils/textFit';
+import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, deterministicOffsetPx, NoteSegment, NoteLine, StackedFitResult } from '../../utils/textFit';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -355,7 +355,6 @@ export function PdfExportModal({
             measure
           });
 
-          const rotationDeg = deterministicRotationDeg(s.id);
           // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
           // tamaño de fuente va por línea (no en el contenedor): la nota excepcional que
           // necesitó encogerse más que las demás para caber entera lo hace sola, sin afectar
@@ -367,11 +366,19 @@ export function PdfExportModal({
             className === 'note-member' ? inkColor : className === 'note-cue' ? '#b45309' : '#555';
           const arrowSvg = (color: string) =>
             `<svg width="9" height="9" viewBox="0 0 16 16" style="flex-shrink:0;margin-right:3px;"><path d="M13 13 L4 5 M4 5 L4.5 8.5 M4 5 L7.5 4.5" stroke="${color}" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+          // Rotación + desplazamiento por LÍNEA (no un único transform para todo el bloque): así
+          // las tres notas no giran como una pieza rígida, sino que cada una parece garabateada
+          // por separado, en un momento distinto — más orgánico y menos "maquetado".
           const notesHtml = layout
-            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${layout.fit.lines.map((line, i) => {
+            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};">${layout.fit.lines.map((line, i) => {
                 const color = noteLineColor(line.className);
                 const arrow = layout.mode === 'below' && i === 0 ? arrowSvg(color) : '';
-                return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;">${arrow}${line.text}</div>`;
+                const seed = `${s.id}-${line.className}`;
+                const lineRotationDeg = deterministicRotationDeg(seed, 3);
+                const lineOffsetXPx = deterministicOffsetPx(`${seed}-x`, 2);
+                const lineOffsetYPx = deterministicOffsetPx(`${seed}-y`, 2.5);
+                const lineTransform = `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`;
+                return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;transform:${lineTransform};">${arrow}${line.text}</div>`;
               }).join('')}</div>`
             : '';
           // El título solo se fuerza a una sola línea (con "…" si hace falta) cuando de verdad
@@ -1250,8 +1257,6 @@ export function PdfExportModal({
                       rowWidthPx: previewContentWidthPx,
                       measure: measureText
                     });
-                    const noteRotationDeg = deterministicRotationDeg(s.id);
-
                     // Cada nota (miembro / nota del bolo / general) apilada en su propia línea,
                     // una encima de otra, en vez de todas seguidas en una sola línea. El texto
                     // nunca se trunca: sin `truncate`/`overflow-hidden` a propósito, para que una
@@ -1259,6 +1264,12 @@ export function PdfExportModal({
                     // computeNoteLayout) pueda asomar un poco fuera de su carril en vez de
                     // recortarse sin avisar. whitespace-nowrap sí se mantiene: eso es lo que
                     // garantiza que nunca salta a una segunda línea.
+                    // Rotación + desplazamiento por LÍNEA (no un único transform para todo el
+                    // bloque): así "nota de fer", "*** ... ***" y "[General: ...]" no giran como
+                    // una pieza rígida, sino que cada una parece garabateada por separado, en un
+                    // momento distinto — más orgánico y menos "maquetado". Seed = id de canción +
+                    // tipo de nota, para que sea estable entre repintados pero distinto entre las
+                    // tres notas de la misma fila.
                     const renderNoteLine = (line: NoteLine, key: string, showArrow: boolean = false) => {
                       const noteColor =
                         line.className === 'note-member'
@@ -1266,13 +1277,22 @@ export function PdfExportModal({
                           : line.className === 'note-cue'
                             ? '#b45309'
                             : '#555';
+                      const seed = `${s.id}-${line.className}`;
+                      const lineRotationDeg = deterministicRotationDeg(seed, 3);
+                      const lineOffsetXPx = deterministicOffsetPx(`${seed}-x`, 2);
+                      const lineOffsetYPx = deterministicOffsetPx(`${seed}-y`, 2.5);
                       return (
                         <div
                           key={key}
                           className={`flex items-center min-w-0 max-w-full font-bold whitespace-nowrap ${
                             line.className === 'note-general' ? 'italic font-semibold' : ''
                           }`}
-                          style={{ fontFamily: getHandwritingFontFamily(), fontSize: line.fontSizePx, color: noteColor }}
+                          style={{
+                            fontFamily: getHandwritingFontFamily(),
+                            fontSize: line.fontSizePx,
+                            color: noteColor,
+                            transform: `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`
+                          }}
                         >
                           {/* Flecha manuscrita apuntando al título de arriba: solo cuando la nota
                               cayó a su propia línea debajo (excepción rara) y podría no quedar
@@ -1355,7 +1375,7 @@ export function PdfExportModal({
                           {noteLayout && noteLayout.mode === 'inline' && (
                             <div
                               className="flex flex-col items-start shrink-0"
-                              style={{ maxWidth: noteLayout.maxWidthPx, lineHeight: 1, transform: `rotate(${noteRotationDeg}deg)` }}
+                              style={{ maxWidth: noteLayout.maxWidthPx, lineHeight: 1 }}
                             >
                               {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                             </div>
@@ -1384,7 +1404,7 @@ export function PdfExportModal({
                         {noteLayout && noteLayout.mode === 'below' && (
                           <div
                             className="pl-9"
-                            style={{ lineHeight: 1, marginTop: '-10px', transform: `rotate(${noteRotationDeg}deg)` }}
+                            style={{ lineHeight: 1, marginTop: '-10px' }}
                           >
                             {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`, i === 0))}
                           </div>
