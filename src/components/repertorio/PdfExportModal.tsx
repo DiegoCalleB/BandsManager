@@ -517,14 +517,16 @@ export function PdfExportModal({
               break-after: page;
             }
 
-            /* Header */
+            /* Header — padding/margin reducidos a propósito: cada mm que se ahorra aquí es un mm
+               más de margen para las canciones, y así menos probabilidad de que una hoja con
+               contenido ajustado necesite una segunda hoja casi vacía. */
             .page-header {
               display: flex;
               justify-content: space-between;
               align-items: center;
-              border-bottom: 4px solid #000;
-              padding-bottom: 8px;
-              margin-bottom: 12px;
+              border-bottom: 3px solid #000;
+              padding-bottom: 5px;
+              margin-bottom: 7px;
             }
             .header-left {
               display: flex;
@@ -554,7 +556,7 @@ export function PdfExportModal({
               font-size: 10.5pt;
               font-weight: 700;
               color: #333;
-              margin-top: 4px;
+              margin-top: 2px;
               display: flex;
               align-items: center;
               gap: 6px;
@@ -610,7 +612,10 @@ export function PdfExportModal({
               display: flex;
               flex-direction: column;
               justify-content: flex-start;
-              gap: 2px;
+              /* gap:0 a propósito: con 30+ canciones, cada px de gap se multiplica por el nº de
+                 filas — es lo que más margen aporta para caber en menos hojas (ver ROW_GAP_PX y
+                 line-height de .song-title, mismo motivo). */
+              gap: 0px;
             }
 
             .setlist-song-item {
@@ -648,12 +653,14 @@ export function PdfExportModal({
               flex-shrink: 0;
             }
             .song-title {
-              /* font-size inline por fila (no aquí): mismo motivo que .song-num de arriba. */
+              /* font-size inline por fila (no aquí): mismo motivo que .song-num de arriba.
+                 line-height:1 (antes 1.1) por el mismo motivo que el gap:0 de arriba — con
+                 muchas filas, cada décima de interlineado de sobra se multiplica. */
               font-family: ${stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif"};
               font-weight: 900;
               letter-spacing: 0.5px;
               color: #000;
-              line-height: 1.1;
+              line-height: 1;
               min-width: 0;
               flex-shrink: 1;
               overflow: hidden;
@@ -815,13 +822,15 @@ export function PdfExportModal({
             }
 
             /* Footer */
+            /* padding/margin reducidos por el mismo motivo que el header: más espacio libre
+               para las canciones. */
             .page-footer {
               display: flex;
               justify-content: space-between;
               align-items: center;
               border-top: 2px solid #000;
-              padding-top: 6px;
-              margin-top: 10px;
+              padding-top: 4px;
+              margin-top: 6px;
               font-family: monospace;
               font-size: 8.5pt;
               color: #444;
@@ -1357,7 +1366,7 @@ export function PdfExportModal({
             {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
                 menos de riesgo de que el repertorio se desborde a una hoja extra. */}
             <div>
-              <div className="flex items-center justify-between border-b-[3px] border-black pb-1.5 mb-3">
+              <div className="flex items-center justify-between border-b-[3px] border-black pb-1 mb-2">
                 <div className="flex items-center gap-3">
                   {showBandLogo && customLogoUrl && (
                     <img
@@ -1399,7 +1408,7 @@ export function PdfExportModal({
               {/* Setlist Song List (Large High-Impact Typography). El ritmo vertical "sin nota"
                   es el de una lista impresa apretada — no se reserva hueco para notas aquí, se
                   aprovecha el que ya deja el interlineado del título (ver modo 'below' abajo). */}
-              <div className="space-y-0.5">
+              <div className="space-y-0">
                 {activeSetlist.items.map((item, index) => {
                   if (item.tipoItem === 'cancion') {
                     const s = songs.find(x => x.id === item.songId);
@@ -1644,7 +1653,7 @@ export function PdfExportModal({
 
             {/* Bottom Footer with BandManager & link */}
             {showAppBranding && (
-              <div className="flex justify-between items-center border-t-2 border-black pt-3 mt-8 font-mono text-[9pt] text-neutral-600">
+              <div className="flex justify-between items-center border-t-2 border-black pt-2 mt-4 font-mono text-[9pt] text-neutral-600">
                 <div className="flex items-center gap-2">
                   <span className="font-black text-black">⚡ BandManager</span>
                   <span>•</span>
