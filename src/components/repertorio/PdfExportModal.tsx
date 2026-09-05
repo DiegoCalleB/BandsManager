@@ -319,7 +319,7 @@ export function PdfExportModal({
   };
 
   // Generate HTML for printing
-  const handlePrint = () => {
+  const handlePrint = async () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
@@ -897,13 +897,42 @@ export function PdfExportModal({
       measureFrame.style.cssText = 'position:fixed;left:-99999px;top:0;width:0;height:0;border:0;visibility:hidden;';
       document.body.appendChild(measureFrame);
 
+      const measureDoc = measureFrame.contentDocument;
+      if (!measureDoc) {
+        document.body.removeChild(measureFrame);
+        return;
+      }
+      // El documento del iframe se escribe UNA sola vez (con las mismas Google Fonts que la
+      // impresión real) y se espera a que carguen antes de medir nada — si no, todas las
+      // mediciones se harían con la fuente de reserva del sistema (más ancha que Anton/Oswald,
+      // que son condensadas), lo que sobreestima cuánto ocupa cada fila y hace que el algoritmo
+      // decida más páginas de las que realmente hacen falta. Las mediciones posteriores solo
+      // cambian el innerHTML de un contenedor reusable (#measure-target) en vez de reescribir
+      // todo el documento cada vez — recargarlo por medición sería lentísimo y volvería a perder
+      // las fuentes ya cargadas.
+      measureDoc.open();
+      measureDoc.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+            <style>${printCss}</style>
+          </head>
+          <body><div id="measure-target"></div></body>
+        </html>
+      `);
+      measureDoc.close();
+      if (measureDoc.fonts) {
+        await measureDoc.fonts.ready;
+      }
+      const measureTarget = measureDoc.getElementById('measure-target');
+
       const measureHtmlHeightPx = (bodyHtml: string): number => {
-        const doc = measureFrame.contentDocument;
-        if (!doc) return 0;
-        doc.open();
-        doc.write(`<!DOCTYPE html><html><head><style>${printCss}</style></head><body>${bodyHtml}</body></html>`);
-        doc.close();
-        const el = doc.body.firstElementChild as HTMLElement | null;
+        if (!measureTarget) return 0;
+        measureTarget.innerHTML = bodyHtml;
+        const el = measureTarget.firstElementChild as HTMLElement | null;
         return el ? el.getBoundingClientRect().height : 0;
       };
 
