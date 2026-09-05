@@ -2563,35 +2563,71 @@ export default function RepertorioSetlists({
                   showIdealCurve={showIdealCurve}
                 />
 
-                {/* Mover el punto seleccionado un paso atrás/adelante con flechas — alternativa al
-                    arrastre para cuando se quiere precisión (un puesto exacto) o simplemente en
-                    móvil, donde apuntar con el dedo a "justo un puesto más allá" es más difícil. */}
+                {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
+                    baja su energía un punto exacto — alternativa al arrastre del gráfico para
+                    cuando se quiere precisión, o directamente para móvil, donde el arrastre (sobre
+                    todo en vertical, encima de un SVG de recharts) no siempre responde igual de
+                    bien que en escritorio. */}
                 {selectedSetlistItemId && (() => {
                   const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
                   if (selectedIndex === -1) return null;
+                  const point = chartData[selectedIndex];
+                  const canEditEnergy = point.songId != null && typeof point.score === 'number';
+                  const info = canEditEnergy ? getEnergyInfo(point.score as number) : null;
+                  const bumpEnergy = (delta: number) => {
+                    if (!canEditEnergy || typeof point.score !== 'number') return;
+                    const next = Math.max(1, Math.min(20, point.score + delta));
+                    if (next !== point.score) handleEnergyChartDrag(point, next);
+                  };
+                  const arrowBtnClass = "p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition";
                   return (
-                    <div className="flex items-center justify-center gap-2 pt-1">
-                      <button
-                        type="button"
-                        disabled={selectedIndex <= 0}
-                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
-                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
-                        title="Mover una posición hacia atrás"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      <span className="text-[10px] font-mono text-neutral-400 max-w-[50%] truncate">
-                        🎯 {chartData[selectedIndex].name}
-                      </span>
-                      <button
-                        type="button"
-                        disabled={selectedIndex >= chartData.length - 1}
-                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
-                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
-                        title="Mover una posición hacia adelante"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                    <div className="flex flex-col items-center gap-1.5 pt-1">
+                      {canEditEnergy && (
+                        <button
+                          type="button"
+                          disabled={(point.score as number) >= 20}
+                          onClick={() => bumpEnergy(1)}
+                          className={arrowBtnClass}
+                          title="Subir energía"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          disabled={selectedIndex <= 0}
+                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
+                          className={arrowBtnClass}
+                          title="Mover una posición hacia atrás"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <span className="text-[10px] font-mono text-neutral-400 max-w-[45%] truncate text-center">
+                          🎯 {point.name}
+                          {info && <span className="ml-1 font-bold" style={{ color: info.hexColor }}>· {point.score}/20</span>}
+                        </span>
+                        <button
+                          type="button"
+                          disabled={selectedIndex >= chartData.length - 1}
+                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
+                          className={arrowBtnClass}
+                          title="Mover una posición hacia adelante"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {canEditEnergy && (
+                        <button
+                          type="button"
+                          disabled={(point.score as number) <= 1}
+                          onClick={() => bumpEnergy(-1)}
+                          className={arrowBtnClass}
+                          title="Bajar energía"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   );
                 })()}
