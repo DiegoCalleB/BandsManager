@@ -709,6 +709,12 @@ export function PdfExportModal({
               display: flex;
               flex-direction: column;
               align-items: flex-start;
+              /* align-self:flex-start a propósito: .song-line usa align-items:baseline, y al ser
+                 este un contenedor flex-column con varias líneas apiladas, su "baseline" para el
+                 padre se toma de la ÚLTIMA línea — eso empujaba toda la columna hacia abajo,
+                 dejando un hueco entre el título y la primera nota. Con flex-start se ignora ese
+                 baseline y la columna se pega arriba, junto al título. */
+              align-self: flex-start;
               gap: 0px;
               flex-shrink: 0;
               overflow: visible;
@@ -1372,9 +1378,13 @@ export function PdfExportModal({
                           {/* Notas "escritas a mano" a la derecha, cuando cabe con hueco de sobra
                               (ver computeNoteLayout) — apiladas, una por línea, tamaño ya
                               decidido por textFit, aquí solo se pintan. */}
+                          {/* self-start a propósito: el padre usa items-baseline, y al ser este
+                              un contenedor flex-column con varias líneas, su "baseline" para el
+                              padre se toma de la ÚLTIMA línea — empujaba toda la columna hacia
+                              abajo, dejando hueco entre el título y la primera nota. */}
                           {noteLayout && noteLayout.mode === 'inline' && (
                             <div
-                              className="flex flex-col items-start shrink-0"
+                              className="flex flex-col items-start self-start shrink-0"
                               style={{ maxWidth: noteLayout.maxWidthPx, lineHeight: 1 }}
                             >
                               {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
