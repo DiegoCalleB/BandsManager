@@ -374,7 +374,10 @@ export function PdfExportModal({
                 const color = noteLineColor(line.className);
                 const arrow = layout.mode === 'below' && i === 0 ? arrowSvg(color) : '';
                 const seed = `${s.id}-${line.className}`;
-                const lineRotationDeg = deterministicRotationDeg(seed, 3);
+                // Solo hacia arriba (o recta), nunca hacia abajo: rotate() positivo gira en
+                // sentido horario, o sea el extremo derecho del texto cae hacia abajo — se veía
+                // como una nota "torcida hacia abajo" en vez de la escritura ascendente natural.
+                const lineRotationDeg = -Math.abs(deterministicRotationDeg(seed, 3));
                 const lineOffsetXPx = deterministicOffsetPx(`${seed}-x`, 2);
                 // Solo hacia arriba (o recta), nunca hacia abajo: un desplazamiento positivo se
                 // veía como un salto de línea/desalineación entre notas — justo el efecto que se
@@ -1287,7 +1290,10 @@ export function PdfExportModal({
                             ? '#b45309'
                             : '#555';
                       const seed = `${s.id}-${line.className}`;
-                      const lineRotationDeg = deterministicRotationDeg(seed, 3);
+                      // Solo hacia arriba (o recta), nunca hacia abajo: rotate() positivo gira en
+                // sentido horario, o sea el extremo derecho del texto cae hacia abajo — se veía
+                // como una nota "torcida hacia abajo" en vez de la escritura ascendente natural.
+                const lineRotationDeg = -Math.abs(deterministicRotationDeg(seed, 3));
                       const lineOffsetXPx = deterministicOffsetPx(`${seed}-x`, 2);
                       // Solo hacia arriba (o recta), nunca hacia abajo: un desplazamiento positivo se
                 // veía como un salto de línea/desalineación entre notas — justo el efecto que se
