@@ -650,6 +650,7 @@ export function PdfExportModal({
               gap: 0px;
               flex-shrink: 0;
               overflow: visible;
+              line-height: 1;
             }
             /* margin-top negativo a propósito: "muerde" el hueco que ya deja el descendente/
                interlineado del título de arriba, para que la nota parezca escrita justo pegada
@@ -1299,7 +1300,7 @@ export function PdfExportModal({
                           {noteLayout && noteLayout.mode === 'inline' && (
                             <div
                               className="flex flex-col items-start shrink-0"
-                              style={{ maxWidth: noteLayout.maxWidthPx, transform: `rotate(${noteRotationDeg}deg)` }}
+                              style={{ maxWidth: noteLayout.maxWidthPx, lineHeight: 1, transform: `rotate(${noteRotationDeg}deg)` }}
                             >
                               {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                             </div>
