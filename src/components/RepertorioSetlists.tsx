@@ -28,6 +28,7 @@ import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
+import { PerfectSetlistModal, PerfectSetlistAction } from './repertorio/PerfectSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -530,6 +531,8 @@ export default function RepertorioSetlists({
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
+ // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
+ const [showPerfectSetlistModal, setShowPerfectSetlistModal] = useState(false);
  // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
  const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
@@ -1505,17 +1508,15 @@ export default function RepertorioSetlists({
  // Setlist Item Manipulation & Agile Reordering (Drag & Drop) — lógica pura, parametrizada por
  // índices en vez de leer el estado de arrastre de la lista (draggedItemIndex), para poder
  // reutilizarla también desde el drag horizontal sobre el Mapa de Energía (ver EnergyChart).
- const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
-   if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+ //
+ // Punto único que de verdad escribe un array de items nuevo — reordenar, quitar una canción,
+ // añadir una del catálogo o insertar un bloque son todos casos de "sustituir items por otro
+ // array", así que todos pasan por aquí para compartir el snapshot de "Deshacer" (sourceKey
+ // identifica qué acción lo generó) y el guardado/sync.
+ const applySetlistItemsChange = (newItems: SetlistItem[], sourceKey: string) => {
+   if (!activeSetlist) return;
 
-   // Snapshot del orden ANTES de tocarlo — es lo que restaura "Deshacer". Se guarda aquí, en el
-   // único punto que de verdad reordena, para que cubra igual el arrastre manual que un "Aplicar"
-   // de un aviso heurístico o de una sugerencia de la IA.
    setUndoReorderSnapshot({ setlistId: activeSetlist.id, items: activeSetlist.items, sourceKey });
-
-   const newItems = [...activeSetlist.items];
-   const [movedItem] = newItems.splice(fromIndex, 1);
-   newItems.splice(toIndex, 0, movedItem);
 
    const updatedSetlist: Setlist = {
      ...activeSetlist,
@@ -1529,6 +1530,90 @@ export default function RepertorioSetlists({
      return next;
    });
    syncSetlistToBackend(updatedSetlist);
+ };
+
+ const reorderSetlistItems = (fromIndex: number, toIndex: number, sourceKey: string = 'manual') => {
+   if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+   const newItems = [...activeSetlist.items];
+   const [movedItem] = newItems.splice(fromIndex, 1);
+   newItems.splice(toIndex, 0, movedItem);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Quita el item en `index` (usado por el plan de "Setlist Perfecto" para retirar una canción que
+ // no encaja — a diferencia de handleRemoveSetlistItem, que borra por id desde la lista visual,
+ // esto trabaja por índice porque así es como el plan referencia sus posiciones).
+ const removeSetlistItemAtIndex = (index: number, sourceKey: string) => {
+   if (!activeSetlist || index < 0 || index >= activeSetlist.items.length) return;
+   const newItems = activeSetlist.items.filter((_, i) => i !== index);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Inserta una canción del catálogo en `insertIndex` — variante de handleAddItemToSetlist que
+ // inserta en una posición concreta (la que propuso el plan) en vez de tras el item seleccionado.
+ const insertSongAtIndex = (songId: string, insertIndex: number, sourceKey: string) => {
+   if (!activeSetlist) return;
+   const newItem: SetlistItem = {
+     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+     tipoItem: 'cancion',
+     songId
+   };
+   const newItems = [...activeSetlist.items];
+   const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
+   newItems.splice(clampedIndex, 0, newItem);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Inserta un bloque (presentación, pausa, bis...) en `insertIndex` — el plan de "Setlist
+ // Perfecto" ya viene con block_type validado contra los tipoItem reales, así que aquí no hace
+ // falta repetir los defaults por tipo que sí tiene handleAddItemToSetlist para el editor manual.
+ const insertBlockAtIndex = (
+   tipoItem: SetlistItem['tipoItem'],
+   tituloCustom: string,
+   duracionEstimadaMinutos: number | undefined,
+   insertIndex: number,
+   sourceKey: string
+ ) => {
+   if (!activeSetlist) return;
+   const newItem: SetlistItem = {
+     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+     tipoItem,
+     tituloCustom,
+     duracionEstimadaMinutos,
+     duracionEstimadaSegundos: duracionEstimadaMinutos ? Math.round(duracionEstimadaMinutos * 60) : undefined
+   };
+   const newItems = [...activeSetlist.items];
+   const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
+   newItems.splice(clampedIndex, 0, newItem);
+   applySetlistItemsChange(newItems, sourceKey);
+ };
+
+ // Ejecuta UNA acción concreta del plan de "Setlist Perfecto" — cada acción ya viene validada por
+ // el servidor (posiciones dentro de rango, catalog_index resuelto a un song_id real, block_type
+ // dentro del enum), así que aquí solo se traduce cada tipo a la función que ya mueve/inserta/quita.
+ const applyPerfectSetlistAction = (action: PerfectSetlistAction, sourceKey: string) => {
+   switch (action.type) {
+     case 'reorder':
+       if (action.from_position != null && action.to_position != null) {
+         reorderSetlistItems(action.from_position - 1, action.to_position - 1, sourceKey);
+       }
+       break;
+     case 'remove_song':
+       if (action.item_position != null) {
+         removeSetlistItemAtIndex(action.item_position - 1, sourceKey);
+       }
+       break;
+     case 'add_song':
+       if (action.song_id && action.insert_at_position != null) {
+         insertSongAtIndex(action.song_id, action.insert_at_position - 1, sourceKey);
+       }
+       break;
+     case 'add_block':
+       if (action.block_type && action.insert_at_position != null) {
+         insertBlockAtIndex(action.block_type as SetlistItem['tipoItem'], action.title || 'Nuevo bloque', action.duracion_minutos, action.insert_at_position - 1, sourceKey);
+       }
+       break;
+   }
  };
 
  const canUndoReorder = !!undoReorderSnapshot && undoReorderSnapshot.setlistId === activeSetlist?.id;
@@ -2216,6 +2301,14 @@ export default function RepertorioSetlists({
               title="Análisis avanzado con IA"
             >
               🧠 Análisis IA
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowPerfectSetlistModal(true)}
+              className="px-3 py-0.5 rounded-lg bg-emerald-800/50 hover:bg-emerald-700 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
+              title="Generar un plan hacia el setlist perfecto (reordenar, añadir/quitar canciones del catálogo, sugerir bloques)"
+            >
+              🪄 Setlist Perfecto
             </button>
           </div>
         </div>
@@ -4039,6 +4132,18 @@ export default function RepertorioSetlists({
     zonasEnergia={ZONAS_ENERGIA}
     warnings={energyAnalysis.warnings}
     onReorder={reorderSetlistItems}
+    canUndo={canUndoReorder}
+    onUndo={undoLastReorder}
+    undoSourceKey={undoSourceKey}
+  />
+
+  {/* PERFECT SETLIST PLAN MODAL */}
+  <PerfectSetlistModal
+    isOpen={showPerfectSetlistModal}
+    onClose={() => setShowPerfectSetlistModal(false)}
+    setlistId={activeSetlist?.id || ''}
+    setlistName={activeSetlist?.nombre}
+    onApplyAction={applyPerfectSetlistAction}
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}
     undoSourceKey={undoSourceKey}

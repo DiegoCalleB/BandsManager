@@ -20,6 +20,8 @@ import {
 
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { analyzeSetlistWithAI } from "../utils/setlistAIAnalyzer.js";
+import { generatePerfectSetlistPlan } from "../utils/perfectSetlistPlanner.js";
+import { iaRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -565,6 +567,36 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
   } catch (err: any) {
     console.error("Error in analyze-setlist-with-ai:", err);
     res.status(500).json({ error: err?.message || "Error al analizar setlist con IA" });
+  }
+});
+
+// Plan de cambios (reordenar, quitar/añadir canciones del catálogo, añadir bloques) para acercar
+// el setlist al "perfecto" — a diferencia de /analyze-with-ai, que solo señala problemas de orden,
+// esto también mira el resto del repertorio de la banda como candidatas a añadir.
+router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRateLimiter, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { setlistId } = req.params;
+
+    const allSetlists = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s: any) => s.id === setlistId);
+    if (!setlist) {
+      return res.status(404).json({ error: "Setlist no encontrado" });
+    }
+
+    const allSongs = await dbGetSongs(userBandId);
+    const songsById = new Map(allSongs.map((s: Song) => [s.id, s]));
+    const usedSongIds = new Set(
+      setlist.items.filter((it: SetlistItem) => !!it.songId).map((it: SetlistItem) => it.songId as string)
+    );
+    const catalogCandidates = allSongs.filter((s: Song) => !usedSongIds.has(s.id));
+
+    const plan = await generatePerfectSetlistPlan(setlist.items, songsById, catalogCandidates);
+
+    res.json({ success: true, plan });
+  } catch (err: any) {
+    console.error("Error in generate-perfect-setlist:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de setlist perfecto" });
   }
 });
 
