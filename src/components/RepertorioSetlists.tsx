@@ -2120,7 +2120,7 @@ export default function RepertorioSetlists({
 
   {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
   {activeTab === 'setlists' && (
-  <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+  <div className="grid grid-cols-1 lg:grid-cols-12 gap-1.5">
   {/* SIDEBAR: LIST OF SAVED SETLISTS */}
   {!isSidebarCollapsed ? (
   <div className={`lg:col-span-3 p-3 rounded-2xl space-y-3 ${colors.card} `}>
