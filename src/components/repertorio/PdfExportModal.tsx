@@ -9,6 +9,7 @@ import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../u
 import { MemberNotesModal } from './MemberNotesModal';
 import { ModalPortal } from '../common/ModalPortal';
 import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, deterministicOffsetPx, NoteSegment, NoteLine, StackedFitResult } from '../../utils/textFit';
+import { computeAutoFitPlan, MeasureRangeFn } from '../../utils/setlistAutoFit';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -21,6 +22,18 @@ const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
 const ROW_GAP_PX = 5;
+
+// Auto-ajuste de tamaño e impresión (ver setlistAutoFit.ts): candidatos de tamaño de título en
+// pt, de mayor a menor. 17pt es el mínimo legible a distancia de escenario (~2 metros) — nunca se
+// baja de ahí para caber en menos hojas; se prefiere repartir el repertorio en más páginas antes
+// que una letra más pequeña. noteFontPt/songNumFontPt se derivan proporcionalmente del título,
+// manteniendo las mismas proporciones que tenían los 3 niveles fijos anteriores (28/19/22 en "gigante").
+const TITLE_FONT_CANDIDATES_PT = [28, 25, 22, 19, 17];
+const deriveNoteFontPt = (titlePt: number) => Math.round(titlePt * (19 / 28) * 10) / 10;
+const deriveSongNumFontPt = (titlePt: number) => Math.round(titlePt * (22 / 28) * 10) / 10;
+// Tamaño de referencia para la vista previa en pantalla (no imprime, no pagina de verdad — es
+// solo scroll continuo), un punto intermedio entre los antiguos "gigante" y "compacto".
+const PREVIEW_TITLE_FONT_PT = 22;
 
 interface NoteLayoutBadge {
   text: string;
@@ -208,7 +221,10 @@ export function PdfExportModal({
   
   // Design & Preset State
   const [stylePreset, setStylePreset] = useState<SetlistStylePreset>('rock_stage');
-  const [fontSizeScale, setFontSizeScale] = useState<'gigante' | 'grande' | 'compacto'>('gigante');
+  // El tamaño real de impresión ya no se elige a mano: se auto-ajusta por hoja (ver
+  // computeAutoFitPlan / setlistAutoFit.ts, usado en handlePrint). La vista previa en pantalla no
+  // reproduce esa paginación 1:1 (no hay salto de página visible aquí, solo scroll), así que usa
+  // un tamaño de referencia fijo — PREVIEW_TITLE_FONT_PT, más abajo.
   const [handwritingFont, setHandwritingFont] = useState<'caveat' | 'permanent_marker' | 'courier' | 'sans'>('caveat');
   const [handwritingColor, setHandwritingColor] = useState<'blue' | 'black' | 'red' | 'purple'>('blue');
   
@@ -308,21 +324,29 @@ export function PdfExportModal({
     if (!printWindow) return;
 
     const measure = makeCanvasMeasurer();
-    const titleFontPt = fontSizeScale === 'gigante' ? 28 : fontSizeScale === 'grande' ? 22 : 17;
-    const noteFontPt = fontSizeScale === 'gigante' ? 19 : fontSizeScale === 'grande' ? 16 : 13;
-    const fontPx = `${titleFontPt}pt`;
-    const titleFontSizePx = ptToPx(titleFontPt);
-    const noteMaxFontSizePx = ptToPx(noteFontPt);
     const noteMinFontSizePx = 11;
-    const songNumFontSizePx = ptToPx(fontSizeScale === 'gigante' ? 22 : 18);
     const inkColor = getInkColorHex();
     const handFont = getHandwritingFontFamily();
     const titleFontFamily = stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif";
 
-    const pagesHtml = membersToExport.map((member, mIdx) => {
-      const isMaster = member.id === 'master';
+    // Construye el HTML de UNA fila (canción o divisor) a un tamaño de título dado — reutilizada
+    // tanto para el HTML final de impresión como para medir alturas candidatas del auto-ajuste
+    // (computeAutoFitPlan, ver más abajo). Antes esto vivía inline dentro de un único
+    // `activeSetlist.items.map`, atado al fontSizeScale fijo elegido a mano; ahora titleFontPt
+    // llega como parámetro porque el auto-ajuste puede decidir un tamaño distinto por miembro
+    // (cada uno tiene sus propias notas, que ocupan distinto espacio).
+    const buildRowHtml = (
+      item: (typeof activeSetlist.items)[number],
+      idx: number,
+      titleFontPt: number,
+      member: (typeof membersToExport)[number],
+      isMaster: boolean
+    ): string => {
+      const titleFontSizePx = ptToPx(titleFontPt);
+      const noteFontPt = deriveNoteFontPt(titleFontPt);
+      const noteMaxFontSizePx = ptToPx(noteFontPt);
+      const songNumFontSizePx = ptToPx(deriveSongNumFontPt(titleFontPt));
 
-      const itemsRowsHtml = activeSetlist.items.map((item, idx) => {
         if (item.tipoItem === 'cancion') {
           const s = songs.find(x => x.id === item.songId);
           if (!s) return '';
@@ -398,15 +422,20 @@ export function PdfExportModal({
           // El título solo se fuerza a una sola línea (con "…" si hace falta) cuando de verdad
           // compite por sitio con una nota en la misma fila (layout.mode === 'inline'). Si esa
           // fila no tiene nota, o la nota cae debajo, el título vuelve a poder ocupar toda su
-          // anchura natural — nunca se pidió tocarlo salvo por esa convivencia.
-          const titleStyle = layout && layout.mode === 'inline' ? '' : ' style="white-space:normal;overflow:visible;text-overflow:clip;"';
+          // anchura natural — nunca se pidió tocarlo salvo por esa convivencia. font-size inline
+          // (no una clase CSS global): titleFontPt ahora puede variar por miembro/página según
+          // el auto-ajuste (ver computeAutoFitPlan), a diferencia de los 3 tamaños fijos de antes.
+          const titleStyle =
+            layout && layout.mode === 'inline'
+              ? `font-size:${titleFontPt}pt;`
+              : `font-size:${titleFontPt}pt;white-space:normal;overflow:visible;text-overflow:clip;`;
 
           return `
             <div class="setlist-song-item">
               <div class="song-line">
                 <div class="song-left">
-                  ${numberText ? `<span class="song-num">${numberText}</span>` : ''}
-                  <span class="song-title"${titleStyle}>${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
+                  ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ''}
+                  <span class="song-title" style="${titleStyle}">${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
                   ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ''}
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ''}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ''}
@@ -444,69 +473,12 @@ export function PdfExportModal({
             </div>
           `;
         }
-      }).join('');
+      };
 
-      return `
-        <div class="sheet-page ${mIdx < membersToExport.length - 1 ? 'page-break' : ''}">
-          <!-- Header: Band Logo / Name + Member Name -->
-          <div class="page-header">
-            <div class="header-left">
-              ${(showBandLogo && customLogoUrl) ? `
-                <img src="${customLogoUrl}" alt="${bandName}" class="band-logo-img" onerror="this.style.display='none'" />
-              ` : ''}
-              <div class="band-text-block">
-                <h1 class="band-heading">${bandName.toUpperCase()}</h1>
-                <div class="setlist-meta">
-                  <span class="setlist-name-badge">${activeSetlist.nombre.toUpperCase()}</span>
-                  ${showDuration ? `<span class="meta-dot">•</span> <span>${activeSetlistMetrics.formattedTime}</span>` : ''}
-                  <span class="meta-dot">•</span> <span>${activeSetlistMetrics.songCount} TEMAS</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="header-right">
-              <div class="member-stage-tag">
-                <div class="tag-title">${!isMaster ? 'COPIA PARA MÚSICO' : 'COPIA CONTROL'}</div>
-                <div class="tag-name">${member.name.toUpperCase()}</div>
-                <div class="tag-instrument">${member.instrument.toUpperCase()}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Main Setlist Body -->
-          <div class="setlist-items-container">
-            ${itemsRowsHtml}
-          </div>
-
-          <!-- Professional Footer with BandManager and App URL -->
-          ${showAppBranding ? `
-            <div class="page-footer">
-              <div class="footer-left">
-                <span class="app-logo-badge">⚡ BandManager</span>
-                <span class="footer-sep">•</span>
-                <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
-              </div>
-              <div class="footer-right">
-                <span>Hoja ${mIdx + 1} de ${membersToExport.length} (${member.name})</span>
-                <span class="footer-sep">•</span>
-                <span>${new Date().toLocaleDateString('es-ES')}</span>
-              </div>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }).join('');
-
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
-          <style>
+      // CSS de impresión: extraído a variable (en vez de embebido directamente en el HTML final
+      // más abajo) para poder inyectar EXACTAMENTE el mismo CSS en el iframe de medición oculto
+      // de auto-ajuste — misma altura real, no una aproximación heurística.
+      const printCss = `
             @page {
               size: A4 portrait;
               margin: 8mm 10mm;
@@ -658,16 +630,17 @@ export function PdfExportModal({
               overflow: hidden;
             }
             .song-num {
+              /* font-size inline por fila (no aquí): titleFontPt puede variar por miembro/página
+                 según el auto-ajuste (ver computeAutoFitPlan / setlistAutoFit.ts). */
               font-family: 'Oswald', sans-serif;
-              font-size: ${fontSizeScale === 'gigante' ? '22pt' : '18pt'};
               font-weight: 800;
               color: #444;
               min-width: 32px;
               flex-shrink: 0;
             }
             .song-title {
+              /* font-size inline por fila (no aquí): mismo motivo que .song-num de arriba. */
               font-family: ${stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif"};
-              font-size: ${fontPx};
               font-weight: 900;
               letter-spacing: 0.5px;
               color: #000;
@@ -867,7 +840,150 @@ export function PdfExportModal({
               gap: 6px;
               font-weight: 700;
             }
-          </style>
+      `;
+
+      // Header/footer de cada hoja: independientes de cuántas páginas necesite el repertorio en
+      // sí (el footer sí necesita el número de página final, se rellena tras calcular el plan).
+      const buildHeaderHtml = (member: (typeof membersToExport)[number], isMaster: boolean): string => `
+        <div class="page-header">
+          <div class="header-left">
+            ${(showBandLogo && customLogoUrl) ? `
+              <img src="${customLogoUrl}" alt="${bandName}" class="band-logo-img" onerror="this.style.display='none'" />
+            ` : ''}
+            <div class="band-text-block">
+              <h1 class="band-heading">${bandName.toUpperCase()}</h1>
+              <div class="setlist-meta">
+                <span class="setlist-name-badge">${activeSetlist.nombre.toUpperCase()}</span>
+                ${showDuration ? `<span class="meta-dot">•</span> <span>${activeSetlistMetrics.formattedTime}</span>` : ''}
+                <span class="meta-dot">•</span> <span>${activeSetlistMetrics.songCount} TEMAS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-right">
+            <div class="member-stage-tag">
+              <div class="tag-title">${!isMaster ? 'COPIA PARA MÚSICO' : 'COPIA CONTROL'}</div>
+              <div class="tag-name">${member.name.toUpperCase()}</div>
+              <div class="tag-instrument">${member.instrument.toUpperCase()}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const buildFooterHtml = (member: (typeof membersToExport)[number], pageNum: number, totalPages: number): string =>
+        showAppBranding
+          ? `
+        <div class="page-footer">
+          <div class="footer-left">
+            <span class="app-logo-badge">⚡ BandManager</span>
+            <span class="footer-sep">•</span>
+            <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
+          </div>
+          <div class="footer-right">
+            <span>Hoja ${pageNum} de ${totalPages} (${member.name})</span>
+            <span class="footer-sep">•</span>
+            <span>${new Date().toLocaleDateString('es-ES')}</span>
+          </div>
+        </div>
+      `
+          : '';
+
+      // Auto-ajuste (ver setlistAutoFit.ts): mide la altura REAL del contenido en un iframe
+      // oculto (aislado del resto de la app — un <div> con <style> inyectado contaminaría los
+      // estilos globales) para decidir, por cada hoja de miembro, el mayor tamaño de título que
+      // hace que el repertorio quepa en una sola página — y si ni el mínimo cabe, en cuántas
+      // páginas repartirlo y qué canciones va en cada una.
+      const measureFrame = document.createElement('iframe');
+      measureFrame.style.cssText = 'position:fixed;left:-99999px;top:0;width:0;height:0;border:0;visibility:hidden;';
+      document.body.appendChild(measureFrame);
+
+      const measureHtmlHeightPx = (bodyHtml: string): number => {
+        const doc = measureFrame.contentDocument;
+        if (!doc) return 0;
+        doc.open();
+        doc.write(`<!DOCTYPE html><html><head><style>${printCss}</style></head><body>${bodyHtml}</body></html>`);
+        doc.close();
+        const el = doc.body.firstElementChild as HTMLElement | null;
+        return el ? el.getBoundingClientRect().height : 0;
+      };
+
+      // .sheet-page min-height (278mm) menos su padding (4px arriba + 4px abajo): alto total
+      // disponible en la hoja, antes de descontar el header/footer real de cada miembro.
+      const PAGE_TOTAL_HEIGHT_PX = mmToPx(278) - 8;
+
+      const memberPlans = membersToExport.map(member => {
+        const isMaster = member.id === 'master';
+        const headerHtml = buildHeaderHtml(member, isMaster);
+        // Placeholder de footer solo para medir: el texto exacto ("Hoja X de Y") no cambia su
+        // alto, solo su ancho, así que basta con valores de relleno para la medición.
+        const footerHtmlForMeasure = buildFooterHtml(member, 1, 1);
+        const headerHeightPx = measureHtmlHeightPx(`<div style="width:${PAGE_CONTENT_WIDTH_PX}px">${headerHtml}</div>`);
+        const footerHeightPx = showAppBranding
+          ? measureHtmlHeightPx(`<div style="width:${PAGE_CONTENT_WIDTH_PX}px">${footerHtmlForMeasure}</div>`)
+          : 0;
+        const pageAvailableHeightPx = PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx;
+
+        const measureFn: MeasureRangeFn = (titleFontPt, fromIndex, toIndexExclusive) => {
+          const rowsHtml = activeSetlist.items
+            .slice(fromIndex, toIndexExclusive)
+            .map((item, i) => buildRowHtml(item, fromIndex + i, titleFontPt, member, isMaster))
+            .join('');
+          return measureHtmlHeightPx(
+            `<div class="setlist-items-container" style="width:${PAGE_CONTENT_WIDTH_PX}px">${rowsHtml}</div>`
+          );
+        };
+
+        const plan = computeAutoFitPlan(activeSetlist.items.length, measureFn, {
+          candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
+          pageAvailableHeightPx
+        });
+
+        return { member, isMaster, plan };
+      });
+
+      document.body.removeChild(measureFrame);
+
+      const totalPagesCount = memberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.length, 0);
+
+      let globalPageIdx = 0;
+      const pagesHtml = memberPlans
+        .map(({ member, isMaster, plan }) => {
+          let cursor = 0;
+          return plan.pageItemCounts
+            .map(count => {
+              const startIdx = cursor;
+              cursor += count;
+              globalPageIdx++;
+              const rowsHtml = activeSetlist.items
+                .slice(startIdx, startIdx + count)
+                .map((item, i) => buildRowHtml(item, startIdx + i, plan.titleFontPt, member, isMaster))
+                .join('');
+              const isLastPageOverall = globalPageIdx === totalPagesCount;
+
+              return `
+                <div class="sheet-page ${!isLastPageOverall ? 'page-break' : ''}">
+                  ${buildHeaderHtml(member, isMaster)}
+                  <div class="setlist-items-container">
+                    ${rowsHtml}
+                  </div>
+                  ${buildFooterHtml(member, globalPageIdx, totalPagesCount)}
+                </div>
+              `;
+            })
+            .join('');
+        })
+        .join('');
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+          <style>${printCss}</style>
         </head>
         <body>
           ${pagesHtml}
@@ -925,8 +1041,11 @@ export function PdfExportModal({
               onClick={handlePrint}
               className="px-5 py-2.5 rounded-xl font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
             >
-              <Printer className="w-4 h-4" /> 
-              <span>Imprimir {membersToExport.length} {membersToExport.length === 1 ? 'Hoja' : 'Hojas'} (PDF)</span>
+              <Printer className="w-4 h-4" />
+              {/* "Músico(s)", no "Hoja(s)": cada uno puede generar más de una página física según
+                  el auto-ajuste (ver computeAutoFitPlan) — el número real de páginas no se sabe
+                  hasta medir el contenido, así que no se promete aquí. */}
+              <span>Imprimir para {membersToExport.length} {membersToExport.length === 1 ? 'Músico' : 'Músicos'} (PDF)</span>
             </button>
             <button
               onClick={onClose}
@@ -1012,38 +1131,20 @@ export function PdfExportModal({
 
           {/* Row 2: Typography, Handwritten Sharpie Ink & Toggles */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/5">
-            {/* Font Scale */}
+            {/* Tamaño de título: ya no se elige a mano — se auto-ajusta por hoja (ver
+                computeAutoFitPlan) para llenar la página lo mejor posible sin bajar nunca de
+                17pt (mínimo legible a ~2m de distancia en escenario). Si no cabe ni así, se
+                reparte en más páginas en vez de encoger más. */}
             <div className="flex items-center gap-2">
               <span className="text-neutral-400 font-bold flex items-center gap-1">
                 <Type className="w-3.5 h-3.5 text-amber-400" /> Tamaño Títulos:
               </span>
-              <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
-                <button
-                  onClick={() => setFontSizeScale('gigante')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
-                    fontSizeScale === 'gigante' ? 'bg-amber-500 text-black font-black' : 'text-neutral-400 hover:text-white'
-                  }`}
-                  title="30pt+ - Ideal para leer de pie desde el suelo o encima de un monitor"
-                >
-                  🔥 Suelo / Escenario (Gigante)
-                </button>
-                <button
-                  onClick={() => setFontSizeScale('grande')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
-                    fontSizeScale === 'grande' ? 'bg-amber-500 text-black font-black' : 'text-neutral-400 hover:text-white'
-                  }`}
-                >
-                  Atril (Grande)
-                </button>
-                <button
-                  onClick={() => setFontSizeScale('compacto')}
-                  className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition-all ${
-                    fontSizeScale === 'compacto' ? 'bg-amber-500 text-black font-black' : 'text-neutral-400 hover:text-white'
-                  }`}
-                >
-                  Compacto
-                </button>
-              </div>
+              <span
+                className="px-2.5 py-1 rounded text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio, sin bajar de 17pt (legible a ~2m)."
+              >
+                ⚡ Automático
+              </span>
             </div>
 
             {/* Handwritten Note Style */}
@@ -1252,8 +1353,8 @@ export function PdfExportModal({
                     const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
                     const setlistNote = (item as any).notaTema || item.notas || '';
 
-                    const titleFontPt = fontSizeScale === 'gigante' ? 26 : fontSizeScale === 'grande' ? 22 : 17;
-                    const noteFontPt = fontSizeScale === 'gigante' ? 16 : fontSizeScale === 'grande' ? 14 : 11;
+                    const titleFontPt = PREVIEW_TITLE_FONT_PT;
+                    const noteFontPt = deriveNoteFontPt(titleFontPt);
                     const numberText = showSongNumbers ? `${index + 1}.` : '';
                     const badges: NoteLayoutBadge[] = [
                       ...(showTonality && s.tonalidad ? [{ text: s.tonalidad, fontSizePx: ptToPx(11), extraWidthPx: 14 }] : []),
@@ -1370,10 +1471,8 @@ export function PdfExportModal({
                             <span
                               className={`font-black uppercase tracking-wide text-black leading-none ${
                                 noteLayout && noteLayout.mode === 'inline' ? 'truncate min-w-0' : ''
-                              } ${
-                                fontSizeScale === 'gigante' ? 'text-[26pt]' : fontSizeScale === 'grande' ? 'text-[22pt]' : 'text-[17pt]'
                               }`}
-                              style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
+                              style={{ fontFamily: "'Anton', 'Oswald', sans-serif", fontSize: `${titleFontPt}pt` }}
                             >
                               {noteLayout?.truncatedTitle ?? s.titulo}
                             </span>
