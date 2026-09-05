@@ -305,8 +305,19 @@ export function PdfExportModal({
           // tamaño de fuente va por línea (no en el contenedor): la nota excepcional que
           // necesitó encogerse más que las demás para caber entera lo hace sola, sin afectar
           // al tamaño de sus vecinas.
+          // Flecha manuscrita apuntando al título de arriba: solo en la primera línea, y solo
+          // cuando la nota cayó a su propia línea debajo (excepción rara), para que quede claro
+          // a qué canción pertenece (ver referencia real de setlist: flechas "← nota" a mano).
+          const noteLineColor = (className: string) =>
+            className === 'note-member' ? inkColor : className === 'note-cue' ? '#b45309' : '#555';
+          const arrowSvg = (color: string) =>
+            `<svg width="9" height="9" viewBox="0 0 16 16" style="flex-shrink:0;margin-right:3px;"><path d="M13 13 L4 5 M4 5 L4.5 8.5 M4 5 L7.5 4.5" stroke="${color}" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
           const notesHtml = layout
-            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${layout.fit.lines.map(line => `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;">${line.text}</div>`).join('')}</div>`
+            ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};transform:rotate(${rotationDeg}deg);">${layout.fit.lines.map((line, i) => {
+                const color = noteLineColor(line.className);
+                const arrow = layout.mode === 'below' && i === 0 ? arrowSvg(color) : '';
+                return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;">${arrow}${line.text}</div>`;
+              }).join('')}</div>`
             : '';
           // El título solo se fuerza a una sola línea (con "…" si hace falta) cuando de verdad
           // compite por sitio con una nota en la misma fila (layout.mode === 'inline'). Si esa
@@ -1192,26 +1203,47 @@ export function PdfExportModal({
                     // computeNoteLayout) pueda asomar un poco fuera de su carril en vez de
                     // recortarse sin avisar. whitespace-nowrap sí se mantiene: eso es lo que
                     // garantiza que nunca salta a una segunda línea.
-                    const renderNoteLine = (line: NoteLine, key: string) => (
-                      <div
-                        key={key}
-                        className={`min-w-0 max-w-full font-bold whitespace-nowrap ${
-                          line.className === 'note-general' ? 'italic font-semibold' : ''
-                        }`}
-                        style={{
-                          fontFamily: getHandwritingFontFamily(),
-                          fontSize: line.fontSizePx,
-                          color:
-                            line.className === 'note-member'
-                              ? getInkColorHex()
-                              : line.className === 'note-cue'
-                                ? '#b45309'
-                                : '#555'
-                        }}
-                      >
-                        {line.text}
-                      </div>
-                    );
+                    const renderNoteLine = (line: NoteLine, key: string, showArrow: boolean = false) => {
+                      const noteColor =
+                        line.className === 'note-member'
+                          ? getInkColorHex()
+                          : line.className === 'note-cue'
+                            ? '#b45309'
+                            : '#555';
+                      return (
+                        <div
+                          key={key}
+                          className={`flex items-center min-w-0 max-w-full font-bold whitespace-nowrap ${
+                            line.className === 'note-general' ? 'italic font-semibold' : ''
+                          }`}
+                          style={{ fontFamily: getHandwritingFontFamily(), fontSize: line.fontSizePx, color: noteColor }}
+                        >
+                          {/* Flecha manuscrita apuntando al título de arriba: solo cuando la nota
+                              cayó a su propia línea debajo (excepción rara) y podría no quedar
+                              claro a qué canción pertenece — ver referencia visual de setlist real
+                              (flechas "← nota" a mano). Un único trazo doblado, no una V simétrica
+                              de línea técnica, para no romper el efecto manuscrito. */}
+                          {showArrow && (
+                            <svg
+                              width={line.fontSizePx * 0.75}
+                              height={line.fontSizePx * 0.75}
+                              viewBox="0 0 16 16"
+                              style={{ flexShrink: 0, marginRight: 3 }}
+                            >
+                              <path
+                                d="M13 13 L4 5 M4 5 L4.5 8.5 M4 5 L7.5 4.5"
+                                stroke={noteColor}
+                                strokeWidth="1.3"
+                                fill="none"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          )}
+                          <span>{line.text}</span>
+                        </div>
+                      );
+                    };
 
                     return (
                       <div key={item.id} className="group relative">
@@ -1298,7 +1330,7 @@ export function PdfExportModal({
                             className="pl-9"
                             style={{ lineHeight: 1, marginTop: '-10px', transform: `rotate(${noteRotationDeg}deg)` }}
                           >
-                            {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
+                            {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`, i === 0))}
                           </div>
                         )}
                       </div>
