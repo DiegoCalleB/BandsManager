@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import { Song, Setlist, SetlistItem } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
@@ -26,7 +27,22 @@ import { analyzeSetlistWithAI } from "../utils/setlistAIAnalyzer.js";
 import { generatePerfectSetlistPlan } from "../utils/perfectSetlistPlanner.js";
 import { BandStyleContext } from "../utils/bandStyleContext.js";
 import { formatGlobalSetlistFeedbackForPrompt } from "../utils/setlistFeedback.js";
+import { parseSetlistFromFile } from "../utils/setlistImport.js";
+import { normalizeSongTitle, titlesMatch } from "../../src/utils/songTitleMatch.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+
+// Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
+// descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
+// luego). Límite bajo a propósito: es una foto o un PDF de una hoja de repertorio, no un vídeo.
+const importUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const permitido = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'application/pdf'].includes(file.mimetype);
+    if (!permitido) return cb(new Error('Formato no soportado: sube una foto (jpg/png/webp) o un PDF'));
+    cb(null, true);
+  }
+});
 
 // El género/biografía/dossier de booking ya viven en el EPK de la banda (para el press kit que
 // se manda a programadores) — en vez de pedirle a la banda que los repita en un campo nuevo solo
@@ -671,6 +687,59 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
   } catch (err: any) {
     console.error("Error in generate-perfect-setlist:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de setlist perfecto" });
+  }
+});
+
+/** Encuentra la canción del catálogo cuyo título case (exacto o parcial, normalizado) con el
+ * título detectado por la IA en la foto/PDF — null si no hay ninguna candidata razonable. */
+function findMatchingSong(detectedTitle: string, catalog: Song[]): Song | null {
+  const normalizedDetected = normalizeSongTitle(detectedTitle);
+  if (!normalizedDetected) return null;
+
+  const exact = catalog.find((s) => normalizeSongTitle(s.titulo) === normalizedDetected);
+  if (exact) return exact;
+
+  // El match parcial (includes) es más arriesgado con títulos muy cortos (p.ej. "Va" casaría con
+  // cualquier título que contenga esas letras) — se exige un mínimo de longitud real.
+  if (normalizedDetected.length < 3) return null;
+  return catalog.find((s) => titlesMatch(detectedTitle, [s.titulo])) || null;
+}
+
+// Analiza una foto o PDF de un repertorio ya impreso y devuelve la lista detectada, cada tema ya
+// resuelto (o no) contra el catálogo real de la banda — el frontend hace de aquí una pantalla de
+// revisión antes de crear nada; esta ruta NUNCA escribe en setlists ni en songs por su cuenta.
+router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res, next) => {
+  importUpload.single("file")(req, res, (err: any) => {
+    if (err) return res.status(400).json({ success: false, error: err.message || "Archivo no válido" });
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: "No se recibió ningún archivo" });
+    }
+
+    const parsed = await parseSetlistFromFile(req.file.buffer, req.file.mimetype);
+    const allSongs = await dbGetSongs(userBandId);
+
+    const items = parsed.items.map((item) => {
+      if (item.type === 'block') {
+        return { type: 'block' as const, titulo: item.titulo, blockType: item.blockType };
+      }
+      const match = findMatchingSong(item.titulo, allSongs as Song[]);
+      return {
+        type: 'song' as const,
+        detectedTitle: item.titulo,
+        matchedSongId: match?.id,
+        matchedSongTitle: match?.titulo
+      };
+    });
+
+    res.json({ success: true, nombreSugerido: parsed.nombreSugerido, items });
+  } catch (err: any) {
+    console.error("Error in import-from-image:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al leer el repertorio de la imagen/PDF" });
   }
 });
 

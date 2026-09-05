@@ -10,7 +10,7 @@ import {
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
-  GripVertical
+  GripVertical, ImagePlus
 } from 'lucide-react';
 import SongStudioModal from './SongStudioModal';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
@@ -30,6 +30,7 @@ import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
 import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
+import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -548,6 +549,8 @@ export default function RepertorioSetlists({
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
  const [showPerfectSetlistModal, setShowPerfectSetlistModal] = useState(false);
+ // Modal para importar un repertorio ya impreso desde una foto o PDF, analizado con IA
+ const [showImportSetlistModal, setShowImportSetlistModal] = useState(false);
  // El plan se genera y aplica sobre una COPIA del setlist activo (ver handleGeneratePerfectSetlist),
  // nunca sobre el original — este estado vive en el padre, no en el modal, precisamente porque
  // generar el plan cambia qué setlist está activo (duplicado) y el modal no debe reiniciarse
@@ -1426,6 +1429,25 @@ export default function RepertorioSetlists({
    setSetlistModalData({ isOpen: true, setlistToEdit: null });
  };
 
+ // El modal de importación ya hizo el POST tanto de las canciones nuevas como del setlist —
+ // aquí solo se actualiza el estado local y se cambia a verlo, igual que tras crear/duplicar
+ // un setlist a mano.
+ const handleSetlistImported = (setlist: Setlist, newSongs: Song[]) => {
+   if (newSongs.length > 0) {
+     setSongs((prev) => {
+       const next = [...prev, ...newSongs];
+       saveSongsToLocalStorageSafely(next);
+       return next;
+     });
+   }
+   setSetlists((prev) => {
+     const next = [setlist, ...prev];
+     saveSetlistsToLocalStorageSafely(next);
+     return next;
+   });
+   setActiveSetlistId(setlist.id);
+ };
+
  const handleSaveSetlistModal = (setlistData: {
    id?: string;
    nombre: string;
@@ -2203,6 +2225,13 @@ export default function RepertorioSetlists({
   >
   <Plus className="w-3 h-3" />
   <span>Nuevo</span>
+  </button>
+  <button
+  onClick={() => setShowImportSetlistModal(true)}
+  className="p-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all cursor-pointer"
+  title="Importar repertorio desde una foto o PDF ya impreso"
+  >
+  <ImagePlus className="w-3.5 h-3.5" />
   </button>
   <button
   onClick={() => setIsSidebarCollapsed(true)}
@@ -4320,6 +4349,14 @@ export default function RepertorioSetlists({
     yDomain={yDomain}
     zonasEnergia={ZONAS_ENERGIA}
     onReorder={reorderSetlistItems}
+  />
+
+  {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}
+  <ImportSetlistModal
+    isOpen={showImportSetlistModal}
+    onClose={() => setShowImportSetlistModal(false)}
+    catalogSongs={songs}
+    onCreated={handleSetlistImported}
   />
 </div>
  );

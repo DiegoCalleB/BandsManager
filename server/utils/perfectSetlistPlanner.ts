@@ -5,7 +5,9 @@ import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
-const BLOCK_TYPES: SetlistItem['tipoItem'][] = [
+/** Todo tipo de item de setlist que no sea una canción — compartido con setlistImport.ts para
+ * validar los bloques que la IA detecta al importar un repertorio desde foto/PDF. */
+export const BLOCK_TYPES: SetlistItem['tipoItem'][] = [
   'chapa', 'descanso', 'bis', 'bloque_header', 'interludio',
   'presentacion', 'beatbox', 'intro_tema', 'solo_performance', 'cambio_instrumento', 'otro'
 ];
