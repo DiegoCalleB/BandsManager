@@ -2585,82 +2585,71 @@ export default function RepertorioSetlists({
                     ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background: 'rgba(23,23,23,0.8)' }
                     : undefined;
                   return (
-                    <div
-                      className="mx-auto grid gap-1 place-items-center pt-1.5 pb-0.5"
-                      style={{ gridTemplateColumns: 'repeat(3, 2.25rem)', gridTemplateRows: 'repeat(3, 2.25rem)' }}
-                    >
-                      <div />
-                      <div>
-                        {canEditEnergy && (
-                          <button
-                            type="button"
-                            disabled={(point.score as number) >= 20}
-                            onClick={() => bumpEnergy(1)}
-                            className={`${dirBtnClass} border hover:brightness-125`}
-                            style={energyBtnStyle}
-                            title="Subir energía"
-                          >
-                            <ChevronUp className="w-4 h-4" />
-                          </button>
-                        )}
+                    <div className="flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
+                      {canEditEnergy && (
+                        <button
+                          type="button"
+                          disabled={(point.score as number) >= 20}
+                          onClick={() => bumpEnergy(1)}
+                          className={`${dirBtnClass} border hover:brightness-125`}
+                          style={energyBtnStyle}
+                          title="Subir energía"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                      )}
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          disabled={selectedIndex <= 0}
+                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
+                          className={reorderBtnClass}
+                          title="Mover una posición hacia atrás"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        {/* Hub central: solo el score de energía (sin el nombre del tema, ya se ve
+                            resaltado en el propio gráfico), con un aro y un glow del color de su
+                            categoría para que el joystick tenga vida propia en vez de ser cuatro
+                            flechas sueltas. */}
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-mono font-bold shrink-0"
+                          style={info ? {
+                            background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
+                            border: `1.5px solid ${info.hexColor}`,
+                            boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
+                            color: info.hexColor
+                          } : {
+                            background: '#171717',
+                            border: '1.5px solid #3f3f46',
+                            color: '#71717a'
+                          }}
+                          title={info ? `${info.label} · ${point.score}/20` : point.name}
+                        >
+                          {info ? point.score : '•'}
+                        </div>
+                        <button
+                          type="button"
+                          disabled={selectedIndex >= chartData.length - 1}
+                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
+                          className={reorderBtnClass}
+                          title="Mover una posición hacia adelante"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
                       </div>
-                      <div />
-
-                      <button
-                        type="button"
-                        disabled={selectedIndex <= 0}
-                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
-                        className={reorderBtnClass}
-                        title="Mover una posición hacia atrás"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      {/* Hub central: solo el score de energía (sin el nombre del tema, ya se sabe
-                          cuál está seleccionado por el punto resaltado en el gráfico), con un aro y
-                          un glow del color de su categoría para que el joystick tenga vida propia
-                          en vez de ser cuatro flechas sueltas. */}
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-mono font-bold"
-                        style={info ? {
-                          background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
-                          border: `1.5px solid ${info.hexColor}`,
-                          boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
-                          color: info.hexColor
-                        } : {
-                          background: '#171717',
-                          border: '1.5px solid #3f3f46',
-                          color: '#71717a'
-                        }}
-                        title={info ? `${info.label} · ${point.score}/20` : point.name}
-                      >
-                        {info ? point.score : '•'}
-                      </div>
-                      <button
-                        type="button"
-                        disabled={selectedIndex >= chartData.length - 1}
-                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
-                        className={reorderBtnClass}
-                        title="Mover una posición hacia adelante"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-
-                      <div />
-                      <div>
-                        {canEditEnergy && (
-                          <button
-                            type="button"
-                            disabled={(point.score as number) <= 1}
-                            onClick={() => bumpEnergy(-1)}
-                            className={`${dirBtnClass} border hover:brightness-125`}
-                            style={energyBtnStyle}
-                            title="Bajar energía"
-                          >
-                            <ChevronDown className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                      <div />
+                      {canEditEnergy && (
+                        <button
+                          type="button"
+                          disabled={(point.score as number) <= 1}
+                          onClick={() => bumpEnergy(-1)}
+                          className={`${dirBtnClass} border hover:brightness-125`}
+                          style={energyBtnStyle}
+                          title="Bajar energía"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   );
                 })()}
