@@ -541,6 +541,11 @@ export default function RepertorioSetlists({
  const [perfectSetlistPlan, setPerfectSetlistPlan] = useState<PerfectSetlistPlan | null>(null);
  const [perfectSetlistLoading, setPerfectSetlistLoading] = useState(false);
  const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(null);
+ // Qué copia de trabajo ya existe para esta ronda de "Setlist Perfecto" — Diego pidió que
+ // "Regenerar" no crease una copia nueva cada vez, así que se recuerda cuál ya se creó (por
+ // ambos ids: el original del que salió y el propio id de la copia) y se reutiliza mientras no se
+ // pida explícitamente una copia nueva. Solo se recuerda LA MÁS RECIENTE, no un historial por setlist.
+ const [perfectSetlistDraft, setPerfectSetlistDraft] = useState<{ originalSetlistId: string; draftSetlistId: string } | null>(null);
  // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
  const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
@@ -1506,6 +1511,11 @@ export default function RepertorioSetlists({
  if (activeSetlistId === stId) {
  setActiveSetlistId(remaining[0]?.id || '');
  }
+ // Si se borra justo la copia de trabajo de "Setlist Perfecto" (o su original), esa referencia
+ // ya no vale — la próxima vez que se pida el plan, se creará una copia nueva desde cero.
+ if (perfectSetlistDraft && (perfectSetlistDraft.draftSetlistId === stId || perfectSetlistDraft.originalSetlistId === stId)) {
+ setPerfectSetlistDraft(null);
+ }
 
  fetch(`/api/setlists/${stId}`, {
  method: 'DELETE',
@@ -1626,20 +1636,41 @@ export default function RepertorioSetlists({
    }
  };
 
- // Genera el plan de "Setlist Perfecto" contra el setlist activo (sin tocarlo) y, si sale bien,
- // duplica ese setlist ANTES de que se pueda aplicar ninguna acción — Diego pidió esto para no
- // arriesgar el original: el plan se generó con esas posiciones/canciones exactas, así que la
- // copia se crea en ese mismo instante (misma foto que vio la IA), y de ahí en adelante todo lo
- // que el modal "Aplique" cae sobre la copia porque handleDuplicateSetlist ya cambió cuál es el
- // setlist activo (reorderSetlistItems/insertSongAtIndex/etc. siempre operan sobre `activeSetlist`).
- const handleGeneratePerfectSetlist = async () => {
+ // Genera el plan de "Setlist Perfecto" y, la PRIMERA vez, duplica el setlist ANTES de que se
+ // pueda aplicar ninguna acción — para no arriesgar el original. Pero "Regenerar" no debe crear
+ // una copia nueva cada vez (eso fue justo la queja: demasiadas copias) — mientras el usuario siga
+ // trabajando sobre el mismo original (o ya esté sobre la copia), se reutiliza esa misma copia y
+ // el plan nuevo se calcula contra SU estado actual (con lo que ya se haya aplicado). Solo se crea
+ // una copia nueva si no existe ninguna todavía para este setlist, o si se pide explícitamente
+ // (`forceNewCopy`, botón "Nueva copia" del modal).
+ const handleGeneratePerfectSetlist = async (forceNewCopy: boolean = false) => {
    if (!activeSetlist) return;
+
+   const existingDraft = !forceNewCopy && perfectSetlistDraft && (
+     perfectSetlistDraft.draftSetlistId === activeSetlist.id ||
+     perfectSetlistDraft.originalSetlistId === activeSetlist.id
+   ) ? perfectSetlistDraft : null;
+
+   // Si el usuario volvió al setlist ORIGINAL (no a la copia) pero ya existe una copia de una
+   // ronda anterior, se retoma esa copia en vez de generar/duplicar desde el original de nuevo.
+   let targetSetlist = activeSetlist;
+   if (existingDraft && existingDraft.draftSetlistId !== activeSetlist.id) {
+     const draft = setlists.find(s => s.id === existingDraft.draftSetlistId);
+     if (draft) {
+       targetSetlist = draft;
+       setActiveSetlistId(draft.id);
+     }
+   }
+
    setPerfectSetlistLoading(true);
    setPerfectSetlistError(null);
    try {
-     const result = await api.generatePerfectSetlist(activeSetlist.id);
+     const result = await api.generatePerfectSetlist(targetSetlist.id);
      if (result.success && result.plan) {
-       handleDuplicateSetlist(activeSetlist, '(Setlist Perfecto)');
+       if (!existingDraft) {
+         const copy = handleDuplicateSetlist(targetSetlist, '(Setlist Perfecto)');
+         setPerfectSetlistDraft({ originalSetlistId: targetSetlist.id, draftSetlistId: copy.id });
+       }
        setPerfectSetlistPlan(result.plan);
      } else {
        setPerfectSetlistError(result.error || 'Error al generar el plan');

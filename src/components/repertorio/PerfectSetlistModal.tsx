@@ -33,9 +33,11 @@ interface PerfectSetlistModalProps {
   loading: boolean;
   plan: PerfectSetlistPlan | null;
   error: string | null;
-  /** Pide un plan nuevo. Generarlo con éxito duplica el setlist activo ANTES de que se pueda
-   * aplicar ninguna acción (lo gestiona el padre) — el original nunca se toca. */
-  onGenerate: () => void;
+  /** Pide un plan nuevo. La PRIMERA vez, generarlo con éxito duplica el setlist activo antes de
+   * que se pueda aplicar ninguna acción (lo gestiona el padre) — el original nunca se toca. Las
+   * siguientes veces ("Regenerar") reutilizan esa misma copia en vez de crear otra — pasar
+   * `true` (botón "Nueva copia") fuerza duplicar de nuevo aunque ya exista una. */
+  onGenerate: (forceNewCopy?: boolean) => void;
   /** Ejecuta la acción concreta (reordena/quita/añade canción o bloque) contra el setlist activo
    * (la copia). `sourceKey` identifica esta acción para que su propio botón se convierta en
    * "Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
@@ -215,7 +217,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 No se toca este setlist: en cuanto se genere el plan, se trabaja sobre una copia nueva.
               </p>
               <button
-                onClick={onGenerate}
+                onClick={() => onGenerate()}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition font-medium"
               >
                 Generar Plan
@@ -236,7 +238,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
               <div>
                 <p className="font-medium text-red-200">Error</p>
                 <p className="text-sm text-red-300">{error}</p>
-                <button onClick={onGenerate} className="mt-3 text-sm text-red-300 hover:text-red-200 underline">
+                <button onClick={() => onGenerate()} className="mt-3 text-sm text-red-300 hover:text-red-200 underline">
                   Reintentar
                 </button>
               </div>
@@ -307,10 +309,18 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
         {plan && (
           <div className="px-4 pb-4 flex gap-3">
             <button
-              onClick={onGenerate}
+              onClick={() => onGenerate()}
+              title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
               className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
             >
               🔄 Regenerar
+            </button>
+            <button
+              onClick={() => onGenerate(true)}
+              title="Crea una copia nueva desde cero en vez de reutilizar la actual"
+              className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 px-4 py-2 rounded-lg transition font-medium text-sm"
+            >
+              🆕 Nueva copia
             </button>
             <button
               onClick={onClose}
