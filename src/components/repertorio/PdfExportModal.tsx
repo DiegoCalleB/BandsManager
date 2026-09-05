@@ -359,9 +359,10 @@ export function PdfExportModal({
           // tamaño de fuente va por línea (no en el contenedor): la nota excepcional que
           // necesitó encogerse más que las demás para caber entera lo hace sola, sin afectar
           // al tamaño de sus vecinas.
-          // Flecha manuscrita apuntando al título de arriba: solo en la primera línea, y solo
-          // cuando la nota cayó a su propia línea debajo (excepción rara), para que quede claro
-          // a qué canción pertenece (ver referencia real de setlist: flechas "← nota" a mano).
+          // Flecha manuscrita apuntando al título de arriba: en modo 'below' va en la primera
+          // línea (nota separada del título); en modo 'inline' con varias notas apiladas va en
+          // la ÚLTIMA (la más cerca de la canción siguiente, donde puede haber duda de a qué
+          // tema pertenece) — ver referencia real de setlist: flechas "← nota" a mano.
           const noteLineColor = (className: string) =>
             className === 'note-member' ? inkColor : className === 'note-cue' ? '#b45309' : '#555';
           const arrowSvg = (color: string) =>
@@ -372,7 +373,14 @@ export function PdfExportModal({
           const notesHtml = layout
             ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};">${layout.fit.lines.map((line, i) => {
                 const color = noteLineColor(line.className);
-                const arrow = layout.mode === 'below' && i === 0 ? arrowSvg(color) : '';
+                // Flecha hacia el título: en modo 'below' en la primera línea (todo el bloque
+                // está separado del título). En modo 'inline' con varias notas apiladas, en la
+                // ÚLTIMA línea — es la que queda más lejos del título y más cerca de la canción
+                // siguiente, donde puede haber duda de a qué tema pertenece.
+                const showArrow =
+                  (layout.mode === 'below' && i === 0) ||
+                  (layout.mode === 'inline' && layout.fit.lines.length > 1 && i === layout.fit.lines.length - 1);
+                const arrow = showArrow ? arrowSvg(color) : '';
                 const seed = `${s.id}-${line.className}`;
                 // Solo hacia arriba (o recta), nunca hacia abajo: rotate() positivo gira en
                 // sentido horario, o sea el extremo derecho del texto cae hacia abajo — se veía
@@ -1312,11 +1320,13 @@ export function PdfExportModal({
                             transform: `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`
                           }}
                         >
-                          {/* Flecha manuscrita apuntando al título de arriba: solo cuando la nota
-                              cayó a su propia línea debajo (excepción rara) y podría no quedar
-                              claro a qué canción pertenece — ver referencia visual de setlist real
-                              (flechas "← nota" a mano). Un único trazo doblado, no una V simétrica
-                              de línea técnica, para no romper el efecto manuscrito. */}
+                          {/* Flecha manuscrita apuntando al título de arriba: en modo 'below'
+                              (nota separada del título) va en la primera línea; en modo 'inline'
+                              con varias notas apiladas va en la ÚLTIMA (la que queda más cerca de
+                              la canción siguiente, donde puede haber duda de a qué tema
+                              pertenece) — ver referencia visual de setlist real (flechas
+                              "← nota" a mano). Un único trazo doblado, no una V simétrica de
+                              línea técnica, para no romper el efecto manuscrito. */}
                           {showArrow && (
                             <svg
                               width={line.fontSizePx * 0.75}
@@ -1399,7 +1409,13 @@ export function PdfExportModal({
                               className="flex flex-col items-start self-start shrink-0"
                               style={{ maxWidth: noteLayout.maxWidthPx, lineHeight: 1 }}
                             >
-                              {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
+                              {noteLayout.fit.lines.map((line, i) =>
+                                renderNoteLine(
+                                  line,
+                                  `l${i}`,
+                                  noteLayout.fit.lines.length > 1 && i === noteLayout.fit.lines.length - 1
+                                )
+                              )}
                             </div>
                           )}
 
