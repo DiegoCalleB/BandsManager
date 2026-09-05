@@ -323,6 +323,15 @@ export function PdfExportModal({
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
+    // Si el usuario imprime justo tras abrir el modal, las fuentes web (Anton/Oswald/Caveat) del
+    // documento de la app podrían no haber terminado de cargar todavía — el canvas measurer de
+    // abajo mediría con la fuente de reserva del sistema (más ancha), haciendo que el título
+    // "parezca" ocupar más sitio del real y forzando el modo 'below' o el truncado con más
+    // frecuencia de la necesaria, lo que infla la altura calculada de cada fila.
+    if (typeof document !== 'undefined' && document.fonts) {
+      await document.fonts.ready;
+    }
+
     const measure = makeCanvasMeasurer();
     const noteMinFontSizePx = 11;
     const inkColor = getInkColorHex();
@@ -894,7 +903,11 @@ export function PdfExportModal({
       // hace que el repertorio quepa en una sola página — y si ni el mínimo cabe, en cuántas
       // páginas repartirlo y qué canciones va en cada una.
       const measureFrame = document.createElement('iframe');
-      measureFrame.style.cssText = 'position:fixed;left:-99999px;top:0;width:0;height:0;border:0;visibility:hidden;';
+      // Dimensiones reales (no 0x0): algunos navegadores — sobre todo Chrome en Android — no
+      // calculan el layout interno de un iframe de tamaño cero con fiabilidad, y acaban midiendo
+      // con un viewport por defecto en vez del ancho real que le pasamos al contenido. Se mantiene
+      // fuera de la pantalla visible con left/top muy negativos en vez de con tamaño cero.
+      measureFrame.style.cssText = `position:fixed;left:-99999px;top:-99999px;width:${PAGE_CONTENT_WIDTH_PX + 40}px;height:3000px;border:0;visibility:hidden;`;
       document.body.appendChild(measureFrame);
 
       const measureDoc = measureFrame.contentDocument;
@@ -917,13 +930,27 @@ export function PdfExportModal({
           <head>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+            <link id="measure-fonts-link" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
             <style>${printCss}</style>
           </head>
           <body><div id="measure-target"></div></body>
         </html>
       `);
       measureDoc.close();
+      // Esperar solo a `fonts.ready` no basta: si en ese momento el navegador aún no ha
+      // descargado/parseado la hoja de estilos externa del <link> de Google Fonts, esa promesa
+      // puede resolver de inmediato sin haber registrado ninguna fuente todavía. Por eso primero
+      // se espera a que el <link> termine de cargar (evento load/error, con timeout de seguridad
+      // por si falla la red) y solo entonces a fonts.ready.
+      const fontsLink = measureDoc.getElementById('measure-fonts-link');
+      if (fontsLink) {
+        await new Promise<void>(resolve => {
+          const done = () => resolve();
+          fontsLink.addEventListener('load', done, { once: true });
+          fontsLink.addEventListener('error', done, { once: true });
+          setTimeout(done, 2000);
+        });
+      }
       if (measureDoc.fonts) {
         await measureDoc.fonts.ready;
       }

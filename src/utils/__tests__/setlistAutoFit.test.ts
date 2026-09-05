@@ -65,4 +65,24 @@ describe('computeAutoFitPlan', () => {
     expect(result.pageItemCounts.every(c => c >= 1)).toBe(true);
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(5);
   });
+
+  it('prefiere un tamaño más grande que el mínimo si sigue cabiendo en el mismo nº de páginas', () => {
+    // A 17pt: 10*55=550 -> ceil(550/500)=2 páginas. A 22pt: 10*90=900 -> ceil(900/500)=2 páginas
+    // también (no necesita más páginas que al mínimo) -> debe preferirse 22pt, no quedarse en 17pt
+    // dejando las 2 páginas a medio llenar. A 25pt: 10*110=1100 -> ceil(1100/500)=3 (si necesita
+    // más páginas, no vale).
+    const measure = makeUniformMeasure({ 28: 130, 25: 110, 22: 90, 19: 70, 17: 55 });
+    const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+    expect(result.titleFontPt).toBe(22);
+    expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(10);
+    expect(result.pageItemCounts.length).toBe(2);
+  });
+
+  it('se queda en el tamaño mínimo si ningún candidato mayor cabe en el mismo nº de páginas', () => {
+    // Cada tamaño mayor necesita estrictamente más páginas que el mínimo -> no hay margen para
+    // subir el tamaño sin aumentar también el nº de páginas.
+    const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
+    const result = computeAutoFitPlan(30, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+    expect(result.titleFontPt).toBe(17);
+  });
 });
