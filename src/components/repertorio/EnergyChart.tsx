@@ -127,6 +127,9 @@ export function EnergyChart({
   // burbuja de energía justo al lado del dedo/cursor en vez de fija arriba en el centro — así se
   // ve claramente el número subir/bajar a la altura real a la que se está arrastrando.
   const [dragPointerPos, setDragPointerPos] = useState<{ x: number; y: number } | null>(null);
+  // 'touch' | 'mouse' | 'pen' (de PointerEvent.pointerType) — en touch, el propio dedo tapa el
+  // punto de contacto, así que la burbuja se planta encima del dedo en vez de al lado (ver render).
+  const [dragPointerType, setDragPointerType] = useState<string | null>(null);
 
   // Umbral mínimo antes de considerar el gesto un arrastre real. Sin esto, el jitter normal del
   // dedo entre el toque y la suelta (aunque la intención fuera un simple tap) podía redondear a un
@@ -152,7 +155,7 @@ export function EnergyChart({
     return plotHeight / Math.max(1, yDomain[1] - yDomain[0]);
   }, [height, compact, yDomain]);
 
-  const startDrag = (fromIndex: number, clientX: number, clientY: number, pointerId: number) => {
+  const startDrag = (fromIndex: number, clientX: number, clientY: number, pointerId: number, pointerType: string) => {
     draggingFromIndexRef.current = fromIndex;
     dragStartClientXRef.current = clientX;
     dragStartClientYRef.current = clientY;
@@ -165,6 +168,7 @@ export function EnergyChart({
     setDragAxis(null);
     setLiveEnergyScore(null);
     setDragPointerPos(null);
+    setDragPointerType(pointerType);
   };
 
   useEffect(() => {
@@ -186,6 +190,7 @@ export function EnergyChart({
       setDragAxis(null);
       setLiveEnergyScore(null);
       setDragPointerPos(null);
+      setDragPointerType(null);
     };
 
     const handlePointerMove = (e: PointerEvent) => {
@@ -214,6 +219,13 @@ export function EnergyChart({
         const dyUp = dragStartClientYRef.current - e.clientY; // positivo = arrastrado hacia arriba
         const rawScore = dragStartScoreRef.current + dyUp / pxPerEnergyUnit;
         const clamped = Math.max(1, Math.min(20, Math.round(rawScore)));
+        // Vibración corta cada vez que el número cambia de unidad (no en cada píxel) — un "tick"
+        // háptico al estilo slider nativo, para notar el cambio sin tener que mirar la burbuja
+        // constantemente. Android Chrome lo soporta; iOS Safari ignora la llamada sin más, así
+        // que no hace falta detectar la plataforma.
+        if (liveEnergyScoreRef.current !== null && clamped !== liveEnergyScoreRef.current) {
+          try { navigator.vibrate?.(10); } catch { /* no-op: vibración no soportada */ }
+        }
         liveEnergyScoreRef.current = clamped;
         setLiveEnergyScore(clamped);
         const rect = containerRef.current?.getBoundingClientRect();
@@ -279,10 +291,12 @@ export function EnergyChart({
       )}
       {/* Arrastrando en vertical: burbuja con la energía en vivo, pegada al dedo/cursor (no fija
           arriba en el centro) para que se note claramente cómo sube y baja el número al mover.
-          Se coloca a un lado (izquierda o derecha según de qué mitad del gráfico se tire) para no
-          quedar tapada por el propio dedo/cursor que la arrastra. */}
+          En ratón/lápiz se coloca a un lado (izquierda o derecha según de qué mitad del gráfico se
+          tire); en dedo se planta ENCIMA del punto de contacto, porque el propio dedo tapa una
+          zona bastante más grande que un cursor y a un lado seguiría quedando oculta debajo. */}
       {draggingFromIndex !== null && dragAxis === 'y' && liveEnergyScore !== null && dragPointerPos && (() => {
         const info = getEnergyInfo(liveEnergyScore);
+        const isTouch = dragPointerType === 'touch';
         const containerWidth = containerRef.current?.clientWidth ?? 300;
         const sideGap = 20;
         const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
@@ -291,11 +305,15 @@ export function EnergyChart({
             className="absolute z-20 bg-black/90 rounded-lg px-3 py-1.5 text-[12px] font-mono text-white shadow-xl pointer-events-none whitespace-nowrap"
             style={{
               border: `1px solid ${info.hexColor}99`,
-              top: dragPointerPos.y,
-              transform: 'translateY(-50%)',
-              ...(placeOnLeft
-                ? { right: containerWidth - dragPointerPos.x + sideGap }
-                : { left: dragPointerPos.x + sideGap })
+              ...(isTouch
+                ? { left: dragPointerPos.x, top: dragPointerPos.y, transform: 'translate(-50%, calc(-100% - 34px))' }
+                : {
+                    top: dragPointerPos.y,
+                    transform: 'translateY(-50%)',
+                    ...(placeOnLeft
+                      ? { right: containerWidth - dragPointerPos.x + sideGap }
+                      : { left: dragPointerPos.x + sideGap })
+                  })
             }}
           >
             <span className="font-bold text-base" style={{ color: info.hexColor }}>{info.icon} {liveEnergyScore}</span>
@@ -486,7 +504,7 @@ export function EnergyChart({
                       onPointerDown={(e) => {
                         e.stopPropagation();
                         (e.target as Element).setPointerCapture?.(e.pointerId);
-                        startDrag(payload.idx, e.clientX, e.clientY, e.pointerId);
+                        startDrag(payload.idx, e.clientX, e.clientY, e.pointerId, e.pointerType);
                       }}
                     />
                   )}
