@@ -415,3 +415,75 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
     explosiveCount
   };
 }
+
+/** Puntos de control (fracción de progreso 0-1, intensidad relativa 0-1) de un arco de pacing
+ * "clásico" de directo: arranque moderado, subida, un pequeño respiro a media función, clímax
+ * cerca del final (no justo al final, para dejar sitio a un cierre reconocible) y remate fuerte
+ * aunque un pelín por debajo del pico — no es una regla rígida, es la forma de referencia contra
+ * la que comparar visualmente la curva real del setlist. */
+const IDEAL_CURVE_TEMPLATE: Array<[number, number]> = [
+  [0, 0.5],
+  [0.15, 0.62],
+  [0.35, 0.48],
+  [0.55, 0.7],
+  [0.8, 0.95],
+  [0.9, 1],
+  [1, 0.82]
+];
+
+function interpolarPlantillaIdeal(fraccion: number): number {
+  const f = Math.max(0, Math.min(1, fraccion));
+  for (let i = 0; i < IDEAL_CURVE_TEMPLATE.length - 1; i++) {
+    const [x0, y0] = IDEAL_CURVE_TEMPLATE[i];
+    const [x1, y1] = IDEAL_CURVE_TEMPLATE[i + 1];
+    if (f >= x0 && f <= x1) {
+      const t = x1 === x0 ? 0 : (f - x0) / (x1 - x0);
+      return y0 + t * (y1 - y0);
+    }
+  }
+  return IDEAL_CURVE_TEMPLATE[IDEAL_CURVE_TEMPLATE.length - 1][1];
+}
+
+/**
+ * Curva de energía "ideal" de referencia, para pintar debajo de la curva real y ver de un vistazo
+ * dónde se aleja más — sin necesitar leer el texto del análisis. Es el mismo arco de pacing
+ * clásico para cualquier repertorio, pero ESCALADO al rango real de energías de este setlist (no
+ * a la escala fija 1-20): una banda de baladas y una de punk cañero tienen curvas ideales muy
+ * distintas en términos absolutos aunque la forma del arco sea la misma — así se adapta al estilo
+ * real del grupo en vez de imponer un rango que sus canciones no tienen.
+ *
+ * Devuelve un array alineado 1:1 con `points` (mismo índice, misma longitud) — cada evento/bloque
+ * también lleva un valor, interpolado por su posición real en el show, para que la línea sea
+ * continua en el gráfico igual que la curva real.
+ */
+export function calcularCurvaEnergiaIdeal(points: SetlistEnergyPoint[]): number[] {
+  const songPoints = points.filter(p => p.isSong);
+  if (songPoints.length < 2) {
+    const flat = songPoints[0]?.score ?? 10;
+    return points.map(() => flat);
+  }
+
+  const scores = songPoints.map(p => p.score);
+  const min = Math.min(...scores);
+  const max = Math.max(...scores);
+
+  // Repertorio con muy poca variación real (casi todo a la misma energía): la curva ideal no
+  // puede fingir un rango que las canciones disponibles no tienen — se aplana también, en vez de
+  // dibujar una forma que ninguna combinación real de estos temas podría lograr.
+  if (max - min < 2) {
+    const flat = Math.round((min + max) / 2);
+    return points.map(() => flat);
+  }
+
+  const totalSongs = songPoints.length;
+  return points.map(p => {
+    // La posición en el arco se calcula sobre el rango de CANCIONES (no eventos), para que un
+    // bloque/pausa intercalado no desplace dónde "debería" caer el clímax del show.
+    const songRank = songPoints.findIndex(sp => sp.index === p.index);
+    const fraction = songRank === -1
+      ? p.index / Math.max(1, points.length - 1)
+      : (totalSongs <= 1 ? 0 : songRank / (totalSongs - 1));
+    const relative = interpolarPlantillaIdeal(fraction);
+    return Math.round(min + relative * (max - min));
+  });
+}

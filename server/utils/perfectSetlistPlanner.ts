@@ -1,6 +1,7 @@
 import { Song, SetlistItem } from "../../src/types.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { tonalidadesSonFiables } from "../../src/utils/harmonicAnalysis.js";
+import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext.js";
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
@@ -60,7 +61,8 @@ interface RawAction {
 export async function generatePerfectSetlistPlan(
   items: SetlistItem[],
   songsById: Map<string, Song>,
-  catalogCandidates: Song[]
+  catalogCandidates: Song[],
+  bandContext?: BandStyleContext | null
 ): Promise<PerfectSetlistPlan> {
   if (items.length === 0 && catalogCandidates.length === 0) {
     throw new Error("No hay canciones ni en el setlist ni en el catálogo para generar un plan");
@@ -71,13 +73,13 @@ export async function generatePerfectSetlistPlan(
     if (item.tipoItem === 'cancion' && item.songId) {
       const song = songsById.get(item.songId);
       if (!song) return `${position}. [canción no encontrada en el catálogo]`;
-      return `${position}. 🎵 ${song.titulo} (energía: ${song.energia || 10}/20${song.tonalidad ? `, tonalidad: ${song.tonalidad}` : ''})`;
+      return `${position}. 🎵 ${song.titulo} (energía: ${song.energia || 10}/20${song.tonalidad ? `, tonalidad: ${song.tonalidad}` : ''}${song.genero ? `, género: ${song.genero}` : ''})`;
     }
     return `${position}. 📋 [BLOQUE: ${item.tipoItem}] ${item.tituloCustom || ''}`;
   }).join('\n');
 
   const catalogList = catalogCandidates.length > 0
-    ? catalogCandidates.map((s, idx) => `C${idx + 1}. ${s.titulo} (energía: ${s.energia || 10}/20${s.tonalidad ? `, tonalidad: ${s.tonalidad}` : ''})`).join('\n')
+    ? catalogCandidates.map((s, idx) => `C${idx + 1}. ${s.titulo} (energía: ${s.energia || 10}/20${s.tonalidad ? `, tonalidad: ${s.tonalidad}` : ''}${s.genero ? `, género: ${s.genero}` : ''})`).join('\n')
     : '(no hay canciones en el catálogo fuera de este setlist)';
 
   const songsInItems = items
@@ -89,6 +91,7 @@ export async function generatePerfectSetlistPlan(
 Eres un experto en diseñar setlists de conciertos de rock/covers en directo, maximizando el
 impacto sobre el público: arco narrativo, curva de energía, variedad armónica y ritmo del show
 completo (canciones + bloques de presentación, pausas, bises, cambios de instrumento...).
+${buildBandStyleContextBlock(bandContext)}
 
 SETLIST ACTUAL (posición. tipo):
 ${itemsList || '(vacío)'}

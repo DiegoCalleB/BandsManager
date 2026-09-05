@@ -40,7 +40,7 @@ import {
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
-import { analyzeSetlistEnergy, getEnergyInfo } from '../utils/energyPacingUtils';
+import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { EnergyChart } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
 
@@ -530,6 +530,9 @@ export default function RepertorioSetlists({
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
+ // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
+ // propio toggle porque puede distraer una vez que ya conoces bien tu propio repertorio.
+ const [showIdealCurve, setShowIdealCurve] = useState<boolean>(true);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
@@ -567,11 +570,16 @@ export default function RepertorioSetlists({
  // interacciones de UI que no cambian los datos reales.
  const { energyAnalysis, chartData, yDomain, ZONAS_ENERGIA } = useMemo(() => {
   const analysis = analyzeSetlistEnergy(activeSetlist?.items || [], songs);
+  // Curva de energía "ideal" de referencia (arco de pacing clásico, escalado al rango real de
+  // este repertorio) — se pinta como segunda línea en el gráfico para ver de un vistazo dónde se
+  // aleja más la curva real, sin depender de leer el texto del análisis.
+  const idealCurve = calcularCurvaEnergiaIdeal(analysis.points);
   const data = analysis.points.map((pt, idx) => ({
    idx,
    id: pt.item.id,
    name: pt.title,
    score: pt.score,
+   idealScore: idealCurve[idx],
    range: [Math.max(1, pt.score - pt.variance), Math.min(20, pt.score + pt.variance)] as [number, number],
    color: pt.info.hexColor,
    icon: pt.info.icon,
@@ -2410,6 +2418,20 @@ export default function RepertorioSetlists({
                     ↩️ Deshacer
                   </button>
                 )}
+                {showEnergyMap && (
+                  <button
+                    type="button"
+                    onClick={() => setShowIdealCurve((v) => !v)}
+                    className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1 ${
+                      showIdealCurve
+                        ? 'bg-neutral-700 text-neutral-200 hover:bg-neutral-600'
+                        : 'bg-neutral-800 text-neutral-500 hover:text-neutral-300'
+                    }`}
+                    title="Curva ideal de referencia: un arco de pacing clásico escalado al rango real de energías de tu repertorio, para ver de un vistazo dónde se aleja más la curva real"
+                  >
+                    〰️ Curva ideal
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowEnergyMap((v) => !v)}
@@ -2433,6 +2455,7 @@ export default function RepertorioSetlists({
                   onSelectItem={setSelectedSetlistItemId}
                   onReorder={reorderSetlistItems}
                   height={256}
+                  showIdealCurve={showIdealCurve}
                 />
 
                 {/* Mover el punto seleccionado un paso atrás/adelante con flechas — alternativa al

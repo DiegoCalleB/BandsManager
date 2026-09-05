@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ResponsiveContainer, ComposedChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
+import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { titlesMatch } from '../../utils/songTitleMatch';
 
 export interface EnergyChartPoint {
@@ -7,6 +7,9 @@ export interface EnergyChartPoint {
   id: string;
   name: string;
   score: number;
+  /** Curva de energía "ideal" de referencia para este mismo punto (ver calcularCurvaEnergiaIdeal)
+   * — se pinta por debajo de la curva real para ver de un vistazo dónde se aleja más. */
+  idealScore?: number;
   range: [number, number];
   color: string;
   icon: string;
@@ -40,6 +43,9 @@ interface EnergyChartProps {
    * altura del punto sigue sin poder tocarse (es la energía calculada, no un valor editable).
    * Se omite en el gráfico compacto del modal de Análisis IA, donde solo es lectura. */
   onReorder?: (fromIndex: number, toIndex: number) => void;
+  /** Muestra/oculta la curva "ideal" de referencia (línea discontinua por debajo de la curva
+   * real). Por defecto visible; el toggle vive en el componente que llama a EnergyChart. */
+  showIdealCurve?: boolean;
 }
 
 /**
@@ -58,7 +64,8 @@ export function EnergyChart({
   onSelectItem,
   height = 256,
   compact = false,
-  onReorder
+  onReorder,
+  showIdealCurve = true
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;
@@ -243,10 +250,34 @@ export function EnergyChart({
                       🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
                     </p>
                   )}
+                  {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
+                    <p className="text-neutral-400 mt-0.5">
+                      〰️ Ideal aquí: ~{d.idealScore}/20
+                    </p>
+                  )}
                 </div>
               );
             }}
           />
+
+          {/* Curva "ideal" de referencia — dibujada ANTES (por debajo, en capas) que la curva real
+              para poder comparar de un vistazo dónde se aleja más, sin depender del texto del
+              análisis. Discontinua y en gris neutro para no competir con los colores reales. */}
+          {showIdealCurve && (
+            <Line
+              type="monotone"
+              dataKey="idealScore"
+              stroke="#9ca3af"
+              strokeWidth={compact ? 1.5 : 2}
+              strokeDasharray="5 4"
+              strokeOpacity={0.6}
+              dot={false}
+              activeDot={false}
+              isAnimationActive={!compact}
+              animationDuration={1200}
+              legendType="none"
+            />
+          )}
 
           {/* Curva principal de energía tema a tema */}
           <Area

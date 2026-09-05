@@ -15,13 +15,30 @@ import {
   dbSetSongEnergiaManual,
   dbGetSetlistShortcuts,
   dbUpsertSetlistShortcut,
-  dbDeleteSetlistShortcut
+  dbDeleteSetlistShortcut,
+  dbGetEpkConfig
 } from "../db.js";
 
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { analyzeSetlistWithAI } from "../utils/setlistAIAnalyzer.js";
 import { generatePerfectSetlistPlan } from "../utils/perfectSetlistPlanner.js";
+import { BandStyleContext } from "../utils/bandStyleContext.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+
+// El género/biografía/dossier de booking ya viven en el EPK de la banda (para el press kit que
+// se manda a programadores) — en vez de pedirle a la banda que los repita en un campo nuevo solo
+// para la IA, se reutilizan aquí como contexto de estilo real. Si el EPK no existe todavía (banda
+// recién creada, nunca abrió el módulo de EPK), se manda sin contexto — el prompt ya contempla eso.
+async function getBandStyleContext(bandId: string): Promise<BandStyleContext | null> {
+  try {
+    const epk = await dbGetEpkConfig(bandId);
+    if (!epk) return null;
+    return { genero: epk.genero, biografia: epk.biografia, dossierTextoExtra: epk.dossierTextoExtra };
+  } catch (err) {
+    console.error("Error fetching EPK config for band style context:", err);
+    return null;
+  }
+}
 
 const router = express.Router();
 
@@ -544,7 +561,8 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     }
 
     // Llamar a análisis IA
-    const analysis = await analyzeSetlistWithAI(setlistSongs);
+    const bandContext = await getBandStyleContext(userBandId);
+    const analysis = await analyzeSetlistWithAI(setlistSongs, bandContext);
 
     // Crear firma del setlist para detectar cambios
     const setlistSignature = setlist.items.map((item: any) => item.id).join('|');
@@ -591,7 +609,8 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
     );
     const catalogCandidates = allSongs.filter((s: Song) => !usedSongIds.has(s.id));
 
-    const plan = await generatePerfectSetlistPlan(setlist.items, songsById, catalogCandidates);
+    const bandContext = await getBandStyleContext(userBandId);
+    const plan = await generatePerfectSetlistPlan(setlist.items, songsById, catalogCandidates, bandContext);
 
     res.json({ success: true, plan });
   } catch (err: any) {
