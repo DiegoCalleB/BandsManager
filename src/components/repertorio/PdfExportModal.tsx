@@ -648,7 +648,7 @@ export function PdfExportModal({
               flex-direction: column;
               gap: 0px;
               padding-left: ${showSongNumbers ? '40px' : '6px'};
-              margin-top: -4px;
+              margin-top: -10px;
               line-height: 1;
             }
             .note-seg {
@@ -1296,7 +1296,7 @@ export function PdfExportModal({
                         {noteLayout && noteLayout.mode === 'below' && (
                           <div
                             className="pl-9"
-                            style={{ lineHeight: 1, marginTop: '-4px', transform: `rotate(${noteRotationDeg}deg)` }}
+                            style={{ lineHeight: 1, marginTop: '-10px', transform: `rotate(${noteRotationDeg}deg)` }}
                           >
                             {noteLayout.fit.lines.map((line, i) => renderNoteLine(line, `l${i}`))}
                           </div>
