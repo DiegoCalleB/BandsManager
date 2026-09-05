@@ -62,7 +62,11 @@ export async function generatePerfectSetlistPlan(
   items: SetlistItem[],
   songsById: Map<string, Song>,
   catalogCandidates: Song[],
-  bandContext?: BandStyleContext | null
+  bandContext?: BandStyleContext | null,
+  /** Feedback de ESTE intento concreto (ya formateado como bloque de texto) — a diferencia de
+   * `bandContext.feedbackMemoryText` (memoria acumulada de intentos anteriores), esto se aplica
+   * siempre a la generación actual sin importar el alcance que el usuario haya elegido. */
+  immediateFeedbackBlock?: string
 ): Promise<PerfectSetlistPlan> {
   if (items.length === 0 && catalogCandidates.length === 0) {
     throw new Error("No hay canciones ni en el setlist ni en el catálogo para generar un plan");
@@ -91,7 +95,7 @@ export async function generatePerfectSetlistPlan(
 Eres un experto en diseñar setlists de conciertos de rock/covers en directo, maximizando el
 impacto sobre el público: arco narrativo, curva de energía, variedad armónica y ritmo del show
 completo (canciones + bloques de presentación, pausas, bises, cambios de instrumento...).
-${buildBandStyleContextBlock(bandContext)}
+${buildBandStyleContextBlock(bandContext)}${immediateFeedbackBlock || ''}
 
 SETLIST ACTUAL (posición. tipo):
 ${itemsList || '(vacío)'}

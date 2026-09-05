@@ -29,7 +29,7 @@ import { AddSongsToSetlistModal } from './repertorio/AddSongsToSetlistModal';
 import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
-import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan } from './repertorio/PerfectSetlistModal';
+import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
@@ -1651,7 +1651,7 @@ export default function RepertorioSetlists({
  // el plan nuevo se calcula contra SU estado actual (con lo que ya se haya aplicado). Solo se crea
  // una copia nueva si no existe ninguna todavía para este setlist, o si se pide explícitamente
  // (`forceNewCopy`, botón "Nueva copia" del modal).
- const handleGeneratePerfectSetlist = async (forceNewCopy: boolean = false) => {
+ const handleGeneratePerfectSetlist = async (forceNewCopy: boolean = false, feedback?: SetlistFeedbackInput) => {
    if (!activeSetlist) return;
 
    const existingDraft = !forceNewCopy && perfectSetlistDraft && (
@@ -1673,7 +1673,7 @@ export default function RepertorioSetlists({
    setPerfectSetlistLoading(true);
    setPerfectSetlistError(null);
    try {
-     const result = await api.generatePerfectSetlist(targetSetlist.id);
+     const result = await api.generatePerfectSetlist(targetSetlist.id, feedback);
      if (result.success && result.plan) {
        if (!existingDraft) {
          const copy = handleDuplicateSetlist(targetSetlist, '(Setlist Perfecto)');

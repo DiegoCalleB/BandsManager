@@ -16,28 +16,77 @@ import {
   dbGetSetlistShortcuts,
   dbUpsertSetlistShortcut,
   dbDeleteSetlistShortcut,
-  dbGetEpkConfig
+  dbGetEpkConfig,
+  dbGetRegisteredBandById,
+  dbLogSetlistFeedback
 } from "../db.js";
 
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { analyzeSetlistWithAI } from "../utils/setlistAIAnalyzer.js";
 import { generatePerfectSetlistPlan } from "../utils/perfectSetlistPlanner.js";
 import { BandStyleContext } from "../utils/bandStyleContext.js";
+import { formatGlobalSetlistFeedbackForPrompt } from "../utils/setlistFeedback.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 
 // El género/biografía/dossier de booking ya viven en el EPK de la banda (para el press kit que
 // se manda a programadores) — en vez de pedirle a la banda que los repita en un campo nuevo solo
 // para la IA, se reutilizan aquí como contexto de estilo real. Si el EPK no existe todavía (banda
-// recién creada, nunca abrió el módulo de EPK), se manda sin contexto — el prompt ya contempla eso.
+// recién creada, nunca abrió el módulo de EPK), se manda sin ese contexto — el prompt ya lo contempla.
+// También se incluye la memoria de feedback (valoraciones + comentarios de alcance "global" que
+// el usuario ha ido dejando en generaciones anteriores) — mismo patrón que el feedback de Reels.
 async function getBandStyleContext(bandId: string): Promise<BandStyleContext | null> {
+  let epkContext: Partial<BandStyleContext> = {};
   try {
     const epk = await dbGetEpkConfig(bandId);
-    if (!epk) return null;
-    return { genero: epk.genero, biografia: epk.biografia, dossierTextoExtra: epk.dossierTextoExtra };
+    if (epk) epkContext = { genero: epk.genero, biografia: epk.biografia, dossierTextoExtra: epk.dossierTextoExtra };
   } catch (err) {
     console.error("Error fetching EPK config for band style context:", err);
-    return null;
   }
+
+  let feedbackMemoryText = '';
+  try {
+    const registered = await dbGetRegisteredBandById(bandId);
+    feedbackMemoryText = formatGlobalSetlistFeedbackForPrompt(registered?.dna_expresion?.historial_feedback_setlist);
+  } catch (err) {
+    console.error("Error fetching setlist feedback memory for band style context:", err);
+  }
+
+  if (Object.keys(epkContext).length === 0 && !feedbackMemoryText) return null;
+  return { ...epkContext, feedbackMemoryText };
+}
+
+/** Construye las líneas de feedback de ESTE intento concreto (valoraciones + comentario que el
+ * usuario acaba de dejar al pulsar "Regenerar") — a diferencia de `feedbackMemoryText` (memoria
+ * acumulada de intentos anteriores con alcance "global"), esto es siempre inmediato: se aplica a
+ * la generación actual sin importar el alcance elegido. */
+function buildImmediateFeedbackLines(feedback?: { comentario?: string; intensidad_rating?: number; contenido_rating?: number }): string {
+  if (!feedback) return '';
+  const lineas: string[] = [];
+  if (feedback.intensidad_rating) lineas.push(`El usuario valoró la INTENSIDAD/energía del plan anterior con ${feedback.intensidad_rating}/5: si es bajo, es justo lo que hay que corregir ahora.`);
+  if (feedback.contenido_rating) lineas.push(`El usuario valoró el CONTENIDO/selección de temas del plan anterior con ${feedback.contenido_rating}/5: si es bajo, revisa qué canciones encajan de verdad.`);
+  if (feedback.comentario?.trim()) lineas.push(`Instrucción de este intento: "${feedback.comentario.trim()}"`);
+  if (lineas.length === 0) return '';
+  return `\nFEEDBACK DEL USUARIO SOBRE EL INTENTO ANTERIOR (aplícalo en este):\n${lineas.join('\n')}\n`;
+}
+
+/** Registra el feedback (si hay señal real) como memoria para próximas generaciones — solo si
+ * `alcance` es "global"; un ajuste puntual ("este_setlist") no debe resurgir en setlists futuros. */
+async function logSetlistFeedbackIfPresent(bandId: string, feedback?: { comentario?: string; intensidad_rating?: number; contenido_rating?: number; alcance?: 'este_setlist' | 'global' }): Promise<void> {
+  if (!feedback) return;
+  const tieneSenal = !!(feedback.comentario?.trim() || feedback.intensidad_rating || feedback.contenido_rating);
+  if (!tieneSenal) return;
+
+  const entry = {
+    id: `sf-${Date.now()}`,
+    fecha: new Date().toISOString(),
+    comentario: feedback.comentario?.trim() || '',
+    intensidadRating: feedback.intensidad_rating || undefined,
+    contenidoRating: feedback.contenido_rating || undefined,
+    alcance: feedback.alcance === 'este_setlist' ? 'este_setlist' : 'global'
+  };
+  await dbLogSetlistFeedback(bandId, entry).catch((err) =>
+    console.warn("Notice dbLogSetlistFeedback:", err?.message || err)
+  );
 }
 
 const router = express.Router();
@@ -595,6 +644,7 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
   try {
     const userBandId = getTargetBandId(req);
     const { setlistId } = req.params;
+    const { feedback } = req.body || {};
 
     const allSetlists = await dbGetSetlists(userBandId);
     const setlist = allSetlists.find((s: any) => s.id === setlistId);
@@ -610,7 +660,12 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
     const catalogCandidates = allSongs.filter((s: Song) => !usedSongIds.has(s.id));
 
     const bandContext = await getBandStyleContext(userBandId);
-    const plan = await generatePerfectSetlistPlan(setlist.items, songsById, catalogCandidates, bandContext);
+    const immediateFeedbackBlock = buildImmediateFeedbackLines(feedback);
+    const plan = await generatePerfectSetlistPlan(setlist.items, songsById, catalogCandidates, bandContext, immediateFeedbackBlock);
+
+    // Se registra DESPUÉS de generar (no antes): si la generación falla, no queremos guardar un
+    // feedback sobre un intento que nunca llegó a completarse.
+    logSetlistFeedbackIfPresent(userBandId, feedback).catch(() => {});
 
     res.json({ success: true, plan });
   } catch (err: any) {

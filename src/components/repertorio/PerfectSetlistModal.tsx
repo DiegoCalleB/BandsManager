@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { X, Loader, AlertCircle, Wand2 } from 'lucide-react';
+import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
+
+/** Feedback opcional que el usuario deja al pedir un plan (nuevo o "Regenerar"): valorar con
+ * estrellas + comentario libre, igual que el mismo patrón ya usado para entrenar los Reels y los
+ * pitches de booking. `alcance` decide si esto queda como memoria para futuros setlists o es solo
+ * un ajuste puntual para este intento. */
+export interface SetlistFeedbackInput {
+  intensidad_rating?: number;
+  contenido_rating?: number;
+  comentario?: string;
+  alcance?: 'este_setlist' | 'global';
+}
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
@@ -37,7 +48,7 @@ interface PerfectSetlistModalProps {
    * que se pueda aplicar ninguna acción (lo gestiona el padre) — el original nunca se toca. Las
    * siguientes veces ("Regenerar") reutilizan esa misma copia en vez de crear otra — pasar
    * `true` (botón "Nueva copia") fuerza duplicar de nuevo aunque ya exista una. */
-  onGenerate: (forceNewCopy?: boolean) => void;
+  onGenerate: (forceNewCopy?: boolean, feedback?: SetlistFeedbackInput) => void;
   /** Ejecuta la acción concreta (reordena/quita/añade canción o bloque) contra el setlist activo
    * (la copia). `sourceKey` identifica esta acción para que su propio botón se convierta en
    * "Deshacer" mientras siga siendo la más reciente, igual que en el Análisis IA. */
@@ -131,6 +142,14 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
   // solo nivel, igual que el propio snapshot de undo del setlist (solo la más reciente es deshacible).
   const [preApplySnapshot, setPreApplySnapshot] = useState<{ liveActions: PerfectSetlistAction[]; invalidActionIndices: Set<number> } | null>(null);
 
+  // Feedback opcional para la próxima generación (nueva o "Regenerar") — mismo patrón que ya usan
+  // los Reels y los pitches de booking: valorar + comentar, y decidir si se recuerda para siempre
+  // o es solo un ajuste puntual de este intento.
+  const [intensidadRating, setIntensidadRating] = useState(0);
+  const [contenidoRating, setContenidoRating] = useState(0);
+  const [comentarioFeedback, setComentarioFeedback] = useState('');
+  const [feedbackScope, setFeedbackScope] = useState<'este_setlist' | 'global'>('este_setlist');
+
   useEffect(() => {
     setLiveActions(plan ? plan.actions : null);
     setAppliedActionIndices(new Set());
@@ -139,6 +158,25 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
   }, [plan]);
 
   if (!isOpen) return null;
+
+  const currentFeedback = (): SetlistFeedbackInput | undefined => {
+    if (!intensidadRating && !contenidoRating && !comentarioFeedback.trim()) return undefined;
+    return {
+      intensidad_rating: intensidadRating || undefined,
+      contenido_rating: contenidoRating || undefined,
+      comentario: comentarioFeedback.trim() || undefined,
+      alcance: feedbackScope
+    };
+  };
+
+  const handleGenerateWithFeedback = (forceNewCopy?: boolean) => {
+    onGenerate(forceNewCopy, currentFeedback());
+    // Igual que en Reels/pitches: tras pedir el plan, se limpia el formulario de feedback —
+    // ya quedó aplicado a este intento y, si el alcance era "global", ya quedó guardado como memoria.
+    setIntensidadRating(0);
+    setContenidoRating(0);
+    setComentarioFeedback('');
+  };
 
   const handleApply = (idx: number) => {
     if (!liveActions) return;
@@ -307,27 +345,93 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
         </div>
 
         {plan && (
-          <div className="px-4 pb-4 flex gap-3">
-            <button
-              onClick={() => onGenerate()}
-              title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
-            >
-              🔄 Regenerar
-            </button>
-            <button
-              onClick={() => onGenerate(true)}
-              title="Crea una copia nueva desde cero en vez de reutilizar la actual"
-              className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 px-4 py-2 rounded-lg transition font-medium text-sm"
-            >
-              🆕 Nueva copia
-            </button>
-            <button
-              onClick={onClose}
-              className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
-            >
-              Cerrar
-            </button>
+          <div className="px-4 pb-4 space-y-2.5">
+            {/* Feedback para la próxima generación — mismo patrón que ya entrena los Reels y los
+                pitches de booking: valorar + comentar, y elegir si se recuerda para siempre. */}
+            <div className="p-2.5 rounded-xl border border-neutral-800 bg-neutral-900/60 space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Intensidad</span>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={`intensidad-${star}`}
+                      type="button"
+                      onClick={() => setIntensidadRating(intensidadRating === star ? 0 : star)}
+                      className={`p-0.5 rounded cursor-pointer transition-colors ${intensidadRating >= star ? 'text-amber-400' : 'text-neutral-700 hover:text-neutral-500'}`}
+                      title={`Valorar la intensidad/energía: ${star}/5`}
+                    >
+                      <Star className="w-3 h-3 fill-current" />
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-neutral-500">Contenido</span>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={`contenido-${star}`}
+                      type="button"
+                      onClick={() => setContenidoRating(contenidoRating === star ? 0 : star)}
+                      className={`p-0.5 rounded cursor-pointer transition-colors ${contenidoRating >= star ? 'text-amber-400' : 'text-neutral-700 hover:text-neutral-500'}`}
+                      title={`Valorar el contenido/selección de temas: ${star}/5`}
+                    >
+                      <Star className="w-3 h-3 fill-current" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <textarea
+                rows={2}
+                value={comentarioFeedback}
+                onChange={(e) => setComentarioFeedback(e.target.value)}
+                placeholder="Ej: 'Evita más de una balada seguida', 'el bis siempre un tema conocido'..."
+                className="w-full p-2 bg-black/60 rounded-lg border border-neutral-700/80 text-[11px] text-neutral-200 placeholder-neutral-500 font-sans focus:outline-none focus:border-amber-400"
+              />
+              <div className="flex items-center gap-1.5 text-[10px] font-mono">
+                <span className="text-neutral-500 uppercase tracking-wider">Alcance:</span>
+                <button
+                  type="button"
+                  onClick={() => setFeedbackScope('este_setlist')}
+                  className={`px-2 py-1 rounded-lg cursor-pointer transition-all ${
+                    feedbackScope === 'este_setlist' ? 'bg-neutral-700 text-white font-bold' : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+                  }`}
+                >
+                  Solo este plan
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFeedbackScope('global')}
+                  className={`px-2 py-1 rounded-lg cursor-pointer transition-all flex items-center gap-1 ${
+                    feedbackScope === 'global' ? 'bg-amber-500/20 text-amber-300 font-bold' : 'bg-transparent text-neutral-500 hover:text-neutral-300'
+                  }`}
+                  title="La IA recordará esta corrección también para futuros setlists de la banda"
+                >
+                  <Sparkles className="w-3 h-3" /> Recordar para siempre
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => handleGenerateWithFeedback()}
+                title="Genera un plan nuevo sobre la misma copia de trabajo, sin crear otra"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+              >
+                🔄 Regenerar
+              </button>
+              <button
+                onClick={() => handleGenerateWithFeedback(true)}
+                title="Crea una copia nueva desde cero en vez de reutilizar la actual"
+                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 px-4 py-2 rounded-lg transition font-medium text-sm"
+              >
+                🆕 Nueva copia
+              </button>
+              <button
+                onClick={onClose}
+                className="flex-1 bg-neutral-700 hover:bg-neutral-600 text-white px-4 py-2 rounded-lg transition font-medium text-sm"
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
         )}
       </div>

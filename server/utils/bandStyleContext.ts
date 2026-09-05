@@ -2,6 +2,10 @@ export interface BandStyleContext {
   genero?: string;
   biografia?: string;
   dossierTextoExtra?: string;
+  /** Memoria acumulada de feedback (valoraciones + comentarios) que la banda ha ido dejando en
+   * generaciones anteriores con alcance "global" — ver `formatGlobalSetlistFeedbackForPrompt`.
+   * Ya viene formateada como texto listo para el prompt. */
+  feedbackMemoryText?: string;
 }
 
 /**
@@ -21,7 +25,13 @@ export function buildBandStyleContextBlock(context?: BandStyleContext | null): s
   if (context.biografia?.trim()) parts.push(`Biografía: ${context.biografia.trim()}`);
   if (context.dossierTextoExtra?.trim()) parts.push(`Notas de booking/estilo: ${context.dossierTextoExtra.trim()}`);
 
-  if (parts.length === 0) return '';
+  let block = '';
+  if (parts.length > 0) {
+    block += `\nCONTEXTO DE LA BANDA (ajusta tu criterio a su estilo real, no a un pacing genérico):\n${parts.join('\n')}\n`;
+  }
+  if (context.feedbackMemoryText?.trim()) {
+    block += `\nCORRECCIONES QUE LA BANDA YA TE HA ENSEÑADO EN GENERACIONES ANTERIORES (aplícalas también aquí, no las repitas como si fueran nuevas):\n${context.feedbackMemoryText.trim()}\n`;
+  }
 
-  return `\nCONTEXTO DE LA BANDA (ajusta tu criterio a su estilo real, no a un pacing genérico):\n${parts.join('\n')}\n`;
+  return block;
 }
