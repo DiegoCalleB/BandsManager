@@ -84,8 +84,8 @@ const es: MusiciansLandingDict = {
   feature3Title: 'Repertorio y Setlists',
   feature3Desc: 'Organiza tus setlists con acordes y tonalidades, siempre a mano para ensayos y conciertos.',
 
-  roadmapTeaserLead: 'Esto es solo el principio.',
-  roadmapTeaserText: 'Cada semana añadimos nuevas herramientas a la plataforma. Quien se apunte ahora será de los primeros en probarlas todas.',
+  roadmapTeaserLead: 'Esto es solo el principio',
+  roadmapTeaserText: 'de todo lo que está por llegar.',
 
   formTitle: 'Apúntate a la Lista de Espera',
   formSubtitle: 'BandManager.ai estará disponible muy pronto. Déjanos tu email e Instagram para que te enviemos toda la información y seas de los primeros en probarlo.',
@@ -147,8 +147,8 @@ const en: MusiciansLandingDict = {
   feature3Title: 'Setlist Repertoire',
   feature3Desc: 'Manage your concert setlists with keys & tempo, always ready for rehearsals and shows.',
 
-  roadmapTeaserLead: 'This is just the beginning.',
-  roadmapTeaserText: "We're shipping new tools every week. Sign up now and you'll be among the first to try them all.",
+  roadmapTeaserLead: 'This is just the beginning',
+  roadmapTeaserText: 'of everything that\'s coming.',
 
   formTitle: 'Join the Early Access Waitlist',
   formSubtitle: 'BandManager.ai is launching very soon. Leave your email & Instagram so we can send you all the information and invite you first.',
@@ -210,8 +210,8 @@ const it: MusiciansLandingDict = {
   feature3Title: 'Repertorio e Scalette',
   feature3Desc: 'Organizza le tue scalette con tonalità e accordi, sempre pronte per prove e concerti.',
 
-  roadmapTeaserLead: 'Questo è solo l\'inizio.',
-  roadmapTeaserText: 'Ogni settimana aggiungiamo nuovi strumenti alla piattaforma. Iscriviti ora e sarai tra i primi a provarli tutti.',
+  roadmapTeaserLead: 'Questo è solo l\'inizio',
+  roadmapTeaserText: 'di tutto quello che sta arrivando.',
 
   formTitle: 'Iscriviti alla Lista d\'Attesa',
   formSubtitle: 'BandManager.ai sarà disponibile a breve. Lasciaci email e Instagram per ricevere tutte le informazioni e il pass di accesso anticipato.',
@@ -273,8 +273,8 @@ const cs: MusiciansLandingDict = {
   feature3Title: 'Repertoár a setlisty',
   feature3Desc: 'Měj přehled o setlistech s akordy a tóninami, vždy po ruce na zkoušky i koncerty.',
 
-  roadmapTeaserLead: 'Tohle je teprve začátek.',
-  roadmapTeaserText: 'Každý týden přidáváme na platformu nové nástroje. Přihlas se hned a budeš mezi prvními, kdo je vyzkouší.',
+  roadmapTeaserLead: 'Tohle je teprve začátek',
+  roadmapTeaserText: 'toho, co je ještě před námi.',
 
   formTitle: 'Připoj se na čekací listinu',
   formSubtitle: 'BandManager.ai bude k dispozici již brzy. Zanech nám svůj e-mail a Instagram, abychom ti zaslali všechny informace a přednostní přístup.',
