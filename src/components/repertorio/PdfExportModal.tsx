@@ -26,11 +26,17 @@ const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 const ROW_GAP_PX = 5;
 
 // Auto-ajuste de tamaño e impresión (ver setlistAutoFit.ts): candidatos de tamaño de título en
-// pt, de mayor a menor. 17pt es el mínimo legible a distancia de escenario (~2 metros) — nunca se
-// baja de ahí para caber en menos hojas; se prefiere repartir el repertorio en más páginas antes
-// que una letra más pequeña. noteFontPt/songNumFontPt se derivan proporcionalmente del título,
-// manteniendo las mismas proporciones que tenían los 3 niveles fijos anteriores (28/19/22 en "gigante").
+// pt, de mayor a menor. 17pt es el mínimo IDEAL, legible a distancia de escenario (~2 metros) —
+// el reparto en VARIAS páginas nunca baja de ahí; se prefiere repartir el repertorio en más
+// páginas antes que una letra más pequeña. noteFontPt/songNumFontPt se derivan proporcionalmente
+// del título, manteniendo las mismas proporciones que tenían los 3 niveles fijos anteriores
+// (28/19/22 en "gigante").
 const TITLE_FONT_CANDIDATES_PT = [28, 25, 22, 19, 17];
+// Tamaño de ÚLTIMO RECURSO (más pequeño que el mínimo ideal), aceptado explícitamente por Diego
+// como trade-off: se prueba SOLO para intentar que el repertorio quepa en una sola página cuando
+// ni siquiera 17pt lo consigue por poco margen — nunca se usa para repartir en varias páginas
+// (ver EMERGENCY_TITLE_FONT_PT en computeAutoFitPlan/setlistAutoFit.ts).
+const EMERGENCY_TITLE_FONT_PT = 15;
 const deriveNoteFontPt = (titlePt: number) => Math.round(titlePt * (19 / 28) * 10) / 10;
 const deriveSongNumFontPt = (titlePt: number) => Math.round(titlePt * (22 / 28) * 10) / 10;
 // Tamaño de referencia para la vista previa en pantalla (no imprime, no pagina de verdad — es
@@ -1081,7 +1087,8 @@ export function PdfExportModal({
 
         const plan = computeAutoFitPlan(activeSetlist.items.length, measureFn, {
           candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
-          pageAvailableHeightPx
+          pageAvailableHeightPx,
+          emergencyFontPt: EMERGENCY_TITLE_FONT_PT
         });
 
         return { member, isMaster, plan, measureFn, pageAvailableHeightPx };
@@ -1347,16 +1354,18 @@ export function PdfExportModal({
           {/* Row 2: Typography, Handwritten Sharpie Ink & Toggles */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/5">
             {/* Tamaño de título: ya no se elige a mano — se auto-ajusta por hoja (ver
-                computeAutoFitPlan) para llenar la página lo mejor posible sin bajar nunca de
-                17pt (mínimo legible a ~2m de distancia en escenario). Si no cabe ni así, se
-                reparte en más páginas en vez de encoger más. */}
+                computeAutoFitPlan) para llenar la página lo mejor posible, priorizando el
+                mínimo ideal de 17pt (legible a ~2m en escenario) para repartir en varias hojas.
+                Solo cuando eso evitaría caber en una sola hoja por muy poco margen, prueba un
+                tamaño de emergencia (15pt) como último recurso — nunca para repartir en más de
+                1 página, solo para intentar mantenerlo en una sola. */}
             <div className="flex items-center gap-2">
               <span className="text-neutral-400 font-bold flex items-center gap-1">
                 <Type className="w-3.5 h-3.5 text-amber-400" /> Tamaño Títulos:
               </span>
               <span
                 className="px-2.5 py-1 rounded text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio, sin bajar de 17pt (legible a ~2m)."
+                title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
               >
                 ⚡ Automático
               </span>

@@ -20,12 +20,22 @@
 // lista de candidatos solo para caber en menos páginas — se prefiere partir en más páginas.
 
 export interface AutoFitOptions {
-  /** Tamaños de título candidatos en pt, de mayor a menor. El último es el mínimo legible a
-   *  distancia de escenario — nunca se encoge por debajo de él. */
+  /** Tamaños de título candidatos en pt, de mayor a menor. El último es el mínimo "ideal",
+   *  pensado para leerse cómodamente a distancia de escenario (~2m). El reparto en VARIAS
+   *  páginas (paso 2 y siguientes) nunca baja de aquí. */
   candidateTitleFontPt: number[];
   /** Alto disponible en px para el CUERPO de canciones de una página (ya descontados header,
    *  footer, padding y márgenes). */
   pageAvailableHeightPx: number;
+  /** Tamaño de ÚLTIMO RECURSO, más pequeño que el mínimo "ideal" de `candidateTitleFontPt` —
+   *  aceptado explícitamente por el usuario como trade-off (letra algo más pequeña a cambio de
+   *  ver el repertorio entero de un vistazo). Se prueba SOLO después de que ningún candidato
+   *  normal quepa en una sola página: si con este tamaño de emergencia SÍ cabe, se prefiere
+   *  sobre repartir en 2+ páginas al tamaño mínimo ideal. Si tampoco cabe con él, el algoritmo
+   *  sigue su curso normal (reparto en varias páginas, siempre al tamaño ideal — nunca usa este
+   *  tamaño para repartir en más de 1 página, solo como último intento de caber en 1 sola).
+   *  Opcional: si se omite, el comportamiento es idéntico al anterior. */
+  emergencyFontPt?: number;
 }
 
 export interface AutoFitResult {
@@ -46,7 +56,7 @@ export function computeAutoFitPlan(
   measureFn: MeasureRangeFn,
   opts: AutoFitOptions
 ): AutoFitResult {
-  const { candidateTitleFontPt, pageAvailableHeightPx } = opts;
+  const { candidateTitleFontPt, pageAvailableHeightPx, emergencyFontPt } = opts;
   const minFontPt = candidateTitleFontPt[candidateTitleFontPt.length - 1];
 
   if (totalItems === 0) {
@@ -70,6 +80,18 @@ export function computeAutoFitPlan(
     const limit = pt === minFontPt ? pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX : pageAvailableHeightPx;
     if (measureFn(pt, 0, totalItems) <= limit) {
       return { titleFontPt: pt, pageItemCounts: [totalItems] };
+    }
+  }
+
+  // 1b. Ningún tamaño "ideal" cupo en una sola página. Antes de resignarse a repartir en varias
+  // páginas, probar el tamaño de EMERGENCIA (si se proporcionó) — más pequeño que el mínimo
+  // ideal, aceptado explícitamente como trade-off: preferible una letra algo más pequeña que ver
+  // el repertorio entero de un vistazo, a saltar de hoja por un margen pequeño (p.ej. 1-2
+  // canciones de más). Solo se usa para intentar 1 SOLA página — el reparto en varias páginas
+  // (pasos siguientes) sigue usando exclusivamente el tamaño ideal, nunca este.
+  if (emergencyFontPt !== undefined && emergencyFontPt < minFontPt) {
+    if (measureFn(emergencyFontPt, 0, totalItems) <= pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX) {
+      return { titleFontPt: emergencyFontPt, pageItemCounts: [totalItems] };
     }
   }
 

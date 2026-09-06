@@ -159,6 +159,51 @@ describe('computeAutoFitPlan', () => {
       cursor += count;
     }
   });
+
+  describe('emergencyFontPt', () => {
+    it('usa el tamaño de emergencia para caber en 1 sola página cuando ningún candidato ideal cabe', () => {
+      // Al tamaño mínimo ideal (17pt) el contenido excede la página por poco (510 > 500); al
+      // tamaño de emergencia (15pt) sí cabe entero.
+      const measure: MeasureRangeFn = (pt) => {
+        const perItem: Record<number, number> = { 28: 30, 25: 27, 22: 24, 19: 21, 17: 17, 15: 15 };
+        return 30 * perItem[pt];
+      };
+      const result = computeAutoFitPlan(30, measure, {
+        candidateTitleFontPt: CANDIDATES,
+        pageAvailableHeightPx: 500,
+        emergencyFontPt: 15
+      });
+      expect(result.titleFontPt).toBe(15);
+      expect(result.pageItemCounts).toEqual([30]);
+    });
+
+    it('ignora el tamaño de emergencia y reparte en varias páginas al tamaño ideal si ni con él cabe', () => {
+      const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60, 15: 55 });
+      // 30 items * 55px = 1650, sigue sin caber en una página de 500 -> el algoritmo no puede
+      // usar el tamaño de emergencia para 1 sola página, debe repartir en varias al tamaño ideal.
+      const result = computeAutoFitPlan(30, measure, {
+        candidateTitleFontPt: CANDIDATES,
+        pageAvailableHeightPx: 500,
+        emergencyFontPt: 15
+      });
+      expect(result.pageItemCounts.length).toBeGreaterThan(1);
+      // El reparto en varias páginas nunca debe usar el tamaño de emergencia, solo el ideal.
+      expect(result.titleFontPt).toBeGreaterThanOrEqual(17);
+    });
+
+    it('sin emergencyFontPt, el comportamiento es idéntico al anterior (reparte en varias páginas)', () => {
+      const measure: MeasureRangeFn = (pt) => {
+        const perItem: Record<number, number> = { 28: 30, 25: 27, 22: 24, 19: 21, 17: 17 };
+        return 30 * perItem[pt];
+      };
+      const result = computeAutoFitPlan(30, measure, {
+        candidateTitleFontPt: CANDIDATES,
+        pageAvailableHeightPx: 500
+      });
+      expect(result.pageItemCounts.length).toBeGreaterThan(1);
+      expect(result.titleFontPt).toBeGreaterThanOrEqual(17);
+    });
+  });
 });
 
 describe('tryFitInPageCount', () => {
