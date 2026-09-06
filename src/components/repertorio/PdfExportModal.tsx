@@ -527,7 +527,10 @@ export function PdfExportModal({
             /* Marca de agua: muy suave, de fondo, centrada — se nota que está pero no compite con
                la lectura. position:absolute la saca del flujo (no afecta en nada a la medición del
                auto-ajuste, que solo mide header/filas/footer por separado) y z-index negativo la
-               deja detrás del contenido normal dentro del propio stacking context de .sheet-page. */
+               deja detrás del contenido normal dentro del propio stacking context de .sheet-page.
+               Si el grupo tiene logo lo usa en alta resolución (misma imagen original que en la
+               cabecera, no una miniatura) — el texto con el nombre queda como alternativa cuando
+               no hay logo subido. */
             .page-watermark {
               position: absolute;
               inset: 0;
@@ -538,6 +541,14 @@ export function PdfExportModal({
               pointer-events: none;
               user-select: none;
               overflow: hidden;
+            }
+            .page-watermark-logo {
+              max-width: 65%;
+              max-height: 65%;
+              object-fit: contain;
+              opacity: 0.09;
+            }
+            .page-watermark-text {
               font-family: 'Anton', 'Oswald', sans-serif;
               font-size: 80pt;
               font-weight: 900;
@@ -1061,6 +1072,13 @@ export function PdfExportModal({
 
       const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.length, 0);
 
+      // Marca de agua: el logo del grupo en alta resolución (la misma imagen original que la
+      // cabecera, no una miniatura reescalada) si hay uno subido y activo; si no, el nombre del
+      // grupo como texto de respaldo.
+      const watermarkInnerHtml = (showBandLogo && customLogoUrl)
+        ? `<img src="${customLogoUrl}" alt="" class="page-watermark-logo" onerror="this.style.display='none'" />`
+        : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
+
       let globalPageIdx = 0;
       const pagesHtml = equalizedMemberPlans
         .map(({ member, isMaster, plan }) => {
@@ -1078,7 +1096,7 @@ export function PdfExportModal({
 
               return `
                 <div class="sheet-page ${!isLastPageOverall ? 'page-break' : ''}">
-                  <div class="page-watermark">${bandName.toUpperCase()}</div>
+                  <div class="page-watermark">${watermarkInnerHtml}</div>
                   ${buildHeaderHtml(member, isMaster)}
                   <div class="setlist-items-container">
                     ${rowsHtml}
@@ -1434,12 +1452,28 @@ export function PdfExportModal({
             }}
           >
             {/* Marca de agua: muy suave, centrada, de fondo — mismo tratamiento que en el HTML de
-                impresión (position:absolute, no forma parte del flujo ni del cálculo de alto). */}
-            <div
-              className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none select-none overflow-hidden whitespace-nowrap font-['Anton',sans-serif] font-black uppercase"
-              style={{ fontSize: '70pt', letterSpacing: '4px', color: getInkColorHex(), opacity: 0.08, transform: 'rotate(-20deg)' }}
-            >
-              {bandName}
+                impresión (position:absolute, no forma parte del flujo ni del cálculo de alto). El
+                logo del grupo en alta resolución (misma imagen original que la cabecera) si hay
+                uno subido y activo; si no, el nombre como texto de respaldo. */}
+            <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+              {showBandLogo && customLogoUrl ? (
+                <img
+                  src={customLogoUrl}
+                  alt=""
+                  className="max-w-[65%] max-h-[65%] object-contain"
+                  style={{ opacity: 0.09 }}
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                <span
+                  className="whitespace-nowrap font-['Anton',sans-serif] font-black uppercase"
+                  style={{ fontSize: '70pt', letterSpacing: '4px', color: getInkColorHex(), opacity: 0.08, transform: 'rotate(-20deg)' }}
+                >
+                  {bandName}
+                </span>
+              )}
             </div>
 
             {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
