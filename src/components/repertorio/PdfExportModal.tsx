@@ -543,10 +543,10 @@ export function PdfExportModal({
               overflow: hidden;
             }
             .page-watermark-logo {
-              max-width: 65%;
-              max-height: 65%;
+              width: 100%;
+              height: 100%;
               object-fit: contain;
-              opacity: 0.15;
+              opacity: 0.12;
               filter: grayscale(0.3);
             }
             .page-watermark-text {
@@ -1462,8 +1462,8 @@ export function PdfExportModal({
                 <img
                   src={customLogoUrl}
                   alt=""
-                  className="max-w-[65%] max-h-[65%] object-contain"
-                  style={{ opacity: 0.15, filter: 'grayscale(0.3)' }}
+                  className="w-full h-full object-contain"
+                  style={{ opacity: 0.12, filter: 'grayscale(0.3)' }}
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
