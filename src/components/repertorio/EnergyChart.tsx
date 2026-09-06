@@ -95,20 +95,34 @@ export function EnergyChart({
   // efecto resultaba chillón al pasar el ratón por varias sugerencias seguidas.
   const dotHighlighted = compact ? 5 : 7;
 
-  // La curva anima despacio (1200ms) SOLO justo al montar/cambiar de setlist, para que se note el
-  // efecto "wow" al abrirlo. El resto del tiempo —cada click del joystick subiendo/bajando energía,
-  // cada arrastre, cada reordenamiento— usa una animación mucho más rápida: antes reutilizaba los
-  // mismos 1200ms también para estos cambios sueltos, y esperar más de un segundo por cada click
-  // se sentía lentísimo. `setlistKey` es lo único que fuerza un remount real (ver key en
-  // ComposedChart más abajo), así que es la señal correcta de "esto es una apertura, no una edición".
-  const [fastAnimation, setFastAnimation] = useState(false);
+  // Tres velocidades de animación según el motivo del cambio — nunca la misma para las tres,
+  // porque cada una pide algo distinto:
+  //  - 'entrance': la PRIMERÍSIMA vez que este gráfico se pinta en esta visita a Repertorio (el
+  //    "momento wow" de verdad — lenta y vistosa a propósito, para que se note la curva
+  //    dibujándose de principio a fin, ver GRAND_ENTRANCE_MS).
+  //  - 'switch': cada vez que se cambia de setlist DESPUÉS de esa primera vez — sigue teniendo su
+  //    propio ritmo, pero ya no hace falta la misma puesta en escena.
+  //  - 'fast': cualquier edición suelta (joystick, arrastre, reordenar) — tiene que sentirse
+  //    instantánea; reusar el ritmo de 'entrance'/'switch' aquí es justo lo que se quejó de lento
+  //    hace unas iteraciones.
+  // `setlistKey` es lo único que fuerza un remount real (ver key en ComposedChart más abajo), así
+  // que es la señal correcta de "esto es una apertura, no una edición". El ref (no state) recuerda
+  // si la entrada ya se reprodujo en este montaje del componente, sin resetearse entre setlists.
+  const GRAND_ENTRANCE_MS = 2800;
+  const SETLIST_SWITCH_MS = 1200;
+  const FAST_EDIT_MS = 180;
+  const hasPlayedGrandEntranceRef = useRef(false);
+  const [animMode, setAnimMode] = useState<'entrance' | 'switch' | 'fast'>('entrance');
   useEffect(() => {
-    setFastAnimation(false);
-    const t = setTimeout(() => setFastAnimation(true), 1300);
+    const isFirstEverPaint = !hasPlayedGrandEntranceRef.current;
+    hasPlayedGrandEntranceRef.current = true;
+    setAnimMode(isFirstEverPaint ? 'entrance' : 'switch');
+    const t = setTimeout(() => setAnimMode('fast'), (isFirstEverPaint ? GRAND_ENTRANCE_MS : SETLIST_SWITCH_MS) + 100);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setlistKey]);
-  const curveAnimationDuration = fastAnimation ? 180 : 1200;
+  const curveAnimationDuration = animMode === 'entrance' ? GRAND_ENTRANCE_MS : animMode === 'switch' ? SETLIST_SWITCH_MS : FAST_EDIT_MS;
+  const curveAnimationEasing = animMode === 'entrance' ? 'ease-in-out' : 'ease-out';
 
   // Arrastrar un punto horizontalmente reordena el setlist — la posición se calcula sobre el
   // ancho real del contenedor (ratio 0-1 mapeado a índice), no sobre coordenadas internas de
@@ -293,7 +307,7 @@ export function EnergyChart({
   return (
     <div
       ref={containerRef}
-      className={`relative ${compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'}`}
+      className={`relative ${compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'} ${animMode === 'entrance' && !compact ? 'energy-map-grand-entrance' : ''}`}
       style={{
         height,
         cursor: draggingFromIndex !== null ? (dragAxis === 'y' ? 'ns-resize' : 'ew-resize') : undefined
@@ -302,6 +316,16 @@ export function EnergyChart({
       {!compact && (
         <style>{`
           .energy-map-glow .recharts-area-curve { filter: drop-shadow(0 0 5px rgba(255,255,255,0.25)) drop-shadow(0 0 10px rgba(255,255,255,0.12)); }
+          /* El "momento wow" al entrar a Repertorio por primera vez: mientras la curva se dibuja
+             despacio (GRAND_ENTRANCE_MS), el fondo del propio Mapa de Energía respira con un halo
+             dorado — sincronizado a la misma duración, para que la puesta en escena no se limite
+             al trazo sino que envuelva todo el gráfico. Un solo ciclo, nunca se repite. */
+          @keyframes energyMapGrandEntranceGlow {
+            0% { box-shadow: inset 0 0 0px rgba(242,202,80,0); }
+            55% { box-shadow: inset 0 0 60px rgba(242,202,80,0.35); }
+            100% { box-shadow: inset 0 0 0px rgba(242,202,80,0); }
+          }
+          .energy-map-grand-entrance { animation: energyMapGrandEntranceGlow ${GRAND_ENTRANCE_MS}ms ease-in-out 1; }
         `}</style>
       )}
       {/* Arrastrando en vertical: burbuja con la energía en vivo, pegada al dedo/cursor (no fija
@@ -465,6 +489,7 @@ export function EnergyChart({
               activeDot={false}
               isAnimationActive={!compact}
               animationDuration={curveAnimationDuration}
+              animationEasing={curveAnimationEasing}
               legendType="none"
               connectNulls
             />
@@ -483,7 +508,7 @@ export function EnergyChart({
             connectNulls
             isAnimationActive={!compact}
             animationDuration={curveAnimationDuration}
-            animationEasing="ease-out"
+            animationEasing={curveAnimationEasing}
             // Recharts dibuja su propio "activeDot" ENCIMA del dot personalizado al pasar el
             // ratón cerca — con onReorder eso tapa el <circle> real y se traga el mousedown
             // antes de que llegue a nuestro handler de arrastre, así que se desactiva aquí.
