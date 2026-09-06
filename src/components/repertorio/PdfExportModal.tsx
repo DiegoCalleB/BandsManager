@@ -1077,12 +1077,17 @@ export function PdfExportModal({
       // Contar solo páginas con contenido (excluir páginas vacías con count === 0)
       const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.filter(count => count > 0).length, 0);
 
+      // Resolver URLs relativas a absolutas para que funcionen en la ventana de impresión
+      const absoluteLogoUrl = customLogoUrl?.trim()
+        ? new URL(customLogoUrl, window.location.href).href
+        : null;
+
       // Marca de agua: el logo del grupo en alta resolución (la misma imagen original que la
       // cabecera, no una miniatura reescalada) si hay uno subido y activo; si no, el nombre del
       // grupo como texto de respaldo. Si la imagen falla en cargar (404, CORS, etc.), el onerror
       // reemplaza todo el contenedor con el nombre como fallback.
-      const watermarkInnerHtml = (showBandLogo && customLogoUrl?.trim())
-        ? `<img src="${customLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=\\\"page-watermark-text\\\">${bandName.toUpperCase()}</div>'" />`
+      const watermarkInnerHtml = (showBandLogo && absoluteLogoUrl)
+        ? `<img src="${absoluteLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=\\\"page-watermark-text\\\">${bandName.toUpperCase()}</div>'" />`
         : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
 
       let globalPageIdx = 0;
