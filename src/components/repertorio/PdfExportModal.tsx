@@ -1074,7 +1074,8 @@ export function PdfExportModal({
 
       document.body.removeChild(measureFrame);
 
-      const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.length, 0);
+      // Contar solo páginas con contenido (excluir páginas vacías con count === 0)
+      const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.filter(count => count > 0).length, 0);
 
       // Marca de agua: el logo del grupo en alta resolución (la misma imagen original que la
       // cabecera, no una miniatura reescalada) si hay uno subido y activo; si no, el nombre del
@@ -1092,6 +1093,9 @@ export function PdfExportModal({
             .map(count => {
               const startIdx = cursor;
               cursor += count;
+              // Saltar páginas vacías (sin canciones)
+              if (count === 0) return '';
+
               globalPageIdx++;
               const rowsHtml = activeSetlist.items
                 .slice(startIdx, startIdx + count)
@@ -1110,6 +1114,7 @@ export function PdfExportModal({
                 </div>
               `;
             })
+            .filter(html => html !== '')
             .join('');
         })
         .join('');
