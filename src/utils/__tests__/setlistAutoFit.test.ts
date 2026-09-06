@@ -189,6 +189,27 @@ describe('computeAutoFitPlan', () => {
       expect(result.pageItemCounts.length).toBeGreaterThan(1);
       // El reparto en varias páginas nunca debe usar el tamaño de emergencia, solo el ideal.
       expect(result.titleFontPt).toBeGreaterThanOrEqual(17);
+      // Sin decisión ambigua que ofrecer: no hay alternativa razonable de 1 sola página.
+      expect(result.alternativePlan).toBeUndefined();
+    });
+
+    it('cuando usa el tamaño de emergencia, incluye alternativePlan con el reparto en varias páginas al tamaño ideal', () => {
+      // Caso ambiguo real: a 15pt cabe entero en 1 página; a 17pt (ideal) no cabe, necesita 2+.
+      const measure: MeasureRangeFn = (pt, from, to) => {
+        const perItem: Record<number, number> = { 28: 30, 25: 27, 22: 24, 19: 21, 17: 17, 15: 15 };
+        return (to - from) * perItem[pt];
+      };
+      const result = computeAutoFitPlan(30, measure, {
+        candidateTitleFontPt: CANDIDATES,
+        pageAvailableHeightPx: 500,
+        emergencyFontPt: 15
+      });
+      expect(result.titleFontPt).toBe(15);
+      expect(result.pageItemCounts).toEqual([30]);
+      expect(result.alternativePlan).toBeDefined();
+      expect(result.alternativePlan!.titleFontPt).toBeGreaterThanOrEqual(17);
+      expect(result.alternativePlan!.pageItemCounts.length).toBeGreaterThan(1);
+      expect(result.alternativePlan!.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(30);
     });
 
     it('sin emergencyFontPt, el comportamiento es idéntico al anterior (reparte en varias páginas)', () => {

@@ -252,6 +252,12 @@ export function PdfExportModal({
   // Print mode: 'all_members' | 'single_member' | 'master'
   const [printMode, setPrintMode] = useState<'all_members' | 'single_member' | 'master'>('all_members');
   const [selectedMemberId, setSelectedMemberId] = useState<string>(resolvedMembers[0]?.id || 'usr-diego');
+
+  // Cuando el auto-ajuste (ver computeAutoFitPlan/EMERGENCY_TITLE_FONT_PT) detecta el caso
+  // AMBIGUO — el repertorio cabe en 1 sola hoja solo apretando la letra por debajo del mínimo
+  // ideal — se pausa el flujo de impresión y se guarda aquí cuántas páginas tendría cada opción,
+  // para que el usuario elija con info real en vez de decidir en su nombre.
+  const [sizeChoiceDialog, setSizeChoiceDialog] = useState<{ singleTotalPages: number; multiTotalPages: number } | null>(null);
   
   // Design & Preset State
   const [stylePreset, setStylePreset] = useState<SetlistStylePreset>('rock_stage');
@@ -360,11 +366,11 @@ export function PdfExportModal({
     }
   };
 
-  // Generate HTML for printing
-  const handlePrint = async () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-
+  // Generate HTML for printing. `forcedSizeChoice` llega definido solo en el reintento tras el
+  // diálogo de "1 hoja vs varias" (ver sizeChoiceDialog más abajo) — en la llamada normal (botón
+  // Imprimir) va indefinido, y si se detecta el caso ambiguo el flujo se pausa antes de abrir
+  // ninguna ventana de impresión.
+  const handlePrint = async (forcedSizeChoice?: 'single' | 'multi') => {
     // Si el usuario imprime justo tras abrir el modal, las fuentes web (Anton/Oswald/Caveat) del
     // documento de la app podrían no haber terminado de cargar todavía — el canvas measurer de
     // abajo mediría con la fuente de reserva del sistema (más ancha), haciendo que el título
@@ -1115,10 +1121,42 @@ export function PdfExportModal({
         return forced ? { ...mp, plan: forced } : mp;
       });
 
+      // Detectar el caso AMBIGUO: algún miembro cabe en 1 sola hoja solo gracias al tamaño de
+      // emergencia (ver EMERGENCY_TITLE_FONT_PT), pero también existe la alternativa real de
+      // repartir en varias hojas al tamaño ideal, más grande. Si el usuario no ha decidido
+      // todavía (primera pasada, forcedSizeChoice indefinido), se pausa el flujo ANTES de abrir
+      // ninguna ventana de impresión y se le muestra el nº real de páginas de cada opción — la
+      // decisión nunca se toma en su nombre. Al elegir, se vuelve a llamar a handlePrint con la
+      // decisión ya resuelta (ver el diálogo en el JSX del modal).
+      const hasAmbiguousChoice = equalizedMemberPlans.some(mp => mp.plan.alternativePlan);
+      if (hasAmbiguousChoice && forcedSizeChoice === undefined) {
+        const singleTotalPages = equalizedMemberPlans.reduce(
+          (sum, mp) => sum + mp.plan.pageItemCounts.filter(c => c > 0).length,
+          0
+        );
+        const multiTotalPages = equalizedMemberPlans.reduce(
+          (sum, mp) => sum + (mp.plan.alternativePlan ?? mp.plan).pageItemCounts.filter(c => c > 0).length,
+          0
+        );
+        document.body.removeChild(measureFrame);
+        setSizeChoiceDialog({ singleTotalPages, multiTotalPages });
+        return;
+      }
+
+      // Resolver la decisión: si el usuario eligió "varias hojas", cambiar cada plan ambiguo por
+      // su alternativa — el plan principal ya ES la opción "1 sola hoja" por defecto, así que
+      // "single" (o ninguna decisión, cuando no hubo ambigüedad) no necesita ningún cambio.
+      const resolvedMemberPlans = forcedSizeChoice === 'multi'
+        ? equalizedMemberPlans.map(mp => (mp.plan.alternativePlan ? { ...mp, plan: mp.plan.alternativePlan } : mp))
+        : equalizedMemberPlans;
+
       document.body.removeChild(measureFrame);
 
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) return;
+
       // Contar solo páginas con contenido (excluir páginas vacías con count === 0)
-      const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.filter(count => count > 0).length, 0);
+      const totalPagesCount = resolvedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.filter(count => count > 0).length, 0);
 
       // Resolver URLs relativas a absolutas para que funcionen en la ventana de impresión
       // Usar window.location.origin + ruta si es relativa, sino usar URL tal cual
@@ -1145,7 +1183,7 @@ export function PdfExportModal({
         : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
 
       let globalPageIdx = 0;
-      const pagesHtml = equalizedMemberPlans
+      const pagesHtml = resolvedMemberPlans
         .map(({ member, isMaster, plan }) => {
           let cursor = 0;
           return plan.pageItemCounts
@@ -1260,7 +1298,7 @@ export function PdfExportModal({
 
           <div className="flex items-center gap-2.5">
             <button
-              onClick={handlePrint}
+              onClick={() => handlePrint()}
               className="px-5 py-2.5 rounded-xl font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
             >
               <Printer className="w-4 h-4" />
@@ -1853,6 +1891,62 @@ export function PdfExportModal({
           </div>
         </div>
       </div>
+
+      {/* Diálogo de decisión ambigua "1 hoja apretada vs varias hojas con letra ideal" (ver
+          sizeChoiceDialog / EMERGENCY_TITLE_FONT_PT en handlePrint). Solo aparece cuando el
+          auto-ajuste detecta ese caso límite real — nunca decide en nombre del usuario. */}
+      {sizeChoiceDialog && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[10000] p-4">
+          <div className={`rounded-2xl shadow-2xl max-w-lg w-full p-6 border ${
+            isStitchLight ? 'bg-white border-slate-300' : 'bg-neutral-900 border-neutral-700'
+          }`}>
+            <h3 className={`text-lg font-black uppercase mb-2 flex items-center gap-2 ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+              <Zap className="w-5 h-5 text-amber-400" />
+              ¿Cómo prefieres el repertorio?
+            </h3>
+            <p className={`text-sm mb-5 ${isStitchLight ? 'text-slate-600' : 'text-neutral-400'}`}>
+              El repertorio casi cabe en una sola hoja, pero necesitaría una letra algo más pequeña
+              de lo recomendado para leerse cómodo en escena (~2m). Elige qué prefieres:
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  setSizeChoiceDialog(null);
+                  handlePrint('single');
+                }}
+                className="p-4 rounded-xl border-2 border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-left transition-colors cursor-pointer"
+              >
+                <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+                  📄 1 sola hoja (letra más pequeña)
+                </div>
+                <div className={`text-xs ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                  {sizeChoiceDialog.singleTotalPages} hoja{sizeChoiceDialog.singleTotalPages !== 1 ? 's' : ''} en total — todo el repertorio de un vistazo
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setSizeChoiceDialog(null);
+                  handlePrint('multi');
+                }}
+                className="p-4 rounded-xl border-2 border-sky-500/40 bg-sky-500/10 hover:bg-sky-500/20 text-left transition-colors cursor-pointer"
+              >
+                <div className={`font-black text-sm uppercase mb-1 ${isStitchLight ? 'text-slate-900' : 'text-white'}`}>
+                  📄📄 Varias hojas (letra más grande)
+                </div>
+                <div className={`text-xs ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                  {sizeChoiceDialog.multiTotalPages} hojas en total — letra al tamaño ideal para leer desde ~2m
+                </div>
+              </button>
+            </div>
+            <button
+              onClick={() => setSizeChoiceDialog(null)}
+              className={`mt-4 text-xs font-mono cursor-pointer ${isStitchLight ? 'text-slate-400 hover:text-slate-600' : 'text-neutral-500 hover:text-neutral-300'}`}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Edit Member Notes Modal if clicked from preview */}
       {editingSongForNotes && (

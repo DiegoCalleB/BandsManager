@@ -43,6 +43,15 @@ export interface AutoFitResult {
   titleFontPt: number;
   /** Cuántos items (consecutivos, en el orden original) va en cada página. Suma = totalItems. */
   pageItemCounts: number[];
+  /**
+   * Presente SOLO cuando el resultado principal usó `emergencyFontPt` para caber en 1 sola
+   * página — es la decisión AMBIGUA que un músico real dudaría al montar el repertorio a mano
+   * ("¿lo aprieto en una hoja o lo reparto en dos con letra más grande?"). Contiene la
+   * alternativa de repartir en varias páginas al tamaño ideal (nunca por debajo del mínimo
+   * legible), para que la UI pueda ofrecer ambas opciones y dejar elegir al usuario en vez de
+   * decidir por él en el único caso donde de verdad hay una disyuntiva real.
+   */
+  alternativePlan?: { titleFontPt: number; pageItemCounts: number[] };
 }
 
 /**
@@ -51,49 +60,20 @@ export interface AutoFitResult {
  */
 export type MeasureRangeFn = (titleFontPt: number, fromIndex: number, toIndexExclusive: number) => number;
 
-export function computeAutoFitPlan(
+// Pasos 2-4 del algoritmo (ver cabecera del archivo): dado que NINGÚN tamaño candidato (ideal)
+// cabe en una sola página, decide cuántas páginas hacen falta al tamaño mínimo, sube el tamaño
+// tanto como se pueda sin necesitar más páginas, reparte equilibrado por altura y aplica la red
+// de seguridad/rebalanceo de la última página dispersa. Extraído a función propia porque hace
+// falta calcularlo DOS veces cuando hay un `emergencyFontPt` que sí permite 1 sola página: una
+// vez como resultado principal (si se prefiere 1 hoja) y otra como `alternativePlan` (repartido
+// en varias hojas al tamaño ideal) para que la UI pueda ofrecer ambas opciones.
+function computeMultiPagePlan(
   totalItems: number,
   measureFn: MeasureRangeFn,
-  opts: AutoFitOptions
+  candidateTitleFontPt: number[],
+  pageAvailableHeightPx: number
 ): AutoFitResult {
-  const { candidateTitleFontPt, pageAvailableHeightPx, emergencyFontPt } = opts;
   const minFontPt = candidateTitleFontPt[candidateTitleFontPt.length - 1];
-
-  if (totalItems === 0) {
-    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0] };
-  }
-
-  // 1. El repertorio completo, ¿cabe en una sola página a alguno de los tamaños candidatos? En
-  // el tamaño MÍNIMO se admite un margen de tolerancia MÍNIMO, en PÍXELES ABSOLUTOS (no un
-  // porcentaje): solo para absorber el ruido de redondeo/subpíxel inevitable entre cómo se MIDE el
-  // contenido (un iframe oculto) y cómo lo pinta de verdad el motor de impresión del navegador —
-  // nunca para "colar" un desborde real de varias filas. Un % (el diseño original usaba un 8%) es
-  // peligroso: en una hoja de ~1000px de alto son ~80px de margen — de sobra para que una canción
-  // entera "quepa" sobre el papel según nuestra medición pero desborde de verdad al imprimir,
-  // generando exactamente la hoja-extra-casi-vacía que este mecanismo se creó para evitar. Con un
-  // tope absoluto de unos pocos píxeles, si de verdad no cabe, se prefiere repartir en más páginas
-  // (paso 2) — que además ahora reparte de forma equilibrada, no deja una canción sola. En los
-  // tamaños mayores no se da ninguna tolerancia: si no caben sin más, hay margen real para probar
-  // un tamaño menor antes de aceptar cualquier desborde.
-  const MIN_SIZE_OVERFLOW_TOLERANCE_PX = 3;
-  for (const pt of candidateTitleFontPt) {
-    const limit = pt === minFontPt ? pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX : pageAvailableHeightPx;
-    if (measureFn(pt, 0, totalItems) <= limit) {
-      return { titleFontPt: pt, pageItemCounts: [totalItems] };
-    }
-  }
-
-  // 1b. Ningún tamaño "ideal" cupo en una sola página. Antes de resignarse a repartir en varias
-  // páginas, probar el tamaño de EMERGENCIA (si se proporcionó) — más pequeño que el mínimo
-  // ideal, aceptado explícitamente como trade-off: preferible una letra algo más pequeña que ver
-  // el repertorio entero de un vistazo, a saltar de hoja por un margen pequeño (p.ej. 1-2
-  // canciones de más). Solo se usa para intentar 1 SOLA página — el reparto en varias páginas
-  // (pasos siguientes) sigue usando exclusivamente el tamaño ideal, nunca este.
-  if (emergencyFontPt !== undefined && emergencyFontPt < minFontPt) {
-    if (measureFn(emergencyFontPt, 0, totalItems) <= pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX) {
-      return { titleFontPt: emergencyFontPt, pageItemCounts: [totalItems] };
-    }
-  }
 
   // 2. Ni al tamaño mínimo cabe en una página: ese tamaño fija el nº MÍNIMO de páginas
   // necesario. No usarlo tal cual todavía — primero se busca, de mayor a menor, el candidato más
@@ -200,6 +180,56 @@ export function computeAutoFitPlan(
   }
 
   return { titleFontPt, pageItemCounts };
+}
+
+export function computeAutoFitPlan(
+  totalItems: number,
+  measureFn: MeasureRangeFn,
+  opts: AutoFitOptions
+): AutoFitResult {
+  const { candidateTitleFontPt, pageAvailableHeightPx, emergencyFontPt } = opts;
+  const minFontPt = candidateTitleFontPt[candidateTitleFontPt.length - 1];
+
+  if (totalItems === 0) {
+    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0] };
+  }
+
+  // 1. El repertorio completo, ¿cabe en una sola página a alguno de los tamaños candidatos? En
+  // el tamaño MÍNIMO se admite un margen de tolerancia MÍNIMO, en PÍXELES ABSOLUTOS (no un
+  // porcentaje): solo para absorber el ruido de redondeo/subpíxel inevitable entre cómo se MIDE el
+  // contenido (un iframe oculto) y cómo lo pinta de verdad el motor de impresión del navegador —
+  // nunca para "colar" un desborde real de varias filas. Un % (el diseño original usaba un 8%) es
+  // peligroso: en una hoja de ~1000px de alto son ~80px de margen — de sobra para que una canción
+  // entera "quepa" sobre el papel según nuestra medición pero desborde de verdad al imprimir,
+  // generando exactamente la hoja-extra-casi-vacía que este mecanismo se creó para evitar. Con un
+  // tope absoluto de unos pocos píxeles, si de verdad no cabe, se prefiere repartir en más páginas
+  // (paso 2) — que además ahora reparte de forma equilibrada, no deja una canción sola. En los
+  // tamaños mayores no se da ninguna tolerancia: si no caben sin más, hay margen real para probar
+  // un tamaño menor antes de aceptar cualquier desborde.
+  const MIN_SIZE_OVERFLOW_TOLERANCE_PX = 3;
+  for (const pt of candidateTitleFontPt) {
+    const limit = pt === minFontPt ? pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX : pageAvailableHeightPx;
+    if (measureFn(pt, 0, totalItems) <= limit) {
+      return { titleFontPt: pt, pageItemCounts: [totalItems] };
+    }
+  }
+
+  // 1b. Ningún tamaño "ideal" cupo en una sola página. Antes de resignarse a repartir en varias
+  // páginas, probar el tamaño de EMERGENCIA (si se proporcionó) — más pequeño que el mínimo
+  // ideal, aceptado explícitamente como trade-off: preferible una letra algo más pequeña que ver
+  // el repertorio entero de un vistazo, a saltar de hoja por un margen pequeño (p.ej. 1-2
+  // canciones de más). Cuando SÍ cabe así, esto es justo la decisión AMBIGUA que un músico real
+  // dudaría al montar el repertorio a mano — así que en vez de decidir en silencio, se calcula
+  // TAMBIÉN la alternativa de repartir en varias páginas al tamaño ideal (`alternativePlan`),
+  // para que la UI pueda ofrecer ambas opciones y sea el usuario quien elija.
+  if (emergencyFontPt !== undefined && emergencyFontPt < minFontPt) {
+    if (measureFn(emergencyFontPt, 0, totalItems) <= pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX) {
+      const alternativePlan = computeMultiPagePlan(totalItems, measureFn, candidateTitleFontPt, pageAvailableHeightPx);
+      return { titleFontPt: emergencyFontPt, pageItemCounts: [totalItems], alternativePlan };
+    }
+  }
+
+  return computeMultiPagePlan(totalItems, measureFn, candidateTitleFontPt, pageAvailableHeightPx);
 }
 
 /**
