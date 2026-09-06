@@ -1,13 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  Music, 
-  Sparkles, 
-  QrCode, 
-  Send, 
-  FileText, 
-  Calendar, 
-  CheckCircle2, 
-  ArrowLeft, 
+import {
+  Music,
+  Sparkles,
+  QrCode,
+  FileText,
+  Rocket,
+  CheckCircle2,
+  ArrowLeft,
   Check, 
   Loader2, 
   MessageSquare, 
@@ -170,9 +169,10 @@ export const PublicMusiciansLanding: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-amber-500/30 p-0.5 shadow-md flex items-center justify-center shrink-0">
               <img
-                src="/logo_bandmanager_official.svg"
+                src="/bandmanager_login_logo.png"
                 alt="BandManager.ai Logo"
                 className="w-full h-full object-contain rounded-[10px]"
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
               />
             </div>
             <div>
@@ -236,9 +236,10 @@ export const PublicMusiciansLanding: React.FC = () => {
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-400/20 to-amber-600/30 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-500" />
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-black border border-amber-500/40 p-1 shadow-2xl flex items-center justify-center">
                 <img
-                  src="/logo_bandmanager_official.svg"
+                  src="/bandmanager_login_logo.png"
                   alt="BandManager.ai"
                   className="w-full h-full object-contain rounded-xl"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
                 />
               </div>
             </div>
@@ -262,7 +263,7 @@ export const PublicMusiciansLanding: React.FC = () => {
         </section>
 
         {/* FEATURE CARDS */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
               <QrCode className="w-5 h-5" />
@@ -277,7 +278,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Send className="w-5 h-5" />
+              <FileText className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature2Title}
@@ -289,7 +290,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <FileText className="w-5 h-5" />
+              <Music className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature3Title}
@@ -298,18 +299,18 @@ export const PublicMusiciansLanding: React.FC = () => {
               {t.feature3Desc}
             </p>
           </div>
+        </section>
 
-          <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-white text-base font-mono">
-              {t.feature4Title}
-            </h3>
-            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
-              {t.feature4Desc}
-            </p>
+        {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
+            concretas todavía por confirmar */}
+        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+            <Rocket className="w-5 h-5" />
           </div>
+          <p className="text-neutral-300 text-xs sm:text-sm leading-relaxed">
+            <span className="text-amber-400 font-bold">{t.roadmapTeaserLead}</span>{' '}
+            {t.roadmapTeaserText}
+          </p>
         </section>
 
         {/* REGISTRATION FORM CARD OR SUCCESS CARD */}
@@ -545,7 +546,6 @@ export const PublicMusiciansLanding: React.FC = () => {
                       >
                         <option value="">{t.optionSelectInterest}</option>
                         <option value="fans">{t.optionInterestFans}</option>
-                        <option value="booking">{t.optionInterestBooking}</option>
                         <option value="epk">{t.optionInterestEpk}</option>
                         <option value="repertorio">{t.optionInterestRepertoire}</option>
                         <option value="todo">{t.optionInterestAll}</option>
