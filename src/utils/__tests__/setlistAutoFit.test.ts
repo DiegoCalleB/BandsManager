@@ -407,4 +407,48 @@ describe('computeExpandedPlan (modo "de pie")', () => {
     expect(result.pageItemCounts).toEqual([0]);
     expect(result.titleFontPt).toBe(28);
   });
+
+  it('sube el tamaño de cada página por encima del tamaño base cuando le sobra alto', () => {
+    // Escala lineal con el tamaño de fuente: a 28pt cada item mide 20px: 10 items = 200px,
+    // muy por debajo del alto disponible (500px) - hay margen real para subir más allá de 28pt.
+    const measure: MeasureRangeFn = (pt, from, to) => (to - from) * (pt / 28) * 20;
+    const result = computeExpandedPlan(10, measure, {
+      titleFontPt: 28,
+      pageAvailableHeightPx: 500,
+      maxTitleFontPt: 44
+    });
+    expect(result.titleFontPt).toBe(28); // la referencia de reparto no cambia
+    expect(result.pageFontSizes[0]).toBeGreaterThan(28); // pero la página sí se ve más grande
+    expect(result.pageFontSizes[0]).toBeLessThanOrEqual(44); // nunca por encima del techo dado
+  });
+
+  it('nunca sube el tamaño de una página por encima del techo aunque sobre muchísimo alto', () => {
+    const measure: MeasureRangeFn = () => 1; // prácticamente no ocupa nada, sea cual sea el tamaño
+    const result = computeExpandedPlan(5, measure, {
+      titleFontPt: 28,
+      pageAvailableHeightPx: 1000,
+      maxTitleFontPt: 40
+    });
+    expect(result.pageFontSizes[0]).toBeLessThanOrEqual(40);
+  });
+
+  it('cada página sube su propio tamaño sin desbordar su propio contenido real', () => {
+    const measure: MeasureRangeFn = (pt, from, to) => (to - from) * (pt / 28) * 20;
+    const result = computeExpandedPlan(29, measure, {
+      titleFontPt: 28,
+      pageAvailableHeightPx: 500,
+      maxTitleFontPt: 44
+    });
+    expect(result.pageItemCounts.length).toBeGreaterThan(1);
+    // Cada página, medida a SU PROPIO tamaño ya elegido, debe seguir cabiendo en el alto real.
+    let cursor = 0;
+    result.pageItemCounts.forEach((count, i) => {
+      const heightAtChosenSize = measure(result.pageFontSizes[i], cursor, cursor + count);
+      expect(heightAtChosenSize).toBeLessThanOrEqual(500);
+      cursor += count;
+    });
+    // Al menos alguna página debe haber subido por encima del tamaño base: si no, el "de pie"
+    // no estaría aprovechando el alto de sobra que sí tiene disponible.
+    expect(result.pageFontSizes.some(pt => pt > 28)).toBe(true);
+  });
 });

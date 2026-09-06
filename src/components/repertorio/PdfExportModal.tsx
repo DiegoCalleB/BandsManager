@@ -37,6 +37,12 @@ const TITLE_FONT_CANDIDATES_PT = [28, 25, 22, 19, 17];
 // ni siquiera 17pt lo consigue por poco margen — nunca se usa para repartir en varias páginas
 // (ver EMERGENCY_TITLE_FONT_PT en computeAutoFitPlan/setlistAutoFit.ts).
 const EMERGENCY_TITLE_FONT_PT = 15;
+// Techo de letra para el modo "de pie" (ver viewDensity): ese modo sube cada página tanto como
+// quepa MÁS ALLÁ del mayor candidato de arriba (28pt), ya que ahí no hay una letra "estándar" que
+// respetar entre páginas — cuantas menos canciones tenga una página, más grande puede verse. 44pt
+// es un techo generoso (evita que una página con muy pocos temas acabe con una letra desmedida)
+// sin dejar de sentirse "mucho más grande" que el máximo de sentado.
+const MAX_EXPANDED_TITLE_FONT_PT = 44;
 const deriveNoteFontPt = (titlePt: number) => Math.round(titlePt * (19 / 28) * 10) / 10;
 const deriveSongNumFontPt = (titlePt: number) => Math.round(titlePt * (22 / 28) * 10) / 10;
 // Tamaño de referencia para la vista previa en pantalla (no imprime, no pagina de verdad — es
@@ -69,6 +75,11 @@ interface NoteLayoutInput {
   // tienen paddings distintos — ver Ronda 2 del plan, no asumir un ancho fijo compartido).
   rowWidthPx: number;
   measure: (text: string, fontSizePx: number, fontFamily: string, fontWeight?: string | number) => number;
+  // Modo "de pie" (ver viewDensity en el componente): sin restricción de espacio real (letra
+  // grande, más hojas aceptadas a cambio), así que la nota va SIEMPRE debajo del título en su
+  // propia línea — nunca compitiendo por ancho al lado, que es justo la limitación que ese modo
+  // existe para evitar. Salta directamente a 'below' sin intentar 'inline' primero.
+  forceBelowMode?: boolean;
 }
 
 interface NoteLayoutResult {
@@ -170,6 +181,13 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
       measure: (text, size) => input.measure(text, size, input.noteFontFamily, 700)
     });
 
+  // Modo "de pie": nunca hay problema real de espacio (letra grande, más hojas aceptadas a
+  // cambio), así que la nota va siempre a su propia línea debajo — ni se intenta ponerla al lado
+  // del título ni se trunca nada para hacerle hueco ahí.
+  if (input.forceBelowMode) {
+    return { mode: 'below', maxWidthPx: belowMaxWidthPx, fit: fitAt(belowMaxWidthPx) };
+  }
+
   // Intenta modo inline con un ancho de título dado; null si no deja hueco útil o si obligaría
   // a encoger la nota DEMASIADO por debajo del mínimo compartido. Se permite un pequeño margen
   // (hasta 20% menos del mínimo) para mantener notas inline cuando hay badges que reducen espacio.
@@ -266,9 +284,12 @@ export function PdfExportModal({
 
   // Densidad de vista: 'sentado' (por defecto) usa el auto-ajuste normal — el mínimo nº de hojas
   // posible, pensado para leerse de cerca (atril, mesa de sonido). 'de_pie' fuerza el tamaño de
-  // título MÁS GRANDE de TITLE_FONT_CANDIDATES_PT y reparte en tantas hojas como haga falta a
-  // ese tamaño — pensado para leerse desde lejos, de pie en el escenario, aceptando más páginas
-  // a cambio de letra mucho mayor (ver computeExpandedPlan en setlistAutoFit.ts).
+  // título MÁS GRANDE de TITLE_FONT_CANDIDATES_PT como base y luego sube CADA página tanto como
+  // quepa por su cuenta (sin techo fijo — ver MAX_EXPANDED_TITLE_FONT_PT/computeExpandedPlan en
+  // setlistAutoFit.ts), repartiendo en tantas hojas como haga falta. Al no competir ya por espacio
+  // horizontal contra el título, las notas van siempre en su propia línea debajo (forceBelowMode
+  // en computeNoteLayout) — pensado para leerse desde lejos, de pie en el escenario, aceptando más
+  // páginas a cambio de letra mucho mayor.
   const [viewDensity, setViewDensity] = useState<'sentado' | 'de_pie'>('sentado');
 
   // Design & Preset State
@@ -443,7 +464,8 @@ export function PdfExportModal({
             noteMaxFontSizePx,
             noteMinFontSizePx,
             rowWidthPx: PAGE_CONTENT_WIDTH_PX,
-            measure
+            measure,
+            forceBelowMode: viewDensity === 'de_pie'
           });
 
           // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
@@ -1111,7 +1133,8 @@ export function PdfExportModal({
         const plan = viewDensity === 'de_pie'
           ? computeExpandedPlan(activeSetlist.items.length, measureFn, {
               titleFontPt: TITLE_FONT_CANDIDATES_PT[0],
-              pageAvailableHeightPx
+              pageAvailableHeightPx,
+              maxTitleFontPt: MAX_EXPANDED_TITLE_FONT_PT
             })
           : computeAutoFitPlan(activeSetlist.items.length, measureFn, {
               candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
@@ -1463,7 +1486,7 @@ export function PdfExportModal({
                 className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                   viewDensity === 'de_pie' ? 'bg-[#1db954] text-black shadow-md' : 'text-neutral-400 hover:text-white'
                 }`}
-                title="Letra lo más grande posible, aceptando más hojas — para leer desde lejos, de pie en el escenario"
+                title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
               >
                 🧍 De pie
               </button>
@@ -1767,7 +1790,8 @@ export function PdfExportModal({
                       noteMaxFontSizePx: ptToPx(noteFontPt),
                       noteMinFontSizePx: 11,
                       rowWidthPx: previewContentWidthPx,
-                      measure: measureText
+                      measure: measureText,
+                      forceBelowMode: viewDensity === 'de_pie'
                     });
                     // Cada nota (miembro / nota del bolo / general) apilada en su propia línea,
                     // una encima de otra, en vez de todas seguidas en una sola línea. El texto
