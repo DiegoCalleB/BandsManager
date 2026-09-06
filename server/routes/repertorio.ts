@@ -14,7 +14,6 @@ import {
   dbDeleteSetlist,
   analizarYGuardarDinamicaCancion,
   dbSetSongEnergiaManual,
-  dbResetSongEnergiaManual,
   dbGetSetlistShortcuts,
   dbUpsertSetlistShortcut,
   dbDeleteSetlistShortcut,
@@ -199,20 +198,6 @@ router.patch("/songs/:id/energia", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error fijando energía manual de la canción:", err);
     res.status(500).json({ error: err?.message || "No se pudo actualizar la energía." });
-  }
-});
-
-// DELETE deshace el "fijado a mano": la canción vuelve a recibir el recalibrado automático desde
-// audio en el próximo análisis de cualquier tema de la banda (ver dbResetSongEnergiaManual).
-router.delete("/songs/:id/energia-manual", requireAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userBandId = getTargetBandId(req);
-    const saved = await dbResetSongEnergiaManual(id, userBandId);
-    res.json({ success: true, song: saved });
-  } catch (err: any) {
-    console.error("Error reactivando el recalibrado automático de la canción:", err);
-    res.status(500).json({ error: err?.message || "No se pudo reactivar el recalibrado automático." });
   }
 });
 

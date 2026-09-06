@@ -101,48 +101,6 @@ export async function dbSetSongEnergiaManual(songId: string, energia: number, ba
 }
 
 /**
- * Deshace el "fijado a mano" (energia_manual -> false) para que la canción vuelva a recibir el
- * recalibrado automático desde audio en el próximo análisis de cualquier tema de la banda.
- * Si esta canción YA tiene datos de audio analizados (energia_db_promedio/energia_bpm_detectado
- * de un análisis previo a que se fijara a mano), se recalibra el repertorio ya mismo en vez de
- * dejarla con el último valor manual hasta que se analice otra canción — así "volver a auto" se
- * nota al momento, no en un futuro indefinido.
- */
-export async function dbResetSongEnergiaManual(songId: string, bandId: string) {
-  const sb = getSupabase();
-  const rawClean = (bandId || "").trim();
-  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
-  const candidateIds = Array.from(new Set([
-    rawClean,
-    noPrefix,
-    `band-${noPrefix}`,
-    `reg-${noPrefix}`
-  ])).filter(Boolean);
-
-  const { data, error } = await sb
-    .from("songs")
-    .update({ energia_manual: false })
-    .eq("id", songId)
-    .in("band_id", candidateIds)
-    .select()
-    .single();
-  if (error) throw new Error(`Supabase Error (reset energía manual): ${error.message}`);
-  if (!data) throw new Error(`No se encontró la canción ${songId} para esta banda`);
-
-  await recalibrarEnergiasDelRepertorio(bandId);
-
-  // Recalibrar pudo haber cambiado la energía de esta misma canción (si tenía datos de audio) —
-  // se relee para devolver al frontend el valor real ya recalculado, no el de antes del recalibrado.
-  const { data: refreshed } = await sb
-    .from("songs")
-    .select()
-    .eq("id", songId)
-    .in("band_id", candidateIds)
-    .single();
-  return mapSongRecord(refreshed || data);
-}
-
-/**
  * Normaliza las energías (1-20) de todas las canciones de una banda
  * usando combinación híbrida de BPM detectado + volumen promedio crudo.
  *

@@ -600,7 +600,6 @@ export default function RepertorioSetlists({
     idx,
     id: pt.item.id,
     songId: isSpeechEvent ? undefined : pt.song?.id,
-    energiaManual: isSpeechEvent ? undefined : pt.song?.energiaManual,
     name: pt.title,
     score: isSpeechEvent ? null : pt.score,
     idealScore: isSpeechEvent ? null : idealCurve[idx],
@@ -691,33 +690,6 @@ export default function RepertorioSetlists({
 
  const handleSetEnergiaManual = (song: Song, itemId: string, valor1a10: number) =>
    handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
-
- // Deshace el "fijado a mano": la canción vuelve a recibir el recalibrado automático desde audio.
- // El servidor recalibra TODO el repertorio de la banda al hacerlo (no solo esta canción), así
- // que tras el DELETE se recarga la lista completa de canciones en vez de solo esta — de lo
- // contrario el resto de energías quedaría desincronizada con lo que hay realmente en Supabase.
- const handleResetEnergiaManual = async (song: Song, itemId: string) => {
-   setSavingEnergyItemId(itemId);
-   setSongs(prev => prev.map(s => s.id === song.id ? { ...s, energiaManual: false } : s));
-   try {
-     await fetch(`/api/songs/${song.id}/energia-manual`, {
-       method: 'DELETE',
-       headers: getHeaders()
-     });
-     const resSongs = await fetch('/api/songs', { headers: getHeaders() });
-     if (resSongs.ok) {
-       const dataS = await resSongs.json();
-       if (dataS.songs && Array.isArray(dataS.songs)) {
-         setSongs(sanitizeBandSongs(dataS.songs));
-       }
-     }
-   } catch (err) {
-     console.error('Error reactivando el recalibrado automático:', err);
-   } finally {
-     setSavingEnergyItemId(null);
-     setEditingEnergyItemId(null);
-   }
- };
 
  // Arrastrar un punto en vertical en el Mapa de Energía cambia su energía (1-20) directamente —
  // mismo resultado que el popover 1-10 de la fila, pero sin salir del gráfico. EnergyChart ya
@@ -2689,22 +2661,6 @@ export default function RepertorioSetlists({
                           <ChevronDown className="w-4 h-4" />
                         </button>
                       )}
-                      {/* Fijada a mano: el recalibrado automático desde audio ya no la toca —
-                          ↺ auto la devuelve al sistema automático (ver dbResetSongEnergiaManual). */}
-                      {point.energiaManual && (
-                        <button
-                          type="button"
-                          disabled={savingEnergyItemId === point.id}
-                          onClick={() => {
-                            const song = songs.find(s => s.id === point.songId);
-                            if (song) handleResetEnergiaManual(song, point.id);
-                          }}
-                          className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold flex items-center gap-1 bg-neutral-800 text-amber-300 hover:bg-neutral-700 disabled:opacity-50 transition"
-                          title="Quitar el fijado a mano y volver a dejar que el análisis de audio recalcule esta energía"
-                        >
-                          ✋ fijada a mano · <span className="underline">↺ auto</span>
-                        </button>
-                      )}
                     </div>
                   );
                 })()}
@@ -3144,17 +3100,6 @@ export default function RepertorioSetlists({
                   {val}
                 </button>
               ))}
-              {song.energiaManual && (
-                <button
-                  type="button"
-                  disabled={savingEnergyItemId === it.id}
-                  onClick={() => handleResetEnergiaManual(song, it.id)}
-                  className="ml-1 px-1.5 h-5 rounded text-[9px] font-mono font-bold flex items-center gap-0.5 bg-neutral-800 text-amber-300 hover:bg-neutral-700 disabled:opacity-50 transition whitespace-nowrap"
-                  title="Quitar el fijado a mano y volver a dejar que el análisis de audio recalcule esta energía"
-                >
-                  ↺ auto
-                </button>
-              )}
             </div>
           )}
         </div>
