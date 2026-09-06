@@ -275,15 +275,13 @@ export function PdfExportModal({
   
   // Customization Toggles (Duration and BPM OFF by default as requested)
   const [showBandLogo, setShowBandLogo] = useState<boolean>(true);
-  const [customLogoUrl, setCustomLogoUrl] = useState<string>(bandLogoUrl);
-  // El valor inicial de useState solo se captura en el primer render: si este modal se monta
-  // antes de que epkConfig.logoUrl termine de cargar (fetch asíncrono en el componente padre),
-  // bandLogoUrl llega vacío esa primera vez y customLogoUrl se queda pegado en vacío para
-  // siempre, aunque el prop se actualice después con la URL real del logo ya subido — de ahí
-  // que el logo "desaparezca" aunque esté subido. Sincronizar cuando el prop cambie.
-  useEffect(() => {
-    setCustomLogoUrl(bandLogoUrl);
-  }, [bandLogoUrl]);
+  // customLogoUrl usaba a ser un useState propio inicializado con bandLogoUrl — pero nada más lo
+  // reasignaba, así que solo copiaba el prop una vez en el primer render y se quedaba pegado en
+  // vacío si el modal se montaba antes de que epkConfig.logoUrl terminara de cargar (fetch
+  // asíncrono en el componente padre), aunque el prop se actualizara después con la URL real del
+  // logo ya subido. Al no haber ningún uploader propio que lo reasigne, es un simple alias del
+  // prop — usarlo directamente evita ese desajuste sin necesitar sincronizarlo a mano.
+  const customLogoUrl = bandLogoUrl;
   const [showSongNumbers, setShowSongNumbers] = useState<boolean>(true);
   const [showBlockLines, setShowBlockLines] = useState<boolean>(true);
   const [showTonality, setShowTonality] = useState<boolean>(false);
