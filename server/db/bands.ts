@@ -234,4 +234,29 @@ export async function dbLogReelFeedback(bandId: string, entry: Record<string, an
   }
 }
 
+/**
+ * Registra una entrada de feedback (valoración de intensidad/contenido + comentario) sobre un
+ * plan/análisis de setlist generado por IA, para que `formatGlobalSetlistFeedbackForPrompt` la
+ * use como memoria en próximas generaciones. Mismo patrón que `dbLogReelFeedback` para los Reels.
+ *
+ * Se acumula (últimas 30) porque cada corrección del usuario aporta una señal más de aprendizaje.
+ */
+export async function dbLogSetlistFeedback(bandId: string, entry: Record<string, any>): Promise<boolean> {
+  const targetBandId = cleanBandId(bandId);
+  if (!targetBandId || !entry) return false;
+
+  try {
+    await ensureRegisteredBandExists(targetBandId);
+    const { ok } = await dbUpdateBandDnaExpresion(targetBandId, (dnaActual) => {
+      const existentes: any[] = Array.isArray(dnaActual.historial_feedback_setlist) ? dnaActual.historial_feedback_setlist : [];
+      const actualizados = [entry, ...existentes].slice(0, 30);
+      return { ...dnaActual, historial_feedback_setlist: actualizados };
+    });
+    return ok;
+  } catch (err: any) {
+    console.warn("[registered_bands] No se pudo guardar el feedback del setlist:", err?.message || err);
+    return false;
+  }
+}
+
 // --- USERS ---

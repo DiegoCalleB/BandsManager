@@ -1,6 +1,7 @@
 import { Song, SetlistItem } from "../../src/types.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { tonalidadesSonFiables } from "../../src/utils/harmonicAnalysis.js";
+import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext.js";
 
 export interface AISetlistSuggestion {
   priority: 'high' | 'medium' | 'low';
@@ -32,7 +33,8 @@ export interface AdvancedSetlistAnalysis {
  * Evalúa pacing, narrativa emocional, psicología del público, etc.
  */
 export async function analyzeSetlistWithAI(
-  songs: (Song & { position: number })[]
+  songs: (Song & { position: number })[],
+  bandContext?: BandStyleContext | null
 ): Promise<AdvancedSetlistAnalysis> {
   if (songs.length === 0) {
     throw new Error("No songs to analyze");
@@ -46,12 +48,12 @@ export async function analyzeSetlistWithAI(
   const incluirTonalidad = tonalidadesSonFiables(sorted);
 
   const songList = sorted
-    .map((s) => `${s.position}. ${s.titulo} (energía: ${s.energia || 10}/20${incluirTonalidad && s.tonalidad ? `, tonalidad: ${s.tonalidad}` : ''})`)
+    .map((s) => `${s.position}. ${s.titulo} (energía: ${s.energia || 10}/20${incluirTonalidad && s.tonalidad ? `, tonalidad: ${s.tonalidad}` : ''}${s.genero ? `, género: ${s.genero}` : ''})`)
     .join('\n');
 
   const prompt = `
 Eres un experto en pacing de conciertos de rock. Analiza este setlist:
-
+${buildBandStyleContextBlock(bandContext)}
 ${songList}
 ${incluirTonalidad ? `
 Las tonalidades indicadas son datos reales: ten también en cuenta la SECUENCIA ARMÓNICA del

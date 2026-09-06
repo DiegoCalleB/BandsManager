@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles, 
+import {
+  Users, Heart, QrCode, Download, Search, Plus, Trash2, Sparkles,
   Copy, Check, FileSpreadsheet, ShieldCheck, Mail, MapPin, Calendar, ExternalLink,
   Filter, LayoutGrid, List, Map as MapIcon, X, TrendingUp, Printer, Share2, MessageCircle,
-  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers, Eye
+  Gift, Tag, Music, Save, CheckCircle2, Flame, Star, Award, Instagram, FileCode, Layers, Eye,
+  MoreHorizontal, Settings2
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import * as XLSX from 'xlsx';
@@ -424,6 +425,9 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [showQrExportModal, setShowQrExportModal] = useState(false);
   const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [isExportingDirect, setIsExportingDirect] = useState(false);
+  const [showQrMoreMenu, setShowQrMoreMenu] = useState(false);
+  const [showAdvancedQrConfig, setShowAdvancedQrConfig] = useState(false);
+  const [showFansHeaderMenu, setShowFansHeaderMenu] = useState(false);
 
   const handleDownloadSvg = async () => {
     setIsExportingDirect(true);
@@ -476,43 +480,63 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <div>
-          <h2 className="text-2xl font-black text-white font-display flex items-center gap-3">
-            <QrCode className="w-8 h-8 text-amber-500" />
-            Captura QR & Fans
+      <div className="flex items-center justify-between gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+        <div className="min-w-0">
+          <h2
+            className="text-lg sm:text-2xl font-black text-white font-display flex items-center gap-2 sm:gap-3"
+            title="Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento."
+          >
+            <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 shrink-0" />
+            <span className="truncate">Captura QR & Fans</span>
           </h2>
-          <p className="text-slate-400 font-mono text-sm mt-1">
+          <p className="hidden sm:block text-slate-400 font-mono text-sm mt-1">
             Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <button 
+        <div className="relative shrink-0">
+          <button
             type="button"
-            onClick={() => setShowFansPreviewModal(true)}
-            className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 text-amber-300 text-xs font-bold font-mono rounded-xl border border-amber-500/40 flex items-center gap-2 transition cursor-pointer shadow-sm"
-            title="Simular y ver el formulario público Únete dentro de la aplicación"
+            onClick={() => setShowFansHeaderMenu(v => !v)}
+            title="Previsualizar formulario, copiar enlace, registrar fan manual o exportar CSV"
+            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
           >
-            <Eye className="w-4 h-4 text-amber-400" /> Previsualizar Formulario
+            <MoreHorizontal className="w-4 h-4" />
           </button>
-          <button 
-            onClick={copyLink}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold font-mono rounded-xl border border-slate-700 flex items-center gap-2 transition cursor-pointer"
-          >
-            <Copy className="w-4 h-4" /> Enlace de Captura Corto
-          </button>
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-bold font-mono rounded-xl border border-slate-700 flex items-center gap-2 transition cursor-pointer"
-          >
-            <Plus className="w-4 h-4" /> Registrar Fan Manual
-          </button>
-          <button 
-            onClick={handleExportCSV}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs font-bold font-mono rounded-xl shadow-lg transition flex items-center gap-2 cursor-pointer"
-          >
-            <Download className="w-4 h-4" /> Exportar CSV
-          </button>
+          {showFansHeaderMenu && (
+            <>
+              <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
+              <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-xs font-mono">
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); setShowFansPreviewModal(true); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
+                >
+                  <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); copyLink(); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                >
+                  <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura Corto
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); setShowAddModal(true); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                >
+                  <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan Manual
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); handleExportCSV(); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                >
+                  <Download className="w-3.5 h-3.5 shrink-0" /> Exportar CSV
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -1065,262 +1089,364 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       )}
 
       {activeTab === 'qr' && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-8">
-          <div className="space-y-2 border-b border-slate-800 pb-5">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:p-8 space-y-5">
+          <div className="space-y-1 border-b border-slate-800 pb-4">
             <h3 className="text-xl font-black text-white flex items-center gap-2 font-display">
-              <QrCode className="w-6 h-6 text-amber-400" /> Captura en Directo: Generador de QR & Campañas
+              <QrCode className="w-6 h-6 text-amber-400" /> Generador de QR
             </h3>
             <p className="text-xs text-slate-400 font-mono">
-              Configura tu recompensa exclusiva para fans, genera carteles con código QR para proyectar o colocar en el stand de merchandising y capta datos con consentimiento RGPD.
+              Genera el código, descárgalo o imprímelo. La recompensa al fan, el dominio y el idioma están abajo, plegados.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Columna Izquierda: Configuración por pasos (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
-              {/* Paso 1: Concierto o Campaña */}
-              <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">1</span>
-                    Vincular a Concierto o Campaña
-                  </label>
-                  {selectedConcertId && (
-                    <button
-                      type="button"
-                      onClick={() => setSelectedConcertId('')}
-                      className="text-[10px] font-mono text-slate-400 hover:text-amber-300 underline cursor-pointer"
-                    >
-                      Usar QR Genérico
-                    </button>
-                  )}
-                </div>
-                <select
-                  value={selectedConcertId}
-                  onChange={e => setSelectedConcertId(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs text-white outline-none font-mono"
-                >
-                  <option value="">-- Campaña General / QR Genérico de la Banda --</option>
-                  {concerts.map(c => (
-                    <option key={c.id} value={c.id}>
-                      📅 {c.fecha} — {c.sala} ({c.ciudad})
-                    </option>
-                  ))}
-                </select>
-                <p className="text-[11px] text-slate-500 font-mono">
-                  {selectedConcert 
-                    ? `Los fans que escaneen se registrarán con origen: "${selectedConcert.sala} (${selectedConcert.ciudad})"`
-                    : 'Los fans que escaneen se registrarán con origen: "Campaña General / Redes"'}
-                </p>
-              </div>
+          {/* Vínculo a concierto: única decisión que cambia la URL, por eso va siempre visible */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <label className="text-[11px] font-bold text-amber-400 uppercase font-mono tracking-wider shrink-0" title="Los fans que escaneen se registrarán con este origen en el CRM">
+              Vincular a:
+            </label>
+            <select
+              value={selectedConcertId}
+              onChange={e => setSelectedConcertId(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
+            >
+              <option value="">-- Campaña General / QR Genérico de la Banda --</option>
+              {concerts.map(c => (
+                <option key={c.id} value={c.id}>
+                  📅 {c.fecha} — {c.sala} ({c.ciudad})
+                </option>
+              ))}
+            </select>
+          </div>
 
-              {/* Paso 2: Incentivo / Recompensa al Fan */}
-              <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">2</span>
-                    <Gift className="w-4 h-4 text-amber-400" />
-                    Recompensa / Incentivo para el Fan
-                  </label>
-                  {savedIncentive && (
-                    <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-slate-400 font-mono">
-                  Ofrece algo de valor al fan tras registrarse (un tema en directo exclusivo o descuento de merchan) para disparar la tasa de escaneos.
-                </p>
-
-                <div className="space-y-3 pt-1">
-                  <div>
-                    <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Mensaje de Bienvenida / Agradecimiento:
-                    </label>
-                    <input
-                      type="text"
-                      value={incentivo.mensajeAgradecimiento}
-                      onChange={e => setIncentivo(prev => ({ ...prev, mensajeAgradecimiento: e.target.value }))}
-                      placeholder="¡Muchas gracias por unirte a la familia de la banda!"
-                      className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none"
+          {/* Contenido principal: el QR, grande y arriba del todo */}
+          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 flex flex-col items-center text-center space-y-4">
+            <div id="qr-code-svg-container" className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-500 inline-block relative">
+              <QRCode value={qrConcertUrl} size={210} level="H" />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                {effectiveBandLogo ? (
+                  <div className="w-14 h-14 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
+                    <img
+                      src={effectiveBandLogo}
+                      alt={`Logo ${effectiveBandName}`}
+                      className="w-full h-full object-contain rounded-lg"
                     />
                   </div>
+                ) : (
+                  <div className="w-12 h-12 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center border-2 border-slate-950 shadow-xl">
+                    <Users className="w-6 h-6" />
+                  </div>
+                )}
+              </div>
+            </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <h4 className="font-black text-white font-display text-lg uppercase tracking-wider">
+                {selectedConcert ? selectedConcert.sala : `Únete a ${effectiveBandName}`}
+              </h4>
+              <p className="text-xs text-slate-400 font-mono">
+                {selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : 'Escanea para conseguir tema exclusivo y descuentos'}
+              </p>
+            </div>
+
+            <div className="w-full flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2">
+              <span className="flex-1 min-w-0 truncate font-mono text-amber-300 text-[11px] text-left">{qrConcertUrl}</span>
+              <button
+                type="button"
+                onClick={handleCopyQrUrl}
+                className="shrink-0 text-[11px] text-amber-400 hover:underline font-mono cursor-pointer"
+              >
+                {copiedQrUrl ? '¡Copiado!' : 'Copiar'}
+              </button>
+            </div>
+
+            {/* Acción principal + resto de acciones detrás de un único menú */}
+            <div className="w-full flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handlePrintQr}
+                className="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-lg"
+              >
+                <Printer className="w-4 h-4" /> Cartel A4 / PDF
+              </button>
+              <div className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowQrMoreMenu(v => !v)}
+                  title="Más opciones: SVG, PNG 4K, tarjetas, compartir, previsualizar el formulario..."
+                  className="p-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+                {showQrMoreMenu && (
+                  <>
+                    <div className="fixed inset-0 z-30" onClick={() => setShowQrMoreMenu(false)} />
+                    <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-[11px] font-mono">
+                      <button
+                        type="button"
+                        onClick={() => { setShowQrMoreMenu(false); handleDownloadSvg(); }}
+                        disabled={isExportingDirect}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-sky-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <FileCode className="w-3.5 h-3.5 shrink-0" /> Vector SVG (imprenta/lonas)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowQrMoreMenu(false); handleDownloadPng4k(); }}
+                        disabled={isExportingDirect}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-purple-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <Download className="w-3.5 h-3.5 shrink-0" /> PNG Ultra HD 4K
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowQrMoreMenu(false); setShowQrExportModal(true); }}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <Layers className="w-3.5 h-3.5 shrink-0" /> Más formatos (tarjeta, pegatina...)
+                      </button>
+                      <div className="h-px bg-slate-800 my-1" />
+                      <button
+                        type="button"
+                        onClick={() => { setShowQrMoreMenu(false); handleShareWhatsApp(); }}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-emerald-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 shrink-0" /> Compartir por WhatsApp
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowQrMoreMenu(false); handleShareNative(); }}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <Share2 className="w-3.5 h-3.5 shrink-0" /> Compartir enlace
+                      </button>
+                      <a
+                        href={qrConcertUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setShowQrMoreMenu(false)}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 shrink-0" /> Abrir landing en pestaña nueva
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => { setShowQrMoreMenu(false); setShowFansPreviewModal(true); }}
+                        className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                      >
+                        <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar formulario "Únete"
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Personalización avanzada: recompensa, dominio/slug e idioma — plegada porque no se toca en cada visita */}
+          <div className="border-t border-slate-800 pt-4">
+            <button
+              type="button"
+              onClick={() => setShowAdvancedQrConfig(v => !v)}
+              className="w-full flex items-center justify-between text-xs font-bold text-slate-400 hover:text-amber-300 uppercase font-mono tracking-wider transition cursor-pointer"
+            >
+              <span className="flex items-center gap-1.5">
+                <Settings2 className="w-3.5 h-3.5" /> Personalización avanzada (recompensa, dominio, idioma)
+              </span>
+              <span>{showAdvancedQrConfig ? '▲' : '▼'}</span>
+            </button>
+
+            {showAdvancedQrConfig && (
+              <div className="mt-4 space-y-4">
+                {/* Incentivo / Recompensa al Fan */}
+                <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                      <Gift className="w-4 h-4 text-amber-400" />
+                      Recompensa / Incentivo para el Fan
+                    </label>
+                    {savedIncentive && (
+                      <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> ¡Guardado!
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400 font-mono">
+                    Ofrece algo de valor al fan tras registrarse (un tema en directo exclusivo o descuento de merchan) para disparar la tasa de escaneos.
+                  </p>
+
+                  <div className="space-y-3 pt-1">
                     <div>
                       <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                        <Music className="w-3.5 h-3.5 text-amber-500" /> Enlace de Descarga (Tema inédito/directo):
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Mensaje de Bienvenida / Agradecimiento:
                       </label>
                       <input
-                        type="url"
-                        value={incentivo.enlaceDescarga}
-                        onChange={e => setIncentivo(prev => ({ ...prev, enlaceDescarga: e.target.value }))}
-                        placeholder="https://..."
+                        type="text"
+                        value={incentivo.mensajeAgradecimiento}
+                        onChange={e => setIncentivo(prev => ({ ...prev, mensajeAgradecimiento: e.target.value }))}
+                        placeholder="¡Muchas gracias por unirte a la familia de la banda!"
+                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                          <Music className="w-3.5 h-3.5 text-amber-500" /> Enlace de Descarga (Tema inédito/directo):
+                        </label>
+                        <input
+                          type="url"
+                          value={incentivo.enlaceDescarga}
+                          onChange={e => setIncentivo(prev => ({ ...prev, enlaceDescarga: e.target.value }))}
+                          placeholder="https://..."
+                          className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
+                          <Tag className="w-3.5 h-3.5 text-amber-500" /> Código Cupón Merchandising:
+                        </label>
+                        <input
+                          type="text"
+                          value={incentivo.codigoDescuento}
+                          onChange={e => setIncentivo(prev => ({ ...prev, codigoDescuento: e.target.value.toUpperCase() }))}
+                          placeholder="TUBANDA-FAN-10"
+                          className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-amber-300 font-bold outline-none font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end pt-1">
+                      <button
+                        type="button"
+                        onClick={() => handleSaveIncentive()}
+                        className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Save className="w-3.5 h-3.5" /> Guardar Incentivo
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Apoyo Económico / Revolut: se configura ahora desde el Dossier EPK, fuente única
+                    del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
+                <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-3">
+                  <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-sky-400" />
+                    Colaboración Económica & Donaciones (Revolut, PayPal y Bizum)
+                  </label>
+                  <p className="text-[11px] text-slate-400 font-mono">
+                    {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
+                      ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
+                      : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate?.('epk')}
+                    className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" /> Configurar en el Dossier EPK
+                  </button>
+                </div>
+
+                {/* Ruta Limpia y Dominio */}
+                <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                  <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
+                    Ruta Limpia y Dominio Base
+                  </label>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setUseCustomDomain(true)}
+                      className={`p-2.5 rounded-xl border text-left font-mono transition flex flex-col gap-1 ${
+                        useCustomDomain
+                          ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-bold'
+                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                      }`}
+                    >
+                      <span>🌐 Dominio Web Oficial</span>
+                      <span className="text-[10px] text-slate-400 font-normal">Para impresiones/carteles</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUseCustomDomain(false)}
+                      className={`p-2.5 rounded-xl border text-left font-mono transition flex flex-col gap-1 ${
+                        !useCustomDomain
+                          ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-bold'
+                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                      }`}
+                    >
+                      <span>🧪 Servidor Dev</span>
+                      <span className="text-[10px] text-slate-400 font-normal">Para pruebas en visor actual</span>
+                    </button>
+                  </div>
+
+                  {useCustomDomain && (
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-slate-400">Dominio del Proyecto:</label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-slate-500 bg-slate-900 px-3 py-2.5 rounded-lg border border-slate-800">https://</span>
+                        <input
+                          type="text"
+                          value={customDomain}
+                          onChange={e => setCustomDomain(e.target.value)}
+                          placeholder="bands-manager.up.railway.app"
+                          className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-lg p-2.5 text-xs text-white outline-none font-mono"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-1 pt-1">
+                    <label className="text-[11px] font-mono text-slate-400">Slug personalizado:</label>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center bg-slate-900 rounded-xl border border-slate-800 px-2.5 shrink-0">
+                        <span className="text-[11px] font-mono text-slate-500">/</span>
+                        <input
+                          type="text"
+                          value={routePrefix}
+                          onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
+                          className="w-16 bg-transparent text-amber-400 text-xs font-mono py-2.5 font-bold outline-none"
+                          placeholder="unete"
+                        />
+                        <span className="text-[11px] font-mono text-slate-500">/</span>
+                      </div>
+                      <input
+                        type="text"
+                        value={customSlug}
+                        onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''))}
+                        placeholder="ej. madrid-sala-siroco"
                         className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
                       />
                     </div>
-                    <div>
-                      <label className="text-[11px] font-mono text-slate-400 flex items-center gap-1.5 mb-1">
-                        <Tag className="w-3.5 h-3.5 text-amber-500" /> Código Cupón Merchandising:
-                      </label>
-                      <input
-                        type="text"
-                        value={incentivo.codigoDescuento}
-                        onChange={e => setIncentivo(prev => ({ ...prev, codigoDescuento: e.target.value.toUpperCase() }))}
-                        placeholder="TUBANDA-FAN-10"
-                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-amber-300 font-bold outline-none font-mono"
-                      />
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <label className="text-[11px] font-mono text-slate-400">Idioma del formulario para este enlace:</label>
+                    {/* grid en vez de flex de una sola fila: con 4+ idiomas (español, inglés,
+                        italiano, checo) un flex sin wrap se salía de la pantalla en móvil en
+                        vez de pasar a una segunda fila. */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {FAN_FORM_LANGUAGES.map(l => (
+                        <button
+                          key={l.code}
+                          type="button"
+                          onClick={() => setQrLanguage(l.code)}
+                          className={`py-2 px-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
+                            qrLanguage === l.code
+                              ? 'bg-amber-500/15 border-amber-500/50 text-amber-300'
+                              : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                          }`}
+                        >
+                          <span>{l.flag}</span>
+                          <span>{l.label}</span>
+                        </button>
+                      ))}
                     </div>
+                    <p className="text-[10px] font-mono text-slate-500">
+                      El formulario se abrirá en este idioma por defecto; quien lo escanee siempre podrá cambiarlo a mano.
+                    </p>
                   </div>
-
-                  <div className="flex justify-end pt-1">
-                    <button
-                      type="button"
-                      onClick={() => handleSaveIncentive()}
-                      className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Save className="w-3.5 h-3.5" /> Guardar Incentivo
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Apoyo Económico / Revolut: se configura ahora desde el Dossier EPK, fuente única
-                  del resto de datos de marca (booking, redes, etc.) — aquí solo un acceso directo. */}
-              <div className="bg-slate-950/80 p-5 rounded-2xl border border-sky-500/30 space-y-3">
-                <label className="text-xs font-bold text-sky-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-sky-400" />
-                  Colaboración Económica & Donaciones (Revolut, PayPal y Bizum)
-                </label>
-                <p className="text-[11px] text-slate-400 font-mono">
-                  {epkConfig?.donacionRevolut?.habilitado !== false && epkConfig?.donacionRevolut?.revolutTag
-                    ? `Activa para revolut.me/${epkConfig.donacionRevolut.revolutTag} — se muestra en el formulario público "Únete" y en la pantalla de confirmación.`
-                    : 'Aún no está configurada. Actívala para que tus fans puedan aportar directamente por Revolut, PayPal o Bizum, sin intermediarios.'}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => onNavigate?.('epk')}
-                  className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold font-mono rounded-xl shadow transition flex items-center gap-1.5 cursor-pointer"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" /> Configurar en el Dossier EPK
-                </button>
-              </div>
-
-              {/* Paso 4: Ruta Limpia y Dominio */}
-              <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
-                <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">3</span>
-                  Ruta Limpia y Dominio Base
-                </label>
-
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setUseCustomDomain(true)}
-                    className={`p-2.5 rounded-xl border text-left font-mono transition flex flex-col gap-1 ${
-                      useCustomDomain
-                        ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-bold'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
-                    }`}
-                  >
-                    <span>🌐 Dominio Web Oficial</span>
-                    <span className="text-[10px] text-slate-400 font-normal">Para impresiones/carteles</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setUseCustomDomain(false)}
-                    className={`p-2.5 rounded-xl border text-left font-mono transition flex flex-col gap-1 ${
-                      !useCustomDomain
-                        ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-bold'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
-                    }`}
-                  >
-                    <span>🧪 Servidor Dev</span>
-                    <span className="text-[10px] text-slate-400 font-normal">Para pruebas en visor actual</span>
-                  </button>
-                </div>
-
-                {useCustomDomain && (
-                  <div className="space-y-1">
-                    <label className="text-[11px] font-mono text-slate-400">Dominio del Proyecto:</label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-slate-500 bg-slate-900 px-3 py-2.5 rounded-lg border border-slate-800">https://</span>
-                      <input
-                        type="text"
-                        value={customDomain}
-                        onChange={e => setCustomDomain(e.target.value)}
-                        placeholder="bands-manager.up.railway.app"
-                        className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-lg p-2.5 text-xs text-white outline-none font-mono"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-1 pt-1">
-                  <label className="text-[11px] font-mono text-slate-400">Slug personalizado:</label>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center bg-slate-900 rounded-xl border border-slate-800 px-2.5 shrink-0">
-                      <span className="text-[11px] font-mono text-slate-500">/</span>
-                      <input
-                        type="text"
-                        value={routePrefix}
-                        onChange={e => setRoutePrefix(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-                        className="w-16 bg-transparent text-amber-400 text-xs font-mono py-2.5 font-bold outline-none"
-                        placeholder="unete"
-                      />
-                      <span className="text-[11px] font-mono text-slate-500">/</span>
-                    </div>
-                    <input
-                      type="text"
-                      value={customSlug}
-                      onChange={e => setCustomSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, ''))}
-                      placeholder="ej. madrid-sala-siroco"
-                      className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1 pt-1">
-                  <label className="text-[11px] font-mono text-slate-400">Idioma del formulario para este enlace:</label>
-                  {/* grid en vez de flex de una sola fila: con 4+ idiomas (español, inglés,
-                      italiano, checo) un flex sin wrap se salía de la pantalla en móvil en
-                      vez de pasar a una segunda fila. */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {FAN_FORM_LANGUAGES.map(l => (
-                      <button
-                        key={l.code}
-                        type="button"
-                        onClick={() => setQrLanguage(l.code)}
-                        className={`py-2 px-2 rounded-xl border text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-colors ${
-                          qrLanguage === l.code
-                            ? 'bg-amber-500/15 border-amber-500/50 text-amber-300'
-                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
-                        }`}
-                      >
-                        <span>{l.flag}</span>
-                        <span>{l.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-[10px] font-mono text-slate-500">
-                    El formulario se abrirá en este idioma por defecto; quien lo escanee siempre podrá cambiarlo a mano.
-                  </p>
-                </div>
-
-                <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-amber-400 uppercase font-mono tracking-widest text-[10px]">URL Destino Final del QR:</span>
-                    <button
-                      type="button"
-                      onClick={handleCopyQrUrl}
-                      className="text-[10px] text-amber-400 hover:underline font-mono"
-                    >
-                      {copiedQrUrl ? '¡Copiado!' : 'Copiar URL'}
-                    </button>
-                  </div>
-                  <p className="font-mono text-amber-300 font-bold break-all bg-slate-950 p-2 rounded-lg border border-slate-800 text-[11px]">
-                    {qrConcertUrl}
-                  </p>
 
                   {selectedConcert && onUpdateConcert && (
                     <div className="pt-2 border-t border-slate-800/80">
@@ -1338,148 +1464,15 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         }`}
                       >
                         <CheckCircle2 className="w-4 h-4" />
-                        {savedToConcertFeedback 
-                          ? '¡QR Asignado a este Concierto en el Calendario!' 
+                        {savedToConcertFeedback
+                          ? '¡QR Asignado a este Concierto en el Calendario!'
                           : '💾 Asignar este QR a este Concierto en el Calendario'}
                       </button>
                     </div>
                   )}
                 </div>
               </div>
-            </div>
-
-            {/* Columna Derecha: Previsualizador del Flyer / Cartel QR (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-center space-y-4 flex flex-col items-center justify-center">
-                <div className="w-full flex items-center justify-between border-b border-slate-800/80 pb-3">
-                  <span className="text-xs font-bold text-slate-400 font-mono uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">5</span>
-                    Cartel & Código QR con Logo
-                  </span>
-                  <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">Alta Resolución</span>
-                </div>
-
-                <div id="qr-code-svg-container" className="p-4 bg-white rounded-2xl shadow-2xl border-4 border-amber-500 inline-block relative my-2">
-                  <QRCode value={qrConcertUrl} size={210} level="H" />
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    {effectiveBandLogo ? (
-                      <div className="w-14 h-14 bg-slate-950 rounded-xl flex items-center justify-center overflow-hidden border-2 border-amber-500 shadow-xl p-0.5">
-                        <img 
-                          src={effectiveBandLogo} 
-                          alt={`Logo ${effectiveBandName}`} 
-                          className="w-full h-full object-contain rounded-lg" 
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-12 h-12 bg-amber-500 text-slate-950 rounded-xl flex items-center justify-center border-2 border-slate-950 shadow-xl">
-                        <Users className="w-6 h-6" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="text-center space-y-1">
-                  <h4 className="font-black text-white font-display text-lg uppercase tracking-wider">
-                    {selectedConcert ? `${selectedConcert.sala}` : `Únete a ${effectiveBandName}`}
-                  </h4>
-                  <p className="text-xs text-slate-400 font-mono">
-                    {selectedConcert ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}` : 'Escanea para conseguir tema exclusivo y descuentos'}
-                  </p>
-                </div>
-
-                {/* Panel de Descargas en Máxima Calidad & Acciones */}
-                <div className="space-y-2.5 pt-3 border-t border-slate-800 w-full">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
-                    <span className="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                      Descarga & Imprenta HD:
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setShowQrExportModal(true)}
-                      className="text-amber-400 hover:text-amber-300 underline font-bold cursor-pointer"
-                    >
-                      Más formatos...
-                    </button>
-                  </div>
-
-                  {/* Fila 1: Botones de Descarga en Máxima Calidad */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    <button
-                      type="button"
-                      onClick={handlePrintQr}
-                      className="py-2.5 px-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow-lg"
-                      title="Imprimir Cartel A4 o Guardar en PDF de alta calidad"
-                    >
-                      <Printer className="w-4 h-4" /> Cartel A4
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDownloadSvg}
-                      disabled={isExportingDirect}
-                      className="py-2.5 px-2 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-amber-500/30 flex items-center justify-center gap-1.5 transition cursor-pointer shadow"
-                      title="Descargar SVG Vectorial (Resolución infinita para imprenta)"
-                    >
-                      <FileCode className="w-4 h-4" /> Vector SVG
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDownloadPng4k}
-                      disabled={isExportingDirect}
-                      className="py-2.5 px-2 bg-slate-900 hover:bg-slate-800 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer shadow col-span-2 sm:col-span-1"
-                      title="Descargar PNG Ultra HD (3000x3000px a 300 DPI)"
-                    >
-                      <Download className="w-4 h-4 text-purple-400" /> PNG 4K
-                    </button>
-                  </div>
-
-                  {/* Fila 2: Difusión & Redes */}
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    <button
-                      type="button"
-                      onClick={handleShareWhatsApp}
-                      className="py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition cursor-pointer shadow"
-                    >
-                      <MessageCircle className="w-4 h-4" /> WhatsApp
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleShareNative}
-                      className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold font-mono text-xs uppercase tracking-wider rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 transition cursor-pointer shadow"
-                    >
-                      <Share2 className="w-4 h-4 text-amber-400" /> {copiedQrUrl ? '¡Copiado!' : 'Compartir'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={() => setShowFansPreviewModal(true)}
-                  className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black font-mono text-xs uppercase tracking-widest rounded-2xl shadow-xl flex items-center justify-center gap-2 transition cursor-pointer"
-                >
-                  <Eye className="w-4 h-4" /> Previsualizar Formulario Únete (Simulador en App)
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowQrExportModal(true)}
-                  className="w-full py-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-amber-500/40 flex items-center justify-center gap-2 transition shadow-sm cursor-pointer"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-400" /> Opciones de Cartelería & Exportación HD
-                </button>
-
-                <a
-                  href={qrConcertUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold font-mono text-xs uppercase tracking-widest rounded-2xl border border-slate-700 flex items-center justify-center gap-2 transition shadow-md"
-                >
-                  <ExternalLink className="w-4 h-4 text-amber-400" /> Abrir Landing en Pestaña Nueva
-                </a>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Modal de Exportación Avanzada de QR */}

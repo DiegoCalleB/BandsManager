@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import { Song, Setlist, SetlistItem } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
@@ -15,11 +16,94 @@ import {
   dbSetSongEnergiaManual,
   dbGetSetlistShortcuts,
   dbUpsertSetlistShortcut,
-  dbDeleteSetlistShortcut
+  dbDeleteSetlistShortcut,
+  dbGetEpkConfig,
+  dbGetRegisteredBandById,
+  dbLogSetlistFeedback
 } from "../db.js";
 
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { analyzeSetlistWithAI } from "../utils/setlistAIAnalyzer.js";
+import { generatePerfectSetlistPlan } from "../utils/perfectSetlistPlanner.js";
+import { BandStyleContext } from "../utils/bandStyleContext.js";
+import { formatGlobalSetlistFeedbackForPrompt } from "../utils/setlistFeedback.js";
+import { parseSetlistFromFile } from "../utils/setlistImport.js";
+import { normalizeSongTitle, titlesMatch } from "../../src/utils/songTitleMatch.js";
+import { iaRateLimiter } from "../middleware/rateLimiter.js";
+
+// Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
+// descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
+// luego). Límite bajo a propósito: es una foto o un PDF de una hoja de repertorio, no un vídeo.
+const importUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const permitido = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'application/pdf'].includes(file.mimetype);
+    if (!permitido) return cb(new Error('Formato no soportado: sube una foto (jpg/png/webp) o un PDF'));
+    cb(null, true);
+  }
+});
+
+// El género/biografía/dossier de booking ya viven en el EPK de la banda (para el press kit que
+// se manda a programadores) — en vez de pedirle a la banda que los repita en un campo nuevo solo
+// para la IA, se reutilizan aquí como contexto de estilo real. Si el EPK no existe todavía (banda
+// recién creada, nunca abrió el módulo de EPK), se manda sin ese contexto — el prompt ya lo contempla.
+// También se incluye la memoria de feedback (valoraciones + comentarios de alcance "global" que
+// el usuario ha ido dejando en generaciones anteriores) — mismo patrón que el feedback de Reels.
+async function getBandStyleContext(bandId: string): Promise<BandStyleContext | null> {
+  let epkContext: Partial<BandStyleContext> = {};
+  try {
+    const epk = await dbGetEpkConfig(bandId);
+    if (epk) epkContext = { genero: epk.genero, biografia: epk.biografia, dossierTextoExtra: epk.dossierTextoExtra };
+  } catch (err) {
+    console.error("Error fetching EPK config for band style context:", err);
+  }
+
+  let feedbackMemoryText = '';
+  try {
+    const registered = await dbGetRegisteredBandById(bandId);
+    feedbackMemoryText = formatGlobalSetlistFeedbackForPrompt(registered?.dna_expresion?.historial_feedback_setlist);
+  } catch (err) {
+    console.error("Error fetching setlist feedback memory for band style context:", err);
+  }
+
+  if (Object.keys(epkContext).length === 0 && !feedbackMemoryText) return null;
+  return { ...epkContext, feedbackMemoryText };
+}
+
+/** Construye las líneas de feedback de ESTE intento concreto (valoraciones + comentario que el
+ * usuario acaba de dejar al pulsar "Regenerar") — a diferencia de `feedbackMemoryText` (memoria
+ * acumulada de intentos anteriores con alcance "global"), esto es siempre inmediato: se aplica a
+ * la generación actual sin importar el alcance elegido. */
+function buildImmediateFeedbackLines(feedback?: { comentario?: string; intensidad_rating?: number; contenido_rating?: number }): string {
+  if (!feedback) return '';
+  const lineas: string[] = [];
+  if (feedback.intensidad_rating) lineas.push(`El usuario valoró la INTENSIDAD/energía del plan anterior con ${feedback.intensidad_rating}/5: si es bajo, es justo lo que hay que corregir ahora.`);
+  if (feedback.contenido_rating) lineas.push(`El usuario valoró el CONTENIDO/selección de temas del plan anterior con ${feedback.contenido_rating}/5: si es bajo, revisa qué canciones encajan de verdad.`);
+  if (feedback.comentario?.trim()) lineas.push(`Instrucción de este intento: "${feedback.comentario.trim()}"`);
+  if (lineas.length === 0) return '';
+  return `\nFEEDBACK DEL USUARIO SOBRE EL INTENTO ANTERIOR (aplícalo en este):\n${lineas.join('\n')}\n`;
+}
+
+/** Registra el feedback (si hay señal real) como memoria para próximas generaciones — solo si
+ * `alcance` es "global"; un ajuste puntual ("este_setlist") no debe resurgir en setlists futuros. */
+async function logSetlistFeedbackIfPresent(bandId: string, feedback?: { comentario?: string; intensidad_rating?: number; contenido_rating?: number; alcance?: 'este_setlist' | 'global' }): Promise<void> {
+  if (!feedback) return;
+  const tieneSenal = !!(feedback.comentario?.trim() || feedback.intensidad_rating || feedback.contenido_rating);
+  if (!tieneSenal) return;
+
+  const entry = {
+    id: `sf-${Date.now()}`,
+    fecha: new Date().toISOString(),
+    comentario: feedback.comentario?.trim() || '',
+    intensidadRating: feedback.intensidad_rating || undefined,
+    contenidoRating: feedback.contenido_rating || undefined,
+    alcance: feedback.alcance === 'este_setlist' ? 'este_setlist' : 'global'
+  };
+  await dbLogSetlistFeedback(bandId, entry).catch((err) =>
+    console.warn("Notice dbLogSetlistFeedback:", err?.message || err)
+  );
+}
 
 const router = express.Router();
 
@@ -542,7 +626,8 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     }
 
     // Llamar a análisis IA
-    const analysis = await analyzeSetlistWithAI(setlistSongs);
+    const bandContext = await getBandStyleContext(userBandId);
+    const analysis = await analyzeSetlistWithAI(setlistSongs, bandContext);
 
     // Crear firma del setlist para detectar cambios
     const setlistSignature = setlist.items.map((item: any) => item.id).join('|');
@@ -565,6 +650,96 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
   } catch (err: any) {
     console.error("Error in analyze-setlist-with-ai:", err);
     res.status(500).json({ error: err?.message || "Error al analizar setlist con IA" });
+  }
+});
+
+// Plan de cambios (reordenar, quitar/añadir canciones del catálogo, añadir bloques) para acercar
+// el setlist al "perfecto" — a diferencia de /analyze-with-ai, que solo señala problemas de orden,
+// esto también mira el resto del repertorio de la banda como candidatas a añadir.
+router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRateLimiter, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { setlistId } = req.params;
+    const { feedback } = req.body || {};
+
+    const allSetlists = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s: any) => s.id === setlistId);
+    if (!setlist) {
+      return res.status(404).json({ error: "Setlist no encontrado" });
+    }
+
+    const allSongs = await dbGetSongs(userBandId);
+    const songsById = new Map(allSongs.map((s: Song) => [s.id, s]));
+    const usedSongIds = new Set(
+      setlist.items.filter((it: SetlistItem) => !!it.songId).map((it: SetlistItem) => it.songId as string)
+    );
+    const catalogCandidates = allSongs.filter((s: Song) => !usedSongIds.has(s.id));
+
+    const bandContext = await getBandStyleContext(userBandId);
+    const immediateFeedbackBlock = buildImmediateFeedbackLines(feedback);
+    const plan = await generatePerfectSetlistPlan(setlist.items, songsById, catalogCandidates, bandContext, immediateFeedbackBlock);
+
+    // Se registra DESPUÉS de generar (no antes): si la generación falla, no queremos guardar un
+    // feedback sobre un intento que nunca llegó a completarse.
+    logSetlistFeedbackIfPresent(userBandId, feedback).catch(() => {});
+
+    res.json({ success: true, plan });
+  } catch (err: any) {
+    console.error("Error in generate-perfect-setlist:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de setlist perfecto" });
+  }
+});
+
+/** Encuentra la canción del catálogo cuyo título case (exacto o parcial, normalizado) con el
+ * título detectado por la IA en la foto/PDF — null si no hay ninguna candidata razonable. */
+function findMatchingSong(detectedTitle: string, catalog: Song[]): Song | null {
+  const normalizedDetected = normalizeSongTitle(detectedTitle);
+  if (!normalizedDetected) return null;
+
+  const exact = catalog.find((s) => normalizeSongTitle(s.titulo) === normalizedDetected);
+  if (exact) return exact;
+
+  // El match parcial (includes) es más arriesgado con títulos muy cortos (p.ej. "Va" casaría con
+  // cualquier título que contenga esas letras) — se exige un mínimo de longitud real.
+  if (normalizedDetected.length < 3) return null;
+  return catalog.find((s) => titlesMatch(detectedTitle, [s.titulo])) || null;
+}
+
+// Analiza una foto o PDF de un repertorio ya impreso y devuelve la lista detectada, cada tema ya
+// resuelto (o no) contra el catálogo real de la banda — el frontend hace de aquí una pantalla de
+// revisión antes de crear nada; esta ruta NUNCA escribe en setlists ni en songs por su cuenta.
+router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res, next) => {
+  importUpload.single("file")(req, res, (err: any) => {
+    if (err) return res.status(400).json({ success: false, error: err.message || "Archivo no válido" });
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: "No se recibió ningún archivo" });
+    }
+
+    const parsed = await parseSetlistFromFile(req.file.buffer, req.file.mimetype);
+    const allSongs = await dbGetSongs(userBandId);
+
+    const items = parsed.items.map((item) => {
+      if (item.type === 'block') {
+        return { type: 'block' as const, titulo: item.titulo, blockType: item.blockType };
+      }
+      const match = findMatchingSong(item.titulo, allSongs as Song[]);
+      return {
+        type: 'song' as const,
+        detectedTitle: item.titulo,
+        matchedSongId: match?.id,
+        matchedSongTitle: match?.titulo
+      };
+    });
+
+    res.json({ success: true, nombreSugerido: parsed.nombreSugerido, items });
+  } catch (err: any) {
+    console.error("Error in import-from-image:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error al leer el repertorio de la imagen/PDF" });
   }
 });
 

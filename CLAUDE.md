@@ -99,6 +99,19 @@ CRUD for outreach campaigns, newest subsystem. Used to fall back to the literal 
 - `src/services/api.ts` / `src/utils/api.ts` — fetch wrapper that attaches auth + `x-band-id` headers; add new endpoints here rather than calling `fetch` ad hoc from components.
 - `src/i18n/` — translation dictionaries for EPK/fan-facing public pages (separate from the Google Translate widget used for the internal app).
 
+### UI simplicity is a hard requirement (see `AGENTS.md` §6 for the full rule)
+
+This app does a *lot* (booking CRM, AI agents, reels, repertoire, finances, EPK, tours, fans). That power is only usable if screens stay minimal — the complexity lives in the backend and the AI, not on screen. **Simplifying never means removing capability; it means relocating it** (a `⋯` menu, a collapsible section, a modal).
+
+Concretely, when touching any screen:
+
+- **Main content first.** What the user came for (the chart, the list, the calendar) renders *above* the title, the stats and the secondary action buttons. If the main content is below the fold at ~390px wide, the order is wrong — reorder the JSX (or use `order-*`), don't just shrink fonts.
+- **A wrapping badge row is not "responsive".** A `flex-wrap` cluster of pills/buttons that fits one line on desktop becomes a 6-line pile on a phone. Give mobile and desktop genuinely different layouts (`hidden sm:flex` / `sm:hidden`) rather than one that only works wide. This is the single most common cause of "it looks horrible on mobile" in this codebase.
+- **Secondary actions live behind one menu.** Share/print/export/assign/settings go in a single `⋯` or `⚙️` menu — the established pattern is the chart settings menu and the "🧠 Asistente IA" chooser in `RepertorioSetlists.tsx`. Rule of thumb: not used on most visits to that screen → no permanent space.
+- **Stats: one summary line + a toggle** for the rest (same collapse pattern already used by "Avisos y sugerencias" in `RepertorioSetlists.tsx`), never a battery of always-visible pills.
+- **Long hints belong in `title`/tooltips**, not inline next to headings.
+- **Trade rule when adding:** before adding a new permanent element to an existing screen, say what gets removed or collapsed in exchange. Screens must not grow by accumulation.
+
 ### Security-sensitive conventions (established the hard way — see inline comments)
 
 - **SSRF guard**: any server-side `fetch()` of a user-supplied URL (lead website enrichment, etc.) must go through `esUrlExternaSegura` in `server/utils/ssrfGuard.ts`, which blocks private/reserved IP ranges and re-validates the DNS-resolved IP (not just the literal host) to prevent DNS-rebinding bypass.
