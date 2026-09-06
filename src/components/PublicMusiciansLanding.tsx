@@ -4,8 +4,9 @@ import {
   Sparkles,
   QrCode,
   FileText,
+  Rocket,
   CheckCircle2,
-  ArrowLeft, 
+  ArrowLeft,
   Check, 
   Loader2, 
   MessageSquare, 
@@ -298,6 +299,18 @@ export const PublicMusiciansLanding: React.FC = () => {
               {t.feature3Desc}
             </p>
           </div>
+        </section>
+
+        {/* ROADMAP TEASER: hype de que la plataforma sigue creciendo, sin detallar features
+            concretas todavía por confirmar */}
+        <section className="flex items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+            <Rocket className="w-5 h-5" />
+          </div>
+          <p className="text-neutral-300 text-xs sm:text-sm leading-relaxed">
+            <span className="text-amber-400 font-bold">{t.roadmapTeaserLead}</span>{' '}
+            {t.roadmapTeaserText}
+          </p>
         </section>
 
         {/* REGISTRATION FORM CARD OR SUCCESS CARD */}
