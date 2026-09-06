@@ -238,18 +238,40 @@ function computeMultiPagePlan(
  * aceptando más hojas a cambio. El reparto de cantidad sigue siendo equilibrado por altura +
  * misma red de seguridad que el modo normal (ver computeBalancedPagesAtFixedFont) — nunca deja
  * una canción sola si se puede evitar, y nunca fuerza un desborde real de página.
+ *
+ * Con el reparto ya decidido, cada página concreta —sobre todo la última, casi siempre con menos
+ * canciones que las demás— suele tener alto de sobra a `titleFontPt`: en vez de dejarlo así (letra
+ * uniforme pero papel desaprovechado), se sube el tamaño de ESA página tanto como quepa, SIN
+ * quedarse atado a la lista fija de candidatos (a diferencia del modo "sentado", aquí no hace
+ * falta un tamaño "estándar" reconocible entre páginas — el objetivo es maximizar letra, punto).
+ * `maxTitleFontPt` pone un techo razonable para no acabar con una sola canción ocupando la hoja
+ * entera a un tamaño absurdo.
  */
 export function computeExpandedPlan(
   totalItems: number,
   measureFn: MeasureRangeFn,
-  opts: { titleFontPt: number; pageAvailableHeightPx: number }
+  opts: { titleFontPt: number; pageAvailableHeightPx: number; maxTitleFontPt?: number; fontStepPt?: number }
 ): AutoFitResult {
-  const { titleFontPt, pageAvailableHeightPx } = opts;
+  const { titleFontPt, pageAvailableHeightPx, maxTitleFontPt = titleFontPt * 1.6, fontStepPt = 0.5 } = opts;
   if (totalItems === 0) {
     return { titleFontPt, pageItemCounts: [0], pageFontSizes: [titleFontPt] };
   }
   const pageItemCounts = computeBalancedPagesAtFixedFont(totalItems, measureFn, titleFontPt, pageAvailableHeightPx, 1);
-  return { titleFontPt, pageItemCounts, pageFontSizes: pageItemCounts.map(() => titleFontPt) };
+
+  let pageStart = 0;
+  const pageFontSizes = pageItemCounts.map(count => {
+    const start = pageStart;
+    pageStart += count;
+    // Búsqueda lineal descendente desde el techo: nº de páginas y de canciones por página son
+    // pequeños (repertorios de decenas de temas, no miles), así que el coste no importa — se
+    // prioriza claridad sobre una bisección más compleja para un techo tan bajo.
+    for (let pt = maxTitleFontPt; pt > titleFontPt; pt -= fontStepPt) {
+      if (measureFn(pt, start, start + count) <= pageAvailableHeightPx) return pt;
+    }
+    return titleFontPt; // suelo garantizado: el reparto de arriba ya confirmó que esto cabe
+  });
+
+  return { titleFontPt, pageItemCounts, pageFontSizes };
 }
 
 export function computeAutoFitPlan(
