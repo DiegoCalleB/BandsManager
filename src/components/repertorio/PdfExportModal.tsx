@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Printer, X, Users, User, FileText, Settings, Eye, Check,
-  ChevronLeft, ChevronRight, Edit3, Music, Sparkles, Image as ImageIcon,
+  ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Edit3, Music, Sparkles, Image as ImageIcon,
   Sliders, Type, Palette, ShieldCheck, Zap
 } from 'lucide-react';
 import { Setlist, Song, ThemeColors } from '../../types';
@@ -258,7 +258,12 @@ export function PdfExportModal({
   // ideal — se pausa el flujo de impresión y se guarda aquí cuántas páginas tendría cada opción,
   // para que el usuario elija con info real en vez de decidir en su nombre.
   const [sizeChoiceDialog, setSizeChoiceDialog] = useState<{ singleTotalPages: number; multiTotalPages: number } | null>(null);
-  
+
+  // Ajustes avanzados (letra manuscrita, tinta, badges de tonalidad/BPM/duración) van ocultos
+  // detrás de este toggle SOLO en móvil (ver "sm:flex" más abajo, que los fuerza siempre visibles
+  // en pantallas grandes) — en pantallas pequeñas todo junto agobiaba, tapando la vista previa.
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+
   // Design & Preset State
   const [stylePreset, setStylePreset] = useState<SetlistStylePreset>('rock_stage');
   // El tamaño real de impresión ya no se elige a mano: se auto-ajusta por hoja (ver
@@ -1276,41 +1281,49 @@ export function PdfExportModal({
             isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-950 border-neutral-800'
           }`}
         >
-        {/* Modal Top Header */}
+        {/* Modal Top Header — recortado a lo esencial en móvil (badge decorativo e info extra
+            ocultos: ver hidden/sm:inline-block y sm:block más abajo) para que en pantallas
+            pequeñas no compita por espacio con los controles y la vista previa, que son lo que
+            de verdad hace falta ver de un vistazo. */}
         <div
-          className={`p-3.5 sm:px-6 flex flex-wrap items-center justify-between gap-3 border-b shrink-0 ${
+          className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 border-b shrink-0 ${
             isStitchLight ? 'border-slate-300 bg-white' : 'border-neutral-800 bg-[#121111]'
           }`}
         >
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="hidden sm:flex p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0">
               <Zap className="w-5 h-5" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="font-display font-black text-base sm:text-lg uppercase tracking-wider text-white">
-                  Generador de Repertorios de Escenario
+                <h3 className="font-display font-black text-sm sm:text-lg uppercase tracking-wider text-white truncate">
+                  Generador de Repertorios
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[#1db954] text-black">
+                <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase font-mono bg-[#1db954] text-black shrink-0">
                   Rock Stage Edition
                 </span>
               </div>
-              <p className="text-xs text-neutral-400 font-sans mt-0.5">
-                Setlist: <span className="font-bold text-white">{activeSetlist.nombre}</span> ({activeSetlistMetrics.songCount} temas • Letras grandes para el suelo de escenario con notas a mano)
+              <p className="text-xs text-neutral-400 font-sans mt-0.5 truncate">
+                <span className="font-bold text-white">{activeSetlist.nombre}</span>
+                <span className="hidden sm:inline"> ({activeSetlistMetrics.songCount} temas • Letras grandes para el suelo de escenario con notas a mano)</span>
+                <span className="sm:hidden"> · {activeSetlistMetrics.songCount} temas</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <button
               onClick={() => handlePrint()}
-              className="px-5 py-2.5 rounded-xl font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
+              className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl font-mono text-xs font-black uppercase transition-all shadow-xl flex items-center gap-1.5 sm:gap-2 cursor-pointer bg-[#1db954] hover:bg-[#1ed760] text-black active:scale-95 hover:shadow-[#1db954]/20"
             >
               <Printer className="w-4 h-4" />
               {/* "Músico(s)", no "Hoja(s)": cada uno puede generar más de una página física según
                   el auto-ajuste (ver computeAutoFitPlan) — el número real de páginas no se sabe
-                  hasta medir el contenido, así que no se promete aquí. */}
-              <span>Imprimir para {membersToExport.length} {membersToExport.length === 1 ? 'Músico' : 'Músicos'} (PDF)</span>
+                  hasta medir el contenido, así que no se promete aquí. Texto completo solo en
+                  desktop; en móvil solo "Imprimir" para no competir por ancho con el resto del
+                  header. */}
+              <span className="hidden sm:inline">Imprimir para {membersToExport.length} {membersToExport.length === 1 ? 'Músico' : 'Músicos'} (PDF)</span>
+              <span className="sm:hidden">Imprimir</span>
             </button>
             <button
               onClick={onClose}
@@ -1329,9 +1342,26 @@ export function PdfExportModal({
         <div className={`p-3 sm:px-6 border-b flex flex-col gap-3 text-xs font-mono shrink-0 ${
           isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/90 border-neutral-800'
         }`}>
-          {/* Row 1: Mode & Target Selector */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10">
+          {/* Row 1: Mode & Target Selector — en móvil un <select> compacto (los 3 botones en
+              fila no cabían sin apretarse); en desktop, los botones de siempre, más cómodos con
+              mouse y con espacio de sobra en pantallas grandes. */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <select
+              value={printMode}
+              onChange={(e) => {
+                setPrintMode(e.target.value as 'all_members' | 'single_member' | 'master');
+                setPreviewPageIndex(0);
+              }}
+              className={`sm:hidden flex-1 min-w-0 p-2 rounded-lg border font-bold cursor-pointer ${
+                isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-white'
+              }`}
+            >
+              <option value="all_members">👥 Todos los Músicos ({resolvedMembers.length} hojas)</option>
+              <option value="single_member">👤 1 Músico Específico</option>
+              <option value="master">📄 Master Escenario / Sonido</option>
+            </select>
+
+            <div className="hidden sm:flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10">
               <button
                 onClick={() => {
                   setPrintMode('all_members');
@@ -1375,12 +1405,12 @@ export function PdfExportModal({
 
             {/* Single member picker */}
             {printMode === 'single_member' && (
-              <div className="flex items-center gap-2">
-                <span className="text-neutral-400 font-bold">Músico:</span>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <span className="hidden sm:inline text-neutral-400 font-bold">Músico:</span>
                 <select
                   value={selectedMemberId}
                   onChange={(e) => setSelectedMemberId(e.target.value)}
-                  className={`p-1.5 px-3 rounded-lg border font-bold cursor-pointer ${
+                  className={`flex-1 sm:flex-none min-w-0 p-1.5 px-3 rounded-lg border font-bold cursor-pointer ${
                     isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-white'
                   }`}
                 >
@@ -1394,8 +1424,26 @@ export function PdfExportModal({
             )}
           </div>
 
-          {/* Row 2: Typography, Handwritten Sharpie Ink & Toggles */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/5">
+          {/* Botón "Ajustes" — solo en móvil (sm:hidden): colapsa tipografía/tinta/badges detrás
+              de un toggle para no agobiar la pantalla pequeña con todo a la vez. En desktop esos
+              ajustes están siempre visibles (ver "sm:flex" en el Row 2 de abajo, que los muestra
+              sin importar showAdvancedSettings). */}
+          <button
+            onClick={() => setShowAdvancedSettings(v => !v)}
+            className={`sm:hidden w-full flex items-center justify-between px-3 py-2 rounded-lg font-bold cursor-pointer transition-colors ${
+              isStitchLight ? 'bg-white border border-slate-300 text-slate-700' : 'bg-black/40 border border-white/10 text-neutral-300'
+            }`}
+          >
+            <span className="flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-sky-400" /> Ajustes (letra, tinta, badges)
+            </span>
+            {showAdvancedSettings ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </button>
+
+          {/* Row 2: Typography, Handwritten Sharpie Ink & Toggles — en móvil apilado en columna
+              (3 grupos en una sola fila se apretaban demasiado en pantallas pequeñas), en
+              desktop en fila con espacio de sobra. */}
+          <div className={`${showAdvancedSettings ? 'flex' : 'hidden'} flex-col sm:flex-row sm:flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4 pt-2 border-t border-white/5 w-full sm:flex`}>
             {/* Tamaño de título: ya no se elige a mano — se auto-ajusta por hoja (ver
                 computeAutoFitPlan) para llenar la página lo mejor posible, priorizando el
                 mínimo ideal de 17pt (legible a ~2m en escenario) para repartir en varias hojas.
@@ -1518,32 +1566,35 @@ export function PdfExportModal({
           </div>
         </div>
 
-        {/* Pager Navigation for Multiple Sheets */}
+        {/* Pager Navigation for Multiple Sheets — recortado en móvil: sin el texto largo
+            "Previsualizando hoja X de Y", y los botones Anterior/Siguiente solo con icono (el
+            texto competía por ancho con el badge del músico en pantallas pequeñas). */}
         {membersToExport.length > 1 && (
-          <div className={`px-4 sm:px-6 py-2 border-b flex items-center justify-between text-xs font-mono shrink-0 ${
+          <div className={`px-3 sm:px-6 py-1.5 sm:py-2 border-b flex items-center justify-between gap-2 text-xs font-mono shrink-0 ${
             isStitchLight ? 'bg-slate-200 border-slate-300' : 'bg-[#151515] border-neutral-800 text-neutral-300'
           }`}>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-neutral-400">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
-              <span className="px-3 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1.5">
-                <span>👤 {currentPreviewMember.name}</span>
-                <span className="text-neutral-400 text-[10px]">({currentPreviewMember.instrument})</span>
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="hidden sm:inline font-bold text-neutral-400 shrink-0">Previsualizando hoja {previewPageIndex + 1} de {membersToExport.length}:</span>
+              <span className="sm:hidden font-bold text-neutral-400 shrink-0">{previewPageIndex + 1}/{membersToExport.length}</span>
+              <span className="px-2.5 sm:px-3 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1.5 min-w-0 truncate">
+                <span className="truncate">👤 {currentPreviewMember.name}</span>
+                <span className="hidden sm:inline text-neutral-400 text-[10px] shrink-0">({currentPreviewMember.instrument})</span>
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 disabled={previewPageIndex <= 0}
                 onClick={() => setPreviewPageIndex(p => Math.max(0, p - 1))}
-                className="p-1 px-3 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                className="p-1.5 sm:p-1 sm:px-3 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
               >
-                <ChevronLeft className="w-3.5 h-3.5" /> Anterior
+                <ChevronLeft className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Anterior</span>
               </button>
               <button
                 disabled={previewPageIndex >= membersToExport.length - 1}
                 onClick={() => setPreviewPageIndex(p => Math.min(membersToExport.length - 1, p + 1))}
-                className="p-1 px-3 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                className="p-1.5 sm:p-1 sm:px-3 rounded-lg bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed font-bold flex items-center gap-1 cursor-pointer transition-colors"
               >
-                Siguiente <ChevronRight className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Siguiente</span> <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
