@@ -66,16 +66,16 @@ describe('computeAutoFitPlan', () => {
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(5);
   });
 
-  it('prefiere un tamaño más grande que el mínimo si sigue cabiendo en el mismo nº de páginas', () => {
-    // A 17pt: 10*55=550 -> ceil(550/500)=2 páginas. A 22pt: 10*90=900 -> ceil(900/500)=2 páginas
-    // también (no necesita más páginas que al mínimo) -> debe preferirse 22pt, no quedarse en 17pt
-    // dejando las 2 páginas a medio llenar. A 25pt: 10*110=1100 -> ceil(1100/500)=3 (si necesita
-    // más páginas, no vale).
+  it('reparte siempre al tamaño mínimo, pero cada página sube su letra tanto como quepa', () => {
+    // A 17pt: 10*55=550 -> ceil(550/500)=2 páginas -> reparto equilibrado a ESE tamaño (5+5).
+    // El reparto de canciones (pageItemCounts) se calcula siempre al mínimo -> titleFontPt=17 -
+    // pero cada página resultante (5 canciones) tiene margen para subir: a 22pt, 5*90=450<=500
+    // (cabe), a 25pt, 5*110=550>500 (no cabe) -> pageFontSizes debe subir a 22, nunca más.
     const measure = makeUniformMeasure({ 28: 130, 25: 110, 22: 90, 19: 70, 17: 55 });
     const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
-    expect(result.titleFontPt).toBe(22);
-    expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(10);
-    expect(result.pageItemCounts.length).toBe(2);
+    expect(result.titleFontPt).toBe(17);
+    expect(result.pageItemCounts).toEqual([5, 5]);
+    expect(result.pageFontSizes).toEqual([22, 22]);
   });
 
   it('se queda en el tamaño mínimo si ningún candidato mayor cabe en el mismo nº de páginas', () => {
@@ -206,6 +206,38 @@ describe('computeAutoFitPlan', () => {
     const result = computeAutoFitPlan(20, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
     expect(result.pageItemCounts).toEqual([20]);
     expect(result.pageFontSizes).toEqual([result.titleFontPt]);
+  });
+
+  it('repartir siempre al tamaño mínimo evita que un tamaño mayor desequilibre la cantidad por página', () => {
+    // Caso real reportado: un repertorio con muchas canciones ligeras y una con una nota pesada
+    // que, a letra grande, ocupa desproporcionadamente MÁS (una nota que cabe "inline" a 17pt
+    // puede necesitar una línea aparte a 19pt, un salto no lineal). Si el reparto se hiciera al
+    // tamaño más grande que aún cupiera en el mismo nº de páginas (comportamiento antiguo), la
+    // canción pesada "pesaría" más en la cuenta de altura y el reparto por CANTIDAD saldría más
+    // desigual para mantener el equilibrio de altura. Repartir siempre al mínimo evita esto.
+    const heights: Record<number, Record<number, number>> = {
+      17: { light: 2, heavy: 50 },
+      19: { light: 2.2, heavy: 100 } // el salto de 50->100 es MUCHO más que proporcional (+10%)
+    };
+    const totalItems = 201; // 200 ligeras + 1 pesada al final
+    const measure: MeasureRangeFn = (pt, from, to) => {
+      const h = heights[pt] ?? heights[17];
+      let sum = 0;
+      for (let i = from; i < to; i++) sum += i === totalItems - 1 ? h.heavy : h.light;
+      return sum;
+    };
+    const result = computeAutoFitPlan(totalItems, measure, {
+      candidateTitleFontPt: [19, 17],
+      pageAvailableHeightPx: 300
+    });
+
+    expect(result.titleFontPt).toBe(17); // el reparto nunca se hace a un tamaño mayor
+    expect(result.pageItemCounts.length).toBe(2);
+    const [first, second] = result.pageItemCounts;
+    // Con el reparto al mínimo, la diferencia entre páginas es moderada (~112 vs ~89, diff~23);
+    // al tamaño mayor habría sido ~122 vs ~79 (diff~43) — se exige aquí que quede claramente por
+    // debajo de esa cota, confirmando que no se desequilibra por culpa de un tamaño más grande.
+    expect(Math.abs(first - second)).toBeLessThan(35);
   });
 
   describe('emergencyFontPt', () => {
