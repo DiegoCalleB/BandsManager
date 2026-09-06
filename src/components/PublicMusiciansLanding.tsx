@@ -4,7 +4,6 @@ import {
   Sparkles,
   QrCode,
   FileText,
-  Calendar,
   CheckCircle2,
   ArrowLeft, 
   Check, 
@@ -288,7 +287,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Calendar className="w-5 h-5" />
+              <Music className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature3Title}
