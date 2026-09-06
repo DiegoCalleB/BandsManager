@@ -54,14 +54,20 @@ export function computeAutoFitPlan(
   }
 
   // 1. El repertorio completo, ¿cabe en una sola página a alguno de los tamaños candidatos? En
-  // el tamaño MÍNIMO se admite un pequeño margen de tolerancia (MIN_SIZE_OVERFLOW_TOLERANCE):
-  // sin él, un repertorio que casi cabe pero se pasa por poco (p.ej. una única canción con mucha
-  // nota que no llegó a caber del todo) saltaría a una segunda hoja entera para esa canción sola
-  // — justo el caso que se pidió evitar. En los tamaños mayores no se da tolerancia: si no caben
-  // sin más, hay margen real para probar un tamaño menor antes de aceptar cualquier desborde.
-  const MIN_SIZE_OVERFLOW_TOLERANCE = 0.08;
+  // el tamaño MÍNIMO se admite un margen de tolerancia MÍNIMO, en PÍXELES ABSOLUTOS (no un
+  // porcentaje): solo para absorber el ruido de redondeo/subpíxel inevitable entre cómo se MIDE el
+  // contenido (un iframe oculto) y cómo lo pinta de verdad el motor de impresión del navegador —
+  // nunca para "colar" un desborde real de varias filas. Un % (el diseño original usaba un 8%) es
+  // peligroso: en una hoja de ~1000px de alto son ~80px de margen — de sobra para que una canción
+  // entera "quepa" sobre el papel según nuestra medición pero desborde de verdad al imprimir,
+  // generando exactamente la hoja-extra-casi-vacía que este mecanismo se creó para evitar. Con un
+  // tope absoluto de unos pocos píxeles, si de verdad no cabe, se prefiere repartir en más páginas
+  // (paso 2) — que además ahora reparte de forma equilibrada, no deja una canción sola. En los
+  // tamaños mayores no se da ninguna tolerancia: si no caben sin más, hay margen real para probar
+  // un tamaño menor antes de aceptar cualquier desborde.
+  const MIN_SIZE_OVERFLOW_TOLERANCE_PX = 3;
   for (const pt of candidateTitleFontPt) {
-    const limit = pt === minFontPt ? pageAvailableHeightPx * (1 + MIN_SIZE_OVERFLOW_TOLERANCE) : pageAvailableHeightPx;
+    const limit = pt === minFontPt ? pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX : pageAvailableHeightPx;
     if (measureFn(pt, 0, totalItems) <= limit) {
       return { titleFontPt: pt, pageItemCounts: [totalItems] };
     }

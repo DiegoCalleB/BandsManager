@@ -86,34 +86,40 @@ describe('computeAutoFitPlan', () => {
     expect(result.titleFontPt).toBe(17);
   });
 
-  it('tolera un pequeño exceso al tamaño mínimo en vez de generar una hoja nueva casi vacía', () => {
-    // Caso real reportado: un repertorio que casi cabe en una página, pero se pasa por poco al
-    // tamaño mínimo (p.ej. por una única canción con mucha nota) — sin tolerancia, esto generaba
-    // una segunda hoja entera para esa canción sola. A 17pt: 10*50=500, un 4.2% por encima de
-    // pageAvailableHeightPx=480 (dentro del margen del 8% admitido) -> debe aceptarse en 1 página.
-    const measure = makeUniformMeasure({ 28: 70, 25: 65, 22: 60, 19: 56, 17: 50 });
+  it('tolera un exceso minúsculo (ruido de redondeo) al tamaño mínimo, en vez de generar una hoja nueva casi vacía', () => {
+    // La tolerancia es un tope ABSOLUTO en píxeles (no un %) pensado solo para absorber el
+    // redondeo/subpíxel entre la medición en el iframe oculto y el motor de impresión real — no
+    // para colar un desborde real de contenido. A 17pt: 10*48.2=482, solo 2px por encima de
+    // pageAvailableHeightPx=480 (dentro de los 3px de tope) -> debe aceptarse en 1 página.
+    const measure = makeUniformMeasure({ 28: 70, 25: 65, 22: 60, 19: 56, 17: 48.2 });
     const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 480 });
     expect(result.titleFontPt).toBe(17);
     expect(result.pageItemCounts).toEqual([10]);
   });
 
   it('no da tolerancia en tamaños que no son el mínimo: si no caben, se prueba uno menor', () => {
-    // A 19pt el contenido excede pageAvailableHeightPx por poco (mismo margen que el caso de
-    // arriba), pero 19pt NO es el tamaño mínimo de la lista (17pt sí lo es) — no se le da
-    // tolerancia porque hay margen real para probar 17pt, que si cabe sin exceso.
+    // A 19pt el contenido excede pageAvailableHeightPx, pero 19pt NO es el tamaño mínimo de la
+    // lista (17pt sí lo es) — no se le da tolerancia porque hay margen real para probar 17pt, que
+    // sí cabe sin exceso.
     const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 52, 17: 40 });
     const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
-    // 19pt: 10*52=520, 4% por encima de 500 -> sin tolerancia (no es el mínimo), no se acepta así.
+    // 19pt: 10*52=520, muy por encima de 500 -> sin tolerancia (no es el mínimo), no se acepta así.
     // 17pt: 10*40=400 <= 500 -> cabe sin más.
     expect(result.titleFontPt).toBe(17);
     expect(result.pageItemCounts).toEqual([10]);
   });
 
-  it('un exceso grande (fuera de la tolerancia) al tamaño mínimo sigue repartiendo en páginas', () => {
+  it('un exceso real (por pequeño que sea en %, pero grande en px) al tamaño mínimo sigue repartiendo en páginas equilibradas, nunca una canción sola', () => {
     const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
-    // 10*60=600, un 20% por encima de 500 -> muy por encima del 8% de tolerancia.
+    // 10*60=600, 100px por encima de 500 -> muy por encima del tope absoluto de tolerancia (3px):
+    // un % (el diseño anterior, 8%) habría admitido hasta 40px de margen aquí y aceptado esto como
+    // "1 página", arriesgando un desborde real en la impresión — con tope absoluto no se acepta.
     const result = computeAutoFitPlan(10, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
     expect(result.pageItemCounts.length).toBeGreaterThan(1);
+    // Reparto equilibrado, no una canción sola en la última página.
+    const max = Math.max(...result.pageItemCounts);
+    const min = Math.min(...result.pageItemCounts);
+    expect(max - min).toBeLessThanOrEqual(2);
   });
 
   it('la fusión de última página dispersa nunca deja overflow ni pierde canciones', () => {
