@@ -92,26 +92,23 @@ export function computeAutoFitPlan(
     }
   }
 
-  // 3. Con el tamaño y el nº de páginas ya fijados, reparto equilibrado por altura: en lugar de
-  // insistir en un objetivo equilibrado estricto (que puede dejar páginas muy vacías si hay
-  // variación de altura entre canciones), busca el máximo de items que cabe en la altura REAL
-  // disponible de la página. Luego, el merge de última página intenta equilibrar si quedó muy
-  // dispersa. Esto asegura que si necesitas 2 páginas con 31 canciones, distribuye ~16 y ~15,
-  // no 10 y 21.
+  // 3. Con el tamaño y el nº de páginas ya fijados, reparto equilibrado por altura: cada corte
+  // busca, por bisección, el máximo de items que no exceda ni el objetivo de reparto (altura
+  // total / nº páginas) ni el alto real disponible de una página.
+  const targetPerPage = Math.min(totalHeight / pageCount, pageAvailableHeightPx);
+
   const pageItemCounts: number[] = [];
   let cursor = 0;
   for (let p = 0; p < pageCount - 1 && cursor < totalItems; p++) {
     const remaining = totalItems - cursor;
     // best arranca en 1 para garantizar avanzar siempre al menos un item por página, incluso si
-    // ni uno solo cabe cómodo (evita un bucle que nunca consuma `remaining`).
+    // ni uno solo cabe cómodo en el objetivo (evita un bucle que nunca consuma `remaining`).
     let lo = 1;
     let hi = remaining;
     let best = 1;
     while (lo <= hi) {
       const mid = Math.floor((lo + hi) / 2);
-      // Buscar items que caben en la altura REAL disponible de la página (no un objetivo
-      // equilibrado más restrictivo que podría dejar páginas subutilizadas).
-      if (measureFn(titleFontPt, cursor, cursor + mid) <= pageAvailableHeightPx) {
+      if (measureFn(titleFontPt, cursor, cursor + mid) <= targetPerPage) {
         best = mid;
         lo = mid + 1;
       } else {
