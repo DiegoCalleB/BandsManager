@@ -13,13 +13,13 @@ import { computeAutoFitPlan, tryFitInPageCount, MeasureRangeFn } from '../../uti
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
-// Ancho de la hoja A4 disponible para contenido: 210mm - 2x8mm de margen del @page (recortado al
+// Ancho de la hoja A4 disponible para contenido: 210mm - 2x7mm de margen del @page (recortado al
 // mínimo razonable para "Guardar como PDF" — no hay limitación física de impresora de por medio,
-// así que cada mm de margen que se quita es un mm real ganado) - el padding de 4px de .sheet-page
+// así que cada mm de margen que se quita es un mm real ganado) - el padding de 2px de .sheet-page
 // a cada lado (ver handlePrint). Se usa tanto en el HTML de impresión real como en la vista previa
 // en directo para decidir, fila a fila, si la nota cabe al lado del título o si esa fila concreta
 // necesita caer a una línea propia debajo (ver textFit.ts).
-const PAGE_CONTENT_WIDTH_PX = mmToPx(194) - 8;
+const PAGE_CONTENT_WIDTH_PX = mmToPx(196) - 4;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
@@ -532,7 +532,7 @@ export function PdfExportModal({
               /* Recortado al mínimo razonable: esto se "Guarda como PDF", no hay tolerancia física
                  de impresora que respetar, así que cada mm de margen es un mm real que se le quita
                  al repertorio sin tocar ni un punto de la tipografía. */
-              margin: 6mm 8mm;
+              margin: 5mm 7mm;
             }
             * {
               box-sizing: border-box;
@@ -549,11 +549,11 @@ export function PdfExportModal({
             .sheet-page {
               position: relative;
               width: 100%;
-              min-height: 283mm;
+              min-height: 286mm;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
-              padding: 4px;
+              padding: 2px;
               overflow: hidden;
             }
             .page-break {
@@ -852,7 +852,7 @@ export function PdfExportModal({
               display: flex;
               align-items: center;
               gap: 8px;
-              margin: 2px 0;
+              margin: 1px 0;
               break-inside: avoid;
               page-break-inside: avoid;
             }
@@ -883,7 +883,7 @@ export function PdfExportModal({
               font-size: 10pt;
               font-weight: 700;
               color: #222;
-              padding: 1px 0 1px ${showSongNumbers ? '40px' : '6px'};
+              padding: 0px 0 0px ${showSongNumbers ? '40px' : '6px'};
               letter-spacing: 0.5px;
               break-inside: avoid;
               page-break-inside: avoid;
@@ -1049,10 +1049,13 @@ export function PdfExportModal({
         return el ? el.getBoundingClientRect().height : 0;
       };
 
-      // .sheet-page min-height (283mm, con @page a 6mm de margen vertical: 297-12=285mm reales,
-      // 2mm de colchón de seguridad) menos su padding (4px arriba + 4px abajo): alto total
-      // disponible en la hoja, antes de descontar el header/footer real de cada miembro.
-      const PAGE_TOTAL_HEIGHT_PX = mmToPx(283) - 8;
+      // .sheet-page min-height (286mm, con @page a 5mm de margen vertical: 297-10=287mm reales,
+      // 1mm de colchón de seguridad) menos su padding (2px arriba + 2px abajo): alto total
+      // disponible en la hoja, antes de descontar el header/footer real de cada miembro. Margen
+      // y padding recortados al mínimo razonable (de 6mm/4px a 5mm/2px) para ganar cada mm/px
+      // real posible — esto se "Guarda como PDF", no hay tolerancia física de impresora que
+      // respetar, y cada pixel ganado aquí es uno menos de riesgo de necesitar una hoja extra.
+      const PAGE_TOTAL_HEIGHT_PX = mmToPx(286) - 4;
 
       const memberPlans = membersToExport.map(member => {
         const isMaster = member.id === 'master';
