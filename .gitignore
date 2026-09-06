@@ -16,3 +16,6 @@ bun.lock
 data.json
 public/clips/
 supabase/.temp/
+
+# Transient worktrees created by Claude Code background agents
+.claude/worktrees/
