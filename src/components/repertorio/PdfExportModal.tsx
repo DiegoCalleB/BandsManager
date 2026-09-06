@@ -546,7 +546,8 @@ export function PdfExportModal({
               max-width: 65%;
               max-height: 65%;
               object-fit: contain;
-              opacity: 0.09;
+              opacity: 0.15;
+              filter: grayscale(0.3);
             }
             .page-watermark-text {
               font-family: 'Anton', 'Oswald', sans-serif;
@@ -1074,9 +1075,10 @@ export function PdfExportModal({
 
       // Marca de agua: el logo del grupo en alta resolución (la misma imagen original que la
       // cabecera, no una miniatura reescalada) si hay uno subido y activo; si no, el nombre del
-      // grupo como texto de respaldo.
-      const watermarkInnerHtml = (showBandLogo && customLogoUrl)
-        ? `<img src="${customLogoUrl}" alt="" class="page-watermark-logo" onerror="this.style.display='none'" />`
+      // grupo como texto de respaldo. Si la imagen falla en cargar (404, CORS, etc.), el onerror
+      // reemplaza todo el contenedor con el nombre como fallback.
+      const watermarkInnerHtml = (showBandLogo && customLogoUrl?.trim())
+        ? `<img src="${customLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=\\\"page-watermark-text\\\">${bandName.toUpperCase()}</div>'" />`
         : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
 
       let globalPageIdx = 0;
@@ -1461,7 +1463,7 @@ export function PdfExportModal({
                   src={customLogoUrl}
                   alt=""
                   className="max-w-[65%] max-h-[65%] object-contain"
-                  style={{ opacity: 0.09 }}
+                  style={{ opacity: 0.15, filter: 'grayscale(0.3)' }}
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
