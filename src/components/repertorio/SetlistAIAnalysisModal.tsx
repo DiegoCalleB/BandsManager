@@ -32,6 +32,8 @@ interface SetlistAIAnalysisModalProps {
    * de lectura. `sourceKey` identifica qué acción lo pidió (p.ej. "ai-suggestion-2") — así ESE
    * botón concreto puede saber si es el que "Deshacer" revertiría ahora mismo. */
   onReorder?: (fromIndex: number, toIndex: number, sourceKey?: string) => void;
+  /** Arrastrar un punto en vertical cambia su energía (1-20) directamente desde este mini-gráfico. */
+  onEnergyChange?: (point: EnergyChartPoint, newScore: number) => void;
   /** true si hay un último reordenamiento (desde aquí o desde el editor de fondo) que se puede
    * deshacer. Se muestra un botón "Deshacer" en el modal para no obligar a cerrarlo solo para eso. */
   canUndo?: boolean;
@@ -66,7 +68,7 @@ interface Analysis {
   areasForImprovement: string[];
 }
 
-export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder, canUndo = false, onUndo, undoSourceKey = null }: SetlistAIAnalysisModalProps) {
+export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName, initialAnalysis, onAnalysisComplete, onHighlightSongs, highlightedSongIds = [], chartData, yDomain, zonasEnergia, warnings = [], onReorder, onEnergyChange, canUndo = false, onUndo, undoSourceKey = null }: SetlistAIAnalysisModalProps) {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -527,6 +529,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
                 height={190}
                 compact
                 onReorder={onReorder}
+                onEnergyChange={onEnergyChange}
               />
             </div>
           )}

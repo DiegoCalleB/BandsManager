@@ -76,6 +76,11 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
   const [bulkUploadAlbum, setBulkUploadAlbum] = useState<{ name: string; songs: Song[] } | null>(null);
   const [dynamicsAnalysis, setDynamicsAnalysis] = useState<{ running: boolean; done: number; total: number; failedTitles: string[] } | null>(null);
+  // Las 4 formas de crear un disco (vacío / subir MP3-WAV / Spotify / recortar de un concierto)
+  // vivían como 4 botones de texto siempre visibles — se usan una vez por disco, no en cada
+  // visita. Un solo punto de entrada "+ Nuevo disco" con las 4 opciones explicadas, mismo patrón
+  // que el "🧠 Asistente IA" de RepertorioSetlists.tsx (AGENTS.md §6).
+  const [showCreateAlbumMenu, setShowCreateAlbumMenu] = useState(false);
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -320,19 +325,20 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             </button>
           </div>
 
-          {/* Expand/Collapse All Button */}
+          {/* Expand/Collapse All Button — solo icono: es un toggle de vista, no la acción
+              principal de la pantalla, no necesita competir en texto con el resto. */}
           {filteredAlbums.length > 0 && (
             <button
               type="button"
               onClick={toggleAllAlbums}
-              className={`px-3.5 py-2 rounded-full text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+              className={`p-2 rounded-full transition-all cursor-pointer border ${
                 isStitchLight
                   ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
                   : 'bg-neutral-800 border-neutral-700 text-zinc-300 hover:bg-neutral-700 hover:text-white'
               }`}
+              title={areAllExpanded ? 'Plegar todos los discos' : 'Desplegar todos los discos'}
             >
               <Layers className="w-3.5 h-3.5 text-[#1db954]" />
-              <span>{areAllExpanded ? 'Plegar Todos' : 'Desplegar Todos'}</span>
             </button>
           )}
 
@@ -373,46 +379,72 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={() => setBulkUploadAlbum({ name: '', songs: [] })}
-            className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
-            title="Crear un disco directamente arrastrando archivos de audio MP3 o WAV de tu ordenador"
-          >
-            <FolderUp className="w-4 h-4" />
-            <span>Subir Disco (MP3/WAV)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsSpotifyModalOpen(true)}
-            className="px-4 py-2 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl shadow-[#1db954]/20 transition-all hover:scale-105 active:scale-95"
-            title="Conectar con Spotify para importar la discografía completa de la banda"
-          >
-            <Disc className="w-4 h-4" />
-            <span>🟢 Traer de Spotify</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsLiveConcertModalOpen(true)}
-            className="px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
-            title="Crear un disco automáticamente a partir del vídeo/audio de un concierto en vivo"
-          >
-            <Scissors className="w-4 h-4" />
-            <span>🔴 Concierto a Disco (IA/FFmpeg)</span>
-          </button>
-
-          {onCreateAlbum && (
+          {/* Un único punto de entrada para las 4 formas de crear un disco — antes eran 4
+              botones de texto siempre visibles compitiendo por espacio con los filtros y el
+              análisis de dinámica. Se usan una vez por disco, no en cada visita. */}
+          <div className="relative">
             <button
               type="button"
-              onClick={onCreateAlbum}
+              onClick={() => setShowCreateAlbumMenu((v) => !v)}
               className="px-4 py-2 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>Nuevo Disco</span>
             </button>
-          )}
+            {showCreateAlbumMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowCreateAlbumMenu(false)} />
+                <div className="absolute right-0 top-full mt-1.5 z-40 w-72 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-1">
+                  {onCreateAlbum && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowCreateAlbumMenu(false); onCreateAlbum(); }}
+                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer flex items-start gap-2"
+                    >
+                      <Plus className="w-4 h-4 text-[#1db954] shrink-0 mt-0.5" />
+                      <span>
+                        <span className="text-sm font-medium text-[#1db954] block">Disco vacío</span>
+                        <span className="block text-[10.5px] text-neutral-400 mt-0.5">Crea el disco y añade canciones después, una a una.</span>
+                      </span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => { setShowCreateAlbumMenu(false); setBulkUploadAlbum({ name: '', songs: [] }); }}
+                    className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer flex items-start gap-2"
+                  >
+                    <FolderUp className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span>
+                      <span className="text-sm font-medium text-emerald-300 block">Subir Disco (MP3/WAV)</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Arrastra archivos de audio desde tu ordenador.</span>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setShowCreateAlbumMenu(false); setIsSpotifyModalOpen(true); }}
+                    className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer flex items-start gap-2"
+                  >
+                    <Disc className="w-4 h-4 text-[#1db954] shrink-0 mt-0.5" />
+                    <span>
+                      <span className="text-sm font-medium text-[#1db954] block">🟢 Traer de Spotify</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Importa la discografía completa de la banda.</span>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setShowCreateAlbumMenu(false); setIsLiveConcertModalOpen(true); }}
+                    className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer flex items-start gap-2"
+                  >
+                    <Scissors className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>
+                      <span className="text-sm font-medium text-amber-300 block">🔴 Concierto a Disco (IA/FFmpeg)</span>
+                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Recorta y cataloga a partir del vídeo/audio de un concierto en vivo.</span>
+                    </span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

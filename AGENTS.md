@@ -121,7 +121,23 @@
 
 ---
 
-## ⚡ 6. Eficiencia de Desarrollo y Economía de Tokens
+## 🧘 6. Simplicidad en Pantalla (REGLA TRANSVERSAL — aplica a TODA la app)
+
+> Esta app hace **muchas** cosas (booking, agentes IA, reels, repertorio, finanzas, EPK, gira, fans...). Esa potencia solo es útil si **no satura la pantalla**. La complejidad vive en el backend y en la IA; la interfaz se mantiene minimalista. **Simplificar nunca significa perder funcionalidad: significa reubicarla.**
+
+1. **El contenido primero, los metadatos después.** Lo primero que se ve al abrir una pantalla es aquello a lo que el usuario venía (el gráfico, la lista, el calendario), no el título, ni las estadísticas, ni los botones de acciones secundarias. Si el contenido principal queda por debajo del pliegue en móvil, el orden está mal.
+2. **Móvil primero, de verdad.** Cada pantalla se diseña y se revisa a ~390 px de ancho. Un `flex-wrap` de badges que en escritorio ocupa 1 línea y en móvil se convierte en 6 **no es responsive**: es un layout de escritorio degradado. Cuando móvil y escritorio necesitan órdenes o densidades distintas, se usan layouts distintos (`hidden sm:flex` / `sm:hidden`, `order-*`), no uno solo que "más o menos" cabe.
+3. **Presupuesto del primer viewport móvil:** como máximo **3 bloques** (una cabecera compacta + el contenido principal + un bloque más) antes de tener que hacer scroll. Todo lo demás va plegado.
+4. **Acciones secundarias, detrás de un menú.** Compartir, imprimir, exportar, asignar, ajustes, configuraciones: en un único menú (`⋯` / `⚙️`), nunca como fila de botones de texto siempre visible. Regla práctica: si no se usa en la mayoría de las visitas a esa pantalla, no ocupa espacio permanente.
+5. **Estadísticas: una línea de resumen + desplegable.** Nunca una batería de pills. Se muestran las 2-3 métricas que de verdad se miran (p. ej. `28 temas · 111m · 120 BPM`) y el resto se pliega bajo un toggle.
+6. **Los textos de ayuda no viven en la pantalla.** Un hint largo entre paréntesis va al `title`/tooltip o desaparece. Si una función necesita un párrafo para entenderse, el problema es la función, no la falta de explicación.
+7. **Ningún componente decorativo sin trabajo que hacer.** Badges que repiten información ya visible, títulos de sección obvios, contadores que nadie mira: fuera.
+8. **Regla de intercambio al añadir:** antes de meter un elemento nuevo y permanente en una pantalla existente, hay que decir explícitamente qué se quita o dónde se pliega. La pantalla no crece por acumulación.
+9. **Prohibido "simplificar" borrando capacidad.** Toda funcionalidad existente se conserva; se mueve a un menú, un desplegable, un modal o una vista secundaria. Si de verdad hay que eliminar algo, se pregunta antes.
+
+---
+
+## ⚡ 7. Eficiencia de Desarrollo y Economía de Tokens
 
 1. **Lecturas Dirigidas:** No leas archivos completos de más de 300 líneas si solo necesitas modificar una función o interfaz específica. Usa `view_file` con rangos.
 2. **Ediciones Quirúrgicas (Surgical Edits):** Usa bloques de reemplazo contiguos y mínimos (`replace_file_content`).

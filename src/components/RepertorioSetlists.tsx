@@ -1,16 +1,16 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import { api } from '../services/api';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
- Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
+ Disc3, Music, Plus, Search, X, Edit3, Trash2, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
  Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
-  GripVertical, ImagePlus
+  GripVertical, ImagePlus, MoreHorizontal
 } from 'lucide-react';
 import SongStudioModal from './SongStudioModal';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
@@ -42,7 +42,7 @@ import {
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
-import { EnergyChart } from './repertorio/EnergyChart';
+import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
 
 interface RepertorioSetlistsProps {
@@ -90,6 +90,17 @@ export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: 
   bis: { label: 'BIS / Parón Pre-Bis', icon: '💣', bg: 'bg-rose-500/15', text: 'text-rose-400', border: 'border-rose-500/30' },
   otro: { label: 'Otro Evento del Show', icon: '📌', bg: 'bg-neutral-800', text: 'text-neutral-300', border: 'border-neutral-700' }
 };
+
+// GIF 1x1 transparente para anular la "foto" fantasma que el navegador dibuja por defecto al
+// arrastrar con drag-and-drop nativo (HTML5 draggable): sin `setDragImage`, cada fila reordenable
+// (canciones y bloques por igual) deja ver una captura translúcida de sí misma siguiendo al
+// cursor mientras se arrastra. Se crea una sola vez a nivel de módulo para que ya esté decodificada
+// cuando el usuario arrastre de verdad — el reordenamiento en sí no cambia, solo desaparece la foto.
+// window.Image (no el icono `Image` de lucide-react importado arriba, que shadowea el global).
+const TRANSPARENT_DRAG_IMAGE = typeof window !== 'undefined' ? new window.Image() : null;
+if (TRANSPARENT_DRAG_IMAGE) {
+  TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
+}
 
 const DEFAULT_SONGS: Song[] = [
  {
@@ -545,6 +556,14 @@ export default function RepertorioSetlists({
  // Avisos heurísticos plegados por defecto — antes ocupaban una fila siempre visible en pantalla
  // aunque no hubiera nada urgente que mirar.
  const [showHeuristicWarnings, setShowHeuristicWarnings] = useState(false);
+ // Métricas secundarias del setlist (interludios, bloques, perfil de dinámica) plegadas: la fila
+ // siempre visible se queda en las 3 que de verdad se miran (temas · duración · BPM). Antes las 5
+ // pills + el badge de perfil iban en un flex-wrap que en móvil se convertía en 5-6 líneas
+ // apiladas ANTES del gráfico — ver AGENTS.md §6 (simplicidad en pantalla).
+ const [showSetlistStats, setShowSetlistStats] = useState(false);
+ // Acciones secundarias del setlist (compartir, asignar a bolo, imprimir, editar detalles) en un
+ // único menú "⋯" en vez de tres botones de texto permanentes: no se usan en la mayoría de visitas.
+ const [showSetlistActionsMenu, setShowSetlistActionsMenu] = useState(false);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
@@ -599,6 +618,7 @@ export default function RepertorioSetlists({
    return {
     idx,
     id: pt.item.id,
+    songId: isSpeechEvent ? undefined : pt.song?.id,
     name: pt.title,
     score: isSpeechEvent ? null : pt.score,
     idealScore: isSpeechEvent ? null : idealCurve[idx],
@@ -666,8 +686,10 @@ export default function RepertorioSetlists({
    return () => document.removeEventListener('mousedown', handleClickOutside);
  }, [editingEnergyItemId]);
 
- const handleSetEnergiaManual = async (song: Song, itemId: string, valor1a10: number) => {
-   const nuevaEnergia = valor1a10 * 2;
+ // Núcleo compartido: fija a mano la energía (1-20) de una canción, tanto desde el popover 1-10
+ // de la fila (handleSetEnergiaManual) como desde el arrastre vertical en el propio gráfico
+ // (handleEnergyChartDrag) — un solo sitio que llama al PATCH y actualiza el estado optimista.
+ const handleSetEnergiaManualValue = async (song: Song, itemId: string, nuevaEnergia: number) => {
    setSavingEnergyItemId(itemId);
    // Optimista: refleja el cambio ya mismo en la UI y en el gráfico, sin esperar al servidor.
    setSongs(prev => prev.map(s => s.id === song.id ? { ...s, energia: nuevaEnergia, energiaManual: true } : s));
@@ -684,6 +706,19 @@ export default function RepertorioSetlists({
      setEditingEnergyItemId(null);
    }
  };
+
+ const handleSetEnergiaManual = (song: Song, itemId: string, valor1a10: number) =>
+   handleSetEnergiaManualValue(song, itemId, valor1a10 * 2);
+
+ // Arrastrar un punto en vertical en el Mapa de Energía cambia su energía (1-20) directamente —
+ // mismo resultado que el popover 1-10 de la fila, pero sin salir del gráfico. EnergyChart ya
+ // filtra esto a puntos con songId (canciones reales, nunca eventos de "speech"/bis).
+ const handleEnergyChartDrag = useCallback((point: EnergyChartPoint, newScore: number) => {
+   if (!point.songId) return;
+   const song = songs.find(s => s.id === point.songId);
+   if (song) handleSetEnergiaManualValue(song, point.id, newScore);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [songs]);
 
  // Deletion Confirmation Modal State
  const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
@@ -1989,26 +2024,6 @@ export default function RepertorioSetlists({
   setShowItemAudioUrl('');
  };
 
- const handleMoveSetlistItem = (index: number, direction: 'up' | 'down') => {
- if (!activeSetlist) return;
- const targetIndex = direction === 'up' ? index - 1 : index + 1;
- if (targetIndex < 0 || targetIndex >= activeSetlist.items.length) return;
-
- const newItems = [...activeSetlist.items];
- const temp = newItems[index];
- newItems[index] = newItems[targetIndex];
- newItems[targetIndex] = temp;
-
- const updatedSetlist: Setlist = {
- ...activeSetlist,
- fechaUltimaEdicion: new Date().toISOString().split('T')[0],
- items: newItems
- };
-
- setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
- syncSetlistToBackend(updatedSetlist);
- };
-
  const handleRemoveSetlistItem = (itemId: string) => {
  if (!activeSetlist) return;
  const updatedSetlist: Setlist = {
@@ -2193,12 +2208,14 @@ export default function RepertorioSetlists({
 
  return (
   <div className="space-y-3">
-  {/* MODULE HEADER BAR */}
-  <div className={`p-3 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
+  {/* MODULE HEADER BAR — en móvil se queda en una línea fina (el subtítulo "Gestión de Setlists"
+      es una etiqueta decorativa: la sección ya se identifica por la navegación inferior). Antes
+      ocupaba una tarjeta entera con padding grande en lo más alto del scroll. AGENTS.md §6. */}
+  <div className={`px-3 py-1.5 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
        {/* HEADER / TITULO PRINCIPAL */}
       <div className="shrink-0 flex items-center gap-3">
-        <h1 className={`text-xl sm:text-2xl font-display font-black tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
-        <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
+        <h1 className={`text-base sm:text-2xl font-display font-black tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
+        <span className={`hidden sm:inline-block text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
       </div>
 
  </div>
@@ -2251,7 +2268,17 @@ export default function RepertorioSetlists({
   return (
   <div
   key={st.id}
-  onClick={() => setActiveSetlistId(st.id)}
+  onClick={() => {
+  setActiveSetlistId(st.id);
+  // En escritorio el sidebar vive en su propia columna junto al editor (no tapa el gráfico), pero
+  // en pantallas estrechas comparten el mismo scroll vertical — sin este auto-colapso, elegir un
+  // setlist distinto dejaba la lista entera tapando el Mapa de Energía hasta que el usuario volvía
+  // a tocar la flecha. Mismo breakpoint `lg` que ya usa este grid (AGENTS.md §6: contenido
+  // principal primero). No se toca en escritorio para no perder la lista de un vistazo.
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
+  setIsSidebarCollapsed(true);
+  }
+  }}
   className={`p-2.5 rounded-xl transition-all cursor-pointer ${
   isSelected 
   ? isStitchLight 
@@ -2310,14 +2337,17 @@ export default function RepertorioSetlists({
   </div>
   </div>
   ) : (
-  <div className="lg:col-span-1 flex flex-col items-center py-3 bg-[#131313] border border-white/5 rounded-2xl shrink-0">
+  // Barra de "abrir lista de setlists": en escritorio es una columna estrecha (chevron + texto
+  // apilados); en móvil ocupa el ancho completo, así que ahí va en UNA línea horizontal en vez
+  // de apilar icono y texto (antes gastaba ~150px de alto por encima del contenido). AGENTS.md §6.
+  <div className="lg:col-span-1 flex flex-col items-center py-1 lg:py-3 bg-[#131313] border border-white/5 rounded-2xl shrink-0">
     <button
       onClick={() => setIsSidebarCollapsed(false)}
-      className="p-2 text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-xl cursor-pointer flex flex-col items-center gap-2"
+      className="p-1.5 lg:p-2 text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-xl cursor-pointer flex flex-row lg:flex-col items-center gap-1.5 lg:gap-2"
       title="Mostrar lista de setlists guardados"
     >
-      <ChevronRight className="w-5 h-5 text-[#d1b375]" />
-      <span className="writing-vertical text-[10px] font-mono font-bold tracking-wider text-neutral-400 uppercase">
+      <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5 text-[#d1b375]" />
+      <span className="text-[10px] font-mono font-bold tracking-wider text-neutral-400 uppercase">
         Setlists ({setlists.length})
       </span>
     </button>
@@ -2328,10 +2358,11 @@ export default function RepertorioSetlists({
   <div className={`${isSidebarCollapsed ? 'lg:col-span-11' : 'lg:col-span-9'} p-3.5 sm:p-4 rounded-2xl space-y-3 ${colors.card} `}>
  {activeSetlist ? (
  <>
- {/* ACTIVE SETLIST HEADER & CONTROLS */}
- <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3">
- <div>
- <div className="flex items-center gap-2">
+ {/* CABECERA COMPACTA: nombre del setlist + un único menú "⋯" con las acciones secundarias.
+     Antes eran tres botones de texto (Compartir / Asignar / Imprimir) + descripción, que en
+     móvil se apilaban en varias líneas empujando el gráfico fuera de pantalla. Ninguna acción
+     se ha perdido: todas viven en el menú (ver AGENTS.md §6). */}
+ <div className="flex items-center gap-1.5">
  <input
  type="text"
  value={activeSetlist.nombre}
@@ -2339,96 +2370,90 @@ export default function RepertorioSetlists({
  const val = e.target.value;
  setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? { ...s, nombre: val } : s));
  }}
- className={`text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
+ title={activeSetlist.descripcion || 'Nombre del repertorio'}
+ className={`flex-1 min-w-0 text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
  />
+
+ <div className="relative shrink-0">
  <button
  type="button"
- onClick={() => setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist })}
- className="p-1 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
- title="Editar detalles del repertorio"
+ onClick={() => setShowSetlistActionsMenu((v) => !v)}
+ className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ title="Acciones del repertorio: compartir, asignar a bolo, imprimir, editar detalles"
  >
- <Edit3 className="w-3.5 h-3.5" />
+ <MoreHorizontal className="w-4 h-4" />
+ </button>
+ {showSetlistActionsMenu && (
+ <>
+ <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
+ <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-0.5 text-[11px] font-mono">
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); handleShareSetlist(activeSetlist); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-emerald-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <MessageSquare className="w-3.5 h-3.5 shrink-0" /> Compartir repertorio
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); setAssigningSetlist(activeSetlist); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-[#10b981] hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Asignar a bolo/ensayo
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); setShowPdfPreview(true); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-[#d1b375] hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
  </button>
  </div>
- <p className="text-[10px] text-neutral-400 mt-1">
- {activeSetlist.descripcion || 'Haz clic para personalizar las canciones de esta lista'}
- </p>
+ </>
+ )}
  </div>
-
- <div className="flex items-center gap-2 flex-wrap">
- <button
- onClick={() => handleShareSetlist(activeSetlist)}
- className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
- title="Compartir repertorio completo por WhatsApp"
- >
- <MessageSquare className="w-3.5 h-3.5 fill-white/20" />
- <span>Compartir Repertorio</span>
- </button>
-
- <button
- onClick={() => setAssigningSetlist(activeSetlist)}
- className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- isStitchLight 
- ? 'bg-[#10b981]/15 text-[#10b981] hover:bg-[#10b981]/15'
- : 'bg-[#10b981]/15 text-[#10b981] hover:bg-[#10b981]/15'
- }`}
- title="Asignar a un concierto del calendario"
- >
- <CheckCircle2 className="w-3.5 h-3.5" />
- <span>Asignar a Bolo/Ensayo</span>
- </button>
-
- <button
- onClick={() => setShowPdfPreview(true)}
- className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- isStitchLight 
- ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
- : 'bg-neutral-900 text-[#d1b375]'
- }`}
- title="Exportar hoja de escenario"
- >
- <Printer className="w-3.5 h-3.5" />
- <span>Imprimir / PDF</span>
- </button>
-  </div>
   </div>
 
   {/* LIVE METRICS & ENERGY MAP BAR */}
   {(() => {
     return (
-      <div className="space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-lg bg-white/10 text-white font-bold flex items-center gap-1.5">
-              🎵 <strong>{activeSetlistMetrics.songCount}</strong> temas
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-[#d1b375] font-bold flex items-center gap-1.5 border border-amber-500/20">
-              ⏱️ <strong>{activeSetlistMetrics.formattedTime}</strong>
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-[#10b981] font-bold flex items-center gap-1.5 border border-emerald-500/20">
-              ⚡ <strong>{activeSetlistMetrics.avgBpm} BPM avg</strong>
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold flex items-center gap-1.5 border border-sky-500/20">
-              💬 <strong>{activeSetlistMetrics.eventCount}</strong> interludios
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold flex items-center gap-1.5 border border-yellow-500/20">
-              ⚡ <strong>{activeSetlistMetrics.blockCount}</strong> bloques
-            </span>
-          </div>
+      // flex + order en vez de un stack fijo: el Mapa de Energía (order-1) va SIEMPRE por delante
+      // de las métricas (order-2/3) — es a lo que se viene a esta pantalla, y antes quedaba
+      // empujado fuera del primer pantallazo en móvil. Ver AGENTS.md §6.
+      <div className="flex flex-col gap-2">
+        <div className="order-2 flex items-center justify-between gap-2 px-2 py-1.5 rounded-xl bg-black/40 text-[10px] font-mono">
+          {/* Resumen en una línea con las 3 métricas que de verdad se miran; interludios,
+              bloques y perfil de dinámica se pliegan detrás del toggle — antes eran 5 pills
+              + badge que en móvil ocupaban 5-6 líneas por encima del gráfico. */}
+          <button
+            type="button"
+            onClick={() => setShowSetlistStats((v) => !v)}
+            className="flex items-center gap-1.5 min-w-0 truncate hover:opacity-80 transition cursor-pointer"
+            title={showSetlistStats ? 'Ocultar métricas secundarias' : 'Ver interludios, bloques y perfil de dinámica'}
+          >
+            <span className="font-bold text-white">🎵 {activeSetlistMetrics.songCount}</span>
+            <span className="text-neutral-600">·</span>
+            <span className="font-bold text-[#d1b375]">⏱️ {activeSetlistMetrics.formattedTime}</span>
+            <span className="text-neutral-600">·</span>
+            <span className="font-bold text-[#10b981]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
+            <span className="text-neutral-500 ml-0.5">{showSetlistStats ? '▲' : '▼'}</span>
+          </button>
 
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-lg bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold flex items-center gap-1.5">
-              <span>{energyAnalysis.profileIcon}</span>
-              <span>{energyAnalysis.profileLabel}</span>
-            </span>
-            <div className="relative">
+          <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setShowAssistantChooser((v) => !v)}
-                className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
+                className="px-2 py-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer font-bold flex items-center gap-1.5"
                 title="Asistente IA del repertorio"
               >
-                🧠 Asistente IA
+                🧠 <span className="hidden sm:inline">Asistente IA</span>
               </button>
               {showAssistantChooser && (
                 <>
@@ -2461,19 +2486,39 @@ export default function RepertorioSetlists({
                   </div>
                 </>
               )}
-            </div>
           </div>
         </div>
 
-        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
+        {/* Métricas secundarias, solo si se piden */}
+        {showSetlistStats && (
+          <div className="order-3 flex flex-wrap items-center gap-1.5 px-1 text-[10px] font-mono">
+            <span className="px-2 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">
+              💬 {activeSetlistMetrics.eventCount} interludios
+            </span>
+            <span className="px-2 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold border border-yellow-500/20">
+              ⚡ {activeSetlistMetrics.blockCount} bloques
+            </span>
+            {/* profileLabel ya incluye su propio icono — antes se pintaba además profileIcon
+                al lado, duplicando el emoji ("⚡ ⚡ Dinámica Equilibrada"). */}
+            <span className="px-2 py-0.5 rounded-lg bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">
+              {energyAnalysis.profileLabel}
+            </span>
+          </div>
+        )}
+
+        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW — order-1: es el contenido principal de la pantalla */}
         {energyAnalysis.points.length > 0 && (
-          <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
-            <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
-              <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                <span>📈 Mapa de Dinámica y Energía del Show</span>
-                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto, o selecciónalo y usa las flechas, para reordenar el setlist)</span>
+          <div className="order-1 p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
+            <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-neutral-400">
+              {/* Título corto y la ayuda en el tooltip: el hint largo entre paréntesis ocupaba
+                  4 líneas en móvil justo encima del gráfico (AGENTS.md §6). */}
+              <span
+                className="font-bold uppercase tracking-wider text-white truncate"
+                title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
+              >
+                📈 Mapa de Energía
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 {canUndoReorder && (
                   <button
                     type="button"
@@ -2542,39 +2587,109 @@ export default function RepertorioSetlists({
                   selectedSetlistItemId={selectedSetlistItemId}
                   onSelectItem={setSelectedSetlistItemId}
                   onReorder={reorderSetlistItems}
+                  onEnergyChange={handleEnergyChartDrag}
                   height={256}
                   showIdealCurve={showIdealCurve}
                 />
 
-                {/* Mover el punto seleccionado un paso atrás/adelante con flechas — alternativa al
-                    arrastre para cuando se quiere precisión (un puesto exacto) o simplemente en
-                    móvil, donde apuntar con el dedo a "justo un puesto más allá" es más difícil. */}
+                {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
+                    baja su energía un punto exacto — alternativa al arrastre del gráfico para
+                    cuando se quiere precisión, o directamente para móvil, donde el arrastre (sobre
+                    todo en vertical, encima de un SVG de recharts) no siempre responde igual de
+                    bien que en escritorio. */}
                 {selectedSetlistItemId && (() => {
                   const selectedIndex = chartData.findIndex((d) => d.id === selectedSetlistItemId);
                   if (selectedIndex === -1) return null;
+                  const point = chartData[selectedIndex];
+                  const canEditEnergy = point.songId != null && typeof point.score === 'number';
+                  const info = canEditEnergy ? getEnergyInfo(point.score as number) : null;
+                  const bumpEnergy = (delta: number) => {
+                    if (!canEditEnergy || typeof point.score !== 'number') return;
+                    const next = Math.max(1, Math.min(20, point.score + delta));
+                    if (next !== point.score) handleEnergyChartDrag(point, next);
+                  };
+                  const dirBtnClass = "w-8 h-8 rounded-full flex items-center justify-center transition disabled:opacity-25 disabled:cursor-not-allowed shrink-0";
+                  const reorderBtnClass = `${dirBtnClass} bg-neutral-800/80 hover:bg-neutral-700 text-amber-300/90 border border-amber-500/30 hover:border-amber-400/60`;
+                  const energyBtnStyle = info
+                    ? { color: info.hexColor, borderColor: `${info.hexColor}55`, background: 'rgba(23,23,23,0.8)' }
+                    : undefined;
+                  const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
+                  const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
                   return (
-                    <div className="flex items-center justify-center gap-2 pt-1">
-                      <button
-                        type="button"
-                        disabled={selectedIndex <= 0}
-                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
-                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
-                        title="Mover una posición hacia atrás"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      <span className="text-[10px] font-mono text-neutral-400 max-w-[50%] truncate">
-                        🎯 {chartData[selectedIndex].name}
-                      </span>
-                      <button
-                        type="button"
-                        disabled={selectedIndex >= chartData.length - 1}
-                        onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
-                        className="p-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 disabled:cursor-not-allowed text-neutral-200 transition"
-                        title="Mover una posición hacia adelante"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                    <div className="w-full flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
+                      {canEditEnergy && (
+                        <button
+                          type="button"
+                          disabled={(point.score as number) >= 20}
+                          onClick={() => bumpEnergy(1)}
+                          className={`${dirBtnClass} border hover:brightness-125`}
+                          style={energyBtnStyle}
+                          title="Subir energía"
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </button>
+                      )}
+                      <div className="w-full flex items-center justify-center gap-2">
+                        {/* Nombre del tema anterior/siguiente junto a la flecha que lleva hasta él —
+                            así se sabe con qué canción se va a intercambiar posición antes de
+                            pulsar, sin tener que mirar el gráfico para ubicarla. */}
+                        <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-right leading-tight">
+                          {prevName || ''}
+                        </span>
+                        <button
+                          type="button"
+                          disabled={selectedIndex <= 0}
+                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex - 1, 'stepper')}
+                          className={reorderBtnClass}
+                          title={prevName ? `Mover antes de "${prevName}"` : 'Mover una posición hacia atrás'}
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        {/* Hub central: solo el score de energía (sin el nombre del tema, ya se ve
+                            resaltado en el propio gráfico), con un aro y un glow del color de su
+                            categoría para que el joystick tenga vida propia en vez de ser cuatro
+                            flechas sueltas. */}
+                        <div
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-mono font-bold shrink-0"
+                          style={info ? {
+                            background: `radial-gradient(circle at 35% 30%, ${info.hexColor}40, #0a0a0a 75%)`,
+                            border: `1.5px solid ${info.hexColor}`,
+                            boxShadow: `0 0 9px ${info.hexColor}80, inset 0 0 4px ${info.hexColor}30`,
+                            color: info.hexColor
+                          } : {
+                            background: '#171717',
+                            border: '1.5px solid #3f3f46',
+                            color: '#71717a'
+                          }}
+                          title={info ? `${info.label} · ${point.score}/20` : point.name}
+                        >
+                          {info ? point.score : '•'}
+                        </div>
+                        <button
+                          type="button"
+                          disabled={selectedIndex >= chartData.length - 1}
+                          onClick={() => reorderSetlistItems(selectedIndex, selectedIndex + 1, 'stepper')}
+                          className={reorderBtnClass}
+                          title={nextName ? `Mover después de "${nextName}"` : 'Mover una posición hacia adelante'}
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                        <span className="w-20 sm:w-28 line-clamp-3 text-[9px] text-neutral-500 font-mono text-left leading-tight">
+                          {nextName || ''}
+                        </span>
+                      </div>
+                      {canEditEnergy && (
+                        <button
+                          type="button"
+                          disabled={(point.score as number) <= 1}
+                          onClick={() => bumpEnergy(-1)}
+                          className={`${dirBtnClass} border hover:brightness-125`}
+                          style={energyBtnStyle}
+                          title="Bajar energía"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   );
                 })()}
@@ -2917,12 +3032,21 @@ export default function RepertorioSetlists({
   <div
   key={it.id}
   draggable={true}
-  onDragStart={() => setDraggedItemIndex(index)}
+  onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
   onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
   onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
   onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
   onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
-  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
+  onClick={() => {
+  // Seleccionar la canción (para el joystick del gráfico, o para insertar justo debajo) ya
+  // expande sus detalles de paso — antes hacían falta dos taps distintos (seleccionar + chevron)
+  // para ver la afinación/disco/cantante del tema que se acaba de elegir. El chevron sigue
+  // sirviendo para expandir sin seleccionar. AGENTS.md §6.
+  if (!isSelected && !isExpanded) {
+  setExpandedSetlistItemIds(new Set(expandedSetlistItemIds).add(it.id));
+  }
+  setSelectedSetlistItemId(isSelected ? null : it.id);
+  }}
   className={`border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
@@ -3029,6 +3153,17 @@ export default function RepertorioSetlists({
     {/* Spacer */}
     <div className="flex-1"></div>
 
+    {/* Notas de miembros / acordes ya no van en la fila compacta — se han movido al panel
+        expandible (ver más abajo): son consultas ocasionales, no algo que se mira en cada fila
+        de cada setlist. Reordenar arriba/abajo se ha quitado por completo: ya lo cubren el drag
+        handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
+        AGENTS.md §6. */}
+    {memberNotesCount > 0 && (
+      <span className="text-amber-300 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
+        <Users className="w-3 h-3" />
+      </span>
+    )}
+
     {/* Expand button for details */}
     <button
       type="button"
@@ -3037,50 +3172,9 @@ export default function RepertorioSetlists({
         toggleExpand();
       }}
       className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
-      title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco y cantante"}
+      title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco, cantante, acordes y notas de miembros"}
     >
       {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-    </button>
-
-    {/* CONTROLS */}
-    <button
-      type="button"
-      onClick={() => setActiveMemberNotesSong(song)}
-      className={`p-0.5 shrink-0 transition-colors ${
-        memberNotesCount > 0
-          ? 'text-amber-300 hover:text-amber-400'
-          : 'text-neutral-400 hover:text-amber-300'
-      }`}
-      title="Notas de miembros"
-    >
-      <Users className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      type="button"
-      onClick={() => setActiveChordsSong(song)}
-      className="p-0.5 text-neutral-400 hover:text-indigo-400 transition-colors shrink-0"
-      title="Ver acordes"
-    >
-      <FileText className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      onClick={() => handleMoveSetlistItem(index, 'up')}
-      disabled={index === 0}
-      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-      title="Mover arriba"
-    >
-      <ArrowUp className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      onClick={() => handleMoveSetlistItem(index, 'down')}
-      disabled={index === activeSetlist.items.length - 1}
-      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-      title="Mover abajo"
-    >
-      <ArrowDown className="w-3.5 h-3.5" />
     </button>
 
     <button
@@ -3152,6 +3246,28 @@ export default function RepertorioSetlists({
             : 'bg-black/40 text-neutral-300 placeholder:text-neutral-600 border border-neutral-800'
         }`}
       />
+
+      {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
+          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo
+          que sí se mira en cada vistazo a la lista (AGENTS.md §6). */}
+      <div className="flex items-center gap-2 pt-1">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
+          className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors ${
+            memberNotesCount > 0 ? 'text-amber-300 hover:text-amber-400' : 'text-neutral-400 hover:text-amber-300'
+          }`}
+        >
+          <Users className="w-3 h-3" /> Notas de miembros{memberNotesCount > 0 ? ` (${memberNotesCount})` : ''}
+        </button>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setActiveChordsSong(song); }}
+          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-neutral-400 hover:text-indigo-400 transition-colors"
+        >
+          <FileText className="w-3 h-3" /> Acordes
+        </button>
+      </div>
     </div>
   )}
  </div>
@@ -3161,7 +3277,7 @@ export default function RepertorioSetlists({
  <div
  key={it.id}
  draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
+ onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
@@ -3218,22 +3334,6 @@ export default function RepertorioSetlists({
      <Edit3 className="w-3.5 h-3.5" />
    </button>
    <button
-     onClick={() => handleMoveSetlistItem(index, 'up')}
-     disabled={index === 0}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover arriba"
-   >
-     <ArrowUp className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'down')}
-     disabled={index === activeSetlist.items.length - 1}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover abajo"
-   >
-     <ArrowDown className="w-3.5 h-3.5" />
-   </button>
-   <button
      onClick={() => handleRemoveSetlistItem(it.id)}
      className="p-0.5 text-neutral-400 hover:text-rose-400 transition-colors shrink-0"
      title="Eliminar Bloque"
@@ -3251,7 +3351,7 @@ export default function RepertorioSetlists({
  <div
  key={it.id}
  draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
+ onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
@@ -3317,22 +3417,6 @@ export default function RepertorioSetlists({
      title="Editar detalles"
    >
      <Edit3 className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'up')}
-     disabled={index === 0}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover arriba"
-   >
-     <ArrowUp className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'down')}
-     disabled={index === activeSetlist.items.length - 1}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover abajo"
-   >
-     <ArrowDown className="w-3.5 h-3.5" />
    </button>
    <button
      onClick={() => handleRemoveSetlistItem(it.id)}
@@ -4327,6 +4411,7 @@ export default function RepertorioSetlists({
     zonasEnergia={ZONAS_ENERGIA}
     warnings={energyAnalysis.warnings}
     onReorder={reorderSetlistItems}
+    onEnergyChange={handleEnergyChartDrag}
     canUndo={canUndoReorder}
     onUndo={undoLastReorder}
     undoSourceKey={undoSourceKey}
@@ -4349,6 +4434,7 @@ export default function RepertorioSetlists({
     yDomain={yDomain}
     zonasEnergia={ZONAS_ENERGIA}
     onReorder={reorderSetlistItems}
+    onEnergyChange={handleEnergyChartDrag}
   />
 
   {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}

@@ -35,7 +35,7 @@ describe('energyPacingUtils', () => {
 
     const result = analyzeSetlistEnergy(items, songs);
 
-    expect(result.warnings.some(w => w.message.includes('valle de energía'))).toBe(true);
+    expect(result.warnings.some(w => w.message.includes('Valle detectado'))).toBe(true);
     expect(result.lowEnergyCount).toBe(3);
     expect(result.explosiveCount).toBe(1);
   });
@@ -58,7 +58,7 @@ describe('energyPacingUtils', () => {
     const result = analyzeSetlistEnergy(items, songs);
 
     expect(result.profileType).toBe('in_crescendo');
-    expect(result.warnings.some(w => w.message.includes('remata'))).toBe(true);
+    expect(result.warnings.some(w => w.message.includes('Cierre potente'))).toBe(true);
   });
 
   describe('calcularCurvaEnergiaIdeal', () => {

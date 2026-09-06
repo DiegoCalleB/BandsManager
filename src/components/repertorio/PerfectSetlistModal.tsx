@@ -66,6 +66,8 @@ interface PerfectSetlistModalProps {
   /** Arrastrar un punto del mini-gráfico reordena el setlist directamente, igual que en el gráfico
    * grande — independiente de aplicar acciones del plan una a una. */
   onReorder?: (fromIndex: number, toIndex: number, sourceKey?: string) => void;
+  /** Arrastrar un punto en vertical cambia su energía (1-20) directamente desde este mini-gráfico. */
+  onEnergyChange?: (point: EnergyChartPoint, newScore: number) => void;
 }
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
@@ -135,7 +137,7 @@ function describeAction(a: PerfectSetlistAction): { icon: string; label: string 
   }
 }
 
-export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null, chartData, yDomain, zonasEnergia, onReorder }: PerfectSetlistModalProps) {
+export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, plan, error, onGenerate, onApplyAction, canUndo = false, onUndo, undoSourceKey = null, chartData, yDomain, zonasEnergia, onReorder, onEnergyChange }: PerfectSetlistModalProps) {
   // Copia local de las acciones del plan que SÍ se reajusta tras cada "Aplicar" — el plan en sí
   // (prop) se queda fijo con las posiciones de cuando se generó, pero aplicar una acción cambia el
   // array real del setlist, y las demás acciones pendientes seguían apuntando a la posición VIEJA.
@@ -269,6 +271,7 @@ export function PerfectSetlistModal({ isOpen, onClose, setlistName, loading, pla
                 height={190}
                 compact
                 onReorder={onReorder}
+                onEnergyChange={onEnergyChange}
               />
             </div>
           )}

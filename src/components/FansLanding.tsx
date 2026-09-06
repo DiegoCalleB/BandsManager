@@ -293,6 +293,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
   useEffect(() => {
     if (isPreview && previewConfig) {
+      // Sin esto, resolvedBandId se quedaba en el valor inicial 'band-bakandeya' durante toda
+      // la previsualización (el resto de estado sí se pisa con los datos de la banda real más
+      // abajo) — y el enlace al Dossier/EPK, que se construye a partir de resolvedBandId, llevaba
+      // a cualquier banda que abriera "Previsualizar Formulario" al EPK público de Bakandeya.
+      if (initialBandId) setResolvedBandId(initialBandId);
       if (initialBandName) setBandName(initialBandName);
       if (initialBandLogo || previewConfig.logoUrl) {
         setLogoUrl(initialBandLogo || previewConfig.logoUrl || null);
