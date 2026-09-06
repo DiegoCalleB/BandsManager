@@ -427,6 +427,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [isExportingDirect, setIsExportingDirect] = useState(false);
   const [showQrMoreMenu, setShowQrMoreMenu] = useState(false);
   const [showAdvancedQrConfig, setShowAdvancedQrConfig] = useState(false);
+  const [showFansHeaderMenu, setShowFansHeaderMenu] = useState(false);
 
   const handleDownloadSvg = async () => {
     setIsExportingDirect(true);
@@ -479,43 +480,63 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <div>
-          <h2 className="text-2xl font-black text-white font-display flex items-center gap-3">
-            <QrCode className="w-8 h-8 text-amber-500" />
-            Captura QR & Fans
+      <div className="flex items-center justify-between gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6">
+        <div className="min-w-0">
+          <h2
+            className="text-lg sm:text-2xl font-black text-white font-display flex items-center gap-2 sm:gap-3"
+            title="Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento."
+          >
+            <QrCode className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 shrink-0" />
+            <span className="truncate">Captura QR & Fans</span>
           </h2>
-          <p className="text-slate-400 font-mono text-sm mt-1">
+          <p className="hidden sm:block text-slate-400 font-mono text-sm mt-1">
             Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <button 
+        <div className="relative shrink-0">
+          <button
             type="button"
-            onClick={() => setShowFansPreviewModal(true)}
-            className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 text-amber-300 text-xs font-bold font-mono rounded-xl border border-amber-500/40 flex items-center gap-2 transition cursor-pointer shadow-sm"
-            title="Simular y ver el formulario público Únete dentro de la aplicación"
+            onClick={() => setShowFansHeaderMenu(v => !v)}
+            title="Previsualizar formulario, copiar enlace, registrar fan manual o exportar CSV"
+            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
           >
-            <Eye className="w-4 h-4 text-amber-400" /> Previsualizar Formulario
+            <MoreHorizontal className="w-4 h-4" />
           </button>
-          <button 
-            onClick={copyLink}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold font-mono rounded-xl border border-slate-700 flex items-center gap-2 transition cursor-pointer"
-          >
-            <Copy className="w-4 h-4" /> Enlace de Captura Corto
-          </button>
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-bold font-mono rounded-xl border border-slate-700 flex items-center gap-2 transition cursor-pointer"
-          >
-            <Plus className="w-4 h-4" /> Registrar Fan Manual
-          </button>
-          <button 
-            onClick={handleExportCSV}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs font-bold font-mono rounded-xl shadow-lg transition flex items-center gap-2 cursor-pointer"
-          >
-            <Download className="w-4 h-4" /> Exportar CSV
-          </button>
+          {showFansHeaderMenu && (
+            <>
+              <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
+              <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-xs font-mono">
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); setShowFansPreviewModal(true); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
+                >
+                  <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); copyLink(); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                >
+                  <Copy className="w-3.5 h-3.5 shrink-0" /> Enlace de Captura Corto
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); setShowAddModal(true); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                >
+                  <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan Manual
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowFansHeaderMenu(false); handleExportCSV(); }}
+                  className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
+                >
+                  <Download className="w-3.5 h-3.5 shrink-0" /> Exportar CSV
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
