@@ -10,6 +10,10 @@ export interface EnergyChartPoint {
   /** id de la canción real detrás de este punto — solo presente en canciones (no en eventos de
    * "speech"/bis). Necesario para saber qué punto se puede editar arrastrando en vertical. */
   songId?: string;
+  /** true si esta canción tiene la energía fijada a mano (energia_manual) — el recalibrado
+   * automático desde audio ya no la toca. Se marca visualmente en el punto para que se note, en
+   * el propio gráfico, cuáles seguirán moviéndose solas en el próximo análisis y cuáles no. */
+  energiaManual?: boolean;
   /** null en los eventos de "speech" (chapa, presentación, interludio...) — no tienen una energía
    * real que valga la pena dibujar en la curva, y contarlos como un bajón sería un falso positivo.
    * Con `connectNulls` en el Area/Line, la curva pasa por encima de ellos sin dibujar un valle. */
@@ -443,6 +447,16 @@ export function EnergyChart({
                           〰️ Ideal aquí: ~{d.idealScore}/20
                         </p>
                       )}
+                      {d.energiaManual && (
+                        <p className="text-amber-300 mt-0.5">
+                          ✋ Fijada a mano — no se recalibra sola
+                        </p>
+                      )}
+                      {onEnergyChange && (
+                        <p className="text-neutral-500 mt-0.5">
+                          ↔️ Cambiar aquí afecta a todas las listas con este tema
+                        </p>
+                      )}
                     </>
                   )}
                 </div>
@@ -547,6 +561,21 @@ export function EnergyChart({
                     }}
                     onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
                   />
+                  {/* Anillo discontinuo: energía fijada a mano (energia_manual) — para que se note,
+                      en el propio gráfico, qué puntos NO se van a recalibrar solos en el próximo
+                      análisis de audio de otra canción del repertorio (ver dbResetSongEnergiaManual). */}
+                  {payload.energiaManual && (
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={(isDraggingThis || isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault) + 3}
+                      fill="none"
+                      stroke="#f2ca50"
+                      strokeWidth={1.25}
+                      strokeDasharray="2 2"
+                      pointerEvents="none"
+                    />
+                  )}
                 </React.Fragment>
               );
             }}
