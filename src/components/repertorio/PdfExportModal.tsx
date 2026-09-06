@@ -1097,8 +1097,16 @@ export function PdfExportModal({
       // cabecera, no una miniatura reescalada) si hay uno subido y activo; si no, el nombre del
       // grupo como texto de respaldo. Si la imagen falla en cargar (404, CORS, etc.), el onerror
       // reemplaza todo el contenedor con el nombre como fallback.
+      // Importante: HTML no entiende \" como escape (eso es solo JS) — dentro de un atributo
+      // delimitado por comillas dobles, un \" corta el atributo en esa comilla real y deja el
+      // resto del código como texto suelto visible en la página (bug real: al fallar la carga
+      // del logo, aparecía literalmente `'" />` como texto en la hoja). Las comillas dobles del
+      // HTML embebido en el onerror deben ir como entidad &quot;, y cualquier apóstrofe del
+      // nombre del grupo debe escaparse para no romper el string JS (delimitado por comillas
+      // simples) del propio onerror.
+      const safeBandNameForOnerror = bandName.toUpperCase().replace(/'/g, '&#39;');
       const watermarkInnerHtml = (showBandLogo && absoluteLogoUrl)
-        ? `<img src="${absoluteLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=\\\"page-watermark-text\\\">${bandName.toUpperCase()}</div>'" />`
+        ? `<img src="${absoluteLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=&quot;page-watermark-text&quot;>${safeBandNameForOnerror}</div>'" />`
         : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
 
       let globalPageIdx = 0;
