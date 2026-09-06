@@ -13,11 +13,13 @@ import { computeAutoFitPlan, tryFitInPageCount, MeasureRangeFn } from '../../uti
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
-// Ancho de la hoja A4 disponible para contenido: 210mm - 2x10mm de margen del @page - el padding
-// de 4px de .sheet-page a cada lado (ver handlePrint). Se usa tanto en el HTML de impresión real
-// como en la vista previa en directo para decidir, fila a fila, si la nota cabe al lado del
-// título o si esa fila concreta necesita caer a una línea propia debajo (ver textFit.ts).
-const PAGE_CONTENT_WIDTH_PX = mmToPx(190) - 8;
+// Ancho de la hoja A4 disponible para contenido: 210mm - 2x8mm de margen del @page (recortado al
+// mínimo razonable para "Guardar como PDF" — no hay limitación física de impresora de por medio,
+// así que cada mm de margen que se quita es un mm real ganado) - el padding de 4px de .sheet-page
+// a cada lado (ver handlePrint). Se usa tanto en el HTML de impresión real como en la vista previa
+// en directo para decidir, fila a fila, si la nota cabe al lado del título o si esa fila concreta
+// necesita caer a una línea propia debajo (ver textFit.ts).
+const PAGE_CONTENT_WIDTH_PX = mmToPx(194) - 8;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
@@ -490,7 +492,10 @@ export function PdfExportModal({
       const printCss = `
             @page {
               size: A4 portrait;
-              margin: 8mm 10mm;
+              /* Recortado al mínimo razonable: esto se "Guarda como PDF", no hay tolerancia física
+                 de impresora que respetar, así que cada mm de margen es un mm real que se le quita
+                 al repertorio sin tocar ni un punto de la tipografía. */
+              margin: 6mm 8mm;
             }
             * {
               box-sizing: border-box;
@@ -507,7 +512,7 @@ export function PdfExportModal({
             .sheet-page {
               position: relative;
               width: 100%;
-              min-height: 278mm;
+              min-height: 283mm;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
@@ -550,18 +555,18 @@ export function PdfExportModal({
               display: flex;
               justify-content: space-between;
               align-items: center;
-              border-bottom: 2px solid #000;
-              padding-bottom: 3px;
-              margin-bottom: 4px;
+              border-bottom: 1.5px solid #000;
+              padding-bottom: 2px;
+              margin-bottom: 2px;
             }
             .header-left {
               display: flex;
               align-items: center;
-              gap: 10px;
+              gap: 8px;
             }
             .band-logo-img {
-              max-height: 38px;
-              max-width: 100px;
+              max-height: 30px;
+              max-width: 85px;
               object-fit: contain;
               filter: grayscale(100%) contrast(150%);
             }
@@ -571,7 +576,7 @@ export function PdfExportModal({
             }
             .band-heading {
               font-family: 'Anton', 'Oswald', sans-serif;
-              font-size: 19pt;
+              font-size: 16pt;
               line-height: 1;
               margin: 0;
               letter-spacing: 0.5px;
@@ -581,10 +586,10 @@ export function PdfExportModal({
                temas, que era ruido que no aportaba nada al músico leyendo desde el escenario. */
             .setlist-meta {
               font-family: 'Oswald', sans-serif;
-              font-size: 9pt;
+              font-size: 7.5pt;
               font-weight: 700;
               color: #333;
-              margin-top: 1px;
+              margin-top: 0px;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -595,30 +600,30 @@ export function PdfExportModal({
               text-align: right;
             }
             .member-stage-tag {
-              border: 2px solid #000;
-              padding: 2px 7px;
+              border: 1.5px solid #000;
+              padding: 1px 6px;
               background: #fff;
-              border-radius: 4px;
+              border-radius: 3px;
               text-align: right;
               white-space: nowrap;
             }
             .tag-title {
               font-family: 'Oswald', sans-serif;
-              font-size: 6.5pt;
+              font-size: 6pt;
               font-weight: 700;
               color: #555;
               letter-spacing: 1px;
             }
             .tag-name {
               font-family: 'Anton', 'Oswald', sans-serif;
-              font-size: 13pt;
+              font-size: 11pt;
               line-height: 1.1;
               color: #000;
               margin-top: 0;
             }
             .tag-instrument {
               font-family: monospace;
-              font-size: 8pt;
+              font-size: 7pt;
               font-weight: 800;
               color: #333;
             }
@@ -799,7 +804,7 @@ export function PdfExportModal({
               display: flex;
               align-items: center;
               gap: 8px;
-              margin: 3px 0;
+              margin: 2px 0;
               break-inside: avoid;
               page-break-inside: avoid;
             }
@@ -810,7 +815,7 @@ export function PdfExportModal({
             }
             .block-title {
               font-family: 'Oswald', sans-serif;
-              font-size: 10pt;
+              font-size: 9pt;
               font-weight: 800;
               letter-spacing: 1px;
               color: #000;
@@ -818,7 +823,7 @@ export function PdfExportModal({
             }
             .bis-text {
               font-family: 'Oswald', sans-serif;
-              font-size: 10pt;
+              font-size: 9pt;
               font-weight: 800;
               letter-spacing: 1px;
               color: #000;
@@ -827,10 +832,10 @@ export function PdfExportModal({
 
             .interlude-item {
               font-family: 'Oswald', monospace, sans-serif;
-              font-size: 11pt;
+              font-size: 10pt;
               font-weight: 700;
               color: #222;
-              padding: 2px 0 2px ${showSongNumbers ? '40px' : '6px'};
+              padding: 1px 0 1px ${showSongNumbers ? '40px' : '6px'};
               letter-spacing: 0.5px;
               break-inside: avoid;
               page-break-inside: avoid;
@@ -857,10 +862,10 @@ export function PdfExportModal({
               justify-content: space-between;
               align-items: center;
               border-top: 1px solid #000;
-              padding-top: 2px;
-              margin-top: 3px;
+              padding-top: 1px;
+              margin-top: 2px;
               font-family: monospace;
-              font-size: 7.5pt;
+              font-size: 6.5pt;
               color: #444;
             }
             .footer-left {
@@ -996,9 +1001,10 @@ export function PdfExportModal({
         return el ? el.getBoundingClientRect().height : 0;
       };
 
-      // .sheet-page min-height (278mm) menos su padding (4px arriba + 4px abajo): alto total
+      // .sheet-page min-height (283mm, con @page a 6mm de margen vertical: 297-12=285mm reales,
+      // 2mm de colchón de seguridad) menos su padding (4px arriba + 4px abajo): alto total
       // disponible en la hoja, antes de descontar el header/footer real de cada miembro.
-      const PAGE_TOTAL_HEIGHT_PX = mmToPx(278) - 8;
+      const PAGE_TOTAL_HEIGHT_PX = mmToPx(283) - 8;
 
       const memberPlans = membersToExport.map(member => {
         const isMaster = member.id === 'master';
