@@ -1,12 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  Music, 
-  Sparkles, 
-  QrCode, 
-  Send, 
-  FileText, 
-  Calendar, 
-  CheckCircle2, 
+import {
+  Music,
+  Sparkles,
+  QrCode,
+  FileText,
+  Calendar,
+  CheckCircle2,
   ArrowLeft, 
   Check, 
   Loader2, 
@@ -262,7 +261,7 @@ export const PublicMusiciansLanding: React.FC = () => {
         </section>
 
         {/* FEATURE CARDS */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
               <QrCode className="w-5 h-5" />
@@ -277,7 +276,7 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Send className="w-5 h-5" />
+              <FileText className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature2Title}
@@ -289,25 +288,13 @@ export const PublicMusiciansLanding: React.FC = () => {
 
           <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <FileText className="w-5 h-5" />
+              <Calendar className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-white text-base font-mono">
               {t.feature3Title}
             </h3>
             <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
               {t.feature3Desc}
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-neutral-900/70 border border-neutral-800 hover:border-amber-500/30 transition-all space-y-2.5 shadow-lg">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-white text-base font-mono">
-              {t.feature4Title}
-            </h3>
-            <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
-              {t.feature4Desc}
             </p>
           </div>
         </section>
@@ -545,7 +532,6 @@ export const PublicMusiciansLanding: React.FC = () => {
                       >
                         <option value="">{t.optionSelectInterest}</option>
                         <option value="fans">{t.optionInterestFans}</option>
-                        <option value="booking">{t.optionInterestBooking}</option>
                         <option value="epk">{t.optionInterestEpk}</option>
                         <option value="repertorio">{t.optionInterestRepertoire}</option>
                         <option value="todo">{t.optionInterestAll}</option>

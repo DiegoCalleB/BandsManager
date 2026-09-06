@@ -15,8 +15,6 @@ export interface MusiciansLandingDict {
   feature2Desc: string;
   feature3Title: string;
   feature3Desc: string;
-  feature4Title: string;
-  feature4Desc: string;
 
   // Form
   formTitle: string;
@@ -40,7 +38,6 @@ export interface MusiciansLandingDict {
   labelMainInterest: string;
   optionSelectInterest: string;
   optionInterestFans: string;
-  optionInterestBooking: string;
   optionInterestEpk: string;
   optionInterestRepertoire: string;
   optionInterestAll: string;
@@ -72,18 +69,16 @@ const es: MusiciansLandingDict = {
   badge: 'Próximamente • Lista de Espera Exclusiva',
   heroTitle: 'Tú piensa en tu música.',
   heroHighlight: 'BandManager.ai se encarga de todo lo demás!',
-  heroSubtitle: 'Estamos terminando de construir la plataforma integral definitiva para músicos y bandas independientes: captación de fans en directo mediante QR, automatización de booking de salas con IA, dossier de prensa EPK interactivo y control de giras. Deja tu email e Instagram para recibir toda la información y acceso prioritario en cuanto esté disponible.',
+  heroSubtitle: 'Estamos terminando de construir la plataforma integral definitiva para músicos y bandas independientes: captación de fans en directo mediante QR, dossier de prensa EPK interactivo y gestión de repertorio y giras. Deja tu email e Instagram para recibir toda la información y acceso prioritario en cuanto esté disponible.',
   badgeFromBand: 'Has llegado desde el concierto de {bandName}',
   backToOrigin: 'Volver a la página de {bandName}',
 
   feature1Title: 'Captura de Fans en Conciertos con QR',
   feature1Desc: 'Página ultra-rápida para que tu público escanee el QR desde el escenario, se una a tu comunidad, escuche tus temas inéditos y reciba tus novedades.',
-  feature2Title: 'Automatización de Booking y Salas con IA',
-  feature2Desc: 'Pipeline CRM de salas con filtros por aforo, caché, seguimiento de propuestas, agentes de prospección y redactores de pitch personalizados.',
-  feature3Title: 'Dossier de Prensa Interactivo (EPK)',
-  feature3Desc: 'Presenta tu proyecto a programadores de salas y festivales con reproductor de temas, rider técnico descargable, fotos en alta resolución y bio multilingüe.',
-  feature4Title: 'Repertorio, Logística de Giras y Finanzas',
-  feature4Desc: 'Organiza tus setlists con acordes y tonalidades, calcula rutas y dietas de furgoneta, y lleva el control exhaustivo de ingresos, gastos y merchan.',
+  feature2Title: 'Dossier de Prensa Interactivo (EPK)',
+  feature2Desc: 'Presenta tu proyecto a programadores de salas y festivales con reproductor de temas, rider técnico descargable, fotos en alta resolución y bio multilingüe.',
+  feature3Title: 'Repertorio, Logística de Giras y Finanzas',
+  feature3Desc: 'Organiza tus setlists con acordes y tonalidades, calcula rutas y dietas de furgoneta, y lleva el control exhaustivo de ingresos, gastos y merchan.',
 
   formTitle: 'Apúntate a la Lista de Espera',
   formSubtitle: 'BandManager.ai estará disponible muy pronto. Déjanos tu email e Instagram para que te enviemos toda la información y seas de los primeros en probarlo.',
@@ -106,7 +101,6 @@ const es: MusiciansLandingDict = {
   labelMainInterest: '¿Qué es lo que más necesita tu banda ahora mismo? *',
   optionSelectInterest: 'Selecciona una opción...',
   optionInterestFans: 'Captar fans en directo y tener página con QR',
-  optionInterestBooking: 'Llenar conciertos y automatizar booking en salas',
   optionInterestEpk: 'Tener un EPK / Dossier profesional interactivo',
   optionInterestRepertoire: 'Gestionar repertorio, setlists y logística de gira',
   optionInterestAll: 'Todo el ecosistema completo de BandManager.ai',
@@ -135,18 +129,16 @@ const en: MusiciansLandingDict = {
   badge: 'Coming Soon • Exclusive Early Access Waitlist',
   heroTitle: 'You focus on the music.',
   heroHighlight: 'BandManager.ai takes care of everything else.',
-  heroSubtitle: 'We are putting the final touches on the ultimate all-in-one operating system for independent musicians and bands: live QR fan capture, AI tour booking, interactive EPK & gig management. Leave your email and Instagram to receive priority access and full info before public launch.',
+  heroSubtitle: 'We are putting the final touches on the ultimate all-in-one operating system for independent musicians and bands: live QR fan capture, interactive EPK press kit, and setlist repertoire & tour management. Leave your email and Instagram to receive priority access and full info before public launch.',
   badgeFromBand: 'You arrived from {bandName}\'s show page',
   backToOrigin: 'Back to {bandName}',
 
   feature1Title: 'Live Gig Fan Capture via QR Code',
   feature1Desc: 'Lightning-fast mobile page for fans to scan from stage, join your inner circle, stream unreleased tracks, and get concert news.',
-  feature2Title: 'AI-Powered Tour Booking & Venue CRM',
-  feature2Desc: 'Venue pipeline with capacity & fee filters, pitch generators, response tracking, and automated promoter discovery agents.',
-  feature3Title: 'Interactive Electronic Press Kit (EPK)',
-  feature3Desc: 'Showcase your band to festival bookers & press with high-res photo galleries, downloadable technical rider, streaming player & multilingual bios.',
-  feature4Title: 'Setlist Repertoire, Tour Logistics & Merch',
-  feature4Desc: 'Manage concert setlists with keys & tempo, calculate van routing & per-diems, and track live gig finances & merch stock.',
+  feature2Title: 'Interactive Electronic Press Kit (EPK)',
+  feature2Desc: 'Showcase your band to festival bookers & press with high-res photo galleries, downloadable technical rider, streaming player & multilingual bios.',
+  feature3Title: 'Setlist Repertoire, Tour Logistics & Merch',
+  feature3Desc: 'Manage concert setlists with keys & tempo, calculate van routing & per-diems, and track live gig finances & merch stock.',
 
   formTitle: 'Join the Early Access Waitlist',
   formSubtitle: 'BandManager.ai is launching very soon. Leave your email & Instagram so we can send you all the information and invite you first.',
@@ -169,7 +161,6 @@ const en: MusiciansLandingDict = {
   labelMainInterest: 'What is your band\'s biggest priority right now? *',
   optionSelectInterest: 'Select an option...',
   optionInterestFans: 'Live fan capture & QR landing page',
-  optionInterestBooking: 'Booking more gigs & automating venue outreach',
   optionInterestEpk: 'Professional interactive EPK dossier',
   optionInterestRepertoire: 'Managing setlists, chords & tour van logistics',
   optionInterestAll: 'The complete BandManager.ai ecosystem',
@@ -198,18 +189,16 @@ const it: MusiciansLandingDict = {
   badge: 'Prossimamente • Lista d\'Attesa Esclusiva',
   heroTitle: 'Tu pensa solo alla musica.',
   heroHighlight: 'BandManager.ai si occupa di tutto il resto.',
-  heroSubtitle: 'Stiamo ultimando la piattaforma definitiva per musicisti e band indipendenti: cattura fan ai concerti con codice QR, booking automatizzato con IA, dossier stampa EPK e gestione tour. Lascia la tua email e Instagram per ricevere tutte le informazioni e accesso prioritario.',
+  heroSubtitle: 'Stiamo ultimando la piattaforma definitiva per musicisti e band indipendenti: cattura fan ai concerti con codice QR, dossier stampa EPK interattivo e gestione di repertorio e tour. Lascia la tua email e Instagram per ricevere tutte le informazioni e accesso prioritario.',
   badgeFromBand: 'Arrivi dalla pagina di {bandName}',
   backToOrigin: 'Torna alla pagina di {bandName}',
 
   feature1Title: 'Cattura Fan ai Live tramite QR Code',
   feature1Desc: 'Pagina mobile ultra-rapida per far scansionare il QR dal palco, far iscrivere il pubblico alla tua community e regalare brani inediti.',
-  feature2Title: 'Booking e Locali Automatizzati con IA',
-  feature2Desc: 'Pipeline CRM di locali e festival, calcolo cachet, monitoraggio delle proposte e redattori intelligenti di pitch personalizzati.',
-  feature3Title: 'Dossier Stampa Interattivo (EPK)',
-  feature3Desc: 'Presenta la tua band a direttori artistici e giornalisti con player musicale, rider tecnico scaricabile e galleria foto HD.',
-  feature4Title: 'Repertorio, Scalette, Logistica e Finanze',
-  feature4Desc: 'Organizza le tue scalette con tonalità e accordi, calcola le spese del furgone da tour e gestisci il merchandising.',
+  feature2Title: 'Dossier Stampa Interattivo (EPK)',
+  feature2Desc: 'Presenta la tua band a direttori artistici e giornalisti con player musicale, rider tecnico scaricabile e galleria foto HD.',
+  feature3Title: 'Repertorio, Scalette, Logistica e Finanze',
+  feature3Desc: 'Organizza le tue scalette con tonalità e accordi, calcola le spese del furgone da tour e gestisci il merchandising.',
 
   formTitle: 'Iscriviti alla Lista d\'Attesa',
   formSubtitle: 'BandManager.ai sarà disponibile a breve. Lasciaci email e Instagram per ricevere tutte le informazioni e il pass di accesso anticipato.',
@@ -232,7 +221,6 @@ const it: MusiciansLandingDict = {
   labelMainInterest: 'Qual è la priorità principale per la tua band? *',
   optionSelectInterest: 'Seleziona un\'opzione...',
   optionInterestFans: 'Catturare fan dal vivo e avere una pagina con QR',
-  optionInterestBooking: 'Trovare più date e automatizzare il booking',
   optionInterestEpk: 'Avere un EPK professionale e interattivo',
   optionInterestRepertoire: 'Gestire scalette, accordi e logistica tour',
   optionInterestAll: 'L\'intero ecosistema completo di BandManager.ai',
@@ -261,18 +249,16 @@ const cs: MusiciansLandingDict = {
   badge: 'Již brzy • Exkluzivní přednostní přístup',
   heroTitle: 'Ty se věnuj hudbě.',
   heroHighlight: 'BandManager.ai se postará o všechno ostatní.',
-  heroSubtitle: 'Dokončujeme komplexní platformu pro nezávislé hudebníky a kapely: sběr fanoušků na koncertech přes QR kód, automatizovaný booking klubů s AI, interaktivní EPK presskit a management turné. Zanech nám svůj e-mail a Instagram pro přednostní přístup a veškeré informace.',
+  heroSubtitle: 'Dokončujeme komplexní platformu pro nezávislé hudebníky a kapely: sběr fanoušků na koncertech přes QR kód, interaktivní EPK presskit a správa repertoáru a turné. Zanech nám svůj e-mail a Instagram pro přednostní přístup a veškeré informace.',
   badgeFromBand: 'Přišel/přišla jsi ze stránky koncertu {bandName}',
   backToOrigin: 'Zpět na stránku {bandName}',
 
   feature1Title: 'Sběr fanoušků na koncertech přes QR kód',
   feature1Desc: 'Bleskurychlá stránka optimalizovaná pro mobily. Fanoušci naskenují QR z pódia, přidají se do tvé komunity a poslechnou si nevydané skladby.',
-  feature2Title: 'Automatizovaný booking a kluby s AI',
-  feature2Desc: 'CRM pipeline klubů a festivalů s filtry podle kapacity a honoráře, sledování odpovědí a AI generátor personalizovaných nabídek.',
-  feature3Title: 'Interaktivní tiskový presskit (EPK)',
-  feature3Desc: 'Prezentuj svou kapelu pořadatelům s hudebním přehrávačem, technickým riderem ke stažení a vícejazyčnou biografií.',
-  feature4Title: 'Repertoár, setlisty, logistika turné a finance',
-  feature4Desc: 'Měj přehled o setlistech s akordy, plánuj trasy dodávky na koncerty a měj pod kontrolou příjmy, výdaje i prodej merche.',
+  feature2Title: 'Interaktivní tiskový presskit (EPK)',
+  feature2Desc: 'Prezentuj svou kapelu pořadatelům s hudebním přehrávačem, technickým riderem ke stažení a vícejazyčnou biografií.',
+  feature3Title: 'Repertoár, setlisty, logistika turné a finance',
+  feature3Desc: 'Měj přehled o setlistech s akordy, plánuj trasy dodávky na koncerty a měj pod kontrolou příjmy, výdaje i prodej merche.',
 
   formTitle: 'Připoj se na čekací listinu',
   formSubtitle: 'BandManager.ai bude k dispozici již brzy. Zanech nám svůj e-mail a Instagram, abychom ti zaslali všechny informace a přednostní přístup.',
@@ -295,7 +281,6 @@ const cs: MusiciansLandingDict = {
   labelMainInterest: 'Co tvá kapela právě teď nejvíce potřebuje? *',
   optionSelectInterest: 'Vyber možnost...',
   optionInterestFans: 'Získávat fanoušky na koncertech a mít stránku s QR kódem',
-  optionInterestBooking: 'Získat více koncertů a automatizovat oslovování klubů',
   optionInterestEpk: 'Mít profesionální a interaktivní EPK presskit',
   optionInterestRepertoire: 'Spravovat setlisty, akordy a logistiku turné',
   optionInterestAll: 'Celý kompletní systém BandManager.ai',
