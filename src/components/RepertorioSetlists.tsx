@@ -91,6 +91,17 @@ export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: 
   otro: { label: 'Otro Evento del Show', icon: '📌', bg: 'bg-neutral-800', text: 'text-neutral-300', border: 'border-neutral-700' }
 };
 
+// GIF 1x1 transparente para anular la "foto" fantasma que el navegador dibuja por defecto al
+// arrastrar con drag-and-drop nativo (HTML5 draggable): sin `setDragImage`, cada fila reordenable
+// (canciones y bloques por igual) deja ver una captura translúcida de sí misma siguiendo al
+// cursor mientras se arrastra. Se crea una sola vez a nivel de módulo para que ya esté decodificada
+// cuando el usuario arrastre de verdad — el reordenamiento en sí no cambia, solo desaparece la foto.
+// window.Image (no el icono `Image` de lucide-react importado arriba, que shadowea el global).
+const TRANSPARENT_DRAG_IMAGE = typeof window !== 'undefined' ? new window.Image() : null;
+if (TRANSPARENT_DRAG_IMAGE) {
+  TRANSPARENT_DRAG_IMAGE.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7';
+}
+
 const DEFAULT_SONGS: Song[] = [
  {
  id: 'song-cm-1',
@@ -2277,7 +2288,17 @@ export default function RepertorioSetlists({
   return (
   <div
   key={st.id}
-  onClick={() => setActiveSetlistId(st.id)}
+  onClick={() => {
+  setActiveSetlistId(st.id);
+  // En escritorio el sidebar vive en su propia columna junto al editor (no tapa el gráfico), pero
+  // en pantallas estrechas comparten el mismo scroll vertical — sin este auto-colapso, elegir un
+  // setlist distinto dejaba la lista entera tapando el Mapa de Energía hasta que el usuario volvía
+  // a tocar la flecha. Mismo breakpoint `lg` que ya usa este grid (AGENTS.md §6: contenido
+  // principal primero). No se toca en escritorio para no perder la lista de un vistazo.
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
+  setIsSidebarCollapsed(true);
+  }
+  }}
   className={`p-2.5 rounded-xl transition-all cursor-pointer ${
   isSelected 
   ? isStitchLight 
@@ -3031,7 +3052,7 @@ export default function RepertorioSetlists({
   <div
   key={it.id}
   draggable={true}
-  onDragStart={() => setDraggedItemIndex(index)}
+  onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
   onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
   onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
   onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
@@ -3275,7 +3296,7 @@ export default function RepertorioSetlists({
  <div
  key={it.id}
  draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
+ onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
@@ -3365,7 +3386,7 @@ export default function RepertorioSetlists({
  <div
  key={it.id}
  draggable={true}
- onDragStart={() => setDraggedItemIndex(index)}
+ onDragStart={(e) => { if (TRANSPARENT_DRAG_IMAGE) e.dataTransfer.setDragImage(TRANSPARENT_DRAG_IMAGE, 0, 0); setDraggedItemIndex(index); }}
  onDragOver={(e) => { e.preventDefault(); setDragOverItemIndex(index); }}
  onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
  onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
