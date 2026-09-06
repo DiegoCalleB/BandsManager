@@ -143,16 +143,12 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
     });
 
   // Intenta modo inline con un ancho de título dado; null si no deja hueco útil o si obligaría
-  // a encoger la nota DEMASIADO por debajo del mínimo compartido. Se permite un pequeño margen
-  // (hasta 20% menos del mínimo) para mantener notas inline cuando hay badges que reducen espacio.
-  const EXTREME_SHRINK_TOLERANCE = 0.8; // 80% del mínimo es el piso antes de rechazar inline
+  // a encoger la nota por debajo del mínimo compartido.
   const tryInline = (titleWidthPx: number) => {
     const rightSpaceAvailable = input.rowWidthPx - fixedLeftWidthPx - titleWidthPx - ROW_GAP_PX;
     if (rightSpaceAvailable < MIN_USEFUL_RIGHT_LANE_PX) return null;
     const inlineFit = fitAt(rightSpaceAvailable);
-    // Permitir que notas se encogan hasta 20% por debajo del mínimo, manteniendo inline
-    const extremeThreshold = input.noteMinFontSizePx * EXTREME_SHRINK_TOLERANCE;
-    if (inlineFit.lines.some(l => l.fontSizePx < extremeThreshold)) return null;
+    if (inlineFit.lines.some(l => l.fontSizePx < input.noteMinFontSizePx)) return null;
     return { rightSpaceAvailable, inlineFit };
   };
 
