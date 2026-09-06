@@ -14,17 +14,21 @@ interface EscenarioViewProps {
   songs: Song[];
   setShowPdfPreview: (val: boolean) => void;
   stageAudioRef: React.RefObject<HTMLAudioElement | null>;
+  stageAudioRefB: React.RefObject<HTMLAudioElement | null>;
   stagePlayingIndex: number | null;
   setStagePlayingIndex: (idx: number | null) => void;
   stageIsPlaying: boolean;
   setStageIsPlaying: (playing: boolean) => void;
   stageCurrentTime: number;
-  setStageCurrentTime: (time: number) => void;
   stageItemDuration: number;
   stageResolvedUrl: string | null;
   stageAutoplayNext: boolean;
   setStageAutoplayNext: (val: boolean) => void;
+  stageCrossfadeEnabled: boolean;
+  setStageCrossfadeEnabled: (val: boolean) => void;
+  isCrossfading: boolean;
   handleStageAudioEnded: () => void;
+  handleStageTimeUpdate: (currentTimeSec: number) => void;
   handleStageSeek: (val: number) => void;
   handleStagePrev: () => void;
   handleStageNext: () => void;
@@ -44,17 +48,21 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   songs,
   setShowPdfPreview,
   stageAudioRef,
+  stageAudioRefB,
   stagePlayingIndex,
   setStagePlayingIndex,
   stageIsPlaying,
   setStageIsPlaying,
   stageCurrentTime,
-  setStageCurrentTime,
   stageItemDuration,
   stageResolvedUrl,
   stageAutoplayNext,
   setStageAutoplayNext,
+  stageCrossfadeEnabled,
+  setStageCrossfadeEnabled,
+  isCrossfading,
   handleStageAudioEnded,
+  handleStageTimeUpdate,
   handleStageSeek,
   handleStagePrev,
   handleStageNext,
@@ -66,8 +74,12 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   formatItemDuration
 }) => {
   const currentStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex] : null;
-  const currentStageSong = currentStageItem && currentStageItem.tipoItem === 'cancion' 
-    ? songs.find(s => s.id === currentStageItem.songId) 
+  const currentStageSong = currentStageItem && currentStageItem.tipoItem === 'cancion'
+    ? songs.find(s => s.id === currentStageItem.songId)
+    : null;
+  const nextStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex + 1] : null;
+  const nextStageSong = nextStageItem && nextStageItem.tipoItem === 'cancion'
+    ? songs.find(s => s.id === nextStageItem.songId)
     : null;
   const isCurrentSongFavorited = currentStageSong?.favoritoGeneral || false;
   const stageProgressPct = stageItemDuration > 0 ? Math.min(100, (stageCurrentTime / stageItemDuration) * 100) : 0;
@@ -142,10 +154,17 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
         </div>
       </div>
 
+      {/* Dos <audio> en vez de uno: durante un fundido cruzado, uno termina la canción actual
+          mientras el otro ya reproduce la siguiente desde cero — ver useStagePlayer.ts. Cuando el
+          fundido está desactivado, el segundo simplemente no se usa nunca. */}
       <audio
         ref={stageAudioRef as any}
         onEnded={handleStageAudioEnded}
-        onTimeUpdate={(e) => setStageCurrentTime(Math.round(e.currentTarget.currentTime))}
+        onTimeUpdate={(e) => handleStageTimeUpdate(Math.round(e.currentTarget.currentTime))}
+      />
+      <audio
+        ref={stageAudioRefB as any}
+        onEnded={handleStageAudioEnded}
       />
 
       {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
@@ -187,6 +206,11 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       Simulación
                     </span>
                   ) : null}
+                  {isCrossfading && nextStageSong && (
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1 animate-pulse">
+                      🔀 Fundiendo → {nextStageSong.titulo}
+                    </span>
+                  )}
                 </div>
 
                 <div className="text-base sm:text-lg font-extrabold font-mono text-white truncate max-w-xs sm:max-w-md flex items-center gap-2">
@@ -307,13 +331,27 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 onClick={() => setStageAutoplayNext(!stageAutoplayNext)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all ${
-                  stageAutoplayNext 
-                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm' 
+                  stageAutoplayNext
+                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm'
                     : 'bg-[#282828] text-zinc-400 border border-transparent hover:text-white'
                 }`}
                 title={stageAutoplayNext ? "Autoplay continuo activado" : "Autoplay desactivado"}
               >
                 <Repeat className="w-4 h-4" />
+              </button>
+
+              {/* Fundido real entre canciones consecutivas (5s, curva de potencia constante) —
+                  desactivado por defecto, junto al botón de Autoplay del que depende. */}
+              <button
+                onClick={() => setStageCrossfadeEnabled(!stageCrossfadeEnabled)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all text-base ${
+                  stageCrossfadeEnabled
+                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-sm'
+                    : 'bg-[#282828] text-zinc-400 border border-transparent hover:text-white'
+                }`}
+                title={stageCrossfadeEnabled ? "Fundido entre canciones activado (5s)" : "Fundido entre canciones desactivado (corte directo)"}
+              >
+                🔀
               </button>
             </div>
           </div>

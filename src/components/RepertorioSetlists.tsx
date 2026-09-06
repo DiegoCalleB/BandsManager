@@ -45,6 +45,7 @@ import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
+import { CROSSFADE_SECONDS, computeCrossfadeGains, getCrossfadeStartTime, shouldCrossfade } from '../utils/crossfade';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -506,17 +507,21 @@ export default function RepertorioSetlists({
 
  const {
    stageAudioRef,
+   stageAudioRefB,
    stagePlayingIndex, setStagePlayingIndex,
    stageIsPlaying, setStageIsPlaying,
    stageAutoplayNext, setStageAutoplayNext,
-   stageCurrentTime, setStageCurrentTime,
+   stageCurrentTime,
    stageItemDuration,
    stageResolvedUrl,
+   stageCrossfadeEnabled, setStageCrossfadeEnabled,
+   isCrossfading,
    toggleStagePlayPause,
    handleStageNext,
    handleStagePrev,
    handleStageSeek,
    handleStageAudioEnded,
+   handleStageTimeUpdate,
  } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
 
  const {
@@ -526,6 +531,87 @@ export default function RepertorioSetlists({
    isPlayerPlaying, setIsPlayerPlaying,
    handleSelectPlayerSong,
  } = useAudioPlayer();
+ // Cambiar este valor pausa el SpotifyPlayerBar desde fuera (ver pauseSignal en ese componente) —
+ // usado para no solapar dos audios cuando se previsualiza un enganche del Mapa de Energía.
+ const [playerPauseSignal, setPlayerPauseSignal] = useState(0);
+
+ // Previsualización de "enganche" entre dos canciones consecutivas del Mapa de Energía: dos
+ // <audio> ocultos, uno terminando la canción A (desde getCrossfadeStartTime) y otro arrancando
+ // la B desde 0, con la misma curva de fundido que useStagePlayer.ts (misma sensación en ambos
+ // sitios). No usa AudioContext/GainNode por la misma razón que crossfade.ts documenta (CORS).
+ const [transitionPreview, setTransitionPreview] = useState<{ from: EnergyChartPoint; to: EnergyChartPoint } | null>(null);
+ const [transitionPreviewPlaying, setTransitionPreviewPlaying] = useState(false);
+ const transitionAudioARef = useRef<HTMLAudioElement | null>(null);
+ const transitionAudioBRef = useRef<HTMLAudioElement | null>(null);
+ const transitionRafRef = useRef<number | null>(null);
+
+ const stopTransitionPreview = useCallback(() => {
+   if (transitionRafRef.current !== null) {
+     cancelAnimationFrame(transitionRafRef.current);
+     transitionRafRef.current = null;
+   }
+   transitionAudioARef.current?.pause();
+   transitionAudioBRef.current?.pause();
+   setTransitionPreviewPlaying(false);
+ }, []);
+
+ const handlePreviewTransition = useCallback((from: EnergyChartPoint, to: EnergyChartPoint) => {
+   const fromSong = songs.find(s => s.id === from.songId);
+   const toSong = songs.find(s => s.id === to.songId);
+   const fromUrl = fromSong?.audioPrincipalUrl || fromSong?.audioIdeas?.[0]?.audioUrl || '';
+   const toUrl = toSong?.audioPrincipalUrl || toSong?.audioIdeas?.[0]?.audioUrl || '';
+   if (!fromUrl || !toUrl) return; // EnergyChart ya deshabilita el botón sin audio; por si acaso.
+
+   stopTransitionPreview();
+   // Evita que suenen dos audios a la vez: pausa el reproductor principal si algo está sonando.
+   if (isPlayerPlaying) setPlayerPauseSignal(Date.now());
+
+   setTransitionPreview({ from, to });
+   setTransitionPreviewPlaying(true);
+
+   Promise.all([resolveAudioUrl(fromUrl), resolveAudioUrl(toUrl)]).then(([resolvedFrom, resolvedTo]) => {
+     const aEl = transitionAudioARef.current;
+     const bEl = transitionAudioBRef.current;
+     if (!aEl || !bEl || !resolvedFrom || !resolvedTo) {
+       setTransitionPreviewPlaying(false);
+       return;
+     }
+
+     const fromDuration = fromSong?.duracionSegundos || parseMmSsToSeconds(fromSong?.duracion || '') || 210;
+     aEl.src = resolvedFrom;
+     bEl.src = resolvedTo;
+     aEl.currentTime = getCrossfadeStartTime(fromDuration);
+     bEl.currentTime = 0;
+     aEl.volume = 1;
+     bEl.volume = 0;
+
+     Promise.all([aEl.play(), bEl.play()]).then(() => {
+       if (!shouldCrossfade(fromDuration)) {
+         // Canción demasiado corta para un fundido real (p.ej. un clip de pocos segundos): se
+         // deja sonar el final de A y el principio de B sin solapar, en vez de forzar un fundido
+         // sobre una ventana que no cabe.
+         return;
+       }
+       const fadeMs = CROSSFADE_SECONDS * 1000;
+       const startTs = performance.now();
+       const tick = () => {
+         const elapsed = performance.now() - startTs;
+         const { fromGain, toGain } = computeCrossfadeGains(elapsed, fadeMs);
+         aEl.volume = fromGain;
+         bEl.volume = toGain;
+         if (elapsed < fadeMs) {
+           transitionRafRef.current = requestAnimationFrame(tick);
+         } else {
+           aEl.pause();
+           transitionRafRef.current = null;
+         }
+       };
+       transitionRafRef.current = requestAnimationFrame(tick);
+     }).catch(() => setTransitionPreviewPlaying(false));
+   }).catch(() => setTransitionPreviewPlaying(false));
+ }, [songs, isPlayerPlaying, parseMmSsToSeconds, stopTransitionPreview]);
+
+ useEffect(() => stopTransitionPreview, [stopTransitionPreview]);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -629,7 +715,10 @@ export default function RepertorioSetlists({
     label: pt.info.label,
     variance: pt.variance,
     isSong: pt.isSong,
-    isSpeechEvent
+    isSpeechEvent,
+    // Decide si el botón "🎧" de previsualizar el enganche con la canción vecina está activo
+    // (ver EnergyChart) — un evento de "speech" nunca tiene un enganche real que escuchar.
+    hasAudio: isSpeechEvent ? false : !!(pt.song?.audioPrincipalUrl || pt.song?.audioIdeas?.[0]?.audioUrl)
    };
   });
 
@@ -2613,7 +2702,51 @@ export default function RepertorioSetlists({
                   onEnergyChange={handleEnergyChartDrag}
                   height={256}
                   showIdealCurve={showIdealCurve}
+                  onPreviewTransition={handlePreviewTransition}
                 />
+
+                {/* Audio oculto de la previsualización de enganche (ver handlePreviewTransition) —
+                    montado siempre que el Mapa de Energía lo está, no solo mientras hay una
+                    previsualización activa, para que los refs existan ya al primer clic. */}
+                <audio ref={transitionAudioARef} onEnded={stopTransitionPreview} />
+                <audio ref={transitionAudioBRef} onEnded={stopTransitionPreview} />
+
+                {transitionPreview && (
+                  <div className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl bg-sky-950/60 border border-sky-500/30 text-sky-100 text-xs font-mono">
+                    <span className="flex items-center gap-1.5 truncate">
+                      🎧 <span className="font-bold truncate">{transitionPreview.from.name}</span>
+                      <span className="text-sky-400">→</span>
+                      <span className="font-bold truncate">{transitionPreview.to.name}</span>
+                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {transitionPreviewPlaying ? (
+                        <button
+                          type="button"
+                          onClick={stopTransitionPreview}
+                          className="px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 font-bold cursor-pointer"
+                        >
+                          ⏹ Detener
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handlePreviewTransition(transitionPreview.from, transitionPreview.to)}
+                          className="px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 font-bold cursor-pointer"
+                        >
+                          ▶ Repetir
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => { stopTransitionPreview(); setTransitionPreview(null); }}
+                        className="text-sky-400 hover:text-white cursor-pointer"
+                        title="Cerrar"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
                     baja su energía un punto exacto — alternativa al arrastre del gráfico para
@@ -3999,17 +4132,21 @@ export default function RepertorioSetlists({
  songs={songs}
  setShowPdfPreview={setShowPdfPreview}
  stageAudioRef={stageAudioRef}
+ stageAudioRefB={stageAudioRefB}
  stagePlayingIndex={stagePlayingIndex}
  setStagePlayingIndex={setStagePlayingIndex}
  stageIsPlaying={stageIsPlaying}
  setStageIsPlaying={setStageIsPlaying}
  stageCurrentTime={stageCurrentTime}
- setStageCurrentTime={setStageCurrentTime}
  stageItemDuration={stageItemDuration}
  stageResolvedUrl={stageResolvedUrl}
  stageAutoplayNext={stageAutoplayNext}
  setStageAutoplayNext={setStageAutoplayNext}
+ stageCrossfadeEnabled={stageCrossfadeEnabled}
+ setStageCrossfadeEnabled={setStageCrossfadeEnabled}
+ isCrossfading={isCrossfading}
  handleStageAudioEnded={handleStageAudioEnded}
+ handleStageTimeUpdate={handleStageTimeUpdate}
  handleStageSeek={handleStageSeek}
  handleStagePrev={handleStagePrev}
  handleStageNext={handleStageNext}
@@ -4318,6 +4455,7 @@ export default function RepertorioSetlists({
  onClosePlayer={() => handleSelectPlayerSong(null)}
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
+ pauseSignal={playerPauseSignal}
  onIsPlayingChange={setIsPlayerPlaying}
  />
  )}
