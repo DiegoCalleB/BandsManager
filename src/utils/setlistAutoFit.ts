@@ -44,6 +44,16 @@ export interface AutoFitResult {
   /** Cuántos items (consecutivos, en el orden original) va en cada página. Suma = totalItems. */
   pageItemCounts: number[];
   /**
+   * Tamaño de fuente FINAL por página (mismo largo que `pageItemCounts`) — cada página puede
+   * usar un tamaño MAYOR que `titleFontPt` cuando reparte en varias páginas: `titleFontPt` es el
+   * tamaño de referencia usado para decidir CUÁNTAS páginas hacen falta y cómo repartir las
+   * canciones entre ellas (mirando el repertorio COMPLETO), pero una página concreta, con MENOS
+   * canciones que el total, suele tener margen de sobra a ese tamaño — se aprovecha subiendo la
+   * letra tanto como quepa en ESA página, sin afectar el reparto ya decidido. Cuando solo hay 1
+   * página, coincide siempre con `[titleFontPt]`.
+   */
+  pageFontSizes: number[];
+  /**
    * Presente SOLO cuando el resultado principal usó `emergencyFontPt` para caber en 1 sola
    * página — es la decisión AMBIGUA que un músico real dudaría al montar el repertorio a mano
    * ("¿lo aprieto en una hoja o lo reparto en dos con letra más grande?"). Contiene la
@@ -51,7 +61,7 @@ export interface AutoFitResult {
    * legible), para que la UI pueda ofrecer ambas opciones y dejar elegir al usuario en vez de
    * decidir por él en el único caso donde de verdad hay una disyuntiva real.
    */
-  alternativePlan?: { titleFontPt: number; pageItemCounts: number[] };
+  alternativePlan?: { titleFontPt: number; pageItemCounts: number[]; pageFontSizes: number[] };
 }
 
 /**
@@ -179,7 +189,31 @@ function computeMultiPagePlan(
     break; // el rebalanceo ya es el óptimo local para este par de páginas
   }
 
-  return { titleFontPt, pageItemCounts };
+  // 5. `titleFontPt` se eligió mirando el repertorio COMPLETO (paso 2) — pero una página
+  // concreta, con MENOS canciones que el total, suele tener margen de sobra a ese tamaño. Por
+  // cada página, se prueba subir tanto como quepa (de mayor a menor, nunca por debajo de
+  // `titleFontPt`, que ya sabemos que cabe: es el suelo garantizado por el reparto de arriba).
+  // Esto es lo que de verdad "aprovecha el papel a lo alto" en vez de dejar cada hoja con el
+  // mismo tamaño mínimo que exigía el repertorio entero.
+  const PAGE_FONT_TOLERANCE_PX = 3; // mismo espíritu que MIN_SIZE_OVERFLOW_TOLERANCE_PX del paso 1
+  let pageStart = 0;
+  const pageFontSizes = pageItemCounts.map(count => {
+    const start = pageStart;
+    pageStart += count;
+    for (const pt of candidateTitleFontPt) {
+      if (pt < titleFontPt) return titleFontPt; // no bajar del ya elegido: es el suelo garantizado
+      // Solo el suelo garantizado (titleFontPt) recibe el colchón de redondeo — para cualquier
+      // tamaño MAYOR que se esté probando de más, si no cabe sin más hay margen real para
+      // probar uno menor antes de arriesgar cualquier desborde (mismo criterio que el paso 1).
+      const limit = pt === titleFontPt ? pageAvailableHeightPx + PAGE_FONT_TOLERANCE_PX : pageAvailableHeightPx;
+      if (measureFn(pt, start, start + count) <= limit) {
+        return pt;
+      }
+    }
+    return titleFontPt;
+  });
+
+  return { titleFontPt, pageItemCounts, pageFontSizes };
 }
 
 export function computeAutoFitPlan(
@@ -191,7 +225,7 @@ export function computeAutoFitPlan(
   const minFontPt = candidateTitleFontPt[candidateTitleFontPt.length - 1];
 
   if (totalItems === 0) {
-    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0] };
+    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0], pageFontSizes: [candidateTitleFontPt[0]] };
   }
 
   // 1. El repertorio completo, ¿cabe en una sola página a alguno de los tamaños candidatos? En
@@ -210,7 +244,7 @@ export function computeAutoFitPlan(
   for (const pt of candidateTitleFontPt) {
     const limit = pt === minFontPt ? pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX : pageAvailableHeightPx;
     if (measureFn(pt, 0, totalItems) <= limit) {
-      return { titleFontPt: pt, pageItemCounts: [totalItems] };
+      return { titleFontPt: pt, pageItemCounts: [totalItems], pageFontSizes: [pt] };
     }
   }
 
@@ -225,7 +259,7 @@ export function computeAutoFitPlan(
   if (emergencyFontPt !== undefined && emergencyFontPt < minFontPt) {
     if (measureFn(emergencyFontPt, 0, totalItems) <= pageAvailableHeightPx + MIN_SIZE_OVERFLOW_TOLERANCE_PX) {
       const alternativePlan = computeMultiPagePlan(totalItems, measureFn, candidateTitleFontPt, pageAvailableHeightPx);
-      return { titleFontPt: emergencyFontPt, pageItemCounts: [totalItems], alternativePlan };
+      return { titleFontPt: emergencyFontPt, pageItemCounts: [totalItems], pageFontSizes: [emergencyFontPt], alternativePlan };
     }
   }
 
@@ -253,7 +287,7 @@ export function tryFitInPageCount(
 ): AutoFitResult | null {
   const { candidateTitleFontPt, pageAvailableHeightPx, forcedPageCount, maxOverflowTolerance } = opts;
   if (totalItems === 0) {
-    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0] };
+    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0], pageFontSizes: [candidateTitleFontPt[0]] };
   }
   if (forcedPageCount <= 0) return null;
 
@@ -303,7 +337,7 @@ export function tryFitInPageCount(
       c += count;
     }
     if (fits) {
-      return { titleFontPt: pt, pageItemCounts };
+      return { titleFontPt: pt, pageItemCounts, pageFontSizes: pageItemCounts.map(() => pt) };
     }
   }
 

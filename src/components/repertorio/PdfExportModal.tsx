@@ -1187,16 +1187,21 @@ export function PdfExportModal({
         .map(({ member, isMaster, plan }) => {
           let cursor = 0;
           return plan.pageItemCounts
-            .map(count => {
+            .map((count, pageIdx) => {
               const startIdx = cursor;
               cursor += count;
               // Saltar páginas vacías (sin canciones)
               if (count === 0) return '';
 
               globalPageIdx++;
+              // Cada página usa su propio tamaño de fuente (ver pageFontSizes en
+              // computeAutoFitPlan/setlistAutoFit.ts): con menos canciones que el repertorio
+              // completo, una página concreta suele tener margen para una letra MAYOR que la
+              // elegida para el conjunto total — se aprovecha en vez de dejarla al mínimo.
+              const pageFontPt = plan.pageFontSizes[pageIdx] ?? plan.titleFontPt;
               const rowsHtml = activeSetlist.items
                 .slice(startIdx, startIdx + count)
-                .map((item, i) => buildRowHtml(item, startIdx + i, plan.titleFontPt, member, isMaster))
+                .map((item, i) => buildRowHtml(item, startIdx + i, pageFontPt, member, isMaster))
                 .join('');
               const isLastPageOverall = globalPageIdx === totalPagesCount;
 

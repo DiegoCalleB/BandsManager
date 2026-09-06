@@ -160,6 +160,54 @@ describe('computeAutoFitPlan', () => {
     }
   });
 
+  it('sube el tamaño de fuente por página individual cuando el conjunto completo no lo soporta pero cada página sí', () => {
+    // Caso real: el repertorio ENTERO no cabe a 22pt en 2 páginas (una canción con nota larga
+    // en algún punto del conjunto de 20 fuerza más altura de la que cabría), pero UNA VEZ
+    // repartido en 2 páginas de 10 canciones cada una (al tamaño base de 17pt), cada página
+    // individual SÍ tiene margen para subir a 22pt. Simulado aquí con un "overhead" que solo se
+    // activa en rangos grandes (>15 items) a 22pt, imitando cómo una nota que no cabe inline a
+    // letra grande puede caer a una línea aparte y añadir altura no proporcional al conjunto
+    // completo, sin afectar a un subconjunto más pequeño.
+    const measure: MeasureRangeFn = (pt, from, to) => {
+      const count = to - from;
+      const perItem: Record<number, number> = { 22: 20, 17: 17 };
+      const overhead = pt === 22 && count > 15 ? 100 : 0;
+      return count * perItem[pt] + overhead;
+    };
+    const result = computeAutoFitPlan(20, measure, {
+      candidateTitleFontPt: [22, 17],
+      pageAvailableHeightPx: 200
+    });
+
+    expect(result.titleFontPt).toBe(17); // el conjunto completo se queda en el tamaño base
+    expect(result.pageItemCounts).toEqual([10, 10]);
+    // Pero cada página individual, con solo 10 canciones (sin el overhead que solo aparece con
+    // más de 15), sí tiene margen para el tamaño mayor.
+    expect(result.pageFontSizes).toEqual([22, 22]);
+
+    // Verificación real: cada página, a su tamaño final, sigue cabiendo dentro del alto real.
+    let cursor = 0;
+    result.pageItemCounts.forEach((count, i) => {
+      const pageHeight = measure(result.pageFontSizes[i], cursor, cursor + count);
+      expect(pageHeight).toBeLessThanOrEqual(200);
+      cursor += count;
+    });
+  });
+
+  it('pageFontSizes nunca baja del tamaño base elegido para el conjunto completo', () => {
+    const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
+    const result = computeAutoFitPlan(30, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+    expect(result.pageFontSizes.every(pt => pt >= result.titleFontPt)).toBe(true);
+    expect(result.pageFontSizes.length).toBe(result.pageItemCounts.length);
+  });
+
+  it('con 1 sola página, pageFontSizes es [titleFontPt]', () => {
+    const measure = makeUniformMeasure({ 28: 10, 25: 9, 22: 8, 19: 7, 17: 6 });
+    const result = computeAutoFitPlan(20, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+    expect(result.pageItemCounts).toEqual([20]);
+    expect(result.pageFontSizes).toEqual([result.titleFontPt]);
+  });
+
   describe('emergencyFontPt', () => {
     it('usa el tamaño de emergencia para caber en 1 sola página cuando ningún candidato ideal cabe', () => {
       // Al tamaño mínimo ideal (17pt) el contenido excede la página por poco (510 > 500); al
