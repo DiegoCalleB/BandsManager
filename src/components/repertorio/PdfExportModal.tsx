@@ -505,16 +505,42 @@ export function PdfExportModal({
               print-color-adjust: exact;
             }
             .sheet-page {
+              position: relative;
               width: 100%;
               min-height: 278mm;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
               padding: 4px;
+              overflow: hidden;
             }
             .page-break {
               page-break-after: always;
               break-after: page;
+            }
+
+            /* Marca de agua: muy suave, de fondo, centrada — se nota que está pero no compite con
+               la lectura. position:absolute la saca del flujo (no afecta en nada a la medición del
+               auto-ajuste, que solo mide header/filas/footer por separado) y z-index negativo la
+               deja detrás del contenido normal dentro del propio stacking context de .sheet-page. */
+            .page-watermark {
+              position: absolute;
+              inset: 0;
+              z-index: -1;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              pointer-events: none;
+              user-select: none;
+              overflow: hidden;
+              font-family: 'Anton', 'Oswald', sans-serif;
+              font-size: 80pt;
+              font-weight: 900;
+              letter-spacing: 4px;
+              color: #000;
+              opacity: 0.035;
+              transform: rotate(-20deg);
+              white-space: nowrap;
             }
 
             /* Header — padding/margin reducidos a propósito: cada mm que se ahorra aquí es un mm
@@ -524,18 +550,18 @@ export function PdfExportModal({
               display: flex;
               justify-content: space-between;
               align-items: center;
-              border-bottom: 3px solid #000;
-              padding-bottom: 5px;
-              margin-bottom: 7px;
+              border-bottom: 2px solid #000;
+              padding-bottom: 3px;
+              margin-bottom: 4px;
             }
             .header-left {
               display: flex;
               align-items: center;
-              gap: 14px;
+              gap: 10px;
             }
             .band-logo-img {
-              max-height: 52px;
-              max-width: 130px;
+              max-height: 38px;
+              max-width: 100px;
               object-fit: contain;
               filter: grayscale(100%) contrast(150%);
             }
@@ -545,7 +571,7 @@ export function PdfExportModal({
             }
             .band-heading {
               font-family: 'Anton', 'Oswald', sans-serif;
-              font-size: 26pt;
+              font-size: 19pt;
               line-height: 1;
               margin: 0;
               letter-spacing: 0.5px;
@@ -553,18 +579,18 @@ export function PdfExportModal({
             }
             .setlist-meta {
               font-family: 'Oswald', sans-serif;
-              font-size: 10.5pt;
+              font-size: 9pt;
               font-weight: 700;
               color: #333;
-              margin-top: 2px;
+              margin-top: 1px;
               display: flex;
               align-items: center;
-              gap: 6px;
+              gap: 5px;
             }
             .setlist-name-badge {
               background: #000;
               color: #fff !important;
-              padding: 1px 6px;
+              padding: 0px 5px;
               border-radius: 2px;
               letter-spacing: 0.5px;
             }
@@ -576,29 +602,29 @@ export function PdfExportModal({
               text-align: right;
             }
             .member-stage-tag {
-              border: 2.5px solid #000;
-              padding: 4px 10px;
+              border: 2px solid #000;
+              padding: 2px 7px;
               background: #fff;
               border-radius: 4px;
               text-align: right;
             }
             .tag-title {
               font-family: 'Oswald', sans-serif;
-              font-size: 8pt;
+              font-size: 6.5pt;
               font-weight: 700;
               color: #555;
               letter-spacing: 1px;
             }
             .tag-name {
               font-family: 'Anton', 'Oswald', sans-serif;
-              font-size: 17pt;
+              font-size: 13pt;
               line-height: 1.1;
               color: #000;
-              margin-top: 1px;
+              margin-top: 0;
             }
             .tag-instrument {
               font-family: monospace;
-              font-size: 9.5pt;
+              font-size: 8pt;
               font-weight: 800;
               color: #333;
             }
@@ -836,11 +862,11 @@ export function PdfExportModal({
               display: flex;
               justify-content: space-between;
               align-items: center;
-              border-top: 2px solid #000;
-              padding-top: 4px;
-              margin-top: 6px;
+              border-top: 1px solid #000;
+              padding-top: 2px;
+              margin-top: 3px;
               font-family: monospace;
-              font-size: 8.5pt;
+              font-size: 7.5pt;
               color: #444;
             }
             .footer-left {
@@ -1035,6 +1061,7 @@ export function PdfExportModal({
 
               return `
                 <div class="sheet-page ${!isLastPageOverall ? 'page-break' : ''}">
+                  <div class="page-watermark">${bandName.toUpperCase()}</div>
                   ${buildHeaderHtml(member, isMaster)}
                   <div class="setlist-items-container">
                     ${rowsHtml}
@@ -1382,34 +1409,43 @@ export function PdfExportModal({
           {/* Authentic Real Stage Paper Sheet */}
           <div
             ref={sheetRef}
-            className="bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border border-neutral-300 transition-all"
-            style={{ 
-              width: '210mm', 
+            className="relative overflow-hidden bg-white text-black p-8 sm:p-12 shadow-2xl rounded-sm w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border border-neutral-300 transition-all"
+            style={{
+              width: '210mm',
               minHeight: '297mm',
               fontFamily: stylePreset === 'rock_stage' ? "'Anton', 'Oswald', sans-serif" : "'Oswald', sans-serif"
             }}
           >
+            {/* Marca de agua: muy suave, centrada, de fondo — mismo tratamiento que en el HTML de
+                impresión (position:absolute, no forma parte del flujo ni del cálculo de alto). */}
+            <div
+              className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none select-none overflow-hidden whitespace-nowrap font-['Anton',sans-serif] font-black uppercase"
+              style={{ fontSize: '70pt', letterSpacing: '4px', color: '#000', opacity: 0.035, transform: 'rotate(-20deg)' }}
+            >
+              {bandName}
+            </div>
+
             {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
                 menos de riesgo de que el repertorio se desborde a una hoja extra. */}
             <div>
-              <div className="flex items-center justify-between border-b-[3px] border-black pb-1 mb-2">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between border-b-2 border-black pb-0.5 mb-1">
+                <div className="flex items-center gap-2">
                   {showBandLogo && customLogoUrl && (
                     <img
                       src={customLogoUrl}
                       alt={bandName}
-                      className="max-h-9 max-w-[100px] object-contain filter grayscale contrast-150"
+                      className="max-h-7 max-w-[80px] object-contain filter grayscale contrast-150"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = 'none';
                       }}
                     />
                   )}
                   <div>
-                    <h1 className="text-[18pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
+                    <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
                       {bandName.toUpperCase()}
                     </h1>
-                    <div className="text-[9pt] font-mono font-bold text-neutral-800 mt-0.5 flex items-center gap-2">
-                      <span className="bg-black text-white px-1.5 py-0.5 rounded text-[8pt] uppercase tracking-wider font-['Oswald',sans-serif]">
+                    <div className="text-[7.5pt] font-mono font-bold text-neutral-800 mt-0.5 flex items-center gap-1.5">
+                      <span className="bg-black text-white px-1 py-0 rounded text-[7pt] uppercase tracking-wider font-['Oswald',sans-serif]">
                         {activeSetlist.nombre}
                       </span>
                       {showDuration && <span>• {activeSetlistMetrics.formattedTime}</span>}
@@ -1418,14 +1454,14 @@ export function PdfExportModal({
                   </div>
                 </div>
 
-                <div className="border-2 border-black bg-white p-1.5 px-3 rounded text-right min-w-[140px] shadow-sm">
-                  <div className="text-[7pt] font-mono font-bold text-neutral-500 uppercase tracking-widest">
+                <div className="border-2 border-black bg-white p-1 px-2 rounded text-right min-w-[110px] shadow-sm">
+                  <div className="text-[6pt] font-mono font-bold text-neutral-500 uppercase tracking-widest">
                     {!isCurrentMaster ? 'REPERTORIO PERSONALIZADO' : 'COPIA DE CONTROL'}
                   </div>
-                  <div className="text-[13pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif] mt-0.5">
+                  <div className="text-[10pt] font-black uppercase text-black leading-tight font-['Anton',sans-serif]">
                     👤 {currentPreviewMember.name}
                   </div>
-                  <div className="text-[8pt] font-mono font-bold text-neutral-800">
+                  <div className="text-[7pt] font-mono font-bold text-neutral-800">
                     🎵 {currentPreviewMember.instrument}
                   </div>
                 </div>
@@ -1677,7 +1713,7 @@ export function PdfExportModal({
 
             {/* Bottom Footer with BandManager & link */}
             {showAppBranding && (
-              <div className="flex justify-between items-center border-t-2 border-black pt-2 mt-4 font-mono text-[9pt] text-neutral-600">
+              <div className="flex justify-between items-center border-t border-black pt-1 mt-2 font-mono text-[7.5pt] text-neutral-600">
                 <div className="flex items-center gap-2">
                   <span className="font-black text-black">⚡ BandManager</span>
                   <span>•</span>
