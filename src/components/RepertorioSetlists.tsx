@@ -10,7 +10,7 @@ import {
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
-  GripVertical, ImagePlus
+  GripVertical, ImagePlus, MoreHorizontal
 } from 'lucide-react';
 import SongStudioModal from './SongStudioModal';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
@@ -545,6 +545,14 @@ export default function RepertorioSetlists({
  // Avisos heurísticos plegados por defecto — antes ocupaban una fila siempre visible en pantalla
  // aunque no hubiera nada urgente que mirar.
  const [showHeuristicWarnings, setShowHeuristicWarnings] = useState(false);
+ // Métricas secundarias del setlist (interludios, bloques, perfil de dinámica) plegadas: la fila
+ // siempre visible se queda en las 3 que de verdad se miran (temas · duración · BPM). Antes las 5
+ // pills + el badge de perfil iban en un flex-wrap que en móvil se convertía en 5-6 líneas
+ // apiladas ANTES del gráfico — ver AGENTS.md §6 (simplicidad en pantalla).
+ const [showSetlistStats, setShowSetlistStats] = useState(false);
+ // Acciones secundarias del setlist (compartir, asignar a bolo, imprimir, editar detalles) en un
+ // único menú "⋯" en vez de tres botones de texto permanentes: no se usan en la mayoría de visitas.
+ const [showSetlistActionsMenu, setShowSetlistActionsMenu] = useState(false);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
@@ -2209,12 +2217,14 @@ export default function RepertorioSetlists({
 
  return (
   <div className="space-y-3">
-  {/* MODULE HEADER BAR */}
-  <div className={`p-3 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
+  {/* MODULE HEADER BAR — en móvil se queda en una línea fina (el subtítulo "Gestión de Setlists"
+      es una etiqueta decorativa: la sección ya se identifica por la navegación inferior). Antes
+      ocupaba una tarjeta entera con padding grande en lo más alto del scroll. AGENTS.md §6. */}
+  <div className={`px-3 py-1.5 sm:p-3.5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 ${colors.card} `}>
        {/* HEADER / TITULO PRINCIPAL */}
       <div className="shrink-0 flex items-center gap-3">
-        <h1 className={`text-xl sm:text-2xl font-display font-black tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
-        <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
+        <h1 className={`text-base sm:text-2xl font-display font-black tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>{t('nav.repertorio', 'Repertorio')}</h1>
+        <span className={`hidden sm:inline-block text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded ${isStitchLight ? 'bg-slate-200 text-slate-700' : 'bg-neutral-800 text-zinc-400'}`}>{t('repertoire.subtitle', 'Gestión de Setlists')}</span>
       </div>
 
  </div>
@@ -2326,14 +2336,17 @@ export default function RepertorioSetlists({
   </div>
   </div>
   ) : (
-  <div className="lg:col-span-1 flex flex-col items-center py-3 bg-[#131313] border border-white/5 rounded-2xl shrink-0">
+  // Barra de "abrir lista de setlists": en escritorio es una columna estrecha (chevron + texto
+  // apilados); en móvil ocupa el ancho completo, así que ahí va en UNA línea horizontal en vez
+  // de apilar icono y texto (antes gastaba ~150px de alto por encima del contenido). AGENTS.md §6.
+  <div className="lg:col-span-1 flex flex-col items-center py-1 lg:py-3 bg-[#131313] border border-white/5 rounded-2xl shrink-0">
     <button
       onClick={() => setIsSidebarCollapsed(false)}
-      className="p-2 text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-xl cursor-pointer flex flex-col items-center gap-2"
+      className="p-1.5 lg:p-2 text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-xl cursor-pointer flex flex-row lg:flex-col items-center gap-1.5 lg:gap-2"
       title="Mostrar lista de setlists guardados"
     >
-      <ChevronRight className="w-5 h-5 text-[#d1b375]" />
-      <span className="writing-vertical text-[10px] font-mono font-bold tracking-wider text-neutral-400 uppercase">
+      <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5 text-[#d1b375]" />
+      <span className="text-[10px] font-mono font-bold tracking-wider text-neutral-400 uppercase">
         Setlists ({setlists.length})
       </span>
     </button>
@@ -2344,10 +2357,11 @@ export default function RepertorioSetlists({
   <div className={`${isSidebarCollapsed ? 'lg:col-span-11' : 'lg:col-span-9'} p-3.5 sm:p-4 rounded-2xl space-y-3 ${colors.card} `}>
  {activeSetlist ? (
  <>
- {/* ACTIVE SETLIST HEADER & CONTROLS */}
- <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3">
- <div>
- <div className="flex items-center gap-2">
+ {/* CABECERA COMPACTA: nombre del setlist + un único menú "⋯" con las acciones secundarias.
+     Antes eran tres botones de texto (Compartir / Asignar / Imprimir) + descripción, que en
+     móvil se apilaban en varias líneas empujando el gráfico fuera de pantalla. Ninguna acción
+     se ha perdido: todas viven en el menú (ver AGENTS.md §6). */}
+ <div className="flex items-center gap-1.5">
  <input
  type="text"
  value={activeSetlist.nombre}
@@ -2355,96 +2369,90 @@ export default function RepertorioSetlists({
  const val = e.target.value;
  setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? { ...s, nombre: val } : s));
  }}
- className={`text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
+ title={activeSetlist.descripcion || 'Nombre del repertorio'}
+ className={`flex-1 min-w-0 text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
  />
+
+ <div className="relative shrink-0">
  <button
  type="button"
- onClick={() => setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist })}
- className="p-1 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
- title="Editar detalles del repertorio"
+ onClick={() => setShowSetlistActionsMenu((v) => !v)}
+ className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ title="Acciones del repertorio: compartir, asignar a bolo, imprimir, editar detalles"
  >
- <Edit3 className="w-3.5 h-3.5" />
+ <MoreHorizontal className="w-4 h-4" />
+ </button>
+ {showSetlistActionsMenu && (
+ <>
+ <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
+ <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-0.5 text-[11px] font-mono">
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); handleShareSetlist(activeSetlist); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-emerald-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <MessageSquare className="w-3.5 h-3.5 shrink-0" /> Compartir repertorio
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); setAssigningSetlist(activeSetlist); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-[#10b981] hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Asignar a bolo/ensayo
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); setShowPdfPreview(true); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-[#d1b375] hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
+ </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
  </button>
  </div>
- <p className="text-[10px] text-neutral-400 mt-1">
- {activeSetlist.descripcion || 'Haz clic para personalizar las canciones de esta lista'}
- </p>
+ </>
+ )}
  </div>
-
- <div className="flex items-center gap-2 flex-wrap">
- <button
- onClick={() => handleShareSetlist(activeSetlist)}
- className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
- title="Compartir repertorio completo por WhatsApp"
- >
- <MessageSquare className="w-3.5 h-3.5 fill-white/20" />
- <span>Compartir Repertorio</span>
- </button>
-
- <button
- onClick={() => setAssigningSetlist(activeSetlist)}
- className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- isStitchLight 
- ? 'bg-[#10b981]/15 text-[#10b981] hover:bg-[#10b981]/15'
- : 'bg-[#10b981]/15 text-[#10b981] hover:bg-[#10b981]/15'
- }`}
- title="Asignar a un concierto del calendario"
- >
- <CheckCircle2 className="w-3.5 h-3.5" />
- <span>Asignar a Bolo/Ensayo</span>
- </button>
-
- <button
- onClick={() => setShowPdfPreview(true)}
- className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
- isStitchLight 
- ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
- : 'bg-neutral-900 text-[#d1b375]'
- }`}
- title="Exportar hoja de escenario"
- >
- <Printer className="w-3.5 h-3.5" />
- <span>Imprimir / PDF</span>
- </button>
-  </div>
   </div>
 
   {/* LIVE METRICS & ENERGY MAP BAR */}
   {(() => {
     return (
-      <div className="space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-black/40 text-xs font-mono">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-lg bg-white/10 text-white font-bold flex items-center gap-1.5">
-              🎵 <strong>{activeSetlistMetrics.songCount}</strong> temas
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-[#d1b375] font-bold flex items-center gap-1.5 border border-amber-500/20">
-              ⏱️ <strong>{activeSetlistMetrics.formattedTime}</strong>
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/10 text-[#10b981] font-bold flex items-center gap-1.5 border border-emerald-500/20">
-              ⚡ <strong>{activeSetlistMetrics.avgBpm} BPM avg</strong>
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold flex items-center gap-1.5 border border-sky-500/20">
-              💬 <strong>{activeSetlistMetrics.eventCount}</strong> interludios
-            </span>
-            <span className="px-2.5 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold flex items-center gap-1.5 border border-yellow-500/20">
-              ⚡ <strong>{activeSetlistMetrics.blockCount}</strong> bloques
-            </span>
-          </div>
+      // flex + order en vez de un stack fijo: el Mapa de Energía (order-1) va SIEMPRE por delante
+      // de las métricas (order-2/3) — es a lo que se viene a esta pantalla, y antes quedaba
+      // empujado fuera del primer pantallazo en móvil. Ver AGENTS.md §6.
+      <div className="flex flex-col gap-2">
+        <div className="order-2 flex items-center justify-between gap-2 px-2 py-1.5 rounded-xl bg-black/40 text-[10px] font-mono">
+          {/* Resumen en una línea con las 3 métricas que de verdad se miran; interludios,
+              bloques y perfil de dinámica se pliegan detrás del toggle — antes eran 5 pills
+              + badge que en móvil ocupaban 5-6 líneas por encima del gráfico. */}
+          <button
+            type="button"
+            onClick={() => setShowSetlistStats((v) => !v)}
+            className="flex items-center gap-1.5 min-w-0 truncate hover:opacity-80 transition cursor-pointer"
+            title={showSetlistStats ? 'Ocultar métricas secundarias' : 'Ver interludios, bloques y perfil de dinámica'}
+          >
+            <span className="font-bold text-white">🎵 {activeSetlistMetrics.songCount}</span>
+            <span className="text-neutral-600">·</span>
+            <span className="font-bold text-[#d1b375]">⏱️ {activeSetlistMetrics.formattedTime}</span>
+            <span className="text-neutral-600">·</span>
+            <span className="font-bold text-[#10b981]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
+            <span className="text-neutral-500 ml-0.5">{showSetlistStats ? '▲' : '▼'}</span>
+          </button>
 
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-lg bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold flex items-center gap-1.5">
-              <span>{energyAnalysis.profileIcon}</span>
-              <span>{energyAnalysis.profileLabel}</span>
-            </span>
-            <div className="relative">
+          <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setShowAssistantChooser((v) => !v)}
-                className="px-3 py-0.5 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer text-sm font-medium flex items-center gap-1.5"
+                className="px-2 py-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer font-bold flex items-center gap-1.5"
                 title="Asistente IA del repertorio"
               >
-                🧠 Asistente IA
+                🧠 <span className="hidden sm:inline">Asistente IA</span>
               </button>
               {showAssistantChooser && (
                 <>
@@ -2477,19 +2485,39 @@ export default function RepertorioSetlists({
                   </div>
                 </>
               )}
-            </div>
           </div>
         </div>
 
-        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
+        {/* Métricas secundarias, solo si se piden */}
+        {showSetlistStats && (
+          <div className="order-3 flex flex-wrap items-center gap-1.5 px-1 text-[10px] font-mono">
+            <span className="px-2 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">
+              💬 {activeSetlistMetrics.eventCount} interludios
+            </span>
+            <span className="px-2 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold border border-yellow-500/20">
+              ⚡ {activeSetlistMetrics.blockCount} bloques
+            </span>
+            {/* profileLabel ya incluye su propio icono — antes se pintaba además profileIcon
+                al lado, duplicando el emoji ("⚡ ⚡ Dinámica Equilibrada"). */}
+            <span className="px-2 py-0.5 rounded-lg bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">
+              {energyAnalysis.profileLabel}
+            </span>
+          </div>
+        )}
+
+        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW — order-1: es el contenido principal de la pantalla */}
         {energyAnalysis.points.length > 0 && (
-          <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
-            <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400">
-              <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                <span>📈 Mapa de Dinámica y Energía del Show</span>
-                <span className="text-[9px] text-neutral-500 font-normal">(arrastra un punto, o selecciónalo y usa las flechas, para reordenar el setlist)</span>
+          <div className="order-1 p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
+            <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-neutral-400">
+              {/* Título corto y la ayuda en el tooltip: el hint largo entre paréntesis ocupaba
+                  4 líneas en móvil justo encima del gráfico (AGENTS.md §6). */}
+              <span
+                className="font-bold uppercase tracking-wider text-white truncate"
+                title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
+              >
+                📈 Mapa de Energía
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 {canUndoReorder && (
                   <button
                     type="button"
