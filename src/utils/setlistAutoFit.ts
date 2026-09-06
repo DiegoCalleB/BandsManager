@@ -134,21 +134,47 @@ export function computeAutoFitPlan(
   // midiendo dos páginas juntas, no una sola.
   const SPARSE_LAST_PAGE_RATIO = 0.4;
   const MERGE_TOLERANCE_PX = 5;
+  const mergeLimitPx = pageAvailableHeightPx + MERGE_TOLERANCE_PX;
   while (pageItemCounts.length > 1) {
-    const lastCount = pageItemCounts[pageItemCounts.length - 1];
+    const lastIdx = pageItemCounts.length - 1;
+    const lastCount = pageItemCounts[lastIdx];
     const avgCount = totalItems / pageItemCounts.length;
-    // Si la última página tiene solo 1 item, SIEMPRE intentar fusionar (nunca dejar una
-    // canción sola en una página). Si tiene más, solo fusionar si es dispersa (< 40% del promedio).
+    // Si la última página tiene solo 1 item, SIEMPRE intentar mejorar (nunca dejar una
+    // canción sola en una página). Si tiene más, solo actuar si es dispersa (< 40% del promedio).
     if (lastCount > 1 && lastCount >= avgCount * SPARSE_LAST_PAGE_RATIO) break;
 
-    const secondLastCount = pageItemCounts[pageItemCounts.length - 2];
+    const secondLastCount = pageItemCounts[lastIdx - 1];
     const mergedStart = totalItems - lastCount - secondLastCount;
     const mergedHeight = measureFn(titleFontPt, mergedStart, totalItems);
-    // Permitir tolerancia de 5px: a veces una canción con notas muy largas genera un pequeño
-    // exceso que la medición por canvas no captó exactamente igual que el render real.
-    if (mergedHeight > pageAvailableHeightPx + MERGE_TOLERANCE_PX) break;
+    if (mergedHeight <= mergeLimitPx) {
+      // Cabe todo junto en la penúltima página: fusionar sin más.
+      pageItemCounts.splice(lastIdx - 1, 2, secondLastCount + lastCount);
+      continue;
+    }
 
-    pageItemCounts.splice(pageItemCounts.length - 2, 2, secondLastCount + lastCount);
+    // No cabe fusionado del todo — con solo 2 páginas totales esto es EXACTAMENTE probar si
+    // cabe el repertorio entero en 1 sola hoja, que ya sabemos que no (por eso hay 2 páginas):
+    // el merge de arriba nunca podría activarse en ese caso, dejando la canción pesada sola
+    // para siempre. La alternativa real es REBALANCEAR: buscar, entre las dos páginas juntas,
+    // el punto de corte que deje el MÁXIMO nº de canciones posible en la última página (no el
+    // que más iguale la ALTURA — con una canción muy pesada, igualar altura sigue dejando pocas
+    // canciones en la última página; lo que de verdad evita "canción sola" es maximizar cuántas
+    // caben ahí), exigiendo siempre que ambas páginas quepan dentro del alto real disponible.
+    const combinedCount = secondLastCount + lastCount;
+    let bestSplit = secondLastCount;
+    for (let firstPageCount = 1; firstPageCount < combinedCount; firstPageCount++) {
+      const h2 = measureFn(titleFontPt, mergedStart + firstPageCount, totalItems);
+      if (h2 > mergeLimitPx) continue; // la última página aún desborda: probar con menos items ahí
+      const h1 = measureFn(titleFontPt, mergedStart, mergedStart + firstPageCount);
+      if (h1 > mergeLimitPx) break; // la primera ya desborda; con más items ahí, peor todavía
+      bestSplit = firstPageCount; // primer split (de menor a mayor) que cabe en ambas: el que
+      break;                      // deja más canciones posible en la última página
+    }
+
+    if (bestSplit === secondLastCount) break; // no se encontró un reparto mejor: parar
+    pageItemCounts[lastIdx - 1] = bestSplit;
+    pageItemCounts[lastIdx] = combinedCount - bestSplit;
+    break; // el rebalanceo ya es el óptimo local para este par de páginas
   }
 
   return { titleFontPt, pageItemCounts };

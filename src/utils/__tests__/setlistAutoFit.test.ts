@@ -133,6 +133,32 @@ describe('computeAutoFitPlan', () => {
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(26);
     expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
   });
+
+  it('rebalancea entre las 2 últimas páginas en vez de dejar 1 sola canción pesada, cuando hay margen para mejorar', () => {
+    // Caso real reportado: 20 canciones ligeras (20px) + 1 con una nota larguísima al final
+    // (450px). La fusión total (21 items) no cabe en una hoja (por eso hay 2 páginas), así que
+    // el viejo "merge de seguridad" nunca podía activarse aquí y dejaba [20, 1] para siempre.
+    // Con margen real disponible (pageAvailableHeightPx=500), debe rebalancear moviendo algunas
+    // canciones ligeras junto a la pesada en vez de dejarla completamente sola.
+    const heights = [...Array(20).fill(20), 450];
+    const measure: MeasureRangeFn = (_pt, from, to) => heights.slice(from, to).reduce((a, b) => a + b, 0);
+    const result = computeAutoFitPlan(21, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 500 });
+
+    expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(21);
+    expect(result.pageItemCounts.length).toBe(2);
+    // La última página ya no debe tener solo 1 canción: el rebalanceo debe haber movido algunas
+    // ligeras junto a la pesada, siempre que sigan cabiendo dentro del alto real.
+    const lastCount = result.pageItemCounts[result.pageItemCounts.length - 1];
+    expect(lastCount).toBeGreaterThan(1);
+    // Verificación real: ninguna página debe exceder el alto disponible (con la tolerancia de
+    // 5px del merge) — el rebalanceo nunca debe generar un desborde real de la hoja.
+    let cursor = 0;
+    for (const count of result.pageItemCounts) {
+      const pageHeight = measure(result.titleFontPt, cursor, cursor + count);
+      expect(pageHeight).toBeLessThanOrEqual(505);
+      cursor += count;
+    }
+  });
 });
 
 describe('tryFitInPageCount', () => {
