@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeAutoFitPlan, tryFitInPageCount, MeasureRangeFn } from '../setlistAutoFit';
+import { computeAutoFitPlan, computeExpandedPlan, tryFitInPageCount, MeasureRangeFn } from '../setlistAutoFit';
 
 const CANDIDATES = [28, 25, 22, 19, 17];
 
@@ -371,5 +371,40 @@ describe('tryFitInPageCount', () => {
     });
     expect(result).not.toBeNull();
     expect(result!.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(20);
+  });
+});
+
+describe('computeExpandedPlan (modo "de pie")', () => {
+  it('usa el tamaño fijo dado aunque el repertorio quepa en 1 sola página a ese tamaño', () => {
+    const measure = makeUniformMeasure({ 28: 20 });
+    const result = computeExpandedPlan(10, measure, { titleFontPt: 28, pageAvailableHeightPx: 500 });
+    expect(result.titleFontPt).toBe(28);
+    expect(result.pageItemCounts).toEqual([10]);
+    expect(result.pageFontSizes).toEqual([28]);
+  });
+
+  it('reparte en varias páginas al tamaño fijo cuando hace falta, nunca cambia el tamaño', () => {
+    // 30 items * 40px = 1200px -> 3 páginas a 500px cada una.
+    const measure = makeUniformMeasure({ 28: 40 });
+    const result = computeExpandedPlan(30, measure, { titleFontPt: 28, pageAvailableHeightPx: 500 });
+    expect(result.titleFontPt).toBe(28);
+    expect(result.pageFontSizes.every(pt => pt === 28)).toBe(true);
+    expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(30);
+    expect(result.pageItemCounts.length).toBeGreaterThan(1);
+  });
+
+  it('reparte equilibrado y nunca deja una canción sola cuando se puede evitar', () => {
+    const heights = [...Array(25).fill(20), 90];
+    const measure: MeasureRangeFn = (_pt, from, to) => heights.slice(from, to).reduce((a, b) => a + b, 0);
+    const result = computeExpandedPlan(26, measure, { titleFontPt: 28, pageAvailableHeightPx: 150 });
+    expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(26);
+    expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
+  });
+
+  it('con un repertorio vacío no lanza y devuelve una página vacía', () => {
+    const measure: MeasureRangeFn = () => 0;
+    const result = computeExpandedPlan(0, measure, { titleFontPt: 28, pageAvailableHeightPx: 500 });
+    expect(result.pageItemCounts).toEqual([0]);
+    expect(result.titleFontPt).toBe(28);
   });
 });

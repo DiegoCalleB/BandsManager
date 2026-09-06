@@ -9,7 +9,7 @@ import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../u
 import { MemberNotesModal } from './MemberNotesModal';
 import { ModalPortal } from '../common/ModalPortal';
 import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, deterministicOffsetPx, NoteSegment, NoteLine, StackedFitResult } from '../../utils/textFit';
-import { computeAutoFitPlan, tryFitInPageCount, MeasureRangeFn } from '../../utils/setlistAutoFit';
+import { computeAutoFitPlan, computeExpandedPlan, tryFitInPageCount, MeasureRangeFn } from '../../utils/setlistAutoFit';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -263,6 +263,13 @@ export function PdfExportModal({
   // detrás de este toggle SOLO en móvil (ver "sm:flex" más abajo, que los fuerza siempre visibles
   // en pantallas grandes) — en pantallas pequeñas todo junto agobiaba, tapando la vista previa.
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+
+  // Densidad de vista: 'sentado' (por defecto) usa el auto-ajuste normal — el mínimo nº de hojas
+  // posible, pensado para leerse de cerca (atril, mesa de sonido). 'de_pie' fuerza el tamaño de
+  // título MÁS GRANDE de TITLE_FONT_CANDIDATES_PT y reparte en tantas hojas como haga falta a
+  // ese tamaño — pensado para leerse desde lejos, de pie en el escenario, aceptando más páginas
+  // a cambio de letra mucho mayor (ver computeExpandedPlan en setlistAutoFit.ts).
+  const [viewDensity, setViewDensity] = useState<'sentado' | 'de_pie'>('sentado');
 
   // Design & Preset State
   const [stylePreset, setStylePreset] = useState<SetlistStylePreset>('rock_stage');
@@ -1097,11 +1104,20 @@ export function PdfExportModal({
           );
         };
 
-        const plan = computeAutoFitPlan(activeSetlist.items.length, measureFn, {
-          candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
-          pageAvailableHeightPx,
-          emergencyFontPt: EMERGENCY_TITLE_FONT_PT
-        });
+        // "De pie": fuerza el tamaño de título más grande y reparte en tantas hojas como haga
+        // falta a ese tamaño — nunca hay ambigüedad que preguntar aquí (a diferencia del modo
+        // "sentado", no se busca el mínimo nº de páginas, así que el diálogo de 1-hoja-vs-varias
+        // no aplica en este modo).
+        const plan = viewDensity === 'de_pie'
+          ? computeExpandedPlan(activeSetlist.items.length, measureFn, {
+              titleFontPt: TITLE_FONT_CANDIDATES_PT[0],
+              pageAvailableHeightPx
+            })
+          : computeAutoFitPlan(activeSetlist.items.length, measureFn, {
+              candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
+              pageAvailableHeightPx,
+              emergencyFontPt: EMERGENCY_TITLE_FONT_PT
+            });
 
         return { member, isMaster, plan, measureFn, pageAvailableHeightPx };
       });
@@ -1114,9 +1130,14 @@ export function PdfExportModal({
       // solo intenta un reparto MÁS APRETADO para quien lo necesite, nunca al revés) y nunca se
       // acepta un desborde real de página — si ni con tolerancia extra encaja, ese miembro se
       // queda con su plan original de más páginas.
+      // En modo "de pie" esta igualación NO se aplica: su única promesa es "letra siempre al
+      // tamaño más grande posible", y apretar a un miembro a menos páginas implicaría buscar
+      // entre TODOS los candidatos de fuente (incluyendo tamaños más pequeños que el forzado),
+      // rompiendo esa promesa. Que cada miembro use un nº de páginas distinto en este modo es
+      // esperado (unos tienen más notas que otros) y no un desequilibrio a corregir.
       const EQUALIZE_MAX_OVERFLOW_TOLERANCE = 0.12;
       const bestPageCount = Math.min(...memberPlans.map(mp => mp.plan.pageItemCounts.length));
-      const equalizedMemberPlans = memberPlans.map(mp => {
+      const equalizedMemberPlans = viewDensity === 'de_pie' ? memberPlans : memberPlans.map(mp => {
         if (mp.plan.pageItemCounts.length <= bestPageCount) return mp;
         const forced = tryFitInPageCount(activeSetlist.items.length, mp.measureFn, {
           candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
@@ -1423,6 +1444,30 @@ export function PdfExportModal({
                 </select>
               </div>
             )}
+
+            {/* Densidad de vista: "sentado" busca el mínimo nº de hojas posible (para leer de
+                cerca — atril, mesa de sonido); "de pie" fuerza la letra más grande de todas,
+                aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10">
+              <button
+                onClick={() => setViewDensity('sentado')}
+                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  viewDensity === 'sentado' ? 'bg-[#1db954] text-black shadow-md' : 'text-neutral-400 hover:text-white'
+                }`}
+                title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
+              >
+                🪑 Sentado
+              </button>
+              <button
+                onClick={() => setViewDensity('de_pie')}
+                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  viewDensity === 'de_pie' ? 'bg-[#1db954] text-black shadow-md' : 'text-neutral-400 hover:text-white'
+                }`}
+                title="Letra lo más grande posible, aceptando más hojas — para leer desde lejos, de pie en el escenario"
+              >
+                🧍 De pie
+              </button>
+            </div>
           </div>
 
           {/* Botón "Ajustes" — solo en móvil (sm:hidden): colapsa tipografía/tinta/badges detrás
@@ -1696,7 +1741,10 @@ export function PdfExportModal({
                     const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
                     const setlistNote = (item as any).notaTema || item.notas || '';
 
-                    const titleFontPt = PREVIEW_TITLE_FONT_PT;
+                    // La vista previa no pagina de verdad (scroll continuo), así que no puede
+                    // reflejar el nº real de hojas — pero al menos usa un tamaño de referencia
+                    // mayor en modo "de pie" para dar una idea de que la letra sale más grande.
+                    const titleFontPt = viewDensity === 'de_pie' ? TITLE_FONT_CANDIDATES_PT[0] : PREVIEW_TITLE_FONT_PT;
                     const noteFontPt = deriveNoteFontPt(titleFontPt);
                     const numberText = showSongNumbers ? `${index + 1}.` : '';
                     const badges: NoteLayoutBadge[] = [
