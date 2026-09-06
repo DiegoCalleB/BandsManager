@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
- Disc3, Music, Plus, Search, X, Edit3, Trash2, ArrowUp, ArrowDown, Copy,
+ Disc3, Music, Plus, Search, X, Edit3, Trash2, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
  Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
@@ -2024,26 +2024,6 @@ export default function RepertorioSetlists({
   setShowItemAudioUrl('');
  };
 
- const handleMoveSetlistItem = (index: number, direction: 'up' | 'down') => {
- if (!activeSetlist) return;
- const targetIndex = direction === 'up' ? index - 1 : index + 1;
- if (targetIndex < 0 || targetIndex >= activeSetlist.items.length) return;
-
- const newItems = [...activeSetlist.items];
- const temp = newItems[index];
- newItems[index] = newItems[targetIndex];
- newItems[targetIndex] = temp;
-
- const updatedSetlist: Setlist = {
- ...activeSetlist,
- fechaUltimaEdicion: new Date().toISOString().split('T')[0],
- items: newItems
- };
-
- setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
- syncSetlistToBackend(updatedSetlist);
- };
-
  const handleRemoveSetlistItem = (itemId: string) => {
  if (!activeSetlist) return;
  const updatedSetlist: Setlist = {
@@ -3057,7 +3037,16 @@ export default function RepertorioSetlists({
   onDragLeave={() => { if (dragOverItemIndex === index) setDragOverItemIndex(null); }}
   onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
   onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
-  onClick={() => setSelectedSetlistItemId(isSelected ? null : it.id)}
+  onClick={() => {
+  // Seleccionar la canción (para el joystick del gráfico, o para insertar justo debajo) ya
+  // expande sus detalles de paso — antes hacían falta dos taps distintos (seleccionar + chevron)
+  // para ver la afinación/disco/cantante del tema que se acaba de elegir. El chevron sigue
+  // sirviendo para expandir sin seleccionar. AGENTS.md §6.
+  if (!isSelected && !isExpanded) {
+  setExpandedSetlistItemIds(new Set(expandedSetlistItemIds).add(it.id));
+  }
+  setSelectedSetlistItemId(isSelected ? null : it.id);
+  }}
   className={`border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
@@ -3164,6 +3153,17 @@ export default function RepertorioSetlists({
     {/* Spacer */}
     <div className="flex-1"></div>
 
+    {/* Notas de miembros / acordes ya no van en la fila compacta — se han movido al panel
+        expandible (ver más abajo): son consultas ocasionales, no algo que se mira en cada fila
+        de cada setlist. Reordenar arriba/abajo se ha quitado por completo: ya lo cubren el drag
+        handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
+        AGENTS.md §6. */}
+    {memberNotesCount > 0 && (
+      <span className="text-amber-300 shrink-0" title={`${memberNotesCount} nota(s) de miembros`}>
+        <Users className="w-3 h-3" />
+      </span>
+    )}
+
     {/* Expand button for details */}
     <button
       type="button"
@@ -3172,50 +3172,9 @@ export default function RepertorioSetlists({
         toggleExpand();
       }}
       className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
-      title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco y cantante"}
+      title={isExpanded ? "Ocultar detalles" : "Ver afinación, disco, cantante, acordes y notas de miembros"}
     >
       {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-    </button>
-
-    {/* CONTROLS */}
-    <button
-      type="button"
-      onClick={() => setActiveMemberNotesSong(song)}
-      className={`p-0.5 shrink-0 transition-colors ${
-        memberNotesCount > 0
-          ? 'text-amber-300 hover:text-amber-400'
-          : 'text-neutral-400 hover:text-amber-300'
-      }`}
-      title="Notas de miembros"
-    >
-      <Users className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      type="button"
-      onClick={() => setActiveChordsSong(song)}
-      className="p-0.5 text-neutral-400 hover:text-indigo-400 transition-colors shrink-0"
-      title="Ver acordes"
-    >
-      <FileText className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      onClick={() => handleMoveSetlistItem(index, 'up')}
-      disabled={index === 0}
-      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-      title="Mover arriba"
-    >
-      <ArrowUp className="w-3.5 h-3.5" />
-    </button>
-
-    <button
-      onClick={() => handleMoveSetlistItem(index, 'down')}
-      disabled={index === activeSetlist.items.length - 1}
-      className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-      title="Mover abajo"
-    >
-      <ArrowDown className="w-3.5 h-3.5" />
     </button>
 
     <button
@@ -3287,6 +3246,28 @@ export default function RepertorioSetlists({
             : 'bg-black/40 text-neutral-300 placeholder:text-neutral-600 border border-neutral-800'
         }`}
       />
+
+      {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
+          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo
+          que sí se mira en cada vistazo a la lista (AGENTS.md §6). */}
+      <div className="flex items-center gap-2 pt-1">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
+          className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors ${
+            memberNotesCount > 0 ? 'text-amber-300 hover:text-amber-400' : 'text-neutral-400 hover:text-amber-300'
+          }`}
+        >
+          <Users className="w-3 h-3" /> Notas de miembros{memberNotesCount > 0 ? ` (${memberNotesCount})` : ''}
+        </button>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setActiveChordsSong(song); }}
+          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-neutral-400 hover:text-indigo-400 transition-colors"
+        >
+          <FileText className="w-3 h-3" /> Acordes
+        </button>
+      </div>
     </div>
   )}
  </div>
@@ -3351,22 +3332,6 @@ export default function RepertorioSetlists({
      title="Editar Bloque"
    >
      <Edit3 className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'up')}
-     disabled={index === 0}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover arriba"
-   >
-     <ArrowUp className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'down')}
-     disabled={index === activeSetlist.items.length - 1}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover abajo"
-   >
-     <ArrowDown className="w-3.5 h-3.5" />
    </button>
    <button
      onClick={() => handleRemoveSetlistItem(it.id)}
@@ -3452,22 +3417,6 @@ export default function RepertorioSetlists({
      title="Editar detalles"
    >
      <Edit3 className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'up')}
-     disabled={index === 0}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover arriba"
-   >
-     <ArrowUp className="w-3.5 h-3.5" />
-   </button>
-   <button
-     onClick={() => handleMoveSetlistItem(index, 'down')}
-     disabled={index === activeSetlist.items.length - 1}
-     className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-30 transition-colors shrink-0"
-     title="Mover abajo"
-   >
-     <ArrowDown className="w-3.5 h-3.5" />
    </button>
    <button
      onClick={() => handleRemoveSetlistItem(it.id)}
