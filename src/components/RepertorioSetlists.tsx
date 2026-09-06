@@ -2578,6 +2578,15 @@ export default function RepertorioSetlists({
 
             {showEnergyMap && (
               <>
+                {/* Nota breve pero deliberada: no va solo en el tooltip del título porque en
+                    móvil (tap, sin hover) nunca se vería, y el efecto de tocar un punto es lo
+                    bastante importante —cambia la energía de la canción en TODOS los
+                    repertorios— como para dejarlo oculto. Una línea, sin dismiss ni estado
+                    extra (AGENTS.md §6). */}
+                <p className="text-[9px] text-neutral-500">
+                  💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
+                </p>
+
                 <EnergyChart
                   setlistKey={activeSetlist.id}
                   chartData={chartData}
