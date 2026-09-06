@@ -598,7 +598,10 @@ export function PdfExportModal({
               max-width: 65%;
               max-height: 65%;
               object-fit: contain;
-              opacity: 0.09;
+              /* 0.09 se veía casi invisible en papel real (la pantalla ilumina el mismo valor de
+                 opacidad más de lo que refleja la tinta impresa) — subido a 0.16, todavía sutil
+                 como marca de agua de fondo, pero perceptible sin competir con el texto negro. */
+              opacity: 0.16;
             }
             .page-watermark-text {
               font-family: 'Anton', 'Oswald', sans-serif;
@@ -606,7 +609,7 @@ export function PdfExportModal({
               font-weight: 900;
               letter-spacing: 4px;
               color: ${inkColor};
-              opacity: 0.08;
+              opacity: 0.14;
               transform: rotate(-20deg);
               white-space: nowrap;
             }
@@ -1624,7 +1627,10 @@ export function PdfExportModal({
                   src={customLogoUrl}
                   alt=""
                   className="max-w-[65%] max-h-[65%] object-contain"
-                  style={{ opacity: 0.09 }}
+                  // 0.09 se veía casi invisible al imprimir en papel real (la pantalla ilumina el
+                  // mismo valor más de lo que refleja la tinta) — subido a 0.16, mismo valor que
+                  // el HTML de impresión real, para que la vista previa no engañe sobre cómo sale.
+                  style={{ opacity: 0.16 }}
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
@@ -1632,7 +1638,7 @@ export function PdfExportModal({
               ) : (
                 <span
                   className="whitespace-nowrap font-['Anton',sans-serif] font-black uppercase"
-                  style={{ fontSize: '70pt', letterSpacing: '4px', color: getInkColorHex(), opacity: 0.08, transform: 'rotate(-20deg)' }}
+                  style={{ fontSize: '70pt', letterSpacing: '4px', color: getInkColorHex(), opacity: 0.14, transform: 'rotate(-20deg)' }}
                 >
                   {bandName}
                 </span>
