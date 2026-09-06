@@ -139,3 +139,81 @@ export function computeAutoFitPlan(
 
   return { titleFontPt, pageItemCounts };
 }
+
+/**
+ * Intenta encajar el repertorio en EXACTAMENTE (como máximo) `forcedPageCount` páginas — se usa
+ * para igualar entre miembros de la banda: si el repertorio del cantante cabe en 1 hoja pero el
+ * del guitarrista necesita 2 (porque sus notas personales son más largas), no tiene sentido que
+ * uno tenga 1 hoja y otro 2 para el MISMO repertorio — un músico real, montando cada hoja a mano,
+ * intentaría apretar la del guitarrista para que también quepa en 1. Se prueba cada tamaño de
+ * candidato (de mayor a menor) con el reparto equilibrado habitual pero apuntando a
+ * `forcedPageCount` páginas en vez de al mínimo que le tocaría a este miembro solo, aceptando algo
+ * más de tolerancia que en el caso normal (`maxOverflowTolerance`) porque aquí ya sabemos que ese
+ * nº de páginas es alcanzable para este repertorio en general — pero SIEMPRE verificando la altura
+ * real de cada página resultante contra ese límite, nunca a ciegas. Si ni con la tolerancia máxima
+ * se logra, devuelve `null` — nunca se fuerza un desborde real de la hoja ni se pierde contenido:
+ * el llamador debe quedarse con el plan independiente original de ese miembro en ese caso.
+ */
+export function tryFitInPageCount(
+  totalItems: number,
+  measureFn: MeasureRangeFn,
+  opts: AutoFitOptions & { forcedPageCount: number; maxOverflowTolerance: number }
+): AutoFitResult | null {
+  const { candidateTitleFontPt, pageAvailableHeightPx, forcedPageCount, maxOverflowTolerance } = opts;
+  if (totalItems === 0) {
+    return { titleFontPt: candidateTitleFontPt[0], pageItemCounts: [0] };
+  }
+  if (forcedPageCount <= 0) return null;
+
+  const limit = pageAvailableHeightPx * (1 + maxOverflowTolerance);
+
+  for (const pt of candidateTitleFontPt) {
+    const totalHeight = measureFn(pt, 0, totalItems);
+    const targetPerPage = totalHeight / forcedPageCount;
+
+    const pageItemCounts: number[] = [];
+    let cursor = 0;
+    for (let p = 0; p < forcedPageCount - 1 && cursor < totalItems; p++) {
+      const remaining = totalItems - cursor;
+      let lo = 1;
+      let hi = remaining;
+      let best = 1;
+      while (lo <= hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        if (measureFn(pt, cursor, cursor + mid) <= targetPerPage) {
+          best = mid;
+          lo = mid + 1;
+        } else {
+          hi = mid - 1;
+        }
+      }
+      pageItemCounts.push(best);
+      cursor += best;
+    }
+    if (cursor < totalItems) {
+      pageItemCounts.push(totalItems - cursor);
+    }
+
+    // El reparto equilibrado, con un objetivo por página más generoso al buscar menos páginas de
+    // las que le tocarían a este tamaño en solitario, puede acabar necesitando MÁS páginas de las
+    // pedidas — en ese caso este tamaño de fuente no vale para el nº de páginas objetivo.
+    if (pageItemCounts.length > forcedPageCount) continue;
+
+    // Verificación real: cada página resultante debe caber dentro del límite con tolerancia — no
+    // basta con que el reparto lo haya intentado, hay que comprobar la altura real de cada una.
+    let fits = true;
+    let c = 0;
+    for (const count of pageItemCounts) {
+      if (measureFn(pt, c, c + count) > limit) {
+        fits = false;
+        break;
+      }
+      c += count;
+    }
+    if (fits) {
+      return { titleFontPt: pt, pageItemCounts };
+    }
+  }
+
+  return null;
+}

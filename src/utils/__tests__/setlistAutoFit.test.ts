@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeAutoFitPlan, MeasureRangeFn } from '../setlistAutoFit';
+import { computeAutoFitPlan, tryFitInPageCount, MeasureRangeFn } from '../setlistAutoFit';
 
 const CANDIDATES = [28, 25, 22, 19, 17];
 
@@ -126,5 +126,72 @@ describe('computeAutoFitPlan', () => {
     const result = computeAutoFitPlan(26, measure, { candidateTitleFontPt: CANDIDATES, pageAvailableHeightPx: 150 });
     expect(result.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(26);
     expect(result.pageItemCounts.every(c => c > 0)).toBe(true);
+  });
+});
+
+describe('tryFitInPageCount', () => {
+  it('encaja en 1 sola página cuando el contenido es corto de sobra', () => {
+    const measure = makeUniformMeasure({ 28: 10, 25: 9, 22: 8, 19: 7, 17: 6 });
+    const result = tryFitInPageCount(10, measure, {
+      candidateTitleFontPt: CANDIDATES,
+      pageAvailableHeightPx: 500,
+      forcedPageCount: 1,
+      maxOverflowTolerance: 0.12
+    });
+    expect(result).not.toBeNull();
+    expect(result!.pageItemCounts).toEqual([10]);
+  });
+
+  it('usa la tolerancia extra para igualar a 1 página cuando el ajuste normal necesitaría 2, prefiriendo el candidato más grande que aun así encaje', () => {
+    // Se prueba de mayor a menor candidato: a 19pt, 20*28=560, justo un 12% por encima de 500
+    // (el límite exacto de la tolerancia) -> ya encaja ahí, así que se prefiere 19pt (más grande)
+    // en vez de bajar hasta 17pt sin necesidad.
+    const measure = makeUniformMeasure({ 28: 40, 25: 35, 22: 30, 19: 28, 17: 26 });
+    const result = tryFitInPageCount(20, measure, {
+      candidateTitleFontPt: CANDIDATES,
+      pageAvailableHeightPx: 500,
+      forcedPageCount: 1,
+      maxOverflowTolerance: 0.12
+    });
+    expect(result).not.toBeNull();
+    expect(result!.titleFontPt).toBe(19);
+    expect(result!.pageItemCounts).toEqual([20]);
+  });
+
+  it('devuelve null si ni con la tolerancia máxima cabe en el nº de páginas pedido', () => {
+    // Incluso al mínimo, el contenido dobla el alto disponible: ninguna tolerancia razonable
+    // permite encajarlo en 1 sola página.
+    const measure = makeUniformMeasure({ 28: 200, 25: 180, 22: 160, 19: 140, 17: 120 });
+    const result = tryFitInPageCount(10, measure, {
+      candidateTitleFontPt: CANDIDATES,
+      pageAvailableHeightPx: 500,
+      forcedPageCount: 1,
+      maxOverflowTolerance: 0.12
+    });
+    expect(result).toBeNull();
+  });
+
+  it('nunca acepta una página que exceda el límite real con tolerancia, aunque el reparto lo intente', () => {
+    const measure = makeUniformMeasure({ 28: 100, 25: 90, 22: 80, 19: 70, 17: 60 });
+    const result = tryFitInPageCount(30, measure, {
+      candidateTitleFontPt: CANDIDATES,
+      pageAvailableHeightPx: 500,
+      forcedPageCount: 2,
+      maxOverflowTolerance: 0.12
+    });
+    // 30 items a 17pt = 1800px, ni repartido en 2 páginas con tolerancia (2*560=1120 < 1800) cabe.
+    expect(result).toBeNull();
+  });
+
+  it('nunca pierde canciones cuando sí logra encajar', () => {
+    const measure = makeUniformMeasure({ 28: 40, 25: 35, 22: 30, 19: 28, 17: 26 });
+    const result = tryFitInPageCount(20, measure, {
+      candidateTitleFontPt: CANDIDATES,
+      pageAvailableHeightPx: 500,
+      forcedPageCount: 1,
+      maxOverflowTolerance: 0.12
+    });
+    expect(result).not.toBeNull();
+    expect(result!.pageItemCounts.reduce((a, b) => a + b, 0)).toBe(20);
   });
 });

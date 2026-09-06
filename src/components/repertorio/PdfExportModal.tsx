@@ -9,7 +9,7 @@ import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../u
 import { MemberNotesModal } from './MemberNotesModal';
 import { ModalPortal } from '../common/ModalPortal';
 import { fitStackedNoteSegments, makeCanvasMeasurer, mmToPx, deterministicRotationDeg, deterministicOffsetPx, NoteSegment, NoteLine, StackedFitResult } from '../../utils/textFit';
-import { computeAutoFitPlan, MeasureRangeFn } from '../../utils/setlistAutoFit';
+import { computeAutoFitPlan, tryFitInPageCount, MeasureRangeFn } from '../../utils/setlistAutoFit';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -537,8 +537,8 @@ export function PdfExportModal({
               font-size: 80pt;
               font-weight: 900;
               letter-spacing: 4px;
-              color: #000;
-              opacity: 0.035;
+              color: ${inkColor};
+              opacity: 0.08;
               transform: rotate(-20deg);
               white-space: nowrap;
             }
@@ -577,25 +577,18 @@ export function PdfExportModal({
               letter-spacing: 0.5px;
               color: #000;
             }
+            /* Solo el nombre del repertorio, en una línea simple — sin badge ni duración/nº de
+               temas, que era ruido que no aportaba nada al músico leyendo desde el escenario. */
             .setlist-meta {
               font-family: 'Oswald', sans-serif;
               font-size: 9pt;
               font-weight: 700;
               color: #333;
               margin-top: 1px;
-              display: flex;
-              align-items: center;
-              gap: 5px;
-            }
-            .setlist-name-badge {
-              background: #000;
-              color: #fff !important;
-              padding: 0px 5px;
-              border-radius: 2px;
-              letter-spacing: 0.5px;
-            }
-            .meta-dot {
-              color: #888;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
             }
 
             .header-right {
@@ -607,6 +600,7 @@ export function PdfExportModal({
               background: #fff;
               border-radius: 4px;
               text-align: right;
+              white-space: nowrap;
             }
             .tag-title {
               font-family: 'Oswald', sans-serif;
@@ -904,11 +898,7 @@ export function PdfExportModal({
             ` : ''}
             <div class="band-text-block">
               <h1 class="band-heading">${bandName.toUpperCase()}</h1>
-              <div class="setlist-meta">
-                <span class="setlist-name-badge">${activeSetlist.nombre.toUpperCase()}</span>
-                ${showDuration ? `<span class="meta-dot">•</span> <span>${activeSetlistMetrics.formattedTime}</span>` : ''}
-                <span class="meta-dot">•</span> <span>${activeSetlistMetrics.songCount} TEMAS</span>
-              </div>
+              <div class="setlist-meta">${activeSetlist.nombre.toUpperCase()}</div>
             </div>
           </div>
 
@@ -1037,15 +1027,36 @@ export function PdfExportModal({
           pageAvailableHeightPx
         });
 
-        return { member, isMaster, plan };
+        return { member, isMaster, plan, measureFn, pageAvailableHeightPx };
+      });
+
+      // Igualar nº de hojas entre miembros: si el repertorio de ALGUNO cabe en menos páginas
+      // (normalmente porque sus notas personales son más cortas), lo lógico es intentar apretar
+      // también las de los demás para que todos usen ese mismo nº de hojas — como haría un músico
+      // montando cada set a mano, no dejar a unos en 1 hoja y a otros en 2 por el mismo repertorio
+      // si de verdad se puede evitar. Cada miembro sigue calculándose de forma independiente (esto
+      // solo intenta un reparto MÁS APRETADO para quien lo necesite, nunca al revés) y nunca se
+      // acepta un desborde real de página — si ni con tolerancia extra encaja, ese miembro se
+      // queda con su plan original de más páginas.
+      const EQUALIZE_MAX_OVERFLOW_TOLERANCE = 0.12;
+      const bestPageCount = Math.min(...memberPlans.map(mp => mp.plan.pageItemCounts.length));
+      const equalizedMemberPlans = memberPlans.map(mp => {
+        if (mp.plan.pageItemCounts.length <= bestPageCount) return mp;
+        const forced = tryFitInPageCount(activeSetlist.items.length, mp.measureFn, {
+          candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
+          pageAvailableHeightPx: mp.pageAvailableHeightPx,
+          forcedPageCount: bestPageCount,
+          maxOverflowTolerance: EQUALIZE_MAX_OVERFLOW_TOLERANCE
+        });
+        return forced ? { ...mp, plan: forced } : mp;
       });
 
       document.body.removeChild(measureFrame);
 
-      const totalPagesCount = memberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.length, 0);
+      const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.length, 0);
 
       let globalPageIdx = 0;
-      const pagesHtml = memberPlans
+      const pagesHtml = equalizedMemberPlans
         .map(({ member, isMaster, plan }) => {
           let cursor = 0;
           return plan.pageItemCounts
@@ -1420,7 +1431,7 @@ export function PdfExportModal({
                 impresión (position:absolute, no forma parte del flujo ni del cálculo de alto). */}
             <div
               className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none select-none overflow-hidden whitespace-nowrap font-['Anton',sans-serif] font-black uppercase"
-              style={{ fontSize: '70pt', letterSpacing: '4px', color: '#000', opacity: 0.035, transform: 'rotate(-20deg)' }}
+              style={{ fontSize: '70pt', letterSpacing: '4px', color: getInkColorHex(), opacity: 0.08, transform: 'rotate(-20deg)' }}
             >
               {bandName}
             </div>
@@ -1444,17 +1455,13 @@ export function PdfExportModal({
                     <h1 className="text-[14pt] font-black uppercase tracking-tighter m-0 leading-none text-black font-['Anton',sans-serif]">
                       {bandName.toUpperCase()}
                     </h1>
-                    <div className="text-[7.5pt] font-mono font-bold text-neutral-800 mt-0.5 flex items-center gap-1.5">
-                      <span className="bg-black text-white px-1 py-0 rounded text-[7pt] uppercase tracking-wider font-['Oswald',sans-serif]">
-                        {activeSetlist.nombre}
-                      </span>
-                      {showDuration && <span>• {activeSetlistMetrics.formattedTime}</span>}
-                      <span>• {activeSetlistMetrics.songCount} TEMAS</span>
+                    <div className="text-[9pt] font-bold text-neutral-700 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
+                      {activeSetlist.nombre.toUpperCase()}
                     </div>
                   </div>
                 </div>
 
-                <div className="border-2 border-black bg-white p-1 px-2 rounded text-right min-w-[110px] shadow-sm">
+                <div className="border-2 border-black bg-white p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap shadow-sm">
                   <div className="text-[6pt] font-mono font-bold text-neutral-500 uppercase tracking-widest">
                     {!isCurrentMaster ? 'REPERTORIO PERSONALIZADO' : 'COPIA DE CONTROL'}
                   </div>
