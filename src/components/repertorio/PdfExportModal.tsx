@@ -465,9 +465,9 @@ export function PdfExportModal({
         } else if (item.tipoItem === 'bis') {
           return `
             <div class="bis-divider-item">
-              <div class="bis-double-line"></div>
-              <div class="bis-text">=== ${(item.tituloCustom || 'BIS / ENCORE').toUpperCase()} ===</div>
-              <div class="bis-double-line"></div>
+              <div class="divider-line"></div>
+              <div class="bis-text">${(item.tituloCustom || 'BIS / ENCORE').toUpperCase()}</div>
+              <div class="divider-line"></div>
             </div>
           `;
         } else {
@@ -620,6 +620,15 @@ export function PdfExportModal({
 
             .setlist-song-item {
               padding: 0;
+              /* Red de seguridad de impresión: nuestro propio reparto por páginas (ver
+                 setlistAutoFit.ts) es quien decide qué canción va en qué hoja, así que en el caso
+                 normal el navegador nunca tiene que partir nada por su cuenta. Pero si, por lo
+                 que sea (una fuente que tarda un pelín más en cargar, redondeo de subpíxel), el
+                 contenido real se pasa unos px del físico de la hoja, esto evita que sea una fila
+                 CONCRETA la que se parta a la mitad entre dos hojas — la empuja entera a la
+                 siguiente en vez de partirla visualmente por la mitad.  */
+              break-inside: avoid;
+              page-break-inside: avoid;
             }
 
             /* .song-line nunca envuelve: el título se trunca con "..." antes de saltar a una
@@ -763,49 +772,48 @@ export function PdfExportModal({
               letter-spacing: 0.2px;
             }
 
-            /* Dividers & Interludes */
-            .block-divider-item {
+            /* Dividers & Interludes — línea fina con el texto en medio, ocupando lo mínimo
+               posible: son separadores de estructura, no canciones, no deben competir por
+               espacio vertical con el repertorio. */
+            .block-divider-item, .bis-divider-item {
               display: flex;
               align-items: center;
-              gap: 10px;
-              margin: 6px 0;
+              gap: 8px;
+              margin: 3px 0;
+              break-inside: avoid;
+              page-break-inside: avoid;
             }
             .divider-line {
               flex: 1;
-              height: 2px;
+              height: 1px;
               background: #000;
             }
             .block-title {
               font-family: 'Oswald', sans-serif;
-              font-size: 12pt;
+              font-size: 10pt;
               font-weight: 800;
               letter-spacing: 1px;
               color: #000;
-            }
-
-            .bis-divider-item {
-              margin: 10px 0 6px 0;
-              text-align: center;
-            }
-            .bis-double-line {
-              height: 2px;
-              background: #000;
-              margin: 2px 0;
+              white-space: nowrap;
             }
             .bis-text {
-              font-family: 'Anton', 'Oswald', sans-serif;
-              font-size: 16pt;
+              font-family: 'Oswald', sans-serif;
+              font-size: 10pt;
+              font-weight: 800;
               letter-spacing: 1px;
               color: #000;
+              white-space: nowrap;
             }
 
             .interlude-item {
               font-family: 'Oswald', monospace, sans-serif;
-              font-size: 13pt;
+              font-size: 11pt;
               font-weight: 700;
               color: #222;
-              padding: 3px 0 3px ${showSongNumbers ? '40px' : '6px'};
+              padding: 2px 0 2px ${showSongNumbers ? '40px' : '6px'};
               letter-spacing: 0.5px;
+              break-inside: avoid;
+              page-break-inside: avoid;
             }
             .interlude-bracket {
               color: #666;
@@ -1054,8 +1062,26 @@ export function PdfExportModal({
           ${pagesHtml}
           <script>
             window.onload = () => {
-              window.print();
-              setTimeout(() => window.close(), 800);
+              // 'onload' solo garantiza que el CSS de Google Fonts (el texto de las reglas
+              // @font-face) ya se descargó — NO que los archivos de fuente (woff2) referenciados
+              // ya estén descargados/parseados. Sin esperar a 'fonts.ready', window.print() podía
+              // disparar con la fuente de reserva del sistema todavía puesta (más ancha que
+              // Anton/Oswald/Caveat), reflowing el texto más alto de lo medido en el iframe oculto
+              // y desbordando la última canción a una hoja nueva — el bug real detrás de que tres
+              // ajustes distintos de tamaño/espaciado dieran siempre el mismo resultado: ninguno
+              // tocaba esta carrera, así que el contenido real seguía siendo más alto de lo medido.
+              var go = function () {
+                window.print();
+                setTimeout(function () { window.close(); }, 800);
+              };
+              if (document.fonts && document.fonts.ready) {
+                var done = false;
+                var proceed = function () { if (!done) { done = true; go(); } };
+                document.fonts.ready.then(proceed);
+                setTimeout(proceed, 2000);
+              } else {
+                go();
+              }
             };
           </script>
         </body>
@@ -1615,29 +1641,27 @@ export function PdfExportModal({
                     );
                   } else if (item.tipoItem === 'bloque_header') {
                     return (
-                      <div key={item.id} className="flex items-center gap-3 my-2.5 py-1">
-                        <div className="flex-1 h-0.5 bg-black" />
-                        <span className="font-['Oswald',sans-serif] text-[13pt] font-black uppercase tracking-wider text-black">
+                      <div key={item.id} className="flex items-center gap-2 my-0.5">
+                        <div className="flex-1 h-px bg-black" />
+                        <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
                           {item.tituloCustom || 'BLOQUE'}
                         </span>
-                        <div className="flex-1 h-0.5 bg-black" />
+                        <div className="flex-1 h-px bg-black" />
                       </div>
                     );
                   } else if (item.tipoItem === 'bis') {
                     return (
-                      <div key={item.id} className="my-3 py-1 text-center">
-                        <div className="h-0.5 bg-black my-0.5" />
-                        <div className="h-0.5 bg-black mb-1.5" />
-                        <span className="font-['Anton',sans-serif] text-[17pt] uppercase tracking-widest text-black">
-                          === {item.tituloCustom || 'BIS / ENCORE'} ===
+                      <div key={item.id} className="flex items-center gap-2 my-0.5">
+                        <div className="flex-1 h-px bg-black" />
+                        <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
+                          {item.tituloCustom || 'BIS / ENCORE'}
                         </span>
-                        <div className="h-0.5 bg-black mt-1.5" />
-                        <div className="h-0.5 bg-black my-0.5" />
+                        <div className="flex-1 h-px bg-black" />
                       </div>
                     );
                   } else {
                     return (
-                      <div key={item.id} className="pl-9 py-1 text-neutral-800 font-mono text-[12pt] font-bold">
+                      <div key={item.id} className="pl-9 py-0.5 text-neutral-800 font-mono text-[11pt] font-bold">
                         <span className="text-neutral-500">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || 'INTERLUDIO').toUpperCase()} <span className="text-neutral-500">****</span>
                         {(item.notas || (item as any).notaTema) && item.tituloCustom && (
                           <span className="text-[10pt] text-neutral-600 font-normal italic ml-2">
