@@ -1074,10 +1074,9 @@ export function PdfExportModal({
 
       // Marca de agua: el logo del grupo en alta resolución (la misma imagen original que la
       // cabecera, no una miniatura reescalada) si hay uno subido y activo; si no, el nombre del
-      // grupo como texto de respaldo. Si la imagen falla en cargar (404, CORS, etc.), el onerror
-      // reemplaza todo el contenedor con el nombre como fallback.
-      const watermarkInnerHtml = (showBandLogo && customLogoUrl?.trim())
-        ? `<img src="${customLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=\\\"page-watermark-text\\\">${bandName.toUpperCase()}</div>'" />`
+      // grupo como texto de respaldo.
+      const watermarkInnerHtml = (showBandLogo && customLogoUrl)
+        ? `<img src="${customLogoUrl}" alt="" class="page-watermark-logo" onerror="this.style.display='none'" />`
         : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
 
       let globalPageIdx = 0;

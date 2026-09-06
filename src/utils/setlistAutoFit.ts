@@ -129,24 +129,16 @@ export function computeAutoFitPlan(
   // disponible (no el objetivo equilibrado, que es más estricto), se fusionan; se repite por si
   // el resultado vuelve a quedar disperso. Nunca se fusiona si no cabe de verdad: eso generaría
   // un desborde real de la página en la impresión.
-  // Se permite una pequeña tolerancia (5px) en el merge para absorber variaciones por notas
-  // particularmente pesadas — el mismo espíritu que MIN_SIZE_OVERFLOW_TOLERANCE_PX, pero aquí
-  // midiendo dos páginas juntas, no una sola.
   const SPARSE_LAST_PAGE_RATIO = 0.4;
-  const MERGE_TOLERANCE_PX = 5;
   while (pageItemCounts.length > 1) {
     const lastCount = pageItemCounts[pageItemCounts.length - 1];
     const avgCount = totalItems / pageItemCounts.length;
-    // Si la última página tiene solo 1 item, SIEMPRE intentar fusionar (nunca dejar una
-    // canción sola en una página). Si tiene más, solo fusionar si es dispersa (< 40% del promedio).
-    if (lastCount > 1 && lastCount >= avgCount * SPARSE_LAST_PAGE_RATIO) break;
+    if (lastCount >= avgCount * SPARSE_LAST_PAGE_RATIO) break;
 
     const secondLastCount = pageItemCounts[pageItemCounts.length - 2];
     const mergedStart = totalItems - lastCount - secondLastCount;
     const mergedHeight = measureFn(titleFontPt, mergedStart, totalItems);
-    // Permitir tolerancia de 5px: a veces una canción con notas muy largas genera un pequeño
-    // exceso que la medición por canvas no captó exactamente igual que el render real.
-    if (mergedHeight > pageAvailableHeightPx + MERGE_TOLERANCE_PX) break;
+    if (mergedHeight > pageAvailableHeightPx) break;
 
     pageItemCounts.splice(pageItemCounts.length - 2, 2, secondLastCount + lastCount);
   }
