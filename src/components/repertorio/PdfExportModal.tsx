@@ -1078,8 +1078,11 @@ export function PdfExportModal({
       const totalPagesCount = equalizedMemberPlans.reduce((sum, mp) => sum + mp.plan.pageItemCounts.filter(count => count > 0).length, 0);
 
       // Resolver URLs relativas a absolutas para que funcionen en la ventana de impresión
+      // Usar window.location.origin + ruta si es relativa, sino usar URL tal cual
       const absoluteLogoUrl = customLogoUrl?.trim()
-        ? new URL(customLogoUrl, window.location.href).href
+        ? (customLogoUrl.startsWith('http')
+            ? customLogoUrl
+            : `${window.location.origin}${customLogoUrl.startsWith('/') ? '' : '/'}${customLogoUrl}`)
         : null;
 
       // Marca de agua: el logo del grupo en alta resolución (la misma imagen original que la
