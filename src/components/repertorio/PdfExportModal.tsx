@@ -116,7 +116,6 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   if (input.showSetlistNotes && input.generalNote) {
     segments.push({ text: `[General: ${input.generalNote}]`, className: 'note-general' });
   }
-  if (segments.length === 0) return null;
 
   const numberWidth = input.numberText
     ? input.measure(input.numberText, input.numberFontSizePx, 'Oswald, sans-serif', 800) + ROW_GAP_PX
@@ -131,6 +130,29 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   );
   const fixedLeftWidthPx = numberWidth + badgesWidth;
   const belowMaxWidthPx = input.rowWidthPx - (input.numberText ? 40 : 6);
+
+  if (segments.length === 0) {
+    // Sin notas que mostrar — pero puede haber badges (tonalidad/BPM/duración) que igual ocupan
+    // espacio fijo en la fila. Sin este caso, el llamador trataría `layout === null` como "nada
+    // compite por sitio" y dejaría el título en white-space:normal (libre de envolver), cuando en
+    // realidad el badge sigue ahí con flex-shrink:0 — el título envuelto empujaba el badge a su
+    // propia línea, aunque el título fuera corto y hubiese hueco de sobra sin el badge.
+    if (input.badges.length === 0) return null;
+    const emptyFit: StackedFitResult = { fontSizePx: input.noteMaxFontSizePx, lines: [] };
+    const fullTitleWidth = input.measure(input.titleText, input.titleFontSizePx, input.titleFontFamily, 900);
+    if (fixedLeftWidthPx + fullTitleWidth + ROW_GAP_PX <= input.rowWidthPx) {
+      return { mode: 'inline', maxWidthPx: 0, fit: emptyFit };
+    }
+    // El título completo no deja hueco para los badges: truncarlo (nunca por debajo del mínimo
+    // legible) para que sigan cabiendo en la misma fila en vez de quedar empujados aparte.
+    const maxTitleWidthForBadges = input.rowWidthPx - fixedLeftWidthPx - ROW_GAP_PX;
+    const truncatedTitle = maxTitleWidthForBadges > 0
+      ? truncateTitleToWidth(input.titleText, maxTitleWidthForBadges, input.titleFontSizePx, input.titleFontFamily, input.measure)
+      : undefined;
+    return truncatedTitle && truncatedTitle !== input.titleText
+      ? { mode: 'inline', maxWidthPx: 0, fit: emptyFit, truncatedTitle }
+      : { mode: 'inline', maxWidthPx: 0, fit: emptyFit };
+  }
 
   const fitAt = (maxWidthPx: number) =>
     fitStackedNoteSegments(segments, {
@@ -417,7 +439,10 @@ export function PdfExportModal({
           // Rotación + desplazamiento por LÍNEA (no un único transform para todo el bloque): así
           // las tres notas no giran como una pieza rígida, sino que cada una parece garabateada
           // por separado, en un momento distinto — más orgánico y menos "maquetado".
-          const notesHtml = layout
+          // layout puede venir en modo 'inline' con fit.lines vacío (caso "solo badges, sin
+          // notas" — ver computeNoteLayout): ahí no hay nada que pintar como nota manuscrita,
+          // solo se usó layout para calcular cuánto debía ceder el título ante los badges.
+          const notesHtml = layout && layout.fit.lines.length > 0
             ? `<div class="${layout.mode === 'inline' ? 'song-notes-right' : 'song-notes-below'}" style="max-width:${layout.mode === 'inline' ? `${layout.maxWidthPx}px` : 'none'};">${layout.fit.lines.map((line, i) => {
                 const color = noteLineColor(line.className);
                 // Flecha hacia el título: en modo 'below' en la primera línea (todo el bloque
@@ -1711,7 +1736,11 @@ export function PdfExportModal({
                               un contenedor flex-column con varias líneas, su "baseline" para el
                               padre se toma de la ÚLTIMA línea — empujaba toda la columna hacia
                               abajo, dejando hueco entre el título y la primera nota. */}
-                          {noteLayout && noteLayout.mode === 'inline' && (
+                          {/* noteLayout puede venir en modo 'inline' con fit.lines vacío (caso
+                              "solo badges, sin notas" — ver computeNoteLayout): ahí no hay nada
+                              que pintar como nota manuscrita, solo se usó el layout para decidir
+                              cuánto debía ceder el título ante los badges. */}
+                          {noteLayout && noteLayout.mode === 'inline' && noteLayout.fit.lines.length > 0 && (
                             <div
                               className="flex flex-col items-start self-start shrink-0"
                               style={{ maxWidth: noteLayout.maxWidthPx, lineHeight: 1 }}
