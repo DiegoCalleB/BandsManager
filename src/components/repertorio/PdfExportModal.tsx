@@ -1117,7 +1117,9 @@ export function PdfExportModal({
         const pageAvailableHeightPx = PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx;
 
         const measureFn: MeasureRangeFn = (titleFontPt, fromIndex, toIndexExclusive) => {
-          const rowsHtml = activeSetlist.items
+          // Filtrar solo canciones (tipoItem === 'cancion') para medir y contar correctamente
+          const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
+          const rowsHtml = songsOnly
             .slice(fromIndex, toIndexExclusive)
             .map((item, i) => buildRowHtml(item, fromIndex + i, titleFontPt, member, isMaster))
             .join('');
@@ -1249,7 +1251,10 @@ export function PdfExportModal({
               // completo, una página concreta suele tener margen para una letra MAYOR que la
               // elegida para el conjunto total — se aprovecha en vez de dejarla al mínimo.
               const pageFontPt = plan.pageFontSizes[pageIdx] ?? plan.titleFontPt;
-              const rowsHtml = activeSetlist.items
+              // Filtrar solo canciones (tipoItem === 'cancion') — el PDF muestra solo canciones,
+              // no pausas, presentaciones o interlúdios. El orden y el conteo deben coincidir.
+              const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
+              const rowsHtml = songsOnly
                 .slice(startIdx, startIdx + count)
                 .map((item, i) => buildRowHtml(item, startIdx + i, pageFontPt, member, isMaster))
                 .join('');
@@ -1755,21 +1760,25 @@ export function PdfExportModal({
                   es el de una lista impresa apretada — no se reserva hueco para notas aquí, se
                   aprovecha el que ya deja el interlineado del título (ver modo 'below' abajo). */}
               <div className="space-y-0">
-                {activeSetlist.items.map((item, index) => {
-                  if (item.tipoItem === 'cancion') {
-                    const s = songs.find(x => x.id === item.songId);
-                    if (!s) return null;
+                {(() => {
+                  let songIndex = 0; // Contador solo para canciones, no para todos los items
+                  return activeSetlist.items.map((item, index) => {
+                    if (item.tipoItem === 'cancion') {
+                      const s = songs.find(x => x.id === item.songId);
+                      if (!s) return null;
 
-                    const memberNote = !isCurrentMaster ? getSongMemberNote(s, currentPreviewMember.id, currentPreviewMember.name) : '';
-                    const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
-                    const setlistNote = (item as any).notaTema || item.notas || '';
+                      songIndex++; // Incrementar solo cuando es una canción
 
-                    // La vista previa no pagina de verdad (scroll continuo), así que no puede
-                    // reflejar el nº real de hojas — pero al menos usa un tamaño de referencia
-                    // mayor en modo "de pie" para dar una idea de que la letra sale más grande.
-                    const titleFontPt = viewDensity === 'de_pie' ? TITLE_FONT_CANDIDATES_PT[0] : PREVIEW_TITLE_FONT_PT;
-                    const noteFontPt = deriveNoteFontPt(titleFontPt);
-                    const numberText = showSongNumbers ? `${index + 1}.` : '';
+                      const memberNote = !isCurrentMaster ? getSongMemberNote(s, currentPreviewMember.id, currentPreviewMember.name) : '';
+                      const generalRepertorioNote = s.notasRepertorio || s.notasInternas || '';
+                      const setlistNote = (item as any).notaTema || item.notas || '';
+
+                      // La vista previa no pagina de verdad (scroll continuo), así que no puede
+                      // reflejar el nº real de hojas — pero al menos usa un tamaño de referencia
+                      // mayor en modo "de pie" para dar una idea de que la letra sale más grande.
+                      const titleFontPt = viewDensity === 'de_pie' ? TITLE_FONT_CANDIDATES_PT[0] : PREVIEW_TITLE_FONT_PT;
+                      const noteFontPt = deriveNoteFontPt(titleFontPt);
+                      const numberText = showSongNumbers ? `${songIndex}.` : '';
                     const badges: NoteLayoutBadge[] = [
                       ...(showTonality && s.tonalidad ? [{ text: s.tonalidad, fontSizePx: ptToPx(11), extraWidthPx: 14 }] : []),
                       ...(showBpm && s.bpm ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(10.5) }] : []),
@@ -1999,7 +2008,8 @@ export function PdfExportModal({
                       </div>
                     );
                   }
-                })}
+                  }); // end map
+                })()}
               </div>
             </div>
 
