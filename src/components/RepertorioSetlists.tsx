@@ -3128,6 +3128,8 @@ export default function RepertorioSetlists({
     selectPlayerSongWithQueue(song, true, setlistSongs);
   };
 
+  const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
+
   return (
   <div
   key={it.id}
@@ -3187,7 +3189,7 @@ export default function RepertorioSetlists({
         </div>
       ) : (
         <>
-          <span className="sm:group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{index + 1}</span>
+          <span className="sm:group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{songIndex + 1}</span>
           <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-black" />
         </>
       )}
