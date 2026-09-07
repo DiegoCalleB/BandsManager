@@ -49,7 +49,7 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
     credits: '100 créditos / mes',
     creditsSub: 'Pitches básicos y consultas IA',
     description: 'Para proyectos noveles que están empezando a organizarse.',
-    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'repertorio', 'catalogo', 'discografia', 'directo', 'planes'],
+    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'repertorio', 'catalogo', 'discografia', 'planes'],
     features: [
       '1 banda o proyecto activo',
       '10 salas en base de datos',
@@ -67,7 +67,7 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
     credits: '300 créditos / mes',
     creditsSub: 'Booking guiado y generación de ideas',
     description: 'Bandas en activo que buscan arrancar su booking y difusión.',
-    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'fans', 'reels', 'repertorio', 'catalogo', 'discografia', 'directo', 'planes'],
+    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'fans', 'reels', 'repertorio', 'catalogo', 'discografia', 'planes'],
     stickerGift: {
       qty: '250 pegatinas gratis',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
@@ -91,7 +91,7 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
     credits: '800 créditos / mes',
     creditsSub: 'Flujos agénticos completos y auto-booking',
     description: 'Para bandas que tocan con frecuencia y automatizan su gestión.',
-    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'catalogo', 'discografia', 'directo', 'chat', 'planes'],
+    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'catalogo', 'discografia', 'chat', 'planes'],
     stickerGift: {
       qty: '500 pegatinas gratis',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',
@@ -115,7 +115,7 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
     credits: '2.500 créditos / mes',
     creditsSub: 'Capacidad multi-banda y agentes en paralelo',
     description: 'Control total para proyectos profesionales, agencias y mánagers.',
-    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'catalogo', 'discografia', 'directo', 'chat', 'finanzas', 'merchan', 'planes'],
+    allowedModules: ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'epk', 'giras', 'fans', 'reels', 'repertorio', 'catalogo', 'discografia', 'chat', 'finanzas', 'merchan', 'planes'],
     stickerGift: {
       qty: '1.000 pegatinas + entrega prioritaria',
       description: 'Pack de pegatinas de tu banda, gratis con tu primera suscripción',

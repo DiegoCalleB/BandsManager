@@ -14,17 +14,21 @@ interface EscenarioViewProps {
   songs: Song[];
   setShowPdfPreview: (val: boolean) => void;
   stageAudioRef: React.RefObject<HTMLAudioElement | null>;
+  stageAudioRefB: React.RefObject<HTMLAudioElement | null>;
   stagePlayingIndex: number | null;
   setStagePlayingIndex: (idx: number | null) => void;
   stageIsPlaying: boolean;
   setStageIsPlaying: (playing: boolean) => void;
   stageCurrentTime: number;
-  setStageCurrentTime: (time: number) => void;
   stageItemDuration: number;
   stageResolvedUrl: string | null;
   stageAutoplayNext: boolean;
   setStageAutoplayNext: (val: boolean) => void;
+  stageCrossfadeEnabled: boolean;
+  setStageCrossfadeEnabled: (val: boolean) => void;
+  isCrossfading: boolean;
   handleStageAudioEnded: () => void;
+  handleStageTimeUpdate: (currentTimeSec: number) => void;
   handleStageSeek: (val: number) => void;
   handleStagePrev: () => void;
   handleStageNext: () => void;
@@ -34,6 +38,13 @@ interface EscenarioViewProps {
   setShowItemAudioUrl: (url: string) => void;
   setShowShowItemModal: (val: boolean) => void;
   formatItemDuration: (item: SetlistItem) => string;
+  /** true cuando este componente se embebe dentro de la pestaña Repertorio (ver
+   * RepertorioSetlists.tsx, toggle "Reproducir concierto") en vez de vivir en su propia pestaña
+   * — oculta el selector de repertorio, el botón "Imprimir/Exportar" y la lista de solo lectura
+   * de temas, porque Repertorio ya tiene su propio selector, su propio "Imprimir/Exportar" y su
+   * propia lista (editable, con arrastre) — mostrarlos dos veces sería puro ruido. Solo se queda
+   * la consola del reproductor (metadata, controles, barra de progreso, atajos). */
+  embedded?: boolean;
 }
 
 export const EscenarioView: React.FC<EscenarioViewProps> = ({
@@ -44,17 +55,21 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   songs,
   setShowPdfPreview,
   stageAudioRef,
+  stageAudioRefB,
   stagePlayingIndex,
   setStagePlayingIndex,
   stageIsPlaying,
   setStageIsPlaying,
   stageCurrentTime,
-  setStageCurrentTime,
   stageItemDuration,
   stageResolvedUrl,
   stageAutoplayNext,
   setStageAutoplayNext,
+  stageCrossfadeEnabled,
+  setStageCrossfadeEnabled,
+  isCrossfading,
   handleStageAudioEnded,
+  handleStageTimeUpdate,
   handleStageSeek,
   handleStagePrev,
   handleStageNext,
@@ -63,11 +78,16 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   setEditingShowItem,
   setShowItemAudioUrl,
   setShowShowItemModal,
-  formatItemDuration
+  formatItemDuration,
+  embedded = false
 }) => {
   const currentStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex] : null;
-  const currentStageSong = currentStageItem && currentStageItem.tipoItem === 'cancion' 
-    ? songs.find(s => s.id === currentStageItem.songId) 
+  const currentStageSong = currentStageItem && currentStageItem.tipoItem === 'cancion'
+    ? songs.find(s => s.id === currentStageItem.songId)
+    : null;
+  const nextStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex + 1] : null;
+  const nextStageSong = nextStageItem && nextStageItem.tipoItem === 'cancion'
+    ? songs.find(s => s.id === nextStageItem.songId)
     : null;
   const isCurrentSongFavorited = currentStageSong?.favoritoGeneral || false;
   const stageProgressPct = stageItemDuration > 0 ? Math.min(100, (stageCurrentTime / stageItemDuration) * 100) : 0;
@@ -121,31 +141,43 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           </h2>
         </div>
 
-        <div className="flex items-center gap-2">
-          <select
-            value={activeSetlistId}
-            onChange={(e) => setActiveSetlistId(e.target.value)}
-            className="bg-neutral-900 text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-xl focus:outline-none"
-          >
-            {setlists.map(s => (
-              <option key={s.id} value={s.id}>{s.nombre}</option>
-            ))}
-          </select>
+        {/* Selector de repertorio + Imprimir/Exportar: Repertorio ya tiene los suyos propios
+            (sidebar de setlists + menú "⋯") cuando este reproductor va embebido ahí — mostrarlos
+            aquí también sería un control duplicado en la misma pantalla. */}
+        {!embedded && (
+          <div className="flex items-center gap-2">
+            <select
+              value={activeSetlistId}
+              onChange={(e) => setActiveSetlistId(e.target.value)}
+              className="bg-neutral-900 text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-xl focus:outline-none"
+            >
+              {setlists.map(s => (
+                <option key={s.id} value={s.id}>{s.nombre}</option>
+              ))}
+            </select>
 
-          <button
-            onClick={() => setShowPdfPreview(true)}
-            className="px-2 py-1 bg-[#f2ca50] text-black font-mono font-extrabold text-[10px] rounded-xl hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Imprimir / Exportar</span>
-          </button>
-        </div>
+            <button
+              onClick={() => setShowPdfPreview(true)}
+              className="px-2 py-1 bg-[#f2ca50] text-black font-mono font-extrabold text-[10px] rounded-xl hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Imprimir / Exportar</span>
+            </button>
+          </div>
+        )}
       </div>
 
+      {/* Dos <audio> en vez de uno: durante un fundido cruzado, uno termina la canción actual
+          mientras el otro ya reproduce la siguiente desde cero — ver useStagePlayer.ts. Cuando el
+          fundido está desactivado, el segundo simplemente no se usa nunca. */}
       <audio
         ref={stageAudioRef as any}
         onEnded={handleStageAudioEnded}
-        onTimeUpdate={(e) => setStageCurrentTime(Math.round(e.currentTarget.currentTime))}
+        onTimeUpdate={(e) => handleStageTimeUpdate(Math.round(e.currentTarget.currentTime))}
+      />
+      <audio
+        ref={stageAudioRefB as any}
+        onEnded={handleStageAudioEnded}
       />
 
       {/* CONCERT PLAYER CONSOLE (SPOTIFY LIVE BAR) */}
@@ -187,6 +219,11 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       Simulación
                     </span>
                   ) : null}
+                  {isCrossfading && nextStageSong && (
+                    <span className="px-2 py-0.5 rounded-full text-[9px] bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1 animate-pulse">
+                      🔀 Fundiendo → {nextStageSong.titulo}
+                    </span>
+                  )}
                 </div>
 
                 <div className="text-base sm:text-lg font-extrabold font-mono text-white truncate max-w-xs sm:max-w-md flex items-center gap-2">
@@ -307,13 +344,27 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
               <button
                 onClick={() => setStageAutoplayNext(!stageAutoplayNext)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all ${
-                  stageAutoplayNext 
-                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm' 
+                  stageAutoplayNext
+                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm'
                     : 'bg-[#282828] text-zinc-400 border border-transparent hover:text-white'
                 }`}
                 title={stageAutoplayNext ? "Autoplay continuo activado" : "Autoplay desactivado"}
               >
                 <Repeat className="w-4 h-4" />
+              </button>
+
+              {/* Fundido real entre canciones consecutivas (5s, curva de potencia constante) —
+                  desactivado por defecto, junto al botón de Autoplay del que depende. */}
+              <button
+                onClick={() => setStageCrossfadeEnabled(!stageCrossfadeEnabled)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all text-base ${
+                  stageCrossfadeEnabled
+                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-sm'
+                    : 'bg-[#282828] text-zinc-400 border border-transparent hover:text-white'
+                }`}
+                title={stageCrossfadeEnabled ? "Fundido entre canciones activado (5s)" : "Fundido entre canciones desactivado (corte directo)"}
+              >
+                🔀
               </button>
             </div>
           </div>
@@ -387,7 +438,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
         </div>
       )}
 
-      {activeSetlist ? (
+      {/* Lista de solo lectura de temas: Repertorio ya trae su propia lista (editable, con
+          arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
+          repetirla aquí sería la misma información dos veces en la misma pantalla. */}
+      {!embedded && activeSetlist ? (
         <div className="bg-[#121212] border border-white/5 rounded-2xl overflow-hidden shadow-2xl p-4 sm:p-6">
           <div className="overflow-x-auto">
             <div className="min-w-[650px] space-y-2">
@@ -468,7 +522,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       </div>
                     </div>
                   );
-                } else if (it.tipoItem === 'bloque_header') {
+                } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
                   return (
                     <div
                       key={it.id}

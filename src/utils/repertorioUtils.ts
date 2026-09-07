@@ -12,6 +12,7 @@ export interface SongLike {
 export interface SetlistItemLike {
   id: string;
   tipoItem?: string;
+  bloqueSubtipo?: string;
   duracionEstimadaMinutos?: number;
   duracionEstimadaSegundos?: number;
   songId?: string;
@@ -79,7 +80,7 @@ export function calculateSetlistStats(
           bpmCount++;
         }
       }
-    } else if (item.tipoItem === 'bloque_header') {
+    } else if (item.tipoItem === 'bloque' && item.bloqueSubtipo === 'header') {
       // Section headers organise the show but take no stage time of their own
       blockCount++;
     } else {

@@ -122,3 +122,21 @@ export function deterministicRotationDeg(id: string, maxDeg = 1.2): number {
   const normalized = (Math.abs(hash) % 1000) / 1000; // 0..1
   return (normalized * 2 - 1) * maxDeg;
 }
+
+/**
+ * Desplazamiento pequeño y determinista (-maxPx a +maxPx) derivado de un id — mismo mecanismo de
+ * hash que deterministicRotationDeg pero con una constante de mezcla distinta (37 en vez de 31)
+ * para que, aplicados al mismo id, rotación y desplazamiento no queden correlados (evita que
+ * "más rotado" implique siempre "más desplazado"). Usado junto a la rotación para que cada nota
+ * manuscrita "flote" ligeramente fuera de la línea base, como una anotación escrita a mano en un
+ * momento distinto — no una fila de texto perfectamente alineada. Nada de Math.random(): debe
+ * dar siempre el mismo resultado para el mismo id, entre repintados e impresiones.
+ */
+export function deterministicOffsetPx(id: string, maxPx = 2.5): number {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 37 + id.charCodeAt(i)) | 0;
+  }
+  const normalized = (Math.abs(hash) % 1000) / 1000; // 0..1
+  return (normalized * 2 - 1) * maxPx;
+}

@@ -438,7 +438,21 @@ export function EnergyChart({
             axisLine={false}
             hide={compact}
           />
-          <YAxis domain={yDomain} stroke="#666666" fontSize={fontSize} tickLine={false} axisLine={false} width={compact ? 0 : 22} hide={compact} />
+          {/* tickFormatter a propósito: los datos y el dominio siguen en la escala interna 1-20
+              (energia se guarda así en toda la app — ver getEnergyInfo/handleSetEnergiaManual),
+              pero de cara al usuario el gráfico debe leerse en 1-10, igual que el popover de
+              energía del grid. Es una transformación puramente de presentación (÷2 en la
+              etiqueta), no cambia la posición real de la curva. */}
+          <YAxis
+            domain={yDomain}
+            tickFormatter={(v: number) => `${Math.round(v / 2)}`}
+            stroke="#666666"
+            fontSize={fontSize}
+            tickLine={false}
+            axisLine={false}
+            width={compact ? 0 : 22}
+            hide={compact}
+          />
 
           <RechartsTooltip
             cursor={{ stroke: '#666', strokeDasharray: '3 3' }}

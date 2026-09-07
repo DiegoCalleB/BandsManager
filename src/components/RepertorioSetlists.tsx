@@ -1,6 +1,7 @@
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
-import { api } from '../services/api';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
+import { api } from '../services/api';
 import { ThemeColors, Song, Setlist, SetlistItem, Concert, Rehearsal, SetlistShortcut } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { 
@@ -17,8 +18,8 @@ import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
 import { useShareModal } from '../hooks/useShareModal';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
-import { useStagePlayer } from '../hooks/useStagePlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
+import { useStagePlayer } from '../hooks/useStagePlayer';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
 import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
 import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
@@ -32,8 +33,8 @@ import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
 import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
 import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
-import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
+import { EscenarioView } from './repertorio/EscenarioView';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { 
@@ -55,7 +56,7 @@ interface RepertorioSetlistsProps {
  bandLogoUrl?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
- view?: 'repertorio' | 'catalogo' | 'discografia' | 'directo';
+ view?: 'repertorio' | 'catalogo' | 'discografia';
  currentUser?: any;
 }
 
@@ -79,7 +80,7 @@ export function formatSecondsToMmSs(secs: number): string {
 }
 
 export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
-  bloque_header: { label: 'Encabezado de Bloque / Sección', icon: '⚡', bg: 'bg-[#d1b375]/20', text: 'text-[#d1b375]', border: 'border-[#f2ca50]/50' },
+  header: { label: 'Encabezado de Bloque / Sección', icon: '⚡', bg: 'bg-[#d1b375]/20', text: 'text-[#d1b375]', border: 'border-[#f2ca50]/50' },
   presentacion: { label: 'Presentación Banda / Saludo', icon: '🎤', bg: 'bg-sky-500/15', text: 'text-sky-400', border: 'border-sky-500/30' },
   intro_tema: { label: 'Intro / Historia del Tema', icon: '🗣️', bg: 'bg-indigo-500/15', text: 'text-indigo-400', border: 'border-indigo-500/30' },
   beatbox: { label: 'Performance Beatbox / Ritmo', icon: '🥁', bg: 'bg-amber-500/15', text: 'text-amber-400', border: 'border-amber-500/30' },
@@ -280,19 +281,19 @@ const DEFAULT_SETLISTS: Setlist[] = [
  fechaCreacion: '2026-03-01',
  fechaUltimaEdicion: '2026-08-01',
  items: [
- { id: 'i-b1', tipoItem: 'bloque_header', tituloCustom: '🔥 Bloque 1: Calentamiento & Arranque' },
+ { id: 'i-b1', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Bloque 1: Calentamiento & Arranque' },
  { id: 'i-1', songId: 'song-1', tipoItem: 'cancion', notaTema: 'Arrancar directo sin intro' },
  { id: 'i-2', songId: 'song-2', tipoItem: 'cancion', notaTema: 'Empalmar batería con final de Brisa' },
- { id: 'i-bbx', tipoItem: 'beatbox', tituloCustom: 'Performance Beatbox Filgue & Intro Vocal', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Luz cenital sobre Filgue. Batería marca el pulso.' },
- 
- { id: 'i-b2', tipoItem: 'bloque_header', tituloCustom: '⚡ Bloque 2: Nudo & Clímax' },
+ { id: 'i-bbx', tipoItem: 'bloque', bloqueSubtipo: 'beatbox', tituloCustom: 'Performance Beatbox Filgue & Intro Vocal', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Luz cenital sobre Filgue. Batería marca el pulso.' },
+
+ { id: 'i-b2', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '⚡ Bloque 2: Nudo & Clímax' },
  { id: 'i-3', songId: 'song-4', tipoItem: 'cancion', notaTema: 'Subidón ska' },
- { id: 'i-4', tipoItem: 'presentacion', tituloCustom: 'Presentación Banda & Agradecimientos', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Jon habla al público y presenta a los vientos' },
+ { id: 'i-4', tipoItem: 'bloque', bloqueSubtipo: 'presentacion', tituloCustom: 'Presentación Banda & Agradecimientos', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Jon habla al público y presenta a los vientos' },
  { id: 'i-5', songId: 'song-3', tipoItem: 'cancion', notaTema: 'Cambio de guitarra a Drop D' },
- 
- { id: 'i-b3', tipoItem: 'bloque_header', tituloCustom: '💣 Bloque 3: Desenlace & BIS Final' },
+
+ { id: 'i-b3', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '💣 Bloque 3: Desenlace & BIS Final' },
  { id: 'i-6', songId: 'song-6', tipoItem: 'cancion', notaTema: 'Estribillo con coros del público' },
- { id: 'i-7', tipoItem: 'bis', tituloCustom: 'BIS / Cierre de Festival', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Salida rápida de escenario y vuelta para bis' },
+ { id: 'i-7', tipoItem: 'bloque', bloqueSubtipo: 'bis', tituloCustom: 'BIS / Cierre de Festival', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Salida rápida de escenario y vuelta para bis' },
  { id: 'i-8', songId: 'song-5', tipoItem: 'cancion', notaTema: 'Solo final de violín extendido' }
  ]
  },
@@ -305,18 +306,18 @@ const DEFAULT_SETLISTS: Setlist[] = [
  fechaCreacion: '2026-04-10',
  fechaUltimaEdicion: '2026-07-20',
  items: [
- { id: 'i-20', tipoItem: 'bloque_header', tituloCustom: '🔥 Bloque 1: Bienvenida & Potencia' },
+ { id: 'i-20', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Bloque 1: Bienvenida & Potencia' },
  { id: 'i-21', songId: 'song-1', tipoItem: 'cancion' },
  { id: 'i-22', songId: 'song-6', tipoItem: 'cancion' },
- { id: 'i-intro', tipoItem: 'intro_tema', tituloCustom: 'Historia / Intro a Noches de Garaje', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Diego explica el origen de la canción' },
+ { id: 'i-intro', tipoItem: 'bloque', bloqueSubtipo: 'intro_tema', tituloCustom: 'Historia / Intro a Noches de Garaje', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Diego explica el origen de la canción' },
  { id: 'i-23', songId: 'song-3', tipoItem: 'cancion' },
- 
- { id: 'i-23b', tipoItem: 'bloque_header', tituloCustom: '🎸 Bloque 2: Acústico & Covers' },
+
+ { id: 'i-23b', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🎸 Bloque 2: Acústico & Covers' },
  { id: 'i-24', songId: 'song-8', tipoItem: 'cancion', notaTema: 'Cover festivo' },
- { id: 'i-25', tipoItem: 'chapa', tituloCustom: 'Chapa Merch & Agradecimientos a la Sala', duracionEstimadaMinutos: 3, duracionEstimadaSegundos: 180 },
+ { id: 'i-25', tipoItem: 'bloque', bloqueSubtipo: 'chapa', tituloCustom: 'Chapa Merch & Agradecimientos a la Sala', duracionEstimadaMinutos: 3, duracionEstimadaSegundos: 180 },
  { id: 'i-26', songId: 'song-7', tipoItem: 'cancion', notaTema: 'Tema nuevo en prueba' },
- 
- { id: 'i-26b', tipoItem: 'bloque_header', tituloCustom: '⚡ Bloque 3: Desenlace & Traca' },
+
+ { id: 'i-26b', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '⚡ Bloque 3: Desenlace & Traca' },
  { id: 'i-27', songId: 'song-5', tipoItem: 'cancion' },
  { id: 'i-28', songId: 'song-4', tipoItem: 'cancion' },
  { id: 'i-29', songId: 'song-2', tipoItem: 'cancion' }
@@ -380,7 +381,7 @@ export default function RepertorioSetlists({
 
  // Navigation tab inside module
  const [showPdfPreview, setShowPdfPreview] = useState(false);
- const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
+ const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'discografia'>('setlists');
  // Plegado por defecto: la lista de setlists guardados ocupaba espacio permanentemente aunque
  // el usuario normalmente ya sabe con cuál está trabajando (ver activeSetlistId más abajo, que
  // recuerda el último setlist activo entre sesiones) — se despliega con un clic cuando hace falta.
@@ -392,10 +393,9 @@ export default function RepertorioSetlists({
      setActiveTab('catalogo');
    } else if (view === 'discografia') {
      setActiveTab('discografia');
-   } else if (view === 'directo') {
-     setActiveTab('escenario');
    } else {
-     // repertorio or undefined
+     // repertorio, undefined, o el antiguo 'directo' (módulo eliminado) — aterriza en Repertorio
+     // en vez de en una vista muerta.
      setActiveTab('setlists');
    }
  }, [view]);
@@ -504,27 +504,42 @@ export default function RepertorioSetlists({
  };
 
  const {
-   stageAudioRef,
-   stagePlayingIndex, setStagePlayingIndex,
-   stageIsPlaying, setStageIsPlaying,
-   stageAutoplayNext, setStageAutoplayNext,
-   stageCurrentTime, setStageCurrentTime,
-   stageItemDuration,
-   stageResolvedUrl,
-   toggleStagePlayPause,
-   handleStageNext,
-   handleStagePrev,
-   handleStageSeek,
-   handleStageAudioEnded,
- } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
-
- const {
    activePlayerSong, setActivePlayerSong,
    playerAutoPlay,
    playSignal,
    isPlayerPlaying, setIsPlayerPlaying,
    handleSelectPlayerSong,
  } = useAudioPlayer();
+
+ // Concert Player (Reproductor de Concierto / Modo Escenario)
+ const {
+   stageAudioRef, stageAudioRefB,
+   stagePlayingIndex, setStagePlayingIndex,
+   stageIsPlaying, setStageIsPlaying,
+   stageAutoplayNext, setStageAutoplayNext,
+   stageCurrentTime, setStageCurrentTime,
+   stageItemDuration,
+   stageResolvedUrl,
+   stageCrossfadeEnabled, setStageCrossfadeEnabled,
+   isCrossfading,
+   handleStageAudioEnded,
+   handleStageTimeUpdate,
+   handleStageSeek,
+   handleStagePrev,
+   handleStageNext,
+   toggleStagePlayPause,
+ } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
+
+ // Cola de canciones que gobierna Siguiente/Anterior (y el fundido) de la barra Spotify
+ // persistente de abajo — por defecto el catálogo completo (comportamiento de siempre en
+ // Catálogo/Discografía); "Reproducir desde aquí" en una fila de Repertorio la sustituye por las
+ // canciones de ESE repertorio, en su orden. Se resetea a null (= catálogo) desde cualquier
+ // entrada de reproducción que no venga de un repositorio.
+ const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
+ const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null) => {
+   setPlayerQueueOverride(queue);
+   handleSelectPlayerSong(song, autoPlay);
+ }, [handleSelectPlayerSong]);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -564,6 +579,9 @@ export default function RepertorioSetlists({
  // Acciones secundarias del setlist (compartir, asignar a bolo, imprimir, editar detalles) en un
  // único menú "⋯" en vez de tres botones de texto permanentes: no se usan en la mayoría de visitas.
  const [showSetlistActionsMenu, setShowSetlistActionsMenu] = useState(false);
+ // Reproducir el concierto dentro de la pestaña Repertorio con la consola del reproductor
+ // (antes vivía en la pestaña Directo, ahora está embebida en Repertorio con toggle)
+ const [showConcertPlayer, setShowConcertPlayer] = useState(false);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
@@ -674,6 +692,12 @@ export default function RepertorioSetlists({
  // tiene el selector abierto ahora mismo, y estado de guardado para deshabilitar mientras dura.
  const [editingEnergyItemId, setEditingEnergyItemId] = useState<string | null>(null);
  const [savingEnergyItemId, setSavingEnergyItemId] = useState<string | null>(null);
+ // Posición del popover, calculada al abrirlo a partir del botón real (getBoundingClientRect) y
+ // pintada vía portal con position:fixed — antes el popover era position:absolute dentro de la
+ // lista con scroll (overflow-y-auto), así que en canciones cerca del final del scroll quedaba
+ // recortado/oculto por ese overflow ("hay que bajar" para verlo). openUpward se decide según si
+ // queda hueco debajo del botón en el viewport.
+ const [energyPopoverPos, setEnergyPopoverPos] = useState<{ top: number; left: number; openUpward: boolean } | null>(null);
 
  useEffect(() => {
    if (!editingEnergyItemId) return;
@@ -682,8 +706,15 @@ export default function RepertorioSetlists({
        setEditingEnergyItemId(null);
      }
    };
+   // Cerrar en scroll (de la lista o de la página): con position:fixed calculado una sola vez al
+   // abrir, si el usuario sigue haciendo scroll el popover dejaría de estar junto a su botón.
+   const handleScroll = () => setEditingEnergyItemId(null);
    document.addEventListener('mousedown', handleClickOutside);
-   return () => document.removeEventListener('mousedown', handleClickOutside);
+   window.addEventListener('scroll', handleScroll, true);
+   return () => {
+     document.removeEventListener('mousedown', handleClickOutside);
+     window.removeEventListener('scroll', handleScroll, true);
+   };
  }, [editingEnergyItemId]);
 
  // Núcleo compartido: fija a mano la energía (1-20) de una canción, tanto desde el popover 1-10
@@ -1802,8 +1833,8 @@ export default function RepertorioSetlists({
  };
 
  const handleAddItemToSetlist = (
-  songId?: string, 
-  tipoItem: SetlistItem['tipoItem'] = 'cancion',
+  songId?: string,
+  tipoItem: any = 'cancion',
   tituloCustom?: string,
   duracionEstimadaMinutos?: number,
   duracionEstimadaSegundos?: number,
@@ -1812,9 +1843,19 @@ export default function RepertorioSetlists({
  ) => {
   if (!activeSetlist) return;
 
+  // Map old tipoItem values to new (tipoItem, bloqueSubtipo) structure
+  let actualTipoItem: 'cancion' | 'bloque' = 'cancion';
+  let bloqueSubtipo: SetlistItem['bloqueSubtipo'] = undefined;
+
+  if (tipoItem !== 'cancion') {
+    actualTipoItem = 'bloque';
+    bloqueSubtipo = tipoItem; // Map directly: 'presentacion', 'bis', 'header', etc.
+  }
+
   const newItem: SetlistItem = {
    id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-   tipoItem,
+   tipoItem: actualTipoItem,
+   bloqueSubtipo,
    songId,
    tituloCustom,
    duracionEstimadaMinutos,
@@ -1823,37 +1864,38 @@ export default function RepertorioSetlists({
   };
 
   if (!tituloCustom) {
-   if (tipoItem === 'bloque_header') {
+   const subtype = bloqueSubtipo || tipoItem;
+   if (subtype === 'header' || subtype === 'bloque_header') {
     newItem.tituloCustom = '⚡ Nuevo Bloque / Sección del Show';
-   } else if (tipoItem === 'presentacion') {
+   } else if (subtype === 'presentacion') {
     newItem.tituloCustom = 'Presentación Banda & Saludo';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'beatbox') {
+   } else if (subtype === 'beatbox') {
     newItem.tituloCustom = 'Solo de Batería / Percusión';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'intro_tema') {
+   } else if (subtype === 'intro_tema') {
     newItem.tituloCustom = 'Intro / Historia del Tema';
     newItem.duracionEstimadaMinutos = 1;
     newItem.duracionEstimadaSegundos = 60;
-   } else if (tipoItem === 'solo_performance') {
+   } else if (subtype === 'solo_performance') {
     newItem.tituloCustom = 'Solo Instrumental / Jam';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'cambio_instrumento') {
+   } else if (subtype === 'cambio_instrumento') {
     newItem.tituloCustom = 'Cambio Instrumento & Afinación';
     newItem.duracionEstimadaMinutos = 1;
     newItem.duracionEstimadaSegundos = 60;
-   } else if (tipoItem === 'chapa') {
+   } else if (subtype === 'chapa') {
     newItem.tituloCustom = 'Chapa / Discurso con Público';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'descanso') {
+   } else if (subtype === 'descanso') {
     newItem.tituloCustom = 'Pausa / Intermedio / Agua';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'bis') {
+   } else if (subtype === 'bis') {
     newItem.tituloCustom = '💣 BIS / PARTE FINAL DEL SHOW';
     newItem.duracionEstimadaMinutos = 1;
     newItem.duracionEstimadaSegundos = 60;
@@ -1976,20 +2018,30 @@ export default function RepertorioSetlists({
  const handleSaveShowItem = (itemData: Partial<SetlistItem>) => {
   if (!activeSetlist) return;
 
+  // Map old tipoItem values to new structure if needed
+  const mappedData = { ...itemData };
+  if (mappedData.tipoItem && mappedData.tipoItem !== 'cancion') {
+    const subtype = mappedData.tipoItem;
+    mappedData.tipoItem = 'bloque' as any;
+    mappedData.bloqueSubtipo = subtype as any;
+  }
+
   let updatedItems: SetlistItem[];
 
   if (editingShowItem) {
-   updatedItems = activeSetlist.items.map(it => 
-    it.id === editingShowItem.id ? { ...it, ...itemData, audioUrl: showItemAudioUrl } : it
+   updatedItems = activeSetlist.items.map(it =>
+    it.id === editingShowItem.id ? { ...it, ...mappedData, audioUrl: showItemAudioUrl } : it
    );
   } else {
+   const defaultSubtype = (mappedData.bloqueSubtipo || 'otro') as any;
    const newItem: SetlistItem = {
     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-    tipoItem: itemData.tipoItem || 'chapa',
-    tituloCustom: itemData.tituloCustom || 'Evento del Show',
-    duracionEstimadaMinutos: itemData.duracionEstimadaMinutos || 2,
-    duracionEstimadaSegundos: itemData.duracionEstimadaSegundos || 120,
-    notaTema: itemData.notaTema || '',
+    tipoItem: mappedData.tipoItem === 'cancion' ? 'cancion' : 'bloque',
+    bloqueSubtipo: mappedData.tipoItem === 'cancion' ? undefined : defaultSubtype,
+    tituloCustom: mappedData.tituloCustom || 'Evento del Show',
+    duracionEstimadaMinutos: mappedData.duracionEstimadaMinutos || 2,
+    duracionEstimadaSegundos: mappedData.duracionEstimadaSegundos || 120,
+    notaTema: mappedData.notaTema || '',
     audioUrl: showItemAudioUrl
    };
 
@@ -2164,7 +2216,7 @@ export default function RepertorioSetlists({
  <td style="font-family:monospace; font-size:16px; color:#aaa;">${s.duracion}</td>
  </tr>
  `;
- } else if (it.tipoItem === 'bloque_header') {
+ } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
  return `
  <tr style="background:#1e1e1e; border-top: 3px solid #f2ca50; border-bottom: 2px solid #f2ca50;">
  <td colspan="5" style="color:#f2ca50; font-size:20px; font-weight:900; letter-spacing:1px; text-transform:uppercase; padding: 12px 10px;">
@@ -2573,11 +2625,28 @@ export default function RepertorioSetlists({
                 >
                   {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setShowConcertPlayer((v) => !v)}
+                  className="p-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+                  title={showConcertPlayer ? 'Ocultar reproductor de concierto' : 'Mostrar reproductor de concierto'}
+                >
+                  {showConcertPlayer ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                </button>
               </div>
             </div>
 
             {showEnergyMap && (
               <>
+                {/* Nota breve pero deliberada: no va solo en el tooltip del título porque en
+                    móvil (tap, sin hover) nunca se vería, y el efecto de tocar un punto es lo
+                    bastante importante —cambia la energía de la canción en TODOS los
+                    repertorios— como para dejarlo oculto. Una línea, sin dismiss ni estado
+                    extra (AGENTS.md §6). */}
+                <p className="text-[9px] text-neutral-500">
+                  💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
+                </p>
+
                 <EnergyChart
                   setlistKey={activeSetlist.id}
                   chartData={chartData}
@@ -2810,6 +2879,46 @@ export default function RepertorioSetlists({
     );
   })()}
 
+  {/* CONCERT PLAYER: Reproducir concierto dentro de Repertorio */}
+  {showConcertPlayer && activeSetlist && (
+    <div className="order-2 p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
+      <EscenarioView
+        activeSetlist={activeSetlist}
+        setlists={setlists}
+        activeSetlistId={activeSetlistId}
+        setActiveSetlistId={setActiveSetlistId}
+        songs={songs}
+        setShowPdfPreview={setShowPdfPreview}
+        stageAudioRef={stageAudioRef}
+        stageAudioRefB={stageAudioRefB}
+        stagePlayingIndex={stagePlayingIndex}
+        setStagePlayingIndex={setStagePlayingIndex}
+        stageIsPlaying={stageIsPlaying}
+        setStageIsPlaying={setStageIsPlaying}
+        stageCurrentTime={stageCurrentTime}
+        stageItemDuration={stageItemDuration}
+        stageResolvedUrl={stageResolvedUrl}
+        stageAutoplayNext={stageAutoplayNext}
+        setStageAutoplayNext={setStageAutoplayNext}
+        stageCrossfadeEnabled={stageCrossfadeEnabled}
+        setStageCrossfadeEnabled={setStageCrossfadeEnabled}
+        isCrossfading={isCrossfading}
+        handleStageAudioEnded={handleStageAudioEnded}
+        handleStageTimeUpdate={handleStageTimeUpdate}
+        handleStageSeek={handleStageSeek}
+        handleStagePrev={handleStagePrev}
+        handleStageNext={handleStageNext}
+        toggleStagePlayPause={toggleStagePlayPause}
+        toggleFavoriteSong={toggleFavoriteSong}
+        setEditingShowItem={setEditingShowItem}
+        setShowItemAudioUrl={setShowItemAudioUrl}
+        setShowShowItemModal={setShowShowItemModal}
+        formatItemDuration={formatItemDuration}
+        embedded
+      />
+    </div>
+  )}
+
   {/* ADD ITEMS ACTION BAR */}
   <div className="space-y-1.5 pt-0.5">
   {/* Selected Song / Item Insertion Indicator */}
@@ -3028,6 +3137,20 @@ export default function RepertorioSetlists({
     setExpandedSetlistItemIds(newSet);
   };
 
+  // Reproducir esta canción sin tener que expandir la fila — manda a la misma barra Spotify
+  // persistente de abajo, con la cola limitada a este repertorio en su orden (igual que
+  // "Reproducir desde aquí" antes, pero accesible con un solo tap en la fila compacta).
+  const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
+  const playThisSong = () => {
+    const setlistSongs = activeSetlist.items
+      .filter((i) => i.tipoItem === 'cancion' && i.songId)
+      .map((i) => songs.find((s) => s.id === i.songId))
+      .filter((s): s is Song => !!s);
+    selectPlayerSongWithQueue(song, true, setlistSongs);
+  };
+
+  const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
+
   return (
   <div
   key={it.id}
@@ -3047,7 +3170,7 @@ export default function RepertorioSetlists({
   }
   setSelectedSetlistItemId(isSelected ? null : it.id);
   }}
-  className={`border rounded-lg transition-all cursor-pointer ${
+  className={`group border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
   isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
@@ -3070,10 +3193,28 @@ export default function RepertorioSetlists({
       <GripVertical className="w-3.5 h-3.5" />
     </div>
 
-    {/* Index */}
-    <span className="w-5 text-center font-mono font-bold text-[9px] text-[#d1b375] shrink-0">
-      {index + 1}
-    </span>
+    {/* Index / Play: número por defecto, botón de play al pasar el ratón (o siempre tocable en
+        móvil, aunque no cambie de icono sin hover) — reproduce sin tener que expandir la fila,
+        mismo patrón que ya usa la fila del Catálogo. */}
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); playThisSong(); }}
+      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[#1db954] text-black sm:bg-transparent sm:group-hover:bg-[#1db954] sm:group-hover:text-black"
+      title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
+    >
+      {isPlayingThisRow ? (
+        <div className="flex items-center gap-0.5">
+          <span className="w-0.5 h-2 bg-[#1db954] rounded-full animate-pulse" />
+          <span className="w-0.5 h-2.5 bg-[#1ed760] rounded-full animate-pulse delay-75" />
+          <span className="w-0.5 h-1.5 bg-[#1db954] rounded-full animate-pulse delay-150" />
+        </div>
+      ) : (
+        <>
+          <span className="sm:group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{songIndex + 1}</span>
+          <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-black" />
+        </>
+      )}
+    </button>
 
     {/* Title + metadata in one line — shrink-0 con tope máximo: antes era el único elemento
         "encogible" de la fila (todo lo demás es shrink-0), así que en móvil, con tantos
@@ -3100,6 +3241,10 @@ export default function RepertorioSetlists({
       const energy = getEnergyInfo(song);
       const currentVal1a10 = Math.max(1, Math.min(10, Math.round((song.energia || 10) / 2)));
       const isEditingThis = editingEnergyItemId === it.id;
+      // Alto aproximado del popover (10 botones de 20px + padding) para decidir si hay hueco
+      // debajo en el viewport o si hay que abrirlo hacia arriba.
+      const POPOVER_HEIGHT_PX = 36;
+      const POPOVER_WIDTH_PX = 220;
       return (
         <div className="relative shrink-0">
           <button
@@ -3107,7 +3252,18 @@ export default function RepertorioSetlists({
             data-energy-popover
             onClick={(e) => {
               e.stopPropagation();
-              setEditingEnergyItemId(isEditingThis ? null : it.id);
+              if (isEditingThis) {
+                setEditingEnergyItemId(null);
+                return;
+              }
+              const rect = e.currentTarget.getBoundingClientRect();
+              const openUpward = window.innerHeight - rect.bottom < POPOVER_HEIGHT_PX + 8;
+              setEnergyPopoverPos({
+                top: openUpward ? rect.top - POPOVER_HEIGHT_PX - 4 : rect.bottom + 4,
+                left: Math.min(rect.left, window.innerWidth - POPOVER_WIDTH_PX - 8),
+                openUpward
+              });
+              setEditingEnergyItemId(it.id);
             }}
             className={`text-[8px] font-mono px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${energy.bgClass} ${energy.textClass} ${energy.borderClass}`}
             title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? ' — fijada a mano' : ''}. Clic para cambiarla.`}
@@ -3115,12 +3271,18 @@ export default function RepertorioSetlists({
             <span>{energy.icon}</span>
             {song.energiaManual && <span className="ml-0.5" title="Energía fijada a mano">✋</span>}
           </button>
-          {isEditingThis && (
+          {/* Portal + position:fixed a propósito: la fila vive dentro de una lista con
+              overflow-y-auto (ver contenedor "ITEMS LIST"), así que un popover position:absolute
+              quedaba recortado/oculto por ese overflow en canciones cerca del final del scroll —
+              de ahí que "hubiera que bajar" para verlo. Con fixed + posición calculada al abrir
+              (arriba o abajo según el hueco real en el viewport) escapa a ese clipping. */}
+          {isEditingThis && energyPopoverPos && createPortal(
             // Selector 1-10 (más fácil de puntuar que 1-20 directamente) — se guarda como
             // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
             <div
               data-energy-popover
-              className="absolute z-30 top-full left-0 mt-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl p-1.5 flex items-center gap-0.5"
+              className="fixed z-[100] bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl p-1.5 flex items-center gap-0.5"
+              style={{ top: energyPopoverPos.top, left: energyPopoverPos.left }}
               onClick={(e) => e.stopPropagation()}
             >
               {Array.from({ length: 10 }, (_, i) => i + 1).map(val => (
@@ -3138,7 +3300,8 @@ export default function RepertorioSetlists({
                   {val}
                 </button>
               ))}
-            </div>
+            </div>,
+            document.body
           )}
         </div>
       );
@@ -3163,6 +3326,20 @@ export default function RepertorioSetlists({
         <Users className="w-3 h-3" />
       </span>
     )}
+
+    {/* Edit song button */}
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        setEditingSong(song);
+        setShowSongModal(true);
+      }}
+      className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+      title="Editar canción"
+    >
+      <Edit3 className="w-3.5 h-3.5" />
+    </button>
 
     {/* Expand button for details */}
     <button
@@ -3248,8 +3425,9 @@ export default function RepertorioSetlists({
       />
 
       {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
-          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo
-          que sí se mira en cada vistazo a la lista (AGENTS.md §6). */}
+          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo que sí
+          se mira en cada vistazo a la lista (AGENTS.md §6). Reproducir la canción tiene su propio
+          botón ▶ en la fila compacta (junto al número), no hace falta expandir para eso. */}
       <div className="flex items-center gap-2 pt-1">
         <button
           type="button"
@@ -3272,7 +3450,7 @@ export default function RepertorioSetlists({
   )}
  </div>
  );
- } else if (it.tipoItem === 'bloque_header') {
+ } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
  return (
  <div
  key={it.id}
@@ -3464,7 +3642,7 @@ export default function RepertorioSetlists({
          onPlay={() => {
            const first = filteredSongs[0];
            if (first) {
-             handleSelectPlayerSong(first, true);
+             selectPlayerSongWithQueue(first, true, null);
            }
          }}
          isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
@@ -3496,7 +3674,7 @@ export default function RepertorioSetlists({
          onClick={() => {
            if (filteredSongs.length > 0) {
              const first = filteredSongs[0];
-             handleSelectPlayerSong(first, true);
+             selectPlayerSongWithQueue(first, true, null);
            }
          }}
          className="w-9 h-9 rounded-full bg-[#1db954] hover:bg-[#1ed760] hover:scale-105 text-black font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer active:scale-95"
@@ -3720,7 +3898,7 @@ export default function RepertorioSetlists({
  <td className="py-3.5 px-4 text-center font-bold text-zinc-500">
  <button
  type="button"
- onClick={() => handleSelectPlayerSong(s, true)}
+ onClick={() => selectPlayerSongWithQueue(s, true, null)}
  className="w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer mx-auto group-hover:bg-[#1db954] group-hover:text-black"
  title={isPlayingCurrent && isPlayerPlaying ? "Pausar" : "Reproducir canción"}
  >
@@ -3935,46 +4113,13 @@ export default function RepertorioSetlists({
      toggleFavoriteSong={handleToggleFavorite}
      activePlayerSong={activePlayerSong}
      isPlayerPlaying={isPlayerPlaying}
-     onSelectSong={(song, autoPlay) => handleSelectPlayerSong(song, autoPlay)}
+     onSelectSong={(song, autoPlay) => selectPlayerSongWithQueue(song, autoPlay, null)}
      onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
      onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
      onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
      onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
      onOpenChords={(song) => setActiveChordsSong(song)}
    />
- )}
-
- {/* VIEW 3: MODO ESCENARIO (HIGH CONTRAST LIVE VIEW) */}
- {activeTab === 'escenario' && (
- <EscenarioView
- activeSetlist={activeSetlist}
- setlists={setlists}
- activeSetlistId={activeSetlistId}
- setActiveSetlistId={setActiveSetlistId}
- songs={songs}
- setShowPdfPreview={setShowPdfPreview}
- stageAudioRef={stageAudioRef}
- stagePlayingIndex={stagePlayingIndex}
- setStagePlayingIndex={setStagePlayingIndex}
- stageIsPlaying={stageIsPlaying}
- setStageIsPlaying={setStageIsPlaying}
- stageCurrentTime={stageCurrentTime}
- setStageCurrentTime={setStageCurrentTime}
- stageItemDuration={stageItemDuration}
- stageResolvedUrl={stageResolvedUrl}
- stageAutoplayNext={stageAutoplayNext}
- setStageAutoplayNext={setStageAutoplayNext}
- handleStageAudioEnded={handleStageAudioEnded}
- handleStageSeek={handleStageSeek}
- handleStagePrev={handleStagePrev}
- handleStageNext={handleStageNext}
- toggleStagePlayPause={toggleStagePlayPause}
- toggleFavoriteSong={handleToggleFavorite}
- setEditingShowItem={setEditingShowItem}
- setShowItemAudioUrl={setShowItemAudioUrl}
- setShowShowItemModal={setShowShowItemModal}
- formatItemDuration={formatItemDuration}
- />
  )}
 
  {/* MODAL: ADD / EDIT SONG */}
@@ -4261,20 +4406,28 @@ export default function RepertorioSetlists({
  />
  )}
 
- {/* Persistent Spotify Music Player Bottom Bar */}
- {activePlayerSong && (
+ {/* Persistent Spotify Music Player Bottom Bar — `songs` es la cola real de Siguiente/Anterior
+     y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
+     con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue).
+     Portal a document.body a propósito: el shell raíz de la app (App.tsx) tiene
+     `overflow-clip` en todo el layout, y eso atrapa cualquier `position: fixed` anidado dentro
+     — sin el portal, la barra "fixed" quedaba pegada al final del contenido en vez de al fondo
+     real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
+     que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
+ {activePlayerSong && createPortal(
  <SpotifyPlayerBar
  song={activePlayerSong}
- songs={songs}
+ songs={playerQueueOverride || songs}
  colors={colors}
  onSelectSong={(newSong, autoPlay) => handleSelectPlayerSong(newSong, autoPlay)}
  onOpenStudio={(songToOpen) => setActiveStudioSong(songToOpen)}
  onUpdateSong={handleUpdateSongFromStudio}
- onClosePlayer={() => handleSelectPlayerSong(null)}
+ onClosePlayer={() => selectPlayerSongWithQueue(null, false, null)}
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
  onIsPlayingChange={setIsPlayerPlaying}
- />
+ />,
+ document.body
  )}
 
 {assignSongsModalData && assignSongsModalData.isOpen && (

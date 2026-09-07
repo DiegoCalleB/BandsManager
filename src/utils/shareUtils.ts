@@ -215,7 +215,7 @@ export function formatSetlistShareText(
   } else {
     let songNum = 1;
     setlist.items.forEach((item) => {
-      if (item.tipoItem === 'bloque_header') {
+      if (item.tipoItem === 'bloque' && item.bloqueSubtipo === 'header') {
         parts.push(`\n⚡ *=== ${item.tituloCustom || 'BLOQUE'} ===*`);
       } else if (item.tipoItem === 'cancion' && item.songId && songsMap[item.songId]) {
         const s = songsMap[item.songId];

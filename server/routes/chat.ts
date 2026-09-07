@@ -5,7 +5,7 @@ import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyCon
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign } from "../db.js";
+import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
@@ -225,6 +225,15 @@ router.post("/chat", requireAuth, async (req, res) => {
       return userBandId === BAKANDEYA_BAND_ID || userBandId === 'reg-bakandeya';
     };
 
+    // El repertorio (songs/setlists) vive solo en Supabase — POST /repertorio no pasa por
+    // loadState() (ver comentario en repertorio.ts) — así que a diferencia de leads/conciertos,
+    // state.songs/state.setlists son datos de semilla desactualizados, nunca lo que la banda
+    // guarda de verdad. Se leen aquí en vivo para que el chatbot vea el repertorio real.
+    const [songsFromDb, setlistsFromDb] = await Promise.all([
+      dbGetSongs(userBandId).catch(() => []),
+      dbGetSetlists(userBandId).catch(() => [])
+    ]);
+
     const stateSummary: any = {
       leads: state.leads.filter(matchBand).map((l: Lead) => ({
         id: l.id,
@@ -266,8 +275,8 @@ router.post("/chat", requireAuth, async (req, res) => {
         presupuestoLogistica: t.presupuestoLogistica,
         stops: t.stops
       })),
-      songs: (state.songs || []).filter(matchBand).map((s: any) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
-      setlists: (state.setlists || []).filter(matchBand).map((st: any) => ({ id: st.id, titulo: st.titulo, fecha: st.fecha, duracionTotal: st.duracionTotal })),
+      songs: songsFromDb.map((s: any) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
+      setlists: setlistsFromDb.map((st: any) => ({ id: st.id, titulo: st.nombre, fecha: st.fecha_ultima_edicion, duracionTotal: st.duracion_total_estimada_minutos })),
       fansCount: (state.fans || []).filter(matchBand).length,
       rehearsals: (state.rehearsals || []).filter(matchBand),
       concerts: (state.concerts || []).filter(matchBand).map((c: Concert) => ({
@@ -307,7 +316,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     // la banda en vez de un rock genérico a 120 BPM por defecto.
     const ownBandGenre = (state.registeredBands || []).find((b: any) => b.id === userBandId)?.estilo_musical || "";
     const bandMembersForDna = (state.users || []).filter(matchBand).map((u: any) => ({ name: u.name || u.username || "", instrument: u.instrument || "" }));
-    stateSummary.musicalDna = computeMusicalDna((state.songs || []).filter(matchBand), ownBandGenre, bandMembersForDna);
+    stateSummary.musicalDna = computeMusicalDna(songsFromDb, ownBandGenre, bandMembersForDna);
 
     if (isLeader) {
       stateSummary.payments = (state.payments || []).filter(matchBand);

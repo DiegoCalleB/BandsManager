@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Song, ThemeColors } from '../types';
-import { 
-  Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX, 
+import {
+  Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX,
   ExternalLink, Disc, Sliders, X, Flame, Music, Sparkles, FileText, ChevronUp, ChevronDown
 } from 'lucide-react';
 import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
+import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -17,6 +18,11 @@ interface SpotifyPlayerBarProps {
   autoPlay?: boolean;
   playSignal?: number;
   onIsPlayingChange?: (isPlaying: boolean) => void;
+}
+
+function getRawAudioUrl(song: Song | null | undefined): string {
+  if (!song) return '';
+  return song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || (song as any).audioUrl || '';
 }
 
 export default function SpotifyPlayerBar({
@@ -39,15 +45,52 @@ export default function SpotifyPlayerBar({
   const [isLooping, setIsLooping] = useState(false);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
   const [isMinimized, setIsMinimized] = useState(false);
+  // Fundido real (5s, curva de potencia constante) al pasar al siguiente tema de la cola —
+  // desactivado por defecto, mismo interruptor tanto si la cola es el catálogo, un álbum de
+  // Discografía o un repertorio (ver `songs`, que decide qué es "el siguiente tema" en cada caso).
+  const [crossfadeEnabled, setCrossfadeEnabled] = useState(false);
+  const [isCrossfading, setIsCrossfading] = useState(false);
 
-  // Audio HTML element ref
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  
+  // Dos <audio> en vez de uno: durante un fundido, uno termina el tema actual mientras el otro ya
+  // reproduce el siguiente desde cero (mismo patrón que useStagePlayer.ts). `activeSlotRef` dice
+  // cuál de los dos es "el de siempre" a efectos de play/pause/seek/volumen manuales — el otro
+  // solo se usa como pista temporal de solape mientras dura el fundido.
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const activeSlotRef = useRef<'A' | 'B'>('A');
+  const getActiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefA.current : audioRefB.current);
+  const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
+
   // Audio Synth fallback for songs without custom audio file
   const synthIntervalRef = useRef<any>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const [activeAudioUrl, setActiveAudioUrl] = useState<string>('');
+
+  const crossfadeRafRef = useRef<number | null>(null);
+  const isCrossfadingRef = useRef(false);
+  // Id de la última canción que llegó aquí por un fundido recién completado — le dice al efecto
+  // de "cambió la canción" que ese tema ya está sonando de verdad (arrancó durante el fundido) y
+  // que NO debe recargar el audio ni relanzar la reproducción desde cero.
+  const promotedSongIdRef = useRef<string | null>(null);
+
+  const cancelCrossfade = () => {
+    if (crossfadeRafRef.current !== null) {
+      cancelAnimationFrame(crossfadeRafRef.current);
+      crossfadeRafRef.current = null;
+    }
+    if (isCrossfadingRef.current) {
+      const inactive = getInactiveAudioEl();
+      if (inactive) {
+        inactive.pause();
+        inactive.volume = isMuted ? 0 : volume;
+      }
+      const active = getActiveAudioEl();
+      if (active) active.volume = isMuted ? 0 : volume;
+      isCrossfadingRef.current = false;
+      setIsCrossfading(false);
+    }
+  };
 
   // Extract and resolve active audio URL asynchronously (supporting IndexedDB & Drive)
   useEffect(() => {
@@ -57,7 +100,7 @@ export default function SpotifyPlayerBar({
       return;
     }
 
-    const rawUrl = song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || (song as any).audioUrl || '';
+    const rawUrl = getRawAudioUrl(song);
 
     if (!rawUrl) {
       setActiveAudioUrl('');
@@ -86,6 +129,14 @@ export default function SpotifyPlayerBar({
   const lastHandledSignalRef = useRef<number>(0);
   const lastSongIdRef = useRef<string | null>(null);
 
+  // Cualquier cambio de canción que NO venga de un fundido recién completado corta un fundido en
+  // curso — sin esto, terminaría aplicándose sobre la pista equivocada.
+  useEffect(() => {
+    if (promotedSongIdRef.current === song?.id) return;
+    cancelCrossfade();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [song?.id]);
+
   // When song, activeAudioUrl, autoPlay, or playSignal changes
   useEffect(() => {
     if (!song) {
@@ -96,6 +147,16 @@ export default function SpotifyPlayerBar({
 
     const isNewSong = lastSongIdRef.current !== song.id;
     lastSongIdRef.current = song.id;
+
+    if (promotedSongIdRef.current === song.id) {
+      // Este tema llegó aquí por un fundido: ya está sonando de verdad desde antes (arrancó en
+      // el elemento <audio> inactivo mientras el anterior terminaba) — solo se refresca la
+      // duración (real, leída directamente del elemento ya activo) para la UI, sin tocar el audio.
+      const activeEl = getActiveAudioEl();
+      const realDuration = activeEl?.duration;
+      setDuration(realDuration && isFinite(realDuration) ? realDuration : (song.duracionSegundos || 210));
+      return;
+    }
 
     const hasNewPlaySignal = !!(playSignal && playSignal !== lastHandledSignalRef.current);
     if (playSignal) {
@@ -108,26 +169,28 @@ export default function SpotifyPlayerBar({
     const estDuration = song.duracionSegundos || 210;
     setDuration(estDuration);
 
+    const activeEl = getActiveAudioEl();
+
     if (activeAudioUrl) {
-      if (audioRef.current) {
-        audioRef.current.src = activeAudioUrl;
-        audioRef.current.playbackRate = playbackRate;
-        audioRef.current.volume = isMuted ? 0 : volume;
+      if (activeEl) {
+        activeEl.src = activeAudioUrl;
+        activeEl.playbackRate = playbackRate;
+        activeEl.volume = isMuted ? 0 : volume;
 
         if (shouldPlayNow) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().then(() => {
+          activeEl.currentTime = 0;
+          activeEl.play().then(() => {
             setIsPlaying(true);
           }).catch(err => {
             console.warn('Playback deferred or blocked:', err);
             setIsPlaying(false);
           });
         } else if (isNewSong) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
+          activeEl.pause();
+          activeEl.currentTime = 0;
           setIsPlaying(false);
         } else if (!autoPlay && !hasNewPlaySignal) {
-          audioRef.current.pause();
+          activeEl.pause();
           setIsPlaying(false);
         }
       }
@@ -138,27 +201,29 @@ export default function SpotifyPlayerBar({
         setIsPlaying(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [song, activeAudioUrl, autoPlay, playSignal]);
 
   // Playback rate effect
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.playbackRate = playbackRate;
-    }
+    const el = getActiveAudioEl();
+    if (el) el.playbackRate = playbackRate;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbackRate]);
 
   // Volume effect
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume;
-    }
+    if (isCrossfadingRef.current) return; // el fundido lleva el volumen de las dos pistas mientras dura
+    const el = getActiveAudioEl();
+    if (el) el.volume = isMuted ? 0 : volume;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [volume, isMuted]);
 
   // Loop effect
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.loop = isLooping;
-    }
+    const el = getActiveAudioEl();
+    if (el) el.loop = isLooping;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLooping]);
 
   // Synthetic practice beat generator when no audio URL exists
@@ -213,11 +278,23 @@ export default function SpotifyPlayerBar({
     };
   }, [isPlaying, activeAudioUrl, song, isLooping]);
 
+  // Cancela cualquier fundido pendiente al desmontar el reproductor.
+  useEffect(() => {
+    return () => cancelCrossfade();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!song) return null;
 
   const currentIdx = songs.findIndex(s => s.id === song.id);
+  // Mismo cálculo que handleNext (con vuelta al principio de la cola) — se usa tanto para saltar
+  // manualmente como para saber a qué tema fundir cuando se acerca el final del actual.
+  const nextQueueSong: Song | null = songs.length > 0
+    ? (currentIdx >= 0 && currentIdx < songs.length - 1 ? songs[currentIdx + 1] : songs[0])
+    : null;
 
   const handlePrev = () => {
+    cancelCrossfade();
     if (currentIdx > 0) {
       onSelectSong(songs[currentIdx - 1]);
     } else {
@@ -225,21 +302,36 @@ export default function SpotifyPlayerBar({
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (autoPlayNext: boolean = false) => {
+    cancelCrossfade();
     if (currentIdx >= 0 && currentIdx < songs.length - 1) {
-      onSelectSong(songs[currentIdx + 1]);
+      onSelectSong(songs[currentIdx + 1], autoPlayNext);
     } else {
-      onSelectSong(songs[0]);
+      onSelectSong(songs[0], autoPlayNext);
+    }
+  };
+
+  const handleEnded = () => {
+    if (isLooping) {
+      const el = getActiveAudioEl();
+      if (el) {
+        el.currentTime = 0;
+        el.play();
+      }
+    } else {
+      // Al terminar una canción, la siguiente debe reproducirse automáticamente (autoPlay=true)
+      handleNext(true);
     }
   };
 
   const togglePlayPause = () => {
-    if (activeAudioUrl && audioRef.current) {
+    const el = getActiveAudioEl();
+    if (activeAudioUrl && el) {
       if (isPlaying) {
-        audioRef.current.pause();
+        el.pause();
         setIsPlaying(false);
       } else {
-        audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
+        el.play().then(() => setIsPlaying(true)).catch(console.error);
       }
     } else {
       setIsPlaying(!isPlaying);
@@ -248,9 +340,79 @@ export default function SpotifyPlayerBar({
 
   const handleSeek = (newTime: number) => {
     setCurrentTime(newTime);
-    if (audioRef.current && activeAudioUrl) {
-      audioRef.current.currentTime = newTime;
+    const el = getActiveAudioEl();
+    if (el && activeAudioUrl) {
+      el.currentTime = newTime;
     }
+  };
+
+  // Arranca el fundido cruzado cuando quedan CROSSFADE_SECONDS o menos del tema actual — llamado
+  // desde onTimeUpdate del <audio> activo en vez de un setInterval propio, así no hay dos relojes
+  // compitiendo por decidir "cuánto queda".
+  const handleActiveTimeUpdate = (currentTimeSec: number) => {
+    setCurrentTime(currentTimeSec);
+
+    if (!crossfadeEnabled || isLooping || isCrossfadingRef.current) return;
+    if (!nextQueueSong || nextQueueSong.id === song.id) return; // cola de un solo tema: nada que fundir
+    if (!duration || !shouldCrossfade(duration) || duration - currentTimeSec > CROSSFADE_SECONDS) return;
+
+    const nextRawUrl = getRawAudioUrl(nextQueueSong);
+    if (!nextRawUrl) return;
+
+    const fromEl = getActiveAudioEl();
+    const toEl = getInactiveAudioEl();
+    if (!fromEl || !toEl) return;
+
+    isCrossfadingRef.current = true;
+    setIsCrossfading(true);
+    const baseVolume = isMuted ? 0 : volume;
+
+    resolveAudioUrl(nextRawUrl).then((resolved) => {
+      if (!resolved || !isCrossfadingRef.current) {
+        isCrossfadingRef.current = false;
+        setIsCrossfading(false);
+        return;
+      }
+      toEl.src = resolved;
+      toEl.currentTime = 0;
+      toEl.volume = 0;
+      toEl.playbackRate = playbackRate;
+      toEl.play().catch(() => {
+        isCrossfadingRef.current = false;
+        setIsCrossfading(false);
+      });
+
+      const fadeMs = CROSSFADE_SECONDS * 1000;
+      const startTs = performance.now();
+
+      const tick = () => {
+        if (!isCrossfadingRef.current) return; // cancelado a mitad de camino (cancelCrossfade)
+        const elapsed = performance.now() - startTs;
+        const { fromGain, toGain } = computeCrossfadeGains(elapsed, fadeMs);
+        fromEl.volume = fromGain * baseVolume;
+        toEl.volume = toGain * baseVolume;
+
+        if (elapsed < fadeMs) {
+          crossfadeRafRef.current = requestAnimationFrame(tick);
+          return;
+        }
+
+        // Fundido completo: A se pausa/limpia y B pasa a ser la pista "activa" de verdad.
+        fromEl.pause();
+        fromEl.volume = baseVolume;
+        toEl.volume = baseVolume;
+        activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';
+        promotedSongIdRef.current = nextQueueSong.id;
+        isCrossfadingRef.current = false;
+        setIsCrossfading(false);
+        crossfadeRafRef.current = null;
+        onSelectSong(nextQueueSong, false);
+      };
+      crossfadeRafRef.current = requestAnimationFrame(tick);
+    }).catch(() => {
+      isCrossfadingRef.current = false;
+      setIsCrossfading(false);
+    });
   };
 
   const formatSecs = (secs: number) => {
@@ -262,42 +424,39 @@ export default function SpotifyPlayerBar({
 
   const isDrive = isGoogleDriveUrl(song.audioPrincipalUrl || '');
 
+  // z-50, no z-40: App.tsx tiene su propia barra de pestañas fija en móvil a z-40 (bottom-0,
+  // h-16) — con el mismo z-index, cuál tapa a cuál dependería del orden en el DOM y podría acabar
+  // esta barra debajo de esa. Se renderiza vía portal a document.body (ver
+  // RepertorioSetlists.tsx), así que z-50 la deja siempre por encima sin pelear por el orden.
+  // left-0 en móvil, md:left-[240px] en desktop para no tapar el sidebar (w-[240px]) de App.tsx.
+  // En móvil: bottom-[64px] para no tapar la barra de navegación inferior (h-16 = 64px).
+  // Cuando está minimizado, ajustar el bottom para que solo se vea la tira de ~2.5rem sin tapar el navbar.
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-300 shadow-2xl ${
+    <div className={`fixed ${
+      isMinimized ? 'bottom-[104px] sm:bottom-0' : 'bottom-[64px] sm:bottom-0'
+    } left-0 md:left-[240px] right-0 z-50 transition-all duration-300 shadow-2xl ${
       isMinimized ? 'translate-y-[calc(100%-2.5rem)]' : 'translate-y-0'
     }`}>
-      {/* Hidden HTML Audio Element */}
-      {activeAudioUrl && (
-        <audio
-          ref={audioRef}
-          src={activeAudioUrl}
-          preload="auto"
-          onTimeUpdate={() => {
-            if (audioRef.current) {
-              setCurrentTime(audioRef.current.currentTime);
-            }
-          }}
-          onLoadedMetadata={() => {
-            if (audioRef.current && audioRef.current.duration) {
-              setDuration(audioRef.current.duration);
-            }
-          }}
-          onEnded={() => {
-            if (isLooping) {
-              if (audioRef.current) {
-                audioRef.current.currentTime = 0;
-                audioRef.current.play();
-              }
-            } else {
-              handleNext();
-            }
-          }}
-        />
-      )}
+      {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
+          en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
+      <audio
+        ref={audioRefA}
+        preload="auto"
+        onTimeUpdate={() => { if (activeSlotRef.current === 'A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime); }}
+        onLoadedMetadata={() => { if (activeSlotRef.current === 'A' && audioRefA.current?.duration) setDuration(audioRefA.current.duration); }}
+        onEnded={() => { if (activeSlotRef.current === 'A') handleEnded(); }}
+      />
+      <audio
+        ref={audioRefB}
+        preload="auto"
+        onTimeUpdate={() => { if (activeSlotRef.current === 'B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime); }}
+        onLoadedMetadata={() => { if (activeSlotRef.current === 'B' && audioRefB.current?.duration) setDuration(audioRefB.current.duration); }}
+        onEnded={() => { if (activeSlotRef.current === 'B') handleEnded(); }}
+      />
 
       <div className="bg-[#121212]/98 backdrop-blur-2xl border-t border-[#282828] text-white px-4 py-3 max-w-full shadow-2xl">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-          
+
           {/* Left: Song Info */}
           <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
             <div className="flex items-center gap-3.5 min-w-0">
@@ -343,15 +502,23 @@ export default function SpotifyPlayerBar({
                   <span className="text-[#1db954] font-semibold">{song.tonalidad || 'Am'}</span>
                   <span>•</span>
                   <span>{song.bpm} BPM</span>
+                  {isCrossfading && nextQueueSong && (
+                    <>
+                      <span>•</span>
+                      <span className="text-sky-400 font-semibold animate-pulse">🔀 → {nextQueueSong.titulo}</span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Minimize / Hide button for mobile */}
-            <div className="flex items-center gap-1 md:hidden">
+            {/* Minimizar a una tira de ~2.5rem (ver el translate-y de más arriba) — antes solo
+                disponible en móvil (`md:hidden`); ahora también en escritorio, para poder dejar
+                la barra ocupando lo mínimo cuando no hace falta verla entera. */}
+            <div className="flex items-center gap-1">
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
-                className="p-1.5 text-zinc-400 hover:text-white"
+                className="p-1.5 text-zinc-400 hover:text-white cursor-pointer"
                 title={isMinimized ? "Expandir Reproductor" : "Minimizar"}
               >
                 {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
@@ -361,15 +528,15 @@ export default function SpotifyPlayerBar({
 
           {/* Center: Playback Controls & Timeline Scrubber */}
           <div className="flex flex-col items-center gap-1.5 w-full md:w-2/4">
-            
+
             {/* Control Buttons */}
             <div className="flex items-center gap-4">
               {/* Loop Practice Toggle */}
               <button
                 onClick={() => setIsLooping(!isLooping)}
                 className={`p-1.5 rounded-full transition-all cursor-pointer ${
-                  isLooping 
-                    ? 'text-[#1db954] bg-[#1db954]/10' 
+                  isLooping
+                    ? 'text-[#1db954] bg-[#1db954]/10'
                     : 'text-[#b3b3b3] hover:text-white'
                 }`}
                 title={isLooping ? "Repetir tema activado" : "Activar Bucle"}
@@ -379,7 +546,7 @@ export default function SpotifyPlayerBar({
 
               {/* Prev Song */}
               <button
-                onClick={handlePrev}
+                onClick={() => handlePrev()}
                 className="p-1 text-[#b3b3b3] hover:text-white transition-all cursor-pointer active:scale-90"
                 title="Canción Anterior"
               >
@@ -397,11 +564,24 @@ export default function SpotifyPlayerBar({
 
               {/* Next Song */}
               <button
-                onClick={handleNext}
+                onClick={() => handleNext(false)}
                 className="p-1 text-[#b3b3b3] hover:text-white transition-all cursor-pointer active:scale-90"
                 title="Siguiente Canción"
               >
                 <SkipForward className="w-5 h-5 fill-current" />
+              </button>
+
+              {/* Crossfade Toggle — fundido real de 5s al pasar al siguiente tema de la cola */}
+              <button
+                onClick={() => setCrossfadeEnabled(!crossfadeEnabled)}
+                className={`p-1.5 rounded-full transition-all cursor-pointer text-sm ${
+                  crossfadeEnabled
+                    ? 'text-sky-400 bg-sky-400/10'
+                    : 'text-[#b3b3b3] hover:text-white'
+                }`}
+                title={crossfadeEnabled ? "Fundido entre temas activado (5s)" : "Activar fundido entre temas (5s)"}
+              >
+                🔀
               </button>
 
               {/* Speed multiplier selector */}
@@ -422,7 +602,7 @@ export default function SpotifyPlayerBar({
             {/* Timeline Slider */}
             <div className="w-full flex items-center gap-2 text-[11px] font-mono text-[#b3b3b3]">
               <span className="w-9 text-right shrink-0">{formatSecs(currentTime)}</span>
-              
+
               <div className="relative flex-1 flex items-center">
                 <input
                   type="range"
@@ -441,7 +621,7 @@ export default function SpotifyPlayerBar({
 
           {/* Right: Actions & Volume */}
           <div className="flex items-center justify-end gap-2.5 w-full md:w-1/4">
-            
+
             {/* Chords link if available */}
             {song.enlaceAcordes && (
               <a
