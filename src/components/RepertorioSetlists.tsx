@@ -18,7 +18,6 @@ import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
 import { useShareModal } from '../hooks/useShareModal';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
-import { useStagePlayer } from '../hooks/useStagePlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
 import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
@@ -33,7 +32,6 @@ import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
 import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
 import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
-import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
@@ -394,11 +392,9 @@ export default function RepertorioSetlists({
    } else if (view === 'discografia') {
      setActiveTab('discografia');
    } else {
-     // repertorio, undefined, o el antiguo 'directo' (módulo eliminado — un enlace o estado
-     // guardado que todavía lo mande aterriza en Repertorio con el reproductor de concierto
-     // ya abierto, en vez de en una vista muerta).
+     // repertorio, undefined, o el antiguo 'directo' (módulo eliminado) — aterriza en Repertorio
+     // en vez de en una vista muerta.
      setActiveTab('setlists');
-     if ((view as string) === 'directo') setShowConcertPlayer(true);
    }
  }, [view]);
 
@@ -506,31 +502,22 @@ export default function RepertorioSetlists({
  };
 
  const {
-   stageAudioRef,
-   stageAudioRefB,
-   stagePlayingIndex, setStagePlayingIndex,
-   stageIsPlaying, setStageIsPlaying,
-   stageAutoplayNext, setStageAutoplayNext,
-   stageCurrentTime,
-   stageItemDuration,
-   stageResolvedUrl,
-   stageCrossfadeEnabled, setStageCrossfadeEnabled,
-   isCrossfading,
-   toggleStagePlayPause,
-   handleStageNext,
-   handleStagePrev,
-   handleStageSeek,
-   handleStageAudioEnded,
-   handleStageTimeUpdate,
- } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
-
- const {
    activePlayerSong, setActivePlayerSong,
    playerAutoPlay,
    playSignal,
    isPlayerPlaying, setIsPlayerPlaying,
    handleSelectPlayerSong,
  } = useAudioPlayer();
+ // Cola de canciones que gobierna Siguiente/Anterior (y el fundido) de la barra Spotify
+ // persistente de abajo — por defecto el catálogo completo (comportamiento de siempre en
+ // Catálogo/Discografía); "Reproducir desde aquí" en una fila de Repertorio la sustituye por las
+ // canciones de ESE repertorio, en su orden. Se resetea a null (= catálogo) desde cualquier
+ // entrada de reproducción que no venga de un repertorio.
+ const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
+ const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null) => {
+   setPlayerQueueOverride(queue);
+   handleSelectPlayerSong(song, autoPlay);
+ }, [handleSelectPlayerSong]);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -548,10 +535,6 @@ export default function RepertorioSetlists({
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
- // Reproductor de concierto (antes vivía en su propia pestaña "Directo", eliminada — se fusiona
- // aquí como sección colapsable para no perder la función pero sin ocupar espacio permanente en
- // las visitas normales de edición del repertorio, que son la mayoría — AGENTS.md §6).
- const [showConcertPlayer, setShowConcertPlayer] = useState<boolean>(false);
  // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
  // propio toggle porque puede distraer una vez que ya conoces bien tu propio repertorio.
  const [showIdealCurve, setShowIdealCurve] = useState<boolean>(true);
@@ -2444,50 +2427,6 @@ export default function RepertorioSetlists({
  </div>
   </div>
 
-  {/* REPRODUCTOR DE CONCIERTO — antes era la pestaña "Directo" independiente, ahora fusionada
-      aquí (eliminada del menú de navegación). Colapsado por defecto; al activarse aparece
-      encima incluso del Mapa de Energía, porque en ese momento SÍ es el contenido principal
-      de la pantalla (AGENTS.md §6: "main content first"). `embedded` le dice a EscenarioView
-      que omita su propio selector de repertorio/"Imprimir" y su lista de solo lectura, porque
-      Repertorio ya tiene ambos (más completos, editables) un poco más abajo en esta misma
-      pantalla. */}
-  {showConcertPlayer && (
-    <EscenarioView
-      embedded
-      activeSetlist={activeSetlist}
-      setlists={setlists}
-      activeSetlistId={activeSetlistId}
-      setActiveSetlistId={setActiveSetlistId}
-      songs={songs}
-      setShowPdfPreview={setShowPdfPreview}
-      stageAudioRef={stageAudioRef}
-      stageAudioRefB={stageAudioRefB}
-      stagePlayingIndex={stagePlayingIndex}
-      setStagePlayingIndex={setStagePlayingIndex}
-      stageIsPlaying={stageIsPlaying}
-      setStageIsPlaying={setStageIsPlaying}
-      stageCurrentTime={stageCurrentTime}
-      stageItemDuration={stageItemDuration}
-      stageResolvedUrl={stageResolvedUrl}
-      stageAutoplayNext={stageAutoplayNext}
-      setStageAutoplayNext={setStageAutoplayNext}
-      stageCrossfadeEnabled={stageCrossfadeEnabled}
-      setStageCrossfadeEnabled={setStageCrossfadeEnabled}
-      isCrossfading={isCrossfading}
-      handleStageAudioEnded={handleStageAudioEnded}
-      handleStageTimeUpdate={handleStageTimeUpdate}
-      handleStageSeek={handleStageSeek}
-      handleStagePrev={handleStagePrev}
-      handleStageNext={handleStageNext}
-      toggleStagePlayPause={toggleStagePlayPause}
-      toggleFavoriteSong={handleToggleFavorite}
-      setEditingShowItem={setEditingShowItem}
-      setShowItemAudioUrl={setShowItemAudioUrl}
-      setShowShowItemModal={setShowShowItemModal}
-      formatItemDuration={formatItemDuration}
-    />
-  )}
-
   {/* LIVE METRICS & ENERGY MAP BAR */}
   {(() => {
     return (
@@ -2513,21 +2452,6 @@ export default function RepertorioSetlists({
             <span className="text-neutral-500 ml-0.5">{showSetlistStats ? '▲' : '▼'}</span>
           </button>
 
-          <div className="flex items-center gap-1.5 shrink-0">
-            {/* Reproducir el concierto completo desde el propio Repertorio (antes era la pestaña
-                "Directo", ahora eliminada) — un toggle más, mismo patrón que el resto de esta fila. */}
-            <button
-              type="button"
-              onClick={() => setShowConcertPlayer((v) => !v)}
-              className={`px-2 py-1 rounded-lg transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
-                showConcertPlayer
-                  ? 'bg-[#1db954]/25 text-[#1ed760] border border-[#1db954]/50'
-                  : 'bg-[#1db954]/10 hover:bg-[#1db954]/20 text-[#1ed760]'
-              }`}
-              title={showConcertPlayer ? 'Ocultar el reproductor de concierto' : 'Reproducir el concierto completo, con fundido entre canciones'}
-            >
-              🎤 <span className="hidden sm:inline">Concierto</span>
-            </button>
           <div className="relative shrink-0">
               <button
                 type="button"
@@ -2568,7 +2492,6 @@ export default function RepertorioSetlists({
                   </div>
                 </>
               )}
-          </div>
           </div>
         </div>
 
@@ -3364,19 +3287,23 @@ export default function RepertorioSetlists({
       {/* Notas de miembros / acordes / reproducir desde aquí: consultas y acciones ocasionales,
           no algo permanente en la fila compacta (ver arriba) — viven aquí, un tap más lejos pero
           fuera del camino de lo que sí se mira en cada vistazo a la lista (AGENTS.md §6).
-          "Reproducir desde aquí" reemplaza al ▶ que tenía cada fila en la antigua pestaña
-          "Directo" (ahora fusionada aquí) — abre el reproductor de concierto si estaba oculto. */}
+          "Reproducir desde aquí" manda la canción a la misma barra Spotify persistente de abajo
+          que usan Catálogo/Discografía (con su botón "Estudio" para editar la ficha), pero con la
+          cola limitada a ESTE repertorio en su orden — así Siguiente/Anterior y el 🔀 fundido
+          recorren el repertorio, no todo el catálogo. */}
       <div className="flex items-center gap-2 pt-1">
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            setShowConcertPlayer(true);
-            setStagePlayingIndex(index);
-            setStageIsPlaying(true);
+            const setlistSongs = activeSetlist.items
+              .filter((i) => i.tipoItem === 'cancion' && i.songId)
+              .map((i) => songs.find((s) => s.id === i.songId))
+              .filter((s): s is Song => !!s);
+            selectPlayerSongWithQueue(song, true, setlistSongs);
           }}
           className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[#1ed760] hover:text-[#1db954] transition-colors"
-          title="Reproducir el concierto empezando por esta canción"
+          title="Reproducir el repertorio empezando por esta canción"
         >
           <Play className="w-3 h-3" /> Reproducir desde aquí
         </button>
@@ -3593,7 +3520,7 @@ export default function RepertorioSetlists({
          onPlay={() => {
            const first = filteredSongs[0];
            if (first) {
-             handleSelectPlayerSong(first, true);
+             selectPlayerSongWithQueue(first, true, null);
            }
          }}
          isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
@@ -3625,7 +3552,7 @@ export default function RepertorioSetlists({
          onClick={() => {
            if (filteredSongs.length > 0) {
              const first = filteredSongs[0];
-             handleSelectPlayerSong(first, true);
+             selectPlayerSongWithQueue(first, true, null);
            }
          }}
          className="w-9 h-9 rounded-full bg-[#1db954] hover:bg-[#1ed760] hover:scale-105 text-black font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer active:scale-95"
@@ -3849,7 +3776,7 @@ export default function RepertorioSetlists({
  <td className="py-3.5 px-4 text-center font-bold text-zinc-500">
  <button
  type="button"
- onClick={() => handleSelectPlayerSong(s, true)}
+ onClick={() => selectPlayerSongWithQueue(s, true, null)}
  className="w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer mx-auto group-hover:bg-[#1db954] group-hover:text-black"
  title={isPlayingCurrent && isPlayerPlaying ? "Pausar" : "Reproducir canción"}
  >
@@ -4064,7 +3991,7 @@ export default function RepertorioSetlists({
      toggleFavoriteSong={handleToggleFavorite}
      activePlayerSong={activePlayerSong}
      isPlayerPlaying={isPlayerPlaying}
-     onSelectSong={(song, autoPlay) => handleSelectPlayerSong(song, autoPlay)}
+     onSelectSong={(song, autoPlay) => selectPlayerSongWithQueue(song, autoPlay, null)}
      onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
      onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
      onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
@@ -4357,16 +4284,18 @@ export default function RepertorioSetlists({
  />
  )}
 
- {/* Persistent Spotify Music Player Bottom Bar */}
+ {/* Persistent Spotify Music Player Bottom Bar — `songs` es la cola real de Siguiente/Anterior
+     y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
+     con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue). */}
  {activePlayerSong && (
  <SpotifyPlayerBar
  song={activePlayerSong}
- songs={songs}
+ songs={playerQueueOverride || songs}
  colors={colors}
  onSelectSong={(newSong, autoPlay) => handleSelectPlayerSong(newSong, autoPlay)}
  onOpenStudio={(songToOpen) => setActiveStudioSong(songToOpen)}
  onUpdateSong={handleUpdateSongFromStudio}
- onClosePlayer={() => handleSelectPlayerSong(null)}
+ onClosePlayer={() => selectPlayerSongWithQueue(null, false, null)}
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
  onIsPlayingChange={setIsPlayerPlaying}

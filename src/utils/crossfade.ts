@@ -1,7 +1,7 @@
 /**
  * Fundido cruzado real entre dos pistas de audio (fin de una canción + principio de la
- * siguiente) — usado tanto por la previsualización de "enganche" en el Mapa de Energía
- * (EnergyChart) como por la reproducción continua del Modo Escenario (useStagePlayer).
+ * siguiente) — usado por la reproducción continua de la barra Spotify persistente
+ * (SpotifyPlayerBar.tsx), tanto para el catálogo/discografía como para un repertorio.
  *
  * Deliberadamente NO usa AudioContext/GainNode: decodeAudioData y los nodos de análisis
  * requieren CORS, que las URLs de Google Drive (la fuente de audio más común en este proyecto)
