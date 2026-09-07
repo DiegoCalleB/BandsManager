@@ -1732,8 +1732,9 @@ export function PdfExportModal({
                   es el de una lista impresa apretada — no se reserva hueco para notas aquí, se
                   aprovecha el que ya deja el interlineado del título (ver modo 'below' abajo). */}
               <div className="space-y-0">
-                {activeSetlist.items.map((item, index) => {
-                  if (item.tipoItem === 'cancion') {
+                {(() => {
+                  const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
+                  return songsOnly.map((item, songIndex) => {
                     const s = songs.find(x => x.id === item.songId);
                     if (!s) return null;
 
@@ -1746,7 +1747,7 @@ export function PdfExportModal({
                     // mayor en modo "de pie" para dar una idea de que la letra sale más grande.
                     const titleFontPt = viewDensity === 'de_pie' ? TITLE_FONT_CANDIDATES_PT[0] : PREVIEW_TITLE_FONT_PT;
                     const noteFontPt = deriveNoteFontPt(titleFontPt);
-                    const numberText = showSongNumbers ? `${index + 1}.` : '';
+                    const numberText = showSongNumbers ? `${songIndex + 1}.` : '';
                     const badges: NoteLayoutBadge[] = [
                       ...(showTonality && s.tonalidad ? [{ text: s.tonalidad, fontSizePx: ptToPx(11), extraWidthPx: 14 }] : []),
                       ...(showBpm && s.bpm ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(10.5) }] : []),
@@ -1853,7 +1854,7 @@ export function PdfExportModal({
                           <div className="flex items-baseline gap-2.5 min-w-0 flex-nowrap overflow-hidden">
                             {showSongNumbers && (
                               <span className="font-mono text-[20pt] text-neutral-400 font-black min-w-[32px] shrink-0">
-                                {index + 1}.
+                                {songIndex + 1}.
                               </span>
                             )}
                             {/* truncate/min-w-0 solo cuando de verdad hay una nota compitiendo
@@ -1943,39 +1944,8 @@ export function PdfExportModal({
                         )}
                       </div>
                     );
-                  } else if (item.tipoItem === 'bloque_header') {
-                    return (
-                      <div key={item.id} className="flex items-center gap-2 my-0.5">
-                        <div className="flex-1 h-px bg-black" />
-                        <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
-                          {item.tituloCustom || 'BLOQUE'}
-                        </span>
-                        <div className="flex-1 h-px bg-black" />
-                      </div>
-                    );
-                  } else if (item.tipoItem === 'bis') {
-                    return (
-                      <div key={item.id} className="flex items-center gap-2 my-0.5">
-                        <div className="flex-1 h-px bg-black" />
-                        <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
-                          {item.tituloCustom || 'BIS / ENCORE'}
-                        </span>
-                        <div className="flex-1 h-px bg-black" />
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div key={item.id} className="pl-9 py-0.5 text-neutral-800 font-mono text-[11pt] font-bold">
-                        <span className="text-neutral-500">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || 'INTERLUDIO').toUpperCase()} <span className="text-neutral-500">****</span>
-                        {(item.notas || (item as any).notaTema) && item.tituloCustom && (
-                          <span className="text-[10pt] text-neutral-600 font-normal italic ml-2">
-                            ({item.notas || (item as any).notaTema})
-                          </span>
-                        )}
-                      </div>
-                    );
-                  }
-                })}
+                  }); // end map
+                })()}
               </div>
             </div>
 
