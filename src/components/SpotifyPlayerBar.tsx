@@ -16,9 +16,6 @@ interface SpotifyPlayerBarProps {
   onClosePlayer: () => void;
   autoPlay?: boolean;
   playSignal?: number;
-  /** Cambiar este valor (p.ej. Date.now()) pausa la reproducción en curso — usado por la
-   * previsualización de enganche del Mapa de Energía para no solapar dos audios a la vez. */
-  pauseSignal?: number;
   onIsPlayingChange?: (isPlaying: boolean) => void;
 }
 
@@ -32,7 +29,6 @@ export default function SpotifyPlayerBar({
   onClosePlayer,
   autoPlay = false,
   playSignal = 0,
-  pauseSignal = 0,
   onIsPlayingChange
 }: SpotifyPlayerBarProps) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -88,19 +84,7 @@ export default function SpotifyPlayerBar({
   }, [isPlaying, onIsPlayingChange]);
 
   const lastHandledSignalRef = useRef<number>(0);
-  const lastHandledPauseSignalRef = useRef<number>(0);
   const lastSongIdRef = useRef<string | null>(null);
-
-  // Mismo patrón que playSignal pero al revés: un cambio en pauseSignal pausa la pista en curso
-  // sin tocar song/activeAudioUrl, para que quien controla el player desde fuera (la
-  // previsualización de enganche del Mapa de Energía) no tenga que desmontar ni cambiar de canción.
-  useEffect(() => {
-    if (pauseSignal && pauseSignal !== lastHandledPauseSignalRef.current) {
-      lastHandledPauseSignalRef.current = pauseSignal;
-      if (audioRef.current) audioRef.current.pause();
-      setIsPlaying(false);
-    }
-  }, [pauseSignal]);
 
   // When song, activeAudioUrl, autoPlay, or playSignal changes
   useEffect(() => {

@@ -38,6 +38,13 @@ interface EscenarioViewProps {
   setShowItemAudioUrl: (url: string) => void;
   setShowShowItemModal: (val: boolean) => void;
   formatItemDuration: (item: SetlistItem) => string;
+  /** true cuando este componente se embebe dentro de la pestaña Repertorio (ver
+   * RepertorioSetlists.tsx, toggle "Reproducir concierto") en vez de vivir en su propia pestaña
+   * — oculta el selector de repertorio, el botón "Imprimir/Exportar" y la lista de solo lectura
+   * de temas, porque Repertorio ya tiene su propio selector, su propio "Imprimir/Exportar" y su
+   * propia lista (editable, con arrastre) — mostrarlos dos veces sería puro ruido. Solo se queda
+   * la consola del reproductor (metadata, controles, barra de progreso, atajos). */
+  embedded?: boolean;
 }
 
 export const EscenarioView: React.FC<EscenarioViewProps> = ({
@@ -71,7 +78,8 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   setEditingShowItem,
   setShowItemAudioUrl,
   setShowShowItemModal,
-  formatItemDuration
+  formatItemDuration,
+  embedded = false
 }) => {
   const currentStageItem = (stagePlayingIndex !== null && activeSetlist) ? activeSetlist.items[stagePlayingIndex] : null;
   const currentStageSong = currentStageItem && currentStageItem.tipoItem === 'cancion'
@@ -133,25 +141,30 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           </h2>
         </div>
 
-        <div className="flex items-center gap-2">
-          <select
-            value={activeSetlistId}
-            onChange={(e) => setActiveSetlistId(e.target.value)}
-            className="bg-neutral-900 text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-xl focus:outline-none"
-          >
-            {setlists.map(s => (
-              <option key={s.id} value={s.id}>{s.nombre}</option>
-            ))}
-          </select>
+        {/* Selector de repertorio + Imprimir/Exportar: Repertorio ya tiene los suyos propios
+            (sidebar de setlists + menú "⋯") cuando este reproductor va embebido ahí — mostrarlos
+            aquí también sería un control duplicado en la misma pantalla. */}
+        {!embedded && (
+          <div className="flex items-center gap-2">
+            <select
+              value={activeSetlistId}
+              onChange={(e) => setActiveSetlistId(e.target.value)}
+              className="bg-neutral-900 text-[#d1b375] text-[10px] font-mono py-2 px-3 rounded-xl focus:outline-none"
+            >
+              {setlists.map(s => (
+                <option key={s.id} value={s.id}>{s.nombre}</option>
+              ))}
+            </select>
 
-          <button
-            onClick={() => setShowPdfPreview(true)}
-            className="px-2 py-1 bg-[#f2ca50] text-black font-mono font-extrabold text-[10px] rounded-xl hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Imprimir / Exportar</span>
-          </button>
-        </div>
+            <button
+              onClick={() => setShowPdfPreview(true)}
+              className="px-2 py-1 bg-[#f2ca50] text-black font-mono font-extrabold text-[10px] rounded-xl hover:bg-[#d1b375]/15 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+            >
+              <Printer className="w-4 h-4" />
+              <span>Imprimir / Exportar</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Dos <audio> en vez de uno: durante un fundido cruzado, uno termina la canción actual
@@ -425,7 +438,10 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
         </div>
       )}
 
-      {activeSetlist ? (
+      {/* Lista de solo lectura de temas: Repertorio ya trae su propia lista (editable, con
+          arrastre, notas, popover de energía...) cuando este reproductor va embebido ahí —
+          repetirla aquí sería la misma información dos veces en la misma pantalla. */}
+      {!embedded && activeSetlist ? (
         <div className="bg-[#121212] border border-white/5 rounded-2xl overflow-hidden shadow-2xl p-4 sm:p-6">
           <div className="overflow-x-auto">
             <div className="min-w-[650px] space-y-2">

@@ -29,10 +29,6 @@ export interface EnergyChartPoint {
    * propia (las canciones reales del bis puntúan por su cuenta justo después). Se marcan en el
    * gráfico con una línea vertical propia en vez de contar como un punto más de la curva. */
   isSpeechEvent?: boolean;
-  /** true si la canción tiene audio real reproducible (audioPrincipalUrl o audioIdeas[0]) —
-   * decide si el botón "🎧" de previsualizar el enganche con la canción vecina está activo.
-   * Ausente/false en eventos de "speech" (nunca tienen un enganche real que previsualizar). */
-  hasAudio?: boolean;
 }
 
 export interface EnergyChartZone {
@@ -69,11 +65,6 @@ interface EnergyChartProps {
   /** Muestra/oculta la curva "ideal" de referencia (línea discontinua por debajo de la curva
    * real). Por defecto visible; el toggle vive en el componente que llama a EnergyChart. */
   showIdealCurve?: boolean;
-  /** Si se pasa, aparece un pequeño botón "🎧" en el punto medio entre dos canciones
-   * CONSECUTIVAS (nunca cruzando un evento de "speech"/bis de por medio) para previsualizar cómo
-   * enganchan sus audios. Se deshabilita (opacidad baja, sin cursor de mano, tooltip explicativo)
-   * cuando a alguna de las dos le falta `hasAudio`. */
-  onPreviewTransition?: (from: EnergyChartPoint, to: EnergyChartPoint) => void;
 }
 
 /**
@@ -94,8 +85,7 @@ export function EnergyChart({
   compact = false,
   onReorder,
   onEnergyChange,
-  showIdealCurve = true,
-  onPreviewTransition
+  showIdealCurve = true
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;
@@ -313,13 +303,6 @@ export function EnergyChart({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggingFromIndex, pxPerEnergyUnit]);
-
-  // Ancla (posición en píxeles + punto) de la última canción real dibujada, usada dentro del
-  // callback `dot` de más abajo para saber si el punto ACTUAL es vecino consecutivo del anterior
-  // y así dibujar el botón de previsualizar el enganche en su punto medio. Se recalcula desde
-  // cero en cada render (no es estado) porque `dot` se llama una vez por punto, en orden, dentro
-  // de esta misma pasada — no necesita sobrevivir entre renders.
-  let transitionPrevAnchorForRender: { cx: number; cy: number; idx: number; point: EnergyChartPoint } | null = null;
 
   return (
     <div
@@ -549,9 +532,6 @@ export function EnergyChart({
               // payload.score null (eventos de "speech") no tiene una posición real que dibujar —
               // Number.isNaN cubre el caso de que recharts calcule cy como NaN en vez de null/undefined.
               if (cx == null || cy == null || Number.isNaN(cx) || Number.isNaN(cy) || payload?.isSpeechEvent) {
-                // Un evento de "speech" rompe cualquier fundido: las dos canciones a los lados no
-                // suenan una detrás de otra de verdad, así que no se ofrece previsualizarlas.
-                transitionPrevAnchorForRender = null;
                 return <React.Fragment key={`dot-${index}`} />;
               }
               const isSelected = payload.id === selectedSetlistItemId;
@@ -559,51 +539,8 @@ export function EnergyChart({
               const isDraggingThis = draggingFromIndex === payload.idx;
               const canEditThisEnergy = !!onEnergyChange && payload.songId != null;
               const canDragThis = !!onReorder || canEditThisEnergy;
-
-              // Botón "🎧" de previsualizar el enganche, en el punto medio con la canción anterior
-              // — solo si de verdad son vecinas en el setlist (idx consecutivo), no la última
-              // canción "real" vista (que podría quedar separada por un evento de speech).
-              const prevAnchor = transitionPrevAnchorForRender;
-              const canShowTransition = !!onPreviewTransition && prevAnchor != null && prevAnchor.idx === payload.idx - 1;
-              const transitionReady = canShowTransition && !!prevAnchor!.point.hasAudio && !!payload.hasAudio;
-              transitionPrevAnchorForRender = { cx, cy, idx: payload.idx, point: payload };
-
               return (
                 <React.Fragment key={`dot-${payload.id}`}>
-                  {canShowTransition && (
-                    <g
-                      style={{ cursor: transitionReady ? 'pointer' : 'default' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (transitionReady) onPreviewTransition!(prevAnchor!.point, payload);
-                      }}
-                    >
-                      <title>
-                        {transitionReady
-                          ? `🎧 Escuchar enganche: ${prevAnchor!.point.name} → ${payload.name}`
-                          : 'Sin audio para previsualizar el enganche'}
-                      </title>
-                      <circle
-                        cx={(prevAnchor!.cx + cx) / 2}
-                        cy={(prevAnchor!.cy + cy) / 2}
-                        r={compact ? 6 : 8}
-                        fill={transitionReady ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.4)'}
-                        stroke={transitionReady ? '#f2ca50' : '#52525b'}
-                        strokeWidth={1}
-                        strokeDasharray={transitionReady ? undefined : '2 2'}
-                      />
-                      <text
-                        x={(prevAnchor!.cx + cx) / 2}
-                        y={(prevAnchor!.cy + cy) / 2}
-                        textAnchor="middle"
-                        dominantBaseline="central"
-                        fontSize={compact ? 7 : 9}
-                        fill={transitionReady ? '#f2ca50' : '#71717a'}
-                      >
-                        🎧
-                      </text>
-                    </g>
-                  )}
                   {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
                       para tocarlo con el dedo con precisión — este círculo transparente más
                       grande (r=18) capta el toque/clic sin cambiar el tamaño visual del punto.

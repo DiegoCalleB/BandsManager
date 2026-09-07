@@ -45,7 +45,6 @@ import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
-import { CROSSFADE_SECONDS, computeCrossfadeGains, getCrossfadeStartTime, shouldCrossfade } from '../utils/crossfade';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -57,7 +56,7 @@ interface RepertorioSetlistsProps {
  bandLogoUrl?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
- view?: 'repertorio' | 'catalogo' | 'discografia' | 'directo';
+ view?: 'repertorio' | 'catalogo' | 'discografia';
  currentUser?: any;
 }
 
@@ -382,7 +381,7 @@ export default function RepertorioSetlists({
 
  // Navigation tab inside module
  const [showPdfPreview, setShowPdfPreview] = useState(false);
- const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
+ const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'discografia'>('setlists');
  // Plegado por defecto: la lista de setlists guardados ocupaba espacio permanentemente aunque
  // el usuario normalmente ya sabe con cuál está trabajando (ver activeSetlistId más abajo, que
  // recuerda el último setlist activo entre sesiones) — se despliega con un clic cuando hace falta.
@@ -394,11 +393,12 @@ export default function RepertorioSetlists({
      setActiveTab('catalogo');
    } else if (view === 'discografia') {
      setActiveTab('discografia');
-   } else if (view === 'directo') {
-     setActiveTab('escenario');
    } else {
-     // repertorio or undefined
+     // repertorio, undefined, o el antiguo 'directo' (módulo eliminado — un enlace o estado
+     // guardado que todavía lo mande aterriza en Repertorio con el reproductor de concierto
+     // ya abierto, en vez de en una vista muerta).
      setActiveTab('setlists');
+     if ((view as string) === 'directo') setShowConcertPlayer(true);
    }
  }, [view]);
 
@@ -531,87 +531,6 @@ export default function RepertorioSetlists({
    isPlayerPlaying, setIsPlayerPlaying,
    handleSelectPlayerSong,
  } = useAudioPlayer();
- // Cambiar este valor pausa el SpotifyPlayerBar desde fuera (ver pauseSignal en ese componente) —
- // usado para no solapar dos audios cuando se previsualiza un enganche del Mapa de Energía.
- const [playerPauseSignal, setPlayerPauseSignal] = useState(0);
-
- // Previsualización de "enganche" entre dos canciones consecutivas del Mapa de Energía: dos
- // <audio> ocultos, uno terminando la canción A (desde getCrossfadeStartTime) y otro arrancando
- // la B desde 0, con la misma curva de fundido que useStagePlayer.ts (misma sensación en ambos
- // sitios). No usa AudioContext/GainNode por la misma razón que crossfade.ts documenta (CORS).
- const [transitionPreview, setTransitionPreview] = useState<{ from: EnergyChartPoint; to: EnergyChartPoint } | null>(null);
- const [transitionPreviewPlaying, setTransitionPreviewPlaying] = useState(false);
- const transitionAudioARef = useRef<HTMLAudioElement | null>(null);
- const transitionAudioBRef = useRef<HTMLAudioElement | null>(null);
- const transitionRafRef = useRef<number | null>(null);
-
- const stopTransitionPreview = useCallback(() => {
-   if (transitionRafRef.current !== null) {
-     cancelAnimationFrame(transitionRafRef.current);
-     transitionRafRef.current = null;
-   }
-   transitionAudioARef.current?.pause();
-   transitionAudioBRef.current?.pause();
-   setTransitionPreviewPlaying(false);
- }, []);
-
- const handlePreviewTransition = useCallback((from: EnergyChartPoint, to: EnergyChartPoint) => {
-   const fromSong = songs.find(s => s.id === from.songId);
-   const toSong = songs.find(s => s.id === to.songId);
-   const fromUrl = fromSong?.audioPrincipalUrl || fromSong?.audioIdeas?.[0]?.audioUrl || '';
-   const toUrl = toSong?.audioPrincipalUrl || toSong?.audioIdeas?.[0]?.audioUrl || '';
-   if (!fromUrl || !toUrl) return; // EnergyChart ya deshabilita el botón sin audio; por si acaso.
-
-   stopTransitionPreview();
-   // Evita que suenen dos audios a la vez: pausa el reproductor principal si algo está sonando.
-   if (isPlayerPlaying) setPlayerPauseSignal(Date.now());
-
-   setTransitionPreview({ from, to });
-   setTransitionPreviewPlaying(true);
-
-   Promise.all([resolveAudioUrl(fromUrl), resolveAudioUrl(toUrl)]).then(([resolvedFrom, resolvedTo]) => {
-     const aEl = transitionAudioARef.current;
-     const bEl = transitionAudioBRef.current;
-     if (!aEl || !bEl || !resolvedFrom || !resolvedTo) {
-       setTransitionPreviewPlaying(false);
-       return;
-     }
-
-     const fromDuration = fromSong?.duracionSegundos || parseMmSsToSeconds(fromSong?.duracion || '') || 210;
-     aEl.src = resolvedFrom;
-     bEl.src = resolvedTo;
-     aEl.currentTime = getCrossfadeStartTime(fromDuration);
-     bEl.currentTime = 0;
-     aEl.volume = 1;
-     bEl.volume = 0;
-
-     Promise.all([aEl.play(), bEl.play()]).then(() => {
-       if (!shouldCrossfade(fromDuration)) {
-         // Canción demasiado corta para un fundido real (p.ej. un clip de pocos segundos): se
-         // deja sonar el final de A y el principio de B sin solapar, en vez de forzar un fundido
-         // sobre una ventana que no cabe.
-         return;
-       }
-       const fadeMs = CROSSFADE_SECONDS * 1000;
-       const startTs = performance.now();
-       const tick = () => {
-         const elapsed = performance.now() - startTs;
-         const { fromGain, toGain } = computeCrossfadeGains(elapsed, fadeMs);
-         aEl.volume = fromGain;
-         bEl.volume = toGain;
-         if (elapsed < fadeMs) {
-           transitionRafRef.current = requestAnimationFrame(tick);
-         } else {
-           aEl.pause();
-           transitionRafRef.current = null;
-         }
-       };
-       transitionRafRef.current = requestAnimationFrame(tick);
-     }).catch(() => setTransitionPreviewPlaying(false));
-   }).catch(() => setTransitionPreviewPlaying(false));
- }, [songs, isPlayerPlaying, parseMmSsToSeconds, stopTransitionPreview]);
-
- useEffect(() => stopTransitionPreview, [stopTransitionPreview]);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -629,6 +548,10 @@ export default function RepertorioSetlists({
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
  // Mostrar/ocultar el Mapa de Energía del Show (visible por defecto: es la pieza más "wow")
  const [showEnergyMap, setShowEnergyMap] = useState<boolean>(true);
+ // Reproductor de concierto (antes vivía en su propia pestaña "Directo", eliminada — se fusiona
+ // aquí como sección colapsable para no perder la función pero sin ocupar espacio permanente en
+ // las visitas normales de edición del repertorio, que son la mayoría — AGENTS.md §6).
+ const [showConcertPlayer, setShowConcertPlayer] = useState<boolean>(false);
  // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
  // propio toggle porque puede distraer una vez que ya conoces bien tu propio repertorio.
  const [showIdealCurve, setShowIdealCurve] = useState<boolean>(true);
@@ -715,10 +638,7 @@ export default function RepertorioSetlists({
     label: pt.info.label,
     variance: pt.variance,
     isSong: pt.isSong,
-    isSpeechEvent,
-    // Decide si el botón "🎧" de previsualizar el enganche con la canción vecina está activo
-    // (ver EnergyChart) — un evento de "speech" nunca tiene un enganche real que escuchar.
-    hasAudio: isSpeechEvent ? false : !!(pt.song?.audioPrincipalUrl || pt.song?.audioIdeas?.[0]?.audioUrl)
+    isSpeechEvent
    };
   });
 
@@ -2524,6 +2444,50 @@ export default function RepertorioSetlists({
  </div>
   </div>
 
+  {/* REPRODUCTOR DE CONCIERTO — antes era la pestaña "Directo" independiente, ahora fusionada
+      aquí (eliminada del menú de navegación). Colapsado por defecto; al activarse aparece
+      encima incluso del Mapa de Energía, porque en ese momento SÍ es el contenido principal
+      de la pantalla (AGENTS.md §6: "main content first"). `embedded` le dice a EscenarioView
+      que omita su propio selector de repertorio/"Imprimir" y su lista de solo lectura, porque
+      Repertorio ya tiene ambos (más completos, editables) un poco más abajo en esta misma
+      pantalla. */}
+  {showConcertPlayer && (
+    <EscenarioView
+      embedded
+      activeSetlist={activeSetlist}
+      setlists={setlists}
+      activeSetlistId={activeSetlistId}
+      setActiveSetlistId={setActiveSetlistId}
+      songs={songs}
+      setShowPdfPreview={setShowPdfPreview}
+      stageAudioRef={stageAudioRef}
+      stageAudioRefB={stageAudioRefB}
+      stagePlayingIndex={stagePlayingIndex}
+      setStagePlayingIndex={setStagePlayingIndex}
+      stageIsPlaying={stageIsPlaying}
+      setStageIsPlaying={setStageIsPlaying}
+      stageCurrentTime={stageCurrentTime}
+      stageItemDuration={stageItemDuration}
+      stageResolvedUrl={stageResolvedUrl}
+      stageAutoplayNext={stageAutoplayNext}
+      setStageAutoplayNext={setStageAutoplayNext}
+      stageCrossfadeEnabled={stageCrossfadeEnabled}
+      setStageCrossfadeEnabled={setStageCrossfadeEnabled}
+      isCrossfading={isCrossfading}
+      handleStageAudioEnded={handleStageAudioEnded}
+      handleStageTimeUpdate={handleStageTimeUpdate}
+      handleStageSeek={handleStageSeek}
+      handleStagePrev={handleStagePrev}
+      handleStageNext={handleStageNext}
+      toggleStagePlayPause={toggleStagePlayPause}
+      toggleFavoriteSong={handleToggleFavorite}
+      setEditingShowItem={setEditingShowItem}
+      setShowItemAudioUrl={setShowItemAudioUrl}
+      setShowShowItemModal={setShowShowItemModal}
+      formatItemDuration={formatItemDuration}
+    />
+  )}
+
   {/* LIVE METRICS & ENERGY MAP BAR */}
   {(() => {
     return (
@@ -2549,6 +2513,21 @@ export default function RepertorioSetlists({
             <span className="text-neutral-500 ml-0.5">{showSetlistStats ? '▲' : '▼'}</span>
           </button>
 
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Reproducir el concierto completo desde el propio Repertorio (antes era la pestaña
+                "Directo", ahora eliminada) — un toggle más, mismo patrón que el resto de esta fila. */}
+            <button
+              type="button"
+              onClick={() => setShowConcertPlayer((v) => !v)}
+              className={`px-2 py-1 rounded-lg transition-all cursor-pointer font-bold flex items-center gap-1.5 ${
+                showConcertPlayer
+                  ? 'bg-[#1db954]/25 text-[#1ed760] border border-[#1db954]/50'
+                  : 'bg-[#1db954]/10 hover:bg-[#1db954]/20 text-[#1ed760]'
+              }`}
+              title={showConcertPlayer ? 'Ocultar el reproductor de concierto' : 'Reproducir el concierto completo, con fundido entre canciones'}
+            >
+              🎤 <span className="hidden sm:inline">Concierto</span>
+            </button>
           <div className="relative shrink-0">
               <button
                 type="button"
@@ -2589,6 +2568,7 @@ export default function RepertorioSetlists({
                   </div>
                 </>
               )}
+          </div>
           </div>
         </div>
 
@@ -2702,51 +2682,7 @@ export default function RepertorioSetlists({
                   onEnergyChange={handleEnergyChartDrag}
                   height={256}
                   showIdealCurve={showIdealCurve}
-                  onPreviewTransition={handlePreviewTransition}
                 />
-
-                {/* Audio oculto de la previsualización de enganche (ver handlePreviewTransition) —
-                    montado siempre que el Mapa de Energía lo está, no solo mientras hay una
-                    previsualización activa, para que los refs existan ya al primer clic. */}
-                <audio ref={transitionAudioARef} onEnded={stopTransitionPreview} />
-                <audio ref={transitionAudioBRef} onEnded={stopTransitionPreview} />
-
-                {transitionPreview && (
-                  <div className="flex items-center justify-between gap-3 px-3 py-2 rounded-xl bg-sky-950/60 border border-sky-500/30 text-sky-100 text-xs font-mono">
-                    <span className="flex items-center gap-1.5 truncate">
-                      🎧 <span className="font-bold truncate">{transitionPreview.from.name}</span>
-                      <span className="text-sky-400">→</span>
-                      <span className="font-bold truncate">{transitionPreview.to.name}</span>
-                    </span>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {transitionPreviewPlaying ? (
-                        <button
-                          type="button"
-                          onClick={stopTransitionPreview}
-                          className="px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 font-bold cursor-pointer"
-                        >
-                          ⏹ Detener
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handlePreviewTransition(transitionPreview.from, transitionPreview.to)}
-                          className="px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 font-bold cursor-pointer"
-                        >
-                          ▶ Repetir
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => { stopTransitionPreview(); setTransitionPreview(null); }}
-                        className="text-sky-400 hover:text-white cursor-pointer"
-                        title="Cerrar"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                )}
 
                 {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
                     baja su energía un punto exacto — alternativa al arrastre del gráfico para
@@ -3425,10 +3361,25 @@ export default function RepertorioSetlists({
         }`}
       />
 
-      {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
-          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo
-          que sí se mira en cada vistazo a la lista (AGENTS.md §6). */}
+      {/* Notas de miembros / acordes / reproducir desde aquí: consultas y acciones ocasionales,
+          no algo permanente en la fila compacta (ver arriba) — viven aquí, un tap más lejos pero
+          fuera del camino de lo que sí se mira en cada vistazo a la lista (AGENTS.md §6).
+          "Reproducir desde aquí" reemplaza al ▶ que tenía cada fila en la antigua pestaña
+          "Directo" (ahora fusionada aquí) — abre el reproductor de concierto si estaba oculto. */}
       <div className="flex items-center gap-2 pt-1">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowConcertPlayer(true);
+            setStagePlayingIndex(index);
+            setStageIsPlaying(true);
+          }}
+          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[#1ed760] hover:text-[#1db954] transition-colors"
+          title="Reproducir el concierto empezando por esta canción"
+        >
+          <Play className="w-3 h-3" /> Reproducir desde aquí
+        </button>
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
@@ -4122,43 +4073,6 @@ export default function RepertorioSetlists({
    />
  )}
 
- {/* VIEW 3: MODO ESCENARIO (HIGH CONTRAST LIVE VIEW) */}
- {activeTab === 'escenario' && (
- <EscenarioView
- activeSetlist={activeSetlist}
- setlists={setlists}
- activeSetlistId={activeSetlistId}
- setActiveSetlistId={setActiveSetlistId}
- songs={songs}
- setShowPdfPreview={setShowPdfPreview}
- stageAudioRef={stageAudioRef}
- stageAudioRefB={stageAudioRefB}
- stagePlayingIndex={stagePlayingIndex}
- setStagePlayingIndex={setStagePlayingIndex}
- stageIsPlaying={stageIsPlaying}
- setStageIsPlaying={setStageIsPlaying}
- stageCurrentTime={stageCurrentTime}
- stageItemDuration={stageItemDuration}
- stageResolvedUrl={stageResolvedUrl}
- stageAutoplayNext={stageAutoplayNext}
- setStageAutoplayNext={setStageAutoplayNext}
- stageCrossfadeEnabled={stageCrossfadeEnabled}
- setStageCrossfadeEnabled={setStageCrossfadeEnabled}
- isCrossfading={isCrossfading}
- handleStageAudioEnded={handleStageAudioEnded}
- handleStageTimeUpdate={handleStageTimeUpdate}
- handleStageSeek={handleStageSeek}
- handleStagePrev={handleStagePrev}
- handleStageNext={handleStageNext}
- toggleStagePlayPause={toggleStagePlayPause}
- toggleFavoriteSong={handleToggleFavorite}
- setEditingShowItem={setEditingShowItem}
- setShowItemAudioUrl={setShowItemAudioUrl}
- setShowShowItemModal={setShowShowItemModal}
- formatItemDuration={formatItemDuration}
- />
- )}
-
  {/* MODAL: ADD / EDIT SONG */}
  {/* key fuerza un remount por canción: SongModal se queda siempre montado (isOpen controla un
      `return null` interno, no un desmontaje), así que sin key su useState de notas por miembro
@@ -4455,7 +4369,6 @@ export default function RepertorioSetlists({
  onClosePlayer={() => handleSelectPlayerSong(null)}
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
- pauseSignal={playerPauseSignal}
  onIsPlayingChange={setIsPlayerPlaying}
  />
  )}
