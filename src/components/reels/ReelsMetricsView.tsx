@@ -72,12 +72,9 @@ export function ReelsMetricsView({
   const [activeMainSection, setActiveMainSection] = useState<'metrics' | 'growth_plan'>('metrics');
 
   // Instagram Meta Graph API & OAuth State
-  const [showIgModal, setShowIgModal] = useState(false);
   const [igStatus, setIgStatus] = useState<{ connected: boolean; method?: string; account?: any; error?: string } | null>(null);
-  const [igTokenInput, setIgTokenInput] = useState('');
   const [isCheckingIg, setIsCheckingIg] = useState(false);
-  const [isConnectingIg, setIsConnectingIg] = useState(false);
-  const [igModalMsg, setIgModalMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [igOAuthMsg, setIgOAuthMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Gemini Multimodal Screenshot Scanner State
   const [showScanModal, setShowScanModal] = useState(false);
@@ -162,10 +159,10 @@ export function ReelsMetricsView({
         // Redirige a Instagram para autorización
         window.location.href = res.authUrl;
       } else {
-        setIgModalMsg({ type: 'error', text: res?.error || 'No se pudo iniciar el flujo OAuth de Instagram.' });
+        setIgOAuthMsg({ type: 'error', text: res?.error || 'No se pudo iniciar el flujo OAuth de Instagram.' });
       }
     } catch (err: any) {
-      setIgModalMsg({ type: 'error', text: err?.message || 'Error al iniciar OAuth de Instagram.' });
+      setIgOAuthMsg({ type: 'error', text: err?.message || 'Error al iniciar OAuth de Instagram.' });
     } finally {
       setIsCheckingIg(false);
     }
@@ -179,7 +176,7 @@ export function ReelsMetricsView({
     const params = new URLSearchParams(window.location.search);
     if (params.get('instagram_success')) {
       const username = params.get('username');
-      setIgModalMsg({
+      setIgOAuthMsg({
         type: 'success',
         text: `¡Conectado! ${username ? `@${username}` : 'Cuenta de Instagram'} sincronizada.`
       });
@@ -190,53 +187,12 @@ export function ReelsMetricsView({
     }
     if (params.get('instagram_error')) {
       const error = params.get('instagram_error');
-      setIgModalMsg({ type: 'error', text: `Error: ${error}` });
+      setIgOAuthMsg({ type: 'error', text: `Error: ${error}` });
       // Limpiar URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
-  const handleConnectIgToken = async () => {
-    if (!igTokenInput.trim()) {
-      setIgModalMsg({ type: 'error', text: 'Por favor, introduce o pega un Token de Acceso válido de Meta / Instagram.' });
-      return;
-    }
-    try {
-      setIsConnectingIg(true);
-      setIgModalMsg(null);
-      const res = await api.connectInstagramToken(igTokenInput.trim());
-      if (res && res.success) {
-        setIgModalMsg({ type: 'success', text: res.message || 'Cuenta de Instagram vinculada con éxito.' });
-        setIgTokenInput('');
-        await loadIgStatus();
-        if (onScanRealMetrics) {
-          await onScanRealMetrics();
-        }
-      } else {
-        setIgModalMsg({ type: 'error', text: res?.message || 'No se pudo verificar el token con Meta Graph API.' });
-      }
-    } catch (err: any) {
-      setIgModalMsg({ type: 'error', text: err?.message || 'Error al validar token con Meta Graph API.' });
-    } finally {
-      setIsConnectingIg(false);
-    }
-  };
-
-  const handleDisconnectIg = async () => {
-    try {
-      setIsConnectingIg(true);
-      setIgModalMsg(null);
-      const res = await api.disconnectInstagram();
-      if (res && res.success) {
-        setIgModalMsg({ type: 'success', text: 'Cuenta de Instagram desconectada. Modo scraping autónomo activado.' });
-        await loadIgStatus();
-      }
-    } catch (err: any) {
-      setIgModalMsg({ type: 'error', text: err?.message || 'Error al desconectar cuenta.' });
-    } finally {
-      setIsConnectingIg(false);
-    }
-  };
 
   // Screenshot scanner handlers
   const handleScreenshotFile = (file: File) => {
@@ -782,25 +738,18 @@ export function ReelsMetricsView({
 
           {/* Instagram OAuth / Meta Graph API Button */}
           <button
-            onClick={() => {
-              if (igStatus?.connected) {
-                setIgModalMsg(null);
-                setShowIgModal(true);
-              } else {
-                handleInstagramOAuth();
-              }
-            }}
-            disabled={isCheckingIg}
+            onClick={handleInstagramOAuth}
+            disabled={isCheckingIg || igStatus?.connected}
             className={`px-3.5 py-2.5 rounded-xl font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all border ${
               igStatus?.connected
-                ? 'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-rose-500/15 border-pink-500/40 text-pink-400 hover:border-pink-400'
+                ? 'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-rose-500/15 border-pink-500/40 text-pink-400'
                 : isCheckingIg
                 ? 'bg-neutral-800 border-neutral-700 text-neutral-500 cursor-not-allowed'
                 : isStitchLight
                 ? 'bg-white border-pink-300 text-pink-700 hover:bg-pink-50'
                 : 'bg-neutral-900 border-pink-900/40 text-pink-400 hover:bg-pink-950/30'
             }`}
-            title={igStatus?.connected ? 'Gestionar conexión de Instagram' : 'Conectar con Instagram via OAuth'}
+            title={igStatus?.connected ? `Conectado: @${igStatus.account?.username}` : 'Conectar con Instagram via OAuth'}
           >
             <Instagram className="w-3.5 h-3.5 text-pink-400" />
             {igStatus?.connected ? (
@@ -888,19 +837,19 @@ export function ReelsMetricsView({
                   <span>Escanear</span>
                 </button>
                 <button
-                  onClick={() => {
-                    setIgModalMsg(null);
-                    setShowIgModal(true);
-                  }}
+                  onClick={handleInstagramOAuth}
+                  disabled={isCheckingIg || igStatus?.connected}
                   className={`text-[9px] font-mono px-2 py-0.5 rounded flex items-center gap-1 transition-all cursor-pointer border ${
                     igStatus?.connected
-                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 opacity-60 cursor-not-allowed'
+                      : isCheckingIg
+                      ? 'bg-pink-500/10 text-pink-400 border-pink-500/20 opacity-60 cursor-not-allowed'
                       : 'bg-pink-500/10 text-pink-400 border-pink-500/20 hover:bg-pink-500/20'
                   }`}
-                  title="Verificar o conectar token oficial de Meta Graph API"
+                  title={igStatus?.connected ? 'Ya conectado a Instagram' : 'Conectar con Instagram OAuth'}
                 >
-                  <Key className="w-2.5 h-2.5" />
-                  {igStatus?.connected ? 'Meta API Oficial' : 'OAuth / Token'}
+                  {isCheckingIg ? <RefreshCw className="w-2.5 h-2.5 animate-spin" /> : <Key className="w-2.5 h-2.5" />}
+                  {igStatus?.connected ? 'Conectado ✓' : isCheckingIg ? 'Conectando...' : 'OAuth / Token'}
                 </button>
               </div>
             </div>
@@ -1811,255 +1760,6 @@ export function ReelsMetricsView({
       </>
       )}
 
-      {/* 4. Instagram Meta Graph API & OAuth Connection Modal */}
-      {showIgModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
-          <div 
-            className={`w-full max-w-xl rounded-2xl border shadow-2xl overflow-hidden ${
-              isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-neutral-900 border-neutral-800 text-white'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="p-5 border-b border-neutral-800 flex items-center justify-between bg-gradient-to-r from-pink-950/30 via-purple-950/20 to-neutral-900">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/20">
-                  <Instagram className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2">
-                    Instagram Platform Insights API
-                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-400 font-mono font-normal">
-                      Meta Official
-                    </span>
-                  </h3>
-                  <p className="text-[11px] text-neutral-400 font-mono">
-                    Alcance real, impresiones, reproducciones de Reels y métricas de creadores
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowIgModal(false)}
-                className="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 space-y-5 max-h-[80vh] overflow-y-auto font-sans">
-              {/* Official Documentation Reference */}
-              <div className="p-3.5 rounded-xl border border-pink-500/30 bg-pink-950/20 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5 text-xs text-pink-200">
-                  <ExternalLink className="w-4 h-4 text-pink-400 shrink-0" />
-                  <span>
-                    Documentación Oficial Meta: <strong className="text-white">Instagram Platform Insights API</strong>
-                  </span>
-                </div>
-                <a
-                  href="https://developers.facebook.com/documentation/instagram-platform/insights"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-2.5 py-1 rounded-lg bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-[10px] font-mono font-bold flex items-center gap-1 transition-all"
-                >
-                  Abrir Docs <ExternalLink className="w-2.5 h-2.5" />
-                </a>
-              </div>
-
-              {/* Connection Status Card */}
-              <div className={`p-4 rounded-xl border ${
-                igStatus?.connected 
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : isStitchLight
-                  ? 'bg-amber-50 border-amber-200 text-amber-800'
-                  : 'bg-neutral-800/60 border-neutral-700 text-neutral-300'
-              }`}>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      igStatus?.connected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-neutral-700 text-neutral-400'
-                    }`}>
-                      {igStatus?.connected ? <ShieldCheck className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2">
-                        {igStatus?.connected ? 'Instagram Insights Conectado' : 'Modo Scraping Autónomo Activo'}
-                        {igStatus?.connected && (
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                        )}
-                      </div>
-                      <div className="text-[11px] text-neutral-400 font-mono mt-0.5">
-                        {igStatus?.connected 
-                          ? `@${igStatus.account?.username} • ${(igStatus.account?.followers_count || latestMetric?.instagram || 1573).toLocaleString()} seguidores • ${igStatus.account?.media_count || 67} publicaciones`
-                          : 'Sin token de Instagram Insights API. El radar opera en modo scraping multi-bot.'
-                        }
-                      </div>
-                    </div>
-                  </div>
-
-                  {igStatus?.connected && (
-                    <button
-                      onClick={handleDisconnectIg}
-                      disabled={isConnectingIg}
-                      className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer"
-                    >
-                      <Unlink className="w-3 h-3" /> Desconectar
-                    </button>
-                  )}
-                </div>
-
-                {/* If connected with Insights, show mini-dashboard */}
-                {igStatus?.connected && (igStatus as any).insights && (
-                  <div className="mt-4 pt-3 border-t border-emerald-500/20 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-                    <div className="p-2 rounded-lg bg-black/30">
-                      <div className="text-[9px] font-mono text-neutral-400 uppercase">Alcance (Reach)</div>
-                      <div className="text-sm font-bold font-display text-white mt-0.5">
-                        {((igStatus as any).insights?.reach || 0).toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="p-2 rounded-lg bg-black/30">
-                      <div className="text-[9px] font-mono text-neutral-400 uppercase">Impresiones</div>
-                      <div className="text-sm font-bold font-display text-white mt-0.5">
-                        {((igStatus as any).insights?.impressions || 0).toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="p-2 rounded-lg bg-black/30">
-                      <div className="text-[9px] font-mono text-neutral-400 uppercase">Visitas Perfil</div>
-                      <div className="text-sm font-bold font-display text-white mt-0.5">
-                        {((igStatus as any).insights?.profile_views || 0).toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="p-2 rounded-lg bg-black/30">
-                      <div className="text-[9px] font-mono text-neutral-400 uppercase">Interacciones</div>
-                      <div className="text-sm font-bold font-display text-white mt-0.5">
-                        {((igStatus as any).insights?.total_interactions || 0).toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Feedback messages */}
-              {igModalMsg && (
-                <div className={`p-3.5 rounded-xl border text-xs font-mono flex items-center gap-2.5 ${
-                  igModalMsg.type === 'success' 
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                }`}>
-                  {igModalMsg.type === 'success' ? <Check className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-                  <span>{igModalMsg.text}</span>
-                </div>
-              )}
-
-              {/* Token Input & Authorization */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-mono uppercase tracking-wider font-bold text-neutral-300">
-                    Vincular Token de Instagram Insights API
-                  </label>
-                  <span className="text-[10px] text-pink-400 font-mono">
-                    Permisos: instagram_manage_insights
-                  </span>
-                </div>
-                
-                <div className="relative">
-                  <input
-                    type="password"
-                    placeholder="Pega aquí tu User Access Token con permiso instagram_manage_insights (EAA...)"
-                    value={igTokenInput}
-                    onChange={(e) => setIgTokenInput(e.target.value)}
-                    className={`w-full px-4 py-3 rounded-xl font-mono text-xs border focus:outline-none focus:ring-2 ${
-                      isStitchLight 
-                        ? 'bg-slate-50 border-slate-300 text-slate-900 focus:ring-pink-500' 
-                        : 'bg-black/50 border-neutral-700 text-white focus:ring-pink-500 focus:border-pink-500'
-                    }`}
-                  />
-                  <div className="absolute right-3 top-3 text-neutral-500">
-                    <Key className="w-4 h-4" />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between gap-3 pt-1">
-                  <a
-                    href="https://developers.facebook.com/tools/explorer/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[11px] text-pink-400 hover:text-pink-300 flex items-center gap-1 font-mono hover:underline"
-                  >
-                    <ExternalLink className="w-3 h-3" /> Meta Graph API Explorer
-                  </a>
-
-                  <button
-                    onClick={handleConnectIgToken}
-                    disabled={isConnectingIg || !igTokenInput.trim()}
-                    className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold tracking-wider uppercase flex items-center gap-2 transition-all cursor-pointer ${
-                      isConnectingIg || !igTokenInput.trim()
-                        ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white shadow-lg shadow-pink-900/30'
-                    }`}
-                  >
-                    {isConnectingIg ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        <span>Verificando Insights API...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>Conectar Instagram Insights</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Step by step guide according to Meta Insights Documentation */}
-              <div className={`p-4 rounded-xl border space-y-2 text-xs ${
-                isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-700' : 'bg-neutral-950/60 border-neutral-800 text-neutral-400'
-              }`}>
-                <div className="font-bold font-mono uppercase tracking-wider text-[11px] text-neutral-300 flex items-center gap-1.5">
-                  <span>📘</span> Pasos según la documentación oficial de Meta Insights:
-                </div>
-                <ol className="list-decimal list-inside space-y-1.5 text-[11px] leading-relaxed">
-                  <li>Tu cuenta de Instagram debe ser de tipo <strong className="text-white">Creador o Empresa</strong> vinculada a una Página de Facebook.</li>
-                  <li>Entra en el <a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noreferrer" className="text-pink-400 underline">Meta Graph API Explorer</a>.</li>
-                  <li>En <em>Permisos (Permissions)</em>, activa exactamente estos 4 scopes oficiales:
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">instagram_manage_insights</code>
-                      <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">instagram_basic</code>
-                      <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">pages_show_list</code>
-                      <code className="px-1.5 py-0.5 rounded bg-pink-500/15 text-pink-300 font-mono text-[10px]">pages_read_engagement</code>
-                    </div>
-                  </li>
-                  <li>Haz clic en <strong>Generate Access Token</strong> y pega el token arriba para sincronizar alcances, impresiones y reproducciones de Reels.</li>
-                </ol>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-neutral-800 flex justify-between items-center bg-neutral-900/50">
-              <a
-                href="https://developers.facebook.com/documentation/instagram-platform/insights"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[11px] text-neutral-400 hover:text-white flex items-center gap-1 font-mono"
-              >
-                <ExternalLink className="w-3 h-3" /> developers.facebook.com/documentation/instagram-platform/insights
-              </a>
-              <button
-                onClick={() => setShowIgModal(false)}
-                className={`px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider font-bold transition-all cursor-pointer ${
-                  isStitchLight
-                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                    : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
-                }`}
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 5. GEMINI MULTIMODAL SCREENSHOT SCANNER MODAL */}
       {showScanModal && (

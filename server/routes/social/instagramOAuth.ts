@@ -71,7 +71,7 @@ router.get("/instagram-oauth/callback", async (req, res) => {
       );
       return res.redirect(
         `/dashboard?instagram_error=${encodeURIComponent(
-          error_description || error
+          String(error_description || error)
         )}`
       );
     }
