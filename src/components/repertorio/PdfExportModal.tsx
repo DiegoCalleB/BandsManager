@@ -1254,12 +1254,29 @@ export function PdfExportModal({
               // completo, una página concreta suele tener margen para una letra MAYOR que la
               // elegida para el conjunto total — se aprovecha en vez de dejarla al mínimo.
               const pageFontPt = plan.pageFontSizes[pageIdx] ?? plan.titleFontPt;
-              // Filtrar solo canciones (tipoItem === 'cancion') — el PDF muestra solo canciones,
-              // no pausas, presentaciones o interlúdios. El orden y el conteo deben coincidir.
-              const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
-              const rowsHtml = songsOnly
-                .slice(startIdx, startIdx + count)
-                .map((item, i) => buildRowHtml(item, startIdx + i, pageFontPt, member, isMaster))
+
+              // Mapear índices de canciones [startIdx, startIdx+count) a índices reales en
+              // activeSetlist.items (que incluye bloques intercalados). Encontrar dónde comienza
+              // la canción startIdx y dónde termina la canción startIdx+count-1.
+              const songIndicesByRealIdx = activeSetlist.items
+                .map((item, idx) => item.tipoItem === 'cancion' ? idx : -1)
+                .filter(idx => idx !== -1);
+
+              const firstSongRealIdx = songIndicesByRealIdx[startIdx] ?? 0;
+              const lastSongRealIdx = songIndicesByRealIdx[startIdx + count - 1] ?? activeSetlist.items.length - 1;
+              const pageItems = activeSetlist.items.slice(firstSongRealIdx, lastSongRealIdx + 1);
+
+              let songIndex = startIdx;
+              const rowsHtml = pageItems
+                .map((item) => {
+                  if (item.tipoItem === 'cancion') {
+                    const html = buildRowHtml(item, songIndex, pageFontPt, member, isMaster);
+                    songIndex++;
+                    return html;
+                  } else {
+                    return buildRowHtml(item, -1, pageFontPt, member, isMaster);
+                  }
+                })
                 .join('');
               const isLastPageOverall = globalPageIdx === totalPagesCount;
 
