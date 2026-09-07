@@ -172,7 +172,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       // incluido) comparten el mismo score de relleno bajo; el gráfico los excluye igual de la
       // curva de energía (ver isSpeechEvent en RepertorioSetlists.tsx), solo cambia el icono para
       // poder distinguir visualmente dónde empieza el bis.
-      const isBis = item.tipoItem === 'bis';
+      const isBis = item.tipoItem === 'bloque' && item.bloqueSubtipo === 'bis';
       const score = 4;
       points.push({
         index,

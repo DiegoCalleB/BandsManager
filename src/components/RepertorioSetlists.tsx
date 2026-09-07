@@ -19,6 +19,7 @@ import { ShareModal } from './ShareModal';
 import { useShareModal } from '../hooks/useShareModal';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
+import { useStagePlayer } from '../hooks/useStagePlayer';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
 import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
 import { AssignSongsToAlbumModal } from './repertorio/AssignSongsToAlbumModal';
@@ -33,6 +34,7 @@ import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistF
 import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
+import { EscenarioView } from './repertorio/EscenarioView';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { 
@@ -78,7 +80,7 @@ export function formatSecondsToMmSs(secs: number): string {
 }
 
 export const SHOW_ITEM_TYPES: Record<string, { label: string; icon: string; bg: string; text: string; border: string }> = {
-  bloque_header: { label: 'Encabezado de Bloque / Sección', icon: '⚡', bg: 'bg-[#d1b375]/20', text: 'text-[#d1b375]', border: 'border-[#f2ca50]/50' },
+  header: { label: 'Encabezado de Bloque / Sección', icon: '⚡', bg: 'bg-[#d1b375]/20', text: 'text-[#d1b375]', border: 'border-[#f2ca50]/50' },
   presentacion: { label: 'Presentación Banda / Saludo', icon: '🎤', bg: 'bg-sky-500/15', text: 'text-sky-400', border: 'border-sky-500/30' },
   intro_tema: { label: 'Intro / Historia del Tema', icon: '🗣️', bg: 'bg-indigo-500/15', text: 'text-indigo-400', border: 'border-indigo-500/30' },
   beatbox: { label: 'Performance Beatbox / Ritmo', icon: '🥁', bg: 'bg-amber-500/15', text: 'text-amber-400', border: 'border-amber-500/30' },
@@ -279,19 +281,19 @@ const DEFAULT_SETLISTS: Setlist[] = [
  fechaCreacion: '2026-03-01',
  fechaUltimaEdicion: '2026-08-01',
  items: [
- { id: 'i-b1', tipoItem: 'bloque_header', tituloCustom: '🔥 Bloque 1: Calentamiento & Arranque' },
+ { id: 'i-b1', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Bloque 1: Calentamiento & Arranque' },
  { id: 'i-1', songId: 'song-1', tipoItem: 'cancion', notaTema: 'Arrancar directo sin intro' },
  { id: 'i-2', songId: 'song-2', tipoItem: 'cancion', notaTema: 'Empalmar batería con final de Brisa' },
- { id: 'i-bbx', tipoItem: 'beatbox', tituloCustom: 'Performance Beatbox Filgue & Intro Vocal', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Luz cenital sobre Filgue. Batería marca el pulso.' },
- 
- { id: 'i-b2', tipoItem: 'bloque_header', tituloCustom: '⚡ Bloque 2: Nudo & Clímax' },
+ { id: 'i-bbx', tipoItem: 'bloque', bloqueSubtipo: 'beatbox', tituloCustom: 'Performance Beatbox Filgue & Intro Vocal', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Luz cenital sobre Filgue. Batería marca el pulso.' },
+
+ { id: 'i-b2', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '⚡ Bloque 2: Nudo & Clímax' },
  { id: 'i-3', songId: 'song-4', tipoItem: 'cancion', notaTema: 'Subidón ska' },
- { id: 'i-4', tipoItem: 'presentacion', tituloCustom: 'Presentación Banda & Agradecimientos', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Jon habla al público y presenta a los vientos' },
+ { id: 'i-4', tipoItem: 'bloque', bloqueSubtipo: 'presentacion', tituloCustom: 'Presentación Banda & Agradecimientos', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Jon habla al público y presenta a los vientos' },
  { id: 'i-5', songId: 'song-3', tipoItem: 'cancion', notaTema: 'Cambio de guitarra a Drop D' },
- 
- { id: 'i-b3', tipoItem: 'bloque_header', tituloCustom: '💣 Bloque 3: Desenlace & BIS Final' },
+
+ { id: 'i-b3', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '💣 Bloque 3: Desenlace & BIS Final' },
  { id: 'i-6', songId: 'song-6', tipoItem: 'cancion', notaTema: 'Estribillo con coros del público' },
- { id: 'i-7', tipoItem: 'bis', tituloCustom: 'BIS / Cierre de Festival', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Salida rápida de escenario y vuelta para bis' },
+ { id: 'i-7', tipoItem: 'bloque', bloqueSubtipo: 'bis', tituloCustom: 'BIS / Cierre de Festival', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Salida rápida de escenario y vuelta para bis' },
  { id: 'i-8', songId: 'song-5', tipoItem: 'cancion', notaTema: 'Solo final de violín extendido' }
  ]
  },
@@ -304,18 +306,18 @@ const DEFAULT_SETLISTS: Setlist[] = [
  fechaCreacion: '2026-04-10',
  fechaUltimaEdicion: '2026-07-20',
  items: [
- { id: 'i-20', tipoItem: 'bloque_header', tituloCustom: '🔥 Bloque 1: Bienvenida & Potencia' },
+ { id: 'i-20', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Bloque 1: Bienvenida & Potencia' },
  { id: 'i-21', songId: 'song-1', tipoItem: 'cancion' },
  { id: 'i-22', songId: 'song-6', tipoItem: 'cancion' },
- { id: 'i-intro', tipoItem: 'intro_tema', tituloCustom: 'Historia / Intro a Noches de Garaje', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Diego explica el origen de la canción' },
+ { id: 'i-intro', tipoItem: 'bloque', bloqueSubtipo: 'intro_tema', tituloCustom: 'Historia / Intro a Noches de Garaje', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Diego explica el origen de la canción' },
  { id: 'i-23', songId: 'song-3', tipoItem: 'cancion' },
- 
- { id: 'i-23b', tipoItem: 'bloque_header', tituloCustom: '🎸 Bloque 2: Acústico & Covers' },
+
+ { id: 'i-23b', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🎸 Bloque 2: Acústico & Covers' },
  { id: 'i-24', songId: 'song-8', tipoItem: 'cancion', notaTema: 'Cover festivo' },
- { id: 'i-25', tipoItem: 'chapa', tituloCustom: 'Chapa Merch & Agradecimientos a la Sala', duracionEstimadaMinutos: 3, duracionEstimadaSegundos: 180 },
+ { id: 'i-25', tipoItem: 'bloque', bloqueSubtipo: 'chapa', tituloCustom: 'Chapa Merch & Agradecimientos a la Sala', duracionEstimadaMinutos: 3, duracionEstimadaSegundos: 180 },
  { id: 'i-26', songId: 'song-7', tipoItem: 'cancion', notaTema: 'Tema nuevo en prueba' },
- 
- { id: 'i-26b', tipoItem: 'bloque_header', tituloCustom: '⚡ Bloque 3: Desenlace & Traca' },
+
+ { id: 'i-26b', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '⚡ Bloque 3: Desenlace & Traca' },
  { id: 'i-27', songId: 'song-5', tipoItem: 'cancion' },
  { id: 'i-28', songId: 'song-4', tipoItem: 'cancion' },
  { id: 'i-29', songId: 'song-2', tipoItem: 'cancion' }
@@ -508,11 +510,31 @@ export default function RepertorioSetlists({
    isPlayerPlaying, setIsPlayerPlaying,
    handleSelectPlayerSong,
  } = useAudioPlayer();
+
+ // Concert Player (Reproductor de Concierto / Modo Escenario)
+ const {
+   stageAudioRef, stageAudioRefB,
+   stagePlayingIndex, setStagePlayingIndex,
+   stageIsPlaying, setStageIsPlaying,
+   stageAutoplayNext, setStageAutoplayNext,
+   stageCurrentTime, setStageCurrentTime,
+   stageItemDuration,
+   stageResolvedUrl,
+   stageCrossfadeEnabled, setStageCrossfadeEnabled,
+   isCrossfading,
+   handleStageAudioEnded,
+   handleStageTimeUpdate,
+   handleStageSeek,
+   handleStagePrev,
+   handleStageNext,
+   toggleStagePlayPause,
+ } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
+
  // Cola de canciones que gobierna Siguiente/Anterior (y el fundido) de la barra Spotify
  // persistente de abajo — por defecto el catálogo completo (comportamiento de siempre en
  // Catálogo/Discografía); "Reproducir desde aquí" en una fila de Repertorio la sustituye por las
  // canciones de ESE repertorio, en su orden. Se resetea a null (= catálogo) desde cualquier
- // entrada de reproducción que no venga de un repertorio.
+ // entrada de reproducción que no venga de un repositorio.
  const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
  const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null) => {
    setPlayerQueueOverride(queue);
@@ -557,6 +579,9 @@ export default function RepertorioSetlists({
  // Acciones secundarias del setlist (compartir, asignar a bolo, imprimir, editar detalles) en un
  // único menú "⋯" en vez de tres botones de texto permanentes: no se usan en la mayoría de visitas.
  const [showSetlistActionsMenu, setShowSetlistActionsMenu] = useState(false);
+ // Reproducir el concierto dentro de la pestaña Repertorio con la consola del reproductor
+ // (antes vivía en la pestaña Directo, ahora está embebida en Repertorio con toggle)
+ const [showConcertPlayer, setShowConcertPlayer] = useState(false);
  // Modal de análisis avanzado con IA
  const [showAIAnalysisModal, setShowAIAnalysisModal] = useState(false);
  // Modal del plan de "Setlist Perfecto" (reordenar + añadir/quitar canciones del catálogo + bloques)
@@ -1808,8 +1833,8 @@ export default function RepertorioSetlists({
  };
 
  const handleAddItemToSetlist = (
-  songId?: string, 
-  tipoItem: SetlistItem['tipoItem'] = 'cancion',
+  songId?: string,
+  tipoItem: any = 'cancion',
   tituloCustom?: string,
   duracionEstimadaMinutos?: number,
   duracionEstimadaSegundos?: number,
@@ -1818,9 +1843,19 @@ export default function RepertorioSetlists({
  ) => {
   if (!activeSetlist) return;
 
+  // Map old tipoItem values to new (tipoItem, bloqueSubtipo) structure
+  let actualTipoItem: 'cancion' | 'bloque' = 'cancion';
+  let bloqueSubtipo: SetlistItem['bloqueSubtipo'] = undefined;
+
+  if (tipoItem !== 'cancion') {
+    actualTipoItem = 'bloque';
+    bloqueSubtipo = tipoItem; // Map directly: 'presentacion', 'bis', 'header', etc.
+  }
+
   const newItem: SetlistItem = {
    id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-   tipoItem,
+   tipoItem: actualTipoItem,
+   bloqueSubtipo,
    songId,
    tituloCustom,
    duracionEstimadaMinutos,
@@ -1829,37 +1864,38 @@ export default function RepertorioSetlists({
   };
 
   if (!tituloCustom) {
-   if (tipoItem === 'bloque_header') {
+   const subtype = bloqueSubtipo || tipoItem;
+   if (subtype === 'header' || subtype === 'bloque_header') {
     newItem.tituloCustom = '⚡ Nuevo Bloque / Sección del Show';
-   } else if (tipoItem === 'presentacion') {
+   } else if (subtype === 'presentacion') {
     newItem.tituloCustom = 'Presentación Banda & Saludo';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'beatbox') {
+   } else if (subtype === 'beatbox') {
     newItem.tituloCustom = 'Solo de Batería / Percusión';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'intro_tema') {
+   } else if (subtype === 'intro_tema') {
     newItem.tituloCustom = 'Intro / Historia del Tema';
     newItem.duracionEstimadaMinutos = 1;
     newItem.duracionEstimadaSegundos = 60;
-   } else if (tipoItem === 'solo_performance') {
+   } else if (subtype === 'solo_performance') {
     newItem.tituloCustom = 'Solo Instrumental / Jam';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'cambio_instrumento') {
+   } else if (subtype === 'cambio_instrumento') {
     newItem.tituloCustom = 'Cambio Instrumento & Afinación';
     newItem.duracionEstimadaMinutos = 1;
     newItem.duracionEstimadaSegundos = 60;
-   } else if (tipoItem === 'chapa') {
+   } else if (subtype === 'chapa') {
     newItem.tituloCustom = 'Chapa / Discurso con Público';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'descanso') {
+   } else if (subtype === 'descanso') {
     newItem.tituloCustom = 'Pausa / Intermedio / Agua';
     newItem.duracionEstimadaMinutos = 2;
     newItem.duracionEstimadaSegundos = 120;
-   } else if (tipoItem === 'bis') {
+   } else if (subtype === 'bis') {
     newItem.tituloCustom = '💣 BIS / PARTE FINAL DEL SHOW';
     newItem.duracionEstimadaMinutos = 1;
     newItem.duracionEstimadaSegundos = 60;
@@ -1982,20 +2018,30 @@ export default function RepertorioSetlists({
  const handleSaveShowItem = (itemData: Partial<SetlistItem>) => {
   if (!activeSetlist) return;
 
+  // Map old tipoItem values to new structure if needed
+  const mappedData = { ...itemData };
+  if (mappedData.tipoItem && mappedData.tipoItem !== 'cancion') {
+    const subtype = mappedData.tipoItem;
+    mappedData.tipoItem = 'bloque' as any;
+    mappedData.bloqueSubtipo = subtype as any;
+  }
+
   let updatedItems: SetlistItem[];
 
   if (editingShowItem) {
-   updatedItems = activeSetlist.items.map(it => 
-    it.id === editingShowItem.id ? { ...it, ...itemData, audioUrl: showItemAudioUrl } : it
+   updatedItems = activeSetlist.items.map(it =>
+    it.id === editingShowItem.id ? { ...it, ...mappedData, audioUrl: showItemAudioUrl } : it
    );
   } else {
+   const defaultSubtype = (mappedData.bloqueSubtipo || 'otro') as any;
    const newItem: SetlistItem = {
     id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-    tipoItem: itemData.tipoItem || 'chapa',
-    tituloCustom: itemData.tituloCustom || 'Evento del Show',
-    duracionEstimadaMinutos: itemData.duracionEstimadaMinutos || 2,
-    duracionEstimadaSegundos: itemData.duracionEstimadaSegundos || 120,
-    notaTema: itemData.notaTema || '',
+    tipoItem: mappedData.tipoItem === 'cancion' ? 'cancion' : 'bloque',
+    bloqueSubtipo: mappedData.tipoItem === 'cancion' ? undefined : defaultSubtype,
+    tituloCustom: mappedData.tituloCustom || 'Evento del Show',
+    duracionEstimadaMinutos: mappedData.duracionEstimadaMinutos || 2,
+    duracionEstimadaSegundos: mappedData.duracionEstimadaSegundos || 120,
+    notaTema: mappedData.notaTema || '',
     audioUrl: showItemAudioUrl
    };
 
@@ -2170,7 +2216,7 @@ export default function RepertorioSetlists({
  <td style="font-family:monospace; font-size:16px; color:#aaa;">${s.duracion}</td>
  </tr>
  `;
- } else if (it.tipoItem === 'bloque_header') {
+ } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
  return `
  <tr style="background:#1e1e1e; border-top: 3px solid #f2ca50; border-bottom: 2px solid #f2ca50;">
  <td colspan="5" style="color:#f2ca50; font-size:20px; font-weight:900; letter-spacing:1px; text-transform:uppercase; padding: 12px 10px;">
@@ -2579,6 +2625,14 @@ export default function RepertorioSetlists({
                 >
                   {showEnergyMap ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setShowConcertPlayer((v) => !v)}
+                  className="p-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-all cursor-pointer"
+                  title={showConcertPlayer ? 'Ocultar reproductor de concierto' : 'Mostrar reproductor de concierto'}
+                >
+                  {showConcertPlayer ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                </button>
               </div>
             </div>
 
@@ -2825,6 +2879,46 @@ export default function RepertorioSetlists({
     );
   })()}
 
+  {/* CONCERT PLAYER: Reproducir concierto dentro de Repertorio */}
+  {showConcertPlayer && activeSetlist && (
+    <div className="order-2 p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2">
+      <EscenarioView
+        activeSetlist={activeSetlist}
+        setlists={setlists}
+        activeSetlistId={activeSetlistId}
+        setActiveSetlistId={setActiveSetlistId}
+        songs={songs}
+        setShowPdfPreview={setShowPdfPreview}
+        stageAudioRef={stageAudioRef}
+        stageAudioRefB={stageAudioRefB}
+        stagePlayingIndex={stagePlayingIndex}
+        setStagePlayingIndex={setStagePlayingIndex}
+        stageIsPlaying={stageIsPlaying}
+        setStageIsPlaying={setStageIsPlaying}
+        stageCurrentTime={stageCurrentTime}
+        stageItemDuration={stageItemDuration}
+        stageResolvedUrl={stageResolvedUrl}
+        stageAutoplayNext={stageAutoplayNext}
+        setStageAutoplayNext={setStageAutoplayNext}
+        stageCrossfadeEnabled={stageCrossfadeEnabled}
+        setStageCrossfadeEnabled={setStageCrossfadeEnabled}
+        isCrossfading={isCrossfading}
+        handleStageAudioEnded={handleStageAudioEnded}
+        handleStageTimeUpdate={handleStageTimeUpdate}
+        handleStageSeek={handleStageSeek}
+        handleStagePrev={handleStagePrev}
+        handleStageNext={handleStageNext}
+        toggleStagePlayPause={toggleStagePlayPause}
+        toggleFavoriteSong={toggleFavoriteSong}
+        setEditingShowItem={setEditingShowItem}
+        setShowItemAudioUrl={setShowItemAudioUrl}
+        setShowShowItemModal={setShowShowItemModal}
+        formatItemDuration={formatItemDuration}
+        embedded
+      />
+    </div>
+  )}
+
   {/* ADD ITEMS ACTION BAR */}
   <div className="space-y-1.5 pt-0.5">
   {/* Selected Song / Item Insertion Indicator */}
@@ -3055,6 +3149,8 @@ export default function RepertorioSetlists({
     selectPlayerSongWithQueue(song, true, setlistSongs);
   };
 
+  const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
+
   return (
   <div
   key={it.id}
@@ -3103,7 +3199,7 @@ export default function RepertorioSetlists({
     <button
       type="button"
       onClick={(e) => { e.stopPropagation(); playThisSong(); }}
-      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer group-hover:bg-[#1db954] group-hover:text-black"
+      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[#1db954] text-black sm:bg-transparent sm:group-hover:bg-[#1db954] sm:group-hover:text-black"
       title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
     >
       {isPlayingThisRow ? (
@@ -3114,8 +3210,8 @@ export default function RepertorioSetlists({
         </div>
       ) : (
         <>
-          <span className="group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{index + 1}</span>
-          <Play className="w-3 h-3 fill-current hidden group-hover:block ml-0.5 text-black" />
+          <span className="sm:group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{songIndex + 1}</span>
+          <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-black" />
         </>
       )}
     </button>
@@ -3354,7 +3450,7 @@ export default function RepertorioSetlists({
   )}
  </div>
  );
- } else if (it.tipoItem === 'bloque_header') {
+ } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
  return (
  <div
  key={it.id}

@@ -5,10 +5,10 @@ import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
-/** Todo tipo de item de setlist que no sea una canción — compartido con setlistImport.ts para
- * validar los bloques que la IA detecta al importar un repertorio desde foto/PDF. */
-export const BLOCK_TYPES: SetlistItem['tipoItem'][] = [
-  'chapa', 'descanso', 'bis', 'bloque_header', 'interludio',
+/** Todo subtipo de bloque en un setlist — compartido con setlistImport.ts para validar los
+ * bloques que la IA detecta al importar un repertorio desde foto/PDF. */
+export const BLOCK_TYPES: SetlistItem['bloqueSubtipo'][] = [
+  'header', 'chapa', 'descanso', 'bis',
   'presentacion', 'beatbox', 'intro_tema', 'solo_performance', 'cambio_instrumento', 'otro'
 ];
 
@@ -27,7 +27,7 @@ export interface PerfectSetlistAction {
   song_title?: string;
   insert_at_position?: number;
   // add_block
-  block_type?: SetlistItem['tipoItem'];
+  block_type?: SetlistItem['bloqueSubtipo'];
   title?: string;
   duracion_minutos?: number;
 }
@@ -196,10 +196,10 @@ REGLAS IMPORTANTES:
     }
 
     if (a.type === 'add_block') {
-      const blockType = a.block_type as SetlistItem['tipoItem'];
+      const blockType = a.block_type as SetlistItem['bloqueSubtipo'];
       const insertAt = a.insert_at_position;
       if (
-        BLOCK_TYPES.includes(blockType) &&
+        blockType && BLOCK_TYPES.includes(blockType) &&
         typeof insertAt === 'number' && insertAt >= 1 && insertAt <= maxInsertPosition
       ) {
         const duracion = typeof a.duracion_minutos === 'number' && Number.isFinite(a.duracion_minutos)
