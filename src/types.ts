@@ -645,14 +645,14 @@ export interface Song {
 export interface SetlistItem {
   id: string;
   songId?: string; // null if speech/pause/break/block header
-  tipoItem: 'cancion' | 'chapa' | 'descanso' | 'bis' | 'bloque_header' | 'interludio' | 'presentacion' | 'beatbox' | 'intro_tema' | 'solo_performance' | 'cambio_instrumento' | 'otro';
+  tipoItem: 'cancion' | 'bloque';
+  bloqueSubtipo?: 'header' | 'presentacion' | 'intro_tema' | 'beatbox' | 'solo_performance' | 'cambio_instrumento' | 'chapa' | 'descanso' | 'bis' | 'otro';
   tituloCustom?: string;
   duracionEstimadaMinutos?: number;
   duracionEstimadaSegundos?: number; // e.g. 90 seconds (1m 30s)
   notaTema?: string;
   notas?: string;
   audioUrl?: string; // Recorded or uploaded speech/presentation audio
-  bloqueCategoria?: 'calentamiento' | 'nudo' | 'desenlace' | 'bis' | 'otro';
 }
 
 export interface Setlist {
