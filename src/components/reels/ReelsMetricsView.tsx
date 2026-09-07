@@ -159,20 +159,19 @@ export function ReelsMetricsView({
       console.log('🟢 Respuesta del servidor:', res);
       if (res?.success && res?.authUrl) {
         console.log('✅ Redirigiendo a:', res.authUrl);
+        setIgOAuthMsg({ type: 'success', text: 'Redirigiendo a Instagram...' });
         // Redirige a Instagram para autorización
         window.location.href = res.authUrl;
       } else {
-        const errorMsg = res?.error || 'No se pudo iniciar el flujo OAuth de Instagram.';
+        const errorMsg = res?.error || 'No se pudo iniciar el flujo OAuth. Respuesta: ' + JSON.stringify(res);
         console.error('❌ Error de respuesta:', errorMsg);
         setIgOAuthMsg({ type: 'error', text: errorMsg });
       }
     } catch (err: any) {
       console.error('💥 Error al iniciar OAuth:', err);
-      console.error('Mensaje:', err?.message);
-      console.error('Stack:', err?.stack);
-      const errorMsg = err?.message || err?.data?.error || 'Error al iniciar OAuth de Instagram.';
-      console.error('Error final:', errorMsg);
-      setIgOAuthMsg({ type: 'error', text: errorMsg });
+      const fullError = `${err?.message || 'Error desconocido'} (Status: ${err?.status || 'N/A'})`;
+      console.error('Error completo:', fullError);
+      setIgOAuthMsg({ type: 'error', text: fullError });
     } finally {
       setIsCheckingIg(false);
     }
@@ -863,6 +862,21 @@ export function ReelsMetricsView({
                 </button>
               </div>
             </div>
+            {igOAuthMsg && (
+              <div className={`p-2.5 rounded-lg text-xs font-mono flex items-start gap-2 ${
+                igOAuthMsg.type === 'success'
+                  ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+                  : 'bg-rose-500/10 border border-rose-500/30 text-rose-300'
+              }`}>
+                {igOAuthMsg.type === 'success' ? <Check className="w-3.5 h-3.5 shrink-0 mt-0.5" /> : <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />}
+                <div className="flex-1 break-words">
+                  <div className="font-bold mb-0.5">
+                    {igOAuthMsg.type === 'success' ? '✅ Éxito' : '❌ Error'}
+                  </div>
+                  <div>{igOAuthMsg.text}</div>
+                </div>
+              </div>
+            )}
             <div>
               <div className="text-2xl font-black font-display tracking-tight text-pink-400">
                 {(latestMetric?.instagram_followers || latestMetric?.instagram || 0).toLocaleString()}
