@@ -623,6 +623,10 @@ export const api = {
     });
   },
 
+  async initiateInstagramOAuth(): Promise<{ success: boolean; authUrl?: string; error?: string }> {
+    return request('/api/social/instagram-oauth/authorize');
+  },
+
   // Screenshot scanner with Gemini Multimodal Vision
   async scanMetricsScreenshot(image: string, mimeType?: string, autoSave: boolean = true): Promise<{ success: boolean; data?: any; savedToSupabase?: boolean; metric?: any; error?: string }> {
     return request('/api/metrics/scan-screenshot', {

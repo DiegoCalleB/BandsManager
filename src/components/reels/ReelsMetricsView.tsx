@@ -153,9 +153,47 @@ export function ReelsMetricsView({
     }
   };
 
+  // Handle Instagram OAuth Flow
+  const handleInstagramOAuth = async () => {
+    try {
+      setIsCheckingIg(true);
+      const res = await api.initiateInstagramOAuth();
+      if (res?.success && res?.authUrl) {
+        // Redirige a Instagram para autorización
+        window.location.href = res.authUrl;
+      } else {
+        setIgModalMsg({ type: 'error', text: res?.error || 'No se pudo iniciar el flujo OAuth de Instagram.' });
+      }
+    } catch (err: any) {
+      setIgModalMsg({ type: 'error', text: err?.message || 'Error al iniciar OAuth de Instagram.' });
+    } finally {
+      setIsCheckingIg(false);
+    }
+  };
+
   useEffect(() => {
     loadContentItems();
     loadIgStatus();
+
+    // Verificar parámetros de OAuth callback
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('instagram_success')) {
+      const username = params.get('username');
+      setIgModalMsg({
+        type: 'success',
+        text: `¡Conectado! ${username ? `@${username}` : 'Cuenta de Instagram'} sincronizada.`
+      });
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Recargar status
+      loadIgStatus();
+    }
+    if (params.get('instagram_error')) {
+      const error = params.get('instagram_error');
+      setIgModalMsg({ type: 'error', text: `Error: ${error}` });
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   const handleConnectIgToken = async () => {
@@ -745,23 +783,35 @@ export function ReelsMetricsView({
           {/* Instagram OAuth / Meta Graph API Button */}
           <button
             onClick={() => {
-              setIgModalMsg(null);
-              setShowIgModal(true);
+              if (igStatus?.connected) {
+                setIgModalMsg(null);
+                setShowIgModal(true);
+              } else {
+                handleInstagramOAuth();
+              }
             }}
+            disabled={isCheckingIg}
             className={`px-3.5 py-2.5 rounded-xl font-mono text-[10px] font-bold tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2 transition-all border ${
               igStatus?.connected
                 ? 'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-rose-500/15 border-pink-500/40 text-pink-400 hover:border-pink-400'
+                : isCheckingIg
+                ? 'bg-neutral-800 border-neutral-700 text-neutral-500 cursor-not-allowed'
                 : isStitchLight
                 ? 'bg-white border-pink-300 text-pink-700 hover:bg-pink-50'
                 : 'bg-neutral-900 border-pink-900/40 text-pink-400 hover:bg-pink-950/30'
             }`}
-            title="Configurar conexión oficial con Meta Graph API / Instagram OAuth"
+            title={igStatus?.connected ? 'Gestionar conexión de Instagram' : 'Conectar con Instagram via OAuth'}
           >
             <Instagram className="w-3.5 h-3.5 text-pink-400" />
             {igStatus?.connected ? (
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 Meta API (@{igStatus.account?.username || '...'})
+              </span>
+            ) : isCheckingIg ? (
+              <span className="flex items-center gap-1.5">
+                <RefreshCw className="w-3 h-3 animate-spin" />
+                Conectando...
               </span>
             ) : (
               <span>OAuth Instagram</span>
