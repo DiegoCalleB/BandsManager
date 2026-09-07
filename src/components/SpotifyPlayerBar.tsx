@@ -302,12 +302,12 @@ export default function SpotifyPlayerBar({
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (autoPlayNext: boolean = false) => {
     cancelCrossfade();
     if (currentIdx >= 0 && currentIdx < songs.length - 1) {
-      onSelectSong(songs[currentIdx + 1]);
+      onSelectSong(songs[currentIdx + 1], autoPlayNext);
     } else {
-      onSelectSong(songs[0]);
+      onSelectSong(songs[0], autoPlayNext);
     }
   };
 
@@ -319,7 +319,8 @@ export default function SpotifyPlayerBar({
         el.play();
       }
     } else {
-      handleNext();
+      // Al terminar una canción, la siguiente debe reproducirse automáticamente (autoPlay=true)
+      handleNext(true);
     }
   };
 
@@ -427,8 +428,9 @@ export default function SpotifyPlayerBar({
   // h-16) — con el mismo z-index, cuál tapa a cuál dependería del orden en el DOM y podría acabar
   // esta barra debajo de esa. Se renderiza vía portal a document.body (ver
   // RepertorioSetlists.tsx), así que z-50 la deja siempre por encima sin pelear por el orden.
+  // left-0 en móvil, md:left-[240px] en desktop para no tapar el sidebar (w-[240px]) de App.tsx.
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 shadow-2xl ${
+    <div className={`fixed bottom-0 left-0 md:left-[240px] right-0 z-50 transition-all duration-300 shadow-2xl ${
       isMinimized ? 'translate-y-[calc(100%-2.5rem)]' : 'translate-y-0'
     }`}>
       {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
@@ -540,7 +542,7 @@ export default function SpotifyPlayerBar({
 
               {/* Prev Song */}
               <button
-                onClick={handlePrev}
+                onClick={() => handlePrev()}
                 className="p-1 text-[#b3b3b3] hover:text-white transition-all cursor-pointer active:scale-90"
                 title="Canción Anterior"
               >
@@ -558,7 +560,7 @@ export default function SpotifyPlayerBar({
 
               {/* Next Song */}
               <button
-                onClick={handleNext}
+                onClick={() => handleNext(false)}
                 className="p-1 text-[#b3b3b3] hover:text-white transition-all cursor-pointer active:scale-90"
                 title="Siguiente Canción"
               >

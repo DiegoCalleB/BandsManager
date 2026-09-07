@@ -3231,6 +3231,20 @@ export default function RepertorioSetlists({
       </span>
     )}
 
+    {/* Edit song button */}
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        setEditingSong(song);
+        setShowSongModal(true);
+      }}
+      className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+      title="Editar canción"
+    >
+      <Edit3 className="w-3.5 h-3.5" />
+    </button>
+
     {/* Expand button for details */}
     <button
       type="button"
