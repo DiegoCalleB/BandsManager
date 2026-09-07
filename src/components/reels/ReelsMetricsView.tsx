@@ -154,15 +154,25 @@ export function ReelsMetricsView({
   const handleInstagramOAuth = async () => {
     try {
       setIsCheckingIg(true);
+      console.log('🔵 Iniciando OAuth de Instagram...');
       const res = await api.initiateInstagramOAuth();
+      console.log('🟢 Respuesta del servidor:', res);
       if (res?.success && res?.authUrl) {
+        console.log('✅ Redirigiendo a:', res.authUrl);
         // Redirige a Instagram para autorización
         window.location.href = res.authUrl;
       } else {
-        setIgOAuthMsg({ type: 'error', text: res?.error || 'No se pudo iniciar el flujo OAuth de Instagram.' });
+        const errorMsg = res?.error || 'No se pudo iniciar el flujo OAuth de Instagram.';
+        console.error('❌ Error de respuesta:', errorMsg);
+        setIgOAuthMsg({ type: 'error', text: errorMsg });
       }
     } catch (err: any) {
-      setIgOAuthMsg({ type: 'error', text: err?.message || 'Error al iniciar OAuth de Instagram.' });
+      console.error('💥 Error al iniciar OAuth:', err);
+      console.error('Mensaje:', err?.message);
+      console.error('Stack:', err?.stack);
+      const errorMsg = err?.message || err?.data?.error || 'Error al iniciar OAuth de Instagram.';
+      console.error('Error final:', errorMsg);
+      setIgOAuthMsg({ type: 'error', text: errorMsg });
     } finally {
       setIsCheckingIg(false);
     }
