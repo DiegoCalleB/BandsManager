@@ -1116,9 +1116,11 @@ export function PdfExportModal({
           : 0;
         const pageAvailableHeightPx = PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx;
 
+        // Filtrar solo canciones (tipoItem === 'cancion') — el conteo para paginación debe
+        // ser de canciones, no del total de items (bloques no cuentan para numeración)
+        const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
+
         const measureFn: MeasureRangeFn = (titleFontPt, fromIndex, toIndexExclusive) => {
-          // Filtrar solo canciones (tipoItem === 'cancion') para medir y contar correctamente
-          const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
           const rowsHtml = songsOnly
             .slice(fromIndex, toIndexExclusive)
             .map((item, i) => buildRowHtml(item, fromIndex + i, titleFontPt, member, isMaster))
@@ -1133,12 +1135,12 @@ export function PdfExportModal({
         // "sentado", no se busca el mínimo nº de páginas, así que el diálogo de 1-hoja-vs-varias
         // no aplica en este modo).
         const plan = viewDensity === 'de_pie'
-          ? computeExpandedPlan(activeSetlist.items.length, measureFn, {
+          ? computeExpandedPlan(songsOnly.length, measureFn, {
               titleFontPt: TITLE_FONT_CANDIDATES_PT[0],
               pageAvailableHeightPx,
               maxTitleFontPt: MAX_EXPANDED_TITLE_FONT_PT
             })
-          : computeAutoFitPlan(activeSetlist.items.length, measureFn, {
+          : computeAutoFitPlan(songsOnly.length, measureFn, {
               candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
               pageAvailableHeightPx,
               emergencyFontPt: EMERGENCY_TITLE_FONT_PT
@@ -1162,9 +1164,10 @@ export function PdfExportModal({
       // esperado (unos tienen más notas que otros) y no un desequilibrio a corregir.
       const EQUALIZE_MAX_OVERFLOW_TOLERANCE = 0.12;
       const bestPageCount = Math.min(...memberPlans.map(mp => mp.plan.pageItemCounts.length));
+      const songsOnlyCount = activeSetlist.items.filter(item => item.tipoItem === 'cancion').length;
       const equalizedMemberPlans = viewDensity === 'de_pie' ? memberPlans : memberPlans.map(mp => {
         if (mp.plan.pageItemCounts.length <= bestPageCount) return mp;
-        const forced = tryFitInPageCount(activeSetlist.items.length, mp.measureFn, {
+        const forced = tryFitInPageCount(songsOnlyCount, mp.measureFn, {
           candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
           pageAvailableHeightPx: mp.pageAvailableHeightPx,
           forcedPageCount: bestPageCount,
