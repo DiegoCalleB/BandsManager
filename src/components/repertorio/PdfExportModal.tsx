@@ -1732,9 +1732,10 @@ export function PdfExportModal({
                   es el de una lista impresa apretada — no se reserva hueco para notas aquí, se
                   aprovecha el que ya deja el interlineado del título (ver modo 'below' abajo). */}
               <div className="space-y-0">
-                {(() => {
-                  const songsOnly = activeSetlist.items.filter(item => item.tipoItem === 'cancion');
-                  return songsOnly.map((item, songIndex) => {
+                {activeSetlist.items.map((item, index) => {
+                  if (item.tipoItem === 'cancion') {
+                    // Calcula el número de canción contando canciones anteriores
+                    const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
                     const s = songs.find(x => x.id === item.songId);
                     if (!s) return null;
 
@@ -1944,8 +1945,39 @@ export function PdfExportModal({
                         )}
                       </div>
                     );
-                  }); // end map
-                })()}
+                    } else if (item.tipoItem === 'bloque_header') {
+                      return (
+                        <div key={item.id} className="flex items-center gap-2 my-0.5">
+                          <div className="flex-1 h-px bg-black" />
+                          <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
+                            {item.tituloCustom || 'BLOQUE'}
+                          </span>
+                          <div className="flex-1 h-px bg-black" />
+                        </div>
+                      );
+                    } else if (item.tipoItem === 'bis') {
+                      return (
+                        <div key={item.id} className="flex items-center gap-2 my-0.5">
+                          <div className="flex-1 h-px bg-black" />
+                          <span className="font-['Oswald',sans-serif] text-[10pt] font-black uppercase tracking-wider text-black whitespace-nowrap">
+                            {item.tituloCustom || 'BIS / ENCORE'}
+                          </span>
+                          <div className="flex-1 h-px bg-black" />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={item.id} className="pl-9 py-0.5 text-neutral-800 font-mono text-[11pt] font-bold">
+                          <span className="text-neutral-500">****</span> {(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || 'INTERLUDIO').toUpperCase()} <span className="text-neutral-500">****</span>
+                          {(item.notas || (item as any).notaTema) && item.tituloCustom && (
+                            <span className="text-[10pt] text-neutral-600 font-normal italic ml-2">
+                              ({item.notas || (item as any).notaTema})
+                            </span>
+                          )}
+                        </div>
+                      );
+                    }
+                })}
               </div>
             </div>
 
