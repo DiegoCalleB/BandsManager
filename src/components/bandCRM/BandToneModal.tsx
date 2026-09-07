@@ -116,6 +116,19 @@ interface BandToneModalProps {
    * sin relanzar el rastreo caro de redes sociales que sí hace onReAnalyze.
    */
   onRefreshLearnedRules?: () => Promise<void>;
+  /**
+   * El bloque "Reglas Aprendidas (Self-Refining Tone DNA)" y su botón "Entrenar ADN de tono
+   * ahora" entrenan EXCLUSIVAMENTE sobre correcciones de pitches/respuestas de Booking CRM
+   * (POST /api/leads/train-tone-dna, categorías salas/festivales/ayuntamientos...) - no tienen
+   * nada que ver con títulos/descripciones de Reels. Este modal se reutiliza tal cual en
+   * ReelsCenter.tsx, y mostrar ahí ese botón (con textos como "corrige al menos 2 pitches" o
+   * enlaces a "Booking CRM → Plantillas de Email") hacía parecer que el entrenamiento de Reels
+   * estaba roto: el usuario lo pulsaba, no pasaba nada relevante, y el aprendizaje real de Reels
+   * (valorar tono/contenido al reanalizar un corte, con "Recordar para siempre") vive en un sitio
+   * completamente distinto sin que este modal lo mencione. Por defecto true (no cambia el
+   * comportamiento existente en BandCRM); ReelsCenter lo pone a false.
+   */
+  showBookingTraining?: boolean;
 }
 
 export const BandToneModal: React.FC<BandToneModalProps> = ({
@@ -130,7 +143,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
   onReAnalyze,
   onUseTailoredPitch,
   onSaved,
-  onRefreshLearnedRules
+  onRefreshLearnedRules,
+  showBookingTraining = true
 }) => {
   const [copied, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -653,7 +667,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             )}
 
             {/* 5. Self-Refining Tone DNA: reglas aprendidas automáticamente de correcciones del mánager */}
-            {editable && (
+            {editable && showBookingTraining && (
               <div className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? 'bg-violet-50/50 border-violet-200' : 'bg-violet-950/20 border-violet-900/40'}`}>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
@@ -767,7 +781,17 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                 corregir cómo se contesta a una negociación no debe enseñarle al sistema a
                 redactar mal el primer contacto, y viceversa. Mismo botón de entrenar sirve para
                 ambos (refineAllToneDnaCategoriesForBand refina las dos bolsas de una vez). */}
-            {editable && (
+            {editable && !showBookingTraining && (
+              <div className={`p-3.5 rounded-xl border space-y-1.5 ${isStitchLight ? 'bg-amber-50/60 border-amber-200' : 'bg-amber-950/20 border-amber-900/40'}`}>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <Brain className="w-3.5 h-3.5" /> Cómo entrenar el estilo de los Reels
+                </span>
+                <p className="text-[10px] font-mono leading-relaxed text-amber-200/80">
+                  Este ADN de tono (vocabulario, frases, emojis) ya se usa al escribir títulos y descripciones. Para corregir cómo redacta un corte en concreto, valóralo con ⭐ Tono/Contenido en "Reanalizar y Refinar Fragmento con IA" y marca "Recordar para siempre": esa corrección se guarda y se aplica a los próximos Reels.
+                </p>
+              </div>
+            )}
+            {editable && showBookingTraining && (
               <div className={`p-3.5 rounded-xl border space-y-2.5 ${isStitchLight ? 'bg-sky-50/50 border-sky-200' : 'bg-sky-950/20 border-sky-900/40'}`}>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">

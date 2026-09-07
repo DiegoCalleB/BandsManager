@@ -4013,6 +4013,7 @@ export default function ReelsCenter({
     }}
     onReAnalyze={handleAnalyzeBakandeyaTone}
     onRefreshLearnedRules={handleRefreshLearnedRules}
+    showBookingTraining={false}
   />
 
  </div>
