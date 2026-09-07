@@ -3103,7 +3103,7 @@ export default function RepertorioSetlists({
     <button
       type="button"
       onClick={(e) => { e.stopPropagation(); playThisSong(); }}
-      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer group-hover:bg-[#1db954] group-hover:text-black"
+      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[#1db954] text-black sm:bg-transparent sm:group-hover:bg-[#1db954] sm:group-hover:text-black"
       title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
     >
       {isPlayingThisRow ? (
@@ -3114,8 +3114,8 @@ export default function RepertorioSetlists({
         </div>
       ) : (
         <>
-          <span className="group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{index + 1}</span>
-          <Play className="w-3 h-3 fill-current hidden group-hover:block ml-0.5 text-black" />
+          <span className="sm:group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{index + 1}</span>
+          <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-black" />
         </>
       )}
     </button>
