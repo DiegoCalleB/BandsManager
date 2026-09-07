@@ -502,11 +502,13 @@ export default function SpotifyPlayerBar({
               </div>
             </div>
 
-            {/* Minimize / Hide button for mobile */}
-            <div className="flex items-center gap-1 md:hidden">
+            {/* Minimizar a una tira de ~2.5rem (ver el translate-y de más arriba) — antes solo
+                disponible en móvil (`md:hidden`); ahora también en escritorio, para poder dejar
+                la barra ocupando lo mínimo cuando no hace falta verla entera. */}
+            <div className="flex items-center gap-1">
               <button
                 onClick={() => setIsMinimized(!isMinimized)}
-                className="p-1.5 text-zinc-400 hover:text-white"
+                className="p-1.5 text-zinc-400 hover:text-white cursor-pointer"
                 title={isMinimized ? "Expandir Reproductor" : "Minimizar"}
               >
                 {isMinimized ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}

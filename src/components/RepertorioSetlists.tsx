@@ -4286,8 +4286,13 @@ export default function RepertorioSetlists({
 
  {/* Persistent Spotify Music Player Bottom Bar — `songs` es la cola real de Siguiente/Anterior
      y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
-     con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue). */}
- {activePlayerSong && (
+     con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue).
+     Portal a document.body a propósito: el shell raíz de la app (App.tsx) tiene
+     `overflow-clip` en todo el layout, y eso atrapa cualquier `position: fixed` anidado dentro
+     — sin el portal, la barra "fixed" quedaba pegada al final del contenido en vez de al fondo
+     real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
+     que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
+ {activePlayerSong && createPortal(
  <SpotifyPlayerBar
  song={activePlayerSong}
  songs={playerQueueOverride || songs}
@@ -4299,7 +4304,8 @@ export default function RepertorioSetlists({
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
  onIsPlayingChange={setIsPlayerPlaying}
- />
+ />,
+ document.body
  )}
 
 {assignSongsModalData && assignSongsModalData.isOpen && (
