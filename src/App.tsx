@@ -208,16 +208,19 @@ export default function App() {
   };
 
   // Active View State mapping directly to the Stitch Design doc
-  type MainView = 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
-  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'reels', 'repertorio', 'catalogo', 'discografia', 'directo', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
+  type MainView = 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
+  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
   const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
   const [currentView, setCurrentView] = useState<MainView>(() => {
     // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
     // que hace un deploy nuevo, o simplemente el usuario comprobando algo) manda siempre de
     // vuelta a "Resumen" perdiendo dónde estaba trabajando.
     try {
+      // 'directo' era el módulo "Directo", eliminado y fusionado dentro de Repertorio — un
+      // usuario que lo tuviera como última pantalla aterriza en Repertorio, no en Resumen.
       const saved = localStorage.getItem(CURRENT_VIEW_STORAGE_KEY);
-      if (saved && (VALID_VIEWS as string[]).includes(saved)) return saved as MainView;
+      const migrated = saved === 'directo' ? 'repertorio' : saved;
+      if (migrated && (VALID_VIEWS as string[]).includes(migrated)) return migrated as MainView;
     } catch {
       // localStorage puede no estar disponible (modo privado estricto, etc.) — no es crítico.
     }
@@ -241,7 +244,7 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
+    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
     options?: {
       sectionTab?: 'salas' | 'medios';
       statusFilter?: LeadStatus | 'todos';
@@ -1246,7 +1249,7 @@ export default function App() {
  )}
  />
  )}
- {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia' || currentView === 'directo') && (
+ {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia') && (
  <RepertorioSetlists
  key={currentActiveBandId}
  colors={colors}

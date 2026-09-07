@@ -1,9 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
-import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Film } from 'lucide-react';
+import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2 } from 'lucide-react';
 
 export type NavItemId =
   | 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'giras'
-  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'directo' | 'chat' | 'finanzas' | 'merchan'
+  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'chat' | 'finanzas' | 'merchan'
   | 'metronome' | 'tuner';
 
 export interface NavItemDef {
@@ -30,7 +30,6 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorio' },
   catalogo: { id: 'catalogo', icon: Music, labelKey: 'nav.catalogo', labelDefault: 'Catálogo' },
   discografia: { id: 'discografia', icon: Disc2, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
-  directo: { id: 'directo', icon: Film, labelKey: 'nav.directo', labelDefault: 'Directo' },
   chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
   finanzas: { id: 'finanzas', icon: Coins, labelKey: 'nav.finanzas', labelDefault: 'Finanzas', adminOnly: true },
   merchan: { id: 'merchan', icon: Sparkles, labelKey: 'nav.merchan', labelDefault: 'Merchandising', adminOnly: true },
@@ -60,8 +59,8 @@ export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen', 'calendario'];
 export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
 
 /**
- * Agrupación para desktop: incluye los 4 módulos separados de música
- * (repertorio, catalogo, discografia, directo) cuando el plan desbloquea
+ * Agrupación para desktop: incluye los 3 módulos separados de música
+ * (repertorio, catalogo, discografia) cuando el plan desbloquea
  * suficientes módulos (ver MIN_MODULES_FOR_GROUPED_NAV).
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
@@ -75,7 +74,7 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'catalogo', 'discografia', 'directo'],
+    itemIds: ['repertorio', 'catalogo', 'discografia'],
   },
   {
     id: 'promocion',
@@ -98,9 +97,9 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
 ];
 
 /**
- * Agrupación para móvil: mismos 4 módulos de música que desktop (repertorio,
- * catalogo, discografia, directo). Antes el grupo solo traía 'repertorio' para
- * mantener el drawer compacto, pero eso dejaba catalogo/discografia/directo
+ * Agrupación para móvil: mismos 3 módulos de música que desktop (repertorio,
+ * catalogo, discografia). Antes el grupo solo traía 'repertorio' para
+ * mantener el drawer compacto, pero eso dejaba catalogo/discografia
  * sin ninguna forma de llegar a ellos en móvil (App.tsx los renderiza igual
  * que en desktop) — se igualan para que sigan siendo alcanzables.
  */
@@ -115,7 +114,7 @@ export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'catalogo', 'discografia', 'directo'],
+    itemIds: ['repertorio', 'catalogo', 'discografia'],
   },
   {
     id: 'promocion',

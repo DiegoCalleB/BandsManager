@@ -18,7 +18,6 @@ import { SongChordsViewerModal } from './SongChordsViewerModal';
 import { ShareModal } from './ShareModal';
 import { useShareModal } from '../hooks/useShareModal';
 import { useCatalogFilters } from '../hooks/useCatalogFilters';
-import { useStagePlayer } from '../hooks/useStagePlayer';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { ConfirmDeleteModal } from './repertorio/ConfirmDeleteModal';
 import { ConfirmDeleteAlbumModal, ConfirmDeleteAlbumData } from './repertorio/ConfirmDeleteAlbumModal';
@@ -33,7 +32,6 @@ import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
 import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
 import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
-import { EscenarioView } from './repertorio/EscenarioView';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
@@ -56,7 +54,7 @@ interface RepertorioSetlistsProps {
  bandLogoUrl?: string;
  onUpdateConcert?: (id: string, fields: Partial<Concert>) => void;
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
- view?: 'repertorio' | 'catalogo' | 'discografia' | 'directo';
+ view?: 'repertorio' | 'catalogo' | 'discografia';
  currentUser?: any;
 }
 
@@ -381,7 +379,7 @@ export default function RepertorioSetlists({
 
  // Navigation tab inside module
  const [showPdfPreview, setShowPdfPreview] = useState(false);
- const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'escenario' | 'discografia'>('setlists');
+ const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists' | 'discografia'>('setlists');
  // Plegado por defecto: la lista de setlists guardados ocupaba espacio permanentemente aunque
  // el usuario normalmente ya sabe con cuál está trabajando (ver activeSetlistId más abajo, que
  // recuerda el último setlist activo entre sesiones) — se despliega con un clic cuando hace falta.
@@ -393,10 +391,9 @@ export default function RepertorioSetlists({
      setActiveTab('catalogo');
    } else if (view === 'discografia') {
      setActiveTab('discografia');
-   } else if (view === 'directo') {
-     setActiveTab('escenario');
    } else {
-     // repertorio or undefined
+     // repertorio, undefined, o el antiguo 'directo' (módulo eliminado) — aterriza en Repertorio
+     // en vez de en una vista muerta.
      setActiveTab('setlists');
    }
  }, [view]);
@@ -505,27 +502,22 @@ export default function RepertorioSetlists({
  };
 
  const {
-   stageAudioRef,
-   stagePlayingIndex, setStagePlayingIndex,
-   stageIsPlaying, setStageIsPlaying,
-   stageAutoplayNext, setStageAutoplayNext,
-   stageCurrentTime, setStageCurrentTime,
-   stageItemDuration,
-   stageResolvedUrl,
-   toggleStagePlayPause,
-   handleStageNext,
-   handleStagePrev,
-   handleStageSeek,
-   handleStageAudioEnded,
- } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
-
- const {
    activePlayerSong, setActivePlayerSong,
    playerAutoPlay,
    playSignal,
    isPlayerPlaying, setIsPlayerPlaying,
    handleSelectPlayerSong,
  } = useAudioPlayer();
+ // Cola de canciones que gobierna Siguiente/Anterior (y el fundido) de la barra Spotify
+ // persistente de abajo — por defecto el catálogo completo (comportamiento de siempre en
+ // Catálogo/Discografía); "Reproducir desde aquí" en una fila de Repertorio la sustituye por las
+ // canciones de ESE repertorio, en su orden. Se resetea a null (= catálogo) desde cualquier
+ // entrada de reproducción que no venga de un repertorio.
+ const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
+ const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null) => {
+   setPlayerQueueOverride(queue);
+   handleSelectPlayerSong(song, autoPlay);
+ }, [handleSelectPlayerSong]);
 
  // Song Modal State
  const [showSongModal, setShowSongModal] = useState(false);
@@ -3051,6 +3043,18 @@ export default function RepertorioSetlists({
     setExpandedSetlistItemIds(newSet);
   };
 
+  // Reproducir esta canción sin tener que expandir la fila — manda a la misma barra Spotify
+  // persistente de abajo, con la cola limitada a este repertorio en su orden (igual que
+  // "Reproducir desde aquí" antes, pero accesible con un solo tap en la fila compacta).
+  const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
+  const playThisSong = () => {
+    const setlistSongs = activeSetlist.items
+      .filter((i) => i.tipoItem === 'cancion' && i.songId)
+      .map((i) => songs.find((s) => s.id === i.songId))
+      .filter((s): s is Song => !!s);
+    selectPlayerSongWithQueue(song, true, setlistSongs);
+  };
+
   return (
   <div
   key={it.id}
@@ -3070,7 +3074,7 @@ export default function RepertorioSetlists({
   }
   setSelectedSetlistItemId(isSelected ? null : it.id);
   }}
-  className={`border rounded-lg transition-all cursor-pointer ${
+  className={`group border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
   isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
@@ -3093,10 +3097,28 @@ export default function RepertorioSetlists({
       <GripVertical className="w-3.5 h-3.5" />
     </div>
 
-    {/* Index */}
-    <span className="w-5 text-center font-mono font-bold text-[9px] text-[#d1b375] shrink-0">
-      {index + 1}
-    </span>
+    {/* Index / Play: número por defecto, botón de play al pasar el ratón (o siempre tocable en
+        móvil, aunque no cambie de icono sin hover) — reproduce sin tener que expandir la fila,
+        mismo patrón que ya usa la fila del Catálogo. */}
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); playThisSong(); }}
+      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer group-hover:bg-[#1db954] group-hover:text-black"
+      title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
+    >
+      {isPlayingThisRow ? (
+        <div className="flex items-center gap-0.5">
+          <span className="w-0.5 h-2 bg-[#1db954] rounded-full animate-pulse" />
+          <span className="w-0.5 h-2.5 bg-[#1ed760] rounded-full animate-pulse delay-75" />
+          <span className="w-0.5 h-1.5 bg-[#1db954] rounded-full animate-pulse delay-150" />
+        </div>
+      ) : (
+        <>
+          <span className="group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{index + 1}</span>
+          <Play className="w-3 h-3 fill-current hidden group-hover:block ml-0.5 text-black" />
+        </>
+      )}
+    </button>
 
     {/* Title + metadata in one line — shrink-0 con tope máximo: antes era el único elemento
         "encogible" de la fila (todo lo demás es shrink-0), así que en móvil, con tantos
@@ -3209,6 +3231,20 @@ export default function RepertorioSetlists({
       </span>
     )}
 
+    {/* Edit song button */}
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        setEditingSong(song);
+        setShowSongModal(true);
+      }}
+      className="p-0.5 text-neutral-400 hover:text-amber-400 transition-colors shrink-0"
+      title="Editar canción"
+    >
+      <Edit3 className="w-3.5 h-3.5" />
+    </button>
+
     {/* Expand button for details */}
     <button
       type="button"
@@ -3293,8 +3329,9 @@ export default function RepertorioSetlists({
       />
 
       {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
-          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo
-          que sí se mira en cada vistazo a la lista (AGENTS.md §6). */}
+          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo que sí
+          se mira en cada vistazo a la lista (AGENTS.md §6). Reproducir la canción tiene su propio
+          botón ▶ en la fila compacta (junto al número), no hace falta expandir para eso. */}
       <div className="flex items-center gap-2 pt-1">
         <button
           type="button"
@@ -3509,7 +3546,7 @@ export default function RepertorioSetlists({
          onPlay={() => {
            const first = filteredSongs[0];
            if (first) {
-             handleSelectPlayerSong(first, true);
+             selectPlayerSongWithQueue(first, true, null);
            }
          }}
          isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
@@ -3541,7 +3578,7 @@ export default function RepertorioSetlists({
          onClick={() => {
            if (filteredSongs.length > 0) {
              const first = filteredSongs[0];
-             handleSelectPlayerSong(first, true);
+             selectPlayerSongWithQueue(first, true, null);
            }
          }}
          className="w-9 h-9 rounded-full bg-[#1db954] hover:bg-[#1ed760] hover:scale-105 text-black font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer active:scale-95"
@@ -3765,7 +3802,7 @@ export default function RepertorioSetlists({
  <td className="py-3.5 px-4 text-center font-bold text-zinc-500">
  <button
  type="button"
- onClick={() => handleSelectPlayerSong(s, true)}
+ onClick={() => selectPlayerSongWithQueue(s, true, null)}
  className="w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer mx-auto group-hover:bg-[#1db954] group-hover:text-black"
  title={isPlayingCurrent && isPlayerPlaying ? "Pausar" : "Reproducir canción"}
  >
@@ -3980,46 +4017,13 @@ export default function RepertorioSetlists({
      toggleFavoriteSong={handleToggleFavorite}
      activePlayerSong={activePlayerSong}
      isPlayerPlaying={isPlayerPlaying}
-     onSelectSong={(song, autoPlay) => handleSelectPlayerSong(song, autoPlay)}
+     onSelectSong={(song, autoPlay) => selectPlayerSongWithQueue(song, autoPlay, null)}
      onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
      onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
      onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
      onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
      onOpenChords={(song) => setActiveChordsSong(song)}
    />
- )}
-
- {/* VIEW 3: MODO ESCENARIO (HIGH CONTRAST LIVE VIEW) */}
- {activeTab === 'escenario' && (
- <EscenarioView
- activeSetlist={activeSetlist}
- setlists={setlists}
- activeSetlistId={activeSetlistId}
- setActiveSetlistId={setActiveSetlistId}
- songs={songs}
- setShowPdfPreview={setShowPdfPreview}
- stageAudioRef={stageAudioRef}
- stagePlayingIndex={stagePlayingIndex}
- setStagePlayingIndex={setStagePlayingIndex}
- stageIsPlaying={stageIsPlaying}
- setStageIsPlaying={setStageIsPlaying}
- stageCurrentTime={stageCurrentTime}
- setStageCurrentTime={setStageCurrentTime}
- stageItemDuration={stageItemDuration}
- stageResolvedUrl={stageResolvedUrl}
- stageAutoplayNext={stageAutoplayNext}
- setStageAutoplayNext={setStageAutoplayNext}
- handleStageAudioEnded={handleStageAudioEnded}
- handleStageSeek={handleStageSeek}
- handleStagePrev={handleStagePrev}
- handleStageNext={handleStageNext}
- toggleStagePlayPause={toggleStagePlayPause}
- toggleFavoriteSong={handleToggleFavorite}
- setEditingShowItem={setEditingShowItem}
- setShowItemAudioUrl={setShowItemAudioUrl}
- setShowShowItemModal={setShowShowItemModal}
- formatItemDuration={formatItemDuration}
- />
  )}
 
  {/* MODAL: ADD / EDIT SONG */}
@@ -4306,20 +4310,28 @@ export default function RepertorioSetlists({
  />
  )}
 
- {/* Persistent Spotify Music Player Bottom Bar */}
- {activePlayerSong && (
+ {/* Persistent Spotify Music Player Bottom Bar — `songs` es la cola real de Siguiente/Anterior
+     y del fundido: el catálogo completo por defecto, o el repertorio activo cuando se arrancó
+     con "Reproducir desde aquí" (ver playerQueueOverride/selectPlayerSongWithQueue).
+     Portal a document.body a propósito: el shell raíz de la app (App.tsx) tiene
+     `overflow-clip` en todo el layout, y eso atrapa cualquier `position: fixed` anidado dentro
+     — sin el portal, la barra "fixed" quedaba pegada al final del contenido en vez de al fondo
+     real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
+     que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
+ {activePlayerSong && createPortal(
  <SpotifyPlayerBar
  song={activePlayerSong}
- songs={songs}
+ songs={playerQueueOverride || songs}
  colors={colors}
  onSelectSong={(newSong, autoPlay) => handleSelectPlayerSong(newSong, autoPlay)}
  onOpenStudio={(songToOpen) => setActiveStudioSong(songToOpen)}
  onUpdateSong={handleUpdateSongFromStudio}
- onClosePlayer={() => handleSelectPlayerSong(null)}
+ onClosePlayer={() => selectPlayerSongWithQueue(null, false, null)}
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
  onIsPlayingChange={setIsPlayerPlaying}
- />
+ />,
+ document.body
  )}
 
 {assignSongsModalData && assignSongsModalData.isOpen && (
