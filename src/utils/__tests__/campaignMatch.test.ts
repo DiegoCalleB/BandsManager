@@ -85,5 +85,12 @@ describe('leadMatchesCampaign', () => {
   it('matches a venue that fits city and capacity', () => {
     expect(leadMatchesCampaign(baseLead({ ciudad: 'Madrid', aforo: 350 }), baseCampaign)).toBe(true);
   });
+
+  it('excludes co-booking groups/agencies/managers/labels/production companies, matching the exclusion Booking CRM applies to its "Salas" tab', () => {
+    for (const tipo of ['grupo', 'agencia', 'manager', 'sello', 'productora']) {
+      const lead = baseLead({ tipo: tipo as any, ciudad: 'Madrid', aforo: 400 });
+      expect(leadMatchesCampaign(lead, baseCampaign)).toBe(false);
+    }
+  });
 });
 

@@ -1,4 +1,5 @@
 import { BookingCampaign, Lead } from '../types';
+import { normalizeType } from './bookingUtils';
 
 const MONTH_NAMES_ES: Record<string, number> = {
   enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
@@ -133,9 +134,15 @@ export function leadMatchesCampaignDates(lead: Lead, campaign: BookingCampaign):
   return !(eventEnd.getTime() < campStart.getTime() || campEnd.getTime() < eventStart.getTime());
 }
 
+// Tipos que Booking CRM excluye de la pestaña "Salas" (ver isGruposType en BookingCRM.tsx) y que
+// por tanto tampoco deben contar como sala objetivo de campaña: ni medios de comunicación ni
+// grupos/agencias/managers/sellos/productoras tienen aforo ni fechas de evento propias. Se usa
+// normalizeType (el mismo normalizador que BookingCRM) en vez de comprobar el string crudo del
+// lead para que este criterio no se desincronice otra vez del de la pestaña real.
+const NON_VENUE_TYPES = new Set(['medio', 'grupo', 'agencia', 'manager', 'productora', 'sello']);
+
 export function leadMatchesCampaign(lead: Lead, campaign: BookingCampaign): boolean {
-  const isMedio = !!lead.tipo && (String(lead.tipo).includes('medio') || String(lead.tipo).includes('prensa') || String(lead.tipo).includes('radio'));
-  if (isMedio) return false;
+  if (NON_VENUE_TYPES.has(normalizeType(lead.tipo))) return false;
   return leadMatchesCampaignCity(lead, campaign) && leadMatchesCampaignCapacity(lead, campaign) && leadMatchesCampaignDates(lead, campaign);
 }
 
