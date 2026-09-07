@@ -423,8 +423,12 @@ export default function SpotifyPlayerBar({
 
   const isDrive = isGoogleDriveUrl(song.audioPrincipalUrl || '');
 
+  // z-50, no z-40: App.tsx tiene su propia barra de pestañas fija en móvil a z-40 (bottom-0,
+  // h-16) — con el mismo z-index, cuál tapa a cuál dependería del orden en el DOM y podría acabar
+  // esta barra debajo de esa. Se renderiza vía portal a document.body (ver
+  // RepertorioSetlists.tsx), así que z-50 la deja siempre por encima sin pelear por el orden.
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-300 shadow-2xl ${
+    <div className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 shadow-2xl ${
       isMinimized ? 'translate-y-[calc(100%-2.5rem)]' : 'translate-y-0'
     }`}>
       {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj

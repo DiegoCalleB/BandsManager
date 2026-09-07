@@ -3043,6 +3043,18 @@ export default function RepertorioSetlists({
     setExpandedSetlistItemIds(newSet);
   };
 
+  // Reproducir esta canción sin tener que expandir la fila — manda a la misma barra Spotify
+  // persistente de abajo, con la cola limitada a este repertorio en su orden (igual que
+  // "Reproducir desde aquí" antes, pero accesible con un solo tap en la fila compacta).
+  const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
+  const playThisSong = () => {
+    const setlistSongs = activeSetlist.items
+      .filter((i) => i.tipoItem === 'cancion' && i.songId)
+      .map((i) => songs.find((s) => s.id === i.songId))
+      .filter((s): s is Song => !!s);
+    selectPlayerSongWithQueue(song, true, setlistSongs);
+  };
+
   return (
   <div
   key={it.id}
@@ -3062,7 +3074,7 @@ export default function RepertorioSetlists({
   }
   setSelectedSetlistItemId(isSelected ? null : it.id);
   }}
-  className={`border rounded-lg transition-all cursor-pointer ${
+  className={`group border rounded-lg transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
   isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
@@ -3085,10 +3097,28 @@ export default function RepertorioSetlists({
       <GripVertical className="w-3.5 h-3.5" />
     </div>
 
-    {/* Index */}
-    <span className="w-5 text-center font-mono font-bold text-[9px] text-[#d1b375] shrink-0">
-      {index + 1}
-    </span>
+    {/* Index / Play: número por defecto, botón de play al pasar el ratón (o siempre tocable en
+        móvil, aunque no cambie de icono sin hover) — reproduce sin tener que expandir la fila,
+        mismo patrón que ya usa la fila del Catálogo. */}
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); playThisSong(); }}
+      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer group-hover:bg-[#1db954] group-hover:text-black"
+      title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
+    >
+      {isPlayingThisRow ? (
+        <div className="flex items-center gap-0.5">
+          <span className="w-0.5 h-2 bg-[#1db954] rounded-full animate-pulse" />
+          <span className="w-0.5 h-2.5 bg-[#1ed760] rounded-full animate-pulse delay-75" />
+          <span className="w-0.5 h-1.5 bg-[#1db954] rounded-full animate-pulse delay-150" />
+        </div>
+      ) : (
+        <>
+          <span className="group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{index + 1}</span>
+          <Play className="w-3 h-3 fill-current hidden group-hover:block ml-0.5 text-black" />
+        </>
+      )}
+    </button>
 
     {/* Title + metadata in one line — shrink-0 con tope máximo: antes era el único elemento
         "encogible" de la fila (todo lo demás es shrink-0), así que en móvil, con tantos
@@ -3284,29 +3314,11 @@ export default function RepertorioSetlists({
         }`}
       />
 
-      {/* Notas de miembros / acordes / reproducir desde aquí: consultas y acciones ocasionales,
-          no algo permanente en la fila compacta (ver arriba) — viven aquí, un tap más lejos pero
-          fuera del camino de lo que sí se mira en cada vistazo a la lista (AGENTS.md §6).
-          "Reproducir desde aquí" manda la canción a la misma barra Spotify persistente de abajo
-          que usan Catálogo/Discografía (con su botón "Estudio" para editar la ficha), pero con la
-          cola limitada a ESTE repertorio en su orden — así Siguiente/Anterior y el 🔀 fundido
-          recorren el repertorio, no todo el catálogo. */}
+      {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
+          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo que sí
+          se mira en cada vistazo a la lista (AGENTS.md §6). Reproducir la canción tiene su propio
+          botón ▶ en la fila compacta (junto al número), no hace falta expandir para eso. */}
       <div className="flex items-center gap-2 pt-1">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            const setlistSongs = activeSetlist.items
-              .filter((i) => i.tipoItem === 'cancion' && i.songId)
-              .map((i) => songs.find((s) => s.id === i.songId))
-              .filter((s): s is Song => !!s);
-            selectPlayerSongWithQueue(song, true, setlistSongs);
-          }}
-          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[#1ed760] hover:text-[#1db954] transition-colors"
-          title="Reproducir el repertorio empezando por esta canción"
-        >
-          <Play className="w-3 h-3" /> Reproducir desde aquí
-        </button>
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); setActiveMemberNotesSong(song); }}
