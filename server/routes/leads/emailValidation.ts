@@ -9,7 +9,7 @@ const router = express.Router();
  * Valida emails en bulk para todos los leads de una banda
  * Devuelve mapa: { leadId: isValid }
  */
-router.get("/validate-emails", requireAuth, async (req, res) => {
+router.get("/leads/validate-emails", requireAuth, async (req, res) => {
   try {
     const state = await loadState();
     const bandId = getTargetBandId(req);
