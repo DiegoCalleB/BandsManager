@@ -479,7 +479,7 @@ export function PdfExportModal({
           const noteLineColor = (className: string) =>
             className === 'note-member' ? inkColor : className === 'note-cue' ? '#b45309' : '#555';
           const arrowSvg = (color: string) =>
-            `<svg width="9" height="9" viewBox="0 0 16 16" style="flex-shrink:0;margin-right:3px;"><path d="M13 13 L4 5 M4 5 L4.5 8.5 M4 5 L7.5 4.5" stroke="${color}" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+            `<svg width="14" height="14" viewBox="0 0 16 16" style="flex-shrink:0;margin-right:4px;"><path d="M13 13 L4 5 M4 5 L4.5 8.5 M4 5 L7.5 4.5" stroke="${color}" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
           // Rotación + desplazamiento por LÍNEA (no un único transform para todo el bloque): así
           // las tres notas no giran como una pieza rígida, sino que cada una parece garabateada
           // por separado, en un momento distinto — más orgánico y menos "maquetado".
