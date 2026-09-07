@@ -522,7 +522,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                       </div>
                     </div>
                   );
-                } else if (it.tipoItem === 'bloque_header') {
+                } else if (it.tipoItem === 'bloque' && it.bloqueSubtipo === 'header') {
                   return (
                     <div
                       key={it.id}

@@ -53,9 +53,9 @@ describe('repertorioUtils', () => {
       ]);
 
       const items: SetlistItemLike[] = [
-        { id: 'b1', tipoItem: 'bloque_header', duracionEstimadaMinutos: 5 },
+        { id: 'b1', tipoItem: 'bloque', bloqueSubtipo: 'header', duracionEstimadaMinutos: 5 },
         { id: 'i1', songId: 's1' },
-        { id: 'e1', tipoItem: 'chapa', duracionEstimadaSegundos: 90 }
+        { id: 'e1', tipoItem: 'bloque', bloqueSubtipo: 'chapa', duracionEstimadaSegundos: 90 }
       ];
 
       const stats = calculateSetlistStats(items, songsMap);

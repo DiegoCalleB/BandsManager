@@ -10,7 +10,7 @@ export interface ParsedSetlistItem {
    * "block" es la etiqueta del bloque (p.ej. "BIS", "Pausa técnica"). */
   titulo: string;
   /** Solo cuando type === 'block'; validado contra BLOCK_TYPES antes de devolverlo. */
-  blockType?: SetlistItem['tipoItem'];
+  blockType?: SetlistItem['bloqueSubtipo'];
 }
 
 export interface ParsedSetlistResult {
@@ -90,8 +90,8 @@ IMPORTANTE:
     if (!titulo) continue;
 
     if (it.type === 'block') {
-      const blockType = BLOCK_TYPES.includes(it.blockType as SetlistItem['tipoItem'])
-        ? (it.blockType as SetlistItem['tipoItem'])
+      const blockType = BLOCK_TYPES.includes(it.blockType as SetlistItem['bloqueSubtipo'])
+        ? (it.blockType as SetlistItem['bloqueSubtipo'])
         : 'otro';
       items.push({ type: 'block', titulo, blockType });
     } else {

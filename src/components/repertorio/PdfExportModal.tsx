@@ -515,7 +515,7 @@ export function PdfExportModal({
               ${layout && layout.mode === 'below' ? notesHtml : ''}
             </div>
           `;
-        } else if (item.tipoItem === 'bloque_header') {
+        } else if (item.tipoItem === 'bloque' && item.bloqueSubtipo === 'header') {
           return `
             <div class="block-divider-item">
               <div class="divider-line"></div>
@@ -523,7 +523,7 @@ export function PdfExportModal({
               <div class="divider-line"></div>
             </div>
           `;
-        } else if (item.tipoItem === 'bis') {
+        } else if (item.tipoItem === 'bloque' && item.bloqueSubtipo === 'bis') {
           return `
             <div class="bis-divider-item">
               <div class="divider-line"></div>
@@ -1945,7 +1945,7 @@ export function PdfExportModal({
                         )}
                       </div>
                     );
-                    } else if (item.tipoItem === 'bloque_header') {
+                    } else if (item.tipoItem === 'bloque' && item.bloqueSubtipo === 'header') {
                       return (
                         <div key={item.id} className="flex items-center gap-2 my-0.5">
                           <div className="flex-1 h-px bg-black" />
@@ -1955,7 +1955,7 @@ export function PdfExportModal({
                           <div className="flex-1 h-px bg-black" />
                         </div>
                       );
-                    } else if (item.tipoItem === 'bis') {
+                    } else if (item.tipoItem === 'bloque' && item.bloqueSubtipo === 'bis') {
                       return (
                         <div key={item.id} className="flex items-center gap-2 my-0.5">
                           <div className="flex-1 h-px bg-black" />
