@@ -2,7 +2,7 @@ BandManager.ai Context Folder
 ==============================
 
 📚 Knowledge Base for Agents, Skills, and Developers
-Total: 9 files, ~3,130 lines of documentation
+Total: 11 files, ~4,100 lines of documentation
 
 READING ORDER:
 
@@ -12,31 +12,38 @@ READING ORDER:
 2. AGENT_CONTEXT.md ⭐ (5 min read)
    └─ Everything an agent needs to know in one page
 
-3. PROJECT_OVERVIEW.md (10 min)
+3. SIMPLICITY_FIRST.md ⭐⭐ (15 min read) [Diego's Obsession]
+   └─ Zero-friction UX, 3-second test, complexity detection checklist
+
+4. PROJECT_OVERVIEW.md (10 min)
    └─ What is BandManager.ai? Stack, values, status
 
-4. ARCHITECTURE.md (20 min)
+5. ARCHITECTURE.md (20 min)
    └─ How it works: dual runtime, data layer, auth, deploy
 
-5. SECURITY.md ⚠️ CRITICAL (20 min)
+6. DATABASE_SCHEMA.md (20 min)
+   └─ Complete Supabase schema: ER diagram, all tables, RLS, queries
+
+7. SECURITY.md ⚠️ CRITICAL (20 min)
    └─ Trust boundary, multi-tenancy, SSRF, rate limiting
 
-6. BUSINESS_RULES.md (30 min)
+8. BUSINESS_RULES.md (30 min)
    └─ AI agents spec: Scout, Redactor, Enviador, Lector
 
-7. CODE_STANDARDS.md (15 min)
+9. CODE_STANDARDS.md (15 min)
    └─ TypeScript, Backend patterns, Frontend, Testing
 
-8. UI_UX_GUIDELINES.md (15 min)
-   └─ Design principles: content-first, responsive, dark mode
+10. UI_UX_GUIDELINES.md (15 min)
+    └─ Design principles: content-first, responsive, dark mode
 
-9. GLOSSARY.md (reference)
-   └─ Terms, acronyms, state machines, critical functions
+11. GLOSSARY.md (reference)
+    └─ Terms, acronyms, state machines, critical functions
 
 ---
 
 QUICK START:
 → Read AGENT_CONTEXT.md first (5 min, everything linked)
+→ Read SIMPLICITY_FIRST.md next (complexity matters most)
 → Then jump to specific files based on your task
 → Always check GLOSSARY.md if you need term definitions
 
@@ -53,6 +60,8 @@ npm run lint          # esbuild dry-run
 npm test              # All tests must pass
 
 FILES TO PROTECT:
-- SECURITY.md         (security rules, never weaken)
-- BUSINESS_RULES.md   (agent lifecycle, human-in-the-loop)
-- CODE_STANDARDS.md   (keep baseline 0 TS errors)
+- SIMPLICITY_FIRST.md  (user rejection prevention, core value)
+- SECURITY.md          (security rules, never weaken)
+- BUSINESS_RULES.md    (agent lifecycle, human-in-the-loop)
+- CODE_STANDARDS.md    (keep baseline 0 TS errors)
+- DATABASE_SCHEMA.md   (band_id filters, multi-tenancy)

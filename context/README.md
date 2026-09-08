@@ -68,8 +68,10 @@ Este folder contiene toda la documentación estructurada del proyecto, organizad
 context/
 ├── README.md                      ← Estás aquí
 ├── AGENT_CONTEXT.md               ← LEER PRIMERO (agentes)
+├── SIMPLICITY_FIRST.md ⭐         ← La obsesión: cero fricción UX
 ├── PROJECT_OVERVIEW.md            ← Qué es el proyecto
 ├── ARCHITECTURE.md                ← Cómo funciona (tech)
+├── DATABASE_SCHEMA.md             ← Estructura de Supabase (tablas, relaciones)
 ├── SECURITY.md                    ← Seguridad & multi-tenancy (CRÍTICO)
 ├── BUSINESS_RULES.md              ← Reglas de negocio de agentes IA
 ├── CODE_STANDARDS.md              ← Estándares de código
@@ -118,11 +120,15 @@ context/
 
 | Pregunta | Lee |
 |----------|-----|
+| "¿La app es demasiado compleja?" | `SIMPLICITY_FIRST.md` (3-second test, checklist) |
+| "¿Dónde clickeo?" | `SIMPLICITY_FIRST.md` (content-first, 3 botones max) |
+| "¿Qué tablas hay en la BD?" | `DATABASE_SCHEMA.md` (ER diagram + todas las tablas) |
+| "¿Estructura de la BD?" | `DATABASE_SCHEMA.md` + `ARCHITECTURE.md` #2 |
 | "¿Cómo autenticar una ruta?" | `CODE_STANDARDS.md` #2 + `SECURITY.md` #5 |
 | "¿Cómo proteger contra SSRF?" | `SECURITY.md` #4 |
 | "¿Estados de un lead?" | `BUSINESS_RULES.md` #2 + `GLOSSARY.md` |
 | "¿Cómo arreglamos multi-tenancy?" | `SECURITY.md` #1-2 |
-| "¿UI design principles?" | `UI_UX_GUIDELINES.md` |
+| "¿UI design principles?" | `UI_UX_GUIDELINES.md` + `SIMPLICITY_FIRST.md` |
 | "¿Cómo testear?" | `CODE_STANDARDS.md` #4 |
 | "¿Qué es EPK?" | `GLOSSARY.md` |
 | "¿Env vars?" | `GLOSSARY.md` (Env Vars Clave) |
@@ -147,22 +153,25 @@ De `AGENT_CONTEXT.md`:
 
 ## 🎓 Para Desarrolladores Nuevos
 
-### Lectura Inicial Recomendada (2 horas)
+### Lectura Inicial Recomendada (2.5 horas)
 
 1. `PROJECT_OVERVIEW.md` (10 min)
 2. `AGENT_CONTEXT.md` (20 min)
-3. `ARCHITECTURE.md` (30 min)
-4. `SECURITY.md` (20 min)
-5. `BUSINESS_RULES.md` (20 min)
-6. `CODE_STANDARDS.md` (15 min)
+3. `SIMPLICITY_FIRST.md` ⭐ (15 min) — **Tu obsesión central**
+4. `ARCHITECTURE.md` (30 min)
+5. `DATABASE_SCHEMA.md` (20 min)
+6. `SECURITY.md` (20 min)
+7. `BUSINESS_RULES.md` (20 min)
+8. `CODE_STANDARDS.md` (15 min)
 
 Después: Explorar código en `server/` y `src/`, siguiendo patrones en estos documentos.
 
 ### Por Tipo de Tarea
 
-- **Backend:** ARCHITECTURE + SECURITY + CODE_STANDARDS
-- **Frontend:** UI_UX_GUIDELINES + CODE_STANDARDS
-- **Agentes IA:** BUSINESS_RULES + SECURITY
+- **UX/Simplicity (TÚ):** SIMPLICITY_FIRST (obsesión central)
+- **Backend:** DATABASE_SCHEMA + ARCHITECTURE + SECURITY + CODE_STANDARDS
+- **Frontend:** SIMPLICITY_FIRST + UI_UX_GUIDELINES + CODE_STANDARDS
+- **Agentes IA:** BUSINESS_RULES + SECURITY + DATABASE_SCHEMA
 - **Deploy/DevOps:** ARCHITECTURE (sección Deploy)
 - **Testing:** CODE_STANDARDS #4
 
