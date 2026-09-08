@@ -21,12 +21,14 @@ import {
   Check,
   ListMusic,
   Share2,
-  MessageSquare
+  MessageSquare,
+  Upload
 } from 'lucide-react';
 import { Song, SongSubstituteGuide } from '../types';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
 import { formatSongShareText } from '../utils/shareUtils';
+import { SongStudioStructureUploadModal } from './song_studio/SongStudioStructureUploadModal';
 import {
   processChordText,
   extractUniqueChords,
@@ -71,6 +73,7 @@ export function SongChordsViewerModal({
   const [aiSuccessMsg, setAiSuccessMsg] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<boolean>(false);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
+  const [showStructureUploadModal, setShowStructureUploadModal] = useState<boolean>(false);
 
   // Auto-scroll timer effect
   useEffect(() => {
@@ -249,6 +252,17 @@ export function SongChordsViewerModal({
             >
               <MessageSquare className="w-4 h-4 fill-white/20" />
               <span>Compartir</span>
+            </button>
+
+            {/* Upload Structure Button */}
+            <button
+              type="button"
+              onClick={() => setShowStructureUploadModal(true)}
+              className="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-teal-950/50"
+              title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
+            >
+              <Upload className="w-4 h-4" />
+              <span>📄 Subir</span>
             </button>
 
             {/* AI Generate Button Header */}
@@ -707,6 +721,14 @@ export function SongChordsViewerModal({
         subtitle="Canción y cifrado para WhatsApp"
         initialText={formatSongShareText(song, { includeChords: true, includeGuide: true })}
         itemType="song"
+      />
+
+      {/* STRUCTURE UPLOAD MODAL */}
+      <SongStudioStructureUploadModal
+        song={song}
+        isOpen={showStructureUploadModal}
+        onClose={() => setShowStructureUploadModal(false)}
+        onUpdateSong={onUpdateSong}
       />
     </div>
     </ModalPortal>
