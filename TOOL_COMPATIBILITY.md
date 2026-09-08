@@ -128,7 +128,9 @@ git commit -m "feat/fix/docs: breve descripción"
 
 ## 🤖 Sub-Agentes Especializados (Claude Code)
 
-`.claude/agents/` contiene 4 sub-agentes, mapeados 1:1 con los skills de `/skills/`. Claude Code los delega automáticamente según la tarea (o se invocan explícitamente).
+`.claude/agents/` sigue el patrón **Developer + Analyst** (el mismo de orquestador central + agentes especializados que ya usas en el proyecto Renault/PRICER): unos implementan, otros auditan sin tocar código. Claude Code los delega automáticamente según la tarea (o se invocan explícitamente).
+
+### 👷 Developers (escriben código — tienen `Write`/`Edit`)
 
 | Sub-Agente | Skill que carga | Cuándo se activa | Modelo |
 |-----------|-----------------|-------------------|--------|
@@ -137,12 +139,24 @@ git commit -m "feat/fix/docs: breve descripción"
 | `fullstack-ux-builder` | `fullstack-ux-design` | Componentes React, pantallas, handlers Express, tests Vitest | **Haiku** (fijado) |
 | `supabase-data-architect` | `supabase-architect` | Schema, migraciones SQL, handlers de DB, tipos TS | Heredado (Sonnet/Opus) |
 
-### 💰 Por qué solo uno usa Haiku
+### 🔍 Analistas (auditan — solo `Read`/`Grep`/`Glob`/`Bash`, nunca escriben)
+
+| Sub-Agente | Audita contra | Gate antes de merge en... | Modelo |
+|-----------|---------------|---------------------------|--------|
+| `security-compliance-auditor` | `security-multitenancy` + `AGENTS.md` §2 | Cualquier PR que toque rutas/DB/auth/SSRF | Heredado (Sonnet/Opus) |
+| `business-rules-auditor` | `agentic-harness` + `AGENTS.md` §3 | Cualquier PR que toque los agentes de booking | Heredado (Sonnet/Opus) |
+| `ux-simplicity-auditor` | `AGENTS.md` §6 + `SIMPLICITY_FIRST.md` | Cualquier PR que toque pantallas/componentes | **Haiku** (fijado) |
+
+**Flujo recomendado:** `Developer` implementa → `Analyst` correspondiente audita el diff → si hay FAIL, vuelve al Developer con hallazgos concretos (archivo:línea + escenario) → solo se mergea con veredicto "APROBADO". Los dos primeros analistas pueden bloquear el merge sin excepción en un FAIL crítico (fuga cross-tenant, envío sin aprobación humana); el de UX es un gate de calidad, no de seguridad.
+
+**Por qué esto abarata desarrollo:** un Analyst detecta el bug en el diff (unos tokens) en vez de en producción (un incidente real: fuga de datos entre bandas, email enviado sin aprobación, migración irreversible). Y como Developer y Analyst son procesos separados, el Developer puede seguir con la siguiente tarea mientras el Analyst audita en paralelo.
+
+### 💰 Por qué solo dos usan Haiku
 
 No todos los dominios tienen el mismo coste de un error:
 
-- **Seguridad, agentes de booking y DB migrations** → se quedan en el modelo heredado de la sesión (Sonnet/Opus). Un bug aquí es una fuga cross-tenant, un email enviado sin aprobación, o una migración irreversible en producción. No vale la pena abaratar esto.
-- **`fullstack-ux-builder`** → fijado en `model: haiku` en su frontmatter. Sus reglas (`AGENTS.md` §6, `skills/fullstack-ux-design/SKILL.md`) son un checklist mecánico y explícito (mobile-first, menú `⋯`, dark mode, `try/catch`), no requieren el mismo razonamiento profundo. Es también el subagente que más se invoca día a día (cada pantalla nueva), así que es donde más ahorro acumula.
+- **Seguridad, agentes de booking y DB migrations** (developer y analyst) → se quedan en el modelo heredado de la sesión (Sonnet/Opus). Un bug aquí es una fuga cross-tenant, un email enviado sin aprobación, o una migración irreversible en producción. No vale la pena abaratar esto ni al implementar ni al auditar.
+- **`fullstack-ux-builder` y `ux-simplicity-auditor`** → fijados en `model: haiku`. Sus reglas (`AGENTS.md` §6, `skills/fullstack-ux-design/SKILL.md`, `SIMPLICITY_FIRST.md`) son un checklist mecánico y explícito (mobile-first, menú `⋯`, dark mode, 3 bloques máximo), no requieren el mismo razonamiento profundo. Es también el par que más se invoca día a día (cada pantalla nueva pasa por los dos), así que es donde más ahorro acumula.
 
 Para revertir: borra la línea `model: haiku` del frontmatter y hereda el modelo de la sesión.
 
