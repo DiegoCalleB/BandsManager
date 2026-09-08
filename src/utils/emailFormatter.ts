@@ -294,8 +294,10 @@ export function formatEmailWithSignatureAndDossier(params: {
     `
     : '';
 
-  const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true);
-  const dossierLabel = 'Dossier Oficial & Kit de Prensa';
+  const logoUrl = (firma?.incluirLogo ?? true) ? (epkConfig?.logoUrl || (isBakandeya ? '/logo_bakandeya_bueno_sin_fondo.png' : '')) : '';
+  const effectiveEpkLink = dossierPdfUrl || (isBakandeya ? 'https://bakandeya.es/epk' : '');
+  const adjuntarDossier = (firma?.adjuntarDossierPorDefecto ?? true) && Boolean(effectiveEpkLink);
+  const dossierLabel = dossierPdfName || 'Dossier Oficial & Kit de Prensa';
 
   // 3. Construct natural, organically integrated HTML email
   const html = `<!DOCTYPE html>
@@ -360,11 +362,11 @@ export function formatEmailWithSignatureAndDossier(params: {
 
   // 4. Plain text version
   const linksTextArray = [
-    dossierPdfUrl ? `EPK / Dossier: ${dossierPdfUrl}` : (adjuntarDossier ? `EPK / Dossier: ${effectiveEpkLink}` : ''),
-    enlaces.website ? `Web: ${enlaces.website}` : '',
-    enlaces.spotify ? `Spotify: ${enlaces.spotify}` : '',
-    enlaces.instagram ? `Instagram: ${enlaces.instagram}` : '',
-    enlaces.youtube ? `YouTube: ${enlaces.youtube}` : ''
+    effectiveEpkLink ? `EPK / Dossier: ${effectiveEpkLink}` : '',
+    rawRedesCombined.website ? `Web: ${rawRedesCombined.website}` : '',
+    rawRedesCombined.spotify ? `Spotify: ${rawRedesCombined.spotify}` : '',
+    rawRedesCombined.instagram ? `Instagram: ${rawRedesCombined.instagram}` : '',
+    rawRedesCombined.youtube ? `YouTube: ${rawRedesCombined.youtube}` : ''
   ].filter(Boolean);
 
   const text = `
