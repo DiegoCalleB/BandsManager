@@ -2,6 +2,10 @@
 
 Este folder contiene toda la documentación estructurada del proyecto, organizada para agentes, skills, developers y cualquiera que necesite contexto.
 
+### 🎯 Multi-Tool Setup
+
+Si usas **Claude Code, AI Studio, Copilot u otra herramienta IA**, lee primero [`TOOL_COMPATIBILITY.md`](../TOOL_COMPATIBILITY.md) (en root). Explica cómo el proyecto funciona agnóstico de herramienta y dónde están los skills.
+
 ---
 
 ## 🎯 ¿Dónde Empezar?
