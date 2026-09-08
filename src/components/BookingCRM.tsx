@@ -280,6 +280,38 @@ export default function BookingCRM({
  const [isContactEnricherOpen, setIsContactEnricherOpen] = useState(false);
  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
  const [isExportLeadsOpen, setIsExportLeadsOpen] = useState(false);
+ const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
+
+ const handleTriggerEnviadorAgent = async (leadId?: string) => {
+   setIsDispatchingEmails(true);
+   try {
+     const data = await apiFetch('/api/trigger-agent', {
+       method: 'POST',
+       body: JSON.stringify({
+         agentName: 'enviador',
+         params: { id: leadId, trigger_type: 'usuario_manual' }
+       })
+     });
+
+     try {
+       window.dispatchEvent(new CustomEvent('app-data-updated'));
+     } catch (_) {}
+
+     if (data.dispatchedCount > 0) {
+       alert(`¡Agente Enviador ejecutado con éxito! ${data.message || ''}`);
+     } else if (data.results && data.results.some((r: any) => r.status === 'error')) {
+       const errMsgs = data.results.filter((r: any) => r.status === 'error').map((r: any) => `${r.nombre_sala}: ${r.error}`).join('\n');
+       alert(`Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`);
+     } else {
+       alert(data.message || 'No se encontraron correos aprobados pendientes de despacho.');
+     }
+   } catch (err: any) {
+     console.error('Error al ejecutar Agente Enviador:', err);
+     alert(`Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`);
+   } finally {
+     setIsDispatchingEmails(false);
+   }
+ };
  const [isAddingLeadModalOpen, setIsAddingLeadModalOpen] = useState(false);
  const [newLeadData, setNewLeadData] = useState({
  nombre_sala: '',
@@ -1174,6 +1206,21 @@ export default function BookingCRM({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            disabled={isDispatchingEmails}
+            onClick={() => {
+              setIsMobileToolsOpen(false);
+              handleTriggerEnviadorAgent();
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
+          >
+            <span className="flex items-center gap-2">
+              {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
+              <span>{isDispatchingEmails ? 'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
           <button
             type="button"
             onClick={() => {

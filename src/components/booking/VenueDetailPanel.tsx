@@ -814,18 +814,52 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
           if (isApproved) {
             return (
-              <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center gap-2.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-1" />
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-emerald-300">
-                    🚀 {rawStatus === 'aprobado_respuesta' ? 'Respuesta Aprobada' : 'Propuesta Aprobada'} — En cola del Agente Enviador
-                  </p>
-                  <p className="text-[10px] text-zinc-400">
-                    {draftError
-                      ? `No se pudo crear el borrador en Gmail (${draftError}). El lead quedó en cola para el Agente Enviador por email.`
-                      : 'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
-                  </p>
+              <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-between gap-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-1" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-emerald-300">
+                      🚀 {rawStatus === 'aprobado_respuesta' ? 'Respuesta Aprobada' : 'Propuesta Aprobada'} — En cola del Agente Enviador
+                    </p>
+                    <p className="text-[10px] text-zinc-400">
+                      {draftError
+                        ? `No se pudo crear el borrador en Gmail (${draftError}). El lead quedó en cola para el Agente Enviador por email.`
+                        : 'El agente despachará este correo respetando las normas de envío y rate-limiting.'}
+                    </p>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  disabled={isCreatingDraft}
+                  onClick={async () => {
+                    setIsCreatingDraft(true);
+                    setDraftError(null);
+                    try {
+                      const data = await apiFetch('/api/trigger-agent', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                          agentName: 'enviador',
+                          params: { id: selectedLead.id, trigger_type: 'usuario_manual' }
+                        })
+                      });
+                      const leadResult = Array.isArray(data.results) ? data.results.find((r: any) => r.id === selectedLead.id) : null;
+                      if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
+                        onUpdateLead(selectedLead.id, { estado: leadResult?.status === 'enviado' ? (leadResult?.estado_nuevo || 'contactado') : 'borrador_creado' });
+                      } else if (leadResult?.error || data.message) {
+                        setDraftError(leadResult?.error || data.message);
+                      }
+                    } catch (err: any) {
+                      setDraftError(err.message || 'Error al despachar el correo.');
+                    } finally {
+                      setIsCreatingDraft(false);
+                    }
+                  }}
+                  className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs rounded-lg shrink-0 flex items-center gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+                  title="Forzar el despacho inmediato de este correo por el Agente Enviador"
+                >
+                  {isCreatingDraft ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                  <span>{isCreatingDraft ? 'Enviando...' : 'Despachar Ahora'}</span>
+                </button>
               </div>
             );
           }
