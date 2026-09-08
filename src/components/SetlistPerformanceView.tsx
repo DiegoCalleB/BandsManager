@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Play, Pause } from 'lucide-react';
 import { Setlist, SetlistItem, Song } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
 import { getSemitoneDifference, transposeChordToken } from '../utils/chordUtils';
@@ -70,19 +70,51 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // Reajuste manual (+/-) que el músico puede aplicar POR ENCIMA de la transposición automática
   // de este tema, sin perderla al cambiar de canción y sin tener que recalcularla a mano.
   const [manualAdjust, setManualAdjust] = useState(0);
-  useEffect(() => {
-    setManualAdjust(0);
-    setShowDetails(false);
-  }, [currentIndex]);
 
-  // La partitura original escaneada (PDF/imagen) es la vista "de verdad" — como pasar hojas
-  // reales de papel en un atril de iPad. El texto con acordes es el fallback para temas que
-  // todavía no tienen un documento subido.
+  // Los acordes en texto son la vista principal: se pueden transportar, agrandar y hacer
+  // autoscroll, cosas que una foto/PDF escaneado no permite. El documento original queda como
+  // consulta opcional (para comparar contra lo que la IA extrajo), no como vista por defecto.
+  const hasChordsText = Boolean(currentSong?.cifradoTexto?.trim());
   const hasScannedSheet = Boolean(
     currentSong?.estructuraDocumentoUrl &&
     (isImageDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl) ||
       isPdfDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl))
   );
+  const [viewMode, setViewMode] = useState<'chords' | 'sheet'>('chords');
+  const showScannedSheet = viewMode === 'sheet' && hasScannedSheet;
+
+  // Autoscroll lento tipo teleprompter para la vista de acordes — para que el músico no tenga
+  // que tocar la pantalla mientras toca el instrumento. 1 = muy lento a propósito (lo pedido),
+  // 2/3 para quien prefiera ir más rápido.
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [scrollSpeed, setScrollSpeed] = useState(1);
+  const chordsScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setManualAdjust(0);
+    setShowDetails(false);
+    setIsAutoScrolling(false);
+    // Al llegar a un tema sin acordes en texto pero con documento escaneado, no tiene sentido
+    // arrancar en una vista de acordes vacía — pero si el usuario ya había pedido ver el
+    // documento a propósito para el tema anterior, no lo forzamos de vuelta a acordes cada vez.
+    setViewMode(prevMode => (hasChordsText ? 'chords' : hasScannedSheet ? 'sheet' : prevMode));
+    if (chordsScrollRef.current) chordsScrollRef.current.scrollTop = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex]);
+
+  useEffect(() => {
+    if (!isAutoScrolling) return;
+    const interval = setInterval(() => {
+      const el = chordsScrollRef.current;
+      if (!el) return;
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 4) {
+        setIsAutoScrolling(false);
+        return;
+      }
+      el.scrollTop += scrollSpeed * 0.4;
+    }, 50);
+    return () => clearInterval(interval);
+  }, [isAutoScrolling, scrollSpeed]);
 
   const notes = [currentSong?.notasInternas, currentSong?.notasRepertorio].filter(Boolean).join('\n\n');
 
@@ -237,7 +269,17 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             </button>
           )}
 
-          {!isBlock && !hasScannedSheet && (
+          {!isBlock && hasChordsText && hasScannedSheet && (
+            <button
+              onClick={() => setViewMode(m => (m === 'chords' ? 'sheet' : 'chords'))}
+              className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
+              title={showScannedSheet ? 'Ver acordes en texto' : 'Ver documento original escaneado'}
+            >
+              {showScannedSheet ? <FileText className="w-4 h-4" /> : <ImageIcon className="w-4 h-4" />}
+            </button>
+          )}
+
+          {!isBlock && !showScannedSheet && (
             <button
               onClick={() => setFontSizeIdx(i => (i + 1) % FONT_SIZES.length)}
               className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
@@ -298,7 +340,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
         {isBlock ? (
           <TeleprompterBlockPage item={currentItem} meta={blockMeta!} />
-        ) : hasScannedSheet ? (
+        ) : showScannedSheet ? (
           <ScannedSheetPage song={currentSong!} />
         ) : (
           <ChordSheetPage
@@ -314,6 +356,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             fontSizeClass={FONT_SIZES[fontSizeIdx]}
             showDetails={showDetails}
             onToggleDetails={() => setShowDetails(v => !v)}
+            scrollRef={chordsScrollRef}
           />
         )}
       </div>
@@ -322,7 +365,40 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           (a scanned sheet is a picture, transposing the text controls does nothing to it),
           plus a peek at what's coming up next so the musician can get ready in advance. */}
       <div className="shrink-0 bg-gradient-to-t from-black to-black/0 px-3 sm:px-4 py-2 space-y-2 z-20">
-        {!isBlock && !hasScannedSheet && (
+        {!isBlock && !showScannedSheet && (
+          <div className="flex items-center justify-center gap-2">
+            {/* Autoscroll tipo teleprompter: para que la letra vaya bajando sola, muy despacio
+                por defecto, sin que el músico tenga que tocar la pantalla mientras toca. */}
+            <button
+              onClick={() => setIsAutoScrolling(v => !v)}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-bold flex items-center gap-1 transition ${
+                isAutoScrolling ? 'bg-emerald-600 text-white animate-pulse' : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
+              }`}
+              title="Autoscroll automático de la letra"
+            >
+              {isAutoScrolling ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+              Autoscroll
+            </button>
+            {isAutoScrolling && (
+              <div className="flex items-center gap-1">
+                {[1, 2, 3].map(v => (
+                  <button
+                    key={v}
+                    onClick={() => setScrollSpeed(v)}
+                    className={`w-5 h-5 rounded text-[10px] font-bold transition ${
+                      scrollSpeed === v ? 'bg-emerald-500 text-black' : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700'
+                    }`}
+                    title={v === 1 ? 'Lento' : v === 2 ? 'Medio' : 'Rápido'}
+                  >
+                    {v}x
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {!isBlock && !showScannedSheet && (
           <div className="flex items-center justify-center gap-2">
             {autoTranspose !== 0 && manualAdjust === 0 && (
               <span className="text-[10px] text-amber-400/80" title={`Este repertorio pide tocarla en ${currentItem?.tonalidadDeseada} (original: ${currentSong?.tonalidad})`}>
@@ -484,7 +560,8 @@ const ChordSheetPage: React.FC<{
   fontSizeClass: string;
   showDetails: boolean;
   onToggleDetails: () => void;
-}> = ({ chords, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion, fontSizeClass, showDetails, onToggleDetails }) => {
+  scrollRef: React.RefObject<HTMLDivElement>;
+}> = ({ chords, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion, fontSizeClass, showDetails, onToggleDetails, scrollRef }) => {
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* Ficha compacta: una sola línea, no cuatro tarjetas — la letra es la protagonista. */}
@@ -519,7 +596,7 @@ const ChordSheetPage: React.FC<{
       )}
 
       {/* La letra + acordes ocupan todo el espacio que queda, sin competir por sitio. */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth">
         <pre className={`max-w-4xl mx-auto text-amber-100 font-mono whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass}`}>
           {chords}
         </pre>
