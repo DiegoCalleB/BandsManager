@@ -121,7 +121,8 @@ async function uploadFileToSupabase(
   fileBuffer: Buffer,
   fileName: string,
   bandId: string,
-  songId: string
+  songId: string,
+  mimeType: string
 ): Promise<string> {
   const supabaseClient = getSupabaseClient();
   if (!supabaseClient) {
@@ -136,7 +137,7 @@ async function uploadFileToSupabase(
   const { error: uploadError } = await supabaseClient.storage
     .from(bucketName)
     .upload(storagePath, fileBuffer, {
-      contentType: 'application/octet-stream',
+      contentType: mimeType,
       upsert: false,
     });
 
@@ -190,7 +191,7 @@ router.post(
       }
 
       // Upload file to Supabase
-      const fileUrl = await uploadFileToSupabase(file.buffer, file.originalname, bandId, songId);
+      const fileUrl = await uploadFileToSupabase(file.buffer, file.originalname, bandId, songId, file.mimetype);
 
       // Extract structure with AI
       const extracted = await extractStructureWithAI(file.buffer, file.originalname, file.mimetype);
