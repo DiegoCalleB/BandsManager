@@ -4,8 +4,8 @@ import path from 'path';
 import { requireAuth } from '../../state.js';
 import { getTargetBandId, puedeEscribirEnBanda } from '../../utils/bandAccess.js';
 import { getSupabaseClient, getBucketName } from '../upload.js';
-import { getAiClient, TIMEOUT_IA_LARGO_MS } from '../../ai.js';
-import { supabase } from '../../db/core.js';
+import { getAiClient, TIMEOUT_IA_LARGO_MS, generateContentWithFallback, GEMINI_MODEL } from '../../ai.js';
+import { getSupabase } from '../../db/core.js';
 import { Song } from '../../../src/types.js';
 
 const router = express.Router();
@@ -52,14 +52,9 @@ async function extractStructureWithAI(
     throw new Error('No se pudo inicializar el cliente de IA');
   }
 
-  const model = aiClient.getGenerativeModel({
-    model: 'gemini-2.0-flash-exp',
-  });
-
-  let imagePart;
-
-  // Convert PDF or Word to base64 (for multimodal processing)
   const base64Data = fileBuffer.toString('base64');
+
+  let imagePart: any;
 
   if (mimeType === 'application/pdf') {
     imagePart = {
@@ -76,7 +71,6 @@ async function extractStructureWithAI(
       },
     };
   } else if (mimeType.includes('word')) {
-    // Word docs: try to treat as binary, Gemini will attempt to interpret
     imagePart = {
       inlineData: {
         mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -87,8 +81,7 @@ async function extractStructureWithAI(
     throw new Error('Tipo de archivo no soportado para procesamiento');
   }
 
-  const prompt = `
-You are an expert music analyst. Please analyze this song structure/chord sheet document and extract the following information in JSON format:
+  const prompt = `You are an expert music analyst. Please analyze this song structure/chord sheet document and extract the following information in JSON format:
 
 1. **acordes**: Complete lyrics with chords in the format "Am - Do - Mi" or similar, preserving the original structure
 2. **estructura**: Main song structure (e.g., "Intro - Verso - Estribillo - Verso - Estribillo - Puente - Verso - Estribillo - Outro")
@@ -101,31 +94,21 @@ You are an expert music analyst. Please analyze this song structure/chord sheet 
 Respond ONLY with valid JSON, no markdown backticks or explanations. If a field is not visible or applicable, use null.
 
 Example response format:
-{
-  "acordes": "Am F\\nUna noche de verano...",
-  "estructura": "Intro - Verso - Estribillo",
-  "progresionClave": "Am - F - C - G",
-  "cortesYClaves": "Puente a los 2:15",
-  "capoTraste": "Capo 2",
-  "instrumentosClave": "Guitarra, Batería, Bajo",
-  "notas": "Solo de guitarra de 8 compases"
-}
-`;
+{"acordes":"Am F\\nUna noche de verano...","estructura":"Intro - Verso - Estribillo","progresionClave":"Am - F - C - G","cortesYClaves":"Puente a los 2:15","capoTraste":"Capo 2","instrumentosClave":"Guitarra, Batería, Bajo","notas":"Solo de guitarra de 8 compases"}`;
 
   try {
-    const response = await model.generateContent(
-      {
-        contents: [
-          {
-            role: 'user',
-            parts: [imagePart as any, { text: prompt }],
-          },
-        ],
-      },
-      { timeout: TIMEOUT_IA_LARGO_MS }
-    );
+    const response = await generateContentWithFallback(aiClient, {
+      contents: [
+        {
+          role: 'user',
+          parts: [imagePart, { text: prompt }],
+        },
+      ],
+      timeoutMs: TIMEOUT_IA_LARGO_MS,
+      preferredModel: GEMINI_MODEL,
+    });
 
-    const text = response.response.text();
+    const text = response.text();
     const extracted = JSON.parse(text) as ExtractedStructure;
     return extracted;
   } catch (error) {
@@ -190,6 +173,7 @@ router.post(
       }
 
       // Verify song exists and user can edit it
+      const supabase = getSupabase();
       const { data: song, error: songError } = await supabase
         .from('songs')
         .select('*')
