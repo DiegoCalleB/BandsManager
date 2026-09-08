@@ -755,6 +755,41 @@ export default function RepertorioSetlists({
    };
  }, [editingEnergyItemId]);
 
+ // Popover de "tono deseado" (transposición): mismo patrón que el de energía — item de setlist
+ // con el selector de las 12 notas abierto, y posición calculada al abrir vía portal fixed.
+ const [editingKeyItemId, setEditingKeyItemId] = useState<string | null>(null);
+ const [keyPopoverPos, setKeyPopoverPos] = useState<{ top: number; left: number } | null>(null);
+
+ useEffect(() => {
+   if (!editingKeyItemId) return;
+   const handleClickOutside = (e: MouseEvent) => {
+     if (!(e.target as HTMLElement)?.closest?.('[data-key-popover]')) {
+       setEditingKeyItemId(null);
+     }
+   };
+   const handleScroll = () => setEditingKeyItemId(null);
+   document.addEventListener('mousedown', handleClickOutside);
+   window.addEventListener('scroll', handleScroll, true);
+   return () => {
+     document.removeEventListener('mousedown', handleClickOutside);
+     window.removeEventListener('scroll', handleScroll, true);
+   };
+ }, [editingKeyItemId]);
+
+ // Guarda (o quita, con null) el tono en el que se quiere tocar esta canción en ESTE
+ // repertorio — vive en el SetlistItem, no en la canción, porque el mismo tema puede tocarse
+ // en tonos distintos según el bolo/cantante (ver comentario en types.ts).
+ const handleSetTonalidadDeseada = (itemId: string, tonalidad: string | null) => {
+   if (!activeSetlist) return;
+   const updatedSetlist: Setlist = {
+     ...activeSetlist,
+     items: activeSetlist.items.map(it => it.id === itemId ? { ...it, tonalidadDeseada: tonalidad || undefined } : it)
+   };
+   setSetlists(prev => prev.map(st => st.id === activeSetlist.id ? updatedSetlist : st));
+   syncSetlistToBackend(updatedSetlist);
+   setEditingKeyItemId(null);
+ };
+
  // Núcleo compartido: fija a mano la energía (1-20) de una canción, tanto desde el popover 1-10
  // de la fila (handleSetEnergiaManual) como desde el arrastre vertical en el propio gráfico
  // (handleEnergyChartDrag) — un solo sitio que llama al PATCH y actualiza el estado optimista.
@@ -3124,9 +3159,81 @@ export default function RepertorioSetlists({
       {song.titulo}
     </span>
 
-    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#10b981]/15 text-[#10b981] font-bold shrink-0">
-      {song.tonalidad || '—'}
-    </span>
+    {(() => {
+      // Tono en el que se quiere tocar ESTE tema en ESTE repertorio (distinto del tono
+      // original de grabación por registro vocal, cantante sustituto, etc.) — se guarda en
+      // el SetlistItem (it.tonalidadDeseada) y el Modo Concierto lo transporta solo.
+      const desiredKey = it.tonalidadDeseada;
+      const isEditingKey = editingKeyItemId === it.id;
+      const KEY_POPOVER_WIDTH_PX = 200;
+      const KEY_POPOVER_HEIGHT_PX = 110;
+      const keyNotes = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(song.tonalidad || '')
+        ? ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si']
+        : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      return (
+        <div className="relative shrink-0">
+          <button
+            type="button"
+            data-key-popover
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isEditingKey) {
+                setEditingKeyItemId(null);
+                return;
+              }
+              const rect = e.currentTarget.getBoundingClientRect();
+              setKeyPopoverPos({
+                top: Math.min(rect.bottom + 4, window.innerHeight - KEY_POPOVER_HEIGHT_PX - 8),
+                left: Math.min(rect.left, window.innerWidth - KEY_POPOVER_WIDTH_PX - 8)
+              });
+              setEditingKeyItemId(it.id);
+            }}
+            className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-white/40 ${
+              desiredKey ? 'bg-amber-500/20 text-amber-400' : 'bg-[#10b981]/15 text-[#10b981]'
+            }`}
+            title={desiredKey
+              ? `Original: ${song.tonalidad || '—'} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`
+              : 'Tonalidad original. Clic para definir en qué tono tocarla en este repertorio (transposición automática).'}
+          >
+            {desiredKey ? `${song.tonalidad || '—'} → ${desiredKey}` : (song.tonalidad || '—')}
+          </button>
+          {isEditingKey && keyPopoverPos && createPortal(
+            <div
+              data-key-popover
+              className="fixed z-[100] bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl p-2 space-y-1.5 w-[200px]"
+              style={{ top: keyPopoverPos.top, left: keyPopoverPos.left }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <p className="text-[9px] font-mono text-neutral-400 px-0.5">Tocar en tono (original: {song.tonalidad || '—'}):</p>
+              <div className="grid grid-cols-4 gap-1">
+                {keyNotes.map(note => (
+                  <button
+                    key={note}
+                    type="button"
+                    onClick={() => handleSetTonalidadDeseada(it.id, note)}
+                    className={`px-1 py-1 rounded text-[10px] font-mono font-bold transition cursor-pointer ${
+                      desiredKey === note ? 'bg-amber-500 text-black' : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                    }`}
+                  >
+                    {note}
+                  </button>
+                ))}
+              </div>
+              {desiredKey && (
+                <button
+                  type="button"
+                  onClick={() => handleSetTonalidadDeseada(it.id, null)}
+                  className="w-full text-center text-[9px] font-mono text-neutral-400 hover:text-rose-400 pt-1.5 border-t border-neutral-800 cursor-pointer"
+                >
+                  Volver al original ({song.tonalidad || '—'})
+                </button>
+              )}
+            </div>,
+            document.body
+          )}
+        </div>
+      );
+    })()}
 
     <span className="text-[9px] font-mono text-neutral-400 shrink-0">
       {song.bpm ? `${song.bpm}` : '—'}

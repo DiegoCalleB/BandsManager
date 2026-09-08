@@ -157,6 +157,32 @@ export function parseRootNote(chordToken: string): { root: string; suffix: strin
   return parsed;
 }
 
+// Índice cromático (0-11) de una tonalidad ("Do", "Mim", "F#m", "Bb"...), en español o inglés,
+// mayor o menor — el modo no cambia el índice, solo la nota raíz importa para medir distancia
+// entre tonos. Devuelve null si no se reconoce como una tonalidad válida.
+export function keyToChromaticIndex(key: string): number | null {
+  if (!key) return null;
+  const parsed = parseRootNote(key.trim());
+  if (!parsed) return null;
+  const normEn = ES_TO_EN_MAP[parsed.root] || parsed.root;
+  let idx = NOTE_NAMES_EN.indexOf(normEn);
+  if (idx === -1) idx = NOTE_NAMES_EN_FLATS.indexOf(normEn);
+  return idx === -1 ? null : idx;
+}
+
+// Semitonos para pasar de `fromKey` a `toKey`, normalizados al camino más corto (-6..+6): así
+// "de Mi a Re" da -2 (bajar un tono) en vez de +10, que llegaría al mismo sitio pero no es como
+// un músico piensa la transposición. Devuelve null si alguna tonalidad no se reconoce.
+export function getSemitoneDifference(fromKey: string, toKey: string): number | null {
+  const fromIdx = keyToChromaticIndex(fromKey);
+  const toIdx = keyToChromaticIndex(toKey);
+  if (fromIdx === null || toIdx === null) return null;
+  let diff = (toIdx - fromIdx) % 12;
+  if (diff > 6) diff -= 12;
+  if (diff < -6) diff += 12;
+  return diff;
+}
+
 export function transposeSingleNote(rootNote: string, semitones: number, targetNotation: 'ES' | 'EN'): string {
   if (semitones === 0 && ((targetNotation === 'ES' && ES_TO_EN_MAP[rootNote] === undefined) || (targetNotation === 'EN' && EN_TO_ES_MAP[rootNote] === undefined))) {
     // Check if notation change needed

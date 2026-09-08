@@ -4,7 +4,9 @@ import {
   transposeSingleNote,
   transposeChordToken,
   processChordText,
-  extractUniqueChords
+  extractUniqueChords,
+  keyToChromaticIndex,
+  getSemitoneDifference
 } from '../chordUtils';
 
 describe('chordUtils', () => {
@@ -121,6 +123,42 @@ describe('chordUtils', () => {
     it('still extracts a real standalone chord line mixed with English lyrics', () => {
       const text = 'Am F C G\nGet your motor runnin\'';
       expect(extractUniqueChords(text)).toEqual(['Am', 'F', 'C', 'G']);
+    });
+  });
+
+  describe('keyToChromaticIndex', () => {
+    it('gives the same index for English and Spanish spellings of the same note', () => {
+      expect(keyToChromaticIndex('E')).toBe(keyToChromaticIndex('Mi'));
+      expect(keyToChromaticIndex('D')).toBe(keyToChromaticIndex('Re'));
+    });
+
+    it('ignores major/minor when computing the index', () => {
+      expect(keyToChromaticIndex('C')).toBe(keyToChromaticIndex('Cm'));
+      expect(keyToChromaticIndex('Mi')).toBe(keyToChromaticIndex('Mim'));
+    });
+
+    it('returns null for an unrecognized key', () => {
+      expect(keyToChromaticIndex('Hola')).toBeNull();
+    });
+  });
+
+  describe('getSemitoneDifference', () => {
+    it('computes the shortest distance between two keys, in either notation', () => {
+      // E -> D is down a whole tone (-2), not up 10
+      expect(getSemitoneDifference('E', 'D')).toBe(-2);
+      expect(getSemitoneDifference('Mi', 'Re')).toBe(-2);
+      // C -> D is up a whole tone
+      expect(getSemitoneDifference('C', 'D')).toBe(2);
+    });
+
+    it('is zero for the same key', () => {
+      expect(getSemitoneDifference('G', 'G')).toBe(0);
+      expect(getSemitoneDifference('Sol', 'G')).toBe(0);
+    });
+
+    it('returns null when either key is unrecognized', () => {
+      expect(getSemitoneDifference('Hola', 'D')).toBeNull();
+      expect(getSemitoneDifference('D', 'Hola')).toBeNull();
     });
   });
 });

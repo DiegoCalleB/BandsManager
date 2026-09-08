@@ -664,6 +664,12 @@ export interface SetlistItem {
   notaTema?: string;
   notas?: string;
   audioUrl?: string; // Recorded or uploaded speech/presentation audio
+  // Tono en el que se quiere tocar ESTE tema en ESTE repertorio concreto (p.ej. "Re" para un
+  // tema grabado en "Mi", porque el cantante de este bolo canta más grave). Vive en el
+  // SetlistItem y no en Song porque el mismo tema puede tocarse en tonos distintos según el
+  // repertorio/cantante — no es una propiedad fija de la canción. Si no se define, se toca en
+  // la tonalidad original de la canción.
+  tonalidadDeseada?: string;
 }
 
 export interface Setlist {
