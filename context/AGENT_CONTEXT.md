@@ -18,6 +18,21 @@
 
 ---
 
+## 🎯 Skills Especializados (Cuando Necesites Profundidad)
+
+Cada skill tiene **checklist, patrones detallados, anti-patterns y ejemplos de código**. Localización: `.gemini/skills/SKILL_NAME/SKILL.md`
+
+| Tarea | Skill | Propósito |
+|-------|-------|----------|
+| **Modificar agentes IA** (Scout, Redactor, Enviador, Lector, scheduler) | [agentic-harness](./.gemini/skills/agentic-harness/SKILL.md) | Máquina de estados 2D, ciclo de vida, human-in-the-loop, scheduling |
+| **Seguridad & Multi-tenancy** (getTargetBandId, SSRF, rate limit, plan limits) | [security-multitenancy](./.gemini/skills/security-multitenancy/SKILL.md) | Trust boundary, fuga cross-tenant prevention, checklist pre-PR |
+| **Frontend & Backend** (React 19, Express, Vitest, UX excellence) | [fullstack-ux-design](./.gemini/skills/fullstack-ux-design/SKILL.md) | Glassmorphism, micro-animaciones, async/await patterns, testing |
+| **Base de Datos** (Supabase, handlers, migraciones SQL, RLS, tipos TS) | [supabase-architect](./.gemini/skills/supabase-architect/SKILL.md) | Arquitectura de datos, convenciones handlers, migraciones idempotentes |
+
+**Regla:** Si el checklist de AGENT_CONTEXT.md no te cubre, ve al skill correspondiente → find detallado + checklist extendido + ejemplos.
+
+---
+
 ## 🏗️ Arquitectura de Un Vistazo
 
 ```
@@ -263,14 +278,14 @@ Antes de pushear código:
 
 ## 📚 Lee Esto Cuando Toques Esto
 
-| Si tocas... | Lee... |
-|-------------|---------|
-| Ruta de backend | SECURITY.md #2 (trust boundary) |
-| Agentes (Scout/Redactor/Enviador/Lector) | BUSINESS_RULES.md |
-| UI (componentes) | UI_UX_GUIDELINES.md |
-| DB (nuevo schema, queries) | ARCHITECTURE.md #2 |
-| Tests | CODE_STANDARDS.md #4 |
-| Fetch externo (scraping, enrichment) | SECURITY.md #4 (SSRF) |
+| Si tocas... | Lee primero (context/) | Luego: Skill Especializado |
+|-------------|---------|----------|
+| Ruta de backend + multi-tenancy | SECURITY.md #2 | `security-multitenancy` |
+| Agentes (Scout/Redactor/Enviador/Lector) | BUSINESS_RULES.md | `agentic-harness` |
+| UI (componentes React) | UI_UX_GUIDELINES.md | `fullstack-ux-design` |
+| DB (nuevo schema, queries, migraciones) | ARCHITECTURE.md #2 | `supabase-architect` |
+| Tests (Vitest, unit/integration) | CODE_STANDARDS.md #4 | `fullstack-ux-design` |
+| Fetch externo (scraping, enrichment) | SECURITY.md #4 (SSRF) | `security-multitenancy` |
 
 ---
 
