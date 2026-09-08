@@ -283,6 +283,17 @@ export async function dbGetSongs(bandId: string) {
   return (data || []).map(mapSongRecord);
 }
 
+// Para campos de texto libre que el usuario puede vaciar a propósito (cifrado_texto,
+// notas_internas...): con `camelCase || snake_case || fallback`, borrar el campo (dejarlo en
+// "") no se guarda nunca, porque "" es falsy y la expresión cae al valor viejo de snake_case.
+// Aquí se distingue "el campo vino en el payload" (aunque sea "") de "no vino" con `!==
+// undefined`, así un borrado intencional sí se respeta.
+function preferClearableString(camelValue: any, snakeValue: any, fallback = ""): string {
+  if (camelValue !== undefined && camelValue !== null) return camelValue;
+  if (snakeValue !== undefined && snakeValue !== null) return snakeValue;
+  return fallback;
+}
+
 export async function dbUpsertSong(song: any, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
@@ -333,7 +344,6 @@ export async function dbUpsertSong(song: any, bandId: string) {
     favorito_general: Boolean(song.favorito_general ?? song.favoritoGeneral),
     estado_tema: song.estado_tema || song.estadoTema || "ensayando",
     es_version_covers: Boolean(song.es_version_covers ?? song.esVersionCovers),
-    enlace_acordes: song.enlaceAcordes || song.enlace_acordes || "",
     // Prioridad camelCase > snake_case: los editores de la app (SongModal, MemberNotesModal...)
     // reciben la canción ya mapeada con AMBAS variantes (mapSongRecord duplica cada campo en
     // los dos formatos) y al guardar hacen `{...song, notasMiembros: nuevoValor}` — solo tocan
@@ -342,16 +352,17 @@ export async function dbUpsertSong(song: any, bandId: string) {
     // ser falsy, pero para objetos/arrays (notas_miembros, notas_por_miembro, audio_ideas,
     // guia_sustituto) CUALQUIER objeto es truthy aunque esté "vacío" por dentro — el valor
     // viejo ganaba siempre y la nota por miembro no se guardaba nunca, ni reintentando.
-    notas_internas: song.notasInternas || song.notas_internas || "",
-    notas_repertorio: song.notasRepertorio || song.notas_repertorio || "",
+    notas_internas: preferClearableString(song.notasInternas, song.notas_internas),
+    notas_repertorio: preferClearableString(song.notasRepertorio, song.notas_repertorio),
     notas_miembros: song.notasMiembros || song.notas_miembros || {},
     notas_por_miembro: song.notasPorMiembro || song.notas_por_miembro || [],
     audio_principal_url: song.audioPrincipalUrl || song.audio_principal_url || song.audioUrl || song.audio_url || "",
     audio_ideas: song.audioIdeas || song.audio_ideas || [],
-    cifrado_texto: song.cifradoTexto || song.cifrado_texto || "",
+    cifrado_texto: preferClearableString(song.cifradoTexto, song.cifrado_texto),
     guia_sustituto: song.guiaSustituto || song.guia_sustituto || {},
-    estructura_documento_url: song.estructuraDocumentoUrl || song.estructura_documento_url || "",
-    estructura_documento_nombre: song.estructuraDocumentoNombre || song.estructura_documento_nombre || "",
+    enlace_acordes: preferClearableString(song.enlaceAcordes, song.enlace_acordes),
+    estructura_documento_url: preferClearableString(song.estructuraDocumentoUrl, song.estructura_documento_url),
+    estructura_documento_nombre: preferClearableString(song.estructuraDocumentoNombre, song.estructura_documento_nombre),
     estructura_documento_procesado_en: song.estructuraDocumentoProcesadoEn || song.estructura_documento_procesado_en || null
   };
 
