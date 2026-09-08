@@ -38,6 +38,7 @@ import { DiscografiaView } from './repertorio/DiscografiaView';
 import { SongCardRow } from './repertorio/SongCardRow';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { EscenarioView } from './repertorio/EscenarioView';
+import { SetlistPerformanceView } from './SetlistPerformanceView';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { 
@@ -470,6 +471,9 @@ export default function RepertorioSetlists({
  }, [activeSetlistId]);
 
  const activeSetlist = useMemo(() => setlists.find(s => s.id === activeSetlistId) || setlists[0] || null, [setlists, activeSetlistId]);
+
+ // Performance mode for showing song structures during concert
+ const [performanceSetlistId, setPerformanceSetlistId] = useState<string | null>(null);
 
  // Custom "quick add" shortcuts the band created itself for the "Rápidos" row below, on top of
  // the built-in ones (Presentación, Chapa, BIS...). Persisted per band in Supabase via
@@ -2416,6 +2420,13 @@ export default function RepertorioSetlists({
 
   <div className="flex items-center gap-1">
   <button
+  onClick={(e) => { e.stopPropagation(); setPerformanceSetlistId(st.id); }}
+  className="p-0.5 text-neutral-400 hover:text-amber-400 rounded hover:bg-neutral-800"
+  title="🎤 Modo Concierto - Ver partituras en directo"
+  >
+  <Mic className="w-3 h-3" />
+  </button>
+  <button
   onClick={(e) => { e.stopPropagation(); handleDuplicateSetlist(st); }}
   className="p-0.5 text-neutral-400 hover:text-white rounded hover:bg-neutral-800"
   title="Duplicar Setlist"
@@ -4330,6 +4341,15 @@ export default function RepertorioSetlists({
     catalogSongs={songs}
     onCreated={handleSetlistImported}
   />
+
+  {/* SETLIST PERFORMANCE VIEW (CONCIERTO EN VIVO) */}
+  {performanceSetlistId && (
+    <SetlistPerformanceView
+      setlist={setlists.find(s => s.id === performanceSetlistId)!}
+      songs={songs}
+      onClose={() => setPerformanceSetlistId(null)}
+    />
+  )}
 </div>
  );
 }
