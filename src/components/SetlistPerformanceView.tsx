@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, Music, FileText } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ChevronLeft, ChevronRight, X, Music, FileText, Maximize, Minimize, Type, StickyNote } from 'lucide-react';
 import { Setlist, Song } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
 
@@ -13,6 +13,8 @@ interface SetlistPerformanceViewProps {
 // dentro del documento.
 const SWIPE_THRESHOLD = 60;
 
+const FONT_SIZES = ['text-sm sm:text-base', 'text-base sm:text-lg', 'text-lg sm:text-xl', 'text-xl sm:text-2xl'];
+
 export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   setlist,
   songs,
@@ -20,11 +22,18 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [transpose, setTranspose] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSizeIdx, setFontSizeIdx] = useState(1);
+  const [showNotes, setShowNotes] = useState(false);
   const touchStartX = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wakeLockRef = useRef<any>(null);
 
   const songItems = setlist.items.filter(item => item.songId && item.tipoItem === 'cancion');
   const currentItem = songItems[currentIndex];
   const currentSong = songs.find(s => s.id === currentItem?.songId);
+  const nextItem = songItems[currentIndex + 1];
+  const nextSong = nextItem ? songs.find(s => s.id === nextItem.songId) : null;
 
   // La partitura original escaneada (PDF/imagen) es la vista "de verdad" — como pasar hojas
   // reales de papel en un atril de iPad. El texto con acordes es el fallback para temas que
@@ -34,6 +43,57 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     (isImageDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl) ||
       isPdfDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl))
   );
+
+  const notes = [currentSong?.notasInternas, currentSong?.notasRepertorio].filter(Boolean).join('\n\n');
+
+  // WAKE LOCK: lo más importante para un músico en directo — que la pantalla del móvil/tablet
+  // NO se apague a media canción por inactividad táctil (el músico está tocando, no tocando la
+  // pantalla). Sin esto, el modo concierto es inservible en un bolo real.
+  useEffect(() => {
+    let released = false;
+    const requestLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLockRef.current = await (navigator as any).wakeLock.request('screen');
+        }
+      } catch {
+        // Algunos navegadores lo rechazan si la pestaña no está en foco o no hay soporte —
+        // degradamos en silencio, no es motivo para romper el modo concierto.
+      }
+    };
+    requestLock();
+
+    // iOS/Android liberan el wake lock al cambiar de pestaña/app; lo repedimos al volver.
+    const handleVisibility = () => {
+      if (!released && document.visibilityState === 'visible') requestLock();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      released = true;
+      document.removeEventListener('visibilitychange', handleVisibility);
+      wakeLockRef.current?.release?.().catch(() => {});
+    };
+  }, []);
+
+  // FULLSCREEN real del navegador (oculta la barra de direcciones/UI del sistema) — el
+  // fixed inset-0 ya cubre la ventana, pero en un móvil/tablet la barra de Chrome/Safari sigue
+  // ahí robando espacio y invitando a un toque accidental que saque al músico de la app.
+  const toggleFullscreen = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement) {
+      el.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', handleChange);
+    return () => document.removeEventListener('fullscreenchange', handleChange);
+  }, []);
 
   // Transpose key
   const transposeKey = (key: string, semitones: number): string => {
@@ -61,20 +121,22 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     setCurrentIndex(i => Math.min(songItems.length - 1, i + 1));
   };
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts — incluye Space/PageUp/PageDown porque los pedales bluetooth de pasar
+  // partituras (los que usan orquestas de verdad con iPad) emulan esas teclas, no solo flechas.
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') handlePrev();
-      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); handlePrev(); }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); handleNext(); }
       if (e.key === 'Escape') onClose();
       if (e.key === '+' || e.key === '=') setTranspose(t => Math.min(t + 1, 6));
       if (e.key === '-') setTranspose(t => Math.max(t - 1, -6));
       if (e.key === '0') setTranspose(0);
+      if (e.key === 'f' || e.key === 'F') toggleFullscreen();
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [songItems.length]);
+  }, [songItems.length, toggleFullscreen]);
 
   // Swipe táctil estilo "pasar página" (iBooks / forScore): un swipe horizontal claro pasa de
   // canción; un gesto vertical o corto se deja pasar para no robarle el scroll al documento.
@@ -116,6 +178,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
   return (
     <div
+      ref={containerRef}
       className="fixed inset-0 z-[9999] bg-black text-white flex flex-col overflow-hidden select-none"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -126,8 +189,37 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           <span className="text-lg">🎤</span>
           <h1 className="text-sm sm:text-base font-bold text-amber-300 truncate">{currentSong.titulo}</h1>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <span className="text-xs font-mono text-neutral-400">{currentIndex + 1} / {songItems.length}</span>
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          <span className="text-xs font-mono text-neutral-400 mr-1">{currentIndex + 1}/{songItems.length}</span>
+
+          {notes && (
+            <button
+              onClick={() => setShowNotes(v => !v)}
+              className={`p-1.5 rounded-lg transition ${showNotes ? 'bg-amber-500 text-black' : 'hover:bg-white/10 text-amber-300'}`}
+              title="Notas del tema"
+            >
+              <StickyNote className="w-4 h-4" />
+            </button>
+          )}
+
+          {!hasScannedSheet && (
+            <button
+              onClick={() => setFontSizeIdx(i => (i + 1) % FONT_SIZES.length)}
+              className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
+              title="Tamaño de letra"
+            >
+              <Type className="w-4 h-4" />
+            </button>
+          )}
+
+          <button
+            onClick={toggleFullscreen}
+            className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
+            title="Pantalla completa (F)"
+          >
+            {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+          </button>
+
           <button
             onClick={onClose}
             className="p-1.5 hover:bg-white/10 rounded-lg transition"
@@ -137,6 +229,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           </button>
         </div>
       </div>
+
+      {/* NOTES BANNER — cosas como "cambio de afinación", "entra el segundo cantante", que un
+          músico necesita ver ANTES de tocar el tema, no descubrirlas a mitad. */}
+      {showNotes && notes && (
+        <div className="shrink-0 bg-amber-950/90 border-y border-amber-500/40 px-4 py-2.5 text-sm text-amber-100 whitespace-pre-wrap z-20">
+          {notes}
+        </div>
+      )}
 
       {/* THE "PAGE" — full-bleed content area with tap zones on the sides to turn songs, like
           forScore / iBooks. The zones sit ABOVE the content but only intercept clicks on their
@@ -174,12 +274,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             bpm={currentSong.bpm}
             duracion={currentSong.duracion}
             afinacion={currentSong.afinacion}
+            fontSizeClass={FONT_SIZES[fontSizeIdx]}
           />
         )}
       </div>
 
       {/* THIN BOTTOM BAR — page dots + prev/next for touch, transpose only when it applies
-          (a scanned sheet is a picture, transposing the text controls does nothing to it). */}
+          (a scanned sheet is a picture, transposing the text controls does nothing to it),
+          plus a peek at what's coming up next so the musician can get ready in advance. */}
       <div className="shrink-0 bg-gradient-to-t from-black to-black/0 px-3 sm:px-4 py-2 space-y-2 z-20">
         {!hasScannedSheet && (
           <div className="flex items-center justify-center gap-2">
@@ -246,6 +348,13 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
+
+        {nextSong && (
+          <p className="text-center text-[11px] text-neutral-500 font-mono truncate">
+            Siguiente: <span className="text-neutral-300">{nextSong.titulo}</span>
+            {nextSong.tonalidad && <span> · {nextSong.tonalidad}</span>}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -287,7 +396,8 @@ const ChordSheetPage: React.FC<{
   bpm?: number;
   duracion?: string;
   afinacion?: string;
-}> = ({ chords, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion }) => {
+  fontSizeClass: string;
+}> = ({ chords, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion, fontSizeClass }) => {
   return (
     <div className="w-full h-full overflow-y-auto p-4 sm:p-8">
       <div className="max-w-4xl mx-auto space-y-5">
@@ -319,7 +429,7 @@ const ChordSheetPage: React.FC<{
           <h2 className="text-sm sm:text-base font-bold text-amber-300 mb-3 uppercase flex items-center gap-2">
             <FileText className="w-4 h-4" /> Acordes & Letra
           </h2>
-          <pre className="text-amber-100 text-sm sm:text-base font-mono whitespace-pre-wrap leading-relaxed break-words">
+          <pre className={`text-amber-100 font-mono whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass}`}>
             {chords}
           </pre>
         </div>
