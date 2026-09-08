@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Play, Pause } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning } from 'lucide-react';
 import { Setlist, SetlistItem, Song } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
-import { getSemitoneDifference, transposeChordToken } from '../utils/chordUtils';
+import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
   songs: Song[];
   onClose: () => void;
-  // Persiste el tono en el que se quiere tocar este tema PARA ESTE REPERTORIO (o null para
-  // volver al tono original) — así el ajuste +/- del Modo Concierto no se pierde al cerrarlo,
-  // la próxima vez que suene este tema en este mismo setlist ya sale transportado solo.
-  onSetDesiredKey: (itemId: string, key: string | null) => void;
 }
 
 // Distancia mínima de swipe (px) para contar como "pasar página" y no como un scroll normal
@@ -45,13 +41,22 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   setlist,
   songs,
   onClose,
-  onSetDesiredKey,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  // Un navegador no puede subir el brillo real de la pantalla (no existe esa API por
+  // privacidad/seguridad) — esto es lo más parecido que se puede ofrecer: fondo blanco con
+  // texto negro muy grueso, que en la práctica se ve mucho mejor que ámbar-sobre-negro bajo sol
+  // directo o focos de escenario (y suele disparar el brillo automático del propio móvil).
+  const [glareMode, setGlareMode] = useState(false);
+  // Battery Status API: Chrome la soporta (con datos redondeados por privacidad), pero Firefox
+  // y Safari/iOS nunca la han implementado. null = "no se sabe" y no se muestra nada — mejor
+  // eso que fingir un dato de batería falso en la mitad de los móviles.
+  const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
+  const [batteryCharging, setBatteryCharging] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const wakeLockRef = useRef<any>(null);
@@ -65,28 +70,22 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const currentSong = !isBlock ? songs.find(s => s.id === currentItem?.songId) : undefined;
   const nextItem = allItems[currentIndex + 1];
 
-  // Transpone una tonalidad manteniendo su notación original (ES o EN) — reutiliza el mismo
-  // transpositor validado que usa el visor de acordes, en vez de una tabla ad-hoc que solo
-  // cubría bien la notación inglesa.
+  // Notación (ES/EN) a mantener al mostrar/transportar un tono — se detecta de la propia
+  // tonalidad guardada de la canción, para no forzar "Re" a salir como "D" o viceversa.
+  const detectNotation = (key: string): 'ES' | 'EN' => (/^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(key.trim()) ? 'ES' : 'EN');
+
   const transposeKey = (key: string, semitones: number): string => {
     if (!key || semitones === 0) return key;
-    const isSpanish = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(key.trim());
-    return transposeChordToken(key, semitones, isSpanish ? 'ES' : 'EN');
+    return transposeChordToken(key, semitones, detectNotation(key));
   };
 
-  // El tono en el que se toca este tema en ESTE repertorio vive persistido en el SetlistItem
-  // (tonalidadDeseada) — no hay un "ajuste manual de sesión" aparte: el botón +/- de abajo
-  // escribe directamente ahí (ver adjustTranspose), así que lo que ajustas en directo queda
-  // guardado para la próxima vez que suene este tema en este mismo repertorio.
+  // El tono en el que se toca este tema en ESTE repertorio se define en la fila del setlist
+  // (RepertorioSetlists), no aquí: cambiar de tono a media canción en directo, con el móvil en
+  // la mano y cantando, es justo lo que NO se quiere. El Modo Concierto solo APLICA lo ya
+  // decidido de antemano — se calcula de forma derivada a partir de tonalidadDeseada.
   const effectiveTranspose = currentItem?.tonalidadDeseada && currentSong
     ? getSemitoneDifference(currentSong.tonalidad, currentItem.tonalidadDeseada) ?? 0
     : 0;
-
-  const adjustTranspose = (delta: number) => {
-    if (!currentItem || !currentSong) return;
-    const newSemitones = Math.max(-6, Math.min(6, effectiveTranspose + delta));
-    onSetDesiredKey(currentItem.id, newSemitones === 0 ? null : transposeKey(currentSong.tonalidad, newSemitones));
-  };
 
   // Los acordes en texto son la vista principal: se pueden transportar, agrandar y hacer
   // autoscroll, cosas que una foto/PDF escaneado no permite. El documento original queda como
@@ -104,35 +103,55 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const effectiveViewMode: 'chords' | 'sheet' = manualViewOverride ?? (hasChordsText ? 'chords' : 'sheet');
   const showScannedSheet = effectiveViewMode === 'sheet' && hasScannedSheet;
 
-  // Autoscroll lento tipo teleprompter para la vista de acordes — para que el músico no tenga
-  // que tocar la pantalla mientras toca el instrumento. 1 = muy lento a propósito (lo pedido),
-  // 2/3 para quien prefiera ir más rápido.
-  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
-  const [scrollSpeed, setScrollSpeed] = useState(1);
-  const chordsScrollRef = useRef<HTMLDivElement>(null);
+  // El autoscroll a velocidad fija se desincroniza en cuanto la banda alarga un solo o repite
+  // un estribillo — para cuando te das cuenta, la letra ya bajó sola de más. En su lugar, la
+  // canción se divide en secciones ([Intro]/[Verso]/[Estribillo]...) y el propio músico avanza
+  // de una a otra tocando, con control total y sin depender de ningún temporizador.
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
   useEffect(() => {
     setShowDetails(false);
-    setIsAutoScrolling(false);
     setManualViewOverride(null);
-    if (chordsScrollRef.current) chordsScrollRef.current.scrollTop = 0;
+    setCurrentSectionIndex(0);
   }, [currentIndex]);
 
-  useEffect(() => {
-    if (!isAutoScrolling) return;
-    const interval = setInterval(() => {
-      const el = chordsScrollRef.current;
-      if (!el) return;
-      if (el.scrollTop + el.clientHeight >= el.scrollHeight - 4) {
-        setIsAutoScrolling(false);
-        return;
-      }
-      el.scrollTop += scrollSpeed * 0.4;
-    }, 50);
-    return () => clearInterval(interval);
-  }, [isAutoScrolling, scrollSpeed]);
+  // Transpone los acordes DE VERDAD (las letras Do/Re/Mi... dentro del texto), no solo la
+  // etiqueta de tonalidad — antes se mostraba "Tono: Re" pero el texto seguía en Mi, que es
+  // peor que inútil en un escenario: parece correcto pero no lo es.
+  const chords = currentSong?.cifradoTexto
+    ? processChordText(currentSong.cifradoTexto, effectiveTranspose, detectNotation(currentSong.tonalidad || 'C'))
+    : 'Sin acordes guardados';
+  const chordSections = hasChordsText ? splitIntoChordSections(chords) : [];
+  const hasMultipleSections = chordSections.length >= 2;
 
   const notes = [currentSong?.notasInternas, currentSong?.notasRepertorio].filter(Boolean).join('\n\n');
+
+  // BATERÍA: con pantalla+wake lock+fullscreen encendidos todo el bolo, avisar antes de que se
+  // apague en el bis es más útil que descubrirlo cuando ya se apagó. Se degrada en silencio
+  // donde el navegador no lo soporta (batteryLevel se queda en null y no se muestra nada).
+  useEffect(() => {
+    let batteryRef: any = null;
+    const handleChange = () => {
+      if (batteryRef) {
+        setBatteryLevel(batteryRef.level);
+        setBatteryCharging(batteryRef.charging);
+      }
+    };
+    if ('getBattery' in navigator) {
+      (navigator as any).getBattery().then((battery: any) => {
+        batteryRef = battery;
+        handleChange();
+        battery.addEventListener('levelchange', handleChange);
+        battery.addEventListener('chargingchange', handleChange);
+      }).catch(() => {});
+    }
+    return () => {
+      if (batteryRef) {
+        batteryRef.removeEventListener('levelchange', handleChange);
+        batteryRef.removeEventListener('chargingchange', handleChange);
+      }
+    };
+  }, []);
 
   // WAKE LOCK: lo más importante para un músico en directo — que la pantalla del móvil/tablet
   // NO se apague a media canción por inactividad táctil (el músico está tocando, no tocando la
@@ -191,22 +210,38 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     setCurrentIndex(i => Math.min(allItems.length - 1, i + 1));
   };
 
+  // Avanzar/retroceder de SECCIÓN dentro del tema (Intro→Verso→Estribillo...) cuando la hay;
+  // al llegar al final o al principio, pasa de canción — así el pedal/tecla de "pasar página"
+  // funciona igual de natural para moverse dentro de un tema largo que para cambiar de tema.
+  const handleAdvance = () => {
+    if (!isBlock && !showScannedSheet && hasMultipleSections && currentSectionIndex < chordSections.length - 1) {
+      setCurrentSectionIndex(i => i + 1);
+    } else {
+      handleNext();
+    }
+  };
+  const handleRetreat = () => {
+    if (!isBlock && !showScannedSheet && hasMultipleSections && currentSectionIndex > 0) {
+      setCurrentSectionIndex(i => i - 1);
+    } else {
+      handlePrev();
+    }
+  };
+
   // Keyboard shortcuts — incluye Space/PageUp/PageDown porque los pedales bluetooth de pasar
   // partituras (los que usan orquestas de verdad con iPad) emulan esas teclas, no solo flechas.
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); handlePrev(); }
-      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); handleNext(); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); handleRetreat(); }
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); handleAdvance(); }
       if (e.key === 'Escape') onClose();
-      if (e.key === '+' || e.key === '=') adjustTranspose(1);
-      if (e.key === '-') adjustTranspose(-1);
-      if (e.key === '0' && currentItem) onSetDesiredKey(currentItem.id, null);
       if (e.key === 'f' || e.key === 'F') toggleFullscreen();
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [allItems.length, toggleFullscreen, currentItem, currentSong, effectiveTranspose, onSetDesiredKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allItems.length, toggleFullscreen, currentSectionIndex, hasMultipleSections, isBlock, showScannedSheet]);
 
   // Swipe táctil estilo "pasar página" (iBooks / forScore): un swipe horizontal claro pasa de
   // canción; un gesto vertical o corto se deja pasar para no robarle el scroll al documento.
@@ -240,7 +275,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   }
 
   const transposedKey = currentSong ? transposeKey(currentSong.tonalidad, effectiveTranspose) : '';
-  const chords = currentSong?.cifradoTexto || 'Sin acordes guardados';
   const structure = currentSong?.guiaSustituto?.estructura || '';
   const progression = currentSong?.guiaSustituto?.progresionClave || '';
   const isFirst = currentIndex === 0;
@@ -250,20 +284,52 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] bg-black text-white flex flex-col overflow-hidden select-none"
+      className={`fixed inset-0 z-[9999] flex flex-col overflow-hidden select-none ${glareMode ? 'bg-white text-black' : 'bg-black text-white'}`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       {/* THIN TOP BAR — minimal, out of the way of the "page" itself */}
-      <div className="shrink-0 bg-gradient-to-b from-black to-black/0 px-3 sm:px-4 py-2 flex items-center justify-between gap-3 z-20">
+      <div className={`shrink-0 px-3 sm:px-4 py-2 flex items-center justify-between gap-3 z-20 ${glareMode ? 'bg-gradient-to-b from-white to-white/0' : 'bg-gradient-to-b from-black to-black/0'}`}>
         <div className="min-w-0 flex items-center gap-2">
           <span className="text-lg">{isBlock ? blockMeta!.icon : '🎤'}</span>
-          <h1 className="text-sm sm:text-base font-bold text-amber-300 truncate">
+          <h1 className={`text-sm sm:text-base font-bold truncate ${glareMode ? 'text-black' : 'text-amber-300'}`}>
             {isBlock ? (currentItem.tituloCustom || blockMeta!.label) : currentSong?.titulo}
           </h1>
+          {/* Aviso de que nadie ha comprobado todavía que estos acordes son correctos — mejor
+              saberlo antes de tocar el tema que descubrirlo a mitad. */}
+          {!isBlock && currentSong?.estructuraDocumentoUrl && !currentSong?.estructuraVerificada && (
+            <span
+              className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 shrink-0"
+              title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
+            >
+              ⚠️ sin verificar
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          <span className="text-xs font-mono text-neutral-400 mr-1">{currentIndex + 1}/{allItems.length}</span>
+          {/* Solo se muestra si el navegador soporta la Battery API (Chrome sí, Safari/iOS y
+              Firefox nunca la han implementado) — mejor no mostrar nada que un dato inventado. */}
+          {batteryLevel !== null && (
+            <span
+              className={`flex items-center gap-1 text-xs font-mono ${
+                batteryCharging ? 'text-emerald-400' : batteryLevel < 0.2 ? 'text-rose-400 font-bold' : glareMode ? 'text-neutral-600' : 'text-neutral-400'
+              }`}
+              title={batteryCharging ? 'Cargando' : batteryLevel < 0.2 ? 'Batería baja — busca un cargador' : 'Batería'}
+            >
+              {batteryCharging ? <BatteryCharging className="w-3.5 h-3.5" /> : batteryLevel < 0.2 ? <BatteryWarning className="w-3.5 h-3.5" /> : <Battery className="w-3.5 h-3.5" />}
+              {Math.round(batteryLevel * 100)}%
+            </span>
+          )}
+
+          <span className={`text-xs font-mono mr-1 ${glareMode ? 'text-neutral-600' : 'text-neutral-400'}`}>{currentIndex + 1}/{allItems.length}</span>
+
+          <button
+            onClick={() => setGlareMode(v => !v)}
+            className={`p-1.5 rounded-lg transition ${glareMode ? 'bg-amber-400 text-black' : 'hover:bg-white/10 text-neutral-300'}`}
+            title="Modo alto contraste para sol/luces fuertes (no controla el brillo real del dispositivo)"
+          >
+            <Sun className="w-4 h-4" />
+          </button>
 
           {!isBlock && notes && (
             <button
@@ -278,7 +344,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           {!isBlock && hasChordsText && hasScannedSheet && (
             <button
               onClick={() => setManualViewOverride(effectiveViewMode === 'sheet' ? 'chords' : 'sheet')}
-              className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
+              className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
               title={showScannedSheet ? 'Ver acordes en texto' : 'Ver documento original escaneado'}
             >
               {showScannedSheet ? <FileText className="w-4 h-4" /> : <ImageIcon className="w-4 h-4" />}
@@ -288,7 +354,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           {!isBlock && !showScannedSheet && (
             <button
               onClick={() => setFontSizeIdx(i => (i + 1) % FONT_SIZES.length)}
-              className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
+              className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
               title="Tamaño de letra"
             >
               <Type className="w-4 h-4" />
@@ -297,7 +363,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
           <button
             onClick={toggleFullscreen}
-            className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
+            className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
             title="Pantalla completa (F)"
           >
             {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
@@ -305,7 +371,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 hover:bg-white/10 rounded-lg transition"
+            className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-black' : 'hover:bg-white/10 text-white'}`}
             title="Cerrar (ESC)"
           >
             <X className="w-5 h-5" />
@@ -323,34 +389,43 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
       {/* THE "PAGE" — full-bleed content area with tap zones on the sides to turn songs, like
           forScore / iBooks. The zones sit ABOVE the content but only intercept clicks on their
-          own strip, so scrolling/pinching the sheet itself still works normally. */}
+          own strip, so scrolling/pinching the sheet itself still works normally.
+          Estas zonas eran `hidden sm:flex` — no existían en absoluto en un móvil, que es
+          precisamente el dispositivo que un cantante sujeta en el atril. Ahora son anchas
+          (28% de la pantalla a cada lado) y visibles con opacidad baja siempre, no solo al
+          hover (que no existe en touch), para que un golpe del atril o un dedo impreciso
+          siga acertando. */}
       <div className="relative flex-1 min-h-0">
         {!isFirst && (
           <button
             onClick={handlePrev}
-            className="hidden sm:flex absolute left-0 top-0 bottom-0 w-16 z-10 items-center justify-start pl-2 bg-gradient-to-r from-black/40 to-transparent opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+            className="absolute left-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex items-center justify-start pl-2 bg-gradient-to-r from-black/50 to-transparent opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-pointer"
             title="← Anterior"
           >
-            <ChevronLeft className="w-8 h-8 text-white/80" />
+            <ChevronLeft className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </button>
         )}
         {!isLast && (
           <button
             onClick={handleNext}
-            className="hidden sm:flex absolute right-0 top-0 bottom-0 w-16 z-10 items-center justify-end pr-2 bg-gradient-to-l from-black/40 to-transparent opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+            className="absolute right-0 top-0 bottom-0 w-[28%] max-w-32 z-10 flex items-center justify-end pr-2 bg-gradient-to-l from-black/50 to-transparent opacity-40 hover:opacity-100 active:opacity-100 transition-opacity cursor-pointer"
             title="Siguiente →"
           >
-            <ChevronRight className="w-8 h-8 text-white/80" />
+            <ChevronRight className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
           </button>
         )}
 
         {isBlock ? (
-          <TeleprompterBlockPage item={currentItem} meta={blockMeta!} />
+          <TeleprompterBlockPage item={currentItem} meta={blockMeta!} glareMode={glareMode} />
         ) : showScannedSheet ? (
           <ScannedSheetPage song={currentSong!} />
         ) : (
           <ChordSheetPage
             chords={chords}
+            sections={chordSections}
+            currentSectionIndex={currentSectionIndex}
+            onAdvanceSection={handleAdvance}
+            onRetreatSection={handleRetreat}
             structure={structure}
             progression={progression}
             transposedKey={transposedKey}
@@ -362,7 +437,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             fontSizeClass={FONT_SIZES[fontSizeIdx]}
             showDetails={showDetails}
             onToggleDetails={() => setShowDetails(v => !v)}
-            scrollRef={chordsScrollRef}
+            glareMode={glareMode}
           />
         )}
       </div>
@@ -370,74 +445,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       {/* THIN BOTTOM BAR — page dots + prev/next for touch, transpose only when it applies
           (a scanned sheet is a picture, transposing the text controls does nothing to it),
           plus a peek at what's coming up next so the musician can get ready in advance. */}
-      <div className="shrink-0 bg-gradient-to-t from-black to-black/0 px-3 sm:px-4 py-2 space-y-2 z-20">
-        {!isBlock && !showScannedSheet && (
-          <div className="flex items-center justify-center gap-2">
-            {/* Autoscroll tipo teleprompter: para que la letra vaya bajando sola, muy despacio
-                por defecto, sin que el músico tenga que tocar la pantalla mientras toca. */}
-            <button
-              onClick={() => setIsAutoScrolling(v => !v)}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-bold flex items-center gap-1 transition ${
-                isAutoScrolling ? 'bg-emerald-600 text-white animate-pulse' : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300'
-              }`}
-              title="Autoscroll automático de la letra"
-            >
-              {isAutoScrolling ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-              Autoscroll
-            </button>
-            {isAutoScrolling && (
-              <div className="flex items-center gap-1">
-                {[1, 2, 3].map(v => (
-                  <button
-                    key={v}
-                    onClick={() => setScrollSpeed(v)}
-                    className={`w-5 h-5 rounded text-[10px] font-bold transition ${
-                      scrollSpeed === v ? 'bg-emerald-500 text-black' : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700'
-                    }`}
-                    title={v === 1 ? 'Lento' : v === 2 ? 'Medio' : 'Rápido'}
-                  >
-                    {v}x
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {!isBlock && !showScannedSheet && (
-          <div className="flex items-center justify-center gap-2">
-            {effectiveTranspose !== 0 && (
-              <span className="text-[10px] text-amber-400/80" title={`Guardado para este repertorio: tocarla en ${currentItem?.tonalidadDeseada} (original: ${currentSong?.tonalidad})`}>
-                💾 guardado
-              </span>
-            )}
-            <span className="text-neutral-500 text-xs">Tono:</span>
-            <button
-              onClick={() => adjustTranspose(-1)}
-              className="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 rounded text-xs font-mono"
-              title="- (Bajar semitono, se guarda para este repertorio)"
-            >
-              −
-            </button>
-            <span className={`px-2 text-xs font-mono min-w-10 text-center ${effectiveTranspose !== 0 ? 'text-amber-400 font-bold' : 'text-neutral-400'}`}>
-              {transposedKey}{effectiveTranspose !== 0 ? ` (${currentSong?.tonalidad} ${effectiveTranspose > 0 ? '+' : ''}${effectiveTranspose})` : ''}
-            </span>
-            <button
-              onClick={() => adjustTranspose(1)}
-              className="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 rounded text-xs font-mono"
-              title="+ (Subir semitono, se guarda para este repertorio)"
-            >
-              +
-            </button>
-            {effectiveTranspose !== 0 && (
-              <button
-                onClick={() => currentItem && onSetDesiredKey(currentItem.id, null)}
-                className="px-2 py-1 text-neutral-500 hover:text-amber-400 text-xs"
-                title="Volver al tono original de la canción"
-              >
-                reset
-              </button>
-            )}
+      <div className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? 'bg-gradient-to-t from-white to-white/0' : 'bg-gradient-to-t from-black to-black/0'}`}>
+        {/* Tono: solo lectura aquí a propósito — cambiar de tono con el móvil en la mano y
+            cantando en directo es un error esperando a pasar. El tono se define en la fila del
+            setlist (Repertorio); esto solo confirma qué se está aplicando ahora mismo. */}
+        {!isBlock && !showScannedSheet && effectiveTranspose !== 0 && (
+          <div className="flex items-center justify-center gap-1.5 text-xs">
+            <span className="text-amber-400 font-bold font-mono">🎯 {transposedKey}</span>
+            <span className="text-neutral-500 font-mono">(original {currentSong?.tonalidad}, definido en el repertorio)</span>
           </div>
         )}
 
@@ -445,7 +460,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           <button
             onClick={handlePrev}
             disabled={isFirst}
-            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-white/5 text-white font-bold rounded-lg transition flex items-center gap-1.5"
+            className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-lg transition flex items-center gap-1.5 ${
+              glareMode ? 'bg-black/5 hover:bg-black/10 text-black' : 'bg-white/5 hover:bg-white/10 text-white'
+            }`}
           >
             <ChevronLeft className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Anterior</span>
@@ -464,7 +481,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     ? 'w-5 h-1.5 bg-amber-400'
                     : it.tipoItem === 'bloque'
                       ? 'w-1.5 h-1.5 bg-indigo-400/60 hover:bg-indigo-400'
-                      : 'w-1.5 h-1.5 bg-white/25 hover:bg-white/50'
+                      : glareMode ? 'w-1.5 h-1.5 bg-black/25 hover:bg-black/50' : 'w-1.5 h-1.5 bg-white/25 hover:bg-white/50'
                 }`}
                 title={itemLabel(it, songs)}
               />
@@ -474,7 +491,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
           <button
             onClick={handleNext}
             disabled={isLast}
-            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-white/5 text-white font-bold rounded-lg transition flex items-center gap-1.5"
+            className={`px-4 py-2.5 disabled:opacity-30 font-bold rounded-lg transition flex items-center gap-1.5 ${
+              glareMode ? 'bg-black/5 hover:bg-black/10 text-black' : 'bg-white/5 hover:bg-white/10 text-white'
+            }`}
           >
             <span className="hidden sm:inline text-xs">Siguiente</span>
             <ChevronRight className="w-4 h-4" />
@@ -482,8 +501,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
         </div>
 
         {nextItem && (
-          <p className="text-center text-[11px] text-neutral-500 font-mono truncate">
-            Siguiente: <span className="text-neutral-300">{itemLabel(nextItem, songs)}</span>
+          <p className={`text-center text-[11px] font-mono truncate ${glareMode ? 'text-neutral-600' : 'text-neutral-500'}`}>
+            Siguiente: <span className={glareMode ? 'text-neutral-800' : 'text-neutral-300'}>{itemLabel(nextItem, songs)}</span>
             {nextItem.tipoItem === 'cancion' && songs.find(s => s.id === nextItem.songId)?.tonalidad && (
               <span> · {songs.find(s => s.id === nextItem.songId)?.tonalidad}</span>
             )}
@@ -497,7 +516,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 // Vista "teleprompter" para los bloques del repertorio (presentación al público, cambio de
 // instrumento, descanso...) que antes desaparecían sin más del modo concierto. Texto grande y
 // centrado, como un guion, para leerlo en voz alta o seguir la indicación sin acercarse a mirar.
-const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string; label: string } }> = ({ item, meta }) => {
+const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string; label: string }; glareMode: boolean }> = ({ item, meta, glareMode }) => {
   const script = item.notas || item.notaTema || '';
   const duration = item.duracionEstimadaMinutos
     ? `${item.duracionEstimadaMinutos} min`
@@ -506,13 +525,15 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
       : null;
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center bg-gradient-to-b from-indigo-950/40 via-neutral-950 to-black overflow-y-auto">
+    <div className={`w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center overflow-y-auto ${
+      glareMode ? 'bg-white' : 'bg-gradient-to-b from-indigo-950/40 via-neutral-950 to-black'
+    }`}>
       <span className="text-5xl sm:text-7xl mb-6">{meta.icon}</span>
-      <h2 className="text-2xl sm:text-4xl font-bold text-amber-300 mb-6 uppercase tracking-wide">
+      <h2 className={`text-2xl sm:text-4xl font-bold mb-6 uppercase tracking-wide ${glareMode ? 'text-black' : 'text-amber-300'}`}>
         {item.tituloCustom || meta.label}
       </h2>
       {script ? (
-        <p className="text-xl sm:text-3xl md:text-4xl text-white leading-relaxed max-w-4xl whitespace-pre-wrap font-medium">
+        <p className={`text-xl sm:text-3xl md:text-4xl leading-relaxed max-w-4xl whitespace-pre-wrap font-medium ${glareMode ? 'text-black font-bold' : 'text-white'}`}>
           {script}
         </p>
       ) : (
@@ -555,6 +576,10 @@ const ScannedSheetPage: React.FC<{ song: Song }> = ({ song }) => {
 // progresión quedan colapsadas detrás de un botón "ⓘ", en vez de robarle espacio por defecto.
 const ChordSheetPage: React.FC<{
   chords: string;
+  sections: ChordSection[];
+  currentSectionIndex: number;
+  onAdvanceSection: () => void;
+  onRetreatSection: () => void;
   structure: string;
   progression: string;
   transposedKey: string;
@@ -566,23 +591,30 @@ const ChordSheetPage: React.FC<{
   fontSizeClass: string;
   showDetails: boolean;
   onToggleDetails: () => void;
-  scrollRef: React.RefObject<HTMLDivElement>;
-}> = ({ chords, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion, fontSizeClass, showDetails, onToggleDetails, scrollRef }) => {
+  glareMode: boolean;
+}> = ({ chords, sections, currentSectionIndex, onAdvanceSection, onRetreatSection, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion, fontSizeClass, showDetails, onToggleDetails, glareMode }) => {
+  const hasMultipleSections = sections.length >= 2;
+  const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
+  const chordTextClass = glareMode ? 'text-black font-bold' : 'text-amber-100';
+  const borderClass = glareMode ? 'border-black/10' : 'border-white/5';
+
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
       {/* Ficha compacta: una sola línea, no cuatro tarjetas — la letra es la protagonista. */}
-      <div className="shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-1.5 text-xs sm:text-sm font-mono border-b border-white/5 bg-black/30">
-        <span className="text-teal-300 font-bold">
+      <div className={`shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-1.5 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/30'}`}>
+        <span className={glareMode ? 'text-teal-700 font-bold' : 'text-teal-300 font-bold'}>
           {transposedKey}
-          {transpose !== 0 && <span className="text-teal-200/70 font-normal"> ({originalKey} {transpose > 0 ? '+' : ''}{transpose})</span>}
+          {transpose !== 0 && <span className={glareMode ? 'text-teal-800/70 font-normal' : 'text-teal-200/70 font-normal'}> ({originalKey} {transpose > 0 ? '+' : ''}{transpose})</span>}
         </span>
-        {bpm && <span className="text-indigo-300">{bpm} BPM</span>}
-        {duracion && <span className="text-emerald-300">{duracion}</span>}
-        {afinacion && <span className="text-purple-300">{afinacion}</span>}
+        {bpm && <span className={glareMode ? 'text-indigo-700' : 'text-indigo-300'}>{bpm} BPM</span>}
+        {duracion && <span className={glareMode ? 'text-emerald-700' : 'text-emerald-300'}>{duracion}</span>}
+        {afinacion && <span className={glareMode ? 'text-purple-700' : 'text-purple-300'}>{afinacion}</span>}
         {(structure || progression) && (
           <button
             onClick={onToggleDetails}
-            className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${showDetails ? 'bg-white/15 text-white' : 'text-neutral-400 hover:text-white'}`}
+            className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
+              showDetails ? (glareMode ? 'bg-black/15 text-black' : 'bg-white/15 text-white') : (glareMode ? 'text-neutral-600 hover:text-black' : 'text-neutral-400 hover:text-white')
+            }`}
             title="Estructura y progresión de acordes"
           >
             <Info className="w-3 h-3" /> detalles
@@ -591,22 +623,57 @@ const ChordSheetPage: React.FC<{
       </div>
 
       {showDetails && (structure || progression) && (
-        <div className="shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm border-b border-white/5 bg-black/20">
+        <div className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/20'}`}>
           {structure && (
-            <p className="text-indigo-200"><span className="text-indigo-400 font-bold">🎵 Estructura: </span>{structure}</p>
+            <p className={glareMode ? 'text-indigo-900' : 'text-indigo-200'}><span className={glareMode ? 'text-indigo-700 font-bold' : 'text-indigo-400 font-bold'}>🎵 Estructura: </span>{structure}</p>
           )}
           {progression && (
-            <p className="text-teal-200"><span className="text-teal-400 font-bold">🎸 Progresión: </span>{progression}</p>
+            <p className={glareMode ? 'text-teal-900' : 'text-teal-200'}><span className={glareMode ? 'text-teal-700 font-bold' : 'text-teal-400 font-bold'}>🎸 Progresión: </span>{progression}</p>
           )}
         </div>
       )}
 
-      {/* La letra + acordes ocupan todo el espacio que queda, sin competir por sitio. */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth">
-        <pre className={`max-w-4xl mx-auto text-amber-100 font-mono whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass}`}>
-          {chords}
-        </pre>
-      </div>
+      {hasMultipleSections ? (
+        // Navegación por SECCIÓN en vez de autoscroll: el músico controla cuándo se pasa a la
+        // siguiente parte (tocando el botón o con el pedal/Space), en vez de fiarse de una
+        // velocidad de scroll fija que se desincroniza en cuanto la banda alarga algo.
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className={`shrink-0 text-center py-1.5 text-[11px] font-mono border-b ${borderClass} ${glareMode ? 'text-neutral-600' : 'text-neutral-400'}`}>
+            Parte {currentSectionIndex + 1}/{sections.length}
+            {currentSection?.title && <span className={glareMode ? 'text-purple-700 font-bold' : 'text-purple-300 font-bold'}> · {currentSection.title}</span>}
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex items-center justify-center">
+            <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words text-center ${fontSizeClass} ${chordTextClass}`}>
+              {currentSection?.body}
+            </pre>
+          </div>
+          <div className={`shrink-0 flex items-center gap-2 p-3 border-t ${borderClass}`}>
+            <button
+              onClick={onRetreatSection}
+              disabled={currentSectionIndex === 0}
+              className={`px-4 py-2.5 disabled:opacity-30 rounded-lg text-sm font-mono font-bold transition ${
+                glareMode ? 'bg-black/10 hover:bg-black/15 text-black' : 'bg-neutral-800 hover:bg-neutral-700 text-white'
+              }`}
+            >
+              ◀ Parte anterior
+            </button>
+            <button
+              onClick={onAdvanceSection}
+              className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-sm font-mono font-bold transition"
+            >
+              Siguiente parte ▶
+            </button>
+          </div>
+        </div>
+      ) : (
+        // Sin encabezados de sección detectados: se muestra todo el cifrado de una vez, con
+        // scroll manual normal (nunca automático).
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+          <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}>
+            {chords}
+          </pre>
+        </div>
+      )}
     </div>
   );
 };

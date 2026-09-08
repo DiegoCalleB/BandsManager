@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download } from 'lucide-react';
+import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download, ShieldCheck } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song } from '../../types';
 import { isImageDocument, isPdfDocument } from '../../utils/documentType';
@@ -108,6 +108,33 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
       tracks.forEach(track => track.stop());
     }
     setIsCameraOpen(false);
+  };
+
+  // Marca (o desmarca) que un humano ha comparado los acordes extraídos contra el documento
+  // original y confirma que son correctos — la diferencia entre "alguien confía en esto para
+  // tocarlo en directo" y "esto lo subió alguien ayer y nadie lo ha mirado todavía".
+  const [isSavingVerified, setIsSavingVerified] = useState(false);
+  const handleToggleVerified = async () => {
+    const updatedSong: Song = { ...song, estructuraVerificada: !song.estructuraVerificada };
+    setIsSavingVerified(true);
+    onUpdateSong(updatedSong);
+    try {
+      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        headers['x-auth-token'] = token;
+      }
+      await fetch(`/api/songs/${song.id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(updatedSong)
+      });
+    } catch (err) {
+      console.error('Error guardando verificación de acordes:', err);
+    } finally {
+      setIsSavingVerified(false);
+    }
   };
 
   const handleProcessWithAI = async () => {
@@ -323,7 +350,17 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
                   procesado con éxito: es precisamente cuando el usuario necesita comparar. */}
               {song.estructuraDocumentoUrl && (
                 <div className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/30 text-sm text-emerald-200 space-y-2">
-                  <p className="font-semibold">Estructura actual guardada</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-semibold">Estructura actual guardada</p>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 ${
+                      song.estructuraVerificada
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                    }`}>
+                      <ShieldCheck className="w-3 h-3" />
+                      {song.estructuraVerificada ? 'Verificado' : 'Sin verificar'}
+                    </span>
+                  </div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-xs text-emerald-300 truncate">{song.estructuraDocumentoNombre || 'Documento'}</p>
@@ -354,6 +391,24 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
                       </a>
                     </div>
                   </div>
+
+                  {/* El check de verificación vive aquí, al lado del botón de comparar: el
+                      flujo esperado es comparar primero y solo entonces marcar como fiable. */}
+                  <button
+                    type="button"
+                    onClick={handleToggleVerified}
+                    disabled={isSavingVerified}
+                    className={`w-full px-3 py-2 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 disabled:opacity-50 ${
+                      song.estructuraVerificada
+                        ? 'bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30'
+                        : 'bg-amber-600/20 border border-amber-500/40 text-amber-300 hover:bg-amber-600/30'
+                    }`}
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    {song.estructuraVerificada
+                      ? 'Verificado — he comparado los acordes y son correctos (clic para desmarcar)'
+                      : 'Marcar como verificado tras comparar con el original'}
+                  </button>
 
                   {/* SIDE-BY-SIDE COMPARISON: original scanned document vs. what the AI extracted,
                       so the user can eyeball whether the extraction actually matches the paper. */}

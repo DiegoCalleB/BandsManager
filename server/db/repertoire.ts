@@ -258,7 +258,9 @@ export function mapSongRecord(s: any) {
     estructuraDocumentoNombre: s.estructura_documento_nombre || s.estructuraDocumentoNombre || "",
     estructura_documento_nombre: s.estructura_documento_nombre || s.estructuraDocumentoNombre || "",
     estructuraDocumentoProcesadoEn: s.estructura_documento_procesado_en || s.estructuraDocumentoProcesadoEn || undefined,
-    estructura_documento_procesado_en: s.estructura_documento_procesado_en || s.estructuraDocumentoProcesadoEn || undefined
+    estructura_documento_procesado_en: s.estructura_documento_procesado_en || s.estructuraDocumentoProcesadoEn || undefined,
+    estructuraVerificada: Boolean(s.estructura_verificada ?? s.estructuraVerificada),
+    estructura_verificada: Boolean(s.estructura_verificada ?? s.estructuraVerificada)
   };
 }
 
@@ -363,7 +365,8 @@ export async function dbUpsertSong(song: any, bandId: string) {
     enlace_acordes: preferClearableString(song.enlaceAcordes, song.enlace_acordes),
     estructura_documento_url: preferClearableString(song.estructuraDocumentoUrl, song.estructura_documento_url),
     estructura_documento_nombre: preferClearableString(song.estructuraDocumentoNombre, song.estructura_documento_nombre),
-    estructura_documento_procesado_en: song.estructuraDocumentoProcesadoEn || song.estructura_documento_procesado_en || null
+    estructura_documento_procesado_en: song.estructuraDocumentoProcesadoEn || song.estructura_documento_procesado_en || null,
+    estructura_verificada: Boolean(song.estructuraVerificada ?? song.estructura_verificada)
   };
 
   let { data, error } = await sb.from("songs").upsert(payload).select().single();

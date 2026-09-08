@@ -197,12 +197,15 @@ router.post(
       // Extract structure with AI
       const extracted = await extractStructureWithAI(file.buffer, file.originalname, file.mimetype);
 
-      // Update song with extracted data
+      // Update song with extracted data. estructuraVerificada se resetea siempre a false: un
+      // documento/cifrado nuevo no hereda la confianza que alguien depositó en el anterior,
+      // tiene que volver a revisarse antes de usarse en directo.
       const updatedSong: Record<string, any> = {
         ...song,
         estructuraDocumentoUrl: fileUrl,
         estructuraDocumentoNombre: file.originalname,
         estructuraDocumentoProcesadoEn: new Date().toISOString(),
+        estructuraVerificada: false,
       };
 
       // Update cifradoTexto if we extracted acordes

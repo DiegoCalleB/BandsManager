@@ -302,3 +302,36 @@ export function extractUniqueChords(text: string): string[] {
 
   return Array.from(found);
 }
+
+// Encabezados de sección reconocidos en un cifrado (mismo vocabulario que usa la IA al
+// extraer estructura y que ya resalta SongChordsViewerModal al renderizar).
+export const CHORD_SECTION_HEADER_REGEX = /^\[(Intro(?:\s*\d+)?|Verso(?:\s*\d+)?|Estribillo(?:\s*\d+)?|Coro(?:\s*\d+)?|Puente|Solo|Outro|Coda|Final)\]$/i;
+
+export interface ChordSection {
+  title: string; // p.ej. "[Estribillo]", o "" si no hay encabezado (texto suelto al principio)
+  body: string;
+}
+
+// Divide un cifrado en secciones por sus encabezados [Intro]/[Verso]/[Estribillo]... — la base
+// para navegar el tema "página a página" en vez de hacer scroll continuo o depender de un
+// autoscroll a velocidad fija que se desincroniza en cuanto la banda improvisa un compás de más.
+export function splitIntoChordSections(text: string): ChordSection[] {
+  if (!text) return [];
+  const lines = text.split('\n');
+  const sections: ChordSection[] = [];
+  let current: ChordSection | null = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (CHORD_SECTION_HEADER_REGEX.test(trimmed)) {
+      if (current) sections.push(current);
+      current = { title: trimmed, body: '' };
+    } else {
+      if (!current) current = { title: '', body: '' };
+      current.body += (current.body ? '\n' : '') + line;
+    }
+  }
+  if (current) sections.push(current);
+
+  return sections.filter(s => s.title || s.body.trim());
+}

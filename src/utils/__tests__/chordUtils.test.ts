@@ -6,7 +6,8 @@ import {
   processChordText,
   extractUniqueChords,
   keyToChromaticIndex,
-  getSemitoneDifference
+  getSemitoneDifference,
+  splitIntoChordSections
 } from '../chordUtils';
 
 describe('chordUtils', () => {
@@ -159,6 +160,30 @@ describe('chordUtils', () => {
     it('returns null when either key is unrecognized', () => {
       expect(getSemitoneDifference('Hola', 'D')).toBeNull();
       expect(getSemitoneDifference('D', 'Hola')).toBeNull();
+    });
+  });
+
+  describe('splitIntoChordSections', () => {
+    it('splits a chord sheet into sections by header', () => {
+      const text = '[Intro]\nMim Do Re\n\n[Estribillo]\n[Sol]Que tiene tu [Re]veneno';
+      const sections = splitIntoChordSections(text);
+      expect(sections.length).toBe(2);
+      expect(sections[0].title).toBe('[Intro]');
+      expect(sections[0].body).toContain('Mim Do Re');
+      expect(sections[1].title).toBe('[Estribillo]');
+      expect(sections[1].body).toContain('Que tiene tu');
+    });
+
+    it('keeps leading text with no header as a titleless section', () => {
+      const text = 'Mim Do Re\n[Estribillo]\nletra';
+      const sections = splitIntoChordSections(text);
+      expect(sections.length).toBe(2);
+      expect(sections[0].title).toBe('');
+    });
+
+    it('returns a single section for text with no headers at all', () => {
+      const text = 'Solo letra y acordes sin estructura marcada';
+      expect(splitIntoChordSections(text).length).toBe(1);
     });
   });
 });

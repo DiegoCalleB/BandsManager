@@ -46,6 +46,7 @@ import {
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
 } from '../utils/audioStorage';
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
+import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
@@ -990,11 +991,53 @@ export default function RepertorioSetlists({
     }
   };
 
-  fetchRepertorio();
+  // Antes de fiarnos de lo que diga el servidor, reenviamos cualquier edición de setlist que
+  // se quedó pendiente sin conexión (p.ej. un cambio de tono en un bolo sin wifi) — si no, el
+  // fetch de abajo traería la versión vieja del servidor y la pisaría sin que nadie se entere.
+  const flushPendingSetlistSyncs = async () => {
+    const pending = getPendingSetlistSyncs(bandId);
+    if (pending.length === 0) return;
+    await Promise.all(pending.map(async (setlist: any) => {
+      try {
+        const res = await fetch(`/api/setlists/${setlist.id}`, {
+          method: 'PUT',
+          headers: getHeaders(),
+          body: JSON.stringify(setlist)
+        });
+        if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
+      } catch {
+        // Sigue sin haber conexión — se reintenta en el próximo montaje o al volver 'online'.
+      }
+    }));
+  };
+
+  (async () => {
+    await flushPendingSetlistSyncs();
+    if (!isCancelled) await fetchRepertorio();
+  })();
+
   return () => {
     isCancelled = true;
   };
  }, [bandId, cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists]);
+
+ // Reintenta ediciones de setlist pendientes en cuanto el navegador recupera conexión, sin
+ // esperar a que el usuario cierre y reabra la pestaña (que es cuando fetchRepertorio corre).
+ useEffect(() => {
+   const handleOnline = () => {
+     getPendingSetlistSyncs(bandId).forEach((setlist: any) => {
+       fetch(`/api/setlists/${setlist.id}`, {
+         method: 'PUT',
+         headers: getHeaders(),
+         body: JSON.stringify(setlist)
+       }).then(res => {
+         if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
+       }).catch(() => {});
+     });
+   };
+   window.addEventListener('online', handleOnline);
+   return () => window.removeEventListener('online', handleOnline);
+ }, [bandId]);
 
  useEffect(() => {
  saveSongsToLocalStorageSafely(songs, bandId);
@@ -1103,12 +1146,22 @@ export default function RepertorioSetlists({
  }
  };
 
+ // Si el PUT falla (típicamente sin conexión, en un bolo), el cambio queda en una cola local
+ // en vez de perderse: sin esto, un cambio de tono hecho sin wifi durante un concierto podía
+ // desaparecer en cuanto la app recuperase conexión y volviera a pedir el setlist al servidor,
+ // que devolvería la versión vieja sin enterarse nunca del cambio.
  const syncSetlistToBackend = (updatedSetlist: Setlist) => {
  fetch(`/api/setlists/${updatedSetlist.id}`, {
  method: 'PUT',
  headers: getHeaders(),
  body: JSON.stringify(updatedSetlist)
- }).catch(err => console.error('Error updating setlist on server:', err));
+ }).then(res => {
+ if (res.ok) clearPendingSetlistSync(bandId, updatedSetlist.id);
+ else queuePendingSetlistSync(bandId, updatedSetlist);
+ }).catch(err => {
+ console.error('Error updating setlist on server:', err);
+ queuePendingSetlistSync(bandId, updatedSetlist);
+ });
  };
 
 
@@ -3235,6 +3288,20 @@ export default function RepertorioSetlists({
       );
     })()}
 
+    {/* Solo se muestra si hay estructura subida: distingue de un vistazo un cifrado ya
+        comprobado por alguien de la banda de uno recién subido en el que nadie ha confiado
+        todavía — justo lo que hace falta saber antes de fiarse de él en un concierto. */}
+    {song.estructuraDocumentoUrl && (
+      <span
+        className={`text-[8px] font-mono px-1 py-0.5 rounded shrink-0 ${
+          song.estructuraVerificada ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
+        }`}
+        title={song.estructuraVerificada ? 'Acordes verificados' : 'Acordes sin verificar — revísalos antes de tocarla en directo'}
+      >
+        {song.estructuraVerificada ? '✓' : '⚠️'}
+      </span>
+    )}
+
     <span className="text-[9px] font-mono text-neutral-400 shrink-0">
       {song.bpm ? `${song.bpm}` : '—'}
     </span>
@@ -4467,7 +4534,6 @@ export default function RepertorioSetlists({
       setlist={setlists.find(s => s.id === performanceSetlistId)!}
       songs={songs}
       onClose={() => setPerformanceSetlistId(null)}
-      onSetDesiredKey={handleSetTonalidadDeseada}
     />
   )}
 </div>
