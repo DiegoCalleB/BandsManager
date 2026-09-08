@@ -284,6 +284,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           band_id: resolvedBandId,
           platform: key,
           button_type: key,
+          concert_id: concertId || previewConcert?.id || undefined,
+          concert_date: previewConcert?.fecha || undefined,
           context: context || (activeTab === 'form' ? 'form' : 'redes')
         }),
         keepalive: true

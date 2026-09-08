@@ -311,6 +311,101 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     </a>
                   </div>
                 )}
+
+                {/* ENLACES A REDES SOCIALES CON LOGOS OFICIALES */}
+                {(config.firmaEmail?.incluirIconosRedes ?? true) && (() => {
+                  const combinedRedes: Record<string, string> = {
+                    ...(isBakandeya ? {
+                      instagram: 'https://instagram.com/bakandeya_oficial',
+                      youtube: 'https://youtube.com/@bakandeya_oficial',
+                      tiktok: 'https://tiktok.com/@bakandeya_oficial'
+                    } : {}),
+                    ...(config.enlacesRedes || {}),
+                    ...(config.firmaEmail?.redesSociales || {})
+                  };
+
+                  const badgesMap: Record<string, { label: string; badgeUrl: string }> = {
+                    instagram: {
+                      label: 'Instagram',
+                      badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white'
+                    },
+                    facebook: {
+                      label: 'Facebook',
+                      badgeUrl: 'https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white'
+                    },
+                    tiktok: {
+                      label: 'TikTok',
+                      badgeUrl: 'https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white'
+                    },
+                    youtube: {
+                      label: 'YouTube',
+                      badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white'
+                    },
+                    spotify: {
+                      label: 'Spotify',
+                      badgeUrl: 'https://img.shields.io/badge/Spotify-1DB954?style=for-the-badge&logo=spotify&logoColor=white'
+                    },
+                    applemusic: {
+                      label: 'Apple Music',
+                      badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white'
+                    },
+                    bandcamp: {
+                      label: 'Bandcamp',
+                      badgeUrl: 'https://img.shields.io/badge/Bandcamp-629AA9?style=for-the-badge&logo=bandcamp&logoColor=white'
+                    },
+                    website: {
+                      label: 'Web Oficial',
+                      badgeUrl: 'https://img.shields.io/badge/Web-475569?style=for-the-badge&logo=google-chrome&logoColor=white'
+                    },
+                    whatsapp: {
+                      label: 'WhatsApp',
+                      badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white'
+                    },
+                    twitter: {
+                      label: 'X / Twitter',
+                      badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white'
+                    }
+                  };
+
+                  const filteredEntries = Object.entries(combinedRedes)
+                    .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()));
+
+                  if (filteredEntries.length === 0) return null;
+
+                  return (
+                    <div className="pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-1.5">
+                      {filteredEntries.map(([net, url]) => {
+                        const cleanNet = net.toLowerCase();
+                        const badgeInfo = badgesMap[cleanNet] || {
+                          label: net,
+                          badgeUrl: `https://img.shields.io/badge/${encodeURIComponent(net)}-475569?style=for-the-badge`
+                        };
+
+                        const rawUrl = String(url || '');
+                        const href = rawUrl.startsWith('http') || rawUrl.startsWith('+')
+                          ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl)
+                          : `https://${rawUrl}`;
+
+                        return (
+                          <a
+                            key={net}
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block transition-transform hover:scale-105"
+                            title={badgeInfo.label}
+                          >
+                            <img
+                              src={badgeInfo.badgeUrl}
+                              alt={badgeInfo.label}
+                              className="h-5 rounded object-contain shadow-xs"
+                            />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
 

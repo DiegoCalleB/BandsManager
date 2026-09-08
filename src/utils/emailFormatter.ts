@@ -205,18 +205,17 @@ export function formatEmailWithSignatureAndDossier(params: {
   const dossierPdfUrl = epkConfig?.dossierPdfUrl || epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = epkConfig?.dossierPdfName || 'Dossier Bakandeya.pdf';
 
-  const enlaces = epkConfig?.enlacesRedes || {};
-  const logoUrl = epkConfig?.logoUrl || (isBakandeya ? 'https://bands-manager.up.railway.app/logo_bakandeya_bueno_sin_fondo.png' : '');
+  const rawRedesCombined: Record<string, string> = {
+    ...(isBakandeya ? {
+      instagram: 'https://instagram.com/bakandeya_oficial',
+      youtube: 'https://youtube.com/@bakandeya_oficial',
+      tiktok: 'https://tiktok.com/@bakandeya_oficial',
+      spotify: 'https://open.spotify.com/artist/bakandeya'
+    } : {}),
+    ...(epkConfig?.enlacesRedes || {}),
+    ...(epkConfig?.firmaEmail?.redesSociales || {})
+  };
 
-  const resolvedBandId = epkConfig?.bandId || (resolvedBandName.toLowerCase().includes('bakandeya') ? 'band-bakandeya' : resolvedBandName.toLowerCase().replace(/\s+/g, '-'));
-  const cleanBandId = resolvedBandId.replace(/^(band|reg)-/, '').toLowerCase();
-  
-  const bandParam = `?band=${encodeURIComponent(resolvedBandId.startsWith('band-') ? resolvedBandId : `band-${cleanBandId}`)}`;
-  const epkLang = idiomaEpkParaLead(lead);
-  const webEpkUrl = `https://bands-manager.up.railway.app/epk${bandParam}&lang=${epkLang}`;
-  const effectiveEpkLink = webEpkUrl;
-
-  // Build clean, elegant social media links with official badges/logos
   const socialIconsMap: Record<string, { badgeUrl: string; label: string }> = {
     instagram: {
       badgeUrl: 'https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white',
@@ -238,7 +237,7 @@ export function formatEmailWithSignatureAndDossier(params: {
       badgeUrl: 'https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white',
       label: 'YouTube'
     },
-    appleMusic: {
+    applemusic: {
       badgeUrl: 'https://img.shields.io/badge/Apple_Music-FA243C?style=for-the-badge&logo=apple-music&logoColor=white',
       label: 'Apple Music'
     },
@@ -253,40 +252,33 @@ export function formatEmailWithSignatureAndDossier(params: {
     whatsapp: {
       badgeUrl: 'https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white',
       label: 'WhatsApp'
+    },
+    twitter: {
+      badgeUrl: 'https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white',
+      label: 'X'
     }
   };
 
-  // Solo incluir links de redes sociales que están efectivamente configurados (no vacíos/whitespace)
-  // No usar defaults: solo mostrar lo que está explícitamente en enlaces
-  const buildSocialLink = (platform: string, configUrl?: string): { net: string; label: string; url: string; badgeUrl: string } | null => {
-    const url = configUrl && String(configUrl).trim() ? String(configUrl).trim() : '';
-    if (!url) return null;
+  const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string }> = Object.entries(rawRedesCombined)
+    .filter(([net, url]) => url && String(url).trim() !== '' && !['revolut', 'paypal', 'bizum', 'iban', 'cash'].includes(net.toLowerCase()))
+    .map(([net, url]) => {
+      const cleanKey = net.toLowerCase();
+      const map = socialIconsMap[cleanKey] || {
+        badgeUrl: `https://img.shields.io/badge/${encodeURIComponent(net)}-475569?style=for-the-badge`,
+        label: net
+      };
+      const rawUrl = String(url).trim();
+      const finalUrl = rawUrl.startsWith('http') || rawUrl.startsWith('+')
+        ? (rawUrl.startsWith('+') ? `https://wa.me/${rawUrl.replace(/\+/g, '')}` : rawUrl)
+        : `https://${rawUrl}`;
 
-    const map = socialIconsMap[platform as keyof typeof socialIconsMap];
-    return {
-      net: platform,
-      label: map?.label || platform,
-      url,
-      badgeUrl: map?.badgeUrl || ''
-    };
-  };
-
-  const socialLinksList: Array<{ net: string; label: string; url: string; badgeUrl: string }> = [
-    buildSocialLink('instagram', enlaces.instagram),
-    buildSocialLink('facebook', enlaces.facebook),
-    buildSocialLink('tiktok', enlaces.tiktok),
-    buildSocialLink('spotify', enlaces.spotify),
-    buildSocialLink('youtube', enlaces.youtube),
-    buildSocialLink('appleMusic', enlaces.appleMusic),
-    buildSocialLink('bandcamp', enlaces.bandcamp),
-    buildSocialLink('website', enlaces.website),
-    (enlaces as any).whatsapp ? {
-      net: 'whatsapp',
-      label: 'WhatsApp',
-      url: `https://wa.me/${String((enlaces as any).whatsapp).replace(/[^0-9]/g, '')}`,
-      badgeUrl: socialIconsMap.whatsapp.badgeUrl
-    } : null
-  ].filter((item): item is { net: string; label: string; url: string; badgeUrl: string } => !!item && !!item.url);
+      return {
+        net,
+        label: map.label,
+        url: finalUrl,
+        badgeUrl: map.badgeUrl
+      };
+    });
 
   const activeSocialLinksHtml = ((firma?.incluirIconosRedes ?? true) && socialLinksList.length > 0)
     ? `

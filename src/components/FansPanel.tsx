@@ -88,6 +88,18 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [selectedNivelFilter, setSelectedNivelFilter] = useState<string>('');
   const [selectedConcertId, setSelectedConcertId] = useState<string>(initialConcertId || '');
   const [savedToConcertFeedback, setSavedToConcertFeedback] = useState(false);
+  const [clickStats, setClickStats] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    fetch('/api/epk/clicks')
+      .then(res => (res.ok && res.headers.get('content-type')?.includes('application/json')) ? res.json() : null)
+      .then(data => {
+        if (data && data.clicks) {
+          setClickStats(data.clicks);
+        }
+      })
+      .catch(() => {});
+  }, [currentBandId]);
 
   useEffect(() => {
     if (initialConcertId) {
@@ -573,7 +585,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
       {activeTab === 'dashboard' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-center">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">Total Fans Registrados</p>
               <h3 className="text-5xl font-black text-white font-display">{fans.length}</h3>
@@ -592,7 +604,33 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                 {new Set(fans.map(f => f.ciudad).filter(Boolean)).size}
               </h3>
             </div>
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-center">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">Clics Totales en QR & Redes</p>
+              <h3 className="text-4xl font-black text-sky-400 font-display flex items-center gap-2">
+                <ExternalLink className="w-7 h-7" />
+                {Object.entries(clickStats).filter(([k]) => !k.endsWith('_last_at')).reduce((a, b) => a + Number(b[1] || 0), 0)}
+              </h3>
+            </div>
           </div>
+
+          {/* Breakdown de Clics por Red Social, Métodos de Pago y Dossier */}
+          {Object.keys(clickStats).length > 0 && (
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3">
+              <h4 className="text-xs font-bold text-amber-400 font-mono uppercase tracking-wider flex items-center gap-2">
+                <TrendingUp className="w-4 h-4" /> Impacto de Enlaces en FansLanding & QR (Por Canal y Donaciones)
+              </h4>
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                {Object.entries(clickStats)
+                  .filter(([k]) => !k.endsWith('_last_at'))
+                  .map(([key, count]) => (
+                    <div key={key} className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono flex items-center gap-2">
+                      <span className="font-semibold text-slate-200 uppercase">{key}:</span>
+                      <span className="font-black text-amber-400">{count} {count === 1 ? 'clic' : 'clics'}</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Crecimiento Evolutivo de Fans */}
