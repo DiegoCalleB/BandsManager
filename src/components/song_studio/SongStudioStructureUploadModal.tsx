@@ -135,13 +135,14 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
       const data = await response.json();
 
       if (data.success && data.song) {
-        setSuccessMessage('✓ Estructura procesada exitosamente');
+        setSuccessMessage('✓ Estructura procesada. Compara abajo el documento original con lo que se guardó.');
         setSelectedFile(null);
         setPreview(null);
         onUpdateSong(data.song);
-        setTimeout(() => {
-          onClose();
-        }, 1500);
+        // No cerramos el modal solo: el usuario necesita ver la comparación de al lado
+        // (documento original vs. acordes extraídos) para confiar en que la IA acertó antes
+        // de usarlo en directo. Cierra él cuando lo haya revisado.
+        setShowComparison(true);
       } else {
         throw new Error(data.error || 'Error al procesar la estructura');
       }
@@ -210,111 +211,116 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
             </div>
           )}
 
-          {!isProcessing && !successMessage && (
+          {!isProcessing && (
             <>
-              {/* Camera View */}
-              {isCameraOpen && (
-                <div className="space-y-3">
-                  <div className="relative bg-black rounded-lg overflow-hidden">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      playsInline
-                      className="w-full aspect-video object-cover"
-                    />
-                    <canvas ref={canvasRef} width={1280} height={720} className="hidden" />
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleCameraCapture}
-                      className="flex-1 px-4 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition"
-                    >
-                      📸 Capturar Foto
-                    </button>
-                    <button
-                      onClick={stopCamera}
-                      className="flex-1 px-4 py-2.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-semibold transition"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* File Upload Area */}
-              {!isCameraOpen && !selectedFile && (
-                <div className="space-y-3">
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-purple-500/30 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500/60 transition"
-                  >
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
-                    <p className="text-sm font-semibold text-white">Arrastra un archivo aquí</p>
-                    <p className="text-xs text-neutral-400 mt-1">o haz clic para seleccionar</p>
-                    <p className="text-xs text-neutral-500 mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
-                  </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"
-                    onChange={handleFileInputChange}
-                    className="hidden"
-                  />
-
-                  <button
-                    onClick={startCamera}
-                    className="w-full px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition flex items-center justify-center gap-2"
-                  >
-                    <Camera className="w-4 h-4" />
-                    Hacer Foto desde Cámara
-                  </button>
-                </div>
-              )}
-
-              {/* Preview */}
-              {selectedFile && preview && (
-                <div className="space-y-3">
-                  <div className="bg-neutral-900 rounded-lg p-3">
-                    <p className="text-xs text-neutral-400 mb-2">
-                      Archivo seleccionado: <span className="text-white font-semibold">{selectedFile.name}</span>
-                    </p>
-                    {selectedFile.type.startsWith('image/') && (
-                      <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
-                    )}
-                    {selectedFile.type === 'application/pdf' && (
-                      <div className="bg-red-950/20 border border-red-500/30 rounded p-3 text-center text-sm text-neutral-300">
-                        📄 PDF - Se procesará con IA para extraer acordes
+              {!successMessage && (
+                <>
+                  {/* Camera View */}
+                  {isCameraOpen && (
+                    <div className="space-y-3">
+                      <div className="relative bg-black rounded-lg overflow-hidden">
+                        <video
+                          ref={videoRef}
+                          autoPlay
+                          playsInline
+                          className="w-full aspect-video object-cover"
+                        />
+                        <canvas ref={canvasRef} width={1280} height={720} className="hidden" />
                       </div>
-                    )}
-                    {selectedFile.type.includes('word') && (
-                      <div className="bg-blue-950/20 border border-blue-500/30 rounded p-3 text-center text-sm text-neutral-300">
-                        📝 Documento Word - Se procesará con IA para extraer acordes
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleCameraCapture}
+                          className="flex-1 px-4 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition"
+                        >
+                          📸 Capturar Foto
+                        </button>
+                        <button
+                          onClick={stopCamera}
+                          className="flex-1 px-4 py-2.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-semibold transition"
+                        >
+                          Cancelar
+                        </button>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedFile(null);
-                        setPreview(null);
-                      }}
-                      className="flex-1 px-4 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-semibold transition"
-                    >
-                      Cambiar Archivo
-                    </button>
-                    <button
-                      onClick={handleProcessWithAI}
-                      disabled={isProcessing}
-                      className="flex-1 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-neutral-600 text-white text-sm font-semibold transition"
-                    >
-                      ✨ Procesar con IA
-                    </button>
-                  </div>
-                </div>
+                  {/* File Upload Area */}
+                  {!isCameraOpen && !selectedFile && (
+                    <div className="space-y-3">
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="border-2 border-dashed border-purple-500/30 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500/60 transition"
+                      >
+                        <Upload className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                        <p className="text-sm font-semibold text-white">Arrastra un archivo aquí</p>
+                        <p className="text-xs text-neutral-400 mt-1">o haz clic para seleccionar</p>
+                        <p className="text-xs text-neutral-500 mt-2">PDF, JPG, PNG, Word (máx. 10MB)</p>
+                      </div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"
+                        onChange={handleFileInputChange}
+                        className="hidden"
+                      />
+
+                      <button
+                        onClick={startCamera}
+                        className="w-full px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition flex items-center justify-center gap-2"
+                      >
+                        <Camera className="w-4 h-4" />
+                        Hacer Foto desde Cámara
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Preview */}
+                  {selectedFile && preview && (
+                    <div className="space-y-3">
+                      <div className="bg-neutral-900 rounded-lg p-3">
+                        <p className="text-xs text-neutral-400 mb-2">
+                          Archivo seleccionado: <span className="text-white font-semibold">{selectedFile.name}</span>
+                        </p>
+                        {selectedFile.type.startsWith('image/') && (
+                          <img src={preview} alt="Preview" className="w-full max-h-64 object-contain rounded" />
+                        )}
+                        {selectedFile.type === 'application/pdf' && (
+                          <div className="bg-red-950/20 border border-red-500/30 rounded p-3 text-center text-sm text-neutral-300">
+                            📄 PDF - Se procesará con IA para extraer acordes
+                          </div>
+                        )}
+                        {selectedFile.type.includes('word') && (
+                          <div className="bg-blue-950/20 border border-blue-500/30 rounded p-3 text-center text-sm text-neutral-300">
+                            📝 Documento Word - Se procesará con IA para extraer acordes
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedFile(null);
+                            setPreview(null);
+                          }}
+                          className="flex-1 px-4 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-sm font-semibold transition"
+                        >
+                          Cambiar Archivo
+                        </button>
+                        <button
+                          onClick={handleProcessWithAI}
+                          disabled={isProcessing}
+                          className="flex-1 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 disabled:bg-neutral-600 text-white text-sm font-semibold transition"
+                        >
+                          ✨ Procesar con IA
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
-              {/* Current Document Info */}
+              {/* Current Document Info — se mantiene visible incluso justo después de un
+                  procesado con éxito: es precisamente cuando el usuario necesita comparar. */}
               {song.estructuraDocumentoUrl && (
                 <div className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/30 text-sm text-emerald-200 space-y-2">
                   <p className="font-semibold">Estructura actual guardada</p>
