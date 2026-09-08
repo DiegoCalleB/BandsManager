@@ -130,12 +130,21 @@ git commit -m "feat/fix/docs: breve descripción"
 
 `.claude/agents/` contiene 4 sub-agentes, mapeados 1:1 con los skills de `/skills/`. Claude Code los delega automáticamente según la tarea (o se invocan explícitamente).
 
-| Sub-Agente | Skill que carga | Cuándo se activa |
-|-----------|-----------------|-------------------|
-| `booking-agents-specialist` | `agentic-harness` | Scout, Redactor, Enviador, Lector, scheduler, dispatch_mode |
-| `security-multitenancy-guard` | `security-multitenancy` | Rutas backend, `server/db/*.ts`, SSRF, rate limiting, plan limits |
-| `fullstack-ux-builder` | `fullstack-ux-design` | Componentes React, pantallas, handlers Express, tests Vitest |
-| `supabase-data-architect` | `supabase-architect` | Schema, migraciones SQL, handlers de DB, tipos TS |
+| Sub-Agente | Skill que carga | Cuándo se activa | Modelo |
+|-----------|-----------------|-------------------|--------|
+| `booking-agents-specialist` | `agentic-harness` | Scout, Redactor, Enviador, Lector, scheduler, dispatch_mode | Heredado (Sonnet/Opus) |
+| `security-multitenancy-guard` | `security-multitenancy` | Rutas backend, `server/db/*.ts`, SSRF, rate limiting, plan limits | Heredado (Sonnet/Opus) |
+| `fullstack-ux-builder` | `fullstack-ux-design` | Componentes React, pantallas, handlers Express, tests Vitest | **Haiku** (fijado) |
+| `supabase-data-architect` | `supabase-architect` | Schema, migraciones SQL, handlers de DB, tipos TS | Heredado (Sonnet/Opus) |
+
+### 💰 Por qué solo uno usa Haiku
+
+No todos los dominios tienen el mismo coste de un error:
+
+- **Seguridad, agentes de booking y DB migrations** → se quedan en el modelo heredado de la sesión (Sonnet/Opus). Un bug aquí es una fuga cross-tenant, un email enviado sin aprobación, o una migración irreversible en producción. No vale la pena abaratar esto.
+- **`fullstack-ux-builder`** → fijado en `model: haiku` en su frontmatter. Sus reglas (`AGENTS.md` §6, `skills/fullstack-ux-design/SKILL.md`) son un checklist mecánico y explícito (mobile-first, menú `⋯`, dark mode, `try/catch`), no requieren el mismo razonamiento profundo. Es también el subagente que más se invoca día a día (cada pantalla nueva), así que es donde más ahorro acumula.
+
+Para revertir: borra la línea `model: haiku` del frontmatter y hereda el modelo de la sesión.
 
 **Por qué esta capa es específica de Claude Code:** el formato `.claude/agents/*.md` (frontmatter + delegación automática) es una feature nativa de Claude Code, no un estándar entre tools. **El contenido que cargan (`/skills/`) sí es agnóstico** — así que en AI Studio o Copilot el mismo resultado se logra pidiendo explícitamente "actúa como especialista en X, lee `/skills/X/SKILL.md` primero" al empezar una tarea.
 
