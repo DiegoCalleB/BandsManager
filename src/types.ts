@@ -648,6 +648,9 @@ export interface Song {
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
+  estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
+  estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
+  estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
 }
 
 export interface SetlistItem {

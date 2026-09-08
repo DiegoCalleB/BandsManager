@@ -3,6 +3,7 @@ import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConf
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
 import { SongStudioAiMusicModal } from "./song_studio/SongStudioAiMusicModal";
 import { SongStudioAiComposerModal } from "./song_studio/SongStudioAiComposerModal";
+import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
 import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
@@ -79,6 +80,7 @@ export default function SongStudioModal({
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
   const [showAiMusicModal, setShowAiMusicModal] = useState<boolean>(false);
   const [showAiComposerModal, setShowAiComposerModal] = useState<boolean>(false);
+  const [showStructureUploadModal, setShowStructureUploadModal] = useState<boolean>(false);
   const {
     shareModalData, setShareModalData,
     handleShareSong,
@@ -1590,6 +1592,16 @@ export default function SongStudioModal({
                 >
                   <FileText className="w-3.5 h-3.5 text-amber-400" />
                   <span>Acordes & Ficha</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowStructureUploadModal(true)}
+                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-teal-500/20 text-teal-300 border border-teal-500/40 hover:bg-teal-500/30 shadow-sm"
+                  title="Subir PDF, imagen o Word con la estructura de acordes - IA extrae automáticamente"
+                >
+                  <Upload className="w-3.5 h-3.5 text-teal-400" />
+                  <span>📄 Subir Estructura</span>
                 </button>
 
                 <button
@@ -3301,6 +3313,15 @@ export default function SongStudioModal({
           const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
           onUpdateSong({ ...song, audioIdeas: updatedIdeas });
         }}
+      />
+
+      {/* STRUCTURE UPLOAD MODAL */}
+      <SongStudioStructureUploadModal
+        song={song}
+        isOpen={showStructureUploadModal}
+        onClose={() => setShowStructureUploadModal(false)}
+        onUpdateSong={onUpdateSong}
+        currentUsername={currentUsername}
       />
     </div>
     </ModalPortal>
