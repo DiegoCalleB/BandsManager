@@ -1,0 +1,389 @@
+import React from 'react';
+import {
+  FileText,
+  Info,
+  Mail,
+  Share2,
+  Trash2,
+  Upload,
+  Loader2,
+  Instagram,
+  User as UserIcon,
+  Users
+} from 'lucide-react';
+import { EPKConfig, BandMember } from '../../types';
+import { EPKBlockWrapper } from './EPKBlockWrapper';
+import { EPK_BLOCKS, EPKBlockMeta } from './epkBlocks';
+
+interface EPKPerfilBlockProps {
+  config: EPKConfig;
+  setConfig: React.Dispatch<React.SetStateAction<EPKConfig>>;
+  miembros: BandMember[];
+  anadirMiembro: () => void;
+  editarMiembro: (id: string, patch: Partial<BandMember>) => void;
+  quitarMiembro: (id: string) => void;
+  subiendoFotoMiembro: string | null;
+  subirFotoMiembro: (id: string, file: File) => void;
+  unifiedPlatforms: Array<{ key: string; label: string; icon: string; placeholder: string }>;
+  prevBlock?: EPKBlockMeta | null;
+  nextBlock?: EPKBlockMeta | null;
+  onNavigate?: (blockId: any) => void;
+  onSave?: () => void;
+  isAllView?: boolean;
+}
+
+export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
+  config,
+  setConfig,
+  miembros,
+  anadirMiembro,
+  editarMiembro,
+  quitarMiembro,
+  subiendoFotoMiembro,
+  subirFotoMiembro,
+  unifiedPlatforms,
+  prevBlock,
+  nextBlock,
+  onNavigate,
+  onSave,
+  isAllView = false
+}) => {
+  return (
+    <EPKBlockWrapper
+      meta={EPK_BLOCKS[0]}
+      prevBlock={prevBlock}
+      nextBlock={nextBlock}
+      onNavigate={onNavigate}
+      onSave={onSave}
+      isAllView={isAllView}
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* BIOGRAFÍA OFICIAL / RESUMEN EJECUTIVO */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+            <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+              <FileText className="w-5 h-5" /> Biografía Oficial / Resumen Ejecutivo
+            </h3>
+            <span
+              className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                config.biografia &&
+                config.biografia.trim().length >= 80 &&
+                !config.biografia.toLowerCase().includes('por definir') &&
+                !config.biografia.includes('Propuesta musical en directo')
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                  : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+              }`}
+            >
+              {config.biografia &&
+              config.biografia.trim().length >= 80 &&
+              !config.biografia.toLowerCase().includes('por definir') &&
+              !config.biografia.includes('Propuesta musical en directo')
+                ? '✓ Bio Lista'
+                : 'Mínimo 80 caracteres'}
+            </span>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-slate-300">Biografía de Presentación</label>
+            <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-400 space-y-1.5">
+              <p className="text-slate-300 font-semibold">
+                Escribid UN texto de banda, no la trayectoria de cada uno por separado (eso va en &quot;Formación de la Banda&quot;, con su foto).
+              </p>
+              <p>Un programador de sala lee esto en 15 segundos antes de decidir si sigue mirando. En este orden:</p>
+              <ol className="list-decimal list-inside space-y-0.5 pl-1">
+                <li>Qué sois y cómo sonáis, en una frase (vuestro género, lo que os hace distintos).</li>
+                <li>Qué pasa en vuestro directo - lo que ve y siente el público.</li>
+                <li>Por qué sois una apuesta segura - trayectoria en UNA frase (giras, festivales, con quién habéis compartido escenario).</li>
+              </ol>
+              <p>Máximo 150 palabras. Evitad adjetivos genéricos (&quot;energética&quot;, &quot;diversa&quot;) y usad detalles concretos que os distingan.</p>
+            </div>
+            <textarea
+              rows={6}
+              value={config.biografia}
+              onChange={e => setConfig({ ...config, biografia: e.target.value })}
+              placeholder={
+                'Ejemplo de estructura (sustituid por lo vuestro):\n\n[Nombre de la banda] es [una frase que os define + vuestro género/sonido propio].\n\nEn directo, [qué ocurre encima del escenario: instrumentación, energía, qué se lleva el público].\n\nCon [X años/conciertos] a la espalda, hemos tocado en [salas/festivales relevantes] y compartido escenario con [referencias, si aplica].'
+              }
+              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed placeholder:text-slate-600"
+            />
+            <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
+              <span>Mínimo 80 caracteres para completar el perfil</span>
+              <span className={(config.biografia || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
+                {(config.biografia || '').trim().length} / 80 min.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* INFORMACIÓN ADICIONAL PARA EL DOSSIER Y AGENTES DE IA */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
+            <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+              <Info className="w-5 h-5" /> Información Adicional (Para Dossier y Agentes IA)
+            </h3>
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                  (config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
+                  (config.dossierTextoExtra &&
+                    config.dossierTextoExtra.trim().length >= 80 &&
+                    !config.dossierTextoExtra.toLowerCase().includes('por definir'))
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                    : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                }`}
+              >
+                {(config.dossierPdfUrl && config.dossierPdfUrl.trim().length > 5) ||
+                (config.dossierTextoExtra &&
+                  config.dossierTextoExtra.trim().length >= 80 &&
+                  !config.dossierTextoExtra.toLowerCase().includes('por definir'))
+                  ? '✓ Listo'
+                  : 'Mín. 80 car. o PDF'}
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full hidden sm:inline">
+                Uso IA
+              </span>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Escribe detalles de la banda (trayectoria, integrantes, estilo, rango de caché, prensa, etc.). El Chatbot y los Agentes la usarán para personalizar los pitches comerciales a salas.
+          </p>
+          <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 border border-amber-500/20 rounded-lg px-3 py-2">
+            ⚠ Este texto NO se muestra en la página pública del EPK - es solo para uso interno de la IA y agentes.
+          </p>
+
+          <div className="space-y-1.5">
+            <textarea
+              rows={5}
+              value={config.dossierTextoExtra || ''}
+              onChange={e => setConfig({ ...config, dossierTextoExtra: e.target.value })}
+              placeholder="Ejemplo: Bakandeya cuenta con 4 integrantes (Jon Quel, José Filgueira, Elyar Pashang, Raúl Pérez). Caché orientativo para salas de 800€-1500€ según aforo y distancia. Ofrecemos un show festivo de 90 minutos con metales y percusión en directo..."
+              className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
+            />
+            <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
+              <span>Mínimo 80 caracteres para marcar como completado (si no hay PDF)</span>
+              <span className={(config.dossierTextoExtra || '').trim().length >= 80 ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
+                {(config.dossierTextoExtra || '').trim().length} / 80 min.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* FORMACIÓN DE LA BANDA */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-amber-400" />
+              <h3 className="text-base sm:text-lg font-bold text-amber-400">
+                Formación de la Banda ({miembros.length})
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={anadirMiembro}
+              className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition cursor-pointer"
+            >
+              + Añadir miembro
+            </button>
+          </div>
+          <div className="text-xs text-slate-400 space-y-1">
+            <p>Quien programa quiere ver caras y saber cuánta gente sube al escenario. Foto, nombre, instrumento y breve descripción de cada integrante.</p>
+          </div>
+          {miembros.length === 0 && (
+            <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-xs text-slate-400">
+              Todavía no has añadido a nadie. Añade a los integrantes con su foto y descripción para que el dossier tenga cercanía.
+            </div>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {miembros.map(m => (
+              <div key={m.id} className="rounded-xl border border-slate-800 bg-slate-950 p-3.5 space-y-2.5">
+                <div className="flex items-start gap-3">
+                  <label className="shrink-0 cursor-pointer group" title="Subir foto del músico">
+                    <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center relative">
+                      {subiendoFotoMiembro === m.id ? (
+                        <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
+                      ) : m.fotoUrl ? (
+                        <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center p-1 text-center">
+                          <Upload className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition mb-0.5" />
+                          <span className="text-[8px] text-slate-500 font-medium">Foto</span>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (f) subirFotoMiembro(m.id, f);
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                  <div className="flex-1 space-y-1.5">
+                    <input
+                      type="text"
+                      value={m.nombre}
+                      onChange={e => editarMiembro(m.id, { nombre: e.target.value })}
+                      placeholder="Nombre del músico"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-sm font-semibold text-white focus:border-amber-500 outline-none"
+                    />
+                    <input
+                      type="text"
+                      value={m.rol}
+                      onChange={e => editarMiembro(m.id, { rol: e.target.value })}
+                      placeholder="Instrumento / Rol (Voz, guitarra, metales...)"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-400/90 focus:border-amber-500 outline-none"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => quitarMiembro(m.id)}
+                    className="shrink-0 p-1.5 text-slate-500 hover:text-red-400 transition cursor-pointer"
+                    title="Quitar músico"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                    Breve descripción / Trayectoria (opcional)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={m.bio || ''}
+                    onChange={e => editarMiembro(m.id, { bio: e.target.value })}
+                    placeholder="Trayectoria o rol en directo..."
+                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:border-amber-500 outline-none placeholder:text-slate-600 leading-relaxed"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                    Instagram personal (opcional)
+                  </label>
+                  <div className="relative">
+                    <Instagram className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      value={m.instagram || ''}
+                      onChange={e => editarMiembro(m.id, { instagram: e.target.value })}
+                      placeholder="@usuario o https://instagram.com/usuario"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:border-amber-500 outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* DATOS DE CONTACTO DE BOOKING & REDES */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+            <Mail className="w-5 h-5" /> Datos de Contacto de Booking & Redes Oficiales
+          </h3>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="text-xs font-semibold text-slate-300">Nombre / Cargo Mánager</label>
+                <input
+                  type="text"
+                  value={config.contactoBooking?.nombre || ''}
+                  onChange={e =>
+                    setConfig({
+                      ...config,
+                      contactoBooking: { ...config.contactoBooking, nombre: e.target.value }
+                    })
+                  }
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300">Email de Contacto</label>
+                <input
+                  type="email"
+                  value={config.contactoBooking?.email || ''}
+                  onChange={e =>
+                    setConfig({
+                      ...config,
+                      contactoBooking: { ...config.contactoBooking, email: e.target.value }
+                    })
+                  }
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300">Teléfono Mánager</label>
+                <input
+                  type="text"
+                  value={config.contactoBooking?.telefono || ''}
+                  onChange={e =>
+                    setConfig({
+                      ...config,
+                      contactoBooking: { ...config.contactoBooking, telefono: e.target.value }
+                    })
+                  }
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none mt-1"
+                />
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-slate-800 space-y-3">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <label className="text-xs font-bold text-amber-300 uppercase flex items-center gap-1.5">
+                    <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
+                  </label>
+                  <p className="text-[11px] text-slate-400">
+                    Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y agentes IA.
+                  </p>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Fuente Centralizada
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
+                {unifiedPlatforms.map(item => (
+                  <div key={item.key} className="space-y-1">
+                    <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={item.placeholder}
+                      value={(config.enlacesRedes as any)?.[item.key] || ''}
+                      onChange={e => {
+                        const updatedVal = e.target.value;
+                        setConfig(prev => {
+                          const newRedes = {
+                            ...(prev.enlacesRedes || {}),
+                            [item.key]: updatedVal
+                          };
+                          return {
+                            ...prev,
+                            enlacesRedes: newRedes,
+                            firmaEmail: {
+                              ...(prev.firmaEmail || {}),
+                              redesSociales: newRedes
+                            }
+                          };
+                        });
+                      }}
+                      className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-2.5 py-1.5 text-slate-200 outline-none font-mono text-[11px]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </EPKBlockWrapper>
+  );
+};

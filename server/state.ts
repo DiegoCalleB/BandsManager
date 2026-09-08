@@ -861,6 +861,11 @@ export function loadState(): any {
             l.hilo_emails = seedLead.hilo_emails;
             changed = true;
           }
+          if (l.id === 'lead-siroco' && l.email_contacto === 'booking@salasiroco.es') {
+            l.email_contacto = 'booking@siroco.es';
+            l.website = 'https://siroco.es/';
+            changed = true;
+          }
           return l;
         });
       }

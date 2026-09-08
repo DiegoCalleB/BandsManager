@@ -15,7 +15,7 @@ import {
  Users, Music, MapPin, Clock, Sparkles, Plus, Search, Filter, Edit3, Trash2, 
  Copy, Check, ExternalLink, Send, MessageCircle, RefreshCw, LayoutGrid, List, 
  Handshake, Repeat, Zap, Share2, X, Star, Radio, Phone, Mail, Globe, AlertCircle, Building2, Map, FileSpreadsheet,
- Loader2, Bot, Upload, Image as ImageIcon, CheckSquare, Square, MinusSquare
+ Loader2, Bot, Upload, Image as ImageIcon, CheckSquare, Square, MinusSquare, Briefcase
 } from 'lucide-react';
 import { BulkBandActionBar } from './bands/BulkBandActionBar';
 import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
@@ -28,9 +28,10 @@ interface BandCRMProps {
  onUpdateLead?: (id: string, updatedFields: Partial<Lead>) => void;
  onDeleteBand?: (id: string) => void;
  currentBandId?: string;
+ onNavigate?: (view: any, options?: any) => void;
 }
 
-export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, onDeleteBand, currentBandId }: BandCRMProps) {
+export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, onDeleteBand, currentBandId, onNavigate }: BandCRMProps) {
  // Local state for band contacts with persistence
  const [bands, setBands] = useState<BandContact[]>([]);
  const [selectedBandIds, setSelectedBandIds] = useState<string[]>([]);
@@ -84,13 +85,15 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  // Save changes to localStorage whenever bands state updates
  
 
- // Sync leads of type 'grupo' from the main leads list if new ones appear
+ // Sync leads of type 'grupo', management and productoras from the main leads list if new ones appear
  useEffect(() => {
  if (leads && leads.length > 0) {
  const groupLeads = leads.filter(l => {
  if (!l.tipo) return false;
  const norm = String(l.tipo).trim().toLowerCase();
- return norm === 'grupo' || norm.includes('grup') || norm.includes('banda') || norm.includes('artist');
+ return norm === 'grupo' || norm.includes('grup') || norm.includes('banda') || norm.includes('artist')
+   || norm === 'productora' || norm.includes('product') || norm === 'manager' || norm.includes('manag')
+   || norm === 'agencia' || norm.includes('agenc') || norm === 'sello' || norm.includes('sello');
  });
 
  if (groupLeads.length > 0) {
@@ -880,28 +883,60 @@ Bakandeya Agent Manager IA & Músicos`;
  return (
  <div className="w-full space-y-6">
  
- {/* 1. HEADER HERO BANNER & METRICS BAR */}
- <div className={`p-5 sm:p-6 rounded-2xl transition-all ${colors.card}  space-y-5 shadow-lg`}>
- <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4">
- <div className="space-y-1">
+ {/* 1. HEADER COMPACTO Y CONTROLES */}
+ <div className={`p-3 sm:p-3.5 rounded-xl transition-all ${colors.card} border border-neutral-800/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5`}>
+ {/* Izquierda: Título y sub-pestañas */}
+ <div className="flex items-center gap-2.5 flex-wrap">
  <div className="flex items-center gap-2">
- <span className="px-2 py-1 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-[#f2ca50]/15 text-[#f2ca50] inline-flex items-center gap-1.5">
- <Users className="w-3 h-3" /> Red de Colaboración • Grupos & Agencias
- </span>
- <span className="text-[10px] font-mono text-neutral-400">• Co-Booking & Giras</span>
- </div>
- <h2 className="text-3xl font-bold font-display tracking-tight text-zinc-100 flex items-center gap-2.5">
-              <span>Grupos & Agencias</span>
- <Sparkles className="w-5 h-5 text-[#f2ca50] shrink-0" />
+ <h2 className="text-lg sm:text-xl font-bold font-display tracking-tight text-zinc-100 flex items-center gap-1.5">
+ <Users className="w-4 h-4 text-[#f2ca50]" />
+ <span>Grupos</span>
  </h2>
- <p className="text-[10px] text-neutral-400 max-w-2xl font-sans leading-relaxed">
- Base de datos estratégica de contactos de otras bandas para coordinar <strong>intercambios de fechas (Date Swaps)</strong>, dobles carteles en salas grandes, compartir furgoneta y backline, y agilizar giras conjuntas.
- </p>
+ <span className="text-[11px] font-mono text-neutral-400 bg-neutral-900 px-2 py-0.5 rounded-full border border-neutral-800">
+ {totalBands}
+ </span>
  </div>
 
- <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+ <div className="h-4 w-px bg-neutral-800 hidden sm:block" />
+
+ {/* Sub-tabs segmentadas */}
+ <div className="flex items-center gap-1 bg-neutral-900/80 p-0.5 rounded-lg border border-neutral-800/80">
+ <button
+ type="button"
+ onClick={() => setSubTab('co_booking')}
+ className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+ subTab === 'co_booking'
+ ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+ : 'text-neutral-400 hover:text-white'
+ }`}
+ >
+ <span>Bandas Amigas</span>
+ </button>
+
+ {registeredBands.length > 0 && (
+ <button
+ type="button"
+ onClick={() => { setSubTab('registered_bands'); fetchRegisteredBands(); }}
+ className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+ subTab === 'registered_bands'
+ ? 'bg-emerald-500/20 text-emerald-300 shadow-sm'
+ : 'text-neutral-400 hover:text-white'
+ }`}
+ >
+ <span>Registro</span>
+ <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-emerald-200 font-bold">
+ {registeredBands.length}
+ </span>
+ </button>
+ )}
+ </div>
+ </div>
+
+ {/* Derecha: Acciones rápidas en una sola fila */}
+ <div className="flex flex-wrap items-center gap-2 shrink-0">
  <button
  id="band-btn-[#date-swap-pitch]"
+ type="button"
  onClick={() => {
  if (bands.length > 0) {
  setSelectedPitchBand(bands[0]);
@@ -910,123 +945,46 @@ Bakandeya Agent Manager IA & Músicos`;
  alert('Añade primero una banda para generar un pitch de intercambio.');
  }
  }}
- className="px-2 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-500/15 hover:bg-sky-500/15 text-white transition-all cursor-pointer flex items-center gap-2 shadow-md active:scale-95"
+ className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-sky-500/10 hover:bg-sky-500/20 text-sky-200 border border-sky-500/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ title="Generar pitch de intercambio de fechas (Date Swap)"
  >
- <Repeat className="w-4 h-4 text-white shrink-0" />
- <span>Pitch de Date Swap</span>
+ <Repeat className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+ <span>Date Swap</span>
  </button>
 
  <button
+ type="button"
  onClick={() => setIsScoutModalOpen(true)}
- className="px-2 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-500 transition-all cursor-pointer flex items-center gap-2 shadow-md active:scale-95"
- title="Scout IA: Buscar bandas de fuera para co-booking"
+ className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-300 transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+ title="Scout IA: Buscar bandas para co-booking"
  >
- <Sparkles className="w-4 h-4 shrink-0" />
- <span>Scout IA de Bandas</span>
+ <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <span>Scout IA</span>
  </button>
 
  <button
  id="band-btn-add-new"
+ type="button"
  onClick={handleOpenCreateModal}
- className="px-2 py-1 rounded-xl text-[10px] font-mono font-bold uppercase tracking-wider bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-all cursor-pointer flex items-center gap-2 shadow-md active:scale-95"
+ className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#f2ca50] hover:bg-[#e2ba40] text-[#3c2f00] transition-all cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
  >
- <Plus className="w-4 h-4 text-[#3c2f00] shrink-0" />
- <span>+ Nueva Banda</span>
- </button>
- </div>
- </div>
-
- {/* Metric Cards Row */}
- <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
- {/* Total Bandas */}
- <div className="p-3.5 rounded-xl bg-neutral-900/60 flex items-center justify-between">
- <div className="space-y-0.5">
- <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider block">Total Bandas</span>
- <span className="text-2xl font-black font-mono text-white">{totalBands}</span>
- </div>
- <div className="p-2.5 rounded-xl bg-[#d1b375]/15 text-[#d1b375]">
- <Users className="w-5 h-5" />
- </div>
- </div>
-
- {/* Colegas / Aliados */}
- <div className="p-3.5 rounded-xl bg-neutral-900/60 flex items-center justify-between">
- <div className="space-y-0.5">
- <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider block">Aliados de Gira</span>
- <span className="text-2xl font-black font-mono text-[#10b981]">{alliesCount}</span>
- </div>
- <div className="p-2.5 rounded-xl bg-[#10b981]/15 text-[#10b981]">
- <Handshake className="w-5 h-5" />
- </div>
- </div>
-
- {/* Intercambios Propuestos */}
- <div className="p-3.5 rounded-xl bg-neutral-900/60 flex items-center justify-between">
- <div className="space-y-0.5">
- <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider block">Date Swaps Activos</span>
- <span className="text-2xl font-black font-mono text-sky-400">{proposedSwapsCount}</span>
- </div>
- <div className="p-2.5 rounded-xl bg-sky-500/15 text-sky-400">
- <Repeat className="w-5 h-5" />
- </div>
- </div>
-
- {/* Registered Bands Count */}
- <div className="p-3.5 rounded-xl bg-neutral-900/60 flex items-center justify-between">
- <div className="space-y-0.5">
- <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider block">Hoja: registro_bandas</span>
- <span className="text-2xl font-black font-mono text-emerald-400">{registeredBands.length}</span>
- </div>
- <div className="p-2.5 rounded-xl bg-emerald-500/15 text-emerald-400">
- <Building2 className="w-5 h-5" />
- </div>
- </div>
- </div>
-
- {/* Sub-Tab Navigation Switcher */}
- <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-neutral-800/80">
- <button
- onClick={() => setSubTab('co_booking')}
- className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
- subTab === 'co_booking'
- ? 'bg-zinc-800 text-zinc-100 border border-zinc-700 shadow-sm'
- : 'bg-neutral-900/60 text-neutral-400 hover:text-white hover:bg-neutral-800'
- }`}
- >
- <Users className="w-4 h-4" />
- <span>1. Red Co-Booking / Bandas Amigas (bandas)</span>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-neutral-800 font-bold text-neutral-300">
- {bands.length}
- </span>
- </button>
-
- <button
- onClick={() => { setSubTab('registered_bands'); fetchRegisteredBands(); }}
- className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
- subTab === 'registered_bands'
- ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm'
- : 'bg-neutral-900/60 text-neutral-400 hover:text-white hover:bg-neutral-800'
- }`}
- >
- <Building2 className="w-4 h-4 text-emerald-400" />
- <span>2. Registro de Nuevas Bandas (registro_bandas)</span>
- <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 font-bold text-emerald-300">
- {registeredBands.length}
- </span>
+ <Plus className="w-3.5 h-3.5 shrink-0" />
+ <span>Nueva Banda</span>
  </button>
 
  <a
  href="/api/export-excel"
  download="band_data.xlsx"
- className="ml-auto px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 transition-all flex items-center gap-2 shadow-sm active:scale-95 cursor-pointer"
+ className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-neutral-900 hover:bg-neutral-800 text-neutral-300 border border-neutral-800 transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+ title="Exportar Excel Completo (.xlsx)"
  >
- <FileSpreadsheet className="w-4 h-4" />
- <span>Exportar Excel Completo (.xlsx)</span>
+ <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+ <span className="hidden sm:inline">Excel</span>
  </a>
  </div>
  </div>
 
- {/* TAB 2: REGISTERED BANDS VIEW (registro_bandas) */}
+  {/* TAB 2: REGISTERED BANDS VIEW (registro_bandas) */}
  {subTab === 'registered_bands' ? (
  <div className={`p-5 rounded-2xl ${colors.card} space-y-4 shadow-lg border border-neutral-800`}>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

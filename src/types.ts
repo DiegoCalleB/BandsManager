@@ -520,6 +520,13 @@ export interface User {
   avatarColor?: string;
   createdAt: string;
   googleOAuth?: GoogleOAuthConfig;
+  ui_preferences?: {
+    calendar_default_months?: {
+      mobile?: '1' | '2';
+      desktop?: '1' | '2';
+    };
+    [key: string]: any;
+  };
   // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente
   // sobre el usuario persistido). Sin declararlos aquí, Planes.tsx y UserProfileModal.tsx los
   // leían con `as any`, sin que el tipo protegiera nada.

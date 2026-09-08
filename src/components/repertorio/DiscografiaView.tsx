@@ -7,6 +7,7 @@ import { apiFetch } from '../../utils/api';
 import { LiveConcertToAlbumModal, TrackCutItem } from './LiveConcertToAlbumModal';
 import { SpotifyDiscographyModal } from './SpotifyDiscographyModal';
 import { BulkAlbumAudioUploaderModal } from './BulkAlbumAudioUploaderModal';
+import { SongCardRow } from './SongCardRow';
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -25,6 +26,10 @@ interface DiscografiaViewProps {
   onCreateAlbum?: () => void;
   onOpenMemberNotes?: (song: Song) => void;
   onOpenChords?: (song: Song) => void;
+  onOpenStudio?: (song: Song) => void;
+  onEditSong?: (song: Song) => void;
+  onDeleteSong?: (songId: string) => void;
+  onShareSong?: (song: Song) => void;
 }
 
 const formatTotalDuration = (songs: Song[]): string => {
@@ -69,6 +74,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   onCreateAlbum,
   onOpenMemberNotes,
   onOpenChords,
+  onOpenStudio,
+  onEditSong,
+  onDeleteSong,
+  onShareSong,
 }) => {
   const [activeFilterTab, setActiveFilterTab] = useState<'todos' | 'albumes' | 'singles'>('todos');
   const [expandedAlbums, setExpandedAlbums] = useState<Record<string, boolean>>({});
@@ -81,6 +90,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   // visita. Un solo punto de entrada "+ Nuevo disco" con las 4 opciones explicadas, mismo patrón
   // que el "🧠 Asistente IA" de RepertorioSetlists.tsx (AGENTS.md §6).
   const [showCreateAlbumMenu, setShowCreateAlbumMenu] = useState(false);
+  const [draggedItem, setDraggedItem] = useState<{ album: string; index: number } | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<{ album: string; index: number } | null>(null);
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -181,6 +192,40 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     const temp = newAlbumSongs[index];
     newAlbumSongs[index] = newAlbumSongs[targetIndex];
     newAlbumSongs[targetIndex] = temp;
+
+    const updatedSongsOrder = new Map<string, number>();
+    newAlbumSongs.forEach((s, idx) => {
+      updatedSongsOrder.set(s.id, idx + 1);
+    });
+
+    const updatedAllSongs = safeSongs.map((s) => {
+      if (updatedSongsOrder.has(s.id)) {
+        return { ...s, ordenAlbum: updatedSongsOrder.get(s.id) };
+      }
+      return s;
+    });
+
+    setSongs(updatedAllSongs);
+    saveSongsToLocalStorageSafely(updatedAllSongs);
+
+    // Persist order updates to backend database
+    newAlbumSongs.forEach((s) => {
+      const newOrd = updatedSongsOrder.get(s.id);
+      const updatedSong = { ...s, ordenAlbum: newOrd };
+      apiFetch(`/api/songs/${s.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedSong),
+      }).catch((err) => console.error('Error updating song order in album on server:', err));
+    });
+  };
+
+  const handleDropSongInAlbum = (albumName: string, sortedAlbumSongs: Song[], sourceIndex: number, targetIndex: number) => {
+    if (sourceIndex === targetIndex || sourceIndex < 0 || targetIndex < 0 || targetIndex >= sortedAlbumSongs.length) return;
+
+    const newAlbumSongs = [...sortedAlbumSongs];
+    const [movedSong] = newAlbumSongs.splice(sourceIndex, 1);
+    newAlbumSongs.splice(targetIndex, 0, movedSong);
 
     const updatedSongsOrder = new Map<string, number>();
     newAlbumSongs.forEach((s, idx) => {
@@ -630,187 +675,77 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
               {/* Collapsible Tracklist Section */}
               {isExpanded && (
-                <div className={`p-4 sm:p-5 border-t ${isStitchLight ? 'bg-white border-slate-200' : 'bg-[#121212] border-neutral-800'}`}>
-                  {/* Table Header */}
-                  <div className="grid grid-cols-12 gap-2 text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-2 text-neutral-400 border-b border-white/10 mb-2">
-                    <div className="col-span-1 text-center">#</div>
-                    <div className="col-span-6 sm:col-span-6 flex items-center gap-1">
-                      <Music className="w-3 h-3 text-neutral-500" />
-                      <span>Título</span>
+                <div className={`p-3 sm:p-4 border-t space-y-1.5 ${isStitchLight ? 'bg-slate-50/70 border-slate-200' : 'bg-[#101010] border-neutral-800'}`}>
+                  {sortedAlbumSongs.map((s, idx) => {
+                    const isCurrentTrack = activePlayerSong?.id === s.id;
+                    const isDraggingThis = draggedItem?.album === album && draggedItem?.index === idx;
+                    const isDragOverThis = dragOverItem?.album === album && dragOverItem?.index === idx;
+
+                    return (
+                      <SongCardRow
+                        key={s.id}
+                        song={s}
+                        index={idx + 1}
+                        isPlayingCurrent={isCurrentTrack}
+                        isPlayerPlaying={isPlayerPlaying}
+                        onPlay={() => onSelectSong?.(s, true)}
+                        onSelect={() => onSelectSong?.(s, false)}
+                        onToggleFavorite={() => toggleFavoriteSong(s.id)}
+                        onOpenChords={onOpenChords ? () => onOpenChords(s) : undefined}
+                        onOpenMemberNotes={onOpenMemberNotes ? () => onOpenMemberNotes(s) : undefined}
+                        onOpenStudio={onOpenStudio ? () => onOpenStudio(s) : undefined}
+                        onEditSong={onEditSong ? () => onEditSong(s) : undefined}
+                        onDeleteSong={onDeleteSong ? () => onDeleteSong(s.id) : undefined}
+                        onShareSong={onShareSong ? () => onShareSong(s) : undefined}
+                        externalLink={s.enlaceAcordes}
+                        showAlbumBadge={false}
+                        draggable={sortedAlbumSongs.length > 1}
+                        isDragging={isDraggingThis}
+                        isDragOver={isDragOverThis}
+                        onDragStart={(e) => {
+                          e.dataTransfer.effectAllowed = 'move';
+                          setDraggedItem({ album, index: idx });
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.dataTransfer.dropEffect = 'move';
+                          if (draggedItem?.album === album && dragOverItem?.index !== idx) {
+                            setDragOverItem({ album, index: idx });
+                          }
+                        }}
+                        onDragLeave={() => {
+                          if (dragOverItem?.album === album && dragOverItem?.index === idx) {
+                            setDragOverItem(null);
+                          }
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          if (draggedItem && draggedItem.album === album) {
+                            handleDropSongInAlbum(album, sortedAlbumSongs, draggedItem.index, idx);
+                          }
+                          setDraggedItem(null);
+                          setDragOverItem(null);
+                        }}
+                        onDragEnd={() => {
+                          setDraggedItem(null);
+                          setDragOverItem(null);
+                        }}
+                        showReorder={sortedAlbumSongs.length > 1}
+                        canMoveUp={idx > 0}
+                        canMoveDown={idx < sortedAlbumSongs.length - 1}
+                        onMoveUp={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id, 'up')}
+                        onMoveDown={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id, 'down')}
+                        colors={colors}
+                        isStitchLight={isStitchLight}
+                      />
+                    );
+                  })}
+
+                  {sortedAlbumSongs.length === 0 && (
+                    <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-2xl border border-dashed border-white/10">
+                      Disco sin canciones asignadas. Haz clic en "Gestionar" para añadir temas a este álbum.
                     </div>
-                    <div className="col-span-3 sm:col-span-3 text-center">Tono / BPM</div>
-                    <div className="col-span-2 sm:col-span-2 text-right pr-2">Acciones</div>
-                  </div>
-
-                  {/* Songs List */}
-                  <div className="space-y-1">
-                    {sortedAlbumSongs.map((s, idx) => {
-                      const isCurrentTrack = activePlayerSong?.id === s.id;
-                      const isTrackPlaying = isCurrentTrack && isPlayerPlaying;
-
-                      return (
-                        <div
-                          key={s.id}
-                          className={`grid grid-cols-12 gap-2 items-center py-2 px-3 rounded-xl transition-all border-b last:border-0 group/track ${
-                            isStitchLight ? 'border-slate-200/60' : 'border-white/5'
-                          } ${
-                            isCurrentTrack
-                              ? isStitchLight
-                                ? 'bg-emerald-100/90 text-emerald-950 font-semibold shadow-sm'
-                                : 'bg-[#1db954]/15 text-[#1ed760] font-semibold border-[#1db954]/30'
-                              : isStitchLight
-                              ? 'hover:bg-slate-100/80 text-slate-800'
-                              : 'hover:bg-white/5 text-zinc-300'
-                          }`}
-                        >
-                          {/* Track Number / Play state */}
-                          <div className="col-span-1 flex items-center justify-center">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (onSelectSong) {
-                                  onSelectSong(s, true);
-                                }
-                              }}
-                              className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer ${
-                                isTrackPlaying
-                                  ? 'bg-[#1db954] text-black shadow-md scale-105'
-                                  : 'bg-zinc-800/80 hover:bg-[#1db954] hover:text-black text-zinc-400 opacity-90 group-hover/track:opacity-100'
-                              }`}
-                              title={isTrackPlaying ? 'Pausar canción' : 'Reproducir canción'}
-                            >
-                              {isTrackPlaying ? (
-                                <Pause className="w-3 h-3 fill-current" />
-                              ) : (
-                                <Play className="w-3 h-3 fill-current ml-0.5" />
-                              )}
-                            </button>
-                          </div>
-
-                          {/* Song Title & Status Badges */}
-                          <div className="col-span-6 flex items-center gap-2 truncate pr-1">
-                            <span className="text-xs font-mono text-neutral-500 w-4 shrink-0 text-right">
-                              {idx + 1}
-                            </span>
-                            <span
-                              className={`truncate font-medium text-xs cursor-pointer hover:underline ${
-                                isCurrentTrack ? 'text-[#1ed760] font-bold' : ''
-                              }`}
-                              onClick={() => onSelectSong?.(s, false)}
-                              title="Ver detalles de la canción"
-                            >
-                              {s.titulo}
-                            </span>
-
-                            {s.estadoTema && (
-                              <span
-                                className={`text-[9px] font-mono px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 ${
-                                  s.estadoTema === 'listo'
-                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                    : s.estadoTema === 'ensayando'
-                                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                    : 'bg-zinc-700/50 text-zinc-400'
-                                }`}
-                              >
-                                {s.estadoTema}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Key & BPM */}
-                          <div className="col-span-3 text-center">
-                            <span
-                              className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-mono border ${
-                                isStitchLight
-                                  ? 'bg-slate-100 border-slate-300 text-slate-700'
-                                  : 'bg-white/5 border-white/10 text-zinc-400'
-                              }`}
-                            >
-                              {s.tonalidad || '—'} {s.bpm ? `• ${s.bpm} BPM` : ''}
-                            </span>
-                          </div>
-
-                          {/* Actions Column */}
-                          <div className="col-span-2 flex items-center justify-end gap-1">
-                            {/* Chords & Harmony (LaCuerda) Button */}
-                            {onOpenChords && (
-                              <button
-                                type="button"
-                                onClick={() => onOpenChords(s)}
-                                className="p-1 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/20 transition-all cursor-pointer"
-                                title="Ver cifrado de acordes, armonía y letra (estilo LaCuerda.net)"
-                              >
-                                <FileText className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-
-                            {/* Member Notes Button */}
-                            {onOpenMemberNotes && (
-                              <button
-                                type="button"
-                                onClick={() => onOpenMemberNotes(s)}
-                                className={`p-1 rounded-lg transition-all cursor-pointer ${
-                                  s.notasMiembros && Object.values(s.notasMiembros).some(v => typeof v === 'string' && v.trim().length > 0)
-                                    ? 'text-amber-400 hover:text-amber-300 bg-amber-500/20'
-                                    : 'text-zinc-500 hover:text-amber-400 hover:bg-white/10'
-                                }`}
-                                title="Editar notas por miembro de la banda"
-                              >
-                                <Users className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-
-                            {/* Reorder Buttons */}
-                            <div className="flex flex-col opacity-0 group-hover/track:opacity-100 transition-opacity">
-                              <button
-                                type="button"
-                                disabled={idx === 0}
-                                onClick={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id, 'up')}
-                                className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
-                                title="Subir orden"
-                              >
-                                <ArrowUp className="w-2.5 h-2.5" />
-                              </button>
-                              <button
-                                type="button"
-                                disabled={idx === sortedAlbumSongs.length - 1}
-                                onClick={() => handleMoveSongInAlbum(album, sortedAlbumSongs, s.id, 'down')}
-                                className="p-0.5 text-neutral-400 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-default"
-                                title="Bajar orden"
-                              >
-                                <ArrowDown className="w-2.5 h-2.5" />
-                              </button>
-                            </div>
-
-                            {/* Favorite Button */}
-                            <button
-                              type="button"
-                              onClick={() => toggleFavoriteSong(s.id)}
-                              className={`p-1 rounded-full transition-all cursor-pointer ${
-                                s.favoritoGeneral
-                                  ? 'text-amber-400 hover:text-amber-300 scale-110 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]'
-                                  : 'text-zinc-500 hover:text-amber-400'
-                              }`}
-                              title={
-                                s.favoritoGeneral
-                                  ? 'Quitar de favoritos'
-                                  : 'Marcar como favorita'
-                              }
-                            >
-                              <Star className={`w-3.5 h-3.5 ${s.favoritoGeneral ? 'fill-amber-400' : ''}`} />
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    {sortedAlbumSongs.length === 0 && (
-                      <div className="text-center py-6 text-neutral-500 text-xs italic font-mono bg-white/5 rounded-2xl border border-dashed border-white/10">
-                        Disco sin canciones asignadas. Haz clic en "Gestionar" para añadir temas a este álbum.
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               )}
             </div>

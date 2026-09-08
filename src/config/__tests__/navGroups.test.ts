@@ -36,10 +36,10 @@ describe('navGroups config', () => {
   it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus music modules and tools', () => {
     // Cuando hay agrupación (planes >6 módulos), mostramos:
     // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye 'repertorio' como ítem de menú único)
-    // - Plus los 2 módulos derivados de repertorio: catalogo, discografia (solo vista agrupada)
+    // - Plus el módulo de discografía (solo vista agrupada)
     // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
     const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
-    const onlyGroupedMusicModules: NavItemId[] = ['catalogo', 'discografia'];
+    const onlyGroupedMusicModules: NavItemId[] = ['discografia'];
     const toolIds: NavItemId[] = ['metronome', 'tuner'];
     const groupedWithoutExtraItems = grouped.filter(id => !onlyGroupedMusicModules.includes(id) && !toolIds.includes(id));
     expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
@@ -48,7 +48,6 @@ describe('navGroups config', () => {
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
-    expect(findNavGroupIdForItem('catalogo')).toBe('musica');
     expect(findNavGroupIdForItem('discografia')).toBe('musica');
     expect(findNavGroupIdForItem('metronome')).toBe('herramientas');
     expect(findNavGroupIdForItem('tuner')).toBe('herramientas');

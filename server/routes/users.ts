@@ -1414,6 +1414,73 @@ router.post(['/set-band-order', '/users/set-band-order'], requireAuth, async (re
   }
 });
 
+// Guardar preferencias de interfaz de usuario (ej. vista de meses del calendario por tipo de dispositivo)
+router.post(['/ui-preferences', '/users/ui-preferences'], requireAuth, async (req, res) => {
+  try {
+    const user_id = (req as any).user.id;
+    const { calendar_default_months, ...otherPrefs } = req.body || {};
+
+    const state = loadState();
+    const reqEmail = ((req as any).user?.email || (req as any).user?.username || '').toLowerCase();
+    const user = state.users?.find((u: any) => u.id === user_id || (reqEmail && (u.email?.toLowerCase() === reqEmail || u.username?.toLowerCase() === reqEmail)));
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const currentPrefs = user.ui_preferences || {};
+    const updatedCalendarMonths = {
+      ...(currentPrefs.calendar_default_months || {}),
+      ...(calendar_default_months || {})
+    };
+
+    const updatedPrefs = {
+      ...currentPrefs,
+      ...otherPrefs,
+      calendar_default_months: updatedCalendarMonths
+    };
+
+    user.ui_preferences = updatedPrefs;
+
+    const userEmail = (user.email || user.username || reqEmail).toLowerCase();
+    if (state.users) {
+      state.users.forEach((u: any) => {
+        if (u.id === user.id || (userEmail && (u.email?.toLowerCase() === userEmail || u.username?.toLowerCase() === userEmail))) {
+          u.ui_preferences = updatedPrefs;
+        }
+      });
+    }
+
+    saveState(state);
+    try {
+      await dbUpsertUser(user);
+    } catch (err) {
+      console.warn("Could not sync ui_preferences to Supabase:", err);
+    }
+
+    const { passwordHash, salt, ...safeUser } = user;
+    res.json({ success: true, ui_preferences: updatedPrefs, user: safeUser });
+  } catch (err: any) {
+    console.error('Error saving ui-preferences:', err);
+    res.status(500).json({ error: err.message || 'Error al guardar preferencias de usuario' });
+  }
+});
+
+// Obtener preferencias de interfaz de usuario
+router.get(['/ui-preferences', '/users/ui-preferences'], requireAuth, async (req, res) => {
+  try {
+    const user_id = (req as any).user.id;
+    const state = loadState();
+    const reqEmail = ((req as any).user?.email || (req as any).user?.username || '').toLowerCase();
+    const user = state.users?.find((u: any) => u.id === user_id || (reqEmail && (u.email?.toLowerCase() === reqEmail || u.username?.toLowerCase() === reqEmail)));
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    res.json({ success: true, ui_preferences: user.ui_preferences || {} });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error al obtener preferencias' });
+  }
+});
+
 // Upload / Update Band Logo
 router.post(['/upload-logo', '/users/upload-logo', '/bands/upload-logo', '/bands/logo'], requireAuth, async (req, res) => {
   try {

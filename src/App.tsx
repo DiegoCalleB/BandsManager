@@ -208,8 +208,8 @@ export default function App() {
   };
 
   // Active View State mapping directly to the Stitch Design doc
-  type MainView = 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
-  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'bandas', 'calendario', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
+  type MainView = 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
+  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
   const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
   const [currentView, setCurrentView] = useState<MainView>(() => {
     // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
@@ -235,8 +235,8 @@ export default function App() {
     }
   }, [currentView]);
   const [bookingOptions, setBookingOptions] = useState<{
-    sectionTab?: 'salas' | 'medios';
-    statusFilter?: LeadStatus | 'todos';
+    sectionTab?: 'salas' | 'medios' | 'grupos';
+    statusFilter?: LeadStatus | 'todos' | string;
     selectedLeadId?: string;
     selectedEventId?: string;
     selectedDate?: string;
@@ -244,10 +244,10 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
+    view: 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
     options?: {
-      sectionTab?: 'salas' | 'medios';
-      statusFilter?: LeadStatus | 'todos';
+      sectionTab?: 'salas' | 'medios' | 'grupos';
+      statusFilter?: LeadStatus | 'todos' | string;
       selectedLeadId?: string;
       selectedEventId?: string;
       selectedDate?: string;
@@ -269,7 +269,7 @@ export default function App() {
     // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
     // 'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
     // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
-    // contratado, así que un admin con un plan que no incluye finanzas entraba igualmente.
+    // contratado, así que un admin con un plan que no incluye finanzas entra igualmente.
     if (view === 'finanzas' && !isAdmin) {
       setShowUserProfileModal(true);
       return;
@@ -285,15 +285,66 @@ export default function App() {
       setOpenNavGroupIds(prev => (prev[targetGroupId] ? prev : { ...prev, [targetGroupId]: true }));
     }
     if (options) {
-      setBookingOptions(options);
+      setBookingOptions({
+        sectionTab: view === 'medios' ? 'medios' : view === 'management' ? 'grupos' : view === 'booking' ? 'salas' : undefined,
+        ...options
+      });
     } else if (view === 'medios') {
       setBookingOptions({ sectionTab: 'medios', statusFilter: 'todos' });
+    } else if (view === 'management') {
+      setBookingOptions({ sectionTab: 'grupos', statusFilter: 'todos' });
     } else if (view === 'booking') {
       setBookingOptions({ sectionTab: 'salas', statusFilter: 'todos' });
     } else {
       setBookingOptions({});
     }
   };
+
+  const [bandsCount, setBandsCount] = useState<number>(0);
+
+  useEffect(() => {
+    api.getBands().then(res => {
+      if (Array.isArray(res?.bands)) {
+        setBandsCount(res.bands.length);
+      }
+    }).catch(() => {});
+  }, [currentActiveBandId]);
+
+  const handleCrmSectionChange = useCallback((section: 'salas' | 'medios' | 'grupos' | 'bandas') => {
+    if (section === 'bandas') {
+      setCurrentView(prev => {
+        if (prev !== 'bandas') {
+          const targetGroupId = findNavGroupIdForItem('bandas');
+          if (targetGroupId) {
+            setOpenNavGroupIds(openPrev => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
+          }
+          return 'bandas';
+        }
+        return prev;
+      });
+      return;
+    }
+
+    const targetView: 'booking' | 'medios' | 'management' = 
+      section === 'medios' ? 'medios' : section === 'grupos' ? 'management' : 'booking';
+    
+    setCurrentView(prev => {
+      if (prev !== targetView) {
+        const targetGroupId = findNavGroupIdForItem(targetView);
+        if (targetGroupId) {
+          setOpenNavGroupIds(openPrev => (openPrev[targetGroupId] ? openPrev : { ...openPrev, [targetGroupId]: true }));
+        }
+        return targetView;
+      }
+      return prev;
+    });
+
+    setBookingOptions(prev => ({
+      ...prev,
+      sectionTab: section,
+      statusFilter: 'todos'
+    }));
+  }, []);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openGroupSheetId, setOpenGroupSheetId] = useState<string | null>(null);
@@ -414,6 +465,11 @@ export default function App() {
       const s = String(l.tipo).trim().toLowerCase();
       return s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc');
     };
+    const isManagement = (l: Lead) => {
+      if (!l.tipo) return false;
+      const s = String(l.tipo).trim().toLowerCase();
+      return ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => s.includes(t));
+    };
     const isBanda = (l: Lead) => {
       if (!l.tipo) return false;
       const s = String(l.tipo).trim().toLowerCase();
@@ -422,11 +478,13 @@ export default function App() {
     const totalEvents = concerts.length + rehearsals.length;
     const activeEvents = activeBandConcerts.length + activeBandRehearsals.length;
     return {
-      booking: leads.filter(l => !isMedio(l) && !isBanda(l)).length,
+      booking: leads.filter(l => !isMedio(l) && !isBanda(l) && !isManagement(l)).length,
       medios: leads.filter(l => isMedio(l)).length,
+      management: leads.filter(l => isManagement(l)).length,
+      bandas: bandsCount,
       calendario: totalEvents === 0 ? 0 : `${activeEvents}/${totalEvents}`,
     } as Record<string, number | string>;
-  }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals]);
+  }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals, bandsCount]);
 
   // Vista agrupada del menú (secciones colapsables) solo para planes con menú largo;
   // `promo` (4 módulos) ya es corto de por sí y se queda con la lista plana de siempre.
@@ -1110,8 +1168,8 @@ export default function App() {
 
  {/* Main Content Area */}
  <main className="flex-1 flex flex-col min-w-0 bg-[#0A0A0A] p-3 sm:p-5 md:p-8 pb-24 md:pb-8">
- {/* Global Active Campaign Banner */}
- {activeCampaign && (
+ {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
+ {activeCampaign && ['booking', 'medios', 'management', 'bandas'].includes(currentView) && (
    <GlobalCampaignBar
      campaign={activeCampaign}
      allLeads={leads}
@@ -1175,26 +1233,30 @@ export default function App() {
  isPromoPlan={isPromoPlan}
  />
  )}
- {(currentView === 'booking' || currentView === 'medios') && (
- <BookingCRM 
- activeCampaign={activeCampaign} 
- onCampaignChange={handleSetActiveCampaign}
- leads={leads} 
- colors={colors}
- onUpdateLead={handleUpdateLead}
- onAddLead={handleAddLeadWithLimitCheck}
- onDeleteLead={handleDeleteLead}
- onBulkDeleteLeads={handleBulkDeleteLeads}
- epkConfig={epkConfig}
- onUpdateEpkConfig={handleUpdateEpkConfig}
- initialSection={bookingOptions.sectionTab || (currentView === 'medios' ? 'medios' : 'salas')}
- initialStatusFilter={bookingOptions.statusFilter || 'todos'}
- initialSelectedLeadId={bookingOptions.selectedLeadId}
- currentUser={currentUser}
- bandName={currentActiveBandName}
- currentBandId={currentActiveBandId}
- />
- )}
+          {(currentView === 'booking' || currentView === 'medios' || currentView === 'management') && (
+            <BookingCRM 
+              key="contacts-crm"
+              activeCampaign={activeCampaign} 
+              onCampaignChange={handleSetActiveCampaign}
+              leads={leads} 
+              colors={colors}
+              onUpdateLead={handleUpdateLead}
+              onAddLead={handleAddLeadWithLimitCheck}
+              onDeleteLead={handleDeleteLead}
+              onBulkDeleteLeads={handleBulkDeleteLeads}
+              epkConfig={epkConfig}
+              onUpdateEpkConfig={handleUpdateEpkConfig}
+              initialSection={currentView === 'medios' ? 'medios' : currentView === 'management' ? 'grupos' : (bookingOptions.sectionTab || 'salas')}
+              onSectionChange={handleCrmSectionChange}
+              onNavigate={handleNavigate}
+              bandsCount={bandsCount}
+              initialStatusFilter={(bookingOptions.statusFilter as (LeadStatus | 'todos')) || 'todos'}
+              initialSelectedLeadId={bookingOptions.selectedLeadId}
+              currentUser={currentUser}
+              bandName={currentActiveBandName}
+              currentBandId={currentActiveBandId}
+            />
+          )}
  {currentView === 'bandas' && (
  <BandCRM 
  colors={colors}
@@ -1203,6 +1265,7 @@ export default function App() {
  onUpdateLead={handleUpdateLead}
  onDeleteBand={handleDeleteBand}
  currentBandId={currentActiveBandId}
+ onNavigate={handleNavigate}
  />
  )}
  {currentView === 'calendario' && (

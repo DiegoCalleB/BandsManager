@@ -27,6 +27,65 @@ interface RawParsedItem {
 }
 
 /**
+ * Extrae y sanea texto JSON de respuestas de modelos IA que puedan contener bloques de código
+ * markdown (```json ... ```), texto conversacional previo o posterior, o espacios en blanco.
+ */
+export function extractJsonFromAiText(text: string): string {
+  if (!text || typeof text !== 'string') return '';
+  let cleaned = text.trim();
+  // Quitar bloques de código markdown tipo ```json ... ```
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+  return jsonMatch ? jsonMatch[0] : cleaned;
+}
+
+/**
+ * Parsea y sanea de forma pura la respuesta en texto devuelta por el modelo de IA al leer
+ * una foto o PDF de repertorio. Valida bloques permitidos y canciones.
+ */
+export function parseRawSetlistAIResponse(text: string): ParsedSetlistResult {
+  if (!text || typeof text !== 'string' || !text.trim()) {
+    throw new Error("No se pudo leer el repertorio (sin respuesta de la IA)");
+  }
+
+  const jsonStr = extractJsonFromAiText(text);
+  let raw: { nombreSugerido?: string; items?: RawParsedItem[] };
+  try {
+    raw = JSON.parse(jsonStr);
+  } catch (err: any) {
+    throw new Error(`Formato JSON inválido de la IA al leer repertorio: ${err?.message || 'error de parseo'}`);
+  }
+
+  const rawItems = Array.isArray(raw.items) ? raw.items : [];
+  const items: ParsedSetlistItem[] = [];
+
+  for (const it of rawItems) {
+    const titulo = typeof it.titulo === 'string' ? it.titulo.trim() : '';
+    if (!titulo) continue;
+
+    if (it.type === 'block') {
+      const blockType = BLOCK_TYPES.includes(it.blockType as SetlistItem['bloqueSubtipo'])
+        ? (it.blockType as SetlistItem['bloqueSubtipo'])
+        : 'otro';
+      items.push({ type: 'block', titulo, blockType });
+    } else {
+      items.push({ type: 'song', titulo });
+    }
+  }
+
+  if (items.length === 0) {
+    throw new Error("No se detectó ningún tema en la imagen/documento");
+  }
+
+  return {
+    nombreSugerido: typeof raw.nombreSugerido === 'string' && raw.nombreSugerido.trim()
+      ? raw.nombreSugerido.trim()
+      : 'Repertorio importado',
+    items
+  };
+}
+
+/**
  * Lee una foto o PDF de un repertorio ya impreso (a mano o a máquina) y devuelve la lista
  * ORDENADA de temas y bloques de estructura (BIS, pausa, presentación...) tal como aparecen.
  * No inventa energía/tonalidad/bpm — eso no suele venir en un papel impreso, y de todos modos el
@@ -73,42 +132,5 @@ IMPORTANTE:
   });
 
   const text = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
-  if (!text) {
-    throw new Error("No se pudo leer el repertorio (sin respuesta de la IA)");
-  }
-
-  let jsonStr = text;
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (jsonMatch) jsonStr = jsonMatch[0];
-
-  const raw = JSON.parse(jsonStr) as { nombreSugerido?: string; items?: RawParsedItem[] };
-  const rawItems = Array.isArray(raw.items) ? raw.items : [];
-
-  const items: ParsedSetlistItem[] = [];
-  for (const it of rawItems) {
-    const titulo = typeof it.titulo === 'string' ? it.titulo.trim() : '';
-    if (!titulo) continue;
-
-    if (it.type === 'block') {
-      const blockType = BLOCK_TYPES.includes(it.blockType as SetlistItem['bloqueSubtipo'])
-        ? (it.blockType as SetlistItem['bloqueSubtipo'])
-        : 'otro';
-      items.push({ type: 'block', titulo, blockType });
-    } else {
-      // Cualquier valor que no sea exactamente "block" se trata como canción — más seguro que
-      // descartar la línea si la IA manda un type inesperado.
-      items.push({ type: 'song', titulo });
-    }
-  }
-
-  if (items.length === 0) {
-    throw new Error("No se detectó ningún tema en la imagen/documento");
-  }
-
-  return {
-    nombreSugerido: typeof raw.nombreSugerido === 'string' && raw.nombreSugerido.trim()
-      ? raw.nombreSugerido.trim()
-      : 'Repertorio importado',
-    items
-  };
+  return parseRawSetlistAIResponse(text);
 }

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Song, Setlist, SetlistItem } from '../../types';
 import { 
   Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart,
-  Activity, Footprints, Zap
+  Activity, Footprints, Zap, FileText, WifiOff, Check, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from '../RepertorioSetlists';
+import { cacheActiveStageSetlist } from '../../utils/stageOfflineCache';
 
 interface EscenarioViewProps {
   activeSetlist: Setlist | null;
@@ -97,6 +98,31 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   const [metronomeTick, setMetronomeTick] = useState(false);
   const [showPedalShortcuts, setShowPedalShortcuts] = useState(false);
 
+  // Offline Stage Mode & Local Cache
+  const [isOnline, setIsOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [isCached, setIsCached] = useState(false);
+  const [showChordsPanel, setShowChordsPanel] = useState(false);
+  const [chordsFontSize, setChordsFontSize] = useState<'sm' | 'base' | 'lg' | 'xl'>('base');
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // Auto-caching setlist and relevant songs into persistent storage
+  useEffect(() => {
+    if (activeSetlist && songs.length > 0) {
+      const success = cacheActiveStageSetlist(activeSetlist, songs);
+      setIsCached(success);
+    }
+  }, [activeSetlist, songs]);
+
   useEffect(() => {
     if (!stageIsPlaying || !currentBpm || currentBpm <= 0) return;
     const intervalMs = (60 / currentBpm) * 1000;
@@ -132,10 +158,25 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
     <div className="p-4 sm:p-6 rounded-2xl bg-black space-y-6 text-white shadow-2xl">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#1db954]/20 border border-[#1db954]/40 text-[#1ed760] font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 mb-1">
-            <span className="w-2 h-2 rounded-full bg-[#1db954] animate-ping" />
-            Directo & Concierto Completo
-          </span>
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#1db954]/20 border border-[#1db954]/40 text-[#1ed760] font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#1db954] animate-ping" />
+              Directo & Concierto
+            </span>
+
+            {/* Offline Robustness Badge */}
+            {!isOnline ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5" title="Sin conexión a internet: funcionando 100% con el repertorio y letras cacheados localmente">
+                <WifiOff className="w-3 h-3 text-amber-400" />
+                Modo Offline Activo
+              </span>
+            ) : isCached ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1.5" title="Repertorio, letras, acordes y tempos guardados localmente para tocar sin red">
+                <Check className="w-3 h-3 text-emerald-400" />
+                Caché Offline Listo
+              </span>
+            ) : null}
+          </div>
           <h2 className="text-xl sm:text-2xl font-black font-mono text-white mt-1">
             {activeSetlist ? activeSetlist.nombre : 'Sin Setlist Seleccionado'}
           </h2>
@@ -433,6 +474,131 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   <span className="font-bold text-white">🦶 Play / Pausa:</span> <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-amber-300">Barra Espaciadora</code>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Quick Stage Actions: Pedal Helper & Live Lyrics/Chords Teleprompter */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/5">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowPedalShortcuts(!showPedalShortcuts)}
+                className={`text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  showPedalShortcuts 
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
+                    : 'bg-neutral-900 text-zinc-400 hover:text-white border border-white/5'
+                }`}
+              >
+                <Footprints className="w-3.5 h-3.5" />
+                <span>Pedal Bluetooth</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowChordsPanel(!showChordsPanel)}
+                className={`text-[11px] font-mono px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer font-bold ${
+                  showChordsPanel 
+                    ? 'bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/50 shadow-sm' 
+                    : 'bg-neutral-900 text-zinc-300 hover:text-white border border-white/5'
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5 text-[#1ed760]" />
+                <span>{showChordsPanel ? 'Ocultar Letra/Acordes' : '📜 Letra y Acordes en Directo'}</span>
+              </button>
+            </div>
+
+            {currentStageSong && (
+              <div className="text-[11px] font-mono text-zinc-400 flex items-center gap-2">
+                {currentStageSong.tonalidad && (
+                  <span className="px-2 py-0.5 rounded bg-zinc-800 text-amber-300 font-bold">
+                    Tono: {currentStageSong.tonalidad}
+                  </span>
+                )}
+                {currentStageSong.bpm && (
+                  <span className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                    {currentStageSong.bpm} BPM
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Live Stage Lyrics & Chords Teleprompter Drawer (Offline-safe) */}
+          {showChordsPanel && (
+            <div className="p-4 rounded-xl bg-neutral-950 border border-zinc-800 space-y-3 animate-fadeIn">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-[#1ed760]" />
+                  <h4 className="font-mono text-sm font-black text-white">
+                    {currentStageSong ? currentStageSong.titulo : 'Sin tema seleccionado'}
+                  </h4>
+                  {currentStageSong?.afinacion && (
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                      {currentStageSong.afinacion}
+                    </span>
+                  )}
+                </div>
+
+                {/* Font Size controls for stage readability */}
+                <div className="flex items-center gap-1.5 text-[11px] font-mono">
+                  <span className="text-zinc-500 mr-1 text-[10px] uppercase font-bold">Tamaño:</span>
+                  <button
+                    type="button"
+                    onClick={() => setChordsFontSize('sm')}
+                    className={`px-2 py-0.5 rounded ${chordsFontSize === 'sm' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+                  >
+                    A-
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChordsFontSize('base')}
+                    className={`px-2 py-0.5 rounded ${chordsFontSize === 'base' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+                  >
+                    A
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChordsFontSize('lg')}
+                    className={`px-2 py-0.5 rounded ${chordsFontSize === 'lg' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+                  >
+                    A+
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChordsFontSize('xl')}
+                    className={`px-2 py-0.5 rounded ${chordsFontSize === 'xl' ? 'bg-[#1ed760] text-black font-bold' : 'bg-zinc-800 text-zinc-300'}`}
+                  >
+                    A++
+                  </button>
+                </div>
+              </div>
+
+              {/* Chords and Lyrics View */}
+              {currentStageSong?.cifradoTexto ? (
+                <div className="max-h-[380px] overflow-y-auto pr-1">
+                  <pre 
+                    className={`font-mono text-zinc-100 whitespace-pre-wrap select-text leading-relaxed ${
+                      chordsFontSize === 'sm' ? 'text-xs' :
+                      chordsFontSize === 'base' ? 'text-sm' :
+                      chordsFontSize === 'lg' ? 'text-base' : 'text-lg font-bold'
+                    }`}
+                  >
+                    {currentStageSong.cifradoTexto}
+                  </pre>
+                </div>
+              ) : (
+                <div className="p-6 text-center text-zinc-500 font-mono text-xs space-y-1">
+                  <p>No hay letra o acordes cifrados guardados para este tema todavía.</p>
+                  <p className="text-[11px] text-zinc-600">Puedes autogenerarlos o pegarlos desde el catálogo de canciones en Repertorio.</p>
+                </div>
+              )}
+
+              {/* Musician/Substitute notes if present */}
+              {currentStageSong?.notasRepertorio && (
+                <div className="p-2.5 rounded bg-zinc-900/80 border border-zinc-800 text-xs font-mono text-amber-200/90">
+                  <span className="font-bold text-amber-400">💡 Nota de directo:</span> {currentStageSong.notasRepertorio}
+                </div>
+              )}
             </div>
           )}
         </div>

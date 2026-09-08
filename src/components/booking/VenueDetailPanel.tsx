@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lead, LeadStatus, LeadType, InteractionLog } from '../../types';
+import { Lead, LeadStatus, LeadType, InteractionLog, Setlist } from '../../types';
 import { LeadHealthBadge } from './LeadHealthBadge';
 import { VerifiedBadge } from '../common/VerifiedBadge';
 import { LeadAvatar } from './LeadAvatar';
@@ -10,6 +10,7 @@ import DirectionsCard from '../DirectionsCard';
 import { apiFetch } from '../../utils/api';
 import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
+import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
 import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
 import {
   Edit3,
@@ -96,6 +97,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [showFeedbackHistory, setShowFeedbackHistory] = useState(false);
   const [showMultiModelModal, setShowMultiModelModal] = useState(false);
   const [selectedAiModel, setSelectedAiModel] = useState<'gemini' | 'deepseek'>('gemini');
+
+  // Bolo Confirmado -> Setlist Optimization Modal
+  const [showBoloConfirmadoModal, setShowBoloConfirmadoModal] = useState(false);
+  const [feedbackBoloMsg, setFeedbackBoloMsg] = useState<string | null>(null);
 
   // Bitácora state
   const [interactionType, setInteractionType] = useState<InteractionLog['tipo']>('Llamada');
@@ -388,7 +393,68 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   };
 
   const handleCorrectStatus = (newStatus: LeadStatus) => {
+    if (newStatus === 'confirmado') {
+      setShowBoloConfirmadoModal(true);
+      return;
+    }
     onUpdateLead(selectedLead.id, { estado: newStatus });
+  };
+
+  const handleConfirmWithSetlist = async (data: {
+    concertDate: string;
+    cacheAmount?: number;
+    setlistId: string;
+    newSetlist?: Setlist;
+  }) => {
+    try {
+      // 1. Si se generó un nuevo setlist automático a medida, guardarlo
+      if (data.newSetlist) {
+        await apiFetch('/api/setlists', {
+          method: 'POST',
+          body: JSON.stringify(data.newSetlist)
+        }).catch(err => console.warn('Error guardando setlist generado:', err));
+      }
+
+      // 2. Crear el concierto en el calendario con la vinculación al setlist y al bolo
+      const isFestival = selectedLead.tipo === 'festival' || selectedLead.tipo === 'ayuntamiento';
+      const newConcert = {
+        id: `concert-crm-${selectedLead.id}-${Date.now()}`,
+        fecha: data.concertDate,
+        ciudad: selectedLead.ciudad || 'Ciudad por definir',
+        sala: selectedLead.nombre_sala,
+        direccion: selectedLead.direccion || '',
+        cache: data.cacheAmount || 0,
+        aforo_vendido: 0,
+        aforo_total: selectedLead.aforo || 0,
+        contrato_firmado: true,
+        estado_pago: 'pendiente',
+        notas: `Bolo confirmado desde el CRM. Lead: ${selectedLead.nombre_sala}`,
+        tipo: isFestival ? 'festival' : 'sala',
+        setlistId: data.setlistId
+      };
+
+      await apiFetch('/api/concerts', {
+        method: 'POST',
+        body: JSON.stringify(newConcert)
+      }).catch(err => console.warn('Error creando concierto:', err));
+
+      // 3. Actualizar estado del lead en Supabase
+      onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+      setShowBoloConfirmadoModal(false);
+      setFeedbackBoloMsg('🎉 ¡Bolo confirmado y repertorio asignado en el calendario!');
+      setTimeout(() => setFeedbackBoloMsg(null), 5000);
+    } catch (err) {
+      console.error('Error al confirmar bolo con setlist:', err);
+      onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+      setShowBoloConfirmadoModal(false);
+    }
+  };
+
+  const handleConfirmWithoutSetlist = () => {
+    onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+    setShowBoloConfirmadoModal(false);
+    setFeedbackBoloMsg('🎉 Concierto marcado como confirmado en el CRM.');
+    setTimeout(() => setFeedbackBoloMsg(null), 4000);
   };
 
   // hiloCompleto (lead_messages real + hilo_emails manual) es la señal fiable de que ya hubo
@@ -518,6 +584,22 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   return (
     <div className="w-full space-y-5 relative">
+      {/* Feedback Alert for Bolo Confirmado */}
+      {feedbackBoloMsg && (
+        <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-mono text-xs font-bold flex items-center justify-between gap-2 shadow-lg animate-fadeIn">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <span>{feedbackBoloMsg}</span>
+          </div>
+          <button
+            onClick={() => setFeedbackBoloMsg(null)}
+            className="text-emerald-400 hover:text-white cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* HEADER CARD */}
       <div className="bg-[#1A1918] rounded-2xl p-4 sm:p-5 border border-zinc-800 shadow-xl space-y-4">
         {/* Title Bar */}
@@ -1888,6 +1970,16 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           setFeedbackSuccessMsg(`¡Propuesta de ${label} seleccionada y aplicada a la sala!`);
           setTimeout(() => setFeedbackSuccessMsg(null), 5000);
         }}
+      />
+
+      {/* Modal de Conexión CRM -> Bolo -> Repertorio Óptimo */}
+      <BoloConfirmadoSetlistModal
+        isOpen={showBoloConfirmadoModal}
+        lead={selectedLead}
+        onClose={() => setShowBoloConfirmadoModal(false)}
+        onConfirmWithSetlist={handleConfirmWithSetlist}
+        onConfirmWithoutSetlist={handleConfirmWithoutSetlist}
+        isStitchLight={isStitchLight}
       />
     </div>
   );
