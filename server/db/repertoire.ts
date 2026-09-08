@@ -252,7 +252,13 @@ export function mapSongRecord(s: any) {
     cifradoTexto: s.cifrado_texto || s.cifradoTexto || "",
     cifrado_texto: s.cifrado_texto || s.cifradoTexto || "",
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
-    guia_sustituto: s.guia_sustituto || s.guiaSustituto || {}
+    guia_sustituto: s.guia_sustituto || s.guiaSustituto || {},
+    estructuraDocumentoUrl: s.estructura_documento_url || s.estructuraDocumentoUrl || "",
+    estructura_documento_url: s.estructura_documento_url || s.estructuraDocumentoUrl || "",
+    estructuraDocumentoNombre: s.estructura_documento_nombre || s.estructuraDocumentoNombre || "",
+    estructura_documento_nombre: s.estructura_documento_nombre || s.estructuraDocumentoNombre || "",
+    estructuraDocumentoProcesadoEn: s.estructura_documento_procesado_en || s.estructuraDocumentoProcesadoEn || undefined,
+    estructura_documento_procesado_en: s.estructura_documento_procesado_en || s.estructuraDocumentoProcesadoEn || undefined
   };
 }
 
@@ -343,7 +349,10 @@ export async function dbUpsertSong(song: any, bandId: string) {
     audio_principal_url: song.audioPrincipalUrl || song.audio_principal_url || song.audioUrl || song.audio_url || "",
     audio_ideas: song.audioIdeas || song.audio_ideas || [],
     cifrado_texto: song.cifradoTexto || song.cifrado_texto || "",
-    guia_sustituto: song.guiaSustituto || song.guia_sustituto || {}
+    guia_sustituto: song.guiaSustituto || song.guia_sustituto || {},
+    estructura_documento_url: song.estructuraDocumentoUrl || song.estructura_documento_url || "",
+    estructura_documento_nombre: song.estructuraDocumentoNombre || song.estructura_documento_nombre || "",
+    estructura_documento_procesado_en: song.estructuraDocumentoProcesadoEn || song.estructura_documento_procesado_en || null
   };
 
   let { data, error } = await sb.from("songs").upsert(payload).select().single();

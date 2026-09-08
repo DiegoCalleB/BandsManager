@@ -6,6 +6,7 @@ import { getTargetBandId, puedeEscribirEnBanda } from '../../utils/bandAccess.js
 import { getSupabaseClient, getBucketName } from '../upload.js';
 import { getAiClient, TIMEOUT_IA_LARGO_MS, generateContentWithFallback, GEMINI_MODEL } from '../../ai.js';
 import { getSupabase } from '../../db/core.js';
+import { dbUpsertSong } from '../../db/repertoire.js';
 import { Song } from '../../../src/types.js';
 
 const router = express.Router();
@@ -197,7 +198,8 @@ router.post(
       const extracted = await extractStructureWithAI(file.buffer, file.originalname, file.mimetype);
 
       // Update song with extracted data
-      const updatedSong: Partial<Song> = {
+      const updatedSong: Record<string, any> = {
+        ...song,
         estructuraDocumentoUrl: fileUrl,
         estructuraDocumentoNombre: file.originalname,
         estructuraDocumentoProcesadoEn: new Date().toISOString(),
@@ -219,14 +221,10 @@ router.post(
         };
       }
 
-      const { data: updatedData, error: updateError } = await supabase
-        .from('songs')
-        .update(updatedSong)
-        .eq('id', songId)
-        .select()
-        .single();
-
-      if (updateError) {
+      let updatedData: any;
+      try {
+        updatedData = await dbUpsertSong(updatedSong, bandId);
+      } catch (updateError) {
         console.error('Update error:', updateError);
         return res.status(500).json({ error: 'Error al guardar los cambios' });
       }
