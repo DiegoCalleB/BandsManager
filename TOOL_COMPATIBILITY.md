@@ -17,8 +17,9 @@ Esta documentación explica cómo el proyecto está estructurado para soportar t
 2. Lee `context/AGENT_CONTEXT.md` (5 min)
 3. Carga un skill si es necesario: `/skill agentic-harness` (u otro)
 4. Uso: comandos `/` disponibles (run, test, lint, etc.)
+5. **Sub-agentes especializados disponibles** (ver sección abajo) — se delegan automáticamente según la tarea
 
-**Config:** `.claude/settings.json` (si existe, auto-detecta permisos)
+**Config:** `.claude/settings.json` (si existe, auto-detecta permisos), `.claude/agents/*.md` (sub-agentes)
 
 ---
 
@@ -122,6 +123,25 @@ npm test
 git commit -m "feat/fix/docs: breve descripción"
 # Explica el POR QUÉ, no solo QUÉ (el diff ya dice qué cambió)
 ```
+
+---
+
+## 🤖 Sub-Agentes Especializados (Claude Code)
+
+`.claude/agents/` contiene 4 sub-agentes, mapeados 1:1 con los skills de `/skills/`. Claude Code los delega automáticamente según la tarea (o se invocan explícitamente).
+
+| Sub-Agente | Skill que carga | Cuándo se activa |
+|-----------|-----------------|-------------------|
+| `booking-agents-specialist` | `agentic-harness` | Scout, Redactor, Enviador, Lector, scheduler, dispatch_mode |
+| `security-multitenancy-guard` | `security-multitenancy` | Rutas backend, `server/db/*.ts`, SSRF, rate limiting, plan limits |
+| `fullstack-ux-builder` | `fullstack-ux-design` | Componentes React, pantallas, handlers Express, tests Vitest |
+| `supabase-data-architect` | `supabase-architect` | Schema, migraciones SQL, handlers de DB, tipos TS |
+
+**Por qué esta capa es específica de Claude Code:** el formato `.claude/agents/*.md` (frontmatter + delegación automática) es una feature nativa de Claude Code, no un estándar entre tools. **El contenido que cargan (`/skills/`) sí es agnóstico** — así que en AI Studio o Copilot el mismo resultado se logra pidiendo explícitamente "actúa como especialista en X, lee `/skills/X/SKILL.md` primero" al empezar una tarea.
+
+**Ventaja de usarlos en Claude Code:** paralelización real (varios sub-agentes trabajando en dominios distintos sin pisarse) + contexto más limpio (cada uno solo carga su skill, no los 12 documentos de `context/`).
+
+**Regla de diseño:** cada sub-agente toca su dominio exclusivamente (backend agents / security / frontend / data). Si una tarea cruza dos dominios (ej. nueva ruta + nueva tabla), usa dos sub-agentes en secuencia, no uno mezclando responsabilidades.
 
 ---
 
