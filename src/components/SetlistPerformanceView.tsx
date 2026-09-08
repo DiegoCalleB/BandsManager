@@ -8,6 +8,10 @@ interface SetlistPerformanceViewProps {
   setlist: Setlist;
   songs: Song[];
   onClose: () => void;
+  // Persiste el tono en el que se quiere tocar este tema PARA ESTE REPERTORIO (o null para
+  // volver al tono original) — así el ajuste +/- del Modo Concierto no se pierde al cerrarlo,
+  // la próxima vez que suene este tema en este mismo setlist ya sale transportado solo.
+  onSetDesiredKey: (itemId: string, key: string | null) => void;
 }
 
 // Distancia mínima de swipe (px) para contar como "pasar página" y no como un scroll normal
@@ -41,6 +45,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   setlist,
   songs,
   onClose,
+  onSetDesiredKey,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -60,28 +65,44 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const currentSong = !isBlock ? songs.find(s => s.id === currentItem?.songId) : undefined;
   const nextItem = allItems[currentIndex + 1];
 
-  // Si este repertorio pide tocar el tema en un tono distinto al original (definido en la
-  // fila del setlist — ver RepertorioSetlists), la transposición se aplica sola al llegar a la
-  // canción: nadie tiene que acordarse de darle manualmente a +/- cada vez que suena este tema.
-  const autoTranspose = currentItem?.tonalidadDeseada
-    ? getSemitoneDifference(currentSong?.tonalidad || '', currentItem.tonalidadDeseada) ?? 0
+  // Transpone una tonalidad manteniendo su notación original (ES o EN) — reutiliza el mismo
+  // transpositor validado que usa el visor de acordes, en vez de una tabla ad-hoc que solo
+  // cubría bien la notación inglesa.
+  const transposeKey = (key: string, semitones: number): string => {
+    if (!key || semitones === 0) return key;
+    const isSpanish = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(key.trim());
+    return transposeChordToken(key, semitones, isSpanish ? 'ES' : 'EN');
+  };
+
+  // El tono en el que se toca este tema en ESTE repertorio vive persistido en el SetlistItem
+  // (tonalidadDeseada) — no hay un "ajuste manual de sesión" aparte: el botón +/- de abajo
+  // escribe directamente ahí (ver adjustTranspose), así que lo que ajustas en directo queda
+  // guardado para la próxima vez que suene este tema en este mismo repertorio.
+  const effectiveTranspose = currentItem?.tonalidadDeseada && currentSong
+    ? getSemitoneDifference(currentSong.tonalidad, currentItem.tonalidadDeseada) ?? 0
     : 0;
 
-  // Reajuste manual (+/-) que el músico puede aplicar POR ENCIMA de la transposición automática
-  // de este tema, sin perderla al cambiar de canción y sin tener que recalcularla a mano.
-  const [manualAdjust, setManualAdjust] = useState(0);
+  const adjustTranspose = (delta: number) => {
+    if (!currentItem || !currentSong) return;
+    const newSemitones = Math.max(-6, Math.min(6, effectiveTranspose + delta));
+    onSetDesiredKey(currentItem.id, newSemitones === 0 ? null : transposeKey(currentSong.tonalidad, newSemitones));
+  };
 
   // Los acordes en texto son la vista principal: se pueden transportar, agrandar y hacer
   // autoscroll, cosas que una foto/PDF escaneado no permite. El documento original queda como
-  // consulta opcional (para comparar contra lo que la IA extrajo), no como vista por defecto.
+  // consulta opcional (para comparar contra lo que la IA extrajo) mediante el botón de
+  // alternar vista, nunca como vista por defecto. Se calcula de forma puramente derivada (sin
+  // useState+useEffect de sincronización) para que no pueda haber un "flash" mostrando el
+  // documento antes de que un efecto corrija la vista al valor correcto.
   const hasChordsText = Boolean(currentSong?.cifradoTexto?.trim());
   const hasScannedSheet = Boolean(
     currentSong?.estructuraDocumentoUrl &&
     (isImageDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl) ||
       isPdfDocument(currentSong.estructuraDocumentoNombre, currentSong.estructuraDocumentoUrl))
   );
-  const [viewMode, setViewMode] = useState<'chords' | 'sheet'>('chords');
-  const showScannedSheet = viewMode === 'sheet' && hasScannedSheet;
+  const [manualViewOverride, setManualViewOverride] = useState<'chords' | 'sheet' | null>(null);
+  const effectiveViewMode: 'chords' | 'sheet' = manualViewOverride ?? (hasChordsText ? 'chords' : 'sheet');
+  const showScannedSheet = effectiveViewMode === 'sheet' && hasScannedSheet;
 
   // Autoscroll lento tipo teleprompter para la vista de acordes — para que el músico no tenga
   // que tocar la pantalla mientras toca el instrumento. 1 = muy lento a propósito (lo pedido),
@@ -91,15 +112,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const chordsScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setManualAdjust(0);
     setShowDetails(false);
     setIsAutoScrolling(false);
-    // Al llegar a un tema sin acordes en texto pero con documento escaneado, no tiene sentido
-    // arrancar en una vista de acordes vacía — pero si el usuario ya había pedido ver el
-    // documento a propósito para el tema anterior, no lo forzamos de vuelta a acordes cada vez.
-    setViewMode(prevMode => (hasChordsText ? 'chords' : hasScannedSheet ? 'sheet' : prevMode));
+    setManualViewOverride(null);
     if (chordsScrollRef.current) chordsScrollRef.current.scrollTop = 0;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   useEffect(() => {
@@ -167,15 +183,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     return () => document.removeEventListener('fullscreenchange', handleChange);
   }, []);
 
-  // Transpone una tonalidad manteniendo su notación original (ES o EN) — reutiliza el mismo
-  // transpositor validado que usa el visor de acordes, en vez de una tabla ad-hoc que solo
-  // cubría bien la notación inglesa.
-  const transposeKey = (key: string, semitones: number): string => {
-    if (!key || semitones === 0) return key;
-    const isSpanish = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(key.trim());
-    return transposeChordToken(key, semitones, isSpanish ? 'ES' : 'EN');
-  };
-
   const handlePrev = () => {
     setCurrentIndex(i => Math.max(0, i - 1));
   };
@@ -191,15 +198,15 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); handlePrev(); }
       if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); handleNext(); }
       if (e.key === 'Escape') onClose();
-      if (e.key === '+' || e.key === '=') setManualAdjust(t => Math.min(t + 1, 6));
-      if (e.key === '-') setManualAdjust(t => Math.max(t - 1, -6));
-      if (e.key === '0') setManualAdjust(0);
+      if (e.key === '+' || e.key === '=') adjustTranspose(1);
+      if (e.key === '-') adjustTranspose(-1);
+      if (e.key === '0' && currentItem) onSetDesiredKey(currentItem.id, null);
       if (e.key === 'f' || e.key === 'F') toggleFullscreen();
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [allItems.length, toggleFullscreen]);
+  }, [allItems.length, toggleFullscreen, currentItem, currentSong, effectiveTranspose, onSetDesiredKey]);
 
   // Swipe táctil estilo "pasar página" (iBooks / forScore): un swipe horizontal claro pasa de
   // canción; un gesto vertical o corto se deja pasar para no robarle el scroll al documento.
@@ -232,7 +239,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     );
   }
 
-  const effectiveTranspose = autoTranspose + manualAdjust;
   const transposedKey = currentSong ? transposeKey(currentSong.tonalidad, effectiveTranspose) : '';
   const chords = currentSong?.cifradoTexto || 'Sin acordes guardados';
   const structure = currentSong?.guiaSustituto?.estructura || '';
@@ -271,7 +277,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
           {!isBlock && hasChordsText && hasScannedSheet && (
             <button
-              onClick={() => setViewMode(m => (m === 'chords' ? 'sheet' : 'chords'))}
+              onClick={() => setManualViewOverride(effectiveViewMode === 'sheet' ? 'chords' : 'sheet')}
               className="p-1.5 hover:bg-white/10 rounded-lg transition text-neutral-300"
               title={showScannedSheet ? 'Ver acordes en texto' : 'Ver documento original escaneado'}
             >
@@ -400,16 +406,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
         {!isBlock && !showScannedSheet && (
           <div className="flex items-center justify-center gap-2">
-            {autoTranspose !== 0 && manualAdjust === 0 && (
-              <span className="text-[10px] text-amber-400/80" title={`Este repertorio pide tocarla en ${currentItem?.tonalidadDeseada} (original: ${currentSong?.tonalidad})`}>
-                🎯 auto
+            {effectiveTranspose !== 0 && (
+              <span className="text-[10px] text-amber-400/80" title={`Guardado para este repertorio: tocarla en ${currentItem?.tonalidadDeseada} (original: ${currentSong?.tonalidad})`}>
+                💾 guardado
               </span>
             )}
             <span className="text-neutral-500 text-xs">Tono:</span>
             <button
-              onClick={() => setManualAdjust(t => Math.max(t - 1, -6))}
+              onClick={() => adjustTranspose(-1)}
               className="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 rounded text-xs font-mono"
-              title="- (Bajar semitono)"
+              title="- (Bajar semitono, se guarda para este repertorio)"
             >
               −
             </button>
@@ -417,17 +423,17 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               {transposedKey}{effectiveTranspose !== 0 ? ` (${currentSong?.tonalidad} ${effectiveTranspose > 0 ? '+' : ''}${effectiveTranspose})` : ''}
             </span>
             <button
-              onClick={() => setManualAdjust(t => Math.min(t + 1, 6))}
+              onClick={() => adjustTranspose(1)}
               className="px-2.5 py-1 bg-neutral-800 hover:bg-neutral-700 rounded text-xs font-mono"
-              title="+ (Subir semitono)"
+              title="+ (Subir semitono, se guarda para este repertorio)"
             >
               +
             </button>
-            {manualAdjust !== 0 && (
+            {effectiveTranspose !== 0 && (
               <button
-                onClick={() => setManualAdjust(0)}
+                onClick={() => currentItem && onSetDesiredKey(currentItem.id, null)}
                 className="px-2 py-1 text-neutral-500 hover:text-amber-400 text-xs"
-                title={autoTranspose !== 0 ? 'Quitar el ajuste manual (vuelve al tono de este repertorio)' : 'Restablecer tono original'}
+                title="Volver al tono original de la canción"
               >
                 reset
               </button>

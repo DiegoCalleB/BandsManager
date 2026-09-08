@@ -4467,6 +4467,7 @@ export default function RepertorioSetlists({
       setlist={setlists.find(s => s.id === performanceSetlistId)!}
       songs={songs}
       onClose={() => setPerformanceSetlistId(null)}
+      onSetDesiredKey={handleSetTonalidadDeseada}
     />
   )}
 </div>
