@@ -108,7 +108,7 @@ Example response format:
       preferredModel: GEMINI_MODEL,
     });
 
-    const text = response.text();
+    const text = response.text || "";
     const extracted = JSON.parse(text) as ExtractedStructure;
     return extracted;
   } catch (error) {
