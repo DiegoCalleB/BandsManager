@@ -2484,6 +2484,18 @@ export default function RepertorioSetlists({
  className={`flex-1 min-w-0 text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
  />
 
+ {/* MODO CONCIERTO: acción principal para usar en directo, no una más del menú "⋯" de
+     ajustes secundarios (compartir/asignar/imprimir) — necesita ser visible de un vistazo. */}
+ <button
+ type="button"
+ onClick={() => setPerformanceSetlistId(activeSetlist.id)}
+ className="shrink-0 px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-amber-950/30"
+ title="Modo Concierto: ver y pasar las partituras del repertorio en directo"
+ >
+ <Mic className="w-3.5 h-3.5" />
+ <span className="hidden sm:inline">Modo Concierto</span>
+ </button>
+
  <div className="relative shrink-0">
  <button
  type="button"

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { X, Upload, Camera, FileText, Loader, CheckCircle, AlertCircle, Download } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song } from '../../types';
+import { isImageDocument, isPdfDocument } from '../../utils/documentType';
 
 interface SongStudioStructureUploadModalProps {
   song: Song;
@@ -29,6 +30,7 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
 
   const ALLOWED_TYPES = [
     'application/pdf',
@@ -316,23 +318,73 @@ export const SongStudioStructureUploadModal: React.FC<SongStudioStructureUploadM
               {song.estructuraDocumentoUrl && (
                 <div className="p-3 rounded-lg bg-emerald-950/20 border border-emerald-500/30 text-sm text-emerald-200 space-y-2">
                   <p className="font-semibold">Estructura actual guardada</p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-emerald-300">{song.estructuraDocumentoNombre || 'Documento'}</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-xs text-emerald-300 truncate">{song.estructuraDocumentoNombre || 'Documento'}</p>
                       <p className="text-xs text-neutral-400 mt-1">
                         Procesado el {new Date(song.estructuraDocumentoProcesadoEn || '').toLocaleDateString('es-ES')}
                       </p>
                     </div>
-                    <a
-                      href={song.estructuraDocumentoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition flex items-center gap-1"
-                    >
-                      <Download className="w-3 h-3" />
-                      Descargar
-                    </a>
+                    <div className="flex gap-1.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setShowComparison(v => !v)}
+                        className={`px-3 py-1.5 rounded text-xs font-semibold transition flex items-center gap-1 ${
+                          showComparison
+                            ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                            : 'bg-white/10 hover:bg-white/20 text-white'
+                        }`}
+                      >
+                        👁️ {showComparison ? 'Ocultar' : 'Comparar'}
+                      </button>
+                      <a
+                        href={song.estructuraDocumentoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition flex items-center gap-1"
+                      >
+                        <Download className="w-3 h-3" />
+                        Descargar
+                      </a>
+                    </div>
                   </div>
+
+                  {/* SIDE-BY-SIDE COMPARISON: original scanned document vs. what the AI extracted,
+                      so the user can eyeball whether the extraction actually matches the paper. */}
+                  {showComparison && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
+                      <div className="space-y-1.5">
+                        <p className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">Documento original</p>
+                        <div className="bg-black/40 border border-white/10 rounded-lg overflow-hidden max-h-96">
+                          {isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
+                            <img
+                              src={song.estructuraDocumentoUrl}
+                              alt="Estructura original"
+                              className="w-full h-full object-contain max-h-96"
+                            />
+                          ) : isPdfDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl) ? (
+                            <iframe
+                              src={song.estructuraDocumentoUrl}
+                              title="Estructura original (PDF)"
+                              className="w-full h-96 border-0"
+                            />
+                          ) : (
+                            <div className="h-96 flex items-center justify-center text-xs text-neutral-400 p-4 text-center">
+                              Este tipo de documento no se puede previsualizar aquí. Usa "Descargar" para abrirlo.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <p className="text-[10px] font-mono uppercase tracking-wider text-neutral-400">Acordes extraídos (guardados)</p>
+                        <div className="bg-black/40 border border-white/10 rounded-lg p-3 h-96 overflow-y-auto">
+                          <pre className="text-[11px] font-mono text-amber-100 whitespace-pre-wrap leading-relaxed">
+                            {song.cifradoTexto || 'Sin acordes guardados todavía.'}
+                          </pre>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </>
