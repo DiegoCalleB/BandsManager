@@ -34,7 +34,8 @@ import {
   extractUniqueChords,
   GUITAR_CHORD_DATABASE,
   GuitarChordShape,
-  transposeChordToken
+  transposeChordToken,
+  parseRootNote
 } from '../utils/chordUtils';
 
 interface SongChordsViewerModalProps {
@@ -74,6 +75,15 @@ export function SongChordsViewerModal({
   const [copiedText, setCopiedText] = useState<boolean>(false);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [showStructureUploadModal, setShowStructureUploadModal] = useState<boolean>(false);
+
+  // El estado de edición solo se inicializa desde `song` al montar (useState no vuelve a leer
+  // sus argumentos). Cuando la subida de estructura o la generación con IA actualizan `song`
+  // desde fuera del formulario de edición, había que cerrar y reabrir el modal para verlo:
+  // este efecto sincroniza el estado local en cuanto cambian los valores reales de la canción.
+  useEffect(() => {
+    setCifradoTexto(song.cifradoTexto || getSampleCifrado(song));
+    setGuiaSustituto(song.guiaSustituto || getSampleSubstituteGuide(song));
+  }, [song.cifradoTexto, song.guiaSustituto]);
 
   // Auto-scroll timer effect
   useEffect(() => {
@@ -205,10 +215,20 @@ export function SongChordsViewerModal({
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
-        <div className="bg-neutral-900 border border-neutral-700/80 rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
-        
+        <div className="relative bg-neutral-900 border border-neutral-700/80 rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden shadow-2xl text-white my-auto">
+
+        {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 right-3 z-20 p-1.5 rounded-full bg-black/50 hover:bg-rose-500/30 text-neutral-300 hover:text-rose-300 transition cursor-pointer"
+          title="Cerrar"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         {/* MODAL HEADER */}
-        <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-purple-950/40 p-4 border-b border-neutral-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="bg-gradient-to-r from-neutral-950 via-neutral-900 to-purple-950/40 p-4 pr-12 border-b border-neutral-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400">
               <Music2 className="w-6 h-6" />
@@ -242,30 +262,8 @@ export function SongChordsViewerModal({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Share WhatsApp / Apps Button */}
-            <button
-              type="button"
-              onClick={() => setShowShareModal(true)}
-              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-emerald-950/50"
-              title="Compartir canción y acordes por WhatsApp o App"
-            >
-              <MessageSquare className="w-4 h-4 fill-white/20" />
-              <span>Compartir</span>
-            </button>
-
-            {/* Upload Structure Button */}
-            <button
-              type="button"
-              onClick={() => setShowStructureUploadModal(true)}
-              className="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-teal-950/50"
-              title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
-            >
-              <Upload className="w-4 h-4" />
-              <span>📄 Subir</span>
-            </button>
-
-            {/* AI Generate Button Header */}
+          <div className="flex items-center gap-1.5">
+            {/* AI Generate — the main action, keeps its label */}
             <button
               type="button"
               onClick={handleGenerateWithAi}
@@ -277,7 +275,25 @@ export function SongChordsViewerModal({
               <span>{isGeneratingAi ? 'Generando...' : 'IA Cifrado'}</span>
             </button>
 
-            {/* Print / Clean View */}
+            {/* Secondary actions — icon-only to keep the header clean */}
+            <button
+              type="button"
+              onClick={() => setShowStructureUploadModal(true)}
+              className="p-2 rounded-xl bg-teal-600/20 border border-teal-500/40 hover:bg-teal-600/30 text-teal-300 transition cursor-pointer"
+              title="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
+            >
+              <Upload className="w-4 h-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowShareModal(true)}
+              className="p-2 rounded-xl bg-white/5 hover:bg-emerald-500/20 text-neutral-300 hover:text-emerald-300 transition cursor-pointer"
+              title="Compartir canción y acordes por WhatsApp o App"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </button>
+
             <button
               type="button"
               onClick={() => window.print()}
@@ -285,15 +301,6 @@ export function SongChordsViewerModal({
               title="Imprimir Cifrado"
             >
               <Printer className="w-4 h-4" />
-            </button>
-
-            {/* Close Modal */}
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-2 rounded-xl bg-white/5 hover:bg-rose-500/20 text-neutral-400 hover:text-rose-400 transition cursor-pointer"
-            >
-              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -776,10 +783,13 @@ function renderFormattedChordSheet(text: string) {
       );
     }
 
-    // Otherwise check if line contains chords separated by spaces
+    // Otherwise check if line contains chords separated by spaces. Usa el mismo validador de
+    // acordes (parseRootNote) que la transposición y la lista de diagramas: antes esta línea
+    // tenía su propia regex duplicada que solo miraba si el token EMPEZABA por una nota, sin
+    // validar el resto ("Get", "Fire", "Baby" contaban como acordes en letras en inglés).
     const tokens = line.trim().split(/\s+/);
-    const chordCount = tokens.filter(t => /^(Sol#|Solb|Sol|Do#|Do|Re#|Reb|Re|Fa#|Fa|La#|Lab|La|Sib|Si|Mib|Mi|[A-G][#b]?)/.test(t)).length;
-    const isChordLine = chordCount > 0 && chordCount / tokens.length >= 0.6;
+    const chordCount = tokens.filter(t => parseRootNote(t) !== null).length;
+    const isChordLine = chordCount > 0 && chordCount / tokens.length >= 0.7;
 
     if (isChordLine) {
       return (

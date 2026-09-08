@@ -28,6 +28,29 @@ describe('chordUtils', () => {
       expect(parseRootNote('Hola')).toBeNull();
       expect(parseRootNote('123')).toBeNull();
     });
+
+    it('rejects English words that merely start with a root note letter', () => {
+      // "Get", "Fire", "Baby", "Come", "Back" all start with A-G but are not chords -
+      // regression test for the bug where any word starting with a note letter counted
+      // as a chord and English lyrics got mangled into fake chord lines.
+      expect(parseRootNote('Get')).toBeNull();
+      expect(parseRootNote('Fire')).toBeNull();
+      expect(parseRootNote('Baby')).toBeNull();
+      expect(parseRootNote('Come')).toBeNull();
+      expect(parseRootNote('Back')).toBeNull();
+      expect(parseRootNote('Days')).toBeNull();
+    });
+
+    it('accepts real chords with recognized suffixes and slash bass notes', () => {
+      expect(parseRootNote('Am7')).toEqual({ root: 'A', suffix: 'm7' });
+      expect(parseRootNote('Csus4')).toEqual({ root: 'C', suffix: 'sus4' });
+      expect(parseRootNote('C/G')).toEqual({ root: 'C', suffix: '/G' });
+      expect(parseRootNote('Sol/Si')).toEqual({ root: 'Sol', suffix: '/Si' });
+    });
+
+    it('rejects a slash chord with an invalid bass note', () => {
+      expect(parseRootNote('C/Get')).toBeNull();
+    });
   });
 
   describe('transposeSingleNote', () => {
@@ -86,6 +109,18 @@ describe('chordUtils', () => {
       const text = '[Do] intro [Sol] verse [Do] chorus [Lam] bridge';
       const chords = extractUniqueChords(text);
       expect(chords).toEqual(['Do', 'Sol', 'Lam']);
+    });
+
+    it('does not mistake capitalized English lyrics for a chord line', () => {
+      // Regression test: title-case English lyrics like this used to be flagged as a
+      // 100% chord line because every word happened to start with a root note letter.
+      const text = 'Baby Come Back\nGet your motor runnin\'';
+      expect(extractUniqueChords(text)).toEqual([]);
+    });
+
+    it('still extracts a real standalone chord line mixed with English lyrics', () => {
+      const text = 'Am F C G\nGet your motor runnin\'';
+      expect(extractUniqueChords(text)).toEqual(['Am', 'F', 'C', 'G']);
     });
   });
 });

@@ -96,22 +96,65 @@ export const GUITAR_CHORD_DATABASE: Record<string, GuitarChordShape> = {
 // Order Spanish multi-char root notes first (Sol#, Sol, Do#, Do, Re#, Re, Fa#, Fa, La#, La, Sib, Si, Mi)
 const ROOT_NOTE_REGEX = /^(Sol#|Solb|Sol|Do#|Dom|Do|Re#|Reb|Rem|Re|Fa#|Fam|Fa|La#|Lab|Lam|La|Sib|Sim|Si|Mib|Mim|Mi|[A-G][#b]?)/i;
 
-export function parseRootNote(chordToken: string): { root: string; suffix: string } | null {
+// Sufijos de acorde reconocidos. Sin esta lista, "root + lo que sea" (el `.*` que había antes)
+// aceptaba cualquier palabra que empezara por una nota como acorde válido: "Get", "Fire",
+// "Baby", "Come"... todas arrancan por A-G y colaban como acordes en letras en inglés. Esta
+// lista es la frontera entre "esto es un acorde" y "esto es una palabra que empieza por Sol".
+const CHORD_SUFFIXES = [
+  'maj13', 'maj11', 'maj9', 'maj7', 'maj',
+  'mMaj7', 'madd9', 'madd11', 'madd2',
+  'm7b5', 'm7#5', 'm6/9', 'm6', 'm7', 'm9', 'm11', 'm13',
+  'min7', 'min9', 'min11', 'min13', 'min', 'm',
+  'dim7', 'dim',
+  'aug7', 'aug', '+',
+  'sus2', 'sus4', 'sus',
+  'add9', 'add11', 'add2',
+  '7sus4', '7sus2', '7b5', '7#5', '7b9', '7#9', '7',
+  '6/9', '6', '9', '11', '13', '5', '°', 'ø7', 'ø'
+];
+
+function isValidChordSuffix(suffix: string): boolean {
+  if (suffix === '') return true;
+  return CHORD_SUFFIXES.includes(suffix);
+}
+
+function matchRoot(part: string): { root: string; suffix: string } | null {
   // Check Spanish root notes first
   const spanishRoots = ['Sol#', 'Solb', 'Sol', 'Do#', 'Do', 'Re#', 'Reb', 'Re', 'Fa#', 'Fa', 'La#', 'Lab', 'La', 'Sib', 'Si', 'Mib', 'Mi'];
   for (const root of spanishRoots) {
-    if (chordToken.startsWith(root)) {
-      return { root, suffix: chordToken.slice(root.length) };
+    if (part.startsWith(root)) {
+      return { root, suffix: part.slice(root.length) };
     }
   }
 
-  // English root notes
-  const englishMatch = chordToken.match(/^([A-G][#b]?)(.*)$/);
+  // English root notes (mayúscula obligatoria: evita que palabras normales en minúscula cuelen)
+  const englishMatch = part.match(/^([A-G][#b]?)(.*)$/);
   if (englishMatch) {
     return { root: englishMatch[1], suffix: englishMatch[2] };
   }
 
   return null;
+}
+
+export function parseRootNote(chordToken: string): { root: string; suffix: string } | null {
+  if (!chordToken) return null;
+
+  // Acordes con bajo tipo "Sol/Si" o "C/G": la nota del bajo también debe ser una nota válida,
+  // sin sufijo raro detrás (un bajo nunca lleva "m7" ni similares).
+  const slashIdx = chordToken.indexOf('/');
+  const mainPart = slashIdx === -1 ? chordToken : chordToken.slice(0, slashIdx);
+  const bassPart = slashIdx === -1 ? null : chordToken.slice(slashIdx + 1);
+
+  const parsed = matchRoot(mainPart);
+  if (!parsed || !isValidChordSuffix(parsed.suffix)) return null;
+
+  if (bassPart !== null) {
+    const bassParsed = matchRoot(bassPart);
+    if (!bassParsed || bassParsed.suffix !== '') return null;
+    return { root: parsed.root, suffix: `${parsed.suffix}/${bassPart}` };
+  }
+
+  return parsed;
 }
 
 export function transposeSingleNote(rootNote: string, semitones: number, targetNotation: 'ES' | 'EN'): string {
@@ -155,6 +198,15 @@ export function transposeChordToken(chord: string, semitones: number, notation: 
   return `${newRoot}${parsed.suffix}`;
 }
 
+// Una línea "de acordes" (sin corchetes) es aquella donde la gran mayoría de los tokens son
+// acordes válidos. Sin este umbral, una sola palabra suelta que empiece por una nota (p.ej.
+// "Do" en mitad de una frase) contaría como acorde aunque el resto de la línea sea letra normal.
+function isChordLine(tokens: string[]): boolean {
+  if (tokens.length === 0 || (tokens.length === 1 && tokens[0] === '')) return false;
+  const chordCount = tokens.filter(t => parseRootNote(t) !== null).length;
+  return chordCount > 0 && chordCount / tokens.length >= 0.7;
+}
+
 // Replaces chords in a block of text
 export function processChordText(
   text: string,
@@ -179,11 +231,7 @@ export function processChordText(
     const tokens = line.trim().split(/\s+/);
     if (tokens.length === 0 || line.trim() === '') return line;
 
-    // Count how many tokens look like chords
-    const chordCount = tokens.filter(t => parseRootNote(t) !== null).length;
-    const isChordLine = chordCount > 0 && chordCount / tokens.length >= 0.7;
-
-    if (!isChordLine) return line;
+    if (!isChordLine(tokens)) return line;
 
     // Replace each chord token preserving spacing
     return line.replace(/([A-Za-z0-9#\/]+)/g, (match) => {
@@ -211,11 +259,14 @@ export function extractUniqueChords(text: string): string[] {
     });
   }
 
-  // Chord lines
+  // Chord lines: solo se cuentan tokens de líneas donde la mayoría son acordes (ver
+  // isChordLine) — si no, una palabra suelta como "Do" en mitad de una frase normal se
+  // colaba como acorde encontrado.
   const lines = text.split('\n');
   lines.forEach(line => {
     if (line.includes('[')) return;
     const tokens = line.trim().split(/\s+/);
+    if (!isChordLine(tokens)) return;
     tokens.forEach(t => {
       if (parseRootNote(t)) {
         found.add(t);
