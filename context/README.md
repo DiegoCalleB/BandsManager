@@ -74,6 +74,7 @@ context/
 ├── DATABASE_SCHEMA.md             ← Estructura de Supabase (tablas, relaciones)
 ├── SECURITY.md                    ← Seguridad & multi-tenancy (CRÍTICO)
 ├── BUSINESS_RULES.md              ← Reglas de negocio de agentes IA
+├── TESTING_STRATEGY.md 🧪         ← Qué testear, cómo, checklist pre-PR
 ├── CODE_STANDARDS.md              ← Estándares de código
 ├── UI_UX_GUIDELINES.md            ← Diseño & frontend
 └── GLOSSARY.md                    ← Términos clave (referencia)
@@ -129,7 +130,8 @@ context/
 | "¿Estados de un lead?" | `BUSINESS_RULES.md` #2 + `GLOSSARY.md` |
 | "¿Cómo arreglamos multi-tenancy?" | `SECURITY.md` #1-2 |
 | "¿UI design principles?" | `UI_UX_GUIDELINES.md` + `SIMPLICITY_FIRST.md` |
-| "¿Cómo testear?" | `CODE_STANDARDS.md` #4 |
+| "¿Qué testear?" | `TESTING_STRATEGY.md` (qué sí, qué no, checklist) |
+| "¿Cómo testear?" | `TESTING_STRATEGY.md` + `CODE_STANDARDS.md` #4 |
 | "¿Qué es EPK?" | `GLOSSARY.md` |
 | "¿Env vars?" | `GLOSSARY.md` (Env Vars Clave) |
 
@@ -153,7 +155,7 @@ De `AGENT_CONTEXT.md`:
 
 ## 🎓 Para Desarrolladores Nuevos
 
-### Lectura Inicial Recomendada (2.5 horas)
+### Lectura Inicial Recomendada (3 horas)
 
 1. `PROJECT_OVERVIEW.md` (10 min)
 2. `AGENT_CONTEXT.md` (20 min)
@@ -162,18 +164,20 @@ De `AGENT_CONTEXT.md`:
 5. `DATABASE_SCHEMA.md` (20 min)
 6. `SECURITY.md` (20 min)
 7. `BUSINESS_RULES.md` (20 min)
-8. `CODE_STANDARDS.md` (15 min)
+8. `TESTING_STRATEGY.md` (20 min) — **Lo que testear (crítico)**
+9. `CODE_STANDARDS.md` (15 min)
 
 Después: Explorar código en `server/` y `src/`, siguiendo patrones en estos documentos.
 
 ### Por Tipo de Tarea
 
 - **UX/Simplicity (TÚ):** SIMPLICITY_FIRST (obsesión central)
-- **Backend:** DATABASE_SCHEMA + ARCHITECTURE + SECURITY + CODE_STANDARDS
-- **Frontend:** SIMPLICITY_FIRST + UI_UX_GUIDELINES + CODE_STANDARDS
-- **Agentes IA:** BUSINESS_RULES + SECURITY + DATABASE_SCHEMA
+- **Backend:** DATABASE_SCHEMA + ARCHITECTURE + SECURITY + CODE_STANDARDS + TESTING_STRATEGY
+- **Frontend:** SIMPLICITY_FIRST + UI_UX_GUIDELINES + CODE_STANDARDS + TESTING_STRATEGY
+- **Agentes IA:** BUSINESS_RULES + SECURITY + DATABASE_SCHEMA + TESTING_STRATEGY
+- **Testing (CRÍTICO):** TESTING_STRATEGY (antes de toda PR)
 - **Deploy/DevOps:** ARCHITECTURE (sección Deploy)
-- **Testing:** CODE_STANDARDS #4
+- **Setup local:** TESTING_STRATEGY (cómo correr tests)
 
 ---
 
