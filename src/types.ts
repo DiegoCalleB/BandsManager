@@ -221,6 +221,7 @@ export interface EmailSignatureConfig {
   telefono?: string;
   email?: string;
   textoPie?: string;
+  incluirLogo?: boolean;
   incluirIconosRedes?: boolean;
   adjuntarDossierPorDefecto?: boolean;
   redesSociales?: {

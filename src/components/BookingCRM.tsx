@@ -20,6 +20,7 @@ import { AddLeadModal } from './booking/AddLeadModal';
 import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
 import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
 import { ExcelImportModal } from './booking/ExcelImportModal';
+import { ExportLeadsModal } from './booking/ExportLeadsModal';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
@@ -278,6 +279,7 @@ export default function BookingCRM({
  const [isPlacesExplorerOpen, setIsPlacesExplorerOpen] = useState(false);
  const [isContactEnricherOpen, setIsContactEnricherOpen] = useState(false);
  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
+ const [isExportLeadsOpen, setIsExportLeadsOpen] = useState(false);
  const [isAddingLeadModalOpen, setIsAddingLeadModalOpen] = useState(false);
  const [newLeadData, setNewLeadData] = useState({
  nombre_sala: '',
@@ -1119,6 +1121,18 @@ export default function BookingCRM({
         </button>
 
         <button
+          id="export-leads-btn"
+          type="button"
+          onClick={() => setIsExportLeadsOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 shadow-sm active:scale-95 cursor-pointer"
+          title="Exportar base de datos a Excel / CSV o JSON"
+        >
+          <Download className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="hidden sm:inline">Exportar Leads</span>
+          <span className="sm:hidden">Exportar</span>
+        </button>
+
+        <button
           id="open-tools-btn"
           type="button"
           onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
@@ -1222,41 +1236,14 @@ export default function BookingCRM({
 
           <button
             type="button"
-            onClick={async () => {
+            onClick={() => {
               setIsMobileToolsOpen(false);
-              const approvedLeads = leads.filter(l => l.estado === 'aprobado');
-              if (approvedLeads.length === 0) {
-                alert("No hay ninguna sala o contacto en estado 'aprobado'.");
-                return;
-              }
-              const headers = ["ID", "Nombre Sala / Contacto", "Ciudad", "Región", "Aforo", "Tipo", "Email Contacto", "Fuente", "Estado", "Pitch Generado", "Notas"];
-              const rows = approvedLeads.map(l => [
-                `"${(l.id || '').replace(/"/g, '""')}"`,
-                `"${(l.nombre_sala || '').replace(/"/g, '""')}"`,
-                `"${(l.ciudad || '').replace(/"/g, '""')}"`,
-                `"${(l.region || '').replace(/"/g, '""')}"`,
-                l.aforo || 0,
-                `"${(l.tipo || '').replace(/"/g, '""')}"`,
-                `"${(l.email_contacto || '').replace(/"/g, '""')}"`,
-                `"${(l.fuente || '').replace(/"/g, '""')}"`,
-                `"${(l.estado || '').replace(/"/g, '""')}"`,
-                `"${(l.pitch_generado || '').replace(/"/g, '""')}"`,
-                `"${(l.notas || '').replace(/"/g, '""')}"`
-              ]);
-              const csvContent = "﻿" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-              const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.setAttribute("href", url);
-              link.setAttribute("download", `${(effectiveBandName || 'Banda').replace(/\s+/g, '_')}_Aprobados_${new Date().toISOString().slice(0, 10)}.csv`);
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
+              setIsExportLeadsOpen(true);
             }}
             className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 transition-all cursor-pointer active:scale-98"
           >
             <Download className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Exportar CSV de Aprobados</span>
+            <span>Exportar Leads (A la vista / Todos / Excel)</span>
           </button>
 
           <button
@@ -1984,34 +1971,7 @@ export default function BookingCRM({
 
       setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
     }}
-    onBulkExportCsv={() => {
-      const leadsToExport = leads.filter(l => selectedLeadIds.includes(l.id));
-      if (leadsToExport.length === 0) return;
-
-      const headers = ['Nombre', 'Tipo', 'Estado', 'Ciudad', 'Región', 'Aforo', 'Género', 'Email', 'Teléfono', 'Web / Redes', 'Notas'];
-      const rows = leadsToExport.map(l => [
-        `"${(l.nombre_sala || '').replace(/"/g, '""')}"`,
-        `"${(l.tipo || '').replace(/"/g, '""')}"`,
-        `"${(l.estado || '').replace(/"/g, '""')}"`,
-        `"${(l.ciudad || '').replace(/"/g, '""')}"`,
-        `"${(l.region || '').replace(/"/g, '""')}"`,
-        `"${l.aforo || ''}"`,
-        `"${(l.genero || '').replace(/"/g, '""')}"`,
-        `"${(l.email_contacto || '').replace(/"/g, '""')}"`,
-        `"${(l.telefono || '').replace(/"/g, '""')}"`,
-        `"${(l.website || l.instagram || '').replace(/"/g, '""')}"`,
-        `"${(l.notas || '').replace(/"/g, '""')}"`
-      ]);
-
-      const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', `bandmanager_salas_seleccionadas_${new Date().toISOString().slice(0, 10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }}
+    onBulkExportCsv={() => setIsExportLeadsOpen(true)}
     onBulkDelete={() => {
       if (selectedLeadIds.length === 0) return;
       const idsToDelete = [...selectedLeadIds];
@@ -2676,6 +2636,15 @@ export default function BookingCRM({
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 50);
     }}
+  />
+
+  <ExportLeadsModal
+    isOpen={isExportLeadsOpen}
+    onClose={() => setIsExportLeadsOpen(false)}
+    allLeads={leads}
+    filteredLeads={filteredLeads}
+    selectedLeadIds={selectedLeadIds}
+    bandName={effectiveBandName}
   />
 
 
