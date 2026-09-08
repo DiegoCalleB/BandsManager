@@ -112,7 +112,19 @@
 ### 5.1 Backend (Express + TypeScript)
 * **Tipado Estricto:** Prohibido añadir nuevos errores a `npx tsc --noEmit` (baseline en CI = 0 errores en código nuevo). Evitar `any` implícitos.
 * **Resiliencia ante Rechazos Asíncronos:** Mantener el handler global `unhandledRejection` en `server.ts` para evitar caídas del servidor Node ante fallos puntuales. Usar `try/catch` en todos los handlers asíncronos.
-* **Testing en Vitest:** Escribir unit tests en carpetas `__tests__/` adyacentes al módulo. Priorizar pruebas de funciones puras, helpers de seguridad y scoping multi-tenancy.
+
+### 5.1.1 Testing (Vitest)
+* **Estructura:** Tests en carpetas `__tests__/` adyacentes al código que prueban (ej: `server/utils/__tests__/bandAccess.test.ts`, no en un `tests/` central).
+* **Estrategia:** Unit-testing de funciones puras exportadas contra objetos `req`/`loadState` falsos, sin usar HTTP client (`supertest`). Priorizar lógica de seguridad y multi-tenancy.
+* **Ejecución:**
+  ```bash
+  npm test                          # Suite completa
+  npx vitest run ruta/al/test.ts   # Un test específico
+  npx vitest                        # Watch mode
+  npm run test:coverage            # Reporte de cobertura
+  ```
+* **Cobertura Actual:** ~560 tests, 56 files. Áreas mejor cubiertas: `server/utils` (auth, multi-tenancy, SSRF) y `server/db` (band-scoping). Áreas débiles: `server/routes/*.ts` (handlers inline).
+* **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
 
 ### 5.2 Frontend (React 19 + Vite + CSS)
 * **Diseño e Interfaz Premium:** Interfaces vibrantes con dark mode moderno, glassmorphism, micro-animaciones (`motion`), iconografía clara (`lucide-react`) y tipografía cuidada. Sin placeholders.

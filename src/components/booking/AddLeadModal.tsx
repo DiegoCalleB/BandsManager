@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Building2, Radio, Sparkles, Loader2, Upload, Search } from 'lucide-react';
+import { X, Building2, Radio, Sparkles, Loader2, Upload, Search, Briefcase } from 'lucide-react';
 import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
@@ -103,6 +103,8 @@ export function AddLeadModal({
           <div className="flex items-center gap-2">
             {sectionTab === 'medios' ? (
               <Radio className="w-5 h-5 text-rose-400" />
+            ) : sectionTab === 'grupos' ? (
+              <Briefcase className="w-5 h-5 text-amber-400" />
             ) : (
               <Building2 className="w-5 h-5 text-[#d1b375]/80" />
             )}
@@ -112,8 +114,10 @@ export function AddLeadModal({
               }`}
             >
               {sectionTab === 'medios'
-                ? 'Añadir Nuevo Medio de Comunicación'
-                : 'Añadir Nueva Sala o Festival'}
+                ? 'Nuevo Medio o Prensa'
+                : sectionTab === 'grupos'
+                ? 'Nuevo Contacto de Industria'
+                : 'Nueva Sala o Festival'}
             </h3>
           </div>
           <button
@@ -129,7 +133,9 @@ export function AddLeadModal({
             <div className="flex justify-between items-center mb-1">
               <label className={`block text-[10px] uppercase font-sans tracking-wider ${textSub}`}>
                 {sectionTab === 'medios'
-                  ? 'Nombre del Medio / Emisora / Revista *'
+                  ? 'Nombre del Medio / Revista *'
+                  : sectionTab === 'grupos'
+                  ? 'Nombre de la Entidad / Contacto *'
                   : 'Nombre de la Sala / Festival *'}
               </label>
               <button
@@ -367,7 +373,7 @@ export function AddLeadModal({
 
             <div>
               <label className={`block text-[10px] uppercase font-sans tracking-wider mb-1 ${textSub}`}>
-                {sectionTab === 'medios' ? 'Tipo de Medio' : 'Tipo de Espacio'}
+                {sectionTab === 'medios' ? 'Tipo de Medio' : sectionTab === 'grupos' ? 'Tipo de Organización' : 'Tipo de Espacio'}
               </label>
               {sectionTab === 'medios' ? (
                 <select
@@ -488,7 +494,7 @@ export function AddLeadModal({
                   : 'bg-[#f2ca50] hover:bg-[#e2ba40] text-[#3c2f00]'
               }`}
             >
-              {sectionTab === 'medios' ? 'Guardar Medio' : 'Guardar Sala'}
+              {sectionTab === 'medios' ? 'Guardar Medio' : sectionTab === 'grupos' ? 'Guardar Contacto' : 'Guardar Sala'}
             </button>
           </div>
         </form>

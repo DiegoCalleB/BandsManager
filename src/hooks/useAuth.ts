@@ -2,12 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { User } from '../types';
 import { api } from '../services/api';
 import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
+import { syncCalendarPreferencesFromUser } from '../utils/calendarViewPreferences';
 
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     try {
       const savedUser = localStorage.getItem('bakandeya_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        syncCalendarPreferencesFromUser(parsed);
+        return parsed;
+      }
+      return null;
     } catch (e) {
       return null;
     }
@@ -48,6 +54,7 @@ export function useAuth() {
         setCurrentUser(data.user);
         setAvailableBands(data.availableBands || []);
         localStorage.setItem('bakandeya_user', JSON.stringify(data.user));
+        syncCalendarPreferencesFromUser(data.user);
         localStorage.setItem('bakandeya_available_bands', JSON.stringify(data.availableBands || []));
         if (data.token) {
           setAuthToken(data.token);
@@ -173,6 +180,7 @@ export function useAuth() {
     }
     localStorage.setItem('bakandeya_token', token);
     localStorage.setItem('bakandeya_user', JSON.stringify(resolvedUser));
+    syncCalendarPreferencesFromUser(resolvedUser);
     localStorage.setItem('bakandeya_remember_me', 'true');
     localStorage.setItem('bakandeya_logged_in', 'true');
     setIsLoggedIn(true);

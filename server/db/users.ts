@@ -13,7 +13,8 @@ export async function dbGetUsers(bandId?: string) {
       passwordHash: u.password_hash || u.passwordHash,
       googleOAuth: u.google_oauth || u.googleOAuth || {},
       main_band_id: u.main_band_id || u.mainBandId,
-      band_order: Array.isArray(u.band_order) ? u.band_order : (u.band_order ? JSON.parse(u.band_order) : undefined)
+      band_order: Array.isArray(u.band_order) ? u.band_order : (u.band_order ? JSON.parse(u.band_order) : undefined),
+      ui_preferences: u.ui_preferences || u.uiPreferences || {}
     }));
   }
 
@@ -26,7 +27,10 @@ export async function dbGetUsers(bandId?: string) {
     bandName: u.band_name || u.bandName,
     avatarColor: u.avatar_color || u.avatarColor,
     passwordHash: u.password_hash || u.passwordHash,
-    googleOAuth: u.google_oauth || u.googleOAuth || {}
+    googleOAuth: u.google_oauth || u.googleOAuth || {},
+    main_band_id: u.main_band_id || u.mainBandId,
+    band_order: Array.isArray(u.band_order) ? u.band_order : (u.band_order ? JSON.parse(u.band_order) : undefined),
+    ui_preferences: u.ui_preferences || u.uiPreferences || {}
   }));
 
   // Also include the band owner/leader from registered_bands if not already in list
@@ -87,7 +91,8 @@ export async function dbGetUserById(userId: string) {
     passwordHash: data.password_hash || data.passwordHash,
     googleOAuth: data.google_oauth || data.googleOAuth || {},
     main_band_id: data.main_band_id || data.mainBandId,
-    band_order: Array.isArray(data.band_order) ? data.band_order : (data.band_order ? JSON.parse(data.band_order) : undefined)
+    band_order: Array.isArray(data.band_order) ? data.band_order : (data.band_order ? JSON.parse(data.band_order) : undefined),
+    ui_preferences: data.ui_preferences || data.uiPreferences || {}
   };
 }
 
@@ -111,16 +116,18 @@ export async function dbUpsertUser(user: any) {
     salt: user.salt || "",
     google_oauth: user.googleOAuth || user.google_oauth || {},
     main_band_id: user.main_band_id || user.mainBandId || null,
-    band_order: user.band_order || null
+    band_order: user.band_order || null,
+    ui_preferences: user.ui_preferences || user.uiPreferences || {}
   };
 
   const { data, error } = await sb.from("users").upsert(payload).select().single();
   if (error) {
-    // If columns like band_order or main_band_id are not yet migrated in Supabase table schema, fallback gracefully
-    if (error.message && (error.message.includes('band_order') || error.message.includes('main_band_id'))) {
+    // If columns like band_order, main_band_id or ui_preferences are not yet migrated in Supabase table schema, fallback gracefully
+    if (error.message && (error.message.includes('band_order') || error.message.includes('main_band_id') || error.message.includes('ui_preferences'))) {
       const fallbackPayload = { ...payload };
       delete fallbackPayload.band_order;
       delete fallbackPayload.main_band_id;
+      delete fallbackPayload.ui_preferences;
       const { data: fbData, error: fbError } = await sb.from("users").upsert(fallbackPayload).select().single();
       if (fbError) throw new Error(`Supabase Error (upsert user fallback): ${fbError.message}`);
       return {
@@ -130,7 +137,8 @@ export async function dbUpsertUser(user: any) {
         passwordHash: fbData.password_hash,
         googleOAuth: fbData.google_oauth,
         main_band_id: user.main_band_id,
-        band_order: user.band_order
+        band_order: user.band_order,
+        ui_preferences: user.ui_preferences
       };
     }
     throw new Error(`Supabase Error (upsert user): ${error.message}`);
@@ -142,7 +150,8 @@ export async function dbUpsertUser(user: any) {
     passwordHash: data.password_hash,
     googleOAuth: data.google_oauth,
     main_band_id: data.main_band_id || user.main_band_id,
-    band_order: data.band_order || user.band_order
+    band_order: data.band_order || user.band_order,
+    ui_preferences: data.ui_preferences || user.ui_preferences
   };
 }
 

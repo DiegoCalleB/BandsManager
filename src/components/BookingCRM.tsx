@@ -20,6 +20,7 @@ import { AddLeadModal } from './booking/AddLeadModal';
 import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
 import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
 import { ExcelImportModal } from './booking/ExcelImportModal';
+import { ExportLeadsModal } from './booking/ExportLeadsModal';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
@@ -64,6 +65,9 @@ interface BookingCRMProps {
   onDeleteLead?: (id: string) => void;
   onBulkDeleteLeads?: (ids: string[]) => void;
   initialSection?: 'salas' | 'medios' | 'grupos';
+  onSectionChange?: (section: 'salas' | 'medios' | 'grupos' | 'bandas') => void;
+  onNavigate?: (view: any, options?: any) => void;
+  bandsCount?: number;
   initialStatusFilter?: LeadStatus | 'todos';
   initialSelectedLeadId?: string;
   epkConfig?: Partial<EPKConfig>;
@@ -97,6 +101,9 @@ export default function BookingCRM({
   onDeleteLead,
   onBulkDeleteLeads,
   initialSection = 'salas',
+  onSectionChange,
+  onNavigate,
+  bandsCount,
   initialStatusFilter = 'todos',
   initialSelectedLeadId,
   epkConfig,
@@ -109,6 +116,12 @@ export default function BookingCRM({
 }: BookingCRMProps) {
   const effectiveBandName = bandName || 'Tu Banda';
   const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
+
+  const handleSelectSectionTab = (tab: 'salas' | 'medios' | 'grupos') => {
+    setSectionTab(tab);
+    setTypeFilter('todos');
+    onSectionChange?.(tab);
+  };
  const {
    searchTerm, setSearchTerm,
    statusFilter, setStatusFilter,
@@ -129,6 +142,7 @@ export default function BookingCRM({
  const [isAgentConfigOpen, setIsAgentConfigOpen] = useState(false);
  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false);
  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+ const [isTemplatesSectionOpen, setIsTemplatesSectionOpen] = useState(false);
 
  useEffect(() => {
  if (initialSection) {
@@ -222,12 +236,13 @@ export default function BookingCRM({
   useEffect(() => {
     if (activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true)) {
       setFilterByCampaign(true);
-      setSectionTab('salas');
-      setSelectedCityFilter('');
-      setMinCapacityFilter(0);
-      setTypeFilter('todos');
-      setStatusFilter('todos');
-      setSearchTerm('');
+      if (sectionTab === 'salas') {
+        setSelectedCityFilter('');
+        setMinCapacityFilter(0);
+        setTypeFilter('todos');
+        setStatusFilter('todos');
+        setSearchTerm('');
+      }
     }
   }, [activeCampaign?.id, activeCampaign?.isActive, (activeCampaign as any)?.is_active]);
 
@@ -264,6 +279,39 @@ export default function BookingCRM({
  const [isPlacesExplorerOpen, setIsPlacesExplorerOpen] = useState(false);
  const [isContactEnricherOpen, setIsContactEnricherOpen] = useState(false);
  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
+ const [isExportLeadsOpen, setIsExportLeadsOpen] = useState(false);
+ const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
+
+ const handleTriggerEnviadorAgent = async (leadId?: string) => {
+   setIsDispatchingEmails(true);
+   try {
+     const data = await apiFetch('/api/trigger-agent', {
+       method: 'POST',
+       body: JSON.stringify({
+         agentName: 'enviador',
+         params: { id: leadId, trigger_type: 'usuario_manual' }
+       })
+     });
+
+     try {
+       window.dispatchEvent(new CustomEvent('app-data-updated'));
+     } catch (_) {}
+
+     if (data.dispatchedCount > 0) {
+       alert(`¡Agente Enviador ejecutado con éxito! ${data.message || ''}`);
+     } else if (data.results && data.results.some((r: any) => r.status === 'error')) {
+       const errMsgs = data.results.filter((r: any) => r.status === 'error').map((r: any) => `${r.nombre_sala}: ${r.error}`).join('\n');
+       alert(`Aviso del Agente Enviador:\n${data.message || ''}\n\nDetalles:\n${errMsgs}`);
+     } else {
+       alert(data.message || 'No se encontraron correos aprobados pendientes de despacho.');
+     }
+   } catch (err: any) {
+     console.error('Error al ejecutar Agente Enviador:', err);
+     alert(`Error al ejecutar el Agente Enviador: ${err.message || 'Error de conexión'}`);
+   } finally {
+     setIsDispatchingEmails(false);
+   }
+ };
  const [isAddingLeadModalOpen, setIsAddingLeadModalOpen] = useState(false);
  const [newLeadData, setNewLeadData] = useState({
  nombre_sala: '',
@@ -986,26 +1034,93 @@ export default function BookingCRM({
  <div className={`${selectedLead ? 'lg:col-span-2' : 'w-full lg:col-span-3'} space-y-4 transition-all duration-300`}>
  <div className="space-y-3 sm:space-y-4">
  
- {/* Header, View Switcher & Search */}
- <div className="flex flex-col gap-3">
-   <div className="flex items-start sm:items-end justify-between gap-2 flex-wrap sm:flex-nowrap">
-     <div>
-       <p className="text-[#eab308] text-[11px] sm:text-[13px] font-bold font-sans tracking-wider uppercase mb-0.5">
-         BOOKING
-       </p>
-       <h3 className={`text-2xl sm:text-3xl font-bold font-display tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}>
-         {sectionTab === 'medios' ? 'Medios y prensa' : 'Salas y festivales'}
-       </h3>
-       <p className={`text-[12px] sm:text-[13px] mt-0.5 ${textMuted}`}>
-         {sectionTab === 'medios' 
-           ? `${leads.filter(l => isMedioOIndustria(l.tipo)).length} contactos registrados`
-           : `${leads.filter(l => !isMedioOIndustria(l.tipo)).length} registradas • ${leads.filter(l => !isMedioOIndustria(l.tipo) && l.estado === 'pendiente_aprobacion').length} pendientes de aprobar`
-         }
-       </p>
-     </div>
+   {/* Header: Tabs + Unified Action Buttons */}
+  <div className="flex flex-col gap-3">
+    <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+      {/* SECCIONES PRINCIPALES DE CONTACTOS: ESCENARIOS, MEDIOS Y MANAGEMENT/PRODUCTORAS */}
+      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/90 border border-white/5 overflow-x-auto w-full sm:w-auto scrollbar-none">
+        <button
+          id="section-tab-salas"
+          type="button"
+          onClick={() => handleSelectSectionTab('salas')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            sectionTab === 'salas'
+              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+          }`}
+        >
+          <Building2 className="w-3.5 h-3.5 shrink-0" />
+          <span>Escenarios</span>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
+            sectionTab === 'salas' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
+          }`}>
+            {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))).length}
+          </span>
+        </button>
 
-     {/* UNIFIED ACTION BUTTONS (Mobile, Tablet, Desktop) */}
-      <div className="flex items-center gap-1.5 shrink-0 self-end">
+        <button
+          id="section-tab-medios"
+          type="button"
+          onClick={() => handleSelectSectionTab('medios')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            sectionTab === 'medios'
+              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+          }`}
+        >
+          <Radio className="w-3.5 h-3.5 shrink-0" />
+          <span>Medios y Prensa</span>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
+            sectionTab === 'medios' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
+          }`}>
+            {leads.filter(l => normalizeType(l.tipo) === 'medio').length}
+          </span>
+        </button>
+
+        <button
+          id="section-tab-grupos"
+          type="button"
+          onClick={() => handleSelectSectionTab('grupos')}
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            sectionTab === 'grupos'
+              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
+              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+          }`}
+        >
+          <Briefcase className="w-3.5 h-3.5 shrink-0" />
+          <span>Management & Productoras</span>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
+            sectionTab === 'grupos' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
+          }`}>
+            {leads.filter(l => ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => normalizeType(l.tipo).includes(t))).length}
+          </span>
+        </button>
+
+        <button
+          id="section-tab-bandas"
+          type="button"
+          onClick={() => {
+            if (onNavigate) {
+              onNavigate('bandas');
+            } else if (onSectionChange) {
+              onSectionChange('bandas');
+            }
+          }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
+          title="Ver Red de Co-Booking y Grupos Amigos"
+        >
+          <Users className="w-3.5 h-3.5 shrink-0 text-[#f2ca50]" />
+          <span>Grupos</span>
+          {typeof bandsCount === 'number' && bandsCount > 0 && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold bg-zinc-800 text-zinc-400">
+              {bandsCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* UNIFIED ACTION BUTTONS */}
+      <div className="flex items-center gap-1.5 shrink-0 ml-auto">
         <button
           id="add-new-lead-btn"
           type="button"
@@ -1016,66 +1131,37 @@ export default function BookingCRM({
               region: 'Nacional',
               direccion: '',
               aforo: 0,
-              tipo: sectionTab === 'medios' ? 'medio' : 'sala',
+              tipo: sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'productora' : 'sala',
               email_contacto: '',
               telefono: '',
               website: '',
               instagram: '',
               fuente: '',
-              genero: sectionTab === 'medios' ? 'Radio' : 'Balkan / Ska',
+              genero: sectionTab === 'medios' ? 'Radio' : sectionTab === 'grupos' ? 'Management / Booking' : 'Balkan / Ska',
               notas: '',
               pitch_generado: '',
-              icono: sectionTab === 'medios' ? '📻' : '🏛️',
+              icono: sectionTab === 'medios' ? '📻' : sectionTab === 'grupos' ? '💼' : '🏛️',
               imagen_url: ''
             });
             setIsAddingLeadModalOpen(true);
           }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-sm active:scale-95 cursor-pointer"
-          title="Añadir sala o medio"
+          title="Añadir contacto"
         >
           <PlusCircle className="w-3.5 h-3.5" />
-          <span>Añadir {sectionTab === 'medios' ? 'medio' : 'sala'}</span>
+          <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
         </button>
 
         <button
-          id="open-places-explorer-btn"
+          id="export-leads-btn"
           type="button"
-          onClick={() => setIsPlacesExplorerOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 shadow-xs active:scale-95 cursor-pointer transition-all"
-          title="Buscar nuevas salas en cualquier ciudad con IA y Google Places"
+          onClick={() => setIsExportLeadsOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 shadow-sm active:scale-95 cursor-pointer"
+          title="Exportar base de datos a Excel / CSV o JSON"
         >
-          <Search className="w-3.5 h-3.5 text-[#f2ca50]" />
-          <span className="hidden sm:inline">Buscar Nuevas Salas</span>
-          <span className="sm:hidden">Buscar</span>
-        </button>
-
-        <button
-          id="open-excel-import-btn"
-          type="button"
-          onClick={() => setIsExcelImportOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 shadow-xs active:scale-95 cursor-pointer transition-all"
-          title="Subir archivo Excel o CSV con tus salas, bandas y contactos"
-        >
-          <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-          <span className="hidden sm:inline">Importar Excel / CSV</span>
-          <span className="sm:hidden">Excel</span>
-        </button>
-
-        <button
-          id="open-contact-enricher-btn"
-          type="button"
-          onClick={() => setIsContactEnricherOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 border border-indigo-500/40 shadow-xs active:scale-95 cursor-pointer transition-all"
-          title="Ejecutar el Agente Enriquecedor de Contactos para extraer y verificar emails en la web"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-          <span className="hidden sm:inline">Agente Enriquecedor</span>
-          <span className="sm:hidden">Enriquecer</span>
-          {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 text-[10px] font-mono font-bold">
-              {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
-            </span>
-          )}
+          <Download className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="hidden sm:inline">Exportar Leads</span>
+          <span className="sm:hidden">Exportar</span>
         </button>
 
         <button
@@ -1087,32 +1173,17 @@ export default function BookingCRM({
               ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
               : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:text-white hover:bg-zinc-800'
           }`}
-          title="Herramientas IA y exportación"
+          title="Herramientas, Scout, Excel y Agentes IA"
         >
           <Bot className="w-3.5 h-3.5 text-amber-400" />
-          <span className="hidden sm:inline">IA & Tools</span>
-          <span className="sm:hidden">IA</span>
-          {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
-        </button>
-
-        <button
-          id="toggle-filters-btn"
-          type="button"
-          onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
-            activeFiltersCount > 0 || isMobileFiltersOpen
-              ? 'bg-[#eab308]/20 text-[#eab308] border-[#eab308]/60'
-              : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:text-white hover:bg-zinc-800'
-          }`}
-          title="Filtros avanzados y búsquedas guardadas"
-        >
-          <Filter className="w-3.5 h-3.5" />
-          <span>Filtros</span>
-          {activeFiltersCount > 0 && (
-            <span className="w-4 h-4 rounded-full bg-[#eab308] text-black text-[10px] font-black flex items-center justify-center">
-              {activeFiltersCount}
+          <span className="hidden sm:inline">Herramientas e IA</span>
+          <span className="sm:hidden">Herramientas</span>
+          {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full bg-indigo-500/30 text-indigo-200 text-[10px] font-mono font-bold">
+              {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
             </span>
           )}
+          {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
         </button>
       </div>
     </div>
@@ -1135,6 +1206,21 @@ export default function BookingCRM({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            disabled={isDispatchingEmails}
+            onClick={() => {
+              setIsMobileToolsOpen(false);
+              handleTriggerEnviadorAgent();
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-950 to-teal-950 hover:from-emerald-900 hover:to-teal-900 text-emerald-200 border border-emerald-500/40 transition-all cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
+          >
+            <span className="flex items-center gap-2">
+              {isDispatchingEmails ? <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" /> : <Send className="w-4 h-4 text-emerald-400" />}
+              <span>{isDispatchingEmails ? 'Despachando correos...' : `Agente Enviador (${leads.filter(l => ['aprobado', 'aprobado_propuesta', 'aprobado_respuesta'].includes(l.estado)).length} en cola de envío)`}</span>
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -1197,41 +1283,14 @@ export default function BookingCRM({
 
           <button
             type="button"
-            onClick={async () => {
+            onClick={() => {
               setIsMobileToolsOpen(false);
-              const approvedLeads = leads.filter(l => l.estado === 'aprobado');
-              if (approvedLeads.length === 0) {
-                alert("No hay ninguna sala o contacto en estado 'aprobado'.");
-                return;
-              }
-              const headers = ["ID", "Nombre Sala / Contacto", "Ciudad", "Región", "Aforo", "Tipo", "Email Contacto", "Fuente", "Estado", "Pitch Generado", "Notas"];
-              const rows = approvedLeads.map(l => [
-                `"${(l.id || '').replace(/"/g, '""')}"`,
-                `"${(l.nombre_sala || '').replace(/"/g, '""')}"`,
-                `"${(l.ciudad || '').replace(/"/g, '""')}"`,
-                `"${(l.region || '').replace(/"/g, '""')}"`,
-                l.aforo || 0,
-                `"${(l.tipo || '').replace(/"/g, '""')}"`,
-                `"${(l.email_contacto || '').replace(/"/g, '""')}"`,
-                `"${(l.fuente || '').replace(/"/g, '""')}"`,
-                `"${(l.estado || '').replace(/"/g, '""')}"`,
-                `"${(l.pitch_generado || '').replace(/"/g, '""')}"`,
-                `"${(l.notas || '').replace(/"/g, '""')}"`
-              ]);
-              const csvContent = "﻿" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-              const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.setAttribute("href", url);
-              link.setAttribute("download", `${(effectiveBandName || 'Banda').replace(/\s+/g, '_')}_Aprobados_${new Date().toISOString().slice(0, 10)}.csv`);
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
+              setIsExportLeadsOpen(true);
             }}
             className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 transition-all cursor-pointer active:scale-98"
           >
             <Download className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Exportar CSV de Aprobados</span>
+            <span>Exportar Leads (A la vista / Todos / Excel)</span>
           </button>
 
           <button
@@ -1261,7 +1320,7 @@ export default function BookingCRM({
        <input
          id="crm-search"
          type="text"
-         placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : "🔍 Buscar sala o festival..."}
+         placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : sectionTab === 'grupos' ? "🔍 Buscar management..." : "🔍 Buscar escenario..."}
          value={searchTerm}
          onChange={(e) => setSearchTerm(e.target.value)}
          className={`w-full rounded-xl pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-all border shadow-sm ${
@@ -1284,20 +1343,96 @@ export default function BookingCRM({
          </button>
        )}
      </div>
-     
+
+     {/* Tipo Dropdown Selector */}
+     <div className="relative shrink-0">
+       <select
+         id="crm-type-filter-select"
+         value={typeFilter}
+         onChange={(e) => setTypeFilter(e.target.value as any)}
+         aria-label="Filtrar por tipo"
+         className={`px-3 py-2 pr-7 rounded-xl text-xs font-semibold font-sans transition-all border shadow-sm cursor-pointer appearance-none ${
+           typeFilter !== 'todos'
+             ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
+             : isStitchLight
+             ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+             : 'bg-[#181716] text-zinc-300 border-white/10 hover:bg-zinc-800'
+         }`}
+       >
+         {sectionTab === 'medios' ? (
+           <>
+             <option value="todos">🌟 Todos los medios ({sectionLeads.length})</option>
+             <option value="radio">📻 Radios</option>
+             <option value="tv">📺 TV</option>
+             <option value="prensa">📰 Prensa</option>
+             <option value="redes">📱 Redes</option>
+             <option value="podcast">🎙️ Podcasts</option>
+           </>
+         ) : sectionTab === 'grupos' ? (
+           <>
+             <option value="todos">🌟 Todas las entidades ({sectionLeads.length})</option>
+             <option value="grupo">🎸 Grupos</option>
+             <option value="agencia">💼 Agencias</option>
+             <option value="manager">👔 Mánagers</option>
+             <option value="productora">🎬 Productoras</option>
+             <option value="sello">💿 Sellos</option>
+           </>
+         ) : (
+           <>
+             <option value="todos">🌟 Tipo: Todos ({sectionLeads.length})</option>
+             <option value="sala">🏛️ Salas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'sala').length})</option>
+             <option value="festival">🎪 Festivales ({sectionLeads.filter(l => normalizeType(l.tipo) === 'festival').length})</option>
+             <option value="discoteca">🪩 Discotecas ({sectionLeads.filter(l => normalizeType(l.tipo) === 'discoteca').length})</option>
+             <option value="ayuntamiento">🎆 Ayuntamientos ({sectionLeads.filter(l => normalizeType(l.tipo) === 'ayuntamiento').length})</option>
+           </>
+         )}
+       </select>
+       <ChevronDown className="w-3.5 h-3.5 absolute right-2 top-2.5 pointer-events-none opacity-60" />
+     </div>
+
+     {/* Advanced Filters Button */}
+     <button
+       id="toggle-filters-btn"
+       type="button"
+       onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+       className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
+         activeFiltersCount > 0 || isMobileFiltersOpen
+           ? 'bg-[#eab308]/20 text-[#eab308] border-[#eab308]/60 shadow-xs'
+           : isStitchLight
+           ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+           : 'bg-[#181716] text-zinc-300 border-white/10 hover:text-white hover:bg-zinc-800'
+       }`}
+       title="Filtros avanzados y búsquedas guardadas"
+     >
+       <Filter className="w-3.5 h-3.5" />
+       <span className="hidden sm:inline">Filtros</span>
+       {activeFiltersCount > 0 && (
+         <span className="w-4 h-4 rounded-full bg-[#eab308] text-black text-[10px] font-black flex items-center justify-center">
+           {activeFiltersCount}
+         </span>
+       )}
+     </button>
+
      {/* Filter by Campaign Toggle */}
      {activeCampaign && (
        <button
+         id="crm-campaign-filter-btn"
+         type="button"
          onClick={() => setFilterByCampaign(!filterByCampaign)}
-         className={`px-3 py-2 rounded-xl text-xs font-semibold font-sans transition-all flex items-center gap-2 border shadow-sm shrink-0 cursor-pointer ${
+         className={`px-3 py-2 rounded-xl text-xs font-semibold font-sans transition-all flex items-center gap-1.5 border shadow-xs shrink-0 cursor-pointer ${
            filterByCampaign
-             ? (isStitchLight ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-green-600 text-white border-green-700')
-             : (isStitchLight ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' : 'bg-[#1a1a1a] text-neutral-300 border-white/10 hover:bg-[#2a2a2a]')
+             ? (isStitchLight ? 'bg-purple-600 text-white border-purple-700 font-bold' : 'bg-purple-600/90 hover:bg-purple-600 text-white border-purple-500/80 font-bold shadow-purple-950/40')
+             : (isStitchLight ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' : 'bg-[#181716] text-zinc-300 border-white/10 hover:text-white hover:bg-zinc-800')
          }`}
-         title={filterByCampaign ? "Quitar filtro de campaña" : "Mostrar solo salas de la campaña activa"}
+         title={filterByCampaign ? "Quitar filtro de campaña (ver todas las salas)" : "Filtrar únicamente salas objetivo de la campaña"}
        >
-         <Target className="w-4 h-4" />
-         <span className="hidden sm:inline">Campaña Activa</span>
+         <Target className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+         <span className="hidden sm:inline">{filterByCampaign ? 'Filtro Campaña' : 'Filtrar Campaña'}</span>
+         {filterByCampaign && (
+           <span className="px-1.5 py-0.2 rounded-full bg-purple-950/70 text-purple-200 text-[10px] font-mono font-bold">
+             {filteredLeads.length}
+           </span>
+         )}
        </button>
      )}
    </div>
@@ -1353,73 +1488,7 @@ export default function BookingCRM({
     </div>
   </div>
 
-      {/* Quick Type Filter Bar (Always visible across all tabs) */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar text-xs">
-        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider shrink-0 mr-1">
-          {sectionTab === 'salas' ? 'Tipo de sala:' : sectionTab === 'grupos' ? 'Tipo de entidad:' : 'Tipo de medio:'}
-        </span>
-        {(sectionTab === 'medios'
-          ? [
-              { key: 'todos', label: '🌟 Todos' },
-              { key: 'radio', label: '📻 Radio' },
-              { key: 'tv', label: '📺 TV' },
-              { key: 'prensa', label: '📰 Prensa' },
-              { key: 'redes', label: '📱 Redes' },
-              { key: 'podcast', label: '🎙️ Podcasts' }
-            ] as const
-          : sectionTab === 'grupos'
-          ? [
-              { key: 'todos', label: '🌟 Todos' },
-              { key: 'grupo', label: '🎸 Grupos' },
-              { key: 'agencia', label: '💼 Agencias' },
-              { key: 'manager', label: '👔 Mánagers' },
-              { key: 'productora', label: '🎬 Productoras' },
-              { key: 'sello', label: '💿 Sellos' }
-            ] as const
-          : [
-              { key: 'todos', label: '🌟 Todos' },
-              { key: 'sala', label: '🏛️ Salas' },
-              { key: 'festival', label: '🎪 Festivales' },
-              { key: 'discoteca', label: '🪩 Discotecas' },
-              { key: 'ayuntamiento', label: '🎆 Ayuntamientos' }
-            ] as const
-        ).map(t => {
-          const isSelected = typeFilter === t.key;
-          const count = t.key === 'todos'
-            ? sectionLeads.length
-            : sectionTab === 'medios'
-            ? sectionLeads.filter(l => matchesMedioType(l, t.key)).length
-            : sectionTab === 'grupos'
-            ? sectionLeads.filter(l => matchesGruposType(l, t.key)).length
-            : sectionLeads.filter(l => normalizeType(l.tipo) === t.key).length;
 
-          return (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => setTypeFilter(t.key)}
-              className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
-                isSelected
-                  ? isStitchLight
-                    ? 'bg-slate-900 text-white shadow-sm'
-                    : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-sm border border-[#f2ca50]'
-                  : isStitchLight
-                  ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
-                  : 'bg-[#181716] text-zinc-300 hover:text-white hover:bg-zinc-800 border border-zinc-800'
-              }`}
-            >
-              <span>{t.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
-                isSelected
-                  ? 'bg-black/20 text-[#3c2f00]'
-                  : 'bg-zinc-800 text-amber-300/90'
-              }`}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
     </div>
 
   {/* Enrich Status Banner */}
@@ -1608,9 +1677,11 @@ export default function BookingCRM({
             : sectionTab === 'grupos'
             ? [
                 { key: 'todos', label: '🌟 Todos' },
-                { key: 'grupo', label: '🎸 Grupos' },
+                { key: 'productora', label: '🎬 Productoras' },
+                { key: 'manager', label: '👔 Mánagers' },
                 { key: 'agencia', label: '💼 Agencias' },
-                { key: 'manager', label: '👔 Mánagers' }
+                { key: 'sello', label: '💿 Sellos' },
+                { key: 'grupo', label: '🎸 Grupos' }
               ] as const
             : [
                 { key: 'todos', label: '🌟 Todos' },
@@ -1805,65 +1876,6 @@ export default function BookingCRM({
     })}
   </div>
 
-  {/* 🎯 CAMPAIGN CONTEXT BANNER & TOGGLE */}
-  {activeCampaign && (activeCampaign.isActive ?? (activeCampaign as any).is_active ?? true) && (
-    <div className={`p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm ${
-      filterByCampaign 
-        ? isStitchLight
-          ? 'bg-indigo-50/90 border-indigo-200 text-indigo-950'
-          : 'bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border-purple-500/40 text-purple-100'
-        : isStitchLight
-          ? 'bg-slate-50 border-slate-200 text-slate-700'
-          : 'bg-zinc-900/60 border-white/5 text-zinc-300'
-    }`}>
-      <div className="flex items-center gap-2.5 min-w-0">
-        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-          filterByCampaign 
-            ? isStitchLight ? 'bg-indigo-600 text-white' : 'bg-purple-600 text-white'
-            : 'bg-zinc-800 text-zinc-400'
-        }`}>
-          <Target className="w-4 h-4" />
-        </div>
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-bold font-sans">
-              Campaña: {activeCampaign.name}
-            </span>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
-              filterByCampaign 
-                ? isStitchLight ? 'bg-indigo-200 text-indigo-800' : 'bg-purple-500/30 text-purple-200 border border-purple-500/40'
-                : 'bg-zinc-800 text-zinc-400'
-            }`}>
-              {filterByCampaign ? `Filtro Activo (${filteredLeads.length} salas)` : 'Filtro Desactivado'}
-            </span>
-          </div>
-          <div className="text-[11px] opacity-80 mt-0.5 flex items-center gap-2 flex-wrap font-sans">
-            <span>📍 Ciudades: {(activeCampaign.targetCities || (activeCampaign as any).target_cities || []).join(', ') || 'Todas'}</span>
-            <span>•</span>
-            <span>👥 Aforo: {activeCampaign.minCapacity || (activeCampaign as any).min_capacity || 0}-{activeCampaign.maxCapacity || (activeCampaign as any).max_capacity || '∞'} pax</span>
-            <span>•</span>
-            <span>📅 Fechas: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(', ') : 'Gira')}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
-        <button
-          type="button"
-          onClick={() => setFilterByCampaign(!filterByCampaign)}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs ${
-            filterByCampaign
-              ? isStitchLight ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-purple-600 text-white hover:bg-purple-500'
-              : isStitchLight ? 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-100' : 'bg-zinc-800 text-zinc-200 border border-white/10 hover:bg-zinc-700'
-          }`}
-        >
-          <Filter className="w-3.5 h-3.5" />
-          <span>{filterByCampaign ? 'Ver Todas las Salas' : 'Filtrar Solo Campaña'}</span>
-        </button>
-      </div>
-    </div>
-  )}
-
   {/* 🎯 GMAIL-STYLE BULK ACTIONS BAR (STICKY AT TOP OF LIST) */}
   <BulkLeadsActionBar
     selectedCount={selectedLeadIds.length}
@@ -2006,34 +2018,7 @@ export default function BookingCRM({
 
       setBulkProgressState(prev => ({ ...prev, isCompleted: true }));
     }}
-    onBulkExportCsv={() => {
-      const leadsToExport = leads.filter(l => selectedLeadIds.includes(l.id));
-      if (leadsToExport.length === 0) return;
-
-      const headers = ['Nombre', 'Tipo', 'Estado', 'Ciudad', 'Región', 'Aforo', 'Género', 'Email', 'Teléfono', 'Web / Redes', 'Notas'];
-      const rows = leadsToExport.map(l => [
-        `"${(l.nombre_sala || '').replace(/"/g, '""')}"`,
-        `"${(l.tipo || '').replace(/"/g, '""')}"`,
-        `"${(l.estado || '').replace(/"/g, '""')}"`,
-        `"${(l.ciudad || '').replace(/"/g, '""')}"`,
-        `"${(l.region || '').replace(/"/g, '""')}"`,
-        `"${l.aforo || ''}"`,
-        `"${(l.genero || '').replace(/"/g, '""')}"`,
-        `"${(l.email_contacto || '').replace(/"/g, '""')}"`,
-        `"${(l.telefono || '').replace(/"/g, '""')}"`,
-        `"${(l.website || l.instagram || '').replace(/"/g, '""')}"`,
-        `"${(l.notas || '').replace(/"/g, '""')}"`
-      ]);
-
-      const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement('a');
-      link.setAttribute('href', encodedUri);
-      link.setAttribute('download', `bandmanager_salas_seleccionadas_${new Date().toISOString().slice(0, 10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }}
+    onBulkExportCsv={() => setIsExportLeadsOpen(true)}
     onBulkDelete={() => {
       if (selectedLeadIds.length === 0) return;
       const idsToDelete = [...selectedLeadIds];
@@ -2134,55 +2119,91 @@ export default function BookingCRM({
 </div>
 
   {/* 3. EMAIL TEMPLATES & AI SETTINGS EDITOR CARD */}
- <div className={`${colors.card} p-5 space-y-6`}>
- <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
- <div>
- <h3 className={`text-sm font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
- <Settings className={`w-4 h-4 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`} /> Configuración de Plantillas y Pautas AI por Categoría (Redactor)
- </h3>
- <p className={`text-[10px] font-sans mt-1 ${textSub}`}>
- Personaliza el correo por defecto y las pautas de IA diferenciadas para Salas, Festivales, Discotecas, Medios, Grupos y Managements.
- </p>
- </div>
+  <div id="ai-template-config-section" className={`${colors.card} p-4 sm:p-5 rounded-2xl border ${isStitchLight ? 'border-slate-200' : 'border-white/5'} transition-all`}>
+    <div
+      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
+      onClick={() => setIsTemplatesSectionOpen(!isTemplatesSectionOpen)}
+    >
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+          <Settings className="w-4 h-4" />
+        </div>
+        <div>
+          <h3 className={`text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
+            Configuración de Plantillas y Pautas AI (Redactor)
+          </h3>
+          <p className={`text-[11px] font-sans mt-0.5 ${textSub}`}>
+            Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
+          </p>
+        </div>
+      </div>
 
- {/* Template Tab Selector (7 Categories) */}
- <div className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
- isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
- }`}>
- {[
- { id: 'salas', label: '🏛️ Salas', icon: Building2 },
- { id: 'festivales', label: '🎪 Festivales', icon: Tent },
- { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
- { id: 'medios', label: '📻 Medios', icon: Radio },
- { id: 'grupos', label: '🎸 Grupos', icon: Users },
- { id: 'managements', label: '💼 Managements', icon: Briefcase },
- { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
- ].map((tab) => {
- const isActive = templateTab === tab.id;
- const IconComp = tab.icon;
- return (
- <button
- key={tab.id}
- type="button"
- id={`template-tab-${tab.id}`}
- onClick={() => setTemplateTab(tab.id as TemplateCategory)}
- className={`py-1.5 px-2.5 rounded-lg text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
- isActive
- ? isStitchLight
- ? 'bg-white text-sky-400 shadow-sm'
- : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-md'
- : isStitchLight
- ? 'text-slate-500 hover:text-slate-800'
- : 'text-neutral-400 hover:text-neutral-200'
- }`}
- >
- <IconComp className="w-3.5 h-3.5" />
- <span>{tab.label}</span>
- </button>
- );
- })}
- </div>
- </div>
+      <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsTemplatesSectionOpen(!isTemplatesSectionOpen);
+          }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+            isTemplatesSectionOpen
+              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+              : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:text-white hover:bg-zinc-800'
+          }`}
+        >
+          <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>
+          {isTemplatesSectionOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        </button>
+      </div>
+    </div>
+
+    {isTemplatesSectionOpen && (
+      <div className="mt-5 pt-4 border-t border-zinc-800/80 space-y-6">
+        <div className={` pb-3 flex flex-col xl:flex-row xl:items-center justify-between gap-3 ${isStitchLight ? '-slate-100' : '-[#99907c]/15'}`}>
+          <div>
+            <h4 className={`text-xs font-bold font-display uppercase tracking-widest flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
+              Pautas diferenciadas por categoría
+            </h4>
+          </div>
+
+          {/* Template Tab Selector (7 Categories) */}
+          <div className={`flex flex-wrap items-center gap-1 p-1 rounded-xl shrink-0 ${
+            isStitchLight ? 'bg-slate-100' : 'bg-[#121215]'
+          }`}>
+            {[
+              { id: 'salas', label: '🏛️ Salas', icon: Building2 },
+              { id: 'festivales', label: '🎪 Festivales', icon: Tent },
+              { id: 'discotecas', label: '🪩 Discotecas', icon: Disc3 },
+              { id: 'medios', label: '📻 Medios', icon: Radio },
+              { id: 'grupos', label: '🎸 Grupos', icon: Users },
+              { id: 'managements', label: '💼 Managements', icon: Briefcase },
+              { id: 'ayuntamientos', label: '🎉 Ayuntamientos', icon: Landmark }
+            ].map((tab) => {
+              const isActive = templateTab === tab.id;
+              const IconComp = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  id={`template-tab-${tab.id}`}
+                  onClick={() => setTemplateTab(tab.id as TemplateCategory)}
+                  className={`py-1.5 px-2.5 rounded-lg text-[10px] font-sans font-bold uppercase tracking-wider flex items-center gap-1 transition-all cursor-pointer ${
+                    isActive
+                      ? isStitchLight
+                        ? 'bg-white text-sky-400 shadow-sm'
+                        : 'bg-[#f2ca50] text-[#3c2f00] font-extrabold shadow-md'
+                      : isStitchLight
+                      ? 'text-slate-500 hover:text-slate-800'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  <IconComp className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
  {/* Category Notice Banner */}
  {(() => {
@@ -2564,6 +2585,8 @@ export default function BookingCRM({
  </>
  );
  })()}
+ </div>
+ )}
 
  </div>
 
@@ -2654,10 +2677,21 @@ export default function BookingCRM({
     currentUser={currentUser}
     isStitchLight={isStitchLight}
     onOpenTemplatesSection={() => {
-      // Focus on template tab
-      const el = document.getElementById('ai-template-config-section');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      setIsTemplatesSectionOpen(true);
+      setTimeout(() => {
+        const el = document.getElementById('ai-template-config-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
     }}
+  />
+
+  <ExportLeadsModal
+    isOpen={isExportLeadsOpen}
+    onClose={() => setIsExportLeadsOpen(false)}
+    allLeads={leads}
+    filteredLeads={filteredLeads}
+    selectedLeadIds={selectedLeadIds}
+    bandName={effectiveBandName}
   />
 
 

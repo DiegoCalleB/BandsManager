@@ -43,7 +43,7 @@ export const normalizeType = (t: any): LeadType => {
   if (s.includes('sello') || s.includes('discog') || s === 'sello') return 'sello';
   if (s.includes('grup') || s.includes('artist') || s.includes('banda') || s === 'grupo') return 'grupo';
   if (s.includes('product') || s === 'productora') return 'productora';
-  if (s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc') || s === 'medio') return 'medio';
+  if (s.includes('medio') || s.includes('radio') || s.includes('prensa') || s.includes('tv') || s.includes('podc') || s.includes('period') || s.includes('revista') || s.includes('blog') || s.includes('magazine') || s.includes('fanzine') || s === 'medio') return 'medio';
   return 'sala';
 };
 

@@ -269,6 +269,23 @@ export default function ReelsCenter({
  const [localVideoDuration, setLocalVideoDuration] = useState<number>(0);
  const [isPreviewMuted, setIsPreviewMuted] = useState(true);
  const [isExpandedPreview, setIsExpandedPreview] = useState(false);
+
+ useEffect(() => {
+   if (isExpandedPreview) {
+     document.body.style.overflow = 'hidden';
+     setTimeout(() => {
+       const modalEl = document.getElementById('theater-mode-modal');
+       if (modalEl) modalEl.scrollTop = 0;
+       window.scrollTo({ top: 0, behavior: 'instant' as any });
+     }, 10);
+   } else {
+     document.body.style.overflow = '';
+   }
+   return () => {
+     document.body.style.overflow = '';
+   };
+ }, [isExpandedPreview]);
+
  const [videoTopic, setVideoTopic] = useState('');
  // Duración objetivo del CLIP que queremos sacar (15/30/60), no la del vídeo de origen.
  const [videoDuration, setVideoDuration] = useState(30);
@@ -2931,11 +2948,28 @@ export default function ReelsCenter({
  e.stopPropagation();
  setIsExpandedPreview(false);
  }}
- className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-neutral-900/90 hover:bg-neutral-800 -neutral-700 text-neutral-300 hover:text-white transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center backdrop-blur-sm"
+ className="fixed top-4 right-4 z-[250] p-3 rounded-full bg-neutral-900/90 hover:bg-neutral-800 -neutral-700 text-neutral-300 hover:text-white transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer hidden lg:flex items-center justify-center backdrop-blur-sm"
  title="Cerrar modo cine (ESC o Click fuera)"
  >
  <X className="w-6 h-6" />
  </button>
+
+ {/* Mobile sticky top header bar */}
+ <div 
+ onClick={(e) => e.stopPropagation()}
+ className="w-full max-w-6xl mb-2 flex items-center justify-between p-3 rounded-2xl bg-neutral-900 -neutral-800 lg:hidden shrink-0 shadow-lg"
+ >
+   <div className="flex items-center gap-2">
+     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+     <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">Modo Cine · Reels</span>
+   </div>
+   <button
+     onClick={() => setIsExpandedPreview(false)}
+     className="px-3 py-1.5 rounded-xl bg-neutral-800 text-amber-400 hover:text-white font-bold text-xs font-mono flex items-center gap-1.5 cursor-pointer -neutral-700"
+   >
+     <X className="w-4 h-4" /> <span>Cerrar</span>
+   </button>
+ </div>
 
  <div 
  onClick={(e) => e.stopPropagation()}

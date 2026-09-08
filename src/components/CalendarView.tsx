@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Rehearsal, Concert, ThemeColors, BookingCampaign } from '../types';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
 import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
 import { normalizePlan } from '../utils/planPermissions';
+import { 
+  getCalendarDefaultMonths, 
+  setCalendarDefaultMonths, 
+  isTwoMonthsDefault, 
+  getAllDevicePreferences, 
+  syncCalendarPreferencesFromUser, 
+  detectDeviceType, 
+  CalendarMonthsView, 
+  DeviceType 
+} from '../utils/calendarViewPreferences';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -27,7 +37,7 @@ interface CalendarViewProps {
  currentBandName?: string;
  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
  bandUsers?: Array<{ id: string; name: string; username?: string; role?: string; instrument?: string; band_id?: string; bandName?: string }>;
- currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string; plan?: string };
+ currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string; plan?: string; ui_preferences?: any };
  isPromoPlan?: boolean;
 }
 
@@ -341,7 +351,70 @@ export default function CalendarView({
  }
  }
  }, [initialSelectedDate, initialSelectedEventId, concerts, rehearsals]);
- const [twoMonthsMode, setTwoMonthsMode] = useState<boolean>(true);
+
+ // Configuración de vista de meses por tipo de dispositivo (1 mes por defecto para simplificación visual, configurable y sincronizado en Supabase)
+ const currentDeviceType = detectDeviceType();
+ const [devicePrefs, setDevicePrefs] = useState<{ mobile: CalendarMonthsView; desktop: CalendarMonthsView }>(() => getAllDevicePreferences());
+ const [selectedConfigDevice, setSelectedConfigDevice] = useState<DeviceType>(() => detectDeviceType());
+ const [twoMonthsMode, setTwoMonthsMode] = useState<boolean>(() => isTwoMonthsDefault());
+ const [showViewConfigPopover, setShowViewConfigPopover] = useState<boolean>(false);
+ const [configToast, setConfigToast] = useState<string | null>(null);
+ const [isSavingPref, setIsSavingPref] = useState<boolean>(false);
+ const viewConfigRef = useRef<HTMLDivElement>(null);
+
+ // Sincronizar preferencias si el usuario se autentica o refresca sesión
+ useEffect(() => {
+  if (currentUser) {
+   syncCalendarPreferencesFromUser(currentUser as any);
+   const updated = getAllDevicePreferences();
+   setDevicePrefs(updated);
+   const curDev = detectDeviceType();
+   setTwoMonthsMode(updated[curDev] === '2');
+  }
+ }, [currentUser]);
+
+ // Cerrar el menú de configuración de vista al hacer clic fuera o pulsar Escape
+ useEffect(() => {
+  if (!showViewConfigPopover) return;
+  const handleClickOutside = (e: MouseEvent) => {
+   if (viewConfigRef.current && !viewConfigRef.current.contains(e.target as Node)) {
+    setShowViewConfigPopover(false);
+   }
+  };
+  const handleKeyDown = (e: KeyboardEvent) => {
+   if (e.key === 'Escape') setShowViewConfigPopover(false);
+  };
+  document.addEventListener('mousedown', handleClickOutside);
+  document.addEventListener('keydown', handleKeyDown);
+  return () => {
+   document.removeEventListener('mousedown', handleClickOutside);
+   document.removeEventListener('keydown', handleKeyDown);
+  };
+ }, [showViewConfigPopover]);
+
+ const handleSetDefaultMonthsForDevice = async (mode: CalendarMonthsView, targetDevice: DeviceType) => {
+  setIsSavingPref(true);
+  setDevicePrefs(prev => ({ ...prev, [targetDevice]: mode }));
+
+  if (targetDevice === currentDeviceType) {
+   setTwoMonthsMode(mode === '2');
+  }
+
+  const isCloudSaved = await setCalendarDefaultMonths(mode, targetDevice, true);
+  setIsSavingPref(false);
+
+  const devLabel = targetDevice === 'mobile' ? 'móviles' : 'ordenadores';
+  const modeLabel = mode === '1' ? '1 mes' : '2 meses';
+  setConfigToast(isCloudSaved
+   ? `Guardado en Supabase: ${modeLabel} por defecto para ${devLabel}`
+   : `Guardado en local: ${modeLabel} por defecto para ${devLabel}`
+  );
+
+  setTimeout(() => {
+   setConfigToast(null);
+  }, 2200);
+ };
+
  const [activeTab, setActiveTab] = useState<'runofshow' | 'gear' | 'roadbook'>('runofshow');
 
  // Roadbooks state per event date
@@ -1310,30 +1383,219 @@ export default function CalendarView({
             Hoy
           </button>
 
-          {/* 1 Mes vs 2 Meses */}
-          <div className={`flex items-center rounded-lg p-0.5 ${
-            isStitchLight ? "bg-slate-200" : "bg-neutral-900 border border-zinc-800"
-          }`}>
-            <button
-              onClick={() => setTwoMonthsMode(false)}
-              className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
-                !twoMonthsMode
-                  ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
-                  : "text-neutral-400 hover:text-neutral-200"
-              }`}
-            >
-              1M
-            </button>
-            <button
-              onClick={() => setTwoMonthsMode(true)}
-              className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
-                twoMonthsMode
-                  ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
-                  : "text-neutral-400 hover:text-neutral-200"
-              }`}
-            >
-              2M
-            </button>
+          {/* 1 Mes vs 2 Meses + Configuración de vista por defecto */}
+          <div className="relative inline-flex items-center" ref={viewConfigRef}>
+            <div className={`flex items-center rounded-lg p-0.5 ${
+              isStitchLight ? "bg-slate-200" : "bg-neutral-900 border border-zinc-800"
+            }`}>
+              <button
+                id="calendar-view-1m-btn"
+                onClick={() => setTwoMonthsMode(false)}
+                title={devicePrefs[currentDeviceType] === '1' ? "Ver 1 mes (predeterminado al iniciar en este dispositivo)" : "Ver 1 mes"}
+                className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
+                  !twoMonthsMode
+                    ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                1M
+              </button>
+              <button
+                id="calendar-view-2m-btn"
+                onClick={() => setTwoMonthsMode(true)}
+                title={devicePrefs[currentDeviceType] === '2' ? "Ver 2 meses (predeterminado al iniciar en este dispositivo)" : "Ver 2 meses"}
+                className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
+                  twoMonthsMode
+                    ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                2M
+              </button>
+              <button
+                id="calendar-view-config-btn"
+                onClick={() => setShowViewConfigPopover(prev => !prev)}
+                title="Configurar vista por defecto (1M o 2M) diferenciada por tipo de dispositivo y sincronizada en Supabase"
+                className={`px-1.5 py-0.5 text-[10px] rounded transition-all cursor-pointer flex items-center justify-center relative ${
+                  showViewConfigPopover
+                    ? isStitchLight ? "bg-slate-300 text-slate-800" : "bg-neutral-800 text-[#d1b375]"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                <Settings className="w-3 h-3" />
+                {devicePrefs[currentDeviceType] === '2' && (
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#d1b375]" title="Vista personalizada activa: 2 meses" />
+                )}
+              </button>
+            </div>
+
+            {/* Popover desplegable de configuración de vista por defecto por dispositivo */}
+            {showViewConfigPopover && (
+              <div className={`absolute top-full right-0 sm:left-0 sm:right-auto mt-2 z-50 w-80 sm:w-96 rounded-2xl p-4 shadow-2xl border ${
+                isStitchLight
+                  ? "bg-white border-slate-200 text-slate-900 shadow-slate-300/60"
+                  : "bg-neutral-950 border-zinc-800 text-white shadow-black/90"
+              } animate-in fade-in zoom-in-95 duration-150`}>
+                <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-white/10">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-[#d1b375]/15 text-[#d1b375]">
+                      <Settings className="w-3.5 h-3.5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold font-display uppercase tracking-wider">
+                        Vista por defecto
+                      </h4>
+                      <p className={`text-[10px] font-mono ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                        Diferenciada por dispositivo · Supabase
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowViewConfigPopover(false)}
+                    className="p-1 rounded-md text-neutral-400 hover:text-white text-xs cursor-pointer"
+                    title="Cerrar"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                {/* Selector de dispositivo (Móvil vs Escritorio) */}
+                <div className={`p-1 rounded-xl flex items-center gap-1 mb-3 border ${
+                  isStitchLight ? "bg-slate-100 border-slate-200" : "bg-neutral-900 border-zinc-800"
+                }`}>
+                  <button
+                    onClick={() => setSelectedConfigDevice('mobile')}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      selectedConfigDevice === 'mobile'
+                        ? isStitchLight ? "bg-white text-sky-600 shadow-xs" : "bg-neutral-800 text-amber-300 shadow-xs"
+                        : "text-neutral-400 hover:text-neutral-200"
+                    }`}
+                  >
+                    <Smartphone className="w-3.5 h-3.5" />
+                    <span>Móvil</span>
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-black/20 dark:bg-white/10">
+                      {devicePrefs.mobile}M
+                    </span>
+                    {currentDeviceType === 'mobile' && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Dispositivo actual" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setSelectedConfigDevice('desktop')}
+                    className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      selectedConfigDevice === 'desktop'
+                        ? isStitchLight ? "bg-white text-sky-600 shadow-xs" : "bg-neutral-800 text-amber-300 shadow-xs"
+                        : "text-neutral-400 hover:text-neutral-200"
+                    }`}
+                  >
+                    <Monitor className="w-3.5 h-3.5" />
+                    <span>Ordenador</span>
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-black/20 dark:bg-white/10">
+                      {devicePrefs.desktop}M
+                    </span>
+                    {currentDeviceType === 'desktop' && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" title="Dispositivo actual" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="mb-2">
+                  <span className={`text-[10px] font-mono block ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                    Al entrar desde un <strong>{selectedConfigDevice === 'mobile' ? 'móvil o pantalla estrecha' : 'ordenador o pantalla ancha'}</strong>:
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  {/* Opción 1: 1 Mes */}
+                  <button
+                    disabled={isSavingPref}
+                    onClick={() => handleSetDefaultMonthsForDevice('1', selectedConfigDevice)}
+                    className={`w-full text-left p-2.5 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                      devicePrefs[selectedConfigDevice] === '1'
+                        ? isStitchLight
+                          ? "bg-sky-50 border-sky-400/80 text-sky-950 shadow-xs"
+                          : "bg-amber-500/10 border-[#d1b375] text-amber-200 shadow-xs"
+                        : isStitchLight
+                          ? "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                          : "bg-neutral-900 hover:bg-neutral-800/80 border-zinc-800 text-neutral-300"
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-xs font-mono">1 Mes</span>
+                        <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
+                          devicePrefs[selectedConfigDevice] === '1'
+                            ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
+                            : isStitchLight ? "bg-slate-200 text-slate-600" : "bg-neutral-800 text-neutral-400"
+                        }`}>
+                          {devicePrefs[selectedConfigDevice] === '1' ? 'Predeterminado' : 'Recomendado móvil'}
+                        </span>
+                      </div>
+                      <p className={`text-[10px] mt-1 leading-snug ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                        Vista limpia y despejada de 1 mes (por defecto en dispositivos móviles).
+                      </p>
+                    </div>
+                    {devicePrefs[selectedConfigDevice] === '1' && (
+                      <Check className="w-4 h-4 text-[#d1b375] shrink-0 mt-0.5" />
+                    )}
+                  </button>
+
+                  {/* Opción 2: 2 Meses */}
+                  <button
+                    disabled={isSavingPref}
+                    onClick={() => handleSetDefaultMonthsForDevice('2', selectedConfigDevice)}
+                    className={`w-full text-left p-2.5 rounded-xl border transition-all cursor-pointer flex items-start justify-between gap-3 ${
+                      devicePrefs[selectedConfigDevice] === '2'
+                        ? isStitchLight
+                          ? "bg-sky-50 border-sky-400/80 text-sky-950 shadow-xs"
+                          : "bg-amber-500/10 border-[#d1b375] text-amber-200 shadow-xs"
+                        : isStitchLight
+                          ? "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                          : "bg-neutral-900 hover:bg-neutral-800/80 border-zinc-800 text-neutral-300"
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-xs font-mono">2 Meses</span>
+                        <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-semibold ${
+                          devicePrefs[selectedConfigDevice] === '2'
+                            ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
+                            : isStitchLight ? "bg-slate-200 text-slate-600" : "bg-neutral-800 text-neutral-400"
+                        }`}>
+                          {devicePrefs[selectedConfigDevice] === '2' ? 'Predeterminado' : 'Recomendado ordenador'}
+                        </span>
+                      </div>
+                      <p className={`text-[10px] mt-1 leading-snug ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                        Vista bimestral extendida (por defecto al entrar desde ordenador o pantalla grande).
+                      </p>
+                    </div>
+                    {devicePrefs[selectedConfigDevice] === '2' && (
+                      <Check className="w-4 h-4 text-[#d1b375] shrink-0 mt-0.5" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Toast feedback */}
+                {configToast && (
+                  <div className="mt-3 p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono flex items-center gap-1.5 animate-in fade-in">
+                    <Check className="w-3.5 h-3.5 shrink-0" />
+                    <span>{configToast}</span>
+                  </div>
+                )}
+
+                <div className={`mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px] font-mono ${
+                  isStitchLight ? "text-slate-400" : "text-neutral-400"
+                }`}>
+                  <span className="flex items-center gap-1.5">
+                    <Cloud className="w-3.5 h-3.5 text-[#d1b375]" />
+                    <span>Sincronizado con Supabase</span>
+                  </span>
+                  <span className="font-bold text-[#d1b375]">
+                    {selectedConfigDevice === 'mobile' ? 'Móvil' : 'Ordenador'}: {devicePrefs[selectedConfigDevice]}M
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

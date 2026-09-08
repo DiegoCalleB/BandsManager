@@ -42,6 +42,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasScheduleConfigured, setHasScheduleConfigured] = useState(false);
   const [hasEmailAccountConnected, setHasEmailAccountConnected] = useState(false);
+  const [hasMinCacheConfigured, setHasMinCacheConfigured] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -69,8 +70,6 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       try {
         const bandId = currentUser?.band_id;
         if (!bandId) { setHasEmailAccountConnected(false); return; }
-        // Cuenta como "conectado" cualquiera de las dos vías que gestiona EmailAccountConfig:
-        // Gmail por OAuth (sin contraseña) o SMTP/IMAP con contraseña de aplicación.
         const [gmailOAuth, imapAccount] = await Promise.all([
           api.getGmailOAuthStatus().catch(() => null),
           api.getBandEmailAccount(bandId).catch(() => null)
@@ -84,23 +83,22 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
     return () => { isMounted = false; };
   }, [currentUser]);
 
+  useEffect(() => {
+    // Check if autonomy config / min cache is configured
+    const autonomy = (currentUser as any)?.autonomy_config;
+    if (autonomy?.minCacheByType && Object.values(autonomy.minCacheByType).some((v: any) => Number(v) > 0)) {
+      setHasMinCacheConfigured(true);
+    } else if (autonomy?.min_cache && Number(autonomy.min_cache) > 0) {
+      setHasMinCacheConfigured(true);
+    } else {
+      setHasMinCacheConfigured(false);
+    }
+  }, [currentUser]);
+
   // Read stored songs from localStorage safely
   const storedSongsCount = React.useMemo(() => {
     try {
       const raw = localStorage.getItem('bakandeya_songs_catalog') || localStorage.getItem('bakandeya_songs');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed.length;
-      }
-      return 0;
-    } catch {
-      return 0;
-    }
-  }, []);
-
-  const storedSetlistsCount = React.useMemo(() => {
-    try {
-      const raw = localStorage.getItem('bakandeya_setlists_data') || localStorage.getItem('bakandeya_setlists');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed.length;
@@ -135,6 +133,11 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
     const hasAgenda = concerts.length > 0 || rehearsals.length > 0;
     const hasMetrics = metrics.length > 0;
     const hasFans = fans.length > 0 || Boolean(epkConfig?.incentivoFans?.enlaceDescarga || epkConfig?.incentivoFans?.codigoDescuento);
+    const hasToneDna = Boolean(
+      (epkConfig as any)?.toneDna || 
+      (currentUser as any)?.bandToneDna || 
+      (epkConfig?.biografia && epkConfig.biografia.length > 120)
+    );
 
     return [
       {
@@ -143,7 +146,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         completed: hasBio && hasPhotoLogo,
         weight: 10,
         view: 'epk',
-        missingLabel: 'Rellenar Bio (mín 80 chars)',
+        missingLabel: 'Rellenar Bio & Logo',
         agentImpact: 'El Agente Redactor usa la Bio e identidad de la banda para los emails de presentación.'
       },
       {
@@ -165,61 +168,70 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         agentImpact: 'Las salas necesitan confirmar qué microfonía y líneas requiere la banda antes de reservar fecha.'
       },
       {
-        id: 'leads',
-        title: 'Directorio Booking & Salas',
-        completed: hasLeads && hasVerifiedEmails,
-        weight: 15,
-        view: 'booking',
-        missingLabel: 'Añadir Salas / Scout',
-        agentImpact: 'Scout y el Redactor usan los contactos en Hoja para enviar campañas automáticas de booking.'
+        id: 'email_account',
+        title: 'Buzón Conectado (Gmail/SMTP)',
+        completed: hasEmailAccountConnected,
+        weight: 12,
+        view: 'profile',
+        missingLabel: 'Conectar Email',
+        agentImpact: 'Permite al Agente Enviador mandar propuestas y al Lector clasificar respuestas desde tu bandeja real.'
       },
       {
         id: 'smart_gate',
-        title: 'Horarios Agentes (Smart Gate)',
+        title: 'Horarios de Envío (Smart Gate)',
         completed: hasScheduleConfigured,
-        weight: 15,
-        view: 'profile',
-        missingLabel: 'Configurar Horarios',
-        agentImpact: 'Sincroniza la zona horaria y ventanas de lectura/envío para los motores de agentes en Supabase.'
-      },
-      {
-        id: 'email_account',
-        title: 'Cuenta de Email Conectada',
-        completed: hasEmailAccountConnected,
         weight: 10,
         view: 'profile',
-        missingLabel: 'Conectar Email',
-        agentImpact: 'Permite al Agente Enviador/Lector mandar propuestas y leer respuestas reales desde tu propia bandeja (Gmail, Outlook o cualquier proveedor).'
+        missingLabel: 'Configurar Horarios',
+        agentImpact: 'Despacha correos únicamente en días y horas de máxima apertura comercial de programadores.'
+      },
+      {
+        id: 'negotiation_cache',
+        title: 'Caché & Reglas de Negociación',
+        completed: hasMinCacheConfigured,
+        weight: 10,
+        view: 'autonomy_modal',
+        missingLabel: 'Fijar Caché Mínimo',
+        agentImpact: 'El Agente Mánager negocia fechas y presupuestos respetando el caché mínimo fijado por la banda.'
+      },
+      {
+        id: 'tone_dna',
+        title: 'Tone DNA & Identidad Vocal',
+        completed: hasToneDna,
+        weight: 10,
+        view: 'bandas',
+        missingLabel: 'Configurar Tone DNA',
+        agentImpact: 'Define la voz, vocabulario y personalidad con la que los agentes redactan pitches y copys.'
+      },
+      {
+        id: 'leads',
+        title: 'Directorio Booking & Salas',
+        completed: hasLeads && hasVerifiedEmails,
+        weight: 10,
+        view: 'booking',
+        missingLabel: 'Buscar Salas con Scout',
+        agentImpact: 'Scout y Redactor extraen contactos y correos de programación para las campañas.'
       },
       {
         id: 'repertorio',
-        title: 'Discografía & Repertorio',
+        title: 'Repertorios & Discografía',
         completed: hasSongs,
         weight: 10,
         view: 'repertorio',
         missingLabel: 'Cargar Canciones',
-        agentImpact: 'Permite al Mánager AI crear setlists ajustados exactamente al tiempo de show permitido (45m, 60m, 90m).'
-      },
-      {
-        id: 'agenda',
-        title: 'Agenda & Conciertos',
-        completed: hasAgenda,
-        weight: 10,
-        view: 'calendario',
-        missingLabel: 'Agendar Evento',
-        agentImpact: 'El bot verifica huecos libres en tu calendario antes de proponer fechas a las salas.'
+        agentImpact: 'Permite al Mánager AI armar setlists exactos ajustados al minutaje del show (45m, 60m, 90m).'
       },
       {
         id: 'metrics_fans',
-        title: 'Métricas & Comunidad Fans',
+        title: 'Métricas de Escuchas & Fans',
         completed: hasMetrics || hasFans,
-        weight: 10,
+        weight: 8,
         view: 'reels',
-        missingLabel: 'Métricas / Regalo Fans',
-        agentImpact: 'El agente utiliza tus seguidores y escuchas en Spotify como argumento de venta de entradas.'
+        missingLabel: 'Métricas / Fans',
+        agentImpact: 'El agente utiliza tus seguidores y oyentes en Spotify como argumento de venta y taquilla.'
       }
     ];
-  }, [epkConfig, leads, storedSongsCount, concerts, rehearsals, metrics, fans, hasScheduleConfigured, hasEmailAccountConnected, currentUser]);
+  }, [epkConfig, leads, storedSongsCount, concerts, rehearsals, metrics, fans, hasScheduleConfigured, hasEmailAccountConnected, hasMinCacheConfigured, currentUser]);
 
   const totalCompletedWeight = pillars.reduce((acc, p) => p.completed ? acc + p.weight : acc, 0);
   const totalPossibleWeight = pillars.reduce((acc, p) => acc + p.weight, 0);
@@ -227,13 +239,19 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
   const completedPillarsCount = pillars.filter(p => p.completed).length;
 
   const getStatusBadge = () => {
-    if (percentage >= 85) return { label: 'Perfil Optimizado (100% Agéntico)', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' };
-    if (percentage >= 50) return { label: 'Perfil Intermedio', color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' };
-    return { label: 'Perfil Inicial (Requiere Datos)', color: 'bg-rose-500/20 text-rose-300 border-rose-500/30' };
+    if (percentage >= 85) return { label: 'Entrenamiento Completo (100% Agéntico)', color: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
+    if (percentage >= 50) return { label: 'Entrenamiento Intermedio', color: 'bg-amber-500/15 text-amber-300 border-amber-500/30' };
+    return { label: 'Entrenamiento Inicial', color: 'bg-rose-500/15 text-rose-300 border-rose-500/30' };
   };
 
   const handlePillarClick = (view: string) => {
-    if (view === 'profile') {
+    if (view === 'autonomy_modal') {
+      if (onOpenAutonomyModal) {
+        onOpenAutonomyModal();
+      } else if (onNavigate) {
+        onNavigate('profile');
+      }
+    } else if (view === 'profile') {
       if (onOpenProfileModal) {
         onOpenProfileModal();
       } else if (onNavigate) {
@@ -255,20 +273,21 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-stone-800/60">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-xs">
+          <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
             {percentage}%
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-100">
-                Estado del Perfil de {bandName}
+              <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-100 flex items-center gap-1.5">
+                <Bot className="w-3.5 h-3.5 text-amber-400" />
+                Entrenamiento & Preparación de Agentes IA
               </h3>
               <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border font-semibold ${badgeInfo.color}`}>
                 {badgeInfo.label}
               </span>
             </div>
             <p className="text-[11px] text-neutral-400 mt-0.5">
-              Completa los datos clave para entrenar la IA y mejorar la negociación de fechas.
+              {completedPillarsCount} de {pillars.length} factores configurados para {bandName}.
             </p>
           </div>
         </div>
@@ -280,7 +299,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               className="px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <Sliders className="w-3.5 h-3.5 text-purple-400" />
-              <span className="hidden xs:inline">Autonomía IA</span>
+              <span className="hidden xs:inline">Autonomía & Caché</span>
             </button>
           )}
 
@@ -297,7 +316,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
             className="px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
             title="Expandir/colapsar checklist"
           >
-            <span>{isExpanded ? 'Ocultar' : 'Ver pasos'}</span>
+            <span>{isExpanded ? 'Ocultar' : 'Ver checklist'}</span>
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
         </div>
@@ -313,30 +332,39 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
         </div>
       </div>
 
-      {/* Compact Trigger Button when Collapsed (Mobile Space Saver) */}
+      {/* Compact Trigger Button when Collapsed */}
       {!isExpanded && (
-        <button
-          onClick={() => setIsExpanded(true)}
-          className="w-full mt-3 p-2.5 rounded-xl bg-stone-900/60 hover:bg-stone-800/80 border border-stone-800/80 text-xs font-mono text-stone-300 flex items-center justify-between transition-all cursor-pointer group active:scale-[0.99]"
-        >
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="truncate">
-              Pasos de Configuración ({completedPillarsCount}/{pillars.length} completados)
-            </span>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-1">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {pillars.map(p => (
+              <span 
+                key={`badge-${p.id}`}
+                className={`inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                  p.completed 
+                    ? 'bg-emerald-950/30 border-emerald-500/20 text-emerald-400' 
+                    : 'bg-stone-900 border-stone-800 text-stone-400'
+                }`}
+              >
+                {p.completed ? <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" /> : <AlertCircle className="w-2.5 h-2.5 text-amber-500/80" />}
+                {p.title.split(' ')[0]}
+              </span>
+            ))}
           </div>
-          <div className="flex items-center gap-1 text-amber-400 font-bold shrink-0 text-[11px] group-hover:underline">
-            <span>Ver detalles</span>
-            <ChevronDown className="w-3.5 h-3.5" />
-          </div>
-        </button>
+          <button
+            onClick={() => setIsExpanded(true)}
+            className="text-amber-400 hover:text-amber-300 font-mono text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <span>Ver detalles y configurar</span>
+            <ChevronDown className="w-3 h-3" />
+          </button>
+        </div>
       )}
 
       {/* Full Grid and Detailed Accordion when Expanded */}
       {isExpanded && (
         <div className="mt-4 space-y-4 animate-in fade-in duration-200">
           {/* Pill Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2">
             {pillars.map(pillar => (
               <button
                 key={pillar.id}
@@ -366,29 +394,31 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
           </div>
 
           {/* Detailed Breakdown List */}
-          <div className="pt-2 border-t border-amber-500/10 space-y-3">
-            <h4 className="text-xs font-mono uppercase tracking-wider font-bold text-amber-400">
-              Checklist Completo de Entrenabilidad IA (9/9 Pasos)
-            </h4>
+          <div className="pt-2 border-t border-stone-800/80 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-mono uppercase tracking-wider font-bold text-amber-400">
+                Checklist de Configuración Agéntica ({completedPillarsCount}/{pillars.length})
+              </h4>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs font-sans">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-sans">
               {pillars.map(pillar => (
                 <div 
                   key={`exp-${pillar.id}`}
-                  className={`p-3 rounded-xl border flex items-start justify-between gap-3 ${
-                    pillar.completed ? 'bg-neutral-900/60 border-neutral-800' : 'bg-amber-500/5 border-amber-500/20'
+                  className={`p-2.5 rounded-xl border flex items-start justify-between gap-3 ${
+                    pillar.completed ? 'bg-neutral-900/40 border-neutral-800/80' : 'bg-amber-500/5 border-amber-500/20'
                   }`}
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-1.5">
                       {pillar.completed ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                       ) : (
-                        <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                        <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                       )}
-                      <span className="font-bold text-zinc-100">{pillar.title}</span>
+                      <span className="font-bold text-zinc-100 text-xs">{pillar.title}</span>
                     </div>
-                    <p className="text-[11px] text-neutral-400 leading-snug">
+                    <p className="text-[10px] text-neutral-400 leading-snug">
                       {pillar.agentImpact}
                     </p>
                   </div>
@@ -396,7 +426,7 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                   {!pillar.completed && (
                     <button
                       onClick={() => handlePillarClick(pillar.view)}
-                      className="px-2.5 py-1 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-[10px] shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
+                      className="px-2 py-1 rounded-lg bg-amber-500 text-stone-950 font-mono font-bold text-[10px] shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
                     >
                       Configurar
                     </button>
@@ -419,10 +449,10 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                 </div>
                 <div>
                   <h3 className="text-lg font-bold font-display uppercase tracking-wider text-zinc-100">
-                    ¿Por qué importa completar el Perfil de {bandName}?
+                    Entrenamiento de Agentes IA para {bandName}
                   </h3>
                   <p className="text-xs text-neutral-400 font-mono">
-                    Cómo funcionan autónomamente los 4 agentes de Supabase con tu información
+                    Cómo utiliza cada agente tu información para conseguir más y mejores conciertos
                   </p>
                 </div>
               </div>
@@ -435,40 +465,40 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
               </button>
             </div>
 
-            <div className="space-y-4 text-xs text-zinc-300 font-sans leading-relaxed">
-              <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 space-y-2">
+            <div className="space-y-3 text-xs text-zinc-300 font-sans leading-relaxed">
+              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
-                  <Bot className="w-4 h-4" /> 1. Agente Scout (Búsqueda e Investigación de Salas)
+                  <Bot className="w-4 h-4" /> 1. Agente Scout (Prospección de Salas & Recintos)
                 </h4>
-                <p>
-                  Busca automáticamente salas, festivales y fiestas patronales en las regiones que solicites. Utiliza tu género musical y tu aforo promedio para descartar recintos incompatibles.
+                <p className="text-neutral-400 text-xs">
+                  Busca automáticamente salas, festivales y fiestas patronales en las regiones seleccionadas. Filtra por aforo y género para encontrar sólo recintos compatibles.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 space-y-2">
+              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
-                  <FileText className="w-4 h-4" /> 2. Agente Redactor (Redacción de Pitches de Booking)
+                  <FileText className="w-4 h-4" /> 2. Agente Redactor (Pitches Personalizados & ADN de Tono)
                 </h4>
-                <p>
-                  Redacta automáticamente las propuestas por correo para las salas. Extrae párrafos clave de tu <strong className="text-zinc-100">Biografía</strong>, adjunta el enlace a tu <strong className="text-zinc-100">Dossier PDF</strong> y menciona tu récord de aforo o número de seguidores en redes.
+                <p className="text-neutral-400 text-xs">
+                  Redacta las propuestas de correo para las salas extrayendo hitos de tu <strong className="text-zinc-100">Biografía</strong>, adjuntando tu <strong className="text-zinc-100">Dossier PDF</strong> y adaptando el vocabulario a la voz de la banda.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 space-y-2">
+              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
-                  <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI (Chatbot y Negociación de Fechas)
+                  <Disc3 className="w-4 h-4" /> 3. Agente Mánager AI (Negociación de Fechas & Caché)
                 </h4>
-                <p>
-                  Cuando una sala responde solicitando fecha, caché o rider técnico, el Mánager AI consulta tu <strong className="text-zinc-100">Rider Técnico</strong> y tu <strong className="text-zinc-100">Calendario</strong> para proponer opciones sin solapar ensayos ni otros bolos.
+                <p className="text-neutral-400 text-xs">
+                  Responde a las salas sobre disponibilidad consultando tu <strong className="text-zinc-100">Calendario</strong>, comprueba el <strong className="text-zinc-100">Rider Técnico</strong> y defiende el presupuesto según tus reglas de <strong className="text-zinc-100">Caché Mínimo</strong>.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 space-y-2">
+              <div className="p-3.5 rounded-xl bg-neutral-900 border border-neutral-800 space-y-1.5">
                 <h4 className="font-bold text-amber-400 flex items-center gap-2 text-sm font-display">
-                  <Heart className="w-4 h-4" /> 4. Agente Lector de Bandeja (Clasificación de Correos)
+                  <Mail className="w-4 h-4" /> 4. Agente Lector & Enviador (Smart Gate)
                 </h4>
-                <p>
-                  Monitoriza las respuestas recibidas en la bandeja de entrada según tu <strong className="text-zinc-100">Smart Gate Scheduler</strong> y clasifica si el programador está interesado, si pide presupuesto o si rechaza la propuesta.
+                <p className="text-neutral-400 text-xs">
+                  Despacha los correos aprobados en los horarios de máxima apertura comercial y monitoriza la bandeja de entrada para detectar respuestas de programadores al instante.
                 </p>
               </div>
             </div>

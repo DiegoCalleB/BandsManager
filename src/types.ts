@@ -221,6 +221,7 @@ export interface EmailSignatureConfig {
   telefono?: string;
   email?: string;
   textoPie?: string;
+  incluirLogo?: boolean;
   incluirIconosRedes?: boolean;
   adjuntarDossierPorDefecto?: boolean;
   redesSociales?: {
@@ -520,6 +521,13 @@ export interface User {
   avatarColor?: string;
   createdAt: string;
   googleOAuth?: GoogleOAuthConfig;
+  ui_preferences?: {
+    calendar_default_months?: {
+      mobile?: '1' | '2';
+      desktop?: '1' | '2';
+    };
+    [key: string]: any;
+  };
   // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente
   // sobre el usuario persistido). Sin declararlos aquí, Planes.tsx y UserProfileModal.tsx los
   // leían con `as any`, sin que el tipo protegiera nada.
@@ -640,6 +648,9 @@ export interface Song {
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
+  estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
+  estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
+  estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
 }
 
 export interface SetlistItem {

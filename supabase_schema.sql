@@ -55,6 +55,9 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash TEXT,
     salt TEXT,
     google_oauth JSONB DEFAULT '{}'::jsonb,
+    main_band_id TEXT,
+    band_order JSONB,
+    ui_preferences JSONB DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -174,6 +177,20 @@ CREATE TABLE IF NOT EXISTS setlists (
     items JSONB DEFAULT '[]'::jsonb,
     fecha_creacion TIMESTAMPTZ DEFAULT NOW(),
     fecha_ultima_edicion TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 7b. setlist_shortcuts
+CREATE TABLE IF NOT EXISTS setlist_shortcuts (
+    id TEXT PRIMARY KEY,
+    band_id TEXT REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+    icono TEXT DEFAULT '⚡',
+    etiqueta TEXT NOT NULL,
+    titulo_custom TEXT,
+    duracion_estimada_minutos INTEGER,
+    duracion_estimada_segundos INTEGER,
+    nota_tema TEXT DEFAULT '',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- 8. rehearsals

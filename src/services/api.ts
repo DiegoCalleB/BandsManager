@@ -99,6 +99,17 @@ export const api = {
     });
   },
 
+  async saveUiPreferences(preferences: Record<string, any>): Promise<{ success: boolean; ui_preferences: any; user: User }> {
+    return request<{ success: boolean; ui_preferences: any; user: User }>('/api/users/ui-preferences', {
+      method: 'POST',
+      body: JSON.stringify(preferences)
+    });
+  },
+
+  async getUiPreferences(): Promise<{ success: boolean; ui_preferences: any }> {
+    return request<{ success: boolean; ui_preferences: any }>('/api/users/ui-preferences');
+  },
+
   async createBand(data: {
     bandName: string;
     leaderName?: string;

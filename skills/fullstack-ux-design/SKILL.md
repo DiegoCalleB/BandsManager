@@ -1,0 +1,98 @@
+---
+name: fullstack-ux-design
+description: Guía de excelencia en diseño Frontend (React 19, Motion, Tailwind v4, UX B2C) y Backend (Express modular, Vitest) para BandManager.ai. Usar al crear componentes UI o refinamientos API.
+---
+
+# 🎨 Skill: Desarrollo Fullstack Premium & Diseño UX
+
+Esta skill establece los principios de desarrollo frontend y backend para lograr una experiencia de usuario de clase mundial (nivel B2C SaaS comercial) manteniendo código limpio, mantenible y robusto.
+
+---
+
+## 💎 1. Estándares de Diseño Frontend (UI/UX)
+
+### Paleta de Colores & Estética
+- **Dark Mode Elegante:** Fondos oscuros profundos (`#0f172a`, `#1e293b`), paneles con glassmorphism (`backdrop-blur-md bg-slate-900/80 border border-slate-800`).
+- **Acentos Armónicos:** Evitar colores genéricos puros (rojo/verde chillón). Usar degradados sutiles (`bg-gradient-to-r from-purple-500 to-indigo-600`, esmeralda sutil para éxito `#10b981`, ámbar cálido para advertencias `#f59e0b`).
+- **Tipografía & Jerarquía:** Títulos claros en negrita, tamaños de fuente proporcionales y contraste WCAG adecuado.
+
+### Micro-Animaciones & Motion (React 19 + `motion`)
+Añadir vida a la interfaz con animaciones fluidas al cargar, sobrevolar o transicionar entre pestañas:
+
+```tsx
+import { motion } from 'motion/react';
+
+export function CardMetrica({ titulo, valor, icono: Icon }: Props) {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02, translateY: -2 }}
+      transition={{ duration: 0.2 }}
+      className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-xl backdrop-blur-sm"
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-slate-400">{titulo}</span>
+        <Icon className="w-5 h-5 text-indigo-400" />
+      </div>
+      <p className="mt-2 text-2xl font-bold text-white">{valor}</p>
+    </motion.div>
+  );
+}
+```
+
+### Componentes y Feedback al Usuario
+- **Estados de Carga y Vacío (Empty States):** Toda tabla o grid debe mostrar un spinner de carga o un *empty state* visualmente atractivo cuando no hay datos.
+- **Sin Placeholders:** Usar datos reales o generar imágenes de demostración si se requieren recursos visuales.
+- **Consumo de API Centralizado:** Utilizar siempre `src/services/api.ts` o `src/utils/api.ts` para llamadas HTTP. No hacer `fetch()` directo desde componentes.
+
+---
+
+## ⚙️ 2. Estándares de Backend (Express + TypeScript)
+
+### Resiliencia Asíncrona
+Todos los handlers asíncronos deben envolverse en bloques `try/catch` para capturar errores de forma limpia y retornar un JSON estructurado de error (`{ error: 'Mensaje descriptivo' }`):
+
+```typescript
+app.post('/api/songs', requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const nuevaCancion = await dbCreateSong(req.body, bandId);
+    return res.status(201).json(nuevaCancion);
+  } catch (error: any) {
+    console.error('[API ERROR] /api/songs:', error);
+    return res.status(500).json({ error: error.message || 'Error interno del servidor' });
+  }
+});
+```
+
+### Tipado y Calidad (`tsc --noEmit`)
+- **Cero Tolerancia a Errores TypeScript Nuevos:** La suite de compilación `npx tsc --noEmit` debe mantenerse en 0 errores nuevos.
+- **Prohibido el Uso Indiscriminado de `any`:** Definir interfaces en `src/types.ts` siempre que se cree un nuevo modelo o payload.
+
+---
+
+## 🧪 3. Pruebas Unitarias con Vitest
+
+- Colocar los archivos de test adyacentes al código que prueban en una carpeta `__tests__/` (ejemplo: `server/utils/__tests__/bandAccess.test.ts`).
+- Ejecutar tests con `npm test` o test específico con `npx vitest run ruta/al/test.test.ts`.
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { getTargetBandId } from '../bandAccess.js';
+
+describe('bandAccess helper', () => {
+  it('debe resolver el band_id de la sesión del usuario autenticado', () => {
+    const req = { user: { band_id: 'banda_123' }, headers: {} } as any;
+    expect(getTargetBandId(req)).toBe('banda_123');
+  });
+});
+```
+
+---
+
+## ✅ Checklist UX & Backend
+
+- [ ] ¿El componente incluye micro-animaciones y estados de hover?
+- [ ] ¿Se gestionan adecuadamente los estados de carga y listas vacías?
+- [ ] ¿Todas las peticiones HTTP usan `src/services/api.ts`?
+- [ ] ¿El handler asíncrono tiene un bloque `try/catch` adecuado?
+- [ ] ¿`npx tsc --noEmit` compila sin errores nuevos?

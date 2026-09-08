@@ -453,6 +453,17 @@ export async function dbDeleteSetlist(id: string, bandId: string) {
 }
 
 // --- SETLIST SHORTCUTS (per-band custom "quick add" presets, see RepertorioSetlists.tsx) ---
+function isMissingTableOrColumnError(error: any): boolean {
+  if (!error) return false;
+  const msg = String(error.message || '').toLowerCase();
+  return (
+    error.code === '42P01' ||
+    msg.includes("could not find the table") ||
+    msg.includes("schema cache") ||
+    (msg.includes("relation") && msg.includes("does not exist"))
+  );
+}
+
 export async function dbGetSetlistShortcuts(bandId: string) {
   const sb = getSupabase();
   const { data, error } = await sb
@@ -461,7 +472,13 @@ export async function dbGetSetlistShortcuts(bandId: string) {
     .eq("band_id", cleanBandId(bandId))
     .order("created_at", { ascending: true });
 
-  if (error) throw new Error(`Supabase Error (setlist_shortcuts): ${error.message}`);
+  if (error) {
+    if (isMissingTableOrColumnError(error)) {
+      console.warn(`[Supabase] Tabla 'setlist_shortcuts' no encontrada aún en el schema cache. Devolviendo lista vacía.`);
+      return [];
+    }
+    throw new Error(`Supabase Error (setlist_shortcuts): ${error.message}`);
+  }
   return (data || []).map(sc => ({
     id: sc.id,
     band_id: sc.band_id,
@@ -493,7 +510,22 @@ export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
   };
 
   const { data, error } = await sb.from("setlist_shortcuts").upsert(payload).select().single();
-  if (error) throw new Error(`Supabase Error (upsert setlist_shortcut): ${error.message}`);
+  if (error) {
+    if (isMissingTableOrColumnError(error)) {
+      console.warn(`[Supabase] Tabla 'setlist_shortcuts' no disponible al guardar atajo. Continuando con datos en memoria.`);
+      return {
+        id: payload.id,
+        band_id: payload.band_id,
+        icono: payload.icono,
+        etiqueta: payload.etiqueta,
+        tituloCustom: payload.titulo_custom,
+        duracionEstimadaMinutos: payload.duracion_estimada_minutos,
+        duracionEstimadaSegundos: payload.duracion_estimada_segundos,
+        notaTema: payload.nota_tema || ""
+      };
+    }
+    throw new Error(`Supabase Error (upsert setlist_shortcut): ${error.message}`);
+  }
   return {
     id: data.id,
     band_id: data.band_id,
@@ -509,7 +541,12 @@ export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
 export async function dbDeleteSetlistShortcut(id: string, bandId: string) {
   const sb = getSupabase();
   const { error } = await sb.from("setlist_shortcuts").delete().eq("id", id).eq("band_id", cleanBandId(bandId));
-  if (error) throw new Error(`Supabase Error (delete setlist_shortcut): ${error.message}`);
+  if (error) {
+    if (isMissingTableOrColumnError(error)) {
+      return true;
+    }
+    throw new Error(`Supabase Error (delete setlist_shortcut): ${error.message}`);
+  }
   return true;
 }
 

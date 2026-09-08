@@ -717,44 +717,95 @@ router.post("/public/fans", async (req, res) => {
   }
 });
 
-// Click Tracking Endpoint for Fan Landing and EPK buttons (Revolut, Socials, Booking, Downloads)
+// Click Tracking Endpoint for Fan Landing and EPK buttons (Socials, Revolut, PayPal, Bizum, Dossier, etc.)
 router.post("/public/track-click", async (req, res) => {
   try {
-    const { band_id, platform, button_type, context } = req.body || {};
-    if (!band_id || !String(band_id).trim()) {
-      // Sin band_id no hay a quién atribuir el clic; antes se contaba en silencio como si fuera
-      // de Bakandeya. Mejor no contar nada que inflar las métricas de otra banda.
-      return res.json({ success: false });
+    const { band_id, platform, button_type, concert_id, concert_date, concertId, concertDate } = req.body || {};
+    const targetBandId = String(band_id || req.query.band_id || req.query.band || "").toLowerCase();
+    
+    if (!targetBandId || !targetBandId.trim()) {
+      return res.json({ success: false, message: "Falta band_id" });
     }
-    const targetBandId = String(band_id).toLowerCase();
-    const cleanKey = (platform || button_type || "unknown").toLowerCase();
 
+    const cleanButton = String(button_type || platform || "unknown").toLowerCase().trim();
+    const finalConcertId = concert_id || concertId || null;
+    const finalConcertDate = concert_date || concertDate || null;
+    const userAgent = (req.headers['user-agent'] || '').slice(0, 200);
+    const referer = (req.headers['referer'] || '').slice(0, 200);
+
+    // 1. Persistir en Supabase
+    try {
+      const { getSupabase } = await import("../db.js");
+      const sb = getSupabase();
+      await sb.from("fan_link_clicks").insert({
+        band_id: targetBandId,
+        button_type: cleanButton,
+        concert_id: finalConcertId,
+        concert_date: finalConcertDate,
+        user_agent: userAgent,
+        referer: referer
+      });
+    } catch (sbErr: any) {
+      // Non-blocking: cae a estado en memoria
+    }
+
+    // 2. Persistir en estado local en memoria
     const state = loadState();
     if (!state.clickMetricsByBand) state.clickMetricsByBand = {};
     if (!state.clickMetricsByBand[targetBandId]) state.clickMetricsByBand[targetBandId] = {};
 
-    const currentCount = state.clickMetricsByBand[targetBandId][cleanKey] || 0;
-    state.clickMetricsByBand[targetBandId][cleanKey] = currentCount + 1;
-    state.clickMetricsByBand[targetBandId][`${cleanKey}_last_at`] = new Date().toISOString();
+    const currentCount = state.clickMetricsByBand[targetBandId][cleanButton] || 0;
+    state.clickMetricsByBand[targetBandId][cleanButton] = currentCount + 1;
+    state.clickMetricsByBand[targetBandId][`${cleanButton}_last_at`] = new Date().toISOString();
+
+    if (finalConcertId) {
+      const concertKey = `concert_${finalConcertId}_${cleanButton}`;
+      state.clickMetricsByBand[targetBandId][concertKey] = (state.clickMetricsByBand[targetBandId][concertKey] || 0) + 1;
+    }
 
     saveState(state);
 
-    res.json({ success: true, count: currentCount + 1, platform: cleanKey });
+    res.json({ success: true, count: currentCount + 1, platform: cleanButton, concert_id: finalConcertId });
   } catch (err: any) {
     console.error("Error tracking click:", err);
     res.status(200).json({ success: false }); // Non-blocking
   }
 });
 
-// Click Stats Endpoint
-// El "o por BandId" que ponía aquí era el agujero: sin sesión y con ?band_id= se leían las
-// analíticas de clicks del EPK de cualquier banda.
+// Click Stats Endpoint con filtros de concierto
 router.get("/epk/clicks", requireAuth, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req).toLowerCase();
+    const concertId = (req.query.concert_id as string) || (req.query.concertId as string);
+
+    let supabaseStats: Record<string, number> = {};
+    let concertBreakdown: Array<{ concert_id: string; concert_date: string; button_type: string; count: number }> = [];
+
+    try {
+      const { getSupabase } = await import("../db.js");
+      const sb = getSupabase();
+
+      let query = sb.from("fan_link_clicks").select("button_type, concert_id, concert_date").eq("band_id", targetBandId);
+      if (concertId) {
+        query = query.eq("concert_id", concertId);
+      }
+      const { data, error } = await query;
+
+      if (!error && Array.isArray(data)) {
+        const counts: Record<string, number> = {};
+        data.forEach(row => {
+          const btn = row.button_type || 'unknown';
+          counts[btn] = (counts[btn] || 0) + 1;
+        });
+        supabaseStats = counts;
+      }
+    } catch (e) {}
+
     const state = loadState();
-    const clicks = state.clickMetricsByBand?.[targetBandId] || {};
-    res.json({ success: true, clicks });
+    const localClicks = state.clickMetricsByBand?.[targetBandId] || {};
+    const mergedClicks = { ...localClicks, ...supabaseStats };
+
+    res.json({ success: true, clicks: mergedClicks, band_id: targetBandId });
   } catch (err: any) {
     res.status(500).json({ error: "Error al obtener estadísticas de clicks." });
   }
