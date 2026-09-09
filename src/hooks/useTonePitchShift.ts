@@ -35,12 +35,13 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
         }
 
         if (!pitchShiftRef.current) {
+          const limiter = new Tone.Limiter(-1).toDestination();
           pitchShiftRef.current = new Tone.PitchShift({
             pitch: semitones,
-            windowSize: 0.25, // Ventana óptima para mezclas de audio completas (evita el efecto robótico/metálico)
-            delayTime: 0.04,
+            windowSize: 0.08, // Ventana óptima de 80ms para mezclas musicales completas (elimina el comb-filtering metálico)
+            delayTime: 0,
             feedback: 0
-          }).toDestination();
+          }).connect(limiter);
         } else {
           pitchShiftRef.current.pitch = semitones;
         }
