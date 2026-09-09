@@ -106,7 +106,7 @@ app.use("/api/upload", uploadRouter);
 app.use("/api", campaignsRouter);
 app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
-app.use("/api", transposeRouter);
+app.use(transposeRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
 // archivo subido se cuela sin pasar por la validación de tipo de server/routes/upload.ts.

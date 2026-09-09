@@ -5,7 +5,7 @@ import { processAudioTransposition } from '../services/audioTransposeService.js'
 
 const router = Router();
 
-router.post('/api/transpose-audio', requireAuth, async (req, res) => {
+router.post(['/transpose-audio', '/api/transpose-audio'], requireAuth, async (req, res) => {
   try {
     const { songId, audioUrl, audioBase64, semitones } = req.body;
     if ((!audioUrl && !audioBase64) || typeof semitones !== 'number') {
