@@ -48,6 +48,7 @@ import {
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
+import { getSemitoneDifference } from '../utils/chordUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
 
@@ -519,6 +520,7 @@ export default function RepertorioSetlists({
    playerAutoPlay,
    playSignal,
    isPlayerPlaying, setIsPlayerPlaying,
+   playerTransposeSemitones,
    handleSelectPlayerSong,
  } = useAudioPlayer();
 
@@ -547,9 +549,9 @@ export default function RepertorioSetlists({
  // canciones de ESE repertorio, en su orden. Se resetea a null (= catálogo) desde cualquier
  // entrada de reproducción que no venga de un repositorio.
  const [playerQueueOverride, setPlayerQueueOverride] = useState<Song[] | null>(null);
- const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null) => {
+ const selectPlayerSongWithQueue = useCallback((song: Song | null, autoPlay: boolean = false, queue: Song[] | null = null, transposeSemitones: number = 0) => {
    setPlayerQueueOverride(queue);
-   handleSelectPlayerSong(song, autoPlay);
+   handleSelectPlayerSong(song, autoPlay, transposeSemitones);
  }, [handleSelectPlayerSong]);
 
  // Song Modal State
@@ -3133,7 +3135,11 @@ export default function RepertorioSetlists({
       .filter((i) => i.tipoItem === 'cancion' && i.songId)
       .map((i) => songs.find((s) => s.id === i.songId))
       .filter((s): s is Song => !!s);
-    selectPlayerSongWithQueue(song, true, setlistSongs);
+    // Calculate transposition from tonalidadDeseada if set
+    const transposeSemitones = it.tonalidadDeseada && song.tonalidad
+      ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada) ?? 0
+      : 0;
+    selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
   };
 
   const songIndex = activeSetlist.items.slice(0, index).filter(i => i.tipoItem === 'cancion').length;
@@ -4356,6 +4362,7 @@ export default function RepertorioSetlists({
  autoPlay={playerAutoPlay}
  playSignal={playSignal}
  onIsPlayingChange={setIsPlayerPlaying}
+ transposeSemitones={playerTransposeSemitones}
  />,
  document.body
  )}
