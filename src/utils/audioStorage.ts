@@ -377,7 +377,7 @@ export async function uploadFileToServer(
   return await fileToBase64(file);
 }
 
-export function fileToBase64(file: File): Promise<string> {
+export function fileToBase64(file: File | Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

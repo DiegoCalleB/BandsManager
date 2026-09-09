@@ -4,9 +4,9 @@ import {
   Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX,
   ExternalLink, Disc, Sliders, X, Flame, Music, Sparkles, FileText, ChevronUp, ChevronDown
 } from 'lucide-react';
-import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
+import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
-import { transposeSingleNote, getSemitoneDifference } from '../utils/chordUtils';
+import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
 import { api } from '../services/api';
 
 interface SpotifyPlayerBarProps {
@@ -140,14 +140,33 @@ export default function SpotifyPlayerBar({
       if (transposeSemitones !== 0 && resolved) {
         setIsTransposingAudio(true);
         try {
-          const res = await api.transposeAudio({
-            songId: song.id,
-            audioUrl: resolved,
-            semitones: transposeSemitones
-          });
+          let payload: { songId: string; audioUrl?: string; audioBase64?: string; semitones: number };
+
+          // If resolved is a local browser blob: URL, fetch and convert to base64 for server processing
+          if (resolved.startsWith('blob:')) {
+            const blobRes = await fetch(resolved);
+            const blob = await blobRes.blob();
+            const base64 = await fileToBase64(blob);
+            payload = {
+              songId: song.id,
+              audioBase64: base64,
+              semitones: transposeSemitones
+            };
+          } else {
+            payload = {
+              songId: song.id,
+              audioUrl: rawUrl.startsWith('http') || rawUrl.startsWith('/uploads/') ? rawUrl : resolved,
+              semitones: transposeSemitones
+            };
+          }
+
+          const res = await api.transposeAudio(payload);
           if (isMounted && res.success && res.transposedUrl) {
             setActiveAudioUrl(res.transposedUrl);
           } else if (isMounted) {
+            if (res.error) {
+              console.warn('[SpotifyPlayerBar] No se pudo trasponer audio en servidor:', res.error);
+            }
             setActiveAudioUrl(resolved);
           }
         } catch (err) {
@@ -197,9 +216,7 @@ export default function SpotifyPlayerBar({
     lastSongIdRef.current = song.id;
 
     if (promotedSongIdRef.current === song.id) {
-      // Este tema llegó aquí por un fundido: ya está sonando de verdad desde antes (arrancó en
-      // el elemento <audio> inactivo mientras el anterior terminaba) — solo se refresca la
-      // duración (real, leída directamente del elemento ya activo) para la UI, sin tocar el audio.
+      // Este tema llegó aquí por un fundido: ya está sonando de verdad desde antes
       const activeEl = getActiveAudioEl();
       const realDuration = activeEl?.duration;
       setDuration(realDuration && isFinite(realDuration) ? realDuration : (song.duracionSegundos || 210));
@@ -211,22 +228,36 @@ export default function SpotifyPlayerBar({
       lastHandledSignalRef.current = playSignal;
     }
 
-    const shouldPlayNow = autoPlay || hasNewPlaySignal;
-
-    setCurrentTime(0);
-    const estDuration = song.duracionSegundos || 210;
-    setDuration(estDuration);
-
     const activeEl = getActiveAudioEl();
+    const wasPlaying = isPlaying;
+    const previousTime = activeEl?.currentTime || currentTime || 0;
+
+    const shouldPlayNow = autoPlay || hasNewPlaySignal || (!isNewSong && wasPlaying);
+
+    if (isNewSong) {
+      setCurrentTime(0);
+      const estDuration = song.duracionSegundos || 210;
+      setDuration(estDuration);
+    }
 
     if (activeAudioUrl) {
       if (activeEl) {
-        activeEl.src = activeAudioUrl;
-        activeEl.playbackRate = playbackRate;
-        activeEl.volume = isMuted ? 0 : volume;
+        const urlChanged = activeEl.src !== activeAudioUrl && !activeEl.src.endsWith(activeAudioUrl);
+        if (urlChanged) {
+          activeEl.src = activeAudioUrl;
+          activeEl.playbackRate = playbackRate;
+          activeEl.volume = isMuted ? 0 : volume;
+
+          if (!isNewSong && previousTime > 0) {
+            try {
+              activeEl.currentTime = previousTime;
+            } catch {
+              // ignore seek error
+            }
+          }
+        }
 
         if (shouldPlayNow) {
-          activeEl.currentTime = 0;
           activeEl.play().then(() => {
             setIsPlaying(true);
           }).catch(err => {
@@ -236,9 +267,6 @@ export default function SpotifyPlayerBar({
         } else if (isNewSong) {
           activeEl.pause();
           activeEl.currentTime = 0;
-          setIsPlaying(false);
-        } else if (!autoPlay && !hasNewPlaySignal) {
-          activeEl.pause();
           setIsPlaying(false);
         }
       }
@@ -554,7 +582,7 @@ export default function SpotifyPlayerBar({
                     {song.tonalidad || 'Am'}
                     {transposeSemitones !== 0 && (
                       <span className="text-[#ff6b9d] ml-1 font-bold">
-                        ➔ {transposeSingleNote(song.tonalidad || 'Am', transposeSemitones, 'ES')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
+                        ➔ {transposeChordToken(song.tonalidad || 'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
                       </span>
                     )}
                     {isTransposingAudio && (

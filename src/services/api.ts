@@ -850,7 +850,8 @@ export const api = {
 
   async transposeAudio(data: {
     songId: string;
-    audioUrl: string;
+    audioUrl?: string;
+    audioBase64?: string;
     semitones: number;
   }): Promise<{ success: boolean; transposedUrl?: string; error?: string }> {
     return request('/api/transpose-audio', {

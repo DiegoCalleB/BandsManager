@@ -7,9 +7,9 @@ const router = Router();
 
 router.post('/api/transpose-audio', requireAuth, async (req, res) => {
   try {
-    const { songId, audioUrl, semitones } = req.body;
-    if (!audioUrl || typeof semitones !== 'number') {
-      res.status(400).json({ success: false, error: 'Faltan parámetros obligatorios: audioUrl y semitones.' });
+    const { songId, audioUrl, audioBase64, semitones } = req.body;
+    if ((!audioUrl && !audioBase64) || typeof semitones !== 'number') {
+      res.status(400).json({ success: false, error: 'Faltan parámetros obligatorios: (audioUrl o audioBase64) y semitones.' });
       return;
     }
 
@@ -17,6 +17,7 @@ router.post('/api/transpose-audio', requireAuth, async (req, res) => {
     const result = await processAudioTransposition({
       songId: songId || 'song',
       audioUrl,
+      audioBase64,
       semitones,
       bandId
     });
