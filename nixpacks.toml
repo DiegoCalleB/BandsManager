@@ -2,10 +2,10 @@
 # yt-dlp es lo que permite descargar de YouTube sin que el antibot corte la petición desde una
 # IP de datacenter. Lo usan el analizador de conciertos y el generador de Reels; sin él ambos
 # caen a caminos de respaldo mucho más frágiles.
-nixPkgs = ["nodejs_22", "yt-dlp", "python3"]
+nixPkgs = ["nodejs_22", "yt-dlp", "python3", "python311Packages.pip", "ffmpeg"]
 
 [phases.install]
-cmds = ["npm install"]
+cmds = ["npm install", "python3 -m pip install --no-cache-dir pedalboard scipy"]
 
 [phases.build]
 cmds = ["npm run build"]

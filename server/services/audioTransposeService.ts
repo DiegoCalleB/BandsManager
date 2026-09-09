@@ -22,7 +22,7 @@ async function getPythonExecutable(): Promise<string> {
 
   const candidates = process.platform === 'win32'
     ? ['python', 'py', 'python3']
-    : ['python3', 'python'];
+    : ['python3', 'python', '/nix/var/nix/profiles/default/bin/python3', '/root/.nix-profile/bin/python3', '/usr/bin/python3', '/usr/local/bin/python3'];
 
   for (const cmd of candidates) {
     try {
@@ -37,8 +37,17 @@ async function getPythonExecutable(): Promise<string> {
     }
   }
 
+  for (const cmd of candidates) {
+    try {
+      await execFileAsync(cmd, ['--version']);
+      cachedPythonExec = cmd;
+      return cmd;
+    } catch {
+      // candidate executable not found
+    }
+  }
+
   const fallback = process.platform === 'win32' ? 'python' : 'python3';
-  cachedPythonExec = fallback;
   return fallback;
 }
 
