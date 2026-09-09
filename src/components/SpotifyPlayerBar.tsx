@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
+import { useTonePitchShift } from '../hooks/useTonePitchShift';
+import { transposeSingleNote } from '../utils/chordUtils';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -63,6 +65,12 @@ export default function SpotifyPlayerBar({
   const activeSlotRef = useRef<'A' | 'B'>('A');
   const getActiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefA.current : audioRefB.current);
   const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
+
+  // Tone.js pitch shifter for real pitch transposition
+  useTonePitchShift({
+    semitones: transposeSemitones,
+    audioElement: getActiveAudioEl(),
+  });
 
   // Audio Synth fallback for songs without custom audio file
   const synthIntervalRef = useRef<any>(null);
@@ -177,12 +185,7 @@ export default function SpotifyPlayerBar({
     if (activeAudioUrl) {
       if (activeEl) {
         activeEl.src = activeAudioUrl;
-        // Note: Don't set playbackRate here if transposeSemitones is active,
-        // let the pitch shift effect handle it. The normal playbackRate effect
-        // will sync playbackRate changes.
-        if (transposeSemitones === 0) {
-          activeEl.playbackRate = playbackRate;
-        }
+        activeEl.playbackRate = playbackRate;
         activeEl.volume = isMuted ? 0 : volume;
 
         if (shouldPlayNow) {
@@ -219,31 +222,22 @@ export default function SpotifyPlayerBar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbackRate]);
 
-  // Pitch shift effect (transpose audio by semitones)
-  useEffect(() => {
-    // Calculate playback rate from semitones: playbackRate = 2^(semitones/12)
-    // Note: This also changes tempo. For true time-stretching, a phase vocoder would be needed.
-    const pitchShiftRate = Math.pow(2, transposeSemitones / 12);
-    // Clamp to browser-supported range
-    const clampedRate = Math.max(0.25, Math.min(2.0, pitchShiftRate));
-    console.log('🎵 Pitch shift effect:', { transposeSemitones, pitchShiftRate, clampedRate });
-    // Update state AND apply directly to audio element to avoid race conditions
-    setPlaybackRate(clampedRate);
-    const el = getActiveAudioEl();
-    if (el) {
-      console.log('🎵 Applying pitch shift directly to audio element:', clampedRate);
-      el.playbackRate = clampedRate;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transposeSemitones]);
 
   // Volume effect
   useEffect(() => {
     if (isCrossfadingRef.current) return; // el fundido lleva el volumen de las dos pistas mientras dura
     const el = getActiveAudioEl();
-    if (el) el.volume = isMuted ? 0 : volume;
+    if (el) {
+      // When pitch shifting is active, silence the original element
+      // Tone.js handles the audio output
+      if (transposeSemitones !== 0) {
+        el.volume = 0;
+      } else {
+        el.volume = isMuted ? 0 : volume;
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [volume, isMuted]);
+  }, [volume, isMuted, transposeSemitones]);
 
   // Loop effect
   useEffect(() => {
@@ -525,7 +519,14 @@ export default function SpotifyPlayerBar({
                 <div className="flex items-center gap-2 text-[11px] text-[#b3b3b3] font-mono mt-0.5 truncate">
                   <span className="text-white font-medium">{song.artista || 'Banda'}</span>
                   <span>•</span>
-                  <span className="text-[#1db954] font-semibold">{song.tonalidad || 'Am'}</span>
+                  <span className="text-[#1db954] font-semibold">
+                    {song.tonalidad || 'Am'}
+                    {transposeSemitones !== 0 && (
+                      <span className="text-[#ff6b9d] ml-1">
+                        → {transposeSingleNote(song.tonalidad || 'Am', transposeSemitones, 'ES')}
+                      </span>
+                    )}
+                  </span>
                   <span>•</span>
                   <span>{song.bpm} BPM</span>
                   {isCrossfading && nextQueueSong && (

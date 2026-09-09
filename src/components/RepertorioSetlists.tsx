@@ -3136,9 +3136,22 @@ export default function RepertorioSetlists({
       .map((i) => songs.find((s) => s.id === i.songId))
       .filter((s): s is Song => !!s);
     // Calculate transposition from tonalidadDeseada if set
-    const transposeSemitones = it.tonalidadDeseada && song.tonalidad
-      ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada) ?? 0
-      : 0;
+    const diffResult = song.tonalidad && it.tonalidadDeseada
+      ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada)
+      : null;
+    const transposeSemitones = diffResult ?? 0;
+    console.log('🎵 playThisSong:', {
+      songTitle: song.titulo,
+      originalKey: song.tonalidad,
+      desiredKey: it.tonalidadDeseada,
+      getSemitoneDifferenceResult: diffResult,
+      transposeSemitones,
+      it
+    });
+    // DEBUG: Show values in alert on mobile
+    if (transposeSemitones !== 0 || it.tonalidadDeseada) {
+      alert(`🎵 ${song.titulo}\nOriginal: ${song.tonalidad}\nDeseado: ${it.tonalidadDeseada || 'ninguno'}\nSemitones: ${transposeSemitones}`);
+    }
     selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
   };
 
