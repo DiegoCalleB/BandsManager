@@ -100,6 +100,52 @@ async function getPythonExecutable(): Promise<string | null> {
   return null;
 }
 
+let cachedFFmpegExec: string | null = null;
+
+async function getFFmpegExecutable(): Promise<string | null> {
+  if (cachedFFmpegExec) return cachedFFmpegExec;
+  const candidates = process.platform === 'win32'
+    ? ['ffmpeg', 'ffmpeg.exe']
+    : ['ffmpeg', '/usr/bin/ffmpeg', '/usr/local/bin/ffmpeg', '/root/.nix-profile/bin/ffmpeg', '/nix/var/nix/profiles/default/bin/ffmpeg'];
+
+  for (const cmd of candidates) {
+    try {
+      await execFileAsync(cmd, ['-version']);
+      cachedFFmpegExec = cmd;
+      console.log(`[AudioTransposeService] Encontrado ejecutable FFmpeg: "${cmd}"`);
+      return cmd;
+    } catch {
+      // candidate executable not found
+    }
+  }
+  return null;
+}
+
+async function transposeWithFFmpeg(inputPath: string, outputPath: string, semitones: number): Promise<boolean> {
+  const ffmpegExec = await getFFmpegExecutable();
+  if (!ffmpegExec) return false;
+
+  const pitchFactor = Math.pow(2, semitones / 12);
+  const targetSampleRate = 44100;
+  const newRate = Math.round(targetSampleRate * pitchFactor);
+  const tempoFactor = 1 / pitchFactor;
+
+  // Filtro de resample + atempo de FFmpeg para trasponer tono manteniendo tempo
+  const filterString = `asetrate=${newRate},atempo=${tempoFactor.toFixed(6)},aresample=${targetSampleRate}`;
+
+  console.log(`[AudioTransposeService] Ejecutando FFmpeg DSP (${ffmpegExec}): semitonos=${semitones}, filter="${filterString}"`);
+
+  await execFileAsync(ffmpegExec, [
+    '-y',
+    '-i', inputPath,
+    '-af', filterString,
+    '-b:a', '192k',
+    outputPath
+  ]);
+
+  return fs.existsSync(outputPath) && fs.statSync(outputPath).size > 0;
+}
+
 export async function processAudioTransposition({
   songId,
   audioUrl,
@@ -168,31 +214,45 @@ export async function processAudioTransposition({
 
     fs.writeFileSync(tempInputPath, audioBuffer);
 
-    // 3. Invocar script de Python con Spotify Pedalboard
-    const scriptPath = path.join(process.cwd(), 'server', 'services', 'transpose_audio.py');
+    // 3. Invocación Dual: Intentar Spotify Pedalboard (Python) y fallback a FFmpeg DSP
+    let processedSuccess = false;
     const pythonExec = await getPythonExecutable();
+    const scriptPath = path.join(process.cwd(), 'server', 'services', 'transpose_audio.py');
 
-    if (!pythonExec) {
-      throw new Error('El entorno de Python 3 no está disponible en el servidor.');
+    if (pythonExec) {
+      try {
+        console.log(`[AudioTransposeService] Intentando Pedalboard DSP (${pythonExec}): ${scriptPath} --semitones ${semitones}`);
+        const { stdout } = await execFileAsync(pythonExec, [
+          scriptPath,
+          '--input', tempInputPath,
+          '--output', localOutputPath,
+          '--semitones', String(semitones)
+        ]);
+
+        if (fs.existsSync(localOutputPath) && fs.statSync(localOutputPath).size > 0) {
+          console.log('[AudioTransposeService Pedalboard Stdout]:', stdout || 'OK');
+          processedSuccess = true;
+        }
+      } catch (pythonErr: any) {
+        console.warn('[AudioTransposeService] Pedalboard Python no disponible o falló, reintentando con FFmpeg:', pythonErr?.message || pythonErr);
+      }
     }
 
-    console.log(`[AudioTransposeService] Ejecutando Pedalboard DSP (${pythonExec}): ${scriptPath} --semitones ${semitones}`);
-
-    const { stdout, stderr } = await execFileAsync(pythonExec, [
-      scriptPath,
-      '--input', tempInputPath,
-      '--output', localOutputPath,
-      '--semitones', String(semitones)
-    ]);
-
-    if (stderr && !fs.existsSync(localOutputPath)) {
-      console.error('[AudioTransposeService Python Stderr]:', stderr);
-      throw new Error(`Error en Pedalboard: ${stderr}`);
+    // 4. Si Pedalboard no procesó, ejecutar motor FFmpeg
+    if (!processedSuccess) {
+      console.log(`[AudioTransposeService] Ejecutando motor FFmpeg DSP para trasposición (${semitones} semitonos)...`);
+      try {
+        processedSuccess = await transposeWithFFmpeg(tempInputPath, localOutputPath, semitones);
+      } catch (ffmpegErr: any) {
+        console.error('[AudioTransposeService FFmpeg Error]:', ffmpegErr?.message || ffmpegErr);
+      }
     }
 
-    console.log('[AudioTransposeService Python Stdout]:', stdout || 'OK');
+    if (!processedSuccess || !fs.existsSync(localOutputPath)) {
+      throw new Error('No se pudo trasponer el audio ni con Spotify Pedalboard ni con el motor FFmpeg en el servidor.');
+    }
 
-    // 4. Intentar subir a Supabase Storage para persistencia
+    // 5. Intentar subir a Supabase Storage para persistencia
     const supabaseUrl = await uploadToSupabaseIfAvailable(localOutputPath, supabaseStoragePath, 'audio/mpeg');
     const finalUrl = supabaseUrl || publicLocalUrl;
 
