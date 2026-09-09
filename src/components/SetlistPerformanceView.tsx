@@ -389,6 +389,15 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     </button>
                   )}
 
+                  {!isBlock && (structure || progression) && (
+                    <button
+                      onClick={() => { setShowDetails(v => !v); setShowMoreMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'} ${showDetails ? (glareMode ? 'text-indigo-700 font-bold' : 'text-indigo-400 font-bold') : ''}`}
+                    >
+                      <Info className="w-4 h-4 shrink-0" /> {showDetails ? 'Ocultar' : 'Ver'} metadatos
+                    </button>
+                  )}
+
                   {!isBlock && hasChordsText && hasScannedSheet && (
                     <button
                       onClick={() => { setManualViewOverride(effectiveViewMode === 'sheet' ? 'chords' : 'sheet'); setShowMoreMenu(false); }}
@@ -692,27 +701,18 @@ const ChordSheetPage: React.FC<{
 
   return (
     <div className="w-full h-full flex flex-col overflow-hidden">
-      {/* Ficha compacta: una sola línea, no cuatro tarjetas — la letra es la protagonista. */}
-      <div className={`shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-1.5 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/30'}`}>
-        <span className={glareMode ? 'text-teal-700 font-bold' : 'text-teal-300 font-bold'}>
-          {transposedKey}
-          {transpose !== 0 && <span className={glareMode ? 'text-teal-800/70 font-normal' : 'text-teal-200/70 font-normal'}> ({originalKey} {transpose > 0 ? '+' : ''}{transpose})</span>}
-        </span>
-        {bpm && <span className={glareMode ? 'text-indigo-700' : 'text-indigo-300'}>{bpm} BPM</span>}
-        {duracion && <span className={glareMode ? 'text-emerald-700' : 'text-emerald-300'}>{duracion}</span>}
-        {afinacion && <span className={glareMode ? 'text-purple-700' : 'text-purple-300'}>{afinacion}</span>}
-        {(structure || progression) && (
-          <button
-            onClick={onToggleDetails}
-            className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition ${
-              showDetails ? (glareMode ? 'bg-black/15 text-black' : 'bg-white/15 text-white') : (glareMode ? 'text-neutral-600 hover:text-black' : 'text-neutral-400 hover:text-white')
-            }`}
-            title="Estructura y progresión de acordes"
-          >
-            <Info className="w-3 h-3" /> detalles
-          </button>
-        )}
-      </div>
+      {/* Metadatos (tonalidad/BPM/duración/afinación) solo visibles cuando se expanden detalles. En directo, ocupa espacio sin aportar mucho. */}
+      {showDetails && (
+        <div className={`shrink-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-1.5 text-xs sm:text-sm font-mono border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/30'}`}>
+          <span className={glareMode ? 'text-teal-700 font-bold' : 'text-teal-300 font-bold'}>
+            {transposedKey}
+            {transpose !== 0 && <span className={glareMode ? 'text-teal-800/70 font-normal' : 'text-teal-200/70 font-normal'}> ({originalKey} {transpose > 0 ? '+' : ''}{transpose})</span>}
+          </span>
+          {bpm && <span className={glareMode ? 'text-indigo-700' : 'text-indigo-300'}>{bpm} BPM</span>}
+          {duracion && <span className={glareMode ? 'text-emerald-700' : 'text-emerald-300'}>{duracion}</span>}
+          {afinacion && <span className={glareMode ? 'text-purple-700' : 'text-purple-300'}>{afinacion}</span>}
+        </div>
+      )}
 
       {showDetails && (structure || progression) && (
         <div className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-4 py-2 text-xs sm:text-sm border-b ${borderClass} ${glareMode ? 'bg-black/5' : 'bg-black/20'}`}>
