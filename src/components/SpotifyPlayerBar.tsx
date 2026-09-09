@@ -227,17 +227,9 @@ export default function SpotifyPlayerBar({
   useEffect(() => {
     if (isCrossfadingRef.current) return; // el fundido lleva el volumen de las dos pistas mientras dura
     const el = getActiveAudioEl();
-    if (el) {
-      // When pitch shifting is active, silence the original element
-      // Tone.js handles the audio output
-      if (transposeSemitones !== 0) {
-        el.volume = 0;
-      } else {
-        el.volume = isMuted ? 0 : volume;
-      }
-    }
+    if (el) el.volume = isMuted ? 0 : volume;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [volume, isMuted, transposeSemitones]);
+  }, [volume, isMuted]);
 
   // Loop effect
   useEffect(() => {
