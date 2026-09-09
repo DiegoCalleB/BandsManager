@@ -8,6 +8,7 @@ import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
 import { api } from '../services/api';
+import { useTonePitchShift } from '../hooks/useTonePitchShift';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -118,6 +119,12 @@ export default function SpotifyPlayerBar({
   };
 
   const [isTransposingAudio, setIsTransposingAudio] = useState(false);
+
+  // Trasposición nativa en tiempo real en el navegador (Tone.js / Web Audio API)
+  useTonePitchShift({
+    audioElement: getActiveAudioEl(),
+    semitones: transposeSemitones
+  });
 
   // Extract and resolve active audio URL asynchronously (supporting IndexedDB, Drive & Spotify Pedalboard DSP)
   useEffect(() => {
