@@ -3139,6 +3139,12 @@ export default function RepertorioSetlists({
     const transposeSemitones = it.tonalidadDeseada && song.tonalidad
       ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada) ?? 0
       : 0;
+    console.log('🎵 playThisSong:', {
+      songTitle: song.titulo,
+      originalKey: song.tonalidad,
+      desiredKey: it.tonalidadDeseada,
+      transposeSemitones
+    });
     selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
   };
 
