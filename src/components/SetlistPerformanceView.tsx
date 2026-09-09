@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning, Moon, Plane } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning, Moon, Plane, MoreVertical } from 'lucide-react';
 import { Setlist, SetlistItem, Song } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
 import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
@@ -60,6 +60,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // para no arriesgarse a llegar a la siguiente canción sin pantalla por olvido.
   const [isResting, setIsResting] = useState(false);
   const [showFlightModeInfo, setShowFlightModeInfo] = useState(false);
+  // Menú "más opciones": agrupa todo lo que no hace falta ver siempre (brillo, descanso, modo
+  // avión, notas, vista, tamaño de letra, pantalla completa) para que el header no vuelva a
+  // llenarse de iconos y comerse el título de la canción.
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   // Battery Status API: Chrome la soporta (con datos redondeados por privacidad), pero Firefox
   // y Safari/iOS nunca la han implementado. null = "no se sabe" y no se muestra nada — mejor
   // eso que fingir un dato de batería falso en la mitad de los móviles.
@@ -125,6 +129,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     // canción, el riesgo es llegar a un tema que sí necesitas ver sin pantalla porque se te
     // olvidó reactivarla.
     setIsResting(false);
+    setShowMoreMenu(false);
+    setShowFlightModeInfo(false);
   }, [currentIndex]);
 
   // Transpone los acordes DE VERDAD (las letras Do/Re/Mi... dentro del texto), no solo la
@@ -323,112 +329,130 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* THIN TOP BAR — minimal, out of the way of the "page" itself */}
-      <div className={`shrink-0 px-3 sm:px-4 py-2 flex items-center justify-between gap-3 z-20 ${glareMode ? 'bg-gradient-to-b from-white to-white/0' : 'bg-gradient-to-b from-black to-black/0'}`}>
-        <div className="min-w-0 flex items-center gap-2">
-          <span className="text-lg">{isBlock ? blockMeta!.icon : '🎤'}</span>
-          <h1 className={`text-sm sm:text-base font-bold truncate ${glareMode ? 'text-black' : 'text-amber-300'}`}>
-            {isBlock ? (currentItem.tituloCustom || blockMeta!.label) : currentSong?.titulo}
-          </h1>
-          {/* Aviso de que nadie ha comprobado todavía que estos acordes son correctos — mejor
-              saberlo antes de tocar el tema que descubrirlo a mitad. */}
+      {/* THIN TOP BAR — el título es lo único que un músico necesita leer de un vistazo para
+          saber en qué tema está; antes competía por sitio con 8 iconos y se quedaba truncado a
+          3 letras. Ahora solo quedan aquí los dos controles que hacen falta siempre a mano
+          (menú y cerrar) — todo lo demás vive en el menú "⋯", y los datos pasivos (batería,
+          posición, verificación) bajan a una segunda línea fina que no le roba sitio al título. */}
+      <div className={`shrink-0 px-3 sm:px-4 pt-2 pb-1.5 z-20 ${glareMode ? 'bg-gradient-to-b from-white to-white/0' : 'bg-gradient-to-b from-black to-black/0'}`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 flex items-center gap-2 flex-1">
+            <span className="text-lg shrink-0">{isBlock ? blockMeta!.icon : '🎤'}</span>
+            <h1 className={`text-base sm:text-lg font-bold truncate ${glareMode ? 'text-black' : 'text-amber-300'}`}>
+              {isBlock ? (currentItem.tituloCustom || blockMeta!.label) : currentSong?.titulo}
+            </h1>
+          </div>
+          <div className="flex items-center gap-1 shrink-0 relative">
+            <button
+              onClick={() => setShowMoreMenu(v => !v)}
+              className={`p-1.5 rounded-lg transition ${showMoreMenu ? (glareMode ? 'bg-black/10' : 'bg-white/15') : glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
+              title="Más opciones"
+            >
+              <MoreVertical className="w-5 h-5" />
+            </button>
+
+            <button
+              onClick={onClose}
+              className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-black' : 'hover:bg-white/10 text-white'}`}
+              title="Cerrar (ESC)"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {showMoreMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowMoreMenu(false)} />
+                <div className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-xl border shadow-2xl p-1.5 space-y-0.5 text-sm ${
+                  glareMode ? 'bg-white border-neutral-300 text-black' : 'bg-neutral-900 border-neutral-700 text-white'
+                }`}>
+                  <button
+                    onClick={() => { setGlareMode(v => !v); setShowMoreMenu(false); }}
+                    className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'} ${glareMode ? 'text-amber-600' : ''}`}
+                  >
+                    <Sun className="w-4 h-4 shrink-0" /> {glareMode ? 'Quitar' : 'Activar'} alto contraste
+                  </button>
+
+                  <button
+                    onClick={() => { setIsResting(true); setShowMoreMenu(false); }}
+                    className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}
+                  >
+                    <Moon className="w-4 h-4 shrink-0" /> Modo descanso (ahorra batería)
+                  </button>
+
+                  {!isBlock && notes && (
+                    <button
+                      onClick={() => { setShowNotes(v => !v); setShowMoreMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'} text-amber-400`}
+                    >
+                      <StickyNote className="w-4 h-4 shrink-0" /> {showNotes ? 'Ocultar' : 'Ver'} notas del tema
+                    </button>
+                  )}
+
+                  {!isBlock && hasChordsText && hasScannedSheet && (
+                    <button
+                      onClick={() => { setManualViewOverride(effectiveViewMode === 'sheet' ? 'chords' : 'sheet'); setShowMoreMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}
+                    >
+                      {showScannedSheet ? <FileText className="w-4 h-4 shrink-0" /> : <ImageIcon className="w-4 h-4 shrink-0" />}
+                      Ver {showScannedSheet ? 'acordes en texto' : 'documento original'}
+                    </button>
+                  )}
+
+                  {!isBlock && !showScannedSheet && (
+                    <button
+                      onClick={() => { setFontSizeIdx(i => (i + 1) % FONT_SIZES.length); setShowMoreMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}
+                    >
+                      <Type className="w-4 h-4 shrink-0" /> Cambiar tamaño de letra
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => { toggleFullscreen(); setShowMoreMenu(false); }}
+                    className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'}`}
+                  >
+                    {isFullscreen ? <Minimize className="w-4 h-4 shrink-0" /> : <Maximize className="w-4 h-4 shrink-0" />}
+                    {isFullscreen ? 'Salir de' : 'Entrar en'} pantalla completa
+                  </button>
+
+                  <button
+                    onClick={() => { setShowFlightModeInfo(v => !v); setShowMoreMenu(false); }}
+                    className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2.5 transition ${glareMode ? 'hover:bg-black/5' : 'hover:bg-white/10'} text-sky-400`}
+                  >
+                    <Plane className="w-4 h-4 shrink-0" /> Sobre el modo avión
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Segunda línea: datos pasivos que no compiten con el título — posición en el
+            repertorio, batería (si el navegador la soporta) y si hace falta revisar los
+            acordes de este tema. */}
+        <div className="flex items-center gap-2 mt-1 pl-7 text-[11px] font-mono">
+          <span className={glareMode ? 'text-neutral-600' : 'text-neutral-500'}>{currentIndex + 1}/{allItems.length}</span>
+
+          {batteryLevel !== null && (
+            <span
+              className={`flex items-center gap-1 ${
+                batteryCharging ? 'text-emerald-400' : batteryLevel < 0.2 ? 'text-rose-400 font-bold' : glareMode ? 'text-neutral-600' : 'text-neutral-500'
+              }`}
+              title={batteryCharging ? 'Cargando' : batteryLevel < 0.2 ? 'Batería baja — busca un cargador' : 'Batería'}
+            >
+              {batteryCharging ? <BatteryCharging className="w-3 h-3" /> : batteryLevel < 0.2 ? <BatteryWarning className="w-3 h-3" /> : <Battery className="w-3 h-3" />}
+              {Math.round(batteryLevel * 100)}%
+            </span>
+          )}
+
           {!isBlock && currentSong?.estructuraDocumentoUrl && !currentSong?.estructuraVerificada && (
             <span
-              className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 shrink-0"
+              className="font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40"
               title="Los acordes de este tema vienen de una subida sin verificar todavía por nadie de la banda"
             >
               ⚠️ sin verificar
             </span>
           )}
-        </div>
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          {/* Solo se muestra si el navegador soporta la Battery API (Chrome sí, Safari/iOS y
-              Firefox nunca la han implementado) — mejor no mostrar nada que un dato inventado. */}
-          {batteryLevel !== null && (
-            <span
-              className={`flex items-center gap-1 text-xs font-mono ${
-                batteryCharging ? 'text-emerald-400' : batteryLevel < 0.2 ? 'text-rose-400 font-bold' : glareMode ? 'text-neutral-600' : 'text-neutral-400'
-              }`}
-              title={batteryCharging ? 'Cargando' : batteryLevel < 0.2 ? 'Batería baja — busca un cargador' : 'Batería'}
-            >
-              {batteryCharging ? <BatteryCharging className="w-3.5 h-3.5" /> : batteryLevel < 0.2 ? <BatteryWarning className="w-3.5 h-3.5" /> : <Battery className="w-3.5 h-3.5" />}
-              {Math.round(batteryLevel * 100)}%
-            </span>
-          )}
-
-          <span className={`text-xs font-mono mr-1 ${glareMode ? 'text-neutral-600' : 'text-neutral-400'}`}>{currentIndex + 1}/{allItems.length}</span>
-
-          <button
-            onClick={() => setGlareMode(v => !v)}
-            className={`p-1.5 rounded-lg transition ${glareMode ? 'bg-amber-400 text-black' : 'hover:bg-white/10 text-neutral-300'}`}
-            title="Modo alto contraste para sol/luces fuertes (no controla el brillo real del dispositivo)"
-          >
-            <Sun className="w-4 h-4" />
-          </button>
-
-          {/* Modo descanso: para el tema actual, si sabes que no lo vas a necesitar mirar.
-              Se reinicia solo al pasar a la siguiente canción — nunca "para siempre". */}
-          <button
-            onClick={() => setIsResting(true)}
-            className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
-            title="Modo descanso: apaga la pantalla para este tema y ahorra batería (toca para volver)"
-          >
-            <Moon className="w-4 h-4" />
-          </button>
-
-          <button
-            onClick={() => setShowFlightModeInfo(v => !v)}
-            className={`p-1.5 rounded-lg transition ${showFlightModeInfo ? 'bg-sky-500/30 text-sky-300' : glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
-            title="Sobre el modo avión"
-          >
-            <Plane className="w-4 h-4" />
-          </button>
-
-          {!isBlock && notes && (
-            <button
-              onClick={() => setShowNotes(v => !v)}
-              className={`p-1.5 rounded-lg transition ${showNotes ? 'bg-amber-500 text-black' : 'hover:bg-white/10 text-amber-300'}`}
-              title="Notas del tema"
-            >
-              <StickyNote className="w-4 h-4" />
-            </button>
-          )}
-
-          {!isBlock && hasChordsText && hasScannedSheet && (
-            <button
-              onClick={() => setManualViewOverride(effectiveViewMode === 'sheet' ? 'chords' : 'sheet')}
-              className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
-              title={showScannedSheet ? 'Ver acordes en texto' : 'Ver documento original escaneado'}
-            >
-              {showScannedSheet ? <FileText className="w-4 h-4" /> : <ImageIcon className="w-4 h-4" />}
-            </button>
-          )}
-
-          {!isBlock && !showScannedSheet && (
-            <button
-              onClick={() => setFontSizeIdx(i => (i + 1) % FONT_SIZES.length)}
-              className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
-              title="Tamaño de letra"
-            >
-              <Type className="w-4 h-4" />
-            </button>
-          )}
-
-          <button
-            onClick={toggleFullscreen}
-            className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
-            title="Pantalla completa (F)"
-          >
-            {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
-          </button>
-
-          <button
-            onClick={onClose}
-            className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-black' : 'hover:bg-white/10 text-white'}`}
-            title="Cerrar (ESC)"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
       </div>
 
