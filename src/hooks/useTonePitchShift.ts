@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import * as Tone from 'tone';
 
 interface PitchShiftConfig {
   semitones: number;
@@ -7,52 +6,84 @@ interface PitchShiftConfig {
 }
 
 export function useTonePitchShift(config: PitchShiftConfig) {
-  const synth = useRef<Tone.PolySynth | null>(null);
-  const sourceRef = useRef<Tone.MediaElementAudioSource | null>(null);
-  const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
-  const volumeRef = useRef<Tone.Volume | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const workerRef = useRef<Worker | null>(null);
   const isConnectedRef = useRef(false);
 
+  // Initialize Web Audio and worker
   useEffect(() => {
     if (!config.audioElement) return;
 
     const init = async () => {
       try {
-        // Start Tone context if needed
-        if (Tone.getContext().state === 'suspended') {
-          await Tone.start();
+        // Initialize Audio Context
+        if (!audioContextRef.current) {
+          const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+          audioContextRef.current = new AudioCtx();
+        }
+
+        const ctx = audioContextRef.current;
+
+        // Resume if suspended
+        if (ctx.state === 'suspended') {
+          await ctx.resume();
         }
 
         // Create source from audio element
         if (!sourceRef.current) {
-          sourceRef.current = new Tone.MediaElementAudioSource(config.audioElement);
+          sourceRef.current = ctx.createMediaElementAudioSource(config.audioElement);
         }
 
-        // Create pitch shifter
-        if (!pitchShiftRef.current) {
-          pitchShiftRef.current = new Tone.PitchShift({
-            pitch: config.semitones,
+        // Create ScriptProcessor for real-time audio processing
+        if (!processorRef.current) {
+          processorRef.current = ctx.createScriptProcessor(4096, 1, 1);
+        }
+
+        // Initialize worker
+        if (!workerRef.current) {
+          workerRef.current = new Worker(
+            new URL('../workers/pitchShiftWorker.ts', import.meta.url),
+            { type: 'module' }
+          );
+
+          workerRef.current.postMessage({
+            type: 'init',
+            data: { sampleRate: ctx.sampleRate },
           });
-        } else {
-          pitchShiftRef.current.pitch = config.semitones;
+
+          // Handle worker output
+          workerRef.current.onmessage = (e) => {
+            if (e.data.type === 'samples' && processorRef.current) {
+              // Store samples for playback
+            }
+          };
         }
 
-        // Create volume node
-        if (!volumeRef.current) {
-          volumeRef.current = new Tone.Volume(0);
-        }
-
-        // Connect chain: source -> pitch shifter -> volume -> destination
+        // Connect: source -> processor -> destination
         if (!isConnectedRef.current) {
-          sourceRef.current.connect(pitchShiftRef.current);
-          pitchShiftRef.current.connect(volumeRef.current);
-          volumeRef.current.toDestination();
+          sourceRef.current.connect(processorRef.current);
+          processorRef.current.connect(ctx.destination);
           isConnectedRef.current = true;
         }
 
-        console.log('🎵 Tone.js pitch shift initialized:', { semitones: config.semitones });
+        // Process audio in real-time
+        if (processorRef.current) {
+          processorRef.current.onaudioprocess = (e) => {
+            const input = e.inputBuffer.getChannelData(0);
+            if (workerRef.current) {
+              workerRef.current.postMessage({
+                type: 'process',
+                data: input,
+              });
+            }
+          };
+        }
+
+        console.log('🎵 Pitch shift worker initialized');
       } catch (err) {
-        console.warn('Tone.js pitch shift setup failed:', err);
+        console.warn('Pitch shift setup failed:', err);
       }
     };
 
@@ -65,18 +96,26 @@ export function useTonePitchShift(config: PitchShiftConfig) {
 
   // Update pitch when semitones change
   useEffect(() => {
-    if (pitchShiftRef.current) {
-      pitchShiftRef.current.pitch = config.semitones;
-      console.log('🎵 Pitch updated to:', config.semitones);
+    if (workerRef.current) {
+      workerRef.current.postMessage({
+        type: 'setPitch',
+        semitones: config.semitones,
+      });
     }
   }, [config.semitones]);
 
-  // Cleanup on unmount
+  // Cleanup
   useEffect(() => {
     return () => {
-      if (sourceRef.current) sourceRef.current.dispose();
-      if (pitchShiftRef.current) pitchShiftRef.current.dispose();
-      if (volumeRef.current) volumeRef.current.dispose();
+      if (processorRef.current) {
+        processorRef.current.disconnect();
+      }
+      if (sourceRef.current) {
+        sourceRef.current.disconnect();
+      }
+      if (workerRef.current) {
+        workerRef.current.terminate();
+      }
     };
   }, []);
 

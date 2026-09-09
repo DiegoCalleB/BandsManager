@@ -43,6 +43,7 @@
     "react-dom": "^19.0.1",
     "react-qr-code": "^2.2.0",
     "recharts": "^3.9.2",
+    "soundtouchjs": "^0.3.0",
     "stripe": "^22.5.0",
     "tone": "^15.1.22",
     "wavesurfer.js": "^7.12.11",
