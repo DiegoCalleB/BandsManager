@@ -141,49 +141,9 @@ export default function SpotifyPlayerBar({
       return;
     }
 
-    resolveAudioUrl(rawUrl).then(async (resolved) => {
-      if (!isMounted) return;
-
-      if (transposeSemitones !== 0 && resolved) {
-        setIsTransposingAudio(true);
-        try {
-          let payload: { songId: string; audioUrl?: string; audioBase64?: string; semitones: number };
-
-          // If resolved is a local browser blob: URL, fetch and convert to base64 for server processing
-          if (resolved.startsWith('blob:')) {
-            const blobRes = await fetch(resolved);
-            const blob = await blobRes.blob();
-            const base64 = await fileToBase64(blob);
-            payload = {
-              songId: song.id,
-              audioBase64: base64,
-              semitones: transposeSemitones
-            };
-          } else {
-            payload = {
-              songId: song.id,
-              audioUrl: rawUrl.startsWith('http') || rawUrl.startsWith('/uploads/') ? rawUrl : resolved,
-              semitones: transposeSemitones
-            };
-          }
-
-          const res = await api.transposeAudio(payload);
-          if (isMounted && res.success && res.transposedUrl) {
-            setActiveAudioUrl(res.transposedUrl);
-          } else if (isMounted) {
-            if (res.error) {
-              console.warn('[SpotifyPlayerBar] No se pudo trasponer audio en servidor:', res.error);
-            }
-            setActiveAudioUrl(resolved);
-          }
-        } catch (err) {
-          console.warn('[SpotifyPlayerBar] Error en trasposición DSP servidor:', err);
-          if (isMounted) setActiveAudioUrl(resolved);
-        } finally {
-          if (isMounted) setIsTransposingAudio(false);
-        }
-      } else {
-        if (isMounted) setActiveAudioUrl(resolved);
+    resolveAudioUrl(rawUrl).then((resolved) => {
+      if (isMounted) {
+        setActiveAudioUrl(resolved || '');
       }
     }).catch(err => {
       console.warn('Error resolving audio URL:', err);
@@ -703,21 +663,21 @@ export default function SpotifyPlayerBar({
                 className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border border-white/5 ${
                   transposeSemitones !== 0 ? 'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' : 'text-[#b3b3b3]'
                 }`}
-                title="Trasposición de Tono (DSP Spotify Pedalboard)"
+                title="Trasposición de Tono (Nativa en tiempo real Web Audio)"
               >
-                <option value={-6}>-6 st</option>
-                <option value={-5}>-5 st</option>
-                <option value={-4}>-4 st</option>
-                <option value={-3}>-3 st</option>
-                <option value={-2}>-2 st</option>
-                <option value={-1}>-1 st</option>
-                <option value={0}>Tono (0)</option>
-                <option value={1}>+1 st</option>
-                <option value={2}>+2 st</option>
-                <option value={3}>+3 st</option>
-                <option value={4}>+4 st</option>
-                <option value={5}>+5 st</option>
-                <option value={6}>+6 st</option>
+                {[6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6].map((st) => {
+                  const origKey = song?.tonalidad?.trim();
+                  let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
+                  if (origKey) {
+                    const targetKey = transposeChordToken(origKey, st, 'EN');
+                    label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
+                  }
+                  return (
+                    <option key={st} value={st}>
+                      {label}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
