@@ -221,17 +221,19 @@ export default function SpotifyPlayerBar({
 
   // Pitch shift effect (transpose audio by semitones)
   useEffect(() => {
-    if (transposeSemitones === 0) return;
-    const el = getActiveAudioEl();
-    if (!el) return;
-
     // Calculate playback rate from semitones: playbackRate = 2^(semitones/12)
     // Note: This also changes tempo. For true time-stretching, a phase vocoder would be needed.
     const pitchShiftRate = Math.pow(2, transposeSemitones / 12);
     // Clamp to browser-supported range
     const clampedRate = Math.max(0.25, Math.min(2.0, pitchShiftRate));
     console.log('🎵 Pitch shift effect:', { transposeSemitones, pitchShiftRate, clampedRate });
-    el.playbackRate = clampedRate;
+    // Update state AND apply directly to audio element to avoid race conditions
+    setPlaybackRate(clampedRate);
+    const el = getActiveAudioEl();
+    if (el) {
+      console.log('🎵 Applying pitch shift directly to audio element:', clampedRate);
+      el.playbackRate = clampedRate;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transposeSemitones]);
 
