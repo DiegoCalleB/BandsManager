@@ -3236,9 +3236,14 @@ export default function RepertorioSetlists({
       const isEditingKey = editingKeyItemId === it.id;
       const KEY_POPOVER_WIDTH_PX = 200;
       const KEY_POPOVER_HEIGHT_PX = 110;
-      const keyNotes = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(song.tonalidad || '')
+      const rawOrigKey = (song.tonalidad || '').trim();
+      const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(rawOrigKey);
+      const baseRoots = isEsKey
         ? ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si']
         : ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      const keyMatch = rawOrigKey.match(/^(Do#|Re#|Fa#|Sol#|La#|Do|Re|Mi|Fa|Sol|La|Si|C#|D#|F#|G#|A#|Db|Eb|Gb|Ab|Bb|C|D|E|F|G|A|B)(.*)$/i);
+      const keySuffix = keyMatch ? keyMatch[2] : '';
+      const keyNotes = baseRoots.map(root => `${root}${keySuffix}`);
       return (
         <div className="relative shrink-0">
           <button
