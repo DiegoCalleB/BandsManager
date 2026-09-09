@@ -17,19 +17,19 @@ interface TransposeRequest {
 
 let cachedPythonExec: string | null = null;
 
-async function getPythonExecutable(): Promise<string> {
+async function getPythonExecutable(): Promise<string | null> {
   if (cachedPythonExec) return cachedPythonExec;
 
   const candidates = process.platform === 'win32'
     ? ['python', 'py', 'python3']
-    : ['python3', 'python', '/nix/var/nix/profiles/default/bin/python3', '/root/.nix-profile/bin/python3', '/usr/bin/python3', '/usr/local/bin/python3'];
+    : ['python3', 'python', 'python3.11', '/nix/var/nix/profiles/default/bin/python3', '/root/.nix-profile/bin/python3', '/usr/bin/python3', '/usr/local/bin/python3'];
 
   for (const cmd of candidates) {
     try {
       const { stdout } = await execFileAsync(cmd, ['-c', 'import pedalboard; print("OK")']);
       if (stdout.includes('OK')) {
         cachedPythonExec = cmd;
-        console.log(`[AudioTransposeService] Utilizando entorno Python válido: "${cmd}"`);
+        console.log(`[AudioTransposeService] Utilizando entorno Python con Pedalboard: "${cmd}"`);
         return cmd;
       }
     } catch {
@@ -41,14 +41,15 @@ async function getPythonExecutable(): Promise<string> {
     try {
       await execFileAsync(cmd, ['--version']);
       cachedPythonExec = cmd;
+      console.log(`[AudioTransposeService] Encontrado ejecutable Python (sin pedalboard): "${cmd}"`);
       return cmd;
     } catch {
       // candidate executable not found
     }
   }
 
-  const fallback = process.platform === 'win32' ? 'python' : 'python3';
-  return fallback;
+  console.warn('[AudioTransposeService] No se encontró ningún ejecutable de Python en PATH ni en las rutas Nix/Linux.');
+  return null;
 }
 
 export async function processAudioTransposition({
@@ -131,6 +132,10 @@ export async function processAudioTransposition({
     // 3. Invocar script de Python con Spotify Pedalboard
     const scriptPath = path.join(process.cwd(), 'server', 'services', 'transpose_audio.py');
     const pythonExec = await getPythonExecutable();
+
+    if (!pythonExec) {
+      throw new Error('El entorno de Python 3 no está disponible en el servidor.');
+    }
 
     console.log(`[AudioTransposeService] Ejecutando Pedalboard DSP (${pythonExec}): ${scriptPath} --semitones ${semitones}`);
 
