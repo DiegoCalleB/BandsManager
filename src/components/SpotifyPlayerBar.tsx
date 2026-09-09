@@ -67,6 +67,7 @@ export default function SpotifyPlayerBar({
   const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
 
   // Tone.js pitch shifter for real pitch transposition
+  console.log('🎵 SpotifyPlayerBar rendering with transposeSemitones:', transposeSemitones);
   useTonePitchShift({
     semitones: transposeSemitones,
     audioElement: getActiveAudioEl(),

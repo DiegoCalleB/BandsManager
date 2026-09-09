@@ -6,6 +6,7 @@ interface PitchShiftConfig {
 }
 
 export function useTonePitchShift(config: PitchShiftConfig) {
+  console.log('🎵 useTonePitchShift called with:', config);
   const audioContextRef = useRef<AudioContext | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
