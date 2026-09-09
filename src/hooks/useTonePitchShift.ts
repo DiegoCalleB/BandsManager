@@ -11,7 +11,7 @@ interface PitchShiftConfig {
  * Falls back gracefully if Web Audio API is unavailable.
  */
 export function useTonePitchShift(config: PitchShiftConfig) {
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioContextRef = useRef<BaseAudioContext | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
   const isConnectedRef = useRef(false);
@@ -22,10 +22,11 @@ export function useTonePitchShift(config: PitchShiftConfig) {
 
     try {
       if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        audioContextRef.current = new AudioCtx();
       }
 
-      const ctx = audioContextRef.current;
+      const ctx = audioContextRef.current as any;
 
       // Resume AudioContext if suspended (required by browsers after user interaction)
       if (ctx.state === 'suspended') {
