@@ -91,6 +91,7 @@ async function getPythonExecutable(): Promise<string | null> {
         'python'
       ];
 
+  // 1. Probar candidatos estáticos con pedalboard
   for (const cmd of candidates) {
     try {
       const { stdout } = await execFileAsync(cmd, ['-c', 'import pedalboard; print("OK")'], nixEnvOptions);
@@ -100,10 +101,11 @@ async function getPythonExecutable(): Promise<string | null> {
         return cmd;
       }
     } catch {
-      // candidate failed or pedalboard not installed in candidate environment
+      // candidate failed
     }
   }
 
+  // 2. Probar candidatos estáticos sin pedalboard
   for (const cmd of candidates) {
     try {
       await execFileAsync(cmd, ['--version'], nixEnvOptions);
@@ -111,7 +113,22 @@ async function getPythonExecutable(): Promise<string | null> {
       console.log(`[AudioTransposeService] Encontrado ejecutable Python (sin pedalboard): "${cmd}"`);
       return cmd;
     } catch {
-      // candidate executable not found
+      // candidate failed
+    }
+  }
+
+  // 3. Búsqueda dinámica en almacén Nix / sistema Linux
+  if (process.platform !== 'win32') {
+    try {
+      const { stdout } = await execFileAsync('sh', ['-c', 'which python3 || find /nix /root /usr /bin -name python3 -type f 2>/dev/null | head -n 1'], nixEnvOptions);
+      const foundPath = stdout.trim().split('\n')[0]?.trim();
+      if (foundPath && fs.existsSync(foundPath)) {
+        cachedPythonExec = foundPath;
+        console.log(`[AudioTransposeService] Encontrado ejecutable Python dinámico en Nix: "${foundPath}"`);
+        return foundPath;
+      }
+    } catch {
+      // dynamic search failed
     }
   }
 
@@ -137,6 +154,22 @@ async function getFFmpegExecutable(): Promise<string | null> {
       // candidate executable not found
     }
   }
+
+  // Búsqueda dinámica en almacén Nix / sistema Linux
+  if (process.platform !== 'win32') {
+    try {
+      const { stdout } = await execFileAsync('sh', ['-c', 'which ffmpeg || find /nix /root /usr /bin -name ffmpeg -type f 2>/dev/null | head -n 1'], nixEnvOptions);
+      const foundPath = stdout.trim().split('\n')[0]?.trim();
+      if (foundPath && fs.existsSync(foundPath)) {
+        cachedFFmpegExec = foundPath;
+        console.log(`[AudioTransposeService] Encontrado ejecutable FFmpeg dinámico en Nix: "${foundPath}"`);
+        return foundPath;
+      }
+    } catch {
+      // dynamic search failed
+    }
+  }
+
   return null;
 }
 
