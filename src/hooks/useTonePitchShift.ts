@@ -33,7 +33,7 @@ export function useTonePitchShift(config: PitchShiftConfig) {
 
         // Create source from audio element
         if (!sourceRef.current) {
-          sourceRef.current = ctx.createMediaElementAudioSource(config.audioElement);
+          sourceRef.current = (ctx as any).createMediaElementAudioSource(config.audioElement);
         }
 
         // Create ScriptProcessor for real-time audio processing
