@@ -60,7 +60,17 @@ async function getPythonExecutable(): Promise<string | null> {
 
   const candidates = process.platform === 'win32'
     ? ['python', 'py', 'python3']
-    : ['python3', 'python', 'python3.11', '/nix/var/nix/profiles/default/bin/python3', '/root/.nix-profile/bin/python3', '/usr/bin/python3', '/usr/local/bin/python3'];
+    : [
+        'python3',
+        'python3.11',
+        '/root/.nix-profile/bin/python3',
+        '/root/.nix-profile/bin/python3.11',
+        '/nix/var/nix/profiles/default/bin/python3',
+        '/nix/var/nix/profiles/default/bin/python3.11',
+        '/usr/local/bin/python3',
+        '/usr/bin/python3',
+        'python'
+      ];
 
   for (const cmd of candidates) {
     try {
@@ -148,7 +158,7 @@ export async function processAudioTransposition({
       }
       audioBuffer = fs.readFileSync(localSrc);
     } else if (audioUrl) {
-      if (!esUrlExternaSegura(audioUrl)) {
+      if (!(await esUrlExternaSegura(audioUrl))) {
         throw new Error('URL de audio no válida o insegura');
       }
       audioBuffer = await downloadAudioBuffer(audioUrl);
@@ -188,8 +198,9 @@ export async function processAudioTransposition({
 
     return { success: true, transposedUrl: finalUrl };
   } catch (err: any) {
-    console.error('[AudioTransposeService Error]:', err.message || err);
-    return { success: false, error: err.message || 'Error al procesar trasposición DSP' };
+    const errorDetails = err.stderr || err.stdout || err.message || String(err);
+    console.error('[AudioTransposeService Error]:', errorDetails);
+    return { success: false, error: errorDetails };
   } finally {
     // Limpieza de archivos temporales
     if (fs.existsSync(tempInputPath)) {
