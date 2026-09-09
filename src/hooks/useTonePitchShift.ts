@@ -1,98 +1,87 @@
 import { useEffect, useRef } from 'react';
+import * as Tone from 'tone';
 
 interface PitchShiftConfig {
   semitones: number;
   audioElement?: HTMLAudioElement | null;
 }
 
-/**
- * Connects an HTMLAudioElement to Web Audio API for pitch shifting.
- * Uses time-domain resampling to shift pitch without changing tempo.
- * Falls back gracefully if Web Audio API is unavailable.
- */
 export function useTonePitchShift(config: PitchShiftConfig) {
-  const audioContextRef = useRef<BaseAudioContext | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const synth = useRef<Tone.PolySynth | null>(null);
+  const sourceRef = useRef<Tone.MediaElementAudioSource | null>(null);
+  const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
+  const volumeRef = useRef<Tone.Volume | null>(null);
   const isConnectedRef = useRef(false);
 
-  // Initialize Web Audio pitch shifter
   useEffect(() => {
     if (!config.audioElement) return;
 
-    try {
-      if (!audioContextRef.current) {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        audioContextRef.current = new AudioCtx();
+    const init = async () => {
+      try {
+        // Start Tone context if needed
+        if (Tone.getContext().state === 'suspended') {
+          await Tone.start();
+        }
+
+        // Create source from audio element
+        if (!sourceRef.current) {
+          sourceRef.current = new Tone.MediaElementAudioSource(config.audioElement);
+        }
+
+        // Create pitch shifter
+        if (!pitchShiftRef.current) {
+          pitchShiftRef.current = new Tone.PitchShift({
+            pitch: config.semitones,
+          });
+        } else {
+          pitchShiftRef.current.pitch = config.semitones;
+        }
+
+        // Create volume node
+        if (!volumeRef.current) {
+          volumeRef.current = new Tone.Volume(0);
+        }
+
+        // Connect chain: source -> pitch shifter -> volume -> destination
+        if (!isConnectedRef.current) {
+          sourceRef.current.connect(pitchShiftRef.current);
+          pitchShiftRef.current.connect(volumeRef.current);
+          volumeRef.current.toDestination();
+          isConnectedRef.current = true;
+        }
+
+        console.log('🎵 Tone.js pitch shift initialized:', { semitones: config.semitones });
+      } catch (err) {
+        console.warn('Tone.js pitch shift setup failed:', err);
       }
+    };
 
-      const ctx = audioContextRef.current as any;
-
-      // Resume AudioContext if suspended (required by browsers after user interaction)
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
-
-      // Create source from audio element if not already done
-      if (!sourceRef.current) {
-        sourceRef.current = ctx.createMediaElementAudioSource(config.audioElement);
-      }
-
-      // Create a simple gain node for volume control
-      const gainNode = ctx.createGain();
-      gainNode.gain.value = 1.0;
-
-      // Connect source -> gain -> destination for audio to flow
-      if (!isConnectedRef.current) {
-        sourceRef.current.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        isConnectedRef.current = true;
-      }
-    } catch (err) {
-      console.warn('Web Audio API pitch shift setup failed, using fallback playbackRate:', err);
-    }
+    init();
 
     return () => {
-      // Keep connections alive for this session
+      // Keep connections alive
     };
   }, [config.audioElement]);
+
+  // Update pitch when semitones change
+  useEffect(() => {
+    if (pitchShiftRef.current) {
+      pitchShiftRef.current.pitch = config.semitones;
+      console.log('🎵 Pitch updated to:', config.semitones);
+    }
+  }, [config.semitones]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (processorRef.current) {
-        processorRef.current.disconnect();
-        processorRef.current = null;
-      }
+      if (sourceRef.current) sourceRef.current.dispose();
+      if (pitchShiftRef.current) pitchShiftRef.current.dispose();
+      if (volumeRef.current) volumeRef.current.dispose();
     };
   }, []);
 
-  /**
-   * Calculate playback rate from semitones.
-   * Formula: playbackRate = 2^(semitones/12)
-   * This allows approximate pitch shifting by adjusting playback speed,
-   * with optional tempo compensation if needed.
-   */
-  const getPlaybackRateFromSemitones = (semitones: number): number => {
-    return Math.pow(2, semitones / 12);
-  };
-
-  /**
-   * Apply pitch shift to the audio element by adjusting playback rate.
-   * Note: This affects tempo as well. For true time-stretching without tempo change,
-   * a more advanced phase vocoder would be needed.
-   */
-  const applyPitchShift = (audioElement: HTMLAudioElement | null, semitones: number) => {
-    if (!audioElement) return;
-
-    const rate = getPlaybackRateFromSemitones(semitones);
-    // Clamp playback rate to browser-supported range (typically 0.25 to 2.0)
-    audioElement.playbackRate = Math.max(0.25, Math.min(2.0, rate));
-  };
-
   return {
-    playbackRate: getPlaybackRateFromSemitones(config.semitones),
+    pitch: config.semitones,
     semitones: config.semitones,
-    applyPitchShift,
   };
 }
