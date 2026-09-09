@@ -229,6 +229,7 @@ export default function SpotifyPlayerBar({
       console.log('🎵 Applying pitch shift directly to audio element:', clampedRate);
       el.playbackRate = clampedRate;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transposeSemitones]);
 
   // Volume effect
