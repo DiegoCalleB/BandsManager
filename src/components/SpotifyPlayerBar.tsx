@@ -18,6 +18,8 @@ interface SpotifyPlayerBarProps {
   autoPlay?: boolean;
   playSignal?: number;
   onIsPlayingChange?: (isPlaying: boolean) => void;
+  /** Transposition semitones (e.g., 2 for +2 semitones). If provided, audio will be pitch-shifted. */
+  transposeSemitones?: number;
 }
 
 function getRawAudioUrl(song: Song | null | undefined): string {
@@ -35,7 +37,8 @@ export default function SpotifyPlayerBar({
   onClosePlayer,
   autoPlay = false,
   playSignal = 0,
-  onIsPlayingChange
+  onIsPlayingChange,
+  transposeSemitones = 0
 }: SpotifyPlayerBarProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -210,6 +213,20 @@ export default function SpotifyPlayerBar({
     if (el) el.playbackRate = playbackRate;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playbackRate]);
+
+  // Pitch shift effect (transpose audio by semitones)
+  useEffect(() => {
+    if (transposeSemitones === 0) return;
+    const el = getActiveAudioEl();
+    if (!el) return;
+
+    // Calculate playback rate from semitones: playbackRate = 2^(semitones/12)
+    // Note: This also changes tempo. For true time-stretching, a phase vocoder would be needed.
+    const pitchShiftRate = Math.pow(2, transposeSemitones / 12);
+    // Clamp to browser-supported range
+    const clampedRate = Math.max(0.25, Math.min(2.0, pitchShiftRate));
+    el.playbackRate = clampedRate;
+  }, [transposeSemitones, getActiveAudioEl]);
 
   // Volume effect
   useEffect(() => {
