@@ -222,8 +222,13 @@ export default function SpotifyPlayerBar({
     // Clamp to browser-supported range
     const clampedRate = Math.max(0.25, Math.min(2.0, pitchShiftRate));
     console.log('🎵 Pitch shift effect:', { transposeSemitones, pitchShiftRate, clampedRate });
-    // Update state so the normal playbackRate effect applies the pitch-shifted rate
+    // Update state AND apply directly to audio element to avoid race conditions
     setPlaybackRate(clampedRate);
+    const el = getActiveAudioEl();
+    if (el) {
+      console.log('🎵 Applying pitch shift directly to audio element:', clampedRate);
+      el.playbackRate = clampedRate;
+    }
   }, [transposeSemitones]);
 
   // Volume effect
