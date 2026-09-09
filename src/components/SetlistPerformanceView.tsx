@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning, Moon, Plane } from 'lucide-react';
 import { Setlist, SetlistItem, Song } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
 import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
@@ -52,6 +52,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // texto negro muy grueso, que en la práctica se ve mucho mejor que ámbar-sobre-negro bajo sol
   // directo o focos de escenario (y suele disparar el brillo automático del propio móvil).
   const [glareMode, setGlareMode] = useState(false);
+  // "Apagar" la pantalla no es algo que una web pueda hacer de verdad (no hay API para eso) —
+  // esto es lo más parecido y honesto: soltar el Wake Lock (deja que el móvil se apague solo
+  // por su propio temporizador de inactividad) y pintar negro puro, que en la mayoría de
+  // pantallas OLED apaga esos píxeles de verdad y sí ahorra batería real. Se resetea en cada
+  // cambio de canción a propósito: activarlo es una decisión por tema, no "para siempre",
+  // para no arriesgarse a llegar a la siguiente canción sin pantalla por olvido.
+  const [isResting, setIsResting] = useState(false);
+  const [showFlightModeInfo, setShowFlightModeInfo] = useState(false);
   // Battery Status API: Chrome la soporta (con datos redondeados por privacidad), pero Firefox
   // y Safari/iOS nunca la han implementado. null = "no se sabe" y no se muestra nada — mejor
   // eso que fingir un dato de batería falso en la mitad de los móviles.
@@ -113,6 +121,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     setShowDetails(false);
     setManualViewOverride(null);
     setCurrentSectionIndex(0);
+    // El Modo Descanso es por tema, no "para siempre": si se quedara activo al cambiar de
+    // canción, el riesgo es llegar a un tema que sí necesitas ver sin pantalla porque se te
+    // olvidó reactivarla.
+    setIsResting(false);
   }, [currentIndex]);
 
   // Transpone los acordes DE VERDAD (las letras Do/Re/Mi... dentro del texto), no solo la
@@ -155,8 +167,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
 
   // WAKE LOCK: lo más importante para un músico en directo — que la pantalla del móvil/tablet
   // NO se apague a media canción por inactividad táctil (el músico está tocando, no tocando la
-  // pantalla). Sin esto, el modo concierto es inservible en un bolo real.
+  // pantalla). Sin esto, el modo concierto es inservible en un bolo real. Se libera cuando el
+  // propio músico activa el Modo Descanso para el tema actual (isResting) — es la única
+  // situación en la que SÍ queremos que el móvil pueda apagar la pantalla solo.
   useEffect(() => {
+    if (isResting) {
+      wakeLockRef.current?.release?.().catch(() => {});
+      wakeLockRef.current = null;
+      return;
+    }
+
     let released = false;
     const requestLock = async () => {
       try {
@@ -181,7 +201,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       document.removeEventListener('visibilitychange', handleVisibility);
       wakeLockRef.current?.release?.().catch(() => {});
     };
-  }, []);
+  }, [isResting]);
 
   // FULLSCREEN real del navegador (oculta la barra de direcciones/UI del sistema) — el
   // fixed inset-0 ya cubre la ventana, pero en un móvil/tablet la barra de Chrome/Safari sigue
@@ -281,6 +301,21 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   const isLast = currentIndex === allItems.length - 1;
   const blockMeta = isBlock ? getBlockMeta(currentItem) : null;
 
+  // MODO DESCANSO: pantalla negra a pantalla completa, sin wake lock — la opción real más
+  // parecida a "apagar la pantalla" que puede ofrecer una web. Cualquier toque la despierta.
+  if (isResting) {
+    return (
+      <div
+        className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center text-center p-8 cursor-pointer select-none"
+        onClick={() => setIsResting(false)}
+      >
+        <span className="text-5xl mb-4">😴</span>
+        <p className="text-neutral-600 text-sm font-mono mb-1">Modo descanso — ahorrando batería</p>
+        <p className="text-neutral-800 text-xs font-mono">Toca la pantalla para volver a "{itemLabel(currentItem, songs)}"</p>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
@@ -329,6 +364,24 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
             title="Modo alto contraste para sol/luces fuertes (no controla el brillo real del dispositivo)"
           >
             <Sun className="w-4 h-4" />
+          </button>
+
+          {/* Modo descanso: para el tema actual, si sabes que no lo vas a necesitar mirar.
+              Se reinicia solo al pasar a la siguiente canción — nunca "para siempre". */}
+          <button
+            onClick={() => setIsResting(true)}
+            className={`p-1.5 rounded-lg transition ${glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
+            title="Modo descanso: apaga la pantalla para este tema y ahorra batería (toca para volver)"
+          >
+            <Moon className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => setShowFlightModeInfo(v => !v)}
+            className={`p-1.5 rounded-lg transition ${showFlightModeInfo ? 'bg-sky-500/30 text-sky-300' : glareMode ? 'hover:bg-black/10 text-neutral-700' : 'hover:bg-white/10 text-neutral-300'}`}
+            title="Sobre el modo avión"
+          >
+            <Plane className="w-4 h-4" />
           </button>
 
           {!isBlock && notes && (
@@ -384,6 +437,21 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       {!isBlock && showNotes && notes && (
         <div className="shrink-0 bg-amber-950/90 border-y border-amber-500/40 px-4 py-2.5 text-sm text-amber-100 whitespace-pre-wrap z-20">
           {notes}
+        </div>
+      )}
+
+      {/* Una web no puede activar el modo avión del dispositivo — ninguna app sin permisos de
+          sistema puede tocar la radio del móvil, por seguridad. Esto es honesto sobre esa
+          limitación en vez de fingir un botón que no haría nada. */}
+      {showFlightModeInfo && (
+        <div className="shrink-0 bg-sky-950/90 border-y border-sky-500/40 px-4 py-2.5 text-sm text-sky-100 z-20 flex items-start gap-2">
+          <Plane className="w-4 h-4 shrink-0 mt-0.5" />
+          <p>
+            No hay forma de activar el modo avión desde aquí — ninguna web (ni casi ninguna app) puede tocar la
+            conectividad del móvil, es una restricción de seguridad del propio sistema. Actívalo tú a mano antes
+            de subir al escenario: la app ya funciona sin conexión una vez cargado el repertorio, así que no pasa
+            nada por quedarte sin señal.
+          </p>
         </div>
       )}
 
