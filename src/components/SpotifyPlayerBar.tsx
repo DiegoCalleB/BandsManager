@@ -177,7 +177,12 @@ export default function SpotifyPlayerBar({
     if (activeAudioUrl) {
       if (activeEl) {
         activeEl.src = activeAudioUrl;
-        activeEl.playbackRate = playbackRate;
+        // Note: Don't set playbackRate here if transposeSemitones is active,
+        // let the pitch shift effect handle it. The normal playbackRate effect
+        // will sync playbackRate changes.
+        if (transposeSemitones === 0) {
+          activeEl.playbackRate = playbackRate;
+        }
         activeEl.volume = isMuted ? 0 : volume;
 
         if (shouldPlayNow) {
@@ -225,8 +230,10 @@ export default function SpotifyPlayerBar({
     const pitchShiftRate = Math.pow(2, transposeSemitones / 12);
     // Clamp to browser-supported range
     const clampedRate = Math.max(0.25, Math.min(2.0, pitchShiftRate));
+    console.log('🎵 Pitch shift effect:', { transposeSemitones, pitchShiftRate, clampedRate });
     el.playbackRate = clampedRate;
-  }, [transposeSemitones, getActiveAudioEl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transposeSemitones]);
 
   // Volume effect
   useEffect(() => {
