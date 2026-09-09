@@ -1,127 +1,94 @@
 import { useEffect, useRef } from 'react';
+import * as Tone from 'tone';
 
-interface PitchShiftConfig {
+interface UseTonePitchShiftProps {
+  audioElement: HTMLAudioElement | null;
   semitones: number;
-  audioElement?: HTMLAudioElement | null;
 }
 
-export function useTonePitchShift(config: PitchShiftConfig) {
-  console.log('🎵 useTonePitchShift called with:', config);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const processorRef = useRef<ScriptProcessorNode | null>(null);
-  const workerRef = useRef<Worker | null>(null);
-  const isConnectedRef = useRef(false);
+export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShiftProps) {
+  const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
+  const mediaSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const isConnectedRef = useRef<boolean>(false);
+  const currentAudioElRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize Web Audio and worker
   useEffect(() => {
-    if (!config.audioElement) return;
+    if (!audioElement) return;
 
-    const init = async () => {
+    if (currentAudioElRef.current !== audioElement) {
+      currentAudioElRef.current = audioElement;
+      isConnectedRef.current = false;
+      mediaSourceRef.current = null;
+    }
+
+    if (semitones === 0) {
+      if (pitchShiftRef.current) {
+        pitchShiftRef.current.pitch = 0;
+      }
+      return;
+    }
+
+    const initAudioNode = async () => {
       try {
-        // Initialize Audio Context
-        if (!audioContextRef.current) {
-          const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-          audioContextRef.current = new AudioCtx();
+        if (Tone.getContext().state !== 'running') {
+          await Tone.start();
         }
 
-        const ctx = audioContextRef.current;
-
-        // Resume if suspended
-        if (ctx.state === 'suspended') {
-          await ctx.resume();
+        if (!pitchShiftRef.current) {
+          pitchShiftRef.current = new Tone.PitchShift({
+            pitch: semitones,
+            windowSize: 0.08,
+            delayTime: 0,
+            feedback: 0
+          }).toDestination();
+        } else {
+          pitchShiftRef.current.pitch = semitones;
         }
 
-        // Create source from audio element
-        if (!sourceRef.current) {
-          sourceRef.current = (ctx as any).createMediaElementAudioSource(config.audioElement);
+        if (!mediaSourceRef.current && audioElement) {
+          if (!audioElement.crossOrigin) {
+            audioElement.crossOrigin = 'anonymous';
+          }
+          const rawAudioContext = Tone.getContext().rawContext as AudioContext;
+          const createSource = rawAudioContext.createMediaElementSource || (rawAudioContext as any).createMediaElementAudioSource;
+          mediaSourceRef.current = createSource.call(rawAudioContext, audioElement);
         }
 
-        // Create ScriptProcessor for real-time audio processing
-        if (!processorRef.current) {
-          processorRef.current = ctx.createScriptProcessor(4096, 1, 1);
-        }
-
-        // Initialize worker
-        if (!workerRef.current) {
-          workerRef.current = new Worker(
-            new URL('../workers/pitchShiftWorker.ts', import.meta.url),
-            { type: 'module' }
-          );
-
-          workerRef.current.postMessage({
-            type: 'init',
-            data: { sampleRate: ctx.sampleRate },
-          });
-
-          // Handle worker output
-          workerRef.current.onmessage = (e) => {
-            if (e.data.type === 'samples' && processorRef.current) {
-              // Store samples for playback
-            }
-          };
-        }
-
-        // Connect: source -> processor -> destination
-        if (!isConnectedRef.current) {
-          sourceRef.current.connect(processorRef.current);
-          processorRef.current.connect(ctx.destination);
+        if (mediaSourceRef.current && pitchShiftRef.current && !isConnectedRef.current) {
+          Tone.connect(mediaSourceRef.current, pitchShiftRef.current);
           isConnectedRef.current = true;
         }
-
-        // Process audio in real-time
-        if (processorRef.current) {
-          processorRef.current.onaudioprocess = (e) => {
-            const input = e.inputBuffer.getChannelData(0);
-            if (workerRef.current) {
-              workerRef.current.postMessage({
-                type: 'process',
-                data: input,
-              });
-            }
-          };
-        }
-
-        console.log('🎵 Pitch shift worker initialized');
       } catch (err) {
-        console.warn('Pitch shift setup failed:', err);
+        console.warn('[useTonePitchShift] AudioContext connect warning:', err);
       }
     };
 
-    init();
+    initAudioNode();
+  }, [audioElement, semitones]);
 
-    return () => {
-      // Keep connections alive
-    };
-  }, [config.audioElement]);
-
-  // Update pitch when semitones change
   useEffect(() => {
-    if (workerRef.current) {
-      workerRef.current.postMessage({
-        type: 'setPitch',
-        semitones: config.semitones,
-      });
+    if (pitchShiftRef.current) {
+      pitchShiftRef.current.pitch = semitones;
     }
-  }, [config.semitones]);
+  }, [semitones]);
 
-  // Cleanup
   useEffect(() => {
     return () => {
-      if (processorRef.current) {
-        processorRef.current.disconnect();
+      if (pitchShiftRef.current) {
+        try {
+          pitchShiftRef.current.dispose();
+        } catch {
+          // ignore
+        }
+        pitchShiftRef.current = null;
       }
-      if (sourceRef.current) {
-        sourceRef.current.disconnect();
-      }
-      if (workerRef.current) {
-        workerRef.current.terminate();
-      }
+      mediaSourceRef.current = null;
+      isConnectedRef.current = false;
     };
   }, []);
 
   return {
-    pitch: config.semitones,
-    semitones: config.semitones,
+    semitones,
+    isToneActive: semitones !== 0 && isConnectedRef.current
   };
 }

@@ -455,6 +455,7 @@ export default function SpotifyPlayerBar({
       <audio
         ref={audioRefA}
         preload="auto"
+        crossOrigin="anonymous"
         onTimeUpdate={() => { if (activeSlotRef.current === 'A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime); }}
         onLoadedMetadata={() => { if (activeSlotRef.current === 'A' && audioRefA.current?.duration) setDuration(audioRefA.current.duration); }}
         onEnded={() => { if (activeSlotRef.current === 'A') handleEnded(); }}
@@ -462,6 +463,7 @@ export default function SpotifyPlayerBar({
       <audio
         ref={audioRefB}
         preload="auto"
+        crossOrigin="anonymous"
         onTimeUpdate={() => { if (activeSlotRef.current === 'B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime); }}
         onLoadedMetadata={() => { if (activeSlotRef.current === 'B' && audioRefB.current?.duration) setDuration(audioRefB.current.duration); }}
         onEnded={() => { if (activeSlotRef.current === 'B') handleEnded(); }}
