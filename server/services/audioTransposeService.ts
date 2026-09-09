@@ -1,11 +1,49 @@
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
+import https from 'https';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { uploadToSupabaseIfAvailable } from '../utils/storage.js';
 import { esUrlExternaSegura } from '../utils/ssrfGuard.js';
 
 const execFileAsync = promisify(execFile);
+
+async function downloadAudioBuffer(url: string): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    function fetchUrl(targetUrl: string, redirects = 0) {
+      if (redirects > 5) {
+        return reject(new Error('Demasiados redireccionamientos al descargar el audio'));
+      }
+      const client = targetUrl.startsWith('https') ? https : http;
+      const req = client.get(targetUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': '*/*'
+        },
+        rejectUnauthorized: false
+      }, (res) => {
+        if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          const redirectUrl = new URL(res.headers.location, targetUrl).toString();
+          return fetchUrl(redirectUrl, redirects + 1);
+        }
+        if (!res.statusCode || res.statusCode < 200 || res.statusCode >= 300) {
+          return reject(new Error(`Fallo al descargar audio: HTTP ${res.statusCode}`));
+        }
+        const chunks: Buffer[] = [];
+        res.on('data', (chunk) => chunks.push(chunk));
+        res.on('end', () => resolve(Buffer.concat(chunks)));
+        res.on('error', (err) => reject(err));
+      });
+      req.on('error', (err) => reject(err));
+      req.setTimeout(30000, () => {
+        req.destroy();
+        reject(new Error('Tiempo de espera agotado al descargar el audio'));
+      });
+    }
+    fetchUrl(url);
+  });
+}
 
 interface TransposeRequest {
   songId: string;
@@ -113,16 +151,7 @@ export async function processAudioTransposition({
       if (!esUrlExternaSegura(audioUrl)) {
         throw new Error('URL de audio no válida o insegura');
       }
-      const response = await fetch(audioUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`Fallo al descargar audio: HTTP ${response.status}`);
-      }
-      const arrayBuffer = await response.arrayBuffer();
-      audioBuffer = Buffer.from(arrayBuffer);
+      audioBuffer = await downloadAudioBuffer(audioUrl);
     } else {
       throw new Error('No hay fuente de audio válida');
     }
