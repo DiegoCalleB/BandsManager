@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNo
 import { Setlist, SetlistItem, Song } from '../types';
 import { isImageDocument, isPdfDocument } from '../utils/documentType';
 import { getSemitoneDifference, transposeChordToken, processChordText, splitIntoChordSections, ChordSection } from '../utils/chordUtils';
+import { ChordLyricsText } from './common/ChordLyricsText';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -687,7 +688,6 @@ const ChordSheetPage: React.FC<{
 }> = ({ chords, sections, currentSectionIndex, onAdvanceSection, onRetreatSection, structure, progression, transposedKey, originalKey, transpose, bpm, duracion, afinacion, fontSizeClass, showDetails, onToggleDetails, glareMode }) => {
   const hasMultipleSections = sections.length >= 2;
   const currentSection = hasMultipleSections ? sections[currentSectionIndex] : null;
-  const chordTextClass = glareMode ? 'text-black font-bold' : 'text-amber-100';
   const borderClass = glareMode ? 'border-black/10' : 'border-white/5';
 
   return (
@@ -735,9 +735,11 @@ const ChordSheetPage: React.FC<{
             {currentSection?.title && <span className={glareMode ? 'text-purple-700 font-bold' : 'text-purple-300 font-bold'}> · {currentSection.title}</span>}
           </div>
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex items-center justify-center">
-            <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words text-center ${fontSizeClass} ${chordTextClass}`}>
-              {currentSection?.body}
-            </pre>
+            <ChordLyricsText
+              text={currentSection?.body || ''}
+              glareMode={glareMode}
+              className={`max-w-4xl mx-auto font-mono leading-relaxed text-center ${fontSizeClass}`}
+            />
           </div>
           <div className={`shrink-0 flex items-center gap-2 p-3 border-t ${borderClass}`}>
             <button
@@ -761,9 +763,11 @@ const ChordSheetPage: React.FC<{
         // Sin encabezados de sección detectados: se muestra todo el cifrado de una vez, con
         // scroll manual normal (nunca automático).
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <pre className={`max-w-4xl mx-auto font-mono whitespace-pre-wrap leading-relaxed break-words ${fontSizeClass} ${chordTextClass}`}>
-            {chords}
-          </pre>
+          <ChordLyricsText
+            text={chords}
+            glareMode={glareMode}
+            className={`max-w-4xl mx-auto font-mono leading-relaxed ${fontSizeClass}`}
+          />
         </div>
       )}
     </div>

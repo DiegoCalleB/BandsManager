@@ -27,6 +27,7 @@ import {
 import { Song, SongSubstituteGuide } from '../types';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
+import { ChordLyricsText } from './common/ChordLyricsText';
 import { formatSongShareText } from '../utils/shareUtils';
 import { SongStudioStructureUploadModal } from './song_studio/SongStudioStructureUploadModal';
 import {
@@ -34,8 +35,7 @@ import {
   extractUniqueChords,
   GUITAR_CHORD_DATABASE,
   GuitarChordShape,
-  transposeChordToken,
-  parseRootNote
+  transposeChordToken
 } from '../utils/chordUtils';
 
 interface SongChordsViewerModalProps {
@@ -517,7 +517,11 @@ export function SongChordsViewerModal({
 
                 {/* THE CHORD SHEET DISPLAY */}
                 <div className="bg-black/60 p-6 rounded-2xl border border-neutral-800 shadow-inner font-mono text-sm leading-relaxed whitespace-pre-wrap select-text">
-                  {renderFormattedChordSheet(processedText)}
+                  {processedText ? (
+                    <ChordLyricsText text={processedText} />
+                  ) : (
+                    <span className="text-neutral-500 italic">Sin cifrado disponible. Usa el botón de IA para generarlo.</span>
+                  )}
                 </div>
               </div>
             )}
@@ -740,72 +744,6 @@ export function SongChordsViewerModal({
     </div>
     </ModalPortal>
   );
-}
-
-// RENDER FUNCTION FOR FORMATTED CHORD SHEET WITH HIGHLIGHTED CHORDS
-function renderFormattedChordSheet(text: string) {
-  if (!text) return <span className="text-neutral-500 italic">Sin cifrado disponible. Usa el botón de IA para generarlo.</span>;
-
-  const lines = text.split('\n');
-
-  return lines.map((line, idx) => {
-    // Check if section header like [Intro], [Estribillo], [Solo], etc.
-    if (/^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(line.trim())) {
-      return (
-        <div key={idx} className="text-purple-400 font-bold text-base my-2 pt-2 border-t border-neutral-800/60 flex items-center gap-2">
-          <span className="px-2.5 py-0.5 rounded bg-purple-950/80 border border-purple-500/40 text-purple-300">
-            {line.trim()}
-          </span>
-        </div>
-      );
-    }
-
-    // Check if inline bracket chord format: [Do] Que tiene tu [Sol] veneno
-    if (line.includes('[')) {
-      const parts = line.split(/(\[[A-Za-z0-9#\/]+\])/g);
-      return (
-        <div key={idx} className="py-0.5">
-          {parts.map((part, pIdx) => {
-            if (part.startsWith('[') && part.endsWith(']')) {
-              const chordName = part.slice(1, -1);
-              return (
-                <span
-                  key={pIdx}
-                  className="font-bold text-amber-400 bg-amber-950/40 px-1 py-0.5 rounded border border-amber-500/30 mx-0.5 text-xs shadow-sm"
-                >
-                  {chordName}
-                </span>
-              );
-            }
-            return <span key={pIdx} className="text-neutral-200">{part}</span>;
-          })}
-        </div>
-      );
-    }
-
-    // Otherwise check if line contains chords separated by spaces. Usa el mismo validador de
-    // acordes (parseRootNote) que la transposición y la lista de diagramas: antes esta línea
-    // tenía su propia regex duplicada que solo miraba si el token EMPEZABA por una nota, sin
-    // validar el resto ("Get", "Fire", "Baby" contaban como acordes en letras en inglés).
-    const tokens = line.trim().split(/\s+/);
-    const chordCount = tokens.filter(t => parseRootNote(t) !== null).length;
-    const isChordLine = chordCount > 0 && chordCount / tokens.length >= 0.7;
-
-    if (isChordLine) {
-      return (
-        <div key={idx} className="font-bold text-amber-400 text-sm tracking-wide py-0.5 leading-none select-none">
-          {line}
-        </div>
-      );
-    }
-
-    // Standard lyrics line
-    return (
-      <div key={idx} className="text-neutral-200 py-0.5">
-        {line || '\u00A0'}
-      </div>
-    );
-  });
 }
 
 // COMPONENT TO RENDER A SINGLE GUITAR CHORD BOX/FRETBOARD DIAGRAM
