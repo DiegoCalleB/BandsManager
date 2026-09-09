@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
-import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { transposeSingleNote, getSemitoneDifference } from '../utils/chordUtils';
 import { api } from '../services/api';
 
@@ -85,11 +84,7 @@ export default function SpotifyPlayerBar({
   const getActiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefA.current : audioRefB.current);
   const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
 
-  // Tone.js pitch shifter for real pitch transposition
-  useTonePitchShift({
-    semitones: transposeSemitones,
-    audioElement: getActiveAudioEl(),
-  });
+  // Spotify Pedalboard C++ DSP on server is used for audio transposition instead of Web Audio phase vocoders
 
   // Audio Synth fallback for songs without custom audio file
   const synthIntervalRef = useRef<any>(null);
@@ -558,8 +553,8 @@ export default function SpotifyPlayerBar({
                   <span className="text-[#1db954] font-semibold">
                     {song.tonalidad || 'Am'}
                     {transposeSemitones !== 0 && (
-                      <span className="text-[#ff6b9d] ml-1">
-                        → {transposeSingleNote(song.tonalidad || 'Am', transposeSemitones, 'ES')}
+                      <span className="text-[#ff6b9d] ml-1 font-bold">
+                        ➔ {transposeSingleNote(song.tonalidad || 'Am', transposeSemitones, 'ES')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
                       </span>
                     )}
                     {isTransposingAudio && (
@@ -664,6 +659,30 @@ export default function SpotifyPlayerBar({
                 <option value={1.0}>1.0x</option>
                 <option value={1.25}>1.25x</option>
                 <option value={1.5}>1.5x</option>
+              </select>
+
+              {/* Pitch Transpose selector (Spotify Pedalboard DSP) */}
+              <select
+                value={transposeSemitones}
+                onChange={(e) => setTransposeSemitones(parseInt(e.target.value, 10))}
+                className={`bg-[#282828] text-[10px] font-mono rounded px-1.5 py-1 cursor-pointer hover:bg-zinc-700 focus:outline-none border border-white/5 ${
+                  transposeSemitones !== 0 ? 'text-[#ff6b9d] font-bold border-[#ff6b9d]/30' : 'text-[#b3b3b3]'
+                }`}
+                title="Trasposición de Tono (DSP Spotify Pedalboard)"
+              >
+                <option value={-6}>-6 st</option>
+                <option value={-5}>-5 st</option>
+                <option value={-4}>-4 st</option>
+                <option value={-3}>-3 st</option>
+                <option value={-2}>-2 st</option>
+                <option value={-1}>-1 st</option>
+                <option value={0}>Tono (0)</option>
+                <option value={1}>+1 st</option>
+                <option value={2}>+2 st</option>
+                <option value={3}>+3 st</option>
+                <option value={4}>+4 st</option>
+                <option value={5}>+5 st</option>
+                <option value={6}>+6 st</option>
               </select>
             </div>
 

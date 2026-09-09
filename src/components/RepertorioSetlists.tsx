@@ -3148,10 +3148,7 @@ export default function RepertorioSetlists({
       transposeSemitones,
       it
     });
-    // DEBUG: Show values in alert on mobile
-    if (transposeSemitones !== 0 || it.tonalidadDeseada) {
-      alert(`🎵 ${song.titulo}\nOriginal: ${song.tonalidad}\nDeseado: ${it.tonalidadDeseada || 'ninguno'}\nSemitones: ${transposeSemitones}`);
-    }
+    // Transpose semitones computed for player
     selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
   };
 

@@ -19,6 +19,7 @@ export function useAudioPlayer() {
     }
 
     if (activePlayerSong?.id === song.id) {
+      setPlayerTransposeSemitones(transposeSemitones);
       if (autoPlay) {
         if (isPlayerPlaying) {
           setPlayerAutoPlay(false);
