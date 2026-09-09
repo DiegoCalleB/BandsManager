@@ -1,6 +1,7 @@
-import SoundTouch from 'soundtouchjs';
+import * as SoundTouchModule from 'soundtouchjs';
 
-let soundTouch: SoundTouch | null = null;
+const SoundTouch = (SoundTouchModule as any).default || SoundTouchModule;
+let soundTouch: any = null;
 let channels: Float32Array[] = [];
 
 self.onmessage = (event: MessageEvent) => {
