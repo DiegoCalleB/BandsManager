@@ -37,8 +37,8 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
         if (!pitchShiftRef.current) {
           pitchShiftRef.current = new Tone.PitchShift({
             pitch: semitones,
-            windowSize: 0.08,
-            delayTime: 0,
+            windowSize: 0.25, // Ventana óptima para mezclas de audio completas (evita el efecto robótico/metálico)
+            delayTime: 0.04,
             feedback: 0
           }).toDestination();
         } else {

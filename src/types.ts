@@ -651,6 +651,7 @@ export interface Song {
   estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
   estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
   estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
+  speechTranscription?: string; // Audio/speech transcription from live cutting
   // Un humano ha comparado los acordes extraídos por la IA contra el documento original y
   // confirma que son correctos. Sin esto, en directo no hay forma de distinguir un cifrado ya
   // revisado de uno recién subido en el que nadie ha confiado todavía.

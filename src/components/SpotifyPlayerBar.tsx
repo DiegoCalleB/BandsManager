@@ -7,7 +7,8 @@ import {
 import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
-import { transposeSingleNote } from '../utils/chordUtils';
+import { transposeSingleNote, getSemitoneDifference } from '../utils/chordUtils';
+import { api } from '../services/api';
 
 interface SpotifyPlayerBarProps {
   song: Song | null;
@@ -40,7 +41,7 @@ export default function SpotifyPlayerBar({
   autoPlay = false,
   playSignal = 0,
   onIsPlayingChange,
-  transposeSemitones = 0
+  transposeSemitones: propTransposeSemitones = 0
 }: SpotifyPlayerBarProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -50,6 +51,24 @@ export default function SpotifyPlayerBar({
   const [isLooping, setIsLooping] = useState(false);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
   const [isMinimized, setIsMinimized] = useState(false);
+
+  // Cálculo automático de semitonos (prop explícita o diferencia entre tonalidad y tonalidadDeseada)
+  const calculatedSemitones = React.useMemo(() => {
+    if (typeof propTransposeSemitones === 'number' && propTransposeSemitones !== 0) {
+      return propTransposeSemitones;
+    }
+    if (song?.tonalidad && (song as any)?.tonalidadDeseada) {
+      return getSemitoneDifference(song.tonalidad, (song as any).tonalidadDeseada) ?? 0;
+    }
+    return 0;
+  }, [propTransposeSemitones, song?.id, song?.tonalidad, (song as any)?.tonalidadDeseada]);
+
+  const [transposeSemitones, setTransposeSemitones] = useState<number>(calculatedSemitones);
+
+  useEffect(() => {
+    setTransposeSemitones(calculatedSemitones);
+  }, [calculatedSemitones, song?.id]);
+
   // Fundido real (5s, curva de potencia constante) al pasar al siguiente tema de la cola —
   // desactivado por defecto, mismo interruptor tanto si la cola es el catálogo, un álbum de
   // Discografía o un repertorio (ver `songs`, que decide qué es "el siguiente tema" en cada caso).
@@ -67,7 +86,6 @@ export default function SpotifyPlayerBar({
   const getInactiveAudioEl = () => (activeSlotRef.current === 'A' ? audioRefB.current : audioRefA.current);
 
   // Tone.js pitch shifter for real pitch transposition
-  console.log('🎵 SpotifyPlayerBar rendering with transposeSemitones:', transposeSemitones);
   useTonePitchShift({
     semitones: transposeSemitones,
     audioElement: getActiveAudioEl(),
@@ -104,7 +122,9 @@ export default function SpotifyPlayerBar({
     }
   };
 
-  // Extract and resolve active audio URL asynchronously (supporting IndexedDB & Drive)
+  const [isTransposingAudio, setIsTransposingAudio] = useState(false);
+
+  // Extract and resolve active audio URL asynchronously (supporting IndexedDB, Drive & Spotify Pedalboard DSP)
   useEffect(() => {
     let isMounted = true;
     if (!song) {
@@ -119,9 +139,30 @@ export default function SpotifyPlayerBar({
       return;
     }
 
-    resolveAudioUrl(rawUrl).then((resolved) => {
-      if (isMounted) {
-        setActiveAudioUrl(resolved);
+    resolveAudioUrl(rawUrl).then(async (resolved) => {
+      if (!isMounted) return;
+
+      if (transposeSemitones !== 0 && resolved) {
+        setIsTransposingAudio(true);
+        try {
+          const res = await api.transposeAudio({
+            songId: song.id,
+            audioUrl: resolved,
+            semitones: transposeSemitones
+          });
+          if (isMounted && res.success && res.transposedUrl) {
+            setActiveAudioUrl(res.transposedUrl);
+          } else if (isMounted) {
+            setActiveAudioUrl(resolved);
+          }
+        } catch (err) {
+          console.warn('[SpotifyPlayerBar] Error en trasposición DSP servidor:', err);
+          if (isMounted) setActiveAudioUrl(resolved);
+        } finally {
+          if (isMounted) setIsTransposingAudio(false);
+        }
+      } else {
+        if (isMounted) setActiveAudioUrl(resolved);
       }
     }).catch(err => {
       console.warn('Error resolving audio URL:', err);
@@ -131,7 +172,7 @@ export default function SpotifyPlayerBar({
     return () => {
       isMounted = false;
     };
-  }, [song]);
+  }, [song, transposeSemitones]);
 
   // Sync isPlaying state to parent if callback provided
   useEffect(() => {
@@ -519,6 +560,11 @@ export default function SpotifyPlayerBar({
                     {transposeSemitones !== 0 && (
                       <span className="text-[#ff6b9d] ml-1">
                         → {transposeSingleNote(song.tonalidad || 'Am', transposeSemitones, 'ES')}
+                      </span>
+                    )}
+                    {isTransposingAudio && (
+                      <span className="ml-1 text-sky-400 font-bold animate-pulse text-[10px]" title="Procesando trasposición DSP con Pedalboard de Spotify">
+                        🎛️ Pedalboard...
                       </span>
                     )}
                   </span>

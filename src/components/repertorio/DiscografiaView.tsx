@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Song, ThemeColors } from '../../types';
-import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2 } from 'lucide-react';
+import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2, Search, X } from 'lucide-react';
 import { AlbumCover } from '../AlbumCover';
 import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
 import { apiFetch } from '../../utils/api';
@@ -92,6 +92,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   const [showCreateAlbumMenu, setShowCreateAlbumMenu] = useState(false);
   const [draggedItem, setDraggedItem] = useState<{ album: string; index: number } | null>(null);
   const [dragOverItem, setDragOverItem] = useState<{ album: string; index: number } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -154,14 +155,47 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
   const allNonEmptyAlbums = safeAlbumsList.filter((a) => a !== 'todos');
 
+  const cleanSearchQuery = searchQuery.trim().toLowerCase();
+
+  const songMatchesSearch = (s: Song, query: string): boolean => {
+    if (!query) return true;
+    const title = (s.titulo || '').toLowerCase();
+    const artist = (s.artista || '').toLowerCase();
+    const key = (s.tonalidad || '').toLowerCase();
+    const albumName = (s.albumDisco || s.album || '').toLowerCase();
+    const speech = (s.speechTranscription || '').toLowerCase();
+    return (
+      title.includes(query) ||
+      artist.includes(query) ||
+      key.includes(query) ||
+      albumName.includes(query) ||
+      speech.includes(query)
+    );
+  };
+
   const filteredAlbums = allNonEmptyAlbums.filter((album) => {
-    if (activeFilterTab === 'albumes') {
-      return album !== 'Singles / Sin Disco';
+    if (activeFilterTab === 'albumes' && album === 'Singles / Sin Disco') {
+      return false;
     }
-    if (activeFilterTab === 'singles') {
-      return album === 'Singles / Sin Disco';
+    if (activeFilterTab === 'singles' && album !== 'Singles / Sin Disco') {
+      return false;
     }
-    return true;
+
+    if (!cleanSearchQuery) return true;
+
+    // Si el nombre del disco coincide con la búsqueda
+    if (album.toLowerCase().includes(cleanSearchQuery)) return true;
+
+    // O si alguna de sus canciones coincide con la búsqueda
+    const albumSongs = safeSongs.filter((s) => {
+      const songAlbum = s.albumDisco || s.album || '';
+      if (album === 'Singles / Sin Disco') {
+        return !songAlbum || songAlbum === 'Singles / Sin Disco';
+      }
+      return songAlbum === album;
+    });
+
+    return albumSongs.some((s) => songMatchesSearch(s, cleanSearchQuery));
   });
 
   const toggleAlbumExpand = (albumName: string) => {
@@ -331,8 +365,34 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           </div>
         </div>
 
-        {/* Filter Pills, Expand All, & Create Album */}
+        {/* Filter Pills, Search Bar, Expand All, & Create Album */}
         <div className="flex items-center gap-3 flex-wrap">
+          {/* Search Input Bar */}
+          <div className="relative min-w-[200px] sm:min-w-[240px] flex-1">
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar canción, tono, letra..."
+              className={`w-full pl-9 pr-8 py-1.5 rounded-full text-xs font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[#1db954]/50 ${
+                isStitchLight
+                  ? 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-400 focus:bg-white'
+                  : 'bg-neutral-900 border-neutral-800 text-white placeholder-neutral-500 focus:border-[#1db954]/60'
+              }`}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-0.5 rounded-full transition-colors cursor-pointer"
+                title="Limpiar búsqueda"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
           {/* Tabs */}
           <div className={`p-1 rounded-full border flex items-center gap-1 ${isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900 border-neutral-800'}`}>
             <button
@@ -498,10 +558,16 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         {filteredAlbums.map((album) => {
           const rawAlbumSongs = safeSongs.filter((s) => {
             const songAlbum = s.albumDisco || s.album || '';
-            if (album === 'Singles / Sin Disco') {
-              return !songAlbum || songAlbum === 'Singles / Sin Disco';
+            const belongsToAlbum = album === 'Singles / Sin Disco'
+              ? (!songAlbum || songAlbum === 'Singles / Sin Disco')
+              : songAlbum === album;
+
+            if (!belongsToAlbum) return false;
+
+            if (cleanSearchQuery && !album.toLowerCase().includes(cleanSearchQuery)) {
+              return songMatchesSearch(s, cleanSearchQuery);
             }
-            return songAlbum === album;
+            return true;
           });
 
           const sortedAlbumSongs = [...rawAlbumSongs].sort((a, b) => {
@@ -511,7 +577,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           });
 
           const coverUrl = rawAlbumSongs.find((s) => s.portadaUrl)?.portadaUrl;
-          const isExpanded = expandedAlbums[album] === true;
+          const isExpanded = cleanSearchQuery ? true : expandedAlbums[album] === true;
 
           const isPlayingAlbum = !!(
             activePlayerSong &&
@@ -755,7 +821,21 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         {filteredAlbums.length === 0 && (
           <div className="text-center py-16 opacity-60">
             <Disc3 className="w-12 h-12 mx-auto mb-3 text-neutral-500" />
-            <p className="text-sm font-mono">No hay discos creados en esta categoría.</p>
+            <p className="text-sm font-mono">
+              {cleanSearchQuery
+                ? `No se encontraron canciones ni discos que coincidan con "${searchQuery}".`
+                : 'No hay discos creados en esta categoría.'}
+            </p>
+            {cleanSearchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="mt-3 px-3 py-1.5 rounded-full bg-[#1db954]/20 text-[#1ed760] border border-[#1db954]/30 text-xs font-mono font-bold hover:bg-[#1db954]/30 transition-all cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>Limpiar búsqueda</span>
+              </button>
+            )}
           </div>
         )}
       </div>

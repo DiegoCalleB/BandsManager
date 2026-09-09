@@ -843,8 +843,19 @@ export const api = {
 
   // Advanced AI analysis of setlist energy and pacing
   async analyzeSetlistWithAI(setlistId: string): Promise<{ success: boolean; analysis?: any; error?: string }> {
-    return request(`/api/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
+    return request(`/api/repertorio/setlists/${encodeURIComponent(setlistId)}/analyze`, {
       method: 'POST'
+    });
+  },
+
+  async transposeAudio(data: {
+    songId: string;
+    audioUrl: string;
+    semitones: number;
+  }): Promise<{ success: boolean; transposedUrl?: string; error?: string }> {
+    return request('/api/transpose-audio', {
+      method: 'POST',
+      body: JSON.stringify(data)
     });
   },
 

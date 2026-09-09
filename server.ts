@@ -33,6 +33,7 @@ import aiMusicRouter from "./server/routes/ai_music.js";
 import campaignsRouter from "./server/routes/campaigns.js";
 import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
+import transposeRouter from "./server/routes/transposeRoute.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -105,6 +106,7 @@ app.use("/api/upload", uploadRouter);
 app.use("/api", campaignsRouter);
 app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
+app.use("/api", transposeRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
 // archivo subido se cuela sin pasar por la validación de tipo de server/routes/upload.ts.
@@ -112,6 +114,11 @@ app.use("/uploads", (req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   next();
 }, express.static(path.join(process.cwd(), "public", "uploads")));
+
+app.use("/transposed", (req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+}, express.static(path.join(process.cwd(), "public", "transposed")));
 
 // Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
 app.get(["/health", "/api/health"], (req, res) => {
