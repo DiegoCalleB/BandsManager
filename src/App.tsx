@@ -1503,6 +1503,7 @@ export default function App() {
  onSetMainBand={handleSetMainBand}
  onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
  onNavigateToPlanes={() => handleNavigate('planes')}
+ onOpenProfileWizard={() => { setShowUserProfileModal(false); setShowProfileWizardModal(true); }}
  />
  )}
 

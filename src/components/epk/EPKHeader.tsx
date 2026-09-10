@@ -9,6 +9,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { EPKBlockId, EPK_BLOCKS, EPKHealthStats } from './epkBlocks';
+import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
 
 interface EPKHeaderProps {
   activeBlock: EPKBlockId;
@@ -18,6 +19,7 @@ interface EPKHeaderProps {
   onCopyUrl: () => void;
   onSave: () => void;
   health: EPKHealthStats;
+  onOpenTutorial?: () => void;
 }
 
 export const EPKHeader: React.FC<EPKHeaderProps> = ({
@@ -27,7 +29,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
   copiedPublicUrl,
   onCopyUrl,
   onSave,
-  health
+  health,
+  onOpenTutorial
 }) => {
   const [showAiNotice, setShowAiNotice] = useState(false);
 
@@ -55,6 +58,8 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
 
         {/* ACCIONES PRINCIPALES */}
         <div className="flex flex-wrap items-center gap-2 pt-1 md:pt-0">
+          {onOpenTutorial && <ModuleTutorialTrigger onOpen={onOpenTutorial} />}
+
           <button
             type="button"
             onClick={onCopyUrl}

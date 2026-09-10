@@ -56,7 +56,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  availableBands = [],
  onSetMainBand,
  onOpenBandSwitcher,
- onNavigateToPlanes
+ onNavigateToPlanes,
+ onOpenProfileWizard
 }) => {
  const { language, setLanguage } = useLanguage();
  const [name, setName] = useState(currentUser.name || '');
@@ -403,6 +404,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  </div>
  </div>
 
+ <div className="flex items-center gap-2 shrink-0">
  {!isHighestPlan && !isPromoUser && (
  <button
  type="button"
@@ -413,6 +415,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  <span>Upgrade</span>
  </button>
  )}
+
+ {onOpenProfileWizard && (
+ <button
+ type="button"
+ onClick={onOpenProfileWizard}
+ className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold font-mono transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+ title="Abrir Asistente de Inicio / Onboarding"
+ >
+ <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+ <span>Guía de Inicio</span>
+ </button>
+ )}
+ </div>
  </div>
  </div>
 

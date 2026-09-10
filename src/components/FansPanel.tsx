@@ -17,6 +17,9 @@ import { FAN_FORM_LANGUAGES, FanFormLanguage, DEFAULT_FAN_FORM_LANGUAGE, isFanFo
 import { QrExportModal } from './QrExportModal';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -75,6 +78,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   onUpdateConcert,
   initialConcertId
 }) => {
+  const fansTutorial = useModuleTutorial('fans');
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
   const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
@@ -505,15 +509,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             Captura de fans en directo con códigos QR, métricas de redes, comunidad interactiva y analítica de crecimiento.
           </p>
         </div>
-        <div className="relative shrink-0">
-          <button
-            type="button"
-            onClick={() => setShowFansHeaderMenu(v => !v)}
-            title="Previsualizar formulario, copiar enlace, registrar fan manual o exportar CSV"
-            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
-          >
-            <MoreHorizontal className="w-4 h-4" />
-          </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <ModuleTutorialTrigger onOpen={fansTutorial.openTutorial} />
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowFansHeaderMenu(v => !v)}
+              title="Previsualizar formulario, copiar enlace, registrar fan manual o exportar CSV"
+              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
+            >
+              <MoreHorizontal className="w-4 h-4" />
+            </button>
           {showFansHeaderMenu && (
             <>
               <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
@@ -551,6 +557,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           )}
         </div>
       </div>
+    </div>
 
       {/* Tabs (metrics tab hidden for Promo) */}
       <div className="flex overflow-x-auto border-b border-slate-800 hide-scrollbar gap-1">
@@ -1699,6 +1706,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         concerts={concerts}
         initialConcertId={selectedConcertId}
         initialLanguage={qrLanguage}
+      />
+      {/* MODULE TUTORIAL MODAL */}
+      <ModuleTutorialModal
+        isOpen={fansTutorial.isOpen}
+        onClose={fansTutorial.closeTutorial}
+        moduleId="fans"
       />
     </div>
   );

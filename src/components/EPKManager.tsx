@@ -17,6 +17,8 @@ import { EPKPrensaBlock } from './epk/EPKPrensaBlock';
 import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
 import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
 import { normalizePlan } from '../utils/planPermissions';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 
 interface EPKManagerProps {
   epkConfig?: Partial<EPKConfig>;
@@ -170,6 +172,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   currentUser,
   isPromoPlan: isPromoPlanProp
 }) => {
+  const epkTutorial = useModuleTutorial('epk');
   const isPromoUser = isPromoPlanProp ?? (normalizePlan(currentUser?.plan) === 'promo');
   // App.tsx monta este componente sin pasarle 'songs', así que el selector de temas
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
@@ -595,6 +598,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         onCopyUrl={handleCopyUrl}
         onSave={handleSave}
         health={healthStats}
+        onOpenTutorial={epkTutorial.openTutorial}
       />
 
       {savedSuccess && (
@@ -737,6 +741,12 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         currentBandName={currentUser?.bandName || config.contactoBooking?.nombre || (isBakandeya ? 'Bakandeya' : 'Tu Banda')}
         currentBandLogo={config.logoUrl}
         epkConfig={config}
+      />
+      {/* MODULE TUTORIAL MODAL */}
+      <ModuleTutorialModal
+        isOpen={epkTutorial.isOpen}
+        onClose={epkTutorial.closeTutorial}
+        moduleId="epk"
       />
     </div>
   );

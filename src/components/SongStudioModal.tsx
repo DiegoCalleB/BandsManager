@@ -15,6 +15,9 @@ import { ModalPortal } from './common/ModalPortal';
 import { useStudioShareModal } from '../hooks/useStudioShareModal';
 import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
@@ -69,6 +72,7 @@ export default function SongStudioModal({
   onUpdateSong,
   currentUsername = 'Diego'
 }: SongStudioModalProps) {
+  const studioTutorial = useModuleTutorial('studio');
   const songRef = useRef<Song>(song);
   useEffect(() => {
     songRef.current = song;
@@ -1733,6 +1737,8 @@ export default function SongStudioModal({
                   <Sparkles className={`w-3.5 h-3.5 ${song.favoritoGeneral ? 'text-amber-400 fill-amber-400' : ''}`} />
                   <span>{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
                 </button>
+
+                <ModuleTutorialTrigger onOpen={studioTutorial.openTutorial} />
 
                 {/* Menú Desplegable de Herramientas Secundarias */}
                 <div className="relative">
@@ -3626,6 +3632,13 @@ export default function SongStudioModal({
           const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
           onUpdateSong({ ...song, audioIdeas: updatedIdeas });
         }}
+      />
+
+      {/* MODULE TUTORIAL MODAL */}
+      <ModuleTutorialModal
+        isOpen={studioTutorial.isOpen}
+        onClose={studioTutorial.closeTutorial}
+        moduleId="studio"
       />
 
     </div>

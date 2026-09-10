@@ -41,6 +41,8 @@ import { EscenarioView } from './repertorio/EscenarioView';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { 
  uploadFileToServer, parseGoogleDriveAudioUrl, isGoogleDriveUrl, 
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
@@ -344,7 +346,8 @@ export default function RepertorioSetlists({
  view,
  currentUser
 }: RepertorioSetlistsProps) {
- const { t } = useLanguage();
+  const repertorioTutorial = useModuleTutorial('repertorio');
+  const { t } = useLanguage();
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName || 'Tu Banda';
 
@@ -2412,6 +2415,7 @@ export default function RepertorioSetlists({
     albumCount={albumsList.filter(a => a !== 'todos').length}
     isSidebarCollapsed={isSidebarCollapsed}
     onToggleSidebar={() => setIsSidebarCollapsed(prev => !prev)}
+    onOpenTutorial={repertorioTutorial.openTutorial}
   />
 
   {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
@@ -4575,6 +4579,12 @@ export default function RepertorioSetlists({
       onClose={() => setPerformanceSetlistId(null)}
     />
   )}
+  {/* MODULE TUTORIAL MODAL */}
+  <ModuleTutorialModal
+    isOpen={repertorioTutorial.isOpen}
+    onClose={repertorioTutorial.closeTutorial}
+    moduleId="repertorio"
+  />
 </div>
  );
 }

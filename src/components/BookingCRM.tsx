@@ -33,6 +33,9 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { BookingCampaign } from '../types';
 import { BulkLeadsActionBar } from './booking/BulkLeadsActionBar';
 import { BulkProgressModal, BulkProgressItem } from './booking/BulkProgressModal';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 const matchesMedioType = (l: Lead, filter: string): boolean => {
   if (!filter || filter === 'todos') return true;
   const txt = `${l.genero || ''} ${l.nombre_sala || ''} ${l.tipo || ''} ${l.icono || ''} ${l.notas || ''} ${l.contexto_extra || ''}`.toLowerCase();
@@ -114,6 +117,7 @@ export default function BookingCRM({
   activeCampaign,
   onCampaignChange
 }: BookingCRMProps) {
+  const bookingTutorial = useModuleTutorial('booking');
   const effectiveBandName = bandName || 'Tu Banda';
   const [sectionTab, setSectionTab] = useState<'salas' | 'medios' | 'grupos'>(initialSection || 'salas');
 
@@ -1151,6 +1155,8 @@ export default function BookingCRM({
           <PlusCircle className="w-3.5 h-3.5" />
           <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
         </button>
+
+        <ModuleTutorialTrigger onOpen={bookingTutorial.openTutorial} />
 
         <button
           id="export-leads-btn"
@@ -2706,6 +2712,13 @@ export default function BookingCRM({
     currentIndex={bulkProgressState.currentIndex}
     totalCount={bulkProgressState.totalCount}
     isCompleted={bulkProgressState.isCompleted}
+  />
+
+  {/* MODULE TUTORIAL MODAL */}
+  <ModuleTutorialModal
+    isOpen={bookingTutorial.isOpen}
+    onClose={bookingTutorial.closeTutorial}
+    moduleId="booking"
   />
 
  </div>

@@ -4,6 +4,7 @@ import {
   Check, SlidersHorizontal
 } from 'lucide-react';
 import { ThemeColors, Setlist } from '../../types';
+import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
 
 interface RepertorioNavBarProps {
   colors: ThemeColors;
@@ -23,6 +24,7 @@ interface RepertorioNavBarProps {
   albumCount: number;
   isSidebarCollapsed: boolean;
   onToggleSidebar: () => void;
+  onOpenTutorial?: () => void;
 }
 
 export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
@@ -42,7 +44,8 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
   songCount,
   albumCount,
   isSidebarCollapsed,
-  onToggleSidebar
+  onToggleSidebar,
+  onOpenTutorial
 }) => {
   const [showSetlistDropdown, setShowSetlistDropdown] = useState(false);
   const activeSetlist = setlists.find(s => s.id === activeSetlistId) || setlists[0];
@@ -200,6 +203,8 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 <Plus className="w-3.5 h-3.5" />
                 <span className="hidden xs:inline">Nuevo Setlist</span>
               </button>
+
+              {onOpenTutorial && <ModuleTutorialTrigger onOpen={onOpenTutorial} />}
 
               <button
                 type="button"
