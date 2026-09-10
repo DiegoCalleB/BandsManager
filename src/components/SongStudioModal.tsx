@@ -411,7 +411,7 @@ export default function SongStudioModal({
         slaveEl.volume = isMuted ? 0 : (tr.volumen ?? 1);
 
         const trackOffsetSec = (tr.desfaseMs || 0) / 1000;
-        const targetSlaveTime = masterTime - trackOffsetSec;
+        const targetSlaveTime = masterTime + trackOffsetSec;
 
         // If master has not reached track offset yet, keep slave paused at 0
         if (targetSlaveTime < 0) {
@@ -499,7 +499,7 @@ export default function SongStudioModal({
       const el = trackAudioRefs.current[tr.id];
       if (el) {
         el.pause();
-        const targetTrackTime = Math.max(0, startPos - ((tr.desfaseMs || 0) / 1000));
+        const targetTrackTime = Math.max(0, startPos + ((tr.desfaseMs || 0) / 1000));
         try { el.currentTime = targetTrackTime; } catch {}
         el.playbackRate = 1.0;
       }
@@ -560,7 +560,7 @@ export default function SongStudioModal({
       if (el) {
         const trackDur = getSafeTrackDuration(el);
         const trackOffsetSec = (tr.desfaseMs || 0) / 1000;
-        const targetTrackTime = Math.max(0, startPos - trackOffsetSec);
+        const targetTrackTime = Math.max(0, startPos + trackOffsetSec);
 
         if (trackDur > 0 && startPos >= trackDur) {
           try { el.currentTime = trackDur; } catch {}
@@ -823,7 +823,7 @@ export default function SongStudioModal({
     const el = trackAudioRefs.current[trackId];
     if (el) {
       const masterTime = currentTimeMap[idea.id] || 0;
-      const targetTime = Math.max(0, masterTime - (newDesfaseMs / 1000));
+      const targetTime = Math.max(0, masterTime + (newDesfaseMs / 1000));
       try { el.currentTime = targetTime; } catch {}
     }
 
@@ -1076,7 +1076,7 @@ export default function SongStudioModal({
           const serverUrl = await uploadFileToServer(file);
           const trackName = newTrackName.trim() || `Pista ${tracks.length + 1}`;
           const instrument = newTrackInstrument.trim() || undefined;
-          saveNewTrackToIdea(idea, serverUrl, trackName, instrument, 0);
+          saveNewTrackToIdea(idea, serverUrl, trackName, instrument, totalLagToTrimMs);
         } catch (err) {
           console.error("Error uploading track recording:", err);
           alert("Error al guardar la nueva pista en el disco del servidor.");
