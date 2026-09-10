@@ -248,7 +248,10 @@ export default function SongStudioModal({
   // --- CONFIRMATION MODAL STATE FOR DELETIONS ---
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
     title: string;
+    description: string;
+    onConfirm: () => void;
   } | null>(null);
+
 
   // --- TRACK EQ & MASTER EXPORT STATE ---
   const [expandedTrackSettingsId, setExpandedTrackSettingsId] = useState<string | null>(null);
@@ -963,7 +966,7 @@ export default function SongStudioModal({
     setIsExportingMaster(true);
     try {
       const tracksToMix = tracks.map(tr => ({
-        url: resolvedAudioUrls[tr.id] || tr.audioUrl,
+        audioUrl: resolvedAudioUrls[tr.id] || tr.audioUrl,
         volumen: tr.volumen ?? 1,
         pan: tr.pan ?? 0,
         muted: tr.muted ?? false,
@@ -974,7 +977,7 @@ export default function SongStudioModal({
         eqHigh: tr.eqHigh ?? 0,
       }));
 
-      const wavBlob = await exportMasterMixAudioBlob(tracksToMix);
+      const wavBlob = await exportMasterMixAudioBlob(tracksToMix, resolveAudioUrl);
       const downloadUrl = URL.createObjectURL(wavBlob);
       const link = document.createElement('a');
       link.href = downloadUrl;

@@ -458,7 +458,7 @@ export interface MasterMixTrackInput {
  */
 export const exportMasterMixAudioBlob = async (
   tracks: MasterMixTrackInput[],
-  resolveUrlFn: (url: string) => Promise<string>
+  resolveUrlFn?: (url: string) => Promise<string>
 ): Promise<Blob> => {
   const activeTracks = tracks.filter(t => !t.muted && t.audioUrl);
   if (activeTracks.length === 0) {
@@ -473,8 +473,9 @@ export const exportMasterMixAudioBlob = async (
 
   for (const tr of activeTracks) {
     try {
-      const resolved = await resolveUrlFn(tr.audioUrl);
+      const resolved = resolveUrlFn ? await resolveUrlFn(tr.audioUrl) : tr.audioUrl;
       const res = await fetch(resolved);
+
       const arrBuf = await res.arrayBuffer();
       const audioBuf = await tempCtx.decodeAudioData(arrBuf);
       const offsetSec = (tr.desfaseMs || 0) / 1000;
