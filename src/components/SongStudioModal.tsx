@@ -251,8 +251,9 @@ export default function SongStudioModal({
   } | null>(null);
 
   // --- TRACK EQ & MASTER EXPORT STATE ---
-  const [expandedEqTrackId, setExpandedEqTrackId] = useState<string | null>(null);
+  const [expandedTrackSettingsId, setExpandedTrackSettingsId] = useState<string | null>(null);
   const [isExportingMaster, setIsExportingMaster] = useState<boolean>(false);
+
 
 
   // Audio elements refs map for multitrack: trackAudioRefs.current[trackId]
@@ -2645,7 +2646,7 @@ export default function SongStudioModal({
                           return (
                             <div 
                               key={tr.id}
-                              className={`p-2.5 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-all ${
+                              className={`p-2.5 rounded-xl border flex flex-col gap-2 transition-all ${
                                 isMuted 
                                   ? 'bg-black/40 border-neutral-800 opacity-60' 
                                   : isSolo 
@@ -2653,55 +2654,58 @@ export default function SongStudioModal({
                                     : 'bg-white/5 border-white/10'
                               }`}
                             >
-                              <div className="w-full sm:w-56 shrink-0 flex flex-col justify-between border-b sm:border-b-0 sm:border-r border-white/5 pb-2 sm:pb-0 sm:pr-3">
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <span className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                                    {idx + 1}
-                                  </span>
+                              {/* Main Track Row */}
+                              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                {/* Track Info & Mute/Solo */}
+                                <div className="w-full sm:w-60 shrink-0 flex items-center justify-between gap-2">
+                                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                                    <span className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                                      {idx + 1}
+                                    </span>
 
-                                  {isEditing ? (
-                                    <div className="flex items-center gap-1 min-w-0 flex-1">
-                                      <input
-                                        type="text"
-                                        value={editingTrackName}
-                                        onChange={(e) => setEditingTrackName(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                        className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold min-w-0"
-                                        autoFocus
-                                      />
-                                      <button
-                                        type="button"
-                                        onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                        className="p-1 text-emerald-400 hover:text-emerald-300 shrink-0"
-                                      >
-                                        <Check className="w-3.5 h-3.5" />
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    <div className="flex items-center gap-1 min-w-0 flex-1">
-                                      <span className="text-xs font-bold text-white truncate font-mono">{tr.nombre}</span>
-                                      {tr.instrumento && (
-                                        <span className="text-[10px] text-neutral-400 font-mono bg-white/5 px-1 py-0.5 rounded truncate max-w-[60px]">
-                                          {tr.instrumento}
-                                        </span>
-                                      )}
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          setEditingTrackId(tr.id);
-                                          setEditingTrackName(tr.nombre);
-                                        }}
-                                        className="text-neutral-500 hover:text-neutral-300 shrink-0 ml-auto"
-                                        title="Editar nombre de pista"
-                                      >
-                                        <Edit2 className="w-3 h-3" />
-                                      </button>
-                                    </div>
-                                  )}
-                                </div>
-                                
-                                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-white/5 justify-between">
-                                  <div className="flex items-center gap-1">
+                                    {isEditing ? (
+                                      <div className="flex items-center gap-1 min-w-0 flex-1">
+                                        <input
+                                          type="text"
+                                          value={editingTrackName}
+                                          onChange={(e) => setEditingTrackName(e.target.value)}
+                                          onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
+                                          className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold min-w-0"
+                                          autoFocus
+                                        />
+                                        <button
+                                          type="button"
+                                          onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
+                                          className="p-1 text-emerald-400 hover:text-emerald-300 shrink-0"
+                                        >
+                                          <Check className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center gap-1 min-w-0 flex-1">
+                                        <span className="text-xs font-bold text-white truncate font-mono">{tr.nombre}</span>
+                                        {tr.instrumento && (
+                                          <span className="text-[10px] text-neutral-400 font-mono bg-white/5 px-1 py-0.5 rounded truncate max-w-[60px]">
+                                            {tr.instrumento}
+                                          </span>
+                                        )}
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            setEditingTrackId(tr.id);
+                                            setEditingTrackName(tr.nombre);
+                                          }}
+                                          className="text-neutral-500 hover:text-neutral-300 shrink-0 ml-0.5"
+                                          title="Editar nombre de pista"
+                                        >
+                                          <Edit2 className="w-3 h-3" />
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Mute & Solo Quick Toggles */}
+                                  <div className="flex items-center gap-1 shrink-0">
                                     <button
                                       type="button"
                                       onClick={() => handleToggleMuteTrack(idea, tr.id)}
@@ -2726,37 +2730,16 @@ export default function SongStudioModal({
                                     >
                                       S
                                     </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleCleanTrackAudio(idea, tr)}
-                                      disabled={cleaningTrackId === tr.id}
-                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold cursor-pointer transition-all border ${
-                                        cleaningTrackId === tr.id
-                                          ? 'bg-amber-500/30 text-amber-300 border-amber-500/50 animate-pulse'
-                                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
-                                      }`}
-                                      title="Limpiar ruido de fondo y zumbidos de esta pista con Filtro Studio DSP (High-Pass 80Hz + Notch)"
-                                    >
-                                      {cleaningTrackId === tr.id ? '🧹 Clean...' : '🧹 Limpiar'}
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => setExpandedEqTrackId(expandedEqTrackId === tr.id ? null : tr.id)}
-                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold cursor-pointer transition-all border ${
-                                        expandedEqTrackId === tr.id
-                                          ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
-                                          : 'bg-purple-500/10 text-purple-400 border-purple-500/30 hover:bg-purple-500/20'
-                                      }`}
-                                      title="Ecualizador de 3 bandas (Graves, Medios, Agudos)"
-                                    >
-                                      🎛️ EQ
-                                    </button>
                                   </div>
-                                  <div className="flex items-center gap-1 flex-1">
+                                </div>
+
+                                {/* Volume Slider & Advanced Settings Toggle */}
+                                <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
+                                  <div className="flex items-center gap-1.5 flex-1 min-w-[120px]">
                                     {vol === 0 || isMuted ? (
-                                      <VolumeX className="w-3 h-3 text-rose-400 shrink-0" />
+                                      <VolumeX className="w-3.5 h-3.5 text-rose-400 shrink-0" />
                                     ) : (
-                                      <Volume2 className="w-3 h-3 text-indigo-400 shrink-0" />
+                                      <Volume2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
                                     )}
                                     <input
                                       type="range"
@@ -2769,207 +2752,44 @@ export default function SongStudioModal({
                                       title={`Volumen: ${Math.round(vol * 100)}%`}
                                     />
                                   </div>
-                                  <div className="flex items-center gap-1 shrink-0 w-20" title={`Paneo: ${tr.pan ? (tr.pan < 0 ? `L ${Math.round(Math.abs(tr.pan)*100)}%` : `R ${Math.round(tr.pan*100)}%`) : 'Centro'}`}>
-                                    <span className="text-[8px] font-mono font-bold text-neutral-400">L</span>
-                                    <input
-                                      type="range"
-                                      min={-1}
-                                      max={1}
-                                      step={0.05}
-                                      value={tr.pan ?? 0}
-                                      onChange={(e) => handleTrackPanChange(idea, tr.id, parseFloat(e.target.value))}
-                                      className="w-full accent-purple-400 h-1 bg-neutral-800 rounded cursor-pointer"
-                                    />
-                                    <span className="text-[8px] font-mono font-bold text-neutral-400">R</span>
-                                  </div>
 
+                                  {/* Active DSP Badge (shows if desfase or pan or EQ is active) */}
+                                  {(tr.desfaseMs || 0) !== 0 && (
+                                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
+                                      ⏱️ {tr.desfaseMs && tr.desfaseMs > 0 ? `+${tr.desfaseMs}ms` : `${tr.desfaseMs}ms`}
+                                    </span>
+                                  )}
+
+                                  {/* Toggle Advanced Track Settings Drawer */}
+                                  <button
+                                    type="button"
+                                    onClick={() => setExpandedTrackSettingsId(expandedTrackSettingsId === tr.id ? null : tr.id)}
+                                    className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all border flex items-center gap-1 shrink-0 ${
+                                      expandedTrackSettingsId === tr.id
+                                        ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
+                                        : 'bg-white/5 text-neutral-300 border-white/10 hover:bg-white/10'
+                                    }`}
+                                    title="Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia"
+                                  >
+                                    <Sliders className="w-3 h-3 text-purple-300" />
+                                    <span>⚙️ Ajustes</span>
+                                  </button>
+
+                                  {/* Delete Track */}
                                   <button
                                     type="button"
                                     onClick={() => handleDeleteTrack(idea, tr.id)}
-                                    className="text-neutral-500 hover:text-rose-400 p-0.5 shrink-0"
+                                    className="text-neutral-500 hover:text-rose-400 p-1 shrink-0 ml-1"
                                     title="Borrar pista"
                                   >
                                     <X className="w-3.5 h-3.5" />
                                   </button>
                                 </div>
-
-                                {/* Micro Latency / Desfase Nudge Control */}
-                                <div className="flex flex-col gap-1 mt-1.5 pt-1.5 border-t border-white/5 text-[9px] font-mono text-neutral-400">
-                                  <div className="flex items-center justify-between gap-1">
-                                    <span className="shrink-0 text-amber-400 font-bold flex items-center gap-0.5" title="Ajuste fino de latencia en milisegundos (-adelantar/+atrasar)">
-                                      ⏱️ Desfase:
-                                    </span>
-                                    <div className="flex items-center gap-0.5">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleAutoSyncTrackLatency(idea, tr)}
-                                        className="px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black border border-amber-500/40 cursor-pointer transition-colors flex items-center gap-0.5 shadow-xs"
-                                        title="Sincronizar automáticamente por IA/DSP comparando las ondas de sonido de la mezcla"
-                                      >
-                                        ⚡ Auto IA
-                                      </button>
-                                      <span className={`px-1.5 py-0.5 rounded font-bold font-mono text-[9px] min-w-[42px] text-center ${
-                                        (tr.desfaseMs || 0) !== 0 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-black/40 text-neutral-400'
-                                      }`}>
-                                        {tr.desfaseMs && tr.desfaseMs > 0 ? `+${tr.desfaseMs}ms` : `${tr.desfaseMs || 0}ms`}
-                                      </span>
-                                      {(tr.desfaseMs || 0) !== 0 && (
-                                        <button
-                                          type="button"
-                                          onClick={() => handleTrackDesfaseChange(idea, tr.id, 0)}
-                                          className="px-1 py-0.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-[8px] cursor-pointer ml-0.5"
-                                          title="Resetear desfase a 0ms"
-                                        >
-                                          Reset
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  {/* Quick Micro Adjust & Fine Nudge Buttons */}
-                                  <div className="flex items-center gap-0.5 justify-end flex-wrap mt-1">
-                                    <button
-                                      type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 50)}
-                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-[9px] cursor-pointer"
-                                      title="-50ms"
-                                    >
-                                      -50
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 10)}
-                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
-                                      title="Ajuste fino -10ms"
-                                    >
-                                      -10
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 1)}
-                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
-                                      title="Ajuste fino -1ms"
-                                    >
-                                      -1
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 1)}
-                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
-                                      title="Ajuste fino +1ms"
-                                    >
-                                      +1
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 10)}
-                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
-                                      title="Ajuste fino +10ms"
-                                    >
-                                      +10
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 50)}
-                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-[9px] cursor-pointer"
-                                      title="+50ms"
-                                    >
-                                      +50
-                                    </button>
-                                  </div>
-
-                                  {/* Fine Desfase Range Slider (-500ms to +500ms) */}
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-[8px] font-mono text-neutral-500 shrink-0">-500ms</span>
-                                    <input
-                                      type="range"
-                                      min={-500}
-                                      max={500}
-                                      step={1}
-                                      value={tr.desfaseMs || 0}
-                                      onChange={(e) => handleTrackDesfaseChange(idea, tr.id, Number(e.target.value))}
-                                      className="w-full h-1 bg-black/40 rounded appearance-none cursor-pointer accent-amber-400"
-                                      title="Deslizar para sincronizar desfase en tiempo real (-500ms a +500ms)"
-                                    />
-                                    <span className="text-[8px] font-mono text-neutral-500 shrink-0">+500ms</span>
-                                  </div>
-
-                                  {/* 3-Band Equalizer Panel (Low, Mid, High) */}
-                                  {expandedEqTrackId === tr.id && (
-                                    <div className="mt-2 p-2 rounded-lg bg-purple-950/30 border border-purple-500/20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 font-mono text-[9px] text-purple-200">
-                                      <div className="flex-1 flex flex-col gap-1">
-                                        <div className="flex justify-between items-center text-neutral-400">
-                                          <span>🔊 Graves (100Hz)</span>
-                                          <span className="font-bold text-purple-300">{tr.eqLow || 0}dB</span>
-                                        </div>
-                                        <input
-                                          type="range"
-                                          min={-12}
-                                          max={12}
-                                          step={1}
-                                          value={tr.eqLow ?? 0}
-                                          onChange={(e) => handleTrackEqChange(idea, tr.id, 'low', parseFloat(e.target.value))}
-                                          className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
-                                        />
-                                      </div>
-
-                                      <div className="flex-1 flex flex-col gap-1">
-                                        <div className="flex justify-between items-center text-neutral-400">
-                                          <span>📻 Medios (1kHz)</span>
-                                          <span className="font-bold text-purple-300">{tr.eqMid || 0}dB</span>
-                                        </div>
-                                        <input
-                                          type="range"
-                                          min={-12}
-                                          max={12}
-                                          step={1}
-                                          value={tr.eqMid ?? 0}
-                                          onChange={(e) => handleTrackEqChange(idea, tr.id, 'mid', parseFloat(e.target.value))}
-                                          className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
-                                        />
-                                      </div>
-
-                                      <div className="flex-1 flex flex-col gap-1">
-                                        <div className="flex justify-between items-center text-neutral-400">
-                                          <span>✨ Agudos (8kHz)</span>
-                                          <span className="font-bold text-purple-300">{tr.eqHigh || 0}dB</span>
-                                        </div>
-                                        <input
-                                          type="range"
-                                          min={-12}
-                                          max={12}
-                                          step={1}
-                                          value={tr.eqHigh ?? 0}
-                                          onChange={(e) => handleTrackEqChange(idea, tr.id, 'high', parseFloat(e.target.value))}
-                                          className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
-                                        />
-                                      </div>
-
-                                      {(tr.eqLow !== 0 || tr.eqMid !== 0 || tr.eqHigh !== 0) && (
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            handleTrackEqChange(idea, tr.id, 'low', 0);
-                                            handleTrackEqChange(idea, tr.id, 'mid', 0);
-                                            handleTrackEqChange(idea, tr.id, 'high', 0);
-                                          }}
-                                          className="px-1.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-[8px] cursor-pointer shrink-0 self-end sm:self-center"
-                                          title="Resetear EQ a 0dB"
-                                        >
-                                          Reset EQ
-                                        </button>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-
                               </div>
 
-                              {/* Right Panel: Waveform */}
-                              <div className="flex-1 min-w-0 flex items-center justify-center p-1 relative min-h-[48px] bg-black/20 rounded">
+                              {/* Waveform Visualizer */}
+                              <div className="w-full flex items-center justify-center p-1 relative min-h-[44px] bg-black/20 rounded">
                                 <WaveformTrack 
-                                  // Sin retorno implícito: en React 19 lo que devuelve un ref
-                                  // callback se trata como función de limpieza y reventaría al desmontar.
                                   ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
                                   audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
                                   color={isSolo ? '#f59e0b' : (isMuted ? '#52525b' : '#818cf8')}
@@ -2988,6 +2808,194 @@ export default function SongStudioModal({
                                   }}
                                 />
                               </div>
+
+                              {/* Collapsible Advanced Track Settings Drawer (Pan, EQ, Latency Nudge) */}
+                              {expandedTrackSettingsId === tr.id && (
+                                <div className="mt-1 p-3 rounded-xl bg-purple-950/20 border border-purple-500/20 space-y-3 font-mono text-[10px] text-purple-200">
+                                  {/* Row 1: Paneo Estéreo & Limpiar Zumbidos */}
+                                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-purple-500/10 pb-2">
+                                    {/* Stereo Pan Slider */}
+                                    <div className="flex items-center gap-2 flex-1 min-w-[200px]" title={`Paneo: ${tr.pan ? (tr.pan < 0 ? `L ${Math.round(Math.abs(tr.pan)*100)}%` : `R ${Math.round(tr.pan*100)}%`) : 'Centro'}`}>
+                                      <span className="text-neutral-400 font-bold shrink-0">🎧 Paneo Estéreo:</span>
+                                      <span className="text-[9px] font-bold text-neutral-400">L</span>
+                                      <input
+                                        type="range"
+                                        min={-1}
+                                        max={1}
+                                        step={0.05}
+                                        value={tr.pan ?? 0}
+                                        onChange={(e) => handleTrackPanChange(idea, tr.id, parseFloat(e.target.value))}
+                                        className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                      />
+                                      <span className="text-[9px] font-bold text-neutral-400">R</span>
+                                      <span className="text-[9px] text-purple-300 font-bold shrink-0 min-w-[36px] text-right">
+                                        {tr.pan ? (tr.pan < 0 ? `L${Math.round(Math.abs(tr.pan)*100)}` : `R${Math.round(tr.pan*100)}`) : 'C'}
+                                      </span>
+                                    </div>
+
+                                    {/* Clean Noise Filter Button */}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleCleanTrackAudio(idea, tr)}
+                                      disabled={cleaningTrackId === tr.id}
+                                      className={`px-2 py-1 rounded-lg font-bold cursor-pointer transition-all border shrink-0 flex items-center gap-1 ${
+                                        cleaningTrackId === tr.id
+                                          ? 'bg-amber-500/30 text-amber-300 border-amber-500/50 animate-pulse'
+                                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20'
+                                      }`}
+                                      title="Limpiar ruido de fondo y zumbidos de esta pista con Filtro Studio DSP (High-Pass 80Hz + Notch)"
+                                    >
+                                      <span>{cleaningTrackId === tr.id ? '🧹 Limpiando...' : '🧹 Filtro Zumbidos'}</span>
+                                    </button>
+                                  </div>
+
+                                  {/* Row 2: 3-Band EQ */}
+                                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-purple-500/10 pb-2">
+                                    <span className="text-neutral-400 font-bold shrink-0">🎛️ Ecualizador:</span>
+                                    
+                                    <div className="flex-1 flex flex-col gap-1">
+                                      <div className="flex justify-between items-center text-neutral-400 text-[9px]">
+                                        <span>Graves (100Hz)</span>
+                                        <span className="font-bold text-purple-300">{tr.eqLow || 0}dB</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min={-12}
+                                        max={12}
+                                        step={1}
+                                        value={tr.eqLow ?? 0}
+                                        onChange={(e) => handleTrackEqChange(idea, tr.id, 'low', parseFloat(e.target.value))}
+                                        className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                      />
+                                    </div>
+
+                                    <div className="flex-1 flex flex-col gap-1">
+                                      <div className="flex justify-between items-center text-neutral-400 text-[9px]">
+                                        <span>Medios (1kHz)</span>
+                                        <span className="font-bold text-purple-300">{tr.eqMid || 0}dB</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min={-12}
+                                        max={12}
+                                        step={1}
+                                        value={tr.eqMid ?? 0}
+                                        onChange={(e) => handleTrackEqChange(idea, tr.id, 'mid', parseFloat(e.target.value))}
+                                        className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                      />
+                                    </div>
+
+                                    <div className="flex-1 flex flex-col gap-1">
+                                      <div className="flex justify-between items-center text-neutral-400 text-[9px]">
+                                        <span>Agudos (8kHz)</span>
+                                        <span className="font-bold text-purple-300">{tr.eqHigh || 0}dB</span>
+                                      </div>
+                                      <input
+                                        type="range"
+                                        min={-12}
+                                        max={12}
+                                        step={1}
+                                        value={tr.eqHigh ?? 0}
+                                        onChange={(e) => handleTrackEqChange(idea, tr.id, 'high', parseFloat(e.target.value))}
+                                        className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                      />
+                                    </div>
+
+                                    {(tr.eqLow !== 0 || tr.eqMid !== 0 || tr.eqHigh !== 0) && (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          handleTrackEqChange(idea, tr.id, 'low', 0);
+                                          handleTrackEqChange(idea, tr.id, 'mid', 0);
+                                          handleTrackEqChange(idea, tr.id, 'high', 0);
+                                        }}
+                                        className="px-1.5 py-0.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-[8px] cursor-pointer shrink-0 self-end sm:self-center"
+                                        title="Resetear EQ a 0dB"
+                                      >
+                                        Reset EQ
+                                      </button>
+                                    )}
+                                  </div>
+
+                                  {/* Row 3: Latency Nudge & Sync IA */}
+                                  <div className="space-y-1.5">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="text-amber-400 font-bold flex items-center gap-1" title="Ajuste fino de latencia en milisegundos (-adelantar/+atrasar)">
+                                        ⏱️ Desfase de Latencia: <span className="text-white">{tr.desfaseMs && tr.desfaseMs > 0 ? `+${tr.desfaseMs}ms` : `${tr.desfaseMs || 0}ms`}</span>
+                                      </span>
+
+                                      <div className="flex items-center gap-1">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleAutoSyncTrackLatency(idea, tr)}
+                                          className="px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-black border border-amber-500/40 cursor-pointer transition-colors flex items-center gap-1 text-[9px]"
+                                          title="Sincronizar automáticamente por IA/DSP comparando las ondas de sonido de la mezcla"
+                                        >
+                                          ⚡ Sync Auto IA
+                                        </button>
+                                        {(tr.desfaseMs || 0) !== 0 && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleTrackDesfaseChange(idea, tr.id, 0)}
+                                            className="px-1.5 py-0.5 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-[9px] cursor-pointer"
+                                            title="Resetear desfase a 0ms"
+                                          >
+                                            Reset 0ms
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    {/* Nudge Buttons & Slider */}
+                                    <div className="flex items-center gap-1 justify-between">
+                                      <div className="flex items-center gap-1">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 10)}
+                                          className="px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[9px] cursor-pointer"
+                                        >
+                                          -10ms
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 1)}
+                                          className="px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[9px] cursor-pointer"
+                                        >
+                                          -1ms
+                                        </button>
+                                      </div>
+
+                                      <input
+                                        type="range"
+                                        min={-500}
+                                        max={500}
+                                        step={1}
+                                        value={tr.desfaseMs || 0}
+                                        onChange={(e) => handleTrackDesfaseChange(idea, tr.id, Number(e.target.value))}
+                                        className="w-full max-w-xs h-1 bg-black/40 rounded appearance-none cursor-pointer accent-amber-400 mx-2"
+                                        title="Deslizar para sincronizar desfase en tiempo real (-500ms a +500ms)"
+                                      />
+
+                                      <div className="flex items-center gap-1">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 1)}
+                                          className="px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[9px] cursor-pointer"
+                                        >
+                                          +1ms
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 10)}
+                                          className="px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[9px] cursor-pointer"
+                                        >
+                                          +10ms
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           );
                         })}
