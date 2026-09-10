@@ -440,3 +440,132 @@ export const autoDetectAudioLatencyOffset = async (
   }
 };
 
+export interface MasterMixTrackInput {
+  audioUrl: string;
+  volumen?: number;
+  muted?: boolean;
+  pan?: number;
+  desfaseMs?: number;
+  eqLow?: number;
+  eqMid?: number;
+  eqHigh?: number;
+}
+
+/**
+ * Offline Master Mix Bounce renderer.
+ * Sums all multitrack audio inputs using OfflineAudioContext, applying per-track volume,
+ * stereo panner, 3-band EQ, and latency offsets, then normalizes and exports a single WAV Blob.
+ */
+export const exportMasterMixAudioBlob = async (
+  tracks: MasterMixTrackInput[],
+  resolveUrlFn: (url: string) => Promise<string>
+): Promise<Blob> => {
+  const activeTracks = tracks.filter(t => !t.muted && t.audioUrl);
+  if (activeTracks.length === 0) {
+    throw new Error("No hay pistas activas para mezclar.");
+  }
+
+  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+  // 1. Fetch and decode all track audio buffers
+  const decodedTrackBuffers: { buffer: AudioBuffer; input: MasterMixTrackInput }[] = [];
+  let maxTotalDuration = 0;
+
+  for (const tr of activeTracks) {
+    try {
+      const resolved = await resolveUrlFn(tr.audioUrl);
+      const res = await fetch(resolved);
+      const arrBuf = await res.arrayBuffer();
+      const audioBuf = await tempCtx.decodeAudioData(arrBuf);
+      const offsetSec = (tr.desfaseMs || 0) / 1000;
+      const trackEndSec = audioBuf.duration + Math.max(0, offsetSec);
+      if (trackEndSec > maxTotalDuration) {
+        maxTotalDuration = trackEndSec;
+      }
+      decodedTrackBuffers.push({ buffer: audioBuf, input: tr });
+    } catch (err) {
+      console.warn("Error decoding track for master mix:", tr.audioUrl, err);
+    }
+  }
+
+  tempCtx.close();
+
+  if (decodedTrackBuffers.length === 0 || maxTotalDuration === 0) {
+    throw new Error("No se pudo decodificar el audio de ninguna de las pistas.");
+  }
+
+  // 2. Setup OfflineAudioContext for rendering master mix
+  const sampleRate = 44100;
+  const totalFrames = Math.ceil(maxTotalDuration * sampleRate);
+  const offlineCtx = new OfflineAudioContext(2, totalFrames, sampleRate);
+
+  // Master Limiter to prevent digital clipping
+  const masterLimiter = offlineCtx.createDynamicsCompressor();
+  masterLimiter.threshold.value = -0.5;
+  masterLimiter.knee.value = 0;
+  masterLimiter.ratio.value = 20;
+  masterLimiter.attack.value = 0.001;
+  masterLimiter.release.value = 0.1;
+  masterLimiter.connect(offlineCtx.destination);
+
+  // 3. Connect each track's DSP chain (Source -> EQ Low -> EQ Mid -> EQ High -> Volume Gain -> Stereo Panner -> Master Limiter)
+  decodedTrackBuffers.forEach(({ buffer, input }) => {
+    const source = offlineCtx.createBufferSource();
+    source.buffer = buffer;
+
+    // EQ Low
+    const eqLow = offlineCtx.createBiquadFilter();
+    eqLow.type = 'lowshelf';
+    eqLow.frequency.value = 100;
+    eqLow.gain.value = input.eqLow ?? 0;
+
+    // EQ Mid
+    const eqMid = offlineCtx.createBiquadFilter();
+    eqMid.type = 'peaking';
+    eqMid.frequency.value = 1000;
+    eqMid.Q.value = 1.0;
+    eqMid.gain.value = input.eqMid ?? 0;
+
+    // EQ High
+    const eqHigh = offlineCtx.createBiquadFilter();
+    eqHigh.type = 'highshelf';
+    eqHigh.frequency.value = 8000;
+    eqHigh.gain.value = input.eqHigh ?? 0;
+
+    // Volume Gain
+    const gainNode = offlineCtx.createGain();
+    gainNode.gain.value = input.volumen ?? 1;
+
+    // Stereo Panner
+    const panner = offlineCtx.createStereoPanner ? offlineCtx.createStereoPanner() : null;
+    if (panner) {
+      panner.pan.value = Math.max(-1, Math.min(1, input.pan ?? 0));
+    }
+
+    // Connect chain
+    source.connect(eqLow);
+    eqLow.connect(eqMid);
+    eqMid.connect(eqHigh);
+    eqHigh.connect(gainNode);
+
+    if (panner) {
+      gainNode.connect(panner);
+      panner.connect(masterLimiter);
+    } else {
+      gainNode.connect(masterLimiter);
+    }
+
+    // Start timestamp with latency offset shift
+    const startOffsetSec = Math.max(0, (input.desfaseMs || 0) / 1000);
+    source.start(startOffsetSec);
+  });
+
+  // 4. Render master mix buffer offline
+  const renderedBuffer = await offlineCtx.startRendering();
+
+  // Normalize final master mix to -1 dBFS
+  normalizeAudioBuffer(renderedBuffer, -1);
+
+  return audioBufferToWavBlob(renderedBuffer);
+};
+

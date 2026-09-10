@@ -3,7 +3,7 @@ import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConf
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
 import { SongStudioAiMusicModal } from "./song_studio/SongStudioAiMusicModal";
 import { SongStudioAiComposerModal } from "./song_studio/SongStudioAiComposerModal";
-import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset } from "../utils/audioLatency";
+import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
 import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
 import { uploadFileToServer, resolveAudioUrl } from '../utils/audioStorage';
@@ -248,9 +248,11 @@ export default function SongStudioModal({
   // --- CONFIRMATION MODAL STATE FOR DELETIONS ---
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
     title: string;
-    description: string;
-    onConfirm: () => void;
   } | null>(null);
+
+  // --- TRACK EQ & MASTER EXPORT STATE ---
+  const [expandedEqTrackId, setExpandedEqTrackId] = useState<string | null>(null);
+  const [isExportingMaster, setIsExportingMaster] = useState<boolean>(false);
 
 
   // Audio elements refs map for multitrack: trackAudioRefs.current[trackId]
@@ -923,6 +925,72 @@ export default function SongStudioModal({
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
+
+  // Handle Track Pan Change (-1 to 1)
+  const handleTrackPanChange = (idea: SongAudioIdea, trackId: string, pan: number) => {
+    const tracks = getIdeaTracks(idea);
+    const updatedTracks = tracks.map(tr => tr.id === trackId ? { ...tr, pan } : tr);
+    const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: updatedTracks } : i);
+    const updatedSong = { ...song, audioIdeas: updatedIdeas };
+    songRef.current = updatedSong;
+    onUpdateSong(updatedSong);
+  };
+
+  // Handle Track EQ Change (low, mid, high: -12dB to +12dB)
+  const handleTrackEqChange = (idea: SongAudioIdea, trackId: string, band: 'low' | 'mid' | 'high', value: number) => {
+    const tracks = getIdeaTracks(idea);
+    const updatedTracks = tracks.map(tr => {
+      if (tr.id !== trackId) return tr;
+      if (band === 'low') return { ...tr, eqLow: value };
+      if (band === 'mid') return { ...tr, eqMid: value };
+      return { ...tr, eqHigh: value };
+    });
+    const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: updatedTracks } : i);
+    const updatedSong = { ...song, audioIdeas: updatedIdeas };
+    songRef.current = updatedSong;
+    onUpdateSong(updatedSong);
+  };
+
+  // Handle Export Master Mix WAV
+  const handleExportMasterMix = async (idea: SongAudioIdea) => {
+    const tracks = getIdeaTracks(idea);
+    if (!tracks || tracks.length === 0) {
+      alert("No hay pistas registradas en esta sección para exportar.");
+      return;
+    }
+
+    setIsExportingMaster(true);
+    try {
+      const tracksToMix = tracks.map(tr => ({
+        url: resolvedAudioUrls[tr.id] || tr.audioUrl,
+        volumen: tr.volumen ?? 1,
+        pan: tr.pan ?? 0,
+        muted: tr.muted ?? false,
+        solo: tr.solo ?? false,
+        desfaseMs: tr.desfaseMs ?? 0,
+        eqLow: tr.eqLow ?? 0,
+        eqMid: tr.eqMid ?? 0,
+        eqHigh: tr.eqHigh ?? 0,
+      }));
+
+      const wavBlob = await exportMasterMixAudioBlob(tracksToMix);
+      const downloadUrl = URL.createObjectURL(wavBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      const safeTitle = (idea.titulo || 'mezcla_master').toLowerCase().replace(/\s+/g, '_');
+      link.download = `${song.titulo || 'cancion'}_${safeTitle}_master.wav`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
+    } catch (err: any) {
+      console.error("Error al exportar la mezcla máster:", err);
+      alert("No se pudo exportar la mezcla máster: " + (err.message || err));
+    } finally {
+      setIsExportingMaster(false);
+    }
+  };
+
 
   // Rename track
   const handleSaveTrackName = (idea: SongAudioIdea, trackId: string, newName: string) => {
@@ -2303,6 +2371,19 @@ export default function SongStudioModal({
                           <span>WhatsApp</span>
                         </button>
 
+                        {/* Export Master Mix WAV Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleExportMasterMix(idea)}
+                          disabled={isExportingMaster}
+                          className="px-2 py-1 rounded-lg bg-indigo-600/80 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1 border border-indigo-400/30"
+                          title="Renderizar y descargar la mezcla de pistas completa en alta calidad WAV"
+                        >
+                          <Disc className={`w-3 h-3 ${isExportingMaster ? 'animate-spin text-amber-300' : 'text-indigo-200'}`} />
+                          <span>{isExportingMaster ? 'Exportando...' : 'Mezcla .WAV'}</span>
+                        </button>
+
+
                         {/* Delete Idea Button */}
                         <button
                           type="button"
@@ -2658,6 +2739,18 @@ export default function SongStudioModal({
                                     >
                                       {cleaningTrackId === tr.id ? '🧹 Clean...' : '🧹 Limpiar'}
                                     </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setExpandedEqTrackId(expandedEqTrackId === tr.id ? null : tr.id)}
+                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold cursor-pointer transition-all border ${
+                                        expandedEqTrackId === tr.id
+                                          ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
+                                          : 'bg-purple-500/10 text-purple-400 border-purple-500/30 hover:bg-purple-500/20'
+                                      }`}
+                                      title="Ecualizador de 3 bandas (Graves, Medios, Agudos)"
+                                    >
+                                      🎛️ EQ
+                                    </button>
                                   </div>
                                   <div className="flex items-center gap-1 flex-1">
                                     {vol === 0 || isMuted ? (
@@ -2676,6 +2769,20 @@ export default function SongStudioModal({
                                       title={`Volumen: ${Math.round(vol * 100)}%`}
                                     />
                                   </div>
+                                  <div className="flex items-center gap-1 shrink-0 w-20" title={`Paneo: ${tr.pan ? (tr.pan < 0 ? `L ${Math.round(Math.abs(tr.pan)*100)}%` : `R ${Math.round(tr.pan*100)}%`) : 'Centro'}`}>
+                                    <span className="text-[8px] font-mono font-bold text-neutral-400">L</span>
+                                    <input
+                                      type="range"
+                                      min={-1}
+                                      max={1}
+                                      step={0.05}
+                                      value={tr.pan ?? 0}
+                                      onChange={(e) => handleTrackPanChange(idea, tr.id, parseFloat(e.target.value))}
+                                      className="w-full accent-purple-400 h-1 bg-neutral-800 rounded cursor-pointer"
+                                    />
+                                    <span className="text-[8px] font-mono font-bold text-neutral-400">R</span>
+                                  </div>
+
                                   <button
                                     type="button"
                                     onClick={() => handleDeleteTrack(idea, tr.id)}
@@ -2786,7 +2893,76 @@ export default function SongStudioModal({
                                     />
                                     <span className="text-[8px] font-mono text-neutral-500 shrink-0">+500ms</span>
                                   </div>
+
+                                  {/* 3-Band Equalizer Panel (Low, Mid, High) */}
+                                  {expandedEqTrackId === tr.id && (
+                                    <div className="mt-2 p-2 rounded-lg bg-purple-950/30 border border-purple-500/20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 font-mono text-[9px] text-purple-200">
+                                      <div className="flex-1 flex flex-col gap-1">
+                                        <div className="flex justify-between items-center text-neutral-400">
+                                          <span>🔊 Graves (100Hz)</span>
+                                          <span className="font-bold text-purple-300">{tr.eqLow || 0}dB</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min={-12}
+                                          max={12}
+                                          step={1}
+                                          value={tr.eqLow ?? 0}
+                                          onChange={(e) => handleTrackEqChange(idea, tr.id, 'low', parseFloat(e.target.value))}
+                                          className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                        />
+                                      </div>
+
+                                      <div className="flex-1 flex flex-col gap-1">
+                                        <div className="flex justify-between items-center text-neutral-400">
+                                          <span>📻 Medios (1kHz)</span>
+                                          <span className="font-bold text-purple-300">{tr.eqMid || 0}dB</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min={-12}
+                                          max={12}
+                                          step={1}
+                                          value={tr.eqMid ?? 0}
+                                          onChange={(e) => handleTrackEqChange(idea, tr.id, 'mid', parseFloat(e.target.value))}
+                                          className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                        />
+                                      </div>
+
+                                      <div className="flex-1 flex flex-col gap-1">
+                                        <div className="flex justify-between items-center text-neutral-400">
+                                          <span>✨ Agudos (8kHz)</span>
+                                          <span className="font-bold text-purple-300">{tr.eqHigh || 0}dB</span>
+                                        </div>
+                                        <input
+                                          type="range"
+                                          min={-12}
+                                          max={12}
+                                          step={1}
+                                          value={tr.eqHigh ?? 0}
+                                          onChange={(e) => handleTrackEqChange(idea, tr.id, 'high', parseFloat(e.target.value))}
+                                          className="w-full accent-purple-400 h-1 bg-neutral-900 rounded cursor-pointer"
+                                        />
+                                      </div>
+
+                                      {(tr.eqLow !== 0 || tr.eqMid !== 0 || tr.eqHigh !== 0) && (
+                                        <button
+                                          type="button"
+                                          onClick={() => {
+                                            handleTrackEqChange(idea, tr.id, 'low', 0);
+                                            handleTrackEqChange(idea, tr.id, 'mid', 0);
+                                            handleTrackEqChange(idea, tr.id, 'high', 0);
+                                          }}
+                                          className="px-1.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold text-[8px] cursor-pointer shrink-0 self-end sm:self-center"
+                                          title="Resetear EQ a 0dB"
+                                        >
+                                          Reset EQ
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
+
                               </div>
 
                               {/* Right Panel: Waveform */}

@@ -581,6 +581,10 @@ export interface AudioTrack {
   muted?: boolean;
   solo?: boolean;
   desfaseMs?: number; // Latency offset in milliseconds (-300 to +300) for multitrack alignment
+  pan?: number; // Stereo panning (-1.0 Left to +1.0 Right, 0 Center)
+  eqLow?: number; // 3-Band EQ Low Shelf Gain in dB (-12 to +12)
+  eqMid?: number; // 3-Band EQ Mid Peaking Gain in dB (-12 to +12)
+  eqHigh?: number; // 3-Band EQ High Shelf Gain in dB (-12 to +12)
 }
 
 export interface SongAudioIdea {
