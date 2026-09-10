@@ -33,6 +33,7 @@ import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
 import { BandSwitcherModal } from './components/BandSwitcherModal';
 import { PlanLimitModal } from './components/PlanLimitModal';
+import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
@@ -116,6 +117,13 @@ export default function App() {
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showCampaignModal, setShowCampaignModal] = useState(false);
+  const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('bandmanager_profile_wizard_completed') !== 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en 'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
@@ -1632,6 +1640,14 @@ export default function App() {
     onDeleteCampaign={handleDeleteCampaign}
     onSetActiveCampaign={handleSetActiveCampaign}
     onNavigate={handleNavigate}
+  />
+
+  {/* Onboarding & Musician Profile Wizard Modal */}
+  <OnboardingWizardModal
+    isOpen={showProfileWizardModal}
+    onClose={() => setShowProfileWizardModal(false)}
+    onComplete={() => setShowProfileWizardModal(false)}
+    currentBandName={currentActiveBandName}
   />
 
  </div>

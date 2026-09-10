@@ -35,6 +35,7 @@ interface UserProfileModalProps {
  onSetMainBand?: (bandId: string) => Promise<any>;
  onOpenBandSwitcher?: () => void;
  onNavigateToPlanes?: () => void;
+ onOpenProfileWizard?: () => void;
 }
 
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
