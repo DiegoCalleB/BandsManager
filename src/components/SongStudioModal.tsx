@@ -75,6 +75,7 @@ export default function SongStudioModal({
   }, [song]);
 
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
+  const [showToolsMenu, setShowToolsMenu] = useState<boolean>(false);
   const [showChordsModal, setShowChordsModal] = useState<boolean>(false);
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
   const [showAiMusicModal, setShowAiMusicModal] = useState<boolean>(false);
@@ -950,7 +951,13 @@ export default function SongStudioModal({
         streamToRecord = pipeline.cleanStream;
       }
 
-      const mediaRecorder = new MediaRecorder(streamToRecord);
+      const recorderOptions: MediaRecorderOptions = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 256000 }
+        : MediaRecorder.isTypeSupported('audio/mp4')
+        ? { mimeType: 'audio/mp4', audioBitsPerSecond: 256000 }
+        : { audioBitsPerSecond: 256000 };
+
+      const mediaRecorder = new MediaRecorder(streamToRecord, recorderOptions);
       trackMediaRecorderRef.current = mediaRecorder;
       trackAudioChunksRef.current = [];
 
@@ -1582,56 +1589,58 @@ export default function SongStudioModal({
                   <span>{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => setShowChordsModal(true)}
-                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 shadow-sm"
-                  title="Abrir visor de acordes y ficha para músicos sustitutos"
-                >
-                  <FileText className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Acordes & Ficha</span>
-                </button>
+                {/* Menú Desplegable de Herramientas Secundarias */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowToolsMenu(prev => !prev)}
+                    className="px-3 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-white/10 hover:bg-white/20 text-white border border-white/10 shadow-sm"
+                    title="Herramientas y opciones del Estudio"
+                  >
+                    <Sliders className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Herramientas ⚙️</span>
+                  </button>
 
-
-                <button
-                  type="button"
-                  onClick={handleShareSong}
-                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
-                  title="Compartir tema completo por WhatsApp"
-                >
-                  <MessageSquare className="w-3.5 h-3.5 fill-white/20" />
-                  <span>Compartir Tema</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowCubaseHelp(true)}
-                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-purple-500/20 text-purple-300 border border-purple-500/40 hover:bg-purple-500/30 shadow-sm"
-                  title="Ver atajos de teclado tipo Cubase DAW (Espacio, 0, R, M, S, ←, →)"
-                >
-                  <Keyboard className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Atajos Cubase</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowAiMusicModal(true)}
-                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-300 border border-amber-500/40 hover:from-amber-500/30 hover:to-orange-500/30 shadow-sm"
-                  title="Generar soundtracks, jingles o música de fondo con IA basada en la banda"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  <span>🎵 Soundtrack IA (Lyria)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowAiComposerModal(true)}
-                  className="px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/40 hover:from-indigo-500/30 hover:to-purple-500/30 shadow-sm"
-                  title="Asistente Compositor IA: aporta ideas y arreglos como un músico real"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-                  <span>🧠 Arreglos IA (Músico Virtual)</span>
-                </button>
+                  {showToolsMenu && (
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl p-1.5 z-50 space-y-1 text-xs font-mono">
+                      <button
+                        type="button"
+                        onClick={() => { setShowToolsMenu(false); setShowChordsModal(true); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-amber-300 flex items-center gap-2"
+                      >
+                        <FileText className="w-4 h-4 text-amber-400" /> Acordes & Partitura
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowToolsMenu(false); setShowAiComposerModal(true); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-indigo-300 flex items-center gap-2"
+                      >
+                        <Sparkles className="w-4 h-4 text-indigo-400" /> Arreglos IA (Músico Virtual)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowToolsMenu(false); setShowAiMusicModal(true); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-purple-300 flex items-center gap-2"
+                      >
+                        <Sparkles className="w-4 h-4 text-purple-400" /> Soundtrack IA (Lyria)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowToolsMenu(false); setShowCubaseHelp(true); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-neutral-300 flex items-center gap-2"
+                      >
+                        <Keyboard className="w-4 h-4 text-neutral-400" /> Atajos Teclado (Cubase)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setShowToolsMenu(false); handleShareSong(); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-emerald-300 flex items-center gap-2 border-t border-white/10 pt-2"
+                      >
+                        <MessageSquare className="w-4 h-4 text-emerald-400" /> Compartir Tema por WhatsApp
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
               <p className="text-xs text-neutral-400 font-mono flex items-center gap-3 mt-0.5">
                 <span>⏱️ {song.duracion}</span>
