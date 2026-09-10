@@ -436,14 +436,10 @@ export default function SongStudioModal({
           const diff = slaveEl.currentTime - targetSlaveTime;
           const absDiff = Math.abs(diff);
           if (absDiff > 0.04) {
-            // Hard seek if drift exceeds 40ms to keep tracks sample-aligned without flam/lag
+            // Hard seek if drift exceeds 40ms to keep tracks sample-aligned without pitch/time distortion
             try { slaveEl.currentTime = Math.max(0, targetSlaveTime); } catch {}
-            slaveEl.playbackRate = 1.0;
-          } else if (absDiff > 0.008) {
-            // Dynamic rate adjustment (corrects 5ms to 40ms drift in <100ms)
-            const speedAdj = Math.max(-0.20, Math.min(0.20, -diff * 5.0));
-            slaveEl.playbackRate = 1.0 + speedAdj;
-          } else {
+          }
+          if (slaveEl.playbackRate !== 1.0) {
             slaveEl.playbackRate = 1.0;
           }
         }
@@ -1062,9 +1058,13 @@ export default function SongStudioModal({
           // Calculate total latency lag to physically trim from recording start
           const isMobileDevice = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
           const defaultHardwareLagMs = isMobileDevice ? 240 : 120;
-          const totalLagToTrimMs = autoLatencyTrimMs > 0
-            ? Math.max(autoLatencyTrimMs, detectedOffsetMs > 0 ? detectedOffsetMs : defaultHardwareLagMs)
-            : (detectedOffsetMs > 0 ? detectedOffsetMs : 0);
+          
+          let totalLagToTrimMs = defaultHardwareLagMs;
+          if (autoLatencyTrimMs > 0) {
+            totalLagToTrimMs = autoLatencyTrimMs;
+          } else if (detectedOffsetMs > 0) {
+            totalLagToTrimMs = detectedOffsetMs;
+          }
 
           if (totalLagToTrimMs > 0) {
             finalBlob = await trimAudioBlobLatency(rawAudioBlob, totalLagToTrimMs);
@@ -2826,15 +2826,54 @@ export default function SongStudioModal({
                                 <span>Cancelación de Eco</span>
                               </label>
 
-                              <label className="flex items-center gap-1.5 cursor-pointer text-amber-300 hover:text-amber-200 font-bold" title="Recorta automáticamente el buffer de arranque del micrófono (~110ms) para que la pista grabada quede perfectamente a tiempo con la base">
+                              <div className="space-y-1.5 pt-1.5 border-t border-white/10">
+                                <div className="flex items-center justify-between text-amber-300 font-bold text-[10px] flex-wrap gap-1">
+                                  <span>⚡ Recorte de Latencia Micro: {autoLatencyTrimMs} ms</span>
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => setAutoLatencyTrimMs(120)}
+                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 120 ? 'bg-amber-500 text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                                      title="Recorte estándar para altavoces o auriculares de cable en PC (120ms)"
+                                    >
+                                      PC (120ms)
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setAutoLatencyTrimMs(240)}
+                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 240 ? 'bg-amber-500 text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                                      title="Recorte para teléfonos móviles y tablets (240ms)"
+                                    >
+                                      Móvil (240ms)
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setAutoLatencyTrimMs(300)}
+                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 300 ? 'bg-amber-500 text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'}`}
+                                      title="Recorte para auriculares Bluetooth tipo AirPods o Sony (300ms)"
+                                    >
+                                      Bluetooth (300ms)
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setAutoLatencyTrimMs(0)}
+                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors ${autoLatencyTrimMs === 0 ? 'bg-rose-500 text-white font-bold' : 'bg-rose-500/20 text-rose-300'}`}
+                                      title="Sin recorte (0ms)"
+                                    >
+                                      0ms
+                                    </button>
+                                  </div>
+                                </div>
                                 <input
-                                  type="checkbox"
-                                  checked={autoLatencyTrimMs > 0}
-                                  onChange={(e) => setAutoLatencyTrimMs(e.target.checked ? 110 : 0)}
-                                  className="rounded accent-amber-500"
+                                  type="range"
+                                  min={0}
+                                  max={400}
+                                  step={10}
+                                  value={autoLatencyTrimMs}
+                                  onChange={(e) => setAutoLatencyTrimMs(Number(e.target.value))}
+                                  className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-amber-400"
                                 />
-                                <span>⚡ Compensar Latencia Hardware (-110ms)</span>
-                              </label>
+                              </div>
                             </div>
                           </div>
                         </div>
