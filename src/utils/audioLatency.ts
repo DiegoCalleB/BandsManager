@@ -163,11 +163,46 @@ export const trimAudioBlobLatency = async (audioBlob: Blob, latencyMs: number = 
       destData.set(srcData.subarray(samplesToTrim));
     }
 
+    normalizeAudioBuffer(newBuffer, -1);
     return audioBufferToWavBlob(newBuffer);
   } catch (err) {
     console.warn("Latency trimming failed, returning original blob:", err);
     return audioBlob;
   }
+};
+
+/**
+ * Normalizes an AudioBuffer to peak target level (default -1 dBFS / ~0.891 linear amplitude).
+ * Prevents recorded tracks from sounding quiet or distorted in the multitrack mix.
+ */
+export const normalizeAudioBuffer = (buffer: AudioBuffer, targetDb: number = -1): AudioBuffer => {
+  try {
+    let maxPeak = 0;
+    for (let c = 0; c < buffer.numberOfChannels; c++) {
+      const data = buffer.getChannelData(c);
+      for (let i = 0; i < data.length; i++) {
+        const abs = Math.abs(data[i]);
+        if (abs > maxPeak) maxPeak = abs;
+      }
+    }
+
+    if (maxPeak === 0 || !isFinite(maxPeak)) return buffer;
+
+    const targetLinear = Math.pow(10, targetDb / 20); // ~0.891 for -1dBFS
+    const gainScale = Math.min(targetLinear / maxPeak, 8.0); // Safety limit max gain to 8x (+18dB)
+
+    if (Math.abs(gainScale - 1.0) < 0.05) return buffer; // Skip if already optimal
+
+    for (let c = 0; c < buffer.numberOfChannels; c++) {
+      const data = buffer.getChannelData(c);
+      for (let i = 0; i < data.length; i++) {
+        data[i] = data[i] * gainScale;
+      }
+    }
+  } catch (e) {
+    console.warn("Peak normalization error:", e);
+  }
+  return buffer;
 };
 
 /**

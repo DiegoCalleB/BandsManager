@@ -136,8 +136,59 @@ export default function SongStudioModal({
   const [useEchoCancellation, setUseEchoCancellation] = useState<boolean>(true);
   const [useNoiseSuppression, setUseNoiseSuppression] = useState<boolean>(true);
   const [autoLatencyTrimMs, setAutoLatencyTrimMs] = useState<number>(110);
+  const [useCountInMetronome, setUseCountInMetronome] = useState<boolean>(true);
+  const [countInCountdown, setCountInCountdown] = useState<number | null>(null);
   const [cleaningTrackId, setCleaningTrackId] = useState<string | null>(null);
   const cleanPipelineRef = useRef<any>(null);
+
+  const triggerCountInBeeps = (bpm: number, onDone: () => void) => {
+    try {
+      if (!studioAudioCtxRef.current) {
+        const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioCtxClass) studioAudioCtxRef.current = new AudioCtxClass();
+      }
+      const ctx = studioAudioCtxRef.current;
+      if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+
+      const songBpm = bpm > 40 && bpm < 240 ? bpm : (song.bpm || 120);
+      const beatIntervalMs = Math.max(300, Math.min(1200, (60 / songBpm) * 1000));
+
+      const playBeep = (freq: number) => {
+        try {
+          if (!ctx) return;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.09);
+        } catch (_) {}
+      };
+
+      setCountInCountdown(4);
+      playBeep(880);
+
+      let current = 4;
+      const interval = setInterval(() => {
+        current -= 1;
+        if (current > 0) {
+          setCountInCountdown(current);
+          playBeep(current === 1 ? 1760 : 880);
+        } else {
+          clearInterval(interval);
+          setCountInCountdown(null);
+          onDone();
+        }
+      }, beatIntervalMs);
+    } catch (err) {
+      setCountInCountdown(null);
+      onDone();
+    }
+  };
 
   // Resolved audio URLs for HTML audio elements (resolves indexeddb: and drive URLs)
   const [resolvedAudioUrls, setResolvedAudioUrls] = useState<Record<string, string>>({});
@@ -919,6 +970,16 @@ export default function SongStudioModal({
 
   // --- OVERDUB / ADDING NEW TRACK TO IDEA ---
   const startRecordingTrackOverdub = async (idea: SongAudioIdea) => {
+    if (useCountInMetronome) {
+      triggerCountInBeeps(song.bpm || 120, () => {
+        executeRecordingTrackOverdub(idea);
+      });
+    } else {
+      executeRecordingTrackOverdub(idea);
+    }
+  };
+
+  const executeRecordingTrackOverdub = async (idea: SongAudioIdea) => {
     try {
       // Resume studio audio context if suspended
       try {
@@ -1559,6 +1620,18 @@ export default function SongStudioModal({
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+        {countInCountdown !== null && (
+          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-black font-mono font-black px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border-2 border-amber-300 animate-pulse">
+            <span className="text-2xl">🥁</span>
+            <div className="text-sm">
+              <div>PREPARANDO GRABACIÓN MULTIPISTA...</div>
+              <div className="text-xs opacity-80 font-bold">Arranca en: ¡{countInCountdown}!</div>
+            </div>
+            <span className="text-3xl font-black ml-2 bg-black text-amber-400 px-3.5 py-1 rounded-xl shadow-inner">
+              {countInCountdown}
+            </span>
+          </div>
+        )}
         <div className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col ${
           isStitchLight ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-[#0f0f15] border-zinc-800 text-zinc-100'
         }`}>
@@ -2646,56 +2719,72 @@ export default function SongStudioModal({
                                     </div>
                                   </div>
 
-                                  {/* Quick Micro Adjust & Mobile Presets */}
-                                  <div className="flex items-center gap-0.5 justify-end flex-wrap">
+                                  {/* Quick Micro Adjust & Fine Nudge Buttons */}
+                                  <div className="flex items-center gap-0.5 justify-end flex-wrap mt-1">
                                     <button
                                       type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 100)}
-                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-bold cursor-pointer"
-                                      title="-100ms"
+                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 50)}
+                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-[9px] cursor-pointer"
+                                      title="-50ms"
                                     >
-                                      -100
+                                      -50
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 25)}
-                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-bold cursor-pointer"
-                                      title="-25ms"
+                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 10)}
+                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
+                                      title="Ajuste fino -10ms"
                                     >
-                                      -25
+                                      -10
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 25)}
-                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-bold cursor-pointer"
-                                      title="+25ms"
+                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) - 1)}
+                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
+                                      title="Ajuste fino -1ms"
                                     >
-                                      +25
+                                      -1
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 100)}
-                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-bold cursor-pointer"
-                                      title="+100ms"
+                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 1)}
+                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
+                                      title="Ajuste fino +1ms"
                                     >
-                                      +100
+                                      +1
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, 240)}
-                                      className="px-1 py-0.5 rounded bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 font-bold cursor-pointer"
-                                      title="Preset Móvil Android/Chrome (+240ms)"
+                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 10)}
+                                      className="px-1 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-mono font-bold text-[9px] cursor-pointer"
+                                      title="Ajuste fino +10ms"
                                     >
-                                      📱 240
+                                      +10
                                     </button>
                                     <button
                                       type="button"
-                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, 320)}
-                                      className="px-1 py-0.5 rounded bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 font-bold cursor-pointer"
-                                      title="Preset iPhone/Safari (+320ms)"
+                                      onClick={() => handleTrackDesfaseChange(idea, tr.id, (tr.desfaseMs || 0) + 50)}
+                                      className="px-1 py-0.5 rounded bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-[9px] cursor-pointer"
+                                      title="+50ms"
                                     >
-                                      📱 320
+                                      +50
                                     </button>
+                                  </div>
+
+                                  {/* Fine Desfase Range Slider (-500ms to +500ms) */}
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-[8px] font-mono text-neutral-500 shrink-0">-500ms</span>
+                                    <input
+                                      type="range"
+                                      min={-500}
+                                      max={500}
+                                      step={1}
+                                      value={tr.desfaseMs || 0}
+                                      onChange={(e) => handleTrackDesfaseChange(idea, tr.id, Number(e.target.value))}
+                                      className="w-full h-1 bg-black/40 rounded appearance-none cursor-pointer accent-amber-400"
+                                      title="Deslizar para sincronizar desfase en tiempo real (-500ms a +500ms)"
+                                    />
+                                    <span className="text-[8px] font-mono text-neutral-500 shrink-0">+500ms</span>
                                   </div>
                                 </div>
                               </div>
