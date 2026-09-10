@@ -3421,6 +3421,19 @@ export default function RepertorioSetlists({
       </span>
     )}
 
+    {/* Studio button */}
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        setActiveStudioSong(song);
+      }}
+      className="p-0.5 text-neutral-400 hover:text-indigo-400 transition-colors shrink-0"
+      title="Abrir Studio de Grabación Multipista & Pistas"
+    >
+      <Headphones className="w-3.5 h-3.5 text-indigo-400" />
+    </button>
+
     {/* Edit song button */}
     <button
       type="button"
@@ -3518,10 +3531,7 @@ export default function RepertorioSetlists({
         }`}
       />
 
-      {/* Notas de miembros / acordes: consultas ocasionales, no algo permanente en la fila
-          compacta (ver arriba) — viven aquí, un tap más lejos pero fuera del camino de lo que sí
-          se mira en cada vistazo a la lista (AGENTS.md §6). Reproducir la canción tiene su propio
-          botón ▶ en la fila compacta (junto al número), no hace falta expandir para eso. */}
+      {/* Notas de miembros / acordes / studio */}
       <div className="flex items-center gap-2 pt-1">
         <button
           type="button"
@@ -3538,6 +3548,13 @@ export default function RepertorioSetlists({
           className="flex items-center gap-1 px-1.5 py-0.5 rounded text-neutral-400 hover:text-indigo-400 transition-colors"
         >
           <FileText className="w-3 h-3" /> Acordes
+        </button>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setActiveStudioSong(song); }}
+          className="flex items-center gap-1 px-1.5 py-0.5 rounded text-neutral-400 hover:text-indigo-400 transition-colors"
+        >
+          <Headphones className="w-3 h-3 text-indigo-400" /> Studio multipista
         </button>
       </div>
     </div>

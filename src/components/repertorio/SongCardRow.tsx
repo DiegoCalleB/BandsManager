@@ -332,17 +332,17 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
               onClick={onOpenStudio}
               className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all cursor-pointer border ${
                 ideasCount > 0
-                  ? 'bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border-indigo-500/40'
+                  ? 'bg-indigo-500/25 hover:bg-indigo-500/35 text-indigo-200 border-indigo-500/50 shadow-xs'
                   : isStitchLight
-                  ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-                  : 'bg-white/5 hover:bg-white/10 text-zinc-300 border-white/10'
+                  ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-indigo-200'
+                  : 'bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 border-indigo-500/30'
               }`}
-              title="Abrir Studio de Audios & Pistas"
+              title="Abrir Studio de Grabación Multipista & Pistas"
             >
-              <Headphones className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="hidden sm:inline text-[11px]">Studio</span>
+              <Headphones className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span className="hidden xs:inline text-[11px]">Studio</span>
               {ideasCount > 0 && (
-                <span className="px-1 py-0.2 bg-indigo-500/40 text-white rounded-full text-[9px]">
+                <span className="px-1 py-0.2 bg-indigo-500/50 text-white rounded-full text-[9px]">
                   {ideasCount}
                 </span>
               )}
@@ -437,6 +437,21 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 }`}
               >
                 <div className="py-1 space-y-0.5">
+                  {/* Studio / Grabadora Multipista */}
+                  {onOpenStudio && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        onOpenStudio();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-500/20 text-indigo-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                    >
+                      <Headphones className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Abrir Studio / Grabadora</span>
+                    </button>
+                  )}
+
                   {/* Share on WhatsApp */}
                   {onShareSong && (
                     <button
