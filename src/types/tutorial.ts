@@ -25,7 +25,7 @@ export interface TutorialStep {
   keyPoints: TutorialKeyPoint[];
 }
 
-export type ModuleTutorialId = 'epk' | 'fans' | 'calendario' | 'repertorio' | 'song_studio';
+export type ModuleTutorialId = 'epk' | 'fans' | 'calendario' | 'repertorio' | 'song_studio' | 'booking';
 
 export interface ModuleTutorialConfig {
   id: ModuleTutorialId;

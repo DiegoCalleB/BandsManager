@@ -1156,7 +1156,10 @@ export default function BookingCRM({
           <span>Añadir {sectionTab === 'medios' ? 'medio' : sectionTab === 'grupos' ? 'contacto' : 'escenario'}</span>
         </button>
 
-        <ModuleTutorialTrigger onOpen={bookingTutorial.openTutorial} />
+        <ModuleTutorialTrigger
+          moduleId="booking"
+          onClick={bookingTutorial.openTutorial}
+        />
 
         <button
           id="export-leads-btn"

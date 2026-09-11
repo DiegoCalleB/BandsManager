@@ -3,9 +3,9 @@ import { MODULE_TUTORIALS } from '../../config/moduleTutorials';
 import { ModuleTutorialId } from '../../types/tutorial';
 
 describe('Module Tutorials Configuration', () => {
-  const targetModules: ModuleTutorialId[] = ['epk', 'fans', 'calendario', 'repertorio', 'song_studio'];
+  const targetModules: ModuleTutorialId[] = ['epk', 'fans', 'calendario', 'repertorio', 'song_studio', 'booking'];
 
-  it('contains configurations for all 5 required modules', () => {
+  it('contains configurations for all 6 required modules', () => {
     targetModules.forEach(id => {
       expect(MODULE_TUTORIALS[id]).toBeDefined();
       expect(MODULE_TUTORIALS[id].steps.length).toBeGreaterThanOrEqual(3);

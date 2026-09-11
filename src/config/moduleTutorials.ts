@@ -569,5 +569,92 @@ export const MODULE_TUTORIALS: Record<ModuleTutorialId, ModuleTutorialConfig> = 
         ]
       }
     ]
+  },
+  booking: {
+    id: 'booking',
+    name: 'Booking CRM & Giras',
+    badge: 'Contratación & Salas',
+    subtitle: 'Automatiza la búsqueda de salas, redacción de propuestas de concierto y seguimiento comercial con agentes IA.',
+    accent: 'blue',
+    steps: [
+      {
+        id: 'booking-1',
+        stepNumber: 1,
+        badge: 'Paso 1 · Directorio & Segmentación',
+        title: 'Gestión de salas, medios y grupos colaboradores',
+        musicianHook: '🎸 Para el músico: Deja de apuntar contactos en servilletas o notas sueltas del móvil que se pierden con el tiempo.',
+        description: 'Organiza todos tus contactos en 3 categorías clave: Salas/festivales para tocar, Medios de prensa para promoción y Grupos afines para compartir cartel.',
+        iconName: 'Users',
+        uiTarget: {
+          type: 'tab',
+          label: 'Pestañas "Salas", "Medios" y "Grupos"',
+          location: 'Barra superior de filtros · Centro',
+          actionHint: 'Cambia de vista para consultar los escenarios donde tocar, la prensa musical o bandas amigas para girar.',
+          selector: '#booking-tabs'
+        },
+        keyPoints: [
+          {
+            title: 'Filtros por provincia y género musical',
+            desc: 'Encuentra salas afines a vuestro estilo filtrando por comunidad, aforo y cachés habituales.'
+          },
+          {
+            title: 'Historial y notas de contacto',
+            desc: 'Apunta si la sala tiene backline propio, técnico de PA, taquilla o condiciones especiales.'
+          }
+        ]
+      },
+      {
+        id: 'booking-2',
+        stepNumber: 2,
+        badge: 'Paso 2 · Redacción Inteligente',
+        title: 'Propuestas de concierto personalizadas con IA',
+        musicianHook: '✍️ Ahorro de horas: Enviar emails genéricos tipo "copia y pega" acaba directo en la papelera del programador.',
+        description: 'La IA analiza el estilo de la sala y redacta un pitch adaptado a su programación destacando vuestro directo y EPK.',
+        iconName: 'Sparkles',
+        uiTarget: {
+          type: 'button',
+          label: 'Acción "Generar Propuesta IA"',
+          location: 'Tarjeta del lead · Botón de redacción',
+          actionHint: 'Genera un correo persuasivo listo para revisar y despachar a la sala.',
+          selector: '#generate-pitch-btn'
+        },
+        keyPoints: [
+          {
+            title: 'Human-in-the-Loop obligatorio',
+            desc: 'La IA propone el texto pero nunca se envía sin tu aprobación previa y revisión final.'
+          },
+          {
+            title: 'Integración del dossier EPK',
+            desc: 'Enlaza automáticamente tu presskit público para que el programador escuche tus temas en 1 clic.'
+          }
+        ]
+      },
+      {
+        id: 'booking-3',
+        stepNumber: 3,
+        badge: 'Paso 3 · Embudo de Contratación',
+        title: 'Control del estado de negociación hasta la confirmación',
+        musicianHook: '📈 Cero despistes: Visualiza exactamente qué salas han respondido, cuáles están negociando y qué fechas están cerradas.',
+        description: 'Mueve tus contactos por las distintas fases del pipeline desde "nuevo" hasta "confirmado" para sincronizar la fecha con el calendario de gira.',
+        iconName: 'Zap',
+        uiTarget: {
+          type: 'section',
+          label: 'Selector de Estado del Lead',
+          location: 'Ficha de contacto · Desplegable de estado',
+          actionHint: 'Actualiza el estado comercial (Contactado, Respondido, Negociando, Confirmado).',
+          selector: '#lead-status-selector'
+        },
+        keyPoints: [
+          {
+            title: 'Traspaso automático a la gira',
+            desc: 'Al marcar un concierto como confirmado, se envía directamente al calendario y logística de gira.'
+          },
+          {
+            title: 'Sincronización con buzón de correo',
+            desc: 'El Lector monitoriza las respuestas de las salas para que nunca se te pase una oferta de concierto.'
+          }
+        ]
+      }
+    ]
   }
 };
