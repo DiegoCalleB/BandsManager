@@ -507,11 +507,9 @@ router.get("/public/epk", async (req, res) => {
       audioPreview: resolvedAudioPreview || epkConfig?.audioPreview,
       contactoBooking: {
         ...(epkConfig?.contactoBooking || {}),
-        nombre: (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) 
-          ? epkConfig.contactoBooking.nombre 
-          : (cleanBandId === 'bakandeya' ? 'Booking & Management Bakandeya' : bandName),
-        email: epkConfig?.contactoBooking?.email || (cleanBandId === 'bakandeya' ? 'diego.delacalleb@gmail.com' : (regBand?.email || '')),
-        telefono: epkConfig?.contactoBooking?.telefono || (cleanBandId === 'bakandeya' ? '+34 612 345 678' : (regBand?.telefono || ''))
+        nombre: epkConfig?.contactoBooking?.nombre || (cleanBandId === 'bakandeya' ? 'Booking & Management' : bandName),
+        email: epkConfig?.contactoBooking?.email || (regBand?.email || ''),
+        telefono: epkConfig?.contactoBooking?.telefono || (regBand?.telefono || '')
       }
     };
 

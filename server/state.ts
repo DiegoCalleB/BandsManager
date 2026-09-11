@@ -56,30 +56,30 @@ const DEFAULT_EPK_CONFIG = {
     twitter: "https://x.com/bakandeya_band"
   },
   contactoBooking: {
-    nombre: "Booking & Management Bakandeya",
-    email: "diego.delacalleb@gmail.com",
-    telefono: "+34 612 345 678"
+    nombre: "Booking & Management",
+    email: "",
+    telefono: ""
   },
   temasDestacadosIds: ["s-1", "s-2", "s-3"],
   incentivoFans: {
-    mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
+    mensajeAgradecimiento: "¡Muchas gracias por unirte a nuestra comunidad! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
     enlaceDescarga: "https://bandmanager.io/descargas/tema-inedito-directo.mp3",
-    codigoDescuento: "BAKANDEYA-FAN-10"
+    codigoDescuento: "FAN-10"
   },
   donacionRevolut: {
     habilitado: true,
-    revolutTag: "bakandeya",
-    revolutUrl: "https://revolut.me/bakandeya",
-    titulo: "Colabora con Bakandeya con una aportación económica",
+    revolutTag: "",
+    revolutUrl: "",
+    titulo: "Colabora con la banda con una aportación económica",
     descripcion: "Tu apoyo directo y voluntario nos permite financiar gastos de furgoneta de gira, grabación de nuevos sencillos en estudio y material independiente sin intermediarios."
   },
   ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"],
   firmaEmail: {
-    nombreRemitente: "Diego de la Calle",
-    cargo: "Booking & Management | Bakandeya",
-    telefono: "+34 612 345 678",
-    email: "diego.delacalleb@gmail.com",
-    textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+    nombreRemitente: "Booking & Management",
+    cargo: "Booking & Management",
+    telefono: "",
+    email: "",
+    textoPie: "Música en directo y conciertos",
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
     redesSociales: {

@@ -482,6 +482,7 @@ export default function CalendarView({
  const [rehLugar, setRehLugar] = useState('Locales de Ensayo');
  const [rehNotas, setRehNotas] = useState('Ensayo general de repertorio directo');
  const [rehEstado, setRehEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
+ const [rehSetlistId, setRehSetlistId] = useState<string>('');
 
  // Form fields for new Concert
  const [concCiudad, setConcCiudad] = useState('Madrid');
@@ -493,6 +494,35 @@ export default function CalendarView({
  const [concTipo, setConcTipo] = useState<'propio' | 'festival' | 'privado'>('propio');
  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
  const [concIdioma, setConcIdioma] = useState('');
+ const [concSetlistId, setConcSetlistId] = useState<string>('');
+
+ // Setlists disponibles para ensayos y conciertos
+ const [availableSetlists, setAvailableSetlists] = useState<any[]>(() => {
+ try {
+ const saved = localStorage.getItem('bakandeya_setlists_data');
+ return saved ? JSON.parse(saved) : [];
+ } catch {
+ return [];
+ }
+ });
+
+ useEffect(() => {
+ let isMounted = true;
+ fetch('/api/setlists')
+ .then(res => res.json())
+ .then(data => {
+ if (!isMounted) return;
+ const list = Array.isArray(data) ? data : (data?.setlists || []);
+ if (list && list.length > 0) {
+ setAvailableSetlists(list);
+ try {
+ localStorage.setItem('bakandeya_setlists_data', JSON.stringify(list));
+ } catch (e) {}
+ }
+ })
+ .catch(() => {});
+ return () => { isMounted = false; };
+ }, [activeBandId]);
 
  // Ficha del concierto: ver / editar un concierto ya creado
  const [viewingConcert, setViewingConcert] = useState<Concert | null>(null);
@@ -517,7 +547,8 @@ export default function CalendarView({
  estado_pago: editDraft.estado_pago,
  tipo: editDraft.tipo,
  notas: editDraft.notas?.trim() || '',
- idioma: editDraft.idioma || undefined
+ idioma: editDraft.idioma || undefined,
+ setlistId: editDraft.setlistId || undefined
  });
  setViewingConcert(null);
  setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
@@ -543,6 +574,7 @@ export default function CalendarView({
  notas: editRehearsalDraft.notas?.trim() || '',
  convocatoria_tipo: editRehearsalDraft.convocatoria_tipo,
  convocados_ids: editRehearsalDraft.convocados_ids,
+ setlistId: editRehearsalDraft.setlistId || undefined
  });
  setViewingRehearsal(null);
  setSyncSuccessMessage(`¡Ensayo en ${editRehearsalDraft.lugar} actualizado!`);
@@ -868,7 +900,8 @@ export default function CalendarView({
  bandName: targetBand.bandName,
  convocatoria_tipo: convocatoriaTipo,
  convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
- convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map(m => m.name) : undefined
+ convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map(m => m.name) : undefined,
+ setlistId: rehSetlistId || undefined
  };
 
  if (onAddRehearsal) {
@@ -901,7 +934,8 @@ export default function CalendarView({
  convocatoria_tipo: convocatoriaTipo,
  convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
  convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map(m => m.name) : undefined,
- idioma: concIdioma || undefined
+ idioma: concIdioma || undefined,
+ setlistId: concSetlistId || undefined
  };
 
  if (onAddConcert) {
@@ -1209,15 +1243,6 @@ export default function CalendarView({
  : selectedRehearsal
  ? `${rehearsalTypeLabel}: ${selectedRehearsal.lugar.split(',')[0]}`
  : `Día Libre`;
-
- const availableSetlists = React.useMemo(() => {
- try {
- const saved = localStorage.getItem('bakandeya_setlists_data');
- return saved ? JSON.parse(saved) : [];
- } catch {
- return [];
- }
- }, []);
 
  const currentSetlistId = selectedConcert?.setlistId || selectedRehearsal?.setlistId;
  const assignedSetlist = availableSetlists.find((s: any) => s.id === currentSetlistId);
@@ -3046,6 +3071,34 @@ export default function CalendarView({
  </div>
 
  <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
+ <span className="flex items-center gap-1 text-[#10b981]">
+ <Music className="w-3 h-3" />
+ <span>Repertorio / Setlist a Ensayar</span>
+ </span>
+ {rehSetlistId && (
+ <span className="text-[9px] font-mono text-[#10b981]">
+ {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
+ </span>
+ )}
+ </label>
+ <select
+ value={rehSetlistId}
+ onChange={(e) => setRehSetlistId(e.target.value)}
+ className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+ }`}
+ >
+ <option value="">-- Sin repertorio asignado --</option>
+ {availableSetlists.map((s: any) => (
+ <option key={s.id} value={s.id}>
+ {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
+ </option>
+ ))}
+ </select>
+ </div>
+
+ <div>
  <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Objetivo del Ensayo</label>
  <textarea
  value={rehNotas}
@@ -3301,6 +3354,34 @@ export default function CalendarView({
  </div>
 
  <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
+ <span className="flex items-center gap-1 text-[#d1b375]">
+ <Disc3 className="w-3 h-3" />
+ <span>Repertorio / Setlist del Concierto</span>
+ </span>
+ {concSetlistId && (
+ <span className="text-[9px] font-mono text-[#10b981]">
+ {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
+ </span>
+ )}
+ </label>
+ <select
+ value={concSetlistId}
+ onChange={(e) => setConcSetlistId(e.target.value)}
+ className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+ }`}
+ >
+ <option value="">-- Sin repertorio asignado --</option>
+ {availableSetlists.map((s: any) => (
+ <option key={s.id} value={s.id}>
+ {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
+ </option>
+ ))}
+ </select>
+ </div>
+
+ <div>
  <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Cláusulas Técnicas</label>
  <textarea
  value={concNotas}
@@ -3514,6 +3595,34 @@ export default function CalendarView({
  </div>
 
  <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
+ <span className="flex items-center gap-1 text-[#d1b375]">
+ <Disc3 className="w-3 h-3" />
+ <span>Repertorio / Setlist Asignado</span>
+ </span>
+ {editDraft.setlistId && (
+ <span className="text-[9px] font-mono text-[#10b981]">
+ {availableSetlists.find((s: any) => s.id === editDraft.setlistId)?.items?.length || 0} temas
+ </span>
+ )}
+ </label>
+ <select
+ value={editDraft.setlistId || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, setlistId: e.target.value || undefined } : prev)}
+ className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+ }`}
+ >
+ <option value="">-- Sin repertorio asignado --</option>
+ {availableSetlists.map((s: any) => (
+ <option key={s.id} value={s.id}>
+ {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
+ </option>
+ ))}
+ </select>
+ </div>
+
+ <div>
  <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Cláusulas Técnicas</label>
  <textarea
  value={editDraft.notas}
@@ -3683,6 +3792,34 @@ export default function CalendarView({
  </div>
  </div>
  )}
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
+ <span className="flex items-center gap-1 text-[#10b981]">
+ <Music className="w-3 h-3" />
+ <span>Repertorio / Setlist a Ensayar</span>
+ </span>
+ {editRehearsalDraft.setlistId && (
+ <span className="text-[9px] font-mono text-[#10b981]">
+ {availableSetlists.find((s: any) => s.id === editRehearsalDraft.setlistId)?.items?.length || 0} temas
+ </span>
+ )}
+ </label>
+ <select
+ value={editRehearsalDraft.setlistId || ''}
+ onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, setlistId: e.target.value || undefined } : prev)}
+ className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+ isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+ }`}
+ >
+ <option value="">-- Sin repertorio asignado --</option>
+ {availableSetlists.map((s: any) => (
+ <option key={s.id} value={s.id}>
+ {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
+ </option>
+ ))}
+ </select>
  </div>
 
  <div>

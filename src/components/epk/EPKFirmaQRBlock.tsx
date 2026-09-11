@@ -130,7 +130,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     firmaEmail: { ...(config.firmaEmail || {}), nombreRemitente: e.target.value }
                   })
                 }
-                placeholder="Ej: Diego & Filgue"
+                placeholder="Ej: Booking & Management"
                 className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-white outline-none"
               />
             </div>
@@ -162,7 +162,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                     firmaEmail: { ...(config.firmaEmail || {}), telefono: e.target.value }
                   })
                 }
-                placeholder="+34 652 93 85 21"
+                placeholder="+34 600 00 00 00"
                 className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-white outline-none font-mono"
               />
             </div>
@@ -198,7 +198,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                   firmaEmail: { ...(config.firmaEmail || {}), textoPie: e.target.value }
                 })
               }
-              placeholder="Bakandeya — Electrónica-Fusión & Balkan Ska Directo"
+              placeholder="Música en directo, energía y directo arrollador"
               className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-white outline-none"
             />
           </div>
@@ -322,7 +322,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
                   <div className="space-y-0.5 flex-1 min-w-0">
                     <h4 className="font-bold text-slate-900 text-sm leading-tight truncate">
-                      {config.firmaEmail?.nombreRemitente || config.contactoBooking?.nombre || 'Diego & Filgue'}
+                      {config.firmaEmail?.nombreRemitente || config.contactoBooking?.nombre || (isBakandeya ? 'Booking & Management' : 'Booking & Management Team')}
                     </h4>
                     <p className="text-slate-600 font-medium text-xs truncate">
                       {config.firmaEmail?.cargo || 'Booking & Management Team'}

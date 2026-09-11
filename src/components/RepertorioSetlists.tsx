@@ -75,12 +75,11 @@ interface RepertorioSetlistsProps {
 // app: solo debe mostrarse cuando la banda activa es literalmente Bakandeya, nunca como
 // fallback para otras bandas (ver bandRosterMembers más abajo).
 const BAKANDEYA_DEMO_MEMBERS: BandMemberOption[] = [
-  { id: 'usr-diego', name: 'Diego', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
-  { id: 'usr-filgue', name: 'Filgue', instrument: 'Beatbox / Coros', avatarColor: '#f59e0b' },
-  { id: 'usr-jon', name: 'Jon', instrument: 'Bajo / Teclados', avatarColor: '#10b981' },
-  { id: 'usr-mikel', name: 'Mikel', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
-  { id: 'usr-larra', name: 'Larra', instrument: 'Trompeta / Vientos', avatarColor: '#3b82f6' },
-  { id: 'usr-raul', name: 'Raúl', instrument: 'Violín / Arreglos', avatarColor: '#8b5cf6' }
+  { id: 'usr-1', name: 'Voz / Guitarra', instrument: 'Voz / Guitarra', avatarColor: '#6366f1' },
+  { id: 'usr-2', name: 'Bajo / Coros', instrument: 'Bajo / Coros', avatarColor: '#f59e0b' },
+  { id: 'usr-3', name: 'Batería / Percusión', instrument: 'Batería / Percusión', avatarColor: '#ec4899' },
+  { id: 'usr-4', name: 'Teclados / Sintes', instrument: 'Teclados / Sintes', avatarColor: '#10b981' },
+  { id: 'usr-5', name: 'Vientos / Metales', instrument: 'Vientos / Metales', avatarColor: '#3b82f6' }
 ];
 
 export function formatSecondsToMmSs(secs: number): string {
@@ -295,11 +294,11 @@ const DEFAULT_SETLISTS: Setlist[] = [
  { id: 'i-b1', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Bloque 1: Calentamiento & Arranque' },
  { id: 'i-1', songId: 'song-1', tipoItem: 'cancion', notaTema: 'Arrancar directo sin intro' },
  { id: 'i-2', songId: 'song-2', tipoItem: 'cancion', notaTema: 'Empalmar batería con final de Brisa' },
- { id: 'i-bbx', tipoItem: 'bloque', bloqueSubtipo: 'beatbox', tituloCustom: 'Performance Beatbox Filgue & Intro Vocal', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Luz cenital sobre Filgue. Batería marca el pulso.' },
+ { id: 'i-bbx', tipoItem: 'bloque', bloqueSubtipo: 'beatbox', tituloCustom: 'Solo de Percusión / Intro Vocal', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Luz cenital sobre el solista. La base rítmica marca el pulso.' },
 
  { id: 'i-b2', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '⚡ Bloque 2: Nudo & Clímax' },
  { id: 'i-3', songId: 'song-4', tipoItem: 'cancion', notaTema: 'Subidón ska' },
- { id: 'i-4', tipoItem: 'bloque', bloqueSubtipo: 'presentacion', tituloCustom: 'Presentación Banda & Agradecimientos', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'Jon habla al público y presenta a los vientos' },
+ { id: 'i-4', tipoItem: 'bloque', bloqueSubtipo: 'presentacion', tituloCustom: 'Presentación Banda & Agradecimientos', duracionEstimadaMinutos: 2, duracionEstimadaSegundos: 120, notaTema: 'El vocalista habla al público y presenta a los músicos' },
  { id: 'i-5', songId: 'song-3', tipoItem: 'cancion', notaTema: 'Cambio de guitarra a Drop D' },
 
  { id: 'i-b3', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '💣 Bloque 3: Desenlace & BIS Final' },
@@ -320,7 +319,7 @@ const DEFAULT_SETLISTS: Setlist[] = [
  { id: 'i-20', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Bloque 1: Bienvenida & Potencia' },
  { id: 'i-21', songId: 'song-1', tipoItem: 'cancion' },
  { id: 'i-22', songId: 'song-6', tipoItem: 'cancion' },
- { id: 'i-intro', tipoItem: 'bloque', bloqueSubtipo: 'intro_tema', tituloCustom: 'Historia / Intro a Noches de Garaje', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Diego explica el origen de la canción' },
+ { id: 'i-intro', tipoItem: 'bloque', bloqueSubtipo: 'intro_tema', tituloCustom: 'Historia / Intro a Noches de Garaje', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Explicación del origen de la canción' },
  { id: 'i-23', songId: 'song-3', tipoItem: 'cancion' },
 
  { id: 'i-23b', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🎸 Bloque 2: Acústico & Covers' },
@@ -652,7 +651,7 @@ export default function RepertorioSetlists({
  const [perfectSetlistPlan, setPerfectSetlistPlan] = useState<PerfectSetlistPlan | null>(null);
  const [perfectSetlistLoading, setPerfectSetlistLoading] = useState(false);
  const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(null);
- // Qué copia de trabajo ya existe para esta ronda de "Setlist Perfecto" — Diego pidió que
+ // Qué copia de trabajo ya existe para esta ronda de "Setlist Perfecto" — se especificó que
  // "Regenerar" no crease una copia nueva cada vez, así que se recuerda cuál ya se creó (por
  // ambos ids: el original del que salió y el propio id de la copia) y se reutiliza mientras no se
  // pida explícitamente una copia nueva. Solo se recuerda LA MÁS RECIENTE, no un historial por setlist.
@@ -4110,7 +4109,7 @@ export default function RepertorioSetlists({
   type="text"
   required
   defaultValue={editingShowItem?.tituloCustom || 'Presentación de la Banda'}
-  placeholder="Ej: Solo Beatbox Filgue, Presentación Larra, Intro Acústica..."
+  placeholder="Ej: Solo de guitarra, Saludo al público, Intro acústica..."
   className={`w-full p-2.5 rounded-xl border border-neutral-800 focus:outline-none ${
   isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
   }`}
@@ -4161,7 +4160,7 @@ export default function RepertorioSetlists({
   name="notaTema"
   rows={2}
   defaultValue={editingShowItem?.notaTema || ''}
-  placeholder="Ej: Foco rojo a Filgue, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
+  placeholder="Ej: Foco cenital sobre guitarra solista, aviso de merchandising en mesa, cambio a guitarra en Drop D..."
   className={`w-full p-2.5 rounded-xl border border-neutral-800 focus:outline-none ${
   isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
   }`}

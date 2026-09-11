@@ -10,6 +10,7 @@ import { apiFetch } from '../../utils/api';
 import { uploadFileToServer } from '../../utils/audioStorage';
 import { ModalPortal } from '../common/ModalPortal';
 import { normalizePlan } from '../../utils/planPermissions';
+import { markOnboardingCompleted } from '../../utils/userPreferences';
 
 import { 
   SpotifyAlbum, QuickEventItem, 
@@ -892,6 +893,10 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   };
 
   const handleFinishWizard = () => {
+    markOnboardingCompleted(activeBandId, { wizard: true, onboarding: true }, true).catch(() => {});
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
+    }
     onClose();
   };
 

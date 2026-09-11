@@ -70,7 +70,7 @@ export default function SongStudioModal({
   isStitchLight = false,
   onClose,
   onUpdateSong,
-  currentUsername = 'Diego'
+  currentUsername = 'Tu Nombre'
 }: SongStudioModalProps) {
   const songRef = useRef<Song>(song);
   useEffect(() => {

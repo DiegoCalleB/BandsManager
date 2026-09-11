@@ -118,4 +118,24 @@ describe('buildAvailableBandsForUser', () => {
     expect(bands[0].band_id).not.toBe('band-bakandeya');
     expect(bands[0].bandName).not.toMatch(/bakandeya/i);
   });
+
+  it('una nueva banda sin logo configurado no hereda el logo de otra banda (ej: Ruta 66)', async () => {
+    const state = {
+      userBands: [
+        { user_id: 'u6', band_id: 'band-nuevabanda', role: 'leader' }
+      ],
+      registeredBands: [
+        { band_id: 'band-nuevabanda', nombre_banda: 'Nueva Banda Indie', logo_url: '' },
+        { band_id: 'band-ruta66', nombre_banda: 'Ruta 66', logo_url: 'https://example.com/ruta66.png' }
+      ],
+      users: [],
+      epkConfigsByBand: {}
+    };
+    const user = { id: 'u6', email: 'indie@ejemplo.com', band_id: 'band-nuevabanda' };
+
+    const bands = await buildAvailableBandsForUser(state, user);
+    const nuevaBanda = bands.find((b: any) => b.band_id === 'band-nuevabanda');
+    expect(nuevaBanda).toBeDefined();
+    expect(nuevaBanda?.logoUrl).toBeFalsy();
+  });
 });

@@ -789,7 +789,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       type="text"
                       value={newBandLeaderName}
                       onChange={(e) => setNewBandLeaderName(e.target.value)}
-                      placeholder="Ej: Diego (Guitarra & Mánager)"
+                      placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
                       className="w-full px-4 py-2.5 rounded-2xl text-xs bg-neutral-950 border border-neutral-800 text-white placeholder-neutral-500 focus:border-amber-500/70 focus:outline-none transition-colors"
                     />
                   </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck } from 'lucide-react';
 import { NavItemId } from '../../config/navGroups';
+import { markOnboardingCompleted } from '../../utils/userPreferences';
 
 interface MusicianOnboardingModalProps {
   isOpen: boolean;
@@ -18,20 +19,18 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
   if (!isOpen) return null;
 
   const handleChooseMission = (view: NavItemId) => {
-    try {
-      localStorage.setItem('bandmanager_onboarding_completed', 'true');
-    } catch {
-      // Ignorar fallo de almacenamiento
+    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
     }
     onSelectMission(view);
     onClose();
   };
 
   const handleDismiss = () => {
-    try {
-      localStorage.setItem('bandmanager_onboarding_completed', 'true');
-    } catch {
-      // Ignorar fallo de almacenamiento
+    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
     }
     onClose();
   };

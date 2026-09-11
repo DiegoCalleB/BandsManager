@@ -123,16 +123,16 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
         twitter: "https://x.com/bakandeya_band"
       },
       contactoBooking: {
-        nombre: "Booking & Management Bakandeya",
-        email: "diego.delacalleb@gmail.com",
-        telefono: "+34 612 345 678"
+        nombre: "Booking & Management",
+        email: "",
+        telefono: ""
       },
       firmaEmail: {
-        nombreRemitente: "Diego de la Calle",
-        cargo: "Booking & Management | Bakandeya",
-        telefono: "+34 612 345 678",
-        email: "diego.delacalleb@gmail.com",
-        textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+        nombreRemitente: "Booking & Management",
+        cargo: "Booking & Management",
+        telefono: "",
+        email: "",
+        textoPie: "Música en directo y conciertos",
         incluirIconosRedes: true,
         adjuntarDossierPorDefecto: true,
         redesSociales: {

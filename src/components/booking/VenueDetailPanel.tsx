@@ -104,7 +104,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Bitácora state
   const [interactionType, setInteractionType] = useState<InteractionLog['tipo']>('Llamada');
-  const [interactionAutor, setInteractionAutor] = useState('Diego (Manager)');
+  const [interactionAutor, setInteractionAutor] = useState('Mánager / Booking');
   const [interactionNotes, setInteractionNotes] = useState('');
   const [interactionResultado, setInteractionResultado] = useState<InteractionLog['resultado']>('Interesado');
 

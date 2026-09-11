@@ -40,52 +40,52 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
   bandPhotos: ['/logo_bakandeya.jpg'],
   temasDestacadosIds: ['s-1', 's-2', 's-3'],
   contactoBooking: {
-    nombre: 'Booking & Management Bakandeya',
-    email: 'diego.delacalleb@gmail.com',
-    telefono: '+34 612 345 678'
+    nombre: 'Booking & Management',
+    email: '',
+    telefono: ''
   },
-  riderTecnico: '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para sección de metales (2 x SM57 / clip condenser)\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
+  riderTecnico: '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para instrumentos y percusión\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
   enlacesRedes: {
-    spotify: 'https://open.spotify.com/artist/bakandeya',
-    youtube: 'https://youtube.com/@bakandeya_oficial',
-    instagram: 'https://instagram.com/bakandeya_oficial',
-    tiktok: 'https://tiktok.com/@bakandeya_oficial',
-    appleMusic: 'https://music.apple.com/artist/bakandeya',
-    bandcamp: 'https://bakandeya.bandcamp.com',
+    spotify: 'https://open.spotify.com',
+    youtube: 'https://youtube.com',
+    instagram: 'https://instagram.com',
+    tiktok: 'https://tiktok.com',
+    appleMusic: 'https://music.apple.com',
+    bandcamp: 'https://bandcamp.com',
     website: 'https://bandmanager.io',
-    whatsapp: '+34612345678',
-    facebook: 'https://facebook.com/bakandeyaoficial',
-    twitter: 'https://x.com/bakandeya_band',
-    revolut: 'https://revolut.me/bakandeya',
-    paypal: 'https://paypal.me/bakandeya'
+    whatsapp: '',
+    facebook: '',
+    twitter: '',
+    revolut: '',
+    paypal: ''
   },
   donacionRevolut: {
     habilitado: true,
-    revolutTag: 'bakandeya',
-    revolutUrl: 'https://revolut.me/bakandeya',
-    paypalUser: 'bakandeya',
-    paypalUrl: 'https://paypal.me/bakandeya',
+    revolutTag: '',
+    revolutUrl: '',
+    paypalUser: '',
+    paypalUrl: '',
     metodoPorDefecto: 'revolut',
     titulo: 'Colabora con la banda',
     descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.'
   },
   firmaEmail: {
-    nombreRemitente: 'Diego de la Calle',
-    cargo: 'Booking & Management | Bakandeya',
-    telefono: '+34 612 345 678',
-    email: 'diego.delacalleb@gmail.com',
-    textoPie: 'Bakandeya — Música en directo, mestizaje y ska-rock',
+    nombreRemitente: 'Booking & Management',
+    cargo: 'Booking & Management',
+    telefono: '',
+    email: '',
+    textoPie: 'Música en directo y gira',
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
     redesSociales: {
-      spotify: 'https://open.spotify.com/artist/bakandeya',
-      youtube: 'https://youtube.com/@bakandeya_oficial',
-      instagram: 'https://instagram.com/bakandeya_oficial',
-      tiktok: 'https://tiktok.com/@bakandeya_oficial',
-      appleMusic: 'https://music.apple.com/artist/bakandeya',
-      bandcamp: 'https://bakandeya.bandcamp.com',
+      spotify: 'https://open.spotify.com',
+      youtube: 'https://youtube.com',
+      instagram: 'https://instagram.com',
+      tiktok: 'https://tiktok.com',
+      appleMusic: 'https://music.apple.com',
+      bandcamp: 'https://bandcamp.com',
       website: 'https://bandmanager.io',
-      whatsapp: '+34612345678'
+      whatsapp: ''
     }
   }
 };

@@ -157,7 +157,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               rows={5}
               value={config.dossierTextoExtra || ''}
               onChange={e => setConfig({ ...config, dossierTextoExtra: e.target.value })}
-              placeholder="Ejemplo: Bakandeya cuenta con 4 integrantes (Jon Quel, José Filgueira, Elyar Pashang, Raúl Pérez). Formato disponible para salas y festivales según aforo y requisitos. Ofrecemos un show festivo de 90 minutos con metales y percusión en directo..."
+              placeholder="Ejemplo: La banda cuenta con 4 integrantes (voz, guitarra, bajo y batería). Formato versátil para salas y festivales según aforo y requisitos técnicos. Ofrecemos un show potente y enérgico de 90 minutos concebido para hacer vibrar al público..."
               className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
             />
             <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">

@@ -42,6 +42,7 @@ import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
 import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
 import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
+import { isOnboardingCompleted } from './utils/userPreferences';
 import { useLanguage } from './context/LanguageContext';
 import {
   Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
@@ -168,23 +169,20 @@ export default function App() {
   useEffect(() => {
     if (isLoggedIn && cleanActiveBandId) {
       try {
-        const wizardKey = `bandmanager_profile_wizard_completed_${cleanActiveBandId}`;
-        const onboardingKey = `bandmanager_onboarding_completed_${cleanActiveBandId}`;
-        const wizardDone = localStorage.getItem(wizardKey) === 'true';
-        const onboardingDone = localStorage.getItem(onboardingKey) === 'true';
+        const { wizardCompleted, onboardingCompleted } = isOnboardingCompleted(cleanActiveBandId, currentUser);
 
-        // Si es una banda nueva o sin asistente completado en este dispositivo, abrir el asistente
-        if (!wizardDone) {
+        // Si es una banda nueva o sin asistente completado para este usuario, abrir el asistente
+        if (!wizardCompleted) {
           setShowProfileWizardModal(true);
         }
-        if (!onboardingDone) {
+        if (!onboardingCompleted) {
           setShowOnboardingModal(true);
         }
       } catch {
         // En caso de modo incógnito o localStorage restringido
       }
     }
-  }, [isLoggedIn, cleanActiveBandId]);
+  }, [isLoggedIn, cleanActiveBandId, currentUser]);
 
   // Soft Limit Modal State
   const [planLimitModal, setPlanLimitModal] = useState<{
@@ -950,14 +948,14 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/logo_bandmanager_symbol.svg" 
+ src="/bandmanageriodefinitiva.jpeg" 
  alt="BandManager.ai" 
- className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
+ className="w-7 h-7 object-contain rounded-lg shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.OI</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.AI</span>
  </span>
  </div>
  </div>
@@ -1215,14 +1213,14 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/logo_bandmanager_symbol.svg" 
+ src="/bandmanageriodefinitiva.jpeg" 
  alt="BandManager.ai" 
- className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
+ className="w-7 h-7 object-contain rounded-lg shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.OI</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.AI</span>
  </span>
  </div>
  </div>
@@ -1735,6 +1733,7 @@ export default function App() {
           localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
         }
         localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
+        window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
       } catch {}
     }}
     currentUser={currentUser}

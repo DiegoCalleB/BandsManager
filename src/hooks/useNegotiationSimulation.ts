@@ -22,15 +22,15 @@ export function useNegotiationSimulation(
  const PREDEFINED_SCENARIOS = {
  sala: [
  { key: 'taquilla', label: 'Interés y reparto de taquilla (70/30 o similar)', defaultInstruction: 'La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.' },
- { key: 'rider', label: 'Exigencias de Rider Técnico y horarios', defaultInstruction: 'La sala está interesada pero exige revisar detalladamente el rider de violín, percusión y sintetizadores analógicos, y pregunta por la hora de montaje de Bakandeya.' },
+ { key: 'rider', label: 'Exigencias de Rider Técnico y horarios', defaultInstruction: 'La sala está interesada pero exige revisar detalladamente el rider de violín, percusión y sintetizadores analógicos, y pregunta por la hora de montaje y prueba de sonido de la banda.' },
  { key: 'lleno', label: 'Rechazo amable por calendario lleno', defaultInstruction: 'La sala felicita a la banda por su dossier pero explica que tiene el calendario de otoño cerrado. Ofrece dejar el contacto para la gira de primavera.' },
  { key: 'contrato', label: 'Aceptación final y petición de datos fiscales', defaultInstruction: 'La sala confirma la fecha sugerida en el pitch, acepta las condiciones de la banda y solicita los datos fiscales (CIF, dirección, representante) para redactar el contrato oficial.' },
  { key: 'custom', label: 'Instrucción libre personalizada...', defaultInstruction: '' }
  ],
  banda: [
- { key: 'contrapropuesta', label: 'Contrapropuesta de fecha (Fin de semana) y co-organización', defaultInstruction: 'Bakandeya Agent Manager IA responde sugiriendo cambiar un concierto propuesto en miércoles a un viernes o sábado de noviembre, y sugiere compartir cartel con una banda local para asegurar aforo.' },
- { key: 'aceptacion_rider', label: 'Aceptación de condiciones y especificación de sintetizadores', defaultInstruction: 'Diego (guitarra) responde aceptando el reparto de taquilla propuesto y especifica que los sintetizadores analógicos van listos en dos líneas estéreo balanceadas.' },
- { key: 'cache_minimo', label: 'Solicitud de caché o mínimo garantizado para cubrir furgoneta', defaultInstruction: 'Filgue (bajo) responde explicando de forma amigable que al viajar desde Madrid/Sevilla necesitan un mínimo garantizado de 300€ para cubrir gastos de gasolina y viaje.' },
+ { key: 'contrapropuesta', label: 'Contrapropuesta de fecha (Fin de semana) y co-organización', defaultInstruction: 'Booking Agent IA responde sugiriendo cambiar un concierto propuesto en miércoles a un viernes o sábado de noviembre, y sugiere compartir cartel con una banda local para asegurar aforo.' },
+ { key: 'aceptacion_rider', label: 'Aceptación de condiciones y especificación de sintetizadores', defaultInstruction: 'El responsable técnico de la banda responde aceptando el reparto de taquilla propuesto y especifica los requerimientos de líneas estéreo balanceadas.' },
+ { key: 'cache_minimo', label: 'Solicitud de caché o mínimo garantizado para cubrir furgoneta', defaultInstruction: 'El mánager de la banda responde explicando de forma amigable que al viajar en furgoneta necesitan un mínimo garantizado para cubrir gastos de desplazamiento.' },
  { key: 'custom', label: 'Instrucción libre personalizada...', defaultInstruction: '' }
  ]
  };
@@ -45,15 +45,15 @@ export function useNegotiationSimulation(
  setSimulationScenario('taquilla');
  setSimulationSubject(selectedLead?.hilo_emails && selectedLead.hilo_emails.length > 0
  ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya');
+ : selectedLead?.band_id ? `Re: Propuesta de concierto` : 'Re: Propuesta de concierto');
  setSimulationCustomInstruction('La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.');
  } else {
- setSimulationSenderName('Bakandeya Agent Manager IA');
+ setSimulationSenderName('Booking Agent IA');
  setSimulationScenario('contrapropuesta');
  setSimulationSubject(selectedLead?.hilo_emails && selectedLead.hilo_emails.length > 0
  ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya');
- setSimulationCustomInstruction('Bakandeya Agent Manager IA responde sugiriendo cambiar un concierto propuesto en miércoles a un viernes o sábado de noviembre, y sugiere compartir cartel con una banda local para asegurar aforo.');
+ : selectedLead?.band_id ? `Re: Propuesta de concierto` : 'Re: Propuesta de concierto');
+ setSimulationCustomInstruction('Booking Agent IA responde sugiriendo cambiar un concierto propuesto en miércoles a un viernes o sábado de noviembre, y sugiere compartir cartel con una banda local para asegurar aforo.');
  }
  };
 
@@ -80,7 +80,7 @@ export function useNegotiationSimulation(
  setSimulationSenderName(`Programador de ${selectedLead.nombre_sala}`);
  setSimulationSubject(selectedLead.hilo_emails && selectedLead.hilo_emails.length > 0
  ? `RE: ${selectedLead.hilo_emails[selectedLead.hilo_emails.length - 1].asunto}`
- : 'Re: Propuesta de concierto - Bakandeya');
+ : selectedLead?.band_id ? `Re: Propuesta de concierto` : 'Re: Propuesta de concierto');
  setSimulationCustomInstruction('La sala muestra gran interés por el directo. Propone una fecha de viernes o sábado de noviembre, un reparto de taquilla del 70/30 a favor de la banda, y entradas a 12€.');
  };
 
@@ -127,7 +127,7 @@ export function useNegotiationSimulation(
  fecha: fechaStr,
  remitente: simulationRole,
  remitente_nombre: simulationSenderName,
- asunto: simulationSubject || 'Re: Propuesta de concierto - Bakandeya',
+ asunto: simulationSubject || selectedLead?.band_id ? `Re: Propuesta de concierto` : 'Re: Propuesta de concierto',
  mensaje: simulationMessage
  };
 

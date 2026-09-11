@@ -348,7 +348,7 @@ export function SongModal({
                   className={`w-full p-2 rounded-lg focus:outline-none border border-neutral-800 ${
                     isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                   }`}
-                  placeholder="ej. Diego"
+                  placeholder="ej. Voz Principal"
                 />
               </div>
             </div>

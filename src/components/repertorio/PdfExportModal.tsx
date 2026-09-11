@@ -260,8 +260,8 @@ export function PdfExportModal({
   songs,
   isStitchLight,
   bandMembers = [],
-  bandName = 'Bakandeya',
-  bandLogoUrl = '/logo_bakandeya_bueno_sin_fondo.png',
+  bandName = 'Tu Banda',
+  bandLogoUrl = '',
   onClose,
   onUpdateSong
 }: PdfExportModalProps) {
@@ -269,7 +269,7 @@ export function PdfExportModal({
 
   // Print mode: 'all_members' | 'single_member' | 'master'
   const [printMode, setPrintMode] = useState<'all_members' | 'single_member' | 'master'>('all_members');
-  const [selectedMemberId, setSelectedMemberId] = useState<string>(resolvedMembers[0]?.id || 'usr-diego');
+  const [selectedMemberId, setSelectedMemberId] = useState<string>(resolvedMembers[0]?.id || 'member-1');
 
   // Cuando el auto-ajuste (ver computeAutoFitPlan/EMERGENCY_TITLE_FONT_PT) detecta el caso
   // AMBIGUO — el repertorio cabe en 1 sola hoja solo apretando la letra por debajo del mínimo

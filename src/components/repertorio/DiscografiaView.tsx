@@ -343,157 +343,36 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
   return (
     <div
-      className={`p-6 sm:p-8 rounded-3xl shadow-2xl transition-all ${
+      className={`p-3 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-2xl transition-all ${
         isStitchLight ? 'bg-white border border-slate-200' : 'bg-[#121212] border border-neutral-800'
       }`}
     >
-      {/* Top Header & Navigation */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-[#1db954]/15 border border-[#1db954]/30 flex items-center justify-center shadow-inner">
-              <Disc3 className="w-6 h-6 text-[#1db954]" />
+      {/* Top Controls Bar (Search + Quick Filters + Actions) */}
+      <div className="mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-white/10 space-y-2.5">
+        {/* Desktop title row (hidden on mobile to keep screen ultra-clean since RepertorioNavBar already provides title) */}
+        <div className="hidden sm:flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#1db954]/15 border border-[#1db954]/30 flex items-center justify-center shadow-inner shrink-0">
+              <Disc3 className="w-4 h-4 text-[#1db954]" />
             </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight" style={{ color: colors.text }}>
-                Discografía
+              <h2 className="text-base sm:text-lg font-display font-black tracking-tight" style={{ color: colors.text }}>
+                Lanzamientos & Discografía
               </h2>
-              <p className="text-xs font-mono opacity-60 mt-0.5">
-                {allNonEmptyAlbums.length} {allNonEmptyAlbums.length === 1 ? 'lanzamiento' : 'lanzamientos'} • {safeSongs.length} temas catalogados
+              <p className="text-[10px] font-mono opacity-60">
+                {allNonEmptyAlbums.length} {allNonEmptyAlbums.length === 1 ? 'lanzamiento' : 'lanzamientos'} • {safeSongs.length} temas
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Filter Pills, Search Bar, Expand All, & Create Album */}
-        <div className="flex items-center gap-3 flex-wrap">
-          {/* Search Input Bar */}
-          <div className="relative min-w-[200px] sm:min-w-[240px] flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar canción, tono, letra..."
-              className={`w-full pl-9 pr-8 py-1.5 rounded-full text-xs font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[#1db954]/50 ${
-                isStitchLight
-                  ? 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-400 focus:bg-white'
-                  : 'bg-neutral-900 border-neutral-800 text-white placeholder-neutral-500 focus:border-[#1db954]/60'
-              }`}
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-0.5 rounded-full transition-colors cursor-pointer"
-                title="Limpiar búsqueda"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {/* Tabs */}
-          <div className={`p-1 rounded-full border flex items-center gap-1 ${isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900 border-neutral-800'}`}>
-            <button
-              type="button"
-              onClick={() => setActiveFilterTab('todos')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
-                activeFilterTab === 'todos'
-                  ? 'bg-[#1db954] text-black shadow-md'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-            >
-              Todos
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveFilterTab('albumes')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
-                activeFilterTab === 'albumes'
-                  ? 'bg-[#1db954] text-black shadow-md'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-            >
-              Álbumes
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveFilterTab('singles')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
-                activeFilterTab === 'singles'
-                  ? 'bg-[#1db954] text-black shadow-md'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-            >
-              Sencillos y EP
-            </button>
-          </div>
-
-          {/* Expand/Collapse All Button — solo icono: es un toggle de vista, no la acción
-              principal de la pantalla, no necesita competir en texto con el resto. */}
-          {filteredAlbums.length > 0 && (
-            <button
-              type="button"
-              onClick={toggleAllAlbums}
-              className={`p-2 rounded-full transition-all cursor-pointer border ${
-                isStitchLight
-                  ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
-                  : 'bg-neutral-800 border-neutral-700 text-zinc-300 hover:bg-neutral-700 hover:text-white'
-              }`}
-              title={areAllExpanded ? 'Plegar todos los discos' : 'Desplegar todos los discos'}
-            >
-              <Layers className="w-3.5 h-3.5 text-[#1db954]" />
-            </button>
-          )}
-
-          {songsPendingDynamicsAnalysis.length > 0 && (
-            <div className="flex flex-col items-end gap-1">
-              <button
-                type="button"
-                onClick={handleAnalyzeAllDynamics}
-                disabled={dynamicsAnalysis?.running}
-                className="px-4 py-2 rounded-full bg-sky-600 hover:bg-sky-500 disabled:opacity-70 disabled:cursor-wait text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
-                title="Detecta automáticamente, a partir del audio, qué temas tienen subidas y bajadas de energía internas (para el Mapa de Energía del Show)"
-              >
-                {dynamicsAnalysis?.running ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Analizando {dynamicsAnalysis.done}/{dynamicsAnalysis.total}...</span>
-                  </>
-                ) : (
-                  <>
-                    <Headphones className="w-4 h-4" />
-                    <span>🎧 Analizar Dinámica del Repertorio ({songsPendingDynamicsAnalysis.length})</span>
-                  </>
-                )}
-              </button>
-              {/* Resumen del último análisis: los fallos ya no se pierden en la consola — si
-                  algo no se pudo persistir (audio inaccesible, band_id antiguo, etc.) se ve aquí. */}
-              {!dynamicsAnalysis?.running && dynamicsAnalysis && dynamicsAnalysis.done > 0 && (
-                dynamicsAnalysis.failedTitles.length > 0 ? (
-                  <span className="text-[10px] font-mono text-amber-400 max-w-[280px] text-right">
-                    ⚠️ {dynamicsAnalysis.done - dynamicsAnalysis.failedTitles.length} analizadas · {dynamicsAnalysis.failedTitles.length} fallaron: {dynamicsAnalysis.failedTitles.join(', ')}
-                  </span>
-                ) : (
-                  <span className="text-[10px] font-mono text-emerald-400">
-                    ✅ {dynamicsAnalysis.done} canciones analizadas correctamente
-                  </span>
-                )
-              )}
-            </div>
-          )}
-
-          {/* Un único punto de entrada para las 4 formas de crear un disco — antes eran 4
-              botones de texto siempre visibles compitiendo por espacio con los filtros y el
-              análisis de dinámica. Se usan una vez por disco, no en cada visita. */}
+          {/* Desktop "+ Nuevo Disco" Button */}
           <div className="relative">
             <button
               type="button"
               onClick={() => setShowCreateAlbumMenu((v) => !v)}
-              className="px-4 py-2 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-xl transition-all hover:scale-105 active:scale-95"
+              className="px-3 py-1.5 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer shadow-md transition-all hover:scale-105 active:scale-95"
             >
-              <Plus className="w-4 h-4 stroke-[3]" />
+              <Plus className="w-3.5 h-3.5 stroke-[3]" />
               <span>Nuevo Disco</span>
             </button>
             {showCreateAlbumMenu && (
@@ -548,6 +427,116 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   </button>
                 </div>
               </>
+            )}
+          </div>
+        </div>
+
+        {/* Filter Pills, Search Bar, Expand All, & Mobile Create Album */}
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          {/* Search Input Bar */}
+          <div className="relative flex-1 min-w-[140px]">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar canción, tono, letra..."
+              className={`w-full pl-8 pr-7 py-1 sm:py-1.5 rounded-xl text-xs font-mono border transition-all focus:outline-none focus:ring-2 focus:ring-[#1db954]/50 ${
+                isStitchLight
+                  ? 'bg-slate-100 border-slate-300 text-slate-800 placeholder-slate-400 focus:bg-white'
+                  : 'bg-neutral-900 border-neutral-800 text-white placeholder-neutral-500 focus:border-[#1db954]/60'
+              }`}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white p-0.5 rounded-full transition-colors cursor-pointer"
+                title="Limpiar búsqueda"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+
+          {/* Quick Filter Tabs */}
+          <div className={`p-0.5 rounded-xl border flex items-center gap-0.5 shrink-0 ${isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900 border-neutral-800'}`}>
+            <button
+              type="button"
+              onClick={() => setActiveFilterTab('todos')}
+              className={`px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all cursor-pointer ${
+                activeFilterTab === 'todos'
+                  ? 'bg-[#1db954] text-black shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              Todos
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveFilterTab('albumes')}
+              className={`px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all cursor-pointer ${
+                activeFilterTab === 'albumes'
+                  ? 'bg-[#1db954] text-black shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              Álbumes
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveFilterTab('singles')}
+              className={`px-2 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-mono font-bold transition-all cursor-pointer ${
+                activeFilterTab === 'singles'
+                  ? 'bg-[#1db954] text-black shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+            >
+              Singles
+            </button>
+          </div>
+
+          {/* Action Icons: Fold/Unfold & Dynamics */}
+          <div className="flex items-center gap-1 shrink-0">
+            {filteredAlbums.length > 0 && (
+              <button
+                type="button"
+                onClick={toggleAllAlbums}
+                className={`p-1.5 rounded-xl transition-all cursor-pointer border ${
+                  isStitchLight
+                    ? 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
+                    : 'bg-neutral-900 border-neutral-800 text-zinc-300 hover:bg-neutral-800 hover:text-white'
+                }`}
+                title={areAllExpanded ? 'Plegar todos los discos' : 'Desplegar todos los discos'}
+              >
+                <Layers className="w-3.5 h-3.5 text-[#1db954]" />
+              </button>
+            )}
+
+            {/* Analizar Dinámica Button (Compact & Discreet) */}
+            {songsPendingDynamicsAnalysis.length > 0 && (
+              <div className="relative inline-flex flex-col items-end">
+                <button
+                  type="button"
+                  onClick={handleAnalyzeAllDynamics}
+                  disabled={dynamicsAnalysis?.running}
+                  className="px-2 py-1 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/40 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
+                  title="Detecta automáticamente qué canciones tienen subidas y bajadas de energía internas"
+                >
+                  {dynamicsAnalysis?.running ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin text-sky-400" />
+                      <span>{dynamicsAnalysis.done}/{dynamicsAnalysis.total}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Headphones className="w-3 h-3 text-sky-400" />
+                      <span className="hidden xs:inline">Dinámica</span>
+                      <span>({songsPendingDynamicsAnalysis.length})</span>
+                    </>
+                  )}
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -608,46 +597,46 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
               {/* Compact Album Header Bar */}
               <div
                 onClick={() => toggleAlbumExpand(album)}
-                className={`p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 cursor-pointer select-none transition-colors ${
+                className={`p-3 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer select-none transition-colors ${
                   isStitchLight
                     ? 'hover:bg-slate-100/80 border-b border-slate-200'
                     : 'hover:bg-neutral-800/40 border-b border-neutral-800/80'
                 }`}
               >
                 {/* Left: Cover & Information */}
-                <div className="flex items-center gap-4 min-w-0 flex-1">
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1 w-full sm:w-auto">
                   <div className="shrink-0 relative group" onClick={(e) => e.stopPropagation()}>
                     <AlbumCover
                       url={coverUrl}
                       onPlay={onSelectSong ? handlePlayAlbum : undefined}
                       isPlaying={isPlayingAlbum}
-                      className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl shadow-xl border border-white/10 object-cover"
+                      className="w-14 h-14 xs:w-16 xs:h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-xl sm:rounded-2xl shadow-md border border-white/10 object-cover"
                     />
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#1db954]/15 text-[#1ed760] border border-[#1db954]/30 text-[9px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                        <Disc3 className="w-3 h-3" />
+                    <div className="flex items-center gap-1.5 mb-0.5 sm:mb-1 flex-wrap">
+                      <span className="px-2 py-0.2 rounded-full bg-[#1db954]/15 text-[#1ed760] border border-[#1db954]/30 text-[8.5px] sm:text-[9px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1">
+                        <Disc3 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                         {album === 'Singles / Sin Disco' ? 'SENCILLOS & INÉDITAS' : 'ÁLBUM OFICIAL'}
                       </span>
                     </div>
 
                     <h3
-                      className="text-lg sm:text-xl font-bold font-display tracking-tight truncate leading-snug"
+                      className="text-sm sm:text-lg md:text-xl font-bold font-display tracking-tight truncate leading-snug"
                       style={{ color: colors.text }}
                       title={album}
                     >
                       {album}
                     </h3>
 
-                    <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mt-1 flex-wrap">
-                      <span className="font-semibold text-[#1ed760]">{bandName || 'Banda'}</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-mono text-neutral-400 mt-0.5 sm:mt-1 flex-wrap">
+                      <span className="font-semibold text-[#1ed760] truncate max-w-[120px]">{bandName || 'Banda'}</span>
                       <span>•</span>
                       <span>{sortedAlbumSongs.length} {sortedAlbumSongs.length === 1 ? 'canción' : 'canciones'}</span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-neutral-500" />
+                        <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-neutral-500" />
                         {formatTotalDuration(sortedAlbumSongs)}
                       </span>
                     </div>
@@ -655,23 +644,23 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 </div>
 
                 {/* Right: Controls & Fold/Unfold Chevron */}
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 self-end sm:self-center" onClick={(e) => e.stopPropagation()}>
                   {sortedAlbumSongs.length > 0 && onSelectSong && (
                     <button
                       type="button"
                       onClick={handlePlayAlbum}
-                      className="px-3.5 py-1.5 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                      className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-[11px] sm:text-xs font-mono flex items-center gap-1.5 shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
                       title={isPlayingAlbum ? 'Pausar disco' : 'Reproducir disco'}
                     >
                       {isPlayingAlbum ? (
                         <>
-                          <Pause className="w-3.5 h-3.5 fill-current" />
-                          <span className="hidden sm:inline">Pausar</span>
+                          <Pause className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
+                          <span className="hidden xs:inline">Pausar</span>
                         </>
                       ) : (
                         <>
-                          <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-                          <span className="hidden sm:inline">Reproducir</span>
+                          <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current ml-0.5" />
+                          <span className="hidden xs:inline">Play</span>
                         </>
                       )}
                     </button>
@@ -681,15 +670,15 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={() => onEditAlbum(album)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium font-mono flex items-center gap-1.5 transition-colors cursor-pointer border ${
+                      className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-medium font-mono flex items-center gap-1 sm:gap-1.5 transition-colors cursor-pointer border ${
                         isStitchLight
                           ? 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
                           : 'bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white'
                       }`}
                       title="Gestionar las canciones de este álbum"
                     >
-                      <Edit3 className="w-3.5 h-3.5 text-sky-400" />
-                      <span className="hidden sm:inline">Gestionar</span>
+                      <Edit3 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-sky-400" />
+                      <span className="hidden xs:inline">Gestionar</span>
                     </button>
                   )}
 
@@ -698,7 +687,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     <button
                       type="button"
                       onClick={() => setBulkUploadAlbum({ name: album, songs: sortedAlbumSongs })}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium font-mono flex items-center gap-1.5 transition-all cursor-pointer border ${
+                      className={`p-1.5 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-medium font-mono flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer border ${
                         isStitchLight
                           ? 'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100'
                           : 'bg-[#1db954]/15 border-[#1db954]/30 text-[#1ed760] hover:bg-[#1db954]/25 hover:text-white'
@@ -706,7 +695,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       title="Subir archivos de audio completos (MP3/WAV/FLAC) para este disco"
                     >
                       <FolderUp className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">Subir Audios Completos</span>
+                      <span className="hidden md:inline">Subir Audios</span>
                     </button>
                   )}
 
@@ -724,8 +713,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   {/* Expand / Collapse Toggle Button */}
                   <button
                     type="button"
-                    onClick={() => toggleAlbumExpand(album)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                    onClick={(e) => { e.stopPropagation(); toggleAlbumExpand(album); }}
+                    className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-mono font-bold flex items-center gap-1 transition-all cursor-pointer border ${
                       isExpanded
                         ? 'bg-[#1db954]/20 border-[#1db954]/40 text-[#1ed760]'
                         : isStitchLight
@@ -733,8 +722,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                         : 'bg-white/10 border-white/10 text-zinc-300 hover:bg-white/20 hover:text-white'
                     }`}
                   >
-                    <span>{isExpanded ? 'Ocultar' : `Ver temas (${sortedAlbumSongs.length})`}</span>
-                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    <span className="hidden xs:inline">{isExpanded ? 'Ocultar' : `Temas (${sortedAlbumSongs.length})`}</span>
+                    {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
