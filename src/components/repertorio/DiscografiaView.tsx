@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Song, ThemeColors } from '../../types';
-import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2, Search, X } from 'lucide-react';
+import { Disc, Disc3, Star, Play, Pause, Trash2, ArrowUp, ArrowDown, Edit3, Plus, Music, Clock, ChevronDown, ChevronUp, Layers, Scissors, Sparkles, Users, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from 'lucide-react';
 import { AlbumCover } from '../AlbumCover';
 import { uploadFileToServer, saveSongsToLocalStorageSafely } from '../../utils/audioStorage';
 import { apiFetch } from '../../utils/api';
 import { LiveConcertToAlbumModal, TrackCutItem } from './LiveConcertToAlbumModal';
 import { SpotifyDiscographyModal } from './SpotifyDiscographyModal';
 import { BulkAlbumAudioUploaderModal } from './BulkAlbumAudioUploaderModal';
+import { ExportAlbumSongsModal } from './ExportAlbumSongsModal';
 import { SongCardRow } from './SongCardRow';
 
 interface DiscografiaViewProps {
@@ -93,6 +94,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   const [draggedItem, setDraggedItem] = useState<{ album: string; index: number } | null>(null);
   const [dragOverItem, setDragOverItem] = useState<{ album: string; index: number } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [exportModalData, setExportModalData] = useState<{ isOpen: boolean; albumName?: string }>({ isOpen: false });
 
   const handleSaveLiveConcertAlbum = (albumTitle: string, tracks: TrackCutItem[]) => {
     const createdSongs: Song[] = tracks.map((t) => {
@@ -365,8 +367,18 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             </div>
           </div>
 
-          {/* Desktop "+ Nuevo Disco" Button */}
-          <div className="relative">
+          {/* Desktop "+ Nuevo Disco" and "Exportar Canciones" Buttons */}
+          <div className="flex items-center gap-2 relative">
+            <button
+              type="button"
+              onClick={() => setExportModalData({ isOpen: true, albumName: 'all' })}
+              className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer border border-white/10 shadow-sm transition-all hover:scale-105 active:scale-95"
+              title="Exportar canciones de la discografía a Excel, M3U playlist, TXT o PDF"
+            >
+              <Download className="w-3.5 h-3.5 text-[#1ed760]" />
+              <span>Exportar</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setShowCreateAlbumMenu((v) => !v)}
@@ -682,6 +694,26 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     </button>
                   )}
 
+                  {/* Per-Album Export Button */}
+                  {sortedAlbumSongs.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExportModalData({ isOpen: true, albumName: album });
+                      }}
+                      className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-medium font-mono flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer border ${
+                        isStitchLight
+                          ? 'bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100'
+                          : 'bg-white/5 border-white/10 text-amber-300 hover:bg-white/10 hover:text-white'
+                      }`}
+                      title="Exportar canciones de este disco (Excel, M3U, TXT, PDF)"
+                    >
+                      <Download className="w-3.5 h-3.5 text-amber-400" />
+                      <span className="hidden lg:inline">Exportar</span>
+                    </button>
+                  )}
+
                   {/* Bulk Audio Master Uploader Button */}
                   {sortedAlbumSongs.length > 0 && (
                     <button
@@ -894,6 +926,18 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           }}
         />
       )}
+
+      {/* Export Album Songs Modal */}
+      <ExportAlbumSongsModal
+        isOpen={exportModalData.isOpen}
+        onClose={() => setExportModalData({ isOpen: false })}
+        albumName={exportModalData.albumName}
+        songs={songs}
+        albumsList={allNonEmptyAlbums}
+        bandName={bandName || "Tu Banda"}
+        colors={colors}
+        isStitchLight={isStitchLight}
+      />
     </div>
   );
 };
