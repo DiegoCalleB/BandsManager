@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Shield, Sparkles, Music, Zap } from 'lucide-react';
 import { User as UserType } from '../types';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
@@ -175,7 +175,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
     }
   };
 
-  const inputClass = "w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner";
+  const inputClass = "w-full pl-11 pr-4 py-3.5 bg-[#17171f]/90 border border-neutral-800/90 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/20 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner";
 
   return (
     <ModalPortal isOpen={true}>
@@ -185,21 +185,6 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
             <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-[#f2ca50]/8 rounded-full blur-[110px] pointer-events-none" />
 
-            <div className="relative flex flex-col items-center justify-center pt-2 pb-1 text-center w-full">
-              <div className="relative group w-full max-w-[340px] sm:max-w-[380px] flex justify-center">
-                <img
-                  src="/bandmanageriodefinitiva.jpeg"
-                  alt="BandManager.ai"
-                  className="w-full h-auto max-h-56 sm:max-h-64 object-contain rounded-2xl drop-shadow-[0_16px_40px_rgba(242,202,80,0.28)] transition-all duration-300 group-hover:scale-[1.015]"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <p className="mt-3 text-sm text-neutral-300 font-medium">
-                {view === 'register' ? 'Crea tu dossier, QR y calendario en 30 segundos.' : 'Tú piensa en tu música, nosotros en lo demás.'}
-              </p>
-            </div>
-
             {error && (
               <div className="w-full p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-xs text-rose-300 flex items-start gap-2 animate-in fade-in duration-200">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
@@ -208,7 +193,25 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
             )}
 
             {view === 'login' && (
-              <div className="w-full animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+              <div className="w-full p-6 sm:p-7 bg-[#111116]/95 border border-[#f2ca50]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+                
+                {/* INTEGRATED LOGO INSIDE CARD */}
+                <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[#f2ca50]/12 rounded-full blur-3xl pointer-events-none" />
+                  
+                  <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
+                    <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50]">
+                      <img
+                        src="/bandmanageriodefinitiva.jpeg"
+                        alt="BandManager.ai"
+                        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 {resetSuccessMsg && (
                   <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-xs text-emerald-400 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 shrink-0" />
@@ -232,21 +235,47 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                       ¿Olvidaste tu contraseña?
                     </button>
                   </div>
-                  <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer">
+                  <button type="submit" disabled={loading} className="w-full py-3.5 px-4 mt-2 rounded-2xl bg-gradient-to-r from-[#f2ca50] to-[#e6b938] hover:from-[#f7dc82] hover:to-[#f2ca50] text-neutral-950 font-bold text-sm tracking-wide transition-all duration-200 shadow-[0_4px_24px_rgba(242,202,80,0.22)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer">
                     {loading ? 'Entrando...' : 'Entrar a mi cuenta'}
                   </button>
                 </form>
-                <p className="text-center text-xs text-neutral-400">
+                <p className="text-center text-xs text-neutral-400 pt-1">
                   ¿Primera vez por aquí?{' '}
                   <button type="button" onClick={() => { setError(null); setView('register'); }} className="text-[#f2ca50] hover:underline font-medium cursor-pointer">
                     Crea tu cuenta gratis
                   </button>
                 </p>
+
+                <div className="pt-3 border-t border-neutral-800/60 text-center text-[11px] text-neutral-400/90 flex items-center justify-center gap-1.5 font-medium">
+                  <Shield className="w-3.5 h-3.5 text-[#f2ca50]" />
+                  <span>Acceso seguro cifrado · Datos 100% privados de tu banda</span>
+                </div>
               </div>
             )}
 
             {view === 'register' && (
-              <div className="w-full animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+              <div className="w-full p-6 sm:p-7 bg-[#111116]/95 border border-[#f2ca50]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+                
+                {/* INTEGRATED LOGO INSIDE CARD */}
+                <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[#f2ca50]/12 rounded-full blur-3xl pointer-events-none" />
+                  
+                  <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
+                    <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50]">
+                      <img
+                        src="/bandmanageriodefinitiva.jpeg"
+                        alt="BandManager.ai"
+                        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  </div>
+                  <p className="mt-3 text-sm text-neutral-300 font-medium">
+                    Crea tu dossier, QR y calendario en 30 segundos.
+                  </p>
+                </div>
+
                 <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
                   <div className="relative flex items-center">
                     <Guitar className="w-4 h-4 text-[#f2ca50] absolute left-4 pointer-events-none" />
