@@ -26,6 +26,15 @@ describe('normalizePlan', () => {
     expect(normalizePlan('pro')).toBe('de_gira');
     expect(normalizePlan('elite')).toBe('cabeza_de_cartel');
     expect(normalizePlan('local')).toBe('local');
+    expect(normalizePlan('promo')).toBe('promo');
+    expect(normalizePlan('festival')).toBe('promo');
+    expect(normalizePlan('promo_plus')).toBe('promo_plus');
+    expect(normalizePlan('promo+')).toBe('promo_plus');
+    expect(normalizePlan('promoplus')).toBe('promo_plus');
+    expect(normalizePlan('promo plus')).toBe('promo_plus');
+    expect(normalizePlan('promo_music')).toBe('promo_plus');
+    expect(normalizePlan('promomusic')).toBe('promo_plus');
+    expect(normalizePlan('promo music')).toBe('promo_plus');
   });
 
   it('cae a ensayo con valores desconocidos o vacíos', () => {

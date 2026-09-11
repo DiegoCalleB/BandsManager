@@ -86,6 +86,29 @@ describe('buildAvailableBandsForUser', () => {
     expect(propia?.plan).toBe('promo');
   });
 
+  it('permite que un usuario tenga planes distintos en cada banda a la que pertenece', async () => {
+    const state = {
+      userBands: [
+        { user_id: 'u5', band_id: 'band-promo', role: 'member' },
+        { user_id: 'u5', band_id: 'band-plus', role: 'leader' }
+      ],
+      registeredBands: [
+        { band_id: 'band-promo', nombre_banda: 'Banda Festival', plan: 'promo' },
+        { band_id: 'band-plus', nombre_banda: 'Banda Repertoire', plan: 'promo_plus' }
+      ],
+      users: [],
+      epkConfigsByBand: {}
+    };
+    const user = { id: 'u5', email: 'musico@ejemplo.com', band_id: 'band-promo', plan: 'promo' };
+
+    const bands = await buildAvailableBandsForUser(state, user);
+    const bandaPromo = bands.find((b: any) => b.band_id === 'band-promo');
+    const bandaPlus = bands.find((b: any) => b.band_id === 'band-plus');
+
+    expect(bandaPromo?.plan).toBe('promo');
+    expect(bandaPlus?.plan).toBe('promo_plus');
+  });
+
   it('un usuario sin band_id no se etiqueta con la identidad de Bakandeya', async () => {
     const state = baseState();
     const user = { id: 'u4', email: 'cuenta-rota@ejemplo.com' }; // sin band_id ni main_band_id

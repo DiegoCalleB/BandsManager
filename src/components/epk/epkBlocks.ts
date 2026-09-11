@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Palette,
   FileText,
   FileDown,
   Music,
@@ -12,7 +13,7 @@ import {
 import { EPKConfig } from '../../types';
 import { tieneTraduccion } from '../../utils/epkTraducciones';
 
-export type EPKBlockId = 'perfil' | 'archivos' | 'musica' | 'prensa' | 'donaciones' | 'firma' | 'qr' | 'todos';
+export type EPKBlockId = 'plantillas' | 'perfil' | 'archivos' | 'musica' | 'prensa' | 'donaciones' | 'firma' | 'qr' | 'todos';
 
 export interface EPKBlockMeta {
   id: EPKBlockId;
@@ -25,10 +26,18 @@ export interface EPKBlockMeta {
 
 export const EPK_BLOCKS: EPKBlockMeta[] = [
   {
+    id: 'plantillas',
+    label: 'Plantillas & Diseño',
+    shortLabel: 'Plantillas',
+    number: 1,
+    icon: Palette,
+    description: 'Elige la plantilla visual (Escenario Rock, Minimalista Claro, Club Neón, Vintage Analógico) y reorganiza el orden de las secciones del dossier.'
+  },
+  {
     id: 'perfil',
     label: 'Perfil & Bio',
     shortLabel: 'Perfil',
-    number: 1,
+    number: 2,
     icon: FileText,
     description: 'Biografía oficial, trayectoria de la banda, formación de integrantes y datos de contacto de booking.'
   },
@@ -36,7 +45,7 @@ export const EPK_BLOCKS: EPKBlockMeta[] = [
     id: 'archivos',
     label: 'Media Kit & PDFs',
     shortLabel: 'Archivos',
-    number: 2,
+    number: 3,
     icon: FileDown,
     description: 'Logo oficial en alta resolución, dossier PDF descargable, rider técnico y galería de fotos de prensa.'
   },
@@ -44,7 +53,7 @@ export const EPK_BLOCKS: EPKBlockMeta[] = [
     id: 'musica',
     label: 'Música & Directo',
     shortLabel: 'Música',
-    number: 3,
+    number: 4,
     icon: Music,
     description: 'Adelanto en audio preview para fans, selección de temas destacados, vídeos de conciertos y logística de gira.'
   },
@@ -52,7 +61,7 @@ export const EPK_BLOCKS: EPKBlockMeta[] = [
     id: 'prensa',
     label: 'Social Proof & Prensa',
     shortLabel: 'Prensa',
-    number: 4,
+    number: 5,
     icon: BarChart3,
     description: 'Cifras clave de impacto (oyentes Spotify, seguidores en redes, conciertos) y reseñas en medios musicales.'
   },
@@ -60,7 +69,7 @@ export const EPK_BLOCKS: EPKBlockMeta[] = [
     id: 'donaciones',
     label: 'Donaciones & Idiomas',
     shortLabel: 'Donaciones',
-    number: 5,
+    number: 6,
     icon: Globe,
     description: 'Canales de aportación directa de fans (Revolut, PayPal) y traducción automática del dossier a 7 idiomas.'
   },
@@ -68,7 +77,7 @@ export const EPK_BLOCKS: EPKBlockMeta[] = [
     id: 'firma',
     label: 'Firma de Email',
     shortLabel: 'Firma',
-    number: 6,
+    number: 7,
     icon: AtSign,
     description: 'Generador de firma HTML profesional con enlaces a redes sociales y reproductor de audio.'
   },
@@ -76,7 +85,7 @@ export const EPK_BLOCKS: EPKBlockMeta[] = [
     id: 'qr',
     label: 'Código QR',
     shortLabel: 'QR',
-    number: 7,
+    number: 8,
     icon: QrCode,
     description: 'Código QR de acceso instantáneo al EPK público para cartelería física, tarjetas y flyers.'
   },
@@ -132,7 +141,7 @@ export function getBlockNavigation(currentBlock: EPKBlockId): {
   prev: EPKBlockMeta | null;
   next: EPKBlockMeta | null;
 } {
-  const sequence: EPKBlockId[] = ['perfil', 'archivos', 'musica', 'prensa', 'donaciones', 'firma', 'qr'];
+  const sequence: EPKBlockId[] = ['plantillas', 'perfil', 'archivos', 'musica', 'prensa', 'donaciones', 'firma', 'qr'];
   const idx = sequence.indexOf(currentBlock);
 
   const prev = idx > 0 ? EPK_BLOCKS.find(b => b.id === sequence[idx - 1]) || null : null;

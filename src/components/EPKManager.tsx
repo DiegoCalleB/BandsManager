@@ -16,6 +16,7 @@ import { EPKMusicaBlock } from './epk/EPKMusicaBlock';
 import { EPKPrensaBlock } from './epk/EPKPrensaBlock';
 import { EPKDonacionesBlock } from './epk/EPKDonacionesBlock';
 import { EPKFirmaQRBlock } from './epk/EPKFirmaQRBlock';
+import { EPKPlantillasBlock } from './epk/EPKPlantillasBlock';
 import { normalizePlan } from '../utils/planPermissions';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
@@ -51,7 +52,7 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
     tiktok: 'https://tiktok.com/@bakandeya_oficial',
     appleMusic: 'https://music.apple.com/artist/bakandeya',
     bandcamp: 'https://bakandeya.bandcamp.com',
-    website: 'https://bands-manager.up.railway.app',
+    website: 'https://bandmanager.io',
     whatsapp: '+34612345678',
     facebook: 'https://facebook.com/bakandeyaoficial',
     twitter: 'https://x.com/bakandeya_band',
@@ -83,7 +84,7 @@ const DEFAULT_EPK_CONFIG: EPKConfig = {
       tiktok: 'https://tiktok.com/@bakandeya_oficial',
       appleMusic: 'https://music.apple.com/artist/bakandeya',
       bandcamp: 'https://bakandeya.bandcamp.com',
-      website: 'https://bands-manager.up.railway.app',
+      website: 'https://bandmanager.io',
       whatsapp: '+34612345678'
     }
   }
@@ -172,7 +173,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   currentUser,
   isPromoPlan: isPromoPlanProp
 }) => {
-  const epkTutorial = useModuleTutorial('epk');
   const isPromoUser = isPromoPlanProp ?? (normalizePlan(currentUser?.plan) === 'promo');
   // App.tsx monta este componente sin pasarle 'songs', así que el selector de temas
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
@@ -185,6 +185,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
   const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
   const baseDefaults = isBakandeya ? DEFAULT_EPK_CONFIG : EMPTY_EPK_CONFIG;
+
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('epk');
 
   const [config, setConfig] = useState<EPKConfig>(() => {
     const initialRedes = {
@@ -281,10 +283,10 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   // público real de Bakandeya).
   const bandQueryParam = activeBandId ? `?band=${encodeURIComponent(activeBandId)}` : '';
   const rawEpkBase = typeof window !== 'undefined' 
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
-        ? 'https://bands-manager.up.railway.app/epk' 
-        : `${window.location.origin}/epk`) 
-    : 'https://bands-manager.up.railway.app/epk';
+    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
+        ? `${window.location.origin}/epk` 
+        : 'https://bandmanager.io/epk') 
+    : 'https://bandmanager.io/epk';
   const publicEpkUrl = `${rawEpkBase}${bandQueryParam}`;
 
   const handleSave = async () => {
@@ -588,7 +590,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3.5 sm:space-y-6">
       {/* HEADER MODULARIZADO */}
       <EPKHeader
         activeBlock={activeBlock}
@@ -598,26 +600,40 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         onCopyUrl={handleCopyUrl}
         onSave={handleSave}
         health={healthStats}
-        onOpenTutorial={epkTutorial.openTutorial}
+        isPromoPlan={isPromoUser}
+        onOpenTutorial={openTutorial}
       />
 
       {savedSuccess && (
-        <div className="p-4 bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-sm font-semibold rounded-xl flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="p-3 sm:p-4 bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 shrink-0" />
           <span>¡Información del dossier y kit de prensa guardada y sincronizada correctamente!</span>
         </div>
       )}
 
       {saveError && (
-        <div className="p-4 bg-red-950/80 border border-red-500/50 text-red-200 text-sm font-semibold rounded-xl flex items-center gap-2">
+        <div className="p-3 sm:p-4 bg-red-950/80 border border-red-500/50 text-red-200 text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
           <span>{saveError}</span>
         </div>
       )}
 
       {/* BLOQUES MODULARES DEL DOSSIER */}
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
           
+        {(activeBlock === 'plantillas' || activeBlock === 'todos') && (
+          <EPKPlantillasBlock
+            config={config}
+            onChange={(updated) => setConfig(prev => ({ ...prev, ...updated }))}
+            publicEpkUrl={publicEpkUrl}
+            prevBlock={prevBlockMeta}
+            nextBlock={nextBlockMeta}
+            onNavigate={setActiveBlock}
+            onSave={handleSave}
+            isAllView={activeBlock === 'todos'}
+          />
+        )}
+
         {(activeBlock === 'perfil' || activeBlock === 'todos') && (
           <EPKPerfilBlock
             config={config}
@@ -742,11 +758,12 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         currentBandLogo={config.logoUrl}
         epkConfig={config}
       />
-      {/* MODULE TUTORIAL MODAL */}
+
+      {/* Tutorial Interactivo Paso a Paso */}
       <ModuleTutorialModal
-        isOpen={epkTutorial.isOpen}
-        onClose={epkTutorial.closeTutorial}
         moduleId="epk"
+        isOpen={isTutorialOpen}
+        onClose={closeTutorial}
       />
     </div>
   );

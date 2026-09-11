@@ -1,4 +1,4 @@
-export type SubscriptionPlanId = 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | 'emergente' | 'profesional' | 'elite' | 'manager360';
+export type SubscriptionPlanId = 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | 'emergente' | 'profesional' | 'elite' | 'manager360';
 
 export interface PlanFeature {
   id: string;
@@ -6,7 +6,7 @@ export interface PlanFeature {
 }
 
 export interface PlanDefinition {
-  id: 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel';
+  id: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel';
   name: string;
   badge: string;
   color: string;
@@ -22,7 +22,7 @@ export interface PlanDefinition {
   features: string[];
 }
 
-export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanDefinition> = {
+export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanDefinition> = {
   promo: {
     id: 'promo',
     name: 'Promo',
@@ -31,13 +31,34 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
     price: '0€ / para siempre',
     credits: '0 créditos IA',
     creditsSub: 'Sin funciones de IA',
-    description: 'Para bandas que solo necesitan su dossier, QR y calendario en un festival o showcase.',
-    allowedModules: ['resumen', 'calendario', 'epk', 'fans'],
+    description: 'Para bandas que necesitan su dossier, QR, calendario de directos, captación de fans y gestión de repertorio.',
+    allowedModules: ['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'catalogo', 'discografia'],
     features: [
       'Dossier de Prensa Interactivo (EPK)',
       'QR de contacto y difusión',
       'Captación de fans con QR',
       'Calendario de conciertos y ensayos',
+      'Gestión de Repertorio & Discografía (hasta 25 temas)',
+    ],
+  },
+  promo_plus: {
+    id: 'promo_plus',
+    name: 'Promo+',
+    badge: 'Festivales+',
+    color: '#38bdf8', // Sky / Azul brillante
+    price: '0€ / para siempre',
+    credits: '0 créditos IA',
+    creditsSub: 'Sin funciones de IA',
+    description: 'Para bandas que necesitan su dossier, QR, calendario y además repertorio, setlists y discografía.',
+    allowedModules: ['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'catalogo', 'discografia'],
+    features: [
+      'Dossier de Prensa Interactivo (EPK)',
+      'QR de contacto y difusión',
+      'Captación de fans con QR',
+      'Calendario de conciertos y ensayos',
+      'Gestión de Repertorio, Setlists & Letras',
+      'Discografía & Catálogo de temas',
+      'Asignación de Setlists en directo',
     ],
   },
   ensayo: {
@@ -132,7 +153,7 @@ export const PLANS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de
   },
 };
 
-export function normalizePlan(rawPlan?: string): 'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
+export function normalizePlan(rawPlan?: string): 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' {
   if (!rawPlan) return 'ensayo';
   const clean = rawPlan.toLowerCase().trim();
 
@@ -144,6 +165,9 @@ export function normalizePlan(rawPlan?: string): 'promo' | 'ensayo' | 'local' | 
   }
   if (clean === 'local') {
     return 'local';
+  }
+  if (clean === 'promo_plus' || clean === 'promo+' || clean === 'promoplus' || clean === 'promo plus' || clean === 'festival_plus' || clean === 'festival+' || clean === 'promo_music' || clean === 'promomusic' || clean === 'promo music') {
+    return 'promo_plus';
   }
   if (clean === 'promo' || clean === 'buskers' || clean === 'festival') {
     return 'promo';
@@ -170,6 +194,7 @@ export function getPlanTierLevel(rawPlan?: string): number {
   if (norm === 'de_gira') return 3;
   if (norm === 'local') return 2;
   if (norm === 'ensayo') return 1;
+  if (norm === 'promo_plus') return 0.5;
   return 0; // promo
 }
 
@@ -191,12 +216,20 @@ export interface PlanLimits {
   monthlyCredits: number;
 }
 
-export const PLAN_LIMITS: Record<'promo' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
+export const PLAN_LIMITS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel', PlanLimits> = {
   promo: {
     maxLeads: 0,
     maxPressContacts: 0,
     maxBands: 1,
-    maxSongs: 0,
+    maxSongs: 25,
+    maxFans: 250,
+    monthlyCredits: 0
+  },
+  promo_plus: {
+    maxLeads: 0,
+    maxPressContacts: 0,
+    maxBands: 1,
+    maxSongs: 25,
     maxFans: 250,
     monthlyCredits: 0
   },

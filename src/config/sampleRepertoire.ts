@@ -1,81 +1,210 @@
-import { Song } from '../types';
+import { Song, Setlist } from '../types';
 
-export const SAMPLE_REPERTOIRE_SONGS: Song[] = [
+export const SAMPLER_ALBUM_NAME = 'Sampler EP (Royalty-Free)';
+export const SAMPLER_COVER_URL = '/audio/samples/sampler_ep_cover.svg';
+
+export const SAMPLER_SONGS: Song[] = [
   {
-    id: 'sample-song-1',
-    titulo: 'Brisa y Cacharros',
-    duracion: '03:30',
-    duracionSegundos: 210,
-    tonalidad: 'Am',
-    bpm: 124,
-    afinacion: 'E Standard',
-    albumDisco: 'Álbum Debut',
+    id: 'sample-track-1',
+    titulo: 'Groove de Apertura',
+    artista: 'BandManager Sounds',
+    album: 'Sampler EP',
+    albumDisco: 'Sampler EP (Royalty-Free)',
+    ordenAlbum: 1,
+    duracion: '0:30',
+    duracionSegundos: 30,
+    duracionMinutos: 1,
+    tonalidad: 'Lam',
+    bpm: 116,
+    afinacion: 'Estándar E',
+    genero: 'Funk / Groove',
+    tipo: 'original',
+    estado: 'listo',
     estadoTema: 'listo',
+    energia: 15,
+    favoritoGeneral: true,
     esVersionCovers: false,
-    cifradoTexto: '[Intro]\n[Am] [F] [C] [G]\n\n[Estrofa]\n[Am]Sopla el viento en la ciudad...\n[F]Suenan cacharros al pasar...',
-    notasInternas: 'Intro con sección de vientos y solo de trompeta. Tema ideal para abrir el concierto.'
+    portadaUrl: SAMPLER_COVER_URL,
+    audioPrincipalUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+    audioUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+    notasInternas: 'Tema sampler instrumental 100% libre de derechos. Base funk con groove marcado de bajo y metales sintetizados para calentar el directo.',
+    notasRepertorio: 'Arrancar directo sin pausa.',
+    audioIdeas: [
+      {
+        id: 'idea-sample-1',
+        titulo: 'Audio Demo Oficial (30s)',
+        seccion: 'general',
+        audioUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+        subidoPor: 'BandManager Royalty-Free',
+        fecha: '2026-03-01T00:00:00.000Z'
+      }
+    ]
   },
   {
-    id: 'sample-song-2',
-    titulo: 'Fuego en la Sala',
-    duracion: '04:12',
-    duracionSegundos: 252,
-    tonalidad: 'Em',
+    id: 'sample-track-2',
+    titulo: 'Balada de Medianoche',
+    artista: 'BandManager Sounds',
+    album: 'Sampler EP',
+    albumDisco: 'Sampler EP (Royalty-Free)',
+    ordenAlbum: 2,
+    duracion: '0:30',
+    duracionSegundos: 30,
+    duracionMinutos: 1,
+    tonalidad: 'Mim',
+    bpm: 84,
+    afinacion: 'Estándar E',
+    genero: 'Indie Acústico',
+    tipo: 'original',
+    estado: 'listo',
+    estadoTema: 'listo',
+    energia: 8,
+    favoritoGeneral: false,
+    esVersionCovers: false,
+    portadaUrl: SAMPLER_COVER_URL,
+    audioPrincipalUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
+    audioUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
+    notasInternas: 'Tema sampler instrumental libre de derechos. Arpegio acústico introspectivo y cálido pad ambiental. Ideal para transiciones o bloque íntimo.',
+    notasRepertorio: 'Luces cálidas, guitarra al frente.',
+    audioIdeas: [
+      {
+        id: 'idea-sample-2',
+        titulo: 'Audio Demo Oficial (30s)',
+        seccion: 'general',
+        audioUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
+        subidoPor: 'BandManager Royalty-Free',
+        fecha: '2026-03-01T00:00:00.000Z'
+      }
+    ]
+  },
+  {
+    id: 'sample-track-3',
+    titulo: 'Fuego en el Asfalto',
+    artista: 'BandManager Sounds',
+    album: 'Sampler EP',
+    albumDisco: 'Sampler EP (Royalty-Free)',
+    ordenAlbum: 3,
+    duracion: '0:30',
+    duracionSegundos: 30,
+    duracionMinutos: 1,
+    tonalidad: 'Rem',
     bpm: 138,
-    afinacion: 'E Standard',
-    albumDisco: 'Álbum Debut',
+    afinacion: 'Estándar E',
+    genero: 'Rock / Fusión',
+    tipo: 'original',
+    estado: 'listo',
     estadoTema: 'listo',
+    energia: 18,
+    favoritoGeneral: true,
     esVersionCovers: false,
-    cifradoTexto: '[Intro]\n[Em] [D] [C] [B7]\n\n[Estribillo]\n[Em]Hay fuego en la sala, ¡sal a bailar!\n[D]El ska no perdona, retumba el compás...',
-    notasInternas: 'Subida progresiva al final. Tema estelar para clímax o cierre en festival.'
+    portadaUrl: SAMPLER_COVER_URL,
+    audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+    audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+    notasInternas: 'Tema sampler instrumental libre de derechos. Riff potente de rock con distorsión analógica y batería contundente para subir la energía al clímax.',
+    notasRepertorio: 'Batería enlaza con final del tema anterior.',
+    audioIdeas: [
+      {
+        id: 'idea-sample-3',
+        titulo: 'Audio Demo Oficial (30s)',
+        seccion: 'general',
+        audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+        subidoPor: 'BandManager Royalty-Free',
+        fecha: '2026-03-01T00:00:00.000Z'
+      }
+    ]
   },
   {
-    id: 'sample-song-3',
-    titulo: 'Noches de Garaje',
-    duracion: '03:45',
-    duracionSegundos: 225,
-    tonalidad: 'Dm',
-    bpm: 115,
-    afinacion: 'Drop D',
-    albumDisco: 'EP Cacharros & Ritmo',
+    id: 'sample-track-4',
+    titulo: 'Brisa Mediterránea',
+    artista: 'BandManager Sounds',
+    album: 'Sampler EP',
+    albumDisco: 'Sampler EP (Royalty-Free)',
+    ordenAlbum: 4,
+    duracion: '0:30',
+    duracionSegundos: 30,
+    duracionMinutos: 1,
+    tonalidad: 'Sol',
+    bpm: 128,
+    afinacion: 'Estándar E',
+    genero: 'Ska / Pop Festivo',
+    tipo: 'original',
+    estado: 'listo',
     estadoTema: 'listo',
+    energia: 16,
+    favoritoGeneral: false,
     esVersionCovers: false,
-    cifradoTexto: '[Intro]\n[Dm] [Bb] [F] [C]\n\n[Verso]\n[Dm]Luces rojas en el local...\n[Bb]Sudor y cables por el suelo...',
-    notasInternas: 'Afinación en Drop D. Recordar cambio de instrumento antes de arrancar.'
+    portadaUrl: SAMPLER_COVER_URL,
+    audioPrincipalUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
+    audioUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
+    notasInternas: 'Tema sampler instrumental libre de derechos. Ritmo festivo ska-pop playero a contratiempo con melodía optimista.',
+    notasRepertorio: 'Público cantando y palmas.',
+    audioIdeas: [
+      {
+        id: 'idea-sample-4',
+        titulo: 'Audio Demo Oficial (30s)',
+        seccion: 'general',
+        audioUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
+        subidoPor: 'BandManager Royalty-Free',
+        fecha: '2026-03-01T00:00:00.000Z'
+      }
+    ]
   },
   {
-    id: 'sample-song-4',
-    titulo: 'Ska del Norte',
-    duracion: '03:15',
-    duracionSegundos: 195,
-    tonalidad: 'A',
-    bpm: 152,
-    afinacion: 'E Standard',
-    albumDisco: 'Single',
+    id: 'sample-track-5',
+    titulo: 'Cierre Triunfal',
+    artista: 'BandManager Sounds',
+    album: 'Sampler EP',
+    albumDisco: 'Sampler EP (Royalty-Free)',
+    ordenAlbum: 5,
+    duracion: '0:30',
+    duracionSegundos: 30,
+    duracionMinutos: 1,
+    tonalidad: 'Do',
+    bpm: 132,
+    afinacion: 'Estándar E',
+    genero: 'Festival Anthem',
+    tipo: 'original',
+    estado: 'listo',
     estadoTema: 'listo',
+    energia: 19,
+    favoritoGeneral: true,
     esVersionCovers: false,
-    cifradoTexto: '[Intro]\n[A] [D] [E] [A]\n\n[Estribillo]\n[A]Bailando ska del norte hasta el amanecer...',
-    notasInternas: 'Ritmo acelerado ska. Excelente para levantar la energía a mitad del pase.'
-  },
-  {
-    id: 'sample-song-5',
-    titulo: 'Maldita Dulzura (Cover)',
-    duracion: '03:40',
-    duracionSegundos: 220,
-    tonalidad: 'C',
-    bpm: 110,
-    afinacion: 'E Standard',
-    albumDisco: 'Covers & Versiones',
-    estadoTema: 'listo',
-    esVersionCovers: true,
-    cifradoTexto: '[Verso]\n[C] [G] [Am] [F]\n\n[Estribillo]\n[C]Maldita dulzura la tuya...\n[G]me atrapa y me aleja de todo...',
-    notasInternas: 'Versión adaptada a metales y ritmo festivo.'
+    portadaUrl: SAMPLER_COVER_URL,
+    audioPrincipalUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+    audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+    notasInternas: 'Tema sampler instrumental libre de derechos. Gran himno de cierre con sintetizadores y ritmo bombeante de festival.',
+    notasRepertorio: 'Tema de despedida y BIS.',
+    audioIdeas: [
+      {
+        id: 'idea-sample-5',
+        titulo: 'Audio Demo Oficial (30s)',
+        seccion: 'general',
+        audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+        subidoPor: 'BandManager Royalty-Free',
+        fecha: '2026-03-01T00:00:00.000Z'
+      }
+    ]
   }
 ];
 
-export function getSampleRepertoireForNewBand(bandName = 'Mi Banda'): Song[] {
-  return SAMPLE_REPERTOIRE_SONGS.map((song, index) => ({
-    ...song,
-    id: `sample-${bandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${index + 1}`
-  }));
-}
+export const SAMPLER_SETLISTS: Setlist[] = [
+  {
+    id: 'setlist-sample-1',
+    nombre: 'Showcase Sampler EP (Directo 15 min)',
+    descripcion: 'Setlist demostrativo con los 5 temas libres de derechos del Sampler EP, estructurado con intro y bloques de concierto',
+    tipoFormato: 'festival',
+    duracionTotalEstimadaMinutos: 15,
+    fechaCreacion: '2026-03-01',
+    fechaUltimaEdicion: '2026-03-01',
+    items: [
+      { id: 'sb-1', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '🔥 Arranque & Calentamiento' },
+      { id: 'st-1', songId: 'sample-track-1', tipoItem: 'cancion', notaTema: 'Groove directo para captar la atención' },
+      { id: 'st-2', songId: 'sample-track-2', tipoItem: 'cancion', notaTema: 'Bajada de tempo íntima acústica' },
+      { id: 'sb-2', tipoItem: 'bloque', bloqueSubtipo: 'presentacion', tituloCustom: 'Presentación Banda & Saludo', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60, notaTema: 'Agradecimientos al público y a la organización' },
+      { id: 'sb-3', tipoItem: 'bloque', bloqueSubtipo: 'header', tituloCustom: '⚡ Subida de Energía & Clímax' },
+      { id: 'st-3', songId: 'sample-track-3', tipoItem: 'cancion', notaTema: 'Fuego y distorsión' },
+      { id: 'st-4', songId: 'sample-track-4', tipoItem: 'cancion', notaTema: 'Fiesta ska y palmas' },
+      { id: 'sb-4', tipoItem: 'bloque', bloqueSubtipo: 'bis', tituloCustom: 'BIS / Cierre Festivalero', duracionEstimadaMinutos: 1, duracionEstimadaSegundos: 60 },
+      { id: 'st-5', songId: 'sample-track-5', tipoItem: 'cancion', notaTema: 'Himno de cierre por todo lo alto' }
+    ]
+  }
+];

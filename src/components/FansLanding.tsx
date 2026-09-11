@@ -174,7 +174,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     spotify: "https://open.spotify.com/artist/bakandeya",
     youtube: "https://youtube.com/@bakandeya_oficial",
     tiktok: "https://tiktok.com/@bakandeya_oficial",
-    website: "https://bands-manager.up.railway.app"
+    website: "https://bandmanager.io"
   };
 
   const [resolvedBandId, setResolvedBandId] = useState<string>('band-bakandeya');
@@ -195,11 +195,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     paypalUser?: string;
     paypalUrl?: string;
     bizumTelefono?: string;
-    metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum';
+    ibanCuenta?: string;
+    metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum' | 'iban';
     titulo?: string;
     descripcion?: string;
   } | null>(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum'>('revolut');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum' | 'iban'>('revolut');
   const [copiedBizum, setCopiedBizum] = useState(false);
   const [miembros, setMiembros] = useState<BandMember[]>([]);
   const [upcomingConcerts, setUpcomingConcerts] = useState<Concert[]>([]);
@@ -574,10 +575,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   // lo ve en italiano por defecto, no en español. EpkLanguage y FanFormLanguage comparten
   // exactamente los mismos códigos (es/en/it/cs), así que conciertoLanguage vale tal cual.
   const epkUrl = (typeof window !== 'undefined'
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
-        ? 'https://bands-manager.up.railway.app/epk'
-        : `${window.location.origin}/epk`)
-    : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
+        ? `${window.location.origin}/epk`
+        : 'https://bandmanager.io/epk')
+    : 'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
     if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;

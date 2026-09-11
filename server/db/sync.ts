@@ -117,7 +117,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
         tiktok: "https://tiktok.com/@bakandeya_oficial",
         appleMusic: "https://music.apple.com/artist/bakandeya",
         bandcamp: "https://bakandeya.bandcamp.com",
-        website: "https://bands-manager.up.railway.app",
+        website: "https://bandmanager.io",
         whatsapp: "+34612345678",
         facebook: "https://facebook.com/bakandeyaoficial",
         twitter: "https://x.com/bakandeya_band"
@@ -142,14 +142,14 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
           tiktok: "https://tiktok.com/@bakandeya_oficial",
           appleMusic: "https://music.apple.com/artist/bakandeya",
           bandcamp: "https://bakandeya.bandcamp.com",
-          website: "https://bands-manager.up.railway.app",
+          website: "https://bandmanager.io",
           whatsapp: "+34612345678"
         }
       },
       temasDestacadosIds: ["s-1", "s-2", "s-3"],
       incentivoFans: {
         mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
-        enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
+        enlaceDescarga: "https://bandmanager.io/descargas/tema-inedito-directo.mp3",
         codigoDescuento: "BAKANDEYA-FAN-10"
       },
       ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"]

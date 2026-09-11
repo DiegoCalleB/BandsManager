@@ -7,6 +7,7 @@ import {
   FLAT_NAV_ORDER_IDS,
   TOP_TABS_ORDER_IDS,
   MIN_MODULES_FOR_GROUPED_NAV,
+  shouldGroupNavForPlan,
   findNavGroupIdForItem,
   NavItemId,
 } from '../navGroups';
@@ -33,17 +34,15 @@ describe('navGroups config', () => {
     expect(new Set(FLAT_NAV_ORDER_IDS)).toEqual(new Set(TOP_TABS_ORDER_IDS));
   });
 
-  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus music modules and tools', () => {
-    // Cuando hay agrupación (planes >6 módulos), mostramos:
-    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye 'repertorio' como ítem de menú único)
-    // - Plus el módulo de discografía (solo vista agrupada)
+  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools', () => {
+    // Cuando hay agrupación (planes >7 módulos), mostramos:
+    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye 'repertorio' y 'discografia')
     // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
     const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
-    const onlyGroupedMusicModules: NavItemId[] = ['discografia'];
     const toolIds: NavItemId[] = ['metronome', 'tuner'];
-    const groupedWithoutExtraItems = grouped.filter(id => !onlyGroupedMusicModules.includes(id) && !toolIds.includes(id));
+    const groupedWithoutExtraItems = grouped.filter(id => !toolIds.includes(id));
     expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
-    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + onlyGroupedMusicModules.length + toolIds.length);
+    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
@@ -66,14 +65,13 @@ describe('navGroups config', () => {
     expect(new Set(NAV_PINNED_BOTTOM_IDS)).toEqual(new Set(['chat']));
   });
 
-  it('threshold matches the intended split: only `promo` stays ungrouped', () => {
-    // Esta prueba fija en negro sobre blanco la decisión de producto: si algún día se
-    // añade o quita un módulo a un plan, este test debe fallar y forzar una revisión
-    // consciente de qué planes ven el menú agrupado.
-    const groupedPlans = (Object.keys(PLANS) as (keyof typeof PLANS)[]).filter(
-      (planId) => PLANS[planId].allowedModules.length > MIN_MODULES_FOR_GROUPED_NAV
-    );
-    expect(groupedPlans.sort()).toEqual(['cabeza_de_cartel', 'de_gira', 'ensayo', 'local'].sort());
-    expect(PLANS.promo.allowedModules.length).toBeLessThanOrEqual(MIN_MODULES_FOR_GROUPED_NAV);
+  it('shouldGroupNavForPlan groups for all plans including promo and promo_plus', () => {
+    expect(shouldGroupNavForPlan('promo')).toBe(true);
+    expect(shouldGroupNavForPlan('promo_plus')).toBe(true);
+    expect(shouldGroupNavForPlan('ensayo')).toBe(true);
+    expect(shouldGroupNavForPlan('local')).toBe(true);
+    expect(shouldGroupNavForPlan('de_gira')).toBe(true);
+    expect(shouldGroupNavForPlan('cabeza_de_cartel')).toBe(true);
+    expect(shouldGroupNavForPlan(undefined)).toBe(true);
   });
 });

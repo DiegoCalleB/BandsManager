@@ -326,7 +326,7 @@ export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): 
   if (bandConfig?.enlacesRedes?.spotify) links.spotify = bandConfig.enlacesRedes.spotify;
   if (bandConfig?.enlacesRedes?.youtube) links.youtube = bandConfig.enlacesRedes.youtube;
   if (bandId) {
-    const base = process.env.APP_URL || "https://bands-manager.up.railway.app";
+    const base = process.env.APP_URL || "https://bandmanager.io";
     links.epk = `${base}/epk?band=${encodeURIComponent(bandId)}`;
   }
   return links;

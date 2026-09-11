@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import {
   Download, Share2, ExternalLink,
   Check, Mail, Phone, MapPin, Play, Pause,
-  Volume2, X, Music, Radio, Sparkles, Quote, Instagram
+  Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe
 } from 'lucide-react';
-import { EPKConfig, Song, Concert } from '../types';
+import { EPKConfig, Song, Concert, EPKSectionId } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
 import { EPK_LANGUAGES, EPK_TRANSLATIONS, EpkDict, idiomasDisponiblesParaEpk } from '../i18n/epkTranslations';
 import { interpolate } from '../i18n/fansTranslations';
 import { useEpkLanguage } from '../hooks/useEpkLanguage';
 import { resolverContenidoEpk } from '../utils/epkTraducciones';
 import { safeUrl } from '../utils/safeUrl';
+import { getEffectiveSectionsOrder, getTemplateStyles } from './epk/epkTemplates';
 
 interface PublicEPKProps {
   initialData?: {
@@ -154,10 +155,458 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     datos.numMusicos || datos.duracionDirecto || datos.ciudadBase || datos.formatos || datos.necesidadesEscenario
   );
 
+  const styles = getTemplateStyles(config.plantilla);
+  const effectiveSections = getEffectiveSectionsOrder(config);
+
+  // Renderizadores modulares para cada sección de la plantilla
+  const renderCifras = () => {
+    if (!config.cifrasClave?.habilitado) return null;
+    const hasAny = config.cifrasClave.oyentes || config.cifrasClave.directos || config.cifrasClave.comunidad || config.cifrasClave.ciudades;
+    if (!hasAny) return null;
+
+    return (
+      <section key="cifras" className="mb-14 print:mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {config.cifrasClave.oyentes && (
+            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+              <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.oyentes}</span>
+              <p className="text-xs opacity-75 font-medium mt-1">{t('cifraOyentes')}</p>
+            </div>
+          )}
+          {config.cifrasClave.directos && (
+            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+              <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.directos}</span>
+              <p className="text-xs opacity-75 font-medium mt-1">{t('cifraDirectos')}</p>
+            </div>
+          )}
+          {config.cifrasClave.comunidad && (
+            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+              <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.comunidad}</span>
+              <p className="text-xs opacity-75 font-medium mt-1">{t('cifraComunidad')}</p>
+            </div>
+          )}
+          {config.cifrasClave.ciudades && (
+            <div className={`${styles.cardHighlight} border rounded-2xl p-4.5 text-center shadow-lg transition`}>
+              <span className={`text-2xl sm:text-3xl font-black ${styles.statNumber} tracking-tight`}>{config.cifrasClave.ciudades}</span>
+              <p className="text-xs opacity-75 font-medium mt-1">{t('cifraCiudades')}</p>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  };
+
+  const renderDatos = () => {
+    if (!hayDatosContratacion) return null;
+    return (
+      <section key="datos" className="mb-16 space-y-6 print:mb-8">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionDatos')}
+        </h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: t('etiquetaMusicos'), valor: datos.numMusicos ? String(datos.numMusicos) : '' },
+            {
+              label: t('etiquetaDuracion'),
+              valor: contenido.dato('duracionDirecto')
+                ? (/[a-zA-Z]/.test(contenido.dato('duracionDirecto')) ? contenido.dato('duracionDirecto') : `${contenido.dato('duracionDirecto')} ${t('unidadMinutos')}`)
+                : ''
+            },
+            { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
+            { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
+          ].filter(d => d.valor).map(d => (
+            <div key={d.label} className={`${styles.card} border rounded-xl p-4`}>
+              <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{d.label}</p>
+              <p className="font-bold mt-1 text-sm">{d.valor}</p>
+            </div>
+          ))}
+        </div>
+        {contenido.dato('necesidadesEscenario') && (
+          <div className={`${styles.card} border rounded-xl p-4`}>
+            <p className="text-[10px] uppercase tracking-wider opacity-60 font-semibold">{t('etiquetaNecesidades')}</p>
+            <p className="text-sm mt-1 opacity-80">{contenido.dato('necesidadesEscenario')}</p>
+          </div>
+        )}
+      </section>
+    );
+  };
+
+  const renderVideos = () => {
+    if (!videoPrincipal) return null;
+    return (
+      <section key="videos" className="mb-16 space-y-6 print:hidden">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionVideo')}
+        </h2>
+        <div className={`rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+          <iframe
+            src={aEmbed(videoPrincipal.url)!}
+            title={contenido.tituloVideo(videoPrincipal) || t('tituloVideoPorDefecto')}
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowFullScreen
+            loading="lazy"
+            className="w-full h-full"
+          />
+        </div>
+        {contenido.tituloVideo(videoPrincipal) && (
+          <p className="text-sm opacity-80 font-medium">{contenido.tituloVideo(videoPrincipal)}</p>
+        )}
+        {videosSecundarios.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            {videosSecundarios.map(v => (
+              <div key={v.id} className="space-y-2">
+                <div className={`rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+                  <iframe
+                    src={aEmbed(v.url)!}
+                    title={contenido.tituloVideo(v) || t('tituloVideoPorDefecto')}
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    loading="lazy"
+                    className="w-full h-full"
+                  />
+                </div>
+                {contenido.tituloVideo(v) && <p className="text-xs opacity-70">{contenido.tituloVideo(v)}</p>}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    );
+  };
+
+  const renderMiembros = () => {
+    if (miembros.length === 0) return null;
+    return (
+      <section key="miembros" className="mb-16 space-y-6 print:mb-8">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionBanda')}
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {miembros.map(m => (
+            <div key={m.id} className="text-center space-y-2">
+              <div className={`aspect-square rounded-2xl overflow-hidden ${styles.memberCard} border`}>
+                {m.fotoUrl ? (
+                  <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-2xl font-black opacity-40">
+                    {(m.nombre || '?').charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div>
+                <h4 className="font-bold text-sm leading-tight">{m.nombre}</h4>
+                {contenido.rolMiembro(m) && <p className={`text-xs ${styles.memberRole} mt-0.5`}>{contenido.rolMiembro(m)}</p>}
+                {contenido.bioMiembro(m) && <p className="text-[11px] opacity-70 mt-1 leading-snug">{contenido.bioMiembro(m)}</p>}
+                {m.instagram?.trim() && (() => {
+                  const raw = m.instagram.trim();
+                  const username = raw.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/^@/, '').replace(/\/$/, '');
+                  const url = safeUrl(raw.startsWith('http') ? raw : `https://instagram.com/${username}`);
+                  if (!url) return null;
+                  const ctaText = t('seguirInstagram');
+                  return (
+                    <div className="mt-2.5 flex items-center justify-center print:hidden">
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-slate-300 hover:text-white"
+                        title={interpolate(t('seguirMiembro'), { name: m.nombre })}
+                        aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
+                      >
+                        <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-white shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
+                          <Instagram className="w-full h-full stroke-[2.5]" />
+                        </span>
+                        <span className="text-[11px] font-mono font-medium truncate max-w-[85px] sm:max-w-[110px]">
+                          @{username}
+                        </span>
+                        <span className="text-[10px] font-semibold text-pink-400 group-hover/ig:text-pink-300 shrink-0 ml-0.5">
+                          {ctaText.split(' ')[0]} ↗
+                        </span>
+                      </a>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  };
+
+  const renderBio = () => {
+    return (
+      <div key="bio" className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 print:mb-8">
+        <section className="lg:col-span-2 space-y-6">
+          <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+            {t('seccionBio')}
+          </h2>
+          <div className="text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3 opacity-90">
+            {contenido.biografia}
+          </div>
+        </section>
+
+        <section className={`${styles.bookingCard} border rounded-2xl p-6 space-y-5 flex flex-col justify-between print:border-amber-400 print:bg-white print:text-black`}>
+          <div className="space-y-3">
+            <h3 className={`text-lg font-bold ${styles.bookingTitle} print:text-black flex items-center gap-2`}>
+              <Mail className="w-5 h-5" /> {t('contactoTitulo')}
+            </h3>
+            <p className="text-xs opacity-75 print:text-slate-600">
+              {t('contactoSubtitulo')}
+            </p>
+
+            <div className="space-y-2.5 pt-2 text-sm">
+              <div className="flex items-center gap-2.5 font-medium">
+                <span className={`w-2 h-2 rounded-full ${styles.accentBtn.includes('fuchsia') ? 'bg-fuchsia-400' : styles.accentBtn.includes('orange') ? 'bg-orange-400' : 'bg-amber-400'} shrink-0`}></span>
+                <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
+              </div>
+              <div className="flex items-center gap-2.5 font-mono">
+                <Mail className="w-4 h-4 shrink-0 opacity-80" />
+                <a href={`mailto:${config.contactoBooking?.email}`} className="hover:underline">{config.contactoBooking?.email}</a>
+              </div>
+              <div className="flex items-center gap-2.5 font-mono">
+                <Phone className="w-4 h-4 shrink-0 opacity-80" />
+                <a href={`tel:${config.contactoBooking?.telefono}`} className="hover:underline">{config.contactoBooking?.telefono}</a>
+              </div>
+              {config.enlacesRedes?.website && (
+                <div className="flex items-center gap-2.5 font-mono">
+                  <Globe className="w-4 h-4 shrink-0 opacity-80" />
+                  <a
+                    href={safeUrl(config.enlacesRedes.website)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline truncate max-w-[200px]"
+                    title="Sitio Web Oficial"
+                  >
+                    {config.enlacesRedes.website.replace(/^https?:\/\//, '')}
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-current/20 print:border-slate-300">
+            <a
+              href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t('asuntoContratacion'))}`}
+              className={`w-full py-2.5 ${styles.accentBtn} rounded-xl flex items-center justify-center gap-2 transition print:hidden`}
+            >
+              <Mail className="w-4 h-4" /> {t('ctaCache')}
+            </a>
+          </div>
+        </section>
+      </div>
+    );
+  };
+
+  const renderPrensa = () => {
+    if (!config.resenasPrensa?.habilitado) return null;
+    const validCitas = (config.resenasPrensa.citas || []).filter(cita => cita.texto?.trim() && cita.medio?.trim());
+    if (validCitas.length === 0) return null;
+
+    return (
+      <section key="prensa" className="mb-16 space-y-6 print:mb-8">
+        <div className="space-y-1">
+          <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+            {t('seccionPrensa')}
+          </h2>
+          <p className="text-xs sm:text-sm opacity-70 font-mono pt-1">
+            {t('prensaSubtitulo')}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {validCitas.map(cita => (
+            <div key={cita.id} className={`${styles.cardHighlight} border rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition`}>
+              <div className="space-y-3">
+                <Quote className={`w-6 h-6 ${styles.quoteIcon}`} />
+                <p className="text-sm italic leading-relaxed">
+                  "{cita.texto}"
+                </p>
+              </div>
+              <div className="pt-3 border-t border-current/15">
+                <span className={`text-xs font-black ${styles.quoteMedium} uppercase tracking-wider font-mono`}>
+                  {cita.medio}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  };
+
+  const renderMusica = () => {
+    if (songs.length === 0) return null;
+    return (
+      <section key="musica" className="mb-16 space-y-6 print:mb-8">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionTemas')}
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {songs.map((song: any) => {
+            const sonando = playingSongId === song.id;
+            return (
+              <div key={song.id} className={`${styles.cardHighlight} border rounded-xl p-4 flex flex-col justify-between gap-3 transition`}>
+                <div className="space-y-1">
+                  <h4 className="font-bold text-base leading-tight">{song.titulo}</h4>
+                  <p className="text-xs opacity-75">
+                    {[song.albumDisco, song.genero, song.duracion].filter(Boolean).join(' • ')}
+                  </p>
+                </div>
+                {song.audioPrincipalUrl && (
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => setPlayingSongId(sonando ? null : song.id)}
+                      className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-lg transition ${sonando ? styles.accentBtn : styles.accentBtnSubtle}`}
+                    >
+                      {sonando ? <><Pause className="w-3.5 h-3.5" /> {t('sonando')}</> : <><Play className="w-3.5 h-3.5" /> {t('escuchar')}</>}
+                    </button>
+                    {sonando && (
+                      <audio
+                        src={song.audioPrincipalUrl}
+                        controls
+                        autoPlay
+                        onEnded={() => setPlayingSongId(null)}
+                        className="w-full h-9"
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    );
+  };
+
+  const renderGaleria = () => {
+    const validPhotos = (config.bandPhotos || []).filter(Boolean);
+    if (validPhotos.length === 0) return null;
+    return (
+      <section key="galeria" className="mb-16 space-y-6 print:mb-8">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionGaleria')}
+        </h2>
+        <div className="relative group/carrusel">
+          <div
+            ref={galeriaScrollRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
+          >
+            {validPhotos.map((photoUrl, idx) => (
+              <div key={idx} className={`group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+                <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
+                  <span className="text-xs font-semibold text-white">{t('fotoPromocional', { n: String(idx + 1) })}</span>
+                  {safeUrl(photoUrl) && (
+                    <a href={safeUrl(photoUrl)} target="_blank" rel="noopener noreferrer" className={`p-1.5 ${styles.accentBtn} rounded-lg text-xs font-bold`}>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden print:grid print:grid-cols-2 print:gap-4">
+            {validPhotos.map((photoUrl, idx) => (
+              <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-xl border border-current/20" />
+            ))}
+          </div>
+          {validPhotos.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
+                aria-label={t('fotoAnterior')}
+                className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
+                aria-label={t('fotoSiguiente')}
+                className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/75 border border-white/20 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
+              >
+                ›
+              </button>
+            </>
+          )}
+        </div>
+      </section>
+    );
+  };
+
+  const renderEscucha = () => {
+    if (!spotifyEmbedUrl && !youtubeEmbedUrl) return null;
+    return (
+      <section key="escucha" className="mb-16 space-y-6 print:hidden">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionEscucha')}
+        </h2>
+        <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+          {youtubeEmbedUrl && (
+            <div className={`rounded-xl overflow-hidden ${styles.card} border aspect-video`}>
+              <iframe
+                src={youtubeEmbedUrl}
+                title={t('tituloVideoPorDefecto')}
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="w-full h-full"
+              />
+            </div>
+          )}
+          {spotifyEmbedUrl && (
+            <div className={`rounded-xl overflow-hidden ${styles.card} border`}>
+              <iframe
+                src={spotifyEmbedUrl}
+                title={t('tituloSpotify')}
+                allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+                className="w-full h-[352px]"
+              />
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  };
+
+  const renderConciertos = () => {
+    if (concerts.length === 0) return null;
+    return (
+      <section key="conciertos" className="mb-16 space-y-6 print:mb-8">
+        <h2 className={`text-2xl sm:text-3xl ${styles.sectionHeadingClass}`} style={styles.sectionHeadingStyle}>
+          {t('seccionFechas')}
+        </h2>
+        <div className="space-y-2.5">
+          {concerts.map(c => (
+            <div key={c.id} className={`${styles.card} border rounded-xl p-3.5 flex items-center justify-between gap-4`}>
+              <div className="flex items-center gap-3">
+                <span className={`px-2.5 py-1 rounded ${styles.badge} font-mono text-xs font-bold shrink-0 border`}>
+                  {c.fecha}
+                </span>
+                <div>
+                  <h4 className="font-bold text-sm leading-tight">{c.sala}</h4>
+                  <p className="text-xs opacity-75 flex items-center gap-1">
+                    <MapPin className="w-3 h-3 opacity-80" /> {c.ciudad}
+                  </p>
+                </div>
+              </div>
+              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize border`}>
+                {c.tipo}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950 print:bg-white print:text-black">
+    <div className={`min-h-screen ${styles.pageBg} font-sans print:bg-white print:text-black`}>
       {/* Top Floating Action Bar (Hidden on Print) */}
-      <div className="fixed top-0 left-0 right-0 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden">
+      <div className={`fixed top-0 left-0 right-0 ${styles.topBar} backdrop-blur-md border-b z-50 py-3 px-4 flex items-center justify-between shadow-lg print:hidden`}>
         <div className="flex items-center gap-3">
           {displayLogo ? (
             <img src={displayLogo} alt={t('logoAlt')} className="w-8 h-8 rounded-full object-cover border border-amber-500/50" />
@@ -166,18 +615,15 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               {bandName.charAt(0).toUpperCase()}
             </div>
           )}
-          {/* En móvil solo el nombre: con el selector de idioma al lado, "— EPK / Press Kit"
-              partía el título en tres líneas y descuadraba la barra. */}
-          <span className="font-bold text-amber-400 tracking-wide text-sm sm:text-base whitespace-nowrap">
+          {/* En móvil solo el nombre: con el selector de idioma al lado */}
+          <span className={`font-bold ${styles.accentText} tracking-wide text-sm sm:text-base whitespace-nowrap`}>
             <span className="sm:hidden">{bandName}</span>
             <span className="hidden sm:inline">{t('insigniaCabecera')}</span>
           </span>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Selector de idioma. Cambiarlo reescribe ?lang= en la URL (ver useEpkLanguage):
-              este enlace se reenvía por correo entre programadores, así que el idioma tiene
-              que viajar con él. Dos botones diminutos para no competir con el resto. */}
-          <div className="flex items-center gap-0.5 bg-slate-800 border border-slate-700 rounded-lg p-0.5" role="group" aria-label={t('selectorIdioma')}>
+          {/* Selector de idioma */}
+          <div className="flex items-center gap-0.5 bg-black/20 border border-current/15 rounded-lg p-0.5" role="group" aria-label={t('selectorIdioma')}>
             {availableLanguages.map(l => (
               <button
                 key={l.code}
@@ -185,7 +631,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 onClick={() => setLanguage(l.code)}
                 aria-pressed={language === l.code}
                 title={l.label}
-                className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:bg-slate-700'}`}
+                className={`px-2 py-1 rounded-md text-xs font-bold transition ${language === l.code ? styles.accentBtn : 'opacity-70 hover:opacity-100'}`}
               >
                 <span aria-hidden="true">{l.flag}</span>
                 <span className="hidden sm:inline ml-1 uppercase">{l.code}</span>
@@ -194,26 +640,23 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           </div>
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium rounded-lg border border-slate-700 transition"
+            className={`flex items-center gap-1.5 px-3 py-1.5 ${styles.topBarBtn} text-xs sm:text-sm font-medium rounded-lg border transition`}
           >
-            {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-amber-400" />}
+            {copiedLink ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
             <span>{copiedLink ? t('enlaceCopiado') : t('compartir')}</span>
           </button>
         </div>
       </div>
 
-      {/* HERO a sangre completa. Una web de banda abre con una imagen que ocupa la pantalla,
-          no con una tarjeta redondeada dentro de una rejilla - ese formato de tarjeta era lo
-          que hacía que la página leyera como un panel de control. La biografía y los datos de
-          contratación tienen su propia sección debajo, así que aquí no se repite nada. */}
+      {/* HERO a sangre completa */}
       <header className="relative w-full overflow-hidden print:border-none print:bg-none">
         {fotoPortada ? (
           <>
             <img src={fotoPortada} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover print:hidden" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/50 print:hidden" />
+            <div className={`absolute inset-0 ${styles.heroOverlay} print:hidden`} />
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-amber-950/30 print:hidden" />
+          <div className={`absolute inset-0 ${styles.heroNoPhoto} print:hidden`} />
         )}
 
         <div className={`relative max-w-5xl mx-auto px-6 flex flex-col items-center text-center justify-end ${fotoPortada ? 'min-h-[78vh] pt-32 pb-16' : 'min-h-[62vh] pt-32 pb-14'}`}>
@@ -226,17 +669,13 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           )}
 
           <h1
-            className="text-white uppercase leading-[0.88] tracking-tight text-[15vw] sm:text-[7rem] lg:text-[9rem]"
-            style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}
+            className={styles.heroTitleClass}
+            style={styles.heroTitleStyle}
           >
             {bandName}
           </h1>
 
-          <p className="mt-6 text-amber-300 text-base sm:text-xl max-w-2xl leading-snug">
-            {/* Subtítulo corto de la cabecera: usa el Lema/Pie de Firma (firmaEmail.textoPie),
-                NUNCA el texto largo para agentes de IA (dossierTextoExtra) - antes usaba ese
-                segundo campo, y al no avisar que también era público, un texto largo pensado
-                solo para el chatbot acababa mostrado como titular gigante en la home. */}
+          <p className={`mt-6 ${styles.heroSubtitle} text-base sm:text-xl max-w-2xl leading-snug`}>
             {contenido.textoPie || (isBakandeya ? t('lemaPorDefectoBakandeya') : t('lemaPorDefecto'))}
           </p>
 
@@ -248,432 +687,43 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </div>
       </header>
 
-      {/* Main Container */}
+      {/* Main Container con renderizado dinámico según ordenSecciones */}
       <div className="max-w-5xl mx-auto px-4 pt-14 pb-28 print:p-0 print:pt-4">
-
-        {/* CIFRAS CLAVE & SOCIAL PROOF - solo si la banda las ha activado y rellenado con datos reales */}
-        {config.cifrasClave?.habilitado && (
-          config.cifrasClave.oyentes || config.cifrasClave.directos || config.cifrasClave.comunidad || config.cifrasClave.ciudades
-        ) && (
-          <section className="mb-14 print:mb-6">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-              {config.cifrasClave.oyentes && (
-                <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
-                  <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">{config.cifrasClave.oyentes}</span>
-                  <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraOyentes')}</p>
-                </div>
-              )}
-              {config.cifrasClave.directos && (
-                <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
-                  <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">{config.cifrasClave.directos}</span>
-                  <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraDirectos')}</p>
-                </div>
-              )}
-              {config.cifrasClave.comunidad && (
-                <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
-                  <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">{config.cifrasClave.comunidad}</span>
-                  <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraComunidad')}</p>
-                </div>
-              )}
-              {config.cifrasClave.ciudades && (
-                <div className="bg-slate-900/90 border border-amber-500/20 rounded-2xl p-4.5 text-center shadow-lg hover:border-amber-500/40 transition">
-                  <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">{config.cifrasClave.ciudades}</span>
-                  <p className="text-xs text-slate-300 font-medium mt-1">{t('cifraCiudades')}</p>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* DATOS DUROS DE CONTRATACIÓN - responde las preguntas de siempre sin otro email */}
-        {hayDatosContratacion && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionDatos')}
-            </h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { label: t('etiquetaMusicos'), valor: datos.numMusicos ? String(datos.numMusicos) : '' },
-                {
-                  label: t('etiquetaDuracion'),
-                  // El editor ahora guarda solo el número (la unidad "min" es fija en la UI),
-                  // pero datos antiguos podían llevar texto libre tipo "75 min" - si ya trae
-                  // letras se deja tal cual, para no acabar mostrando "75 min min".
-                  valor: contenido.dato('duracionDirecto')
-                    ? (/[a-zA-Z]/.test(contenido.dato('duracionDirecto')) ? contenido.dato('duracionDirecto') : `${contenido.dato('duracionDirecto')} ${t('unidadMinutos')}`)
-                    : ''
-                },
-                { label: t('etiquetaCiudadBase'), valor: datos.ciudadBase || '' },
-                { label: t('etiquetaFormatos'), valor: contenido.dato('formatos') }
-              ].filter(d => d.valor).map(d => (
-                <div key={d.label} className="bg-slate-950 border border-slate-800 rounded-xl p-4">
-                  <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{d.label}</p>
-                  <p className="text-white font-bold mt-1 text-sm">{d.valor}</p>
-                </div>
-              ))}
-            </div>
-            {contenido.dato('necesidadesEscenario') && (
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
-                <p className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('etiquetaNecesidades')}</p>
-                <p className="text-slate-300 text-sm mt-1">{contenido.dato('necesidadesEscenario')}</p>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* VÍDEOS DE DIRECTO - lo primero que mira quien contrata: cómo suena y cómo se ve */}
-        {videoPrincipal && (
-          <section className="mb-16 space-y-6 print:hidden">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionVideo')}
-            </h2>
-            <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-              <iframe
-                src={aEmbed(videoPrincipal.url)!}
-                title={contenido.tituloVideo(videoPrincipal) || t('tituloVideoPorDefecto')}
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                allowFullScreen
-                loading="lazy"
-                className="w-full h-full"
-              />
-            </div>
-            {contenido.tituloVideo(videoPrincipal) && (
-              <p className="text-sm text-slate-300 font-medium">{contenido.tituloVideo(videoPrincipal)}</p>
-            )}
-            {videosSecundarios.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                {videosSecundarios.map(v => (
-                  <div key={v.id} className="space-y-2">
-                    <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                      <iframe
-                        src={aEmbed(v.url)!}
-                        title={contenido.tituloVideo(v) || t('tituloVideoPorDefecto')}
-                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                        allowFullScreen
-                        loading="lazy"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    {contenido.tituloVideo(v) && <p className="text-xs text-slate-400">{contenido.tituloVideo(v)}</p>}
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* FORMACIÓN - caras y quién sube al escenario */}
-        {miembros.length > 0 && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionBanda')}
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {miembros.map(m => (
-                <div key={m.id} className="text-center space-y-2">
-                  <div className="aspect-square rounded-2xl overflow-hidden border border-slate-800 bg-slate-950">
-                    {m.fotoUrl ? (
-                      <img src={m.fotoUrl} alt={m.nombre} className="w-full h-full object-cover" loading="lazy" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-2xl font-black text-slate-700">
-                        {(m.nombre || '?').charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white text-sm leading-tight">{m.nombre}</h4>
-                    {contenido.rolMiembro(m) && <p className="text-xs text-amber-400/90 mt-0.5">{contenido.rolMiembro(m)}</p>}
-                    {contenido.bioMiembro(m) && <p className="text-[11px] text-slate-500 mt-1 leading-snug">{contenido.bioMiembro(m)}</p>}
-                    {m.instagram?.trim() && (() => {
-                      const raw = m.instagram.trim();
-                      const username = raw.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/^@/, '').replace(/\/$/, '');
-                      const url = safeUrl(raw.startsWith('http') ? raw : `https://instagram.com/${username}`);
-                      if (!url) return null;
-                      const ctaText = t('seguirInstagram');
-                      return (
-                        <div className="mt-2.5 flex items-center justify-center print:hidden">
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group/ig inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-pink-500/40 shadow-sm transition-all duration-200 active:scale-95 text-slate-300 hover:text-white"
-                            title={interpolate(t('seguirMiembro'), { name: m.nombre })}
-                            aria-label={interpolate(t('seguirMiembro'), { name: m.nombre })}
-                          >
-                            <span className="w-3.5 h-3.5 rounded-[4px] bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] flex items-center justify-center p-[2px] text-white shrink-0 group-hover/ig:scale-110 transition-transform shadow-xs">
-                              <Instagram className="w-full h-full stroke-[2.5]" />
-                            </span>
-                            <span className="text-[11px] font-mono font-medium truncate max-w-[85px] sm:max-w-[110px]">
-                              @{username}
-                            </span>
-                            <span className="text-[10px] font-semibold text-pink-400 group-hover/ig:text-pink-300 shrink-0 ml-0.5">
-                              {ctaText.split(' ')[0]} ↗
-                            </span>
-                          </a>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-
-        {/* 2-COLUMN LAYOUT FOR BIO & CONTACT */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* BIOGRAPHY (2 Cols) */}
-          <section className="lg:col-span-2 space-y-6">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionBio')}
-            </h2>
-            <div className="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line space-y-3">
-              {contenido.biografia}
-            </div>
-          </section>
-
-          {/* CONTACT & BOOKING CARD (1 Col) */}
-          <section className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-6 space-y-5 flex flex-col justify-between print:border-amber-400 print:bg-white print:text-black">
-            <div className="space-y-3">
-              <h3 className="text-lg font-bold text-amber-400 print:text-black flex items-center gap-2">
-                <Mail className="w-5 h-5" /> {t('contactoTitulo')}
-              </h3>
-              <p className="text-xs text-slate-400 print:text-slate-600">
-                {t('contactoSubtitulo')}
-              </p>
-
-              <div className="space-y-2.5 pt-2 text-sm">
-                <div className="flex items-center gap-2.5 text-slate-200 print:text-black font-medium">
-                  <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-                  <span>{config.contactoBooking?.nombre || t('managerPorDefecto')}</span>
-                </div>
-                <div className="flex items-center gap-2.5 text-amber-300 print:text-black font-mono">
-                  <Mail className="w-4 h-4 shrink-0 text-amber-400" />
-                  <a href={`mailto:${config.contactoBooking?.email}`} className="hover:underline">{config.contactoBooking?.email}</a>
-                </div>
-                <div className="flex items-center gap-2.5 text-slate-300 print:text-black font-mono">
-                  <Phone className="w-4 h-4 shrink-0 text-amber-400" />
-                  <a href={`tel:${config.contactoBooking?.telefono}`} className="hover:underline">{config.contactoBooking?.telefono}</a>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-amber-500/20 print:border-slate-300">
-              <a
-                href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t('asuntoContratacion'))}`}
-                className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg transition print:hidden"
-              >
-                <Mail className="w-4 h-4" /> {t('ctaCache')}
-              </a>
-            </div>
-          </section>
-        </div>
-
-        {/* CITAS DE PRENSA & RESEÑAS DESTACADAS - solo si la banda las ha activado y tiene alguna cita real cargada */}
-        {config.resenasPrensa?.habilitado && (config.resenasPrensa.citas || []).some(c => c.texto?.trim() && c.medio?.trim()) && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <div className="space-y-1">
-              <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-                {t('seccionPrensa')}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-400 font-mono pt-1">
-                {t('prensaSubtitulo')}
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {(config.resenasPrensa.citas || [])
-                .filter(cita => cita.texto?.trim() && cita.medio?.trim())
-                .map(cita => (
-                  <div key={cita.id} className="bg-slate-950/80 border border-slate-800/90 hover:border-amber-500/40 rounded-2xl p-5 flex flex-col justify-between space-y-4 shadow-lg transition">
-                    <div className="space-y-3">
-                      <Quote className="w-6 h-6 text-amber-500/40" />
-                      <p className="text-sm text-slate-200 italic leading-relaxed">
-                        "{cita.texto}"
-                      </p>
-                    </div>
-                    <div className="pt-3 border-t border-slate-800/80">
-                      <span className="text-xs font-black text-amber-400 uppercase tracking-wider font-mono">
-                        {cita.medio}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </section>
-        )}
-
-        {/* FEATURED TRACKS / AUDIO PREVIEW */}
-        {songs.length > 0 && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionTemas')}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {songs.map((song: any) => {
-                const sonando = playingSongId === song.id;
-                return (
-                  <div key={song.id} className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 flex flex-col justify-between gap-3 hover:border-amber-500/40 transition">
-                    <div className="space-y-1">
-                      <h4 className="font-bold text-white text-base leading-tight">{song.titulo}</h4>
-                      {/* Nada de BPM/tonalidad/notas internas: son datos de ensayo, no le dicen
-                          nada a quien programa y ensucian la página (salían como "N/A"). */}
-                      <p className="text-xs text-slate-400">
-                        {[song.albumDisco, song.genero, song.duracion].filter(Boolean).join(' • ')}
-                      </p>
-                    </div>
-                    {song.audioPrincipalUrl && (
-                      <div className="space-y-2">
-                        <button
-                          onClick={() => setPlayingSongId(sonando ? null : song.id)}
-                          className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-lg transition ${sonando ? 'bg-amber-400 text-slate-950' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25'}`}
-                        >
-                          {sonando ? <><Pause className="w-3.5 h-3.5" /> {t('sonando')}</> : <><Play className="w-3.5 h-3.5" /> {t('escuchar')}</>}
-                        </button>
-                        {sonando && (
-                          <audio
-                            src={song.audioPrincipalUrl}
-                            controls
-                            autoPlay
-                            onEnded={() => setPlayingSongId(null)}
-                            className="w-full h-9"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* BAND PHOTOS & GALLERY - solo si hay fotos reales de banda (no solo logo) */}
-        {(config.bandPhotos && config.bandPhotos.length > 0) && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionGaleria')}
-            </h2>
-            <div className="relative group/carrusel">
-              <div
-                ref={galeriaScrollRef}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none] print:hidden"
-              >
-                {config.bandPhotos.filter(Boolean).map((photoUrl, idx) => (
-                  <div key={idx} className="group/foto relative shrink-0 w-[78%] sm:w-[340px] snap-center rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                    <img src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full h-full object-cover" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover/foto:opacity-100 transition p-4 flex items-end justify-between">
-                      <span className="text-xs font-semibold text-white">{t('fotoPromocional', { n: String(idx + 1) })}</span>
-                      {safeUrl(photoUrl) && (
-                        <a href={safeUrl(photoUrl)} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-amber-500 text-slate-950 rounded-lg text-xs font-bold">
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {/* Print: la galería sí se imprime, pero como cuadrícula normal (el scroll no existe en papel). */}
-              <div className="hidden print:grid print:grid-cols-2 print:gap-4">
-                {config.bandPhotos.filter(Boolean).map((photoUrl, idx) => (
-                  <img key={idx} src={photoUrl} alt={t('fotoAlt', { n: String(idx + 1) })} className="w-full aspect-video object-cover rounded-xl border border-slate-800" />
-                ))}
-              </div>
-              {(config.bandPhotos?.length || 0) > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => galeriaScrollRef.current?.scrollBy({ left: -360, behavior: 'smooth' })}
-                    aria-label={t('fotoAnterior')}
-                    className="hidden sm:flex absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/80 border border-slate-700 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
-                  >
-                    ‹
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => galeriaScrollRef.current?.scrollBy({ left: 360, behavior: 'smooth' })}
-                    aria-label={t('fotoSiguiente')}
-                    className="hidden sm:flex absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-slate-950/80 border border-slate-700 text-white items-center justify-center opacity-0 group-hover/carrusel:opacity-100 transition print:hidden"
-                  >
-                    ›
-                  </button>
-                </>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* ESCUCHA Y VÍDEO - lo que de verdad decide a quien programa un directo */}
-        {(spotifyEmbedUrl || youtubeEmbedUrl) && (
-          <section className="mb-16 space-y-6 print:hidden">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionEscucha')}
-            </h2>
-            <div className={`grid gap-4 ${spotifyEmbedUrl && youtubeEmbedUrl ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
-              {youtubeEmbedUrl && (
-                <div className="rounded-xl overflow-hidden border border-slate-800 aspect-video bg-slate-950">
-                  <iframe
-                    src={youtubeEmbedUrl}
-                    title={t('tituloVideoPorDefecto')}
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                    className="w-full h-full"
-                  />
-                </div>
-              )}
-              {spotifyEmbedUrl && (
-                <div className="rounded-xl overflow-hidden border border-slate-800 bg-slate-950">
-                  <iframe
-                    src={spotifyEmbedUrl}
-                    title={t('tituloSpotify')}
-                    allow="clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    className="w-full h-[352px]"
-                  />
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* UPCOMING SHOWS */}
-        {concerts.length > 0 && (
-          <section className="mb-16 space-y-6 print:mb-8">
-            <h2 className="text-2xl sm:text-3xl uppercase tracking-wide text-white border-b border-slate-800/80 pb-4" style={{ fontFamily: "'Anton', 'Oswald', sans-serif" }}>
-              {t('seccionFechas')}
-            </h2>
-            <div className="space-y-2.5">
-              {concerts.map(c => (
-                <div key={c.id} className="bg-slate-950 border border-slate-800 rounded-xl p-3.5 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 font-mono text-xs font-bold shrink-0">
-                      {c.fecha}
-                    </span>
-                    <div>
-                      <h4 className="font-bold text-white text-sm">{c.sala}</h4>
-                      <p className="text-xs text-slate-400 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-amber-500/80" /> {c.ciudad}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 capitalize">
-                    {c.tipo}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+        {effectiveSections.map((sectionId: EPKSectionId) => {
+          switch (sectionId) {
+            case 'cifras':
+              return renderCifras();
+            case 'datos':
+              return renderDatos();
+            case 'videos':
+              return renderVideos();
+            case 'miembros':
+              return renderMiembros();
+            case 'bio':
+              return renderBio();
+            case 'prensa':
+              return renderPrensa();
+            case 'musica':
+              return renderMusica();
+            case 'galeria':
+              return renderGaleria();
+            case 'escucha':
+              return renderEscucha();
+            case 'conciertos':
+              return renderConciertos();
+            default:
+              return null;
+          }
+        })}
 
         {/* FOOTER */}
-        <footer className="text-center text-xs text-slate-500 space-y-4 pt-6 border-t border-slate-800 print:text-black">
+        <footer className={`text-center text-xs ${styles.footer} space-y-4 pt-6 border-t print:text-black`}>
           {safeUrl(config.dossierPdfUrl) && (
             <a
               href={safeUrl(config.dossierPdfUrl)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 hover:bg-amber-500/25 text-xs font-bold rounded-full transition print:hidden"
+              className={`inline-flex items-center gap-1.5 px-4 py-2 ${styles.accentBtnSubtle} text-xs font-bold rounded-full transition print:hidden`}
             >
               <Download className="w-3.5 h-3.5" /> {config.dossierPdfName || t('descargarDossier')}
             </a>
@@ -682,28 +732,28 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </footer>
       </div>
 
-      {/* STICKY AUDIO PLAYER (Bottom Bar while browsing) */}
+      {/* STICKY AUDIO PLAYER */}
       {(() => {
         const activeSong = songs.find(s => s.id === playingSongId) || songs.find(s => s.audioPrincipalUrl);
         if (!activeSong?.audioPrincipalUrl || stickyPlayerDismissed) return null;
         const isCurrentlyPlaying = playingSongId === activeSong.id;
 
         return (
-          <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 bg-slate-900/95 backdrop-blur-md border border-amber-500/40 rounded-2xl p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 text-white animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden">
+          <div className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 ${styles.stickyPlayer} backdrop-blur-md rounded-2xl p-3.5 shadow-2xl z-40 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 print:hidden`}>
             <div className="flex items-center gap-3 overflow-hidden">
               <button
                 onClick={() => setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)}
-                className="w-10 h-10 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 shadow transition"
+                className={`w-10 h-10 rounded-xl ${styles.accentBtn} flex items-center justify-center shrink-0 shadow transition`}
                 aria-label={isCurrentlyPlaying ? 'Pausar' : 'Reproducir'}
               >
                 {isCurrentlyPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
               </button>
               <div className="min-w-0 pr-1">
-                <p className="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                <p className={`text-[10px] ${styles.accentText} font-bold uppercase tracking-wider flex items-center gap-1`}>
                   <Music className="w-3 h-3 animate-pulse" /> {isCurrentlyPlaying ? t('playerPista') : 'Audio Demo'}
                 </p>
-                <p className="text-xs font-bold text-white truncate">{activeSong.titulo}</p>
-                <p className="text-[11px] text-slate-400 truncate">{activeSong.albumDisco || bandName}</p>
+                <p className="text-xs font-bold truncate">{activeSong.titulo}</p>
+                <p className="text-[11px] opacity-75 truncate">{activeSong.albumDisco || bandName}</p>
               </div>
             </div>
 
@@ -711,7 +761,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <button
                 onClick={() => setStickyPlayerDismissed(true)}
                 title={t('playerCerrar')}
-                className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+                className="p-1.5 opacity-60 hover:opacity-100 rounded-lg hover:bg-black/10 transition"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -18,8 +18,8 @@ import { QrExportModal } from './QrExportModal';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
 import { downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer } from '../utils/qrExport';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 
 interface FansPanelProps {
   fans: Fan[];
@@ -78,10 +78,10 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   onUpdateConcert,
   initialConcertId
 }) => {
-  const fansTutorial = useModuleTutorial('fans');
   const effectiveBandName = currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
   const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || (effectiveBandName.toLowerCase().includes('bakandeya') ? '/logo_bakandeya_bueno_sin_fondo.png' : '');
   const cleanBandId = (currentBandId || '').toLowerCase().replace(/^(band|reg)-/, '') || 'banda';
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('fans');
   const [activeTab, setActiveTab] = useState<'metrics' | 'fans' | 'qr' | 'dashboard'>(
     initialConcertId || isPromo ? 'qr' : 'metrics'
   );
@@ -360,10 +360,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
 
   const selectedConcert = concerts.find(c => c.id === selectedConcertId);
   const [customSlug, setCustomSlug] = useState('');
-  const [useCustomDomain, setUseCustomDomain] = useState(true); // Default to clean custom domain like bands-manager.up.railway.app
-  const defaultDomain = typeof window !== 'undefined' && window.location.hostname.endsWith('railway.app')
-    ? window.location.hostname
-    : 'bands-manager.up.railway.app';
+  const [useCustomDomain, setUseCustomDomain] = useState(true); // Default to clean custom domain like bandmanager.io
+  const defaultDomain = 'bandmanager.io';
   const [customDomain, setCustomDomain] = useState(defaultDomain);
   const [routePrefix, setRoutePrefix] = useState('unete');
   const [qrLanguage, setQrLanguage] = useState<FanFormLanguage>(DEFAULT_FAN_FORM_LANGUAGE);
@@ -382,7 +380,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   // Build clean target URL
   const rawDomain = useCustomDomain 
     ? (customDomain.trim().startsWith('http') ? customDomain.trim() : `https://${customDomain.trim().replace(/\/$/, '')}`)
-    : (typeof window !== 'undefined' ? window.location.origin : 'https://bands-manager.up.railway.app');
+    : (typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io');
 
   const cleanPrefix = routePrefix.trim().replace(/^\/+|\/+$/g, '');
   const cleanSlugVal = customSlug.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '');
@@ -510,27 +508,39 @@ export const FansPanel: React.FC<FansPanelProps> = ({
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <ModuleTutorialTrigger onOpen={fansTutorial.openTutorial} />
+          <ModuleTutorialTrigger
+            moduleId="fans"
+            onClick={openTutorial}
+            label="Guía rápida"
+          />
+
           <div className="relative shrink-0">
             <button
               type="button"
               onClick={() => setShowFansHeaderMenu(v => !v)}
-              title="Previsualizar formulario, copiar enlace, registrar fan manual o exportar CSV"
+              title="Previsualizar formulario, copiar enlace, registrar fan manual, exportar CSV o ver guía"
               className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 transition cursor-pointer"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
-          {showFansHeaderMenu && (
-            <>
-              <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
-              <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-xs font-mono">
-                <button
-                  type="button"
-                  onClick={() => { setShowFansHeaderMenu(false); setShowFansPreviewModal(true); }}
-                  className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
-                >
-                  <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
-                </button>
+            {showFansHeaderMenu && (
+              <>
+                <div className="fixed inset-0 z-30" onClick={() => setShowFansHeaderMenu(false)} />
+                <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-xl border border-slate-700 bg-slate-900 shadow-2xl p-1.5 space-y-0.5 text-xs font-mono">
+                  <button
+                    type="button"
+                    onClick={() => { setShowFansHeaderMenu(false); openTutorial(); }}
+                    className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" /> Guía Rápida & Tutorial
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setShowFansHeaderMenu(false); setShowFansPreviewModal(true); }}
+                    className="w-full text-left px-2.5 py-2 rounded-lg text-amber-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2 font-bold"
+                  >
+                    <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar Formulario
+                  </button>
                 <button
                   type="button"
                   onClick={() => { setShowFansHeaderMenu(false); copyLink(); }}
@@ -546,6 +556,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   <Plus className="w-3.5 h-3.5 shrink-0" /> Registrar Fan Manual
                 </button>
                 <button
+                  id="fans-export-csv-btn"
                   type="button"
                   onClick={() => { setShowFansHeaderMenu(false); handleExportCSV(); }}
                   className="w-full text-left px-2.5 py-2 rounded-lg text-slate-300 hover:bg-slate-800 transition cursor-pointer flex items-center gap-2"
@@ -571,18 +582,21 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         </button>
         )}
         <button
+          id="tab-btn-fans-qr"
           onClick={() => setActiveTab('qr')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'qr' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
           <QrCode className="w-4 h-4 text-amber-500" /> {isPromo ? '1' : '2'}. Captura en Vivo & QR
         </button>
         <button
+          id="tab-btn-fans-dashboard"
           onClick={() => setActiveTab('dashboard')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'dashboard' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
           <Heart className="w-4 h-4 text-amber-500" /> {isPromo ? '2' : '3'}. Dashboard & Analítica
         </button>
         <button
+          id="tab-btn-fans-directory"
           onClick={() => setActiveTab('fans')}
           className={`px-4 py-2.5 flex items-center gap-2 border-b-2 transition cursor-pointer font-mono text-xs uppercase tracking-wider ${activeTab === 'fans' ? 'border-amber-500 text-amber-400 font-bold bg-amber-500/5' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
         >
@@ -1150,6 +1164,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               Vincular a:
             </label>
             <select
+              id="fans-concert-selector"
               value={selectedConcertId}
               onChange={e => setSelectedConcertId(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-2.5 text-xs text-white outline-none font-mono"
@@ -1207,6 +1222,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             {/* Acción principal + resto de acciones detrás de un único menú */}
             <div className="w-full flex items-center gap-2">
               <button
+                id="fans-qr-export-btn"
                 type="button"
                 onClick={handlePrintQr}
                 className="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition cursor-pointer shadow-lg"
@@ -1303,7 +1319,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             {showAdvancedQrConfig && (
               <div className="mt-4 space-y-4">
                 {/* Incentivo / Recompensa al Fan */}
-                <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                <div id="fans-incentive-section" className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800 space-y-4">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider flex items-center gap-2">
                       <Gift className="w-4 h-4 text-amber-400" />
@@ -1435,7 +1451,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                           type="text"
                           value={customDomain}
                           onChange={e => setCustomDomain(e.target.value)}
-                          placeholder="bands-manager.up.railway.app"
+                          placeholder="bandmanager.io"
                           className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-lg p-2.5 text-xs text-white outline-none font-mono"
                         />
                       </div>
@@ -1707,11 +1723,12 @@ export const FansPanel: React.FC<FansPanelProps> = ({
         initialConcertId={selectedConcertId}
         initialLanguage={qrLanguage}
       />
-      {/* MODULE TUTORIAL MODAL */}
+
+      {/* Tutorial Interactivo Paso a Paso */}
       <ModuleTutorialModal
-        isOpen={fansTutorial.isOpen}
-        onClose={fansTutorial.closeTutorial}
         moduleId="fans"
+        isOpen={isTutorialOpen}
+        onClose={closeTutorial}
       />
     </div>
   );

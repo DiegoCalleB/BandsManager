@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Music, Layers, Disc3, Plus, ImagePlus, ChevronDown, 
-  Check, SlidersHorizontal
+  Check, HelpCircle
 } from 'lucide-react';
 import { ThemeColors, Setlist } from '../../types';
 import { ModuleTutorialTrigger } from '../common/ModuleTutorialTrigger';
@@ -22,8 +22,6 @@ interface RepertorioNavBarProps {
   onOpenNewAlbumModal: () => void;
   songCount: number;
   albumCount: number;
-  isSidebarCollapsed: boolean;
-  onToggleSidebar: () => void;
   onOpenTutorial?: () => void;
 }
 
@@ -43,8 +41,6 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
   onOpenNewAlbumModal,
   songCount,
   albumCount,
-  isSidebarCollapsed,
-  onToggleSidebar,
   onOpenTutorial
 }) => {
   const [showSetlistDropdown, setShowSetlistDropdown] = useState(false);
@@ -70,12 +66,21 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
           </div>
         </div>
 
-        {/* 2-Pill Segmented View Switcher */}
-        <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-xl flex items-center gap-1 border ${isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-black/50 border-neutral-800'}`}>
-          <button
-            id="tab-btn-setlists"
-            type="button"
-            onClick={() => setActiveTab('setlists')}
+        {/* 2-Pill Segmented View Switcher & Tutorial Trigger */}
+        <div className="flex items-center gap-2">
+          {onOpenTutorial && (
+            <ModuleTutorialTrigger
+              moduleId="repertorio"
+              onClick={onOpenTutorial}
+              label="Guía rápida"
+            />
+          )}
+
+          <nav aria-label="Vistas principales de repertorio" className={`p-1 rounded-xl flex items-center gap-1 border ${isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-black/50 border-neutral-800'}`}>
+            <button
+              id="tab-btn-setlists"
+              type="button"
+              onClick={() => setActiveTab('setlists')}
             className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
               activeTab === 'setlists'
                 ? isStitchLight
@@ -111,6 +116,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
           </button>
         </nav>
       </div>
+    </div>
 
       {/* Sub Row: Contextual Quick Actions */}
       <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/5 flex-wrap sm:flex-nowrap">
@@ -195,6 +201,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             {/* Setlist Quick Action Buttons */}
             <div className="flex items-center gap-1.5 shrink-0">
               <button
+                id="btn-create-setlist"
                 type="button"
                 onClick={onCreateSetlist}
                 className="px-2.5 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
@@ -204,8 +211,6 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 <span className="hidden xs:inline">Nuevo Setlist</span>
               </button>
 
-              {onOpenTutorial && <ModuleTutorialTrigger onOpen={onOpenTutorial} />}
-
               <button
                 type="button"
                 onClick={onImportSetlist}
@@ -213,16 +218,6 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 title="Importar repertorio desde foto o PDF impreso"
               >
                 <ImagePlus className="w-4 h-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={onToggleSidebar}
-                className="hidden lg:flex items-center gap-1 p-1.5 px-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition cursor-pointer text-xs font-mono"
-                title={isSidebarCollapsed ? "Ver panel lateral de setlists" : "Ocultar panel lateral de setlists"}
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span className="text-[10px]">{isSidebarCollapsed ? 'Panel' : 'Cerrar'}</span>
               </button>
             </div>
           </>
@@ -233,6 +228,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             {/* Sub-view switcher inside Catálogo */}
             <div className="flex items-center gap-1 p-0.5 rounded-lg bg-black/40 border border-neutral-800 shrink-0">
               <button
+                id="btn-subtab-albumes"
                 type="button"
                 onClick={() => setCatalogoViewMode('albumes')}
                 className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
@@ -245,6 +241,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
                 <span>Por Álbumes / EPs ({albumCount})</span>
               </button>
               <button
+                id="btn-subtab-canciones"
                 type="button"
                 onClick={() => setCatalogoViewMode('canciones')}
                 className={`px-2.5 py-1 rounded-md text-xs font-mono font-bold flex items-center gap-1.5 transition cursor-pointer ${
@@ -261,6 +258,7 @@ export const RepertorioNavBar: React.FC<RepertorioNavBarProps> = ({
             {/* Quick Actions for Catálogo */}
             <div className="flex items-center gap-2 justify-end">
               <button
+                id="btn-add-song"
                 type="button"
                 onClick={onOpenNewSongModal}
                 className="px-2.5 py-1.5 rounded-xl bg-[#1db954] hover:bg-[#1ed760] text-black text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md shrink-0"

@@ -218,8 +218,13 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     return 0;
   });
 
-  if (normalizePlan(targetUser.plan) === 'promo') {
-    availableBands.forEach(b => { b.plan = 'promo'; });
+  const normUserPlan = normalizePlan(targetUser.plan);
+  if (normUserPlan === 'promo' || normUserPlan === 'promo_plus') {
+    availableBands.forEach(b => {
+      if (b.band_id === targetUser.band_id || !b.plan || b.plan === 'ensayo') {
+        b.plan = normUserPlan;
+      }
+    });
   }
 
   return availableBands;

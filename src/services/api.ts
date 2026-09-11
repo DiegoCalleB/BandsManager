@@ -512,6 +512,51 @@ export const api = {
     return request<{ songs: any[] }>('/api/songs');
   },
 
+  async createSong(song: any): Promise<any> {
+    return request('/api/songs', {
+      method: 'POST',
+      body: JSON.stringify(song)
+    });
+  },
+
+  async updateSong(id: string, updatedFields: any): Promise<any> {
+    return request(`/api/songs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updatedFields)
+    });
+  },
+
+  async deleteSong(id: string): Promise<any> {
+    return request(`/api/songs/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  // Setlists
+  async getSetlists(): Promise<{ setlists: any[] }> {
+    return request<{ setlists: any[] }>('/api/setlists');
+  },
+
+  async createSetlist(setlist: any): Promise<any> {
+    return request('/api/setlists', {
+      method: 'POST',
+      body: JSON.stringify(setlist)
+    });
+  },
+
+  async updateSetlist(id: string, updatedFields: any): Promise<any> {
+    return request(`/api/setlists/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updatedFields)
+    });
+  },
+
+  async deleteSetlist(id: string): Promise<any> {
+    return request(`/api/setlists/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
   // Schedules (Smart Gate)
   async getBandSchedule(bandId: string): Promise<any> {
     return request(`/api/bands/schedules/${encodeURIComponent(bandId)}`);

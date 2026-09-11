@@ -272,7 +272,9 @@ export interface DatosContratacion {
 export interface EPKConfig {
   bandId?: string;
   biografia: string;
+  fraseImpacto?: string;
   genero?: string;
+  idioma?: string;
   miembros?: BandMember[];
   videos?: EPKVideo[];
   datosContratacion?: DatosContratacion;
@@ -300,6 +302,7 @@ export interface EPKConfig {
     revolut?: string;
     paypal?: string;
     bizum?: string;
+    iban?: string;
     [key: string]: string | undefined;
   };
   contactoBooking: {
@@ -322,7 +325,8 @@ export interface EPKConfig {
     paypalUser?: string;
     paypalUrl?: string;
     bizumTelefono?: string;
-    metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum';
+    ibanCuenta?: string;
+    metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum' | 'iban';
     titulo?: string;
     descripcion?: string;
   };
@@ -330,6 +334,9 @@ export interface EPKConfig {
     mensajeAgradecimiento?: string;
     enlaceDescarga?: string;
     codigoDescuento?: string;
+    fraseGancho?: string;
+    premioTexto?: string;
+    recompensaTipo?: string;
   };
   ciudadesConfig?: string[];
   firmaEmail?: EmailSignatureConfig;
@@ -351,7 +358,27 @@ export interface EPKConfig {
     habilitado?: boolean;
     citas?: PressQuote[];
   };
+  // Plantilla visual y estética del EPK público ('stage', 'minimal', 'neon', 'vintage')
+  plantilla?: EPKTemplateId;
+  // Orden personalizado de las secciones en el dossier web
+  ordenSecciones?: EPKSectionId[];
+  // Secciones ocultas voluntariamente por la banda en el dossier público
+  seccionesOcultas?: EPKSectionId[];
 }
+
+export type EPKTemplateId = 'stage' | 'minimal' | 'neon' | 'vintage';
+
+export type EPKSectionId =
+  | 'cifras'
+  | 'datos'
+  | 'videos'
+  | 'miembros'
+  | 'bio'
+  | 'prensa'
+  | 'musica'
+  | 'galeria'
+  | 'escucha'
+  | 'conciertos';
 
 export interface PressQuote {
   id: string;
@@ -511,7 +538,7 @@ export interface User {
   username: string;
   name: string;
   role: UserRole;
-  plan?: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
+  plan?: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
   bandName?: string;
   band_id?: string;
   main_band_id?: string;
@@ -649,6 +676,7 @@ export interface Song {
   notasMiembros?: Record<string, string>; // member ID or member Name -> note text
   notasPorMiembro?: MemberSongNote[];
   audioPrincipalUrl?: string; // Demo / Master audio file
+  audioUrl?: string; // Alias for audioPrincipalUrl for legacy/sample playback
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
@@ -782,7 +810,7 @@ export interface RegisteredBand {
   fecha_registro: string;
   nombre_banda: string;
   email: string;
-  plan: 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
+  plan: 'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gira' | 'cabeza_de_cartel' | string;
   contacto_nombre?: string;
   estilo_musical?: string;
   localizacion?: string;

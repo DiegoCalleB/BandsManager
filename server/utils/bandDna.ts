@@ -189,12 +189,12 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   }
 
   // Enlaces oficiales
-  const baseUrl = process.env.APP_URL || "https://bands-manager.up.railway.app";
+  const baseUrl = process.env.APP_URL || "https://bandmanager.io";
   const epkUrl = `${baseUrl}/epk?band=${encodeURIComponent(bandId || cleanId)}`;
   const spotifyUrl = bandConfig?.enlacesRedes?.spotify || registeredBand?.spotify_youtube || "https://open.spotify.com/artist/bakandeya";
   const youtubeUrl = bandConfig?.enlacesRedes?.youtube || "https://youtube.com/@bakandeya_oficial";
   const instagramUrl = bandConfig?.enlacesRedes?.instagram || registeredBand?.instagram || "@bakandeya_oficial";
-  const websiteUrl = bandConfig?.enlacesRedes?.website || baseUrl;
+  const websiteUrl = bandConfig?.enlacesRedes?.website || registeredBand?.web || baseUrl;
 
   // Contacto
   const contactoNombre = bandConfig?.contactoBooking?.nombre || registeredBand?.contacto_nombre || "Diego de la Calle";

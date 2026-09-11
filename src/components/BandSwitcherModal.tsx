@@ -230,7 +230,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         }
 
         // If paid plan, redirect to Stripe Checkout!
-        if (planKey !== 'ensayo' && planKey !== 'promo' && res.band_id) {
+        if (planKey !== 'ensayo' && planKey !== 'promo' && planKey !== 'promo_plus' && res.band_id) {
           try {
             await api.startCheckout({
               planId: planKey,
@@ -649,7 +649,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                   {/* Plan Badge (Static in beta/promo mode) */}
                   <div className="mt-1 flex items-center justify-center">
-                    {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' ? (
+                    {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' || band.plan === 'promo_plus' ? (
                       <span
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shadow-xs"
                         style={{

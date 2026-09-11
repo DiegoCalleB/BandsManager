@@ -267,6 +267,9 @@ CREATE TABLE IF NOT EXISTS epk_configs (
     -- Versiones en otros idiomas del contenido que escribe la banda (biografía, lema, bios de
     -- los miembros...). Clave = código de idioma; ver EPKTranslations en src/types.ts.
     traducciones JSONB DEFAULT '{}'::jsonb,
+    plantilla TEXT DEFAULT 'stage',
+    orden_secciones JSONB DEFAULT '[]'::jsonb,
+    secciones_ocultas JSONB DEFAULT '[]'::jsonb,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

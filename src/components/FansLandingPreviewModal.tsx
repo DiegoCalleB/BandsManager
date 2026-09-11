@@ -318,7 +318,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
               </div>
               <div className="bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-1 text-neutral-400 text-[11px] flex-1 max-w-md text-center truncate font-mono">
-                https://bands-manager.up.railway.app/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g, '-')}` : ''}?lang={selectedLanguage}
+                https://bandmanager.io/unete{selectedConcert ? `/${selectedConcert.ciudad.toLowerCase()}-${selectedConcert.sala.toLowerCase().replace(/\s+/g, '-')}` : ''}?lang={selectedLanguage}
               </div>
               <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
                 HTTPS

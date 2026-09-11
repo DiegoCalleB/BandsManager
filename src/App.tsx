@@ -33,14 +33,15 @@ import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
 import { BandSwitcherModal } from './components/BandSwitcherModal';
 import { PlanLimitModal } from './components/PlanLimitModal';
-import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { GlobalCampaignBar } from './components/campaign/GlobalCampaignBar';
 import { CampaignManagerModal } from './components/campaign/CampaignManagerModal';
 import { FontPresetKey, applyFontPreset, getStoredFontPreset } from './utils/typography';
 import { hasModuleAccess, getPlanDefinition, checkRecordLimit, normalizePlan, getRequiredPlanForModule } from './utils/planPermissions';
-import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, MIN_MODULES_FOR_GROUPED_NAV, findNavGroupIdForItem, NavItemId } from './config/navGroups';
+import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_DESKTOP, NAV_GROUPS_MOBILE, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, NAV_BOTTOM_BAR_SLOTS, MIN_MODULES_FOR_GROUPED_NAV, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from './config/navGroups';
 import { NavGroupSection } from './components/common/NavGroupSection';
 import { NavItemButton } from './components/common/NavItemButton';
+import { MusicianOnboardingModal } from './components/onboarding/MusicianOnboardingModal';
+import { OnboardingWizardModal } from './components/onboarding/OnboardingWizardModal';
 import { useLanguage } from './context/LanguageContext';
 import {
   Menu, Music, Sparkles, LogOut, ShieldAlert, Shield, UserCheck,
@@ -117,13 +118,8 @@ export default function App() {
   const [showUserManagementModal, setShowUserManagementModal] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [showCampaignModal, setShowCampaignModal] = useState(false);
-  const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('bandmanager_profile_wizard_completed') !== 'true';
-    } catch {
-      return false;
-    }
-  });
+  const [showProfileWizardModal, setShowProfileWizardModal] = useState<boolean>(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
   // se caía en 'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
@@ -152,9 +148,6 @@ export default function App() {
   };
 
   const currentActiveBandPlan = React.useMemo(() => {
-    if (normalizePlan(currentUser?.plan) === 'promo') {
-      return 'promo';
-    }
     if (availableBands && Array.isArray(availableBands) && availableBands.length > 0) {
       const match = availableBands.find((b: any) =>
         isSameBand(b.band_id || b.id, currentActiveBandId, b.bandName || b.nombre_banda || b.name, currentActiveBandName)
@@ -163,13 +156,35 @@ export default function App() {
         return normalizePlan(match.plan);
       }
     }
-    return normalizePlan(currentUser?.plan || 'promo');
+    return normalizePlan(currentUser?.plan || 'ensayo');
   }, [availableBands, currentActiveBandId, currentActiveBandName, currentUser?.plan]);
 
-  // Plan Promo (fase beta, festivales): a diferencia del resto de planes, que enseñan los
+  // Plan Promo y Promo+ (fase beta, festivales): a diferencia del resto de planes, que enseñan los
   // módulos no incluidos con un candado "Plan" (invitando a mejorar), Promo no debe ni
   // enseñar que esos módulos existen — así que el nav los oculta del todo en vez de bloquearlos.
-  const isPromoPlan = currentActiveBandPlan === 'promo';
+  const isPromoPlan = currentActiveBandPlan === 'promo' || currentActiveBandPlan === 'promo_plus';
+
+  // Disparar reactivamente el asistente de perfil o bienvenida si la banda activa actual aún no lo ha completado
+  useEffect(() => {
+    if (isLoggedIn && cleanActiveBandId) {
+      try {
+        const wizardKey = `bandmanager_profile_wizard_completed_${cleanActiveBandId}`;
+        const onboardingKey = `bandmanager_onboarding_completed_${cleanActiveBandId}`;
+        const wizardDone = localStorage.getItem(wizardKey) === 'true';
+        const onboardingDone = localStorage.getItem(onboardingKey) === 'true';
+
+        // Si es una banda nueva o sin asistente completado en este dispositivo, abrir el asistente
+        if (!wizardDone) {
+          setShowProfileWizardModal(true);
+        }
+        if (!onboardingDone) {
+          setShowOnboardingModal(true);
+        }
+      } catch {
+        // En caso de modo incógnito o localStorage restringido
+      }
+    }
+  }, [isLoggedIn, cleanActiveBandId]);
 
   // Soft Limit Modal State
   const [planLimitModal, setPlanLimitModal] = useState<{
@@ -242,6 +257,13 @@ export default function App() {
       // Ignorado a propósito: perder la persistencia de la vista no debe romper la navegación.
     }
   }, [currentView]);
+
+  // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a 'resumen'
+  useEffect(() => {
+    if (!hasModuleAccess(currentActiveBandPlan, currentView)) {
+      setCurrentView('resumen');
+    }
+  }, [currentActiveBandPlan, currentView]);
   const [bookingOptions, setBookingOptions] = useState<{
     sectionTab?: 'salas' | 'medios' | 'grupos';
     statusFilter?: LeadStatus | 'todos' | string;
@@ -283,7 +305,9 @@ export default function App() {
       return;
     }
     if (!hasModuleAccess(currentActiveBandPlan, view)) {
-      setShowUserProfileModal(true);
+      if (!isPromoPlan) {
+        setShowUserProfileModal(true);
+      }
       return;
     }
     setCurrentView(view);
@@ -494,9 +518,9 @@ export default function App() {
     } as Record<string, number | string>;
   }, [leads, concerts, rehearsals, activeBandConcerts, activeBandRehearsals, bandsCount]);
 
-  // Vista agrupada del menú (secciones colapsables) solo para planes con menú largo;
-  // `promo` (4 módulos) ya es corto de por sí y se queda con la lista plana de siempre.
-  const shouldGroupNav = getPlanDefinition(currentActiveBandPlan).allowedModules.length > MIN_MODULES_FOR_GROUPED_NAV;
+  // Vista agrupada del menú (secciones colapsables) para planes con menú largo y para `promo_plus`/`promo_music`;
+  // `promo` (4 módulos) se queda con la lista plana de siempre sin agrupaciones.
+  const shouldGroupNav = shouldGroupNavForPlan(currentActiveBandPlan);
 
   const [openNavGroupIds, setOpenNavGroupIds] = useState<Record<string, boolean>>(() => {
     try {
@@ -629,6 +653,15 @@ export default function App() {
   </div>
  </div>
  <div className="flex items-center gap-2">
+  <button
+   type="button"
+   onClick={() => setShowOnboardingModal(true)}
+   className="px-2 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20"
+   title="Guía rápida: ¿Por dónde empezar?"
+  >
+   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+   <span className="text-[10px] hidden xs:inline font-mono">Guía</span>
+  </button>
   {!isPromoPlan && (
   <button
    onClick={() => setShowCampaignModal(true)}
@@ -654,43 +687,63 @@ export default function App() {
      Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
  <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[#121110] border-t border-[#22211F] shadow-[0_-6px_20px_rgba(0,0,0,0.35)]">
  {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
- const isGroupOpen = slot.kind === 'group' && openGroupSheetId === slot.groupId;
- const isMoreActive = slot.kind === 'more' && isMobileMenuOpen;
- const isDirectSelected = slot.kind === 'view' && currentView === slot.itemId;
- const belongsToGroup = slot.kind === 'group' && findNavGroupIdForItem(currentView) === slot.groupId;
- const isActive = isGroupOpen || isMoreActive || isDirectSelected || belongsToGroup;
- const IconComp = slot.kind === 'view'
- ? NAV_ITEMS[slot.itemId as NavItemId].icon
- : slot.kind === 'group'
- ? NAV_ITEMS[NAV_GROUPS_MOBILE.find(g => g.id === slot.groupId)!.itemIds[0]].icon
- : Menu;
- const slotLabel = t(slot.labelKey, slot.labelDefault);
- return (
- <button
- key={slot.id}
- type="button"
- onClick={() => {
- if (slot.kind === 'view') {
- setOpenGroupSheetId(null);
- handleNavigate(slot.itemId as any);
- } else if (slot.kind === 'group') {
- setOpenGroupSheetId(prev => (prev === slot.groupId ? null : (slot.groupId as string)));
- } else {
- setOpenGroupSheetId(null);
- setIsMobileMenuOpen(prev => !prev);
- }
- }}
- className="flex-1 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
- aria-label={slotLabel}
- title={slotLabel}
- >
- <span className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
- isActive ? 'bg-amber-500/20 text-amber-400' : 'text-neutral-400'
- }`}>
- <IconComp className="w-5 h-5" />
- </span>
- </button>
- );
+   let isActive = false;
+   if (openGroupSheetId) {
+     isActive = slot.kind === 'group' && openGroupSheetId === slot.groupId;
+   } else if (isMobileMenuOpen) {
+     isActive = slot.kind === 'more';
+   } else {
+     if (slot.kind === 'view') {
+       isActive = currentView === slot.itemId;
+     } else if (slot.kind === 'group') {
+       isActive = (slot.itemId ? currentView === slot.itemId : false) || findNavGroupIdForItem(currentView) === slot.groupId;
+     } else if (slot.kind === 'more') {
+       const groupOfView = findNavGroupIdForItem(currentView);
+       const isDirectBottomSlot = currentView === 'resumen' || currentView === 'calendario' || groupOfView === 'musica' || groupOfView === 'promocion';
+       isActive = !isDirectBottomSlot;
+     }
+   }
+   const IconComp = slot.itemId
+     ? NAV_ITEMS[slot.itemId as NavItemId].icon
+     : slot.kind === 'group' && slot.groupId
+     ? NAV_ITEMS[NAV_GROUPS_MOBILE.find(g => g.id === slot.groupId)!.itemIds[0]].icon
+     : Menu;
+   const slotLabel = t(slot.labelKey, slot.labelDefault);
+   return (
+     <button
+       key={slot.id}
+       type="button"
+       onClick={() => {
+         if (slot.kind === 'view') {
+           setOpenGroupSheetId(null);
+           setIsMobileMenuOpen(false);
+           handleNavigate(slot.itemId as any);
+         } else if (slot.kind === 'group') {
+           setIsMobileMenuOpen(false);
+           const isAlreadyInGroup = (slot.itemId && currentView === slot.itemId) || findNavGroupIdForItem(currentView) === slot.groupId;
+           if (isAlreadyInGroup) {
+             setOpenGroupSheetId(prev => (prev === slot.groupId ? null : (slot.groupId as string)));
+           } else {
+             setOpenGroupSheetId(null);
+             const defaultTarget = slot.itemId || (slot.groupId === 'musica' ? 'repertorio' : 'epk');
+             handleNavigate(defaultTarget as any);
+           }
+         } else {
+           setOpenGroupSheetId(null);
+           setIsMobileMenuOpen(prev => !prev);
+         }
+       }}
+       className="flex-1 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+       aria-label={slotLabel}
+       title={slotLabel}
+     >
+       <span className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
+         isActive ? 'bg-amber-500/20 text-amber-400' : 'text-neutral-400'
+       }`}>
+         <IconComp className="w-5 h-5" />
+       </span>
+     </button>
+   );
  })}
  </nav>
 
@@ -711,7 +764,7 @@ export default function App() {
  {t(group.titleKey, group.titleDefault)}
  </div>
  <div className="px-3 pb-4 flex flex-col gap-1">
- {group.itemIds.map((id) => {
+ {group.itemIds.filter((id) => (!NAV_ITEMS[id].adminOnly || isAdmin) && hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
  const item = NAV_ITEMS[id];
  return (
  <NavItemButton
@@ -826,7 +879,7 @@ export default function App() {
        />
      ))
  )}
- {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.map((id) => {
+ {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.filter((id) => hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
    const item = NAV_ITEMS[id];
    return (
      <NavItemButton
@@ -969,6 +1022,18 @@ export default function App() {
   </div>
  </div>
 
+ <div className="px-3 pt-2.5 pb-1">
+  <button
+   type="button"
+   onClick={() => setShowOnboardingModal(true)}
+   className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-mono font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all cursor-pointer shadow-xs active:scale-95"
+   title="Guía interactiva para nuevos músicos"
+  >
+   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+   <span>¿Por dónde empezar?</span>
+  </button>
+ </div>
+
  {/* Navigation */}
  <nav className="flex flex-col gap-0.5 px-3 pt-2 flex-1">
  {NAV_PINNED_TOP_IDS.map((id) => {
@@ -1020,7 +1085,7 @@ export default function App() {
        />
      ))
  )}
- {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.map((id) => {
+ {shouldGroupNav && NAV_PINNED_BOTTOM_IDS.filter((id) => hasModuleAccess(currentActiveBandPlan, id)).map((id) => {
    const item = NAV_ITEMS[id];
    return (
      <NavItemButton
@@ -1334,6 +1399,7 @@ export default function App() {
  onUpdateRehearsal={handleUpdateRehearsal}
  view={currentView as any}
  currentUser={currentUser}
+ onNavigate={handleNavigate}
  />
  )}
 {currentView === 'merchan' && (
@@ -1503,7 +1569,7 @@ export default function App() {
  onSetMainBand={handleSetMainBand}
  onOpenBandSwitcher={() => setShowBandSwitcherModal(true)}
  onNavigateToPlanes={() => handleNavigate('planes')}
- onOpenProfileWizard={() => { setShowUserProfileModal(false); setShowProfileWizardModal(true); }}
+ onOpenProfileWizard={() => setShowProfileWizardModal(true)}
  />
  )}
 
@@ -1520,7 +1586,7 @@ export default function App() {
  )}
 
  {/* Floating Chatbot Overlay */}
- {currentView !== 'chat' && (
+ {currentView !== 'chat' && !isPromoPlan && (
    <div
      className={`fixed bottom-36 md:bottom-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] max-w-[440px] h-[580px] max-h-[80vh] z-[9999] shadow-2xl transition-all duration-200 ${
        isFloatingChatOpen ? 'block animate-in slide-in-from-bottom-5' : 'hidden'
@@ -1643,12 +1709,47 @@ export default function App() {
     onNavigate={handleNavigate}
   />
 
-  {/* Onboarding & Musician Profile Wizard Modal */}
+  {/* Musician First-Time Onboarding Modal ("Elige tu misión") */}
+  <MusicianOnboardingModal
+    isOpen={showOnboardingModal && !showProfileWizardModal}
+    onClose={() => {
+      setShowOnboardingModal(false);
+      try {
+        if (cleanActiveBandId) {
+          localStorage.setItem(`bandmanager_onboarding_completed_${cleanActiveBandId}`, 'true');
+        }
+        localStorage.setItem('bandmanager_onboarding_completed', 'true');
+      } catch {}
+    }}
+    onSelectMission={(targetView) => handleNavigate(targetView)}
+    bandName={currentActiveBandName}
+  />
+
+  {/* Comprehensive Band Profile Setup Wizard */}
   <OnboardingWizardModal
-    isOpen={showProfileWizardModal}
-    onClose={() => setShowProfileWizardModal(false)}
-    onComplete={() => setShowProfileWizardModal(false)}
-    currentBandName={currentActiveBandName}
+    isOpen={showProfileWizardModal && isLoggedIn}
+    onClose={() => {
+      setShowProfileWizardModal(false);
+      try {
+        if (cleanActiveBandId) {
+          localStorage.setItem(`bandmanager_profile_wizard_completed_${cleanActiveBandId}`, 'true');
+        }
+        localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
+      } catch {}
+    }}
+    currentUser={currentUser}
+    epkConfig={epkConfig as any}
+    onUpdateEpkConfig={handleUpdateEpkConfig}
+    onSongsImported={() => {
+      fetchState();
+    }}
+    onRefreshData={fetchState}
+    onAddConcert={handleAddConcert}
+    onAddRehearsal={handleAddRehearsal}
+    bandId={currentActiveBandId}
+    bandName={currentActiveBandName}
+    bandLogoUrl={currentActiveBandLogo}
+    bandPlan={currentActiveBandPlan}
   />
 
  </div>

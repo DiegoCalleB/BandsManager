@@ -794,35 +794,35 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  switch (status) {
  case 'colegas_aliados':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981]">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-[#10b981]/15 text-[#10b981] whitespace-nowrap shrink-0">
  <Handshake className="w-3 h-3 text-[#10b981] shrink-0" />
  <span>Colegas / Aliados</span>
  </span>
  );
  case 'concierto_agendado':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-[#d1b375]/15 text-[#d1b375]">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-[#d1b375]/15 text-[#d1b375] whitespace-nowrap shrink-0">
  <Zap className="w-3 h-3 text-[#d1b375] shrink-0 animate-pulse" />
  <span>Concierto Agendado</span>
  </span>
  );
  case 'intercambio_propuesto':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-500/15 text-sky-400">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-500/15 text-sky-400 whitespace-nowrap shrink-0">
  <Repeat className="w-3 h-3 text-sky-400 shrink-0" />
  <span>Intercambio Propuesto</span>
  </span>
  );
  case 'pendiente_respuesta':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-fuchsia-500/15 text-fuchsia-300">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-fuchsia-500/15 text-fuchsia-300 whitespace-nowrap shrink-0">
  <Clock className="w-3 h-3 text-fuchsia-300 shrink-0" />
  <span>Pendiente Respuesta</span>
  </span>
  );
  case 'no_disponible':
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/15 text-rose-400 whitespace-nowrap shrink-0">
  <X className="w-3 h-3 text-rose-400 shrink-0" />
  <span>No Disponible</span>
  </span>
@@ -830,7 +830,7 @@ export default function BandCRM({ colors, leads = [], onAddLead, onUpdateLead, o
  case 'sin_contactar':
  default:
  return (
- <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-800 text-neutral-400">
+ <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-800 text-neutral-400 whitespace-nowrap shrink-0">
  <Radio className="w-3 h-3 text-neutral-400 shrink-0" />
  <span>Sin Contactar</span>
  </span>
@@ -1277,14 +1277,14 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  
  <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-mono text-neutral-400">
- <span className="bg-neutral-800 px-2 py-1 rounded-md text-[#d1b375] flex items-center gap-1 shrink-0">
- <Music className="w-3 h-3 text-[#d1b375]" />
+ <span className="bg-neutral-800 px-2 py-0.5 rounded-md text-[#d1b375] flex items-center gap-1 shrink-0 max-w-[160px]" title={band.estilo_musical}>
+ <Music className="w-3 h-3 text-[#d1b375] shrink-0" />
  <span className="truncate">{band.estilo_musical}</span>
  </span>
 
- <span className="bg-neutral-800/80 px-2 py-1 rounded-md text-neutral-300 flex items-center gap-1 shrink-0">
- <MapPin className="w-3 h-3 text-rose-400" />
- <span>{band.localizacion}</span>
+ <span className="bg-neutral-800/80 px-2 py-0.5 rounded-md text-neutral-300 flex items-center gap-1 shrink-0 max-w-[140px]" title={band.localizacion}>
+ <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
+ <span className="truncate">{band.localizacion}</span>
  </span>
 
  <ReliabilityBadge item={band} size="sm" />
@@ -1419,11 +1419,11 @@ Bakandeya Agent Manager IA & Músicos`;
  </div>
  ) : (
  /* TABLE LIST VIEW */
- <div className={` rounded-2xl overflow-hidden ${colors.card}  shadow-md overflow-x-auto`}>
- <table className="w-full text-left text-[10px] font-mono">
- <thead className="bg-neutral-900/90 text-neutral-400 uppercase tracking-wider text-[10px]">
+ <div className={`rounded-2xl overflow-hidden ${colors.card} shadow-md overflow-x-auto`}>
+ <table className="w-full text-left text-[10px] font-mono min-w-[850px] border-collapse">
+ <thead className="bg-neutral-900/90 text-neutral-400 uppercase tracking-wider text-[10px] border-b border-neutral-800">
  <tr>
- <th className="p-3.5 w-10 text-center">
+ <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">
    <button
      type="button"
      onClick={selectedBandIds.length === filteredBands.length && filteredBands.length > 0 ? handleDeselectAllBands : handleSelectAllFilteredBands}
@@ -1439,22 +1439,22 @@ Bakandeya Agent Manager IA & Músicos`;
      )}
    </button>
  </th>
- <th className="p-3.5">Banda / Artista</th>
- <th className="p-3.5">Estilo Musical</th>
- <th className="p-3.5">Localización</th>
- <th className="p-3.5">Estado Relación</th>
- <th className="p-3.5">Contacto</th>
- <th className="p-3.5">Aforo Habitual</th>
- <th className="p-3.5">Último Contacto</th>
- <th className="p-3.5 text-right">Acciones</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[170px]">Banda / Artista</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[150px]">Estilo Musical</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[140px]">Localización</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[140px]">Estado Relación</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[150px]">Contacto</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[90px]">Aforo Habitual</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[100px]">Último Contacto</th>
+ <th className="py-2.5 px-3 whitespace-nowrap min-w-[130px] text-right">Acciones</th>
  </tr>
  </thead>
- <tbody className=" /60 text-neutral-300">
+ <tbody className="divide-y divide-neutral-800/60 text-neutral-300">
  {filteredBands.map((band) => {
    const isRowSelected = selectedBandIds.includes(band.id);
    return (
  <tr key={band.id} className={`transition-colors ${isRowSelected ? 'bg-[#f2ca50]/10 hover:bg-[#f2ca50]/15' : 'hover:bg-neutral-900/50'}`}>
- <td className="p-3.5 w-10 text-center" onClick={(e) => e.stopPropagation()}>
+ <td className="py-2 px-3 w-10 text-center align-middle whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
    <button
      type="button"
      onClick={(e) => handleToggleSelectBand(band.id, e)}
@@ -1468,33 +1468,37 @@ Bakandeya Agent Manager IA & Músicos`;
      )}
    </button>
  </td>
- <td className="p-3.5 font-bold text-white">
- <div className="flex items-center gap-2">
+ <td className="py-2 px-3 font-bold text-white align-middle whitespace-nowrap">
+ <div className="flex items-center gap-2 min-w-0">
  {band.imagen_url ? (
  <img src={band.imagen_url} alt={band.nombre_banda} className="w-5 h-5 rounded-full object-cover border border-[#f2ca50]/50 shrink-0" />
  ) : (
  <span className="text-xs shrink-0">{band.icono || '🎸'}</span>
  )}
- <span>{band.nombre_banda}</span>
+ <span className="truncate max-w-[150px] sm:max-w-[200px]" title={band.nombre_banda}>{band.nombre_banda}</span>
  </div>
  </td>
- <td className="p-3.5 text-[#d1b375]">{band.estilo_musical}</td>
- <td className="p-3.5">
- <span className="inline-flex items-center gap-1 text-neutral-300">
- <MapPin className="w-3 h-3 text-rose-400" />
- <span>{band.localizacion}</span>
+ <td className="py-2 px-3 text-[#d1b375] align-middle whitespace-nowrap">
+   <span className="truncate max-w-[150px] sm:max-w-[200px] block" title={band.estilo_musical}>
+     {band.estilo_musical}
+   </span>
+ </td>
+ <td className="py-2 px-3 align-middle whitespace-nowrap">
+ <span className="inline-flex items-center gap-1 text-neutral-300 max-w-[140px] sm:max-w-[190px]" title={band.localizacion}>
+ <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
+ <span className="truncate">{band.localizacion}</span>
  </span>
  </td>
- <td className="p-3.5">{renderStatusBadge(band.estado_relacion)}</td>
- <td className="p-3.5">
- <div className="space-y-0.5">
- <div className="text-[#d1b375] font-bold">{band.contacto_nombre || '-'}</div>
- <div className="text-[10px] text-neutral-400">{band.email || band.telefono || '-'}</div>
+ <td className="py-2 px-3 align-middle whitespace-nowrap">{renderStatusBadge(band.estado_relacion)}</td>
+ <td className="py-2 px-3 align-middle whitespace-nowrap">
+ <div className="space-y-0.5 max-w-[160px]">
+ <div className="text-[#d1b375] font-bold truncate" title={band.contacto_nombre}>{band.contacto_nombre || '-'}</div>
+ <div className="text-[10px] text-neutral-400 truncate" title={band.email || band.telefono}>{band.email || band.telefono || '-'}</div>
  </div>
  </td>
- <td className="p-3.5 font-mono">{band.aforo_promedio ? `${band.aforo_promedio} pers.` : '-'}</td>
- <td className="p-3.5 text-neutral-400">{band.ultimo_contacto}</td>
- <td className="p-3.5 text-right">
+ <td className="py-2 px-3 font-mono align-middle whitespace-nowrap text-neutral-300">{band.aforo_promedio ? `${band.aforo_promedio} pers.` : '-'}</td>
+ <td className="py-2 px-3 text-neutral-400 align-middle whitespace-nowrap">{band.ultimo_contacto || '-'}</td>
+ <td className="py-2 px-3 text-right align-middle whitespace-nowrap">
  <div className="flex items-center justify-end gap-1.5">
  <button
  onClick={() => handleAnalyzeTone(band)}

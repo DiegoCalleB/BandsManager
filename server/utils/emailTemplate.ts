@@ -78,10 +78,10 @@ export function buildServerEmailHtml(params: {
   const email = firma.email || booking.email || defaultEmail;
 
   const dossierPdfName = epkConfig?.dossierPdfName || epkConfig?.dossier_pdf_name || 'Dossier Bakandeya.pdf';
-  const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || (isBakandeya ? 'https://bands-manager.up.railway.app/logo_bakandeya_bueno_sin_fondo.png' : '');
+  const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || (isBakandeya ? 'https://bandmanager.io/logo_bakandeya_bueno_sin_fondo.png' : '');
 
   const cleanBandIdStr = bandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const webEpkUrl = `https://bands-manager.up.railway.app/epk?band=${encodeURIComponent(bandId.startsWith('band-') ? bandId : `band-${cleanBandIdStr}`)}`;
+  const webEpkUrl = `https://bandmanager.io/epk?band=${encodeURIComponent(bandId.startsWith('band-') ? bandId : `band-${cleanBandIdStr}`)}`;
 
   const enlaces = epkConfig?.enlacesRedes || epkConfig?.enlaces_redes || {};
 

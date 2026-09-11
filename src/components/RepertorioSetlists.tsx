@@ -33,16 +33,17 @@ import { PdfExportModal } from './repertorio/PdfExportModal';
 import { MemberNotesModal } from './repertorio/MemberNotesModal';
 import { SetlistAIAnalysisModal } from './repertorio/SetlistAIAnalysisModal';
 import { PerfectSetlistModal, PerfectSetlistAction, PerfectSetlistPlan, SetlistFeedbackInput } from './repertorio/PerfectSetlistModal';
+import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ImportSetlistModal } from './repertorio/ImportSetlistModal';
 import { DiscografiaView } from './repertorio/DiscografiaView';
 import { SongCardRow } from './repertorio/SongCardRow';
 import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
+import { cacheActiveStageSetlist } from '../utils/stageOfflineCache';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
-import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { 
  uploadFileToServer, parseGoogleDriveAudioUrl, isGoogleDriveUrl, 
  saveSongsToLocalStorageSafely, saveSetlistsToLocalStorageSafely, resolveAudioUrl 
@@ -53,6 +54,7 @@ import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '
 import { getSemitoneDifference } from '../utils/chordUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
+import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../config/sampleRepertoire';
 
 interface RepertorioSetlistsProps {
  colors: ThemeColors;
@@ -66,6 +68,7 @@ interface RepertorioSetlistsProps {
  onUpdateRehearsal?: (id: string, fields: Partial<Rehearsal>) => void;
  view?: 'repertorio' | 'catalogo' | 'discografia';
  currentUser?: any;
+ onNavigate?: (view: 'repertorio' | 'catalogo' | 'discografia') => void;
 }
 
 // Plantilla de la formación de Bakandeya usada como banda de demostración de la propia
@@ -344,12 +347,14 @@ export default function RepertorioSetlists({
  onUpdateConcert,
  onUpdateRehearsal,
  view,
- currentUser
+ currentUser,
+ onNavigate
 }: RepertorioSetlistsProps) {
-  const repertorioTutorial = useModuleTutorial('repertorio');
-  const { t } = useLanguage();
+ const { t } = useLanguage();
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const bName = bandName || 'Tu Banda';
+
+ const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('repertorio');
 
  const cleanBand = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
  const isBakandeya = cleanBand === 'bakandeya';
@@ -370,6 +375,7 @@ export default function RepertorioSetlists({
    return rawList.filter(s => {
      if (!s || typeof s !== 'object') return false;
      const sId = (s.id || '').toLowerCase();
+     if (sId.startsWith('sample-track-')) return true;
      if (sId.startsWith('song-cm-') || /^song-[1-8]$/.test(sId) || sId.startsWith('live_song_')) {
        return false;
      }
@@ -383,6 +389,7 @@ export default function RepertorioSetlists({
    return rawList.filter(sl => {
      if (!sl || typeof sl !== 'object') return false;
      const slId = (sl.id || '').toLowerCase();
+     if (slId.startsWith('setlist-sample-')) return true;
      if (slId === 'setlist-1' || slId === 'setlist-2') return false;
      return true;
    });
@@ -392,10 +399,6 @@ export default function RepertorioSetlists({
  const [showPdfPreview, setShowPdfPreview] = useState(false);
  const [activeTab, setActiveTab] = useState<'catalogo' | 'setlists'>('setlists');
  const [catalogoViewMode, setCatalogoViewMode] = useState<'albumes' | 'canciones'>('albumes');
- // Plegado por defecto: la lista de setlists guardados ocupaba espacio permanentemente aunque
- // el usuario normalmente ya sabe con cuál está trabajando (ver activeSetlistId más abajo, que
- // recuerda el último setlist activo entre sesiones) — se despliega con un clic cuando hace falta.
- const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(true);
 
  // Sync activeTab with the view prop (when navigating from sidebar)
  useEffect(() => {
@@ -412,6 +415,14 @@ export default function RepertorioSetlists({
    }
  }, [view]);
 
+ const handleTabChange = useCallback((newTab: 'catalogo' | 'setlists') => {
+   setActiveTab(newTab);
+   if (onNavigate) {
+     const targetView = newTab === 'setlists' ? 'repertorio' : 'discografia';
+     onNavigate(targetView);
+   }
+ }, [onNavigate]);
+
  // Songs Repertoire State
  const [songs, setSongs] = useState<Song[]>(() => {
    try {
@@ -420,14 +431,15 @@ export default function RepertorioSetlists({
      const parsed = saved ? JSON.parse(saved) : [];
      const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((s: any) => {
        const sId = (s?.id || '').toLowerCase();
+       if (sId.startsWith('sample-track-')) return true;
        return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
      }) : []);
      if (sanitized.length > 0) {
        return sanitized;
      }
-     return isBakandeya ? DEFAULT_SONGS : [];
+     return isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS;
    } catch {
-     return isBakandeya ? DEFAULT_SONGS : [];
+     return isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS;
    }
  });
 
@@ -439,14 +451,15 @@ export default function RepertorioSetlists({
      const parsed = saved ? JSON.parse(saved) : [];
      const sanitized = isBakandeya ? parsed : (Array.isArray(parsed) ? parsed.filter((sl: any) => {
        const slId = (sl?.id || '').toLowerCase();
+       if (slId.startsWith('setlist-sample-')) return true;
        return slId !== 'setlist-1' && slId !== 'setlist-2';
      }) : []);
      if (sanitized.length > 0) {
        return sanitized;
      }
-     return isBakandeya ? DEFAULT_SETLISTS : [];
+     return isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
    } catch {
-     return isBakandeya ? DEFAULT_SETLISTS : [];
+     return isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS;
    }
  });
 
@@ -946,20 +959,20 @@ export default function RepertorioSetlists({
     const savedS = localStorage.getItem(keyS) || (isBakandeya ? localStorage.getItem('bakandeya_songs_catalog') : null);
     const parsedS = savedS ? JSON.parse(savedS) : [];
     const sanitizedS = sanitizeBandSongs(parsedS);
-    setSongs(sanitizedS.length > 0 ? sanitizedS : (isBakandeya ? DEFAULT_SONGS : []));
+    setSongs(sanitizedS.length > 0 ? sanitizedS : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
 
     const savedSt = localStorage.getItem(keySt) || (isBakandeya ? localStorage.getItem('bakandeya_setlists') : null);
     const parsedSt = savedSt ? JSON.parse(savedSt) : [];
     const sanitizedSt = sanitizeBandSetlists(parsedSt);
-    setSetlists(sanitizedSt.length > 0 ? sanitizedSt : (isBakandeya ? DEFAULT_SETLISTS : []));
+    setSetlists(sanitizedSt.length > 0 ? sanitizedSt : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS));
     if (sanitizedSt.length > 0) {
       setActiveSetlistId(sanitizedSt[0].id);
     } else {
-      setActiveSetlistId('');
+      setActiveSetlistId(isBakandeya ? 'setlist-1' : (SAMPLER_SETLISTS[0]?.id || ''));
     }
   } catch {
-    setSongs(isBakandeya ? DEFAULT_SONGS : []);
-    setSetlists(isBakandeya ? DEFAULT_SETLISTS : []);
+    setSongs(isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
+    setSetlists(isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
   }
 
   const fetchRepertorio = async () => {
@@ -975,7 +988,7 @@ export default function RepertorioSetlists({
         const dataS = await resSongs.json();
         if (dataS.songs && Array.isArray(dataS.songs)) {
           const sanitized = sanitizeBandSongs(dataS.songs);
-          setSongs(sanitized);
+          setSongs(sanitized.length > 0 ? sanitized : (isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS));
         }
       }
 
@@ -983,9 +996,10 @@ export default function RepertorioSetlists({
         const dataSt = await resSetlists.json();
         if (dataSt.setlists && Array.isArray(dataSt.setlists)) {
           const sanitized = sanitizeBandSetlists(dataSt.setlists);
-          setSetlists(sanitized);
-          if (sanitized.length > 0) {
-            setActiveSetlistId(prev => sanitized.some((s: any) => s.id === prev) ? prev : sanitized[0].id);
+          const finalSetlists = sanitized.length > 0 ? sanitized : (isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
+          setSetlists(finalSetlists);
+          if (finalSetlists.length > 0) {
+            setActiveSetlistId(prev => finalSetlists.some((s: any) => s.id === prev) ? prev : finalSetlists[0].id);
           } else {
             setActiveSetlistId('');
           }
@@ -2396,16 +2410,13 @@ export default function RepertorioSetlists({
     colors={colors}
     isStitchLight={isStitchLight}
     activeTab={activeTab}
-    setActiveTab={setActiveTab}
+    setActiveTab={handleTabChange}
     catalogoViewMode={catalogoViewMode}
     setCatalogoViewMode={setCatalogoViewMode}
     setlists={setlists}
     activeSetlistId={activeSetlistId}
     onSelectSetlist={(id) => {
       setActiveSetlistId(id);
-      if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
-        setIsSidebarCollapsed(true);
-      }
     }}
     onCreateSetlist={handleCreateSetlist}
     onImportSetlist={() => setShowImportSetlistModal(true)}
@@ -2413,153 +2424,14 @@ export default function RepertorioSetlists({
     onOpenNewAlbumModal={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
     songCount={songs.length}
     albumCount={albumsList.filter(a => a !== 'todos').length}
-    isSidebarCollapsed={isSidebarCollapsed}
-    onToggleSidebar={() => setIsSidebarCollapsed(prev => !prev)}
-    onOpenTutorial={repertorioTutorial.openTutorial}
+    onOpenTutorial={openTutorial}
   />
 
   {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
   {activeTab === 'setlists' && (
-  <div className="grid grid-cols-1 lg:grid-cols-12 gap-1.5">
-  {/* SIDEBAR: LIST OF SAVED SETLISTS */}
-  {!isSidebarCollapsed ? (
-  <div className={`lg:col-span-3 p-3 rounded-2xl space-y-3 ${colors.card} `}>
-  <div className="flex justify-between items-center">
-  <h3 className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-  <Layers className="w-3.5 h-3.5 text-[#d1b375]/80" />
-  <span>Setlists Guardados</span>
-  </h3>
-  <div className="flex items-center gap-1">
-  <button
-  id="btn-create-setlist"
-  onClick={handleCreateSetlist}
-  className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
-  isStitchLight ? 'bg-slate-900 text-white hover:bg-slate-800' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100'
-  }`}
-  title="Crear un nuevo setlist"
-  >
-  <Plus className="w-3 h-3" />
-  <span>Nuevo</span>
-  </button>
-  <button
-  onClick={() => setShowImportSetlistModal(true)}
-  className="p-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-all cursor-pointer"
-  title="Importar repertorio desde una foto o PDF ya impreso"
-  >
-  <ImagePlus className="w-3.5 h-3.5" />
-  </button>
-  <button
-  onClick={() => setIsSidebarCollapsed(true)}
-  className="p-1 text-neutral-400 hover:text-white rounded hover:bg-neutral-800 cursor-pointer"
-  title="Colapsar panel lateral para ampliar editor"
-  >
-  <ChevronLeft className="w-4 h-4" />
-  </button>
-  </div>
-  </div>
-
-  <div className="space-y-1.5 max-h-[calc(85vh-180px)] min-h-[450px] overflow-y-auto pr-1">
-  {setlists.map(st => {
-  const isSelected = st.id === activeSetlistId;
-  const songItemsCount = st.items.filter(i => i.tipoItem === 'cancion').length;
-  
-  return (
-  <div
-  key={st.id}
-  onClick={() => {
-  setActiveSetlistId(st.id);
-  // En escritorio el sidebar vive en su propia columna junto al editor (no tapa el gráfico), pero
-  // en pantallas estrechas comparten el mismo scroll vertical — sin este auto-colapso, elegir un
-  // setlist distinto dejaba la lista entera tapando el Mapa de Energía hasta que el usuario volvía
-  // a tocar la flecha. Mismo breakpoint `lg` que ya usa este grid (AGENTS.md §6: contenido
-  // principal primero). No se toca en escritorio para no perder la lista de un vistazo.
-  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
-  setIsSidebarCollapsed(true);
-  }
-  }}
-  className={`p-2.5 rounded-xl transition-all cursor-pointer ${
-  isSelected 
-  ? isStitchLight 
-  ? 'bg-sky-500/15 ring-1 ring-indigo-500/30' 
-  : 'bg-[#d1b375]/15 ring-1 ring-[#f2ca50]/30'
-  : isStitchLight
-  ? 'bg-white hover:border-slate-300'
-  : 'bg-[#131313] hover:border-neutral-700'
-  }`}
-  >
-  <div className="flex justify-between items-start gap-2">
-  <h4 className={`text-[10px] font-mono font-bold truncate ${isSelected ? (isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]') : colors.text}`}>
-  {st.nombre}
-  </h4>
-  <span className={`text-[9px] font-mono uppercase px-1.5 py-0.5 rounded font-bold shrink-0 ${
-  st.tipoFormato === 'festival' 
-  ? 'bg-[#d1b375]/15 text-[#d1b375]'
-  : st.tipoFormato === 'sala_larga'
-  ? 'bg-sky-500/15 text-sky-400'
-  : (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]')
-  }`}>
-  {st.tipoFormato}
-  </span>
-  </div>
-
-  <p className="text-[9px] text-neutral-400 line-clamp-1 mt-0.5 font-sans">
-  {st.descripcion || 'Sin descripción'}
-  </p>
-
-  <div className="flex items-center justify-between mt-1.5 pt-1 border-t border-white/5 text-[9px] font-mono text-neutral-400">
-  <span className="flex items-center gap-1">
-  <Music className="w-3 h-3 text-[#d1b375]" />
-  <span>{songItemsCount} temas</span>
-  </span>
-
-  <div className="flex items-center gap-1">
-  <button
-  onClick={(e) => { e.stopPropagation(); setPerformanceSetlistId(st.id); }}
-  className="p-0.5 text-neutral-400 hover:text-amber-400 rounded hover:bg-neutral-800"
-  title="🎤 Modo Concierto - Ver partituras en directo"
-  >
-  <Mic className="w-3 h-3" />
-  </button>
-  <button
-  onClick={(e) => { e.stopPropagation(); handleDuplicateSetlist(st); }}
-  className="p-0.5 text-neutral-400 hover:text-white rounded hover:bg-neutral-800"
-  title="Duplicar Setlist"
-  >
-  <Copy className="w-3 h-3" />
-  </button>
-  <button
-  onClick={(e) => { e.stopPropagation(); handleDeleteSetlist(st.id); }}
-  className="p-0.5 text-neutral-400 hover:text-rose-400 rounded hover:bg-neutral-800"
-  title="Eliminar Setlist"
-  >
-  <Trash2 className="w-3 h-3" />
-  </button>
-  </div>
-  </div>
-  </div>
-  );
-  })}
-  </div>
-  </div>
-  ) : (
-  // Barra de "abrir lista de setlists": en escritorio es una columna estrecha (chevron + texto
-  // apilados); en móvil se oculta porque el selector rápido ya vive en la barra superior unificada.
-  <div className="hidden lg:flex lg:col-span-1 flex-col items-center py-1 lg:py-3 bg-[#131313] border border-white/5 rounded-2xl shrink-0">
-    <button
-      onClick={() => setIsSidebarCollapsed(false)}
-      className="p-1.5 lg:p-2 text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-xl cursor-pointer flex flex-row lg:flex-col items-center gap-1.5 lg:gap-2"
-      title="Mostrar lista de setlists guardados"
-    >
-      <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5 text-[#d1b375]" />
-      <span className="text-[10px] font-mono font-bold tracking-wider text-neutral-400 uppercase">
-        Setlists ({setlists.length})
-      </span>
-    </button>
-  </div>
-  )}
-
+  <div className="w-full">
   {/* MAIN EDITOR FOR ACTIVE SETLIST */}
-  <div className={`${isSidebarCollapsed ? 'lg:col-span-11' : 'lg:col-span-9'} p-3.5 sm:p-4 rounded-2xl space-y-3 ${colors.card} `}>
+  <div className={`w-full p-3.5 sm:p-4 rounded-2xl space-y-3 ${colors.card} `}>
  {activeSetlist ? (
  <>
  {/* CABECERA COMPACTA: nombre del setlist + un único menú "⋯" con las acciones secundarias.
@@ -2578,16 +2450,35 @@ export default function RepertorioSetlists({
  className={`flex-1 min-w-0 text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
  />
 
- {/* MODO CONCIERTO: acción principal para usar en directo, no una más del menú "⋯" de
-     ajustes secundarios (compartir/asignar/imprimir) — necesita ser visible de un vistazo. */}
+ <div className="flex items-center gap-1.5 shrink-0">
+ {/* IMPRIMIR REPERTORIO — directo a 1 clic, bien a mano */}
  <button
+ id="btn-print-setlist-header"
  type="button"
- onClick={() => setPerformanceSetlistId(activeSetlist.id)}
+ onClick={() => setShowPdfPreview(true)}
+ className="shrink-0 px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-[#d1b375] hover:text-white border border-[#d1b375]/40 font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+ title="Imprimir repertorio o exportar a PDF / atril en papel"
+ >
+ <Printer className="w-3.5 h-3.5 text-[#d1b375]" />
+ <span>Imprimir</span>
+ </button>
+
+ {/* MODO ESCENARIO / ATRIL: acción principal para directo */}
+ <button
+ id="btn-stage-mode-header"
+ type="button"
+ onClick={() => {
+   if (activeSetlist) {
+     cacheActiveStageSetlist(activeSetlist, songs, bandId);
+     setPerformanceSetlistId(activeSetlist.id);
+   }
+ }}
  className="shrink-0 px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-amber-950/30"
- title="Modo Concierto: ver y pasar las partituras del repertorio en directo"
+ title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
  >
  <Mic className="w-3.5 h-3.5" />
- <span className="hidden sm:inline">Modo Concierto</span>
+ <span className="hidden sm:inline">Modo Escenario</span>
+ <span className="sm:hidden">Atril</span>
  </button>
 
  <div className="relative shrink-0">
@@ -2595,7 +2486,7 @@ export default function RepertorioSetlists({
  type="button"
  onClick={() => setShowSetlistActionsMenu((v) => !v)}
  className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
- title="Acciones del repertorio: compartir, asignar a bolo, imprimir, editar detalles"
+ title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
  >
  <MoreHorizontal className="w-4 h-4" />
  </button>
@@ -2626,14 +2517,29 @@ export default function RepertorioSetlists({
  </button>
  <button
  type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); handleDuplicateSetlist(activeSetlist); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar setlist
+ </button>
+ <button
+ type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
  className="w-full text-left px-2.5 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
  >
  <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
  </button>
+ <button
+ type="button"
+ onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
+ className="w-full text-left px-2.5 py-2 rounded-lg text-rose-400 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ >
+ <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
+ </button>
  </div>
  </>
  )}
+ </div>
  </div>
   </div>
 
@@ -3735,7 +3641,7 @@ export default function RepertorioSetlists({
  </>
  ) : (
  <div className="text-center py-20 text-neutral-500 font-mono text-[10px]">
- Selecciona o crea un repertorio a la izquierda para empezar.
+ Selecciona o crea un repertorio desde la barra superior para empezar.
  </div>
  )}
  </div>
@@ -4579,11 +4485,12 @@ export default function RepertorioSetlists({
       onClose={() => setPerformanceSetlistId(null)}
     />
   )}
-  {/* MODULE TUTORIAL MODAL */}
+
+  {/* Tutorial Interactivo Paso a Paso */}
   <ModuleTutorialModal
-    isOpen={repertorioTutorial.isOpen}
-    onClose={repertorioTutorial.closeTutorial}
     moduleId="repertorio"
+    isOpen={isTutorialOpen}
+    onClose={closeTutorial}
   />
 </div>
  );

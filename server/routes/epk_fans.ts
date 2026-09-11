@@ -446,7 +446,7 @@ router.get("/public/epk", async (req, res) => {
       spotify: "https://open.spotify.com/artist/bakandeya",
       youtube: "https://youtube.com/@bakandeya_oficial",
       tiktok: "https://tiktok.com/@bakandeya_oficial",
-      website: "https://bands-manager.up.railway.app"
+      website: "https://bandmanager.io"
     };
 
     // Filter out bakandeya default logo if this is not bakandeya

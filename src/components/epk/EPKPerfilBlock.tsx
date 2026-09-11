@@ -9,7 +9,8 @@ import {
   Loader2,
   Instagram,
   User as UserIcon,
-  Users
+  Users,
+  Globe
 } from 'lucide-react';
 import { EPKConfig, BandMember } from '../../types';
 import { EPKBlockWrapper } from './EPKBlockWrapper';
@@ -114,11 +115,11 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </div>
         </div>
 
-        {/* INFORMACIÓN ADICIONAL PARA EL DOSSIER Y AGENTES DE IA */}
+        {/* INFORMACIÓN ADICIONAL PARA EL DOSSIER */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
             <h3 className="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
-              <Info className="w-5 h-5" /> Información Adicional (Para Dossier y Agentes IA)
+              <Info className="w-5 h-5" /> Información Adicional y Notas del Dossier
             </h3>
             <div className="flex items-center gap-2">
               <span
@@ -139,16 +140,16 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                   : 'Mín. 80 car. o PDF'}
               </span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full hidden sm:inline">
-                Uso IA
+                Uso Interno
               </span>
             </div>
           </div>
 
           <p className="text-xs text-slate-400 leading-relaxed">
-            Escribe detalles de la banda (trayectoria, integrantes, estilo, rango de caché, prensa, etc.). El Chatbot y los Agentes la usarán para personalizar los pitches comerciales a salas.
+            Escribe notas y detalles de la banda (trayectoria, integrantes, estilo, hitos, prensa, etc.) para enriquecer la documentación del proyecto.
           </p>
           <p className="text-[11px] text-amber-400/90 font-semibold bg-amber-500/5 border border-amber-500/20 rounded-lg px-3 py-2">
-            ⚠ Este texto NO se muestra en la página pública del EPK - es solo para uso interno de la IA y agentes.
+            Nota: Este texto es para uso interno del equipo y no se muestra en la página pública del EPK.
           </p>
 
           <div className="space-y-1.5">
@@ -156,7 +157,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               rows={5}
               value={config.dossierTextoExtra || ''}
               onChange={e => setConfig({ ...config, dossierTextoExtra: e.target.value })}
-              placeholder="Ejemplo: Bakandeya cuenta con 4 integrantes (Jon Quel, José Filgueira, Elyar Pashang, Raúl Pérez). Caché orientativo para salas de 800€-1500€ según aforo y distancia. Ofrecemos un show festivo de 90 minutos con metales y percusión en directo..."
+              placeholder="Ejemplo: Bakandeya cuenta con 4 integrantes (Jon Quel, José Filgueira, Elyar Pashang, Raúl Pérez). Formato disponible para salas y festivales según aforo y requisitos. Ofrecemos un show festivo de 90 minutos con metales y percusión en directo..."
               className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 outline-none leading-relaxed font-sans"
             />
             <div className="flex justify-between items-center text-[11px] font-mono text-slate-400">
@@ -332,6 +333,44 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               </div>
             </div>
 
+            {/* SITIO WEB OFICIAL PROPIO DE LA BANDA */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-amber-500/30 space-y-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-amber-400" /> Sitio Web Oficial Propio de la Banda (Opcional)
+                </label>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                  Dossier EPK + Fans Landing
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Si vuestra banda ya dispone de un sitio web oficial o dominio propio, incluidlo aquí. Se enlazará de forma destacada en el Dossier EPK y en la Landing de Fans.
+              </p>
+              <input
+                type="url"
+                placeholder="https://www.tubanda.com"
+                value={config.enlacesRedes?.website || ''}
+                onChange={e => {
+                  const updatedVal = e.target.value;
+                  setConfig(prev => {
+                    const newRedes = {
+                      ...(prev.enlacesRedes || {}),
+                      website: updatedVal
+                    };
+                    return {
+                      ...prev,
+                      enlacesRedes: newRedes,
+                      firmaEmail: {
+                        ...(prev.firmaEmail || {}),
+                        redesSociales: newRedes
+                      }
+                    };
+                  });
+                }}
+                className="w-full bg-slate-900 border border-slate-800 focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none font-mono"
+              />
+            </div>
+
             <div className="pt-3 border-t border-slate-800 space-y-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
@@ -339,7 +378,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     <Share2 className="w-3.5 h-3.5" /> Enlaces de Redes & Plataformas Oficiales
                   </label>
                   <p className="text-[11px] text-slate-400">
-                    Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y agentes IA.
+                    Fuente única: se sincronizan automáticamente en tu Dossier EPK, firma de email, landing de fans y plataformas oficiales.
                   </p>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -348,7 +387,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
-                {unifiedPlatforms.map(item => (
+                {unifiedPlatforms.filter(item => item.key !== 'website').map(item => (
                   <div key={item.key} className="space-y-1">
                     <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1">
                       <span>{item.icon}</span>

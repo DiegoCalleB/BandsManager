@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AtSign,
   Mail,
@@ -10,12 +10,22 @@ import {
   ExternalLink,
   Check,
   Share2,
-  FileText
+  FileText,
+  Code,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  Info
 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { EPKConfig } from '../../types';
 import { EPKBlockWrapper } from './EPKBlockWrapper';
 import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from './epkBlocks';
+import {
+  buildEmailSignatureHtml,
+  buildEmailSignaturePlainText,
+  copyRichSignatureToClipboard
+} from '../../utils/emailFormatter';
 
 interface EPKFirmaQRBlockProps {
   config: EPKConfig;
@@ -46,6 +56,47 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
   onSave,
   isAllView = false
 }) => {
+  const [copiadoFirma, setCopiadoFirma] = useState<false | 'rich' | 'html' | 'text'>(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [instructionTab, setInstructionTab] = useState<'gmail' | 'outlook' | 'apple'>('gmail');
+
+  const handleCopyRichSignature = async () => {
+    const success = await copyRichSignatureToClipboard({
+      epkConfig: config,
+      isBakandeya,
+      publicEpkUrl
+    });
+    if (success) {
+      setCopiadoFirma('rich');
+      setTimeout(() => setCopiadoFirma(false), 3500);
+    }
+  };
+
+  const handleCopyHtmlCode = async () => {
+    const html = buildEmailSignatureHtml({
+      epkConfig: config,
+      isBakandeya,
+      publicEpkUrl
+    });
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(html);
+      setCopiadoFirma('html');
+      setTimeout(() => setCopiadoFirma(false), 3000);
+    }
+  };
+
+  const handleCopyPlainText = async () => {
+    const text = buildEmailSignaturePlainText({
+      epkConfig: config,
+      isBakandeya,
+      publicEpkUrl
+    });
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      setCopiadoFirma('text');
+      setTimeout(() => setCopiadoFirma(false), 3000);
+    }
+  };
   return (
     <EPKBlockWrapper
       meta={EPK_BLOCKS[5]}
@@ -295,19 +346,20 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
                 </div>
 
                 {(config.firmaEmail?.adjuntarDossierPorDefecto ?? true) && (
-                  <div className="pt-1 text-xs">
+                  <div className="pt-2 pb-1">
                     <a
-                      href={publicEpkUrl}
+                      href={publicEpkUrl || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sky-600 hover:text-sky-700 font-semibold underline transition"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer group"
                     >
-                      <FileDown className="w-3.5 h-3.5" />
+                      <FileText className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
                       <span>
                         {config.dossierPdfName
-                          ? `Dossier Oficial & Rider (${config.dossierPdfName})`
-                          : 'Dossier Oficial & Kit de Prensa'}
+                          ? `Ver Dossier Oficial (${config.dossierPdfName})`
+                          : 'Ver Dossier Oficial & EPK Online'}
                       </span>
+                      <ExternalLink className="w-3 h-3 text-slate-400" />
                     </a>
                   </div>
                 )}
@@ -411,8 +463,172 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
             <p className="text-[11px] text-slate-400 flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              Esta firma se inyecta automáticamente en los correos redactados por la IA o enviados desde el CRM.
+              Esta firma se inyecta automáticamente en los correos del CRM y ahora puedes exportarla a tu propio correo.
             </p>
+
+            {/* BOTONES DE COPIADO DE FIRMA */}
+            <div className="pt-2 border-t border-slate-800 space-y-2.5">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <button
+                  type="button"
+                  id="copy-rich-signature-btn"
+                  onClick={handleCopyRichSignature}
+                  className={`flex-1 px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
+                    copiadoFirma === 'rich'
+                      ? 'bg-emerald-500 text-slate-950 ring-2 ring-emerald-400'
+                      : 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 shadow-amber-500/10'
+                  }`}
+                  title="Copia la firma visual con fotos, enlaces y formato para pegarla en Gmail, Outlook o Apple Mail"
+                >
+                  {copiadoFirma === 'rich' ? (
+                    <>
+                      <Check className="w-4 h-4 stroke-[3]" />
+                      <span>¡Firma Formateada Copiada!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      <span>Copiar Firma Formateada (Gmail / Outlook)</span>
+                    </>
+                  )}
+                </button>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    id="copy-html-signature-btn"
+                    onClick={handleCopyHtmlCode}
+                    className={`px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
+                      copiadoFirma === 'html'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        : 'bg-slate-950 hover:bg-slate-800 text-slate-300 border-slate-800 hover:text-white'
+                    }`}
+                    title="Copiar el código fuente HTML puro de la firma"
+                  >
+                    {copiadoFirma === 'html' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Code className="w-3.5 h-3.5 text-amber-400" />}
+                    <span>{copiadoFirma === 'html' ? '¡HTML Copiado!' : 'HTML'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    id="copy-plain-signature-btn"
+                    onClick={handleCopyPlainText}
+                    className={`px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer border ${
+                      copiadoFirma === 'text'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        : 'bg-slate-950 hover:bg-slate-800 text-slate-300 border-slate-800 hover:text-white'
+                    }`}
+                    title="Copiar versión en texto plano"
+                  >
+                    {copiadoFirma === 'text' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <FileText className="w-3.5 h-3.5 text-slate-400" />}
+                    <span>{copiadoFirma === 'text' ? '¡Texto Copiado!' : 'Texto'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* AVISO / TOAST DE ÉXITO */}
+              {copiadoFirma && (
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-2 animate-fadeIn">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div className="leading-snug">
+                    {copiadoFirma === 'rich' && (
+                      <span><strong>¡Firma visual copiada!</strong> Ahora ve a los ajustes de firma de tu correo (Gmail, Outlook, Apple Mail...) y pulsa <kbd className="px-1.5 py-0.5 bg-slate-900 rounded border border-slate-700 text-amber-300 font-mono text-[10px]">Ctrl + V</kbd> (o <kbd className="px-1.5 py-0.5 bg-slate-900 rounded border border-slate-700 text-amber-300 font-mono text-[10px]">Cmd + V</kbd>) para pegarla con todos sus enlaces y logos.</span>
+                    )}
+                    {copiadoFirma === 'html' && (
+                      <span><strong>¡Código HTML copiado!</strong> Puedes pegarlo en clientes de correo o editores que admitan código HTML directo.</span>
+                    )}
+                    {copiadoFirma === 'text' && (
+                      <span><strong>¡Texto plano copiado!</strong> Ideal para clientes en modo texto o terminal.</span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* GUÍA DESPLEGABLE: CÓMO PEGARLA EN TU CORREO */}
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowInstructions(!showInstructions)}
+                  className="w-full text-left py-2 px-3 rounded-xl bg-slate-950/60 hover:bg-slate-950 border border-slate-800/80 text-xs text-slate-400 hover:text-amber-300 flex items-center justify-between transition cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
+                    ¿Cómo ponértela de firma en tu correo electrónico?
+                  </span>
+                  {showInstructions ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+
+                {showInstructions && (
+                  <div className="mt-2 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-3 text-xs text-slate-300 animate-fadeIn">
+                    {/* Tabs de clientes */}
+                    <div className="flex items-center gap-1.5 border-b border-slate-800 pb-2">
+                      <button
+                        type="button"
+                        onClick={() => setInstructionTab('gmail')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition ${
+                          instructionTab === 'gmail'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        🔴 Gmail
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setInstructionTab('outlook')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition ${
+                          instructionTab === 'outlook'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        🔵 Outlook / Microsoft 365
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setInstructionTab('apple')}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition ${
+                          instructionTab === 'apple'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        ⚪ Apple Mail / Mac
+                      </button>
+                    </div>
+
+                    {/* Contenido según tab */}
+                    {instructionTab === 'gmail' && (
+                      <ol className="list-decimal list-inside space-y-1.5 text-slate-300 pl-1 leading-relaxed">
+                        <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
+                        <li>Abre tu Gmail y pulsa en la rueda de <strong>Ajustes (⚙️)</strong> &gt; <strong>Ver todos los ajustes</strong>.</li>
+                        <li>En la pestaña <em>General</em>, baja hasta <strong>Firma</strong> y pulsa en <em>Crear nueva</em> (o edita la actual).</li>
+                        <li>Haz clic dentro del recuadro de firma y pulsa <kbd className="px-1 py-0.5 bg-slate-900 rounded border border-slate-700 text-amber-300 text-[10px] font-mono">Ctrl + V</kbd> (o <kbd className="px-1 py-0.5 bg-slate-900 rounded border border-slate-700 text-amber-300 text-[10px] font-mono">Cmd + V</kbd> en Mac).</li>
+                        <li>Baja al final de la página de Gmail y pulsa <strong>Guardar cambios</strong>.</li>
+                      </ol>
+                    )}
+
+                    {instructionTab === 'outlook' && (
+                      <ol className="list-decimal list-inside space-y-1.5 text-slate-300 pl-1 leading-relaxed">
+                        <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
+                        <li>En Outlook Web o App, entra en <strong>Configuración (⚙️)</strong> &gt; <strong>Correo</strong> &gt; <strong>Redactar y responder</strong>.</li>
+                        <li>En <em>Firma de correo electrónico</em>, crea una nueva firma y pega con <kbd className="px-1 py-0.5 bg-slate-900 rounded border border-slate-700 text-amber-300 text-[10px] font-mono">Ctrl + V</kbd>.</li>
+                        <li>Haz clic en <strong>Guardar</strong>.</li>
+                      </ol>
+                    )}
+
+                    {instructionTab === 'apple' && (
+                      <ol className="list-decimal list-inside space-y-1.5 text-slate-300 pl-1 leading-relaxed">
+                        <li>Haz clic arriba en <strong>"Copiar Firma Formateada"</strong>.</li>
+                        <li>En la app Mail de Mac, ve al menú superior <strong>Mail</strong> &gt; <strong>Ajustes...</strong> &gt; <strong>Firmas</strong>.</li>
+                        <li>Añade una firma con el botón <strong>+</strong> y desmarca la casilla <em>"Usar siempre el tipo de letra predeterminado"</em>.</li>
+                        <li>Pega en el editor con <kbd className="px-1 py-0.5 bg-slate-900 rounded border border-slate-700 text-amber-300 text-[10px] font-mono">Cmd + V</kbd>.</li>
+                      </ol>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* CÓDIGO QR OFICIAL DEL EPK */}

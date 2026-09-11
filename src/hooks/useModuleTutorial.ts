@@ -1,76 +1,57 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModuleTutorialId } from '../types/tutorial';
 
-const TUTORIAL_PREFIX = 'bandmanager_tutorial_seen_';
+const STORAGE_PREFIX = 'bm_tutorial_seen_';
 
-export interface TutorialStep {
-  title: string;
-  description: string;
-  icon?: string;
-  tip?: string;
-}
-
-export interface ModuleTutorialContent {
-  moduleId: string;
-  moduleTitle: string;
-  badge?: string;
-  steps: TutorialStep[];
-}
-
-export function useModuleTutorial(moduleId: string) {
-  const storageKey = `${TUTORIAL_PREFIX}${moduleId}`;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [hasSeen, setHasSeen] = useState<boolean>(true);
+export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime = true) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     try {
-      const seen = localStorage.getItem(storageKey);
-      setHasSeen(seen === 'true');
+      const seen = localStorage.getItem(`${STORAGE_PREFIX}${moduleId}`);
+      if (!seen && autoOpenFirstTime) {
+        // Small timeout to allow the main module to mount cleanly and avoid layout shift
+        const timer = setTimeout(() => {
+          setIsOpen(true);
+        }, 350);
+        return () => clearTimeout(timer);
+      }
     } catch {
-      setHasSeen(false);
+      // localStorage may be unavailable or disabled
+    } finally {
+      setHasLoaded(true);
     }
-  }, [storageKey]);
+  }, [moduleId, autoOpenFirstTime]);
 
   const openTutorial = useCallback(() => {
     setIsOpen(true);
   }, []);
 
-  const closeTutorial = useCallback(() => {
+  const closeTutorial = useCallback((markAsSeen = true) => {
     setIsOpen(false);
-    try {
-      localStorage.setItem(storageKey, 'true');
-      setHasSeen(true);
-    } catch (e) {
-      console.warn('No se pudo guardar estado del tutorial:', e);
+    if (markAsSeen) {
+      try {
+        localStorage.setItem(`${STORAGE_PREFIX}${moduleId}`, 'true');
+      } catch {
+        // ignore
+      }
     }
-  }, [storageKey]);
+  }, [moduleId]);
 
-  const resetTutorial = useCallback(() => {
+  const resetTutorialSeen = useCallback(() => {
     try {
-      localStorage.removeItem(storageKey);
-      setHasSeen(false);
-      setIsOpen(true);
-    } catch (e) {
-      console.warn('Error al resetear tutorial:', e);
+      localStorage.removeItem(`${STORAGE_PREFIX}${moduleId}`);
+    } catch {
+      // ignore
     }
-  }, [storageKey]);
+  }, [moduleId]);
 
   return {
     isOpen,
-    hasSeen,
+    hasLoaded,
     openTutorial,
     closeTutorial,
-    resetTutorial,
+    resetTutorialSeen
   };
-}
-
-export function resetAllTutorials() {
-  try {
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith(TUTORIAL_PREFIX) || key === 'bandmanager_profile_wizard_completed') {
-        localStorage.removeItem(key);
-      }
-    });
-  } catch (e) {
-    console.warn('Error borrando tutoriales:', e);
-  }
 }

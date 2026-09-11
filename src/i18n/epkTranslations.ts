@@ -165,7 +165,7 @@ const es: EpkDict = {
   contactoSubtitulo: 'Atención directa a programadores de salas, comisiones de fiestas y festivales:',
   managerPorDefecto: 'Mánager {bandName}',
   asuntoContratacion: 'Contratación {bandName} {year}',
-  ctaCache: 'Solicitar Caché & Disponibilidad',
+  ctaCache: 'Consultar Disponibilidad & Contratación',
 
   seccionTemas: 'Temas Destacados / Repertorio Principal',
   sonando: 'Sonando',
@@ -237,7 +237,7 @@ const en: EpkDict = {
   contactoSubtitulo: 'Direct line for venue bookers, festival programmers and local councils:',
   managerPorDefecto: '{bandName} Manager',
   asuntoContratacion: 'Booking {bandName} {year}',
-  ctaCache: 'Request Fee & Availability',
+  ctaCache: 'Check Availability & Booking',
 
   seccionTemas: 'Featured Tracks / Core Repertoire',
   sonando: 'Playing',
@@ -309,7 +309,7 @@ const it: EpkDict = {
   contactoSubtitulo: 'Linea diretta per programmatori di locali, festival e organizzatori:',
   managerPorDefecto: 'Manager {bandName}',
   asuntoContratacion: 'Booking {bandName} {year}',
-  ctaCache: 'Richiedi Cachet & Disponibilità',
+  ctaCache: 'Richiedi Disponibilità & Ingaggio',
 
   seccionTemas: 'Brani in Evidenza / Repertorio Principale',
   sonando: 'In riproduzione',
@@ -381,7 +381,7 @@ const cs: EpkDict = {
   contactoSubtitulo: 'Přímá linka pro pořadatele klubů, festivalů a produkce:',
   managerPorDefecto: 'Manažer {bandName}',
   asuntoContratacion: 'Booking {bandName} {year}',
-  ctaCache: 'Vyžádat honorář a termíny',
+  ctaCache: 'Poptat dostupnost a vystoupení',
 
   seccionTemas: 'Vybrané skladby / hlavní repertoár',
   sonando: 'Právě hraje',

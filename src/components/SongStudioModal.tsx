@@ -16,8 +16,8 @@ import { useStudioShareModal } from '../hooks/useStudioShareModal';
 import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
-import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
@@ -72,7 +72,6 @@ export default function SongStudioModal({
   onUpdateSong,
   currentUsername = 'Diego'
 }: SongStudioModalProps) {
-  const studioTutorial = useModuleTutorial('studio');
   const songRef = useRef<Song>(song);
   useEffect(() => {
     songRef.current = song;
@@ -84,6 +83,7 @@ export default function SongStudioModal({
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
   const [showAiMusicModal, setShowAiMusicModal] = useState<boolean>(false);
   const [showAiComposerModal, setShowAiComposerModal] = useState<boolean>(false);
+  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('song_studio');
   const {
     shareModalData, setShareModalData,
     handleShareSong,
@@ -1738,8 +1738,6 @@ export default function SongStudioModal({
                   <span>{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
                 </button>
 
-                <ModuleTutorialTrigger onOpen={studioTutorial.openTutorial} />
-
                 {/* Menú Desplegable de Herramientas Secundarias */}
                 <div className="relative">
                   <button
@@ -1802,13 +1800,20 @@ export default function SongStudioModal({
             </div>
           </div>
 
-          <button 
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ModuleTutorialTrigger
+              moduleId="song_studio"
+              onClick={openTutorial}
+              label="Guía rápida"
+            />
+            <button 
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Content Body */}
@@ -3634,11 +3639,11 @@ export default function SongStudioModal({
         }}
       />
 
-      {/* MODULE TUTORIAL MODAL */}
+      {/* Tutorial Interactivo Paso a Paso */}
       <ModuleTutorialModal
-        isOpen={studioTutorial.isOpen}
-        onClose={studioTutorial.closeTutorial}
-        moduleId="studio"
+        moduleId="song_studio"
+        isOpen={isTutorialOpen}
+        onClose={closeTutorial}
       />
 
     </div>

@@ -145,7 +145,7 @@ export const NAV_GROUPS = NAV_GROUPS_DESKTOP;
  * solo en vista agrupada.
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'chat', 'finanzas', 'merchan',
+  'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'discografia', 'chat', 'finanzas', 'merchan',
 ];
 
 /**
@@ -155,16 +155,16 @@ export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
  * sidebar — mantiene la lista de módulos principales para scroll horizontal.)
  */
 export const TOP_TABS_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'chat', 'finanzas', 'merchan',
+  'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'discografia', 'chat', 'finanzas', 'merchan',
 ];
 
-// Un plan con pocos módulos desbloqueados (p.ej. `promo`, 4 módulos) ya tiene un
-// menú corto de por sí: agrupar/colapsar no aporta y solo añade fricción.
-// Los ítems bloqueados por plan se siguen mostrando (con candado) dentro de cada
-// grupo igual que hoy, así que este umbral no depende de cuántos estén accesibles
-// dentro de cada grupo, solo de si el total global (allowedModules.length) justifica
-// agrupar.
-export const MIN_MODULES_FOR_GROUPED_NAV = 6;
+// Todos los planes (incluyendo `promo` y `promo_plus`) agrupan sus secciones en el menú (Música, Promoción, etc.).
+export const MIN_MODULES_FOR_GROUPED_NAV = 4;
+
+export function shouldGroupNavForPlan(planId?: string): boolean {
+  if (!planId) return true;
+  return true;
+}
 
 export function findNavGroupIdForItem(itemId: string): string | undefined {
   return NAV_GROUPS.find((g) => g.itemIds.includes(itemId as NavItemId))?.id;
@@ -173,7 +173,7 @@ export function findNavGroupIdForItem(itemId: string): string | undefined {
 export interface BottomNavSlotDef {
   id: string;
   kind: 'view' | 'group' | 'more';
-  /** Solo para kind 'view': navega directo a este NavItemId. */
+  /** Solo para kind 'view' o vista inicial por defecto de 'group': navega directo a este NavItemId. */
   itemId?: NavItemId;
   /** Solo para kind 'group': abre un sheet con los itemIds de este NAV_GROUPS_MOBILE. */
   groupId?: string;
@@ -183,16 +183,15 @@ export interface BottomNavSlotDef {
 
 /**
  * Slots de la bottom tab bar móvil (sustituye la fila de tabs horizontal + el
- * hamburger). Solo 5 slots fijos, icon-only: Resumen/Calendario navegan directo,
- * Música/Promoción abren un sheet con sus sub-módulos, y Más abre el drawer
- * completo con el resto (Contactos, Negocio, Herramientas, Chat, perfil...).
- * Cinco es el máximo razonable en icon-only sin apelmazar el thumb-reach en
- * pantallas de 360-400px de ancho.
+ * hamburger). Solo 5 slots fijos, icon-only: Resumen/Calendario/Repertorio/Dossier
+ * navegan directo al primer toque. Si ya se está en Música o Promoción, un segundo
+ * toque despliega el sheet con los sub-módulos. Más abre el drawer completo con el
+ * resto (Contactos, Negocio, Herramientas, Chat, perfil...).
  */
 export const NAV_BOTTOM_BAR_SLOTS: BottomNavSlotDef[] = [
   { id: 'resumen', kind: 'view', itemId: 'resumen', labelKey: 'nav.resumen', labelDefault: 'Resumen' },
   { id: 'calendario', kind: 'view', itemId: 'calendario', labelKey: 'nav.calendario', labelDefault: 'Calendario' },
-  { id: 'musica', kind: 'group', groupId: 'musica', labelKey: 'navGroup.musica', labelDefault: 'Música' },
-  { id: 'promocion', kind: 'group', groupId: 'promocion', labelKey: 'navGroup.promocion', labelDefault: 'Promoción' },
+  { id: 'musica', kind: 'group', groupId: 'musica', itemId: 'repertorio', labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
+  { id: 'promocion', kind: 'group', groupId: 'promocion', itemId: 'epk', labelKey: 'nav.epk', labelDefault: 'Dossier' },
   { id: 'more', kind: 'more', labelKey: 'nav.mas', labelDefault: 'Más' },
 ];
