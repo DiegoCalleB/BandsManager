@@ -345,8 +345,8 @@ export const ProfileCompletenessCard: React.FC<ProfileCompletenessCardProps> = (
                     : 'bg-stone-900 border-stone-800 text-stone-400'
                 }`}
               >
-                {p.completed ? <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" /> : <AlertCircle className="w-2.5 h-2.5 text-amber-500/80" />}
-                {p.title.split(' ')[0]}
+                {p.completed ? <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400 shrink-0" /> : <AlertCircle className="w-2.5 h-2.5 text-amber-500/80 shrink-0" />}
+                <span>{p.title.split(' ')[0]}</span>
               </span>
             ))}
           </div>

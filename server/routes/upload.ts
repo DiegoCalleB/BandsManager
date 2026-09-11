@@ -38,18 +38,19 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 // express.static como por Supabase Storage, ejecutando cualquier <script> que contenga en el
 // navegador de quien abra la URL — XSS almacenado. Solo se permiten los tipos que la app
 // realmente usa (audio, imagen, PDF, documentos), nunca HTML/SVG/JS.
-const EXTENSIONES_PERMITIDAS = new Set([
+export const EXTENSIONES_PERMITIDAS = new Set([
   // Audio
-  'mp3', 'wav', 'm4a', 'flac', 'ogg', 'aac', 'wma',
+  'mp3', 'wav', 'm4a', 'flac', 'ogg', 'aac', 'wma', 'aiff', 'aif', 'alac', 'opus',
   // Imagen (sin svg: es HTML/JS ejecutable disfrazado de imagen)
   'jpg', 'jpeg', 'png', 'webp', 'gif',
   // Vídeo
-  'mp4', 'mov', 'webm',
+  'mp4', 'mov', 'webm', 'mkv', 'avi',
   // Documentos
   'pdf', 'doc', 'docx'
 ]);
 
-function extensionPermitida(originalname: string): boolean {
+export function extensionPermitida(originalname: string): boolean {
+  if (!originalname || typeof originalname !== 'string') return false;
   const ext = path.extname(originalname).slice(1).toLowerCase();
   return EXTENSIONES_PERMITIDAS.has(ext);
 }
@@ -59,6 +60,24 @@ const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFi
     return cb(new Error('Tipo de archivo no permitido.'));
   }
   cb(null, true);
+};
+
+const multerChunkFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const original = file.originalname || '';
+  // Strips chunk extensions like .part0, .part1, .part
+  const strippedPart = original.replace(/\.part\d*$/i, '');
+  const bodyFilename = req.body?.filename || '';
+
+  if (
+    extensionPermitida(original) ||
+    extensionPermitida(strippedPart) ||
+    (bodyFilename && extensionPermitida(bodyFilename)) ||
+    original.endsWith('.bin') ||
+    original.endsWith('.part')
+  ) {
+    return cb(null, true);
+  }
+  return cb(new Error('Tipo de archivo no permitido.'));
 };
 
 // Multer storage engine for direct binary disk streaming (handles files > 1GB)
@@ -83,8 +102,8 @@ const uploadMiddleware = multer({
 const multerChunkStorage = multer.memoryStorage();
 const uploadChunkMiddleware = multer({
   storage: multerChunkStorage,
-  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB per chunk limit
-  fileFilter: multerFileFilter
+  limits: { fileSize: 30 * 1024 * 1024 }, // 30MB per chunk limit
+  fileFilter: multerChunkFileFilter
 });
 
 // Sin este envoltorio, un fileFilter rechazado llega a next(err) y responde con la página de
@@ -280,6 +299,15 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
     const { uploadId, chunkIndex, totalChunks, filename, folder } = req.body || {};
     if (!uploadId || chunkIndex === undefined || !totalChunks || !filename) {
       return res.status(400).json({ error: "Missing required chunk metadata (uploadId, chunkIndex, totalChunks, filename)" });
+    }
+
+    const bandaPedida = bandaSolicitada(req);
+    if (bandaPedida && !puedeEscribirEnBanda(req, bandaPedida)) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
+    }
+
+    if (!extensionPermitida(filename)) {
+      return res.status(400).json({ error: "Tipo de archivo no permitido." });
     }
 
     const cIdx = parseInt(chunkIndex, 10);

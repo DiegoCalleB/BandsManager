@@ -1,12 +1,12 @@
+import './utils/domTranslatePatch';
 import {StrictMode, Suspense, lazy} from 'react';
 import {createRoot} from 'react-dom/client';
+import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
 
-// App (todo el panel interno: CRM, calendario, reels, repertorio...) y las rutas públicas
-// (/epk, /musicos, /fans) se cargan bajo demanda y por separado.
-const App = lazy(() => import('./App.tsx'));
+// Rutas públicas (/epk, /musicos) se cargan bajo demanda
 const PublicEPK = lazy(() => import('./components/PublicEPK'));
 const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLanding'));
 

@@ -186,16 +186,16 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
             <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[420px] h-[420px] bg-[#f2ca50]/8 rounded-full blur-[110px] pointer-events-none" />
 
             <div className="relative flex flex-col items-center justify-center pt-2 pb-1 text-center w-full">
-              <div className="relative group w-full max-w-[300px] flex justify-center">
+              <div className="relative group w-full max-w-[340px] sm:max-w-[380px] flex justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
                   alt="BandManager.ai"
-                  className="w-full h-auto max-h-40 object-contain rounded-2xl drop-shadow-[0_12px_32px_rgba(242,202,80,0.22)]"
+                  className="w-full h-auto max-h-56 sm:max-h-64 object-contain rounded-2xl drop-shadow-[0_16px_40px_rgba(242,202,80,0.28)] transition-all duration-300 group-hover:scale-[1.015]"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <p className="mt-3 text-sm text-neutral-300">
+              <p className="mt-3 text-sm text-neutral-300 font-medium">
                 {view === 'register' ? 'Crea tu dossier, QR y calendario en 30 segundos.' : 'Tú piensa en tu música, nosotros en lo demás.'}
               </p>
             </div>

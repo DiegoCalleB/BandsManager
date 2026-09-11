@@ -347,22 +347,22 @@ export const MODULE_TUTORIALS: Record<ModuleTutorialId, ModuleTutorialConfig> = 
     id: 'repertorio',
     name: 'Repertorio, Setlists & Discografía',
     badge: 'Música & Directo',
-    subtitle: 'Organiza tus temas con tonalidades y BPMs, diseña repertorios equilibrados para directo y accede a ellos sin conexión.',
+    subtitle: 'Organiza tus temas con tonalidades y BPMs, diseña setlists para directo, imprime hojas a medida para cada músico y accede sin conexión.',
     accent: 'emerald',
     steps: [
       {
         id: 'rep-1',
         stepNumber: 1,
         badge: 'Paso 1 · Tu catálogo musical',
-        title: 'Ficha completa de cada canción con datos reales',
-        musicianHook: '🎵 Para el músico: Saber la tonalidad para cantar sin forzar la garganta, los BPMs para el metrónomo del batería y la afinación de la guitarra.',
-        description: 'Tus temas organizados con duración exacta, afinación, enlaces de audio/maqueta, estado de ensayo y notas para los músicos.',
+        title: 'Catálogo & Discografía: ficha musical completa',
+        musicianHook: '🎵 Para el músico: Saber la tonalidad para cantar sin forzar la garganta, los BPMs para el metrónomo del batería, la afinación y los discos oficiales de Spotify.',
+        description: 'Tus temas organizados por singles y álbumes con duración exacta, afinación, enlaces de audio/maqueta, estado de ensayo y notas para los músicos.',
         iconName: 'Music',
         uiTarget: {
           type: 'tab',
-          label: 'Pestaña "Catálogo" + Botón "+ Canción"',
-          location: 'Selector superior derecho · Pestaña "Catálogo"',
-          actionHint: 'Registra tus canciones con su tonalidad, BPM, afinación de guitarra, duración y enlaces a pistas de audio.',
+          label: 'Pestaña "Catálogo & Discografía"',
+          location: 'Selector superior · Pestaña "Catálogo"',
+          actionHint: 'Registra canciones con su tonalidad, BPM, afinación, duración, notas y organízalas por lanzamientos discográficos.',
           selector: '#tab-btn-catalogo, #btn-add-song'
         },
         keyPoints: [
@@ -371,8 +371,8 @@ export const MODULE_TUTORIALS: Record<ModuleTutorialId, ModuleTutorialConfig> = 
             desc: 'Datos musicales esenciales visibles de un vistazo rápido para toda la banda.'
           },
           {
-            title: 'Audio de referencia y notas',
-            desc: 'Adjunta la pista de audio o enlace para que los miembros repasen sus partes antes del ensayo.'
+            title: 'Discografía y portadas oficiales',
+            desc: 'Agrupa canciones por discos oficiales y vincúlalas a Spotify para el dossier y directo.'
           }
         ]
       },
@@ -403,28 +403,28 @@ export const MODULE_TUTORIALS: Record<ModuleTutorialId, ModuleTutorialConfig> = 
         ]
       },
       {
-        id: 'rep-3',
+        id: 'rep-print',
         stepNumber: 3,
-        badge: 'Paso 3 · Tu discografía',
-        title: 'Organización por Álbumes, EPs y Singles oficiales',
-        musicianHook: '💿 Identidad: Agrupa tus canciones por lanzamientos discográficos oficiales vinculados a Spotify con portadas en alta calidad.',
-        description: 'Separa los temas de tu nuevo disco de las versiones, maquetas o temas antiguos para mantener el catálogo ordenado.',
-        iconName: 'Disc',
+        badge: 'Paso 3 · Hojas de escenario a medida',
+        title: 'Impresión y PDF con notas exclusivas por músico',
+        musicianHook: '🖨️ En el camerino: El batería necesita saber cuándo entra con caja y el tempo; el guitarra qué cejilla poner; y el cantante cuándo hablar. Genera una hoja a medida para cada uno en 1 clic.',
+        description: 'Imprime el setlist en A4 o expórtalo a PDF seleccionando el músico destinatario para incluir sus notas personales, efecto rotulador de escenario y auto-ajuste anti-cortes.',
+        iconName: 'Printer',
         uiTarget: {
           type: 'button',
-          label: 'Sub-pestaña "Álbumes y EPs"',
-          location: 'Dentro del Catálogo · Selector de vista de álbumes',
-          actionHint: 'Visualiza la discografía oficial de la banda con portadas en alta resolución y enlaces directos a Spotify.',
-          selector: '#btn-subtab-albumes'
+          label: 'Botón "Imprimir" / "Imprimir con notas"',
+          location: 'Barra del setlist activo · Botón "Imprimir"',
+          actionHint: 'Abre la vista previa de impresión profesional con selector de miembro de la banda, notas manuscritas y ajuste automático a páginas A4.',
+          selector: '#btn-print-setlist-header, #btn-print-action'
         },
         keyPoints: [
           {
-            title: 'Vista por carátulas de álbumes',
-            desc: 'Navega por tu discografía con portadas y fechas oficiales de lanzamiento.'
+            title: 'Notas personalizadas por miembro',
+            desc: 'Filtra por músico (Batería, Guitarra, Voz, Bajo...) para imprimir hojas con sus recordatorios específicos de cada tema.'
           },
           {
-            title: 'Sincronización con Spotify',
-            desc: 'Vincula los temas con su enlace de streaming oficial para el público y dossier.'
+            title: 'Efecto rotulador y auto-ajuste A4',
+            desc: 'Tipografía gigante para leer a 2 metros desde el suelo sin que ninguna canción quede partida entre páginas.'
           }
         ]
       },
@@ -432,7 +432,7 @@ export const MODULE_TUTORIALS: Record<ModuleTutorialId, ModuleTutorialConfig> = 
         id: 'rep-4',
         stepNumber: 4,
         badge: 'Paso 4 · En el escenario',
-        title: 'Modo Escenario: pantalla completa y 100% offline',
+        title: 'Modo Escenario: teleprompter y 100% offline',
         musicianHook: '🔦 En vivo: En el escenario no hay buena cobertura ni luz. El modo escenario usa fondo negro puro, tipografía gigante y funciona sin internet.',
         description: 'Pon la tablet en el pie de micro o el móvil en el suelo para ver el orden de temas, acordes, notas clave y minutaje restante.',
         iconName: 'Sliders',

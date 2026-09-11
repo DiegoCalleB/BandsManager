@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, Guitar, FileText, Users, Globe, Video, 
   Disc3, Layers, Award, DollarSign, Calendar, Camera, 
@@ -18,6 +18,7 @@ import {
   WizardStepDef 
 } from './types';
 
+import { StepLanguage } from './steps/StepLanguage';
 import { StepIdentity } from './steps/StepIdentity';
 import { StepBio } from './steps/StepBio';
 import { StepMembers } from './steps/StepMembers';
@@ -79,14 +80,21 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const hasBookingAccess = !isPromoPlan; // only non-promo plans have booking CRM
   const hasAiAgentAccess = ['local', 'de_gira', 'cabeza_de_cartel'].includes(userPlanId);
 
-  // Dynamic step list based on user plan
+  // Dynamic step list based on user plan (Paso 1 prioritario: Idioma)
   const activeSteps: WizardStepDef[] = [
     {
+      key: 'language',
+      title: 'Idioma de la Plataforma & Banda',
+      shortTitle: 'Idioma',
+      iconName: 'Globe',
+      description: 'Idioma para la app, agentes de IA y dossier de prensa'
+    },
+    {
       key: 'identity',
-      title: 'Identidad, Estilo & Idioma',
+      title: 'Identidad, Nombre & Tipografía',
       shortTitle: 'Identidad',
       iconName: 'Guitar',
-      description: 'Nombre, género, ciudad, idioma y logo'
+      description: 'Nombre de banda, estilo visual, género, ciudad y logo'
     },
     {
       key: 'bio',
@@ -185,9 +193,26 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [localBandName, setLocalBandName] = useState(bandName || currentUser?.bandName || '');
   const [genre, setGenre] = useState(epkConfig?.genero || 'Indie Rock');
   const [language, setLanguage] = useState(epkConfig?.idioma || 'Español');
+  const [fontStyle, setFontStyle] = useState(epkConfig?.fontStyle || epkConfig?.tipografia || 'anton');
   const [city, setCity] = useState(epkConfig?.datosContratacion?.ciudadBase || 'Madrid, España');
   const [logoUrl, setLogoUrl] = useState(epkConfig?.logoUrl || bandLogoUrl || '');
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  // Sincronizar nombre de la banda, queries y estilos si cambian al abrirse el modal
+  useEffect(() => {
+    if (isOpen) {
+      const resolvedName = bandName || currentUser?.bandName || currentUser?.name || '';
+      if (resolvedName && (!localBandName || localBandName === 'Bakandeya' || localBandName === 'Mi Banda')) {
+        setLocalBandName(resolvedName);
+      }
+      if (resolvedName && (!spotifyQuery || spotifyQuery === 'Bakandeya')) {
+        setSpotifyQuery(resolvedName);
+      }
+      if (epkConfig?.fontStyle || epkConfig?.tipografia) {
+        setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
+      }
+    }
+  }, [isOpen, bandName, currentUser, epkConfig]);
 
   // --- Step 2: Bio & Formato ---
   const [slogan, setSlogan] = useState(epkConfig?.fraseImpacto || '');
@@ -787,6 +812,8 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       bandId: activeBandId,
       genero: genre,
       idioma: language,
+      fontStyle,
+      tipografia: fontStyle,
       logoUrl,
       fraseImpacto: slogan,
       biografia: bio,
@@ -968,7 +995,16 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
           {/* Content Body */}
           <div className="p-5 sm:p-6 overflow-y-auto flex-1 custom-scrollbar">
-            {/* Step 1 */}
+            {/* Step 1: Idioma */}
+            {currentStepDef?.key === 'language' && (
+              <StepLanguage
+                language={language}
+                setLanguage={setLanguage}
+                onContinue={handleNextStep}
+              />
+            )}
+
+            {/* Step 2: Identidad */}
             {currentStepDef?.key === 'identity' && (
               <StepIdentity
                 localBandName={localBandName}
@@ -977,6 +1013,8 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
                 setGenre={setGenre}
                 language={language}
                 setLanguage={setLanguage}
+                fontStyle={fontStyle}
+                setFontStyle={setFontStyle}
                 city={city}
                 setCity={setCity}
                 logoUrl={logoUrl}

@@ -329,6 +329,8 @@ export interface LanguageContextType {
   language: SupportedLanguage;
   setLanguage: (lang: SupportedLanguage) => void;
   t: (key: string, defaultText?: string) => string;
+  isTranslating: boolean;
+  refreshTranslation: () => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -347,9 +349,45 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return 'es';
   });
 
-  // Helper to trigger Google Translate Widget
+  const [isTranslating, setIsTranslating] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('bakandeya_language');
+      return saved !== null && saved !== 'es';
+    }
+    return false;
+  });
+
+  // Helper to finish background translation seamlessly without flickering
+  const finishTranslation = () => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.remove('translating-in-background');
+      document.body?.classList?.remove('translating-in-background');
+    }
+    setIsTranslating(false);
+  };
+
+  // Helper to trigger Google Translate Widget in the background
   const triggerGoogleTranslate = (targetLang: SupportedLanguage) => {
     if (typeof window === 'undefined') return;
+
+    if (targetLang === 'es') {
+      // Clear translation cookies & reset
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      if (window.location.hostname && window.location.hostname !== 'localhost') {
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+      }
+      const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
+      if (combo && combo.value !== 'es') {
+        combo.value = 'es';
+        combo.dispatchEvent(new Event('change'));
+      }
+      finishTranslation();
+      return;
+    }
+
+    // Entering background translation mode
+    setIsTranslating(true);
+    document.documentElement.classList.add('translating-in-background');
 
     // Set google translate cookie
     const cookieVal = `/es/${targetLang}`;
@@ -358,11 +396,60 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       document.cookie = `googtrans=${cookieVal}; path=/; domain=${window.location.hostname}`;
     }
 
+    let observer: MutationObserver | null = null;
+    let fallbackTimer: NodeJS.Timeout | null = null;
+
+    const cleanupAndReveal = () => {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      if (fallbackTimer) {
+        clearTimeout(fallbackTimer);
+        fallbackTimer = null;
+      }
+      // Small buffer to ensure browser paint is finished with translated DOM
+      setTimeout(() => {
+        finishTranslation();
+      }, 60);
+    };
+
+    // Watch DOM for translation completion (Google Translate wraps translated nodes in <font> or marks html/body)
+    if (typeof MutationObserver !== 'undefined') {
+      observer = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          if (
+            document.documentElement.classList.contains('translated-ltr') ||
+            document.documentElement.classList.contains('translated-rtl') ||
+            document.querySelector('font[style]') !== null ||
+            (m.target as HTMLElement)?.nodeName === 'FONT'
+          ) {
+            cleanupAndReveal();
+            break;
+          }
+        }
+      });
+
+      observer.observe(document.body || document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+
+    // Safety maximum timeout so UI never gets stuck
+    fallbackTimer = setTimeout(() => {
+      cleanupAndReveal();
+    }, 450);
+
     const selectCombo = () => {
       const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
       if (combo) {
-        combo.value = targetLang;
-        combo.dispatchEvent(new Event('change'));
+        if (combo.value !== targetLang) {
+          combo.value = targetLang;
+          combo.dispatchEvent(new Event('change'));
+        }
         return true;
       }
       return false;
@@ -372,10 +459,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       let attempts = 0;
       const interval = setInterval(() => {
         attempts++;
-        if (selectCombo() || attempts > 15) {
+        if (selectCombo() || attempts > 12) {
           clearInterval(interval);
         }
-      }, 300);
+      }, 150);
     }
   };
 
@@ -417,6 +504,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     // Apply saved language if not default
     if (language !== 'es') {
       triggerGoogleTranslate(language);
+    } else {
+      finishTranslation();
     }
   }, []);
 
@@ -424,6 +513,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLanguageState(lang);
     localStorage.setItem('bakandeya_language', lang);
     triggerGoogleTranslate(lang);
+  };
+
+  const refreshTranslation = () => {
+    if (language !== 'es') {
+      triggerGoogleTranslate(language);
+    }
   };
 
   const t = (key: string, defaultText?: string): string => {
@@ -439,7 +534,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isTranslating, refreshTranslation }}>
       {children}
     </LanguageContext.Provider>
   );

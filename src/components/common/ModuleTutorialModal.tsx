@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   X, ChevronLeft, ChevronRight, Check, BookOpen, Music, QrCode,
   Calendar, Disc, FileText, Sliders, Sparkles, Share2, Mic,
-  Users, Smartphone, Radio, Layers, Zap, HelpCircle,
+  Users, Smartphone, Radio, Layers, Zap, HelpCircle, Printer,
   Target, MapPin, MousePointer, Maximize2, Minimize2
 } from 'lucide-react';
 import { ModuleTutorialConfig, ModuleTutorialId } from '../../types/tutorial';
@@ -32,7 +32,8 @@ const ICON_MAP = {
   Radio,
   Layers,
   Zap,
-  HelpCircle
+  HelpCircle,
+  Printer
 };
 
 export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({

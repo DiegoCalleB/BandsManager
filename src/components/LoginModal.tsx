@@ -5,6 +5,7 @@ import { googleSignIn } from '../utils/gmail';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 import { ModalPortal } from './common/ModalPortal';
+import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -15,6 +16,7 @@ type ViewState = 'login' | 'register' | 'plans' | 'activate' | 'reset-password';
 
 export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   const [view, setView] = useState<ViewState>('login');
+  const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
 
   // --- Login State ---
   const [username, setUsername] = useState('');
@@ -487,17 +489,42 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
         {/* Soft Golden Background Ambient Glow */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-[#f2ca50]/8 rounded-full blur-[110px] pointer-events-none" />
 
+        {/* Top Language Switcher */}
+        <div className="w-full flex justify-end items-center gap-1.5 mb-1 px-2 z-20">
+          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-neutral-900/80 border border-neutral-800 backdrop-blur-sm">
+            {SUPPORTED_LANGUAGES.map((l) => {
+              const isSelected = currentAppLang === l.code;
+              return (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setAppLang(l.code)}
+                  className={`px-2 py-1 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+                    isSelected
+                      ? 'bg-[#f2ca50] text-neutral-950 font-bold shadow-xs scale-105'
+                      : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+                  }`}
+                  title={l.label}
+                >
+                  <span>{l.flag}</span>
+                  <span className="hidden sm:inline">{l.label.slice(0, 3)}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* --- BRANDING LOGO & TYPOGRAPHY (Only for Login/Register) --- */}
         {view !== 'plans' && (
           <div className="relative flex flex-col items-center justify-center pt-2 pb-1 text-center w-full">
             {/* Ambient Spotlight behind logo */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-44 bg-[#f2ca50]/10 rounded-full blur-2xl pointer-events-none" />
             
-            <div className="relative group cursor-pointer w-full max-w-[320px] sm:max-w-[360px] flex justify-center">
+            <div className="relative group cursor-pointer w-full max-w-[340px] sm:max-w-[400px] flex justify-center">
               <img 
                 src="/bandmanageriodefinitiva.jpeg" 
                 alt="BandManager.ai - Plataforma Integral para Bandas"
-                className="w-full h-auto max-h-48 object-contain rounded-2xl drop-shadow-[0_12px_32px_rgba(242,202,80,0.22)] group-hover:scale-[1.015] transition-all duration-300"
+                className="w-full h-auto max-h-56 sm:max-h-64 object-contain rounded-2xl drop-shadow-[0_16px_40px_rgba(242,202,80,0.28)] group-hover:scale-[1.015] transition-all duration-300"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
                 }}

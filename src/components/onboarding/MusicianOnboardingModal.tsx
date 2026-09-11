@@ -1,7 +1,8 @@
 import React from 'react';
-import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck } from 'lucide-react';
+import { Calendar, BookOpen, Disc3, ArrowRight, Sparkles, X, CheckCircle2, Music2, ShieldCheck, Globe, Check } from 'lucide-react';
 import { NavItemId } from '../../config/navGroups';
 import { markOnboardingCompleted } from '../../utils/userPreferences';
+import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../../context/LanguageContext';
 
 interface MusicianOnboardingModalProps {
   isOpen: boolean;
@@ -16,6 +17,8 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
   onSelectMission,
   bandName,
 }) => {
+  const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
+
   if (!isOpen) return null;
 
   const handleChooseMission = (view: NavItemId) => {
@@ -56,9 +59,34 @@ export const MusicianOnboardingModal: React.FC<MusicianOnboardingModalProps> = (
             <X className="w-5 h-5" />
           </button>
 
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-mono font-bold tracking-wider uppercase mb-2.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Primeros Pasos para Músicos</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-mono font-bold tracking-wider uppercase">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Primeros Pasos para Músicos</span>
+            </div>
+
+            {/* Quick Language Selector */}
+            <div className="flex items-center gap-1 pr-8 sm:pr-0">
+              {SUPPORTED_LANGUAGES.map((l) => {
+                const isSelected = currentAppLang === l.code;
+                return (
+                  <button
+                    key={l.code}
+                    type="button"
+                    onClick={() => setAppLang(l.code)}
+                    className={`px-2 py-1 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+                      isSelected
+                        ? 'bg-amber-400 text-stone-950 font-bold shadow-sm scale-105'
+                        : 'bg-neutral-800/70 hover:bg-neutral-800 text-neutral-300 border border-white/5'
+                    }`}
+                    title={l.label}
+                  >
+                    <span>{l.flag}</span>
+                    <span className="hidden sm:inline">{l.label.slice(0, 3)}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <h2 className="text-xl sm:text-2xl font-bold font-display text-white tracking-wide">

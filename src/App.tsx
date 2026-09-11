@@ -51,7 +51,7 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const { t } = useLanguage();
+  const { t, language, isTranslating, refreshTranslation } = useLanguage();
 
   // Authentication Custom Hook
   const {
@@ -128,10 +128,14 @@ export default function App() {
   // 'bakandeya') y el resto de componentes deben tratarlo como "sin banda seleccionada".
   const currentActiveBandId = currentUser?.band_id || '';
   const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, '');
-  const currentActiveBandName = currentUser?.bandName || currentUser?.name || 'Mi Banda';
+  const activeBandFromList = (availableBands || []).find((b: any) =>
+    (b.band_id && (b.band_id === currentActiveBandId || b.band_id.replace(/^(band|reg)-/, '') === cleanActiveBandId)) ||
+    (b.id && (b.id === currentActiveBandId || b.id.replace(/^(band|reg)-/, '') === cleanActiveBandId))
+  );
+  const currentActiveBandName = activeBandFromList?.nombre_banda || activeBandFromList?.bandName || currentUser?.bandName || currentUser?.name || 'Mi Banda';
   const currentActiveBandLogo = (epkConfig?.logoUrl && epkConfig.logoUrl.trim().length > 0)
     ? epkConfig.logoUrl
-    : ((currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
+    : (activeBandFromList?.logo_url || activeBandFromList?.imagen_url || (currentUser as any)?.logoUrl || (currentUser as any)?.logo_url || (currentUser as any)?.imagen_url ||
        (cleanActiveBandId === 'bakandeya' ? '/logo_bakandeya_bueno_sin_fondo.png' : ''));
 
   const isSameBand = (id1?: string, id2?: string, name1?: string, name2?: string) => {
@@ -254,7 +258,10 @@ export default function App() {
     } catch {
       // Ignorado a propósito: perder la persistencia de la vista no debe romper la navegación.
     }
-  }, [currentView]);
+    if (language !== 'es') {
+      refreshTranslation();
+    }
+  }, [currentView, language]);
 
   // Si la vista actual no está permitida para el plan de la banda activa (ej. plan Promo), redirigir inmediatamente a 'resumen'
   useEffect(() => {

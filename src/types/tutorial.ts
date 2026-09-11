@@ -20,7 +20,7 @@ export interface TutorialStep {
   title: string;
   musicianHook: string;
   description: string;
-  iconName: 'BookOpen' | 'Music' | 'QrCode' | 'Calendar' | 'Disc' | 'FileText' | 'Sliders' | 'Sparkles' | 'Share2' | 'Mic' | 'Users' | 'Smartphone' | 'Radio' | 'Layers' | 'Zap';
+  iconName: 'BookOpen' | 'Music' | 'QrCode' | 'Calendar' | 'Disc' | 'FileText' | 'Sliders' | 'Sparkles' | 'Share2' | 'Mic' | 'Users' | 'Smartphone' | 'Radio' | 'Layers' | 'Zap' | 'Printer';
   uiTarget: TutorialUiTarget;
   keyPoints: TutorialKeyPoint[];
 }

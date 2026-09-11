@@ -275,6 +275,8 @@ export interface EPKConfig {
   fraseImpacto?: string;
   genero?: string;
   idioma?: string;
+  fontStyle?: string;
+  tipografia?: string;
   miembros?: BandMember[];
   videos?: EPKVideo[];
   datosContratacion?: DatosContratacion;

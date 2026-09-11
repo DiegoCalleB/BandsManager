@@ -12,6 +12,7 @@ import { useEpkLanguage } from '../hooks/useEpkLanguage';
 import { resolverContenidoEpk } from '../utils/epkTraducciones';
 import { safeUrl } from '../utils/safeUrl';
 import { getEffectiveSectionsOrder, getTemplateStyles } from './epk/epkTemplates';
+import { getFontFamilyById } from '../config/bandFonts';
 
 interface PublicEPKProps {
   initialData?: {
@@ -670,7 +671,10 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
           <h1
             className={styles.heroTitleClass}
-            style={styles.heroTitleStyle}
+            style={{
+              ...styles.heroTitleStyle,
+              ...((config.fontStyle || config.tipografia) ? { fontFamily: getFontFamilyById(config.fontStyle || config.tipografia) } : {})
+            }}
           >
             {bandName}
           </h1>

@@ -231,6 +231,17 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   ): Promise<string> => {
     const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks fit easily inside Cloud Run / proxy limits
 
+    const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+    let activeBandId = '';
+    try {
+      const userStr = localStorage.getItem('bakandeya_user');
+      if (userStr) activeBandId = JSON.parse(userStr)?.band_id || '';
+    } catch {}
+
+    const authHeaders: Record<string, string> = {};
+    if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+    if (activeBandId) authHeaders['x-band-id'] = activeBandId;
+
     if (file.size <= 10 * 1024 * 1024) {
       if (onProgress) onProgress('Subiendo archivo...');
       const formData = new FormData();
@@ -239,6 +250,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
       const uploadRes = await fetch('/api/upload', {
         method: 'POST',
+        headers: authHeaders,
         body: formData,
       });
 
@@ -261,7 +273,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
       const chunkBlob = file.slice(start, end);
 
       const formData = new FormData();
-      formData.append('chunk', chunkBlob, `${file.name}.part${i}`);
+      formData.append('chunk', chunkBlob, file.name);
       formData.append('uploadId', uploadId);
       formData.append('chunkIndex', String(i));
       formData.append('totalChunks', String(totalChunks));
@@ -277,6 +289,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
       const res = await fetch('/api/upload/chunk', {
         method: 'POST',
+        headers: authHeaders,
         body: formData,
       });
 
