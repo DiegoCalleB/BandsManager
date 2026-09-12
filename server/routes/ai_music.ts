@@ -1,9 +1,175 @@
 import express from "express";
-import { GoogleGenAI, Modality } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { requireAuth } from "../state.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+import ffmpeg from "fluent-ffmpeg";
+import ffmpegPath from "ffmpeg-static";
+import path from "path";
+import fs from "fs";
+
+if (ffmpegPath) {
+  ffmpeg.setFfmpegPath(ffmpegPath);
+}
 
 const router = express.Router();
+
+/**
+ * Procesa la separación de stems con Red Neuronal Demucs v4 (Replicate) si REPLICATE_API_TOKEN está configurado.
+ * Devuelve un mapa con { Voz, Batería, Bajo, Guitarras, Arreglos } usando audio real de estudio.
+ */
+async function processNeuralStemsReplicate(audioUrl: string): Promise<Record<string, string> | null> {
+  const token = process.env.REPLICATE_API_TOKEN;
+  if (!token) return null;
+
+  try {
+    let resolvedUrl = audioUrl;
+    if (audioUrl.startsWith('/uploads/') || audioUrl.startsWith('/')) {
+      const appUrl = process.env.APP_URL || '';
+      if (appUrl) {
+        resolvedUrl = `${appUrl.replace(/\/$/, '')}${audioUrl}`;
+      }
+    }
+
+    console.log("[Demucs Neural] Iniciando separación de stems con Demucs v4 (HT-Demucs) en Replicate...");
+    const response = await fetch('https://api.replicate.com/v1/predictions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        version: "25a173c086e222f926f2c618708a869c12471c3082e6d82814049abc830fbfa2",
+        input: {
+          audio: resolvedUrl,
+          stem: "all",
+          split: true
+        }
+      })
+    });
+
+    if (!response.ok) {
+      console.warn("Replicate API request failed:", response.status, await response.text());
+      return null;
+    }
+
+    let prediction = await response.json();
+    const predictionId = prediction.id;
+
+    // Polling hasta finalización (máx 75s)
+    const startTime = Date.now();
+    while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
+      if (Date.now() - startTime > 75000) {
+        console.warn("Demucs separation timeout en Replicate");
+        return null;
+      }
+      await new Promise(r => setTimeout(r, 2500));
+      const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
+        headers: { 'Authorization': `Token ${token}` }
+      });
+      if (pollRes.ok) {
+        prediction = await pollRes.json();
+      }
+    }
+
+    if (prediction.status === 'succeeded' && prediction.output) {
+      const out = prediction.output;
+      console.log("[Demucs Neural] ¡Separación neuronal completada con éxito!");
+      const stemsMap: Record<string, string> = {};
+      if (out.vocals) stemsMap['Voz'] = out.vocals;
+      if (out.drums) stemsMap['Batería'] = out.drums;
+      if (out.bass) stemsMap['Bajo'] = out.bass;
+      if (out.other || out.guitar) stemsMap['Guitarras'] = out.guitar || out.other;
+      if (out.piano || out.other) stemsMap['Arreglos'] = out.piano || out.other;
+
+      return stemsMap;
+    }
+  } catch (err) {
+    console.warn("Error invocando modelo neuronal Demucs en Replicate:", err);
+  }
+  return null;
+}
+
+/**
+ * Función auxiliar para procesar stems en el servidor usando FFmpeg y supresión Mid/Side
+ */
+async function processServerStemsFfmpeg(audioUrl: string): Promise<Record<string, string>> {
+  const uploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+
+  // Handle local path vs HTTP URL
+  let inputPath = audioUrl;
+  if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
+    inputPath = audioUrl;
+  } else if (audioUrl.startsWith("/")) {
+    inputPath = path.join(process.cwd(), "public", audioUrl);
+    if (!fs.existsSync(inputPath)) {
+      console.warn(`Archivo de audio no encontrado para FFmpeg: ${inputPath}`);
+      return {};
+    }
+  }
+
+  const timestamp = Date.now();
+  const stemsMap: Record<string, string> = {};
+
+  // Standard crash-proof FFmpeg audio filters (avoiding memory-heavy afftdn)
+  const configs = [
+    {
+      key: "Voz",
+      filename: `stem-vocal-${timestamp}.wav`,
+      filter: "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=260,lowpass=f=3400,equalizer=f=1500:width_type=q:width=1.5:g=5,volume=1.5"
+    },
+    {
+      key: "Batería",
+      filename: `stem-drums-${timestamp}.wav`,
+      filter: "highpass=f=1800,equalizer=f=1200:width_type=q:width=2:g=-12,volume=1.2"
+    },
+    {
+      key: "Bajo",
+      filename: `stem-bass-${timestamp}.wav`,
+      filter: "lowpass=f=180,lowpass=f=180,equalizer=f=80:width_type=q:width=1.2:g=3,volume=1.3"
+    },
+    {
+      key: "Guitarras",
+      filename: `stem-guitars-${timestamp}.wav`,
+      filter: "pan=stereo|c0=c0-c1|c1=c1-c0,bandpass=f=800:width_type=h:width=1200,volume=1.2"
+    },
+    {
+      key: "Arreglos",
+      filename: `stem-brass-${timestamp}.wav`,
+      filter: "pan=stereo|c0=c0-c1|c1=c1-c0,highpass=f=2200,lowpass=f=8500,volume=1.2"
+    }
+  ];
+
+  // Process stems sequentially to avoid parallel process memory exhaustion
+  for (const cfg of configs) {
+    await new Promise<void>((resolve) => {
+      const outputPath = path.join(uploadsDir, cfg.filename);
+      try {
+        ffmpeg(inputPath)
+          .audioFilters(cfg.filter)
+          .output(outputPath)
+          .on("end", () => {
+            if (fs.existsSync(outputPath)) {
+              stemsMap[cfg.key] = `/uploads/stems/${cfg.filename}`;
+            }
+            resolve();
+          })
+          .on("error", (err) => {
+            console.warn(`Aviso procesando stem FFmpeg ${cfg.key}:`, err?.message || err);
+            resolve(); // Safe fallback
+          })
+          .run();
+      } catch (procErr) {
+        console.warn(`Error al lanzar FFmpeg para ${cfg.key}:`, procErr);
+        resolve();
+      }
+    });
+  }
+
+  return stemsMap;
+}
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -195,9 +361,49 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       };
     }
 
+    // Process real audio stem files: 
+    // 1st Priority: Deep Learning Neural Source Separation (Demucs v4 / HT-Demucs via Replicate)
+    // 2nd Priority: Crash-proof Server-Side FFmpeg Mid-Side DSP Extraction
+    let finalStemsMap: Record<string, string> = {};
+    let separationEngine = "dsp-server";
+    let isNeural = false;
+
+    if (audioUrl) {
+      if (process.env.REPLICATE_API_TOKEN) {
+        try {
+          const neuralMap = await processNeuralStemsReplicate(audioUrl);
+          if (neuralMap && Object.keys(neuralMap).length > 0) {
+            finalStemsMap = neuralMap;
+            separationEngine = "demucs-neural-v4";
+            isNeural = true;
+          }
+        } catch (neuralErr) {
+          console.warn("Fallo motor neuronal Demucs, usando fallback DSP:", neuralErr);
+        }
+      }
+
+      if (!isNeural) {
+        try {
+          finalStemsMap = await processServerStemsFfmpeg(audioUrl);
+        } catch (stErr) {
+          console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);
+        }
+      }
+    }
+
+    if (parsedResult?.stems && Array.isArray(parsedResult.stems)) {
+      parsedResult.stems = parsedResult.stems.map((st: any) => ({
+        ...st,
+        audioUrl: finalStemsMap[st.instrument] || audioUrl
+      }));
+    }
+
     return res.json({
       success: true,
       audioUrl: audioUrl || "",
+      separationEngine,
+      isNeural,
+      replicateConfigured: !!process.env.REPLICATE_API_TOKEN,
       ...parsedResult
     });
   } catch (err: any) {

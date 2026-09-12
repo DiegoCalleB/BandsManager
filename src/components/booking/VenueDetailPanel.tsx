@@ -1113,7 +1113,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                     </div>
                   </div>
 
-                  {editedLeadInfo.imagen_url ? (
+                  {editedLeadInfo.imagen_url && editedLeadInfo.imagen_url.trim() !== '' ? (
                     <div className="flex items-center gap-3 p-2 bg-zinc-950 rounded-lg border border-zinc-800">
                       <img
                         src={editedLeadInfo.imagen_url}

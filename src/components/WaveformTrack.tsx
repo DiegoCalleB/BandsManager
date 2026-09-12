@@ -92,13 +92,13 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
     }
   };
 
-  // Compute clean valid src for HTML <audio> element
-  const validAudioSrc = (() => {
+  // Compute clean valid src for HTML <audio> element (undefined prevents empty string src warning)
+  const validAudioSrc: string | undefined = (() => {
     if (resolvedUrl && !resolvedUrl.startsWith('indexeddb:')) {
       return resolvedUrl;
     }
-    if (!audioUrl) return '';
-    if (audioUrl.startsWith('indexeddb:')) return '';
+    if (!audioUrl) return undefined;
+    if (audioUrl.startsWith('indexeddb:')) return undefined;
     if (audioUrl.includes('drive.google.com')) {
       return parseGoogleDriveAudioUrl(audioUrl);
     }
@@ -243,7 +243,21 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
       setLoadError(true);
       setIsLoaded(true);
     }
-  }, [validAudioSrc, color]);
+  }, [validAudioSrc]);
+
+  // Dynamic WaveSurfer color update without re-decoding audio or re-creating instance
+  useEffect(() => {
+    if (wavesurfer.current) {
+      try {
+        wavesurfer.current.setOptions({
+          waveColor: color + '40',
+          progressColor: color,
+        });
+      } catch (e) {
+        // ignore if setOptions not supported
+      }
+    }
+  }, [color]);
 
   const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!onSeekTrack || effMasterDur <= 0) return;

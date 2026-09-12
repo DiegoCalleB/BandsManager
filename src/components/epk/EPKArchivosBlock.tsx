@@ -69,7 +69,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative shrink-0">
-              {config.logoUrl ? (
+              {config.logoUrl && config.logoUrl.trim() !== '' ? (
                 <img
                   src={config.logoUrl}
                   alt="Logo de la banda"
@@ -355,7 +355,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {(config.bandPhotos || []).map((url, idx) => (
+              {(config.bandPhotos || []).filter(url => Boolean(url && url.trim() !== '')).map((url, idx) => (
                 <div
                   key={url + idx}
                   className="group relative aspect-video rounded-xl overflow-hidden border border-slate-800 bg-slate-950"

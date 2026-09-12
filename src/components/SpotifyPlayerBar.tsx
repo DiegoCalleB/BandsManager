@@ -238,6 +238,11 @@ export default function SpotifyPlayerBar({
         }
       }
     } else {
+      if (activeEl && isNewSong) {
+        activeEl.pause();
+        activeEl.removeAttribute('src');
+        activeEl.load();
+      }
       if (shouldPlayNow) {
         setIsPlaying(true);
       } else if (isNewSong) {
@@ -443,6 +448,8 @@ export default function SpotifyPlayerBar({
 
         // Fundido completo: A se pausa/limpia y B pasa a ser la pista "activa" de verdad.
         fromEl.pause();
+        fromEl.removeAttribute('src');
+        fromEl.load();
         fromEl.volume = baseVolume;
         toEl.volume = baseVolume;
         activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';

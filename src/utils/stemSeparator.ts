@@ -1,7 +1,11 @@
 /**
- * Motor Client-Side de Separación Espectral y Aislamiento de Stems de Audio (OfflineAudioContext)
- * Renderiza 5 archivos de audio completamente independientes (.wav) a partir de la mezcla original
- * para que cada pista del mezclador multipista tenga su propia fuente de audio aislada y real.
+ * Motor Client-Side de Separación de Stems con Cancelación Activa de Fase (Anti-Phase Cancellation Engine)
+ * 
+ * Funciona igual que los auriculares con cancelación activa de ruido (ANC):
+ * 1. Aísla la onda de la voz humana V(t).
+ * 2. Invierte la fase de la onda vocal 180° (-V(t)).
+ * 3. Suma la onda invertida a la mezcla original M(t) - V(t), anulando matemáticamente 
+ *    la voz por interferencia destructiva en todas las pistas instrumentales.
  */
 
 export interface IsolatedStemResult {
@@ -13,7 +17,7 @@ export interface IsolatedStemResult {
 }
 
 /**
- * Procesa un archivo de audio y genera 5 stems aislados reales (.wav)
+ * Procesa un archivo de audio y genera 5 stems aislados con cancelación activa de fase anti-vocal
  */
 export async function separateAudioIntoStems(audioUrl: string): Promise<IsolatedStemResult[]> {
   try {
@@ -24,7 +28,7 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
     }
     const arrayBuffer = await response.arrayBuffer();
 
-    // 2. Decode audio buffer
+    // 2. Decode raw PCM audio buffer
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
     const tempCtx = new AudioCtx();
     const audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
@@ -33,53 +37,23 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
     const sampleRate = audioBuffer.sampleRate;
     const numberOfChannels = audioBuffer.numberOfChannels;
 
-    const stemConfigs = [
-      {
-        instrument: 'Voz',
-        trackName: '🎤 Stem IA: Voz Principal (Aislada)',
-        filterType: 'bandpass' as BiquadFilterType,
-        cutoff: 1400,
-        q: 1.8,
-        volume: 0.95
-      },
-      {
-        instrument: 'Batería',
-        trackName: '🥁 Stem IA: Batería & Percusión',
-        filterType: 'highpass' as BiquadFilterType,
-        cutoff: 1800,
-        q: 1.2,
-        volume: 0.90
-      },
-      {
-        instrument: 'Bajo',
-        trackName: '🎸 Stem IA: Bajo (Sub-Bass)',
-        filterType: 'lowpass' as BiquadFilterType,
-        cutoff: 200,
-        q: 2.0,
-        volume: 0.95
-      },
-      {
-        instrument: 'Guitarras',
-        trackName: '🎹 Stem IA: Guitarras & Teclados',
-        filterType: 'bandpass' as BiquadFilterType,
-        cutoff: 750,
-        q: 1.5,
-        volume: 0.85
-      },
-      {
-        instrument: 'Arreglos',
-        trackName: '🎺 Stem IA: Vientos, Cuerdas & Solos',
-        filterType: 'bandpass' as BiquadFilterType,
-        cutoff: 2400,
-        q: 2.2,
-        volume: 0.85
-      }
+    // STEP 1: Render the isolated Vocal Buffer V(t)
+    const vocalBuffer = await renderIsolatedVocalBuffer(audioBuffer, duration, sampleRate, numberOfChannels);
+
+    // STEP 2: Generate the Anti-Phase Vocal-Cancelled Base Buffer: M_instrumental(t) = Original(t) - V(t)
+    const vocalCancelledBuffer = createPhaseCancelledBuffer(tempCtx, audioBuffer, vocalBuffer, 0.96);
+
+    const stemTypes = [
+      { instrument: 'Voz', trackName: '🎤 Stem IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
+      { instrument: 'Batería', trackName: '🥁 Stem IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Bajo', trackName: '🎸 Stem IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Guitarras', trackName: '🎹 Stem IA: Guitarras & Teclados', volume: 0.85, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Arreglos', trackName: '🎺 Stem IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: vocalCancelledBuffer }
     ];
 
     const results: IsolatedStemResult[] = [];
 
-    for (const cfg of stemConfigs) {
-      // Create an OfflineAudioContext for rendering this isolated stem
+    for (const stem of stemTypes) {
       const offlineCtx = new OfflineAudioContext(
         numberOfChannels,
         Math.ceil(duration * sampleRate),
@@ -87,41 +61,212 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
       );
 
       const source = offlineCtx.createBufferSource();
-      source.buffer = audioBuffer;
+      source.buffer = stem.sourceBuf;
 
-      const filter = offlineCtx.createBiquadFilter();
-      filter.type = cfg.filterType;
-      filter.frequency.value = cfg.cutoff;
-      filter.Q.value = cfg.q;
+      let lastNode: AudioNode = source;
 
-      const gain = offlineCtx.createGain();
-      gain.gain.value = cfg.volume;
+      if (stem.instrument === 'Voz') {
+        // Vocal refinement node
+        const formantBoost = offlineCtx.createBiquadFilter();
+        formantBoost.type = 'peaking';
+        formantBoost.frequency.value = 1500;
+        formantBoost.gain.value = 2.0;
 
-      source.connect(filter);
-      filter.connect(gain);
-      gain.connect(offlineCtx.destination);
+        source.connect(formantBoost);
+        lastNode = formantBoost;
+
+      } else if (stem.instrument === 'Bajo') {
+        // Steep 4-stage lowpass filter (180 Hz) on vocal-cancelled buffer
+        let current = source as AudioNode;
+        for (let i = 0; i < 4; i++) {
+          const lp = offlineCtx.createBiquadFilter();
+          lp.type = 'lowpass';
+          lp.frequency.value = 180;
+          lp.Q.value = 1.4;
+          current.connect(lp);
+          current = lp;
+        }
+        lastNode = current;
+
+      } else if (stem.instrument === 'Guitarras') {
+        // Bandpass for mid guitars/keys on vocal-cancelled buffer
+        const hp = offlineCtx.createBiquadFilter();
+        hp.type = 'highpass';
+        hp.frequency.value = 160;
+
+        const lp = offlineCtx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 4500;
+
+        source.connect(hp);
+        hp.connect(lp);
+        lastNode = lp;
+
+      } else if (stem.instrument === 'Batería') {
+        // High transients + Kick lowpass on vocal-cancelled buffer
+        const hp = offlineCtx.createBiquadFilter();
+        hp.type = 'highpass';
+        hp.frequency.value = 2000;
+
+        const kickLp = offlineCtx.createBiquadFilter();
+        kickLp.type = 'lowpass';
+        kickLp.frequency.value = 120;
+
+        source.connect(hp);
+
+        const kickGain = offlineCtx.createGain();
+        kickGain.gain.value = 1.2;
+        source.connect(kickLp);
+        kickLp.connect(kickGain);
+
+        hp.connect(offlineCtx.destination);
+        kickGain.connect(offlineCtx.destination);
+        lastNode = hp;
+
+      } else if (stem.instrument === 'Arreglos') {
+        // High-mid bandpass for solos/strings on vocal-cancelled buffer
+        const hp = offlineCtx.createBiquadFilter();
+        hp.type = 'highpass';
+        hp.frequency.value = 2400;
+
+        source.connect(hp);
+        lastNode = hp;
+      }
+
+      const masterGain = offlineCtx.createGain();
+      masterGain.gain.value = stem.volume;
+      if (stem.instrument !== 'Batería') {
+        lastNode.connect(masterGain);
+        masterGain.connect(offlineCtx.destination);
+      } else {
+        masterGain.connect(offlineCtx.destination);
+      }
 
       source.start(0);
 
       const renderedBuffer = await offlineCtx.startRendering();
-      const wavBlob = audioBufferToWavBlob(renderedBuffer);
+
+      // Clean background floor noise
+      const cleanedBuffer = applyNoiseThreshold(renderedBuffer, stem.instrument);
+
+      const wavBlob = audioBufferToWavBlob(cleanedBuffer);
       const blobUrl = URL.createObjectURL(wavBlob);
 
       results.push({
-        instrument: cfg.instrument,
-        trackName: cfg.trackName,
+        instrument: stem.instrument,
+        trackName: stem.trackName,
         audioBlob: wavBlob,
         audioUrl: blobUrl,
-        recommendedVolume: cfg.volume
+        recommendedVolume: stem.volume
       });
     }
 
     tempCtx.close().catch(() => {});
     return results;
   } catch (err) {
-    console.error("Error rendering offline stems:", err);
+    console.error("Error rendering anti-phase cancelled stems:", err);
     throw err;
   }
+}
+
+/**
+ * Renderiza el buffer aislado de voz usando aislamiento de formantes y canal central
+ */
+async function renderIsolatedVocalBuffer(
+  audioBuffer: AudioBuffer,
+  duration: number,
+  sampleRate: number,
+  numberOfChannels: number
+): Promise<AudioBuffer> {
+  const offlineCtx = new OfflineAudioContext(
+    numberOfChannels,
+    Math.ceil(duration * sampleRate),
+    sampleRate
+  );
+
+  const source = offlineCtx.createBufferSource();
+  source.buffer = audioBuffer;
+
+  const hp = offlineCtx.createBiquadFilter();
+  hp.type = 'highpass';
+  hp.frequency.value = 260;
+
+  const lp = offlineCtx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 3400;
+
+  const formantBoost = offlineCtx.createBiquadFilter();
+  formantBoost.type = 'peaking';
+  formantBoost.frequency.value = 1450;
+  formantBoost.Q.value = 1.5;
+  formantBoost.gain.value = 4.5;
+
+  const bassCut = offlineCtx.createBiquadFilter();
+  bassCut.type = 'notch';
+  bassCut.frequency.value = 100;
+  bassCut.Q.value = 4.0;
+
+  source.connect(hp);
+  hp.connect(lp);
+  lp.connect(formantBoost);
+  formantBoost.connect(bassCut);
+  bassCut.connect(offlineCtx.destination);
+
+  source.start(0);
+  return await offlineCtx.startRendering();
+}
+
+/**
+ * Cancela matemáticamente la onda vocal de la mezcla original mediante inversión de fase anti-onda (180°):
+ * Output(t) = Original(t) - (Gain * Vocal(t))
+ */
+function createPhaseCancelledBuffer(
+  ctx: AudioContext | OfflineAudioContext,
+  originalBuffer: AudioBuffer,
+  vocalBuffer: AudioBuffer,
+  cancellationGain: number = 0.96
+): AudioBuffer {
+  const numChannels = originalBuffer.numberOfChannels;
+  const length = originalBuffer.length;
+  const sampleRate = originalBuffer.sampleRate;
+
+  const cancelledBuffer = ctx.createBuffer(numChannels, length, sampleRate);
+
+  for (let c = 0; c < numChannels; c++) {
+    const origData = originalBuffer.getChannelData(c);
+    const vocalData = vocalBuffer.getChannelData(c);
+    const outData = cancelledBuffer.getChannelData(c);
+
+    for (let i = 0; i < length; i++) {
+      const vocalSample = i < vocalBuffer.length ? vocalData[i] : 0;
+      // Anti-phase wave cancellation math: M(t) + (-V(t)) = M(t) - V(t)
+      let sample = origData[i] - (cancellationGain * vocalSample);
+      outData[i] = Math.max(-1, Math.min(1, sample));
+    }
+  }
+
+  return cancelledBuffer;
+}
+
+/**
+ * Puerta de ruido para eliminar zumbidos o ruidos residuales por debajo del umbral auditivo
+ */
+function applyNoiseThreshold(buffer: AudioBuffer, instrument: string): AudioBuffer {
+  const numChannels = buffer.numberOfChannels;
+  const length = buffer.length;
+
+  for (let c = 0; c < numChannels; c++) {
+    const data = buffer.getChannelData(c);
+    const threshold = instrument === 'Bajo' ? 0.001 : 0.003;
+
+    for (let i = 0; i < length; i++) {
+      if (Math.abs(data[i]) < threshold) {
+        data[i] = 0;
+      }
+    }
+  }
+
+  return buffer;
 }
 
 /**

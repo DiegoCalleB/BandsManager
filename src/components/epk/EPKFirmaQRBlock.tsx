@@ -302,7 +302,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
 
               <div className="pt-1 space-y-2">
                 <div className="flex items-start gap-3">
-                  {config.logoUrl ? (
+                  {config.logoUrl && config.logoUrl.trim() !== '' ? (
                     <img
                       src={config.logoUrl}
                       alt="Logo"

@@ -202,7 +202,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 flex items-center justify-center relative">
                       {subiendoFotoMiembro === m.id ? (
                         <Loader2 className="w-5 h-5 text-amber-400 animate-spin" />
-                      ) : m.fotoUrl ? (
+                      ) : m.fotoUrl && m.fotoUrl.trim() !== '' ? (
                         <img src={m.fotoUrl} alt={m.nombre || 'Miembro'} className="w-full h-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-1 text-center">

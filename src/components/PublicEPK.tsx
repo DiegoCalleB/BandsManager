@@ -104,7 +104,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     temasDestacadosIds: []
   };
 
-  const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "");
+  const displayLogo = config.logoUrl || (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : null);
 
   // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
   // resto de la app usa camelCase. Sin normalizar, 'albumDisco' salía undefined y caía al
