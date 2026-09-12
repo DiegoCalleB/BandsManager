@@ -605,6 +605,8 @@ export interface AudioTrack {
   audioUrl: string;
   autor?: string;
   instrumento?: string;
+  formato?: string; // e.g. "MP3 (256 kbps)", "WAV", "MP3"
+  tamano?: string;  // e.g. "2.4 MB", "1.2 MB", "850 KB"
   fecha?: string;
   volumen?: number; // 0 to 1
   muted?: boolean;

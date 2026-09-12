@@ -14,6 +14,8 @@ export interface IsolatedStemResult {
   audioBlob: Blob;
   audioUrl: string;
   recommendedVolume: number;
+  formato?: string;
+  tamano?: string;
 }
 
 /**
@@ -40,15 +42,18 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
     // STEP 1: Render the isolated Vocal Buffer V(t)
     const vocalBuffer = await renderIsolatedVocalBuffer(audioBuffer, duration, sampleRate, numberOfChannels);
 
-    // STEP 2: Generate the Anti-Phase Vocal-Cancelled Base Buffer: M_instrumental(t) = Original(t) - V(t)
+    // STEP 2: Generate Anti-Phase Vocal-Cancelled Base Buffer: M_instrumental(t) = Original(t) - V(t)
     const vocalCancelledBuffer = createPhaseCancelledBuffer(tempCtx, audioBuffer, vocalBuffer, 0.96);
+
+    // STEP 3: Generate Side-Channel Buffer S(t) = L(t) - R(t) (mathematically cancels dead-center vocals, kick & snare)
+    const sideChannelBuffer = createSideChannelBuffer(tempCtx, audioBuffer);
 
     const stemTypes = [
       { instrument: 'Voz', trackName: '🎤 Stem IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
       { instrument: 'Batería', trackName: '🥁 Stem IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
       { instrument: 'Bajo', trackName: '🎸 Stem IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
-      { instrument: 'Guitarras', trackName: '🎹 Stem IA: Guitarras & Teclados', volume: 0.85, sourceBuf: vocalCancelledBuffer },
-      { instrument: 'Arreglos', trackName: '🎺 Stem IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: vocalCancelledBuffer }
+      { instrument: 'Guitarras', trackName: '🎹 Stem IA: Guitarras & Teclados', volume: 0.85, sourceBuf: sideChannelBuffer },
+      { instrument: 'Arreglos', trackName: '🎺 Stem IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: sideChannelBuffer }
     ];
 
     const results: IsolatedStemResult[] = [];
@@ -151,13 +156,19 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
 
       const wavBlob = audioBufferToWavBlob(cleanedBuffer);
       const blobUrl = URL.createObjectURL(wavBlob);
+      const bytes = wavBlob.size;
+      const sizeFormatted = bytes < 1024 * 1024 
+        ? `${(bytes / 1024).toFixed(0)} KB` 
+        : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
       results.push({
         instrument: stem.instrument,
         trackName: stem.trackName,
         audioBlob: wavBlob,
         audioUrl: blobUrl,
-        recommendedVolume: stem.volume
+        recommendedVolume: stem.volume,
+        formato: 'WAV',
+        tamano: sizeFormatted
       });
     }
 
@@ -246,6 +257,42 @@ function createPhaseCancelledBuffer(
   }
 
   return cancelledBuffer;
+}
+
+/**
+ * Genera el buffer del canal lateral Side: S(t) = 0.5 * (L(t) - R(t)).
+ * Anula matemáticamente todo sonido paneado al centro exacto (Voces principales, bombo y caja de batería).
+ */
+function createSideChannelBuffer(
+  ctx: AudioContext | OfflineAudioContext,
+  originalBuffer: AudioBuffer
+): AudioBuffer {
+  const numChannels = originalBuffer.numberOfChannels;
+  const length = originalBuffer.length;
+  const sampleRate = originalBuffer.sampleRate;
+
+  const sideBuffer = ctx.createBuffer(numChannels, length, sampleRate);
+
+  if (numChannels >= 2) {
+    const left = originalBuffer.getChannelData(0);
+    const right = originalBuffer.getChannelData(1);
+    const outL = sideBuffer.getChannelData(0);
+    const outR = sideBuffer.getChannelData(1);
+
+    for (let i = 0; i < length; i++) {
+      const side = 0.5 * (left[i] - right[i]);
+      outL[i] = side;
+      outR[i] = -side;
+    }
+  } else {
+    const mono = originalBuffer.getChannelData(0);
+    const outL = sideBuffer.getChannelData(0);
+    for (let i = 0; i < length; i++) {
+      outL[i] = mono[i];
+    }
+  }
+
+  return sideBuffer;
 }
 
 /**

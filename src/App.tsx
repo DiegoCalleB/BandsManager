@@ -9,21 +9,48 @@ import ErrorBoundary from './components/ErrorBoundary';
 // Vistas grandes cargadas bajo demanda: sin esto, visitar /unete o abrir cualquier pestaña
 // metía en el mismo bundle inicial el CRM, calendario, reels, repertorio, etc. — un fan que
 // solo quiere donar por Revolut/PayPal pagaba el peso entero de todo el panel interno.
-const BookingCRM = lazy(() => import('./components/BookingCRM'));
-const BandCRM = lazy(() => import('./components/BandCRM'));
-const CalendarView = lazy(() => import('./components/CalendarView'));
-const ReelsCenter = lazy(() => import('./components/ReelsCenter'));
-const Finanzas = lazy(() => import('./components/Finanzas'));
-const TourManager = lazy(() => import('./components/TourManager'));
-const RepertorioSetlists = lazy(() => import('./components/RepertorioSetlists'));
-const Merchan = lazy(() => import('./components/Merchan'));
-const Chatbot = lazy(() => import('./components/Chatbot'));
-const EPKManager = lazy(() => import('./components/EPKManager'));
-const FansPanel = lazy(() => import('./components/FansPanel'));
-const FansLanding = lazy(() => import('./components/FansLanding'));
-const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLanding').then(m => ({ default: m.PublicMusiciansLanding })));
-const PublicEPK = lazy(() => import('./components/PublicEPK').then(m => ({ default: m.PublicEPK })));
-const Planes = lazy(() => import('./components/Planes'));
+function safeLazy<T extends React.ComponentType<any>>(
+  factory: () => Promise<{ default: T } | any>
+) {
+  return lazy(async () => {
+    try {
+      const mod = await factory();
+      return mod.default ? mod : { default: mod };
+    } catch (err: any) {
+      console.warn("Retrying dynamic module load after error:", err);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      try {
+        const modRetry = await factory();
+        return modRetry.default ? modRetry : { default: modRetry };
+      } catch (retryErr: any) {
+        const key = 'last_dynamic_import_reload';
+        const last = Number(sessionStorage.getItem(key) || 0);
+        if (Date.now() - last > 10000 && typeof window !== 'undefined') {
+          sessionStorage.setItem(key, String(Date.now()));
+          window.location.reload();
+          return new Promise(() => {}) as any;
+        }
+        throw retryErr;
+      }
+    }
+  });
+}
+
+const BookingCRM = safeLazy(() => import('./components/BookingCRM'));
+const BandCRM = safeLazy(() => import('./components/BandCRM'));
+const CalendarView = safeLazy(() => import('./components/CalendarView'));
+const ReelsCenter = safeLazy(() => import('./components/ReelsCenter'));
+const Finanzas = safeLazy(() => import('./components/Finanzas'));
+const TourManager = safeLazy(() => import('./components/TourManager'));
+const RepertorioSetlists = safeLazy(() => import('./components/RepertorioSetlists'));
+const Merchan = safeLazy(() => import('./components/Merchan'));
+const Chatbot = safeLazy(() => import('./components/Chatbot'));
+const EPKManager = safeLazy(() => import('./components/EPKManager'));
+const FansPanel = safeLazy(() => import('./components/FansPanel'));
+const FansLanding = safeLazy(() => import('./components/FansLanding'));
+const PublicMusiciansLanding = safeLazy(() => import('./components/PublicMusiciansLanding').then(m => ({ default: m.PublicMusiciansLanding })));
+const PublicEPK = safeLazy(() => import('./components/PublicEPK').then(m => ({ default: m.PublicEPK })));
+const Planes = safeLazy(() => import('./components/Planes'));
 import { LoginModal } from './components/LoginModal';
 import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
@@ -1391,21 +1418,23 @@ export default function App() {
  />
  )}
  {(currentView === 'repertorio' || currentView === 'catalogo' || currentView === 'discografia') && (
- <RepertorioSetlists
- key={currentActiveBandId}
- colors={colors}
- concerts={activeBandConcerts}
- rehearsals={activeBandRehearsals}
- bandName={currentActiveBandName}
- bandId={currentActiveBandId}
- bandUsers={bandUsers}
- bandLogoUrl={currentActiveBandLogo}
- onUpdateConcert={handleUpdateConcert}
- onUpdateRehearsal={handleUpdateRehearsal}
- view={currentView as any}
- currentUser={currentUser}
- onNavigate={handleNavigate}
- />
+  <ErrorBoundary fallbackTitle="Repertorio y Setlists">
+    <RepertorioSetlists
+      key={currentActiveBandId}
+      colors={colors}
+      concerts={activeBandConcerts}
+      rehearsals={activeBandRehearsals}
+      bandName={currentActiveBandName}
+      bandId={currentActiveBandId}
+      bandUsers={bandUsers}
+      bandLogoUrl={currentActiveBandLogo}
+      onUpdateConcert={handleUpdateConcert}
+      onUpdateRehearsal={handleUpdateRehearsal}
+      view={currentView as any}
+      currentUser={currentUser}
+      onNavigate={handleNavigate}
+    />
+  </ErrorBoundary>
  )}
 {currentView === 'merchan' && (
  <Merchan

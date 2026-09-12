@@ -750,7 +750,17 @@ export function getAutonomyConfigForBand(state: any, bandId: string): any {
   return existing;
 }
 
+let inMemoryStateCache: any = null;
+
+export function invalidateStateCache(): void {
+  inMemoryStateCache = null;
+}
+
 export function loadState(): any {
+  if (inMemoryStateCache) {
+    return inMemoryStateCache;
+  }
+
   if (fs.existsSync(DATA_FILE)) {
     try {
       const content = fs.readFileSync(DATA_FILE, "utf-8");
@@ -882,6 +892,8 @@ export function loadState(): any {
 
       if (changed) {
         saveState(state);
+      } else {
+        inMemoryStateCache = state;
       }
 
       return state;
@@ -927,15 +939,26 @@ export function loadState(): any {
   ensureBakandeyaBandId(defaultState);
   ensureUniqueIdsInState(defaultState);
   saveState(defaultState);
+  inMemoryStateCache = defaultState;
   return defaultState;
 }
 
 export function saveState(state: any) {
   try {
     ensureUniqueIdsInState(state);
-    const tmpFile = `${DATA_FILE}.tmp`;
-    fs.writeFileSync(tmpFile, JSON.stringify(state, null, 2), "utf-8");
-    fs.renameSync(tmpFile, DATA_FILE);
+    inMemoryStateCache = state;
+    const tmpFile = `${DATA_FILE}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
+    const content = JSON.stringify(state, null, 2);
+    fs.writeFileSync(tmpFile, content, "utf-8");
+    try {
+      fs.renameSync(tmpFile, DATA_FILE);
+    } catch (renameErr) {
+      // Fallback si rename falla entre montajes o permisos de disco
+      fs.writeFileSync(DATA_FILE, content, "utf-8");
+      if (fs.existsSync(tmpFile)) {
+        try { fs.unlinkSync(tmpFile); } catch (_) {}
+      }
+    }
   } catch (e) {
     console.error("Error saving data.json", e);
   }

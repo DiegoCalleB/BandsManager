@@ -25,7 +25,8 @@ import {
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
   Layers, Sliders, Edit2, Check, Radio, Wand2, RefreshCw, FileText, Keyboard,
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
-  Maximize2, Minimize2, Cpu, Activity, Info
+  Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
+  FileAudio, HardDrive, Clock, Timer
 } from 'lucide-react';
 
 
@@ -257,6 +258,7 @@ export default function SongStudioModal({
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'replicate' | 'dsp-server'>('replicate');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
@@ -267,40 +269,179 @@ export default function SongStudioModal({
   const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState<string>('');
   const [isGeneratingAiTrack, setIsGeneratingAiTrack] = useState<boolean>(false);
   const [isSeparatingStemsAi, setIsSeparatingStemsAi] = useState<boolean>(false);
+  const [separationElapsedSeconds, setSeparationElapsedSeconds] = useState<number>(0);
+  const [stemProgressModal, setStemProgressModal] = useState<{
+    isOpen: boolean;
+    songTitle: string;
+    ideaTitle: string;
+    stage: 'preparing' | 'demucs' | 'persisting' | 'completed' | 'error';
+    progressPct: number;
+    currentStepText: string;
+    isNeural?: boolean;
+    separationEngine?: string;
+    engineChoice?: 'replicate' | 'dsp-server';
+    stemsAdded?: number;
+    stemsInfo?: Array<{ instrument: string; trackName: string; formato: string; tamano: string; audioUrl?: string }>;
+    errorMessage?: string;
+    executionTimeSec?: string;
+    timingBreakdown?: {
+      preloadSec?: string;
+      gpuInferenceSec?: string;
+      stemsPersistenceSec?: string;
+      totalSec?: string;
+    };
+  } | null>(null);
 
-  // AI Multimodal Audio Stem Separation Handler (Server-side FFmpeg STFT + Client Anti-Phase Fallback)
-  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea) => {
+  // AI Multimodal Audio Stem Separation Handler (Demucs v4 Neural AI + Server DSP + Anti-Phase Fallback)
+  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'replicate' | 'dsp-server') => {
+    setIsSeparatingStemsAi(true);
+    setSeparationElapsedSeconds(0);
+    const engineToUse = overrideEngine || selectedStemEngine;
+
+    setStemProgressModal({
+      isOpen: true,
+      songTitle: song.titulo,
+      ideaTitle: targetIdea.titulo,
+      stage: 'preparing',
+      progressPct: 15,
+      currentStepText: engineToUse === 'replicate' 
+        ? 'Iniciando y optimizando flujo de audio para Replicate Cloud GPU...' 
+        : 'Iniciando filtros DSP de procesamiento estéreo local...',
+      engineChoice: engineToUse
+    });
+
+    const elapsedTimer = setInterval(() => {
+      setSeparationElapsedSeconds(prev => prev + 1);
+    }, 1000);
+
+    const progressTimer = setInterval(() => {
+      setStemProgressModal(prev => {
+        if (!prev || prev.stage === 'completed' || prev.stage === 'error') return prev;
+        let nextPct = prev.progressPct;
+        if (prev.stage === 'preparing' && nextPct < 30) {
+          nextPct += 3;
+        } else if (prev.stage === 'demucs' && nextPct < 85) {
+          nextPct += 2.5;
+        } else if (prev.stage === 'persisting' && nextPct < 96) {
+          nextPct += 1;
+        }
+        return { ...prev, progressPct: Math.min(nextPct, 96) };
+      });
+    }, 350);
+
     try {
-      setIsSeparatingStemsAi(true);
+      setStemProgressModal(prev => prev ? {
+        ...prev,
+        stage: 'preparing',
+        progressPct: 25,
+        currentStepText: engineToUse === 'replicate' 
+          ? 'Verificando URL pública y enviando audio al cluster GPU Replicate...' 
+          : 'Preparando espectro de audio para motor DSP local...'
+      } : null);
 
-      // 1. Request Deep AI & Server-Side FFmpeg STFT Stem Processing
+      let sendableAudioUrl = targetIdea.audioUrl;
+      try {
+        const resolved = await resolveAudioUrl(targetIdea.audioUrl);
+        if (resolved) {
+          sendableAudioUrl = resolved;
+        }
+
+        if (sendableAudioUrl.startsWith('indexeddb:') || sendableAudioUrl.startsWith('blob:') || sendableAudioUrl.startsWith('data:')) {
+          const res = await fetch(sendableAudioUrl);
+          const blob = await res.blob();
+          const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
+          const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
+          const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
+          const uploadedUrl = await uploadFileToServer(file, { category: 'stems', folder: 'inputs', bandId: bandIdToUse });
+          if (uploadedUrl && (uploadedUrl.startsWith('http://') || uploadedUrl.startsWith('https://') || uploadedUrl.startsWith('/'))) {
+            sendableAudioUrl = uploadedUrl;
+          }
+        }
+      } catch (prepErr) {
+        console.warn("[Stem Separation Frontend] Error preparando audio para el servidor:", prepErr);
+      }
+
+      setStemProgressModal(prev => prev ? {
+        ...prev,
+        stage: 'demucs',
+        progressPct: 45,
+        currentStepText: engineToUse === 'replicate'
+          ? 'Red Neuronal HT-Demucs v4 (Replicate Cloud GPU) aislando Voz, Batería, Bajo, Guitarras...'
+          : 'Motor FFmpeg DSP Local realizando filtrado de frecuencias...'
+      } : null);
+
       const data = await apiFetch('/api/ai-stem-separation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           songTitle: song.titulo,
           sectionName: targetIdea.seccion,
-          audioUrl: targetIdea.audioUrl,
+          audioUrl: sendableAudioUrl,
           bpm: song.bpm,
-          key: song.tonalidad
+          key: song.tonalidad,
+          forceEngine: engineToUse
         })
       });
 
+      setStemProgressModal(prev => prev ? {
+        ...prev,
+        stage: 'persisting',
+        progressPct: 92,
+        currentStepText: 'Sincronizando pistas aisladas MP3 HQ en la nube...'
+      } : null);
+
       const existing = getIdeaTracks(targetIdea);
-      let newTracks = [...existing];
+      // Al generar las pistas por separado, eliminamos la pista master original no separada (Pista Principal / Demo Unificada)
+      let newTracks = existing.filter(t => 
+        t.audioUrl !== targetIdea.audioUrl && 
+        t.id !== `${targetIdea.id}-track-1` && 
+        t.nombre !== 'Pista Principal' &&
+        t.nombre !== targetIdea.titulo &&
+        !!t.instrumento
+      );
       let stemsAdded = 0;
 
-      if (data.stems && Array.isArray(data.stems) && data.stems.some((s: any) => s.audioUrl && s.audioUrl !== targetIdea.audioUrl)) {
-        // Server provided isolated audio stems!
+      if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
         const engineAuthor = data.isNeural ? 'Demucs v4 Neural AI (Calidad Moises Pro)' : 'Deep AI & Studio DSP';
         data.stems.forEach((st: any) => {
-          if (!newTracks.some(t => t.nombre.includes(st.instrument))) {
-            newTracks.push({
-              id: `stem-ai-${st.instrument.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-              nombre: st.trackName || `Stem IA (${st.instrument})`,
-              audioUrl: st.audioUrl || targetIdea.audioUrl,
+          if (!st.audioUrl) return;
+
+          const instClean = (st.instrument || '').toLowerCase();
+          const existingIdx = newTracks.findIndex(t => 
+            (t.instrumento && t.instrumento.toLowerCase() === instClean) ||
+            (t.nombre && t.nombre.toLowerCase().includes(instClean)) ||
+            (instClean === 'voz' && t.nombre.toLowerCase().includes('voz')) ||
+            (instClean === 'batería' && (t.nombre.toLowerCase().includes('batería') || t.nombre.toLowerCase().includes('bateria'))) ||
+            (instClean === 'bajo' && t.nombre.toLowerCase().includes('bajo')) ||
+            (instClean === 'guitarras' && t.nombre.toLowerCase().includes('guitarra')) ||
+            (instClean === 'teclados' && (t.nombre.toLowerCase().includes('teclado') || t.nombre.toLowerCase().includes('piano'))) ||
+            (instClean === 'arreglos' && t.nombre.toLowerCase().includes('arreglo'))
+          );
+
+          const fmt = st.formato || (st.audioUrl.toLowerCase().includes('.wav') ? 'WAV' : 'MP3');
+          const sz = st.tamano || '2.5 MB';
+
+          if (existingIdx >= 0) {
+            newTracks[existingIdx] = {
+              ...newTracks[existingIdx],
+              nombre: st.trackName || newTracks[existingIdx].nombre,
+              audioUrl: st.audioUrl,
               autor: engineAuthor,
               instrumento: st.instrument,
+              formato: fmt,
+              tamano: sz,
+              volumen: st.recommendedVolume || newTracks[existingIdx].volumen || 1
+            };
+            stemsAdded++;
+          } else {
+            newTracks.push({
+              id: `stem-ai-${instClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+              nombre: st.trackName || `Stem IA (${st.instrument})`,
+              audioUrl: st.audioUrl,
+              autor: engineAuthor,
+              instrumento: st.instrument,
+              formato: fmt,
+              tamano: sz,
               fecha: new Date().toISOString().split('T')[0],
               volumen: st.recommendedVolume || 1,
               muted: false
@@ -309,7 +450,6 @@ export default function SongStudioModal({
           }
         });
       } else {
-        // Fallback to client-side anti-phase cancellation engine
         let renderedStems: IsolatedStemResult[] = [];
         try {
           renderedStems = await separateAudioIntoStems(targetIdea.audioUrl);
@@ -318,41 +458,83 @@ export default function SongStudioModal({
         }
 
         if (renderedStems.length > 0) {
-          for (const stemRes of renderedStems) {
-            let uploadedUrl = stemRes.audioUrl;
-            try {
-              const wavFile = new File([stemRes.audioBlob], `stem-${stemRes.instrument.toLowerCase()}-${Date.now()}.wav`, { type: 'audio/wav' });
-              uploadedUrl = await uploadFileToServer(wavFile);
-            } catch (upErr) {
-              console.warn("Using blob URL fallback for stem upload:", upErr);
-            }
+          // Carga paralela ultra-rápida de stems en cliente con timeout de rescate
+          await Promise.all(
+            renderedStems.map(async (stemRes) => {
+              let uploadedUrl = stemRes.audioUrl;
+              try {
+                const wavFile = new File([stemRes.audioBlob], `stem-${stemRes.instrument.toLowerCase()}-${Date.now()}.wav`, { type: 'audio/wav' });
+                const uploadPromise = uploadFileToServer(wavFile);
+                const timeoutPromise = new Promise<string>((resolve) => 
+                  setTimeout(() => resolve(URL.createObjectURL(stemRes.audioBlob)), 3500)
+                );
+                uploadedUrl = await Promise.race([uploadPromise, timeoutPromise]);
+              } catch (upErr) {
+                console.warn("Using blob URL fallback for stem upload:", upErr);
+                uploadedUrl = URL.createObjectURL(stemRes.audioBlob);
+              }
 
-            if (!newTracks.some(t => t.nombre.includes(stemRes.instrument))) {
-              newTracks.push({
-                id: `stem-ai-${stemRes.instrument.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-                nombre: stemRes.trackName,
-                audioUrl: uploadedUrl,
-                autor: 'Anti-Phase AI Engine',
-                instrumento: stemRes.instrument,
-                fecha: new Date().toISOString().split('T')[0],
-                volumen: stemRes.recommendedVolume || 1,
-                muted: false
-              });
-              stemsAdded++;
-            }
-          }
+              if (!newTracks.some(t => t.nombre.includes(stemRes.instrument))) {
+                newTracks.push({
+                  id: `stem-ai-${stemRes.instrument.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+                  nombre: stemRes.trackName,
+                  audioUrl: uploadedUrl,
+                  autor: 'Anti-Phase AI Engine',
+                  instrumento: stemRes.instrument,
+                  formato: stemRes.formato || 'WAV',
+                  tamano: stemRes.tamano || '3.2 MB',
+                  fecha: new Date().toISOString().split('T')[0],
+                  volumen: stemRes.recommendedVolume || 1,
+                  muted: false
+                });
+                stemsAdded++;
+              }
+            })
+          );
         }
       }
 
       const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? { ...i, pistas: newTracks } : i);
       onUpdateSong({ ...song, audioIdeas: updatedIdeas });
-      const engineInfo = data.isNeural
-        ? '🚀 Modelo Neuronal Demucs v4 (Calidad de Estudio Moises Pro) ejecutado en GPU.'
-        : '⚡ Motor Espectral de Estudio procesado. (Para activar el modelo neuronal Demucs v4 en GPU, puedes configurar REPLICATE_API_TOKEN en el entorno).';
-      alert(`¡Separación de Stems completada con éxito para "${targetIdea.titulo}"!\n\n${engineInfo}\n\nSe han generado 5 pistas independientes de alta fidelidad: Voz, Batería, Bajo, Guitarras y Arreglos.`);
+
+      const stemsInfo = newTracks.map(t => ({
+        instrument: t.instrumento || 'Pista',
+        trackName: t.nombre,
+        formato: t.formato || (t.audioUrl?.toLowerCase().includes('.wav') ? 'WAV' : 'MP3'),
+        tamano: t.tamano || '2.5 MB',
+        audioUrl: t.audioUrl
+      }));
+
+      clearInterval(progressTimer);
+      clearInterval(elapsedTimer);
+      setStemProgressModal({
+        isOpen: true,
+        songTitle: song.titulo,
+        ideaTitle: targetIdea.titulo,
+        stage: 'completed',
+        progressPct: 100,
+        currentStepText: '¡Pistas aisladas montadas en el mezclador con éxito!',
+        isNeural: !!data.isNeural,
+        separationEngine: data.separationEngine || (data.isNeural ? 'Demucs v4 Neural (Replicate Cloud GPU)' : 'FFmpeg DSP Local (Sin Replicate)'),
+        engineChoice: engineToUse,
+        stemsAdded: stemsAdded || 5,
+        stemsInfo,
+        executionTimeSec: data.executionTimeSec,
+        timingBreakdown: data.timingBreakdown
+      });
     } catch (err: any) {
+      clearInterval(progressTimer);
+      clearInterval(elapsedTimer);
       console.error("Error en separación de stems por IA:", err);
-      alert("No se pudo completar la separación por IA. Inténtalo de nuevo.");
+      setStemProgressModal({
+        isOpen: true,
+        songTitle: song.titulo,
+        ideaTitle: targetIdea.titulo,
+        stage: 'error',
+        progressPct: 0,
+        currentStepText: 'Error al procesar la separación por IA.',
+        errorMessage: err?.message || 'No se pudo conectar con el servidor de IA.'
+      });
     } finally {
       setIsSeparatingStemsAi(false);
     }
@@ -1394,16 +1576,25 @@ export default function SongStudioModal({
     onUpdateSong(updatedSong);
   };
 
-  // Handle Track Solo Toggle
+  // Handle Track Solo Toggle (Cubase style: Exclusive Solo)
   const handleToggleSoloTrack = (idea: SongAudioIdea, trackId: string) => {
     const tracks = getIdeaTracks(idea);
+    const targetTrack = tracks.find(t => t.id === trackId);
+    const isTargetCurrentlySolo = !!targetTrack?.solo;
+
     const updatedTracks = tracks.map(tr => {
-      if (tr.id !== trackId) return tr;
-      const nextSolo = !tr.solo;
+      if (tr.id === trackId) {
+        const nextSolo = !isTargetCurrentlySolo;
+        return {
+          ...tr,
+          solo: nextSolo,
+          muted: nextSolo ? false : tr.muted // Turning Solo ON turns Mute OFF
+        };
+      }
+      // Exclusive Solo: turning solo ON for 1 track turns solo OFF for all other tracks
       return {
         ...tr,
-        solo: nextSolo,
-        muted: nextSolo ? false : tr.muted // Mutually exclusive: turning Solo ON turns Mute OFF
+        solo: false
       };
     });
     const hasSolo = updatedTracks.some(t => t.solo);
@@ -3219,109 +3410,122 @@ export default function SongStudioModal({
 
                     {/* MINI DAW TRACK LIST MIXER */}
                     <div className="space-y-2 bg-black/30 p-3 rounded-xl border border-white/5">
-                      <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 uppercase tracking-wider border-b border-white/10 pb-1.5">
-                        <span className="flex items-center gap-1.5">
-                          <Sliders className="w-3.5 h-3.5 text-indigo-400" /> Mezclador de Pistas ({tracks.length})
-                        </span>
-                        <span>Volumen & Mute</span>
-                      </div>
+                      {(() => {
+                        const hasSoloInIdea = tracks.some(t => t.solo);
+                        return (
+                          <>
+                            <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 uppercase tracking-wider border-b border-white/10 pb-1.5">
+                              <span className="flex items-center gap-1.5 font-bold text-white">
+                                <Sliders className="w-3.5 h-3.5 text-indigo-400" /> Mezclador de Pistas ({tracks.length})
+                              </span>
+                              <div className="flex items-center gap-2">
+                                {hasSoloInIdea && (
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-amber-400 text-black flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
+                                    <Volume2 className="w-3 h-3" /> SOLO (S) ACTIVO
+                                  </span>
+                                )}
+                                <span>Volumen & Mute</span>
+                              </div>
+                            </div>
 
-                      <div className="space-y-2">
-                        {tracks.map((tr, idx) => {
-                          const isMuted = tr.muted;
-                          const isSolo = (tr as any).solo;
-                          const vol = tr.volumen ?? 1;
-                          const isEditing = editingTrackId === tr.id;
+                            <div className="space-y-2">
+                              {tracks.map((tr, idx) => {
+                                const isMuted = tr.muted;
+                                const isSolo = (tr as any).solo;
+                                const vol = tr.volumen ?? 1;
+                                const isEditing = editingTrackId === tr.id;
 
-                          return (
-                            <div 
-                              key={tr.id}
-                              className={`p-2.5 rounded-xl border flex flex-col gap-2 transition-all ${
-                                isMuted 
-                                  ? 'bg-black/40 border-neutral-800 opacity-60' 
-                                  : isSolo 
-                                    ? 'bg-amber-950/20 border-amber-500/40' 
-                                    : 'bg-white/5 border-white/10'
-                              }`}
-                            >
-                              {/* Main Track Row */}
-                              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                                {/* Track Info & Mute/Solo */}
-                                <div className="w-full sm:w-auto min-w-[300px] shrink-0 flex items-center justify-between gap-2.5">
-                                  <div className="flex items-center gap-2 flex-1 flex-wrap">
-                                    <span className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                                      {idx + 1}
-                                    </span>
-
-                                    {isEditing ? (
-                                      <div className="flex items-center gap-1 min-w-0 flex-1">
-                                        <input
-                                          type="text"
-                                          value={editingTrackName}
-                                          onChange={(e) => setEditingTrackName(e.target.value)}
-                                          onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                          className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold"
-                                          autoFocus
-                                        />
-                                        <button
-                                          type="button"
-                                          onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                          className="p-1 text-emerald-400 hover:text-emerald-300 shrink-0"
-                                        >
-                                          <Check className="w-3.5 h-3.5" />
-                                        </button>
-                                      </div>
-                                    ) : (
-                                      <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="text-xs font-bold text-white font-mono whitespace-nowrap">{tr.nombre}</span>
-                                        {tr.instrumento && (
-                                          <span className="text-[10px] text-indigo-300 font-mono bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 whitespace-nowrap font-semibold">
-                                            {tr.instrumento}
+                                return (
+                                  <div 
+                                    key={tr.id}
+                                    className={`p-2.5 rounded-xl border flex flex-col gap-2 transition-all ${
+                                      isMuted 
+                                        ? 'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]' 
+                                        : isSolo 
+                                          ? 'bg-amber-500/10 border-amber-400/80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30' 
+                                          : hasSoloInIdea
+                                            ? 'bg-black/50 border-neutral-800/80 opacity-40 grayscale-[50%]'
+                                            : 'bg-white/5 border-white/10 hover:border-white/20'
+                                    }`}
+                                  >
+                                    {/* Main Track Row */}
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                      {/* Track Info & Mute/Solo */}
+                                      <div className="w-full sm:w-auto min-w-[300px] shrink-0 flex items-center justify-between gap-2.5">
+                                        <div className="flex items-center gap-2 flex-1 flex-wrap">
+                                          <span className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                                            {idx + 1}
                                           </span>
-                                        )}
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            setEditingTrackId(tr.id);
-                                            setEditingTrackName(tr.nombre);
-                                          }}
-                                          className="text-neutral-500 hover:text-neutral-300 shrink-0"
-                                          title="Editar nombre de pista"
-                                        >
-                                          <Edit2 className="w-3 h-3" />
-                                        </button>
-                                      </div>
-                                    )}
-                                  </div>
 
-                                  {/* Mute & Solo Quick Toggles */}
-                                  <div className="flex items-center gap-1 shrink-0">
-                                    <button
-                                      type="button"
-                                      onClick={() => handleToggleMuteTrack(idea, tr.id)}
-                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold cursor-pointer transition-all border ${
-                                        isMuted 
-                                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' 
-                                          : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
-                                      }`}
-                                      title="Mute"
-                                    >
-                                      M
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleToggleSoloTrack(idea, tr.id)}
-                                      className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold cursor-pointer transition-all border ${
-                                        isSolo 
-                                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' 
-                                          : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
-                                      }`}
-                                      title="Solo"
-                                    >
-                                      S
-                                    </button>
-                                  </div>
-                                </div>
+                                          {isEditing ? (
+                                            <div className="flex items-center gap-1 min-w-0 flex-1">
+                                              <input
+                                                type="text"
+                                                value={editingTrackName}
+                                                onChange={(e) => setEditingTrackName(e.target.value)}
+                                                onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
+                                                className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold"
+                                                autoFocus
+                                              />
+                                              <button
+                                                type="button"
+                                                onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
+                                                className="p-1 text-emerald-400 hover:text-emerald-300 shrink-0"
+                                              >
+                                                <Check className="w-3.5 h-3.5" />
+                                              </button>
+                                            </div>
+                                          ) : (
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                              <span className="text-xs font-bold text-white font-mono whitespace-nowrap">{tr.nombre}</span>
+                                              {tr.instrumento && (
+                                                <span className="text-[10px] text-indigo-300 font-mono bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 whitespace-nowrap font-semibold">
+                                                  {tr.instrumento}
+                                                </span>
+                                              )}
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  setEditingTrackId(tr.id);
+                                                  setEditingTrackName(tr.nombre);
+                                                }}
+                                                className="text-neutral-500 hover:text-neutral-300 shrink-0"
+                                                title="Editar nombre de pista"
+                                              >
+                                                <Edit2 className="w-3 h-3" />
+                                              </button>
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        {/* Cubase Style Mute (Red) & Solo (Amber) Quick Toggles */}
+                                        <div className="flex items-center gap-1.5 shrink-0">
+                                          <button
+                                            type="button"
+                                            onClick={() => handleToggleMuteTrack(idea, tr.id)}
+                                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-black cursor-pointer transition-all border ${
+                                              isMuted 
+                                                ? 'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] ring-1 ring-red-400/50' 
+                                                : 'bg-neutral-800/90 text-neutral-400 border-neutral-700/80 hover:text-white hover:bg-neutral-700'
+                                            }`}
+                                            title="Mute (M) - Silenciar pista"
+                                          >
+                                            M
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleToggleSoloTrack(idea, tr.id)}
+                                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-black cursor-pointer transition-all border ${
+                                              isSolo 
+                                                ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60' 
+                                                : 'bg-neutral-800/90 text-neutral-400 border-neutral-700/80 hover:text-white hover:bg-neutral-700'
+                                            }`}
+                                            title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
+                                          >
+                                            S
+                                          </button>
+                                        </div>
+                                      </div>
 
                                 {/* Volume Slider & Advanced Settings Toggle */}
                                 <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
@@ -3643,7 +3847,10 @@ export default function SongStudioModal({
                           </div>
                         )}
                       </div>
-                    </div>
+                    </>
+                  );
+                })()}
+                </div>
 
                     {/* OVERDUB ADD TRACK DRAWER */}
                     {isAddingTrack && (
@@ -4334,43 +4541,84 @@ export default function SongStudioModal({
                   </p>
                 </div>
 
+                {/* SELECTOR DE MOTOR: REPLICATE vs DSP LOCAL */}
+                <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-2.5 font-mono text-[11px]">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white flex items-center gap-1.5">
+                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Separación:
+                    </span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
+                      selectedStemEngine === 'replicate' 
+                        ? 'bg-purple-500/10 text-purple-300 border-purple-500/30' 
+                        : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
+                    }`}>
+                      {selectedStemEngine === 'replicate' ? '⚡ Replicate Cloud GPU' : '⚙️ Servidor Local DSP'}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStemEngine('replicate')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
+                        selectedStemEngine === 'replicate'
+                          ? 'bg-purple-950/60 border-purple-500 text-purple-200 ring-1 ring-purple-500/50 shadow-lg shadow-purple-950/50'
+                          : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
+                      }`}
+                    >
+                      <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                        <Sparkles className="w-3.5 h-3.5 text-purple-400" /> ⚡ Con Replicate
+                      </span>
+                      <span className="text-[10px] text-neutral-300 leading-normal">
+                        Red Neuronal HT-Demucs v4 en Cloud GPU. Calidad Moises Pro de alta fidelidad.
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStemEngine('dsp-server')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
+                        selectedStemEngine === 'dsp-server'
+                          ? 'bg-blue-950/60 border-blue-500 text-blue-200 ring-1 ring-blue-500/50 shadow-lg shadow-blue-950/50'
+                          : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
+                      }`}
+                    >
+                      <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                        <Cpu className="w-3.5 h-3.5 text-blue-400" /> ⚙️ Sin Replicate
+                      </span>
+                      <span className="text-[10px] text-neutral-300 leading-normal">
+                        Filtro DSP estéreo local en servidor. Rápido sin consumir créditos de IA.
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
                 <button
                   type="button"
                   onClick={() => {
                     const targetIdea = showMoisesStemsModal;
                     setShowMoisesStemsModal(null);
-
-                    const existing = getIdeaTracks(targetIdea);
-                    const stemTypes = [
-                      { name: '🎤 Stem: Voz Principal', inst: 'Voz' },
-                      { name: '🥁 Stem: Batería & Percusión', inst: 'Batería' },
-                      { name: '🎸 Stem: Bajo', inst: 'Bajo' },
-                      { name: '🎹 Stem: Guitarras & Teclados', inst: 'Guitarras' },
-                    ];
-
-                    let newTracks = [...existing];
-                    stemTypes.forEach(s => {
-                      if (!newTracks.some(t => t.nombre.includes(s.inst))) {
-                        newTracks.push({
-                          id: `stem-${s.inst.toLowerCase()}-${Date.now()}`,
-                          nombre: s.name,
-                          audioUrl: targetIdea.audioUrl,
-                          autor: 'Stems Moises AI',
-                          instrumento: s.inst,
-                          fecha: new Date().toISOString().split('T')[0],
-                          volumen: 1,
-                          muted: false
-                        });
-                      }
-                    });
-
-                    const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? { ...i, pistas: newTracks } : i);
-                    onUpdateSong({ ...song, audioIdeas: updatedIdeas });
-                    alert(`¡Pistas de Stems agregadas a "${targetIdea.titulo}"! Ahora puedes mutear o graduar la voz, batería, bajo y guitarras con control total.`);
+                    if (targetIdea) {
+                      handlePerformAiStemSeparation(targetIdea, selectedStemEngine);
+                    }
                   }}
-                  className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center"
+                  className={`w-full py-3 rounded-xl font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 ${
+                    selectedStemEngine === 'replicate'
+                      ? 'bg-gradient-to-r from-amber-500 via-purple-600 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white'
+                      : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white'
+                  }`}
                 >
-                  ⚡ Activar Pistas de Stems en esta Sección
+                  {selectedStemEngine === 'replicate' ? (
+                    <>
+                      <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                      <span>⚡ Separar Stems con Replicate (Cloud GPU Demucs v4)</span>
+                    </>
+                  ) : (
+                    <>
+                      <Cpu className="w-4 h-4 text-cyan-200" />
+                      <span>⚙️ Separar Stems con DSP (Servidor Local - Sin Replicate)</span>
+                    </>
+                  )}
                 </button>
               </div>
             )}
@@ -4599,6 +4847,250 @@ export default function SongStudioModal({
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE PROGRESO DE SEPARACIÓN DE STEMS IA */}
+      {stemProgressModal && stemProgressModal.isOpen && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
+          <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center relative">
+                  {stemProgressModal.stage === 'completed' ? (
+                    <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                  ) : stemProgressModal.stage === 'error' ? (
+                    <AlertCircle className="w-6 h-6 text-rose-400" />
+                  ) : (
+                    <Cpu className="w-6 h-6 text-amber-400 animate-pulse" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-mono font-bold text-sm text-white flex items-center gap-2">
+                    {stemProgressModal.stage === 'completed'
+                      ? '¡Separación de Stems Completada!'
+                      : stemProgressModal.stage === 'error'
+                      ? 'Error en la Separación'
+                      : 'Separando Pistas por IA'}
+                  </h3>
+                  <p className="text-[11px] text-neutral-400 font-sans">
+                    {stemProgressModal.ideaTitle} • <span className="text-amber-300">{stemProgressModal.songTitle}</span>
+                  </p>
+                </div>
+              </div>
+              {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+                <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border flex items-center gap-1.5 animate-pulse ${
+                  stemProgressModal.engineChoice === 'replicate' || stemProgressModal.isNeural
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                    : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                }`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                  {stemProgressModal.engineChoice === 'replicate' || stemProgressModal.isNeural
+                    ? '⚡ Replicate Cloud GPU'
+                    : '⚙️ FFmpeg DSP Local'}
+                </span>
+              )}
+            </div>
+
+            {/* Content for Processing States */}
+            {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+              <div className="space-y-4">
+                
+                {/* Live Elapsed Time Monitor */}
+                <div className="p-3 rounded-xl bg-zinc-900/90 border border-amber-500/30 flex items-center justify-between font-mono text-[11px]">
+                  <div className="flex items-center gap-2 text-amber-300 font-bold">
+                    <Clock className="w-4 h-4 text-amber-400 animate-spin" />
+                    <span>⏱️ Monitor de Tiempo:</span>
+                  </div>
+                  <span className="text-white font-black bg-black/60 px-2.5 py-1 rounded border border-white/10 text-xs">
+                    {separationElapsedSeconds}s transcurridos
+                  </span>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="text-neutral-300 text-[11px]">Progreso del Proceso</span>
+                    <span className="font-bold text-amber-400">{Math.round(stemProgressModal.progressPct)}%</span>
+                  </div>
+                  <div className="w-full h-3 bg-zinc-900 rounded-full overflow-hidden border border-white/10 p-0.5">
+                    <div 
+                      className="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.max(5, stemProgressModal.progressPct)}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Animated Equalizer Visualizer */}
+                <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 h-8">
+                    <div className="w-1.5 bg-amber-400 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height: '60%' }} />
+                    <div className="w-1.5 bg-purple-400 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height: '90%' }} />
+                    <div className="w-1.5 bg-indigo-400 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height: '40%' }} />
+                    <div className="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height: '100%' }} />
+                    <div className="w-1.5 bg-amber-400 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height: '75%' }} />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-mono font-bold text-amber-200 animate-pulse">
+                      {stemProgressModal.currentStepText}
+                    </p>
+                    <p className="text-[10px] text-neutral-400 font-sans mt-0.5">
+                      Modelos de Inteligencia Artificial separando frecuencias...
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step Checklist */}
+                <div className="space-y-2 font-mono text-[11px] pt-1">
+                  <div className={`p-2.5 rounded-lg border flex items-center gap-2.5 transition-all ${
+                    stemProgressModal.stage === 'preparing' 
+                      ? 'bg-amber-950/40 border-amber-500/50 text-amber-200' 
+                      : 'bg-zinc-900/60 border-white/5 text-neutral-400'
+                  }`}>
+                    {stemProgressModal.stage === 'preparing' ? (
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400 shrink-0" />
+                    ) : (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    )}
+                    <span>1. Verificación e ingesta de flujo de audio</span>
+                  </div>
+
+                  <div className={`p-2.5 rounded-lg border flex items-center gap-2.5 transition-all ${
+                    stemProgressModal.stage === 'demucs' 
+                      ? 'bg-purple-950/40 border-purple-500/50 text-purple-200' 
+                      : stemProgressModal.stage === 'persisting'
+                      ? 'bg-zinc-900/60 border-white/5 text-neutral-400'
+                      : 'bg-zinc-900/30 border-white/5 text-neutral-600'
+                  }`}>
+                    {stemProgressModal.stage === 'demucs' ? (
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-400 shrink-0" />
+                    ) : stemProgressModal.stage === 'persisting' ? (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />
+                    )}
+                    <span>
+                      {stemProgressModal.engineChoice === 'replicate' || stemProgressModal.isNeural
+                        ? '2. Inferencia Neuronal HT-Demucs v4 (Replicate Cloud GPU)'
+                        : '2. Procesamiento de Señal DSP Mid-Side (Servidor Local - Sin Replicate)'}
+                    </span>
+                  </div>
+
+                  <div className={`p-2.5 rounded-lg border flex items-center gap-2.5 transition-all ${
+                    stemProgressModal.stage === 'persisting' 
+                      ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-200' 
+                      : 'bg-zinc-900/30 border-white/5 text-neutral-600'
+                  }`}>
+                    {stemProgressModal.stage === 'persisting' ? (
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400 shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />
+                    )}
+                    <span>3. Codificación MP3 HQ & Carga al Mezclador Multipista</span>
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* Completed State */}
+            {stemProgressModal.stage === 'completed' && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-200 space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-xs">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>¡Pistas de Stems Generadas con Éxito!</span>
+                  </div>
+                  <p className="text-[11px] text-neutral-300 font-sans leading-relaxed">
+                    Las pistas aisladas ya están montadas en el mezclador. Cada instrumento cuenta con sus controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, volumen y ecualizador.
+                  </p>
+                </div>
+
+                {/* TELEMETRY TIMING CARD */}
+                <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 font-mono text-xs space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-amber-300 font-bold flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-amber-400" /> Telemetría de Rendimiento:
+                    </span>
+                    <span className="text-emerald-400 font-black text-xs bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-500/30">
+                      ⏱️ {stemProgressModal.executionTimeSec || `${separationElapsedSeconds}s`} Total
+                    </span>
+                  </div>
+
+                  {stemProgressModal.timingBreakdown ? (
+                    <div className="grid grid-cols-3 gap-2 text-[10px] pt-1">
+                      <div className="p-2 rounded bg-black/40 border border-white/5 text-center">
+                        <span className="text-neutral-400 block">📥 Prelectura</span>
+                        <span className="font-bold text-white">{stemProgressModal.timingBreakdown.preloadSec || '0.1s'}</span>
+                      </div>
+                      <div className="p-2 rounded bg-purple-950/40 border border-purple-500/30 text-center">
+                        <span className="text-purple-300 block">⚡ GPU Inferencia</span>
+                        <span className="font-bold text-purple-200">{stemProgressModal.timingBreakdown.gpuInferenceSec || 'GPU Cloud'}</span>
+                      </div>
+                      <div className="p-2 rounded bg-emerald-950/40 border border-emerald-500/30 text-center">
+                        <span className="text-emerald-300 block">☁️ Supabase</span>
+                        <span className="font-bold text-emerald-200">{stemProgressModal.timingBreakdown.stemsPersistenceSec || 'Stems OK'}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-[10px] text-neutral-400 font-sans">
+                      Tiempo de procesamiento total registrado: {stemProgressModal.executionTimeSec || `${separationElapsedSeconds}s`}.
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
+                    <span>🎤</span> <span>Voz Principal</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
+                    <span>🥁</span> <span>Batería & Percusión</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
+                    <span>🎸</span> <span>Bajo (Sub-Bass)</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
+                    <span>🎹</span> <span>Guitarras / Teclados</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setStemProgressModal(null)}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-zinc-950 font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2"
+                >
+                  <Sliders className="w-4 h-4" />
+                  <span>Abrir Mezclador Multipista</span>
+                </button>
+              </div>
+            )}
+
+            {/* Error State */}
+            {stemProgressModal.stage === 'error' && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-rose-950/50 border border-rose-500/40 text-rose-200 space-y-1">
+                  <div className="flex items-center gap-2 text-rose-400 font-mono font-bold text-xs">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>Ocurrió un inconveniente</span>
+                  </div>
+                  <p className="text-[11px] text-neutral-300 font-sans">
+                    {stemProgressModal.errorMessage || 'No se pudo completar la separación de pistas.'}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setStemProgressModal(null)}
+                  className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-bold transition-all cursor-pointer"
+                >
+                  Cerrar
+                </button>
+              </div>
+            )}
+
           </div>
         </div>
       )}

@@ -190,11 +190,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
 
     // O si alguna de sus canciones coincide con la búsqueda
     const albumSongs = safeSongs.filter((s) => {
-      const songAlbum = s.albumDisco || s.album || '';
-      if (album === 'Singles / Sin Disco') {
+      const songAlbum = (s.albumDisco || s.album || '').trim();
+      const albumClean = album.trim();
+      if (albumClean === 'Singles / Sin Disco') {
         return !songAlbum || songAlbum === 'Singles / Sin Disco';
       }
-      return songAlbum === album;
+      return songAlbum === albumClean || songAlbum.toLowerCase() === albumClean.toLowerCase();
     });
 
     return albumSongs.some((s) => songMatchesSearch(s, cleanSearchQuery));
@@ -558,10 +559,11 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
       <div className="space-y-4">
         {filteredAlbums.map((album) => {
           const rawAlbumSongs = safeSongs.filter((s) => {
-            const songAlbum = s.albumDisco || s.album || '';
-            const belongsToAlbum = album === 'Singles / Sin Disco'
+            const songAlbum = (s.albumDisco || s.album || '').trim();
+            const albumClean = album.trim();
+            const belongsToAlbum = albumClean === 'Singles / Sin Disco'
               ? (!songAlbum || songAlbum === 'Singles / Sin Disco')
-              : songAlbum === album;
+              : (songAlbum === albumClean || songAlbum.toLowerCase() === albumClean.toLowerCase());
 
             if (!belongsToAlbum) return false;
 

@@ -17,8 +17,32 @@ import { dbGetRunOfShow, dbGetGearChecklists } from "./production.js";
 import { dbGetCampaigns } from "./campaigns.js";
 import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 
+const bandStateCache = new Map<string, { timestamp: number; result: any }>();
+const BAND_CACHE_TTL_MS = 10_000; // 10s TTL cache for fast reads
+
+export function invalidateBandStateCache(bandId?: string) {
+  if (bandId) {
+    try {
+      const cleanId = cleanBandId(bandId);
+      for (const key of bandStateCache.keys()) {
+        if (key.startsWith(`${cleanId}:`)) {
+          bandStateCache.delete(key);
+        }
+      }
+    } catch (_) {}
+  } else {
+    bandStateCache.clear();
+  }
+}
+
 export async function loadStateFromSupabase(bandId: string, user?: any) {
   const cleanId = cleanBandId(bandId);
+  const cacheKey = `${cleanId}:${user?.id || 'anonymous'}`;
+  const cached = bandStateCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < BAND_CACHE_TTL_MS) {
+    return cached.result;
+  }
+
   await ensureRegisteredBandExists(cleanId, user?.bandName || user?.band_name);
 
   // Determine all bands relevant to this user (for multi-band calendar view)
@@ -89,7 +113,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     dbGetCategoryTemplates(cleanId).catch(() => ({}))
   ]);
 
-  return {
+  const resState = {
     leads,
     rehearsals,
     concerts,
@@ -177,6 +201,9 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     users,
     categoryTemplates
   };
+
+  bandStateCache.set(cacheKey, { timestamp: Date.now(), result: resState });
+  return resState;
 }
 
 // ----------------------------------------------------

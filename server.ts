@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 import helmet from "helmet";
 import path from "path";
 import * as XLSX from "xlsx";
@@ -74,6 +75,8 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
   referrerPolicy: { policy: "strict-origin-when-cross-origin" }
 }));
+
+app.use(compression());
 
 app.use(
   express.json({

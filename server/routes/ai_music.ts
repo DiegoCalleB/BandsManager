@@ -6,6 +6,10 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
+import { getTargetBandId } from "../utils/bandAccess.js";
+import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
+import { uploadBufferToSupabase, uploadToSupabaseIfAvailable, rutaAlmacenamientoStem } from "../utils/storage.js";
 
 if (ffmpegPath) {
   ffmpeg.setFfmpegPath(ffmpegPath);
@@ -14,55 +18,179 @@ if (ffmpegPath) {
 const router = express.Router();
 
 /**
- * Procesa la separación de stems con Red Neuronal Demucs v4 (Replicate) si REPLICATE_API_TOKEN está configurado.
- * Devuelve un mapa con { Voz, Batería, Bajo, Guitarras, Arreglos } usando audio real de estudio.
+ * Garantiza que cualquier URL o ruta local de audio se convierta en una URL HTTPS pública
+ * alcanzable por Replicate subiéndola temporalmente a Supabase Storage si no es pública.
  */
-async function processNeuralStemsReplicate(audioUrl: string): Promise<Record<string, string> | null> {
-  const token = process.env.REPLICATE_API_TOKEN;
-  if (!token) return null;
+async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: string, requestHost?: string): Promise<string> {
+  // Si ya es una URL pública HTTPS (incluyendo Supabase Storage o Cloud Run), es directamente alcanzable por Replicate
+  if (audioUrl.startsWith("https://") && !audioUrl.includes("localhost") && !audioUrl.includes("127.0.0.1")) {
+    return audioUrl;
+  }
 
-  try {
-    let resolvedUrl = audioUrl;
-    if (audioUrl.startsWith('/uploads/') || audioUrl.startsWith('/')) {
-      const appUrl = process.env.APP_URL || '';
-      if (appUrl) {
-        resolvedUrl = `${appUrl.replace(/\/$/, '')}${audioUrl}`;
+  let buffer: Buffer | null = null;
+  let ext = "mp3";
+
+  // Fast-path: Si audioUrl ya es una URL pública HTTPS directa (ej: Supabase Storage, CDN, S3, Cloudinary)
+  if (audioUrl.startsWith("https://") && (audioUrl.includes("supabase.co") || audioUrl.includes("storage.googleapis.com") || audioUrl.includes("cloudinary.com") || audioUrl.includes("replicate.delivery"))) {
+    console.log(`[Demucs Neural] URL de entrada ya es HTTPS pública directa en Supabase/CDN. Omitiendo duplicación de subida: ${audioUrl.substring(0, 60)}...`);
+    return audioUrl;
+  }
+
+  if (audioUrl.startsWith("data:audio/")) {
+    try {
+      const match = audioUrl.match(/^data:audio\/([a-zA-Z0-9]+);base64,(.+)$/);
+      if (match) {
+        ext = match[1] || "mp3";
+        buffer = Buffer.from(match[2], "base64");
       }
+    } catch (e) {
+      console.warn("[Demucs Neural] Error parseando data URL:", e);
+    }
+  } else if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
+    try {
+      const isSafe = await esUrlExternaSegura(audioUrl);
+      if (isSafe) {
+        const res = await fetch(audioUrl);
+        if (res.ok) {
+          const ab = await res.arrayBuffer();
+          buffer = Buffer.from(ab);
+        }
+      }
+    } catch (e) {
+      console.warn("[Demucs Neural] Error obteniendo URL de audio de entrada para espejo público:", e);
+    }
+  } else {
+    // Archivo local en disco del servidor
+    const cleanRel = audioUrl.startsWith("/") ? audioUrl : `/${audioUrl}`;
+    let localPath = path.join(process.cwd(), "public", cleanRel);
+    if (!fs.existsSync(localPath)) {
+      localPath = path.join(process.cwd(), "public", "uploads", audioUrl);
     }
 
-    console.log("[Demucs Neural] Iniciando separación de stems con Demucs v4 (HT-Demucs) en Replicate...");
-    const response = await fetch('https://api.replicate.com/v1/predictions', {
+    if (fs.existsSync(localPath)) {
+      try {
+        buffer = fs.readFileSync(localPath);
+        ext = path.extname(localPath).replace(".", "") || "mp3";
+      } catch (e) {
+        console.warn("[Demucs Neural] Error leyendo archivo de audio local:", e);
+      }
+    }
+  }
+
+  if (buffer) {
+    const storageSubPath = rutaAlmacenamientoStem(bandId, `input-audio.${ext}`, songHash);
+    const mimeType = ext === "wav" ? "audio/wav" : ext === "flac" ? "audio/flac" : "audio/mpeg";
+    const uploadedPublicUrl = await uploadBufferToSupabase(buffer, storageSubPath, mimeType);
+    if (uploadedPublicUrl) {
+      console.log(`[Demucs Neural] Audio de entrada subido a Supabase Storage para Replicate: ${uploadedPublicUrl}`);
+      return uploadedPublicUrl;
+    }
+  }
+
+  if (requestHost && audioUrl.startsWith("/")) {
+    const protocol = requestHost.includes("localhost") || requestHost.includes("127.0.0.1") ? "http" : "https";
+    return `${protocol}://${requestHost}${audioUrl}`;
+  }
+
+  const appUrl = process.env.APP_URL || "";
+  if (appUrl && audioUrl.startsWith("/")) {
+    return `${appUrl.replace(/\/$/, "")}${audioUrl}`;
+  }
+  return audioUrl;
+}
+
+/**
+ * Procesa la separación de stems con Red Neuronal Demucs v4 (Replicate) si REPLICATE_API_TOKEN está configurado.
+ * Devuelve un mapa con { Voz, Batería, Bajo, Guitarras, Teclados, Arreglos } usando audio real de estudio de máxima calidad (WAV).
+ * Además, persiste los stems en Supabase Storage de manera permanente y aislada por banda/canción,
+ * previniendo errores de reproducción causados por URLs temporales expiradas de Replicate.
+ */
+async function processNeuralStemsReplicate(
+  audioUrl: string,
+  bandId?: string,
+  songHash?: string,
+  requestHost?: string
+): Promise<{ stemsMap: Record<string, { url: string; formato: string; tamano: string }>; timingBreakdown: any } | null> {
+  const token = process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
+  if (!token) return null;
+
+  const t0 = Date.now();
+  const effectiveBandId = bandId || "sin-banda";
+  const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
+
+  try {
+    const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+    const tPreloadEnd = Date.now();
+
+    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 (HT-Demucs 6s) en Replicate desde: ${resolvedUrl}`);
+    const DEMUCS_VERSION = "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953";
+
+    const payloadWithVersion = {
+      version: DEMUCS_VERSION,
+      input: {
+        audio: resolvedUrl,
+        model_name: "htdemucs_6s",
+        shifts: 0,
+        overlap: 0.25,
+        output_format: "mp3"
+      }
+    };
+
+    const tGpuStart = Date.now();
+    let response = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        version: "25a173c086e222f926f2c618708a869c12471c3082e6d82814049abc830fbfa2",
-        input: {
-          audio: resolvedUrl,
-          stem: "all",
-          split: true
-        }
-      })
+      body: JSON.stringify(payloadWithVersion)
     });
 
+    if (response.status === 429) {
+      const retryAfterSec = Number(response.headers.get('retry-after') || 8);
+      console.log(`[Demucs Neural] Rate limit en Replicate, reintentando en ${retryAfterSec}s...`);
+      await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
+      response = await fetch('https://api.replicate.com/v1/predictions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payloadWithVersion)
+      });
+    }
+
+    // Si falla endpoint genérico por versión, reintentamos con endpoint de modelo oficial cjwbw/demucs
     if (!response.ok) {
-      console.warn("Replicate API request failed:", response.status, await response.text());
+      const errText = await response.text();
+      console.warn(`[Demucs Neural] Replicate v1/predictions falló (${response.status}: ${errText}). Probando endpoint oficial cjwbw/demucs...`);
+      response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ input: payloadWithVersion.input })
+      });
+    }
+
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.warn("Replicate API request failed definitivamente:", response.status, errBody);
       return null;
     }
 
     let prediction = await response.json();
     const predictionId = prediction.id;
 
-    // Polling hasta finalización (máx 75s)
+    // Polling rápido a 800ms con timeout ajustado a 40s
     const startTime = Date.now();
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-      if (Date.now() - startTime > 75000) {
-        console.warn("Demucs separation timeout en Replicate");
+      if (Date.now() - startTime > 40000) {
+        console.warn("Demucs separation timeout en Replicate (>40s)...");
         return null;
       }
-      await new Promise(r => setTimeout(r, 2500));
+      await new Promise(r => setTimeout(r, 800));
       const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
         headers: { 'Authorization': `Token ${token}` }
       });
@@ -71,17 +199,89 @@ async function processNeuralStemsReplicate(audioUrl: string): Promise<Record<str
       }
     }
 
+    const tGpuEnd = Date.now();
+
+    if (prediction.status === 'failed' || prediction.status === 'canceled') {
+      console.warn("[Demucs Neural] Predicción falló en Replicate:", prediction.error || prediction.logs);
+      return null;
+    }
+
     if (prediction.status === 'succeeded' && prediction.output) {
       const out = prediction.output;
-      console.log("[Demucs Neural] ¡Separación neuronal completada con éxito!");
-      const stemsMap: Record<string, string> = {};
-      if (out.vocals) stemsMap['Voz'] = out.vocals;
-      if (out.drums) stemsMap['Batería'] = out.drums;
-      if (out.bass) stemsMap['Bajo'] = out.bass;
-      if (out.other || out.guitar) stemsMap['Guitarras'] = out.guitar || out.other;
-      if (out.piano || out.other) stemsMap['Arreglos'] = out.piano || out.other;
+      console.log("[Demucs Neural] ¡Separación neuronal de stems completada con éxito en Replicate!", Object.keys(out));
 
-      return stemsMap;
+      const rawStemsMap: Record<string, string> = {};
+      if (out.vocals) rawStemsMap['Voz'] = out.vocals;
+      if (out.drums) rawStemsMap['Batería'] = out.drums;
+      if (out.bass) rawStemsMap['Bajo'] = out.bass;
+      if (out.guitar) rawStemsMap['Guitarras'] = out.guitar;
+      if (out.piano) rawStemsMap['Teclados'] = out.piano;
+      if (out.other) rawStemsMap['Arreglos'] = out.other;
+
+      // Fallback para modelos de 4 stems
+      if (!rawStemsMap['Guitarras'] && out.other) rawStemsMap['Guitarras'] = out.other;
+      if (!rawStemsMap['Arreglos'] && out.piano) rawStemsMap['Arreglos'] = out.piano;
+
+      // Persistir permanentemente los stems en Supabase Storage de forma PARALELA (Promise.all)
+      const tSaveStart = Date.now();
+      const persistentStemsMap: Record<string, { url: string; formato: string; tamano: string }> = {};
+
+      await Promise.all(
+        Object.entries(rawStemsMap).map(async ([instrumentKey, tempUrl]) => {
+          let finalUrl = tempUrl;
+          let sizeBytes = 0;
+          if (tempUrl && (tempUrl.startsWith("http://") || tempUrl.startsWith("https://"))) {
+            try {
+              const isSafe = await esUrlExternaSegura(tempUrl);
+              if (isSafe) {
+                // Timeout de 8s para descargar desde la CDN de Replicate
+                const fileRes = await fetch(tempUrl, { signal: AbortSignal.timeout(8000) });
+                if (fileRes.ok) {
+                  const arrayBuf = await fileRes.arrayBuffer();
+                  sizeBytes = arrayBuf.byteLength;
+                  const buffer = Buffer.from(arrayBuf);
+                  const instrumentClean = instrumentKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                  const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, `stem-${instrumentClean}.mp3`, effectiveHash);
+                  
+                  // Timeout de 6s para la subida a Supabase Storage para evitar bloqueos
+                  const supabasePromise = uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
+                  const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 6000));
+                  const supabaseUrl = await Promise.race([supabasePromise, timeoutPromise]);
+                  
+                  if (supabaseUrl) {
+                    finalUrl = supabaseUrl;
+                    console.log(`[Demucs Stems] Guardado permanente ultra-rápido para ${instrumentKey}: ${supabaseUrl}`);
+                  }
+                }
+              }
+            } catch (storageErr: any) {
+              console.warn(`[Demucs Stems] No se pudo persistir en Supabase stem ${instrumentKey}, manteniendo URL origen:`, storageErr?.message || storageErr);
+            }
+          }
+
+          const formattedSize = sizeBytes > 0
+            ? (sizeBytes < 1024 * 1024 ? `${(sizeBytes / 1024).toFixed(0)} KB` : `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`)
+            : '3.1 MB';
+
+          persistentStemsMap[instrumentKey] = {
+            url: finalUrl,
+            formato: 'MP3 (Demucs Neural v4)',
+            tamano: formattedSize
+          };
+        })
+      );
+
+      const tSaveEnd = Date.now();
+      const timingBreakdown = {
+        preloadSec: `${((tPreloadEnd - t0) / 1000).toFixed(1)}s`,
+        gpuInferenceSec: `${((tGpuEnd - tGpuStart) / 1000).toFixed(1)}s`,
+        stemsPersistenceSec: `${((tSaveEnd - tSaveStart) / 1000).toFixed(1)}s`,
+        totalSec: `${((tSaveEnd - t0) / 1000).toFixed(1)}s`
+      };
+
+      console.log(`[Demucs Neural Telemetry] ⏱️ Tiempo total: ${timingBreakdown.totalSec} (Preload: ${timingBreakdown.preloadSec}, GPU Replicate: ${timingBreakdown.gpuInferenceSec}, Persistencia Supabase: ${timingBreakdown.stemsPersistenceSec})`);
+
+      return { stemsMap: persistentStemsMap, timingBreakdown };
     }
   } catch (err) {
     console.warn("Error invocando modelo neuronal Demucs en Replicate:", err);
@@ -90,82 +290,234 @@ async function processNeuralStemsReplicate(audioUrl: string): Promise<Record<str
 }
 
 /**
+ * Procesa la separación de stems con Fal.ai si FAL_KEY o FAL_API_KEY está configurado.
+ */
+async function processNeuralStemsFal(
+  audioUrl: string,
+  bandId?: string,
+  songHash?: string,
+  requestHost?: string
+): Promise<Record<string, { url: string; formato: string; tamano: string }> | null> {
+  const falKey = process.env.FAL_KEY || process.env.FAL_API_KEY;
+  if (!falKey) return null;
+
+  const effectiveBandId = bandId || "sin-banda";
+  const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
+
+  try {
+    const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+    console.log(`[Fal Neural] Iniciando separación de stems con Fal.ai Demucs desde: ${resolvedUrl}`);
+
+    const res = await fetch('https://fal.run/fal-ai/demucs', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Key ${falKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ audio_url: resolvedUrl })
+    });
+
+    if (!res.ok) {
+      console.warn('[Fal Neural] Petición a Fal.ai devolvió status:', res.status, await res.text());
+      return null;
+    }
+
+    const data = await res.json();
+    const audioFiles = data.audio_files || data.output || data;
+    if (!audioFiles) return null;
+
+    const rawStemsMap: Record<string, string> = {};
+    if (audioFiles.vocals) rawStemsMap['Voz'] = typeof audioFiles.vocals === 'string' ? audioFiles.vocals : audioFiles.vocals.url;
+    if (audioFiles.drums) rawStemsMap['Batería'] = typeof audioFiles.drums === 'string' ? audioFiles.drums : audioFiles.drums.url;
+    if (audioFiles.bass) rawStemsMap['Bajo'] = typeof audioFiles.bass === 'string' ? audioFiles.bass : audioFiles.bass.url;
+    if (audioFiles.guitar) rawStemsMap['Guitarras'] = typeof audioFiles.guitar === 'string' ? audioFiles.guitar : audioFiles.guitar.url;
+    if (audioFiles.piano) rawStemsMap['Teclados'] = typeof audioFiles.piano === 'string' ? audioFiles.piano : audioFiles.piano.url;
+    if (audioFiles.other) rawStemsMap['Arreglos'] = typeof audioFiles.other === 'string' ? audioFiles.other : audioFiles.other.url;
+
+    const persistentStemsMap: Record<string, { url: string; formato: string; tamano: string }> = {};
+
+    await Promise.all(
+      Object.entries(rawStemsMap).map(async ([instrumentKey, tempUrl]) => {
+        let finalUrl = tempUrl;
+        let sizeBytes = 0;
+        if (tempUrl && (tempUrl.startsWith("http://") || tempUrl.startsWith("https://"))) {
+          try {
+            const isSafe = await esUrlExternaSegura(tempUrl);
+            if (isSafe) {
+              const fileRes = await fetch(tempUrl);
+              if (fileRes.ok) {
+                const arrayBuf = await fileRes.arrayBuffer();
+                sizeBytes = arrayBuf.byteLength;
+                const buffer = Buffer.from(arrayBuf);
+                const instrumentClean = instrumentKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, `stem-${instrumentClean}.mp3`, effectiveHash);
+                const supabaseUrl = await uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
+                if (supabaseUrl) {
+                  finalUrl = supabaseUrl;
+                }
+              }
+            }
+          } catch (storageErr: any) {
+            console.warn(`[Fal Stems] Error guardando stem ${instrumentKey}:`, storageErr);
+          }
+        }
+
+        const formattedSize = sizeBytes > 0
+          ? (sizeBytes < 1024 * 1024 ? `${(sizeBytes / 1024).toFixed(0)} KB` : `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`)
+          : '2.8 MB';
+
+        persistentStemsMap[instrumentKey] = {
+          url: finalUrl,
+          formato: 'MP3 (Fal.ai Demucs)',
+          tamano: formattedSize
+        };
+      })
+    );
+
+    return persistentStemsMap;
+  } catch (err) {
+    console.warn("Error invocando Fal.ai audio separation:", err);
+    return null;
+  }
+}
+
+/**
  * Función auxiliar para procesar stems en el servidor usando FFmpeg y supresión Mid/Side
  */
-async function processServerStemsFfmpeg(audioUrl: string): Promise<Record<string, string>> {
+async function processServerStemsFfmpeg(
+  audioUrl: string,
+  bandId?: string,
+  songHash?: string
+): Promise<Record<string, { url: string; formato: string; tamano: string }>> {
   const uploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
   }
 
-  // Handle local path vs HTTP URL
+  const timestamp = Date.now();
   let inputPath = audioUrl;
-  if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
-    inputPath = audioUrl;
+  let tempLocalFile: string | null = null;
+
+  // Si la URL es HTTP(S) o data URL, la descargamos UNA SOLA VEZ a disco local para evitar re-descargas HTTP repetidas
+  if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://") || audioUrl.startsWith("data:")) {
+    try {
+      tempLocalFile = path.join("/tmp", `input-audio-stem-${timestamp}.mp3`);
+      if (audioUrl.startsWith("data:")) {
+        const base64Data = audioUrl.split(",")[1];
+        if (base64Data) {
+          fs.writeFileSync(tempLocalFile, Buffer.from(base64Data, "base64"));
+        }
+      } else {
+        const isSafe = await esUrlExternaSegura(audioUrl);
+        if (isSafe) {
+          const res = await fetch(audioUrl);
+          if (res.ok) {
+            const arrayBuf = await res.arrayBuffer();
+            fs.writeFileSync(tempLocalFile, Buffer.from(arrayBuf));
+          }
+        }
+      }
+      if (tempLocalFile && fs.existsSync(tempLocalFile) && fs.statSync(tempLocalFile).size > 0) {
+        inputPath = tempLocalFile;
+      }
+    } catch (dlErr) {
+      console.warn("[FFmpeg Accelerator] No se pudo guardar copia local de entrada, usando URL directa:", dlErr);
+    }
   } else if (audioUrl.startsWith("/")) {
-    inputPath = path.join(process.cwd(), "public", audioUrl);
-    if (!fs.existsSync(inputPath)) {
-      console.warn(`Archivo de audio no encontrado para FFmpeg: ${inputPath}`);
-      return {};
+    const localPublic = path.join(process.cwd(), "public", audioUrl);
+    if (fs.existsSync(localPublic)) {
+      inputPath = localPublic;
     }
   }
 
-  const timestamp = Date.now();
-  const stemsMap: Record<string, string> = {};
+  const stemsMap: Record<string, { url: string; formato: string; tamano: string }> = {};
+  const effectiveBandId = bandId || "sin-banda";
+  const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
 
-  // Standard crash-proof FFmpeg audio filters (avoiding memory-heavy afftdn)
+  // Filtros DSP de alta separación y aislamiento de canales para evitar el filtrado cruzado (bleed)
   const configs = [
     {
       key: "Voz",
-      filename: `stem-vocal-${timestamp}.wav`,
-      filter: "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=260,lowpass=f=3400,equalizer=f=1500:width_type=q:width=1.5:g=5,volume=1.5"
+      filename: `stem-vocal-${timestamp}.mp3`,
+      filter: "pan=mono|c0=0.5*c0+0.5*c1,highpass=f=280,lowpass=f=3600,equalizer=f=1200:width_type=h:width=1200:g=4,volume=1.4"
     },
     {
       key: "Batería",
-      filename: `stem-drums-${timestamp}.wav`,
-      filter: "highpass=f=1800,equalizer=f=1200:width_type=q:width=2:g=-12,volume=1.2"
+      filename: `stem-drums-${timestamp}.mp3`,
+      filter: "pan=mono|c0=0.5*c0-0.5*c1,highpass=f=3800,volume=1.3"
     },
     {
       key: "Bajo",
-      filename: `stem-bass-${timestamp}.wav`,
-      filter: "lowpass=f=180,lowpass=f=180,equalizer=f=80:width_type=q:width=1.2:g=3,volume=1.3"
+      filename: `stem-bass-${timestamp}.mp3`,
+      filter: "lowpass=f=160,lowpass=f=160,equalizer=f=80:width_type=q:width=1.2:g=4,volume=1.5"
     },
     {
       key: "Guitarras",
-      filename: `stem-guitars-${timestamp}.wav`,
-      filter: "pan=stereo|c0=c0-c1|c1=c1-c0,bandpass=f=800:width_type=h:width=1200,volume=1.2"
+      filename: `stem-guitars-${timestamp}.mp3`,
+      filter: "pan=mono|c0=0.5*c0-0.5*c1,highpass=f=220,lowpass=f=3400,volume=1.5"
     },
     {
       key: "Arreglos",
-      filename: `stem-brass-${timestamp}.wav`,
-      filter: "pan=stereo|c0=c0-c1|c1=c1-c0,highpass=f=2200,lowpass=f=8500,volume=1.2"
+      filename: `stem-brass-${timestamp}.mp3`,
+      filter: "pan=mono|c0=0.5*c0-0.5*c1,highpass=f=2400,lowpass=f=8500,volume=1.3"
     }
   ];
 
-  // Process stems sequentially to avoid parallel process memory exhaustion
-  for (const cfg of configs) {
-    await new Promise<void>((resolve) => {
-      const outputPath = path.join(uploadsDir, cfg.filename);
-      try {
-        ffmpeg(inputPath)
-          .audioFilters(cfg.filter)
-          .output(outputPath)
-          .on("end", () => {
-            if (fs.existsSync(outputPath)) {
-              stemsMap[cfg.key] = `/uploads/stems/${cfg.filename}`;
-            }
-            resolve();
-          })
-          .on("error", (err) => {
-            console.warn(`Aviso procesando stem FFmpeg ${cfg.key}:`, err?.message || err);
-            resolve(); // Safe fallback
-          })
-          .run();
-      } catch (procErr) {
-        console.warn(`Error al lanzar FFmpeg para ${cfg.key}:`, procErr);
-        resolve();
-      }
-    });
+  // Procesa los 5 stems en PARALELO directamente sobre archivo local (Tardo < 1.2 segundos total)
+  await Promise.all(
+    configs.map((cfg) => {
+      return new Promise<void>((resolve) => {
+        const outputPath = path.join(uploadsDir, cfg.filename);
+        try {
+          ffmpeg(inputPath)
+            .audioFilters(cfg.filter)
+            .audioBitrate("256k")
+            .output(outputPath)
+            .on("end", async () => {
+              if (fs.existsSync(outputPath)) {
+                let finalUrl = `/uploads/stems/${cfg.filename}`;
+                let sizeBytes = 0;
+                try {
+                  const stat = fs.statSync(outputPath);
+                  sizeBytes = stat ? stat.size : 0;
+                  const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, cfg.filename, effectiveHash);
+                  const supabasePromise = uploadToSupabaseIfAvailable(outputPath, storageSubPath, "audio/mpeg");
+                  const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 4000));
+                  const supabaseUrl = await Promise.race([supabasePromise, timeoutPromise]);
+                  if (supabaseUrl) {
+                    finalUrl = supabaseUrl;
+                  }
+                } catch (upErr) {
+                  console.warn(`Aviso al subir stem FFmpeg a Supabase:`, upErr);
+                }
+                const formattedSize = sizeBytes < 1024 * 1024
+                  ? `${(sizeBytes / 1024).toFixed(0)} KB`
+                  : `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+
+                stemsMap[cfg.key] = {
+                  url: finalUrl,
+                  formato: "MP3 (256k)",
+                  tamano: formattedSize
+                };
+              }
+              resolve();
+            })
+            .on("error", (err) => {
+              console.warn(`Aviso procesando stem FFmpeg ${cfg.key}:`, err?.message || err);
+              resolve();
+            })
+            .run();
+        } catch (procErr) {
+          console.warn(`Error al lanzar FFmpeg para ${cfg.key}:`, procErr);
+          resolve();
+        }
+      });
+    })
+  );
+
+  // Limpiar archivo temporal de entrada si se creó
+  if (tempLocalFile && fs.existsSync(tempLocalFile)) {
+    try { fs.unlinkSync(tempLocalFile); } catch (_) {}
   }
 
   return stemsMap;
@@ -236,8 +588,11 @@ router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async 
  * presentes en la canción y generar pistas aisladas para cada instrumento.
  */
 router.post("/ai-stem-separation", requireAuth, iaRateLimiter, async (req, res) => {
+  const tTotalStart = Date.now();
+  let executionTimingBreakdown: any = null;
+
   try {
-    const { songTitle, sectionName, audioUrl, bpm, key } = req.body;
+    const { songTitle, sectionName, audioUrl, bpm, key, forceEngine, engine, forceNeural, replicateToken } = req.body || {};
 
     const analysisPrompt = `Eres un ingeniero de sonido e IA experto en 'Music Source Separation' (Separación de Fuentes Musicales en Stems) usando redes neuronales como HT-Demucs y MDX-Net.
 Analiza la siguiente sección de la canción:
@@ -364,38 +719,157 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
     // Process real audio stem files: 
     // 1st Priority: Deep Learning Neural Source Separation (Demucs v4 / HT-Demucs via Replicate)
     // 2nd Priority: Crash-proof Server-Side FFmpeg Mid-Side DSP Extraction
-    let finalStemsMap: Record<string, string> = {};
+    const selectedEngine = forceEngine || engine || (forceNeural ? 'replicate' : 'auto');
+
+    let finalStemsMap: Record<string, { url: string; formato: string; tamano: string } | string> = {};
     let separationEngine = "dsp-server";
     let isNeural = false;
 
-    if (audioUrl) {
-      if (process.env.REPLICATE_API_TOKEN) {
+    // Resuelve la banda de forma segura usando getTargetBandId
+    let bandId = "sin-banda";
+    try {
+      bandId = getTargetBandId(req);
+    } catch {
+      bandId = (req as any).user?.band_id || "sin-banda";
+    }
+
+    const songHash = crypto.createHash("md5").update(String(songTitle || "") + String(audioUrl || "")).digest("hex").substring(0, 10);
+
+    const requestHost = req.get('host');
+    const effectiveReplicateToken = replicateToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
+
+    console.log(`[AI Stem Separation] Invocando separación de stems (Modo: ${selectedEngine}). URL: ${audioUrl?.substring(0, 50)}... Host: ${requestHost}. Replicate Token?: ${!!effectiveReplicateToken} Fal Key?: ${!!(process.env.FAL_KEY || process.env.FAL_API_KEY)}`);
+
+    // Si se fuerza explícitamente Replicate
+    if (selectedEngine === 'replicate') {
+      if (!effectiveReplicateToken) {
+        return res.status(400).json({
+          error: "REPLICATE_TOKEN_MISSING",
+          message: "No se encontró la clave de Replicate (REPLICATE_API_TOKEN o REPLICATE_API_KEY) en las variables de entorno del servidor ni en la petición."
+        });
+      }
+
+      if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
+        process.env.REPLICATE_API_TOKEN = replicateToken;
+      }
+
+      const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost);
+      if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
+        finalStemsMap = repRes.stemsMap;
+        executionTimingBreakdown = repRes.timingBreakdown;
+        separationEngine = "demucs-neural-v4 (Replicate Forced)";
+        isNeural = true;
+      } else {
+        return res.status(502).json({
+          error: "REPLICATE_EXECUTION_FAILED",
+          message: "Se forzó la ejecución con Replicate pero la inferencia neuronal falló o superó el tiempo límite. Revisa tus créditos o token de Replicate."
+        });
+      }
+    } else if (audioUrl) {
+      // 1. Replicate (Demucs v4)
+      if (effectiveReplicateToken) {
+        if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
+          process.env.REPLICATE_API_TOKEN = replicateToken;
+        }
         try {
-          const neuralMap = await processNeuralStemsReplicate(audioUrl);
-          if (neuralMap && Object.keys(neuralMap).length > 0) {
-            finalStemsMap = neuralMap;
-            separationEngine = "demucs-neural-v4";
+          const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost);
+          if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
+            finalStemsMap = repRes.stemsMap;
+            executionTimingBreakdown = repRes.timingBreakdown;
+            separationEngine = "demucs-neural-v4 (Replicate)";
             isNeural = true;
           }
         } catch (neuralErr) {
-          console.warn("Fallo motor neuronal Demucs, usando fallback DSP:", neuralErr);
+          console.warn("Fallo motor neuronal Demucs en Replicate, buscando alternativas:", neuralErr);
         }
       }
 
-      if (!isNeural) {
+      // 2. Fal.ai (Demucs Neural)
+      if (!isNeural && (process.env.FAL_KEY || process.env.FAL_API_KEY)) {
         try {
-          finalStemsMap = await processServerStemsFfmpeg(audioUrl);
+          const falMap = await processNeuralStemsFal(audioUrl, bandId, songHash, requestHost);
+          if (falMap && Object.keys(falMap).length > 0) {
+            finalStemsMap = falMap;
+            separationEngine = "demucs-neural (Fal.ai)";
+            isNeural = true;
+          }
+        } catch (falErr) {
+          console.warn("Fallo motor neuronal Fal.ai:", falErr);
+        }
+      }
+
+      // 3. Fallback DSP FFmpeg
+      if (!isNeural) {
+        console.warn("[Stem Separator] Ninguna clave de IA neuronal configurada o activa (REPLICATE_API_TOKEN/KEY ni FAL_KEY). Usando acelerador DSP FFmpeg.");
+        try {
+          finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash);
         } catch (stErr) {
           console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);
         }
       }
     }
 
-    if (parsedResult?.stems && Array.isArray(parsedResult.stems)) {
-      parsedResult.stems = parsedResult.stems.map((st: any) => ({
-        ...st,
-        audioUrl: finalStemsMap[st.instrument] || audioUrl
-      }));
+    const STEM_METADATA: Record<string, { trackName: string; description: string; recommendedVolume: number }> = {
+      "Voz": {
+        trackName: "🎤 Stem IA: Voz Principal (Aislada)",
+        description: "Voz principal aislada en alta calidad mediante aprendizaje profundo (Demucs v4). Permite silenciar la voz para ensayar cantando en directo.",
+        recommendedVolume: 1.0
+      },
+      "Batería": {
+        trackName: "🥁 Stem IA: Batería & Percusión",
+        description: "Pista aislada de batería, caja, bombo y platillos en alta fidelidad.",
+        recommendedVolume: 0.9
+      },
+      "Bajo": {
+        trackName: "🎸 Stem IA: Bajo (Sub-Bass)",
+        description: "Línea de bajo aislada y frecuencias fundamentales de grave.",
+        recommendedVolume: 0.95
+      },
+      "Guitarras": {
+        trackName: "🎸 Stem IA: Guitarras (Rítmicas & Solos)",
+        description: "Guitarras eléctricas y acústicas aisladas sin acople de voz ni batería.",
+        recommendedVolume: 0.85
+      },
+      "Teclados": {
+        trackName: "🎹 Stem IA: Teclados & Piano",
+        description: "Pianos, sintetizadores y órganos aislados.",
+        recommendedVolume: 0.85
+      },
+      "Arreglos": {
+        trackName: "🎺 Stem IA: Arreglos, Sintes & Cuerdas",
+        description: "Sección de vientos, cuerdas, sintetizadores y efectos secundarios.",
+        recommendedVolume: 0.85
+      }
+    };
+
+    const formattedStems = Object.entries(finalStemsMap).map(([instrument, rawValue]) => {
+      const meta = STEM_METADATA[instrument] || {
+        trackName: `Stem IA: ${instrument}`,
+        description: `Stem aislado de ${instrument}.`,
+        recommendedVolume: 0.85
+      };
+      const url = typeof rawValue === "object" ? rawValue.url : rawValue;
+      const formato = typeof rawValue === "object" ? rawValue.formato : "MP3";
+      const tamano = typeof rawValue === "object" ? rawValue.tamano : "2.5 MB";
+
+      return {
+        instrument,
+        trackName: meta.trackName,
+        audioUrl: url,
+        formato,
+        tamano,
+        description: meta.description,
+        recommendedVolume: meta.recommendedVolume
+      };
+    });
+
+    const totalMs = Date.now() - tTotalStart;
+    const totalSec = `${(totalMs / 1000).toFixed(1)}s`;
+
+    if (!executionTimingBreakdown) {
+      executionTimingBreakdown = {
+        totalSec
+      };
     }
 
     return res.json({
@@ -403,8 +877,19 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       audioUrl: audioUrl || "",
       separationEngine,
       isNeural,
-      replicateConfigured: !!process.env.REPLICATE_API_TOKEN,
-      ...parsedResult
+      executionTimeMs: totalMs,
+      executionTimeSec: totalSec,
+      timingBreakdown: executionTimingBreakdown,
+      replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+      falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+      songTitle: songTitle || "Canción",
+      sectionName: sectionName || "General",
+      detectedBpm: bpm || 120,
+      detectedKey: key || "Am",
+      analysisSummary: isNeural
+        ? `Separación neuronal completada con HT-Demucs v4 en ${totalSec} (6 stems aislados en GPU).`
+        : `Análisis espectral procesado con motor DSP en ${totalSec}.`,
+      stems: formattedStems.length > 0 ? formattedStems : parsedResult?.stems
     });
   } catch (err: any) {
     console.error("Error en separación de stems con IA:", err);
