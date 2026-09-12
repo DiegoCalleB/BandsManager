@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import JSZip from 'jszip';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, ThemeColors } from '../../types';
 import {
   Download, Copy, Check, X, FileSpreadsheet, Music, FileText, Code, Printer,
-  Sparkles, Disc3, Clock, Layers, Share2, Info
+  Sparkles, Disc3, Clock, Layers, Share2, Info, Archive, Loader2, AlertCircle, FileCheck
 } from 'lucide-react';
 
 interface ExportAlbumSongsModalProps {
@@ -18,7 +19,7 @@ interface ExportAlbumSongsModalProps {
   onExportAsSetlistPdf?: (albumSongs: Song[], titleName: string) => void;
 }
 
-type ExportFormat = 'csv' | 'm3u' | 'txt' | 'json';
+type ExportFormat = 'zip' | 'csv' | 'm3u' | 'txt' | 'json';
 
 export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   isOpen,
@@ -32,21 +33,28 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   onExportAsSetlistPdf,
 }) => {
   const [selectedAlbum, setSelectedAlbum] = useState<string>(albumName || 'all');
-  const [format, setFormat] = useState<ExportFormat>('csv');
-  const [includeChords, setIncludeChords] = useState(false);
+  const [format, setFormat] = useState<ExportFormat>('zip');
+  const [includeChords, setIncludeChords] = useState(true);
   const [includeAudioUrls, setIncludeAudioUrls] = useState(true);
   const [copied, setCopied] = useState(false);
 
+  // ZIP packaging status
+  const [zipLoading, setZipLoading] = useState(false);
+  const [zipProgress, setZipProgress] = useState<{ current: number; total: number; status: string }>({
+    current: 0,
+    total: 0,
+    status: '',
+  });
+  const [zipError, setZipError] = useState<string | null>(null);
+
   // Sync selected album when albumName prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (albumName) {
       setSelectedAlbum(albumName);
     } else {
       setSelectedAlbum('all');
     }
   }, [albumName, isOpen]);
-
-  if (!isOpen) return null;
 
   // Filter songs by selected album
   const targetSongs = useMemo(() => {
@@ -66,6 +74,11 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       return oA - oB;
     });
   }, [songs, selectedAlbum]);
+
+  // Count songs with actual downloadable audio
+  const songsWithAudio = useMemo(() => {
+    return targetSongs.filter((s) => Boolean(s.audioPrincipalUrl || (s as any).audioUrl));
+  }, [targetSongs]);
 
   // Calculate total duration in seconds and formatted string
   const totalSeconds = useMemo(() => {
@@ -232,26 +245,149 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
         return { content: generateM3uContent(), mimeType: 'audio/x-mpegurl;charset=utf-8;', extension: 'm3u8' };
       case 'json':
         return { content: generateJsonContent(), mimeType: 'application/json;charset=utf-8;', extension: 'json' };
+      case 'zip':
+        return {
+          content: `PAQUETE ZIP DIGITAL CON MP3s + METADATOS\n` +
+            `--------------------------------------------------\n` +
+            `Disco: ${activeTitle}\n` +
+            `Artista: ${bandName}\n` +
+            `Total pistas audio a comprimir: ${songsWithAudio.length} de ${targetSongs.length}\n` +
+            `Incluye: Archivos MP3/WAV, 00_TRACKLIST.txt, 00_DATOS_ALBUM.json` +
+            (includeChords ? `, 00_LETRAS_Y_CIFRADOS.txt` : '') + `\n\n` +
+            `Haz clic en "DESCARGAR ZIP (.ZIP)" para empaquetar y bajar el disco.`,
+          mimeType: 'application/zip;',
+          extension: 'zip'
+        };
       case 'txt':
       default:
         return { content: generateTextContent(), mimeType: 'text/plain;charset=utf-8;', extension: 'txt' };
     }
   };
 
-  const handleDownload = () => {
+  // Handle standard text/CSV/M3U/JSON download
+  const handleDownloadStandard = () => {
     const { content, mimeType, extension } = getContentForFormat();
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     const safeAlbumName = activeTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const safeBandName = bandName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    
+
     link.href = url;
     link.download = `${safeBandName}_${safeAlbumName}_canciones.${extension}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  // Handle ZIP bundle creation with JSZip
+  const handleDownloadZip = async () => {
+    if (zipLoading) return;
+    setZipLoading(true);
+    setZipError(null);
+
+    try {
+      const zip = new JSZip();
+      const safeAlbumName = activeTitle.replace(/[^a-z0-9_\-]/gi, '_');
+      const safeBandName = bandName.replace(/[^a-z0-9_\-]/gi, '_');
+      const folderName = `${safeBandName}_${safeAlbumName}`;
+      const folder = zip.folder(folderName) || zip;
+
+      // 1. Add Tracklist TXT file
+      folder.file('00_TRACKLIST.txt', generateTextContent());
+
+      // 2. Add Album metadata JSON file
+      folder.file('00_DATOS_ALBUM.json', generateJsonContent());
+
+      // 3. Add M3U playlist file
+      folder.file('00_PLAYLIST.m3u8', generateM3uContent());
+
+      // 4. Add Chords/Lyrics document if enabled
+      if (includeChords) {
+        const chordsContent = targetSongs
+          .filter((s) => s.cifradoTexto)
+          .map((s, idx) => `==================================================\nTRACK ${String(idx + 1).padStart(2, '0')}: ${s.titulo.toUpperCase()}\n==================================================\n\n${s.cifradoTexto}`)
+          .join('\n\n\n');
+        if (chordsContent) {
+          folder.file('00_LETRAS_Y_CIFRADOS.txt', chordsContent);
+        }
+      }
+
+      // 5. Fetch and add audio MP3/WAV files
+      const audioTargets = targetSongs
+        .map((s, idx) => {
+          const audioUrl = s.audioPrincipalUrl || (s as any).audioUrl;
+          return { song: s, trackIndex: idx + 1, audioUrl };
+        })
+        .filter((t) => Boolean(t.audioUrl));
+
+      if (audioTargets.length === 0) {
+        setZipProgress({ current: 0, total: 0, status: 'Empaquetando metadatos del disco en ZIP...' });
+      }
+
+      for (let i = 0; i < audioTargets.length; i++) {
+        const target = audioTargets[i];
+        const numStr = String(target.trackIndex).padStart(2, '0');
+        const cleanTitle = target.song.titulo.replace(/[^a-z0-9_\-]/gi, '_');
+
+        setZipProgress({
+          current: i + 1,
+          total: audioTargets.length,
+          status: `Descargando audio (${i + 1}/${audioTargets.length}): "${target.song.titulo}"...`,
+        });
+
+        try {
+          const response = await fetch(target.audioUrl!);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const blob = await response.blob();
+
+          let ext = 'mp3';
+          const lowerUrl = target.audioUrl!.toLowerCase();
+          if (lowerUrl.includes('.wav')) ext = 'wav';
+          else if (lowerUrl.includes('.ogg')) ext = 'ogg';
+          else if (lowerUrl.includes('.m4a')) ext = 'm4a';
+          else if (lowerUrl.includes('.flac')) ext = 'flac';
+
+          folder.file(`${numStr}_${cleanTitle}.${ext}`, blob);
+        } catch (err) {
+          console.warn(`Error al descargar audio para ${target.song.titulo}:`, err);
+          folder.file(
+            `${numStr}_${cleanTitle}_NOTA_AUDIO.txt`,
+            `No se pudo descargar directamente el archivo de audio para "${target.song.titulo}".\nEnlace original: ${target.audioUrl}`
+          );
+        }
+      }
+
+      setZipProgress({
+        current: audioTargets.length,
+        total: audioTargets.length,
+        status: 'Comprimiendo carpeta y generando archivo .ZIP...',
+      });
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' }, (metadata) => {
+        setZipProgress((prev) => ({
+          ...prev,
+          status: `Empaquetando ZIP (${Math.round(metadata.percent)}%)...`,
+        }));
+      });
+
+      const downloadUrl = URL.createObjectURL(zipBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `${safeBandName}_${safeAlbumName}_mp3.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+
+      setZipProgress({ current: 0, total: 0, status: '' });
+    } catch (err: any) {
+      console.error('Error al generar archivo ZIP:', err);
+      setZipError(err?.message || 'Error al empaquetar el disco en ZIP.');
+    } finally {
+      setZipLoading(false);
+    }
   };
 
   const handleCopyClipboard = () => {
@@ -267,6 +403,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       onClose();
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <ModalPortal>
@@ -289,7 +427,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   Exportar Canciones del Disco
                 </h2>
                 <p className="text-xs text-neutral-400 truncate">
-                  Exporta tu tracklist a Excel, M3U playlist, TXT o imprime en PDF
+                  Descarga los audios MP3 en ZIP, Excel, M3U playlist o imprime PDF
                 </p>
               </div>
             </div>
@@ -339,7 +477,27 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
               <label className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
                 Formato de Exportación
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {/* ZIP MP3 Bundle (Highlight) */}
+                <button
+                  type="button"
+                  onClick={() => setFormat('zip')}
+                  className={`p-3 rounded-2xl border text-left transition-all flex flex-col gap-1.5 cursor-pointer relative col-span-2 sm:col-span-1 ${
+                    format === 'zip'
+                      ? 'bg-gradient-to-br from-[#1db954]/30 to-emerald-900/40 border-[#1db954] text-white shadow-lg ring-1 ring-[#1ed760]/40'
+                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20'
+                  }`}
+                >
+                  <Archive className={`w-5 h-5 ${format === 'zip' ? 'text-[#1ed760]' : 'text-emerald-400'}`} />
+                  <div>
+                    <div className="text-xs font-extrabold flex items-center gap-1">
+                      <span>ZIP MP3s</span>
+                      <span className="px-1 bg-[#1ed760] text-black text-[9px] font-black rounded uppercase">Pack</span>
+                    </div>
+                    <div className="text-[10px] opacity-80">Audios + letras</div>
+                  </div>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setFormat('csv')}
@@ -352,7 +510,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   <FileSpreadsheet className={`w-5 h-5 ${format === 'csv' ? 'text-[#1ed760]' : 'text-emerald-400'}`} />
                   <div>
                     <div className="text-xs font-bold">Excel / CSV</div>
-                    <div className="text-[10px] opacity-70">Tabla compatible</div>
+                    <div className="text-[10px] opacity-70">Tabla de datos</div>
                   </div>
                 </button>
 
@@ -368,7 +526,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   <Music className={`w-5 h-5 ${format === 'm3u' ? 'text-[#1ed760]' : 'text-sky-400'}`} />
                   <div>
                     <div className="text-xs font-bold">Playlist M3U</div>
-                    <div className="text-[10px] opacity-70">VLC / Reproductores</div>
+                    <div className="text-[10px] opacity-70">VLC / Reprod.</div>
                   </div>
                 </button>
 
@@ -383,8 +541,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 >
                   <FileText className={`w-5 h-5 ${format === 'txt' ? 'text-[#1ed760]' : 'text-amber-400'}`} />
                   <div>
-                    <div className="text-xs font-bold">Texto / Lista</div>
-                    <div className="text-[10px] opacity-70">WhatsApp / Dossier</div>
+                    <div className="text-xs font-bold">Texto TXT</div>
+                    <div className="text-[10px] opacity-70">Lista limpia</div>
                   </div>
                 </button>
 
@@ -400,15 +558,34 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   <Code className={`w-5 h-5 ${format === 'json' ? 'text-[#1ed760]' : 'text-purple-400'}`} />
                   <div>
                     <div className="text-xs font-bold">JSON Data</div>
-                    <div className="text-[10px] opacity-70">Copia de seguridad</div>
+                    <div className="text-[10px] opacity-70">Backup</div>
                   </div>
                 </button>
               </div>
             </div>
 
+            {/* Audio Availability Banner (for ZIP mode) */}
+            {format === 'zip' && (
+              <div className="p-3.5 rounded-2xl bg-[#1db954]/10 border border-[#1db954]/30 flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2 text-emerald-300">
+                  <Music className="w-4 h-4 text-[#1ed760] shrink-0" />
+                  <span>
+                    Audios listos para comprimir:{' '}
+                    <strong className="text-white font-mono">{songsWithAudio.length}</strong> de{' '}
+                    <strong className="text-white font-mono">{targetSongs.length}</strong> temas
+                  </span>
+                </div>
+                {songsWithAudio.length < targetSongs.length && (
+                  <span className="text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20 shrink-0">
+                    {targetSongs.length - songsWithAudio.length} sin MP3 subido
+                  </span>
+                )}
+              </div>
+            )}
+
             {/* 3. Export Options / Toggles */}
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2.5">
-              <span className="text-xs font-semibold text-neutral-300">Opciones adicionales de exportación:</span>
+              <span className="text-xs font-semibold text-neutral-300">Contenido a incluir en la exportación:</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
@@ -417,7 +594,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                     onChange={(e) => setIncludeAudioUrls(e.target.checked)}
                     className="w-4 h-4 rounded accent-[#1db954] cursor-pointer"
                   />
-                  <span>Incluir enlaces de audio demo MP3/WAV</span>
+                  <span>Enlaces directos de audios demo</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -427,10 +604,43 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                     onChange={(e) => setIncludeChords(e.target.checked)}
                     className="w-4 h-4 rounded accent-[#1db954] cursor-pointer"
                   />
-                  <span>Incluir cifrado y letra de los temas</span>
+                  <span>Documento de letras y cifrados de guitarra/bajo</span>
                 </label>
               </div>
             </div>
+
+            {/* ZIP Progress Bar */}
+            {zipLoading && (
+              <div className="p-4 rounded-2xl bg-emerald-950/60 border border-emerald-500/40 space-y-2 animate-in fade-in">
+                <div className="flex items-center justify-between text-xs font-medium text-emerald-300">
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 text-[#1ed760] animate-spin" />
+                    <span>{zipProgress.status || 'Procesando paquete ZIP...'}</span>
+                  </span>
+                  {zipProgress.total > 0 && (
+                    <span className="font-mono text-emerald-400 font-bold">
+                      {Math.round((zipProgress.current / zipProgress.total) * 100)}%
+                    </span>
+                  )}
+                </div>
+                {zipProgress.total > 0 && (
+                  <div className="w-full h-2 bg-neutral-900 rounded-full overflow-hidden border border-emerald-500/30">
+                    <div
+                      className="h-full bg-gradient-to-r from-[#1db954] to-[#1ed760] transition-all duration-300 rounded-full"
+                      style={{ width: `${Math.round((zipProgress.current / zipProgress.total) * 100)}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ZIP Error Alert */}
+            {zipError && (
+              <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-xs text-rose-300 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>{zipError}</span>
+              </div>
+            )}
 
             {/* 4. Live Preview Box */}
             <div className="space-y-1.5">
@@ -440,9 +650,13 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                   formato .{getContentForFormat().extension}
                 </span>
               </div>
-              <div className={`p-3 rounded-2xl border font-mono text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
-                isStitchLight ? 'bg-slate-100 border-slate-300 text-slate-800' : 'bg-neutral-950 border-neutral-800 text-emerald-400/90'
-              }`}>
+              <div
+                className={`p-3 rounded-2xl border font-mono text-xs max-h-44 overflow-y-auto custom-scrollbar select-all ${
+                  isStitchLight
+                    ? 'bg-slate-100 border-slate-300 text-slate-800'
+                    : 'bg-neutral-950 border-neutral-800 text-emerald-400/90'
+                }`}
+              >
                 <pre className="whitespace-pre-wrap break-all leading-relaxed">
                   {getContentForFormat().content.slice(0, 1200)}
                   {getContentForFormat().content.length > 1200 && '\n... (vista previa truncada)'}
@@ -484,14 +698,35 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
                 )}
               </button>
 
-              <button
-                type="button"
-                onClick={handleDownload}
-                className="px-5 py-2.5 rounded-2xl bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95"
-              >
-                <Download className="w-4 h-4" />
-                <span>Descargar .{getContentForFormat().extension.toUpperCase()}</span>
-              </button>
+              {format === 'zip' ? (
+                <button
+                  type="button"
+                  disabled={zipLoading}
+                  onClick={handleDownloadZip}
+                  className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#1db954] to-[#1ed760] hover:from-[#1ed760] hover:to-[#1db954] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-50"
+                >
+                  {zipLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-black" />
+                      <span>Empaquetando ZIP...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Archive className="w-4 h-4" />
+                      <span>DESCARGAR DISCO EN ZIP (.ZIP)</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleDownloadStandard}
+                  className="px-5 py-2.5 rounded-2xl bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer hover:scale-105 active:scale-95"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Descargar .{getContentForFormat().extension.toUpperCase()}</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

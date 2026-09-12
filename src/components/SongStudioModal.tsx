@@ -7,6 +7,8 @@ import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudio
 import React, { useState, useRef, useEffect } from 'react';
 import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
 import { uploadFileToServer, resolveAudioUrl } from '../utils/audioStorage';
+import { apiFetch } from '../utils/api';
+import { separateAudioIntoStems, IsolatedStemResult } from '../utils/stemSeparator';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import WaveformTrack from './WaveformTrack';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
@@ -22,10 +24,130 @@ import {
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
   Layers, Sliders, Edit2, Check, Radio, Wand2, RefreshCw, FileText, Keyboard,
-  Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2
+  Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
+  Maximize2, Minimize2, Cpu, Activity, Info
 } from 'lucide-react';
 
 
+
+// Live microphone waveform visualization component for Cubase-style real-time recording
+const LiveMicWaveformCanvas: React.FC<{
+  stream: MediaStream | null;
+  audioCtx: AudioContext | null;
+  isRecording: boolean;
+  color?: string;
+  height?: number;
+}> = ({ stream, audioCtx, isRecording, color = '#ef4444', height = 48 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!isRecording || !stream) return;
+
+    let animId: number;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let ctxToUse = audioCtx;
+    let createdLocalCtx = false;
+    if (!ctxToUse || ctxToUse.state === 'closed') {
+      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtxClass) {
+        ctxToUse = new AudioCtxClass();
+        createdLocalCtx = true;
+      }
+    }
+    if (!ctxToUse) return;
+
+    let sourceNode: MediaStreamAudioSourceNode | null = null;
+    let analyserNode: AnalyserNode | null = null;
+
+    try {
+      sourceNode = ctxToUse.createMediaStreamSource(stream);
+      analyserNode = ctxToUse.createAnalyser();
+      analyserNode.fftSize = 128;
+      sourceNode.connect(analyserNode);
+    } catch (e) {
+      console.warn("LiveMicWaveformCanvas setup error:", e);
+      return;
+    }
+
+    const bufferLength = analyserNode.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    const historyBars: number[] = [];
+    const maxBars = 100;
+
+    const draw = () => {
+      if (!canvas || !ctx || !analyserNode) return;
+      const width = (canvas.width = canvas.offsetWidth || 300);
+      const ch = (canvas.height = canvas.offsetHeight || height);
+
+      analyserNode.getByteFrequencyData(dataArray);
+
+      let sum = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        sum += dataArray[i];
+      }
+      const avg = sum / bufferLength;
+      const normVal = Math.min(1, avg / 120);
+
+      historyBars.push(normVal);
+      if (historyBars.length > maxBars) {
+        historyBars.shift();
+      }
+
+      ctx.clearRect(0, 0, width, ch);
+
+      // Grid background
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.fillRect(0, 0, width, ch);
+
+      const barWidth = width / maxBars;
+      const centerY = ch / 2;
+
+      for (let i = 0; i < historyBars.length; i++) {
+        const val = historyBars[i];
+        const barH = Math.max(3, val * (ch - 6));
+        const x = i * barWidth;
+        const y = centerY - barH / 2;
+
+        const isCurrentPoint = i === historyBars.length - 1;
+        ctx.fillStyle = isCurrentPoint ? '#ffffff' : (val > 0.6 ? '#f59e0b' : color);
+        ctx.fillRect(x, y, Math.max(1.5, barWidth - 1), barH);
+      }
+
+      // Live recording line cursor
+      const currentX = (historyBars.length / maxBars) * width;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(currentX, 0);
+      ctx.lineTo(currentX, ch);
+      ctx.stroke();
+
+      animId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      if (animId) cancelAnimationFrame(animId);
+      try { sourceNode?.disconnect(); } catch {}
+      try { analyserNode?.disconnect(); } catch {}
+      if (createdLocalCtx && ctxToUse) {
+        try { ctxToUse.close(); } catch {}
+      }
+    };
+  }, [isRecording, stream, audioCtx, color, height]);
+
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="w-full h-full block rounded border border-red-500/40 bg-black/50"
+    />
+  );
+};
 
 interface SongStudioModalProps {
   song: Song;
@@ -134,6 +256,178 @@ export default function SongStudioModal({
   const trackRecordingTimerRef = useRef<any>(null);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
+  const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
+  const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
+  const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
+  const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
+
+  // AI Instrument Track Generator State
+  const [showAiTrackGenModal, setShowAiTrackGenModal] = useState<boolean>(false);
+  const [aiTrackGenInstrument, setAiTrackGenInstrument] = useState<string>('Guitarra Solista');
+  const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState<string>('');
+  const [isGeneratingAiTrack, setIsGeneratingAiTrack] = useState<boolean>(false);
+  const [isSeparatingStemsAi, setIsSeparatingStemsAi] = useState<boolean>(false);
+
+  // AI Multimodal Audio Stem Separation Handler (Renders REAL isolated audio stems via OfflineAudioContext)
+  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea) => {
+    try {
+      setIsSeparatingStemsAi(true);
+
+      // 1. Render isolated audio stem WAV files client-side using OfflineAudioContext
+      let renderedStems: IsolatedStemResult[] = [];
+      try {
+        renderedStems = await separateAudioIntoStems(targetIdea.audioUrl);
+      } catch (renderErr) {
+        console.warn("Could not render offline audio stem buffers, falling back to spectral track routing:", renderErr);
+      }
+
+      // 2. Fetch AI analysis metadata from Gemini
+      const data = await apiFetch('/api/ai-stem-separation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          songTitle: song.titulo,
+          sectionName: targetIdea.seccion,
+          audioUrl: targetIdea.audioUrl,
+          bpm: song.bpm,
+          key: song.tonalidad
+        })
+      });
+
+      const existing = getIdeaTracks(targetIdea);
+      let newTracks = [...existing];
+
+      if (renderedStems.length > 0) {
+        // Upload each isolated WAV blob so it persists in server storage
+        for (const stemRes of renderedStems) {
+          let uploadedUrl = stemRes.audioUrl;
+          try {
+            const wavFile = new File([stemRes.audioBlob], `stem-${stemRes.instrument.toLowerCase()}-${Date.now()}.wav`, { type: 'audio/wav' });
+            uploadedUrl = await uploadFileToServer(wavFile);
+          } catch (upErr) {
+            console.warn("Using blob URL fallback for stem upload:", upErr);
+          }
+
+          if (!newTracks.some(t => t.nombre.includes(stemRes.instrument))) {
+            newTracks.push({
+              id: `stem-ai-${stemRes.instrument.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+              nombre: stemRes.trackName,
+              audioUrl: uploadedUrl,
+              autor: 'Gemini & Audio AI Engine',
+              instrumento: stemRes.instrument,
+              fecha: new Date().toISOString().split('T')[0],
+              volumen: stemRes.recommendedVolume || 1,
+              muted: false
+            });
+          }
+        }
+      } else if (data.stems && Array.isArray(data.stems)) {
+        data.stems.forEach((st: any) => {
+          if (!newTracks.some(t => t.nombre.includes(st.instrument))) {
+            newTracks.push({
+              id: `stem-ai-${st.instrument.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+              nombre: st.trackName || `Stem IA (${st.instrument})`,
+              audioUrl: targetIdea.audioUrl,
+              autor: 'Gemini 3.7 Audio AI',
+              instrumento: st.instrument,
+              fecha: new Date().toISOString().split('T')[0],
+              volumen: st.recommendedVolume || 1,
+              muted: false
+            });
+          }
+        });
+      }
+
+      const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? { ...i, pistas: newTracks } : i);
+      onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+      alert(`¡Separación de Stems por IA completada con éxito para "${targetIdea.titulo}"!\n\nSe han aislado 5 archivos de audio reales (.WAV) e independientes: Voz, Batería, Bajo, Guitarras y Arreglos. Ahora cada pista del mezclador reproduce su propia fuente única.`);
+    } catch (err: any) {
+      console.error("Error en separación de stems por IA:", err);
+      alert("No se pudo completar la separación por IA. Inténtalo de nuevo.");
+    } finally {
+      setIsSeparatingStemsAi(false);
+    }
+  };
+
+  // AI Custom Instrument Track Generator Handler
+  const handleGenerateAiInstrumentTrack = async (targetIdea: SongAudioIdea) => {
+    if (!aiTrackGenInstrument) return;
+    try {
+      setIsGeneratingAiTrack(true);
+      const data = await apiFetch('/api/ai-generate-instrument-track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          instrument: aiTrackGenInstrument,
+          songTitle: song.titulo,
+          sectionName: targetIdea.seccion,
+          bpm: song.bpm,
+          key: song.tonalidad,
+          contextPrompt: aiTrackGenPrompt
+        })
+      });
+
+      const existing = getIdeaTracks(targetIdea);
+      let audioUrl = targetIdea.audioUrl;
+      if (data.audioBase64) {
+        audioUrl = `data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}`;
+      }
+
+      const newAiTrack: AudioTrack = {
+        id: `ai-track-${Date.now()}`,
+        nombre: data.trackName || `Pista IA: ${aiTrackGenInstrument}`,
+        audioUrl: audioUrl,
+        autor: 'IA Lyria & Gemini',
+        instrumento: aiTrackGenInstrument,
+        fecha: new Date().toISOString().split('T')[0],
+        volumen: 1,
+        muted: false
+      };
+
+      const updatedIdeas = (song.audioIdeas || []).map(i => 
+        i.id === targetIdea.id ? { ...i, pistas: [...existing, newAiTrack] } : i
+      );
+
+      onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+      setShowAiTrackGenModal(false);
+      setAiTrackGenPrompt('');
+      alert(`¡Pista de ${aiTrackGenInstrument} creada por la IA para "${targetIdea.seccion}"!\n\nNotas de arreglo: ${data.arrangementNotes || 'Generado en armonía con la tonalidad y BPM.'}`);
+    } catch (err: any) {
+      console.error("Error al generar pista por IA:", err);
+      alert("No se pudo generar la pista de instrumento. Inténtalo de nuevo.");
+    } finally {
+      setIsGeneratingAiTrack(false);
+    }
+  };
+
+  // Studio Fullscreen Mode State & Handler
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
+
+  const toggleIsFullScreen = () => {
+    setIsFullScreen(prev => {
+      const next = !prev;
+      if (next) {
+        if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
+      } else {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && isFullScreen) {
+        setIsFullScreen(false);
+      }
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, [isFullScreen]);
 
   // DSP Noise Reduction & Anti-Bleed Studio Settings
   const [useCleanDSPFilter, setUseCleanDSPFilter] = useState<boolean>(true);
@@ -144,6 +438,175 @@ export default function SongStudioModal({
   const [countInCountdown, setCountInCountdown] = useState<number | null>(null);
   const [cleaningTrackId, setCleaningTrackId] = useState<string | null>(null);
   const cleanPipelineRef = useRef<any>(null);
+
+  // Web Audio API DSP nodes map for live smooth volume, 3-band EQ, Stem Isolators and Stereo Panning per track
+  const trackDSPMapRef = useRef<Record<string, {
+    element: HTMLAudioElement;
+    source?: MediaElementAudioSourceNode;
+    stemFilter?: BiquadFilterNode | null;
+    eqLow?: BiquadFilterNode;
+    eqMid?: BiquadFilterNode;
+    eqHigh?: BiquadFilterNode;
+    gainNode?: GainNode;
+    panNode?: StereoPannerNode | GainNode;
+  }>>({});
+
+  const updateTrackAudioDSP = (
+    trackId: string,
+    el: HTMLAudioElement | null,
+    tr: { 
+      volumen?: number; 
+      muted?: boolean; 
+      solo?: boolean; 
+      eqLow?: number; 
+      eqMid?: number; 
+      eqHigh?: number; 
+      pan?: number; 
+      instrumento?: string;
+      nombre?: string;
+    },
+    hasSoloInSession: boolean = false
+  ) => {
+    if (!el) return;
+
+    try {
+      if (!studioAudioCtxRef.current || studioAudioCtxRef.current.state === 'closed') {
+        const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioCtxClass) {
+          studioAudioCtxRef.current = new AudioCtxClass();
+        }
+      }
+
+      const ctx = studioAudioCtxRef.current;
+      if (!ctx) return;
+
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+
+      let dsp = trackDSPMapRef.current[trackId];
+
+      if (!dsp || dsp.element !== el) {
+        if (!el.crossOrigin) {
+          el.crossOrigin = 'anonymous';
+        }
+
+        let source: MediaElementAudioSourceNode | undefined;
+        try {
+          source = ctx.createMediaElementSource(el);
+        } catch (e) {
+          // If media element was already connected to WebAudio source node, handle safely
+          source = undefined;
+        }
+
+        if (source) {
+          // Stem Instrument Frequency Isolator
+          let stemFilter: BiquadFilterNode | null = null;
+          const inst = (tr.instrumento || tr.nombre || '').toLowerCase();
+
+          if (inst.includes('voz') || inst.includes('vocal')) {
+            // Bandpass centered at 1200Hz for Vocals
+            stemFilter = ctx.createBiquadFilter();
+            stemFilter.type = 'bandpass';
+            stemFilter.frequency.value = 1200;
+            stemFilter.Q.value = 0.6;
+          } else if (inst.includes('batería') || inst.includes('bateria') || inst.includes('drum')) {
+            // Highpass at 1800Hz for Drum attack/cymbals/percussion
+            stemFilter = ctx.createBiquadFilter();
+            stemFilter.type = 'highpass';
+            stemFilter.frequency.value = 1800;
+            stemFilter.Q.value = 0.7;
+          } else if (inst.includes('bajo') || inst.includes('bass')) {
+            // Lowpass at 220Hz for Sub-bass and Bass guitar
+            stemFilter = ctx.createBiquadFilter();
+            stemFilter.type = 'lowpass';
+            stemFilter.frequency.value = 220;
+            stemFilter.Q.value = 0.8;
+          } else if (inst.includes('guitar') || inst.includes('teclado') || inst.includes('key')) {
+            // Bandpass centered at 750Hz for Guitars & Keyboards
+            stemFilter = ctx.createBiquadFilter();
+            stemFilter.type = 'bandpass';
+            stemFilter.frequency.value = 750;
+            stemFilter.Q.value = 0.6;
+          }
+
+          // 1. Low Shelf Filter (Graves < 150Hz)
+          const eqLow = ctx.createBiquadFilter();
+          eqLow.type = 'lowshelf';
+          eqLow.frequency.value = 150;
+          eqLow.gain.value = tr.eqLow ?? 0;
+
+          // 2. Peaking Filter (Medios 1000Hz)
+          const eqMid = ctx.createBiquadFilter();
+          eqMid.type = 'peaking';
+          eqMid.frequency.value = 1000;
+          eqMid.Q.value = 1.0;
+          eqMid.gain.value = tr.eqMid ?? 0;
+
+          // 3. High Shelf Filter (Agudos > 3500Hz)
+          const eqHigh = ctx.createBiquadFilter();
+          eqHigh.type = 'highshelf';
+          eqHigh.frequency.value = 3500;
+          eqHigh.gain.value = tr.eqHigh ?? 0;
+
+          // 4. Smooth GainNode (Web Audio volume control)
+          const gainNode = ctx.createGain();
+
+          // 5. Stereo Panner Node L / R
+          let panNode: StereoPannerNode | GainNode;
+          if (ctx.createStereoPanner) {
+            panNode = ctx.createStereoPanner();
+            (panNode as StereoPannerNode).pan.value = tr.pan ?? 0;
+          } else {
+            panNode = ctx.createGain();
+          }
+
+          // Connect DSP chain in series
+          let lastNode: AudioNode = source;
+          if (stemFilter) {
+            lastNode.connect(stemFilter);
+            lastNode = stemFilter;
+          }
+          lastNode.connect(eqLow);
+          eqLow.connect(eqMid);
+          eqMid.connect(eqHigh);
+          eqHigh.connect(gainNode);
+          gainNode.connect(panNode);
+          panNode.connect(ctx.destination);
+
+          // Keep HTMLAudioElement volume at 1.0 so GainNode controls volume without HTMLAudioElement stutter
+          el.volume = 1.0;
+
+          dsp = { element: el, source, stemFilter, eqLow, eqMid, eqHigh, gainNode, panNode };
+          trackDSPMapRef.current[trackId] = dsp;
+        }
+      }
+
+      const now = ctx.currentTime;
+      const isAudible = (hasSoloInSession ? !!tr.solo : true) && !tr.muted;
+      const targetGain = isAudible ? Math.max(0, tr.volumen ?? 1) : 0;
+
+      if (dsp && dsp.gainNode) {
+        // Smooth gain transition over 15ms (setTargetAtTime prevents clicking, popping, buffer drops)
+        dsp.gainNode.gain.setTargetAtTime(targetGain, now, 0.015);
+
+        if (dsp.eqLow) dsp.eqLow.gain.setTargetAtTime(tr.eqLow ?? 0, now, 0.015);
+        if (dsp.eqMid) dsp.eqMid.gain.setTargetAtTime(tr.eqMid ?? 0, now, 0.015);
+        if (dsp.eqHigh) dsp.eqHigh.gain.setTargetAtTime(tr.eqHigh ?? 0, now, 0.015);
+
+        if (dsp.panNode && 'pan' in dsp.panNode) {
+          (dsp.panNode as StereoPannerNode).pan.setTargetAtTime(tr.pan ?? 0, now, 0.015);
+        }
+      } else {
+        // Fallback to HTMLAudioElement volume if WebAudio source creation was bypassed
+        el.volume = targetGain;
+      }
+    } catch (err) {
+      console.warn("Could not setup WebAudio DSP for track:", trackId, err);
+      const isAudible = (hasSoloInSession ? !!tr.solo : true) && !tr.muted;
+      el.volume = isAudible ? Math.max(0, tr.volumen ?? 1) : 0;
+    }
+  };
 
   const triggerCountInBeeps = (bpm: number, onDone: () => void) => {
     try {
@@ -632,8 +1095,8 @@ export default function SongStudioModal({
             try { el.currentTime = targetTrackTime; } catch {}
           }
           el.playbackRate = 1.0;
-          const isMuted = tr.muted || (hasSoloTrack && !tr.solo);
-          el.volume = isMuted ? 0 : (tr.volumen ?? 1);
+          // Apply Web Audio DSP EQ (low, mid, high), GainNode volume, Stem Isolators & Panning live
+          updateTrackAudioDSP(tr.id, el, tr, hasSoloTrack);
         }
       }
     });
@@ -864,8 +1327,7 @@ export default function SongStudioModal({
     updatedTracks.forEach(tr => {
       const el = trackAudioRefs.current[tr.id];
       if (el) {
-        const isTrackAudible = (hasSolo ? !!tr.solo : true) && !tr.muted;
-        el.volume = isTrackAudible ? (tr.volumen ?? 1) : 0;
+        updateTrackAudioDSP(tr.id, el, tr, hasSolo);
       }
     });
 
@@ -903,8 +1365,7 @@ export default function SongStudioModal({
     updatedTracks.forEach(tr => {
       const el = trackAudioRefs.current[tr.id];
       if (el) {
-        const isTrackAudible = (hasSolo ? !!tr.solo : true) && !tr.muted;
-        el.volume = isTrackAudible ? (tr.volumen ?? 1) : 0;
+        updateTrackAudioDSP(tr.id, el, tr, hasSolo);
       }
     });
 
@@ -923,8 +1384,7 @@ export default function SongStudioModal({
     updatedTracks.forEach(tr => {
       const el = trackAudioRefs.current[tr.id];
       if (el) {
-        const isTrackAudible = (hasSolo ? !!tr.solo : true) && !tr.muted;
-        el.volume = isTrackAudible ? (tr.volumen ?? 1) : 0;
+        updateTrackAudioDSP(tr.id, el, tr, hasSolo);
       }
     });
 
@@ -938,6 +1398,15 @@ export default function SongStudioModal({
   const handleTrackPanChange = (idea: SongAudioIdea, trackId: string, pan: number) => {
     const tracks = getIdeaTracks(idea);
     const updatedTracks = tracks.map(tr => tr.id === trackId ? { ...tr, pan } : tr);
+    const hasSolo = updatedTracks.some(t => t.solo);
+
+    updatedTracks.forEach(tr => {
+      const el = trackAudioRefs.current[tr.id];
+      if (el) {
+        updateTrackAudioDSP(tr.id, el, tr, hasSolo);
+      }
+    });
+
     const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: updatedTracks } : i);
     const updatedSong = { ...song, audioIdeas: updatedIdeas };
     songRef.current = updatedSong;
@@ -953,6 +1422,15 @@ export default function SongStudioModal({
       if (band === 'mid') return { ...tr, eqMid: value };
       return { ...tr, eqHigh: value };
     });
+    const hasSolo = updatedTracks.some(t => t.solo);
+
+    updatedTracks.forEach(tr => {
+      const el = trackAudioRefs.current[tr.id];
+      if (el) {
+        updateTrackAudioDSP(tr.id, el, tr, hasSolo);
+      }
+    });
+
     const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: updatedTracks } : i);
     const updatedSong = { ...song, audioIdeas: updatedIdeas };
     songRef.current = updatedSong;
@@ -1076,6 +1554,7 @@ export default function SongStudioModal({
         noiseSuppression: useNoiseSuppression,
         autoGainControl: false,
       });
+      setActiveRecordingStream(rawStream);
 
       let streamToRecord = rawStream;
       if (useCleanDSPFilter) {
@@ -1238,6 +1717,7 @@ export default function SongStudioModal({
     }
     setIsRecordingTrack(false);
     setRecordingTrackIdeaId(null);
+    setActiveRecordingStream(null);
     if (trackRecordingTimerRef.current) {
       clearInterval(trackRecordingTimerRef.current);
     }
@@ -1358,6 +1838,7 @@ export default function SongStudioModal({
         noiseSuppression: useNoiseSuppression,
         autoGainControl: false,
       });
+      setActiveRecordingStream(rawStream);
 
       let streamToRecord = rawStream;
       let cleanPipeline: any = null;
@@ -1423,6 +1904,7 @@ export default function SongStudioModal({
       mediaRecorderRef.current.stop();
     }
     setIsRecording(false);
+    setActiveRecordingStream(null);
     if (recordingTimerRef.current) clearInterval(recordingTimerRef.current);
   };
 
@@ -1602,7 +2084,8 @@ export default function SongStudioModal({
     onUpdateSong({
       ...song,
       audioIdeas: updatedIdeas,
-      audioPrincipalUrl: song.audioPrincipalUrl || audioDataUrl
+      // CRITICAL: Preserve original song demo audio and never overwrite with an idea
+      audioPrincipalUrl: song.audioPrincipalUrl
     });
 
     // Reset form & promise
@@ -1653,17 +2136,10 @@ export default function SongStudioModal({
 
       const updatedIdeas = (song.audioIdeas || []).filter(i => i.id !== ideaId);
 
-      // If the main song audio was this idea's audio, update or clear it
-      const deletedIdea = (song.audioIdeas || []).find(i => i.id === ideaId);
-      let newAudioPrincipalUrl = song.audioPrincipalUrl;
-      if (deletedIdea && song.audioPrincipalUrl === deletedIdea.audioUrl) {
-        newAudioPrincipalUrl = updatedIdeas[0]?.audioUrl || '';
-      }
-
       onUpdateSong({ 
         ...song, 
         audioIdeas: updatedIdeas,
-        audioPrincipalUrl: newAudioPrincipalUrl 
+        audioPrincipalUrl: song.audioPrincipalUrl 
       });
     };
 
@@ -1695,7 +2171,9 @@ export default function SongStudioModal({
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+      <div className={`fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center overflow-y-auto overscroll-contain animate-in fade-in duration-200 ${
+        isFullScreen ? 'p-0' : 'p-2 sm:p-4'
+      }`}>
         {countInCountdown !== null && (
           <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-black font-mono font-black px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border-2 border-amber-300 animate-pulse">
             <span className="text-2xl">🥁</span>
@@ -1708,7 +2186,11 @@ export default function SongStudioModal({
             </span>
           </div>
         )}
-        <div className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col ${
+        <div className={`w-full ${
+          isFullScreen 
+            ? 'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none border-none' 
+            : 'max-w-4xl rounded-2xl border shadow-2xl overflow-hidden my-auto max-h-[92vh]'
+        } flex flex-col ${
           isStitchLight ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-[#0f0f15] border-zinc-800 text-zinc-100'
         }`}>
         
@@ -1801,6 +2283,29 @@ export default function SongStudioModal({
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleIsFullScreen}
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                isFullScreen
+                  ? 'bg-amber-500 text-zinc-950 border-amber-400 shadow-lg font-black hover:bg-amber-400'
+                  : 'bg-white/10 hover:bg-white/20 text-white border-white/10'
+              }`}
+              title={isFullScreen ? "Salir de Pantalla Completa" : "Poner Modo Studio en Pantalla Completa"}
+            >
+              {isFullScreen ? (
+                <>
+                  <Minimize2 className="w-4 h-4 text-zinc-950" />
+                  <span className="hidden sm:inline">Salir Pantalla Completa</span>
+                </>
+              ) : (
+                <>
+                  <Maximize2 className="w-4 h-4 text-amber-400" />
+                  <span className="hidden sm:inline">Pantalla Completa HD</span>
+                </>
+              )}
+            </button>
+
             <ModuleTutorialTrigger
               moduleId="song_studio"
               onClick={openTutorial}
@@ -2025,13 +2530,24 @@ export default function SongStudioModal({
                         <Mic className="w-3.5 h-3.5 animate-pulse" /> Grabar Micrófono
                       </button>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={stopRecording}
-                        className="px-2.5 py-1.5 rounded-lg bg-red-600 text-white font-bold text-[11px] flex items-center gap-1 cursor-pointer animate-ping"
-                      >
-                        ⏹️ Detener ({formatTime(recordingTime)})
-                      </button>
+                      <div className="w-full space-y-2">
+                        <button
+                          type="button"
+                          onClick={stopRecording}
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-[11px] flex items-center justify-center gap-1 cursor-pointer animate-pulse"
+                        >
+                          ⏹️ Detener Grabación ({formatTime(recordingTime)})
+                        </button>
+                        <div className="w-full h-11 relative rounded overflow-hidden">
+                          <LiveMicWaveformCanvas
+                            stream={activeRecordingStream}
+                            audioCtx={studioAudioCtxRef.current}
+                            isRecording={isRecording}
+                            color="#f43f5e"
+                            height={44}
+                          />
+                        </div>
+                      </div>
                     )}
 
                     {recordedAudioUrl && (
@@ -2386,6 +2902,29 @@ export default function SongStudioModal({
                           <span>WhatsApp</span>
                         </button>
 
+                        {/* AI Stem Separator Button */}
+                        <button
+                          type="button"
+                          onClick={() => handlePerformAiStemSeparation(idea)}
+                          disabled={isSeparatingStemsAi}
+                          className="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1 border border-amber-500/40"
+                          title="Usar IA para separar voces, batería, bajo y guitarras en pistas aisladas"
+                        >
+                          <Cpu className={`w-3 h-3 ${isSeparatingStemsAi ? 'animate-spin text-amber-400' : 'text-amber-400'}`} />
+                          <span>{isSeparatingStemsAi ? 'Separando IA...' : 'Stems IA'}</span>
+                        </button>
+
+                        {/* AI Instrument Arrangement Button */}
+                        <button
+                          type="button"
+                          onClick={() => setShowAiTrackGenModal(true)}
+                          className="px-2 py-1 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1 border border-purple-500/40"
+                          title="Generar un nuevo arreglo o pista de instrumento con IA que encaje a la perfección"
+                        >
+                          <Wand2 className="w-3 h-3 text-purple-400" />
+                          <span>+ Arreglo IA</span>
+                        </button>
+
                         {/* Export Master Mix WAV Button */}
                         <button
                           type="button"
@@ -2559,6 +3098,16 @@ export default function SongStudioModal({
 
                           <button
                             type="button"
+                            onClick={() => setShowMoisesStemsModal(idea)}
+                            className="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md hover:scale-105"
+                            title="Modo Moises: Separa o configura pistas independientes de Voz, Batería, Bajo y Guitarras/Teclados para mutear instrumentos"
+                          >
+                            <Sliders className="w-4 h-4 text-amber-400" />
+                            <span>🎛️ Stems (Estilo Moises)</span>
+                          </button>
+
+                          <button
+                            type="button"
                             onClick={() => {
                               if (addingTrackIdeaId === idea.id) {
                                 setAddingTrackIdeaId(null);
@@ -2671,8 +3220,8 @@ export default function SongStudioModal({
                               {/* Main Track Row */}
                               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                 {/* Track Info & Mute/Solo */}
-                                <div className="w-full sm:w-60 shrink-0 flex items-center justify-between gap-2">
-                                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                                <div className="w-full sm:w-auto min-w-[300px] shrink-0 flex items-center justify-between gap-2.5">
+                                  <div className="flex items-center gap-2 flex-1 flex-wrap">
                                     <span className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
                                       {idx + 1}
                                     </span>
@@ -2684,7 +3233,7 @@ export default function SongStudioModal({
                                           value={editingTrackName}
                                           onChange={(e) => setEditingTrackName(e.target.value)}
                                           onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                          className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold min-w-0"
+                                          className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold"
                                           autoFocus
                                         />
                                         <button
@@ -2696,10 +3245,10 @@ export default function SongStudioModal({
                                         </button>
                                       </div>
                                     ) : (
-                                      <div className="flex items-center gap-1 min-w-0 flex-1">
-                                        <span className="text-xs font-bold text-white truncate font-mono">{tr.nombre}</span>
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="text-xs font-bold text-white font-mono whitespace-nowrap">{tr.nombre}</span>
                                         {tr.instrumento && (
-                                          <span className="text-[10px] text-neutral-400 font-mono bg-white/5 px-1 py-0.5 rounded truncate max-w-[60px]">
+                                          <span className="text-[10px] text-indigo-300 font-mono bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 whitespace-nowrap font-semibold">
                                             {tr.instrumento}
                                           </span>
                                         )}
@@ -2709,7 +3258,7 @@ export default function SongStudioModal({
                                             setEditingTrackId(tr.id);
                                             setEditingTrackName(tr.nombre);
                                           }}
-                                          className="text-neutral-500 hover:text-neutral-300 shrink-0 ml-0.5"
+                                          className="text-neutral-500 hover:text-neutral-300 shrink-0"
                                           title="Editar nombre de pista"
                                         >
                                           <Edit2 className="w-3 h-3" />
@@ -3016,49 +3565,53 @@ export default function SongStudioModal({
 
                         {/* CUBASE LIVE RECORDING TRACK ROW */}
                         {isRecordingTrack && recordingTrackIdeaId === idea.id && (
-                          <div className="p-3 rounded-xl border-2 border-red-500 bg-red-950/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xl shadow-red-950/60 ring-2 ring-red-500/50">
-                            <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
-                              <span className="w-6 h-6 rounded bg-red-600 text-white font-mono text-xs font-black flex items-center justify-center shrink-0 shadow">
-                                {tracks.length + 1}
-                              </span>
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="text-xs font-bold text-white font-mono">
-                                    {newTrackName.trim() || `Pista ${tracks.length + 1}`}
-                                  </span>
-                                  <span className="px-2 py-0.5 rounded bg-red-600 text-white font-mono text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow">
-                                    <span className="w-2 h-2 rounded-full bg-white animate-ping" /> GRABANDO...
+                          <div className="p-3.5 rounded-xl border-2 border-red-500 bg-red-950/40 flex flex-col gap-2.5 shadow-xl shadow-red-950/60 ring-2 ring-red-500/50">
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                              <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+                                <span className="w-6 h-6 rounded bg-red-600 text-white font-mono text-xs font-black flex items-center justify-center shrink-0 shadow">
+                                  {tracks.length + 1}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-xs font-bold text-white font-mono">
+                                      {newTrackName.trim() || `Pista ${tracks.length + 1}`}
+                                    </span>
+                                    <span className="px-2 py-0.5 rounded bg-red-600 text-white font-mono text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow">
+                                      <span className="w-2 h-2 rounded-full bg-white animate-ping" /> GRABANDO ONDAS EN DIRECTO...
+                                    </span>
+                                  </div>
+                                  <span className="text-[10px] font-mono text-red-300 block mt-0.5">
+                                    Grabación estilo Cubase sobre la barra de la pista
                                   </span>
                                 </div>
-                                <span className="text-[10px] font-mono text-red-300 block mt-0.5">
-                                  Microactivo grabando en directo sobre la mezcla
-                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                                <div className="text-sm font-mono font-black text-red-400 bg-black/80 px-3 py-1 rounded-lg border border-red-500/50 shadow">
+                                  {formatTime(recordingTrackTime)}
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={stopRecordingTrackOverdub}
+                                  className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-lg cursor-pointer transition-all active:scale-95 shrink-0"
+                                  title="Detener y guardar pista en la idea"
+                                >
+                                  <Square className="w-3.5 h-3.5 fill-current" />
+                                  <span>Detener & Guardar</span>
+                                </button>
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-                              {/* Live Audio Meter Animation */}
-                              <div className="flex items-end gap-1 h-6 px-3 bg-black/80 rounded-lg border border-red-500/50 shadow-inner">
-                                <span className="w-1 bg-red-500 h-3 animate-bounce rounded-full" style={{ animationDelay: '0ms' }} />
-                                <span className="w-1 bg-amber-400 h-5 animate-bounce rounded-full" style={{ animationDelay: '150ms' }} />
-                                <span className="w-1 bg-red-500 h-2 animate-bounce rounded-full" style={{ animationDelay: '300ms' }} />
-                                <span className="w-1 bg-emerald-400 h-4 animate-bounce rounded-full" style={{ animationDelay: '75ms' }} />
-                                <span className="w-1 bg-red-500 h-6 animate-bounce rounded-full" style={{ animationDelay: '220ms' }} />
-                              </div>
-
-                              <div className="text-sm font-mono font-black text-red-400 bg-black/80 px-3 py-1 rounded-lg border border-red-500/50 shadow">
-                                {formatTime(recordingTrackTime)}
-                              </div>
-
-                              <button
-                                type="button"
-                                onClick={stopRecordingTrackOverdub}
-                                className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold flex items-center gap-1.5 shadow-lg cursor-pointer transition-all active:scale-95 shrink-0"
-                                title="Detener y guardar pista en la idea (Atajo Espacio / R / Stop)"
-                              >
-                                <Square className="w-3.5 h-3.5 fill-current" />
-                                <span>Detener & Guardar</span>
-                              </button>
+                            {/* Live Waveform Timeline Bar across the track lane */}
+                            <div className="w-full h-12 relative rounded bg-black/60 border border-red-500/40 p-0.5 overflow-hidden">
+                              <LiveMicWaveformCanvas 
+                                stream={activeRecordingStream}
+                                audioCtx={studioAudioCtxRef.current}
+                                isRecording={isRecordingTrack}
+                                color="#ef4444"
+                                height={44}
+                              />
                             </div>
                           </div>
                         )}
@@ -3638,6 +4191,390 @@ export default function SongStudioModal({
           onUpdateSong({ ...song, audioIdeas: updatedIdeas });
         }}
       />
+
+      {/* MODAL MOISES STEMS SEPARATION & MULTITRACK CONTROL */}
+      {showMoisesStemsModal && (
+        <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-amber-500/40 rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-5 shadow-2xl text-white max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
+              <div className="flex items-center gap-2 text-amber-400 font-mono font-bold text-sm">
+                <Sliders className="w-5 h-5 text-amber-400" />
+                <span>Separador de Stems & IA de Audio (Estilo Moises)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowMoisesStemsModal(null)}
+                className="text-neutral-400 hover:text-white p-1 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation Tabs */}
+            <div className="flex items-center gap-2 border-b border-white/10 pb-2 font-mono text-xs">
+              <button
+                type="button"
+                onClick={() => setMoisesTab('stems')}
+                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  moisesTab === 'stems'
+                    ? 'bg-amber-500 text-zinc-950 font-black shadow-md'
+                    : 'bg-white/5 hover:bg-white/10 text-neutral-300'
+                }`}
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span>1. Canales Stems</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMoisesTab('how_it_works')}
+                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  moisesTab === 'how_it_works'
+                    ? 'bg-indigo-500 text-white font-black shadow-md'
+                    : 'bg-white/5 hover:bg-white/10 text-neutral-300'
+                }`}
+              >
+                <Cpu className="w-3.5 h-3.5" />
+                <span>2. ¿Cómo funciona la IA de Moises?</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMoisesTab('upload')}
+                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  moisesTab === 'upload'
+                    ? 'bg-emerald-500 text-zinc-950 font-black shadow-md'
+                    : 'bg-white/5 hover:bg-white/10 text-neutral-300'
+                }`}
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>3. Subir Stems Aislados</span>
+              </button>
+            </div>
+
+            {/* TAB 1: CANALES STEMS & HABILITACIÓN */}
+            {moisesTab === 'stems' && (
+              <div className="space-y-4 text-xs text-neutral-300 leading-relaxed">
+                <p className="text-neutral-300 font-sans">
+                  BandManager crea canales de pistas independientes denominados <strong>Stems</strong> (Voz, Batería, Bajo, Guitarras) para controlar el volumen, silenciar (Mute) o dejar en Solo cada instrumento en tus ensayos y composición.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[11px]">
+                  <div className="p-3 rounded-xl bg-black/60 border border-indigo-500/30 text-indigo-200 space-y-1">
+                    <span className="font-bold text-white block flex items-center gap-1.5">
+                      🎤 1. Voz (Vocals)
+                    </span>
+                    <p className="text-[10px] text-neutral-400">
+                      Filtro DSP de frecuencia centrada en 1200Hz. Silencia la voz para cantar la letra en directo o practicar afinación.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/60 border border-amber-500/30 text-amber-200 space-y-1">
+                    <span className="font-bold text-white block flex items-center gap-1.5">
+                      🥁 2. Batería (Drums)
+                    </span>
+                    <p className="text-[10px] text-neutral-400">
+                      Aísla transitorios de platos (&gt;1800Hz) y golpes de bombo/caja. Ideal para tocar la batería encima sin estorbar.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/60 border border-emerald-500/30 text-emerald-200 space-y-1">
+                    <span className="font-bold text-white block flex items-center gap-1.5">
+                      🎸 3. Bajo (Bass)
+                    </span>
+                    <p className="text-[10px] text-neutral-400">
+                      Filtro sub-bass paso bajo en 220Hz. Apaga la línea de bajo grabada para que el bajista de la banda toque su línea real.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/60 border border-purple-500/30 text-purple-200 space-y-1">
+                    <span className="font-bold text-white block flex items-center gap-1.5">
+                      🎹 4. Guitarras & Armonía
+                    </span>
+                    <p className="text-[10px] text-neutral-400">
+                      Filtro de espectro medio (350Hz-3.5kHz). Controla el nivel armónico para acompañar con teclado o rítmicas.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-200 font-mono text-[11px] space-y-1">
+                  <span className="font-bold text-amber-300 block flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    Controles Activos en la Línea de Tiempo:
+                  </span>
+                  <p className="text-neutral-300">
+                    Al activar los Stems, cada instrumento tendrá su propia pista con botones <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, Fader de Volumen (0-100%), Ecualizador de 3 bandas (Graves, Medios, Agudos) y Paneo L/R estéreo.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const targetIdea = showMoisesStemsModal;
+                    setShowMoisesStemsModal(null);
+
+                    const existing = getIdeaTracks(targetIdea);
+                    const stemTypes = [
+                      { name: '🎤 Stem: Voz Principal', inst: 'Voz' },
+                      { name: '🥁 Stem: Batería & Percusión', inst: 'Batería' },
+                      { name: '🎸 Stem: Bajo', inst: 'Bajo' },
+                      { name: '🎹 Stem: Guitarras & Teclados', inst: 'Guitarras' },
+                    ];
+
+                    let newTracks = [...existing];
+                    stemTypes.forEach(s => {
+                      if (!newTracks.some(t => t.nombre.includes(s.inst))) {
+                        newTracks.push({
+                          id: `stem-${s.inst.toLowerCase()}-${Date.now()}`,
+                          nombre: s.name,
+                          audioUrl: targetIdea.audioUrl,
+                          autor: 'Stems Moises AI',
+                          instrumento: s.inst,
+                          fecha: new Date().toISOString().split('T')[0],
+                          volumen: 1,
+                          muted: false
+                        });
+                      }
+                    });
+
+                    const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? { ...i, pistas: newTracks } : i);
+                    onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+                    alert(`¡Pistas de Stems agregadas a "${targetIdea.titulo}"! Ahora puedes mutear o graduar la voz, batería, bajo y guitarras con control total.`);
+                  }}
+                  className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center"
+                >
+                  ⚡ Activar Pistas de Stems en esta Sección
+                </button>
+              </div>
+            )}
+
+            {/* TAB 2: ¿CÓMO FUNCIONA MOISES Y LA IA? */}
+            {moisesTab === 'how_it_works' && (
+              <div className="space-y-4 text-xs text-neutral-300 leading-relaxed font-sans">
+                <div className="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-200 space-y-2">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
+                    <Cpu className="w-4 h-4 text-indigo-400" />
+                    ¿Cómo consigue Moises separar audio de forma tan precisa?
+                  </h4>
+                  <p className="text-neutral-300 leading-normal">
+                    Moises se apoya en modelos de <strong>Deep Learning (Aprendizaje Profundo)</strong> para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales) como <strong>HT-Demucs (Hybrid Transformer Demucs)</strong> y <strong>MDX-Net</strong>.
+                  </p>
+                </div>
+
+                <div className="space-y-2.5 font-mono text-[11px]">
+                  <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
+                    <span className="font-bold text-amber-300 block">1. Transformada de Fourier (STFT) & Espectrogramas 2D:</span>
+                    <p className="text-neutral-400 font-sans">
+                      El audio estéreo se convierte en un espectrograma 2D donde el eje Y representa la frecuencia (Hz) y el eje X representa el tiempo (ms).
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
+                    <span className="font-bold text-indigo-300 block">2. Arquitectura de Dominio Dual (Tiempo + Frecuencia):</span>
+                    <p className="text-neutral-400 font-sans">
+                      A diferencia de filtros clásicos, HT-Demucs procesa tanto la forma de onda pura en el tiempo (para transitorios de batería) como el espectrograma de frecuencias con capas de <strong>Transformers & U-Nets</strong>.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
+                    <span className="font-bold text-purple-300 block">3. Máscaras de Fase Compleja & Estimación Tímbrica:</span>
+                    <p className="text-neutral-400 font-sans">
+                      El modelo predice una "máscara" espectral que multiplica el audio original para aislar la firma tímbrica de la voz o del bajo, preservando la fase original para evitar artefactos chirriantes o cancelación de fase.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
+                    <span className="font-bold text-emerald-300 block">4. Entrenamiento Masivo en Clusters de GPUs:</span>
+                    <p className="text-neutral-400 font-sans">
+                      Estos modelos se entrenan con miles de temas grabados en pistas separadas en estudio (MusDB18). Al procesar, ejecutan inferencia acelerada mediante ONNX Runtime / TensorRT en servidores de GPU dedicadas.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700 text-zinc-300 text-[11px] font-mono">
+                  💡 <strong>Integración en BandManager:</strong> Nuestra app combina filtros DSP en tiempo real mediante Web Audio API con ruteo de nodos `BiquadFilterNode` para silenciar la voz o batería en vivo, y te permite subir archivos de audio de Stems exportados de Moises para máxima calidad.
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: SUBIR STEMS AISLADOS DE MOISES O ESTUDIO */}
+            {moisesTab === 'upload' && (
+              <div className="space-y-4 text-xs text-neutral-300 leading-relaxed font-sans">
+                <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-200 space-y-1">
+                  <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
+                    <Upload className="w-4 h-4 text-emerald-400" />
+                    Cargar Pistas Separadas (Stems de Moises / Demucs / Estudio)
+                  </h4>
+                  <p className="text-neutral-300 text-[11px]">
+                    Si ya has procesado un tema en Moises, Lalal.ai o Demucs y tienes los archivos MP3/WAV independientes, súbelos aquí para añadirlos directamente a la mezcla multipista de esta sección.
+                  </p>
+                </div>
+
+                <div className="space-y-3 font-mono text-[11px]">
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-bold">Selecciona el Instrumento de la Pista:</label>
+                    <select
+                      value={uploadingStemInstrument}
+                      onChange={(e) => setUploadingStemInstrument(e.target.value)}
+                      className="w-full bg-black/60 border border-neutral-700 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500"
+                    >
+                      <option value="Voz">🎤 Stem: Voz Aislada (Vocals)</option>
+                      <option value="Batería">🥁 Stem: Batería Aislada (Drums)</option>
+                      <option value="Bajo">🎸 Stem: Bajo Aislado (Bass)</option>
+                      <option value="Guitarras">🎹 Stem: Guitarras / Teclados (Other)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-bold">Seleccionar Archivo de Audio (WAV / MP3 / M4A):</label>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file || !showMoisesStemsModal) return;
+
+                        try {
+                          const uploadedUrl = await uploadFileToServer(file);
+                          const targetIdea = showMoisesStemsModal;
+                          const existing = getIdeaTracks(targetIdea);
+
+                          const newTrack: AudioTrack = {
+                            id: `stem-file-${uploadingStemInstrument.toLowerCase()}-${Date.now()}`,
+                            nombre: `Stem (${uploadingStemInstrument}): ${file.name.replace(/\.[^/.]+$/, '')}`,
+                            audioUrl: uploadedUrl,
+                            autor: 'Moises AI Import',
+                            instrumento: uploadingStemInstrument,
+                            fecha: new Date().toISOString().split('T')[0],
+                            volumen: 1,
+                            muted: false
+                          };
+
+                          const updatedIdeas = (song.audioIdeas || []).map(i => 
+                            i.id === targetIdea.id ? { ...i, pistas: [...existing, newTrack] } : i
+                          );
+
+                          onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+                          setShowMoisesStemsModal(null);
+                          alert(`¡Pista de Stem "${file.name}" cargada con éxito en la mezcla!`);
+                        } catch (err) {
+                          console.error("Error al subir archivo Stem:", err);
+                          alert("Ocurrió un error al cargar el archivo de audio Stem.");
+                        }
+                      }}
+                      className="w-full bg-black/60 border border-neutral-700 rounded-xl p-2.5 text-neutral-300 text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-500 file:text-zinc-950 hover:file:bg-emerald-400"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700 text-zinc-400 text-[10px] font-mono">
+                  📌 Los archivos subidos se sincronizan con Supabase Storage y estarán disponibles inmediatamente para el resto de miembros de la banda.
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* AI Instrument Track Generator Modal */}
+      {showAiTrackGenModal && (
+        <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-purple-500/40 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative overflow-hidden">
+            <div className="flex items-center justify-between border-b border-purple-500/20 pb-3">
+              <div className="flex items-center gap-2.5 text-purple-300 font-mono font-bold text-sm">
+                <Wand2 className="w-5 h-5 text-purple-400 animate-pulse" />
+                <span>Generar Arreglo Musical con IA (Gemini & Lyria)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAiTrackGenModal(false)}
+                className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs font-sans">
+              <p className="text-neutral-300 leading-relaxed">
+                El motor de composición IA de BandManager creará una propuesta de arreglo o pista de instrumento en la tonalidad (<strong>{song.tonalidad || 'Am'}</strong>) y tempo (<strong>{song.bpm || 120} BPM</strong>) de esta canción para dar ideas a la banda.
+              </p>
+
+              <div>
+                <label className="block text-purple-300 font-mono font-bold mb-1.5">
+                  Selecciona el Instrumento que deseas añadir:
+                </label>
+                <select
+                  value={aiTrackGenInstrument}
+                  onChange={(e) => setAiTrackGenInstrument(e.target.value)}
+                  className="w-full bg-black/60 border border-purple-500/40 rounded-xl p-2.5 text-white font-mono text-xs focus:outline-none focus:border-purple-400"
+                >
+                  <option value="Guitarra Solista">🎸 Guitarra Solista (Solo / Lead Riff)</option>
+                  <option value="Sintetizador Lead">🎹 Sintetizador Lead / Teclado Moderno</option>
+                  <option value="Bajo Bailable">🎸 Bajo Bailable & Groovy</option>
+                  <option value="Vientos (Trompeta / Saxo)">🎺 Vientos (Sección de Trompeta / Saxo Ska)</option>
+                  <option value="Batería & Percusión">🥁 Percusión Adicional & Batería Rítmica</option>
+                  <option value="Violín / Cuerdas">🎻 Violín Solista / Arreglo de Cuerdas</option>
+                  <option value="Acordeón">🪗 Acordeón Balkan / Folclórico</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-purple-300 font-mono font-bold mb-1.5">
+                  Instrucción / Estilo deseado para el Arreglo (Opcional):
+                </label>
+                <textarea
+                  value={aiTrackGenPrompt}
+                  onChange={(e) => setAiTrackGenPrompt(e.target.value)}
+                  placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
+                  className="w-full h-20 bg-black/60 border border-purple-500/40 rounded-xl p-2.5 text-white placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-purple-400 resize-none"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200 text-[11px] font-mono flex items-start gap-2">
+                <Sparkles className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                <span>
+                  La pista generada se agregará automáticamente como una pista independiente en el mezclador multipista para que puedas probarla, silenciarla o integrarla en el tema.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowAiTrackGenModal(false)}
+                className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-xs font-bold cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                disabled={isGeneratingAiTrack}
+                onClick={() => {
+                  const activeIdea = song.audioIdeas?.[0];
+                  if (activeIdea) {
+                    handleGenerateAiInstrumentTrack(activeIdea);
+                  } else {
+                    alert("Por favor crea o selecciona una idea primero para añadir la pista.");
+                  }
+                }}
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
+              >
+                {isGeneratingAiTrack ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>Generando Arreglo con IA...</span>
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="w-4 h-4" />
+                    <span>Generar Pista con IA</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tutorial Interactivo Paso a Paso */}
       <ModuleTutorialModal

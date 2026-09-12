@@ -262,6 +262,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
       <audio 
         ref={setAudioRef} 
         src={validAudioSrc} 
+        crossOrigin="anonymous"
         preload="auto" 
         onLoadedMetadata={(e) => {
           const el = e.currentTarget;
