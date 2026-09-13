@@ -267,6 +267,48 @@ function parseReplicateError(status: number, errBody: string): ServiceDiagnostic
 }
 
 /**
+ * Helper resiliente para llamadas a la API de Replicate con reintento automático ante
+ * errores transitorios de upstream/gateway (500, 502, 503, 504) o rate limiting (429).
+ */
+export async function fetchReplicateWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries = 3
+): Promise<Response> {
+  let attempt = 0;
+  while (true) {
+    attempt++;
+    try {
+      const res = await fetch(url, options);
+      if (res.ok) return res;
+
+      // Si es un error transitorio de servidor (5xx) o rate limit (429), reintentar con backoff exponencial
+      if ((res.status >= 500 || res.status === 429) && attempt <= maxRetries) {
+        let waitSec = attempt * 2;
+        if (res.status === 429) {
+          const retryAfter = Number(res.headers.get('retry-after'));
+          if (retryAfter && !isNaN(retryAfter)) {
+            waitSec = Math.max(retryAfter, waitSec);
+          }
+        }
+        console.warn(`[Replicate API] Error transitorio ${res.status} en intento ${attempt}/${maxRetries}. Reintentando en ${waitSec}s...`);
+        await new Promise(r => setTimeout(r, waitSec * 1000));
+        continue;
+      }
+      return res;
+    } catch (netErr: any) {
+      if (attempt <= maxRetries) {
+        const waitSec = attempt * 2;
+        console.warn(`[Replicate API] Error de red en intento ${attempt}/${maxRetries} (${netErr?.message}). Reintentando en ${waitSec}s...`);
+        await new Promise(r => setTimeout(r, waitSec * 1000));
+        continue;
+      }
+      throw netErr;
+    }
+  }
+}
+
+/**
  * Parsea y clasifica con precisión diagnóstica cualquier error originado en la API de Google Gemini (GenAI).
  */
 export function parseGeminiError(err: any): ServiceDiagnosticError {
@@ -602,23 +644,12 @@ async function processNeuralStemsReplicate(
       'Content-Type': 'application/json'
     };
 
-    // 1. Probar primero el endpoint oficial del modelo cjwbw/demucs
-    let response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
+    // 1. Probar primero el endpoint oficial del modelo cjwbw/demucs con reintento automático ante 5xx/429
+    let response = await fetchReplicateWithRetry('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
       method: 'POST',
       headers: reqHeaders,
       body: JSON.stringify({ input: demucsInput })
     });
-
-    if (response.status === 429) {
-      const retryAfterSec = Number(response.headers.get('retry-after') || 6);
-      console.log(`[Demucs Neural] Rate limit en Replicate, reintentando en ${retryAfterSec}s...`);
-      await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
-      response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
-        method: 'POST',
-        headers: reqHeaders,
-        body: JSON.stringify({ input: demucsInput })
-      });
-    }
 
     let primaryErrText = "";
     // 2. Si falla endpoint oficial por ruta con 404/400/422, probar endpoint por hash de versión
@@ -626,7 +657,7 @@ async function processNeuralStemsReplicate(
       primaryErrText = await response.text();
       console.warn(`[Demucs Neural] Replicate model/cjwbw/demucs/predictions falló (${response.status}: ${primaryErrText}). Probando v1/predictions con versión...`);
       if (response.status === 404 || response.status === 400 || response.status === 422) {
-        response = await fetch('https://api.replicate.com/v1/predictions', {
+        response = await fetchReplicateWithRetry('https://api.replicate.com/v1/predictions', {
           method: 'POST',
           headers: reqHeaders,
           body: JSON.stringify({
@@ -656,18 +687,18 @@ async function processNeuralStemsReplicate(
     let prediction = await response.json();
     const predictionId = prediction.id;
 
-    // Polling a Replicate con tiempo límite ampliado a 120s (2 minutos)
+    // Polling a Replicate con tiempo límite ampliado a 360s (6 minutos)
     const startTime = Date.now();
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-      if (Date.now() - startTime > 120000) {
-        console.warn("Demucs separation timeout en Replicate (>120s)...");
+      if (Date.now() - startTime > 360000) {
+        console.warn("Demucs separation timeout en Replicate (>360s)...");
         const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-4).join(' | ');
         return {
           stemsMap: null,
           provider: 'replicate',
           errorType: 'timeout',
-          errorTitle: 'Tiempo de Espera en GPU Excedido (>120s)',
-          error: `La separación en la GPU de Replicate superó los 120 segundos de espera (Estado: ${prediction.status}).`,
+          errorTitle: 'Tiempo de Espera en GPU Excedido (>6 min)',
+          error: `La separación en la GPU de Replicate superó los 6 minutos de espera (Estado: ${prediction.status}).`,
           actionAdvice: 'La máquina de Replicate puede haber tardado en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.',
           errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs: ${lastLogs || 'Sin logs disponibles'}`,
           httpStatus: 504
@@ -847,8 +878,8 @@ async function processMdx23Stems(
     'Content-Type': 'application/json'
   };
 
-  // 1. Invocar Replicate usando el endpoint por versión fijada (garantiza compatibilidad 100% con modelos comunitarios)
-  let response = await fetch('https://api.replicate.com/v1/predictions', {
+  // 1. Invocar Replicate usando el endpoint por versión fijada con reintentos automáticos
+  let response = await fetchReplicateWithRetry('https://api.replicate.com/v1/predictions', {
     method: 'POST',
     headers: reqHeaders,
     body: JSON.stringify({
@@ -859,24 +890,10 @@ async function processMdx23Stems(
     })
   });
 
-  if (response.status === 429) {
-    const retryAfterSec = Number(response.headers.get('retry-after') || 6);
-    console.log(`[MDX23 Neural] Rate limit en Replicate, reintentando en ${retryAfterSec}s...`);
-    await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
-    response = await fetch('https://api.replicate.com/v1/predictions', {
-      method: 'POST',
-      headers: reqHeaders,
-      body: JSON.stringify({
-        version: MVSEP_VERSION,
-        input: { audio: resolvedUrl }
-      })
-    });
-  }
-
-  // 2. Si falla por endpoint de versiones, probar endpoint por modelo slug
+  // 2. Si falla por endpoint de versiones con 404/422/400, probar endpoint por modelo slug
   if (!response.ok && (response.status === 404 || response.status === 422 || response.status === 400)) {
     console.warn(`[MDX23 Neural] Prediction por versión ${MVSEP_VERSION.substring(0, 10)} falló (${response.status}). Probando endpoint por modelo slug...`);
-    response = await fetch(`https://api.replicate.com/v1/models/${replicateModel}/predictions`, {
+    response = await fetchReplicateWithRetry(`https://api.replicate.com/v1/models/${replicateModel}/predictions`, {
       method: 'POST',
       headers: reqHeaders,
       body: JSON.stringify({
@@ -906,16 +923,17 @@ async function processMdx23Stems(
 
   const startTime = Date.now();
   while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-    if (Date.now() - startTime > 130000) {
-      console.warn(`[MDX23 Neural] Timeout en Replicate (>130s) para predicción ${predictionId}`);
+    if (Date.now() - startTime > 360000) {
+      console.warn(`[MDX23 Neural] Timeout en Replicate (>360s) para predicción ${predictionId}`);
+      const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-6).join('\n');
       return {
         stemsMap: null,
         provider: 'replicate',
         errorType: 'timeout',
         errorTitle: `Tiempo de Espera Excedido en GPU (${modelFriendlyName})`,
-        error: `La inferencia en Replicate superó los 130 segundos de espera.`,
+        error: `La inferencia en Replicate superó los 6 minutos de espera (Estado: ${prediction.status}).`,
         actionAdvice: 'Puedes reintentar o separar las pistas con el Motor DSP local.',
-        errorDetail: `Prediction ID: ${predictionId}`,
+        errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs:\n${lastLogs || 'Sin logs'}`,
         httpStatus: 504
       };
     }

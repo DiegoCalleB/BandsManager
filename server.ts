@@ -539,6 +539,10 @@ async function startServer() {
 
   const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`BandManager.ai server running on http://localhost:${PORT}`);
+    // Ampliación de socket timeout para procesos de inferencia pesados (GPU neural)
+    server.timeout = 420000;
+    server.keepAliveTimeout = 430000;
+    server.headersTimeout = 440000;
     // Comprobación de seguridad en arranque: Webhook secret de Replicate
     if (!process.env.REPLICATE_WEBHOOK_SECRET) {
       console.error("[Seguridad Webhook] ❌ REPLICATE_WEBHOOK_SECRET no está configurado en las variables de entorno. Las peticiones a /api/webhooks/replicate-stems serán rechazadas con HTTP 401 (Fail-Closed).");
