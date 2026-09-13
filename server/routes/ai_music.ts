@@ -1612,9 +1612,14 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         // Opción (a) Fail-Safe Estricto: Si la reserva distribuida falla por error de base de datos/infraestructura,
         // no se lanza la inferencia en GPU para evitar gastos duplicados o carreras descontroladas.
         return res.status(503).json({
+          provider: 'supabase',
           error: "Servicio de procesamiento distribuido no disponible temporalmente",
-          message: "No se pudo asegurar el bloqueo de inferencia distribuido en la base de datos. Por seguridad anti-duplicados, la petición no ha consumido cómputo GPU. Por favor, inténtalo de nuevo en unos minutos.",
+          message: "No se pudo asegurar el bloqueo de inferencia distribuido en la base de datos. Por seguridad anti-duplicados, la petición no ha consumido cómputo GPU.",
           errorType: "distributed_lock_unavailable",
+          errorTitle: "Bloqueo Distribuido no Disponible",
+          actionAdvice: `Detalle técnico de Supabase: "${lockResult.error || 'Fallo al insertar en song_stems_cache'}". Puedes reintentar o usar el Motor DSP local gratuito.`,
+          errorDetail: lockResult.error,
+          details: lockResult.error,
           reason: lockResult.error,
           engine: selectedEngine
         });
