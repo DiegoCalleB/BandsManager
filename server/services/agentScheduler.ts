@@ -13,6 +13,7 @@ import { EmailAgentError } from "./emailAgentClient.js";
 import { runLectorAgent } from "./lectorAgent.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
 import { captureError } from "../utils/errorTracking.js";
+import { reconcileStaleStemPredictions } from "./stemPredictionReconciler.js";
 
 const TICK_MS = 60 * 1000;
 let schedulerHandle: NodeJS.Timeout | null = null;
@@ -111,6 +112,13 @@ async function tick() {
       // los ticks (cada 60s), para que una respuesta o un envío manual se reflejen cuanto antes.
       // horas_lector/dias_lector (band_schedules) ya no lo limitan.
       await runLectorTick(bandId);
+    }
+
+    // Reconciliación periódica de predicciones de IA pendientes
+    try {
+      await reconcileStaleStemPredictions(5);
+    } catch (stemRecErr) {
+      console.warn("[AgentScheduler] Error en reconciliación de predicciones de stems:", stemRecErr);
     }
 
     // Señal de vida mínima: hoy costó más de dos horas darse cuenta de que el scheduler estaba

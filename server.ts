@@ -539,6 +539,10 @@ async function startServer() {
 
   const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`BandManager.ai server running on http://localhost:${PORT}`);
+    // Comprobación de seguridad en arranque: Webhook secret de Replicate
+    if (!process.env.REPLICATE_WEBHOOK_SECRET) {
+      console.error("[Seguridad Webhook] ❌ REPLICATE_WEBHOOK_SECRET no está configurado en las variables de entorno. Las peticiones a /api/webhooks/replicate-stems serán rechazadas con HTTP 401 (Fail-Closed).");
+    }
     // Initialize Admin SuperUser Account
     try {
       ensureAdminUserExists(loadState()).catch(e => console.warn("Notice: Admin account init:", e));

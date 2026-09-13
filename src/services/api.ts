@@ -49,8 +49,9 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    const detailedMessage = errorData.message || errorData.error || errorData.detail || `Error en la petición HTTP (${response.status})`;
     throw new ApiError(
-      errorData.error || `Error en la petición HTTP (${response.status})`,
+      typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage),
       response.status,
       errorData
     );

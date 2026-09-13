@@ -29,7 +29,8 @@ import {
   Layers, Sliders, Edit2, Check, Radio, Wand2, RefreshCw, FileText, Keyboard,
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
   Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
-  FileAudio, HardDrive, Clock, Timer
+  FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
+  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database
 } from 'lucide-react';
 
 
@@ -261,7 +262,7 @@ export default function SongStudioModal({
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
-  const [selectedStemEngine, setSelectedStemEngine] = useState<'replicate' | 'dsp-server'>('replicate');
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('mvsep-mdx23');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
@@ -273,19 +274,30 @@ export default function SongStudioModal({
   const [isGeneratingAiTrack, setIsGeneratingAiTrack] = useState<boolean>(false);
   const [isSeparatingStemsAi, setIsSeparatingStemsAi] = useState<boolean>(false);
   const [separationElapsedSeconds, setSeparationElapsedSeconds] = useState<number>(0);
+  const [showStemErrorDetails, setShowStemErrorDetails] = useState<boolean>(false);
+  const [copiedStemError, setCopiedStemError] = useState<boolean>(false);
   const [stemProgressModal, setStemProgressModal] = useState<{
     isOpen: boolean;
     songTitle: string;
     ideaTitle: string;
+    targetIdea?: SongAudioIdea;
     stage: 'preparing' | 'demucs' | 'persisting' | 'completed' | 'error';
     progressPct: number;
     currentStepText: string;
     isNeural?: boolean;
+    engineUsed?: string;
+    degraded?: boolean;
+    degradedReason?: string;
     separationEngine?: string;
-    engineChoice?: 'replicate' | 'dsp-server';
+    engineChoice?: 'mvsep-mdx23' | 'demucs' | 'dsp-server';
     stemsAdded?: number;
     stemsInfo?: Array<{ instrument: string; trackName: string; formato: string; tamano: string; audioUrl?: string }>;
     errorMessage?: string;
+    errorDetail?: string;
+    errorProvider?: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
+    errorType?: string;
+    errorTitle?: string;
+    actionAdvice?: string;
     executionTimeSec?: string;
     timingBreakdown?: {
       preloadSec?: string;
@@ -295,21 +307,25 @@ export default function SongStudioModal({
     };
   } | null>(null);
 
-  // AI Multimodal Audio Stem Separation Handler (Demucs v4 Neural AI + Server DSP + Anti-Phase Fallback)
-  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'replicate' | 'dsp-server') => {
+  // AI Multimodal Audio Stem Separation Handler (MVSEP-MDX23 + Demucs v4 + Server DSP)
+  const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
     setIsSeparatingStemsAi(true);
     setSeparationElapsedSeconds(0);
     const engineToUse = overrideEngine || selectedStemEngine;
+
+    const stepInitText = 
+      engineToUse === 'mvsep-mdx23' ? "Iniciando red neuronal MVSEP-MDX23 (MDX-Net + Demucs4)..." :
+      engineToUse === 'demucs' ? 'Iniciando y optimizando flujo de audio para HT-Demucs v4 (Replicate Cloud GPU)...' :
+      'Iniciando filtros DSP de procesamiento estéreo local ($0)...';
 
     setStemProgressModal({
       isOpen: true,
       songTitle: song.titulo,
       ideaTitle: targetIdea.titulo,
+      targetIdea,
       stage: 'preparing',
       progressPct: 15,
-      currentStepText: engineToUse === 'replicate' 
-        ? 'Iniciando y optimizando flujo de audio para Replicate Cloud GPU...' 
-        : 'Iniciando filtros DSP de procesamiento estéreo local...',
+      currentStepText: stepInitText,
       engineChoice: engineToUse
     });
 
@@ -337,7 +353,7 @@ export default function SongStudioModal({
         ...prev,
         stage: 'preparing',
         progressPct: 25,
-        currentStepText: engineToUse === 'replicate' 
+        currentStepText: engineToUse !== 'dsp-server'
           ? 'Verificando URL pública y enviando audio al cluster GPU Replicate...' 
           : 'Preparando espectro de audio para motor DSP local...'
       } : null);
@@ -363,13 +379,18 @@ export default function SongStudioModal({
         console.warn("[Stem Separation Frontend] Error preparando audio para el servidor:", prepErr);
       }
 
+      const stepProcessingText =
+        engineToUse === 'mvsep-mdx23'
+          ? "Red Neuronal MVSEP-MDX23 (MDX-Net + Demucs4) aislando pistas vocales e instrumentales..."
+          : engineToUse === 'demucs'
+          ? 'Red Neuronal HT-Demucs v4 (Replicate Cloud GPU) aislando Voz, Batería, Bajo, Guitarras...'
+          : 'Motor FFmpeg DSP Local realizando filtrado de frecuencias ($0)...';
+
       setStemProgressModal(prev => prev ? {
         ...prev,
         stage: 'demucs',
         progressPct: 45,
-        currentStepText: engineToUse === 'replicate'
-          ? 'Red Neuronal HT-Demucs v4 (Replicate Cloud GPU) aislando Voz, Batería, Bajo, Guitarras...'
-          : 'Motor FFmpeg DSP Local realizando filtrado de frecuencias...'
+        currentStepText: stepProcessingText
       } : null);
 
       const data = await apiFetch('/api/ai-stem-separation', {
@@ -404,7 +425,13 @@ export default function SongStudioModal({
       let stemsAdded = 0;
 
       if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
-        const engineAuthor = data.isNeural ? 'Demucs v4 Neural AI (Calidad Moises Pro)' : 'Deep AI & Studio DSP';
+        const engineAuthor = data.degraded
+          ? 'FFmpeg DSP Local (Modo Degradado)'
+          : data.separationEngine?.includes('MVSEP')
+          ? 'MVSEP-MDX23 Neural AI (MDX-Net + Demucs4)'
+          : data.isNeural
+          ? 'HT-Demucs v4 Neural (Replicate Cloud GPU)'
+          : 'FFmpeg DSP Local ($0)';
         data.stems.forEach((st: any) => {
           if (!st.audioUrl) return;
 
@@ -498,7 +525,15 @@ export default function SongStudioModal({
         }
       }
 
-      const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? { ...i, pistas: newTracks } : i);
+      const finalSeparationEngine = data.separationEngine || (data.isNeural ? (engineToUse === 'mvsep-mdx23' ? 'MVSEP-MDX23 Neural Ensemble' : 'HT-Demucs v4 Neural (Replicate Cloud GPU)') : 'FFmpeg DSP Local (Sin Replicate)');
+      const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? {
+        ...i,
+        pistas: newTracks,
+        stemEngineUsed: finalSeparationEngine,
+        stemIsNeural: !!data.isNeural,
+        stemDegraded: !!data.degraded,
+        stemProcessedAt: new Date().toISOString()
+      } : i);
       onUpdateSong({ ...song, audioIdeas: updatedIdeas });
 
       const stemsInfo = newTracks.map(t => ({
@@ -515,11 +550,17 @@ export default function SongStudioModal({
         isOpen: true,
         songTitle: song.titulo,
         ideaTitle: targetIdea.titulo,
+        targetIdea,
         stage: 'completed',
         progressPct: 100,
-        currentStepText: '¡Pistas aisladas montadas en el mezclador con éxito!',
+        currentStepText: data.degraded
+          ? '¡Pistas procesadas en Modo Degradado (DSP básico) y montadas en el mezclador!'
+          : '¡Pistas aisladas montadas en el mezclador con éxito!',
         isNeural: !!data.isNeural,
-        separationEngine: data.separationEngine || (data.isNeural ? 'Demucs v4 Neural (Replicate Cloud GPU)' : 'FFmpeg DSP Local (Sin Replicate)'),
+        engineUsed: data.engineUsed,
+        degraded: !!data.degraded,
+        degradedReason: data.degradedReason,
+        separationEngine: finalSeparationEngine,
         engineChoice: engineToUse,
         stemsAdded: stemsAdded || 5,
         stemsInfo,
@@ -530,14 +571,119 @@ export default function SongStudioModal({
       clearInterval(progressTimer);
       clearInterval(elapsedTimer);
       console.error("Error en separación de stems por IA:", err);
+      const data = err?.data || {};
+      const errMsg = String(data.message || data.error || err?.message || "");
+
+      // Diferenciar el proveedor origen del error (Replicate, Gemini API Key, Librería FFmpeg, Supabase, etc.)
+      const errorProvider: 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system' = data.provider || (
+        data.errorType?.startsWith('gemini_') || errMsg.includes('GEMINI_API_KEY') || errMsg.includes('Gemini') || errMsg.includes('GoogleGenAI') ? 'gemini' :
+        data.errorType?.startsWith('ffmpeg_') || errMsg.includes('ffmpeg') || errMsg.includes('fluent-ffmpeg') ? 'ffmpeg' :
+        data.errorType?.startsWith('supabase_') || errMsg.includes('supabase') || errMsg.includes('storage') ? 'supabase' :
+        (engineToUse !== 'dsp-server' || data.engine === 'replicate' || data.engine === 'mvsep-mdx23' || data.engine === 'demucs' || errMsg.includes('replicate') || errMsg.includes('r8_')) ? 'replicate' :
+        'system'
+      );
+
+      // Determinar el tipo específico de error
+      let errorType = data.errorType;
+      if (!errorType) {
+        if (errorProvider === 'gemini') {
+          if (errMsg.includes('key') && (errMsg.includes('not valid') || errMsg.includes('API_KEY_INVALID') || err?.status === 400 || err?.status === 401)) {
+            errorType = 'gemini_auth_invalid';
+          } else if (errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED') || err?.status === 429) {
+            errorType = 'gemini_quota_exceeded';
+          } else if (errMsg.includes('model') || errMsg.includes('NOT_FOUND') || err?.status === 404) {
+            errorType = 'gemini_model_unavailable';
+          } else {
+            errorType = 'gemini_generic';
+          }
+        } else if (errorProvider === 'ffmpeg') {
+          if (errMsg.includes('codec') || errMsg.includes('Invalid data') || err?.status === 422) {
+            errorType = 'ffmpeg_codec_unsupported';
+          } else if (errMsg.includes('missing') || errMsg.includes('not found')) {
+            errorType = 'ffmpeg_missing';
+          } else {
+            errorType = 'ffmpeg_processing_error';
+          }
+        } else if (errorProvider === 'supabase') {
+          if (errMsg.includes('credentials') || errMsg.includes('URL') || errMsg.includes('KEY')) {
+            errorType = 'supabase_credentials_missing';
+          } else {
+            errorType = 'supabase_storage_error';
+          }
+        } else {
+          errorType = (
+            err?.status === 401 ? 'auth_invalid' :
+            err?.status === 402 ? 'billing_required' :
+            err?.status === 422 ? 'audio_unsupported' :
+            err?.status === 429 ? 'rate_limit' :
+            err?.status === 504 ? 'timeout' :
+            err?.status >= 500 ? 'server_error' : 'generic'
+          );
+        }
+      }
+
+      // Títulos diferenciados por proveedor y tipo
+      const errorTitle = data.errorTitle || (
+        errorType === 'gemini_key_missing' ? 'Clave GEMINI_API_KEY No Configurada' :
+        errorType === 'gemini_auth_invalid' ? 'Clave GEMINI_API_KEY Inválida o Revocada' :
+        errorType === 'gemini_quota_exceeded' ? 'Cuota de Gemini API Excedida (HTTP 429)' :
+        errorType === 'gemini_model_unavailable' ? 'Modelo de Gemini no Accesible en tu Región' :
+        errorType === 'gemini_safety_block' ? 'Bloqueo de Seguridad en Gemini AI' :
+        errorType === 'gemini_generic' ? 'Error en la API de Google Gemini' :
+        errorType === 'ffmpeg_missing' ? 'Librería FFmpeg no Instalada en Servidor' :
+        errorType === 'ffmpeg_codec_unsupported' ? 'Formato de Audio Incompatible con FFmpeg' :
+        errorType === 'ffmpeg_processing_error' ? 'Error en Filtros Espectrales FFmpeg' :
+        errorType === 'supabase_credentials_missing' ? 'Credenciales de Supabase no Configuradas' :
+        errorType === 'supabase_storage_error' ? 'Error de Almacenamiento en Supabase Storage' :
+        errorType === 'billing_required' ? 'Saldo o Facturación Requerida en Replicate (HTTP 402)' :
+        errorType === 'auth_invalid' ? 'Token de Replicate Inválido o Expirado (HTTP 401)' :
+        errorType === 'token_missing' ? 'Token de Replicate No Configurado' :
+        errorType === 'audio_unsupported' ? 'Formato de Audio Rechazado por Replicate (HTTP 422)' :
+        errorType === 'rate_limit' ? 'Límite de Peticiones en Replicate Alcanzado (HTTP 429)' :
+        errorType === 'timeout' ? 'Tiempo de Espera en GPU Replicate Excedido (>120s)' :
+        errorType === 'gpu_failure' ? 'Fallo en el Contenedor GPU de Demucs (Replicate)' :
+        errorType === 'server_error' ? 'Fallo Temporal en la Infraestructura de Replicate' :
+        'Inconveniente en la Separación de Pistas'
+      );
+
+      const specificMsg = data.message || data.error || errMsg || 'No se pudo conectar con el servidor de IA.';
+
+      // Consejo / Acción guiada según el origen exacto
+      const actionAdvice = data.actionAdvice || (
+        errorType === 'gemini_key_missing' ? 'Añade tu clave GEMINI_API_KEY en los ajustes del proyecto o variables de entorno.' :
+        errorType === 'gemini_auth_invalid' ? 'Verifica tu API Key en Google AI Studio (https://aistudio.google.com/app/apikey) y actualízala.' :
+        errorType === 'gemini_quota_exceeded' ? 'Has superado el ratio de llamadas de tu cuenta en Gemini. Espera 60s o utiliza el plan de pago.' :
+        errorType === 'gemini_model_unavailable' ? 'El modelo solicitado no está activo para tu clave. Se usará el análisis local de respaldo.' :
+        errorType === 'ffmpeg_codec_unsupported' ? 'Exporta tu pista a MP3 estándar o WAV PCM 16-bit / 44.1kHz antes de subirla.' :
+        errorType === 'ffmpeg_missing' ? 'Verifica la instalación de ffmpeg-static en el servidor backend de Railway.' :
+        errorType === 'supabase_credentials_missing' ? 'Asegúrate de que SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY estén definidas en Railway.' :
+        errorType === 'billing_required' ? 'Tu cuenta de Replicate requiere añadir saldo en replicate.com/account/billing o utilizar el Motor DSP local gratuito.' :
+        errorType === 'auth_invalid' ? 'Comprueba que tu API Token comience por r8_ y esté activo en replicate.com/account/api-tokens.' :
+        errorType === 'token_missing' ? 'Configura la variable REPLICATE_API_TOKEN en los ajustes de tu proyecto.' :
+        errorType === 'rate_limit' ? 'Espera 30-60 segundos antes de enviar una nueva solicitud o utiliza el Motor DSP local.' :
+        errorType === 'timeout' ? 'La máquina GPU tardó en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.' :
+        'Puedes reintentar o usar la separación con el Motor DSP local que procesa el audio en el propio servidor.'
+      );
+      const detailInfo = data.details || data.errorDetail;
+
+      setShowStemErrorDetails(false);
+      setCopiedStemError(false);
+
       setStemProgressModal({
         isOpen: true,
         songTitle: song.titulo,
         ideaTitle: targetIdea.titulo,
+        targetIdea,
         stage: 'error',
         progressPct: 0,
-        currentStepText: 'Error al procesar la separación por IA.',
-        errorMessage: err?.message || 'No se pudo conectar con el servidor de IA.'
+        currentStepText: 'Error al procesar la separación.',
+        errorProvider,
+        errorType,
+        errorTitle,
+        errorMessage: typeof specificMsg === 'string' ? specificMsg : JSON.stringify(specificMsg),
+        actionAdvice,
+        errorDetail: detailInfo && detailInfo !== specificMsg ? (typeof detailInfo === 'string' ? detailInfo : JSON.stringify(detailInfo, null, 2)) : undefined,
+        engineChoice: engineToUse
       });
     } finally {
       setIsSeparatingStemsAi(false);
@@ -3209,17 +3355,27 @@ export default function SongStudioModal({
 
                       {/* Primary Quick Actions for Musician */}
                       <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
-                        {/* 1. AI Stem Separator - Highlighted Action */}
-                        <button
-                          type="button"
-                          onClick={() => handlePerformAiStemSeparation(idea)}
-                          disabled={isSeparatingStemsAi}
-                          className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer disabled:opacity-50"
-                          title="Separar voces, batería, bajo y guitarras en pistas aisladas con Inteligencia Artificial"
-                        >
-                          <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
-                          <span>{isSeparatingStemsAi ? 'Separando Pistas...' : '🎛️ Separar Stems (IA)'}</span>
-                        </button>
+                        {/* 1. AI Stem Separator - Highlighted Action with Engine Selector */}
+                        <div className="flex items-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 shadow-md overflow-hidden">
+                          <button
+                            type="button"
+                            onClick={() => handlePerformAiStemSeparation(idea)}
+                            disabled={isSeparatingStemsAi}
+                            className="px-3 py-1.5 hover:bg-amber-400/20 text-zinc-950 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+                            title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
+                          >
+                            <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
+                            <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Stems (IA)'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowMoisesStemsModal(idea)}
+                            className="px-2 py-1.5 border-l border-amber-600/60 hover:bg-amber-400/30 text-zinc-950 transition-all cursor-pointer flex items-center"
+                            title="Elegir motor (MVSEP-MDX23, Demucs v4, DSP) o comparar calidad"
+                          >
+                            <Sliders className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
 
                         {/* 2. Add Track / Overdub Button */}
                         <button
@@ -3436,11 +3592,32 @@ export default function SongStudioModal({
                         const hasSoloInIdea = tracks.some(t => t.solo);
                         return (
                           <>
-                            <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 uppercase tracking-wider border-b border-white/10 pb-1.5">
-                              <span className="flex items-center gap-1.5 font-bold text-white">
-                                <Sliders className="w-3.5 h-3.5 text-indigo-400" /> Mezclador de Pistas ({tracks.length})
-                              </span>
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 uppercase tracking-wider border-b border-white/10 pb-1.5 flex-wrap gap-2">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="flex items-center gap-1.5 font-bold text-white">
+                                  <Sliders className="w-3.5 h-3.5 text-indigo-400" /> Mezclador de Pistas ({tracks.length})
+                                </span>
+                                {idea.stemEngineUsed && (
+                                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 font-bold ${
+                                    idea.stemDegraded 
+                                      ? 'bg-amber-950/70 border border-amber-500/40 text-amber-300' 
+                                      : 'bg-purple-950/70 border border-purple-500/40 text-purple-300'
+                                  }`}>
+                                    <Sparkles className="w-3 h-3 text-amber-400" />
+                                    <span>Motor: {idea.stemEngineUsed.split('(')[0].trim()}</span>
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <button
+                                  type="button"
+                                  onClick={() => setShowMoisesStemsModal(idea)}
+                                  className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
+                                  title="Comparar calidad con otro motor (MVSEP-MDX23, Demucs v4, DSP) o re-separar"
+                                >
+                                  <RefreshCw className="w-3 h-3" />
+                                  <span>Comparar Motor</span>
+                                </button>
                                 {hasSoloInIdea && (
                                   <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-amber-400 text-black flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
                                     <Volume2 className="w-3 h-3" /> SOLO (S) ACTIVO
@@ -4564,39 +4741,73 @@ export default function SongStudioModal({
                   </p>
                 </div>
 
-                {/* SELECTOR DE MOTOR: REPLICATE vs DSP LOCAL */}
-                <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-2.5 font-mono text-[11px]">
+                {/* SELECTOR DE MOTOR: MVSEP-MDX23 / DEMUCS V4 / DSP LOCAL */}
+                <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
                       <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Separación:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
-                      selectedStemEngine === 'replicate' 
+                      selectedStemEngine === 'mvsep-mdx23'
+                        ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                        : selectedStemEngine === 'demucs' 
                         ? 'bg-purple-500/10 text-purple-300 border-purple-500/30' 
                         : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
                     }`}>
-                      {selectedStemEngine === 'replicate' ? '⚡ Replicate Cloud GPU' : '⚙️ Servidor Local DSP'}
+                      {selectedStemEngine === 'mvsep-mdx23' && "✨ MVSEP-MDX23 Neural (MDX'23)"}
+                      {selectedStemEngine === 'demucs' && '⚡ HT-Demucs v4'}
+                      {selectedStemEngine === 'dsp-server' && '⚙️ Servidor Local DSP ($0)'}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {/* MVSEP-MDX23 */}
                     <button
                       type="button"
-                      onClick={() => setSelectedStemEngine('replicate')}
+                      onClick={() => setSelectedStemEngine('mvsep-mdx23')}
                       className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
-                        selectedStemEngine === 'replicate'
+                        selectedStemEngine === 'mvsep-mdx23'
+                          ? 'bg-amber-950/60 border-amber-500 text-amber-200 ring-1 ring-amber-500/50 shadow-lg shadow-amber-950/50'
+                          : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> MVSEP-MDX23
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-black border border-amber-500/30">
+                          MDX-Net + Demucs4
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-neutral-300 leading-normal">
+                        Modelo neural híbrido de alta precisión del reto MDX'23 para aislar voz, bajo, batería y demás fuentes.
+                      </span>
+                    </button>
+
+                    {/* HT-Demucs v4 */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStemEngine('demucs')}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1.5 ${
+                        selectedStemEngine === 'demucs'
                           ? 'bg-purple-950/60 border-purple-500 text-purple-200 ring-1 ring-purple-500/50 shadow-lg shadow-purple-950/50'
                           : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
                       }`}
                     >
-                      <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                        <Sparkles className="w-3.5 h-3.5 text-purple-400" /> ⚡ Con Replicate
-                      </span>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> HT-Demucs v4
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-black border border-purple-500/30">
+                          6 Canales GPU
+                        </span>
+                      </div>
                       <span className="text-[10px] text-neutral-300 leading-normal">
-                        Red Neuronal HT-Demucs v4 en Cloud GPU. Calidad Moises Pro de alta fidelidad.
+                        Red Demucs v4 multicanal probada en estudio para aislamiento directo en GPU Cloud.
                       </span>
                     </button>
 
+                    {/* DSP Local Server */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('dsp-server')}
@@ -4606,13 +4817,26 @@ export default function SongStudioModal({
                           : 'bg-black/40 border-white/10 text-neutral-400 hover:border-white/20'
                       }`}
                     >
-                      <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                        <Cpu className="w-3.5 h-3.5 text-blue-400" /> ⚙️ Sin Replicate
-                      </span>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs flex items-center gap-1.5 text-white">
+                          <Cpu className="w-3.5 h-3.5 text-blue-400" /> FFmpeg DSP Local
+                        </span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-black border border-blue-500/30">
+                          100% Gratis ($0)
+                        </span>
+                      </div>
                       <span className="text-[10px] text-neutral-300 leading-normal">
-                        Filtro DSP estéreo local en servidor. Rápido sin consumir créditos de IA.
+                        Filtros DSP de frecuencia y Mid/Side en CPU. Rápido, 100% gratuito y sin consumo de créditos de IA.
                       </span>
                     </button>
+                  </div>
+
+                  {/* Banner de Garantía Anti-Duplicación */}
+                  <div className="p-2 rounded-lg bg-emerald-950/30 border border-emerald-500/20 text-emerald-300 text-[10px] flex items-center gap-2">
+                    <span className="text-emerald-400 font-bold">🛡️ Cero Coste Duplicado:</span>
+                    <span className="text-neutral-300">
+                      Los stems procesados se persisten en Supabase y caché de servidor por hash de pista. Nunca pagarás 2 veces por la misma canción.
+                    </span>
                   </div>
                 </div>
 
@@ -4626,20 +4850,29 @@ export default function SongStudioModal({
                     }
                   }}
                   className={`w-full py-3 rounded-xl font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg text-center flex items-center justify-center gap-2 ${
-                    selectedStemEngine === 'replicate'
-                      ? 'bg-gradient-to-r from-amber-500 via-purple-600 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white'
-                      : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white'
+                    selectedStemEngine === 'mvsep-mdx23'
+                      ? 'bg-gradient-to-r from-amber-500 via-orange-600 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white shadow-amber-900/30'
+                      : selectedStemEngine === 'demucs'
+                      ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white shadow-purple-900/30'
+                      : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white shadow-blue-900/30'
                   }`}
                 >
-                  {selectedStemEngine === 'replicate' ? (
+                  {selectedStemEngine === 'mvsep-mdx23' && (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-                      <span>⚡ Separar Stems con Replicate (Cloud GPU Demucs v4)</span>
+                      <span>✨ Separar con MVSEP-MDX23 (Demucs4 + MDX-Net Ensemble)</span>
                     </>
-                  ) : (
+                  )}
+                  {selectedStemEngine === 'demucs' && (
+                    <>
+                      <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
+                      <span>⚡ Separar con HT-Demucs v4 (Cloud GPU Replicate)</span>
+                    </>
+                  )}
+                  {selectedStemEngine === 'dsp-server' && (
                     <>
                       <Cpu className="w-4 h-4 text-cyan-200" />
-                      <span>⚙️ Separar Stems con DSP (Servidor Local - Sin Replicate)</span>
+                      <span>⚙️ Separar Stems con DSP Local (FFmpeg - Coste $0)</span>
                     </>
                   )}
                 </button>
@@ -4882,11 +5115,41 @@ export default function SongStudioModal({
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/50 flex items-center justify-center relative">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center relative border ${
+                  stemProgressModal.stage === 'completed'
+                    ? 'bg-emerald-500/20 border-emerald-500/50'
+                    : stemProgressModal.stage === 'error'
+                    ? stemProgressModal.errorType === 'billing_required'
+                      ? 'bg-amber-500/20 border-amber-500/50'
+                      : stemProgressModal.errorType === 'rate_limit'
+                      ? 'bg-sky-500/20 border-sky-500/50'
+                      : stemProgressModal.errorType === 'timeout'
+                      ? 'bg-purple-500/20 border-purple-500/50'
+                      : stemProgressModal.errorType === 'audio_unsupported'
+                      ? 'bg-orange-500/20 border-orange-500/50'
+                      : stemProgressModal.errorType === 'gpu_failure'
+                      ? 'bg-fuchsia-500/20 border-fuchsia-500/50'
+                      : 'bg-rose-500/20 border-rose-500/50'
+                    : 'bg-amber-500/20 border-amber-500/50'
+                }`}>
                   {stemProgressModal.stage === 'completed' ? (
                     <CheckCircle2 className="w-6 h-6 text-emerald-400" />
                   ) : stemProgressModal.stage === 'error' ? (
-                    <AlertCircle className="w-6 h-6 text-rose-400" />
+                    stemProgressModal.errorType === 'billing_required' ? (
+                      <CreditCard className="w-5 h-5 text-amber-400" />
+                    ) : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing' ? (
+                      <Key className="w-5 h-5 text-rose-400" />
+                    ) : stemProgressModal.errorType === 'audio_unsupported' ? (
+                      <FileAudio className="w-5 h-5 text-orange-400" />
+                    ) : stemProgressModal.errorType === 'rate_limit' ? (
+                      <Clock className="w-5 h-5 text-sky-400" />
+                    ) : stemProgressModal.errorType === 'timeout' ? (
+                      <Timer className="w-5 h-5 text-purple-400" />
+                    ) : stemProgressModal.errorType === 'gpu_failure' ? (
+                      <Cpu className="w-5 h-5 text-fuchsia-400" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-rose-400" />
+                    )
                   ) : (
                     <Cpu className="w-6 h-6 text-amber-400 animate-pulse" />
                   )}
@@ -4896,7 +5159,7 @@ export default function SongStudioModal({
                     {stemProgressModal.stage === 'completed'
                       ? '¡Separación de Stems Completada!'
                       : stemProgressModal.stage === 'error'
-                      ? 'Error en la Separación'
+                      ? stemProgressModal.errorTitle || 'Error en la Separación'
                       : 'Separando Pistas por IA'}
                   </h3>
                   <p className="text-[11px] text-neutral-400 font-sans">
@@ -4904,15 +5167,54 @@ export default function SongStudioModal({
                   </p>
                 </div>
               </div>
-              {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+
+              {stemProgressModal.stage === 'error' ? (
+                <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border flex items-center gap-1.5 ${
+                  stemProgressModal.errorType === 'billing_required'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing'
+                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                    : stemProgressModal.errorType === 'audio_unsupported'
+                    ? 'bg-orange-500/20 text-orange-300 border-orange-500/40'
+                    : stemProgressModal.errorType === 'rate_limit'
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                    : stemProgressModal.errorType === 'timeout'
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                    : stemProgressModal.errorType === 'gpu_failure'
+                    ? 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40'
+                    : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                }`}>
+                  {stemProgressModal.errorType === 'billing_required'
+                    ? '💳 HTTP 402 Saldo'
+                    : stemProgressModal.errorType === 'auth_invalid'
+                    ? '🔑 HTTP 401 Auth'
+                    : stemProgressModal.errorType === 'token_missing'
+                    ? '⚙️ Sin Token'
+                    : stemProgressModal.errorType === 'audio_unsupported'
+                    ? '🎵 HTTP 422 Audio'
+                    : stemProgressModal.errorType === 'rate_limit'
+                    ? '⏳ HTTP 429 Límite'
+                    : stemProgressModal.errorType === 'timeout'
+                    ? '⏱️ Timeout >120s'
+                    : stemProgressModal.errorType === 'gpu_failure'
+                    ? '⚡ Worker GPU'
+                    : stemProgressModal.errorType === 'server_error'
+                    ? '☁️ Replicate 5xx'
+                    : '⚠️ Error'}
+                </span>
+              ) : stemProgressModal.stage !== 'completed' && (
                 <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border flex items-center gap-1.5 animate-pulse ${
-                  stemProgressModal.engineChoice === 'replicate' || stemProgressModal.isNeural
+                  stemProgressModal.engineChoice === 'mvsep-mdx23'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : stemProgressModal.engineChoice === 'demucs'
                     ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
                     : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
                 }`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-                  {stemProgressModal.engineChoice === 'replicate' || stemProgressModal.isNeural
-                    ? '⚡ Replicate Cloud GPU'
+                  {stemProgressModal.engineChoice === 'mvsep-mdx23'
+                    ? '✨ MVSEP-MDX23 Ensemble'
+                    : stemProgressModal.engineChoice === 'demucs'
+                    ? '⚡ Demucs v4 Cloud GPU'
                     : '⚙️ FFmpeg DSP Local'}
                 </span>
               )}
@@ -4996,8 +5298,8 @@ export default function SongStudioModal({
                       <div className="w-3.5 h-3.5 rounded-full border border-neutral-600 shrink-0" />
                     )}
                     <span>
-                      {stemProgressModal.engineChoice === 'replicate' || stemProgressModal.isNeural
-                        ? '2. Inferencia Neuronal HT-Demucs v4 (Replicate Cloud GPU)'
+                      {stemProgressModal.engineChoice !== 'dsp-server' || stemProgressModal.isNeural
+                        ? '2. Inferencia Neuronal (Replicate Cloud GPU)'
                         : '2. Procesamiento de Señal DSP Mid-Side (Servidor Local - Sin Replicate)'}
                     </span>
                   </div>
@@ -5022,15 +5324,39 @@ export default function SongStudioModal({
             {/* Completed State */}
             {stemProgressModal.stage === 'completed' && (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-200 space-y-2">
-                  <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>¡Pistas de Stems Generadas con Éxito!</span>
+                {stemProgressModal.degraded ? (
+                  <div className="p-4 rounded-xl bg-amber-950/60 border border-amber-500/50 text-amber-200 space-y-2">
+                    <div className="flex items-center gap-2 text-amber-400 font-mono font-bold text-xs">
+                      <AlertCircle className="w-4 h-4 text-amber-400" />
+                      <span>⚠️ Modo Degradado Activo (Filtros DSP Básicos)</span>
+                    </div>
+                    <p className="text-[11px] text-neutral-200 font-sans leading-relaxed">
+                      {stemProgressModal.degradedReason || 'El modelo de Inteligencia Artificial neuronal no estaba disponible o no se configuraron credenciales de Replicate. Las pistas se han generado mediante filtrado por frecuencias de señal (DSP básico).'}
+                    </p>
+                    <div className="pt-1 text-[10px] font-mono text-amber-300">
+                      💡 Para separación de calidad de estudio con aislamiento de fuentes (MDX\'23 / Demucs v4), añade tu <code className="bg-black/50 px-1 py-0.5 rounded text-amber-200">REPLICATE_API_TOKEN</code> en Ajustes.
+                    </div>
                   </div>
-                  <p className="text-[11px] text-neutral-300 font-sans leading-relaxed">
-                    Las pistas aisladas ya están montadas en el mezclador. Cada instrumento cuenta con sus controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, volumen y ecualizador.
-                  </p>
-                </div>
+                ) : (
+                  <div className="p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-200 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-xs">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>¡Pistas de Stems Generadas con Éxito!</span>
+                      </div>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-bold ${
+                        stemProgressModal.isNeural 
+                          ? 'bg-purple-950/80 text-purple-300 border-purple-500/40' 
+                          : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
+                      }`}>
+                        {stemProgressModal.isNeural ? '🧠 Red Neuronal Cloud GPU' : '⚙️ Motor DSP Local'}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-neutral-300 font-sans leading-relaxed">
+                      Procesado con el motor <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border border-white/10">{stemProgressModal.separationEngine || 'Neural AI'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
+                    </p>
+                  </div>
+                )}
 
                 {/* TELEMETRY TIMING CARD */}
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 font-mono text-xs space-y-2">
@@ -5065,20 +5391,105 @@ export default function SongStudioModal({
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
-                    <span>🎤</span> <span>Voz Principal</span>
+                {/* Stems generated display */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono">
+                  <div className="p-2 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-1.5">
+                    <span>🎤</span> <span className="truncate">Voz Principal</span>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
-                    <span>🥁</span> <span>Batería & Percusión</span>
+                  <div className="p-2 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-1.5">
+                    <span>🥁</span> <span className="truncate">Batería</span>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
-                    <span>🎸</span> <span>Bajo (Sub-Bass)</span>
+                  <div className="p-2 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-1.5">
+                    <span>🎸</span> <span className="truncate">Bajo</span>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-2">
-                    <span>🎹</span> <span>Guitarras / Teclados</span>
+                  <div className="p-2 rounded-lg bg-zinc-900 border border-white/10 flex items-center gap-1.5">
+                    <span>🎹</span> <span className="truncate">Guitarras/Tecl.</span>
                   </div>
                 </div>
+
+                {/* A/B Quality Comparison / Re-processing Engine Selector */}
+                {stemProgressModal.targetIdea && (
+                  <div className="p-3.5 rounded-xl bg-black/60 border border-indigo-500/30 space-y-2.5 font-mono text-[11px]">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-white flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-400" /> Banco de Pruebas A/B: Comparar Calidad
+                      </span>
+                      <span className="text-[10px] text-indigo-300">
+                        Re-separar con otro motor
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-neutral-400 font-sans leading-normal">
+                      ¿Quieres comparar la pureza del aislamiento vocal y sangrado armónico? Selecciona un motor alternativo para re-procesar:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                      {/* MVSEP-MDX23 */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const idea = stemProgressModal.targetIdea;
+                          if (idea) handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
+                        }}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                          stemProgressModal.engineChoice === 'mvsep-mdx23'
+                            ? 'bg-amber-500/20 border-amber-500/60 text-amber-200 ring-1 ring-amber-400/40'
+                            : 'bg-zinc-900/90 border-white/10 text-neutral-300 hover:border-amber-400/50 hover:bg-zinc-800'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs text-white">✨ MVSEP-MDX23</span>
+                          {stemProgressModal.engineChoice === 'mvsep-mdx23' && (
+                            <span className="text-[9px] px-1 py-0.2 rounded bg-amber-400 text-zinc-950 font-black">ACTIVO</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-neutral-400">MDX-Net + Demucs4 (Ensamble SOTA)</span>
+                      </button>
+
+                      {/* HT-Demucs v4 */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const idea = stemProgressModal.targetIdea;
+                          if (idea) handlePerformAiStemSeparation(idea, 'demucs');
+                        }}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                          stemProgressModal.engineChoice === 'demucs'
+                            ? 'bg-purple-500/20 border-purple-500/60 text-purple-200 ring-1 ring-purple-400/40'
+                            : 'bg-zinc-900/90 border-white/10 text-neutral-300 hover:border-purple-400/50 hover:bg-zinc-800'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs text-white">⚡ HT-Demucs v4</span>
+                          {stemProgressModal.engineChoice === 'demucs' && (
+                            <span className="text-[9px] px-1 py-0.2 rounded bg-purple-400 text-zinc-950 font-black">ACTIVO</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-neutral-400">Hybrid Transformer (6 canales)</span>
+                      </button>
+
+                      {/* DSP Local */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const idea = stemProgressModal.targetIdea;
+                          if (idea) handlePerformAiStemSeparation(idea, 'dsp-server');
+                        }}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
+                          stemProgressModal.engineChoice === 'dsp-server'
+                            ? 'bg-emerald-500/20 border-emerald-500/60 text-emerald-200 ring-1 ring-emerald-400/40'
+                            : 'bg-zinc-900/90 border-white/10 text-neutral-300 hover:border-emerald-400/50 hover:bg-zinc-800'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs text-white">⚙️ DSP Local</span>
+                          {stemProgressModal.engineChoice === 'dsp-server' && (
+                            <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-400 text-zinc-950 font-black">ACTIVO</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-neutral-400">FFmpeg Servidor ($0 Coste)</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <button
                   type="button"
@@ -5093,24 +5504,248 @@ export default function SongStudioModal({
 
             {/* Error State */}
             {stemProgressModal.stage === 'error' && (
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-rose-950/50 border border-rose-500/40 text-rose-200 space-y-1">
-                  <div className="flex items-center gap-2 text-rose-400 font-mono font-bold text-xs">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>Ocurrió un inconveniente</span>
+              <div className="space-y-3.5">
+                {/* Provider Origin Badge */}
+                <div className="flex items-center justify-between">
+                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold border ${
+                    stemProgressModal.errorProvider === 'replicate'
+                      ? 'bg-purple-950/70 border-purple-500/50 text-purple-200'
+                      : stemProgressModal.errorProvider === 'gemini'
+                      ? 'bg-sky-950/70 border-sky-500/50 text-sky-200'
+                      : stemProgressModal.errorProvider === 'ffmpeg'
+                      ? 'bg-emerald-950/70 border-emerald-500/50 text-emerald-200'
+                      : stemProgressModal.errorProvider === 'supabase'
+                      ? 'bg-amber-950/70 border-amber-500/50 text-amber-200'
+                      : 'bg-zinc-900 border-zinc-700 text-zinc-300'
+                  }`}>
+                    {stemProgressModal.errorProvider === 'replicate' && <Cpu className="w-3.5 h-3.5 text-purple-400" />}
+                    {stemProgressModal.errorProvider === 'gemini' && <Bot className="w-3.5 h-3.5 text-sky-400" />}
+                    {stemProgressModal.errorProvider === 'ffmpeg' && <Sliders className="w-3.5 h-3.5 text-emerald-400" />}
+                    {stemProgressModal.errorProvider === 'supabase' && <Database className="w-3.5 h-3.5 text-amber-400" />}
+                    {(!stemProgressModal.errorProvider || stemProgressModal.errorProvider === 'system' || stemProgressModal.errorProvider === 'network') && (
+                      <AlertCircle className="w-3.5 h-3.5 text-zinc-400" />
+                    )}
+                    <span>
+                      {stemProgressModal.errorProvider === 'replicate' && 'Origen: Replicate AI (Demucs v4 Cloud GPU)'}
+                      {stemProgressModal.errorProvider === 'gemini' && 'Origen: Google Gemini API (GenAI)'}
+                      {stemProgressModal.errorProvider === 'ffmpeg' && 'Origen: Librería Local FFmpeg (Motor DSP)'}
+                      {stemProgressModal.errorProvider === 'supabase' && 'Origen: Supabase Storage (Almacenamiento)'}
+                      {(!stemProgressModal.errorProvider || stemProgressModal.errorProvider === 'system' || stemProgressModal.errorProvider === 'network') && 'Origen: Sistema Local'}
+                    </span>
                   </div>
-                  <p className="text-[11px] text-neutral-300 font-sans">
+
+                  <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">
+                    {stemProgressModal.errorType || 'ERROR'}
+                  </span>
+                </div>
+
+                {/* Error Banner */}
+                <div className={`p-4 rounded-xl border space-y-2 transition-all ${
+                  stemProgressModal.errorType === 'billing_required'
+                    ? 'bg-amber-950/40 border-amber-500/50 text-amber-200'
+                    : stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'gemini_quota_exceeded'
+                    ? 'bg-sky-950/40 border-sky-500/50 text-sky-200'
+                    : stemProgressModal.errorType === 'timeout'
+                    ? 'bg-purple-950/40 border-purple-500/50 text-purple-200'
+                    : stemProgressModal.errorType === 'audio_unsupported' || stemProgressModal.errorType === 'ffmpeg_codec_unsupported'
+                    ? 'bg-orange-950/40 border-orange-500/50 text-orange-200'
+                    : stemProgressModal.errorType === 'gpu_failure'
+                    ? 'bg-fuchsia-950/40 border-fuchsia-500/50 text-fuchsia-200'
+                    : stemProgressModal.errorType === 'server_error'
+                    ? 'bg-slate-900/90 border-slate-600/50 text-slate-200'
+                    : stemProgressModal.errorProvider === 'gemini'
+                    ? 'bg-blue-950/50 border-blue-500/40 text-blue-200'
+                    : 'bg-rose-950/50 border-rose-500/40 text-rose-200'
+                }`}>
+                  <div className="flex items-center gap-2 font-mono font-bold text-xs">
+                    {stemProgressModal.errorType === 'billing_required' ? (
+                      <CreditCard className="w-4 h-4 text-amber-400 shrink-0" />
+                    ) : stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing' || stemProgressModal.errorType === 'gemini_key_missing' || stemProgressModal.errorType === 'gemini_auth_invalid' ? (
+                      <Key className="w-4 h-4 text-rose-400 shrink-0" />
+                    ) : stemProgressModal.errorType === 'audio_unsupported' || stemProgressModal.errorType === 'ffmpeg_codec_unsupported' ? (
+                      <FileAudio className="w-4 h-4 text-orange-400 shrink-0" />
+                    ) : stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'gemini_quota_exceeded' ? (
+                      <Clock className="w-4 h-4 text-sky-400 shrink-0" />
+                    ) : stemProgressModal.errorType === 'timeout' ? (
+                      <Timer className="w-4 h-4 text-purple-400 shrink-0" />
+                    ) : stemProgressModal.errorType === 'gpu_failure' ? (
+                      <Cpu className="w-4 h-4 text-fuchsia-400 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                    )}
+                    <span>{stemProgressModal.errorTitle || 'Diagnóstico del Error'}</span>
+                  </div>
+                  <p className="text-[12px] text-neutral-100 font-sans leading-relaxed whitespace-pre-wrap break-words font-medium">
                     {stemProgressModal.errorMessage || 'No se pudo completar la separación de pistas.'}
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setStemProgressModal(null)}
-                  className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-bold transition-all cursor-pointer"
-                >
-                  Cerrar
-                </button>
+                {/* Recommended Solution Card */}
+                {stemProgressModal.actionAdvice && (
+                  <div className="p-3.5 rounded-xl bg-zinc-900/90 border border-emerald-500/30 space-y-1.5">
+                    <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-[11px]">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>💡 Solución Recomendada:</span>
+                    </div>
+                    <p className="text-[11px] text-neutral-300 font-sans leading-relaxed">
+                      {stemProgressModal.actionAdvice}
+                    </p>
+                  </div>
+                )}
+
+                {/* Primary Action Buttons Based on Error Provider & Type */}
+                <div className="space-y-2">
+                  {/* Replicate Specific Actions */}
+                  {stemProgressModal.errorProvider === 'replicate' && stemProgressModal.errorType === 'billing_required' && (
+                    <a
+                      href="https://replicate.com/account/billing"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-zinc-950 font-mono text-xs font-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      <span>Recargar Saldo en Replicate Billing</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+
+                  {stemProgressModal.errorProvider === 'replicate' && (stemProgressModal.errorType === 'auth_invalid' || stemProgressModal.errorType === 'token_missing') && (
+                    <a
+                      href="https://replicate.com/account/api-tokens"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                    >
+                      <Key className="w-4 h-4" />
+                      <span>Gestionar Tokens en Replicate API</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+
+                  {stemProgressModal.errorProvider === 'replicate' && (stemProgressModal.errorType === 'rate_limit' || stemProgressModal.errorType === 'timeout' || stemProgressModal.errorType === 'gpu_failure') && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const idea = stemProgressModal.targetIdea;
+                        if (idea) handlePerformAiStemSeparation(idea, stemProgressModal.engineChoice || 'demucs');
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      <span>Reintentar con Replicate Cloud GPU</span>
+                    </button>
+                  )}
+
+                  {stemProgressModal.errorProvider === 'replicate' && stemProgressModal.errorType === 'server_error' && (
+                    <a
+                      href="https://replicatestatus.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                    >
+                      <Activity className="w-4 h-4" />
+                      <span>Comprobar Estado en Replicate Status</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+
+                  {/* Gemini API Specific Actions */}
+                  {stemProgressModal.errorProvider === 'gemini' && (stemProgressModal.errorType === 'gemini_key_missing' || stemProgressModal.errorType === 'gemini_auth_invalid') && (
+                    <a
+                      href="https://aistudio.google.com/app/apikey"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                    >
+                      <Key className="w-4 h-4" />
+                      <span>Configurar API Key en Google AI Studio</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+
+                  {stemProgressModal.errorProvider === 'gemini' && stemProgressModal.errorType === 'gemini_quota_exceeded' && (
+                    <a
+                      href="https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/quotas"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
+                    >
+                      <Clock className="w-4 h-4" />
+                      <span>Revisar Cuotas de Gemini en Google Cloud</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+
+                  {/* Fallback and Alternative Engine Buttons */}
+                  <div className="flex gap-2">
+                    {stemProgressModal.targetIdea && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const idea = stemProgressModal.targetIdea;
+                          if (idea) {
+                            if (stemProgressModal.engineChoice === 'dsp-server') {
+                              handlePerformAiStemSeparation(idea, 'mvsep-mdx23');
+                            } else {
+                              handlePerformAiStemSeparation(idea, 'dsp-server');
+                            }
+                          }
+                        }}
+                        className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>
+                          {stemProgressModal.engineChoice === 'dsp-server'
+                            ? 'Probar con MVSEP-MDX23'
+                            : 'Separar con Motor DSP Local (Gratis)'}
+                        </span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setStemProgressModal(null)}
+                      className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+
+                {/* Collapsible Technical Details */}
+                {stemProgressModal.errorDetail && (
+                  <div className="pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowStemErrorDetails(!showStemErrorDetails)}
+                      className="text-[11px] font-mono text-neutral-400 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      {showStemErrorDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                      <span>{showStemErrorDetails ? 'Ocultar diagnóstico técnico' : 'Ver diagnóstico técnico detallado (logs / error)'}</span>
+                    </button>
+                    {showStemErrorDetails && (
+                      <div className="mt-2 p-3 rounded-xl bg-black/80 border border-white/10 font-mono text-[11px] text-neutral-300 space-y-2 animate-in fade-in duration-150">
+                        <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                          <span className="text-[10px] text-neutral-400 uppercase font-bold tracking-wider">Detalles técnicos del error:</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(stemProgressModal.errorDetail || '');
+                              setCopiedStemError(true);
+                              setTimeout(() => setCopiedStemError(false), 2000);
+                            }}
+                            className="flex items-center gap-1 text-[10px] text-amber-300 hover:text-amber-200 transition-colors cursor-pointer"
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>{copiedStemError ? '¡Copiado!' : 'Copiar'}</span>
+                          </button>
+                        </div>
+                        <div className="max-h-40 overflow-y-auto whitespace-pre-wrap break-all text-[10px] text-neutral-400 font-mono leading-relaxed select-all">
+                          {stemProgressModal.errorDetail}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 

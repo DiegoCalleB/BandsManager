@@ -9,32 +9,48 @@ import fs from "fs";
 import crypto from "crypto";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
+import { getStemsFromPersistentCache, saveStemsToPersistentCache, acquireStemsSeparationLock, waitForStemsCompletion, markStemsSeparationFailed, StemsCacheRecord } from "../db/stemsCache.js";
+import { stemStorageRetryManager } from "../services/stemStorageRetryQueue.js";
+import { verifyReplicateWebhook, verifyWebhookSignature, isPredictionWebhookProcessed, recordPredictionJob } from "../services/stemPredictionReconciler.js";
 import { uploadBufferToSupabase, uploadToSupabaseIfAvailable, rutaAlmacenamientoStem } from "../utils/storage.js";
+import { preprocesarAudioDirecto, construirFiltroPreprocesamientoDirecto } from "../utils/audioEnergy.js";
 
 if (ffmpegPath) {
   ffmpeg.setFfmpegPath(ffmpegPath);
 }
 
+// Identificadores de modelos de Replicate (verificados y distintos)
+export const REPLICATE_MODEL_DEMUCS_V4 = 'cjwbw/demucs';
+export const REPLICATE_MODEL_MVSEP_MDX23 = 'lucataco/mvsep-mdx23-music-separation';
+
+export const REPLICATE_MODELS = {
+  demucs: REPLICATE_MODEL_DEMUCS_V4,
+  'mvsep-mdx23': REPLICATE_MODEL_MVSEP_MDX23,
+} as const;
+
 const router = express.Router();
 
 /**
  * Garantiza que cualquier URL o ruta local de audio se convierta en una URL HTTPS pública
- * alcanzable por Replicate subiéndola temporalmente a Supabase Storage si no es pública.
+ * alcanzable por Replicate subiéndola a Supabase Storage si no es pública.
  */
 async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: string, requestHost?: string): Promise<string> {
-  // Si ya es una URL pública HTTPS (incluyendo Supabase Storage o Cloud Run), es directamente alcanzable por Replicate
-  if (audioUrl.startsWith("https://") && !audioUrl.includes("localhost") && !audioUrl.includes("127.0.0.1")) {
+  // Fast-path: Si audioUrl ya es una URL pública HTTPS directa en un CDN o Storage público
+  if (
+    audioUrl.startsWith("https://") &&
+    (audioUrl.includes("supabase.co") ||
+     audioUrl.includes("storage.googleapis.com") ||
+     audioUrl.includes("cloudinary.com") ||
+     audioUrl.includes("replicate.delivery") ||
+     audioUrl.includes("amazonaws.com") ||
+     audioUrl.includes("blob.core.windows.net"))
+  ) {
+    console.log(`[Demucs Neural] URL de entrada ya es HTTPS pública directa en Supabase/CDN: ${audioUrl.substring(0, 60)}...`);
     return audioUrl;
   }
 
   let buffer: Buffer | null = null;
   let ext = "mp3";
-
-  // Fast-path: Si audioUrl ya es una URL pública HTTPS directa (ej: Supabase Storage, CDN, S3, Cloudinary)
-  if (audioUrl.startsWith("https://") && (audioUrl.includes("supabase.co") || audioUrl.includes("storage.googleapis.com") || audioUrl.includes("cloudinary.com") || audioUrl.includes("replicate.delivery"))) {
-    console.log(`[Demucs Neural] URL de entrada ya es HTTPS pública directa en Supabase/CDN. Omitiendo duplicación de subida: ${audioUrl.substring(0, 60)}...`);
-    return audioUrl;
-  }
 
   if (audioUrl.startsWith("data:audio/")) {
     try {
@@ -46,57 +62,476 @@ async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: 
     } catch (e) {
       console.warn("[Demucs Neural] Error parseando data URL:", e);
     }
-  } else if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
-    try {
-      const isSafe = await esUrlExternaSegura(audioUrl);
-      if (isSafe) {
-        const res = await fetch(audioUrl);
-        if (res.ok) {
-          const ab = await res.arrayBuffer();
-          buffer = Buffer.from(ab);
-        }
-      }
-    } catch (e) {
-      console.warn("[Demucs Neural] Error obteniendo URL de audio de entrada para espejo público:", e);
-    }
   } else {
-    // Archivo local en disco del servidor
-    const cleanRel = audioUrl.startsWith("/") ? audioUrl : `/${audioUrl}`;
-    let localPath = path.join(process.cwd(), "public", cleanRel);
-    if (!fs.existsSync(localPath)) {
-      localPath = path.join(process.cwd(), "public", "uploads", audioUrl);
+    // 1. Intentar localizar en disco local primero
+    const urlWithoutQuery = audioUrl.split('?')[0];
+    const filenameOnly = path.basename(urlWithoutQuery);
+    let subRel = "";
+    if (urlWithoutQuery.includes("/uploads/")) {
+      subRel = urlWithoutQuery.substring(urlWithoutQuery.indexOf("/uploads/") + "/uploads/".length);
     }
 
-    if (fs.existsSync(localPath)) {
+    const candidatePaths = [
+      subRel ? path.join(process.cwd(), "public", "uploads", subRel) : "",
+      path.join(process.cwd(), "public", urlWithoutQuery.startsWith("/") ? urlWithoutQuery : `/${urlWithoutQuery}`),
+      path.join(process.cwd(), "public", "uploads", filenameOnly),
+      path.join(process.cwd(), "public", "uploads", "stems", "inputs", filenameOnly),
+      path.join(process.cwd(), "public", "uploads", "stems", filenameOnly),
+      path.join(process.cwd(), "public", "audio", filenameOnly),
+      path.join(process.cwd(), "public", "transposed", filenameOnly)
+    ].filter(p => p && p.length > 0);
+
+    const localPath = candidatePaths.find(p => fs.existsSync(p));
+    if (localPath) {
       try {
         buffer = fs.readFileSync(localPath);
         ext = path.extname(localPath).replace(".", "") || "mp3";
+        console.log(`[Demucs Neural] Archivo de entrada encontrado en disco local (${localPath}) - ${buffer.length} bytes`);
       } catch (e) {
         console.warn("[Demucs Neural] Error leyendo archivo de audio local:", e);
+      }
+    } else if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
+      try {
+        const isSafe = await esUrlExternaSegura(audioUrl);
+        if (isSafe) {
+          const res = await fetch(audioUrl);
+          if (res.ok) {
+            const ab = await res.arrayBuffer();
+            buffer = Buffer.from(ab);
+            ext = path.extname(urlWithoutQuery).replace(".", "") || "mp3";
+          }
+        }
+      } catch (e) {
+        console.warn("[Demucs Neural] Error obteniendo URL de audio de entrada para espejo público:", e);
       }
     }
   }
 
-  if (buffer) {
-    const storageSubPath = rutaAlmacenamientoStem(bandId, `input-audio.${ext}`, songHash);
+  // Si tenemos el buffer, subirlo a Supabase Storage para que Replicate tenga una URL pública universal 100% garantizada
+  if (buffer && buffer.length > 0) {
+    const storageSubPath = rutaAlmacenamientoStem(bandId, `input-audio-${Date.now()}.${ext}`, songHash);
     const mimeType = ext === "wav" ? "audio/wav" : ext === "flac" ? "audio/flac" : "audio/mpeg";
     const uploadedPublicUrl = await uploadBufferToSupabase(buffer, storageSubPath, mimeType);
     if (uploadedPublicUrl) {
       console.log(`[Demucs Neural] Audio de entrada subido a Supabase Storage para Replicate: ${uploadedPublicUrl}`);
       return uploadedPublicUrl;
     }
+
+    // Fallback: Si Supabase Storage no está disponible pero el buffer es manejable (<12MB),
+    // Replicate acepta Data URIs base64 directamente en el parámetro audio
+    if (buffer.length <= 12 * 1024 * 1024) {
+      console.log(`[Demucs Neural] Utilizando Data URI base64 directo para Replicate (${(buffer.length / 1024 / 1024).toFixed(2)} MB)...`);
+      return `data:${mimeType};base64,${buffer.toString("base64")}`;
+    }
   }
 
-  if (requestHost && audioUrl.startsWith("/")) {
-    const protocol = requestHost.includes("localhost") || requestHost.includes("127.0.0.1") ? "http" : "https";
-    return `${protocol}://${requestHost}${audioUrl}`;
+  // Resolver dominio público HTTPS para Replicate (soporta bandmanager.io / custom domains y Railway)
+  const publicDomain = process.env.APP_URL || process.env.PUBLIC_URL || process.env.RAILWAY_PUBLIC_DOMAIN || process.env.RAILWAY_STATIC_URL || "https://bandmanager.io";
+  if (audioUrl.startsWith("/")) {
+    if (publicDomain) {
+      const cleanDomain = publicDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      return `https://${cleanDomain}${audioUrl}`;
+    }
+    if (requestHost && !requestHost.includes("localhost") && !requestHost.includes("127.0.0.1")) {
+      const proto = requestHost.includes(":") ? "http" : "https";
+      return `${proto}://${requestHost}${audioUrl}`;
+    }
   }
 
-  const appUrl = process.env.APP_URL || "";
-  if (appUrl && audioUrl.startsWith("/")) {
-    return `${appUrl.replace(/\/$/, "")}${audioUrl}`;
-  }
   return audioUrl;
+}
+
+export type MusicServiceErrorProvider = 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
+
+export type StemErrorType = 
+  // Replicate (Demucs Neural Cloud GPU)
+  | 'token_missing' 
+  | 'auth_invalid' 
+  | 'billing_required' 
+  | 'audio_unsupported' 
+  | 'rate_limit' 
+  | 'timeout' 
+  | 'gpu_failure' 
+  | 'server_error'
+  // Google Gemini API (GenAI / Lyria / Flash)
+  | 'gemini_key_missing'
+  | 'gemini_auth_invalid'
+  | 'gemini_quota_exceeded'
+  | 'gemini_model_unavailable'
+  | 'gemini_safety_block'
+  | 'gemini_generic'
+  // FFmpeg DSP (Local Server Library)
+  | 'ffmpeg_missing'
+  | 'ffmpeg_codec_unsupported'
+  | 'ffmpeg_processing_error'
+  // Supabase Storage
+  | 'supabase_credentials_missing'
+  | 'supabase_storage_error'
+  // Network / SSRF
+  | 'audio_fetch_failed'
+  | 'ssrf_blocked'
+  | 'generic';
+
+export interface ServiceDiagnosticError {
+  provider: MusicServiceErrorProvider;
+  errorType: StemErrorType;
+  errorTitle: string;
+  message: string;
+  actionAdvice: string;
+  errorDetail: string;
+  httpStatus: number;
+}
+
+// Retrocompatibilidad con ReplicateDiagnosticError
+export type ReplicateDiagnosticError = ServiceDiagnosticError;
+
+/**
+ * Parsea y clasifica con precisión diagnóstica cualquier respuesta de error recibida de la API de Replicate.
+ */
+function parseReplicateError(status: number, errBody: string): ServiceDiagnosticError {
+  let parsedDetail = "";
+  try {
+    const json = JSON.parse(errBody);
+    parsedDetail = json.detail || json.title || json.error || json.message || "";
+    if (typeof parsedDetail === "object") parsedDetail = JSON.stringify(parsedDetail);
+  } catch {
+    parsedDetail = errBody.trim().substring(0, 400);
+  }
+
+  if (status === 401) {
+    return {
+      provider: 'replicate',
+      errorType: 'auth_invalid',
+      errorTitle: 'Error de Autenticación en Replicate (HTTP 401)',
+      message: `El token de Replicate suministrado es inválido, ha caducado o carece de permisos. Detalle: ${parsedDetail || 'Unauthorized'}`,
+      actionAdvice: "Verifica tu API Token en https://replicate.com/account/api-tokens. Asegúrate de que comience por 'r8_' y no contenga espacios ni comillas.",
+      errorDetail: parsedDetail || errBody,
+      httpStatus: 401
+    };
+  }
+  if (status === 402) {
+    return {
+      provider: 'replicate',
+      errorType: 'billing_required',
+      errorTitle: 'Saldo o Facturación Requerida en Replicate (HTTP 402)',
+      message: `Tu cuenta de Replicate no dispone de saldo suficiente o requiere vincular una tarjeta de crédito para arrancar el contenedor Demucs v4. Detalle: ${parsedDetail || 'Payment Required'}`,
+      actionAdvice: "Accede a tu panel de facturación en https://replicate.com/account/billing para añadir créditos a tu cuenta de Replicate. O bien utiliza la separación con Motor DSP local que es 100% gratuita.",
+      errorDetail: parsedDetail || errBody,
+      httpStatus: 402
+    };
+  }
+  if (status === 422) {
+    return {
+      provider: 'replicate',
+      errorType: 'audio_unsupported',
+      errorTitle: 'Parámetro o Archivo de Audio no Válido en Replicate (HTTP 422)',
+      message: `El modelo Demucs v4 rechazó los datos de audio suministrados. Detalle: ${parsedDetail || errBody.substring(0, 200)}`,
+      actionAdvice: "Comprueba que la pista contenga audio real reproducible en formato MP3, WAV o FLAC con al menos 3 segundos de duración. Si el archivo es muy grande, recórtalo o usa el Motor DSP.",
+      errorDetail: parsedDetail || errBody,
+      httpStatus: 422
+    };
+  }
+  if (status === 429) {
+    return {
+      provider: 'replicate',
+      errorType: 'rate_limit',
+      errorTitle: 'Límite de Peticiones en Replicate Alcanzado (HTTP 429)',
+      message: `Has sobrepasado temporalmente el límite de llamadas concurrentes o peticiones por minuto permitidas por Replicate. Detalle: ${parsedDetail || 'Rate limit exceeded'}`,
+      actionAdvice: "Espera entre 30 y 60 segundos antes de enviar una nueva solicitud a Replicate o utiliza el Motor DSP local.",
+      errorDetail: parsedDetail || errBody,
+      httpStatus: 429
+    };
+  }
+  if (status >= 500) {
+    return {
+      provider: 'replicate',
+      errorType: 'server_error',
+      errorTitle: `Fallo Temporal en la Infraestructura de Replicate (HTTP ${status})`,
+      message: `Los servidores de Replicate están respondiendo con un error interno de infraestructura temporal. Detalle: ${parsedDetail || 'Internal Server Error'}`,
+      actionAdvice: "Puedes comprobar el estado global del servicio en https://replicatestatus.com o separar las pistas con el Motor DSP local que corre en tu propio servidor sin depender de la nube.",
+      errorDetail: parsedDetail || errBody,
+      httpStatus: status
+    };
+  }
+
+  return {
+    provider: 'replicate',
+    errorType: 'generic',
+    errorTitle: `Respuesta Inesperada de Replicate (HTTP ${status})`,
+    message: `Replicate devolvió una respuesta no habitual (${status}): ${parsedDetail || errBody.substring(0, 250)}`,
+    actionAdvice: "Revisa los detalles técnicos a continuación o prueba la separación con el Motor DSP local.",
+    errorDetail: parsedDetail || errBody,
+    httpStatus: status
+  };
+}
+
+/**
+ * Parsea y clasifica con precisión diagnóstica cualquier error originado en la API de Google Gemini (GenAI).
+ */
+export function parseGeminiError(err: any): ServiceDiagnosticError {
+  const errMsg = String(err?.message || err || "");
+  const errStatus = err?.status || (errMsg.includes("403") ? 403 : errMsg.includes("429") ? 429 : errMsg.includes("400") ? 400 : 500);
+
+  if (!process.env.GEMINI_API_KEY) {
+    return {
+      provider: 'gemini',
+      errorType: 'gemini_key_missing',
+      errorTitle: 'Clave GEMINI_API_KEY No Configurada (Google GenAI)',
+      message: 'No se encontró la variable GEMINI_API_KEY en el entorno del servidor.',
+      actionAdvice: 'Configura la variable GEMINI_API_KEY en Settings para habilitar el análisis musical, composición y generación con Lyria / Gemini.',
+      errorDetail: 'Missing process.env.GEMINI_API_KEY',
+      httpStatus: 400
+    };
+  }
+
+  if (errMsg.includes("API_KEY_INVALID") || errMsg.includes("API key not valid") || (errStatus === 400 && errMsg.includes("key"))) {
+    return {
+      provider: 'gemini',
+      errorType: 'gemini_auth_invalid',
+      errorTitle: 'Clave GEMINI_API_KEY Inválida o Caducada (Google GenAI)',
+      message: 'La clave GEMINI_API_KEY no es válida o ha sido revocada en Google AI Studio.',
+      actionAdvice: 'Comprueba tu clave en https://aistudio.google.com/app/apikey y actualízala en Settings.',
+      errorDetail: errMsg,
+      httpStatus: 401
+    };
+  }
+
+  if (errMsg.includes("PERMISSION_DENIED") || errStatus === 403) {
+    return {
+      provider: 'gemini',
+      errorType: 'gemini_auth_invalid',
+      errorTitle: 'Permiso Denegado en Gemini API (HTTP 403)',
+      message: 'Tu proyecto de Google Cloud / AI Studio no tiene habilitada la API o los permisos necesarios.',
+      actionAdvice: 'Verifica los permisos y la habilitación de la Generative Language API en Google AI Studio / Google Cloud Console.',
+      errorDetail: errMsg,
+      httpStatus: 403
+    };
+  }
+
+  if (errMsg.includes("RESOURCE_EXHAUSTED") || errMsg.includes("quota") || errStatus === 429) {
+    return {
+      provider: 'gemini',
+      errorType: 'gemini_quota_exceeded',
+      errorTitle: 'Cuota de Gemini API Excedida (HTTP 429 Resource Exhausted)',
+      message: 'Se ha superado el límite de peticiones por minuto (RPM/TPM) o la cuota diaria asignada a tu clave Gemini API.',
+      actionAdvice: 'Espera unos 60 segundos antes de reintentar o actualiza tu nivel en Google AI Studio (Pay-as-you-go / Tier 2).',
+      errorDetail: errMsg,
+      httpStatus: 429
+    };
+  }
+
+  if (errMsg.includes("NOT_FOUND") || errMsg.includes("model") || errMsg.includes("lyria")) {
+    return {
+      provider: 'gemini',
+      errorType: 'gemini_model_unavailable',
+      errorTitle: 'Modelo de Gemini no Disponible en tu Región / Nivel',
+      message: `El modelo solicitado (${errMsg.includes('lyria') ? 'Lyria Audio' : 'Gemini'}) no está accesible con tu clave o en tu región geográfica.`,
+      actionAdvice: 'El sistema utilizará automáticamente análisis compositivo local o el motor fallback de Gemini Flash.',
+      errorDetail: errMsg,
+      httpStatus: 404
+    };
+  }
+
+  if (errMsg.includes("SAFETY") || errMsg.includes("blocked") || errMsg.includes("HARM")) {
+    return {
+      provider: 'gemini',
+      errorType: 'gemini_safety_block',
+      errorTitle: 'Bloqueo por Políticas de Seguridad de Gemini AI',
+      message: 'El contenido de la letra o el prompt fue bloqueado por los filtros de seguridad de Google AI.',
+      actionAdvice: 'Modifica el texto o título de la canción para evitar términos protegidos o palabras sensibles.',
+      errorDetail: errMsg,
+      httpStatus: 422
+    };
+  }
+
+  return {
+    provider: 'gemini',
+    errorType: 'gemini_generic',
+    errorTitle: 'Error en la API de Google Gemini',
+    message: `Gemini API devolvió una incidencia: ${errMsg.substring(0, 200)}`,
+    actionAdvice: 'Verifica la conectividad con los servicios de Google AI o reintenta en unos instantes.',
+    errorDetail: errMsg,
+    httpStatus: errStatus
+  };
+}
+
+/**
+ * Parsea y clasifica con precisión diagnóstica cualquier error originado en FFmpeg (Motor DSP Local).
+ */
+export function parseFfmpegError(err: any): ServiceDiagnosticError {
+  const msg = String(err?.message || err || "");
+  if (!ffmpegPath && !fs.existsSync("/usr/bin/ffmpeg")) {
+    return {
+      provider: 'ffmpeg',
+      errorType: 'ffmpeg_missing',
+      errorTitle: 'Binario FFmpeg No Encontrado en Servidor',
+      message: 'La librería fluent-ffmpeg no pudo localizar el binario ejecutable de ffmpeg en el servidor.',
+      actionAdvice: 'El paquete ffmpeg-static debe estar instalado en el entorno de Railway/Node.',
+      errorDetail: msg || 'ffmpegPath missing',
+      httpStatus: 500
+    };
+  }
+  if (msg.includes("Invalid data found") || msg.includes("codec") || msg.includes("format") || msg.includes("header")) {
+    return {
+      provider: 'ffmpeg',
+      errorType: 'ffmpeg_codec_unsupported',
+      errorTitle: 'Formato o Códec de Audio no Compatible en FFmpeg',
+      message: 'El archivo de audio tiene un formato, compresión o encabezado corrupto que la librería FFmpeg no puede decodificar.',
+      actionAdvice: 'Exporta tu canción a WAV PCM de 16-bit / 44.1kHz o MP3 estándar antes de subirla.',
+      errorDetail: msg,
+      httpStatus: 422
+    };
+  }
+  return {
+    provider: 'ffmpeg',
+    errorType: 'ffmpeg_processing_error',
+    errorTitle: 'Error en Filtro DSP Local con FFmpeg',
+    message: `Fallo durante el filtrado espectral por software en el servidor: ${msg.substring(0, 200)}`,
+    actionAdvice: 'Comprueba que el archivo de audio tenga duración suficiente y que la memoria RAM del servidor sea adecuada.',
+    errorDetail: msg,
+    httpStatus: 500
+  };
+}
+
+/**
+ * Parsea y clasifica con precisión diagnóstica errores originados en Supabase Storage.
+ */
+export function parseSupabaseStorageError(err: any): ServiceDiagnosticError {
+  const msg = String(err?.message || err || "");
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return {
+      provider: 'supabase',
+      errorType: 'supabase_credentials_missing',
+      errorTitle: 'Credenciales de Supabase No Configuradas',
+      message: 'Faltan las variables SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY en el servidor.',
+      actionAdvice: 'Configura las variables de Supabase en tu panel de Railway para permitir persistir stems y audios.',
+      errorDetail: msg || 'Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY',
+      httpStatus: 500
+    };
+  }
+  return {
+    provider: 'supabase',
+    errorType: 'supabase_storage_error',
+    errorTitle: 'Error de Almacenamiento en Supabase Storage',
+    message: `No se pudo guardar la pista o archivo en el bucket de Supabase: ${msg.substring(0, 200)}`,
+    actionAdvice: 'Verifica los permisos del bucket o el tamaño máximo de archivo en tu proyecto de Supabase.',
+    errorDetail: msg,
+    httpStatus: 502
+  };
+}
+
+export interface ProcessNeuralStemsResult {
+  stemsMap: Record<string, { url: string; formato: string; tamano: string }> | null;
+  timingBreakdown?: any;
+  error?: string;
+  errorType?: StemErrorType;
+  errorTitle?: string;
+  actionAdvice?: string;
+  errorDetail?: string;
+  httpStatus?: number;
+  provider?: MusicServiceErrorProvider;
+  engine?: string;
+  cached?: boolean;
+}
+
+// ============================================================================
+// CACHÉ Y MUTEX ANTI-DUPLICACIÓN (Garantía de Cero Coste Duplicado en Replicate/GPU)
+// ============================================================================
+export interface CachedStemsEntry {
+  stemsMap: Record<string, { url: string; formato: string; tamano: string }>;
+  timingBreakdown: any;
+  engine: string;
+  engineUsed?: string;
+  degraded?: boolean;
+  degradedReason?: string;
+  isNeural: boolean;
+  timestamp: number;
+}
+
+export const stemsMemoryCache = new Map<string, CachedStemsEntry>();
+export const inFlightSeparations = new Map<string, Promise<{
+  stemsMap: Record<string, { url: string; formato: string; tamano: string }> | null;
+  timingBreakdown?: any;
+  engine: string;
+  engineUsed?: string;
+  degraded?: boolean;
+  degradedReason?: string;
+  isNeural: boolean;
+  cached?: boolean;
+  errorInfo?: ProcessNeuralStemsResult | null;
+}>>();
+
+/**
+ * Descarga y persiste de forma permanente una lista de stems en Supabase Storage
+ * (con fallback seguro en disco local), garantizando que las URLs efímeras de Replicate
+ * o microservicios GPU nunca expiren para la banda.
+ */
+async function persistRawStemsMap(
+  rawStemsMap: Record<string, string>,
+  effectiveBandId: string,
+  effectiveHash: string,
+  formatLabel: string
+): Promise<Record<string, { url: string; formato: string; tamano: string }>> {
+  const persistentStemsMap: Record<string, { url: string; formato: string; tamano: string }> = {};
+  const stemsUploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
+  if (!fs.existsSync(stemsUploadsDir)) {
+    fs.mkdirSync(stemsUploadsDir, { recursive: true });
+  }
+
+  await Promise.all(
+    Object.entries(rawStemsMap).map(async ([instrumentKey, tempUrl]) => {
+      let finalUrl = "";
+      let sizeBytes = 0;
+      if (tempUrl && (tempUrl.startsWith("http://") || tempUrl.startsWith("https://"))) {
+        try {
+          const isSafe = tempUrl.includes("replicate.delivery") || tempUrl.includes("supabase.co") || await esUrlExternaSegura(tempUrl);
+          if (isSafe) {
+            const fileRes = await fetch(tempUrl, { signal: AbortSignal.timeout(45000) });
+            if (fileRes.ok) {
+              const arrayBuf = await fileRes.arrayBuffer();
+              sizeBytes = arrayBuf.byteLength;
+              const buffer = Buffer.from(arrayBuf);
+              const instrumentClean = instrumentKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+              const filename = `stem-${instrumentClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}.mp3`;
+              const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, filename, effectiveHash);
+              
+              // 1. Intentar guardar en Supabase Storage permanente
+              const supabaseUrl = await uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
+              if (supabaseUrl) {
+                finalUrl = supabaseUrl;
+                console.log(`[Neural Stems] Guardado permanente en Supabase para ${instrumentKey}: ${supabaseUrl}`);
+              } else {
+                // 2. Buffer temporal en disco de tránsito con reintento automático hacia Supabase
+                const localPath = path.join(stemsUploadsDir, filename);
+                fs.writeFileSync(localPath, buffer);
+                finalUrl = `/uploads/stems/${filename}`;
+                console.warn(`[Neural Stems] ⚠️ Subida inmediata a Supabase no disponible. Almacenado en buffer efímero de tránsito (${localPath}) y encolado para reintento con backoff.`);
+                stemStorageRetryManager.enqueue(localPath, storageSubPath, effectiveBandId, "audio/mpeg", 5);
+              }
+            }
+          }
+        } catch (storageErr: any) {
+          console.warn(`[Neural Stems] Error descargando o persistiendo stem ${instrumentKey}:`, storageErr?.message || storageErr);
+        }
+      }
+
+      if (!finalUrl) {
+        finalUrl = tempUrl;
+      }
+
+      const formattedSize = sizeBytes > 0
+        ? (sizeBytes < 1024 * 1024 ? `${(sizeBytes / 1024).toFixed(0)} KB` : `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`)
+        : '3.1 MB';
+
+      persistentStemsMap[instrumentKey] = {
+        url: finalUrl,
+        formato: formatLabel,
+        tamano: formattedSize
+      };
+    })
+  );
+
+  return persistentStemsMap;
 }
 
 /**
@@ -109,10 +544,36 @@ async function processNeuralStemsReplicate(
   audioUrl: string,
   bandId?: string,
   songHash?: string,
-  requestHost?: string
-): Promise<{ stemsMap: Record<string, { url: string; formato: string; tamano: string }> | null; timingBreakdown?: any; error?: string } | null> {
-  const token = process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
-  if (!token) return null;
+  requestHost?: string,
+  overrideToken?: string
+): Promise<ProcessNeuralStemsResult | null> {
+  const rawToken = overrideToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || "";
+  const token = rawToken.trim().replace(/^["']|["']$/g, '').replace(/^(Token|Bearer)\s+/i, '');
+  if (!token) {
+    return {
+      stemsMap: null,
+      provider: 'replicate',
+      errorType: 'token_missing',
+      errorTitle: 'Token de Replicate no Configurado',
+      error: 'No se encontró la clave REPLICATE_API_TOKEN en el entorno.',
+      actionAdvice: 'Configura REPLICATE_API_TOKEN en los ajustes del proyecto o variables de entorno.',
+      errorDetail: 'Missing environment variable REPLICATE_API_TOKEN',
+      httpStatus: 400
+    };
+  }
+
+  if (!audioUrl) {
+    return {
+      stemsMap: null,
+      provider: 'replicate',
+      errorType: 'audio_unsupported',
+      errorTitle: 'Audio no Suministrado',
+      error: 'No se proporcionó una URL o archivo de audio válido para procesar en Replicate.',
+      actionAdvice: 'Sube o graba una idea de audio primero antes de solicitar la separación.',
+      errorDetail: 'audioUrl is empty or null',
+      httpStatus: 400
+    };
+  }
 
   const t0 = Date.now();
   const effectiveBandId = bandId || "sin-banda";
@@ -122,26 +583,28 @@ async function processNeuralStemsReplicate(
     const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
     const tPreloadEnd = Date.now();
 
-    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL pública: ${resolvedUrl}`);
+    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL de entrada: ${resolvedUrl.startsWith('data:') ? 'Data URI (' + resolvedUrl.substring(0, 30) + '...)' : resolvedUrl}`);
     const DEMUCS_VERSION = "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953";
 
+    // shifts debe ser >= 1 en el schema de cjwbw/demucs (1 = procesamiento rápido sin shifts adicionales; 0 genera error 422)
     const demucsInput = {
       audio: resolvedUrl,
       model_name: "htdemucs_6s",
-      shifts: 0, // Shifts=0 para velocidad óptima sin timeouts en GPU Replicate
+      shifts: 1,
       overlap: 0.25,
       output_format: "mp3"
     };
 
     const tGpuStart = Date.now();
+    const reqHeaders = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
 
     // 1. Probar primero el endpoint oficial del modelo cjwbw/demucs
     let response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
       method: 'POST',
-      headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json'
-      },
+      headers: reqHeaders,
       body: JSON.stringify({ input: demucsInput })
     });
 
@@ -151,35 +614,42 @@ async function processNeuralStemsReplicate(
       await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
       response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
         method: 'POST',
-        headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json'
-        },
+        headers: reqHeaders,
         body: JSON.stringify({ input: demucsInput })
       });
     }
 
-    // 2. Si falla endpoint oficial por ruta, probar endpoint por hash de versión
+    let primaryErrText = "";
+    // 2. Si falla endpoint oficial por ruta con 404/400/422, probar endpoint por hash de versión
     if (!response.ok) {
-      const errText = await response.text();
-      console.warn(`[Demucs Neural] Replicate model/cjwbw/demucs/predictions falló (${response.status}: ${errText}). Probando v1/predictions con versión...`);
-      response = await fetch('https://api.replicate.com/v1/predictions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          version: DEMUCS_VERSION,
-          input: demucsInput
-        })
-      });
+      primaryErrText = await response.text();
+      console.warn(`[Demucs Neural] Replicate model/cjwbw/demucs/predictions falló (${response.status}: ${primaryErrText}). Probando v1/predictions con versión...`);
+      if (response.status === 404 || response.status === 400 || response.status === 422) {
+        response = await fetch('https://api.replicate.com/v1/predictions', {
+          method: 'POST',
+          headers: reqHeaders,
+          body: JSON.stringify({
+            version: DEMUCS_VERSION,
+            input: demucsInput
+          })
+        });
+      }
     }
 
     if (!response.ok) {
-      const errBody = await response.text();
+      const errBody = primaryErrText && response.status !== 404 ? primaryErrText : await response.text();
       console.warn("Replicate API request failed definitivamente:", response.status, errBody);
-      return { stemsMap: null, error: `Error de Replicate (${response.status}): ${errBody.substring(0, 180)}` };
+      const diag = parseReplicateError(response.status, errBody);
+      return {
+        stemsMap: null,
+        provider: 'replicate',
+        errorType: diag.errorType,
+        errorTitle: diag.errorTitle,
+        error: diag.message,
+        actionAdvice: diag.actionAdvice,
+        errorDetail: diag.errorDetail,
+        httpStatus: diag.httpStatus
+      };
     }
 
     let prediction = await response.json();
@@ -190,23 +660,72 @@ async function processNeuralStemsReplicate(
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
       if (Date.now() - startTime > 120000) {
         console.warn("Demucs separation timeout en Replicate (>120s)...");
-        return { stemsMap: null, error: "La separación en Replicate superó los 120 segundos de espera." };
+        const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-4).join(' | ');
+        return {
+          stemsMap: null,
+          provider: 'replicate',
+          errorType: 'timeout',
+          errorTitle: 'Tiempo de Espera en GPU Excedido (>120s)',
+          error: `La separación en la GPU de Replicate superó los 120 segundos de espera (Estado: ${prediction.status}).`,
+          actionAdvice: 'La máquina de Replicate puede haber tardado en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.',
+          errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs: ${lastLogs || 'Sin logs disponibles'}`,
+          httpStatus: 504
+        };
       }
       await new Promise(r => setTimeout(r, 1000));
       const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
-        headers: { 'Authorization': `Token ${token}` }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (pollRes.ok) {
         prediction = await pollRes.json();
+      } else {
+        const pollErr = await pollRes.text().catch(() => '');
+        console.warn(`[Demucs Neural] Error al consultar predicción ${predictionId} (${pollRes.status}): ${pollErr}`);
       }
     }
 
     const tGpuEnd = Date.now();
 
     if (prediction.status === 'failed' || prediction.status === 'canceled') {
-      const predError = prediction.error || prediction.logs || "Error desconocido en el worker de Replicate";
-      console.warn("[Demucs Neural] Predicción falló en Replicate:", predError);
-      return { stemsMap: null, error: `Error en la GPU de Replicate: ${String(predError).substring(0, 200)}` };
+      const predError = prediction.error ? String(prediction.error) : "";
+      const predLogs = String(prediction.logs || "").trim();
+      const lastLogs = predLogs ? predLogs.split('\n').filter(Boolean).slice(-6).join('\n') : "";
+
+      let failureType: StemErrorType = 'gpu_failure';
+      let failureTitle = `Fallo en el Worker GPU de Replicate (${prediction.status})`;
+      let failureAdvice = 'El contenedor Demucs finalizó inesperadamente. Consulta los logs de GPU abajo o usa el Motor DSP local.';
+
+      if (predError.toLowerCase().includes('cuda out of memory') || predLogs.toLowerCase().includes('cuda out of memory')) {
+        failureTitle = 'Memoria GPU Insuficiente (CUDA Out of Memory)';
+        failureAdvice = 'El archivo de audio es demasiado largo o complejo para la memoria VRAM de la GPU. Intenta con un fragmento más corto o usa el Motor DSP.';
+      } else if (predError.toLowerCase().includes('soundfile') || predError.toLowerCase().includes('format') || predError.toLowerCase().includes('codec')) {
+        failureType = 'audio_unsupported';
+        failureTitle = 'Error de Decodificación de Audio en GPU';
+        failureAdvice = 'El decodificador FFmpeg/Soundfile del contenedor no pudo leer el audio. Prueba a convertir el archivo a MP3 o WAV estándar.';
+      }
+
+      let detailedGpuError = `Fallo en el procesamiento GPU de Replicate (${prediction.status}): `;
+      if (predError) {
+        detailedGpuError += predError;
+      }
+      if (lastLogs && !predError.includes(lastLogs)) {
+        detailedGpuError += `\nLogs de GPU:\n${lastLogs}`;
+      }
+      if (!predError && !lastLogs) {
+        detailedGpuError += "El worker finalizó sin devolver mensaje de error explícito.";
+      }
+
+      console.warn("[Demucs Neural] Predicción falló en Replicate:", detailedGpuError);
+      return {
+        stemsMap: null,
+        provider: 'replicate',
+        errorType: failureType,
+        errorTitle: failureTitle,
+        error: predError || 'El worker finalizó con estado failed.',
+        actionAdvice: failureAdvice,
+        errorDetail: `Prediction ID: ${predictionId}\nError: ${predError || 'No especificado'}\n\nLogs de GPU:\n${lastLogs || '(vacíos)'}`,
+        httpStatus: 502
+      };
     }
 
     if (prediction.status === 'succeeded' && prediction.output) {
@@ -214,82 +733,52 @@ async function processNeuralStemsReplicate(
       console.log("[Demucs Neural] ¡Separación neuronal de stems completada con éxito en Replicate!", Object.keys(out));
 
       const rawStemsMap: Record<string, string> = {};
-      if (out.vocals) rawStemsMap['Voz'] = out.vocals;
-      if (out.drums) rawStemsMap['Batería'] = out.drums;
-      if (out.bass) rawStemsMap['Bajo'] = out.bass;
-      if (out.guitar) rawStemsMap['Guitarras'] = out.guitar;
-      if (out.piano) rawStemsMap['Teclados'] = out.piano;
-      if (out.other) rawStemsMap['Arreglos'] = out.other;
 
-      // Fallback para modelos de 4 stems
-      if (!rawStemsMap['Guitarras'] && out.other) rawStemsMap['Guitarras'] = out.other;
-      if (!rawStemsMap['Arreglos'] && out.piano) rawStemsMap['Arreglos'] = out.piano;
-
-      // Persistir permanentemente los stems en Supabase Storage o Disco Local para evitar URLs efímeras de Replicate
-      const tSaveStart = Date.now();
-      const persistentStemsMap: Record<string, { url: string; formato: string; tamano: string }> = {};
-
-      const stemsUploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
-      if (!fs.existsSync(stemsUploadsDir)) {
-        fs.mkdirSync(stemsUploadsDir, { recursive: true });
-      }
-
-      await Promise.all(
-        Object.entries(rawStemsMap).map(async ([instrumentKey, tempUrl]) => {
-          let finalUrl = "";
-          let sizeBytes = 0;
-          if (tempUrl && (tempUrl.startsWith("http://") || tempUrl.startsWith("https://"))) {
-            try {
-              const isSafe = await esUrlExternaSegura(tempUrl);
-              if (isSafe) {
-                // Descarga directa desde Replicate CDN con timeout suficiente (25s)
-                const fileRes = await fetch(tempUrl, { signal: AbortSignal.timeout(25000) });
-                if (fileRes.ok) {
-                  const arrayBuf = await fileRes.arrayBuffer();
-                  sizeBytes = arrayBuf.byteLength;
-                  const buffer = Buffer.from(arrayBuf);
-                  const instrumentClean = instrumentKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                  const filename = `stem-${instrumentClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}.mp3`;
-                  const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, filename, effectiveHash);
-                  
-                  // 1. Intentar guardar en Supabase Storage permanente
-                  const supabaseUrl = await uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
-                  
-                  if (supabaseUrl) {
-                    finalUrl = supabaseUrl;
-                    console.log(`[Demucs Stems] Guardado permanente en Supabase para ${instrumentKey}: ${supabaseUrl}`);
-                  } else {
-                    // 2. Fallback garantizado: guardar en disco local permanente (/public/uploads/stems/...)
-                    const localPath = path.join(stemsUploadsDir, filename);
-                    fs.writeFileSync(localPath, buffer);
-                    finalUrl = `/uploads/stems/${filename}`;
-                    console.log(`[Demucs Stems] Guardado permanente en disco local para ${instrumentKey}: ${finalUrl}`);
-                  }
-                }
-              }
-            } catch (storageErr: any) {
-              console.warn(`[Demucs Stems] Error descargando o persistiendo stem ${instrumentKey}:`, storageErr?.message || storageErr);
+      // cjwbw/demucs en Replicate devuelve: bassuri, drumsuri, guitaruri, otheruri, pianouri, vocalsuri
+      // Otras versiones pueden devolver: bass, drums, guitar, other, piano, vocals
+      const findStemUrl = (searchKeys: string[]): string | undefined => {
+        for (const k of searchKeys) {
+          if (out[k] && typeof out[k] === 'string') return out[k];
+        }
+        for (const [k, v] of Object.entries(out)) {
+          if (typeof v === 'string') {
+            const lowerK = k.toLowerCase();
+            if (searchKeys.some(target => lowerK.includes(target.toLowerCase()))) {
+              return v;
             }
           }
+        }
+        return undefined;
+      };
 
-          // Si por alguna anomalía crítica no se pudo guardar localmente ni en Supabase, usar tempUrl como último recurso
-          if (!finalUrl) {
-            finalUrl = tempUrl;
-          }
+      const vocalUrl = findStemUrl(['vocalsuri', 'vocals', 'vocal', 'vocals_url', 'vocals_uri', 'voz']);
+      const drumsUrl = findStemUrl(['drumsuri', 'drums', 'drum', 'drums_url', 'drums_uri', 'bateria']);
+      const bassUrl = findStemUrl(['bassuri', 'bass', 'bass_url', 'bass_uri', 'bajo']);
+      const guitarUrl = findStemUrl(['guitaruri', 'guitar', 'guitars', 'guitar_url', 'guitar_uri', 'guitarra']);
+      const pianoUrl = findStemUrl(['pianouri', 'piano', 'keyboards', 'piano_url', 'piano_uri', 'teclados']);
+      const otherUrl = findStemUrl(['otheruri', 'other', 'no_vocals', 'other_url', 'other_uri', 'accompaniment', 'arreglos']);
 
-          const formattedSize = sizeBytes > 0
-            ? (sizeBytes < 1024 * 1024 ? `${(sizeBytes / 1024).toFixed(0)} KB` : `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`)
-            : '3.1 MB';
+      if (vocalUrl) rawStemsMap['Voz'] = vocalUrl;
+      if (drumsUrl) rawStemsMap['Batería'] = drumsUrl;
+      if (bassUrl) rawStemsMap['Bajo'] = bassUrl;
+      if (guitarUrl) rawStemsMap['Guitarras'] = guitarUrl;
+      if (pianoUrl) rawStemsMap['Teclados'] = pianoUrl;
+      if (otherUrl) rawStemsMap['Arreglos'] = otherUrl;
 
-          persistentStemsMap[instrumentKey] = {
-            url: finalUrl,
-            formato: 'MP3 (Demucs Neural v4)',
-            tamano: formattedSize
-          };
-        })
+      // Fallback para modelos de 4 stems
+      if (!rawStemsMap['Guitarras'] && otherUrl) rawStemsMap['Guitarras'] = otherUrl;
+      if (!rawStemsMap['Arreglos'] && pianoUrl) rawStemsMap['Arreglos'] = pianoUrl;
+
+      // Persistir permanentemente los stems en Supabase Storage o Disco Local
+      const tSaveStart = Date.now();
+      const persistentStemsMap = await persistRawStemsMap(
+        rawStemsMap,
+        effectiveBandId,
+        effectiveHash,
+        'MP3 (Demucs Neural v4)'
       );
-
       const tSaveEnd = Date.now();
+
       const timingBreakdown = {
         preloadSec: `${((tPreloadEnd - t0) / 1000).toFixed(1)}s`,
         gpuInferenceSec: `${((tGpuEnd - tGpuStart) / 1000).toFixed(1)}s`,
@@ -299,11 +788,196 @@ async function processNeuralStemsReplicate(
 
       console.log(`[Demucs Neural Telemetry] ⏱️ Tiempo total: ${timingBreakdown.totalSec} (Preload: ${timingBreakdown.preloadSec}, GPU Replicate: ${timingBreakdown.gpuInferenceSec}, Persistencia Supabase: ${timingBreakdown.stemsPersistenceSec})`);
 
-      return { stemsMap: persistentStemsMap, timingBreakdown };
+      return { stemsMap: persistentStemsMap, timingBreakdown, engine: 'demucs' };
     }
   } catch (err) {
     console.warn("Error invocando modelo neuronal Demucs en Replicate:", err);
   }
+  return null;
+}
+
+/**
+ * Procesa la separación de stems con el modelo MVSEP-MDX23 (MDX-Net + Demucs4) en Replicate.
+ * 
+ * 1. Inferencia en Replicate con lucataco/mvsep-mdx23-music-separation.
+ * 2. Persistencia Inmutable en Supabase Storage.
+ */
+async function processMdx23Stems(
+  audioUrl: string,
+  bandId?: string,
+  songHash?: string,
+  requestHost?: string,
+  overrideToken?: string
+): Promise<ProcessNeuralStemsResult | null> {
+  const effectiveBandId = bandId || "sin-banda";
+  const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
+  const t0 = Date.now();
+
+  const modelFriendlyName = "MVSEP MDX'23 (MDX-Net + Demucs4)";
+  const formatLabel = "MP3 (MVSEP MDX23 Neural)";
+
+  const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+  const tPreloadEnd = Date.now();
+
+  const rawToken = overrideToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || "";
+  const token = rawToken.trim().replace(/^["']|["']$/g, '').replace(/^(Token|Bearer)\s+/i, '');
+
+  if (!token) {
+    return {
+      stemsMap: null,
+      provider: 'replicate',
+      errorType: 'token_missing',
+      errorTitle: `Token de Replicate No Configurado para ${modelFriendlyName}`,
+      error: `Para procesar audio con ${modelFriendlyName} necesitas configurar REPLICATE_API_TOKEN en tus variables de entorno o en la petición.`,
+      actionAdvice: 'Configura tu token de Replicate en Settings o utiliza el Motor DSP local que es 100% gratuito.',
+      errorDetail: 'Missing REPLICATE_API_TOKEN in server environment or request headers',
+      httpStatus: 400
+    };
+  }
+
+  const replicateModel = REPLICATE_MODEL_MVSEP_MDX23;
+
+  console.log(`[MDX23 Neural] Iniciando inferencia en Replicate (${replicateModel}) para ${modelFriendlyName}. Audio: ${resolvedUrl.substring(0, 50)}...`);
+
+  const tGpuStart = Date.now();
+  const reqHeaders = {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  };
+
+  let response = await fetch(`https://api.replicate.com/v1/models/${replicateModel}/predictions`, {
+    method: 'POST',
+    headers: reqHeaders,
+    body: JSON.stringify({
+      input: {
+        audio: resolvedUrl
+      }
+    })
+  });
+
+  if (response.status === 429) {
+    const retryAfterSec = Number(response.headers.get('retry-after') || 6);
+    console.log(`[MDX23 Neural] Rate limit en Replicate, reintentando en ${retryAfterSec}s...`);
+    await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
+    response = await fetch(`https://api.replicate.com/v1/models/${replicateModel}/predictions`, {
+      method: 'POST',
+      headers: reqHeaders,
+      body: JSON.stringify({ input: { audio: resolvedUrl } })
+    });
+  }
+
+  if (!response.ok) {
+    const errBody = await response.text();
+    console.warn(`[MDX23 Neural] Petición inicial a Replicate falló (${response.status}):`, errBody);
+    const diag = parseReplicateError(response.status, errBody);
+    return {
+      stemsMap: null,
+      provider: 'replicate',
+      errorType: diag.errorType,
+      errorTitle: `${diag.errorTitle} (${modelFriendlyName})`,
+      error: diag.message,
+      actionAdvice: diag.actionAdvice,
+      errorDetail: diag.errorDetail,
+      httpStatus: diag.httpStatus
+    };
+  }
+
+  let prediction = await response.json();
+  const predictionId = prediction.id;
+
+  const startTime = Date.now();
+  while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
+    if (Date.now() - startTime > 130000) {
+      console.warn(`[MDX23 Neural] Timeout en Replicate (>130s) para predicción ${predictionId}`);
+      return {
+        stemsMap: null,
+        provider: 'replicate',
+        errorType: 'timeout',
+        errorTitle: `Tiempo de Espera Excedido en GPU (${modelFriendlyName})`,
+        error: `La inferencia en Replicate superó los 130 segundos de espera.`,
+        actionAdvice: 'Puedes reintentar o separar las pistas con el Motor DSP local.',
+        errorDetail: `Prediction ID: ${predictionId}`,
+        httpStatus: 504
+      };
+    }
+    await new Promise(r => setTimeout(r, 1200));
+    const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (pollRes.ok) {
+      prediction = await pollRes.json();
+    }
+  }
+
+  const tGpuEnd = Date.now();
+
+  if (prediction.status === 'failed' || prediction.status === 'canceled') {
+    const predError = String(prediction.error || "");
+    const lastLogs = String(prediction.logs || "").trim().split('\n').filter(Boolean).slice(-6).join('\n');
+    return {
+      stemsMap: null,
+      provider: 'replicate',
+      errorType: 'gpu_failure',
+      errorTitle: `Fallo en el Contenedor GPU (${modelFriendlyName})`,
+      error: predError || 'El contenedor finalizó con error.',
+      actionAdvice: 'Verifica los logs o usa el Motor DSP local.',
+      errorDetail: `Prediction ID: ${predictionId}\nError: ${predError}\nLogs:\n${lastLogs}`,
+      httpStatus: 502
+    };
+  }
+
+  if (prediction.status === 'succeeded' && prediction.output) {
+    const out = prediction.output;
+    console.log(`[MDX23 Neural] Inferencia completada con éxito en Replicate (${modelFriendlyName}):`, Object.keys(out));
+
+    const rawStemsMap: Record<string, string> = {};
+
+    const findStemUrl = (searchKeys: string[]): string | undefined => {
+      for (const k of searchKeys) {
+        if (out[k] && typeof out[k] === 'string') return out[k];
+      }
+      for (const [k, v] of Object.entries(out)) {
+        if (typeof v === 'string') {
+          const lowerK = k.toLowerCase();
+          if (searchKeys.some(target => lowerK.includes(target.toLowerCase()))) {
+            return v;
+          }
+        }
+      }
+      return undefined;
+    };
+
+    const vocalUrl = findStemUrl(['vocals', 'vocals_url', 'vocalsuri', 'vocal', 'acapella', 'voz']);
+    const drumsUrl = findStemUrl(['drums', 'drums_url', 'drumsuri', 'drum', 'bateria']);
+    const bassUrl = findStemUrl(['bass', 'bass_url', 'bassuri', 'bajo']);
+    const guitarUrl = findStemUrl(['guitar', 'guitars', 'guitar_url', 'guitaruri', 'guitarra']);
+    const pianoUrl = findStemUrl(['piano', 'pianouri', 'keyboards', 'teclados']);
+    const otherUrl = findStemUrl(['other', 'other_url', 'otheruri', 'instrumental', 'accompaniment', 'arreglos']);
+
+    if (vocalUrl) rawStemsMap['Voz'] = vocalUrl;
+    if (drumsUrl) rawStemsMap['Batería'] = drumsUrl;
+    if (bassUrl) rawStemsMap['Bajo'] = bassUrl;
+    if (guitarUrl) rawStemsMap['Guitarras'] = guitarUrl;
+    if (pianoUrl) rawStemsMap['Teclados'] = pianoUrl;
+    if (otherUrl) rawStemsMap['Arreglos'] = otherUrl;
+
+    if (!rawStemsMap['Guitarras'] && otherUrl) rawStemsMap['Guitarras'] = otherUrl;
+    if (!rawStemsMap['Arreglos'] && otherUrl && !rawStemsMap['Teclados']) rawStemsMap['Arreglos'] = otherUrl;
+
+    const tSaveStart = Date.now();
+    const persistentStemsMap = await persistRawStemsMap(rawStemsMap, effectiveBandId, effectiveHash, formatLabel);
+    const tSaveEnd = Date.now();
+
+    const timingBreakdown = {
+      preloadSec: `${((tPreloadEnd - t0) / 1000).toFixed(1)}s`,
+      gpuInferenceSec: `${((tGpuEnd - tGpuStart) / 1000).toFixed(1)}s`,
+      stemsPersistenceSec: `${((tSaveEnd - tSaveStart) / 1000).toFixed(1)}s`,
+      totalSec: `${((tSaveEnd - t0) / 1000).toFixed(1)}s`
+    };
+
+    return { stemsMap: persistentStemsMap, timingBreakdown, engine: 'mvsep-mdx23' };
+  }
+
   return null;
 }
 
@@ -405,7 +1079,8 @@ async function processNeuralStemsFal(
 async function processServerStemsFfmpeg(
   audioUrl: string,
   bandId?: string,
-  songHash?: string
+  songHash?: string,
+  preprocesarDirecto: boolean = false
 ): Promise<Record<string, { url: string; formato: string; tamano: string }>> {
   const uploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
   if (!fs.existsSync(uploadsDir)) {
@@ -415,6 +1090,7 @@ async function processServerStemsFfmpeg(
   const timestamp = Date.now();
   let inputPath = audioUrl;
   let tempLocalFile: string | null = null;
+  let tempPreprocessedFile: string | null = null;
 
   // Si la URL es HTTP(S) o data URL, la descargamos UNA SOLA VEZ a disco local para evitar re-descargas HTTP repetidas
   if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://") || audioUrl.startsWith("data:")) {
@@ -445,6 +1121,20 @@ async function processServerStemsFfmpeg(
     const localPublic = path.join(process.cwd(), "public", audioUrl);
     if (fs.existsSync(localPublic)) {
       inputPath = localPublic;
+    }
+  }
+
+  // Si se solicita acondicionamiento para directo o grabación ruidosa, normalizar previamente
+  if (preprocesarDirecto && fs.existsSync(inputPath)) {
+    tempPreprocessedFile = path.join("/tmp", `preproc-stem-${timestamp}.mp3`);
+    const preprocRes = await preprocesarAudioDirecto(inputPath, tempPreprocessedFile, {
+      filtroRumble: true,
+      targetLufs: -14,
+      truePeakDb: -1.0,
+      deHiss: true
+    });
+    if (preprocRes.success && fs.existsSync(tempPreprocessedFile)) {
+      inputPath = tempPreprocessedFile;
     }
   }
 
@@ -596,7 +1286,16 @@ router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async 
     });
   } catch (err: any) {
     console.error("AI Music generation error:", err);
-    return res.status(500).json({ error: err.message || "Error al generar música con IA Lyria" });
+    const gemDiag = parseGeminiError(err);
+    return res.status(gemDiag.httpStatus).json({
+      provider: gemDiag.provider,
+      error: gemDiag.errorTitle,
+      message: gemDiag.message,
+      errorType: gemDiag.errorType,
+      errorTitle: gemDiag.errorTitle,
+      actionAdvice: gemDiag.actionAdvice,
+      details: gemDiag.errorDetail
+    });
   }
 });
 
@@ -610,7 +1309,7 @@ router.post("/ai-stem-separation", requireAuth, iaRateLimiter, async (req, res) 
   let executionTimingBreakdown: any = null;
 
   try {
-    const { songTitle, sectionName, audioUrl, bpm, key, forceEngine, engine, forceNeural, replicateToken } = req.body || {};
+    const { songTitle, sectionName, audioUrl, bpm, key, forceEngine, engine, forceNeural, replicateToken, preprocesarDirecto } = req.body || {};
 
     const analysisPrompt = `Eres un ingeniero de sonido e IA experto en 'Music Source Separation' (Separación de Fuentes Musicales en Stems) usando redes neuronales como HT-Demucs y MDX-Net.
 Analiza la siguiente sección de la canción:
@@ -735,8 +1434,12 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
     }
 
     // Process real audio stem files: 
-    // 1st Priority: Deep Learning Neural Source Separation (Demucs v4 / HT-Demucs via Replicate)
-    // 2nd Priority: Crash-proof Server-Side FFmpeg Mid-Side DSP Extraction
+    // Engines soportados:
+    // - 'mel-roformer': Mel-Band RoFormer (SOTA mundial en pureza vocal y de instrumentos)
+    // - 'bs-roformer': BS-RoFormer (Band-Split Transformer ganador SDX23)
+    // - 'replicate' / 'demucs': HT-Demucs v4 Neural (6 stems)
+    // - 'dsp-server' / 'dsp': Motor Local FFmpeg (100% gratuito, $0)
+    // - 'auto': Detección inteligente (Endpoint Propio -> RoFormer -> Demucs -> Fal -> DSP)
     const selectedEngine = forceEngine || engine || (forceNeural ? 'replicate' : 'auto');
 
     let finalStemsMap: Record<string, { url: string; formato: string; tamano: string } | string> = {};
@@ -752,86 +1455,12 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
     }
 
     const songHash = crypto.createHash("md5").update(String(songTitle || "") + String(audioUrl || "")).digest("hex").substring(0, 10);
-
-    const requestHost = req.get('host');
-    const effectiveReplicateToken = replicateToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
-
-    console.log(`[AI Stem Separation] Invocando separación de stems (Modo: ${selectedEngine}). URL: ${audioUrl?.substring(0, 50)}... Host: ${requestHost}. Replicate Token?: ${!!effectiveReplicateToken} Fal Key?: ${!!(process.env.FAL_KEY || process.env.FAL_API_KEY)}`);
-
-    // Si se fuerza explícitamente Replicate
-    if (selectedEngine === 'replicate') {
-      if (!effectiveReplicateToken) {
-        return res.status(400).json({
-          error: "REPLICATE_TOKEN_MISSING",
-          message: "No se encontró la clave de Replicate (REPLICATE_API_TOKEN o REPLICATE_API_KEY) en las variables de entorno del servidor ni en la petición."
-        });
-      }
-
-      if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
-        process.env.REPLICATE_API_TOKEN = replicateToken;
-      }
-
-      const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost);
-      if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
-        finalStemsMap = repRes.stemsMap;
-        executionTimingBreakdown = repRes.timingBreakdown;
-        separationEngine = "demucs-neural-v4 (Replicate Forced)";
-        isNeural = true;
-      } else {
-        const errorDetail = repRes?.error || "La inferencia en la GPU de Replicate no devolvió resultados.";
-        return res.status(502).json({
-          error: "REPLICATE_EXECUTION_FAILED",
-          message: `Ocurrió un problema con Replicate: ${errorDetail}`
-        });
-      }
-    } else if (audioUrl) {
-      // 1. Replicate (Demucs v4)
-      if (effectiveReplicateToken) {
-        if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
-          process.env.REPLICATE_API_TOKEN = replicateToken;
-        }
-        try {
-          const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost);
-          if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
-            finalStemsMap = repRes.stemsMap;
-            executionTimingBreakdown = repRes.timingBreakdown;
-            separationEngine = "demucs-neural-v4 (Replicate)";
-            isNeural = true;
-          }
-        } catch (neuralErr) {
-          console.warn("Fallo motor neuronal Demucs en Replicate, buscando alternativas:", neuralErr);
-        }
-      }
-
-      // 2. Fal.ai (Demucs Neural)
-      if (!isNeural && (process.env.FAL_KEY || process.env.FAL_API_KEY)) {
-        try {
-          const falMap = await processNeuralStemsFal(audioUrl, bandId, songHash, requestHost);
-          if (falMap && Object.keys(falMap).length > 0) {
-            finalStemsMap = falMap;
-            separationEngine = "demucs-neural (Fal.ai)";
-            isNeural = true;
-          }
-        } catch (falErr) {
-          console.warn("Fallo motor neuronal Fal.ai:", falErr);
-        }
-      }
-
-      // 3. Fallback DSP FFmpeg
-      if (!isNeural) {
-        console.warn("[Stem Separator] Ninguna clave de IA neuronal configurada o activa (REPLICATE_API_TOKEN/KEY ni FAL_KEY). Usando acelerador DSP FFmpeg.");
-        try {
-          finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash);
-        } catch (stErr) {
-          console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);
-        }
-      }
-    }
+    const cacheKey = `${bandId}:${songHash}:${selectedEngine}`;
 
     const STEM_METADATA: Record<string, { trackName: string; description: string; recommendedVolume: number }> = {
       "Voz": {
         trackName: "🎤 Stem IA: Voz Principal (Aislada)",
-        description: "Voz principal aislada en alta calidad mediante aprendizaje profundo (Demucs v4). Permite silenciar la voz para ensayar cantando en directo.",
+        description: "Voz principal aislada en alta calidad mediante aprendizaje profundo. Permite silenciar la voz para ensayar cantando en directo.",
         recommendedVolume: 1.0
       },
       "Batería": {
@@ -861,26 +1490,434 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       }
     };
 
-    const formattedStems = Object.entries(finalStemsMap).map(([instrument, rawValue]) => {
-      const meta = STEM_METADATA[instrument] || {
-        trackName: `Stem IA: ${instrument}`,
-        description: `Stem aislado de ${instrument}.`,
-        recommendedVolume: 0.85
-      };
-      const url = typeof rawValue === "object" ? rawValue.url : rawValue;
-      const formato = typeof rawValue === "object" ? rawValue.formato : "MP3";
-      const tamano = typeof rawValue === "object" ? rawValue.tamano : "2.5 MB";
+    const buildFormattedStems = (stemsMap: Record<string, any>) => {
+      return Object.entries(stemsMap).map(([instrument, rawValue]) => {
+        const meta = STEM_METADATA[instrument] || {
+          trackName: `Stem IA: ${instrument}`,
+          description: `Stem aislado de ${instrument}.`,
+          recommendedVolume: 0.85
+        };
+        const url = typeof rawValue === "object" ? rawValue.url : rawValue;
+        const formato = typeof rawValue === "object" ? rawValue.formato : "MP3";
+        const tamano = typeof rawValue === "object" ? rawValue.tamano : "2.5 MB";
 
-      return {
-        instrument,
-        trackName: meta.trackName,
-        audioUrl: url,
-        formato,
-        tamano,
-        description: meta.description,
-        recommendedVolume: meta.recommendedVolume
-      };
+        return {
+          instrument,
+          trackName: meta.trackName,
+          audioUrl: url,
+          formato,
+          tamano,
+          description: meta.description,
+          recommendedVolume: meta.recommendedVolume
+        };
+      });
+    };
+
+    // ========================================================================
+    // 1. CHEQUEO DE CACHÉ PERSISTENTE L1/L2 (Garantía de Cero Coste Duplicado)
+    // ========================================================================
+    const isUserExplicitDsp = selectedEngine === 'dsp-server' || selectedEngine === 'dsp';
+
+    const persistentEntry = await getStemsFromPersistentCache(bandId, songHash, selectedEngine);
+    if (persistentEntry && persistentEntry.stemsMap && Object.keys(persistentEntry.stemsMap).length > 0) {
+      const cachedEngineUsed = persistentEntry.engineUsed || (persistentEntry.isNeural ? persistentEntry.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
+      const cachedDegraded = !persistentEntry.isNeural && !isUserExplicitDsp;
+      console.log(`[Stem Separator] ⚡ Cache HIT persistente (L1/L2 Supabase) para ${cacheKey}. 0 llamadas GPU / Replicate. Coste: $0.00.`);
+      return res.json({
+        success: true,
+        audioUrl: audioUrl || "",
+        separationEngine: persistentEntry.engine,
+        engineUsed: cachedEngineUsed,
+        degraded: cachedDegraded,
+        degradedReason: cachedDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
+        isNeural: persistentEntry.isNeural,
+        cached: true,
+        executionTimeMs: 8,
+        executionTimeSec: "0.0s",
+        timingBreakdown: { ...persistentEntry.timingBreakdown, cached: true, duplicateCostSaved: true },
+        replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+        falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+        songTitle: songTitle || "Canción",
+        sectionName: sectionName || "General",
+        detectedBpm: bpm || 120,
+        detectedKey: key || "Am",
+        analysisSummary: `Stems cargados desde la base de datos persistente para el motor ${persistentEntry.engine}. Coste: $0.00 (sin consumo de créditos).`,
+        stems: buildFormattedStems(persistentEntry.stemsMap)
+      });
+    }
+
+    // ========================================================================
+    // 2. PATRÓN DE RESERVA DISTRIBUIDA (Multi-instancia Railway anti-duplicados)
+    // ========================================================================
+    const lockResult = await acquireStemsSeparationLock(bandId, songHash, selectedEngine);
+    if (lockResult.acquired === false) {
+      if (lockResult.reason === 'already_completed') {
+        const cached = lockResult.record;
+        const cachedEngineUsed = cached.engineUsed || (cached.isNeural ? cached.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
+        const cachedDegraded = !cached.isNeural && !isUserExplicitDsp;
+        return res.json({
+          success: true,
+          audioUrl: audioUrl || "",
+          separationEngine: cached.engine,
+          engineUsed: cachedEngineUsed,
+          degraded: cachedDegraded,
+          degradedReason: cachedDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
+          isNeural: cached.isNeural,
+          cached: true,
+          executionTimeMs: 8,
+          executionTimeSec: "0.0s",
+          timingBreakdown: { ...cached.timingBreakdown, cached: true, duplicateCostSaved: true },
+          replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+          falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+          songTitle: songTitle || "Canción",
+          sectionName: sectionName || "General",
+          detectedBpm: bpm || 120,
+          detectedKey: key || "Am",
+          analysisSummary: `Stems cargados desde reserva concurrente para ${cached.engine}. Coste: $0.00.`,
+          stems: buildFormattedStems(cached.stemsMap)
+        });
+      }
+
+      if (lockResult.reason === 'in_progress_by_other_instance') {
+        console.log(`[Stem Separator] ⏳ Trabajo en progreso en otra instancia de Railway para ${cacheKey}. Iniciando polling...`);
+        const polledRecord = await waitForStemsCompletion(bandId, songHash, selectedEngine);
+        if (polledRecord && polledRecord.stemsMap && Object.keys(polledRecord.stemsMap).length > 0) {
+          const polledEngineUsed = polledRecord.engineUsed || (polledRecord.isNeural ? polledRecord.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
+          const polledDegraded = !polledRecord.isNeural && !isUserExplicitDsp;
+          return res.json({
+            success: true,
+            audioUrl: audioUrl || "",
+            separationEngine: polledRecord.engine,
+            engineUsed: polledEngineUsed,
+            degraded: polledDegraded,
+            degradedReason: polledDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
+            isNeural: polledRecord.isNeural,
+            cached: true,
+            executionTimeMs: 25,
+            executionTimeSec: "0.0s",
+            timingBreakdown: { ...polledRecord.timingBreakdown, polledFromOtherInstance: true, duplicateCostSaved: true },
+            replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+            falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+            songTitle: songTitle || "Canción",
+            sectionName: sectionName || "General",
+            detectedBpm: bpm || 120,
+            detectedKey: key || "Am",
+            analysisSummary: `Stems sincronizados entre instancias de Railway para ${polledRecord.engine}. 0 llamadas duplicadas a la GPU.`,
+            stems: buildFormattedStems(polledRecord.stemsMap)
+          });
+        }
+      }
+
+      if (lockResult.reason === 'distributed_lock_failed') {
+        // Opción (a) Fail-Safe Estricto: Si la reserva distribuida falla por error de base de datos/infraestructura,
+        // no se lanza la inferencia en GPU para evitar gastos duplicados o carreras descontroladas.
+        return res.status(503).json({
+          error: "Servicio de procesamiento distribuido no disponible temporalmente",
+          message: "No se pudo asegurar el bloqueo de inferencia distribuido en la base de datos. Por seguridad anti-duplicados, la petición no ha consumido cómputo GPU. Por favor, inténtalo de nuevo en unos minutos.",
+          errorType: "distributed_lock_unavailable",
+          reason: lockResult.error,
+          engine: selectedEngine
+        });
+      }
+    }
+
+    // ========================================================================
+    // 3. MUTEX LOCAL / IN-FLIGHT DEDUPLICATION (En la misma instancia)
+    // ========================================================================
+    if (inFlightSeparations.has(cacheKey)) {
+      console.log(`[Stem Separator] ⏳ Deduplicación activa: Petición en curso para ${cacheKey}. Esperando al trabajo original sin duplicar gasto...`);
+      const inFlightRes = await inFlightSeparations.get(cacheKey)!;
+      if (inFlightRes.errorInfo) {
+        const diag = inFlightRes.errorInfo;
+        return res.status(diag.httpStatus || 502).json({
+          provider: diag.provider || 'replicate',
+          error: diag.errorTitle || 'Fallo en la inferencia',
+          message: diag.error || 'La inferencia no devolvió resultados.',
+          errorType: diag.errorType || 'generic',
+          errorTitle: diag.errorTitle || 'Error en Inferencia',
+          actionAdvice: diag.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.',
+          details: diag.errorDetail,
+          engine: selectedEngine
+        });
+      }
+      if (inFlightRes.stemsMap && Object.keys(inFlightRes.stemsMap).length > 0) {
+        const inFlightEngineUsed = inFlightRes.engineUsed || (inFlightRes.isNeural ? inFlightRes.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
+        const inFlightDegraded = !inFlightRes.isNeural && !isUserExplicitDsp;
+        return res.json({
+          success: true,
+          audioUrl: audioUrl || "",
+          separationEngine: inFlightRes.engine,
+          engineUsed: inFlightEngineUsed,
+          degraded: inFlightDegraded,
+          degradedReason: inFlightDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
+          isNeural: inFlightRes.isNeural,
+          cached: true,
+          executionTimeMs: 12,
+          executionTimeSec: "0.0s",
+          timingBreakdown: { ...inFlightRes.timingBreakdown, deduplicated: true },
+          replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+          falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+          songTitle: songTitle || "Canción",
+          sectionName: sectionName || "General",
+          detectedBpm: bpm || 120,
+          detectedKey: key || "Am",
+          analysisSummary: `Stems sincronizados desde el trabajo en ejecución (${inFlightRes.engine}). 0 llamadas duplicadas a la GPU.`,
+          stems: buildFormattedStems(inFlightRes.stemsMap)
+        });
+      }
+    }
+
+    const requestHost = req.get('host');
+    const effectiveReplicateToken = replicateToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
+
+    console.log(`[AI Stem Separation] Invocando separación de stems (Modo: ${selectedEngine}). URL: ${audioUrl?.substring(0, 50)}... Host: ${requestHost}. Replicate Token?: ${!!effectiveReplicateToken} Fal Key?: ${!!(process.env.FAL_KEY || process.env.FAL_API_KEY)}`);
+
+    // Iniciar promesa en vuelo para mutex
+    let executionPromiseResolve: (val: any) => void;
+    const executionPromise = new Promise<{
+      stemsMap: Record<string, { url: string; formato: string; tamano: string }> | null;
+      timingBreakdown?: any;
+      engine: string;
+      engineUsed?: string;
+      degraded?: boolean;
+      degradedReason?: string;
+      isNeural: boolean;
+      cached?: boolean;
+      errorInfo?: ProcessNeuralStemsResult | null;
+    }>((resolve) => {
+      executionPromiseResolve = resolve;
     });
+    inFlightSeparations.set(cacheKey, executionPromise);
+
+    try {
+      // ----------------------------------------------------------------------
+      // CASO A: MVSEP-MDX23 (MDX-NET + DEMUCS4 EN REPLICATE)
+      // ----------------------------------------------------------------------
+      if (selectedEngine === 'mvsep-mdx23') {
+        const mdxRes = await processMdx23Stems(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
+        if (mdxRes && mdxRes.stemsMap && Object.keys(mdxRes.stemsMap).length > 0) {
+          finalStemsMap = mdxRes.stemsMap;
+          executionTimingBreakdown = mdxRes.timingBreakdown;
+          separationEngine = "MVSEP-MDX23 (MDX-Net + Demucs4 Neural)";
+          isNeural = true;
+        } else {
+          const errorType = mdxRes?.errorType || 'generic';
+          const errorTitle = mdxRes?.errorTitle || "Fallo en la inferencia de MVSEP-MDX23";
+          const errorMessage = mdxRes?.error || "La inferencia con MVSEP-MDX23 no devolvió resultados.";
+          const actionAdvice = mdxRes?.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.';
+          const errorDetail = mdxRes?.errorDetail || mdxRes?.error;
+          const httpStatus = mdxRes?.httpStatus || 502;
+
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'mvsep-mdx23', isNeural: false, errorInfo: mdxRes });
+          return res.status(httpStatus).json({
+            provider: mdxRes?.provider || "replicate",
+            error: errorTitle,
+            message: errorMessage,
+            errorType,
+            errorTitle,
+            actionAdvice,
+            details: errorDetail,
+            engine: "mvsep-mdx23"
+          });
+        }
+      }
+      // ----------------------------------------------------------------------
+      // CASO B: DEMUCS V4 (HT-DEMUCS MULTI-CANAL EN REPLICATE)
+      // ----------------------------------------------------------------------
+      else if (selectedEngine === 'replicate' || selectedEngine === 'demucs') {
+        if (!effectiveReplicateToken) {
+          const tokenMissingMsg = "No se encontró la clave de Replicate (REPLICATE_API_TOKEN o REPLICATE_API_KEY) en las variables de entorno del servidor ni en la petición. Asegúrate de configurar REPLICATE_API_TOKEN en Settings.";
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'replicate', isNeural: false, errorInfo: null });
+          return res.status(400).json({
+            provider: "replicate",
+            error: "Token de Replicate no configurado",
+            message: tokenMissingMsg,
+            errorType: "token_missing",
+            errorTitle: "Token de Replicate No Configurado",
+            actionAdvice: "Obtén un API token en https://replicate.com/account/api-tokens (comienza por 'r8_') y configúralo en Settings.",
+            details: "Missing environment variable REPLICATE_API_TOKEN",
+            engine: "replicate"
+          });
+        }
+
+        if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
+          process.env.REPLICATE_API_TOKEN = replicateToken;
+        }
+
+        const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
+        if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
+          finalStemsMap = repRes.stemsMap;
+          executionTimingBreakdown = repRes.timingBreakdown;
+          separationEngine = "demucs-neural-v4 (HT-Demucs Replicate)";
+          isNeural = true;
+        } else {
+          const errorType = repRes?.errorType || 'generic';
+          const errorTitle = repRes?.errorTitle || 'Fallo en la inferencia de Replicate';
+          const errorMessage = repRes?.error || 'La inferencia en la GPU de Replicate no devolvió resultados.';
+          const actionAdvice = repRes?.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.';
+          const errorDetail = repRes?.errorDetail || repRes?.error;
+          const httpStatus = repRes?.httpStatus || 502;
+
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'replicate', isNeural: false, errorInfo: repRes });
+          return res.status(httpStatus).json({
+            provider: repRes?.provider || "replicate",
+            error: errorTitle,
+            message: errorMessage,
+            errorType,
+            errorTitle,
+            actionAdvice,
+            details: errorDetail,
+            engine: "replicate"
+          });
+        }
+      }
+      // ----------------------------------------------------------------------
+      // CASO C: MOTOR DSP SERVIDOR LOCAL (FFmpeg - 100% GRATUITO)
+      // ----------------------------------------------------------------------
+      else if (selectedEngine === 'dsp-server' || selectedEngine === 'dsp') {
+        console.log("[Stem Separator] Motor DSP FFmpeg seleccionado por el usuario.");
+        try {
+          finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash, Boolean(preprocesarDirecto));
+          separationEngine = "dsp-server (FFmpeg)";
+        } catch (stErr: any) {
+          console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);
+          const ffgDiag = parseFfmpegError(stErr);
+          inFlightSeparations.delete(cacheKey);
+          executionPromiseResolve!({ stemsMap: null, engine: 'dsp-server', isNeural: false, errorInfo: null });
+          return res.status(ffgDiag.httpStatus).json({
+            provider: ffgDiag.provider,
+            error: ffgDiag.errorTitle,
+            message: ffgDiag.message,
+            errorType: ffgDiag.errorType,
+            errorTitle: ffgDiag.errorTitle,
+            actionAdvice: ffgDiag.actionAdvice,
+            details: ffgDiag.errorDetail,
+            engine: "dsp-server"
+          });
+        }
+      }
+      // ----------------------------------------------------------------------
+      // CASO D: MODO 'AUTO'
+      // ----------------------------------------------------------------------
+      else if (audioUrl) {
+        // 1. Replicate (MVSEP-MDX23 o Demucs v4)
+        if (!isNeural && effectiveReplicateToken) {
+          if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
+            process.env.REPLICATE_API_TOKEN = replicateToken;
+          }
+          try {
+            const mdxRes = await processMdx23Stems(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
+            if (mdxRes && mdxRes.stemsMap && Object.keys(mdxRes.stemsMap).length > 0) {
+              finalStemsMap = mdxRes.stemsMap;
+              executionTimingBreakdown = mdxRes.timingBreakdown;
+              separationEngine = "MVSEP-MDX23 (Replicate)";
+              isNeural = true;
+            }
+          } catch (e) {
+            console.warn("Fallo motor MVSEP-MDX23 en Replicate, buscando alternativa:", e);
+          }
+
+          if (!isNeural) {
+            try {
+              const repRes = await processNeuralStemsReplicate(audioUrl, bandId, songHash, requestHost, effectiveReplicateToken);
+              if (repRes && repRes.stemsMap && Object.keys(repRes.stemsMap).length > 0) {
+                finalStemsMap = repRes.stemsMap;
+                executionTimingBreakdown = repRes.timingBreakdown;
+                separationEngine = "demucs-neural-v4 (Replicate)";
+                isNeural = true;
+              }
+            } catch (neuralErr) {
+              console.warn("Fallo motor neuronal Demucs en Replicate, buscando alternativas:", neuralErr);
+            }
+          }
+        }
+
+        // 2. Fal.ai (Demucs Neural)
+        if (!isNeural && (process.env.FAL_KEY || process.env.FAL_API_KEY)) {
+          try {
+            const falMap = await processNeuralStemsFal(audioUrl, bandId, songHash, requestHost);
+            if (falMap && Object.keys(falMap).length > 0) {
+              finalStemsMap = falMap;
+              separationEngine = "demucs-neural (Fal.ai)";
+              isNeural = true;
+            }
+          } catch (falErr) {
+            console.warn("Fallo motor neuronal Fal.ai:", falErr);
+          }
+        }
+
+        // 3. Fallback DSP FFmpeg (con aviso de degradado)
+        if (!isNeural) {
+          console.warn(`[STEM_SEPARATION_DEGRADED_FALLBACK] ⚠️ Alerta: Fallback a DSP activado para banda "${bandId}", tema "${songTitle || 'sin-titulo'}". Motor solicitado: auto/IA. Razón: No hay tokens de IA neuronal configurados o fallaron los proveedores externos.`);
+          try {
+            finalStemsMap = await processServerStemsFfmpeg(audioUrl, bandId, songHash, Boolean(preprocesarDirecto));
+            separationEngine = "dsp-server (FFmpeg)";
+          } catch (stErr) {
+            console.warn("Fallo procesando FFmpeg stems en el servidor:", stErr);
+          }
+        }
+      }
+
+      const engineUsed = isNeural
+        ? (selectedEngine === 'auto' ? (separationEngine.includes('MVSEP') ? 'mvsep-mdx23' : 'demucs') : selectedEngine)
+        : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback');
+      const isDegraded = !isNeural && !isUserExplicitDsp;
+      const degradedReason = isDegraded ? 'Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP de frecuencia' : undefined;
+
+      if (isDegraded) {
+        console.warn(`[STEM_SEPARATION_DEGRADED_FALLBACK] ⚠️ Alerta: Fallback a DSP activado para banda "${bandId}", tema "${songTitle || 'sin-titulo'}". Motor solicitado: ${selectedEngine}. Razón: IA no disponible.`);
+      }
+
+      // Guardar en caché persistente (L1 Memoria + L2 Supabase)
+      if (finalStemsMap && Object.keys(finalStemsMap).length > 0) {
+        await saveStemsToPersistentCache({
+          bandId,
+          songHash,
+          engine: selectedEngine,
+          engineUsed,
+          isNeural,
+          degraded: isDegraded,
+          degradedReason,
+          stemsMap: finalStemsMap as any,
+          timingBreakdown: executionTimingBreakdown,
+          audioUrl: audioUrl || undefined,
+          songTitle: songTitle || undefined
+        });
+      }
+
+      // Resolver la promesa de mutex para peticiones en cola
+      inFlightSeparations.delete(cacheKey);
+      executionPromiseResolve!({
+        stemsMap: finalStemsMap as any,
+        timingBreakdown: executionTimingBreakdown,
+        engine: separationEngine,
+        engineUsed,
+        degraded: isDegraded,
+        degradedReason,
+        isNeural,
+        cached: false
+      });
+    } catch (procErr: any) {
+      inFlightSeparations.delete(cacheKey);
+      executionPromiseResolve!({
+        stemsMap: null,
+        engine: selectedEngine,
+        engineUsed: isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback',
+        degraded: !isUserExplicitDsp,
+        isNeural: false,
+        errorInfo: {
+          stemsMap: null,
+          error: procErr?.message || String(procErr),
+          httpStatus: 500
+        }
+      });
+      throw procErr;
+    }
+
+    const formattedStems = buildFormattedStems(finalStemsMap);
 
     const totalMs = Date.now() - tTotalStart;
     const totalSec = `${(totalMs / 1000).toFixed(1)}s`;
@@ -891,10 +1928,19 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       };
     }
 
+    const finalEngineUsed = isNeural
+      ? (selectedEngine === 'auto' ? (separationEngine.includes('MVSEP') ? 'mvsep-mdx23' : 'demucs') : selectedEngine)
+      : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback');
+    const finalDegraded = !isNeural && !isUserExplicitDsp;
+    const finalDegradedReason = finalDegraded ? 'Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP de frecuencia' : undefined;
+
     return res.json({
       success: true,
       audioUrl: audioUrl || "",
       separationEngine,
+      engineUsed: finalEngineUsed,
+      degraded: finalDegraded,
+      degradedReason: finalDegradedReason,
       isNeural,
       executionTimeMs: totalMs,
       executionTimeSec: totalSec,
@@ -906,13 +1952,43 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       detectedBpm: bpm || 120,
       detectedKey: key || "Am",
       analysisSummary: isNeural
-        ? `Separación neuronal completada con HT-Demucs v4 en ${totalSec} (6 stems aislados en GPU).`
-        : `Análisis espectral procesado con motor DSP en ${totalSec}.`,
+        ? `Separación neuronal completada con ${separationEngine} en ${totalSec} (stems aislados en GPU).`
+        : (finalDegraded ? `⚠️ Separación en modo degradado (DSP básico) en ${totalSec}. No se utilizó red neuronal.` : `Análisis espectral procesado con motor DSP en ${totalSec}.`),
       stems: formattedStems.length > 0 ? formattedStems : parsedResult?.stems
     });
   } catch (err: any) {
     console.error("Error en separación de stems con IA:", err);
-    return res.status(500).json({ error: err.message || "Error al procesar separación de stems por IA." });
+    let classifiedDiag: ServiceDiagnosticError;
+    const errMsg = String(err?.message || err || "");
+    if (errMsg.includes("supabase") || errMsg.includes("storage")) {
+      classifiedDiag = parseSupabaseStorageError(err);
+    } else if (errMsg.includes("ffmpeg") || errMsg.includes("fluent-ffmpeg")) {
+      classifiedDiag = parseFfmpegError(err);
+    } else if (errMsg.includes("gemini") || errMsg.includes("generative") || errMsg.includes("API_KEY")) {
+      classifiedDiag = parseGeminiError(err);
+    } else if (errMsg.includes("replicate") || errMsg.includes("r8_")) {
+      classifiedDiag = parseReplicateError(err?.status || 500, errMsg);
+    } else {
+      classifiedDiag = {
+        provider: 'system',
+        errorType: 'generic',
+        errorTitle: 'Error Interno al Procesar Stems',
+        message: errMsg || "Error inesperado al procesar la separación de pistas.",
+        actionAdvice: "Puedes reintentar la operación o utilizar el Motor DSP local.",
+        errorDetail: errMsg,
+        httpStatus: 500
+      };
+    }
+
+    return res.status(classifiedDiag.httpStatus).json({
+      provider: classifiedDiag.provider,
+      error: classifiedDiag.errorTitle,
+      message: classifiedDiag.message,
+      errorType: classifiedDiag.errorType,
+      errorTitle: classifiedDiag.errorTitle,
+      actionAdvice: classifiedDiag.actionAdvice,
+      details: classifiedDiag.errorDetail
+    });
   }
 });
 
@@ -988,7 +2064,77 @@ Musical context:
     });
   } catch (err: any) {
     console.error("Error al generar pista de instrumento con IA:", err);
-    return res.status(500).json({ error: err.message || "Error al generar la pista de instrumento con IA." });
+    const gemDiag = parseGeminiError(err);
+    return res.status(gemDiag.httpStatus).json({
+      provider: gemDiag.provider,
+      error: gemDiag.errorTitle,
+      message: gemDiag.message,
+      errorType: gemDiag.errorType,
+      errorTitle: gemDiag.errorTitle,
+      actionAdvice: gemDiag.actionAdvice,
+      details: gemDiag.errorDetail
+    });
+  }
+});
+
+/**
+ * Webhook para recepcion asincrona de predicciones de Replicate con firma HMAC e idempotencia
+ */
+router.post(["/webhooks/replicate-stems", "/api/webhooks/replicate-stems"], async (req, res) => {
+  try {
+    const webhookHeaders = {
+      id: (req.headers["webhook-id"] || req.headers["webhook_id"]) as string | undefined,
+      timestamp: (req.headers["webhook-timestamp"] || req.headers["webhook_timestamp"]) as string | undefined,
+      signature: (req.headers["webhook-signature"] || req.headers["webhook_signature"] || req.headers["replicate-signature"]) as string | undefined
+    };
+    const webhookSecret = process.env.REPLICATE_WEBHOOK_SECRET;
+
+    // 1. Fail-closed: si el secreto no está configurado, rechazar inmediatamente con 401
+    if (!webhookSecret) {
+      console.error("[Replicate Webhook] ❌ REPLICATE_WEBHOOK_SECRET no configurado — rechazando webhook por seguridad.");
+      return res.status(401).json({
+        error: "REPLICATE_WEBHOOK_SECRET no configurado en el servidor",
+        reason: "secret_not_configured"
+      });
+    }
+
+    const rawBody = (req as any).rawBody || (typeof req.body === "string" ? req.body : JSON.stringify(req.body));
+    const verification = verifyReplicateWebhook(rawBody, webhookHeaders, webhookSecret);
+    if (!verification.valid) {
+      console.warn(`[Stem Webhook] ❌ Firma HMAC inválida en webhook de Replicate: ${verification.reason}`);
+      return res.status(401).json({ error: "Firma HMAC inválida", reason: verification.reason });
+    }
+
+    const prediction = req.body;
+    const predictionId = prediction?.id;
+
+    if (!predictionId) {
+      return res.status(400).json({ error: "ID de predicción ausente" });
+    }
+
+    // 2. Comprobación de idempotencia por prediction_id
+    const alreadyProcessed = await isPredictionWebhookProcessed(predictionId);
+    if (alreadyProcessed) {
+      console.log(`[Stem Webhook] ⚡ Webhook ${predictionId} ya procesado anteriormente (Idempotencia).`);
+      return res.json({ status: "already_processed", id: predictionId });
+    }
+
+    // 3. Registrar el trabajo y su estado en Supabase
+    await recordPredictionJob({
+      id: predictionId,
+      status: prediction.status || "processing",
+      provider: "replicate",
+      webhook_received_at: new Date().toISOString(),
+      webhook_signature_verified: !!webhookSecret,
+      result_stems_map: prediction.output || null,
+      error_message: prediction.error || null
+    });
+
+    console.log(`[Stem Webhook] ✅ Webhook ${predictionId} procesado exitosamente con estado: ${prediction.status}`);
+    return res.json({ status: "processed", id: predictionId });
+  } catch (err: any) {
+    console.error("[Stem Webhook] Error procesando webhook:", err);
+    return res.status(500).json({ error: err?.message || "Error procesando webhook" });
   }
 });
 

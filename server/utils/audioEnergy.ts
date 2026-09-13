@@ -411,3 +411,98 @@ export async function analizarEnergiaAudio(
     }
   }
 }
+
+/**
+ * Configuración de preprocesamiento para grabaciones de directo.
+ */
+export interface OpcionesPreprocesamientoDirecto {
+  /** Eliminar ruidos subsónicos por debajo de 35Hz (viento, golpes de soporte de micro) */
+  filtroRumble?: boolean;
+  /** Normalización de sonoridad estándar broadcast (EBU R128 / LUFS integrado objetivo) */
+  targetLufs?: number;
+  /** Techo máximo de picos True-Peak en dBFS para evitar distorsión en clipping */
+  truePeakDb?: number;
+  /** Rango dinámico LRA objetivo para comprimir suavemente picos sin aplastar la dinámica */
+  lraTarget?: number;
+  /** Atenuación suave de frecuencias hirientes / siseos de directo (>15kHz) */
+  deHiss?: boolean;
+}
+
+/**
+ * Construye la cadena de filtros de audio FFmpeg para acondicionar grabaciones de directo
+ * antes de la separación de stems, análisis espectral o masterización de conciertos.
+ *
+ * Incluye:
+ * - Filtro subsónico paso alto (35Hz) para limpiar acoples de escenario y golpes de soporte.
+ * - Filtro paso bajo suave anti-hiss (15.5kHz).
+ * - Loudnorm de doble pasada o EBU R128 (-14 LUFS para streaming/ensayo, -16 LUFS para conciertos).
+ */
+export function construirFiltroPreprocesamientoDirecto(opciones: OpcionesPreprocesamientoDirecto = {}): string {
+  const {
+    filtroRumble = true,
+    targetLufs = -14,
+    truePeakDb = -1.0,
+    lraTarget = 11,
+    deHiss = true
+  } = opciones;
+
+  const filtros: string[] = [];
+
+  // 1. Limpieza de rumble de escenario y frecuencias no musicales
+  if (filtroRumble) {
+    filtros.push("highpass=f=35:poles=2");
+  }
+
+  // 2. Control de agudos extremos y siseo de sala
+  if (deHiss) {
+    filtros.push("lowpass=f=15500:poles=2");
+  }
+
+  // 3. Normalización EBU R128 profesional (Loudnorm)
+  const clampedLufs = Math.max(-24, Math.min(-9, targetLufs));
+  const clampedPeak = Math.max(-6, Math.min(-0.1, truePeakDb));
+  const clampedLra = Math.max(5, Math.min(20, lraTarget));
+
+  filtros.push(`loudnorm=I=${clampedLufs}:TP=${clampedPeak}:LRA=${clampedLra}`);
+
+  return filtros.join(",");
+}
+
+/**
+ * Acondiciona y normaliza un archivo de audio de concierto/directo usando FFmpeg.
+ * Produce un archivo de alta fidelidad listo para inferencia de stems o corte de pistas.
+ */
+export async function preprocesarAudioDirecto(
+  rutaEntrada: string,
+  rutaSalida: string,
+  opciones: OpcionesPreprocesamientoDirecto = {}
+): Promise<{ success: boolean; rutaSalida: string; error?: string }> {
+  const binario = ffmpegStatic as unknown as string;
+  if (!binario) {
+    return { success: false, rutaSalida: rutaEntrada, error: "ffmpeg no disponible" };
+  }
+
+  const cadenaFiltro = construirFiltroPreprocesamientoDirecto(opciones);
+  const args = [
+    "-y",
+    "-hide_banner",
+    "-nostdin",
+    "-i", rutaEntrada,
+    "-af", cadenaFiltro,
+    "-c:a", "libmp3lame",
+    "-b:a", "320k",
+    "-ar", "44100",
+    rutaSalida
+  ];
+
+  try {
+    await ejecutar(binario, args, { timeout: 180_000 });
+    if (fs.existsSync(rutaSalida) && fs.statSync(rutaSalida).size > 0) {
+      return { success: true, rutaSalida };
+    }
+    return { success: false, rutaSalida: rutaEntrada, error: "Archivo de salida vacío tras preprocesado" };
+  } catch (err: any) {
+    console.error("[Preprocesado Audio Directo] Fallo en ffmpeg:", err?.message || err);
+    return { success: false, rutaSalida: rutaEntrada, error: String(err?.message || err) };
+  }
+}

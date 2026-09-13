@@ -71,8 +71,9 @@ export async function apiFetch<T = any>(url: string, options: RequestInit = {}):
   if (contentType && contentType.includes('application/json')) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
+      const detailedMessage = data.message || data.error || data.detail || (typeof data === 'string' ? data : `Error ${res.status}: ${res.statusText}`);
       throw new ApiRequestError(
-        data.error || data.message || `Error ${res.status}: ${res.statusText}`,
+        typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage),
         res.status,
         data
       );

@@ -10,6 +10,7 @@ import {
   calcularEnergiaBpmVolumen,
   DB_SILENCIO,
   type PuntoEnergia,
+  construirFiltroPreprocesamientoDirecto,
 } from '../audioEnergy';
 
 /** Salida real de `ametadata=print`, tal cual la escupe ffmpeg. */
@@ -275,5 +276,36 @@ describe('calcularEnergiaBpmVolumen', () => {
   it('con toda la banda en el mismo tempo y volumen, no inventa contraste: energía media', () => {
     const plano = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25 };
     expect(calcularEnergiaBpmVolumen(120, -25, plano)).toBe(10);
+  });
+});
+
+describe('construirFiltroPreprocesamientoDirecto', () => {
+  it('genera cadena por defecto con filtro rumble, dehiss y loudnorm estándar', () => {
+    const filtro = construirFiltroPreprocesamientoDirecto();
+    expect(filtro).toContain('highpass=f=35:poles=2');
+    expect(filtro).toContain('lowpass=f=15500:poles=2');
+    expect(filtro).toContain('loudnorm=I=-14:TP=-1:LRA=11');
+  });
+
+  it('permite desactivar de-rumble o de-hiss según el caso de uso', () => {
+    const sinFiltros = construirFiltroPreprocesamientoDirecto({
+      filtroRumble: false,
+      deHiss: false,
+      targetLufs: -16,
+      truePeakDb: -1.5,
+      lraTarget: 9
+    });
+    expect(sinFiltros).not.toContain('highpass');
+    expect(sinFiltros).not.toContain('lowpass');
+    expect(sinFiltros).toBe('loudnorm=I=-16:TP=-1.5:LRA=9');
+  });
+
+  it('limita los parámetros de loudnorm a valores seguros y válidos para ffmpeg', () => {
+    const seguro = construirFiltroPreprocesamientoDirecto({
+      targetLufs: -50, // fuera de rango: clampea a -24
+      truePeakDb: 10,  // clipping imposible: clampea a -0.1
+      lraTarget: 100   // fuera de rango: clampea a 20
+    });
+    expect(seguro).toContain('loudnorm=I=-24:TP=-0.1:LRA=20');
   });
 });

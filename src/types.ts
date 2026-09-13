@@ -630,6 +630,10 @@ export interface SongAudioIdea {
   notas?: string;
   votos?: string[]; // Array of usernames who approved/liked this idea
   comentarios?: AudioComment[];
+  stemEngineUsed?: string;
+  stemIsNeural?: boolean;
+  stemDegraded?: boolean;
+  stemProcessedAt?: string;
 }
 
 export interface SongSubstituteGuide {
