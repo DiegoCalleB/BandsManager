@@ -110,7 +110,7 @@ async function processNeuralStemsReplicate(
   bandId?: string,
   songHash?: string,
   requestHost?: string
-): Promise<{ stemsMap: Record<string, { url: string; formato: string; tamano: string }>; timingBreakdown: any } | null> {
+): Promise<{ stemsMap: Record<string, { url: string; formato: string; tamano: string }> | null; timingBreakdown?: any; error?: string } | null> {
   const token = process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY;
   if (!token) return null;
 
@@ -122,75 +122,77 @@ async function processNeuralStemsReplicate(
     const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
     const tPreloadEnd = Date.now();
 
-    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 (HT-Demucs 6s) en Replicate desde: ${resolvedUrl}`);
+    console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL pública: ${resolvedUrl}`);
     const DEMUCS_VERSION = "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953";
 
-    const payloadWithVersion = {
-      version: DEMUCS_VERSION,
-      input: {
-        audio: resolvedUrl,
-        model_name: "htdemucs_6s",
-        shifts: 1, // Shifts=1 aumenta significativamente la precisión de la separación espectral
-        overlap: 0.25,
-        output_format: "mp3"
-      }
+    const demucsInput = {
+      audio: resolvedUrl,
+      model_name: "htdemucs_6s",
+      shifts: 0, // Shifts=0 para velocidad óptima sin timeouts en GPU Replicate
+      overlap: 0.25,
+      output_format: "mp3"
     };
 
     const tGpuStart = Date.now();
-    let response = await fetch('https://api.replicate.com/v1/predictions', {
+
+    // 1. Probar primero el endpoint oficial del modelo cjwbw/demucs
+    let response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
       method: 'POST',
       headers: {
         'Authorization': `Token ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payloadWithVersion)
+      body: JSON.stringify({ input: demucsInput })
     });
 
     if (response.status === 429) {
-      const retryAfterSec = Number(response.headers.get('retry-after') || 8);
+      const retryAfterSec = Number(response.headers.get('retry-after') || 6);
       console.log(`[Demucs Neural] Rate limit en Replicate, reintentando en ${retryAfterSec}s...`);
       await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
-      response = await fetch('https://api.replicate.com/v1/predictions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Token ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payloadWithVersion)
-      });
-    }
-
-    // Si falla endpoint genérico por versión, reintentamos con endpoint de modelo oficial cjwbw/demucs
-    if (!response.ok) {
-      const errText = await response.text();
-      console.warn(`[Demucs Neural] Replicate v1/predictions falló (${response.status}: ${errText}). Probando endpoint oficial cjwbw/demucs...`);
       response = await fetch('https://api.replicate.com/v1/models/cjwbw/demucs/predictions', {
         method: 'POST',
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ input: payloadWithVersion.input })
+        body: JSON.stringify({ input: demucsInput })
+      });
+    }
+
+    // 2. Si falla endpoint oficial por ruta, probar endpoint por hash de versión
+    if (!response.ok) {
+      const errText = await response.text();
+      console.warn(`[Demucs Neural] Replicate model/cjwbw/demucs/predictions falló (${response.status}: ${errText}). Probando v1/predictions con versión...`);
+      response = await fetch('https://api.replicate.com/v1/predictions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          version: DEMUCS_VERSION,
+          input: demucsInput
+        })
       });
     }
 
     if (!response.ok) {
       const errBody = await response.text();
       console.warn("Replicate API request failed definitivamente:", response.status, errBody);
-      return null;
+      return { stemsMap: null, error: `Error de Replicate (${response.status}): ${errBody.substring(0, 180)}` };
     }
 
     let prediction = await response.json();
     const predictionId = prediction.id;
 
-    // Polling rápido a 800ms con timeout ajustado a 40s
+    // Polling a Replicate con tiempo límite ampliado a 120s (2 minutos)
     const startTime = Date.now();
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-      if (Date.now() - startTime > 40000) {
-        console.warn("Demucs separation timeout en Replicate (>40s)...");
-        return null;
+      if (Date.now() - startTime > 120000) {
+        console.warn("Demucs separation timeout en Replicate (>120s)...");
+        return { stemsMap: null, error: "La separación en Replicate superó los 120 segundos de espera." };
       }
-      await new Promise(r => setTimeout(r, 800));
+      await new Promise(r => setTimeout(r, 1000));
       const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
         headers: { 'Authorization': `Token ${token}` }
       });
@@ -202,8 +204,9 @@ async function processNeuralStemsReplicate(
     const tGpuEnd = Date.now();
 
     if (prediction.status === 'failed' || prediction.status === 'canceled') {
-      console.warn("[Demucs Neural] Predicción falló en Replicate:", prediction.error || prediction.logs);
-      return null;
+      const predError = prediction.error || prediction.logs || "Error desconocido en el worker de Replicate";
+      console.warn("[Demucs Neural] Predicción falló en Replicate:", predError);
+      return { stemsMap: null, error: `Error en la GPU de Replicate: ${String(predError).substring(0, 200)}` };
     }
 
     if (prediction.status === 'succeeded' && prediction.output) {
@@ -775,9 +778,10 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         separationEngine = "demucs-neural-v4 (Replicate Forced)";
         isNeural = true;
       } else {
+        const errorDetail = repRes?.error || "La inferencia en la GPU de Replicate no devolvió resultados.";
         return res.status(502).json({
           error: "REPLICATE_EXECUTION_FAILED",
-          message: "Se forzó la ejecución con Replicate pero la inferencia neuronal falló o superó el tiempo límite. Revisa tus créditos o token de Replicate."
+          message: `Ocurrió un problema con Replicate: ${errorDetail}`
         });
       }
     } else if (audioUrl) {
