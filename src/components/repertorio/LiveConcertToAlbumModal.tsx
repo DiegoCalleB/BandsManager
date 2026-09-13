@@ -1908,16 +1908,19 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                           ) : (
                             <>
                               {/* Audio element controller */}
-                              <audio
-                                ref={snippetAudioRef}
-                                src={activeSnippet.audioUrl}
-                                autoPlay
-                                onTimeUpdate={(e) => setSnippetCurrentTime(e.currentTarget.currentTime)}
-                                onLoadedMetadata={(e) => setSnippetDuration(e.currentTarget.duration)}
-                                onPlay={() => setSnippetIsPlaying(true)}
-                                onPause={() => setSnippetIsPlaying(false)}
-                                onEnded={() => setSnippetIsPlaying(false)}
-                              />
+                              {activeSnippet.audioUrl && (
+                                <audio
+                                  ref={snippetAudioRef}
+                                  src={activeSnippet.audioUrl}
+                                  autoPlay
+                                  onError={(e) => e.preventDefault()}
+                                  onTimeUpdate={(e) => setSnippetCurrentTime(e.currentTarget.currentTime)}
+                                  onLoadedMetadata={(e) => setSnippetDuration(e.currentTarget.duration)}
+                                  onPlay={() => setSnippetIsPlaying(true)}
+                                  onPause={() => setSnippetIsPlaying(false)}
+                                  onEnded={() => setSnippetIsPlaying(false)}
+                                />
+                              )}
 
                               {/* Range Slider Scrubber */}
                               <div className="space-y-1">

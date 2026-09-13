@@ -125,6 +125,8 @@ const DEFAULT_SONGS: Song[] = [
  albumDisco: 'Directo Casa México',
  estadoTema: 'listo',
  esVersionCovers: false,
+ audioPrincipalUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+ audioUrl: '/audio/samples/sample_01_groove_apertura.mp3',
  notasInternas: 'Intro del directo en Casa México'
  },
  {
@@ -137,7 +139,9 @@ const DEFAULT_SONGS: Song[] = [
  afinacion: 'E Standard',
  albumDisco: 'Directo Casa México',
  estadoTema: 'listo',
- esVersionCovers: false
+ esVersionCovers: false,
+ audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+ audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3'
  },
  {
  id: 'song-cm-3',
@@ -149,7 +153,9 @@ const DEFAULT_SONGS: Song[] = [
  afinacion: 'E Standard',
  albumDisco: 'Directo Casa México',
  estadoTema: 'listo',
- esVersionCovers: false
+ esVersionCovers: false,
+ audioPrincipalUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
+ audioUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3'
  },
  {
  id: 'song-cm-4',
@@ -161,7 +167,9 @@ const DEFAULT_SONGS: Song[] = [
  afinacion: 'E Standard',
  albumDisco: 'Directo Casa México',
  estadoTema: 'listo',
- esVersionCovers: false
+ esVersionCovers: false,
+ audioPrincipalUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+ audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3'
  },
  {
  id: 'song-cm-5',
@@ -173,7 +181,9 @@ const DEFAULT_SONGS: Song[] = [
  afinacion: 'E Standard',
  albumDisco: 'Directo Casa México',
  estadoTema: 'listo',
- esVersionCovers: false
+ esVersionCovers: false,
+ audioPrincipalUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
+ audioUrl: '/audio/samples/sample_02_balada_medianoche.mp3'
  },
  {
  id: 'song-1',
@@ -576,6 +586,11 @@ export default function RepertorioSetlists({
 
  // Studio Ideas Modal State
  const [activeStudioSong, setActiveStudioSong] = useState<Song | null>(null);
+
+ const handleOpenStudioModal = useCallback((song: Song | null) => {
+   setIsPlayerPlaying(false);
+   setActiveStudioSong(song);
+ }, [setIsPlayerPlaying]);
 
  // Chords Viewer Modal State
  const [activeChordsSong, setActiveChordsSong] = useState<Song | null>(null);
@@ -3335,7 +3350,7 @@ export default function RepertorioSetlists({
       type="button"
       onClick={(e) => {
         e.stopPropagation();
-        setActiveStudioSong(song);
+        handleOpenStudioModal(song);
       }}
       className="p-0.5 text-neutral-400 hover:text-indigo-400 transition-colors shrink-0"
       title="Abrir Studio de Grabación Multipista & Pistas"
@@ -3460,7 +3475,7 @@ export default function RepertorioSetlists({
         </button>
         <button
           type="button"
-          onClick={(e) => { e.stopPropagation(); setActiveStudioSong(song); }}
+          onClick={(e) => { e.stopPropagation(); handleOpenStudioModal(song); }}
           className="flex items-center gap-1 px-1.5 py-0.5 rounded text-neutral-400 hover:text-indigo-400 transition-colors"
         >
           <Headphones className="w-3 h-3 text-indigo-400" /> Studio multipista
@@ -3662,13 +3677,13 @@ export default function RepertorioSetlists({
        toggleFavoriteSong={handleToggleFavorite}
        activePlayerSong={activePlayerSong}
        isPlayerPlaying={isPlayerPlaying}
-       onSelectSong={(song, autoPlay) => selectPlayerSongWithQueue(song, autoPlay, null)}
+       onSelectSong={(song, autoPlay, queue) => selectPlayerSongWithQueue(song, autoPlay, queue || null)}
        onRequestDeleteAlbum={(albumName, songCount) => setDeleteAlbumData({ albumName, songCount })}
        onEditAlbum={(albumName) => setAssignSongsModalData({ isOpen: true, albumName })}
        onCreateAlbum={() => setAssignSongsModalData({ isOpen: true, albumName: '' })}
        onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
        onOpenChords={(song) => setActiveChordsSong(song)}
-       onOpenStudio={(song) => setActiveStudioSong(song)}
+       onOpenStudio={(song) => handleOpenStudioModal(song)}
        onEditSong={(song) => { setEditingSong(song); setShowSongModal(true); }}
        onDeleteSong={(songId) => handleDeleteSong(songId)}
        onShareSong={(song) => handleShareSong(song)}
@@ -3945,7 +3960,7 @@ export default function RepertorioSetlists({
                 onToggleSelect={() => toggleCatalogSelect(s.id)}
                 onOpenChords={() => setActiveChordsSong(s)}
                 onOpenMemberNotes={() => setActiveMemberNotesSong(s)}
-                onOpenStudio={() => setActiveStudioSong(s)}
+                onOpenStudio={() => handleOpenStudioModal(s)}
                 onEditSong={() => {
                   setEditingSong(s);
                   setShowSongModal(true);
@@ -4229,7 +4244,7 @@ export default function RepertorioSetlists({
 
   {showItemAudioUrl && (
     <div className="pt-1">
-      <audio src={showItemAudioUrl} controls className="w-full h-8 accent-sky-500" />
+      <audio src={showItemAudioUrl} controls onError={(e) => e.preventDefault()} className="w-full h-8 accent-sky-500" />
     </div>
   )}
 
@@ -4291,13 +4306,13 @@ export default function RepertorioSetlists({
      — sin el portal, la barra "fixed" quedaba pegada al final del contenido en vez de al fondo
      real de la ventana, así que solo se veía al hacer scroll hasta abajo del todo. Mismo truco
      que el popover de energía (ver energyPopoverPos) para el mismo problema de overflow. */}
- {activePlayerSong && createPortal(
+ {!activeStudioSong && activePlayerSong && createPortal(
  <SpotifyPlayerBar
  song={activePlayerSong}
  songs={playerQueueOverride || songs}
  colors={colors}
  onSelectSong={(newSong, autoPlay) => handleSelectPlayerSong(newSong, autoPlay)}
- onOpenStudio={(songToOpen) => setActiveStudioSong(songToOpen)}
+ onOpenStudio={(songToOpen) => handleOpenStudioModal(songToOpen)}
  onUpdateSong={handleUpdateSongFromStudio}
  onClosePlayer={() => selectPlayerSongWithQueue(null, false, null)}
  autoPlay={playerAutoPlay}

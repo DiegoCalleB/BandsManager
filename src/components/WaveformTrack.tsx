@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } f
 import WaveSurfer from 'wavesurfer.js';
 import { resolveAudioUrl, parseGoogleDriveAudioUrl } from '../utils/audioStorage';
 
+const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+
 interface WaveformTrackProps {
   audioUrl: string;
   color?: string;
@@ -22,39 +24,57 @@ const FallbackWaveformCanvas: React.FC<{ color: string; seedStr: string; progres
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const width = (canvas.width = canvas.offsetWidth || 300);
-    const height = (canvas.height = canvas.offsetHeight || 48);
+    const renderCanvas = () => {
+      const parent = canvas.parentElement;
+      const width = (canvas.width = parent?.clientWidth || canvas.offsetWidth || parent?.offsetWidth || 300);
+      const height = (canvas.height = parent?.clientHeight || canvas.offsetHeight || parent?.offsetHeight || 48);
 
-    ctx.clearRect(0, 0, width, height);
+      if (width <= 0 || height <= 0) return;
 
-    let seed = 12345;
-    for (let i = 0; i < seedStr.length; i++) {
-      seed = (seed << 5) - seed + seedStr.charCodeAt(i);
-      seed |= 0;
-    }
-    const pseudoRandom = () => {
-      seed = (seed * 9301 + 49297) % 233280;
-      return seed / 233280;
+      ctx.clearRect(0, 0, width, height);
+
+      let seed = 12345;
+      for (let i = 0; i < seedStr.length; i++) {
+        seed = (seed << 5) - seed + seedStr.charCodeAt(i);
+        seed |= 0;
+      }
+      const pseudoRandom = () => {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+      };
+
+      const barWidth = 2.5;
+      const barGap = 1.2;
+      const numBars = Math.max(10, Math.floor(width / (barWidth + barGap)));
+      const centerY = height / 2;
+      const progressX = (Math.max(0, Math.min(100, progressPercent)) / 100) * width;
+
+      for (let i = 0; i < numBars; i++) {
+        const posRatio = i / numBars;
+        const envelope = Math.sin(posRatio * Math.PI) * 0.75 + 0.25;
+        const randVal = 0.25 + pseudoRandom() * 0.75;
+        const barHeight = Math.max(4, (height - 8) * randVal * envelope);
+
+        const x = i * (barWidth + barGap);
+        const y = centerY - barHeight / 2;
+
+        ctx.fillStyle = x <= progressX ? color : color + '50';
+        ctx.fillRect(x, y, barWidth, barHeight);
+      }
     };
 
-    const barWidth = 2;
-    const barGap = 1;
-    const numBars = Math.max(10, Math.floor(width / (barWidth + barGap)));
-    const centerY = height / 2;
-    const progressX = (progressPercent / 100) * width;
+    renderCanvas();
 
-    for (let i = 0; i < numBars; i++) {
-      const posRatio = i / numBars;
-      const envelope = Math.sin(posRatio * Math.PI) * 0.75 + 0.25;
-      const randVal = 0.2 + pseudoRandom() * 0.8;
-      const barHeight = Math.max(4, (height - 10) * randVal * envelope);
-
-      const x = i * (barWidth + barGap);
-      const y = centerY - barHeight / 2;
-
-      ctx.fillStyle = x <= progressX ? color : color + '40';
-      ctx.fillRect(x, y, barWidth, barHeight);
+    const parent = canvas.parentElement;
+    let observer: ResizeObserver | null = null;
+    if (parent && typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(() => renderCanvas());
+      observer.observe(parent);
     }
+
+    return () => {
+      if (observer) observer.disconnect();
+    };
   }, [color, seedStr, progressPercent]);
 
   return (
@@ -275,9 +295,9 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
     >
       <audio 
         ref={setAudioRef} 
-        src={validAudioSrc} 
-        crossOrigin="anonymous"
-        preload="auto" 
+        src={validAudioSrc || SILENT_AUDIO_URI} 
+        preload={validAudioSrc ? "metadata" : "none"}
+        onError={(e) => e.preventDefault()}
         onLoadedMetadata={(e) => {
           const el = e.currentTarget;
           const dur = el.duration;
@@ -312,15 +332,14 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(({
         className="h-full relative overflow-hidden bg-black/20 border-r border-white/20 z-10"
         style={{ width: `${trackWidthPercent}%` }}
       >
-        {loadError ? (
+        <div className="absolute inset-0 pointer-events-none z-0">
           <FallbackWaveformCanvas 
             color={color} 
             seedStr={audioUrl || 'track-seed'} 
             progressPercent={(currentTime / effTrackDur) * 100} 
           />
-        ) : (
-          <div ref={containerRef} className="w-full h-full pointer-events-none" />
-        )}
+        </div>
+        <div ref={containerRef} className="w-full h-full relative z-10 pointer-events-none" />
       </div>
 
       {/* Empty DAW Track Grid Region if track audio duration is shorter than master */}

@@ -145,7 +145,9 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
                   </a>
                 </div>
 
-                <audio controls src={generatedAudioUrl} className="w-full h-10" />
+                {generatedAudioUrl && (
+                  <audio controls src={generatedAudioUrl} className="w-full h-10" onError={(e) => e.preventDefault()} />
+                )}
 
                 {generatedLyrics && (
                   <div className="p-2.5 rounded-lg bg-black/60 border border-neutral-800 text-xs font-mono text-neutral-300 max-h-32 overflow-y-auto whitespace-pre-line">

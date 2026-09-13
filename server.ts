@@ -14,7 +14,7 @@ import { startSocialRadarScheduler } from "./server/services/socialRadarService.
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 
-import usersRouter from "./server/routes/users.js";
+import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
 import postsRouter from "./server/routes/posts.js";
 import metricsRouter from "./server/routes/metrics.js";
 import chatRouter from "./server/routes/chat.js";
@@ -117,6 +117,11 @@ app.use("/uploads", (req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   next();
 }, express.static(path.join(process.cwd(), "public", "uploads")));
+
+app.use("/audio", (req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+}, express.static(path.join(process.cwd(), "public", "audio")));
 
 app.use("/transposed", (req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -534,6 +539,12 @@ async function startServer() {
 
   const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`BandManager.ai server running on http://localhost:${PORT}`);
+    // Initialize Admin SuperUser Account
+    try {
+      ensureAdminUserExists(loadState()).catch(e => console.warn("Notice: Admin account init:", e));
+    } catch (e) {
+      console.warn("Notice: Admin account init:", e);
+    }
     // Start background autonomous Social Radar Agent
     try {
       startSocialRadarScheduler();

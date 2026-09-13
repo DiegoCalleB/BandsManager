@@ -461,11 +461,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                     >
                       {sonando ? <><Pause className="w-3.5 h-3.5" /> {t('sonando')}</> : <><Play className="w-3.5 h-3.5" /> {t('escuchar')}</>}
                     </button>
-                    {sonando && (
+                    {sonando && song.audioPrincipalUrl && (
                       <audio
                         src={song.audioPrincipalUrl}
                         controls
                         autoPlay
+                        onError={(e) => e.preventDefault()}
                         onEnded={() => setPlayingSongId(null)}
                         className="w-full h-9"
                       />

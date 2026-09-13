@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+
+const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, ThemeColors } from '../types';
 import {
   Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX,
@@ -27,7 +29,20 @@ interface SpotifyPlayerBarProps {
 
 function getRawAudioUrl(song: Song | null | undefined): string {
   if (!song) return '';
-  return song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || (song as any).audioUrl || '';
+  return (
+    song.audioPrincipalUrl ||
+    (song as any).audio_principal_url ||
+    song.audioUrl ||
+    (song as any).audio_url ||
+    (song as any).audio ||
+    (song as any).url ||
+    (song as any).fileUrl ||
+    (song as any).file_url ||
+    (song.audioIdeas && song.audioIdeas[0]?.audioUrl) ||
+    (song as any).audio_ideas?.[0]?.audioUrl ||
+    (song as any).audio_ideas?.[0]?.audio_url ||
+    ''
+  );
 }
 
 export default function SpotifyPlayerBar({
@@ -238,10 +253,11 @@ export default function SpotifyPlayerBar({
         }
       }
     } else {
-      if (activeEl && isNewSong) {
+      if (activeEl) {
         activeEl.pause();
-        activeEl.removeAttribute('src');
-        activeEl.load();
+        if (activeEl.src !== SILENT_AUDIO_URI) {
+          activeEl.src = SILENT_AUDIO_URI;
+        }
       }
       if (shouldPlayNow) {
         setIsPlaying(true);
@@ -380,7 +396,10 @@ export default function SpotifyPlayerBar({
         el.pause();
         setIsPlaying(false);
       } else {
-        el.play().then(() => setIsPlaying(true)).catch(console.error);
+        el.play().then(() => setIsPlaying(true)).catch(err => {
+          console.warn('Playback deferred or interrupted:', err);
+          setIsPlaying(false);
+        });
       }
     } else {
       setIsPlaying(!isPlaying);
@@ -448,8 +467,7 @@ export default function SpotifyPlayerBar({
 
         // Fundido completo: A se pausa/limpia y B pasa a ser la pista "activa" de verdad.
         fromEl.pause();
-        fromEl.removeAttribute('src');
-        fromEl.load();
+        fromEl.src = SILENT_AUDIO_URI;
         fromEl.volume = baseVolume;
         toEl.volume = baseVolume;
         activeSlotRef.current = activeSlotRef.current === 'A' ? 'B' : 'A';
@@ -492,16 +510,18 @@ export default function SpotifyPlayerBar({
           en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
       <audio
         ref={audioRefA}
-        preload="auto"
-        crossOrigin="anonymous"
+        src={SILENT_AUDIO_URI}
+        preload="metadata"
+        onError={(e) => { e.preventDefault(); }}
         onTimeUpdate={() => { if (activeSlotRef.current === 'A' && audioRefA.current) handleActiveTimeUpdate(audioRefA.current.currentTime); }}
         onLoadedMetadata={() => { if (activeSlotRef.current === 'A' && audioRefA.current?.duration) setDuration(audioRefA.current.duration); }}
         onEnded={() => { if (activeSlotRef.current === 'A') handleEnded(); }}
       />
       <audio
         ref={audioRefB}
-        preload="auto"
-        crossOrigin="anonymous"
+        src={SILENT_AUDIO_URI}
+        preload="metadata"
+        onError={(e) => { e.preventDefault(); }}
         onTimeUpdate={() => { if (activeSlotRef.current === 'B' && audioRefB.current) handleActiveTimeUpdate(audioRefB.current.currentTime); }}
         onLoadedMetadata={() => { if (activeSlotRef.current === 'B' && audioRefB.current?.duration) setDuration(audioRefB.current.duration); }}
         onEnded={() => { if (activeSlotRef.current === 'B') handleEnded(); }}

@@ -8,6 +8,8 @@
  *    la voz por interferencia destructiva en todas las pistas instrumentales.
  */
 
+import { getAudioArrayBufferFromUrl } from './audioStorage';
+
 export interface IsolatedStemResult {
   instrument: string;
   trackName: string;
@@ -23,12 +25,8 @@ export interface IsolatedStemResult {
  */
 export async function separateAudioIntoStems(audioUrl: string): Promise<IsolatedStemResult[]> {
   try {
-    // 1. Fetch original audio content
-    const response = await fetch(audioUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error fetching audio: ${response.status}`);
-    }
-    const arrayBuffer = await response.arrayBuffer();
+    // 1. Fetch original audio content safely handling indexeddb keys, base64 data URLs & streams
+    const arrayBuffer = await getAudioArrayBufferFromUrl(audioUrl);
 
     // 2. Decode raw PCM audio buffer
     const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;

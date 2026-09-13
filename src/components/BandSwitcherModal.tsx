@@ -167,7 +167,12 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           return;
         }
       } catch {}
-      setErrorMessage(err.message || "Error al eliminar la banda de tu usuario");
+      const rawMsg = err?.message || "";
+      const isNetworkErr = rawMsg === "Failed to fetch" || rawMsg.includes("NetworkError") || rawMsg.includes("fetch");
+      const userFriendlyMsg = isNetworkErr 
+        ? "Error de conexión con el servidor. Por favor, reintenta en unos instantes." 
+        : (rawMsg || "Error al eliminar la banda de tu usuario");
+      setErrorMessage(userFriendlyMsg);
       setLeavingBandId(null);
     }
   };

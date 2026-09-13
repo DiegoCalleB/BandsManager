@@ -1948,7 +1948,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
  {audioState?.url ? (
  <>
- <audio controls src={audioState.url} className="w-full h-9" />
+ <audio controls src={audioState.url} onError={(e) => e.preventDefault()} className="w-full h-9" />
  {audioState.savedToSong ? (
  <div className="text-[10px] font-mono text-emerald-600 bg-emerald-500/5 -emerald-500/10 rounded-lg p-2 flex items-center gap-1.5">
  <CheckCircle className="w-3.5 h-3.5" /> Guardada en "{audioState.savedToSong}" (Song Studio)
@@ -2024,7 +2024,7 @@ export default function Chatbot({ colors, leads, rehearsals, concerts, epkConfig
  </div>
  {audioState?.url ? (
  <>
- <audio controls src={audioState.url} className="w-full h-9" />
+ <audio controls src={audioState.url} onError={(e) => e.preventDefault()} className="w-full h-9" />
  <button
  type="button"
  onClick={() => handleDownloadMelodicIdeaMidi(idea)}

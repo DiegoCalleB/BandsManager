@@ -21,7 +21,7 @@ interface DiscografiaViewProps {
   toggleFavoriteSong: (id: string) => void;
   activePlayerSong?: Song | null;
   isPlayerPlaying?: boolean;
-  onSelectSong?: (song: Song | null, autoPlay?: boolean) => void;
+  onSelectSong?: (song: Song | null, autoPlay?: boolean, queue?: Song[] | null) => void;
   onRequestDeleteAlbum?: (albumName: string, songCount: number) => void;
   onEditAlbum?: (albumName: string) => void;
   onCreateAlbum?: () => void;
@@ -592,9 +592,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             if (e) e.stopPropagation();
             if (onSelectSong && sortedAlbumSongs.length > 0) {
               if (isPlayingAlbum) {
-                onSelectSong(sortedAlbumSongs[0], false);
+                onSelectSong(sortedAlbumSongs[0], false, sortedAlbumSongs);
               } else {
-                onSelectSong(sortedAlbumSongs[0], true);
+                onSelectSong(sortedAlbumSongs[0], true, sortedAlbumSongs);
               }
             }
           };
@@ -777,8 +777,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                         index={idx + 1}
                         isPlayingCurrent={isCurrentTrack}
                         isPlayerPlaying={isPlayerPlaying}
-                        onPlay={() => onSelectSong?.(s, true)}
-                        onSelect={() => onSelectSong?.(s, false)}
+                        onPlay={() => onSelectSong?.(s, true, sortedAlbumSongs)}
+                        onSelect={() => onSelectSong?.(s, false, sortedAlbumSongs)}
                         onToggleFavorite={() => toggleFavoriteSong(s.id)}
                         onOpenChords={onOpenChords ? () => onOpenChords(s) : undefined}
                         onOpenMemberNotes={onOpenMemberNotes ? () => onOpenMemberNotes(s) : undefined}

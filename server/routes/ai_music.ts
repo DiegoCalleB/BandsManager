@@ -130,7 +130,7 @@ async function processNeuralStemsReplicate(
       input: {
         audio: resolvedUrl,
         model_name: "htdemucs_6s",
-        shifts: 0,
+        shifts: 1, // Shifts=1 aumenta significativamente la precisión de la separación espectral
         overlap: 0.25,
         output_format: "mp3"
       }
@@ -222,41 +222,56 @@ async function processNeuralStemsReplicate(
       if (!rawStemsMap['Guitarras'] && out.other) rawStemsMap['Guitarras'] = out.other;
       if (!rawStemsMap['Arreglos'] && out.piano) rawStemsMap['Arreglos'] = out.piano;
 
-      // Persistir permanentemente los stems en Supabase Storage de forma PARALELA (Promise.all)
+      // Persistir permanentemente los stems en Supabase Storage o Disco Local para evitar URLs efímeras de Replicate
       const tSaveStart = Date.now();
       const persistentStemsMap: Record<string, { url: string; formato: string; tamano: string }> = {};
 
+      const stemsUploadsDir = path.join(process.cwd(), "public", "uploads", "stems");
+      if (!fs.existsSync(stemsUploadsDir)) {
+        fs.mkdirSync(stemsUploadsDir, { recursive: true });
+      }
+
       await Promise.all(
         Object.entries(rawStemsMap).map(async ([instrumentKey, tempUrl]) => {
-          let finalUrl = tempUrl;
+          let finalUrl = "";
           let sizeBytes = 0;
           if (tempUrl && (tempUrl.startsWith("http://") || tempUrl.startsWith("https://"))) {
             try {
               const isSafe = await esUrlExternaSegura(tempUrl);
               if (isSafe) {
-                // Timeout de 8s para descargar desde la CDN de Replicate
-                const fileRes = await fetch(tempUrl, { signal: AbortSignal.timeout(8000) });
+                // Descarga directa desde Replicate CDN con timeout suficiente (25s)
+                const fileRes = await fetch(tempUrl, { signal: AbortSignal.timeout(25000) });
                 if (fileRes.ok) {
                   const arrayBuf = await fileRes.arrayBuffer();
                   sizeBytes = arrayBuf.byteLength;
                   const buffer = Buffer.from(arrayBuf);
                   const instrumentClean = instrumentKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                  const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, `stem-${instrumentClean}.mp3`, effectiveHash);
+                  const filename = `stem-${instrumentClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}.mp3`;
+                  const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, filename, effectiveHash);
                   
-                  // Timeout de 6s para la subida a Supabase Storage para evitar bloqueos
-                  const supabasePromise = uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
-                  const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 6000));
-                  const supabaseUrl = await Promise.race([supabasePromise, timeoutPromise]);
+                  // 1. Intentar guardar en Supabase Storage permanente
+                  const supabaseUrl = await uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
                   
                   if (supabaseUrl) {
                     finalUrl = supabaseUrl;
-                    console.log(`[Demucs Stems] Guardado permanente ultra-rápido para ${instrumentKey}: ${supabaseUrl}`);
+                    console.log(`[Demucs Stems] Guardado permanente en Supabase para ${instrumentKey}: ${supabaseUrl}`);
+                  } else {
+                    // 2. Fallback garantizado: guardar en disco local permanente (/public/uploads/stems/...)
+                    const localPath = path.join(stemsUploadsDir, filename);
+                    fs.writeFileSync(localPath, buffer);
+                    finalUrl = `/uploads/stems/${filename}`;
+                    console.log(`[Demucs Stems] Guardado permanente en disco local para ${instrumentKey}: ${finalUrl}`);
                   }
                 }
               }
             } catch (storageErr: any) {
-              console.warn(`[Demucs Stems] No se pudo persistir en Supabase stem ${instrumentKey}, manteniendo URL origen:`, storageErr?.message || storageErr);
+              console.warn(`[Demucs Stems] Error descargando o persistiendo stem ${instrumentKey}:`, storageErr?.message || storageErr);
             }
+          }
+
+          // Si por alguna anomalía crítica no se pudo guardar localmente ni en Supabase, usar tempUrl como último recurso
+          if (!finalUrl) {
+            finalUrl = tempUrl;
           }
 
           const formattedSize = sizeBytes > 0

@@ -5,8 +5,11 @@ import { SongStudioAiMusicModal } from "./song_studio/SongStudioAiMusicModal";
 import { SongStudioAiComposerModal } from "./song_studio/SongStudioAiComposerModal";
 import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
+
+const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+import { motion, AnimatePresence } from 'motion/react';
 import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
-import { uploadFileToServer, resolveAudioUrl } from '../utils/audioStorage';
+import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl, saveAudioToStorage } from '../utils/audioStorage';
 import { apiFetch } from '../utils/api';
 import { separateAudioIntoStems, IsolatedStemResult } from '../utils/stemSeparator';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
@@ -347,8 +350,7 @@ export default function SongStudioModal({
         }
 
         if (sendableAudioUrl.startsWith('indexeddb:') || sendableAudioUrl.startsWith('blob:') || sendableAudioUrl.startsWith('data:')) {
-          const res = await fetch(sendableAudioUrl);
-          const blob = await res.blob();
+          const blob = await getAudioBlobFromUrl(targetIdea.audioUrl);
           const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
           const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
           const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
@@ -458,20 +460,22 @@ export default function SongStudioModal({
         }
 
         if (renderedStems.length > 0) {
-          // Carga paralela ultra-rápida de stems en cliente con timeout de rescate
+          // Guardado persistente de cada stem en servidor/IndexedDB (sin depender de blob URLs efímeras)
           await Promise.all(
             renderedStems.map(async (stemRes) => {
               let uploadedUrl = stemRes.audioUrl;
               try {
                 const wavFile = new File([stemRes.audioBlob], `stem-${stemRes.instrument.toLowerCase()}-${Date.now()}.wav`, { type: 'audio/wav' });
-                const uploadPromise = uploadFileToServer(wavFile);
-                const timeoutPromise = new Promise<string>((resolve) => 
-                  setTimeout(() => resolve(URL.createObjectURL(stemRes.audioBlob)), 3500)
-                );
-                uploadedUrl = await Promise.race([uploadPromise, timeoutPromise]);
+                uploadedUrl = await uploadFileToServer(wavFile, { category: 'stems', folder: 'separated' });
               } catch (upErr) {
-                console.warn("Using blob URL fallback for stem upload:", upErr);
-                uploadedUrl = URL.createObjectURL(stemRes.audioBlob);
+                console.warn("Using IndexedDB fallback for stem upload:", upErr);
+                try {
+                  const key = `stem_${stemRes.instrument.toLowerCase()}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+                  await saveAudioToStorage(key, stemRes.audioBlob);
+                  uploadedUrl = `indexeddb:${key}`;
+                } catch (idbErr) {
+                  console.warn("IndexedDB fallback error:", idbErr);
+                }
               }
 
               if (!newTracks.some(t => t.nombre.includes(stemRes.instrument))) {
@@ -661,6 +665,15 @@ export default function SongStudioModal({
   ) => {
     if (!el) return;
 
+    const isAudible = (hasSoloInSession ? !!tr.solo : true) && !tr.muted;
+    const targetGain = isAudible ? Math.max(0, tr.volumen ?? 1) : 0;
+
+    // Apply direct HTML5 Audio element volume baseline first to prevent silence on cross-origin stems
+    try {
+      el.volume = targetGain;
+      el.muted = !isAudible;
+    } catch (e) {}
+
     try {
       if (!studioAudioCtxRef.current || studioAudioCtxRef.current.state === 'closed') {
         const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
@@ -679,16 +692,18 @@ export default function SongStudioModal({
       let dsp = trackDSPMapRef.current[trackId];
 
       if (!dsp || dsp.element !== el) {
-        if (!el.crossOrigin) {
-          el.crossOrigin = 'anonymous';
-        }
+        let source: MediaElementAudioSourceNode | undefined = (el as any).__mediaElementSource;
 
-        let source: MediaElementAudioSourceNode | undefined;
-        try {
-          source = ctx.createMediaElementSource(el);
-        } catch (e) {
-          // If media element was already connected to WebAudio source node, handle safely
-          source = undefined;
+        if (!source) {
+          const isSameOriginOrBlob = !el.src || el.src.startsWith('blob:') || el.src.startsWith('data:') || el.src.includes(window.location.host);
+          if (isSameOriginOrBlob) {
+            try {
+              source = ctx.createMediaElementSource(el);
+              (el as any).__mediaElementSource = source;
+            } catch (e) {
+              source = (el as any).__mediaElementSource;
+            }
+          }
         }
 
         if (source) {
@@ -927,6 +942,8 @@ export default function SongStudioModal({
 
   // Audio elements refs map for multitrack: trackAudioRefs.current[trackId]
   const trackAudioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
+  const pendingPlayPromiseRefs = useRef<Record<string, Promise<void>>>({});
+  const lastPlayAttemptMapRef = useRef<Record<string, number>>({});
   
   // High-precision WebAudio & Synchronization Master Engine Refs
   const studioAudioCtxRef = useRef<AudioContext | null>(null);
@@ -1110,10 +1127,24 @@ export default function SongStudioModal({
 
         const slaveDur = getSafeTrackDuration(slaveEl);
         const isMuted = tr.muted || (activeHasSolo && !tr.solo);
-        // If WebAudio DSP is active, GainNode handles volume without touching HTMLAudioElement volume
+        const targetGain = isMuted ? 0 : Math.max(0, tr.volumen ?? 1);
+
+        // Only modify DOM properties when changed to prevent Chrome audio engine stutter
+        if (slaveEl.muted !== isMuted) {
+          slaveEl.muted = isMuted;
+        }
+        if (Math.abs(slaveEl.volume - targetGain) > 0.005) {
+          slaveEl.volume = targetGain;
+        }
+
         const dsp = trackDSPMapRef.current[tr.id];
-        if (!dsp) {
-          slaveEl.volume = isMuted ? 0 : (tr.volumen ?? 1);
+        if (dsp && dsp.gainNode && studioAudioCtxRef.current) {
+          try {
+            const currentGain = dsp.gainNode.gain.value;
+            if (Math.abs(currentGain - targetGain) > 0.005) {
+              dsp.gainNode.gain.setTargetAtTime(targetGain, studioAudioCtxRef.current.currentTime, 0.015);
+            }
+          } catch (_) {}
         }
 
         const trackOffsetSec = (tr.desfaseMs || 0) / 1000;
@@ -1122,7 +1153,9 @@ export default function SongStudioModal({
         // If master has not reached track offset yet, keep slave paused at 0
         if (targetSlaveTime < 0) {
           if (!slaveEl.paused) slaveEl.pause();
-          try { slaveEl.currentTime = 0; } catch {}
+          if (Math.abs(slaveEl.currentTime) > 0.01) {
+            try { slaveEl.currentTime = 0; } catch {}
+          }
           return;
         }
 
@@ -1132,38 +1165,41 @@ export default function SongStudioModal({
           return;
         }
 
-        // Ensure slave element is playing if in active audio range
-        if (slaveEl.paused && (slaveDur === 0 || targetSlaveTime < slaveDur - 0.05)) {
-          slaveEl.play().catch(() => {});
+        // Ensure slave element is playing if in active audio range (throttled & non-blocking to prevent Chrome audio engine lockup)
+        const isPending = !!pendingPlayPromiseRefs.current[tr.id];
+        if (slaveEl.paused && !isPending && slaveEl.src && !slaveEl.src.startsWith('indexeddb:') && (slaveDur === 0 || targetSlaveTime < slaveDur - 0.05)) {
+          const now = Date.now();
+          const lastAttempt = lastPlayAttemptMapRef.current[tr.id] || 0;
+          if (now - lastAttempt > 600) {
+            lastPlayAttemptMapRef.current[tr.id] = now;
+            const p = slaveEl.play();
+            if (p !== undefined) {
+              pendingPlayPromiseRefs.current[tr.id] = p;
+              p.then(() => {
+                delete pendingPlayPromiseRefs.current[tr.id];
+              }).catch(() => {
+                delete pendingPlayPromiseRefs.current[tr.id];
+              });
+            }
+          }
         }
 
-        // Glitch-free, ultra-fluid drift alignment (Moises / Pro-DAW style):
-        // NEVER hard-seek for small drifts (which freezes the browser's audio pipeline).
-        // Micro-nudge playback rate (±3%) to gently align samples without any dropouts.
+        // Keep playbackRate always at 1.0 to eliminate resample distortion and pitch wobble
+        if (slaveEl.playbackRate !== 1.0) {
+          slaveEl.playbackRate = 1.0;
+        }
+
+        // Hard seek ONLY when drift is severe (> 350ms) to prevent continuous seek popping
         if (currentMasterEl && slaveEl !== currentMasterEl) {
           const diff = slaveEl.currentTime - targetSlaveTime;
-          const absDiff = Math.abs(diff);
-          if (absDiff > 0.30) {
-            // Hard seek ONLY when drift is large (e.g. manual timeline scrub or loop wrap)
+          if (Math.abs(diff) > 0.35) {
             try { slaveEl.currentTime = Math.max(0, targetSlaveTime); } catch {}
-            slaveEl.playbackRate = 1.0;
-          } else if (absDiff > 0.035) {
-            // Gentle inaudible resample rate nudge (re-syncs within ~120ms with zero stutter)
-            const targetRate = diff > 0 ? 0.97 : 1.03;
-            if (slaveEl.playbackRate !== targetRate) {
-              slaveEl.playbackRate = targetRate;
-            }
-          } else {
-            // In perfect phase lock (< 35ms)
-            if (slaveEl.playbackRate !== 1.0) {
-              slaveEl.playbackRate = 1.0;
-            }
           }
         }
       });
 
-      // Update progress & duration maps smoothly without flooding React re-renders
-      if (Math.abs(masterTime - lastReportedTime) >= 0.01 || lastReportedTime < 0) {
+      // Update progress & duration maps at smooth ~10fps (every 100ms) to eliminate React re-render thrashing
+      if (Math.abs(masterTime - lastReportedTime) >= 0.10 || lastReportedTime < 0) {
         lastReportedTime = masterTime;
         setCurrentTimeMap(prev => ({ ...prev, [idea.id]: masterTime }));
       }
@@ -1198,6 +1234,7 @@ export default function SongStudioModal({
         el.playbackRate = 1.0;
       }
     });
+    pendingPlayPromiseRefs.current = {};
     playingIdeaIdRef.current = null;
     setPlayingIdeaId(null);
   };
@@ -1222,14 +1259,15 @@ export default function SongStudioModal({
       }
     });
 
+    pendingPlayPromiseRefs.current = {};
     setCurrentTimeMap(prev => ({ ...prev, [idea.id]: startPos }));
     playingIdeaIdRef.current = null;
     setPlayingIdeaId(null);
   };
 
   // Master Transport: Play (starts/resumes from current position)
-  const handlePlayIdea = (idea: SongAudioIdea) => {
-    // Unlock and resume AudioContext non-blockingly for low-latency playback
+  const handlePlayIdea = async (idea: SongAudioIdea) => {
+    // 1. Immediately unlock and resume AudioContext in the user click callstack
     try {
       if (!studioAudioCtxRef.current) {
         const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -1255,7 +1293,11 @@ export default function SongStudioModal({
 
     let maxDur = 0;
     tracks.forEach(tr => {
-      const el = trackAudioRefs.current[tr.id];
+      let el = trackAudioRefs.current[tr.id];
+      if (!el) {
+        el = new Audio(SILENT_AUDIO_URI);
+        trackAudioRefs.current[tr.id] = el;
+      }
       const dur = getSafeTrackDuration(el);
       if (dur > maxDur) maxDur = dur;
     });
@@ -1271,58 +1313,67 @@ export default function SongStudioModal({
     playingIdeaIdRef.current = idea.id;
     setPlayingIdeaId(idea.id);
 
-    // 1. Pre-synchronize initial timestamps & volumes across all tracks with precise per-track latency offsets
-    tracks.forEach(tr => {
-      const el = trackAudioRefs.current[tr.id];
-      if (el) {
-        const trackDur = getSafeTrackDuration(el);
-        const trackOffsetSec = (tr.desfaseMs || 0) / 1000;
-        const targetTrackTime = Math.max(0, startPos + trackOffsetSec);
+    // Synchronize initial timestamps, DSP and volumes across all tracks
+    for (const tr of tracks) {
+      let el = trackAudioRefs.current[tr.id];
+      if (!el) {
+        el = new Audio(SILENT_AUDIO_URI);
+        trackAudioRefs.current[tr.id] = el;
+      }
 
-        if (trackDur > 0 && startPos >= trackDur) {
-          try { el.currentTime = trackDur; } catch {}
-          el.pause();
-        } else {
-          // Avoid triggering unnecessary asynchronous browser seek if element is already at target time
-          if (Math.abs((el.currentTime || 0) - targetTrackTime) > 0.03) {
-            try { el.currentTime = targetTrackTime; } catch {}
+      let resolvedUrl = resolvedAudioUrls[tr.id] || tr.audioUrl;
+      if (resolvedUrl && (resolvedUrl.startsWith('indexeddb:') || resolvedUrl.includes('drive.google.com'))) {
+        try {
+          const res = await resolveAudioUrl(resolvedUrl);
+          if (res) {
+            resolvedUrl = res;
+            setResolvedAudioUrls(prev => ({ ...prev, [tr.id]: res }));
           }
-          el.playbackRate = 1.0;
-          // Apply Web Audio DSP EQ (low, mid, high), GainNode volume, Stem Isolators & Panning live
-          updateTrackAudioDSP(tr.id, el, tr, hasSoloTrack);
+        } catch (_) {}
+      }
+
+      if (resolvedUrl && !resolvedUrl.startsWith('indexeddb:') && (!el.src || el.src === '' || el.src.endsWith('undefined') || (!el.src.includes(resolvedUrl) && el.src !== resolvedUrl))) {
+        el.src = resolvedUrl;
+      }
+
+      if (el.readyState === 0 && el.src && !el.src.startsWith('indexeddb:')) {
+        try { el.load(); } catch {}
+      }
+
+      const trackDur = getSafeTrackDuration(el);
+      const trackOffsetSec = (tr.desfaseMs || 0) / 1000;
+      const targetTrackTime = Math.max(0, startPos + trackOffsetSec);
+
+      if (trackDur > 0 && startPos >= trackDur) {
+        try { el.currentTime = trackDur; } catch {}
+        el.pause();
+      } else {
+        if (Math.abs((el.currentTime || 0) - targetTrackTime) > 0.03) {
+          try { el.currentTime = targetTrackTime; } catch {}
+        }
+        el.playbackRate = 1.0;
+        el.muted = false;
+
+        // Apply DSP and volume
+        updateTrackAudioDSP(tr.id, el, tr, hasSoloTrack);
+
+        // Ensure audio element play is triggered
+        if (el.src && el.src !== '' && !el.src.endsWith('undefined') && !el.src.startsWith('indexeddb:')) {
+          if (!pendingPlayPromiseRefs.current[tr.id]) {
+            const p = el.play();
+            if (p !== undefined) {
+              pendingPlayPromiseRefs.current[tr.id] = p;
+              p.then(() => {
+                delete pendingPlayPromiseRefs.current[tr.id];
+              }).catch(err => {
+                delete pendingPlayPromiseRefs.current[tr.id];
+                console.warn(`Track ${tr.id} play deferred:`, err);
+              });
+            }
+          }
         }
       }
-    });
-
-    // 2. Fire play calls synchronously for active tracks in the click callstack
-    tracks.forEach(tr => {
-      const el = trackAudioRefs.current[tr.id];
-      if (el) {
-        const resolvedUrl = resolvedAudioUrls[tr.id];
-        if (resolvedUrl && (!el.src || el.src === '' || el.src.endsWith('undefined'))) {
-          el.src = resolvedUrl;
-        }
-        if (el.readyState === 0 && el.src) {
-          try { el.load(); } catch {}
-        }
-        const trackDur = getSafeTrackDuration(el);
-        if (el.src && el.src !== '' && !el.src.endsWith('undefined') && (trackDur === 0 || startPos < trackDur)) {
-          const playPromise = el.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(err => {
-              console.warn(`Track ${tr.id} play deferred:`, err);
-              const onCanPlay = () => {
-                if (playingIdeaIdRef.current === idea.id) {
-                  el.play().catch(() => {});
-                }
-                el.removeEventListener('canplay', onCanPlay);
-              };
-              el.addEventListener('canplay', onCanPlay);
-            });
-          }
-        }
-      }
-    });
+    }
 
     // 3. Launch Master Sync Engine
     runMasterSyncLoop(idea);
@@ -1330,7 +1381,7 @@ export default function SongStudioModal({
 
   // Toggle Play / Pause
   const togglePlayIdea = async (idea: SongAudioIdea) => {
-    if (playingIdeaId === idea.id) {
+    if (playingIdeaId === idea.id || playingIdeaIdRef.current === idea.id) {
       handlePauseIdea(idea);
     } else {
       await handlePlayIdea(idea);
@@ -1373,12 +1424,30 @@ export default function SongStudioModal({
     }
   };
 
-  // Cleanup sync loop on unmount or idea change
+  // Stop background discography player when entering studio modal & cleanup on unmount
   useEffect(() => {
+    // Silence any background discography audio elements when entering Song Studio
+    const allAudioElements = document.querySelectorAll('audio');
+    allAudioElements.forEach(el => {
+      try {
+        el.pause();
+      } catch {}
+    });
+
     return () => {
       if (syncAnimationFrameRef.current) {
         cancelAnimationFrame(syncAnimationFrameRef.current);
       }
+      // Stop all multitrack studio audio elements on unmount
+      Object.values(trackAudioRefs.current).forEach(el => {
+        if (el) {
+          try {
+            el.pause();
+            el.currentTime = 0;
+          } catch {}
+        }
+      });
+      playingIdeaIdRef.current = null;
     };
   }, []);
 
@@ -1802,9 +1871,19 @@ export default function SongStudioModal({
       // 2. Pre-align backing tracks at position 0
       setCurrentTimeMap(prev => ({ ...prev, [idea.id]: 0 }));
       tracks.forEach(tr => {
-        const el = trackAudioRefs.current[tr.id];
+        const resolvedUrl = resolvedAudioUrls[tr.id] || tr.audioUrl;
+        let el = trackAudioRefs.current[tr.id];
+        if (!el && resolvedUrl && typeof resolvedUrl === 'string' && !resolvedUrl.startsWith('indexeddb:') && !resolvedUrl.endsWith('undefined')) {
+          el = new Audio(resolvedUrl || SILENT_AUDIO_URI);
+          trackAudioRefs.current[tr.id] = el;
+        }
         if (el) {
-          el.currentTime = 0;
+          if (resolvedUrl && typeof resolvedUrl === 'string' && !resolvedUrl.startsWith('indexeddb:') && !resolvedUrl.endsWith('undefined')) {
+            if (!el.src || !el.src.includes(resolvedUrl)) {
+              el.src = resolvedUrl;
+            }
+          }
+          try { el.currentTime = 0; } catch {}
           el.playbackRate = 1.0;
           const isMuted = tr.muted || (hasSolo && !(tr as any).solo);
           el.volume = isMuted ? 0 : (tr.volumen ?? 1);
@@ -1813,10 +1892,21 @@ export default function SongStudioModal({
 
       // 3. Play backing track audio FIRST so sound is emitted before mic recording captures performance
       const playPromises = activeBackingTracks.map(tr => {
-        const el = trackAudioRefs.current[tr.id];
-        if (el && el.src && el.src !== '' && !el.src.endsWith('undefined')) {
-          el.currentTime = 0;
-          return el.play().catch(e => console.error("Backing track playback error:", e));
+        const resolvedUrl = resolvedAudioUrls[tr.id] || tr.audioUrl;
+        if (resolvedUrl && typeof resolvedUrl === 'string' && resolvedUrl.trim() !== '' && !resolvedUrl.endsWith('undefined') && !resolvedUrl.startsWith('indexeddb:')) {
+          let el = trackAudioRefs.current[tr.id];
+          if (!el) {
+            el = new Audio(resolvedUrl || SILENT_AUDIO_URI);
+            trackAudioRefs.current[tr.id] = el;
+          }
+          if (!el.src || !el.src.includes(resolvedUrl)) {
+            el.src = resolvedUrl;
+          }
+          if (el.readyState === 0) {
+            try { el.load(); } catch {}
+          }
+          try { el.currentTime = 0; } catch {}
+          return el.play().catch(e => console.warn("Backing track playback notice:", e?.message || e));
         }
         return Promise.resolve();
       });
@@ -1951,10 +2041,7 @@ export default function SongStudioModal({
         return;
       }
       const masterUrl = await resolveAudioUrl(masterTrack.audioUrl);
-      const trackUrl = await resolveAudioUrl(track.audioUrl);
-      const res = await fetch(trackUrl);
-      if (!res.ok) throw new Error("No se pudo obtener el audio de la pista.");
-      const trackBlob = await res.blob();
+      const trackBlob = await getAudioBlobFromUrl(track.audioUrl);
 
       const calculatedLagMs = await autoDetectAudioLatencyOffset(masterUrl, trackBlob);
       handleTrackDesfaseChange(idea, track.id, calculatedLagMs);
@@ -1970,10 +2057,7 @@ export default function SongStudioModal({
   const handleCleanTrackAudio = async (idea: SongAudioIdea, track: AudioTrack) => {
     try {
       setCleaningTrackId(track.id);
-      const trackUrl = await resolveAudioUrl(track.audioUrl);
-      const res = await fetch(trackUrl);
-      if (!res.ok) throw new Error("No se pudo obtener el audio de la pista.");
-      const rawBlob = await res.blob();
+      const rawBlob = await getAudioBlobFromUrl(track.audioUrl);
       const cleanedBlob = await cleanAudioBlobOffline(rawBlob);
       const cleanedFile = new File([cleanedBlob], `clean-${track.nombre || 'pista'}-${Date.now()}.wav`, { type: 'audio/wav' });
       const serverUrl = await uploadFileToServer(cleanedFile);
@@ -2317,6 +2401,32 @@ export default function SongStudioModal({
     setShowAddIdea(false);
   };
 
+  // Directly insert original song as an idea without showing form or asking anything else
+  const handleInsertOriginalSongDirectly = () => {
+    const urlToUse = song.audioPrincipalUrl || selectedSongBaseUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl);
+    if (!urlToUse) return;
+
+    const newIdea: SongAudioIdea = {
+      id: `idea-${Date.now()}`,
+      titulo: `Tema Original: ${song.titulo}`,
+      seccion: 'general',
+      audioUrl: urlToUse,
+      subidoPor: currentUsername || 'Miembro de la Banda',
+      instrumento: 'Tema Base',
+      fecha: new Date().toISOString().split('T')[0],
+      notas: 'Pista base original cargada automáticamente.',
+      votos: [currentUsername],
+      comentarios: []
+    };
+
+    const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
+    onUpdateSong({
+      ...song,
+      audioIdeas: updatedIdeas,
+      audioPrincipalUrl: song.audioPrincipalUrl
+    });
+  };
+
   // Toggle upvote / like
   const handleToggleVote = (ideaId: string) => {
     const updatedIdeas = (song.audioIdeas || []).map(idea => {
@@ -2542,100 +2652,71 @@ export default function SongStudioModal({
         {/* Content Body */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
           
-          {/* Main Song Demo Header */}
-          <div className="p-4 rounded-xl border border-indigo-500/20 bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-zinc-900/60 shadow-lg relative overflow-hidden">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-indigo-600/30 text-indigo-400 border border-indigo-500/40">
-                  <Music className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                    Studio & Banco de Ideas Multipista
-                    <span className="text-[10px] bg-indigo-500/30 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-500/40">
-                      Multipista Demo
-                    </span>
-                  </h3>
-                  <p className="text-xs text-neutral-400">
-                    Sube ideas por secciones o graba pistas superpuestas (guitarra, voz, bajo) para armar arreglos juntos.
-                  </p>
-                </div>
-              </div>
+          {/* Sleek Top Action Bar */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 bg-zinc-900/80 rounded-2xl border border-white/10 shadow-md">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
+                <Music className="w-4 h-4 text-indigo-400 animate-pulse" /> Ideas & Grabaciones
+              </span>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={() => setShowCubaseHelp(true)}
+                className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-all cursor-pointer flex items-center gap-1"
+                title="Ver atajos de teclado"
+              >
+                <Keyboard className="w-3 h-3" /> Atajos (Espacio, M, S)
+              </motion.button>
+            </div>
 
-              <div className="flex items-center gap-2 flex-wrap shrink-0">
-                {selectedSongBaseUrl && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUseSongBaseTrack(true);
-                      setShowAddIdea(true);
-                      setIdeaTitle(`Tocar sobre Tema Original: ${song.titulo}`);
-                    }}
-                    className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/30 to-orange-500/30 hover:from-amber-500/40 hover:to-orange-500/40 text-amber-200 border border-amber-500/40 font-mono text-xs font-bold flex items-center gap-2 shadow-md cursor-pointer transition-all active:scale-95"
-                    title="Crear una idea cargando automáticamente el tema original como pista base"
-                  >
-                    <Disc className="w-4 h-4 text-amber-400 animate-spin-slow" />
-                    <span>🎵 Cargar Tema Original como Base</span>
-                  </button>
-                )}
-
-                <button
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              {selectedSongBaseUrl && (
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.95 }}
                   type="button"
-                  onClick={() => setShowAddIdea(true)}
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-zinc-950 font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95"
+                  onClick={handleInsertOriginalSongDirectly}
+                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  title="Insertar directamente el tema original como una nueva idea multipista"
                 >
-                  <Plus className="w-4 h-4" /> Crear Nueva Idea / Arreglo
-                </button>
-              </div>
-            </div>
-          </div>
+                  <Disc className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Cargar Tema Original</span>
+                </motion.button>
+              )}
 
-          {/* Quick Cubase Shortcuts Status Bar */}
-          <div className="px-3 py-2 bg-purple-950/40 border border-purple-500/30 rounded-xl text-xs font-mono text-purple-200 flex items-center justify-between flex-wrap gap-2 shadow-sm">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="flex items-center gap-1.5 font-bold text-purple-300">
-                <Keyboard className="w-4 h-4 text-purple-400" /> Atajos Cubase:
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-purple-500/40 text-white font-sans text-[11px] font-bold shadow-inner">Espacio</kbd> Play/Pause
-              </span>
-              <span className="text-purple-500">|</span>
-              <span className="inline-flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-purple-500/40 text-white font-sans text-[11px] font-bold shadow-inner">0 / Home</kbd> Ir a 0:00
-              </span>
-              <span className="text-purple-500">|</span>
-              <span className="inline-flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-purple-500/40 text-rose-300 font-sans text-[11px] font-bold shadow-inner">R</kbd> Grabar Pista
-              </span>
-              <span className="text-purple-500">|</span>
-              <span className="inline-flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-purple-500/40 text-white font-sans text-[11px] font-bold shadow-inner">← / →</kbd> Jump ±5s
-              </span>
-              <span className="text-purple-500">|</span>
-              <span className="inline-flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-purple-500/40 text-amber-300 font-sans text-[11px] font-bold shadow-inner">M / S</kbd> Mute / Solo
-              </span>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={() => setShowAddIdea(true)}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ Grabar / Subir Idea</span>
+              </motion.button>
             </div>
-            <button
-              type="button"
-              onClick={() => setShowCubaseHelp(true)}
-              className="text-[11px] font-bold text-purple-300 hover:text-white underline cursor-pointer ml-auto"
-            >
-              Guía Completa (K / ?)
-            </button>
           </div>
 
           {/* Add New Audio Idea Form */}
-          {showAddIdea && (
-            <div className="p-5 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 space-y-4 animate-in slide-in-from-top-4 duration-200">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-emerald-300 font-mono uppercase tracking-wider flex items-center gap-2">
-                  <Mic className="w-4 h-4" /> Aportar Idea o Arreglo de Audio
-                </h4>
-                <button type="button" onClick={() => setShowAddIdea(false)} className="text-neutral-400 hover:text-white">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+          <AnimatePresence>
+            {showAddIdea && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                className="overflow-hidden"
+              >
+                <div className="p-5 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-bold text-emerald-300 font-mono uppercase tracking-wider flex items-center gap-2">
+                      <Mic className="w-4 h-4 text-emerald-400 animate-pulse" /> Aportar Idea o Arreglo de Audio
+                    </h4>
+                    <button type="button" onClick={() => setShowAddIdea(false)} className="text-neutral-400 hover:text-white">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
@@ -3002,7 +3083,9 @@ export default function SongStudioModal({
                 </button>
               </div>
             </div>
-          )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
           {/* Section Filter Bar */}
           <div className="space-y-2">
@@ -3072,99 +3155,124 @@ export default function SongStudioModal({
             </div>
           ) : (
             <div className="space-y-6">
-              {filteredIdeas.map((idea) => {
-                const isPlaying = playingIdeaId === idea.id;
-                const currentTime = currentTimeMap[idea.id] || 0;
-                const rawDuration = durationMap[idea.id];
-                const duration = (rawDuration && !isNaN(rawDuration) && isFinite(rawDuration) && rawDuration > 0) ? rawDuration : 0;
-                const sectionInfo = SECCIONES_TEMA.find(s => s.key === idea.seccion) || SECCIONES_TEMA[0];
-                const votes = idea.votos || [];
-                const hasVoted = votes.includes(currentUsername);
-                const tracks = getIdeaTracks(idea);
-                const isAddingTrack = addingTrackIdeaId === idea.id;
+              <AnimatePresence>
+                {filteredIdeas.map((idea) => {
+                  const isPlaying = playingIdeaId === idea.id;
+                  const currentTime = currentTimeMap[idea.id] || 0;
+                  const rawDuration = durationMap[idea.id];
+                  const duration = (rawDuration && !isNaN(rawDuration) && isFinite(rawDuration) && rawDuration > 0) ? rawDuration : 0;
+                  const sectionInfo = SECCIONES_TEMA.find(s => s.key === idea.seccion) || SECCIONES_TEMA[0];
+                  const votes = idea.votos || [];
+                  const hasVoted = votes.includes(currentUsername);
+                  const tracks = getIdeaTracks(idea);
+                  const isAddingTrack = addingTrackIdeaId === idea.id;
 
-                return (
-                  <div
-                    key={idea.id}
-                    className={`p-4 sm:p-5 rounded-2xl border transition-all space-y-4 ${
-                      isPlaying 
-                        ? 'bg-indigo-950/30 border-indigo-500/50 shadow-2xl ring-1 ring-indigo-500/30' 
-                        : 'bg-white/5 border-white/10 hover:border-white/20'
-                    }`}
-                  >
-                    {/* Idea Header */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${sectionInfo.color}`}>
-                          {sectionInfo.icon} {sectionInfo.label}
-                        </span>
-                        <h4 className="text-base font-bold text-white">{idea.titulo}</h4>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">
-                          {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas (Mezcla)'}
-                        </span>
+                  return (
+                    <motion.div
+                      key={idea.id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.25 }}
+                      className={`p-4 sm:p-5 rounded-2xl border transition-all space-y-4 ${
+                        isPlaying 
+                          ? 'bg-indigo-950/30 border-indigo-500/50 shadow-2xl ring-1 ring-indigo-500/30' 
+                          : 'bg-white/5 border-white/10 hover:border-white/20'
+                      }`}
+                    >
+                      {/* Idea Header */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${sectionInfo.color}`}>
+                            {sectionInfo.icon} {sectionInfo.label}
+                          </span>
+                          <div>
+                            <h4 className="text-base font-bold text-white flex items-center gap-2">
+                              {idea.titulo}
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">
+                                {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas (Stems)'}
+                              </span>
+                              {isPlaying && (
+                                <div className="flex items-end gap-0.5 h-4 px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40">
+                                  <motion.span animate={{ height: ['25%', '90%', '40%', '100%', '30%'] }} transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
+                                  <motion.span animate={{ height: ['80%', '30%', '95%', '40%', '70%'] }} transition={{ repeat: Infinity, duration: 0.7, ease: "easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
+                                  <motion.span animate={{ height: ['40%', '100%', '30%', '80%', '20%'] }} transition={{ repeat: Infinity, duration: 0.5, ease: "easeInOut" }} className="w-1 bg-emerald-400 rounded-full" />
+                                </div>
+                              )}
+                            </h4>
+                          <span className="text-[11px] text-neutral-400 font-mono flex items-center gap-1 mt-0.5">
+                            <User className="w-3 h-3 text-indigo-400" />
+                            {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''} • {idea.fecha}
+                          </span>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2 text-xs text-neutral-400 font-mono">
-                        <User className="w-3.5 h-3.5 text-indigo-400" />
-                        <span>{idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''}</span>
-                        <span>• {idea.fecha}</span>
-
-                        {/* Share Idea Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleShareIdea(idea)}
-                          className="px-2 py-1 rounded-lg bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1"
-                          title="Compartir esta idea de audio por WhatsApp"
-                        >
-                          <MessageSquare className="w-3 h-3 fill-white/20" />
-                          <span>WhatsApp</span>
-                        </button>
-
-                        {/* AI Stem Separator Button */}
+                      {/* Primary Quick Actions for Musician */}
+                      <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
+                        {/* 1. AI Stem Separator - Highlighted Action */}
                         <button
                           type="button"
                           onClick={() => handlePerformAiStemSeparation(idea)}
                           disabled={isSeparatingStemsAi}
-                          className="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1 border border-amber-500/40"
-                          title="Usar IA para separar voces, batería, bajo y guitarras en pistas aisladas"
+                          className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+                          title="Separar voces, batería, bajo y guitarras en pistas aisladas con Inteligencia Artificial"
                         >
-                          <Cpu className={`w-3 h-3 ${isSeparatingStemsAi ? 'animate-spin text-amber-400' : 'text-amber-400'}`} />
-                          <span>{isSeparatingStemsAi ? 'Separando IA...' : 'Stems IA'}</span>
+                          <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
+                          <span>{isSeparatingStemsAi ? 'Separando Pistas...' : '🎛️ Separar Stems (IA)'}</span>
                         </button>
 
-                        {/* AI Instrument Arrangement Button */}
+                        {/* 2. Add Track / Overdub Button */}
                         <button
                           type="button"
-                          onClick={() => setShowAiTrackGenModal(true)}
-                          className="px-2 py-1 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1 border border-purple-500/40"
-                          title="Generar un nuevo arreglo o pista de instrumento con IA que encaje a la perfección"
+                          onClick={() => {
+                            if (addingTrackIdeaId === idea.id) {
+                              setAddingTrackIdeaId(null);
+                            } else {
+                              setAddingTrackIdeaId(idea.id);
+                              setNewTrackName(`Pista ${tracks.length + 1}`);
+                              setNewTrackInstrument('');
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
+                          title="Grabar micrófono o subir otra pista de instrumento"
                         >
-                          <Wand2 className="w-3 h-3 text-purple-400" />
-                          <span>+ Arreglo IA</span>
+                          <Plus className="w-4 h-4" />
+                          <span>+ Pista</span>
                         </button>
 
-                        {/* Export Master Mix WAV Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleExportMasterMix(idea)}
-                          disabled={isExportingMaster}
-                          className="px-2 py-1 rounded-lg bg-indigo-600/80 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer ml-1 border border-indigo-400/30"
-                          title="Renderizar y descargar la mezcla de pistas completa en alta calidad WAV"
-                        >
-                          <Disc className={`w-3 h-3 ${isExportingMaster ? 'animate-spin text-amber-300' : 'text-indigo-200'}`} />
-                          <span>{isExportingMaster ? 'Exportando...' : 'Mezcla .WAV'}</span>
-                        </button>
+                        {/* 3. Secondary Tools Dropdown / Grouped Actions */}
+                        <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/10">
+                          {/* WhatsApp Share */}
+                          <button
+                            type="button"
+                            onClick={() => handleShareIdea(idea)}
+                            className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-950/40 transition-all cursor-pointer"
+                            title="Compartir idea por WhatsApp"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                          </button>
 
+                          {/* Export WAV */}
+                          <button
+                            type="button"
+                            onClick={() => handleExportMasterMix(idea)}
+                            disabled={isExportingMaster}
+                            className="p-1.5 rounded-lg text-indigo-300 hover:bg-indigo-950/40 transition-all cursor-pointer disabled:opacity-50"
+                            title="Exportar mezcla completa en .WAV"
+                          >
+                            <Disc className={`w-4 h-4 ${isExportingMaster ? 'animate-spin' : ''}`} />
+                          </button>
 
-                        {/* Delete Idea Button */}
-                        <button
-                          type="button"
-                          onClick={(e) => handleDeleteIdea(e, idea.id)}
-                          className="p-1.5 rounded-lg text-neutral-500 hover:text-rose-400 hover:bg-rose-950/40 transition-all cursor-pointer ml-2"
-                          title="Eliminar esta idea completa"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                          {/* Delete */}
+                          <button
+                            type="button"
+                            onClick={(e) => handleDeleteIdea(e, idea.id)}
+                            className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-400 hover:bg-rose-950/40 transition-all cursor-pointer"
+                            title="Eliminar esta idea"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -3176,111 +3284,73 @@ export default function SongStudioModal({
 
                     {/* MASTER MULTITRACK CONTROLS & TIMELINE */}
                     <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 space-y-3 shadow-inner">
-                      {/* Transport Controls Header */}
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        {/* Transport Buttons: Play, Pause, Stop, Loop, Cues */}
-                        <div className="flex items-center gap-2 flex-wrap">
-                          {/* Play Button */}
+                      {/* Streamlined Transport Toolbar */}
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                        {/* Playback Controls */}
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                          {/* Play / Pause Toggle */}
                           <button
                             type="button"
                             onClick={() => togglePlayIdea(idea)}
-                            className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-mono text-xs font-bold transition-all cursor-pointer shadow-lg active:scale-95 ${
+                            className={`px-4 py-2 rounded-xl flex items-center gap-2 font-bold text-xs shadow-lg transition-all active:scale-95 cursor-pointer ${
                               isPlaying
-                                ? 'bg-emerald-500 text-zinc-950 ring-2 ring-emerald-400'
-                                : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                                ? 'bg-amber-500 text-zinc-950 font-black'
+                                : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
                             }`}
                             title="Play / Pausa (Espacio)"
                           >
-                            <Play className="w-4 h-4 fill-current" />
-                            <span>{isPlaying ? 'Reproduciendo...' : 'Play'}</span>
+                            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                            <span>{isPlaying ? 'Pausa' : 'Reproducir'}</span>
                           </button>
 
-                          {/* Pause Button */}
-                          <button
-                            type="button"
-                            onClick={() => handlePauseIdea(idea)}
-                            disabled={!isPlaying}
-                            className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 disabled:opacity-40 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
-                            title="Pausar en posición actual (P / Espacio)"
-                          >
-                            <Pause className="w-4 h-4 fill-current" />
-                            <span>Pausa</span>
-                          </button>
-
-                          {/* Stop Button */}
+                          {/* Stop / Rewind to 0:00 */}
                           <button
                             type="button"
                             onClick={() => handleStopIdea(idea)}
-                            className="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
-                            title="Detener e ir a inicio / Cue A (0 / Home / Stop)"
+                            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10 transition-all cursor-pointer"
+                            title="Detener e ir al inicio (Atajo: 0 / Home)"
                           >
-                            <Square className="w-4 h-4 fill-current" />
-                            <span>Stop</span>
+                            <Square className="w-4 h-4 fill-current text-rose-400" />
                           </button>
 
-                          {/* Loop Button */}
+                          {/* Loop Toggle */}
                           {(() => {
                             const loopCfg = loopConfigMap[idea.id];
                             const isLoopEnabled = !!loopCfg?.enabled;
-                            const loopStart = loopCfg?.start || 0;
-                            const loopEnd = (loopCfg?.end && loopCfg.end > loopStart) ? loopCfg.end : duration;
-
                             return (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleIdeaLoop(idea)}
-                                  className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                                    isLoopEnabled
-                                      ? 'bg-purple-600 text-white border-purple-400 shadow-md ring-1 ring-purple-400/50'
-                                      : 'bg-white/5 hover:bg-white/10 text-neutral-400 border-white/10'
-                                  }`}
-                                  title="Alternar Modo Bucle entre Cues (Atajo L)"
-                                >
-                                  <Repeat className="w-4 h-4" />
-                                  <span>Bucle {isLoopEnabled ? 'ON' : 'OFF'}</span>
-                                </button>
-
-                                <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/10 text-[11px] font-mono">
-                                  <span className="text-neutral-400 px-1 font-semibold">Cues:</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => setIdeaCueIn(idea)}
-                                    className="px-2 py-0.5 rounded bg-indigo-500/20 hover:bg-indigo-500/40 text-indigo-300 border border-indigo-500/30 font-bold flex items-center gap-1 cursor-pointer"
-                                    title="Fijar Cue In (Inicio Bucle A) en la posición actual (Atajo I)"
-                                  >
-                                    <Flag className="w-3 h-3 text-indigo-400" />
-                                    <span>In [{formatTime(loopStart)}]</span>
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    onClick={() => setIdeaCueOut(idea)}
-                                    className="px-2 py-0.5 rounded bg-purple-500/20 hover:bg-purple-500/40 text-purple-300 border border-purple-500/30 font-bold flex items-center gap-1 cursor-pointer"
-                                    title="Fijar Cue Out (Fin Bucle B) en la posición actual (Atajo O)"
-                                  >
-                                    <Flag className="w-3 h-3 text-purple-400" />
-                                    <span>Out [{formatTime(loopEnd)}]</span>
-                                  </button>
-
-                                  {(loopStart > 0 || (loopEnd > 0 && loopEnd < duration)) && (
-                                    <button
-                                      type="button"
-                                      onClick={() => resetIdeaLoopBounds(idea)}
-                                      className="p-1 rounded text-neutral-400 hover:text-white cursor-pointer"
-                                      title="Restablecer bucle a la duración total"
-                                    >
-                                      <RotateCcw className="w-3.5 h-3.5" />
-                                    </button>
-                                  )}
-                                </div>
-                              </>
+                              <button
+                                type="button"
+                                onClick={() => toggleIdeaLoop(idea)}
+                                className={`px-2.5 py-1.5 rounded-xl font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                                  isLoopEnabled
+                                    ? 'bg-purple-600 text-white border-purple-400 shadow-md ring-1 ring-purple-400/50'
+                                    : 'bg-white/5 hover:bg-white/10 text-neutral-400 border-white/10'
+                                }`}
+                                title="Bucle ON/OFF (Atajo: L)"
+                              >
+                                <Repeat className="w-3.5 h-3.5" />
+                                <span>{isLoopEnabled ? 'Bucle ON' : 'Bucle'}</span>
+                              </button>
                             );
                           })()}
                         </div>
 
-                        {/* AI Accompaniment & Overdub Action Buttons */}
-                        <div className="flex items-center gap-2 flex-wrap shrink-0">
+                        {/* Extra Tools & Stems Actions */}
+                        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowGenModalForIdea(idea);
+                              setGenBpm(song.bpm || 120);
+                              setGenKey(song.tonalidad || 'Do');
+                            }}
+                            className="px-2.5 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900 text-purple-300 border border-purple-500/30 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                            title="Batería / Bajo de acompañamiento con IA"
+                          >
+                            <Wand2 className="w-3.5 h-3.5 text-purple-400" />
+                            <span>+ Base Rítmica IA</span>
+                          </button>
+
                           {selectedSongBaseUrl && !tracks.some(t => t.audioUrl === selectedSongBaseUrl) && (
                             <button
                               type="button"
@@ -3292,77 +3362,29 @@ export default function SongStudioModal({
                                   'Tema Base'
                                 );
                               }}
-                              className="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md hover:scale-105"
-                              title={`Cargar la pista base original del tema "${song.titulo}" en esta mezcla`}
+                              className="px-2.5 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                              title="Cargar tema original como base"
                             >
-                              <Disc className="w-4 h-4 text-amber-400 animate-spin-slow" />
+                              <Disc className="w-3.5 h-3.5 text-amber-400" />
                               <span>+ Base Tema</span>
                             </button>
                           )}
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setShowGenModalForIdea(idea);
-                              setGenBpm(song.bpm || 120);
-                              setGenKey(song.tonalidad || 'Do');
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md hover:scale-105"
-                            title="Sintetizar sugerencia de batería y/o bajo de referencia orientativa"
-                          >
-                            <Wand2 className="w-4 h-4 text-purple-400" />
-                            <span>⚡ Base Batería/Bajo (AI)</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setShowMoisesStemsModal(idea)}
-                            className="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md hover:scale-105"
-                            title="Modo Moises: Separa o configura pistas independientes de Voz, Batería, Bajo y Guitarras/Teclados para mutear instrumentos"
-                          >
-                            <Sliders className="w-4 h-4 text-amber-400" />
-                            <span>🎛️ Stems (Estilo Moises)</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (addingTrackIdeaId === idea.id) {
-                                setAddingTrackIdeaId(null);
-                              } else {
-                                setAddingTrackIdeaId(idea.id);
-                                setNewTrackName(`Pista ${tracks.length + 1}`);
-                                setNewTrackInstrument('');
-                              }
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-sky-950/80 hover:bg-sky-900 text-sky-300 border border-sky-500/40 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md hover:scale-105"
-                            title="Grabar o subir otra pista encima de esta idea"
-                          >
-                            <Layers className="w-4 h-4 text-sky-400" />
-                            <span>+ Pista</span>
-                          </button>
                         </div>
                       </div>
 
-                      {/* Timeline status bar */}
+                      {/* Timeline status & counter */}
                       <div className="flex items-center justify-between text-xs font-mono text-neutral-400 pt-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-white font-bold">
-                            {isPlaying ? '▶ Reproduciendo Mezcla' : 'Transport Detenido'}
-                          </span>
-                          {tracks.length > 1 && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold" title="Pistas de diferente longitud se rellenan y sincronizan automáticamente">
-                              ⚡ Sync Auto-Padding
-                            </span>
+                        <span className="text-neutral-300 font-bold flex items-center gap-1.5">
+                          {isPlaying ? (
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                          ) : (
+                            <span className="w-2 h-2 rounded-full bg-neutral-500" />
                           )}
-                        </div>
-                        <div>
-                          <span className="text-emerald-400 font-bold">{formatTime(currentTime)}</span> / <span>{formatTime(duration)}</span>
-                          {loopConfigMap[idea.id]?.enabled && (
-                            <span className="text-purple-300 ml-2">
-                              (Bucle: {formatTime(loopConfigMap[idea.id]?.start || 0)} ➔ {formatTime(loopConfigMap[idea.id]?.end || duration)})
-                            </span>
-                          )}
+                          {isPlaying ? 'Reproduciendo...' : 'Detenido'}
+                        </span>
+
+                        <div className="text-emerald-400 font-bold font-mono">
+                          {formatTime(currentTime)} <span className="text-neutral-500">/</span> {formatTime(duration)}
                         </div>
                       </div>
 
@@ -4152,9 +4174,10 @@ export default function SongStudioModal({
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
+              </AnimatePresence>
             </div>
           )}
 
