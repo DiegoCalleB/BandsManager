@@ -22,6 +22,7 @@ if (ffmpegPath) {
 // Identificadores de modelos de Replicate (verificados y distintos)
 export const REPLICATE_MODEL_DEMUCS_V4 = 'cjwbw/demucs';
 export const REPLICATE_MODEL_MVSEP_MDX23 = 'lucataco/mvsep-mdx23-music-separation';
+export const REPLICATE_VERSION_MVSEP_MDX23 = '510b9b91aec1bfa7d634e6c06ee80c18492fb0fc06aa1474533fbda90dd3dba4';
 
 export const REPLICATE_MODELS = {
   demucs: REPLICATE_MODEL_DEMUCS_V4,
@@ -836,8 +837,9 @@ async function processMdx23Stems(
   }
 
   const replicateModel = REPLICATE_MODEL_MVSEP_MDX23;
+  const MVSEP_VERSION = REPLICATE_VERSION_MVSEP_MDX23;
 
-  console.log(`[MDX23 Neural] Iniciando inferencia en Replicate (${replicateModel}) para ${modelFriendlyName}. Audio: ${resolvedUrl.substring(0, 50)}...`);
+  console.log(`[MDX23 Neural] Iniciando inferencia en Replicate (${replicateModel} / version: ${MVSEP_VERSION.substring(0, 12)}...) para ${modelFriendlyName}. Audio: ${resolvedUrl.substring(0, 50)}...`);
 
   const tGpuStart = Date.now();
   const reqHeaders = {
@@ -845,10 +847,12 @@ async function processMdx23Stems(
     'Content-Type': 'application/json'
   };
 
-  let response = await fetch(`https://api.replicate.com/v1/models/${replicateModel}/predictions`, {
+  // 1. Invocar Replicate usando el endpoint por versión fijada (garantiza compatibilidad 100% con modelos comunitarios)
+  let response = await fetch('https://api.replicate.com/v1/predictions', {
     method: 'POST',
     headers: reqHeaders,
     body: JSON.stringify({
+      version: MVSEP_VERSION,
       input: {
         audio: resolvedUrl
       }
@@ -859,16 +863,31 @@ async function processMdx23Stems(
     const retryAfterSec = Number(response.headers.get('retry-after') || 6);
     console.log(`[MDX23 Neural] Rate limit en Replicate, reintentando en ${retryAfterSec}s...`);
     await new Promise(r => setTimeout(r, (retryAfterSec + 1) * 1000));
+    response = await fetch('https://api.replicate.com/v1/predictions', {
+      method: 'POST',
+      headers: reqHeaders,
+      body: JSON.stringify({
+        version: MVSEP_VERSION,
+        input: { audio: resolvedUrl }
+      })
+    });
+  }
+
+  // 2. Si falla por endpoint de versiones, probar endpoint por modelo slug
+  if (!response.ok && (response.status === 404 || response.status === 422 || response.status === 400)) {
+    console.warn(`[MDX23 Neural] Prediction por versión ${MVSEP_VERSION.substring(0, 10)} falló (${response.status}). Probando endpoint por modelo slug...`);
     response = await fetch(`https://api.replicate.com/v1/models/${replicateModel}/predictions`, {
       method: 'POST',
       headers: reqHeaders,
-      body: JSON.stringify({ input: { audio: resolvedUrl } })
+      body: JSON.stringify({
+        input: { audio: resolvedUrl }
+      })
     });
   }
 
   if (!response.ok) {
     const errBody = await response.text();
-    console.warn(`[MDX23 Neural] Petición inicial a Replicate falló (${response.status}):`, errBody);
+    console.warn(`[MDX23 Neural] Petición a Replicate falló (${response.status}):`, errBody);
     const diag = parseReplicateError(response.status, errBody);
     return {
       stemsMap: null,
@@ -877,7 +896,7 @@ async function processMdx23Stems(
       errorTitle: `${diag.errorTitle} (${modelFriendlyName})`,
       error: diag.message,
       actionAdvice: diag.actionAdvice,
-      errorDetail: diag.errorDetail,
+      errorDetail: `Endpoint Replicate: v1/predictions [version: ${MVSEP_VERSION}]\nResponse (${response.status}): ${errBody}`,
       httpStatus: diag.httpStatus
     };
   }
