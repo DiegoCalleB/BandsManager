@@ -177,8 +177,7 @@ export async function acquireStemsSeparationLock(
             .update({
               status: 'pending',
               locked_at: nowIso,
-              locked_by: instanceId,
-              updated_at: nowIso
+              locked_by: instanceId
             })
             .eq("band_id", bandId)
             .eq("song_hash", songHash)
@@ -225,8 +224,7 @@ export async function acquireStemsSeparationLock(
         locked_at: nowIso,
         locked_by: instanceId,
         stems_map: {},
-        created_at: nowIso,
-        updated_at: nowIso
+        created_at: nowIso
       });
 
     if (!insertErr) {
@@ -326,8 +324,7 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
         timing_breakdown: record.timingBreakdown || {},
         audio_url: record.audioUrl || null,
         song_title: record.songTitle || null,
-        created_at: record.createdAt || nowIso,
-        updated_at: nowIso
+        created_at: record.createdAt || nowIso
       }, { onConflict: "band_id,song_hash,engine" });
     
     console.log(`[Stems Cache] 💾 Guardado persistente L2 en Supabase para ${cacheKey}`);
@@ -351,8 +348,7 @@ export async function markStemsSeparationFailed(
       .from("song_stems_cache")
       .update({
         status: 'failed',
-        degraded_reason: errorMessage,
-        updated_at: new Date().toISOString()
+        degraded_reason: errorMessage
       })
       .eq("band_id", bandId)
       .eq("song_hash", songHash)
