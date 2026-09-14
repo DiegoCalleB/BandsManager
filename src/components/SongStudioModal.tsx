@@ -5402,19 +5402,48 @@ export default function SongStudioModal({
               <div>
                 <label className="block text-purple-300 font-mono font-bold mb-1.5 flex items-center justify-between">
                   <span>¿En qué momento de la canción debe empezar a sonar?</span>
-                  <span className="text-white bg-black/60 px-2 py-0.5 rounded-lg text-[11px]">{formatTime(aiTrackGenStartOffsetSec)}</span>
+                  <span className="text-white bg-black/60 px-2 py-0.5 rounded-lg text-[11px]">Se colocará en {formatTime(aiTrackGenStartOffsetSec)}</span>
                 </label>
-                <input
-                  type="range"
-                  min={0}
-                  max={Math.max(0, (song.duracionSegundos || 180) - 5)}
-                  step={1}
-                  value={aiTrackGenStartOffsetSec}
-                  onChange={(e) => setAiTrackGenStartOffsetSec(Number(e.target.value))}
-                  className="w-full accent-purple-500"
-                />
+
+                {/* Mini transporte: reproduce la idea real para elegir el punto de oído, no a ciegas con un slider */}
+                <div className="flex items-center gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => showAiTrackGenModal && togglePlayIdea(showAiTrackGenModal)}
+                    className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-400 text-white flex items-center justify-center shrink-0 cursor-pointer"
+                  >
+                    {showAiTrackGenModal && playingIdeaId === showAiTrackGenModal.id
+                      ? <Pause className="w-4 h-4 fill-current" />
+                      : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                  </button>
+                  <input
+                    type="range"
+                    min={0}
+                    max={Math.max(1, song.duracionSegundos || 180)}
+                    step={0.1}
+                    value={showAiTrackGenModal ? (currentTimeMap[showAiTrackGenModal.id] || 0) : 0}
+                    onChange={(e) => showAiTrackGenModal && handleSeekIdea(showAiTrackGenModal, Number(e.target.value))}
+                    className="flex-1 accent-purple-500"
+                  />
+                  <span className="text-[10px] font-mono text-neutral-400 w-10 text-right shrink-0">
+                    {formatTime(showAiTrackGenModal ? (currentTimeMap[showAiTrackGenModal.id] || 0) : 0)}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!showAiTrackGenModal) return;
+                    handlePauseIdea(showAiTrackGenModal);
+                    setAiTrackGenStartOffsetSec(Math.floor(currentTimeMap[showAiTrackGenModal.id] || 0));
+                  }}
+                  className="w-full py-2 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-200 text-xs font-mono font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  📍 Marcar este punto ({formatTime(showAiTrackGenModal ? (currentTimeMap[showAiTrackGenModal.id] || 0) : 0)})
+                </button>
+
                 <p className="text-[10px] text-neutral-400 font-sans mt-1">
-                  Lyria solo genera clips fieles al contexto de ~30s — en vez de forzar una canción entera, elige aquí la sección donde mejor encaje (ej. el puente en 1:45) y se colocará ahí en la mezcla.
+                  Dale al play, escucha la canción y pulsa "Marcar este punto" justo donde quieras que entre — Lyria genera clips fieles al contexto de ~30s, así que elige la sección donde mejor encaje (ej. el puente) en vez de forzar una canción entera.
                 </p>
               </div>
 
