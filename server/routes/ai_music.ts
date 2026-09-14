@@ -969,37 +969,62 @@ async function processMdx23Stems(
 
     const rawStemsMap: Record<string, string> = {};
 
-    const findStemUrl = (searchKeys: string[]): string | undefined => {
-      for (const k of searchKeys) {
-        if (out[k] && typeof out[k] === 'string') return out[k];
-      }
-      for (const [k, v] of Object.entries(out)) {
-        if (typeof v === 'string') {
-          const lowerK = k.toLowerCase();
-          if (searchKeys.some(target => lowerK.includes(target.toLowerCase()))) {
-            return v;
+    // La versión pinneada de lucataco/mvsep-mdx23-music-separation devuelve el output como
+    // array posicional (claves "0".."N"), no como objeto con nombres (vocals/drums/bass/...).
+    // Sin este caso, el mapeo por nombre de abajo no encuentra nada y se descartan 6 stems
+    // ya generados y cobrados en Replicate. El orden posicional coincide con el mismo orden
+    // vocals/drums/bass/guitar/piano/other documentado para el ensemble de 6 fuentes.
+    const outKeys = Object.keys(out);
+    const isPositionalArray = Array.isArray(out) || (outKeys.length > 0 && outKeys.every(k => /^\d+$/.test(k)));
+
+    if (isPositionalArray) {
+      const values = Array.isArray(out)
+        ? out
+        : outKeys.sort((a, b) => Number(a) - Number(b)).map(k => out[k]);
+      const positionalLabels: Record<number, string[]> = {
+        4: ['Voz', 'Batería', 'Bajo', 'Arreglos'],
+        6: ['Voz', 'Batería', 'Bajo', 'Guitarras', 'Teclados', 'Arreglos']
+      };
+      const labels = positionalLabels[values.length] || [];
+      console.log(`[MDX23 Neural] Output posicional (array) de ${values.length} stems detectado. Mapeando por orden: ${labels.join(', ') || 'desconocido, se etiquetará genéricamente'}`);
+      values.forEach((url: unknown, idx: number) => {
+        if (typeof url !== 'string') return;
+        const label = labels[idx] || `Stem IA ${idx + 1}`;
+        rawStemsMap[label] = url;
+      });
+    } else {
+      const findStemUrl = (searchKeys: string[]): string | undefined => {
+        for (const k of searchKeys) {
+          if (out[k] && typeof out[k] === 'string') return out[k];
+        }
+        for (const [k, v] of Object.entries(out)) {
+          if (typeof v === 'string') {
+            const lowerK = k.toLowerCase();
+            if (searchKeys.some(target => lowerK.includes(target.toLowerCase()))) {
+              return v;
+            }
           }
         }
-      }
-      return undefined;
-    };
+        return undefined;
+      };
 
-    const vocalUrl = findStemUrl(['vocals', 'vocals_url', 'vocalsuri', 'vocal', 'acapella', 'voz']);
-    const drumsUrl = findStemUrl(['drums', 'drums_url', 'drumsuri', 'drum', 'bateria']);
-    const bassUrl = findStemUrl(['bass', 'bass_url', 'bassuri', 'bajo']);
-    const guitarUrl = findStemUrl(['guitar', 'guitars', 'guitar_url', 'guitaruri', 'guitarra']);
-    const pianoUrl = findStemUrl(['piano', 'pianouri', 'keyboards', 'teclados']);
-    const otherUrl = findStemUrl(['other', 'other_url', 'otheruri', 'instrumental', 'accompaniment', 'arreglos']);
+      const vocalUrl = findStemUrl(['vocals', 'vocals_url', 'vocalsuri', 'vocal', 'acapella', 'voz']);
+      const drumsUrl = findStemUrl(['drums', 'drums_url', 'drumsuri', 'drum', 'bateria']);
+      const bassUrl = findStemUrl(['bass', 'bass_url', 'bassuri', 'bajo']);
+      const guitarUrl = findStemUrl(['guitar', 'guitars', 'guitar_url', 'guitaruri', 'guitarra']);
+      const pianoUrl = findStemUrl(['piano', 'pianouri', 'keyboards', 'teclados']);
+      const otherUrl = findStemUrl(['other', 'other_url', 'otheruri', 'instrumental', 'accompaniment', 'arreglos']);
 
-    if (vocalUrl) rawStemsMap['Voz'] = vocalUrl;
-    if (drumsUrl) rawStemsMap['Batería'] = drumsUrl;
-    if (bassUrl) rawStemsMap['Bajo'] = bassUrl;
-    if (guitarUrl) rawStemsMap['Guitarras'] = guitarUrl;
-    if (pianoUrl) rawStemsMap['Teclados'] = pianoUrl;
-    if (otherUrl) rawStemsMap['Arreglos'] = otherUrl;
+      if (vocalUrl) rawStemsMap['Voz'] = vocalUrl;
+      if (drumsUrl) rawStemsMap['Batería'] = drumsUrl;
+      if (bassUrl) rawStemsMap['Bajo'] = bassUrl;
+      if (guitarUrl) rawStemsMap['Guitarras'] = guitarUrl;
+      if (pianoUrl) rawStemsMap['Teclados'] = pianoUrl;
+      if (otherUrl) rawStemsMap['Arreglos'] = otherUrl;
 
-    if (!rawStemsMap['Guitarras'] && otherUrl) rawStemsMap['Guitarras'] = otherUrl;
-    if (!rawStemsMap['Arreglos'] && otherUrl && !rawStemsMap['Teclados']) rawStemsMap['Arreglos'] = otherUrl;
+      if (!rawStemsMap['Guitarras'] && otherUrl) rawStemsMap['Guitarras'] = otherUrl;
+      if (!rawStemsMap['Arreglos'] && otherUrl && !rawStemsMap['Teclados']) rawStemsMap['Arreglos'] = otherUrl;
+    }
 
     const tSaveStart = Date.now();
     const persistentStemsMap = await persistRawStemsMap(rawStemsMap, effectiveBandId, effectiveHash, formatLabel);
