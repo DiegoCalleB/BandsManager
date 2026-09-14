@@ -1217,7 +1217,7 @@ export default function App() {
    );
  })()}
 
- {!isPromoPlan && <AiSupportWidget variant="sidebar" />}
+ <AiSupportWidget variant="sidebar" />
 
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">

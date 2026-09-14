@@ -709,6 +709,14 @@ export default function Dashboard({
             </div>
           </div>
         </div>
+
+        {/* APOYO AL PROYECTO Y CONSUMO DE IA: el resumen reducido de Promo se salta el dashboard
+            grande de más abajo por completo, así que sin esto las bandas en Promo nunca veían
+            ni el CTA de Ko-fi ni cuánta IA llevan gastada este mes. */}
+        <div className="space-y-3">
+          <AiSupportWidget variant="card" />
+          <AiUsageCard isStitchLight={isStitchLight} />
+        </div>
       </div>
     );
   }
