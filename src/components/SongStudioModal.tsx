@@ -393,7 +393,7 @@ export default function SongStudioModal({
         currentStepText: stepProcessingText
       } : null);
 
-      const data = await apiFetch('/api/ai-stem-separation', {
+      const kickoff = await apiFetch('/api/ai-stem-separation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -405,6 +405,40 @@ export default function SongStudioModal({
           forceEngine: engineToUse
         })
       });
+
+      let data = kickoff;
+
+      // El servidor responde al instante (202) y sigue procesando en segundo plano para no
+      // chocar con el límite de ~5 minutos de conexión inactiva del proxy de Railway. Hacemos
+      // polling ligero del resultado en vez de mantener esta petición abierta varios minutos.
+      if (kickoff?.status === 'processing') {
+        const pollStartedAt = Date.now();
+        const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
+        while (true) {
+          await new Promise(r => setTimeout(r, 4000));
+          const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
+          setStemProgressModal(prev => prev ? {
+            ...prev,
+            stage: 'demucs',
+            progressPct: Math.min(88, 45 + elapsedSec / 3),
+            currentStepText: `${stepProcessingText} (${elapsedSec}s transcurridos, puede tardar varios minutos)`
+          } : null);
+
+          const statusRes = await apiFetch(
+            `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
+          );
+          if (statusRes?.status === 'completed') {
+            data = statusRes;
+            break;
+          }
+          if (Date.now() - pollStartedAt > maxWaitMs) {
+            throw new Error('La separación sigue procesándose en el servidor tras 20 minutos. Cierra esta ventana e inténtalo de nuevo en un rato: el resultado quedará guardado y no se repetirá el gasto en GPU.');
+          }
+          // statusRes.status === 'processing' o 'not_found' (aún no escrito en caché): seguimos esperando.
+          // Un estado 'failed' hace que apiFetch lance ApiRequestError automáticamente (respuesta no-2xx),
+          // que cae de forma natural en el catch de más abajo con el mismo formato de error enriquecido.
+        }
+      }
 
       setStemProgressModal(prev => prev ? {
         ...prev,

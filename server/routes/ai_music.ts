@@ -9,7 +9,7 @@ import fs from "fs";
 import crypto from "crypto";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
-import { getStemsFromPersistentCache, saveStemsToPersistentCache, acquireStemsSeparationLock, waitForStemsCompletion, markStemsSeparationFailed, StemsCacheRecord } from "../db/stemsCache.js";
+import { getStemsFromPersistentCache, saveStemsToPersistentCache, acquireStemsSeparationLock, markStemsSeparationFailed, getStemsJobStatus, StemsCacheRecord } from "../db/stemsCache.js";
 import { stemStorageRetryManager } from "../services/stemStorageRetryQueue.js";
 import { verifyReplicateWebhook, verifyWebhookSignature, isPredictionWebhookProcessed, recordPredictionJob } from "../services/stemPredictionReconciler.js";
 import { uploadBufferToSupabase, uploadToSupabaseIfAvailable, rutaAlmacenamientoStem } from "../utils/storage.js";
@@ -30,6 +30,73 @@ export const REPLICATE_MODELS = {
 } as const;
 
 const router = express.Router();
+
+const STEM_METADATA: Record<string, { trackName: string; description: string; recommendedVolume: number }> = {
+  "Voz": {
+    trackName: "🎤 Stem IA: Voz Principal (Aislada)",
+    description: "Voz principal aislada en alta calidad mediante aprendizaje profundo. Permite silenciar la voz para ensayar cantando en directo.",
+    recommendedVolume: 1.0
+  },
+  "Batería": {
+    trackName: "🥁 Stem IA: Batería & Percusión",
+    description: "Pista aislada de batería, caja, bombo y platillos en alta fidelidad.",
+    recommendedVolume: 0.9
+  },
+  "Bajo": {
+    trackName: "🎸 Stem IA: Bajo (Sub-Bass)",
+    description: "Línea de bajo aislada y frecuencias fundamentales de grave.",
+    recommendedVolume: 0.95
+  },
+  "Guitarras": {
+    trackName: "🎸 Stem IA: Guitarras (Rítmicas & Solos)",
+    description: "Guitarras eléctricas y acústicas aisladas sin acople de voz ni batería.",
+    recommendedVolume: 0.85
+  },
+  "Teclados": {
+    trackName: "🎹 Stem IA: Teclados & Piano",
+    description: "Pianos, sintetizadores y órganos aislados.",
+    recommendedVolume: 0.85
+  },
+  "Arreglos": {
+    trackName: "🎺 Stem IA: Arreglos, Sintes & Cuerdas",
+    description: "Sección de vientos, cuerdas, sintetizadores y efectos secundarios.",
+    recommendedVolume: 0.85
+  }
+};
+
+function buildFormattedStems(stemsMap: Record<string, any>) {
+  return Object.entries(stemsMap || {}).map(([instrument, rawValue]) => {
+    const meta = STEM_METADATA[instrument] || {
+      trackName: `Stem IA: ${instrument}`,
+      description: `Stem aislado de ${instrument}.`,
+      recommendedVolume: 0.85
+    };
+    const url = typeof rawValue === "object" ? rawValue.url : rawValue;
+    const formato = typeof rawValue === "object" ? rawValue.formato : "MP3";
+    const tamano = typeof rawValue === "object" ? rawValue.tamano : "2.5 MB";
+
+    return {
+      instrument,
+      trackName: meta.trackName,
+      audioUrl: url,
+      formato,
+      tamano,
+      description: meta.description,
+      recommendedVolume: meta.recommendedVolume
+    };
+  });
+}
+
+/** Registra el fallo de un job de separación en la caché persistente con el mismo formato de
+ *  diagnóstico que antes viajaba en la respuesta HTTP directa, para que el polling de estado
+ *  pueda reconstruir la misma tarjeta de error enriquecida en el cliente. */
+async function failStemsJob(bandId: string, songHash: string, engine: string, payload: Record<string, any>): Promise<void> {
+  try {
+    await markStemsSeparationFailed(bandId, songHash, engine, JSON.stringify(payload));
+  } catch (e) {
+    console.warn("[Stem Separator] No se pudo registrar el fallo del job en caché:", e);
+  }
+}
 
 /**
  * Garantiza que cualquier URL o ruta local de audio se convierta en una URL HTTPS pública
@@ -1369,6 +1436,9 @@ router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async 
 router.post("/ai-stem-separation", requireAuth, iaRateLimiter, async (req, res) => {
   const tTotalStart = Date.now();
   let executionTimingBreakdown: any = null;
+  let bandId = "sin-banda";
+  let songHash = "";
+  let selectedEngine = "auto";
 
   try {
     const { songTitle, sectionName, audioUrl, bpm, key, forceEngine, engine, forceNeural, replicateToken, preprocesarDirecto } = req.body || {};
@@ -1502,78 +1572,21 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
     // - 'replicate' / 'demucs': HT-Demucs v4 Neural (6 stems)
     // - 'dsp-server' / 'dsp': Motor Local FFmpeg (100% gratuito, $0)
     // - 'auto': Detección inteligente (Endpoint Propio -> RoFormer -> Demucs -> Fal -> DSP)
-    const selectedEngine = forceEngine || engine || (forceNeural ? 'replicate' : 'auto');
+    selectedEngine = forceEngine || engine || (forceNeural ? 'replicate' : 'auto');
 
     let finalStemsMap: Record<string, { url: string; formato: string; tamano: string } | string> = {};
     let separationEngine = "dsp-server";
     let isNeural = false;
 
     // Resuelve la banda de forma segura usando getTargetBandId
-    let bandId = "sin-banda";
     try {
       bandId = getTargetBandId(req);
     } catch {
       bandId = (req as any).user?.band_id || "sin-banda";
     }
 
-    const songHash = crypto.createHash("md5").update(String(songTitle || "") + String(audioUrl || "")).digest("hex").substring(0, 10);
+    songHash = crypto.createHash("md5").update(String(songTitle || "") + String(audioUrl || "")).digest("hex").substring(0, 10);
     const cacheKey = `${bandId}:${songHash}:${selectedEngine}`;
-
-    const STEM_METADATA: Record<string, { trackName: string; description: string; recommendedVolume: number }> = {
-      "Voz": {
-        trackName: "🎤 Stem IA: Voz Principal (Aislada)",
-        description: "Voz principal aislada en alta calidad mediante aprendizaje profundo. Permite silenciar la voz para ensayar cantando en directo.",
-        recommendedVolume: 1.0
-      },
-      "Batería": {
-        trackName: "🥁 Stem IA: Batería & Percusión",
-        description: "Pista aislada de batería, caja, bombo y platillos en alta fidelidad.",
-        recommendedVolume: 0.9
-      },
-      "Bajo": {
-        trackName: "🎸 Stem IA: Bajo (Sub-Bass)",
-        description: "Línea de bajo aislada y frecuencias fundamentales de grave.",
-        recommendedVolume: 0.95
-      },
-      "Guitarras": {
-        trackName: "🎸 Stem IA: Guitarras (Rítmicas & Solos)",
-        description: "Guitarras eléctricas y acústicas aisladas sin acople de voz ni batería.",
-        recommendedVolume: 0.85
-      },
-      "Teclados": {
-        trackName: "🎹 Stem IA: Teclados & Piano",
-        description: "Pianos, sintetizadores y órganos aislados.",
-        recommendedVolume: 0.85
-      },
-      "Arreglos": {
-        trackName: "🎺 Stem IA: Arreglos, Sintes & Cuerdas",
-        description: "Sección de vientos, cuerdas, sintetizadores y efectos secundarios.",
-        recommendedVolume: 0.85
-      }
-    };
-
-    const buildFormattedStems = (stemsMap: Record<string, any>) => {
-      return Object.entries(stemsMap).map(([instrument, rawValue]) => {
-        const meta = STEM_METADATA[instrument] || {
-          trackName: `Stem IA: ${instrument}`,
-          description: `Stem aislado de ${instrument}.`,
-          recommendedVolume: 0.85
-        };
-        const url = typeof rawValue === "object" ? rawValue.url : rawValue;
-        const formato = typeof rawValue === "object" ? rawValue.formato : "MP3";
-        const tamano = typeof rawValue === "object" ? rawValue.tamano : "2.5 MB";
-
-        return {
-          instrument,
-          trackName: meta.trackName,
-          audioUrl: url,
-          formato,
-          tamano,
-          description: meta.description,
-          recommendedVolume: meta.recommendedVolume
-        };
-      });
-    };
 
     // ========================================================================
     // 1. CHEQUEO DE CACHÉ PERSISTENTE L1/L2 (Garantía de Cero Coste Duplicado)
@@ -1641,33 +1654,16 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       }
 
       if (lockResult.reason === 'in_progress_by_other_instance') {
-        console.log(`[Stem Separator] ⏳ Trabajo en progreso en otra instancia de Railway para ${cacheKey}. Iniciando polling...`);
-        const polledRecord = await waitForStemsCompletion(bandId, songHash, selectedEngine);
-        if (polledRecord && polledRecord.stemsMap && Object.keys(polledRecord.stemsMap).length > 0) {
-          const polledEngineUsed = polledRecord.engineUsed || (polledRecord.isNeural ? polledRecord.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
-          const polledDegraded = !polledRecord.isNeural && !isUserExplicitDsp;
-          return res.json({
-            success: true,
-            audioUrl: audioUrl || "",
-            separationEngine: polledRecord.engine,
-            engineUsed: polledEngineUsed,
-            degraded: polledDegraded,
-            degradedReason: polledDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
-            isNeural: polledRecord.isNeural,
-            cached: true,
-            executionTimeMs: 25,
-            executionTimeSec: "0.0s",
-            timingBreakdown: { ...polledRecord.timingBreakdown, polledFromOtherInstance: true, duplicateCostSaved: true },
-            replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
-            falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
-            songTitle: songTitle || "Canción",
-            sectionName: sectionName || "General",
-            detectedBpm: bpm || 120,
-            detectedKey: key || "Am",
-            analysisSummary: `Stems sincronizados entre instancias de Railway para ${polledRecord.engine}. 0 llamadas duplicadas a la GPU.`,
-            stems: buildFormattedStems(polledRecord.stemsMap)
-          });
-        }
+        console.log(`[Stem Separator] ⏳ Trabajo ya en progreso (otra instancia o petición previa) para ${cacheKey}. El cliente hará polling de estado.`);
+        return res.status(202).json({
+          success: true,
+          status: 'processing',
+          bandId,
+          songHash,
+          engine: selectedEngine,
+          songTitle: songTitle || "Canción",
+          sectionName: sectionName || "General"
+        });
       }
 
       if (lockResult.reason === 'distributed_lock_failed') {
@@ -1687,6 +1683,19 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         });
       }
     }
+
+    // A partir de aquí el trabajo puede tardar varios minutos (cold start de GPU en Replicate).
+    // Railway corta cualquier conexión HTTP inactiva a los 5 minutos, así que respondemos ya mismo
+    // y el resto se procesa en segundo plano; el cliente hace polling a GET /ai-stem-separation/status.
+    res.status(202).json({
+      success: true,
+      status: 'processing',
+      bandId,
+      songHash,
+      engine: selectedEngine,
+      songTitle: songTitle || "Canción",
+      sectionName: sectionName || "General"
+    });
 
     // ========================================================================
     // 3. MUTEX LOCAL / IN-FLIGHT DEDUPLICATION (En la misma instancia)
@@ -1777,7 +1786,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
 
           inFlightSeparations.delete(cacheKey);
           executionPromiseResolve!({ stemsMap: null, engine: 'mvsep-mdx23', isNeural: false, errorInfo: mdxRes });
-          return res.status(httpStatus).json({
+          await failStemsJob(bandId, songHash, selectedEngine, {
             provider: mdxRes?.provider || "replicate",
             error: errorTitle,
             message: errorMessage,
@@ -1785,8 +1794,10 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             errorTitle,
             actionAdvice,
             details: errorDetail,
+            httpStatus,
             engine: "mvsep-mdx23"
           });
+          return;
         }
       }
       // ----------------------------------------------------------------------
@@ -1797,7 +1808,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           const tokenMissingMsg = "No se encontró la clave de Replicate (REPLICATE_API_TOKEN o REPLICATE_API_KEY) en las variables de entorno del servidor ni en la petición. Asegúrate de configurar REPLICATE_API_TOKEN en Settings.";
           inFlightSeparations.delete(cacheKey);
           executionPromiseResolve!({ stemsMap: null, engine: 'replicate', isNeural: false, errorInfo: null });
-          return res.status(400).json({
+          await failStemsJob(bandId, songHash, selectedEngine, {
             provider: "replicate",
             error: "Token de Replicate no configurado",
             message: tokenMissingMsg,
@@ -1805,8 +1816,10 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             errorTitle: "Token de Replicate No Configurado",
             actionAdvice: "Obtén un API token en https://replicate.com/account/api-tokens (comienza por 'r8_') y configúralo en Settings.",
             details: "Missing environment variable REPLICATE_API_TOKEN",
+            httpStatus: 400,
             engine: "replicate"
           });
+          return;
         }
 
         if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
@@ -1829,7 +1842,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
 
           inFlightSeparations.delete(cacheKey);
           executionPromiseResolve!({ stemsMap: null, engine: 'replicate', isNeural: false, errorInfo: repRes });
-          return res.status(httpStatus).json({
+          await failStemsJob(bandId, songHash, selectedEngine, {
             provider: repRes?.provider || "replicate",
             error: errorTitle,
             message: errorMessage,
@@ -1837,8 +1850,10 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             errorTitle,
             actionAdvice,
             details: errorDetail,
+            httpStatus,
             engine: "replicate"
           });
+          return;
         }
       }
       // ----------------------------------------------------------------------
@@ -1854,7 +1869,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           const ffgDiag = parseFfmpegError(stErr);
           inFlightSeparations.delete(cacheKey);
           executionPromiseResolve!({ stemsMap: null, engine: 'dsp-server', isNeural: false, errorInfo: null });
-          return res.status(ffgDiag.httpStatus).json({
+          await failStemsJob(bandId, songHash, selectedEngine, {
             provider: ffgDiag.provider,
             error: ffgDiag.errorTitle,
             message: ffgDiag.message,
@@ -1862,8 +1877,10 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             errorTitle: ffgDiag.errorTitle,
             actionAdvice: ffgDiag.actionAdvice,
             details: ffgDiag.errorDetail,
+            httpStatus: ffgDiag.httpStatus,
             engine: "dsp-server"
           });
+          return;
         }
       }
       // ----------------------------------------------------------------------
@@ -1984,8 +2001,6 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       throw procErr;
     }
 
-    const formattedStems = buildFormattedStems(finalStemsMap);
-
     const totalMs = Date.now() - tTotalStart;
     const totalSec = `${(totalMs / 1000).toFixed(1)}s`;
 
@@ -1995,35 +2010,30 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       };
     }
 
-    const finalEngineUsed = isNeural
-      ? (selectedEngine === 'auto' ? (separationEngine.includes('MVSEP') ? 'mvsep-mdx23' : 'demucs') : selectedEngine)
-      : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback');
     const finalDegraded = !isNeural && !isUserExplicitDsp;
-    const finalDegradedReason = finalDegraded ? 'Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP de frecuencia' : undefined;
 
-    return res.json({
-      success: true,
-      audioUrl: audioUrl || "",
-      separationEngine,
-      engineUsed: finalEngineUsed,
-      degraded: finalDegraded,
-      degradedReason: finalDegradedReason,
-      isNeural,
-      executionTimeMs: totalMs,
-      executionTimeSec: totalSec,
-      timingBreakdown: executionTimingBreakdown,
-      replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
-      falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
-      songTitle: songTitle || "Canción",
-      sectionName: sectionName || "General",
-      detectedBpm: bpm || 120,
-      detectedKey: key || "Am",
-      analysisSummary: isNeural
-        ? `Separación neuronal completada con ${separationEngine} en ${totalSec} (stems aislados en GPU).`
-        : (finalDegraded ? `⚠️ Separación en modo degradado (DSP básico) en ${totalSec}. No se utilizó red neuronal.` : `Análisis espectral procesado con motor DSP en ${totalSec}.`),
-      stems: formattedStems.length > 0 ? formattedStems : parsedResult?.stems
-    });
+    // La respuesta HTTP (202 "processing") ya se envió al cliente hace rato; el resultado real
+    // ya quedó persistido en song_stems_cache (saveStemsToPersistentCache, más arriba) para que
+    // el polling de GET /ai-stem-separation/status lo recoja.
+    console.log(`[Stem Separator] ✅ Job en segundo plano completado para ${cacheKey} en ${totalSec} (motor: ${separationEngine}, degradado: ${finalDegraded}).`);
+    return;
   } catch (err: any) {
+    if (res.headersSent) {
+      const bgErrMsg = String(err?.message || err || "Error inesperado al procesar la separación de pistas.");
+      console.error(`[Stem Separator] ❌ Job en segundo plano falló para banda "${bandId}":`, err);
+      await failStemsJob(bandId, songHash, selectedEngine, {
+        provider: 'system',
+        error: 'Error Interno al Procesar Stems',
+        message: bgErrMsg,
+        errorType: 'generic',
+        errorTitle: 'Error Interno al Procesar Stems',
+        actionAdvice: 'Puedes reintentar la operación o utilizar el Motor DSP local.',
+        details: bgErrMsg,
+        httpStatus: 500,
+        engine: selectedEngine
+      });
+      return;
+    }
     console.error("Error en separación de stems con IA:", err);
     let classifiedDiag: ServiceDiagnosticError;
     const errMsg = String(err?.message || err || "");
@@ -2056,6 +2066,86 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
       actionAdvice: classifiedDiag.actionAdvice,
       details: classifiedDiag.errorDetail
     });
+  }
+});
+
+/**
+ * Polling ligero de estado para separaciones de stems lanzadas en segundo plano por
+ * POST /ai-stem-separation (que responde 202 al instante para no chocar con el límite de
+ * ~5 minutos del proxy de Railway). El cliente llama a este endpoint cada pocos segundos.
+ */
+router.get("/ai-stem-separation/status", requireAuth, async (req, res) => {
+  try {
+    const songHash = String(req.query.songHash || "");
+    const engine = String(req.query.engine || "auto");
+    if (!songHash) {
+      return res.status(400).json({ error: "Falta songHash" });
+    }
+
+    let bandId = "sin-banda";
+    try {
+      bandId = getTargetBandId(req);
+    } catch {
+      bandId = (req as any).user?.band_id || "sin-banda";
+    }
+
+    const jobStatus = await getStemsJobStatus(bandId, songHash, engine);
+
+    if (jobStatus.state === 'completed') {
+      const record = jobStatus.record;
+      const isUserExplicitDsp = engine === 'dsp-server' || engine === 'dsp';
+      const engineUsed = record.engineUsed || (record.isNeural ? record.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
+      const degraded = !record.isNeural && !isUserExplicitDsp;
+      return res.json({
+        success: true,
+        status: 'completed',
+        audioUrl: record.audioUrl || "",
+        separationEngine: record.engine,
+        engineUsed,
+        degraded,
+        degradedReason: degraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
+        isNeural: record.isNeural,
+        cached: true,
+        timingBreakdown: record.timingBreakdown,
+        replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+        falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+        songTitle: record.songTitle || "Canción",
+        analysisSummary: record.isNeural
+          ? `Separación neuronal completada con ${record.engine}.`
+          : (degraded ? `⚠️ Separación en modo degradado (DSP básico).` : `Análisis espectral procesado con motor DSP.`),
+        stems: buildFormattedStems(record.stemsMap)
+      });
+    }
+
+    if (jobStatus.state === 'failed') {
+      let errorPayload: Record<string, any> = {};
+      try {
+        errorPayload = JSON.parse(jobStatus.errorMessage);
+      } catch {
+        errorPayload = {
+          provider: 'system',
+          error: 'Error en la Separación de Stems',
+          message: jobStatus.errorMessage,
+          errorType: 'generic',
+          errorTitle: 'Error en la Separación de Stems',
+          actionAdvice: 'Puedes reintentar o usar el Motor DSP local.',
+          httpStatus: 500
+        };
+      }
+      return res.status(errorPayload.httpStatus || 502).json({
+        status: 'failed',
+        ...errorPayload
+      });
+    }
+
+    if (jobStatus.state === 'pending') {
+      return res.json({ success: true, status: 'processing' });
+    }
+
+    return res.json({ success: true, status: 'not_found' });
+  } catch (err: any) {
+    console.error("Error consultando estado de separación de stems:", err);
+    return res.status(500).json({ error: err?.message || "Error consultando estado" });
   }
 });
 

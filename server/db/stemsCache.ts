@@ -342,6 +342,8 @@ export async function markStemsSeparationFailed(
   engine: string,
   errorMessage: string
 ): Promise<void> {
+  const cacheKey = `${bandId}:${songHash}:${engine}`;
+  stemsMemoryCache.delete(cacheKey);
   try {
     const sb = getSupabase();
     await sb
@@ -356,4 +358,56 @@ export async function markStemsSeparationFailed(
   } catch (e) {
     // Ignorar error al marcar fallo
   }
+}
+
+export type StemsJobStatus =
+  | { state: 'not_found' }
+  | { state: 'pending' }
+  | { state: 'completed'; record: StemsCacheRecord }
+  | { state: 'failed'; errorMessage: string };
+
+/**
+ * Lectura ligera del estado de un job de separación para polling desde el cliente,
+ * sin bloquear la petición HTTP mientras la GPU procesa en segundo plano.
+ */
+export async function getStemsJobStatus(
+  bandId: string,
+  songHash: string,
+  engine: string
+): Promise<StemsJobStatus> {
+  const cacheKey = `${bandId}:${songHash}:${engine}`;
+
+  const completed = await getStemsFromPersistentCache(bandId, songHash, engine);
+  if (completed) {
+    return { state: 'completed', record: completed };
+  }
+
+  const memExisting = stemsMemoryCache.get(cacheKey) as any;
+  if (memExisting?.status === 'pending') {
+    return { state: 'pending' };
+  }
+
+  try {
+    const sb = getSupabase();
+    const { data, error } = await sb
+      .from("song_stems_cache")
+      .select("status, degraded_reason")
+      .eq("band_id", bandId)
+      .eq("song_hash", songHash)
+      .eq("engine", engine)
+      .maybeSingle();
+
+    if (!error && data) {
+      if (data.status === 'failed') {
+        return { state: 'failed', errorMessage: data.degraded_reason || 'La separación de stems falló sin detalle adicional.' };
+      }
+      if (data.status === 'pending') {
+        return { state: 'pending' };
+      }
+    }
+  } catch (dbErr: any) {
+    console.warn(`[Stems Cache] Aviso consultando estado de job ${cacheKey}: ${dbErr?.message || dbErr}`);
+  }
+
+  return { state: 'not_found' };
 }
