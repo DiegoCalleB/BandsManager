@@ -355,7 +355,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
           <ul>${analysis.areasForImprovement.map(a => `<li>${escapeHtml(a)}</li>`).join('')}</ul>
         </div>` : ''}
 
-        <div class="footer">Análisis IA exportado • BandManager.ai</div>
+        <div class="footer">Análisis IA exportado • BandManager.io</div>
 
         <script>
           window.onload = function() { window.print(); }

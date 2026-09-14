@@ -189,7 +189,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
               <div className="relative group w-full max-w-[300px] flex justify-center">
                 <img
                   src="/bandmanager_login_logo.png"
-                  alt="BandManager.ai"
+                  alt="BandManager.io"
                   className="w-full h-auto max-h-40 object-contain drop-shadow-[0_12px_32px_rgba(242,202,80,0.22)]"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
                   referrerPolicy="no-referrer"

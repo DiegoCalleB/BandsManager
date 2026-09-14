@@ -536,9 +536,9 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     }
 
     const planPrices: Record<string, { monthly: number; annual: number; name: string }> = {
-      local: { monthly: 1500, annual: 14400, name: "Plan LOCAL - BandManager.ai" },
-      de_gira: { monthly: 2900, annual: 27800, name: "Plan DE GIRA - BandManager.ai" },
-      cabeza_de_cartel: { monthly: 7900, annual: 75800, name: "Plan CABEZA DE CARTEL - BandManager.ai" }
+      local: { monthly: 1500, annual: 14400, name: "Plan LOCAL - BandManager.io" },
+      de_gira: { monthly: 2900, annual: 27800, name: "Plan DE GIRA - BandManager.io" },
+      cabeza_de_cartel: { monthly: 7900, annual: 75800, name: "Plan CABEZA DE CARTEL - BandManager.io" }
     };
 
     const planInfo = planPrices[normalizedPlan];
@@ -576,7 +576,7 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
             currency: "eur",
             product_data: {
               name: planInfo.name,
-              description: `Suscripción ${billingInterval === "annual" ? "Anual" : "Mensual"} para BandManager.ai`
+              description: `Suscripción ${billingInterval === "annual" ? "Anual" : "Mensual"} para BandManager.io`
             },
             unit_amount: unitAmount,
             recurring: {

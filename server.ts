@@ -132,7 +132,7 @@ app.get("/privacy", (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>Política de Privacidad - BandManager.ai</title>
+        <title>Política de Privacidad - BandManager.io</title>
         <style>
           body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1e293b; background: #f8fafc; }
           h1 { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
@@ -143,9 +143,9 @@ app.get("/privacy", (req, res) => {
       </head>
       <body>
         <div class="card">
-          <h1>Política de Privacidad de BandManager.ai</h1>
+          <h1>Política de Privacidad de BandManager.io</h1>
           <p><strong>Última actualización:</strong> Agosto de 2026</p>
-          <p>En <strong>BandManager.ai</strong> (desarrollado en el marco del TFM de Gestión Agéntica para Músicos), nos tomamos muy en serio la privacidad y la protección de los datos de las bandas y músicos independientes.</p>
+          <p>En <strong>BandManager.io</strong> (desarrollado en el marco del TFM de Gestión Agéntica para Músicos), nos tomamos muy en serio la privacidad y la protección de los datos de las bandas y músicos independientes.</p>
           
           <h2>1. Información que Recopilamos</h2>
           <p>Para el correcto funcionamiento de las herramientas de booking, CRM y automatización de correos, la aplicación puede solicitar autorización de acceso a tu cuenta de Google (Gmail API). Los datos accedidos se limitan estrictamente a:</p>
@@ -174,7 +174,7 @@ app.get("/terms", (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>Términos de Servicio - BandManager.ai</title>
+        <title>Términos de Servicio - BandManager.io</title>
         <style>
           body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1e293b; background: #f8fafc; }
           h1 { color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
@@ -185,12 +185,12 @@ app.get("/terms", (req, res) => {
       </head>
       <body>
         <div class="card">
-          <h1>Términos de Servicio de BandManager.ai</h1>
+          <h1>Términos de Servicio de BandManager.io</h1>
           <p><strong>Última actualización:</strong> Agosto de 2026</p>
-          <p>Bienvenido a <strong>BandManager.ai</strong>. Al utilizar nuestra plataforma de gestión musical y booking automatizado, aceptas los siguientes términos y condiciones:</p>
+          <p>Bienvenido a <strong>BandManager.io</strong>. Al utilizar nuestra plataforma de gestión musical y booking automatizado, aceptas los siguientes términos y condiciones:</p>
 
           <h2>1. Uso Académico y Profesional</h2>
-          <p>BandManager.ai es una herramienta integral diseñada para la optimización logística, financiera y de contratación de bandas musicales. Su uso implica el cumplimiento de las normativas de comunicación comercial y uso legítimo de APIs de terceros.</p>
+          <p>BandManager.io es una herramienta integral diseñada para la optimización logística, financiera y de contratación de bandas musicales. Su uso implica el cumplimiento de las normativas de comunicación comercial y uso legítimo de APIs de terceros.</p>
 
           <h2>2. Responsabilidad de Envío (Human-in-the-Loop)</h2>
           <p>La plataforma genera propuestas y borradores de correo mediante inteligencia artificial. El usuario es el único responsable de revisar y aprobar el contenido antes de que se produzca cualquier envío oficial a salas o promotores.</p>
@@ -531,7 +531,7 @@ async function startServer() {
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`BandManager.ai server running on http://localhost:${PORT}`);
+    console.log(`BandManager.io server running on http://localhost:${PORT}`);
     // Start background autonomous Social Radar Agent
     try {
       startSocialRadarScheduler();

@@ -204,35 +204,35 @@ describe('urlDeVueltaSegura (bloqueo de open redirect en el retorno del portal d
   const reqConOrigen = (origin: string) => ({ headers: { origin }, body: {} } as any);
 
   it('acepta returnUrl cuando coincide con el origen que sirve la app', () => {
-    const req = reqConOrigen('https://bandmanager.ai');
-    expect(urlDeVueltaSegura(req, 'https://bandmanager.ai/dashboard')).toBe('https://bandmanager.ai/dashboard');
+    const req = reqConOrigen('https://bandmanager.io');
+    expect(urlDeVueltaSegura(req, 'https://bandmanager.io/dashboard')).toBe('https://bandmanager.io/dashboard');
   });
 
   it('ignora un returnUrl a un dominio ajeno y vuelve al origen conocido', () => {
-    const req = reqConOrigen('https://bandmanager.ai');
-    expect(urlDeVueltaSegura(req, 'https://sitio-malicioso.com/phish')).toBe('https://bandmanager.ai');
+    const req = reqConOrigen('https://bandmanager.io');
+    expect(urlDeVueltaSegura(req, 'https://sitio-malicioso.com/phish')).toBe('https://bandmanager.io');
   });
 
   it('ignora un returnUrl que no es una URL válida', () => {
-    const req = reqConOrigen('https://bandmanager.ai');
-    expect(urlDeVueltaSegura(req, 'no-es-una-url')).toBe('https://bandmanager.ai');
+    const req = reqConOrigen('https://bandmanager.io');
+    expect(urlDeVueltaSegura(req, 'no-es-una-url')).toBe('https://bandmanager.io');
   });
 
   it('vuelve al origen cuando no se pasa returnUrl', () => {
-    const req = reqConOrigen('https://bandmanager.ai');
-    expect(urlDeVueltaSegura(req, undefined)).toBe('https://bandmanager.ai');
+    const req = reqConOrigen('https://bandmanager.io');
+    expect(urlDeVueltaSegura(req, undefined)).toBe('https://bandmanager.io');
   });
 });
 
 describe('getOriginHost', () => {
   it('usa el header Origin cuando está presente', () => {
-    const req = { headers: { origin: 'https://bandmanager.ai' }, body: {} } as any;
-    expect(getOriginHost(req)).toBe('https://bandmanager.ai');
+    const req = { headers: { origin: 'https://bandmanager.io' }, body: {} } as any;
+    expect(getOriginHost(req)).toBe('https://bandmanager.io');
   });
 
   it('cae al Referer cuando no hay Origin', () => {
-    const req = { headers: { referer: 'https://bandmanager.ai/pricing?x=1' }, body: {} } as any;
-    expect(getOriginHost(req)).toBe('https://bandmanager.ai');
+    const req = { headers: { referer: 'https://bandmanager.io/pricing?x=1' }, body: {} } as any;
+    expect(getOriginHost(req)).toBe('https://bandmanager.io');
   });
 
   it('cae a x-forwarded-proto/host cuando no hay Origin ni Referer', () => {

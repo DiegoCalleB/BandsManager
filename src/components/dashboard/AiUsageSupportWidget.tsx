@@ -35,7 +35,7 @@ interface AiSupportWidgetProps {
   variant: 'sidebar' | 'card';
 }
 
-/** CTA de apoyo económico a BandManager.ai. Independiente de la tarjeta de consumo de IA. */
+/** CTA de apoyo económico a BandManager.io. Independiente de la tarjeta de consumo de IA. */
 export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => {
   const owedEur = useAiDebtEur();
   const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;

@@ -334,7 +334,7 @@ export function generateSmartGeneralFallback(promptText: string): string {
   const lower = (promptText || "").toLowerCase();
   if (lower.includes("json") || lower.includes("clasifica") || lower.includes("categoriza")) {
     return JSON.stringify({
-      text: "Operación procesada con éxito mediante el motor local de respaldo (BandManager.ai AI Core).",
+      text: "Operación procesada con éxito mediante el motor local de respaldo (BandManager.io AI Core).",
       category: "general",
       confidence: 0.95,
       suggestedActions: []
@@ -344,9 +344,9 @@ export function generateSmartGeneralFallback(promptText: string): string {
     return "🔥 ¡Noche épica en el local de ensayo! 🎻💥 Preparando los nuevos directos de la gira Bakandeya 2026. ¡No os lo perdáis!\n\n#Bakandeya #BalkanSka #Directo #MusicaEnVivo";
   }
   if (lower.includes("acorde") || lower.includes("letra") || lower.includes("canción") || lower.includes("song")) {
-    return "🎸 Análisis armónico y sugerencia de acordes completados por BandManager.ai Studio Core: Progresión recomendada en Am - F - C - G (Tonalidad de La menor).";
+    return "🎸 Análisis armónico y sugerencia de acordes completados por BandManager.io Studio Core: Progresión recomendada en Am - F - C - G (Tonalidad de La menor).";
   }
-  return `🤖 **Aviso del Sistema IA BandManager.ai**: El servicio de Gemini API ha alcanzado su límite de cuota o spending cap (429). El sistema ha activado automáticamente el motor inteligente de respaldo local para garantizar que tu flujo de trabajo no se detenga. 
+  return `🤖 **Aviso del Sistema IA BandManager.io**: El servicio de Gemini API ha alcanzado su límite de cuota o spending cap (429). El sistema ha activado automáticamente el motor inteligente de respaldo local para garantizar que tu flujo de trabajo no se detenga. 
 
 Consulta procesada correctamente. Puedes continuar gestionando tu booking, repertorio, finanzas y redes con normalidad.`;
 }

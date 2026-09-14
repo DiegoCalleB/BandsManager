@@ -614,7 +614,7 @@ router.post("/metrics/scan-screenshot", requireAuth, async (req, res) => {
       }
     }
 
-    const prompt = `Eres el Agente de Visión y Analítica Social de BandManager.ai.
+    const prompt = `Eres el Agente de Visión y Analítica Social de BandManager.io.
 Analiza con precisión milimétrica esta captura de pantalla de un teléfono móvil o panel web correspondiente a un perfil o estadísticas de una red social (Instagram, TikTok, Spotify for Artists, YouTube Studio, o Facebook).
 
 Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válido con esta estructura:

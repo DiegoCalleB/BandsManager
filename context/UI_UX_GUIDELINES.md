@@ -1,4 +1,4 @@
-# 🎨 UI/UX Guidelines - BandManager.ai
+# 🎨 UI/UX Guidelines - BandManager.io
 
 > **Principio Cero:** La app hace MUCHAS cosas. La interfaz debe ser minimalista. Complejidad → backend.
 

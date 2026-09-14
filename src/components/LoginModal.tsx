@@ -496,7 +496,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             <div className="relative group cursor-pointer w-full max-w-[320px] sm:max-w-[360px] flex justify-center">
               <img 
                 src="/bandmanager_login_logo.png" 
-                alt="BandManager.ai - Plataforma Integral para Bandas"
+                alt="BandManager.io - Plataforma Integral para Bandas"
                 className="w-full h-auto max-h-48 object-contain drop-shadow-[0_12px_32px_rgba(242,202,80,0.22)] group-hover:scale-[1.015] transition-all duration-300"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
@@ -509,7 +509,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
               <p className="text-sm text-neutral-300 font-normal leading-relaxed tracking-tight">
                 Tú piensa en tu música.{' '}
                 <span className="text-[#f2ca50] font-semibold block sm:inline mt-0.5 sm:mt-0">
-                  ¡BandManager.ai se encarga de todo lo demás!
+                  ¡BandManager.io se encarga de todo lo demás!
                 </span>
               </p>
             </div>

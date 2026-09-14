@@ -1,4 +1,4 @@
-# 🏗️ Arquitectura Técnica - BandManager.ai
+# 🏗️ Arquitectura Técnica - BandManager.io
 
 ## 1. Runtime Dual: Frontend + Backend en Un Deploy
 

@@ -1,8 +1,8 @@
-# 🎸 BandManager.ai - Visión General del Proyecto
+# 🎸 BandManager.io - Visión General del Proyecto
 
 ## ¿Qué es?
 
-**BandManager.ai** (internamente "Bakandeya") es una plataforma integral SaaS para músicos y bandas independientes. Automatiza:
+**BandManager.io** (internamente "Bakandeya") es una plataforma integral SaaS para músicos y bandas independientes. Automatiza:
 
 - **Booking & CRM:** Descubrimiento de salas/festivales, propuestas personalizadas, seguimiento de leads
 - **AI Agents:** Reclutamiento automático de salas, redacción de emails, lectura de respuestas (todo human-in-the-loop)

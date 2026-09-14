@@ -1,6 +1,6 @@
 ---
 name: supabase-architect
-description: Guía de arquitectura de datos con Supabase PostgreSQL para BandManager.ai. Usar al modificar tablas, crear migraciones SQL, definir modelos TypeScript o actualizar handlers en server/db/*.ts.
+description: Guía de arquitectura de datos con Supabase PostgreSQL para BandManager.io. Usar al modificar tablas, crear migraciones SQL, definir modelos TypeScript o actualizar handlers en server/db/*.ts.
 ---
 
 # 🐘 Skill: Supabase Architect & Data Management

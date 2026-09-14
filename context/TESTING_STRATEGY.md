@@ -1,4 +1,4 @@
-# 🧪 Testing Strategy - BandManager.ai
+# 🧪 Testing Strategy - BandManager.io
 
 > **Core Principle:** Sin tests bien dirigidos, la simplicidad se rompe bajo cambios.
 > 

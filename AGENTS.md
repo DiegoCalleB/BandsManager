@@ -1,8 +1,8 @@
-# 🎸 AGENTS.md — Instrucciones y Directivas del Agente de Código (BandManager.ai / Bakandeya)
+# 🎸 AGENTS.md — Instrucciones y Directivas del Agente de Código (BandManager.io / Bakandeya)
 
 > **Contexto del Proyecto:** Esta aplicación es el núcleo técnico de un **Trabajo Fin de Máster (TFM) sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica**.
 > 
-> **Misión:** Desarrollar la plataforma integral definitiva (**BandManager.ai**) que todo músico y banda independiente necesita para automatizar su booking, logística, prensa, contenido en redes, repertorio y finanzas.
+> **Misión:** Desarrollar la plataforma integral definitiva (**BandManager.io**) que todo músico y banda independiente necesita para automatizar su booking, logística, prensa, contenido en redes, repertorio y finanzas.
 
 ---
 

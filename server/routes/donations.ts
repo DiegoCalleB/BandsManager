@@ -82,7 +82,7 @@ router.post("/donations/create-checkout-session", requireAuth, donationRateLimit
         preset: suggestedCents
       },
       product_data: {
-        name: "Apoyo a BandManager.ai — consumo de IA",
+        name: "Apoyo a BandManager.io — consumo de IA",
         metadata: { kind: "ai_donation" }
       }
     });

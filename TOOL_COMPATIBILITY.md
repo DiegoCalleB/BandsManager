@@ -1,6 +1,6 @@
 # 🛠️ Tool Compatibility - Agnóstico de Herramienta IA
 
-**BandManager.ai está optimizado para usarse con CUALQUIER herramienta de IA:**
+**BandManager.io está optimizado para usarse con CUALQUIER herramienta de IA:**
 - **Claude Code** (Claude.ai)
 - **Google AI Studio** (Gemini)
 - **GitHub Copilot** (Codex)
