@@ -288,6 +288,10 @@ export default function SongStudioModal({
     targetIdea?: SongAudioIdea;
     stage: 'preparing' | 'demucs' | 'persisting' | 'completed' | 'error';
     progressPct: number;
+    /** Timestamp (Date.now()) de cuándo empezó la fase de inferencia neuronal/DSP — única fuente
+     *  de verdad para calcular su % de progreso, así el timer rápido de la barra y el polling de
+     *  estado (cada 4s) nunca vuelven a pisarse el uno al otro con valores distintos. */
+    demucsStartedAt?: number;
     currentStepText: string;
     isNeural?: boolean;
     engineUsed?: string;
@@ -338,18 +342,23 @@ export default function SongStudioModal({
       setSeparationElapsedSeconds(prev => prev + 1);
     }, 1000);
 
+    // Única fuente de verdad para el % de progreso en cada fase: el polling de estado (cada 4s)
+    // ya NO toca progressPct, solo el texto explicativo — así nunca compiten dos relojes distintos
+    // por el mismo valor y la barra no retrocede (ver demucsStartedAt más arriba).
     const progressTimer = setInterval(() => {
       setStemProgressModal(prev => {
         if (!prev || prev.stage === 'completed' || prev.stage === 'error') return prev;
-        let nextPct = prev.progressPct;
-        if (prev.stage === 'preparing' && nextPct < 30) {
-          nextPct += 3;
-        } else if (prev.stage === 'demucs' && nextPct < 85) {
-          nextPct += 2.5;
-        } else if (prev.stage === 'persisting' && nextPct < 96) {
-          nextPct += 1;
+        if (prev.stage === 'preparing') {
+          return { ...prev, progressPct: Math.min(prev.progressPct + 3, 30) };
         }
-        return { ...prev, progressPct: Math.min(nextPct, 96) };
+        if (prev.stage === 'demucs') {
+          const elapsedSec = prev.demucsStartedAt ? (Date.now() - prev.demucsStartedAt) / 1000 : 0;
+          return { ...prev, progressPct: Math.min(45 + elapsedSec / 3, 88) };
+        }
+        if (prev.stage === 'persisting') {
+          return { ...prev, progressPct: Math.min(prev.progressPct + 1, 96) };
+        }
+        return prev;
       });
     }, 350);
 
@@ -395,6 +404,7 @@ export default function SongStudioModal({
         ...prev,
         stage: 'demucs',
         progressPct: 45,
+        demucsStartedAt: Date.now(),
         currentStepText: stepProcessingText
       } : null);
 
@@ -419,14 +429,27 @@ export default function SongStudioModal({
       if (kickoff?.status === 'processing') {
         const pollStartedAt = Date.now();
         const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
+        const engineLabel =
+          engineToUse === 'mvsep-mdx23' ? "MVSEP-MDX23 (MDX-Net + Demucs4)" :
+          engineToUse === 'demucs' ? 'HT-Demucs v4' :
+          'Motor DSP Local';
         while (true) {
           await new Promise(r => setTimeout(r, 4000));
           const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
+          // Fases explicativas: qué está pasando realmente en cada tramo de tiempo de la GPU en
+          // la nube (no es una barra ficticia: refleja subida, cold-start del contenedor e inferencia).
+          const phaseText =
+            engineToUse === 'dsp-server'
+              ? `${stepProcessingText} (${elapsedSec}s transcurridos)`
+              : elapsedSec < 12
+              ? `📤 Subiendo tu audio al clúster GPU de Replicate (${engineLabel})... (${elapsedSec}s)`
+              : elapsedSec < 40
+              ? `🧊 Arrancando el contenedor GPU — si el modelo llevaba un rato sin usarse, tarda hasta ~1 min en "despertar" (cold start)... (${elapsedSec}s)`
+              : `🎛️ ${engineLabel} separando voz, batería, bajo, guitarras, teclados y arreglos por frecuencia... (${elapsedSec}s transcurridos, puede tardar varios minutos)`;
           setStemProgressModal(prev => prev ? {
             ...prev,
             stage: 'demucs',
-            progressPct: Math.min(88, 45 + elapsedSec / 3),
-            currentStepText: `${stepProcessingText} (${elapsedSec}s transcurridos, puede tardar varios minutos)`
+            currentStepText: phaseText
           } : null);
 
           const statusRes = await apiFetch(
