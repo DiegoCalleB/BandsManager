@@ -829,7 +829,8 @@ export default function SongStudioModal({
           bpm: song.bpm,
           key: song.tonalidad,
           style: aiTrackGenMode === 'presets' ? aiTrackGenStyle : undefined,
-          contextPrompt: aiTrackGenMode === 'custom' ? aiTrackGenPrompt : undefined
+          contextPrompt: aiTrackGenMode === 'custom' ? aiTrackGenPrompt : undefined,
+          targetDurationSec: song.duracionSegundos || undefined
         })
       });
 

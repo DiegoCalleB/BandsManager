@@ -2270,9 +2270,15 @@ router.get("/ai-stem-separation/status", requireAuth, async (req, res) => {
  */
 router.post("/ai-generate-instrument-track", requireAuth, iaRateLimiter, async (req, res) => {
   try {
-    const { instrument, songTitle, sectionName, bpm, key, style, lyrics, contextPrompt } = req.body;
+    const { instrument, songTitle, sectionName, bpm, key, style, lyrics, contextPrompt, targetDurationSec } = req.body;
 
     const requestedInst = instrument || "Guitarra Solista";
+    // lyria-3-pro-preview soporta canciones completas (hasta ~3 min) frente a lyria-3-clip-preview,
+    // que SIEMPRE genera 30s fijos sin importar lo que se le pida — por eso una pista de acompañamiento
+    // se quedaba corta frente a la duración real del tema. Pedimos duración explícita en el prompt
+    // (los modelos Lyria no tienen un parámetro de config para esto, solo se controla por texto),
+    // acotada al techo real del modelo Pro.
+    const clampedDurationSec = Math.max(30, Math.min(175, Number(targetDurationSec) || 0)) || undefined;
     const fullPrompt = `Compose and generate a high quality studio arrangement track for the instrument: "${requestedInst}".
 Musical context:
 - Song Title: "${songTitle || 'Canción de la Banda'}"
@@ -2280,15 +2286,17 @@ Musical context:
 - Tempo: ${bpm || 120} BPM
 - Key: "${key || 'La menor / Am'}"
 - Style: "${style || 'Rock / Balkan Ska / Pop'}"
-- Specific instructions: "${contextPrompt || 'Arreglo virtuosista, melódico y dinámico que encaje a la perfección con la sección'}"`;
+- Specific instructions: "${contextPrompt || 'Arreglo virtuosista, melódico y dinámico que encaje a la perfección con la sección'}"
+- Target duration: ${clampedDurationSec ? `generate a FULL ${clampedDurationSec}-second track that covers the entire song, not just a short intro clip` : 'generate as long a complete track as the model allows, not just a short intro clip'}`;
 
     let audioBase64 = "";
     let mimeType = "audio/wav";
     let arrangementNotes = "";
+    let modelUsed = "lyria-3-pro-preview";
 
     try {
       const lyriaResponse = await ai.models.generateContentStream({
-        model: "lyria-3-clip-preview",
+        model: modelUsed,
         contents: fullPrompt,
       });
 
@@ -2307,8 +2315,33 @@ Musical context:
           }
         }
       }
-    } catch (lyriaErr) {
-      console.warn("Lyria API call error, fall-back to Gemini AI Music Composer description:", lyriaErr);
+    } catch (lyriaProErr) {
+      console.warn(`Lyria ${modelUsed} falló, probando fallback a lyria-3-clip-preview (30s fijos):`, lyriaProErr);
+      modelUsed = "lyria-3-clip-preview";
+      audioBase64 = "";
+      try {
+        const lyriaFallbackResponse = await ai.models.generateContentStream({
+          model: modelUsed,
+          contents: fullPrompt,
+        });
+        for await (const chunk of lyriaFallbackResponse) {
+          const parts = chunk.candidates?.[0]?.content?.parts;
+          if (!parts) continue;
+          for (const part of parts) {
+            if (part.inlineData?.data) {
+              if (!audioBase64 && part.inlineData.mimeType) {
+                mimeType = part.inlineData.mimeType;
+              }
+              audioBase64 += part.inlineData.data;
+            }
+            if (part.text && !arrangementNotes) {
+              arrangementNotes = part.text;
+            }
+          }
+        }
+      } catch (lyriaClipErr) {
+        console.warn("Lyria API call error (ambos modelos), fall-back a explicación de texto de Gemini:", lyriaClipErr);
+      }
     }
 
     // Secondary text guidance from Gemini 3.7 Flash for arrangement rationale
@@ -2323,13 +2356,15 @@ Musical context:
       console.warn("Fallo explicación de arreglo:", e);
     }
 
+    const modelLabel = modelUsed === "lyria-3-pro-preview" ? "Lyria 3 Pro · larga duración" : "Lyria 3 Clip · 30s fijos";
     return res.json({
       success: true,
       instrument: requestedInst,
       trackName: `Pista IA: ${requestedInst} (${key || 'Am'}, ${bpm || 120} BPM)`,
       audioBase64,
       mimeType,
-      arrangementNotes: aiExplanation || arrangementNotes || `Arreglo de ${requestedInst} compuesto por la IA en ${key || 'Am'} a ${bpm || 120} BPM.`,
+      modelUsed,
+      arrangementNotes: `${aiExplanation || arrangementNotes || `Arreglo de ${requestedInst} compuesto por la IA en ${key || 'Am'} a ${bpm || 120} BPM.`} [${modelLabel}]`,
       bpm: bpm || 120,
       key: key || "Am"
     });
