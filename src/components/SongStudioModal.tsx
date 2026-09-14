@@ -176,6 +176,20 @@ const SECCIONES_TEMA: { key: SongAudioIdea['seccion']; label: string; icon: stri
   { key: 'outro', label: 'Outro / Final', icon: '🏁', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30' }
 ];
 
+// Galería de presets de estilo para el generador de pista con IA: en vez de una caja de texto en
+// blanco (parálisis de decisión), un punto de partida de un clic con nombre + descripción de una
+// línea, igual que las tarjetas de estilo de herramientas tipo Moisés/Suno Studio.
+const AI_TRACK_STYLE_PRESETS: { key: string; label: string; icon: string; description: string; style: string }[] = [
+  { key: 'rock', label: 'Rock Clásico', icon: '🎸', description: 'Riffs con guitarra distorsionada, bien pegado a la base rítmica.', style: 'Rock clásico, guitarra con distorsión moderada, riff pegado a la batería' },
+  { key: 'balada', label: 'Balada Suave', icon: '🌊', description: 'Arreglo melódico y espacioso, dinámica contenida.', style: 'Balada suave, arreglo melódico y espacioso, dinámica contenida y emotiva' },
+  { key: 'funk', label: 'Funk Groove', icon: '🕺', description: 'Patrón sincopado y percusivo, mucho groove.', style: 'Funk groove, patrón rítmico sincopado, muy percusivo y bailable' },
+  { key: 'ska', label: 'Ska / Balkan', icon: '🎷', description: 'Vientos y ritmo saltarín, energía festiva.', style: 'Ska / Balkan, ritmo saltarín off-beat, energía festiva de fanfarria' },
+  { key: 'pop', label: 'Pop Moderno', icon: '🌆', description: 'Producción limpia, ganchos melódicos directos.', style: 'Pop moderno, producción limpia y comercial, ganchos melódicos directos' },
+  { key: 'punk', label: 'Punk Energético', icon: '🤘', description: 'Rápido, crudo, acordes potentes.', style: 'Punk rock energético, tempo rápido, acordes potentes, sonido crudo' },
+  { key: 'synth', label: 'Synth Atmosférico', icon: '🎹', description: 'Texturas electrónicas, pads y capas.', style: 'Synth atmosférico, texturas electrónicas, pads envolventes y capas' },
+  { key: 'orquestal', label: 'Cuerdas Orquestales', icon: '🎻', description: 'Arreglo sinfónico con dramatismo.', style: 'Cuerdas orquestales, arreglo sinfónico con dramatismo y amplitud' }
+];
+
 // Helper to standardise tracks array from idea
 export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
   if (idea.pistas && idea.pistas.length > 0) {
@@ -209,6 +223,17 @@ export default function SongStudioModal({
   }, [song]);
 
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
+  // Ideas plegadas (mezclador, pistas, comentarios...) para que la lista no se vea abarrotada
+  // cuando hay varias ideas con muchas pistas cada una. Vacío = todas expandidas por defecto,
+  // como se ha visto siempre; el usuario decide cuáles plegar.
+  const [collapsedIdeaIds, setCollapsedIdeaIds] = useState<Set<string>>(new Set());
+  const toggleIdeaCollapsed = (ideaId: string) => {
+    setCollapsedIdeaIds(prev => {
+      const next = new Set(prev);
+      if (next.has(ideaId)) next.delete(ideaId); else next.add(ideaId);
+      return next;
+    });
+  };
   const [showToolsMenu, setShowToolsMenu] = useState<boolean>(false);
   const [showChordsModal, setShowChordsModal] = useState<boolean>(false);
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
@@ -273,10 +298,20 @@ export default function SongStudioModal({
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
 
-  // AI Instrument Track Generator State
-  const [showAiTrackGenModal, setShowAiTrackGenModal] = useState<boolean>(false);
+  // AI Instrument Track Generator State — guarda la idea de destino (no un simple boolean) para
+  // saber a qué mezcla añadir la pista generada; antes se asumía siempre audioIdeas[0], ignorando
+  // sobre qué idea había pulsado el usuario el botón.
+  const [showAiTrackGenModal, setShowAiTrackGenModal] = useState<SongAudioIdea | null>(null);
   const [aiTrackGenInstrument, setAiTrackGenInstrument] = useState<string>('Guitarra Solista');
+  const [aiTrackGenMode, setAiTrackGenMode] = useState<'presets' | 'custom'>('presets');
+  const [aiTrackGenStyle, setAiTrackGenStyle] = useState<string>(AI_TRACK_STYLE_PRESETS[0].style);
   const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState<string>('');
+  const [aiTrackGenError, setAiTrackGenError] = useState<string | null>(null);
+  const [aiTrackGenPreview, setAiTrackGenPreview] = useState<{
+    audioUrl: string;
+    trackName: string;
+    arrangementNotes: string;
+  } | null>(null);
   const [isGeneratingAiTrack, setIsGeneratingAiTrack] = useState<boolean>(false);
   const [isSeparatingStemsAi, setIsSeparatingStemsAi] = useState<boolean>(false);
   const [separationElapsedSeconds, setSeparationElapsedSeconds] = useState<number>(0);
@@ -774,9 +809,14 @@ export default function SongStudioModal({
     }
   };
 
-  // AI Custom Instrument Track Generator Handler
+  // AI Custom Instrument Track Generator Handler — genera y deja en previsualización, NUNCA
+  // compromete directo al mezclador: la IA generativa a veces devuelve algo que no encaja, y
+  // forzar al usuario a escucharlo ya integrado en su mezcla (o peor, tener que deshacerlo a mano)
+  // es peor experiencia que dejarle escuchar antes y decidir "Añadir" o "Descartar".
   const handleGenerateAiInstrumentTrack = async (targetIdea: SongAudioIdea) => {
     if (!aiTrackGenInstrument) return;
+    setAiTrackGenError(null);
+    setAiTrackGenPreview(null);
     try {
       setIsGeneratingAiTrack(true);
       const data = await apiFetch('/api/ai-generate-instrument-track', {
@@ -788,41 +828,50 @@ export default function SongStudioModal({
           sectionName: targetIdea.seccion,
           bpm: song.bpm,
           key: song.tonalidad,
-          contextPrompt: aiTrackGenPrompt
+          style: aiTrackGenMode === 'presets' ? aiTrackGenStyle : undefined,
+          contextPrompt: aiTrackGenMode === 'custom' ? aiTrackGenPrompt : undefined
         })
       });
 
-      const existing = getIdeaTracks(targetIdea);
-      let audioUrl = targetIdea.audioUrl;
-      if (data.audioBase64) {
-        audioUrl = `data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}`;
+      if (!data.audioBase64) {
+        throw new Error('La IA no devolvió audio esta vez (puede pasar con Lyria). Prueba a regenerar o cambia el estilo/instrucción.');
       }
 
-      const newAiTrack: AudioTrack = {
-        id: `ai-track-${Date.now()}`,
-        nombre: data.trackName || `Pista IA: ${aiTrackGenInstrument}`,
-        audioUrl: audioUrl,
-        autor: 'IA Lyria & Gemini',
-        instrumento: aiTrackGenInstrument,
-        fecha: new Date().toISOString().split('T')[0],
-        volumen: 1,
-        muted: false
-      };
-
-      const updatedIdeas = (song.audioIdeas || []).map(i => 
-        i.id === targetIdea.id ? { ...i, pistas: [...existing, newAiTrack] } : i
-      );
-
-      onUpdateSong({ ...song, audioIdeas: updatedIdeas });
-      setShowAiTrackGenModal(false);
-      setAiTrackGenPrompt('');
-      alert(`¡Pista de ${aiTrackGenInstrument} creada por la IA para "${targetIdea.seccion}"!\n\nNotas de arreglo: ${data.arrangementNotes || 'Generado en armonía con la tonalidad y BPM.'}`);
+      setAiTrackGenPreview({
+        audioUrl: `data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}`,
+        trackName: data.trackName || `Pista IA: ${aiTrackGenInstrument}`,
+        arrangementNotes: data.arrangementNotes || 'Generado en armonía con la tonalidad y BPM.'
+      });
     } catch (err: any) {
       console.error("Error al generar pista por IA:", err);
-      alert("No se pudo generar la pista de instrumento. Inténtalo de nuevo.");
+      setAiTrackGenError(err?.message || 'No se pudo generar la pista de instrumento. Inténtalo de nuevo.');
     } finally {
       setIsGeneratingAiTrack(false);
     }
+  };
+
+  const handleConfirmAddAiTrack = (targetIdea: SongAudioIdea) => {
+    if (!aiTrackGenPreview) return;
+    const existing = getIdeaTracks(targetIdea);
+    const newAiTrack: AudioTrack = {
+      id: `ai-track-${Date.now()}`,
+      nombre: aiTrackGenPreview.trackName,
+      audioUrl: aiTrackGenPreview.audioUrl,
+      autor: 'IA Lyria & Gemini',
+      instrumento: aiTrackGenInstrument,
+      fecha: new Date().toISOString().split('T')[0],
+      volumen: 1,
+      muted: false
+    };
+
+    const updatedIdeas = (song.audioIdeas || []).map(i =>
+      i.id === targetIdea.id ? { ...i, pistas: [...existing, newAiTrack] } : i
+    );
+
+    onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+    setShowAiTrackGenModal(null);
+    setAiTrackGenPreview(null);
+    setAiTrackGenPrompt('');
   };
 
   // Studio Fullscreen Mode State & Handler
@@ -3473,6 +3522,14 @@ export default function SongStudioModal({
                       {/* Idea Header */}
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
                         <div className="flex items-center gap-2.5 flex-wrap">
+                          <button
+                            type="button"
+                            onClick={() => toggleIdeaCollapsed(idea.id)}
+                            title={collapsedIdeaIds.has(idea.id) ? 'Expandir idea' : 'Plegar idea'}
+                            className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0"
+                          >
+                            {collapsedIdeaIds.has(idea.id) ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                          </button>
                           <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${sectionInfo.color}`}>
                             {sectionInfo.icon} {sectionInfo.label}
                           </span>
@@ -3573,6 +3630,21 @@ export default function SongStudioModal({
                             <Copy className="w-4 h-4" />
                           </button>
 
+                          {/* Generate AI instrument track for this idea's mix */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAiTrackGenPreview(null);
+                              setAiTrackGenError(null);
+                              setShowAiTrackGenModal(idea);
+                            }}
+                            className="p-1.5 rounded-lg text-purple-300 hover:bg-purple-950/40 transition-all cursor-pointer"
+                            title="Generar pista de acompañamiento con IA para esta mezcla"
+                          >
+                            <Wand2 className="w-4 h-4" />
+                          </button>
+
                           {/* Delete */}
                           <button
                             type="button"
@@ -3586,6 +3658,8 @@ export default function SongStudioModal({
                       </div>
                     </div>
 
+                    {!collapsedIdeaIds.has(idea.id) && (
+                    <>
                     {idea.notas && (
                       <p className="text-xs text-neutral-300 italic bg-black/20 p-2.5 rounded-xl border border-white/5">
                         "{idea.notas}"
@@ -4538,6 +4612,8 @@ export default function SongStudioModal({
                         </button>
                       </div>
                     </div>
+                    </>
+                    )}
                   </motion.div>
                 );
               })}
@@ -5219,16 +5295,16 @@ export default function SongStudioModal({
 
       {/* AI Instrument Track Generator Modal */}
       {showAiTrackGenModal && (
-        <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-purple-500/40 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative overflow-hidden">
+        <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200 overflow-y-auto">
+          <div className="bg-gradient-to-b from-zinc-900 via-indigo-950/80 to-zinc-950 border border-purple-500/40 rounded-2xl max-w-xl w-full p-6 space-y-5 shadow-2xl relative overflow-hidden my-auto max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-purple-500/20 pb-3">
               <div className="flex items-center gap-2.5 text-purple-300 font-mono font-bold text-sm">
                 <Wand2 className="w-5 h-5 text-purple-400 animate-pulse" />
-                <span>Generar Arreglo Musical con IA (Gemini & Lyria)</span>
+                <span>Generar Pista con IA (Gemini & Lyria)</span>
               </div>
               <button
                 type="button"
-                onClick={() => setShowAiTrackGenModal(false)}
+                onClick={() => { setShowAiTrackGenModal(null); setAiTrackGenPreview(null); setAiTrackGenError(null); }}
                 className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
@@ -5237,12 +5313,12 @@ export default function SongStudioModal({
 
             <div className="space-y-4 text-xs font-sans">
               <p className="text-neutral-300 leading-relaxed">
-                El motor de composición IA de BandManager creará una propuesta de arreglo o pista de instrumento en la tonalidad (<strong>{song.tonalidad || 'Am'}</strong>) y tempo (<strong>{song.bpm || 120} BPM</strong>) de esta canción para dar ideas a la banda.
+                Genera una pista de acompañamiento con IA para <strong>"{showAiTrackGenModal.titulo}"</strong> en la tonalidad (<strong>{song.tonalidad || 'Am'}</strong>) y tempo (<strong>{song.bpm || 120} BPM</strong>) de la canción — perfecta para practicar cuando falta un instrumento en la demo, no para sustituir a nadie de la banda.
               </p>
 
               <div>
                 <label className="block text-purple-300 font-mono font-bold mb-1.5">
-                  Selecciona el Instrumento que deseas añadir:
+                  Instrumento a generar:
                 </label>
                 <select
                   value={aiTrackGenInstrument}
@@ -5259,56 +5335,112 @@ export default function SongStudioModal({
                 </select>
               </div>
 
-              <div>
-                <label className="block text-purple-300 font-mono font-bold mb-1.5">
-                  Instrucción / Estilo deseado para el Arreglo (Opcional):
-                </label>
-                <textarea
-                  value={aiTrackGenPrompt}
-                  onChange={(e) => setAiTrackGenPrompt(e.target.value)}
-                  placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
-                  className="w-full h-20 bg-black/60 border border-purple-500/40 rounded-xl p-2.5 text-white placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-purple-400 resize-none"
-                />
+              {/* Pestañas Presets / Personalizado */}
+              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-purple-500/20 w-fit">
+                <button
+                  type="button"
+                  onClick={() => setAiTrackGenMode('presets')}
+                  className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold transition-all ${
+                    aiTrackGenMode === 'presets' ? 'bg-purple-500/30 text-purple-200' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  Presets
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAiTrackGenMode('custom')}
+                  className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold transition-all ${
+                    aiTrackGenMode === 'custom' ? 'bg-purple-500/30 text-purple-200' : 'text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  Personalizado
+                </button>
               </div>
 
-              <div className="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-200 text-[11px] font-mono flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                <span>
-                  La pista generada se agregará automáticamente como una pista independiente en el mezclador multipista para que puedas probarla, silenciarla o integrarla en el tema.
-                </span>
-              </div>
+              {aiTrackGenMode === 'presets' ? (
+                <div className="grid grid-cols-2 gap-2">
+                  {AI_TRACK_STYLE_PRESETS.map(preset => (
+                    <button
+                      key={preset.key}
+                      type="button"
+                      onClick={() => setAiTrackGenStyle(preset.style)}
+                      className={`p-2.5 rounded-xl border text-left transition-all flex flex-col gap-0.5 ${
+                        aiTrackGenStyle === preset.style
+                          ? 'bg-purple-950/60 border-purple-500 ring-1 ring-purple-500/50'
+                          : 'bg-black/40 border-white/10 hover:border-white/20'
+                      }`}
+                    >
+                      <span className="font-bold text-[11px] text-white flex items-center gap-1.5">
+                        <span>{preset.icon}</span> {preset.label}
+                      </span>
+                      <span className="text-[10px] text-neutral-400 leading-snug">{preset.description}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-purple-300 font-mono font-bold mb-1.5">
+                    Instrucción / Estilo deseado para el Arreglo:
+                  </label>
+                  <textarea
+                    value={aiTrackGenPrompt}
+                    onChange={(e) => setAiTrackGenPrompt(e.target.value)}
+                    placeholder="Ej: Solo virtuosista y energético con aire rock balkan para dar la máxima potencia al estribillo..."
+                    className="w-full h-20 bg-black/60 border border-purple-500/40 rounded-xl p-2.5 text-white placeholder-neutral-500 font-sans text-xs focus:outline-none focus:border-purple-400 resize-none"
+                  />
+                </div>
+              )}
+
+              {aiTrackGenError && (
+                <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 text-[11px] font-mono">
+                  ⚠️ {aiTrackGenError}
+                </div>
+              )}
+
+              {aiTrackGenPreview && (
+                <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/40 space-y-2.5 animate-in fade-in duration-200">
+                  <div className="flex items-center gap-1.5 text-emerald-300 font-mono font-bold text-[11px]">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {aiTrackGenPreview.trackName}
+                  </div>
+                  <audio controls src={aiTrackGenPreview.audioUrl} className="w-full h-9" onError={(e) => e.preventDefault()} />
+                  <p className="text-[10px] text-neutral-300 font-sans italic leading-relaxed">{aiTrackGenPreview.arrangementNotes}</p>
+                  <p className="text-[10px] text-emerald-400/80 font-mono">Escúchala antes de decidir — si no te convence, regenera o prueba otro preset, no se ha tocado aún tu mezcla.</p>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setShowAiTrackGenModal(false)}
+                onClick={() => { setShowAiTrackGenModal(null); setAiTrackGenPreview(null); setAiTrackGenError(null); }}
                 className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 font-mono text-xs font-bold cursor-pointer"
               >
                 Cancelar
               </button>
+              {aiTrackGenPreview && (
+                <button
+                  type="button"
+                  onClick={() => showAiTrackGenModal && handleConfirmAddAiTrack(showAiTrackGenModal)}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95"
+                >
+                  <Check className="w-4 h-4" /> Añadir a la mezcla
+                </button>
+              )}
               <button
                 type="button"
                 disabled={isGeneratingAiTrack}
-                onClick={() => {
-                  const activeIdea = song.audioIdeas?.[0];
-                  if (activeIdea) {
-                    handleGenerateAiInstrumentTrack(activeIdea);
-                  } else {
-                    alert("Por favor crea o selecciona una idea primero para añadir la pista.");
-                  }
-                }}
+                onClick={() => showAiTrackGenModal && handleGenerateAiInstrumentTrack(showAiTrackGenModal)}
                 className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-mono text-xs font-bold flex items-center gap-2 shadow-lg cursor-pointer transition-all active:scale-95 disabled:opacity-50"
               >
                 {isGeneratingAiTrack ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Generando Arreglo con IA...</span>
+                    <span>Generando...</span>
                   </>
                 ) : (
                   <>
                     <Wand2 className="w-4 h-4" />
-                    <span>Generar Pista con IA</span>
+                    <span>{aiTrackGenPreview ? 'Regenerar' : 'Generar Pista con IA'}</span>
                   </>
                 )}
               </button>
