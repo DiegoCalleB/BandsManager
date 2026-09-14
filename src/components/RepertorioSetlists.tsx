@@ -4295,6 +4295,8 @@ export default function RepertorioSetlists({
  isStitchLight={isStitchLight}
  onClose={() => setActiveStudioSong(null)}
  onUpdateSong={handleUpdateSongFromStudio}
+ currentUser={currentUser}
+ currentUsername={currentUser?.name || currentUser?.username}
  />
  )}
 

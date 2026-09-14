@@ -8,13 +8,14 @@ import React, { useState, useRef, useEffect } from 'react';
 
 const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { motion, AnimatePresence } from 'motion/react';
-import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle } from '../types';
+import { Song, SongAudioIdea, AudioTrack, ThemeColors, DrumPatternStyle, User } from '../types';
 import { uploadFileToServer, resolveAudioUrl, getAudioBlobFromUrl, saveAudioToStorage } from '../utils/audioStorage';
 import { apiFetch } from '../utils/api';
 import { separateAudioIntoStems, IsolatedStemResult } from '../utils/stemSeparator';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import WaveformTrack from './WaveformTrack';
 import { SongChordsViewerModal } from './SongChordsViewerModal';
+import PracticeModePanel from './PracticeModePanel';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
 import { useStudioShareModal } from '../hooks/useStudioShareModal';
@@ -161,6 +162,7 @@ interface SongStudioModalProps {
   onClose: () => void;
   onUpdateSong: (updatedSong: Song) => void;
   currentUsername?: string;
+  currentUser?: User;
 }
 
 const SECCIONES_TEMA: { key: SongAudioIdea['seccion']; label: string; icon: string; color: string }[] = [
@@ -197,7 +199,8 @@ export default function SongStudioModal({
   isStitchLight = false,
   onClose,
   onUpdateSong,
-  currentUsername = 'Tu Nombre'
+  currentUsername = 'Tu Nombre',
+  currentUser
 }: SongStudioModalProps) {
   const songRef = useRef<Song>(song);
   useEffect(() => {
@@ -210,6 +213,7 @@ export default function SongStudioModal({
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
   const [showAiMusicModal, setShowAiMusicModal] = useState<boolean>(false);
   const [showAiComposerModal, setShowAiComposerModal] = useState<boolean>(false);
+  const [practiceModeIdea, setPracticeModeIdea] = useState<SongAudioIdea | null>(null);
   const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('song_studio');
   const {
     shareModalData, setShareModalData,
@@ -225,6 +229,7 @@ export default function SongStudioModal({
   const {
     commentTextMap, setCommentTextMap,
     commentTimeTagMap, setCommentTimeTagMap,
+    commentTrackTagMap, setCommentTrackTagMap,
     handleAddComment,
   } = useIdeaComments(song, onUpdateSong, currentUsername, currentTimeMap);
   
@@ -3643,6 +3648,17 @@ export default function SongStudioModal({
                                 )}
                               </div>
                               <div className="flex items-center gap-2 flex-wrap">
+                                {tracks.length > 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setPracticeModeIdea(idea)}
+                                    className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 transition-all cursor-pointer"
+                                    title="Practica con tu propia mezcla, velocidad y bucle sin tocar la mezcla de la banda"
+                                  >
+                                    <Headphones className="w-3 h-3" />
+                                    <span>Sala de Ensayo</span>
+                                  </button>
+                                )}
                                 <button
                                   type="button"
                                   onClick={() => setShowMoisesStemsModal(idea)}
@@ -4327,8 +4343,16 @@ export default function SongStudioModal({
                         {(idea.comentarios || []).map((comm) => (
                           <div key={comm.id} className="p-2 rounded-xl bg-black/30 border border-white/5 text-xs flex items-start justify-between gap-2 group">
                             <div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 flex-wrap">
                                 <span className="font-bold text-indigo-300 font-mono">{comm.autor}:</span>
+                                {comm.instrumento && (
+                                  <span
+                                    className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-[10px] font-bold"
+                                    title="Comentario referido a esta pista"
+                                  >
+                                    🎚️ {comm.instrumento}
+                                  </span>
+                                )}
                                 {comm.timestampSegundos !== undefined && comm.timestampSegundos > 0 && (
                                   <button
                                     type="button"
@@ -4357,7 +4381,7 @@ export default function SongStudioModal({
                       </div>
 
                       {/* Add comment input */}
-                      <div className="flex items-center gap-2 pt-1">
+                      <div className="flex items-center gap-2 pt-1 flex-wrap">
                         <button
                           type="button"
                           onClick={() => setCommentTimeTagMap(prev => ({ ...prev, [idea.id]: Math.floor(currentTime) }))}
@@ -4366,6 +4390,20 @@ export default function SongStudioModal({
                         >
                           ⏱️ @ {formatTime(currentTime)}
                         </button>
+
+                        {getIdeaTracks(idea).length > 1 && (
+                          <select
+                            value={commentTrackTagMap[idea.id] || ''}
+                            onChange={(e) => setCommentTrackTagMap(prev => ({ ...prev, [idea.id]: e.target.value || null }))}
+                            title="Referir este comentario a una pista concreta"
+                            className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-mono text-emerald-400 font-bold cursor-pointer outline-none"
+                          >
+                            <option value="">🎚️ General</option>
+                            {getIdeaTracks(idea).map(tr => (
+                              <option key={tr.id} value={tr.instrumento || tr.nombre}>{tr.nombre}</option>
+                            ))}
+                          </select>
+                        )}
 
                         <input
                           type="text"
@@ -4659,6 +4697,23 @@ export default function SongStudioModal({
           onUpdateSong({ ...song, audioIdeas: updatedIdeas });
         }}
       />
+
+      {/* SALA DE ENSAYO INDIVIDUAL: mezcla 100% local, nunca escribe en `song` */}
+      {practiceModeIdea && (
+        <PracticeModePanel
+          key={practiceModeIdea.id}
+          song={song}
+          idea={practiceModeIdea}
+          tracks={getIdeaTracks(practiceModeIdea)}
+          currentUser={currentUser}
+          isStitchLight={isStitchLight}
+          onClose={() => setPracticeModeIdea(null)}
+          onApplyAsMainChords={(cifradoTexto, guiaSustituto) => {
+            if (!window.confirm('Esto sustituye el cifrado de acordes principal de la canción (visible para toda la banda) por el detectado en esta pista aislada. ¿Continuar?')) return;
+            onUpdateSong({ ...song, cifradoTexto, guiaSustituto });
+          }}
+        />
+      )}
 
       {/* MODAL MOISES STEMS SEPARATION & MULTITRACK CONTROL */}
       {showMoisesStemsModal && (
