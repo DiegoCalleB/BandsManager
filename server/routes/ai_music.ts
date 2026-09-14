@@ -210,6 +210,55 @@ async function ensurePublicAudioUrl(audioUrl: string, bandId: string, songHash: 
   return audioUrl;
 }
 
+/**
+ * Comprime el audio de entrada a MP3 antes de mandarlo a la GPU de Replicate cuando llega sin
+ * comprimir o pesa de más (WAV/FLAC de estudio, másteres a 24-bit/48kHz...). Un máster así puede
+ * pesar 5-10x un MP3 equivalente: menos tiempo de subida y de decodificación en el contenedor
+ * antes de que la GPU empiece a separar nada. Si el audio ya es un MP3 razonablemente ligero, o
+ * si algo falla al comprimir/resubir, se sigue con la URL original sin bloquear la separación.
+ */
+async function ensureCompressedAudioForReplicate(url: string, bandId: string, songHash: string): Promise<string> {
+  if (!url) return url;
+  if (url.startsWith('data:audio/mpeg') || url.startsWith('data:audio/mp3')) return url;
+
+  const MAX_MP3_SIZE = 10 * 1024 * 1024; // Un MP3 ya comprimido de este tamaño no merece recomprimirse
+  const MIN_WORTHWHILE_SIZE = 300 * 1024; // Clips muy cortos no compensan el viaje de ida y vuelta
+
+  try {
+    const headRes = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(8000) });
+    const contentType = (headRes.headers.get('content-type') || '').toLowerCase();
+    const contentLength = parseInt(headRes.headers.get('content-length') || '0', 10);
+    const urlLooksLikeMp3 = url.toLowerCase().split('?')[0].endsWith('.mp3');
+    const alreadyMp3 = contentType.includes('mpeg') || contentType.includes('mp3') || urlLooksLikeMp3;
+
+    if (alreadyMp3 && contentLength > 0 && contentLength <= MAX_MP3_SIZE) return url;
+    if (contentLength > 0 && contentLength <= MIN_WORTHWHILE_SIZE) return url;
+  } catch {
+    // Si el HEAD falla (algún CDN no lo soporta), seguimos e intentamos comprimir igualmente.
+  }
+
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(45000) });
+    if (!res.ok) return url;
+    const original = Buffer.from(await res.arrayBuffer());
+    if (original.length === 0) return url;
+
+    const compressed = await transcodeBufferToMp3(original);
+    if (compressed.length === 0 || compressed.length >= original.length) return url;
+
+    const storageSubPath = rutaAlmacenamientoStem(bandId, `input-compressed-${Date.now()}.mp3`, songHash);
+    const uploadedUrl = await uploadBufferToSupabase(compressed, storageSubPath, 'audio/mpeg');
+    if (uploadedUrl) {
+      console.log(`[Replicate Input Compression] ${(original.length / 1024 / 1024).toFixed(1)}MB -> ${(compressed.length / 1024 / 1024).toFixed(1)}MB antes de enviar a Replicate (${storageSubPath}).`);
+      return uploadedUrl;
+    }
+  } catch (err: any) {
+    console.warn('[Replicate Input Compression] No se pudo comprimir el audio de entrada, se usa el original:', err?.message || err);
+  }
+
+  return url;
+}
+
 export type MusicServiceErrorProvider = 'replicate' | 'gemini' | 'ffmpeg' | 'supabase' | 'network' | 'system';
 
 export type StemErrorType = 
@@ -731,7 +780,8 @@ async function processNeuralStemsReplicate(
   const effectiveHash = songHash || crypto.createHash('md5').update(audioUrl).digest('hex').substring(0, 10);
 
   try {
-    const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+    const publicUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+    const resolvedUrl = await ensureCompressedAudioForReplicate(publicUrl, effectiveBandId, effectiveHash);
     const tPreloadEnd = Date.now();
 
     console.log(`[Demucs Neural] Iniciando separación de stems con Demucs v4 en Replicate. URL de entrada: ${resolvedUrl.startsWith('data:') ? 'Data URI (' + resolvedUrl.substring(0, 30) + '...)' : resolvedUrl}`);
@@ -956,7 +1006,8 @@ async function processMdx23Stems(
   const modelFriendlyName = "MVSEP MDX'23 (MDX-Net + Demucs4)";
   const formatLabel = "MP3 (MVSEP MDX23 Neural)";
 
-  const resolvedUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+  const publicUrl = await ensurePublicAudioUrl(audioUrl, effectiveBandId, effectiveHash, requestHost);
+  const resolvedUrl = await ensureCompressedAudioForReplicate(publicUrl, effectiveBandId, effectiveHash);
   const tPreloadEnd = Date.now();
 
   const rawToken = overrideToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || "";

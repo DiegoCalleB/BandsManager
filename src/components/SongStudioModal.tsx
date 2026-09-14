@@ -267,7 +267,7 @@ export default function SongStudioModal({
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
-  const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('mvsep-mdx23');
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'mvsep-mdx23' | 'demucs' | 'dsp-server'>('demucs');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
@@ -4871,6 +4871,9 @@ export default function SongStudioModal({
                       <span className="text-[10px] text-neutral-300 leading-normal">
                         Modelo neural híbrido de alta precisión del reto MDX'23 para aislar voz, bajo, batería y demás fuentes.
                       </span>
+                      <span className="text-[9px] text-amber-400/80 font-bold">
+                        🐢 Más lento: combina 2 modelos (ensemble) para máximo detalle.
+                      </span>
                     </button>
 
                     {/* HT-Demucs v4 */}
@@ -4893,6 +4896,9 @@ export default function SongStudioModal({
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal">
                         Red Demucs v4 multicanal probada en estudio para aislamiento directo en GPU Cloud.
+                      </span>
+                      <span className="text-[9px] text-emerald-400 font-bold">
+                        ⚡ Recomendado: un único modelo, mucho más rápido que el ensemble.
                       </span>
                     </button>
 
