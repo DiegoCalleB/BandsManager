@@ -833,6 +833,7 @@ export default function SongStudioModal({
           sectionName: targetIdea.seccion,
           bpm: song.bpm,
           key: song.tonalidad,
+          genero: song.genero,
           style: aiTrackGenMode === 'presets' ? aiTrackGenStyle : undefined,
           contextPrompt: aiTrackGenMode === 'custom' ? aiTrackGenPrompt : undefined,
           targetDurationSec: song.duracionSegundos || undefined
@@ -960,7 +961,7 @@ export default function SongStudioModal({
 
     // Apply direct HTML5 Audio element volume baseline first to prevent silence on cross-origin stems
     try {
-      el.volume = targetGain;
+      el.volume = applyMasterToElementVolume(targetGain);
       el.muted = !isAudible;
     } catch (e) {}
 
@@ -1096,12 +1097,12 @@ export default function SongStudioModal({
         }
       } else {
         // Fallback to HTMLAudioElement volume if WebAudio source creation was bypassed
-        el.volume = targetGain;
+        el.volume = applyMasterToElementVolume(targetGain);
       }
     } catch (err) {
       console.warn("Could not setup WebAudio DSP for track:", trackId, err);
       const isAudible = (hasSoloInSession ? !!tr.solo : true) && !tr.muted;
-      el.volume = isAudible ? Math.max(0, tr.volumen ?? 1) : 0;
+      el.volume = applyMasterToElementVolume(isAudible ? Math.max(0, tr.volumen ?? 1) : 0);
     }
   };
 
@@ -1254,6 +1255,13 @@ export default function SongStudioModal({
     }
     return masterGainNodeRef.current;
   };
+  // Para pistas de origen cruzado (Supabase Storage, la mayoría del audio real) el navegador nunca
+  // llega a construir el MediaElementAudioSourceNode (ver isSameOriginOrBlob más abajo), así que el
+  // GainNode maestro de arriba jamás entra en su cadena de audio — solo sirve para las pistas
+  // mismo-origen/blob. Para que el master también afecte a esas pistas hay que aplicarlo al propio
+  // `el.volume` nativo (con techo de 1.0: el elemento no puede amplificar por encima del 100%,
+  // solo el GainNode puede boostear).
+  const applyMasterToElementVolume = (perTrackGain: number) => Math.max(0, Math.min(1, perTrackGain * masterVolume));
   useEffect(() => {
     if (masterGainNodeRef.current) {
       masterGainNodeRef.current.gain.value = masterVolume;
@@ -1449,13 +1457,14 @@ export default function SongStudioModal({
         const slaveDur = getSafeTrackDuration(slaveEl);
         const isMuted = tr.muted || (activeHasSolo && !tr.solo);
         const targetGain = isMuted ? 0 : Math.max(0, tr.volumen ?? 1);
+        const targetElementVolume = applyMasterToElementVolume(targetGain);
 
         // Only modify DOM properties when changed to prevent Chrome audio engine stutter
         if (slaveEl.muted !== isMuted) {
           slaveEl.muted = isMuted;
         }
-        if (Math.abs(slaveEl.volume - targetGain) > 0.005) {
-          slaveEl.volume = targetGain;
+        if (Math.abs(slaveEl.volume - targetElementVolume) > 0.005) {
+          slaveEl.volume = targetElementVolume;
         }
 
         const dsp = trackDSPMapRef.current[tr.id];
@@ -2207,7 +2216,7 @@ export default function SongStudioModal({
           try { el.currentTime = 0; } catch {}
           el.playbackRate = 1.0;
           const isMuted = tr.muted || (hasSolo && !(tr as any).solo);
-          el.volume = isMuted ? 0 : (tr.volumen ?? 1);
+          el.volume = applyMasterToElementVolume(isMuted ? 0 : (tr.volumen ?? 1));
         }
       });
 

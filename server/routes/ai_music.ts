@@ -2323,17 +2323,28 @@ async function callLyriaWithRetries(model: string, prompt: string, maxAttempts =
 
 router.post("/ai-generate-instrument-track", requireAuth, iaRateLimiter, async (req, res) => {
   try {
-    const { instrument, songTitle, sectionName, bpm, key, style, lyrics, contextPrompt, targetDurationSec } = req.body;
+    const { instrument, songTitle, sectionName, bpm, key, style, genero, lyrics, contextPrompt, targetDurationSec } = req.body;
 
     const requestedInst = instrument || "Guitarra Solista";
-    const basePrompt = `Compose and generate a high quality studio arrangement track for the instrument: "${requestedInst}".
+    // Diego reportó que un tema de rock salía sonando a salsa/merengue — Lyria puede desviarse de
+    // género si solo se lo mencionas una vez en mitad de una lista de bullets. Anclamos el género
+    // real de la canción (no solo el preset de estilo) al PRINCIPIO y al FINAL del prompt, que es
+    // donde los modelos generativos prestan más atención (primacía/recencia), y lo repetimos varias
+    // veces con lenguaje explícito de restricción en vez de dejarlo como un dato más entre otros.
+    const genreLabel = genero || style || "el estilo de la banda";
+    const basePrompt = `STRICT GENRE CONSTRAINT: this track MUST sound like ${genreLabel}. Do NOT generate any other genre, rhythm feel, or instrumentation style.
+
+Compose and generate a high quality studio arrangement track for the instrument: "${requestedInst}", strictly in the ${genreLabel} genre.
 Musical context:
 - Song Title: "${songTitle || 'Canción de la Banda'}"
+- Genre (mandatory, do not deviate from this): "${genreLabel}"
 - Active Section: "${sectionName || 'Estribillo'}"
 - Tempo: ${bpm || 120} BPM
 - Key: "${key || 'La menor / Am'}"
-- Style: "${style || 'Rock / Balkan Ska / Pop'}"
-- Specific instructions: "${contextPrompt || 'Arreglo virtuosista, melódico y dinámico que encaje a la perfección con la sección'}"`;
+- Style: "${style || genreLabel}"
+- Specific instructions: "${contextPrompt || 'Arreglo virtuosista, melódico y dinámico que encaje a la perfección con la sección'}"
+
+REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matching the tempo and key above. Do not switch to a different genre than ${genreLabel} under any circumstance.`;
 
     let audioBase64 = "";
     let mimeType = "audio/wav";
