@@ -23,7 +23,7 @@ async function test() {
     const result = await resend.emails.send({
       from: "BandManager <no-reply@bandmanager.io>",
       to: toEmail,
-      subject: "🎸 Probando correos de BandManager.ai",
+      subject: "🎸 Probando correos de BandManager.io",
       html: `
         <div style="font-family: 'Segoe UI', Arial, sans-serif; background: #09090b; color: #f4f4f5; padding: 32px; border-radius: 12px; max-width: 500px; margin: 20px auto; border: 1px solid #27272a;">
           <h1 style="color: #3b82f6; margin-top: 0; font-size: 24px;">BandManager<span style="color:#ffffff">.ai</span></h1>

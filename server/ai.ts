@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { dbRecordAiUsage } from "./db/aiLedger.js";
 
 export const GEMINI_MODEL = "gemini-3.7-flash";
 
@@ -100,6 +101,38 @@ export function calculatePitchCost(provider: string, inputText: string, outputTe
     costPer100EurFormatted: `${(costEur * 100).toFixed(3).replace(".", ",")} €`,
     costPer1000EurFormatted: `${(costEur * 1000).toFixed(2).replace(".", ",")} €`
   };
+}
+
+/** Coste real en EUR a partir de tokens ya conocidos (no estimados desde longitud de texto). */
+export function costEurFromTokens(provider: string, promptTokens: number, completionTokens: number): number {
+  const pricing = AI_PRICING_TABLE[provider] || AI_PRICING_TABLE.gemini;
+  const costUsd = ((promptTokens / 1_000_000) * pricing.inputPer1M) + ((completionTokens / 1_000_000) * pricing.outputPer1M);
+  return costUsd / EUR_USD_RATE;
+}
+
+/**
+ * Registra en el ledger de "Transparencia de Costes Dinámica" (server/db/aiLedger.ts) el
+ * consumo real de una llamada de IA. Va en fire-and-forget con su propio catch: un fallo de
+ * Supabase aquí no debe tirar abajo una respuesta de IA que ya se generó y le costó dinero real
+ * a la plataforma pedirla.
+ */
+function registrarConsumoIA(params: {
+  bandId?: string;
+  provider: string;
+  modelName: string;
+  promptTokens: number;
+  completionTokens: number;
+}): void {
+  if (!params.bandId || (!params.promptTokens && !params.completionTokens)) return;
+  dbRecordAiUsage({
+    bandId: params.bandId,
+    promptTokens: params.promptTokens,
+    completionTokens: params.completionTokens,
+    modelName: params.modelName,
+    estimatedCostEur: costEurFromTokens(params.provider, params.promptTokens, params.completionTokens)
+  }).catch((err) => {
+    console.warn("[AI Ledger] No se pudo registrar el consumo de IA:", err?.message || err);
+  });
 }
 
 export function getAvailableAIProviders() {
@@ -205,9 +238,11 @@ export async function generateContentWithFallback(
     permitirPitchLocal?: boolean;
     timeoutMs?: number;
     links?: PitchLinks;
+    /** Si se pasa, registra el consumo real de tokens de esta llamada en el ledger de IA. */
+    bandId?: string;
   }
 ) {
-  const modelsToTry = params.preferredModel 
+  const modelsToTry = params.preferredModel
     ? [params.preferredModel, ...FALLBACK_MODELS.filter(m => m !== params.preferredModel)]
     : FALLBACK_MODELS;
 
@@ -229,6 +264,13 @@ export async function generateContentWithFallback(
       });
       if (response) {
         console.log(`[Gemini API] ¡Éxito con modelo: ${modelName}!`);
+        registrarConsumoIA({
+          bandId: params.bandId,
+          provider: "gemini",
+          modelName,
+          promptTokens: response.usageMetadata?.promptTokenCount || 0,
+          completionTokens: response.usageMetadata?.candidatesTokenCount || 0
+        });
         return response;
       }
     } catch (err: any) {
@@ -297,7 +339,7 @@ export function generateSmartGeneralFallback(promptText: string): string {
   const lower = (promptText || "").toLowerCase();
   if (lower.includes("json") || lower.includes("clasifica") || lower.includes("categoriza")) {
     return JSON.stringify({
-      text: "Operación procesada con éxito mediante el motor local de respaldo (BandManager.ai AI Core).",
+      text: "Operación procesada con éxito mediante el motor local de respaldo (BandManager.io AI Core).",
       category: "general",
       confidence: 0.95,
       suggestedActions: []
@@ -307,9 +349,9 @@ export function generateSmartGeneralFallback(promptText: string): string {
     return "🔥 ¡Noche épica en el local de ensayo! 🎻💥 Preparando los nuevos directos de la gira Bakandeya 2026. ¡No os lo perdáis!\n\n#Bakandeya #BalkanSka #Directo #MusicaEnVivo";
   }
   if (lower.includes("acorde") || lower.includes("letra") || lower.includes("canción") || lower.includes("song")) {
-    return "🎸 Análisis armónico y sugerencia de acordes completados por BandManager.ai Studio Core: Progresión recomendada en Am - F - C - G (Tonalidad de La menor).";
+    return "🎸 Análisis armónico y sugerencia de acordes completados por BandManager.io Studio Core: Progresión recomendada en Am - F - C - G (Tonalidad de La menor).";
   }
-  return `🤖 **Aviso del Sistema IA BandManager.ai**: El servicio de Gemini API ha alcanzado su límite de cuota o spending cap (429). El sistema ha activado automáticamente el motor inteligente de respaldo local para garantizar que tu flujo de trabajo no se detenga. 
+  return `🤖 **Aviso del Sistema IA BandManager.io**: El servicio de Gemini API ha alcanzado su límite de cuota o spending cap (429). El sistema ha activado automáticamente el motor inteligente de respaldo local para garantizar que tu flujo de trabajo no se detenga. 
 
 Consulta procesada correctamente. Puedes continuar gestionando tu booking, repertorio, finanzas y redes con normalidad.`;
 }
@@ -598,6 +640,8 @@ export async function generateUnifiedAI(params: {
   links?: PitchLinks;
   /** Email real de contacto de la banda, para firmar el pitch si cae al generador local. */
   contactEmail?: string;
+  /** Si se pasa, registra el consumo real de tokens de esta llamada en el ledger de IA. */
+  bandId?: string;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -626,6 +670,7 @@ export async function generateUnifiedAI(params: {
         contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
         preferredModel: params.modelName || GEMINI_MODEL,
         timeoutMs: params.timeoutMs,
+        bandId: params.bandId,
         // OJO: sin permitirPitchLocal aquí a propósito. generateUnifiedAI ya tiene su propio
         // escalón de fallback local (más abajo) tras intentar también DeepSeek explícitamente;
         // activarlo en esta llamada interna haría que un fallo total de Gemini devolviera ya el

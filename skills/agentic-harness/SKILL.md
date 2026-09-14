@@ -1,11 +1,11 @@
 ---
 name: agentic-harness
-description: Guía de arquitectura para los agentes de IA (Booking CRM, Reels, Music Studio) y control del Scheduler en BandManager.ai. Usar al modificar agentEngine.ts, lectorAgent.ts, scheduler o flujos agénticos.
+description: Guía de arquitectura para los agentes de IA (Booking CRM, Reels, Music Studio) y control del Scheduler en BandManager.io. Usar al modificar agentEngine.ts, lectorAgent.ts, scheduler o flujos agénticos.
 ---
 
 # 🤖 Skill: Agentic Harness & Human-in-the-Loop Architecture
 
-Esta skill establece los patrones de arquitectura para el desarrollo, mantenimiento y supervisión del ecosistema de **Agentes de Inteligencia Artificial** en BandManager.ai (objeto central del TFM).
+Esta skill establece los patrones de arquitectura para el desarrollo, mantenimiento y supervisión del ecosistema de **Agentes de Inteligencia Artificial** en BandManager.io (objeto central del TFM).
 
 ---
 

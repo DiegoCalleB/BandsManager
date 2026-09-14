@@ -1,4 +1,4 @@
-# 🔒 Seguridad & Multi-Tenancy - BandManager.ai
+# 🔒 Seguridad & Multi-Tenancy - BandManager.io
 
 ## 1. El Trust Boundary Fundamental
 
@@ -110,7 +110,7 @@ Si introduces este patrón, **CI falla incluso sin un test dedicado**.
 
 La UI (`src/utils/planPermissions.ts`) muestra/oculta features según el plan. Pero...
 ```bash
-curl -X POST https://bandmanager.ai/api/leads \
+curl -X POST https://bandmanager.io/api/leads \
   -H "Authorization: Bearer <token>" \
   -d "{"name": "sale", ...}"
 ```

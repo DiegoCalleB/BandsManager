@@ -55,6 +55,7 @@ import { LoginModal } from './components/LoginModal';
 import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
 import { UserProfileModal } from './components/UserProfileModal';
+import { AiSupportWidget } from './components/dashboard/AiUsageSupportWidget';
 import { FontSelectorModal } from './components/FontSelectorModal';
 import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
@@ -982,14 +983,14 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/bandmanageriodefinitiva.jpeg" 
- alt="BandManager.ai" 
- className="w-7 h-7 object-contain rounded-lg shrink-0 transition-all cursor-pointer"
+ src="/logo_bandmanager_symbol.png"
+ alt="BandManager.io"
+ className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.AI</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.io</span>
  </span>
  </div>
  </div>
@@ -1216,6 +1217,8 @@ export default function App() {
    );
  })()}
 
+ {!isPromoPlan && <AiSupportWidget variant="sidebar" />}
+
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">
  {currentUser && (
@@ -1247,14 +1250,14 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/bandmanageriodefinitiva.jpeg" 
- alt="BandManager.ai" 
- className="w-7 h-7 object-contain rounded-lg shrink-0 transition-all cursor-pointer"
+ src="/logo_bandmanager_symbol.png"
+ alt="BandManager.io"
+ className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.AI</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.io</span>
  </span>
  </div>
  </div>

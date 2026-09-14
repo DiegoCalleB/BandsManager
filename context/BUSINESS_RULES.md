@@ -1,4 +1,4 @@
-# 🤖 Reglas de Negocio de Agentes IA - BandManager.ai
+# 🤖 Reglas de Negocio de Agentes IA - BandManager.io
 
 ## 1. Principio Fundamental: Human-in-the-Loop, Siempre
 

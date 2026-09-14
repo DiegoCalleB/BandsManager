@@ -2,6 +2,8 @@ import express from "express";
 import { GoogleGenAI } from "@google/genai";
 import { requireAuth } from "../state.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+import { costEurFromTokens } from "../ai.js";
+import { dbRecordAiUsage } from "../db/aiLedger.js";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 import path from "path";
@@ -1500,9 +1502,11 @@ router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async 
     let audioBase64 = "";
     let generatedLyrics = "";
     let mimeType = "audio/wav";
+    let usageMetadata: { promptTokenCount?: number; candidatesTokenCount?: number } | undefined;
 
     for await (const chunk of response) {
       const parts = chunk.candidates?.[0]?.content?.parts;
+      if (chunk.usageMetadata) usageMetadata = chunk.usageMetadata;
       if (!parts) continue;
       for (const part of parts) {
         if (part.inlineData?.data) {
@@ -1519,6 +1523,26 @@ router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async 
 
     if (!audioBase64) {
       return res.status(500).json({ error: "No se pudo generar el clip de audio musical." });
+    }
+
+    // Lyria no tiene tarifa propia en AI_PRICING_TABLE (es audio, no texto): se usa la tarifa de
+    // Gemini como aproximación de visibilidad, no como coste exacto de facturación de audio.
+    let bandId: string | undefined;
+    try {
+      bandId = getTargetBandId(req);
+    } catch (e: any) {
+      console.warn("[AI Ledger] Sin banda activa para registrar consumo de Lyria:", e?.message || e);
+    }
+    if (bandId && usageMetadata) {
+      const promptTokens = usageMetadata.promptTokenCount || 0;
+      const completionTokens = usageMetadata.candidatesTokenCount || 0;
+      dbRecordAiUsage({
+        bandId,
+        promptTokens,
+        completionTokens,
+        modelName: "lyria-3-clip-preview",
+        estimatedCostEur: costEurFromTokens("gemini", promptTokens, completionTokens)
+      }).catch((err) => console.warn("[AI Ledger] No se pudo registrar consumo de Lyria:", err?.message || err));
     }
 
     return res.json({

@@ -41,7 +41,7 @@ describe('transactionalEmail', () => {
 
     const callArg = sendMock.mock.calls[0][0];
     expect(callArg.to).toBe('rockstar@example.com');
-    expect(callArg.subject).toContain('Bienvenido a BandManager.ai');
+    expect(callArg.subject).toContain('Bienvenido a BandManager.io');
     expect(callArg.html).toContain('Alex');
     expect(callArg.html).toContain('Los Roqueros');
   });

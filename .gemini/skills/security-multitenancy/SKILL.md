@@ -1,6 +1,6 @@
 ---
 name: security-multitenancy
-description: Guía de auditoría de seguridad y aislamiento multi-inquilino para Express y Supabase en BandManager.ai. Usar al modificar rutas de servidor, endpoints API o consultas a base de datos.
+description: Guía de auditoría de seguridad y aislamiento multi-inquilino para Express y Supabase en BandManager.io. Usar al modificar rutas de servidor, endpoints API o consultas a base de datos.
 ---
 
 # 🛡️ Skill: Seguridad & Aislamiento Multi-Inquilino (Multi-Tenancy Guard)

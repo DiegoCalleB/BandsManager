@@ -1,4 +1,4 @@
-# 📚 Context Folder - BandManager.ai Knowledge Base
+# 📚 Context Folder - BandManager.io Knowledge Base
 
 Este folder contiene toda la documentación estructurada del proyecto, organizada para agentes, skills, developers y cualquiera que necesite contexto.
 
@@ -13,7 +13,7 @@ Si usas **Claude Code, AI Studio, Copilot u otra herramienta IA**, lee primero [
 ### Para Agentes & Skills (Primero Esto)
 
 1. **→ `AGENT_CONTEXT.md`** (5 min) — Resumen ejecutivo. "Lo que todo agente debe saber."
-   - En 60 segundos: qué es BandManager.ai, stack, archivos clave
+   - En 60 segundos: qué es BandManager.io, stack, archivos clave
    - Checklist pre-push
    - Tareas comunes con links a archivos relevantes
 

@@ -74,7 +74,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string, bandNa
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>¡Bienvenido a BandManager.ai!</title>
+      <title>¡Bienvenido a BandManager.io!</title>
       <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 30px auto; background: #18181b; border: 1px solid #27272a; border-radius: 12px; overflow: hidden; }
@@ -116,7 +116,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string, bandNa
           </p>
         </div>
         <div class="footer">
-          &copy; ${new Date().getFullYear()} BandManager.ai. Todos los derechos reservados.
+          &copy; ${new Date().getFullYear()} BandManager.io. Todos los derechos reservados.
         </div>
       </div>
     </body>
@@ -125,7 +125,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string, bandNa
 
   return sendTransactionalEmail({
     to: toEmail,
-    subject: "🎸 ¡Bienvenido a BandManager.ai!",
+    subject: "🎸 ¡Bienvenido a BandManager.io!",
     html,
   });
 }
