@@ -307,9 +307,12 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
   stemsMemoryCache.set(cacheKey, { ...record, status: 'completed' });
 
   // 2. Guardar en L2 (Supabase)
+  // OJO: supabase-js no lanza en un error de base de datos (columna inexistente, restricción, etc.),
+  // devuelve { error } — hay que comprobarlo explícitamente o un fallo real (p.ej. PGRST204 por un
+  // esquema desincronizado) se registra como "guardado con éxito" mientras la fila real nunca cambia.
   try {
     const sb = getSupabase();
-    await sb
+    const { error } = await sb
       .from("song_stems_cache")
       .upsert({
         band_id: record.bandId,
@@ -326,10 +329,14 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
         song_title: record.songTitle || null,
         created_at: record.createdAt || nowIso
       }, { onConflict: "band_id,song_hash,engine" });
-    
+
+    if (error) {
+      throw new Error(`${error.code || ''} ${error.message}`.trim());
+    }
+
     console.log(`[Stems Cache] 💾 Guardado persistente L2 en Supabase para ${cacheKey}`);
   } catch (dbErr: any) {
-    console.warn(`[Stems Cache] No se pudo persistir en Supabase (L1 preservada): ${dbErr?.message || dbErr}`);
+    console.error(`[STEM_CACHE_PERSIST_FAILED_ALERT] 🚨 No se pudo persistir el resultado en Supabase para ${cacheKey} (L1 en memoria preservada, pero se perderá si el proceso reinicia): ${dbErr?.message || dbErr}`);
   }
 }
 
@@ -346,7 +353,7 @@ export async function markStemsSeparationFailed(
   stemsMemoryCache.delete(cacheKey);
   try {
     const sb = getSupabase();
-    await sb
+    const { error } = await sb
       .from("song_stems_cache")
       .update({
         status: 'failed',
@@ -355,6 +362,9 @@ export async function markStemsSeparationFailed(
       .eq("band_id", bandId)
       .eq("song_hash", songHash)
       .eq("engine", engine);
+    if (error) {
+      console.error(`[STEM_CACHE_MARK_FAILED_ALERT] 🚨 No se pudo marcar como fallido ${cacheKey} en Supabase: ${error.code || ''} ${error.message}`);
+    }
   } catch (e) {
     // Ignorar error al marcar fallo
   }
