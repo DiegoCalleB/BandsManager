@@ -658,7 +658,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       try {
         const aiResponse = await generateContentWithFallback(ai, {
           contents: prompt,
-          preferredModel: GEMINI_MODEL
+          preferredModel: GEMINI_MODEL,
+          userId: (req as any).user?.id
         });
 
         const parsed = extractJsonObject(aiResponse?.text);
@@ -1065,7 +1066,8 @@ Responde ÚNICAMENTE con JSON válido:
       try {
         const aiResponse = await generateContentWithFallback(ai, {
           contents: prompt,
-          preferredModel: GEMINI_MODEL
+          preferredModel: GEMINI_MODEL,
+          userId: (req as any).user?.id
         });
 
         const parsed = extractJsonObject(aiResponse?.text);

@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { dbRecordAiUsage } from "./db/aiLedger.js";
 
 export const GEMINI_MODEL = "gemini-3.7-flash";
 
@@ -99,6 +100,38 @@ export function calculatePitchCost(provider: string, inputText: string, outputTe
     costPer100EurFormatted: `${(costEur * 100).toFixed(3).replace(".", ",")} €`,
     costPer1000EurFormatted: `${(costEur * 1000).toFixed(2).replace(".", ",")} €`
   };
+}
+
+/** Coste real en EUR a partir de tokens ya conocidos (no estimados desde longitud de texto). */
+export function costEurFromTokens(provider: string, promptTokens: number, completionTokens: number): number {
+  const pricing = AI_PRICING_TABLE[provider] || AI_PRICING_TABLE.gemini;
+  const costUsd = ((promptTokens / 1_000_000) * pricing.inputPer1M) + ((completionTokens / 1_000_000) * pricing.outputPer1M);
+  return costUsd / EUR_USD_RATE;
+}
+
+/**
+ * Registra en el ledger de "Transparencia de Costes Dinámica" (server/db/aiLedger.ts) el
+ * consumo real de una llamada de IA. Va en fire-and-forget con su propio catch: un fallo de
+ * Supabase aquí no debe tirar abajo una respuesta de IA que ya se generó y le costó dinero real
+ * a la plataforma pedirla.
+ */
+function registrarConsumoIA(params: {
+  userId?: string;
+  provider: string;
+  modelName: string;
+  promptTokens: number;
+  completionTokens: number;
+}): void {
+  if (!params.userId || (!params.promptTokens && !params.completionTokens)) return;
+  dbRecordAiUsage({
+    userId: params.userId,
+    promptTokens: params.promptTokens,
+    completionTokens: params.completionTokens,
+    modelName: params.modelName,
+    estimatedCostEur: costEurFromTokens(params.provider, params.promptTokens, params.completionTokens)
+  }).catch((err) => {
+    console.warn("[AI Ledger] No se pudo registrar el consumo de IA:", err?.message || err);
+  });
 }
 
 export function getAvailableAIProviders() {
@@ -204,9 +237,11 @@ export async function generateContentWithFallback(
     permitirPitchLocal?: boolean;
     timeoutMs?: number;
     links?: PitchLinks;
+    /** Si se pasa, registra el consumo real de tokens de esta llamada en el ledger de IA. */
+    userId?: string;
   }
 ) {
-  const modelsToTry = params.preferredModel 
+  const modelsToTry = params.preferredModel
     ? [params.preferredModel, ...FALLBACK_MODELS.filter(m => m !== params.preferredModel)]
     : FALLBACK_MODELS;
 
@@ -228,6 +263,13 @@ export async function generateContentWithFallback(
       });
       if (response) {
         console.log(`[Gemini API] ¡Éxito con modelo: ${modelName}!`);
+        registrarConsumoIA({
+          userId: params.userId,
+          provider: "gemini",
+          modelName,
+          promptTokens: response.usageMetadata?.promptTokenCount || 0,
+          completionTokens: response.usageMetadata?.candidatesTokenCount || 0
+        });
         return response;
       }
     } catch (err: any) {
@@ -593,6 +635,8 @@ export async function generateUnifiedAI(params: {
   links?: PitchLinks;
   /** Email real de contacto de la banda, para firmar el pitch si cae al generador local. */
   contactEmail?: string;
+  /** Si se pasa, registra el consumo real de tokens de esta llamada en el ledger de IA. */
+  userId?: string;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -621,6 +665,7 @@ export async function generateUnifiedAI(params: {
         contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
         preferredModel: params.modelName || GEMINI_MODEL,
         timeoutMs: params.timeoutMs,
+        userId: params.userId,
         // OJO: sin permitirPitchLocal aquí a propósito. generateUnifiedAI ya tiene su propio
         // escalón de fallback local (más abajo) tras intentar también DeepSeek explícitamente;
         // activarlo en esta llamada interna haría que un fallo total de Gemini devolviera ya el
