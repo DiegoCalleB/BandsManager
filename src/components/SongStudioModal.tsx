@@ -4658,18 +4658,6 @@ export default function SongStudioModal({
 
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-white/10 bg-white/5 flex justify-between items-center text-xs text-neutral-400 font-mono">
-          <span>💡 Sube ideas de audio o superpone pistas (Overdub) para construir arreglos en grupo.</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold cursor-pointer"
-          >
-            Cerrar Studio
-          </button>
-        </div>
-
       </div>
 
       <SongStudioAiGeneratorModal
