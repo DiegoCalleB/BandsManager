@@ -6,6 +6,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 import path from "path";
 import fs from "fs";
+import os from "os";
 import crypto from "crypto";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -576,6 +577,42 @@ export const inFlightSeparations = new Map<string, Promise<{
  * (con fallback seguro en disco local), garantizando que las URLs efímeras de Replicate
  * o microservicios GPU nunca expiren para la banda.
  */
+/**
+ * Recomprime un buffer de audio a MP3 real (192kbps) vía FFmpeg antes de persistirlo.
+ * Los stems que devuelve Replicate llegan como WAV sin comprimir con extensión .mp3 en el
+ * nombre — un stem aislado de una canción entera puede pesar 40-80MB así, muy por encima del
+ * límite de 50MB del plan gratuito de Supabase Storage. Un MP3 real a 192kbps pesa una fracción
+ * de eso sin pérdida perceptible para un instrumento aislado de ensayo.
+ * Si la transcodificación falla por cualquier motivo, devuelve el buffer original sin tocar.
+ */
+async function transcodeBufferToMp3(buffer: Buffer): Promise<Buffer> {
+  const tmpId = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+  const inputPath = path.join(os.tmpdir(), `stem-in-${tmpId}`);
+  const outputPath = path.join(os.tmpdir(), `stem-out-${tmpId}.mp3`);
+
+  try {
+    fs.writeFileSync(inputPath, buffer);
+
+    await new Promise<void>((resolve, reject) => {
+      ffmpeg(inputPath)
+        .audioBitrate("192k")
+        .toFormat("mp3")
+        .output(outputPath)
+        .on("end", () => resolve())
+        .on("error", (err) => reject(err))
+        .run();
+    });
+
+    return fs.readFileSync(outputPath);
+  } catch (err: any) {
+    console.warn("[Neural Stems] No se pudo recomprimir el stem a MP3, se sube el buffer original:", err?.message || err);
+    return buffer;
+  } finally {
+    try { if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath); } catch {}
+    try { if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath); } catch {}
+  }
+}
+
 async function persistRawStemsMap(
   rawStemsMap: Record<string, string>,
   effectiveBandId: string,
@@ -599,12 +636,16 @@ async function persistRawStemsMap(
             const fileRes = await fetch(tempUrl, { signal: AbortSignal.timeout(45000) });
             if (fileRes.ok) {
               const arrayBuf = await fileRes.arrayBuffer();
-              sizeBytes = arrayBuf.byteLength;
-              const buffer = Buffer.from(arrayBuf);
+              const rawBuffer = Buffer.from(arrayBuf);
+              // Replicate devuelve WAV sin comprimir con extensi\u00f3n .mp3 en el nombre: un stem
+              // aislado de una canci\u00f3n entera puede superar los 50MB del l\u00edmite gratuito de
+              // Supabase Storage. Recomprimimos a MP3 real antes de subir.
+              const buffer = await transcodeBufferToMp3(rawBuffer);
+              sizeBytes = buffer.length;
               const instrumentClean = instrumentKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
               const filename = `stem-${instrumentClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}.mp3`;
               const storageSubPath = rutaAlmacenamientoStem(effectiveBandId, filename, effectiveHash);
-              
+
               // 1. Intentar guardar en Supabase Storage permanente
               const supabaseUrl = await uploadBufferToSupabase(buffer, storageSubPath, "audio/mpeg");
               if (supabaseUrl) {
