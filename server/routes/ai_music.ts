@@ -1080,8 +1080,11 @@ async function processMdx23Stems(
     // La versión pinneada de lucataco/mvsep-mdx23-music-separation devuelve el output como
     // array posicional (claves "0".."N"), no como objeto con nombres (vocals/drums/bass/...).
     // Sin este caso, el mapeo por nombre de abajo no encuentra nada y se descartan 6 stems
-    // ya generados y cobrados en Replicate. El orden posicional coincide con el mismo orden
-    // vocals/drums/bass/guitar/piano/other documentado para el ensemble de 6 fuentes.
+    // ya generados y cobrados en Replicate. El orden de 6 posiciones de abajo NO es el orden
+    // documentado en la ficha del modelo (esa describe el modelo base de 4 stems: bass, drums,
+    // vocals, other) — se verificó a oído con una separación real: índice 0 = bajo, 1 = batería,
+    // 2 = teclados (con algo de bleed de guitarra), 3 = voz, 4 = arreglos/mezcla residual,
+    // 5 = guitarras. Si Replicate cambia de versión del modelo, este orden habría que reverificarlo.
     const outKeys = Object.keys(out);
     const isPositionalArray = Array.isArray(out) || (outKeys.length > 0 && outKeys.every(k => /^\d+$/.test(k)));
 
@@ -1090,8 +1093,8 @@ async function processMdx23Stems(
         ? out
         : outKeys.sort((a, b) => Number(a) - Number(b)).map(k => out[k]);
       const positionalLabels: Record<number, string[]> = {
-        4: ['Voz', 'Batería', 'Bajo', 'Arreglos'],
-        6: ['Voz', 'Batería', 'Bajo', 'Guitarras', 'Teclados', 'Arreglos']
+        4: ['Bajo', 'Batería', 'Voz', 'Arreglos'],
+        6: ['Bajo', 'Batería', 'Teclados', 'Voz', 'Arreglos', 'Guitarras']
       };
       const labels = positionalLabels[values.length] || [];
       console.log(`[MDX23 Neural] Output posicional (array) de ${values.length} stems detectado. Mapeando por orden: ${labels.join(', ') || 'desconocido, se etiquetará genéricamente'}`);
