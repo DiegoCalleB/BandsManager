@@ -306,6 +306,11 @@ export default function SongStudioModal({
   const [aiTrackGenMode, setAiTrackGenMode] = useState<'presets' | 'custom'>('presets');
   const [aiTrackGenStyle, setAiTrackGenStyle] = useState<string>(AI_TRACK_STYLE_PRESETS[0].style);
   const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState<string>('');
+  // Segundo de la canción en el que debe empezar a sonar la pista generada — Lyria solo genera
+  // clips de ~30s fieles al contexto, así que en vez de pedirle una canción entera (peor
+  // resultado, ver commit anterior), dejamos elegir EN QUÉ PARTE de la canción encaja ese clip
+  // (p.ej. el puente en el minuto 1:45), colocándolo ahí en vez de siempre al principio.
+  const [aiTrackGenStartOffsetSec, setAiTrackGenStartOffsetSec] = useState<number>(0);
   const [aiTrackGenError, setAiTrackGenError] = useState<string | null>(null);
   const [aiTrackGenPreview, setAiTrackGenPreview] = useState<{
     audioUrl: string;
@@ -862,7 +867,11 @@ export default function SongStudioModal({
       instrumento: aiTrackGenInstrument,
       fecha: new Date().toISOString().split('T')[0],
       volumen: 1,
-      muted: false
+      muted: false,
+      // Negativo = retrasa la entrada de la pista en la mezcla (mismo campo que la corrección
+      // fina de latencia, reutilizado aquí para colocar el clip de ~30s en el punto de la canción
+      // que el usuario eligió en vez de siempre al principio).
+      desfaseMs: aiTrackGenStartOffsetSec > 0 ? -(aiTrackGenStartOffsetSec * 1000) : 0
     };
 
     const updatedIdeas = (song.audioIdeas || []).map(i =>
@@ -873,6 +882,7 @@ export default function SongStudioModal({
     setShowAiTrackGenModal(null);
     setAiTrackGenPreview(null);
     setAiTrackGenPrompt('');
+    setAiTrackGenStartOffsetSec(0);
   };
 
   // Studio Fullscreen Mode State & Handler
@@ -1258,6 +1268,17 @@ export default function SongStudioModal({
     const m = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  // Bajo ~1s siguen siendo micro-correcciones de latencia (+Nms); por encima es una pista (p.ej.
+  // IA) colocada deliberadamente más adelante en la canción, así que se lee mejor como timestamp.
+  const formatDesfase = (ms?: number) => {
+    const val = ms || 0;
+    if (val === 0) return '0ms';
+    if (Math.abs(val) >= 1000) {
+      return val < 0 ? `empieza en ${formatTime(-val / 1000)}` : `+${(val / 1000).toFixed(1)}s`;
+    }
+    return val > 0 ? `+${val}ms` : `${val}ms`;
   };
 
   // Cue Loop Helper Functions
@@ -3638,6 +3659,7 @@ export default function SongStudioModal({
                               e.stopPropagation();
                               setAiTrackGenPreview(null);
                               setAiTrackGenError(null);
+                              setAiTrackGenStartOffsetSec(0);
                               setShowAiTrackGenModal(idea);
                             }}
                             className="p-1.5 rounded-lg text-purple-300 hover:bg-purple-950/40 transition-all cursor-pointer"
@@ -3989,7 +4011,7 @@ export default function SongStudioModal({
                                   {/* Active DSP Badge (shows if desfase or pan or EQ is active) */}
                                   {(tr.desfaseMs || 0) !== 0 && (
                                     <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
-                                      ⏱️ {tr.desfaseMs && tr.desfaseMs > 0 ? `+${tr.desfaseMs}ms` : `${tr.desfaseMs}ms`}
+                                      ⏱️ {formatDesfase(tr.desfaseMs)}
                                     </span>
                                   )}
 
@@ -4154,7 +4176,7 @@ export default function SongStudioModal({
                                   <div className="space-y-1.5">
                                     <div className="flex items-center justify-between gap-2">
                                       <span className="text-amber-400 font-bold flex items-center gap-1" title="Ajuste fino de latencia en milisegundos (-adelantar/+atrasar)">
-                                        ⏱️ Desfase de Latencia: <span className="text-white">{tr.desfaseMs && tr.desfaseMs > 0 ? `+${tr.desfaseMs}ms` : `${tr.desfaseMs || 0}ms`}</span>
+                                        ⏱️ Desfase de Latencia: <span className="text-white">{formatDesfase(tr.desfaseMs)}</span>
                                       </span>
 
                                       <div className="flex items-center gap-1">
@@ -5334,6 +5356,25 @@ export default function SongStudioModal({
                   <option value="Violín / Cuerdas">🎻 Violín Solista / Arreglo de Cuerdas</option>
                   <option value="Acordeón">🪗 Acordeón Balkan / Folclórico</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-purple-300 font-mono font-bold mb-1.5 flex items-center justify-between">
+                  <span>¿En qué momento de la canción debe empezar a sonar?</span>
+                  <span className="text-white bg-black/60 px-2 py-0.5 rounded-lg text-[11px]">{formatTime(aiTrackGenStartOffsetSec)}</span>
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={Math.max(0, (song.duracionSegundos || 180) - 5)}
+                  step={1}
+                  value={aiTrackGenStartOffsetSec}
+                  onChange={(e) => setAiTrackGenStartOffsetSec(Number(e.target.value))}
+                  className="w-full accent-purple-500"
+                />
+                <p className="text-[10px] text-neutral-400 font-sans mt-1">
+                  Lyria solo genera clips fieles al contexto de ~30s — en vez de forzar una canción entera, elige aquí la sección donde mejor encaje (ej. el puente en 1:45) y se colocará ahí en la mezcla.
+                </p>
               </div>
 
               {/* Pestañas Presets / Personalizado */}

@@ -478,8 +478,14 @@ export const exportMasterMixAudioBlob = async (
 
       const arrBuf = await res.arrayBuffer();
       const audioBuf = await tempCtx.decodeAudioData(arrBuf);
+      // desfaseMs negativo retrasa la ENTRADA de la pista en la mezcla (usado para colocar pistas
+      // generadas por IA en un punto concreto de la canción, no solo micro-ajustes de latencia) —
+      // igual que ya interpreta la reproducción en vivo. Antes solo se contaba la duración extra
+      // cuando el desfase era positivo, así que una pista retrasada se podía cortar al final del
+      // render por quedarse corto el buffer total.
       const offsetSec = (tr.desfaseMs || 0) / 1000;
-      const trackEndSec = audioBuf.duration + Math.max(0, offsetSec);
+      const entryDelaySec = offsetSec < 0 ? -offsetSec : 0;
+      const trackEndSec = audioBuf.duration + entryDelaySec;
       if (trackEndSec > maxTotalDuration) {
         maxTotalDuration = trackEndSec;
       }
@@ -556,9 +562,14 @@ export const exportMasterMixAudioBlob = async (
       gainNode.connect(masterLimiter);
     }
 
-    // Start timestamp with latency offset shift
-    const startOffsetSec = Math.max(0, (input.desfaseMs || 0) / 1000);
-    source.start(startOffsetSec);
+    // desfaseMs > 0: la pista se adelanta dentro de su propio audio (micro-corrección de latencia
+    // clásica). desfaseMs < 0: la pista se retrasa en la mezcla — arranca más tarde en el render,
+    // desde el principio de su propio audio (usado para colocar pistas de IA en un punto concreto
+    // de la canción). Mismo criterio que la reproducción en vivo (ver SongStudioModal).
+    const desfaseSec = (input.desfaseMs || 0) / 1000;
+    const renderStartSec = desfaseSec < 0 ? -desfaseSec : 0;
+    const bufferOffsetSec = desfaseSec > 0 ? Math.min(desfaseSec, Math.max(0, buffer.duration - 0.01)) : 0;
+    source.start(renderStartSec, bufferOffsetSec);
   });
 
   // 4. Render master mix buffer offline
