@@ -22,6 +22,7 @@ import { useStudioShareModal } from '../hooks/useStudioShareModal';
 import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
+import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { 
@@ -2807,6 +2808,35 @@ export default function SongStudioModal({
                   <Sparkles className={`w-3.5 h-3.5 ${song.favoritoGeneral ? 'text-amber-400 fill-amber-400' : ''}`} />
                   <span>{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
                 </button>
+
+                {/* Mi nivel de preparación con esta canción — cada miembro opina por sí mismo, no
+                    es un estado global (ya existe song.estadoTema para eso). Sirve para que quien
+                    lleva la banda vea de un vistazo quién necesita repasar antes del bolo. */}
+                {(() => {
+                  const myKey = currentUser?.id || currentUser?.username;
+                  const myName = currentUser?.name || currentUser?.username || currentUsername;
+                  const myReadiness = getMemberReadiness(song, myKey, myName);
+                  const levelInfo = READINESS_LEVELS.find(l => l.value === myReadiness);
+                  return (
+                    <select
+                      value={myReadiness || ''}
+                      onChange={(e) => {
+                        const val = e.target.value as ReadinessLevel;
+                        if (!val) return;
+                        onUpdateSong({ ...song, notasPorMiembro: withMemberReadiness(song, myKey, myName, val) });
+                      }}
+                      title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
+                      className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold border cursor-pointer outline-none ${
+                        levelInfo ? levelInfo.colorClass : 'bg-white/5 text-neutral-400 border-white/10'
+                      }`}
+                    >
+                      <option value="" disabled>Mi preparación...</option>
+                      {READINESS_LEVELS.map(l => (
+                        <option key={l.value} value={l.value}>{l.icon} {l.label}</option>
+                      ))}
+                    </select>
+                  );
+                })()}
 
                 {/* Menú Desplegable de Herramientas Secundarias */}
                 <div className="relative">

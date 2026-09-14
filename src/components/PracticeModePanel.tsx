@@ -1,10 +1,37 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale } from 'lucide-react';
+import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer } from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
 import { matchInstrumentToStemCategory } from '../config/stemInstruments';
 import { apiFetch } from '../utils/api';
+import { useTonePitchShift } from '../hooks/useTonePitchShift';
+import { transposeChordToken } from '../utils/chordUtils';
+
+const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
+
+/** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
+ *  el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
+ *  pistas a la vez, y los hooks no se pueden llamar dentro de un .map(), así que cada pista tiene
+ *  su propia instancia de este componente — se queda montado siempre (aunque semitones sea 0) para
+ *  no desconectar el audio de la pista a media sesión (ver comentario en TrackPitchShiftBridges). */
+function TrackPitchShiftBridge({ audioElement, semitones }: { audioElement: HTMLAudioElement | null; semitones: number }) {
+  useTonePitchShift({ audioElement, semitones });
+  return null;
+}
+
+function scheduleMetronomeClick(ctx: AudioContext, time: number, accent: boolean) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.frequency.value = accent ? 1500 : 1000;
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.exponentialRampToValueAtTime(accent ? 0.9 : 0.6, time + 0.005);
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.05);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(time);
+  osc.stop(time + 0.06);
+}
 
 /**
  * Sala de ensayo individual: mezcla 100% local (nunca toca `song`/onUpdateSong) para que
@@ -63,6 +90,17 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const [isExporting, setIsExporting] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const [isAutoBalancing, setIsAutoBalancing] = useState(false);
+  const [semitonesOffset, setSemitonesOffset] = useState(0);
+  const [metronomeOn, setMetronomeOn] = useState(false);
+  // Se incrementa cada vez que ensureAudioLoaded crea elementos <audio> nuevos, para forzar un
+  // re-render y que los puentes de trasposición (TrackPitchShiftBridge) reciban el elemento real
+  // en vez del null inicial — audioRefs es un ref, mutarlo no dispara render por sí solo.
+  const [, setAudioReadyTick] = useState(0);
+
+  const metronomeCtxRef = useRef<AudioContext | null>(null);
+  const metronomeTimerRef = useRef<number | null>(null);
+  const metronomeNextClickTimeRef = useRef<number>(0);
+  const metronomeBeatCounterRef = useRef<number>(0);
 
   const [chordsByTrack, setChordsByTrack] = useState<Record<string, TrackChordsResult>>({});
   const [loadingChordsTrackId, setLoadingChordsTrackId] = useState<string | null>(null);
@@ -85,6 +123,8 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     setLoopA(null);
     setLoopB(null);
     setSpeed(1);
+    setSemitonesOffset(0);
+    setMetronomeOn(false);
   }, [storageKey]);
 
   // Persistir la mezcla personal (solo en este dispositivo, nunca en el documento de la canción)
@@ -184,12 +224,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   };
 
   const ensureAudioLoaded = useCallback(async () => {
+    let createdAny = false;
     for (const tr of tracks) {
       let el = audioRefs.current[tr.id];
       if (!el) {
         el = new Audio();
         el.preload = 'auto';
         audioRefs.current[tr.id] = el;
+        createdAny = true;
       }
       if (!el.src || el.src === '' || el.src.endsWith('undefined')) {
         try {
@@ -200,7 +242,59 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
         }
       }
     }
+    if (createdAny) setAudioReadyTick(t => t + 1);
   }, [tracks]);
+
+  // Recalcula en qué instante exacto (reloj de AudioContext) debería sonar el próximo clic del
+  // metrónomo para que coincida con `atTime` de la reproducción — se llama al arrancar, al cambiar
+  // de velocidad/BPM y en cada salto (seek, bucle A/B) para que nunca se desincronice.
+  const resyncMetronomeAt = useCallback((atTime: number) => {
+    if (!metronomeCtxRef.current) {
+      metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    const ctx = metronomeCtxRef.current;
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    const secPerBeat = 60 / (song.bpm || 120) / speed;
+    const nextBeatIndex = Math.ceil(atTime / secPerBeat);
+    metronomeBeatCounterRef.current = nextBeatIndex;
+    metronomeNextClickTimeRef.current = ctx.currentTime + (nextBeatIndex * secPerBeat - atTime);
+  }, [song.bpm, speed]);
+
+  const metronomeSchedulerTick = useCallback(() => {
+    const ctx = metronomeCtxRef.current;
+    if (!ctx) return;
+    const secPerBeat = 60 / (song.bpm || 120) / speed;
+    const lookaheadSec = 0.1;
+    while (metronomeNextClickTimeRef.current < ctx.currentTime + lookaheadSec) {
+      const accent = metronomeBeatCounterRef.current % 4 === 0;
+      scheduleMetronomeClick(ctx, metronomeNextClickTimeRef.current, accent);
+      metronomeNextClickTimeRef.current += secPerBeat;
+      metronomeBeatCounterRef.current += 1;
+    }
+  }, [song.bpm, speed]);
+
+  // Arranca/para el metrónomo y lo re-sincroniza cada vez que cambian play/pausa, la velocidad de
+  // práctica o el BPM de la canción (un seek suelto lo gestiona seekAll, más abajo, sin reiniciar
+  // el intervalo entero).
+  useEffect(() => {
+    if (metronomeOn && isPlaying) {
+      resyncMetronomeAt(currentTime);
+      if (metronomeTimerRef.current) window.clearInterval(metronomeTimerRef.current);
+      metronomeTimerRef.current = window.setInterval(metronomeSchedulerTick, 25);
+    } else if (metronomeTimerRef.current) {
+      window.clearInterval(metronomeTimerRef.current);
+      metronomeTimerRef.current = null;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metronomeOn, isPlaying, speed, song.bpm]);
+
+  const effectiveSemitones = useMemo(() => {
+    if (semitonesOffset === 0) return 0;
+    // La velocidad de práctica ya cambia el tono de forma natural (playbackRate). Compensamos ese
+    // desvío para que "+2 semitonos" siga significando "+2 respecto al tono ORIGINAL" sin importar
+    // a qué velocidad estés ensayando.
+    return semitonesOffset - 12 * Math.log2(speed);
+  }, [semitonesOffset, speed]);
 
   // Carga inicial + limpieza total al cambiar de idea o desmontar
   useEffect(() => {
@@ -208,16 +302,24 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     return () => {
       Object.values(audioRefs.current).forEach(el => { if (el) { el.pause(); el.src = ''; } });
       audioRefs.current = {};
+      if (metronomeTimerRef.current) {
+        window.clearInterval(metronomeTimerRef.current);
+        metronomeTimerRef.current = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idea.id]);
 
   const seekAll = useCallback((time: number) => {
+    const clamped = Math.max(0, time);
     Object.values(audioRefs.current).forEach(el => {
-      if (el) { try { el.currentTime = Math.max(0, time); } catch {} }
+      if (el) { try { el.currentTime = clamped; } catch {} }
     });
-    setCurrentTime(Math.max(0, time));
-  }, []);
+    setCurrentTime(clamped);
+    if (metronomeOn && isPlaying) {
+      resyncMetronomeAt(clamped);
+    }
+  }, [metronomeOn, isPlaying, resyncMetronomeAt]);
 
   // La primera pista actúa de "líder" de tiempo: de ahí sale el playhead y el chequeo de loop.
   useEffect(() => {
@@ -354,6 +456,12 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const cardBg = isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-950/60 border-neutral-800/80';
 
   return (
+    <>
+      {/* Puentes de trasposición: uno por pista, siempre montados (ver comentario en
+          TrackPitchShiftBridge más arriba — desmontarlos a mitad de sesión dejaría esa pista muda). */}
+      {tracks.map(tr => (
+        <TrackPitchShiftBridge key={tr.id} audioElement={audioRefs.current[tr.id] || null} semitones={effectiveSemitones} />
+      ))}
     <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
       <div className={`w-full max-w-2xl rounded-2xl shadow-2xl border overflow-hidden flex flex-col max-h-[90vh] ${panelBg}`}>
         {/* Header */}
@@ -452,6 +560,42 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
                     Quitar
                   </button>
                 )}
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <ArrowUpDown className="w-3.5 h-3.5 text-neutral-400" />
+                <span className="text-[10px] font-mono text-neutral-400">Tono</span>
+                <select
+                  value={semitonesOffset}
+                  onChange={(e) => setSemitonesOffset(Number(e.target.value))}
+                  title="Trasposición de tono en tiempo real — útil para ensayar en el tono acordado para un bolo concreto"
+                  className={`text-xs font-mono rounded-lg px-2 py-1 outline-none ${isStitchLight ? 'bg-white border border-slate-200' : 'bg-neutral-900 border border-neutral-700'} ${semitonesOffset !== 0 ? 'text-sky-400 font-bold' : ''}`}
+                >
+                  {TRANSPOSE_SEMITONE_OPTIONS.map(st => {
+                    const origKey = song.tonalidad?.trim();
+                    let label = st > 0 ? `+${st} st` : st < 0 ? `${st} st` : '0 (Original)';
+                    if (origKey) {
+                      const notation = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(origKey) ? 'ES' : 'EN';
+                      const targetKey = transposeChordToken(origKey, st, notation);
+                      label = st === 0 ? `${origKey} (Original)` : `${targetKey} (${st > 0 ? `+${st}` : st} st)`;
+                    }
+                    return <option key={st} value={st}>{label}</option>;
+                  })}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setMetronomeOn(v => !v)}
+                  title={`Metrónomo sincronizado a ${song.bpm || 120} BPM`}
+                  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-lg border ${
+                    metronomeOn
+                      ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                      : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  <Timer className="w-3.5 h-3.5" /> {song.bpm || 120} BPM
+                </button>
               </div>
             </div>
           </div>
@@ -583,5 +727,6 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
         </div>
       </div>
     </div>
+    </>
   );
 }

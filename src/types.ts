@@ -650,6 +650,10 @@ export interface MemberSongNote {
   instrument?: string;
   nota: string;
   updatedAt?: string;
+  /** Nivel de preparación de ESTE miembro con la canción, de cara a tocarla en directo — no es un
+   *  estado global de la canción (ya existe Song.estadoTema para eso), sino "¿yo, en concreto, ya
+   *  me la sé?", para que quien lleve la banda vea de un vistazo quién necesita repasar antes del bolo. */
+  estadoPreparacion?: 'aprendiendo' | 'casi_lista' | 'lista';
 }
 
 export interface Song {
