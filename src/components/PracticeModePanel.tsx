@@ -230,6 +230,11 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
       if (!el) {
         el = new Audio();
         el.preload = 'auto';
+        // Hay que fijar esto ANTES de asignar el .src: si se hace después (como hace, a la fuerza,
+        // useTonePitchShift la primera vez que activas la trasposición), el navegador ya ha
+        // empezado a pedir el audio sin modo CORS y createMediaElementSource() se queda mudo para
+        // esa pista el resto de la sesión, sin lanzar ningún error visible.
+        el.crossOrigin = 'anonymous';
         audioRefs.current[tr.id] = el;
         createdAny = true;
       }
