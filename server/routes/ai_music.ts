@@ -2326,42 +2326,42 @@ router.post("/ai-generate-instrument-track", requireAuth, iaRateLimiter, async (
     const { instrument, songTitle, sectionName, bpm, key, style, lyrics, contextPrompt, targetDurationSec } = req.body;
 
     const requestedInst = instrument || "Guitarra Solista";
-    // lyria-3-pro-preview soporta canciones completas (hasta ~3 min) frente a lyria-3-clip-preview,
-    // que SIEMPRE genera 30s fijos sin importar lo que se le pida — por eso una pista de acompañamiento
-    // se quedaba corta frente a la duración real del tema. Pedimos duración explícita en el prompt
-    // (los modelos Lyria no tienen un parámetro de config para esto, solo se controla por texto),
-    // acotada al techo real del modelo Pro.
-    const clampedDurationSec = Math.max(30, Math.min(175, Number(targetDurationSec) || 0)) || undefined;
-    const fullPrompt = `Compose and generate a high quality studio arrangement track for the instrument: "${requestedInst}".
+    const basePrompt = `Compose and generate a high quality studio arrangement track for the instrument: "${requestedInst}".
 Musical context:
 - Song Title: "${songTitle || 'Canción de la Banda'}"
 - Active Section: "${sectionName || 'Estribillo'}"
 - Tempo: ${bpm || 120} BPM
 - Key: "${key || 'La menor / Am'}"
 - Style: "${style || 'Rock / Balkan Ska / Pop'}"
-- Specific instructions: "${contextPrompt || 'Arreglo virtuosista, melódico y dinámico que encaje a la perfección con la sección'}"
-- Target duration: ${clampedDurationSec ? `generate a FULL ${clampedDurationSec}-second track that covers the entire song, not just a short intro clip` : 'generate as long a complete track as the model allows, not just a short intro clip'}`;
+- Specific instructions: "${contextPrompt || 'Arreglo virtuosista, melódico y dinámico que encaje a la perfección con la sección'}"`;
 
     let audioBase64 = "";
     let mimeType = "audio/wav";
     let arrangementNotes = "";
-    let modelUsed = "lyria-3-pro-preview";
+    // lyria-3-clip-preview es el motor principal: en pruebas reales encaja mucho mejor con la
+    // tonalidad/tempo/estilo pedidos que lyria-3-pro-preview, aunque este último soporte pistas
+    // más largas — de nada sirve una pista de 3 minutos si suena a otra canción. Se queda en 30s
+    // fijos (limitación del propio modelo), y solo si falla del todo probamos Pro con una
+    // instrucción de duración explícita, priorizando "algo largo" sobre "nada" en ese caso extremo.
+    let modelUsed = "lyria-3-clip-preview";
 
     try {
-      const result = await callLyriaWithRetries(modelUsed, fullPrompt, 2);
+      const result = await callLyriaWithRetries(modelUsed, basePrompt, 2);
       audioBase64 = result.audioBase64;
       mimeType = result.mimeType;
       arrangementNotes = result.arrangementNotes;
-    } catch (lyriaProErr) {
-      console.warn(`Lyria ${modelUsed} falló tras reintentos, probando fallback a lyria-3-clip-preview (30s fijos):`, lyriaProErr);
-      modelUsed = "lyria-3-clip-preview";
+    } catch (lyriaClipErr) {
+      console.warn(`Lyria ${modelUsed} falló tras reintentos, probando fallback a lyria-3-pro-preview (más duración, pero menos fiel al contexto en pruebas):`, lyriaClipErr);
+      modelUsed = "lyria-3-pro-preview";
+      const clampedDurationSec = Math.max(30, Math.min(175, Number(targetDurationSec) || 0)) || undefined;
+      const proPrompt = `${basePrompt}\n- Target duration: ${clampedDurationSec ? `generate a FULL ${clampedDurationSec}-second track that covers the entire song, not just a short intro clip` : 'generate as long a complete track as the model allows, not just a short intro clip'}`;
       try {
-        const result = await callLyriaWithRetries(modelUsed, fullPrompt, 2);
+        const result = await callLyriaWithRetries(modelUsed, proPrompt, 2);
         audioBase64 = result.audioBase64;
         mimeType = result.mimeType;
         arrangementNotes = result.arrangementNotes;
-      } catch (lyriaClipErr) {
-        console.warn("Lyria API call error (ambos modelos, con reintentos), fall-back a explicación de texto de Gemini:", lyriaClipErr);
+      } catch (lyriaProErr) {
+        console.warn("Lyria API call error (ambos modelos, con reintentos), fall-back a explicación de texto de Gemini:", lyriaProErr);
       }
     }
 
