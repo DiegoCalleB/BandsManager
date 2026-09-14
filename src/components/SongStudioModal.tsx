@@ -26,7 +26,7 @@ import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
-  ThumbsUp, Plus, Music, User, Sparkles, Trash2, Send, Disc,
+  ThumbsUp, Plus, Music, User as UserIcon, Sparkles, Trash2, Send, Disc,
   Layers, Sliders, Edit2, Check, Radio, Wand2, RefreshCw, FileText, Keyboard,
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
   Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
@@ -3386,7 +3386,7 @@ export default function SongStudioModal({
                               )}
                             </h4>
                           <span className="text-[11px] text-neutral-400 font-mono flex items-center gap-1 mt-0.5">
-                            <User className="w-3 h-3 text-indigo-400" />
+                            <UserIcon className="w-3 h-3 text-indigo-400" />
                             {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''} • {idea.fecha}
                           </span>
                         </div>
