@@ -1069,7 +1069,7 @@ export default function SongStudioModal({
           eqMid.connect(eqHigh);
           eqHigh.connect(gainNode);
           gainNode.connect(panNode);
-          panNode.connect(ctx.destination);
+          panNode.connect(getOrCreateMasterGain(ctx));
 
           // Keep HTMLAudioElement volume at 1.0 so GainNode controls volume without HTMLAudioElement stutter
           el.volume = 1.0;
@@ -1127,7 +1127,7 @@ export default function SongStudioModal({
           gain.gain.setValueAtTime(0.3, ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
           osc.connect(gain);
-          gain.connect(ctx.destination);
+          gain.connect(getOrCreateMasterGain(ctx));
           osc.start(ctx.currentTime);
           osc.stop(ctx.currentTime + 0.09);
         } catch (_) {}
@@ -1239,6 +1239,26 @@ export default function SongStudioModal({
   const studioAudioCtxRef = useRef<AudioContext | null>(null);
   const syncAnimationFrameRef = useRef<number | null>(null);
   const playingIdeaIdRef = useRef<string | null>(null);
+
+  // Volumen master de salida del Studio — control personal de escucha (nunca se guarda en song,
+  // no es parte de la mezcla de la banda, solo cuánto suena EN TU dispositivo mientras trabajas).
+  // Todas las pistas se conectan a este gain compartido en vez de ir directas a ctx.destination.
+  const [masterVolume, setMasterVolume] = useState<number>(1);
+  const masterGainNodeRef = useRef<GainNode | null>(null);
+  const getOrCreateMasterGain = (ctx: AudioContext): GainNode => {
+    if (!masterGainNodeRef.current || masterGainNodeRef.current.context !== ctx) {
+      const g = ctx.createGain();
+      g.gain.value = masterVolume;
+      g.connect(ctx.destination);
+      masterGainNodeRef.current = g;
+    }
+    return masterGainNodeRef.current;
+  };
+  useEffect(() => {
+    if (masterGainNodeRef.current) {
+      masterGainNodeRef.current.gain.value = masterVolume;
+    }
+  }, [masterVolume]);
 
   const ideasList = song.audioIdeas || [];
 
@@ -2972,6 +2992,27 @@ export default function SongStudioModal({
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Volumen master de salida — control personal de escucha, no se guarda en la canción */}
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10" title="Volumen master de salida (solo tu escucha, no afecta a la mezcla de la banda)">
+              <button
+                type="button"
+                onClick={() => setMasterVolume(v => v > 0 ? 0 : 1)}
+                className="text-neutral-300 hover:text-white cursor-pointer shrink-0"
+              >
+                {masterVolume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+              <input
+                type="range"
+                min={0}
+                max={1.5}
+                step={0.01}
+                value={masterVolume}
+                onChange={(e) => setMasterVolume(Number(e.target.value))}
+                className="w-20 accent-amber-500"
+              />
+              <span className="text-[10px] font-mono text-neutral-400 w-8 text-right">{Math.round(masterVolume * 100)}%</span>
+            </div>
+
             <button
               type="button"
               onClick={toggleIsFullScreen}
