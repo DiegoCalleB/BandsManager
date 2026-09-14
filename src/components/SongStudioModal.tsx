@@ -2692,6 +2692,37 @@ export default function SongStudioModal({
     });
   };
 
+  // Duplica una idea (con todas sus pistas/stems) como una nueva versión independiente, para
+  // probar un arreglo distinto sin tocar ni arriesgar la versión que ya está validada por la
+  // banda. Empieza sin votos ni comentarios propios: es una idea nueva, no un historial compartido.
+  const handleDuplicateIdea = (e: React.MouseEvent, ideaId: string) => {
+    e.stopPropagation();
+    const ideas = song.audioIdeas || [];
+    const original = ideas.find(i => i.id === ideaId);
+    if (!original) return;
+
+    const baseTitle = original.titulo.replace(/\s+\(v\d+\)$/i, '');
+    const versionCount = ideas.filter(i => i.titulo === baseTitle || i.titulo.startsWith(`${baseTitle} (v`)).length;
+    const newIdeaId = `idea-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const clonedTracks: AudioTrack[] = getIdeaTracks(original).map((t, idx) => ({
+      ...t,
+      id: `${newIdeaId}-track-${idx + 1}`
+    }));
+
+    const duplicated: SongAudioIdea = {
+      ...original,
+      id: newIdeaId,
+      titulo: `${baseTitle} (v${versionCount + 1})`,
+      pistas: clonedTracks,
+      subidoPor: currentUsername,
+      fecha: new Date().toLocaleDateString('es-ES'),
+      votos: [],
+      comentarios: []
+    };
+
+    onUpdateSong({ ...song, audioIdeas: [...ideas, duplicated] });
+  };
+
   // Delete comment from idea
   const handleDeleteComment = (idea: SongAudioIdea, commentId: string) => {
     setConfirmDeleteModal({
@@ -3479,6 +3510,16 @@ export default function SongStudioModal({
                             title="Exportar mezcla completa en .WAV"
                           >
                             <Disc className={`w-4 h-4 ${isExportingMaster ? 'animate-spin' : ''}`} />
+                          </button>
+
+                          {/* Duplicate as new version (fork) */}
+                          <button
+                            type="button"
+                            onClick={(e) => handleDuplicateIdea(e, idea.id)}
+                            className="p-1.5 rounded-lg text-sky-300 hover:bg-sky-950/40 transition-all cursor-pointer"
+                            title="Duplicar como nueva versión (prueba un arreglo distinto sin tocar este)"
+                          >
+                            <Copy className="w-4 h-4" />
                           </button>
 
                           {/* Delete */}

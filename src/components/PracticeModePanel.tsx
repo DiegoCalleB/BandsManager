@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale } from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
-import { exportMasterMixAudioBlob, MasterMixTrackInput } from '../utils/audioLatency';
+import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
 import { matchInstrumentToStemCategory } from '../config/stemInstruments';
 import { apiFetch } from '../utils/api';
 
@@ -62,6 +62,7 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const [duration, setDuration] = useState(0);
   const [isExporting, setIsExporting] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [isAutoBalancing, setIsAutoBalancing] = useState(false);
 
   const [chordsByTrack, setChordsByTrack] = useState<Record<string, TrackChordsResult>>({});
   const [loadingChordsTrackId, setLoadingChordsTrackId] = useState<string | null>(null);
@@ -143,6 +144,30 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const setTrackVolume = (trackId: string, vol: number) => setOverride(trackId, { volumen: vol });
 
   const resetOverrides = () => setOverrides({});
+
+  // Analiza el volumen real (RMS) de cada pista y nivela los faders de "Mi mezcla" para que
+  // ningún instrumento se pierda bajo otro más fuerte. Solo afecta a tu mezcla local: nunca toca
+  // song/onUpdateSong, así que es 100% seguro repetirlo o deshacerlo con "Restablecer".
+  const handleAutoBalance = async () => {
+    setIsAutoBalancing(true);
+    try {
+      const volumes = await computeAutoBalanceVolumes(
+        tracks.map(t => ({ id: t.id, audioUrl: t.audioUrl })),
+        resolveAudioUrl
+      );
+      setOverrides(prev => {
+        const next = { ...prev };
+        for (const [trackId, volumen] of Object.entries(volumes)) {
+          next[trackId] = { ...next[trackId], volumen };
+        }
+        return next;
+      });
+    } catch (err) {
+      console.warn('[Practice Mode] Auto-Balance falló:', err);
+    } finally {
+      setIsAutoBalancing(false);
+    }
+  };
 
   const applyPresetPracticeWithBand = () => {
     if (!myTrack) return;
@@ -435,9 +460,20 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono font-semibold text-neutral-400 uppercase">Mi mezcla (solo la ves tú)</span>
-              <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-neutral-400 hover:text-white">
-                <RotateCcw className="w-3 h-3" /> Restablecer
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleAutoBalance}
+                  disabled={isAutoBalancing}
+                  title="Analiza el volumen real de cada pista y nivela los faders automáticamente"
+                  className="flex items-center gap-1 text-[10px] font-mono text-sky-400 hover:text-sky-300 disabled:opacity-50"
+                >
+                  {isAutoBalancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Scale className="w-3 h-3" />}
+                  {isAutoBalancing ? 'Analizando...' : 'Auto-Balance'}
+                </button>
+                <button onClick={resetOverrides} className="flex items-center gap-1 text-[10px] font-mono text-neutral-400 hover:text-white">
+                  <RotateCcw className="w-3 h-3" /> Restablecer
+                </button>
+              </div>
             </div>
             {tracks.map(tr => {
               const eff = getEffective(tr);

@@ -570,3 +570,65 @@ export const exportMasterMixAudioBlob = async (
   return audioBufferToWavBlob(renderedBuffer);
 };
 
+export interface AutoBalanceTrackInput {
+  id: string;
+  audioUrl: string;
+}
+
+/**
+ * Analiza el RMS real de cada pista (no el pico, que engaña con transitorios) y devuelve el
+ * volumen sugerido (0-1) para nivelarlas todas al oído de la más floja — típicamente un bajo o
+ * una voz grabada de más lejos que una batería a saco. Solo puede atenuar, nunca subir por
+ * encima de 1.0: el fader no tiene margen para "amplificar" una pista floja sin clipping real,
+ * así que la nivelación va siempre hacia abajo respecto a la pista más silenciosa del grupo.
+ */
+export const computeAutoBalanceVolumes = async (
+  tracks: AutoBalanceTrackInput[],
+  resolveUrlFn?: (url: string) => Promise<string>
+): Promise<Record<string, number>> => {
+  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const rmsById: Record<string, number> = {};
+
+  try {
+    for (const tr of tracks) {
+      try {
+        const resolved = resolveUrlFn ? await resolveUrlFn(tr.audioUrl) : tr.audioUrl;
+        const res = await fetch(resolved);
+        const arrBuf = await res.arrayBuffer();
+        const buffer = await tempCtx.decodeAudioData(arrBuf);
+
+        let sumSquares = 0;
+        let sampleCount = 0;
+        for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+          const data = buffer.getChannelData(ch);
+          // Muestreo cada N samples: con canciones de varios minutos no hace falta recorrer
+          // cada sample para tener una estimación de RMS fiable, y así no bloqueamos el hilo.
+          const step = Math.max(1, Math.floor(data.length / 200000));
+          for (let i = 0; i < data.length; i += step) {
+            sumSquares += data[i] * data[i];
+            sampleCount++;
+          }
+        }
+        rmsById[tr.id] = sampleCount > 0 ? Math.sqrt(sumSquares / sampleCount) : 0;
+      } catch (err) {
+        console.warn('[Auto-Balance] No se pudo analizar la pista para nivelar volumen:', tr.audioUrl, err);
+      }
+    }
+  } finally {
+    tempCtx.close();
+  }
+
+  const SILENCE_FLOOR = 0.0005;
+  const validRms = Object.values(rmsById).filter(v => v > SILENCE_FLOOR);
+  if (validRms.length === 0) return {};
+
+  const minRms = Math.min(...validRms);
+  const volumes: Record<string, number> = {};
+  for (const [id, rms] of Object.entries(rmsById)) {
+    // Pista silenciosa o que no se pudo analizar: no tocar su volumen actual.
+    if (rms <= SILENCE_FLOOR) continue;
+    volumes[id] = Math.max(0.15, Math.min(1, minRms / rms));
+  }
+  return volumes;
+};
+
