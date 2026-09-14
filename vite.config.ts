@@ -1,7 +1,9 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+// defineConfig viene de vitest/config (no de vite) para que TypeScript reconozca
+// también la propiedad `test` de Vitest en este mismo fichero de configuración.
+import {configDefaults, defineConfig} from 'vitest/config';
 
 export default defineConfig(() => {
   return {
@@ -29,6 +31,15 @@ export default defineConfig(() => {
     },
     preview: {
       allowedHosts: true as const,
+    },
+    test: {
+      // Los tests existentes (lógica pura en server/ y src/utils) corren en 'node' por defecto,
+      // rápido y sin DOM. Los tests de componentes React (*.test.tsx) que sí necesitan DOM
+      // activan jsdom por fichero con el pragma `// @vitest-environment jsdom`.
+      environment: 'node',
+      setupFiles: ['./src/test/setupTests.ts'],
+      // e2e/ son specs de Playwright (otro test runner, otro `test`/`expect`), no de Vitest.
+      exclude: [...configDefaults.exclude, 'e2e/**'],
     },
   };
 });

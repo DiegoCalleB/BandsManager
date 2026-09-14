@@ -17,6 +17,12 @@ data.json
 public/clips/
 supabase/.temp/
 
+# Artefactos generados al correr los tests e2e de Playwright.
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
 # Worktrees temporales de agentes de Claude Code (isolation: "worktree") - copias de
 # trabajo efímeras, nunca contenido real del proyecto.
 .claude/
