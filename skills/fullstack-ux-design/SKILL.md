@@ -1,6 +1,6 @@
 ---
 name: fullstack-ux-design
-description: Guía de excelencia en diseño Frontend (React 19, Motion, Tailwind v4, UX B2C) y Backend (Express modular, Vitest) para BandManager.ai. Usar al crear componentes UI o refinamientos API.
+description: Guía de excelencia en diseño Frontend (React 19, Motion, Tailwind v4, UX B2C) y Backend (Express modular, Vitest) para BandManager.io. Usar al crear componentes UI o refinamientos API.
 ---
 
 # 🎨 Skill: Desarrollo Fullstack Premium & Diseño UX

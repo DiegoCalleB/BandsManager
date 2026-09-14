@@ -1,4 +1,4 @@
-# 🎯 Simplicidad Primero - La Obsesión Central de BandManager.ai
+# 🎯 Simplicidad Primero - La Obsesión Central de BandManager.io
 
 > **Principio Cero:** La app hace MUCHAS cosas. Si la interfaz no es simple, los usuarios la rechazan.
 > 

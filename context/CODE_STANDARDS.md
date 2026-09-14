@@ -1,4 +1,4 @@
-# 🛠️ Estándares de Código - BandManager.ai
+# 🛠️ Estándares de Código - BandManager.io
 
 ## 1. TypeScript Strict Mode
 

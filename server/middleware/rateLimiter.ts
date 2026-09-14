@@ -103,6 +103,19 @@ export const renderRateLimiter = createRateLimiter({
   mensaje: "Has pedido demasiados renderizados seguidos. Espera un momento y vuelve a intentarlo."
 });
 
+/**
+ * Límite para crear sesiones de Checkout de donación: cada llamada pega
+ * contra la API de Stripe (coste real y cuota), y sin tope un usuario podría
+ * generar sesiones sin fin sin llegar nunca a pagar ninguna.
+ */
+export const donationRateLimiter = createRateLimiter({
+  nombre: "donation",
+  windowMs: 5 * 60 * 1000,
+  maxRequests: 10,
+  porUsuario: true,
+  mensaje: "Has pedido demasiadas sesiones de pago seguidas. Espera un momento antes de volver a intentarlo."
+});
+
 /* ------------------------------------------------------- trabajos simultáneos */
 
 /**

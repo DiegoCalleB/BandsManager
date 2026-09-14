@@ -6,7 +6,7 @@
 
 ## 📍 En 60 Segundos
 
-**BandManager.ai** = plataforma SaaS para booking + IA agents de bandas independientes.
+**BandManager.io** = plataforma SaaS para booking + IA agents de bandas independientes.
 
 - **DB:** Supabase (Postgres) = single source of truth. Google Sheets: NEVER.
 - **Stack:** React 19 (frontend) + Express (backend) + Node 22

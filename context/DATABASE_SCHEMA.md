@@ -1,6 +1,6 @@
 # 🗄️ Database Schema - Supabase (PostgreSQL)
 
-Estructura completa de la BD de BandManager.ai. **Supabase es la única fuente de verdad.** Google Sheets: NUNCA.
+Estructura completa de la BD de BandManager.io. **Supabase es la única fuente de verdad.** Google Sheets: NUNCA.
 
 ---
 

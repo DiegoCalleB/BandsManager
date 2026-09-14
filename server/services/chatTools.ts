@@ -1,7 +1,7 @@
 import { FunctionDeclaration, Type } from "@google/genai";
 
 /**
- * Declaraciones de Function Calling nativas para Gemini en BandManager.ai.
+ * Declaraciones de Function Calling nativas para Gemini en BandManager.io.
  * Permiten que el Mánager Virtual razone sobre el estado de la banda y emita
  * acciones tipadas y estructuradas con validación JSON Schema estricta.
  */

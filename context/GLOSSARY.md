@@ -1,4 +1,4 @@
-# 📖 Glosario de Términos - BandManager.ai
+# 📖 Glosario de Términos - BandManager.io
 
 Términos, acrónimos y conceptos clave del proyecto.
 
@@ -8,7 +8,7 @@ Términos, acrónimos y conceptos clave del proyecto.
 
 **Agentic Status** — Sub-estado de un lead en la cola de agentes IA. Valores: `pendiente_aprobacion`, `aprobado_propuesta`, `aprobado_respuesta`, `borrador_creado`. Distinto de `estado` (CRM funnel).
 
-**App URL** — Dirección base de la aplicación (ej: `https://bandmanager.ai`). Usado en OAuth redirects y EPK links públicos.
+**App URL** — Dirección base de la aplicación (ej: `https://bandmanager.io`). Usado en OAuth redirects y EPK links públicos.
 
 **Aprobación Humana** — Gate obligatorio antes de cualquier envío de email. Un usuario debe presionar "Aprobar" en la UI. Nunca omitible.
 

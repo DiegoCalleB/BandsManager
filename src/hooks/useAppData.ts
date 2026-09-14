@@ -153,6 +153,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     const resolvedBandId = newConfig?.bandId || bandId;
     if (!resolvedBandId) {
       console.error('Error updating EPK config: no hay banda activa.');
+      alert('No se pudo guardar: no hay ninguna banda activa seleccionada.');
       return;
     }
     try {
@@ -161,8 +162,15 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
         bandId: resolvedBandId
       };
       await api.updateEpkConfig(payload);
-    } catch (e) {
+    } catch (e: any) {
+      // Antes este error se quedaba solo en consola: el cambio se pintaba igual (estado
+      // optimista de arriba) aunque el guardado real hubiera fallado, así que parecía
+      // persistir hasta el siguiente refresco/redeploy, cuando volvía a como estaba. Al
+      // fallar, se avisa Y se recarga el estado real del servidor para no dejar la UI
+      // enseñando un cambio que nunca llegó a guardarse.
       console.error('Error updating EPK config:', e);
+      alert(`No se pudo guardar el cambio en el EPK (logo, biografía, etc.): ${e?.message || 'error desconocido'}. Se ha revertido a lo último guardado.`);
+      fetchState();
     }
   };
 

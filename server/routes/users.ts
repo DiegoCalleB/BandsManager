@@ -411,7 +411,7 @@ router.post("/auth/register", async (req, res) => {
       spotify_youtube: "",
       aforo_promedio: 0,
       estado_cuenta: "activo",
-      notas: `Plan seleccionado: ${selectedPlan}. Registrado desde BANDMANAGER.ai web app.`
+      notas: `Plan seleccionado: ${selectedPlan}. Registrado desde BANDMANAGER.io web app.`
     };
     if (!state.registeredBands) state.registeredBands = [];
     state.registeredBands.push(newRegisteredBandRecord);

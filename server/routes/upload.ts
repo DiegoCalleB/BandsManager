@@ -216,13 +216,21 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
   }
 
   const bucketName = getBucketName();
-  const testBuffer = Buffer.from("test connection " + Date.now());
-  const testPath = `diagnostics/test-${Date.now()}.txt`;
+  // Antes probaba con un .txt (text/plain): si el bucket tiene restringidos los tipos MIME
+  // permitidos a solo imágenes (lo normal para "band-media"), esa prueba SIEMPRE falla con
+  // "mime type text/plain is not supported" aunque la subida real de logos/fotos funcione
+  // perfectamente - un falso positivo que no dice nada del caso real. Se prueba con un PNG
+  // mínimo válido (1x1 transparente) para que el diagnóstico responda a lo que de verdad importa.
+  const testBuffer = Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+    "base64"
+  );
+  const testPath = `diagnostics/test-${Date.now()}.png`;
 
   try {
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from(bucketName)
-      .upload(testPath, testBuffer, { contentType: "text/plain", upsert: true });
+      .upload(testPath, testBuffer, { contentType: "image/png", upsert: true });
 
     if (uploadError) {
       return res.json({

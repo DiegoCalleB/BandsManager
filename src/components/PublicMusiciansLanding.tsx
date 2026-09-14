@@ -170,14 +170,14 @@ export const PublicMusiciansLanding: React.FC = () => {
             <div className="w-10 h-10 rounded-xl overflow-hidden bg-black border border-amber-500/30 p-0.5 shadow-md flex items-center justify-center shrink-0">
               <img
                 src="/bandmanageriodefinitiva.jpeg"
-                alt="BandManager.ai Logo"
+                alt="BandManager.io Logo"
                 className="w-full h-full object-contain rounded-[10px]"
                 onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
               />
             </div>
             <div>
               <span className="font-extrabold tracking-tight text-white font-mono text-base flex items-center gap-0.5">
-                BandManager<span className="text-[#f2ca50]">.oi</span>
+                BandManager<span className="text-[#f2ca50]">.io</span>
               </span>
               <span className="text-[10px] font-mono text-amber-400/80 block -mt-1 tracking-wider uppercase">
                 IA Agéntica para tu Banda
@@ -237,7 +237,7 @@ export const PublicMusiciansLanding: React.FC = () => {
               <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-black border border-amber-500/40 p-1 shadow-2xl flex items-center justify-center">
                 <img
                   src="/bandmanageriodefinitiva.jpeg"
-                  alt="BandManager.ai"
+                  alt="BandManager.io"
                   className="w-full h-full object-contain rounded-xl"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
                 />

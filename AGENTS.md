@@ -1,11 +1,11 @@
-# 🎸 AGENTS.md — Instrucciones y Directivas del Agente de Código (BandManager.ai / Bakandeya)
+# 🎸 AGENTS.md — Instrucciones y Directivas del Agente de Código (BandManager.io / Bakandeya)
 
 > **🏆 DIRECTIVA SUPREMA Y OBJETIVO DE HONOR (TFM DE ÉLITE):**
 > Este proyecto constituye el núcleo técnico y práctico del **Trabajo Fin de Máster (TFM) sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica**. 
 > 
 > **La meta innegociable es obtener la Mención de Honor (Matrícula de Honor)** y posicionar este TFM como **el mejor trabajo de toda la historia del máster**, de la promoción actual y de todas las promociones futuras. Debe sobresalir de manera indiscutible frente a cualquier otro proyecto presentado, superando con creces los estándares académicos y técnicos habituales, demostrando una arquitectura, robustez, elegancia y nivel de acabado superior incluso a lo que el claustro docente del máster podría concebir o construir conjuntamente.
 > 
-> **Misión de Producto:** Desarrollar la plataforma integral definitiva (**BandManager.ai**) que todo músico y banda independiente necesita para automatizar su booking, logística de gira, prensa, contenido viral en redes, repertorio multipista con IA y finanzas.
+> **Misión de Producto:** Desarrollar la plataforma integral definitiva (**BandManager.io**) que todo músico y banda independiente necesita para automatizar su booking, logística de gira, prensa, contenido viral en redes, repertorio multipista con IA y finanzas.
 >
 > **Criterios de Excelencia Continua:**
 > - **Cero Tolerancia a Fallos:** Cero errores de TypeScript (`npx tsc --noEmit`), suite de tests pasando al 100% (880+ tests), trazabilidad y sanitización total de datos.

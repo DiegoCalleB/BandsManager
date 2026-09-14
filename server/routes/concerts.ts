@@ -563,9 +563,9 @@ router.get("/calendar.ics", async (req, res) => {
     const ics = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//BandManager.ai//ES",
+      "PRODID:-//BandManager.io//ES",
       `X-WR-CALNAME:${escapeIcsText(calTitle)}`,
-      "X-WR-CALDESC:Sincronizacion automatica de conciertos y ensayos de BandManager.ai",
+      "X-WR-CALDESC:Sincronizacion automatica de conciertos y ensayos de BandManager.io",
       "X-PUBLISHED-TTL:PT1H",
       "REFRESH-INTERVAL;VALUE=DURATION:PT1H",
       "CALSCALE:GREGORIAN",
@@ -683,7 +683,7 @@ router.get("/calendar.ics", async (req, res) => {
 
       ics.push(
         "BEGIN:VEVENT",
-        `UID:concert-${c.id || Math.random().toString(36).substring(2, 9)}@bandmanager.ai`,
+        `UID:concert-${c.id || Math.random().toString(36).substring(2, 9)}@bandmanager.io`,
         `DTSTAMP:${nowStamp}`,
         `DTSTART;VALUE=DATE:${start}`,
         `DTEND;VALUE=DATE:${end}`,
@@ -744,7 +744,7 @@ router.get("/calendar.ics", async (req, res) => {
 
       ics.push(
         "BEGIN:VEVENT",
-        `UID:rehearsal-${r.id || Math.random().toString(36).substring(2, 9)}@bandmanager.ai`,
+        `UID:rehearsal-${r.id || Math.random().toString(36).substring(2, 9)}@bandmanager.io`,
         `DTSTAMP:${nowStamp}`,
         `DTSTART;VALUE=DATE:${start}`,
         `DTEND;VALUE=DATE:${end}`,

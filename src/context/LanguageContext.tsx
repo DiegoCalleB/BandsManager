@@ -77,7 +77,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // General UI
     'general.no_data': 'Sin datos disponibles',
     'general.search_placeholder': 'Buscar sala, ciudad, contacto...',
-    'general.welcome': '¡Bienvenido a BandManager.ai!',
+    'general.welcome': '¡Bienvenido a BandManager.io!',
   },
   en: {
     // Navigation
@@ -138,7 +138,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // General UI
     'general.no_data': 'No data available',
     'general.search_placeholder': 'Search venue, city, contact...',
-    'general.welcome': 'Welcome to BandManager.ai!',
+    'general.welcome': 'Welcome to BandManager.io!',
   },
   ca: {
     // Navigation
@@ -199,7 +199,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // General UI
     'general.no_data': 'Sense dades disponibles',
     'general.search_placeholder': 'Cercar sala, ciutat, contacte...',
-    'general.welcome': 'Benvingut a BandManager.ai!',
+    'general.welcome': 'Benvingut a BandManager.io!',
   },
   gl: {
     // Navigation
@@ -260,7 +260,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // General UI
     'general.no_data': 'Sen datos dispoñibles',
     'general.search_placeholder': 'Buscar sala, cidade, contacto...',
-    'general.welcome': 'Benvido a BandManager.ai!',
+    'general.welcome': 'Benvido a BandManager.io!',
   },
   eu: {
     // Navigation
@@ -321,7 +321,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     // General UI
     'general.no_data': 'Ez dago daturik eskuragarri',
     'general.search_placeholder': 'Bilatu aretoa, hiria, kontaktua...',
-    'general.welcome': 'Ongi etorri BandManager.ai-ra!',
+    'general.welcome': 'Ongi etorri BandManager.io-ra!',
   },
 };
 
