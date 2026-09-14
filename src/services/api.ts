@@ -214,6 +214,15 @@ export const api = {
     return request(`/api/billing/credits-status?${query.toString()}`);
   },
 
+  async getDonationStatus(): Promise<{
+    success: boolean;
+    owed_cents: number;
+    owed_eur: number;
+    suggested_cents: number;
+  }> {
+    return request('/api/donations/status');
+  },
+
   // State Fetching
   async getState(): Promise<{
     leads: Lead[];

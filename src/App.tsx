@@ -28,6 +28,7 @@ import { LoginModal } from './components/LoginModal';
 import { SimplePromoLoginModal } from './components/SimplePromoLoginModal';
 import { UserManagementModal } from './components/UserManagementModal';
 import { UserProfileModal } from './components/UserProfileModal';
+import { AiUsageSupportWidget } from './components/dashboard/AiUsageSupportWidget';
 import { FontSelectorModal } from './components/FontSelectorModal';
 import { MetronomeModal } from './components/MetronomeModal';
 import { TunerModal } from './components/TunerModal';
@@ -1118,6 +1119,8 @@ export default function App() {
      </div>
    );
  })()}
+
+ {!isPromoPlan && <AiUsageSupportWidget variant="sidebar" />}
 
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">
