@@ -2915,7 +2915,7 @@ export default function SongStudioModal({
         }`}>
         
         {/* Header Bar */}
-        <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-white/5">
+        <div className="p-2.5 sm:p-5 border-b border-white/10 flex items-center justify-between bg-white/5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-lg">
               <Disc className="w-5 h-5 animate-spin-slow" />
@@ -3092,10 +3092,10 @@ export default function SongStudioModal({
         </div>
 
         {/* Content Body */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
-          
+        <div className="p-2.5 sm:p-6 overflow-y-auto space-y-2.5 sm:space-y-6 flex-1">
+
           {/* Sleek Top Action Bar */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 bg-zinc-900/80 rounded-2xl border border-white/10 shadow-md">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-2 sm:p-3 bg-zinc-900/80 rounded-2xl border border-white/10 shadow-md">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
                 <Music className="w-4 h-4 text-indigo-400 animate-pulse" /> Ideas & Grabaciones
@@ -3771,9 +3771,9 @@ export default function SongStudioModal({
                     )}
 
                     {/* MASTER MULTITRACK CONTROLS & TIMELINE */}
-                    <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 space-y-3 shadow-inner">
+                    <div className="p-2.5 sm:p-3.5 rounded-xl bg-black/50 border border-white/10 space-y-2 sm:space-y-3 shadow-inner">
                       {/* Streamlined Transport Toolbar */}
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
                         {/* Playback Controls */}
                         <div className="flex items-center gap-2 w-full sm:w-auto">
                           {/* Play / Pause Toggle */}
@@ -3919,7 +3919,7 @@ export default function SongStudioModal({
                     </div>
 
                     {/* MINI DAW TRACK LIST MIXER */}
-                    <div className="space-y-2 bg-black/30 p-3 rounded-xl border border-white/5">
+                    <div className="space-y-1.5 sm:space-y-2 bg-black/30 p-2 sm:p-3 rounded-xl border border-white/5">
                       {(() => {
                         const hasSoloInIdea = tracks.some(t => t.solo);
                         return (
@@ -3930,9 +3930,9 @@ export default function SongStudioModal({
                                   <Sliders className="w-3.5 h-3.5 text-indigo-400" /> Mezclador de Pistas ({tracks.length})
                                 </span>
                                 {idea.stemEngineUsed && (
-                                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 font-bold ${
-                                    idea.stemDegraded 
-                                      ? 'bg-amber-950/70 border border-amber-500/40 text-amber-300' 
+                                  <span className={`hidden sm:flex px-2 py-0.5 rounded text-[10px] font-mono items-center gap-1 font-bold ${
+                                    idea.stemDegraded
+                                      ? 'bg-amber-950/70 border border-amber-500/40 text-amber-300'
                                       : 'bg-purple-950/70 border border-purple-500/40 text-purple-300'
                                   }`}>
                                     <Sparkles className="w-3 h-3 text-amber-400" />
@@ -3940,37 +3940,37 @@ export default function SongStudioModal({
                                   </span>
                                 )}
                               </div>
-                              <div className="flex items-center gap-2 flex-wrap">
+                              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                                 {tracks.length > 1 && (
                                   <button
                                     type="button"
                                     onClick={() => setPracticeModeIdea(idea)}
-                                    className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 transition-all cursor-pointer"
+                                    className="px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 transition-all cursor-pointer"
                                     title="Practica con tu propia mezcla, velocidad y bucle sin tocar la mezcla de la banda"
                                   >
                                     <Headphones className="w-3 h-3" />
-                                    <span>Sala de Ensayo</span>
+                                    <span className="hidden sm:inline">Sala de Ensayo</span>
                                   </button>
                                 )}
                                 <button
                                   type="button"
                                   onClick={() => setShowMoisesStemsModal(idea)}
-                                  className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
+                                  className="px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
                                   title="Comparar calidad con otro motor (MVSEP-MDX23, Demucs v4, DSP) o re-separar"
                                 >
                                   <RefreshCw className="w-3 h-3" />
-                                  <span>Comparar Motor</span>
+                                  <span className="hidden sm:inline">Comparar Motor</span>
                                 </button>
                                 {hasSoloInIdea && (
                                   <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black bg-amber-400 text-black flex items-center gap-1 shadow-md shadow-amber-400/40 animate-pulse">
                                     <Volume2 className="w-3 h-3" /> SOLO (S) ACTIVO
                                   </span>
                                 )}
-                                <span>Volumen & Mute</span>
+                                <span className="hidden sm:inline">Volumen & Mute</span>
                               </div>
                             </div>
 
-                            <div className="space-y-2">
+                            <div className="space-y-1.5 sm:space-y-2">
                               {tracks.map((tr, idx) => {
                                 const isMuted = tr.muted;
                                 const isSolo = (tr as any).solo;
@@ -3990,11 +3990,11 @@ export default function SongStudioModal({
                                             : 'bg-white/5 border-white/10 hover:border-white/20'
                                     }`}
                                   >
-                                    {/* Cubase-style compact row: name/controls sidebar left, waveform fills the rest, row height = waveform height */}
-                                    <div className="flex items-stretch min-h-[44px]">
+                                    {/* Cubase-style compact row: name/controls sidebar left of the waveform on tablet/desktop; on mobile the sidebar becomes a bar above the waveform instead (too narrow to sit side by side) */}
+                                    <div className="flex flex-col sm:flex-row sm:items-stretch">
                                       {/* Sidebar: name + transport controls, 2 compact lines */}
                                       <div
-                                        className="w-[150px] sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-r border-white/10 bg-black/25"
+                                        className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
                                         title={tr.instrumento || undefined}
                                       >
                                         {/* Line 1: number badge + name + edit */}
@@ -4112,7 +4112,7 @@ export default function SongStudioModal({
                                       </div>
 
                                       {/* Waveform Visualizer: fills remaining width, height = row height */}
-                                      <div className="flex-1 relative bg-black/20">
+                                      <div className="w-full sm:flex-1 relative bg-black/20">
                                         <WaveformTrack
                                           ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
                                           audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
