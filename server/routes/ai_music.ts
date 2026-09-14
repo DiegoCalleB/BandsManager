@@ -65,8 +65,27 @@ const STEM_METADATA: Record<string, { trackName: string; description: string; re
   }
 };
 
+// Orden canónico de instrumentos (el mismo que declara STEM_METADATA arriba). Los stems se
+// persisten de forma concurrente (Promise.all en persistRawStemsMap), así que el orden de llegada
+// al objeto stemsMap no es determinista entre ejecuciones ni entre motores (MDX23/Demucs/DSP) —
+// reordenamos aquí, en el único punto por el que pasan todas las respuestas al cliente, para que
+// la lista de pistas sea siempre Voz/Batería/Bajo/Guitarras/Teclados/Arreglos sin importar qué
+// motor las generó ni en qué orden terminaron sus subidas a Supabase.
+const CANONICAL_STEM_ORDER = Object.keys(STEM_METADATA);
+
+function sortStemsMapCanonically<T>(stemsMap: Record<string, T>): Record<string, T> {
+  const sorted: Record<string, T> = {};
+  for (const key of CANONICAL_STEM_ORDER) {
+    if (stemsMap[key] !== undefined) sorted[key] = stemsMap[key];
+  }
+  for (const key of Object.keys(stemsMap)) {
+    if (!(key in sorted)) sorted[key] = stemsMap[key];
+  }
+  return sorted;
+}
+
 function buildFormattedStems(stemsMap: Record<string, any>) {
-  return Object.entries(stemsMap || {}).map(([instrument, rawValue]) => {
+  return Object.entries(sortStemsMapCanonically(stemsMap || {})).map(([instrument, rawValue]) => {
     const meta = STEM_METADATA[instrument] || {
       trackName: `Stem IA: ${instrument}`,
       description: `Stem aislado de ${instrument}.`,
