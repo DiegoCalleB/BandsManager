@@ -24,7 +24,6 @@ import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
-import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User as UserIcon, Sparkles, Trash2, Send, Disc,
@@ -32,7 +31,7 @@ import {
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
   Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
   FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
-  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database
+  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical
 } from 'lucide-react';
 
 
@@ -223,17 +222,17 @@ export default function SongStudioModal({
   }, [song]);
 
   const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
-  // Ideas plegadas (mezclador, pistas, comentarios...) para que la lista no se vea abarrotada
-  // cuando hay varias ideas con muchas pistas cada una. Vacío = todas expandidas por defecto,
-  // como se ha visto siempre; el usuario decide cuáles plegar.
-  const [collapsedIdeaIds, setCollapsedIdeaIds] = useState<Set<string>>(new Set());
-  const toggleIdeaCollapsed = (ideaId: string) => {
-    setCollapsedIdeaIds(prev => {
+  // Máxima sencillez: cada idea empieza PLEGADA (solo título + escuchar + menú de opciones),
+  // el mezclador completo y las acciones secundarias solo aparecen al expandir a propósito.
+  const [expandedIdeaIds, setExpandedIdeaIds] = useState<Set<string>>(new Set());
+  const toggleIdeaExpanded = (ideaId: string) => {
+    setExpandedIdeaIds(prev => {
       const next = new Set(prev);
       if (next.has(ideaId)) next.delete(ideaId); else next.add(ideaId);
       return next;
     });
   };
+  const [openIdeaActionsMenuId, setOpenIdeaActionsMenuId] = useState<string | null>(null);
   const [showToolsMenu, setShowToolsMenu] = useState<boolean>(false);
   const [showChordsModal, setShowChordsModal] = useState<boolean>(false);
   const [showCubaseHelp, setShowCubaseHelp] = useState<boolean>(false);
@@ -2937,7 +2936,7 @@ export default function SongStudioModal({
                   title="Marcar como tema favorito para incluir por defecto en repertorios"
                 >
                   <Sparkles className={`w-3.5 h-3.5 ${song.favoritoGeneral ? 'text-amber-400 fill-amber-400' : ''}`} />
-                  <span>{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
+                  <span className="hidden sm:inline">{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
                 </button>
 
                 {/* Mi nivel de preparación con esta canción — cada miembro opina por sí mismo, no
@@ -3013,6 +3012,13 @@ export default function SongStudioModal({
                       </button>
                       <button
                         type="button"
+                        onClick={() => { setShowToolsMenu(false); openTutorial(); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-sky-300 flex items-center gap-2"
+                      >
+                        <Info className="w-4 h-4 text-sky-400" /> Guía rápida
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => { setShowToolsMenu(false); handleShareSong(); }}
                         className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-emerald-300 flex items-center gap-2 border-t border-white/10 pt-2"
                       >
@@ -3076,12 +3082,7 @@ export default function SongStudioModal({
               )}
             </button>
 
-            <ModuleTutorialTrigger
-              moduleId="song_studio"
-              onClick={openTutorial}
-              label="Guía rápida"
-            />
-            <button 
+            <button
               type="button"
               onClick={onClose}
               className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
@@ -3622,22 +3623,23 @@ export default function SongStudioModal({
                           : 'bg-white/5 border-white/10 hover:border-white/20'
                       }`}
                     >
-                      {/* Idea Header */}
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-                        <div className="flex items-center gap-2.5 flex-wrap">
+                      {/* Idea Header: solo lo esencial siempre visible — escuchar, ver de qué va, y un
+                          menú de "más opciones" para todo lo demás. El resto se revela al expandir. */}
+                      <div className="flex items-center justify-between gap-2 pb-3 border-b border-white/10">
+                        <div className="flex items-center gap-2 flex-wrap min-w-0">
                           <button
                             type="button"
-                            onClick={() => toggleIdeaCollapsed(idea.id)}
-                            title={collapsedIdeaIds.has(idea.id) ? 'Expandir idea' : 'Plegar idea'}
+                            onClick={() => toggleIdeaExpanded(idea.id)}
+                            title={expandedIdeaIds.has(idea.id) ? 'Plegar idea' : 'Expandir idea'}
                             className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0"
                           >
-                            {collapsedIdeaIds.has(idea.id) ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                            {expandedIdeaIds.has(idea.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                           </button>
-                          <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${sectionInfo.color}`}>
+                          <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border shrink-0 ${sectionInfo.color}`}>
                             {sectionInfo.icon} {sectionInfo.label}
                           </span>
-                          <div>
-                            <h4 className="text-base font-bold text-white flex items-center gap-2">
+                          <div className="min-w-0">
+                            <h4 className="text-base font-bold text-white flex items-center gap-2 flex-wrap">
                               {idea.titulo}
                               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">
                                 {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas (Stems)'}
@@ -3650,125 +3652,136 @@ export default function SongStudioModal({
                                 </div>
                               )}
                             </h4>
-                          <span className="text-[11px] text-neutral-400 font-mono flex items-center gap-1 mt-0.5">
-                            <UserIcon className="w-3 h-3 text-indigo-400" />
-                            {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''} • {idea.fecha}
-                          </span>
+                            <span className="text-[11px] text-neutral-400 font-mono flex items-center gap-1 mt-0.5 truncate">
+                              <UserIcon className="w-3 h-3 text-indigo-400 shrink-0" />
+                              {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''} • {idea.fecha}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Únicas acciones siempre visibles: escuchar y el menú de más opciones */}
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => togglePlayIdea(idea)}
+                            className={`p-2 rounded-xl flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer ${
+                              isPlaying ? 'bg-amber-500 text-zinc-950' : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
+                            }`}
+                            title="Play / Pausa"
+                          >
+                            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                          </button>
+
+                          <div className="relative">
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setOpenIdeaActionsMenuId(openIdeaActionsMenuId === idea.id ? null : idea.id); }}
+                              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/10 transition-all cursor-pointer"
+                              title="Más opciones"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+
+                            {openIdeaActionsMenuId === idea.id && (
+                              <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl p-1.5 z-50 space-y-1 text-xs font-mono">
+                                <button
+                                  type="button"
+                                  onClick={() => { setOpenIdeaActionsMenuId(null); handleShareIdea(idea); }}
+                                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-emerald-300 flex items-center gap-2"
+                                >
+                                  <MessageSquare className="w-4 h-4 text-emerald-400" /> Compartir por WhatsApp
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => { setOpenIdeaActionsMenuId(null); handleExportMasterMix(idea); }}
+                                  disabled={isExportingMaster}
+                                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-indigo-300 flex items-center gap-2 disabled:opacity-50"
+                                >
+                                  <Disc className={`w-4 h-4 text-indigo-400 ${isExportingMaster ? 'animate-spin' : ''}`} /> Exportar mezcla (.WAV)
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { setOpenIdeaActionsMenuId(null); handleDuplicateIdea(e, idea.id); }}
+                                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-sky-300 flex items-center gap-2"
+                                >
+                                  <Copy className="w-4 h-4 text-sky-400" /> Duplicar como nueva versión
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setOpenIdeaActionsMenuId(null);
+                                    setAiTrackGenPreview(null);
+                                    setAiTrackGenError(null);
+                                    setAiTrackGenStartOffsetSec(0);
+                                    setShowAiTrackGenModal(idea);
+                                  }}
+                                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-purple-300 flex items-center gap-2"
+                                >
+                                  <Wand2 className="w-4 h-4 text-purple-400" /> Generar pista con IA
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => { setOpenIdeaActionsMenuId(null); handleDeleteIdea(e, idea.id); }}
+                                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-950/40 text-rose-300 flex items-center gap-2 border-t border-white/10 pt-2"
+                                >
+                                  <Trash2 className="w-4 h-4 text-rose-400" /> Eliminar idea
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
 
-                      {/* Primary Quick Actions for Musician */}
-                      <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
-                        {/* 1. AI Stem Separator - Highlighted Action with Engine Selector */}
-                        <div className="flex items-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 shadow-md overflow-hidden">
-                          <button
-                            type="button"
-                            onClick={() => handlePerformAiStemSeparation(idea)}
-                            disabled={isSeparatingStemsAi}
-                            className="px-3 py-1.5 hover:bg-amber-400/20 text-zinc-950 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
-                            title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
-                          >
-                            <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
-                            <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Stems (IA)'}</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setShowMoisesStemsModal(idea)}
-                            className="px-2 py-1.5 border-l border-amber-600/60 hover:bg-amber-400/30 text-zinc-950 transition-all cursor-pointer flex items-center"
-                            title="Elegir motor (MVSEP-MDX23, Demucs v4, DSP) o comparar calidad"
-                          >
-                            <Sliders className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-
-                        {/* 2. Add Track / Overdub Button */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (addingTrackIdeaId === idea.id) {
-                              setAddingTrackIdeaId(null);
-                            } else {
-                              setAddingTrackIdeaId(idea.id);
-                              setNewTrackName(`Pista ${tracks.length + 1}`);
-                              setNewTrackInstrument('');
-                            }
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
-                          title="Grabar micrófono o subir otra pista de instrumento"
-                        >
-                          <Plus className="w-4 h-4" />
-                          <span>+ Pista</span>
-                        </button>
-
-                        {/* 3. Secondary Tools Dropdown / Grouped Actions */}
-                        <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/10">
-                          {/* WhatsApp Share */}
-                          <button
-                            type="button"
-                            onClick={() => handleShareIdea(idea)}
-                            className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-950/40 transition-all cursor-pointer"
-                            title="Compartir idea por WhatsApp"
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                          </button>
-
-                          {/* Export WAV */}
-                          <button
-                            type="button"
-                            onClick={() => handleExportMasterMix(idea)}
-                            disabled={isExportingMaster}
-                            className="p-1.5 rounded-lg text-indigo-300 hover:bg-indigo-950/40 transition-all cursor-pointer disabled:opacity-50"
-                            title="Exportar mezcla completa en .WAV"
-                          >
-                            <Disc className={`w-4 h-4 ${isExportingMaster ? 'animate-spin' : ''}`} />
-                          </button>
-
-                          {/* Duplicate as new version (fork) */}
-                          <button
-                            type="button"
-                            onClick={(e) => handleDuplicateIdea(e, idea.id)}
-                            className="p-1.5 rounded-lg text-sky-300 hover:bg-sky-950/40 transition-all cursor-pointer"
-                            title="Duplicar como nueva versión (prueba un arreglo distinto sin tocar este)"
-                          >
-                            <Copy className="w-4 h-4" />
-                          </button>
-
-                          {/* Generate AI instrument track for this idea's mix */}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setAiTrackGenPreview(null);
-                              setAiTrackGenError(null);
-                              setAiTrackGenStartOffsetSec(0);
-                              setShowAiTrackGenModal(idea);
-                            }}
-                            className="p-1.5 rounded-lg text-purple-300 hover:bg-purple-950/40 transition-all cursor-pointer"
-                            title="Generar pista de acompañamiento con IA para esta mezcla"
-                          >
-                            <Wand2 className="w-4 h-4" />
-                          </button>
-
-                          {/* Delete */}
-                          <button
-                            type="button"
-                            onClick={(e) => handleDeleteIdea(e, idea.id)}
-                            className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-400 hover:bg-rose-950/40 transition-all cursor-pointer"
-                            title="Eliminar esta idea"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {!collapsedIdeaIds.has(idea.id) && (
+                    {expandedIdeaIds.has(idea.id) && (
                     <>
                     {idea.notas && (
                       <p className="text-xs text-neutral-300 italic bg-black/20 p-2.5 rounded-xl border border-white/5">
                         "{idea.notas}"
                       </p>
                     )}
+
+                    {/* Separar Stems / Añadir Pista: se revelan solo al expandir la idea */}
+                    <div className="flex items-center gap-2 flex-wrap justify-end">
+                      <div className="flex items-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 shadow-md overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => handlePerformAiStemSeparation(idea)}
+                          disabled={isSeparatingStemsAi}
+                          className="px-3 py-1.5 hover:bg-amber-400/20 text-zinc-950 font-bold text-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+                          title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
+                        >
+                          <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
+                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Stems (IA)'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowMoisesStemsModal(idea)}
+                          className="px-2 py-1.5 border-l border-amber-600/60 hover:bg-amber-400/30 text-zinc-950 transition-all cursor-pointer flex items-center"
+                          title="Elegir motor (MVSEP-MDX23, Demucs v4, DSP) o comparar calidad"
+                        >
+                          <Sliders className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (addingTrackIdeaId === idea.id) {
+                            setAddingTrackIdeaId(null);
+                          } else {
+                            setAddingTrackIdeaId(idea.id);
+                            setNewTrackName(`Pista ${tracks.length + 1}`);
+                            setNewTrackInstrument('');
+                          }
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer"
+                        title="Grabar micrófono o subir otra pista de instrumento"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>+ Pista</span>
+                      </button>
+                    </div>
 
                     {/* MASTER MULTITRACK CONTROLS & TIMELINE */}
                     <div className="p-2.5 sm:p-3.5 rounded-xl bg-black/50 border border-white/10 space-y-2 sm:space-y-3 shadow-inner">
