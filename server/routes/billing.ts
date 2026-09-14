@@ -1,6 +1,6 @@
 import express from "express";
 import Stripe from "stripe";
-import { getSupabase, dbUpsertRegisteredBand, normalizePlan, dbIsWebhookEventProcessed, dbRecordWebhookEvent } from "../db.js";
+import { getSupabase, dbUpsertRegisteredBand, normalizePlan, dbIsWebhookEventProcessed, dbRecordWebhookEvent, dbSettleAiDonation } from "../db.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 
 const router = express.Router();
@@ -721,6 +721,22 @@ async function handleWebhook(req: express.Request, res: express.Response) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
+
+        // Donación de "Transparencia de Costes Dinámica" (server/routes/donations.ts):
+        // se distingue de una suscripción de plan por metadata.kind, no por el mode de
+        // la sesión, porque ambas pueden vivir como "payment" en el futuro.
+        if (session.metadata?.kind === "ai_donation") {
+          const donorUserId = session.metadata?.userId;
+          const amountPaidCents = session.amount_total ?? 0;
+          if (donorUserId && event.id) {
+            const resultado = await dbSettleAiDonation(donorUserId, amountPaidCents, event.id);
+            console.log(`[Stripe Webhook] Donación IA liquidada para ${donorUserId}:`, resultado);
+          } else {
+            console.warn("[Stripe Webhook] Sesión de donación sin userId en metadata; se ignora.");
+          }
+          break;
+        }
+
         const bandId = session.metadata?.bandId || (session as any).subscription_data?.metadata?.bandId;
         const planId = session.metadata?.planId || (session as any).subscription_data?.metadata?.planId;
         const customerEmail = session.customer_email || session.metadata?.userEmail;

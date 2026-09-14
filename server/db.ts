@@ -25,3 +25,4 @@ export * from "./db/pitchLearning.js";
 export * from "./db/categoryTemplates.js";
 export * from "./db/exampleThreads.js";
 export * from "./db/leadMessages.js";
+export * from "./db/aiLedger.js";
