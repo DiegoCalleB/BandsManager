@@ -5,7 +5,7 @@ import { isSameBandId } from '../utils/bandUtils';
 import DirectionsCard from './DirectionsCard';
 import { AddLeadModal } from './dashboard/AddLeadModal';
 import { ProfileCompletenessCard } from './dashboard/ProfileCompletenessCard';
-import { AiUsageSupportWidget } from './dashboard/AiUsageSupportWidget';
+import { AiSupportWidget, AiUsageCard } from './dashboard/AiUsageSupportWidget';
 import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
@@ -862,8 +862,13 @@ export default function Dashboard({
         onOpenProfileModal={onOpenProfileModal}
       />
 
-      {/* 4. SECCIÓN: CONSUMO DE IA Y APOYO AL PROYECTO */}
-      {!isPromo && <AiUsageSupportWidget variant="card" isStitchLight={isStitchLight} />}
+      {/* 4. SECCIÓN: APOYO AL PROYECTO Y CONSUMO DE IA */}
+      {!isPromo && (
+        <div className="space-y-3">
+          <AiSupportWidget variant="card" />
+          <AiUsageCard isStitchLight={isStitchLight} />
+        </div>
+      )}
 
       {/* MODAL: PLANTILLAS Y EJEMPLOS REALES DE EMAIL */}
       <EmailTemplatesModal
