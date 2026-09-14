@@ -2268,6 +2268,59 @@ router.get("/ai-stem-separation/status", requireAuth, async (req, res) => {
  * Permite a la banda solicitar un nuevo arreglo musical para un instrumento concreto (ej. Guitarra Solista,
  * Bajo, Sintetizador, Violín, Percusión, etc.) en perfecta armonía con el BPM y Tonalidad de la canción.
  */
+/**
+ * Llama a un modelo Lyria una vez y extrae audio/texto del stream. Los modelos "preview" a veces
+ * responden con éxito (sin lanzar excepción) pero sin ningún part de audio en el stream — un fallo
+ * silencioso que antes no dejaba ningún rastro en los logs. Aquí capturamos finishReason/
+ * blockReason del propio stream para tener diagnóstico real la próxima vez que pase.
+ */
+async function callLyriaOnce(model: string, prompt: string): Promise<{
+  audioBase64: string; mimeType: string; arrangementNotes: string; diagnostics: string;
+}> {
+  let audioBase64 = "";
+  let mimeType = "audio/wav";
+  let arrangementNotes = "";
+  let finishReason = "";
+  let blockReason = "";
+
+  const lyriaResponse = await ai.models.generateContentStream({ model, contents: prompt });
+  for await (const chunk of lyriaResponse) {
+    const promptFeedback = (chunk as any).promptFeedback;
+    if (promptFeedback?.blockReason) blockReason = String(promptFeedback.blockReason);
+    const candidate = chunk.candidates?.[0];
+    if ((candidate as any)?.finishReason) finishReason = String((candidate as any).finishReason);
+    const parts = candidate?.content?.parts;
+    if (!parts) continue;
+    for (const part of parts) {
+      if (part.inlineData?.data) {
+        if (!audioBase64 && part.inlineData.mimeType) mimeType = part.inlineData.mimeType;
+        audioBase64 += part.inlineData.data;
+      }
+      if (part.text && !arrangementNotes) arrangementNotes = part.text;
+    }
+  }
+
+  const diagnostics = [blockReason && `blockReason=${blockReason}`, finishReason && `finishReason=${finishReason}`]
+    .filter(Boolean)
+    .join(" ") || "sin diagnóstico del stream";
+
+  return { audioBase64, mimeType, arrangementNotes, diagnostics };
+}
+
+/** Reintenta un modelo Lyria hasta maxAttempts veces cuando responde sin lanzar error pero sin
+ *  audio — la flakiness observada en producción (Lyria "preview" a veces no devuelve el part de
+ *  audio a la primera). Lanza si ningún intento trae audio, con el último diagnóstico capturado. */
+async function callLyriaWithRetries(model: string, prompt: string, maxAttempts = 2) {
+  let lastDiagnostics = "";
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const result = await callLyriaOnce(model, prompt);
+    if (result.audioBase64) return result;
+    lastDiagnostics = result.diagnostics;
+    console.warn(`[Lyria ${model}] Intento ${attempt}/${maxAttempts} sin audio devuelto (${result.diagnostics}).`);
+  }
+  throw new Error(`Lyria ${model} no devolvió audio tras ${maxAttempts} intentos (${lastDiagnostics}).`);
+}
+
 router.post("/ai-generate-instrument-track", requireAuth, iaRateLimiter, async (req, res) => {
   try {
     const { instrument, songTitle, sectionName, bpm, key, style, lyrics, contextPrompt, targetDurationSec } = req.body;
@@ -2295,52 +2348,20 @@ Musical context:
     let modelUsed = "lyria-3-pro-preview";
 
     try {
-      const lyriaResponse = await ai.models.generateContentStream({
-        model: modelUsed,
-        contents: fullPrompt,
-      });
-
-      for await (const chunk of lyriaResponse) {
-        const parts = chunk.candidates?.[0]?.content?.parts;
-        if (!parts) continue;
-        for (const part of parts) {
-          if (part.inlineData?.data) {
-            if (!audioBase64 && part.inlineData.mimeType) {
-              mimeType = part.inlineData.mimeType;
-            }
-            audioBase64 += part.inlineData.data;
-          }
-          if (part.text && !arrangementNotes) {
-            arrangementNotes = part.text;
-          }
-        }
-      }
+      const result = await callLyriaWithRetries(modelUsed, fullPrompt, 2);
+      audioBase64 = result.audioBase64;
+      mimeType = result.mimeType;
+      arrangementNotes = result.arrangementNotes;
     } catch (lyriaProErr) {
-      console.warn(`Lyria ${modelUsed} falló, probando fallback a lyria-3-clip-preview (30s fijos):`, lyriaProErr);
+      console.warn(`Lyria ${modelUsed} falló tras reintentos, probando fallback a lyria-3-clip-preview (30s fijos):`, lyriaProErr);
       modelUsed = "lyria-3-clip-preview";
-      audioBase64 = "";
       try {
-        const lyriaFallbackResponse = await ai.models.generateContentStream({
-          model: modelUsed,
-          contents: fullPrompt,
-        });
-        for await (const chunk of lyriaFallbackResponse) {
-          const parts = chunk.candidates?.[0]?.content?.parts;
-          if (!parts) continue;
-          for (const part of parts) {
-            if (part.inlineData?.data) {
-              if (!audioBase64 && part.inlineData.mimeType) {
-                mimeType = part.inlineData.mimeType;
-              }
-              audioBase64 += part.inlineData.data;
-            }
-            if (part.text && !arrangementNotes) {
-              arrangementNotes = part.text;
-            }
-          }
-        }
+        const result = await callLyriaWithRetries(modelUsed, fullPrompt, 2);
+        audioBase64 = result.audioBase64;
+        mimeType = result.mimeType;
+        arrangementNotes = result.arrangementNotes;
       } catch (lyriaClipErr) {
-        console.warn("Lyria API call error (ambos modelos), fall-back a explicación de texto de Gemini:", lyriaClipErr);
+        console.warn("Lyria API call error (ambos modelos, con reintentos), fall-back a explicación de texto de Gemini:", lyriaClipErr);
       }
     }
 
