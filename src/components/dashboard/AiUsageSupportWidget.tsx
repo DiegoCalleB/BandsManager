@@ -86,10 +86,18 @@ interface AiUsageCardProps {
   isStitchLight?: boolean;
 }
 
-/** Tarjeta puramente informativa: cuánto ha gastado la banda en IA este mes. Sin CTA propio. */
+// Por debajo de esto no merece la pena ni mostrar la tarjeta: Diego prefiere que una banda que
+// apenas ha usado IA este mes no vea un número casi a cero, en vez de "ocultar hasta que gaste".
+const MIN_EUR_TO_SHOW_USAGE = 2;
+
+/** Tarjeta puramente informativa: cuánto ha gastado la banda en IA este mes. Sin CTA propio.
+ * No se muestra nada si el gasto real (o aún desconocido) no supera los 2€. */
 export const AiUsageCard: React.FC<AiUsageCardProps> = ({ isStitchLight = false }) => {
   const owedEur = useAiDebtEur();
-  const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;
+
+  if (owedEur === null || owedEur <= MIN_EUR_TO_SHOW_USAGE) return null;
+
+  const costeLabel = `${owedEur.toFixed(2).replace('.', ',')} €`;
 
   return (
     <div className={`p-4 sm:p-5 rounded-2xl transition-all border shadow-sm flex items-center gap-3 ${
