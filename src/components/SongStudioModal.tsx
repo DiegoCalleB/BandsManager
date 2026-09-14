@@ -2904,19 +2904,11 @@ export default function SongStudioModal({
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase font-semibold">
                   {song.estadoTema || 'componiendo'}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral })}
-                  className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
-                    song.favoritoGeneral
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
-                      : 'bg-white/5 text-neutral-400 border-white/10 hover:text-amber-300 hover:border-amber-500/30'
-                  }`}
-                  title="Marcar como tema favorito para incluir por defecto en repertorios"
-                >
-                  <Sparkles className={`w-3.5 h-3.5 ${song.favoritoGeneral ? 'text-amber-400 fill-amber-400' : ''}`} />
-                  <span className="hidden sm:inline">{song.favoritoGeneral ? '★ Favorito' : '+ Favorito'}</span>
-                </button>
+                {song.favoritoGeneral && (
+                  <span className="text-amber-400" title="Tema favorito">
+                    <Sparkles className="w-3.5 h-3.5 fill-amber-400" />
+                  </span>
+                )}
 
                 {/* Mi nivel de preparación con esta canción — cada miembro opina por sí mismo, no
                     es un estado global (ya existe song.estadoTema para eso). Sirve para que quien
@@ -2962,6 +2954,14 @@ export default function SongStudioModal({
 
                   {showToolsMenu && (
                     <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl p-1.5 z-50 space-y-1 text-xs font-mono">
+                      <button
+                        type="button"
+                        onClick={() => { setShowToolsMenu(false); onUpdateSong({ ...song, favoritoGeneral: !song.favoritoGeneral }); }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-amber-300 flex items-center gap-2"
+                      >
+                        <Sparkles className={`w-4 h-4 text-amber-400 ${song.favoritoGeneral ? 'fill-amber-400' : ''}`} />
+                        {song.favoritoGeneral ? 'Quitar de Favoritos' : 'Marcar como Favorito'}
+                      </button>
                       {/* Mi preparación: solo en móvil, en escritorio ya se ve en la cabecera */}
                       <div className="sm:hidden px-1 pb-1">
                         {(() => {
@@ -3651,6 +3651,18 @@ export default function SongStudioModal({
                                 </button>
                                 <button
                                   type="button"
+                                  onClick={() => {
+                                    setOpenIdeaActionsMenuId(null);
+                                    setShowGenModalForIdea(idea);
+                                    setGenBpm(song.bpm || 120);
+                                    setGenKey(song.tonalidad || 'Do');
+                                  }}
+                                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-purple-300 flex items-center gap-2"
+                                >
+                                  <Wand2 className="w-4 h-4 text-purple-400" /> Base rítmica IA (batería/bajo)
+                                </button>
+                                <button
+                                  type="button"
                                   onClick={(e) => { setOpenIdeaActionsMenuId(null); handleDeleteIdea(e, idea.id); }}
                                   className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-950/40 text-rose-300 flex items-center gap-2 border-t border-white/10 pt-2"
                                 >
@@ -3670,8 +3682,11 @@ export default function SongStudioModal({
                       </p>
                     )}
 
-                    {/* Separar Stems / Añadir Pista: se revelan solo al expandir la idea */}
+                    {/* Separar Stems / Añadir Pista: se revelan solo al expandir la idea.
+                        Una vez ya hay stems separados, "Separar Stems" deja paso a "Comparar
+                        Motor" (en la cabecera del mezclador) — no hace falta tenerlo doblado aquí. */}
                     <div className="flex items-center gap-2 flex-wrap justify-end">
+                      {!idea.stemEngineUsed && (
                       <div className="flex items-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 shadow-md overflow-hidden">
                         <button
                           type="button"
@@ -3692,6 +3707,7 @@ export default function SongStudioModal({
                           <Sliders className="w-3.5 h-3.5" />
                         </button>
                       </div>
+                      )}
 
                       <button
                         type="button"
@@ -3765,22 +3781,9 @@ export default function SongStudioModal({
                           })()}
                         </div>
 
-                        {/* Extra Tools & Stems Actions */}
+                        {/* Extra Tools & Stems Actions: "+ Base Rítmica IA" vive en el menú ⋮ de la
+                            idea (es una acción ocasional, no algo que hace falta tener siempre a mano) */}
                         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setShowGenModalForIdea(idea);
-                              setGenBpm(song.bpm || 120);
-                              setGenKey(song.tonalidad || 'Do');
-                            }}
-                            className="px-2.5 py-1.5 rounded-xl bg-purple-950/60 hover:bg-purple-900 text-purple-300 border border-purple-500/30 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
-                            title="Batería / Bajo de acompañamiento con IA"
-                          >
-                            <Wand2 className="w-3.5 h-3.5 text-purple-400" />
-                            <span>+ Base Rítmica IA</span>
-                          </button>
-
                           {selectedSongBaseUrl && !tracks.some(t => t.audioUrl === selectedSongBaseUrl) && (
                             <button
                               type="button"
@@ -4040,16 +4043,6 @@ export default function SongStudioModal({
                                               <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-amber-400 ring-1 ring-black" />
                                             )}
                                           </button>
-
-                                          {/* Delete Track */}
-                                          <button
-                                            type="button"
-                                            onClick={() => handleDeleteTrack(idea, tr.id)}
-                                            className="text-neutral-500 hover:text-rose-400 p-0.5 shrink-0"
-                                            title="Borrar pista"
-                                          >
-                                            <X className="w-3 h-3" />
-                                          </button>
                                         </div>
                                       </div>
 
@@ -4260,6 +4253,18 @@ export default function SongStudioModal({
                                         </button>
                                       </div>
                                     </div>
+                                  </div>
+
+                                  {/* Row 4: Borrar pista — acción destructiva, fuera de la fila
+                                      principal, solo aquí en Ajustes donde no se pulsa sin querer */}
+                                  <div className="flex justify-end border-t border-purple-500/10 pt-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteTrack(idea, tr.id)}
+                                      className="px-2 py-1 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 font-bold text-[10px] flex items-center gap-1.5 cursor-pointer transition-all"
+                                    >
+                                      <X className="w-3 h-3" /> Borrar Pista
+                                    </button>
                                   </div>
                                 </div>
                               )}
