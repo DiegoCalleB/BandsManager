@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { PaintBucket, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { api } from '../../services/api';
 
 const KOFI_URL = 'https://ko-fi.com/bandmanager';
+/**
+ * Bote de billetes/monedas neón que pidió Diego para el CTA de aportación económica: es el
+ * mismo asset que ya usa FansLanding.tsx en su tarjeta "Colabora con una aportación económica"
+ * (public/Screenshot_20260824_164054_Google.jpg), reutilizado en vez de duplicarlo.
+ */
+const BUCKET_ICON_SRC = '/Screenshot_20260824_164054_Google.jpg';
 
 interface AiUsageSupportWidgetProps {
   variant: 'sidebar' | 'card';
@@ -48,8 +54,11 @@ export const AiUsageSupportWidget: React.FC<AiUsageSupportWidgetProps> = ({ vari
           <Zap className="w-3 h-3 text-amber-400 shrink-0" />
           <span className="text-[10px] font-mono text-neutral-300 truncate">IA este mes: <strong className="text-amber-300">{costeLabel}</strong></span>
         </div>
-        <span className="text-[10px] font-mono font-bold text-amber-400 group-hover:text-amber-300 transition-colors flex items-center gap-1 shrink-0">
-          <PaintBucket className="w-3 h-3" /> Apoyar
+        <span className="text-[10px] font-mono font-bold text-amber-400 group-hover:text-amber-300 transition-colors flex items-center gap-1.5 shrink-0">
+          <span className="w-5 h-5 rounded-md overflow-hidden border border-amber-500/30 shrink-0">
+            <img src={BUCKET_ICON_SRC} alt="" className="w-full h-full object-cover" />
+          </span>
+          Apoyar
         </span>
       </a>
     );
@@ -74,12 +83,15 @@ export const AiUsageSupportWidget: React.FC<AiUsageSupportWidgetProps> = ({ vari
         href={KOFI_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex flex-col items-center gap-0.5 shrink-0 w-full sm:w-auto"
+        className="flex flex-col gap-1 shrink-0 w-full sm:w-auto"
       >
-        <span className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 w-full justify-center">
-          <PaintBucket className="w-3.5 h-3.5" /> Apoya BandManager económicamente
+        <span className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer active:scale-95 w-full justify-center sm:justify-start">
+          <span className="w-8 h-8 rounded-lg overflow-hidden border border-stone-950/20 shrink-0">
+            <img src={BUCKET_ICON_SRC} alt="" className="w-full h-full object-cover" />
+          </span>
+          Apoya BandManager económicamente
         </span>
-        <span className="text-[9px] font-mono text-neutral-500">vía Ko-fi</span>
+        <span className="text-[9px] font-mono text-neutral-500 text-center sm:text-left">vía Ko-fi</span>
       </a>
     </div>
   );
