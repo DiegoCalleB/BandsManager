@@ -898,14 +898,14 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/logo_bandmanager_symbol.svg" 
+ src="/logo_bandmanager_symbol.png" 
  alt="BandManager.ai" 
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.OI</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.ai</span>
  </span>
  </div>
  </div>
@@ -1153,14 +1153,14 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/logo_bandmanager_symbol.svg" 
+ src="/logo_bandmanager_symbol.png" 
  alt="BandManager.ai" 
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.OI</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.ai</span>
  </span>
  </div>
  </div>
