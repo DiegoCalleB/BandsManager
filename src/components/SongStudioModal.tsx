@@ -3978,24 +3978,28 @@ export default function SongStudioModal({
                                 const isEditing = editingTrackId === tr.id;
 
                                 return (
-                                  <div 
+                                  <div
                                     key={tr.id}
-                                    className={`p-2.5 rounded-xl border flex flex-col gap-2 transition-all ${
-                                      isMuted 
-                                        ? 'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]' 
-                                        : isSolo 
-                                          ? 'bg-amber-500/10 border-amber-400/80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30' 
+                                    className={`rounded-xl border overflow-hidden transition-all ${
+                                      isMuted
+                                        ? 'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]'
+                                        : isSolo
+                                          ? 'bg-amber-500/10 border-amber-400/80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30'
                                           : hasSoloInIdea
                                             ? 'bg-black/50 border-neutral-800/80 opacity-40 grayscale-[50%]'
                                             : 'bg-white/5 border-white/10 hover:border-white/20'
                                     }`}
                                   >
-                                    {/* Main Track Row */}
-                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                                      {/* Track Info & Mute/Solo */}
-                                      <div className="w-full sm:w-auto min-w-[300px] shrink-0 flex items-center justify-between gap-2.5">
-                                        <div className="flex items-center gap-2 flex-1 flex-wrap">
-                                          <span className="w-5 h-5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                                    {/* Cubase-style compact row: name/controls sidebar left, waveform fills the rest, row height = waveform height */}
+                                    <div className="flex items-stretch min-h-[44px]">
+                                      {/* Sidebar: name + transport controls, 2 compact lines */}
+                                      <div
+                                        className="w-[150px] sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-r border-white/10 bg-black/25"
+                                        title={tr.instrumento || undefined}
+                                      >
+                                        {/* Line 1: number badge + name + edit */}
+                                        <div className="flex items-center gap-1 min-w-0">
+                                          <span className="w-4 h-4 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[9px] font-bold flex items-center justify-center shrink-0">
                                             {idx + 1}
                                           </span>
 
@@ -4006,25 +4010,20 @@ export default function SongStudioModal({
                                                 value={editingTrackName}
                                                 onChange={(e) => setEditingTrackName(e.target.value)}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                                className="w-full px-2 py-0.5 rounded bg-black border border-indigo-500 text-xs text-white font-bold"
+                                                className="w-full min-w-0 px-1.5 py-0.5 rounded bg-black border border-indigo-500 text-[11px] text-white font-bold"
                                                 autoFocus
                                               />
                                               <button
                                                 type="button"
                                                 onClick={() => handleSaveTrackName(idea, tr.id, editingTrackName)}
-                                                className="p-1 text-emerald-400 hover:text-emerald-300 shrink-0"
+                                                className="p-0.5 text-emerald-400 hover:text-emerald-300 shrink-0"
                                               >
-                                                <Check className="w-3.5 h-3.5" />
+                                                <Check className="w-3 h-3" />
                                               </button>
                                             </div>
                                           ) : (
-                                            <div className="flex items-center gap-2 flex-wrap">
-                                              <span className="text-xs font-bold text-white font-mono whitespace-nowrap">{tr.nombre}</span>
-                                              {tr.instrumento && (
-                                                <span className="text-[10px] text-indigo-300 font-mono bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 whitespace-nowrap font-semibold">
-                                                  {tr.instrumento}
-                                                </span>
-                                              )}
+                                            <div className="flex items-center gap-1 min-w-0 flex-1">
+                                              <span className="text-[11px] font-bold text-white font-mono truncate">{tr.nombre}</span>
                                               <button
                                                 type="button"
                                                 onClick={() => {
@@ -4034,20 +4033,20 @@ export default function SongStudioModal({
                                                 className="text-neutral-500 hover:text-neutral-300 shrink-0"
                                                 title="Editar nombre de pista"
                                               >
-                                                <Edit2 className="w-3 h-3" />
+                                                <Edit2 className="w-2.5 h-2.5" />
                                               </button>
                                             </div>
                                           )}
                                         </div>
 
-                                        {/* Cubase Style Mute (Red) & Solo (Amber) Quick Toggles */}
-                                        <div className="flex items-center gap-1.5 shrink-0">
+                                        {/* Line 2: M/S + volume + ajustes + delete */}
+                                        <div className="flex items-center gap-1">
                                           <button
                                             type="button"
                                             onClick={() => handleToggleMuteTrack(idea, tr.id)}
-                                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-black cursor-pointer transition-all border ${
-                                              isMuted 
-                                                ? 'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] ring-1 ring-red-400/50' 
+                                            className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all border shrink-0 ${
+                                              isMuted
+                                                ? 'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] ring-1 ring-red-400/50'
                                                 : 'bg-neutral-800/90 text-neutral-400 border-neutral-700/80 hover:text-white hover:bg-neutral-700'
                                             }`}
                                             title="Mute (M) - Silenciar pista"
@@ -4057,93 +4056,83 @@ export default function SongStudioModal({
                                           <button
                                             type="button"
                                             onClick={() => handleToggleSoloTrack(idea, tr.id)}
-                                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-black cursor-pointer transition-all border ${
-                                              isSolo 
-                                                ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60' 
+                                            className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-black cursor-pointer transition-all border shrink-0 ${
+                                              isSolo
+                                                ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.8)] ring-1 ring-amber-300/60'
                                                 : 'bg-neutral-800/90 text-neutral-400 border-neutral-700/80 hover:text-white hover:bg-neutral-700'
                                             }`}
                                             title="Solo (S) - Aísla esta pista en exclusiva (Cubase style)"
                                           >
                                             S
                                           </button>
+
+                                          {vol === 0 || isMuted ? (
+                                            <VolumeX className="w-2.5 h-2.5 text-rose-400 shrink-0" />
+                                          ) : (
+                                            <Volume2 className="w-2.5 h-2.5 text-indigo-400 shrink-0" />
+                                          )}
+                                          <input
+                                            type="range"
+                                            min={0}
+                                            max={1}
+                                            step={0.05}
+                                            value={isMuted ? 0 : vol}
+                                            onChange={(e) => handleTrackVolumeChange(idea, tr.id, parseFloat(e.target.value))}
+                                            className="flex-1 min-w-0 accent-indigo-500 h-1 bg-neutral-800 rounded cursor-pointer"
+                                            title={`Volumen: ${Math.round(vol * 100)}%`}
+                                          />
+
+                                          {/* Toggle Advanced Track Settings Drawer */}
+                                          <button
+                                            type="button"
+                                            onClick={() => setExpandedTrackSettingsId(expandedTrackSettingsId === tr.id ? null : tr.id)}
+                                            className={`relative p-1 rounded cursor-pointer transition-all border shrink-0 ${
+                                              expandedTrackSettingsId === tr.id
+                                                ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
+                                                : 'bg-white/5 text-neutral-300 border-white/10 hover:bg-white/10'
+                                            }`}
+                                            title={`Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia${(tr.desfaseMs || 0) !== 0 ? ` · ${formatDesfase(tr.desfaseMs)}` : ''}`}
+                                          >
+                                            <Sliders className="w-2.5 h-2.5 text-purple-300" />
+                                            {(tr.desfaseMs || 0) !== 0 && (
+                                              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-amber-400 ring-1 ring-black" />
+                                            )}
+                                          </button>
+
+                                          {/* Delete Track */}
+                                          <button
+                                            type="button"
+                                            onClick={() => handleDeleteTrack(idea, tr.id)}
+                                            className="text-neutral-500 hover:text-rose-400 p-0.5 shrink-0"
+                                            title="Borrar pista"
+                                          >
+                                            <X className="w-3 h-3" />
+                                          </button>
                                         </div>
                                       </div>
 
-                                {/* Volume Slider & Advanced Settings Toggle */}
-                                <div className="flex items-center gap-2 flex-1 w-full sm:w-auto">
-                                  <div className="flex items-center gap-1.5 flex-1 min-w-[120px]">
-                                    {vol === 0 || isMuted ? (
-                                      <VolumeX className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                                    ) : (
-                                      <Volume2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                                    )}
-                                    <input
-                                      type="range"
-                                      min={0}
-                                      max={1}
-                                      step={0.05}
-                                      value={isMuted ? 0 : vol}
-                                      onChange={(e) => handleTrackVolumeChange(idea, tr.id, parseFloat(e.target.value))}
-                                      className="w-full min-w-0 accent-indigo-500 h-1 bg-neutral-800 rounded cursor-pointer"
-                                      title={`Volumen: ${Math.round(vol * 100)}%`}
-                                    />
-                                  </div>
-
-                                  {/* Active DSP Badge (shows if desfase or pan or EQ is active) */}
-                                  {(tr.desfaseMs || 0) !== 0 && (
-                                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
-                                      ⏱️ {formatDesfase(tr.desfaseMs)}
-                                    </span>
-                                  )}
-
-                                  {/* Toggle Advanced Track Settings Drawer */}
-                                  <button
-                                    type="button"
-                                    onClick={() => setExpandedTrackSettingsId(expandedTrackSettingsId === tr.id ? null : tr.id)}
-                                    className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all border flex items-center gap-1 shrink-0 ${
-                                      expandedTrackSettingsId === tr.id
-                                        ? 'bg-purple-500/30 text-purple-300 border-purple-500/50'
-                                        : 'bg-white/5 text-neutral-300 border-white/10 hover:bg-white/10'
-                                    }`}
-                                    title="Ajustes de Pista: Paneo, Ecualizador 3 Bandas y Ajuste de Latencia"
-                                  >
-                                    <Sliders className="w-3 h-3 text-purple-300" />
-                                    <span>⚙️ Ajustes</span>
-                                  </button>
-
-                                  {/* Delete Track */}
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDeleteTrack(idea, tr.id)}
-                                    className="text-neutral-500 hover:text-rose-400 p-1 shrink-0 ml-1"
-                                    title="Borrar pista"
-                                  >
-                                    <X className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
-                              </div>
-
-                              {/* Waveform Visualizer */}
-                              <div className="w-full flex items-center justify-center p-1 relative min-h-[44px] bg-black/20 rounded">
-                                <WaveformTrack 
-                                  ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
-                                  audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
-                                  color={isSolo ? '#f59e0b' : (isMuted ? '#52525b' : '#818cf8')}
-                                  masterDuration={duration || 30}
-                                  trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
-                                  currentTime={currentTime}
-                                  onSeekTrack={(seekSec) => handleSeekIdea(idea, seekSec)}
-                                  onTrackLoaded={(dur) => {
-                                    if (dur > 0 && isFinite(dur)) {
-                                      setDurationMap(prev => {
-                                        const cur = prev[idea.id] || 0;
-                                        if (dur > cur) return { ...prev, [idea.id]: dur };
-                                        return prev;
-                                      });
-                                    }
-                                  }}
-                                />
-                              </div>
+                                      {/* Waveform Visualizer: fills remaining width, height = row height */}
+                                      <div className="flex-1 relative bg-black/20">
+                                        <WaveformTrack
+                                          ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
+                                          audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
+                                          color={isSolo ? '#f59e0b' : (isMuted ? '#52525b' : '#818cf8')}
+                                          masterDuration={duration || 30}
+                                          trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
+                                          currentTime={currentTime}
+                                          onSeekTrack={(seekSec) => handleSeekIdea(idea, seekSec)}
+                                          onTrackLoaded={(dur) => {
+                                            if (dur > 0 && isFinite(dur)) {
+                                              setDurationMap(prev => {
+                                                const cur = prev[idea.id] || 0;
+                                                if (dur > cur) return { ...prev, [idea.id]: dur };
+                                                return prev;
+                                              });
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
 
                               {/* Collapsible Advanced Track Settings Drawer (Pan, EQ, Latency Nudge) */}
                               {expandedTrackSettingsId === tr.id && (
