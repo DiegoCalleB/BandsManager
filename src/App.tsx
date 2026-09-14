@@ -905,7 +905,7 @@ export default function App() {
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.ai</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.io</span>
  </span>
  </div>
  </div>
@@ -1160,7 +1160,7 @@ export default function App() {
  />
  <div className="flex flex-col text-left">
  <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
- BANDMANAGER<span className="text-[#f2ca50]">.ai</span>
+ BANDMANAGER<span className="text-[#f2ca50]">.io</span>
  </span>
  </div>
  </div>
