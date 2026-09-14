@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Coffee, Zap } from 'lucide-react';
+import { PaintBucket, Zap } from 'lucide-react';
 import { api } from '../../services/api';
 
 const KOFI_URL = 'https://ko-fi.com/bandmanager';
@@ -11,6 +11,10 @@ interface AiUsageSupportWidgetProps {
 
 /**
  * Consumo real de IA de la banda (server/db/aiLedger.ts) + enlace a Ko-fi para donar.
+ *
+ * El CTA dice explícitamente "Apoya BandManager económicamente" en vez de solo "Ko-fi": el
+ * nombre de la plataforma solo no comunica para qué es el botón. Ko-fi aparece igualmente como
+ * texto pequeño, para que quede claro a dónde lleva antes de hacer clic.
  *
  * A propósito no monta ningún checkout propio: ya existe uno (Stripe con "pay what you want",
  * server/routes/donations.ts) pero mantener dos vías de donar a la vez es justo el patrón de
@@ -38,14 +42,14 @@ export const AiUsageSupportWidget: React.FC<AiUsageSupportWidgetProps> = ({ vari
         target="_blank"
         rel="noopener noreferrer"
         className="mx-3 mb-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm flex items-center justify-between gap-2"
-        title="Consumo real de IA de tu banda este mes. Apoya el proyecto en Ko-fi."
+        title="Consumo real de IA de tu banda este mes. Apoya BandManager económicamente (vía Ko-fi)."
       >
         <div className="flex items-center gap-1.5 min-w-0">
           <Zap className="w-3 h-3 text-amber-400 shrink-0" />
           <span className="text-[10px] font-mono text-neutral-300 truncate">IA este mes: <strong className="text-amber-300">{costeLabel}</strong></span>
         </div>
         <span className="text-[10px] font-mono font-bold text-amber-400 group-hover:text-amber-300 transition-colors flex items-center gap-1 shrink-0">
-          <Coffee className="w-3 h-3" /> Ko-fi
+          <PaintBucket className="w-3 h-3" /> Apoyar
         </span>
       </a>
     );
@@ -70,9 +74,12 @@ export const AiUsageSupportWidget: React.FC<AiUsageSupportWidgetProps> = ({ vari
         href={KOFI_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0 w-full sm:w-auto justify-center"
+        className="flex flex-col items-center gap-0.5 shrink-0 w-full sm:w-auto"
       >
-        <Coffee className="w-3.5 h-3.5" /> Apoyar en Ko-fi
+        <span className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 w-full justify-center">
+          <PaintBucket className="w-3.5 h-3.5" /> Apoya BandManager económicamente
+        </span>
+        <span className="text-[9px] font-mono text-neutral-500">vía Ko-fi</span>
       </a>
     </div>
   );
