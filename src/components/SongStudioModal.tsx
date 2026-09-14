@@ -2761,32 +2761,6 @@ export default function SongStudioModal({
     setShowAddIdea(false);
   };
 
-  // Directly insert original song as an idea without showing form or asking anything else
-  const handleInsertOriginalSongDirectly = () => {
-    const urlToUse = song.audioPrincipalUrl || selectedSongBaseUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl);
-    if (!urlToUse) return;
-
-    const newIdea: SongAudioIdea = {
-      id: `idea-${Date.now()}`,
-      titulo: `Tema Original: ${song.titulo}`,
-      seccion: 'general',
-      audioUrl: urlToUse,
-      subidoPor: currentUsername || 'Miembro de la Banda',
-      instrumento: 'Tema Base',
-      fecha: new Date().toISOString().split('T')[0],
-      notas: 'Pista base original cargada automáticamente.',
-      votos: [currentUsername],
-      comentarios: []
-    };
-
-    const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
-    onUpdateSong({
-      ...song,
-      audioIdeas: updatedIdeas,
-      audioPrincipalUrl: song.audioPrincipalUrl
-    });
-  };
-
   // Toggle upvote / like
   const handleToggleVote = (ideaId: string) => {
     const updatedIdeas = (song.audioIdeas || []).map(idea => {
@@ -2941,7 +2915,8 @@ export default function SongStudioModal({
 
                 {/* Mi nivel de preparación con esta canción — cada miembro opina por sí mismo, no
                     es un estado global (ya existe song.estadoTema para eso). Sirve para que quien
-                    lleva la banda vea de un vistazo quién necesita repasar antes del bolo. */}
+                    lleva la banda vea de un vistazo quién necesita repasar antes del bolo.
+                    En móvil se oculta de la cabecera y vive dentro de Herramientas. */}
                 {(() => {
                   const myKey = currentUser?.id || currentUser?.username;
                   const myName = currentUser?.name || currentUser?.username || currentUsername;
@@ -2956,7 +2931,7 @@ export default function SongStudioModal({
                         onUpdateSong({ ...song, notasPorMiembro: withMemberReadiness(song, myKey, myName, val) });
                       }}
                       title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
-                      className={`px-2.5 py-1 rounded-xl text-xs font-mono font-bold border cursor-pointer outline-none ${
+                      className={`hidden sm:inline-block px-2.5 py-1 rounded-xl text-xs font-mono font-bold border cursor-pointer outline-none ${
                         levelInfo ? levelInfo.colorClass : 'bg-white/5 text-neutral-400 border-white/10'
                       }`}
                     >
@@ -2982,6 +2957,34 @@ export default function SongStudioModal({
 
                   {showToolsMenu && (
                     <div className="absolute right-0 top-full mt-2 w-56 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl p-1.5 z-50 space-y-1 text-xs font-mono">
+                      {/* Mi preparación: solo en móvil, en escritorio ya se ve en la cabecera */}
+                      <div className="sm:hidden px-1 pb-1">
+                        {(() => {
+                          const myKey = currentUser?.id || currentUser?.username;
+                          const myName = currentUser?.name || currentUser?.username || currentUsername;
+                          const myReadiness = getMemberReadiness(song, myKey, myName);
+                          const levelInfo = READINESS_LEVELS.find(l => l.value === myReadiness);
+                          return (
+                            <select
+                              value={myReadiness || ''}
+                              onChange={(e) => {
+                                const val = e.target.value as ReadinessLevel;
+                                if (!val) return;
+                                onUpdateSong({ ...song, notasPorMiembro: withMemberReadiness(song, myKey, myName, val) });
+                              }}
+                              title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
+                              className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold border cursor-pointer outline-none ${
+                                levelInfo ? levelInfo.colorClass : 'bg-white/5 text-neutral-400 border-white/10'
+                              }`}
+                            >
+                              <option value="" disabled>Mi preparación...</option>
+                              {READINESS_LEVELS.map(l => (
+                                <option key={l.value} value={l.value}>{l.icon} {l.label}</option>
+                              ))}
+                            </select>
+                          );
+                        })()}
+                      </div>
                       <button
                         type="button"
                         onClick={() => { setShowToolsMenu(false); setShowChordsModal(true); }}
@@ -3095,50 +3098,23 @@ export default function SongStudioModal({
         {/* Content Body */}
         <div className="p-2.5 sm:p-6 overflow-y-auto space-y-2.5 sm:space-y-6 flex-1">
 
-          {/* Sleek Top Action Bar */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-2 sm:p-3 bg-zinc-900/80 rounded-2xl border border-white/10 shadow-md">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
-                <Music className="w-4 h-4 text-indigo-400 animate-pulse" /> Ideas & Grabaciones
-              </span>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => setShowCubaseHelp(true)}
-                className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 transition-all cursor-pointer flex items-center gap-1"
-                title="Ver atajos de teclado"
-              >
-                <Keyboard className="w-3 h-3" /> Atajos (Espacio, M, S)
-              </motion.button>
-            </div>
+          {/* Sleek Top Action Bar: "Atajos" y "Cargar Tema Original" viven ya en Herramientas
+              y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
+          <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-zinc-900/80 rounded-2xl border border-white/10 shadow-md">
+            <span className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider flex items-center gap-1.5">
+              <Music className="w-4 h-4 text-indigo-400 animate-pulse" /> Ideas & Grabaciones
+            </span>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-              {selectedSongBaseUrl && (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.95 }}
-                  type="button"
-                  onClick={handleInsertOriginalSongDirectly}
-                  className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
-                  title="Insertar directamente el tema original como una nueva idea multipista"
-                >
-                  <Disc className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Cargar Tema Original</span>
-                </motion.button>
-              )}
-
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => setShowAddIdea(true)}
-                className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
-              >
-                <Plus className="w-4 h-4" />
-                <span>+ Grabar / Subir Idea</span>
-              </motion.button>
-            </div>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.95 }}
+              type="button"
+              onClick={() => setShowAddIdea(true)}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Grabar / Subir Idea</span>
+            </motion.button>
           </div>
 
           {/* Add New Audio Idea Form */}
@@ -3530,14 +3506,16 @@ export default function SongStudioModal({
         )}
       </AnimatePresence>
 
-          {/* Section Filter Bar */}
+          {/* Section Filter Bar: con pocas ideas filtrar no aporta nada — solo aparece cuando
+              el catálogo crece lo bastante como para que merezca la pena */}
+          {ideasList.length > 3 && (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono text-neutral-400 uppercase tracking-wider">
                 Filtrar por Sección:
               </span>
               <span className="text-xs font-mono text-emerald-400">
-                {ideasList.length} {ideasList.length === 1 ? 'idea' : 'ideas'} en catálogo
+                {ideasList.length} ideas en catálogo
               </span>
             </div>
 
@@ -3575,6 +3553,7 @@ export default function SongStudioModal({
               })}
             </div>
           </div>
+          )}
 
           {/* Ideas Audio Feed */}
           {filteredIdeas.length === 0 ? (
