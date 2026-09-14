@@ -742,6 +742,16 @@ export default function Dashboard({
         </div>
       </div>
 
+      {/* APOYO AL PROYECTO Y CONSUMO DE IA — arriba del todo: en móvil, tras el header, para
+          que no dependa de bajar más allá de las secciones de Agenda/Booking (que en pantallas
+          estrechas ocupan mucho alto y lo dejaban fuera de la vista inicial). */}
+      {!isPromo && (
+        <div className="space-y-3">
+          <AiSupportWidget variant="card" />
+          <AiUsageCard isStitchLight={isStitchLight} />
+        </div>
+      )}
+
       {/* 1. SECCIÓN PRINCIPAL: PRÓXIMAS FECHAS Y AGENDA */}
       <div className={`p-5 rounded-2xl transition-all border ${
         isStitchLight 
@@ -1043,14 +1053,6 @@ export default function Dashboard({
         onOpenAutonomyModal={() => setIsAutonomyModalOpen(true)}
         onOpenProfileModal={onOpenProfileModal}
       />
-
-      {/* 4. SECCIÓN: APOYO AL PROYECTO Y CONSUMO DE IA */}
-      {!isPromo && (
-        <div className="space-y-3">
-          <AiSupportWidget variant="card" />
-          <AiUsageCard isStitchLight={isStitchLight} />
-        </div>
-      )}
 
       {/* MODAL: PLANTILLAS Y EJEMPLOS REALES DE EMAIL */}
       <EmailTemplatesModal
