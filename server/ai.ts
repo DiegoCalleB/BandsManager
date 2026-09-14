@@ -116,15 +116,15 @@ export function costEurFromTokens(provider: string, promptTokens: number, comple
  * a la plataforma pedirla.
  */
 function registrarConsumoIA(params: {
-  userId?: string;
+  bandId?: string;
   provider: string;
   modelName: string;
   promptTokens: number;
   completionTokens: number;
 }): void {
-  if (!params.userId || (!params.promptTokens && !params.completionTokens)) return;
+  if (!params.bandId || (!params.promptTokens && !params.completionTokens)) return;
   dbRecordAiUsage({
-    userId: params.userId,
+    bandId: params.bandId,
     promptTokens: params.promptTokens,
     completionTokens: params.completionTokens,
     modelName: params.modelName,
@@ -238,7 +238,7 @@ export async function generateContentWithFallback(
     timeoutMs?: number;
     links?: PitchLinks;
     /** Si se pasa, registra el consumo real de tokens de esta llamada en el ledger de IA. */
-    userId?: string;
+    bandId?: string;
   }
 ) {
   const modelsToTry = params.preferredModel
@@ -264,7 +264,7 @@ export async function generateContentWithFallback(
       if (response) {
         console.log(`[Gemini API] ¡Éxito con modelo: ${modelName}!`);
         registrarConsumoIA({
-          userId: params.userId,
+          bandId: params.bandId,
           provider: "gemini",
           modelName,
           promptTokens: response.usageMetadata?.promptTokenCount || 0,
@@ -636,7 +636,7 @@ export async function generateUnifiedAI(params: {
   /** Email real de contacto de la banda, para firmar el pitch si cae al generador local. */
   contactEmail?: string;
   /** Si se pasa, registra el consumo real de tokens de esta llamada en el ledger de IA. */
-  userId?: string;
+  bandId?: string;
 }): Promise<{ text: string; provider: string; modelName: string; fallbackFrom?: string }> {
   const provider = params.provider || "gemini";
   const allowFallback = params.allowFallback ?? true;
@@ -665,7 +665,7 @@ export async function generateUnifiedAI(params: {
         contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
         preferredModel: params.modelName || GEMINI_MODEL,
         timeoutMs: params.timeoutMs,
-        userId: params.userId,
+        bandId: params.bandId,
         // OJO: sin permitirPitchLocal aquí a propósito. generateUnifiedAI ya tiene su propio
         // escalón de fallback local (más abajo) tras intentar también DeepSeek explícitamente;
         // activarlo en esta llamada interna haría que un fallo total de Gemini devolviera ya el

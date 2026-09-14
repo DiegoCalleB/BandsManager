@@ -726,13 +726,13 @@ async function handleWebhook(req: express.Request, res: express.Response) {
         // se distingue de una suscripción de plan por metadata.kind, no por el mode de
         // la sesión, porque ambas pueden vivir como "payment" en el futuro.
         if (session.metadata?.kind === "ai_donation") {
-          const donorUserId = session.metadata?.userId;
+          const donorBandId = session.metadata?.bandId;
           const amountPaidCents = session.amount_total ?? 0;
-          if (donorUserId && event.id) {
-            const resultado = await dbSettleAiDonation(donorUserId, amountPaidCents, event.id);
-            console.log(`[Stripe Webhook] Donación IA liquidada para ${donorUserId}:`, resultado);
+          if (donorBandId && event.id) {
+            const resultado = await dbSettleAiDonation(donorBandId, amountPaidCents, event.id);
+            console.log(`[Stripe Webhook] Donación IA liquidada para la banda ${donorBandId}:`, resultado);
           } else {
-            console.warn("[Stripe Webhook] Sesión de donación sin userId en metadata; se ignora.");
+            console.warn("[Stripe Webhook] Sesión de donación sin bandId en metadata; se ignora.");
           }
           break;
         }

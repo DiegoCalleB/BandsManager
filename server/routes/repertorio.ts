@@ -415,7 +415,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
           config: {
             responseMimeType: "application/json"
           },
-          userId: (req as any).user?.id
+          bandId: getTargetBandId(req)
         });
 
         const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -582,7 +582,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
       config: {
         responseMimeType: "application/json"
       },
-      userId: (req as any).user?.id
+      bandId: getTargetBandId(req)
     });
 
     const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";

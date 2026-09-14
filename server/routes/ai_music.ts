@@ -4,6 +4,7 @@ import { requireAuth } from "../state.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import { costEurFromTokens } from "../ai.js";
 import { dbRecordAiUsage } from "../db/aiLedger.js";
+import { getTargetBandId } from "../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -58,12 +59,17 @@ router.post(["/generate", "/generate-music"], requireAuth, iaRateLimiter, async 
 
     // Lyria no tiene tarifa propia en AI_PRICING_TABLE (es audio, no texto): se usa la tarifa de
     // Gemini como aproximación de visibilidad, no como coste exacto de facturación de audio.
-    const userId = (req as any).user?.id;
-    if (userId && usageMetadata) {
+    let bandId: string | undefined;
+    try {
+      bandId = getTargetBandId(req);
+    } catch (e: any) {
+      console.warn("[AI Ledger] Sin banda activa para registrar consumo de Lyria:", e?.message || e);
+    }
+    if (bandId && usageMetadata) {
       const promptTokens = usageMetadata.promptTokenCount || 0;
       const completionTokens = usageMetadata.candidatesTokenCount || 0;
       dbRecordAiUsage({
-        userId,
+        bandId,
         promptTokens,
         completionTokens,
         modelName: "lyria-3-clip-preview",

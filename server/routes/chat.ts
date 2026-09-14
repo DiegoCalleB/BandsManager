@@ -730,7 +730,7 @@ FORMATO: 2-4 líneas de texto, después una línea con 4-6 hashtags. Sin comilla
   }
 
   try {
-    const response = await generateContentWithFallback(client, { contents: prompt, userId: (req as any).user?.id });
+    const response = await generateContentWithFallback(client, { contents: prompt, bandId: getTargetBandId(req) });
     const copy = (response.text || "").trim();
     if (!copy) throw new Error("La IA devolvió una respuesta vacía.");
     // El frontend (ReelsCenter) espera { success, text }: devolver solo { copy } hacía que el

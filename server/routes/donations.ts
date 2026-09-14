@@ -4,6 +4,7 @@ import { dbGetAiDebtCents } from "../db.js";
 import { requireAuth } from "../state.js";
 import { donationRateLimiter } from "../middleware/rateLimiter.js";
 import { getOriginHost } from "./billing.js";
+import { bandaFacturableDelUsuario } from "../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -29,15 +30,15 @@ export function defaultDonationCents(owedCents: number): number {
   return Math.min(MAX_DONATION_CENTS, Math.max(STRIPE_MIN_EUR_CENTS, Math.round(owedCents) || 0));
 }
 
-// GET /api/donations/status - deuda viva del usuario autenticado.
+// GET /api/donations/status - deuda viva de la banda del usuario autenticado.
 router.get("/donations/status", requireAuth, async (req, res) => {
   try {
-    const userId = (req as any).user?.id;
-    if (!userId) {
-      return res.status(401).json({ success: false, error: "Sesión no válida." });
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
     }
 
-    const owedCents = await dbGetAiDebtCents(userId);
+    const owedCents = await dbGetAiDebtCents(banda.bandId);
     return res.json({
       success: true,
       owed_cents: owedCents,
@@ -52,18 +53,17 @@ router.get("/donations/status", requireAuth, async (req, res) => {
 
 // POST /api/donations/create-checkout-session
 //
-// El userId sale SIEMPRE de la sesión (requireAuth), nunca del body: igual
-// que en billing.ts, aceptar un userId del cliente aquí dejaría a cualquiera
-// generar una sesión de pago "a cuenta" de la deuda de otro usuario.
+// La banda sale SIEMPRE de la sesión (bandaFacturableDelUsuario), nunca del body: igual
+// que en billing.ts, aceptar un bandId del cliente aquí dejaría a cualquiera generar una
+// sesión de pago "a cuenta" de la deuda de otra banda.
 router.post("/donations/create-checkout-session", requireAuth, donationRateLimiter, async (req, res) => {
   try {
-    const userId = (req as any).user?.id;
-    const userEmail = (req as any).user?.email as string | undefined;
-    if (!userId) {
-      return res.status(401).json({ success: false, error: "Sesión no válida." });
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
     }
 
-    const owedCents = await dbGetAiDebtCents(userId);
+    const owedCents = await dbGetAiDebtCents(banda.bandId);
     const suggestedCents = defaultDonationCents(owedCents);
     const host = getOriginHost(req);
     const stripe = getStripe();
@@ -90,19 +90,19 @@ router.post("/donations/create-checkout-session", requireAuth, donationRateLimit
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
-      customer_email: userEmail || undefined,
+      customer_email: banda.email || undefined,
       line_items: [{ price: donationPrice.id, quantity: 1 }],
       custom_text: {
         submit: {
-          message: `Tu consumo de IA de este mes es de ${(owedCents / 100).toFixed(2)} €. Cualquier cantidad ayuda; superarlo te da el nivel Sponsor.`
+          message: `El consumo de IA de tu banda este mes es de ${(owedCents / 100).toFixed(2)} €. Cualquier cantidad ayuda; superarlo desbloquea el nivel Sponsor.`
         }
       },
-      // El userId viaja en metadata, no en el importe: el webhook vuelve a
+      // El bandId viaja en metadata, no en el importe: el webhook vuelve a
       // calcular la deuda contra la BD en el momento de liquidar, no se fía
       // de lo que esta sesión creyera que se debía al crearla.
       metadata: {
         kind: "ai_donation",
-        userId
+        bandId: banda.bandId
       },
       success_url: `${host}/?donation=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${host}/?donation=cancelled`
