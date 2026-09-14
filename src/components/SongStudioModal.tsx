@@ -2895,7 +2895,12 @@ export default function SongStudioModal({
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-xl font-bold tracking-tight text-white">{song.titulo}</h2>
+                <h2
+                  className="text-xl font-bold tracking-tight text-white"
+                  title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
+                >
+                  {song.titulo}
+                </h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase font-semibold">
                   {song.estadoTema || 'componiendo'}
                 </span>
@@ -3031,12 +3036,6 @@ export default function SongStudioModal({
                   )}
                 </div>
               </div>
-              <p className="text-xs text-neutral-400 font-mono flex items-center gap-3 mt-0.5">
-                <span>⏱️ {song.duracion}</span>
-                <span>🎵 {song.tonalidad}</span>
-                <span>⚡ {song.bpm} BPM</span>
-                {song.afinacion && <span>🎸 {song.afinacion}</span>}
-              </p>
             </div>
           </div>
 
@@ -3505,55 +3504,6 @@ export default function SongStudioModal({
           </motion.div>
         )}
       </AnimatePresence>
-
-          {/* Section Filter Bar: con pocas ideas filtrar no aporta nada — solo aparece cuando
-              el catálogo crece lo bastante como para que merezca la pena */}
-          {ideasList.length > 3 && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-neutral-400 uppercase tracking-wider">
-                Filtrar por Sección:
-              </span>
-              <span className="text-xs font-mono text-emerald-400">
-                {ideasList.length} ideas en catálogo
-              </span>
-            </div>
-
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-              <button
-                type="button"
-                onClick={() => setActiveSectionFilter('todas')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap ${
-                  activeSectionFilter === 'todas'
-                    ? 'bg-amber-500 text-zinc-950 shadow-md'
-                    : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                🔍 Todas ({ideasList.length})
-              </button>
-
-              {SECCIONES_TEMA.map(sec => {
-                const count = ideasList.filter(i => i.seccion === sec.key).length;
-                return (
-                  <button
-                    key={sec.key}
-                    type="button"
-                    onClick={() => setActiveSectionFilter(sec.key)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                      activeSectionFilter === sec.key
-                        ? 'bg-indigo-600 text-white shadow-md'
-                        : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    <span>{sec.icon}</span>
-                    <span>{sec.label}</span>
-                    <span className="text-[10px] opacity-75">({count})</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          )}
 
           {/* Ideas Audio Feed */}
           {filteredIdeas.length === 0 ? (
