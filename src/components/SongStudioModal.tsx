@@ -3,7 +3,7 @@ import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConf
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";
 import { SongStudioAiMusicModal } from "./song_studio/SongStudioAiMusicModal";
 import { SongStudioAiComposerModal } from "./song_studio/SongStudioAiComposerModal";
-import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob } from "../utils/audioLatency";
+import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline, trimAudioBlobLatency, autoDetectAudioLatencyOffset, exportMasterMixAudioBlob, computeAutoBalanceVolumes } from "../utils/audioLatency";
 import React, { useState, useRef, useEffect } from 'react';
 
 const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
@@ -585,6 +585,27 @@ export default function SongStudioModal({
             })
           );
         }
+      }
+
+      // Nivelamos el volumen inicial de las pistas recién separadas con el RMS real de cada una,
+      // en vez de dejar el valor genérico por instrumento (STEM_METADATA.recommendedVolume): así
+      // el primer miembro que abra la canción ya escucha una mezcla equilibrada de fábrica, no una
+      // guitarra tapando la voz porque esa toma en concreto se grabó más alta de nivel. Si el
+      // análisis falla para alguna pista, se queda con su volumen por defecto sin bloquear nada.
+      setStemProgressModal(prev => prev ? {
+        ...prev,
+        currentStepText: 'Analizando volumen real de cada pista para una mezcla inicial equilibrada...'
+      } : null);
+      try {
+        const autoBalanceVolumes = await computeAutoBalanceVolumes(
+          newTracks.map(t => ({ id: t.id, audioUrl: t.audioUrl })),
+          resolveAudioUrl
+        );
+        newTracks = newTracks.map(t =>
+          autoBalanceVolumes[t.id] !== undefined ? { ...t, volumen: autoBalanceVolumes[t.id] } : t
+        );
+      } catch (balanceErr) {
+        console.warn('[Stem Separation] Auto-Balance inicial falló, se mantienen los volúmenes por defecto:', balanceErr);
       }
 
       const finalSeparationEngine = data.separationEngine || (data.isNeural ? (engineToUse === 'mvsep-mdx23' ? 'MVSEP-MDX23 Neural Ensemble' : 'HT-Demucs v4 Neural (Replicate Cloud GPU)') : 'FFmpeg DSP Local (Sin Replicate)');
