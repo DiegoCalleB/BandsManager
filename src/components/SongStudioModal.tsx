@@ -828,13 +828,17 @@ export default function SongStudioModal({
       // Audio real de la idea para que el motor (MusicGen) pueda ESCUCHAR melodía/acordes/ritmo
       // en vez de adivinar desde una descripción de texto — mismo saneado que ya hace la
       // separación de stems para blobs/IndexedDB, que Replicate no puede ir a buscar por sí solo.
-      let sourceAudioUrl: string | undefined = targetIdea.audioUrl || undefined;
+      // idea.audioUrl es "la pista principal o legacy" y puede estar vacío en ideas que solo
+      // tienen pistas separadas (stems) o grabaciones multipista — sin este fallback, esas ideas
+      // se iban derechas a Lyria (solo texto) sin que se notara por qué.
+      const originalSourceAudioUrl = targetIdea.audioUrl || getIdeaTracks(targetIdea)[0]?.audioUrl || '';
+      let sourceAudioUrl: string | undefined = originalSourceAudioUrl || undefined;
       try {
         if (sourceAudioUrl) {
           const resolved = await resolveAudioUrl(sourceAudioUrl);
           if (resolved) sourceAudioUrl = resolved;
           if (sourceAudioUrl.startsWith('indexeddb:') || sourceAudioUrl.startsWith('blob:') || sourceAudioUrl.startsWith('data:')) {
-            const blob = await getAudioBlobFromUrl(targetIdea.audioUrl);
+            const blob = await getAudioBlobFromUrl(originalSourceAudioUrl);
             const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
             const file = new File([blob], `source-audio-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
             const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
