@@ -745,4 +745,17 @@ router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res
   }
 });
 
+// Optimiza masivamente todos los audios en formato WAV del repertorio a MP3 de alta calidad (256k)
+router.post("/optimize-wavs", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { optimizeWavSongsForBand } = await import("../utils/optimizeExistingWavs.js");
+    const result = await optimizeWavSongsForBand(userBandId);
+    res.json({ success: true, result });
+  } catch (err: any) {
+    console.error("Error in /optimize-wavs:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error optimizando audios WAV" });
+  }
+});
+
 export default router;

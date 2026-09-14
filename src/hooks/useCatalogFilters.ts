@@ -11,8 +11,8 @@ export function useCatalogFilters(songs: Song[]) {
  if (!Array.isArray(songs)) return ['todos', 'Singles / Sin Disco'];
  const safe = songs.filter((s): s is Song => Boolean(s && typeof s === 'object' && s.id));
  const list = safe
- .map((s) => s.albumDisco || s.album)
- .filter((a): a is string => Boolean(a && typeof a === 'string'));
+ .map((s) => (s.albumDisco || s.album || '').trim())
+ .filter((a): a is string => Boolean(a));
  const albumSet = new Set(list);
  if (safe.some((s) => !s.albumDisco && !s.album) || albumSet.size === 0) {
  albumSet.add('Singles / Sin Disco');
@@ -30,7 +30,7 @@ export function useCatalogFilters(songs: Song[]) {
  (s.cantantePrincipal && s.cantantePrincipal.toLowerCase().includes(query)) ||
  (s.notasInternas && s.notasInternas.toLowerCase().includes(query));
 
- const matchAlbum = catalogAlbumFilter === 'todos' || s.albumDisco === catalogAlbumFilter;
+ const matchAlbum = catalogAlbumFilter === 'todos' || (s.albumDisco || s.album || 'Singles / Sin Disco') === catalogAlbumFilter;
  const matchStatus = catalogStatusFilter === 'todos'
  || (catalogStatusFilter === 'favoritos' ? Boolean(s.favoritoGeneral) : s.estadoTema === catalogStatusFilter);
 

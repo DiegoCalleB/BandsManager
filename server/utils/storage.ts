@@ -56,6 +56,56 @@ export async function uploadToSupabaseIfAvailable(
 }
 
 /**
+ * Sube un Buffer en memoria directamente a Supabase Storage y devuelve su URL pública.
+ * Evita tener que escribir en disco temporal cuando se descargan streams remotos.
+ */
+export async function uploadBufferToSupabase(
+  buffer: Buffer,
+  storageSubPath: string,
+  contentType: string = "audio/wav"
+): Promise<string | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase || !buffer || buffer.length === 0) return null;
+
+  try {
+    const bucketName = getBucketName();
+    const { error: uploadError } = await supabase.storage
+      .from(bucketName)
+      .upload(storageSubPath, buffer, {
+        contentType,
+        upsert: true
+      });
+
+    if (uploadError) {
+      console.warn(`[Supabase Buffer Upload Notice] Failed for ${storageSubPath}:`, uploadError.message);
+      return null;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from(bucketName)
+      .getPublicUrl(storageSubPath);
+
+    if (publicUrlData?.publicUrl) {
+      console.log(`[Supabase Storage] Stem uploaded directly to permanent storage: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
+      return publicUrlData.publicUrl;
+    }
+  } catch (err: any) {
+    console.warn(`[Supabase Storage Buffer Error] ${storageSubPath}:`, err.message || err);
+  }
+  return null;
+}
+
+/**
+ * Genera la ruta aislada por banda y canción para almacenar stems separados de forma permanente.
+ */
+export function rutaAlmacenamientoStem(bandId: string, stemName: string, songHash: string): string {
+  const bandaLimpia = String(bandId || "sin-banda").replace(/[^a-zA-Z0-9_-]/g, "_");
+  const hashLimpio = String(songHash || "general").replace(/[^a-zA-Z0-9_-]/g, "_").substring(0, 16);
+  const stemLimpio = String(stemName || "stem").replace(/[^a-zA-Z0-9_.-]/g, "_");
+  return `bandas/${bandaLimpia}/stems/${hashLimpio}/${stemLimpio}`;
+}
+
+/**
  * Ruta dentro del bucket para un clip de Reels, con la banda como carpeta: así los ficheros de
  * una banda no pisan los de otra, y es fácil borrar los de una banda entera si hiciera falta.
  * Solo se admiten caracteres seguros para no acabar escribiendo fuera de esa carpeta.

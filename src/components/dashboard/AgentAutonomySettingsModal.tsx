@@ -1104,7 +1104,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
                       placeholder={`ej: ${bandName} Booking & Management`}
                     />
                     <p className="text-[10px] text-neutral-500">
-                      Nombre de la persona o departamento que firma las propuestas (ej: Diego - Booking {bandName}).
+                      Nombre de la persona o departamento que firma las propuestas (ej: Booking & Management - {bandName}).
                     </p>
                   </div>
 

@@ -12,6 +12,7 @@ import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../u
 // uploadToSupabaseIfAvailable vivía aquí; ahora la comparte también el generador de Reels,
 // para que el clip renderizado sobreviva a un redeploy del disco efímero de Railway.
 import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
+import { construirFiltroPreprocesamientoDirecto } from "../utils/audioEnergy.js";
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
@@ -598,7 +599,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
 // requireAuth: igual que /analyze, descarga y trocea vídeo en el servidor.
 router.post("/process", requireAuth, async (req, res) => {
   try {
-    const { tracks, albumTitle, artist } = req.body;
+    const { tracks, albumTitle, artist, normalizeAudio = true } = req.body;
     const urlVideo = urlDeVideoValida(req.body.url);
     const ficheroFuente = rutaFuenteSegura(req.body.sourceFilePath);
     if (req.body.sourceFilePath && !ficheroFuente) {
@@ -675,10 +676,21 @@ router.post("/process", requireAuth, async (req, res) => {
       const startTime = Math.max(0, track.start);
       const duration = Math.max(0.5, track.end - track.start);
 
-      // FFmpeg slice to MP3
+      // FFmpeg slice to MP3 con acondicionamiento para directo (de-rumble + loudnorm opcional)
       console.log(`[Concert Slicer] Cutting Track ${track.index}: "${track.title}" (${startTime}s to ${track.end}s)...`);
       try {
-        await ejecutar(ffmpegStatic!, ["-y", "-ss", String(startTime), "-i", localMasterMedia, "-t", String(duration), "-vn", "-c:a", "libmp3lame", "-q:a", "2", mp3Path]);
+        const sliceArgs = ["-y", "-ss", String(startTime), "-i", localMasterMedia, "-t", String(duration), "-vn"];
+        if (normalizeAudio) {
+          const filterChain = construirFiltroPreprocesamientoDirecto({
+            filtroRumble: true,
+            targetLufs: isSong ? -14 : -18,
+            truePeakDb: -1.0,
+            deHiss: true
+          });
+          sliceArgs.push("-af", filterChain);
+        }
+        sliceArgs.push("-c:a", "libmp3lame", "-b:a", "320k", mp3Path);
+        await ejecutar(ffmpegStatic!, sliceArgs);
       } catch (ffErr: any) {
         console.warn(`[Concert Slicer] FFmpeg slice error on track ${track.index}:`, ffErr.message);
       }

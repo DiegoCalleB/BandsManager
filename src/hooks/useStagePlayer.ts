@@ -198,7 +198,10 @@ export function useStagePlayer(
  activeEl.pause();
  setStageIsPlaying(false);
  } else {
- activeEl.play().then(() => setStageIsPlaying(true)).catch(console.error);
+ activeEl.play().then(() => setStageIsPlaying(true)).catch(err => {
+ console.warn('Stage playback notice:', err);
+ setStageIsPlaying(false);
+ });
  }
  } else {
  setStageIsPlaying(!stageIsPlaying);

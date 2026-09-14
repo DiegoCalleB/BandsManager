@@ -400,27 +400,61 @@ export async function searchSpotifyArtists(query: string) {
     }
   }
 
-  // Fallback to Deezer & iTunes
+  // Fallback: Parallel search on Deezer & iTunes
+  const results: any[] = [];
+  const seenNames = new Set<string>();
+
   try {
-    const dzRes = await fetch(`https://api.deezer.com/search/artist?q=${encodeURIComponent(cleanQ)}&limit=6`);
-    if (dzRes.ok) {
-      const dzData = await dzRes.json();
-      const dzArtists = dzData.data || [];
-      if (dzArtists.length > 0) {
-        return dzArtists.map((a: any) => ({
-          id: `dz_${a.id}`,
-          name: a.name,
-          genres: ["Música"],
-          followers: a.nb_fan || 0,
-          popularity: Math.min(100, Math.round((a.nb_fan || 0) / 1000) + 40),
-          imageUrl: a.picture_big || a.picture_medium || "",
-          spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(a.name)}`,
-          uri: `spotify:artist:dz_${a.id}`
-        }));
-      }
+    const [dzRes, itRes] = await Promise.allSettled([
+      fetch(`https://api.deezer.com/search/artist?q=${encodeURIComponent(cleanQ)}&limit=6`, { signal: AbortSignal.timeout(6000) }),
+      fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(cleanQ)}&entity=musicArtist&limit=6`, { signal: AbortSignal.timeout(6000) })
+    ]);
+
+    if (dzRes.status === "fulfilled" && dzRes.value.ok) {
+      const dzData = await dzRes.value.json();
+      (dzData.data || []).forEach((a: any) => {
+        const nameLower = (a.name || "").toLowerCase().trim();
+        if (nameLower && !seenNames.has(nameLower)) {
+          seenNames.add(nameLower);
+          results.push({
+            id: `dz_${a.id}`,
+            name: a.name,
+            genres: ["Música"],
+            followers: a.nb_fan || 0,
+            popularity: Math.min(100, Math.round((a.nb_fan || 0) / 1000) + 40),
+            imageUrl: a.picture_big || a.picture_medium || "",
+            spotifyUrl: `https://open.spotify.com/search/${encodeURIComponent(a.name)}`,
+            uri: `spotify:artist:dz_${a.id}`
+          });
+        }
+      });
     }
-  } catch (dzErr) {
-    // Continue to next fallback
+
+    if (itRes.status === "fulfilled" && itRes.value.ok) {
+      const itData = await itRes.value.json();
+      (itData.results || []).forEach((a: any) => {
+        const nameLower = (a.artistName || "").toLowerCase().trim();
+        if (nameLower && !seenNames.has(nameLower)) {
+          seenNames.add(nameLower);
+          results.push({
+            id: `it_${a.artistId || Date.now()}`,
+            name: a.artistName,
+            genres: [a.primaryGenreName || "Música"],
+            followers: 0,
+            popularity: 50,
+            imageUrl: "",
+            spotifyUrl: a.artistLinkUrl || `https://open.spotify.com/search/${encodeURIComponent(a.artistName)}`,
+            uri: `spotify:artist:it_${a.artistId || Date.now()}`
+          });
+        }
+      });
+    }
+  } catch (err: any) {
+    console.warn("[SpotifyService] Fallback search error:", err?.message);
+  }
+
+  if (results.length > 0) {
+    return results;
   }
 
   return [
@@ -450,15 +484,16 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
   let resolvedArtistName = parsed.type === "query" ? parsed.value : "";
 
   // If input was an ID or URL, attempt to resolve the artist's real name via Spotify oEmbed if needed
-  if (parsed.type === "id" && !resolvedArtistName) {
+  if (parsed.type === "id" && (!resolvedArtistName || resolvedArtistName.toLowerCase().includes("spotify"))) {
     try {
       const oembedRes = await fetch(`https://open.spotify.com/oembed?url=https://open.spotify.com/artist/${parsed.value}`, {
         signal: AbortSignal.timeout(4000)
       });
       if (oembedRes.ok) {
         const oembedData = await oembedRes.json();
-        if (oembedData.title) {
-          resolvedArtistName = oembedData.title;
+        const rawTitle = (oembedData.title || "").trim();
+        if (rawTitle && !rawTitle.toLowerCase().startsWith("spotify") && rawTitle !== "Spotify") {
+          resolvedArtistName = rawTitle;
         }
       }
     } catch (oeErr) {
@@ -772,16 +807,24 @@ export async function bulkImportSpotifyDiscographyToBand(
         notas_internas: existing?.notasInternas || `Importado de discografía oficial (${album.name}, ${album.releaseYear}). Enlace: ${track.spotifyUrl}`,
         notas_repertorio: existing?.notasRepertorio || "",
         audio_principal_url: songAudioUrl || "",
-        audio_ideas: (songAudioUrl ? [
-          {
-            id: `idea_sp_${track.id}`,
-            titulo: "Audio Preview Oficial (30s)",
-            seccion: "general" as const,
-            audioUrl: songAudioUrl,
-            subidoPor: "Spotify Sync",
-            fecha: new Date().toISOString()
+        audio_ideas: (() => {
+          const existingIdeas = existing?.audioIdeas || (existing as any)?.audio_ideas || [];
+          const hasPreviewAlready = existingIdeas.some((i: any) => i.id === `idea_sp_${track.id}` || i.subidoPor === 'Spotify Sync');
+          if (songAudioUrl && !hasPreviewAlready) {
+            return [
+              {
+                id: `idea_sp_${track.id}`,
+                titulo: "Audio Preview Oficial (30s)",
+                seccion: "general" as const,
+                audioUrl: songAudioUrl,
+                subidoPor: "Spotify Sync",
+                fecha: new Date().toISOString()
+              },
+              ...existingIdeas
+            ];
           }
-        ] : (existing?.audioIdeas || [])),
+          return existingIdeas;
+        })(),
         cifrado_texto: existing?.cifradoTexto || ""
       };
 

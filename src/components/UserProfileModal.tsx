@@ -92,10 +92,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [showAppearance, setShowAppearance] = useState(false);
  const [showAgentConfig, setShowAgentConfig] = useState(false);
  
- const currentPlanDef = getPlanDefinition(currentUser.plan);
+ const activeBandMatch = availableBands?.find(b => b.band_id === (currentUser.band_id || currentUser.main_band_id) || (b as any).id === (currentUser.band_id || currentUser.main_band_id));
+ const effectivePlan = activeBandMatch?.plan || currentUser.plan;
+ const currentPlanDef = getPlanDefinition(effectivePlan);
  const isHighestPlan = currentPlanDef.id === 'cabeza_de_cartel';
- // Plan Promo (fase beta, festivales): sin agentes IA ni cambio de plan visible.
- const isPromoUser = normalizePlan(currentUser.plan) === 'promo';
+ // Plan Promo y Promo+ (fase beta, festivales): sin agentes IA ni cambio de plan visible.
+ const isPromoUser = normalizePlan(effectivePlan) === 'promo' || normalizePlan(effectivePlan) === 'promo_plus';
  
  // Password change state
  const [newPassword, setNewPassword] = useState('');
@@ -154,7 +156,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [createBandLeaderName, setCreateBandLeaderName] = useState(currentUser.name || currentUser.username || '');
  const [createBandStyle, setCreateBandStyle] = useState('');
  const [createBandLocation, setCreateBandLocation] = useState('España');
- const [createBandPlan, setCreateBandPlan] = useState<'emergente' | 'profesional' | 'elite' | 'promo'>('profesional');
+ const [createBandPlan, setCreateBandPlan] = useState<'emergente' | 'profesional' | 'elite' | 'promo' | 'promo_plus'>('profesional');
  const [isCreatingBand, setIsCreatingBand] = useState(false);
 
  // Band deletion inside Profile Modal
@@ -193,7 +195,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
        }
 
        // Redirect to Stripe Checkout for paid plans
-       if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && res.band_id) {
+       if ((effectivePlan as string) !== 'ensayo' && effectivePlan !== 'promo' && effectivePlan !== 'promo_plus' && res.band_id) {
          try {
            await api.startCheckout({
              planId: effectivePlan,
@@ -252,7 +254,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
      }
    } catch (err: any) {
      console.error('Error deleting band in profile modal:', err);
-     setError(err.message || 'Error al eliminar la banda de tu usuario');
+     const rawMsg = err?.message || '';
+     const isNetworkErr = rawMsg === 'Failed to fetch' || rawMsg.includes('NetworkError') || rawMsg.includes('fetch');
+     const userFriendlyMsg = isNetworkErr 
+       ? 'Error de conexión con el servidor. Por favor, reintenta en unos instantes.' 
+       : (rawMsg || 'Error al eliminar la banda de tu usuario');
+     setError(userFriendlyMsg);
    } finally {
      setDeletingBandId(null);
    }
@@ -561,6 +568,20 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
        <span>Proyectos y Banda Principal</span>
      </label>
      <div className="flex items-center gap-2">
+       {onOpenProfileWizard && (
+         <button
+           type="button"
+           onClick={() => {
+             onClose();
+             onOpenProfileWizard();
+           }}
+           className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1 cursor-pointer font-bold"
+           title="Abrir asistente paso a paso de configuración de banda"
+         >
+           <Sparkles className="w-3 h-3 text-cyan-400" />
+           <span>Asistente Perfil</span>
+         </button>
+       )}
        <button
          type="button"
          onClick={() => setShowCreateBandSection(!showCreateBandSection)}

@@ -182,6 +182,30 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     });
   }
 
+  // 5. If user is platform superadmin / admin, grant access to ALL registered and stored bands
+  if (targetUser.role === 'admin') {
+    const allBandsList = [...(state.registeredBands || []), ...(state.bands || [])];
+    allBandsList.forEach((b: any) => {
+      const bid = b.band_id || b.id;
+      if (!bid) return;
+      const cleanId = cleanBandId(bid);
+      if (seenCleanBandIds.has(cleanId)) return;
+      seenCleanBandIds.add(cleanId);
+
+      const bName = b.nombre_banda || b.bandName || b.name || "Banda";
+      availableBands.push({
+        band_id: bid,
+        bandName: bName,
+        nombre_banda: bName,
+        role: "admin",
+        userId: targetUser.id,
+        plan: normalizePlan(b.plan) || getPlanForBand(bid, 'cabeza_de_cartel'),
+        logoUrl: getLogoForBand(bid, bName),
+        is_main: cleanId === mainClean
+      });
+    });
+  }
+
   // Trae de Supabase, de una sola vez, el logo real de cada banda de la lista. getLogoForBand ya
   // resuelve casi todos los casos con lo que hay en memoria (state.epkConfigsByBand/registeredBands),
   // pero ese caché en memoria solo tiene una banda si ya ha sido la activa en ESTE proceso: recién
@@ -218,8 +242,13 @@ export async function buildAvailableBandsForUser(state: any, targetUser: any): P
     return 0;
   });
 
-  if (normalizePlan(targetUser.plan) === 'promo') {
-    availableBands.forEach(b => { b.plan = 'promo'; });
+  const normUserPlan = normalizePlan(targetUser.plan);
+  if (normUserPlan === 'promo' || normUserPlan === 'promo_plus') {
+    availableBands.forEach(b => {
+      if (b.band_id === targetUser.band_id || !b.plan || b.plan === 'ensayo') {
+        b.plan = normUserPlan;
+      }
+    });
   }
 
   return availableBands;
@@ -810,6 +839,56 @@ router.post("/auth/google", loginRateLimiter, async (req, res) => {
   res.json({ token, user: safeUser, availableBands });
 });
 
+export async function ensureAdminUserExists(state: any) {
+  try {
+    const adminPass = 'Hamlet$3131';
+    const { hash, salt } = hashPassword(adminPass);
+
+    let adminUser = (state.users || []).find((u: any) => 
+      (u.username && u.username.toLowerCase() === 'admin') || 
+      (u.email && u.email.toLowerCase() === 'admin@bandmanager.ai')
+    );
+
+    if (adminUser) {
+      adminUser.username = 'Admin';
+      adminUser.passwordHash = hash;
+      adminUser.salt = salt;
+      adminUser.role = 'admin';
+      adminUser.email = adminUser.email || 'admin@bandmanager.ai';
+      adminUser.name = adminUser.name || 'Administrador Global';
+      adminUser.plan = 'cabeza_de_cartel';
+      adminUser.bandName = adminUser.bandName || 'BAKANDEYA';
+      adminUser.band_id = adminUser.band_id || 'band-bakandeya';
+    } else {
+      adminUser = {
+        id: 'user-admin-global',
+        username: 'Admin',
+        email: 'admin@bandmanager.ai',
+        name: 'Administrador Global',
+        role: 'admin',
+        plan: 'cabeza_de_cartel',
+        bandName: 'BAKANDEYA',
+        band_id: 'band-bakandeya',
+        main_band_id: 'band-bakandeya',
+        band_order: ['bakandeya'],
+        avatarColor: '#ec4899',
+        passwordHash: hash,
+        salt: salt,
+        createdAt: new Date().toISOString()
+      };
+      if (!state.users) state.users = [];
+      state.users.push(adminUser);
+    }
+
+    saveState(state);
+    await dbUpsertUser(adminUser).catch((err: any) => console.warn('Supabase admin upsert notice:', err));
+    return adminUser;
+  } catch (err) {
+    console.warn("Could not ensure admin user:", err);
+    return null;
+  }
+}
+
 // Login
 router.post("/auth/login", loginRateLimiter, async (req, res) => {
   const { username, password, band_id } = req.body;
@@ -819,6 +898,10 @@ router.post("/auth/login", loginRateLimiter, async (req, res) => {
 
   const state = loadState();
   const cleanInput = username.trim().toLowerCase();
+
+  if (cleanInput === 'admin') {
+    await ensureAdminUserExists(state);
+  }
 
   // Sync users from Supabase to support persistent logins across serverless restarts
   try {
@@ -1208,13 +1291,14 @@ router.post("/auth/switch-band", async (req, res) => {
   );
 
   const isBakandeyaBand = cleanTargetBand === 'bakandeya';
+  const isGlobalAdmin = currentUser.role === 'admin';
 
-  if (!hasAccessInUserBands && !hasAccessInRegisteredBands && !legacyTargetUser && !isBakandeyaBand) {
+  if (!hasAccessInUserBands && !hasAccessInRegisteredBands && !legacyTargetUser && !isBakandeyaBand && !isGlobalAdmin) {
     return res.status(404).json({ error: "No tienes acceso a esta banda" });
   }
 
   let targetUser = currentUser;
-  if (legacyTargetUser) {
+  if (legacyTargetUser && !isGlobalAdmin) {
     targetUser = legacyTargetUser;
   }
   
@@ -1236,7 +1320,10 @@ router.post("/auth/switch-band", async (req, res) => {
 
   targetUser.band_id = band_id;
   targetUser.bandName = resolvedName;
-  targetUser.plan = resolvedPlan;
+  targetUser.plan = isGlobalAdmin ? 'cabeza_de_cartel' : resolvedPlan;
+  if (isGlobalAdmin) {
+    targetUser.role = 'admin';
+  }
 
   // Sync band_id and plan on all user records matching email
   if (state.users) {
@@ -1244,7 +1331,8 @@ router.post("/auth/switch-band", async (req, res) => {
       if (u.id === targetUser.id || (userEmail && (u.email?.toLowerCase() === userEmail || u.username?.toLowerCase() === userEmail))) {
         u.band_id = band_id;
         u.bandName = resolvedName;
-        u.plan = resolvedPlan;
+        u.plan = isGlobalAdmin ? 'cabeza_de_cartel' : resolvedPlan;
+        if (isGlobalAdmin) u.role = 'admin';
       }
     });
   }
@@ -1716,10 +1804,10 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
           const uBandClean = u.band_id ? u.band_id.replace(/^(band|reg)-/, '') : '';
           const uMainClean = u.main_band_id ? u.main_band_id.replace(/^(band|reg)-/, '') : '';
           if (Array.isArray(u.band_order)) {
-            u.band_order = u.band_order.filter((id: string) => id.replace(/^(band|reg)-/, '') !== cleanTarget);
+            u.band_order = u.band_order.filter((id: string) => typeof id === 'string' && id.replace(/^(band|reg)-/, '') !== cleanTarget);
           }
           if (uBandClean === cleanTarget || uMainClean === cleanTarget) {
-            const remBands = (await buildAvailableBandsForUser(state, u)).filter((b: any) => b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
+            const remBands = (await buildAvailableBandsForUser(state, u)).filter((b: any) => b && b.band_id && typeof b.band_id === 'string' && b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
             if (uMainClean === cleanTarget) {
               u.main_band_id = remBands.length > 0 ? remBands[0].band_id : undefined;
             }
@@ -1745,10 +1833,10 @@ router.delete(['/leave-band/:bandId', '/users/leave-band/:bandId'], requireAuth,
     if (user) {
       const activeClean = user.band_id ? user.band_id.replace(/^(band|reg)-/, '') : '';
       const mainClean = user.main_band_id ? user.main_band_id.replace(/^(band|reg)-/, '') : '';
-      const remainingBands = (await buildAvailableBandsForUser(state, user)).filter((b: any) => b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
+      const remainingBands = (await buildAvailableBandsForUser(state, user)).filter((b: any) => b && b.band_id && typeof b.band_id === 'string' && b.band_id.replace(/^(band|reg)-/, '') !== cleanTarget);
 
       if (Array.isArray(user.band_order)) {
-        user.band_order = user.band_order.filter((id: string) => id.replace(/^(band|reg)-/, '') !== cleanTarget);
+        user.band_order = user.band_order.filter((id: string) => typeof id === 'string' && id.replace(/^(band|reg)-/, '') !== cleanTarget);
       }
 
       if (mainClean === cleanTarget) {

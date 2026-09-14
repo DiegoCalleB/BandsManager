@@ -167,7 +167,12 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           return;
         }
       } catch {}
-      setErrorMessage(err.message || "Error al eliminar la banda de tu usuario");
+      const rawMsg = err?.message || "";
+      const isNetworkErr = rawMsg === "Failed to fetch" || rawMsg.includes("NetworkError") || rawMsg.includes("fetch");
+      const userFriendlyMsg = isNetworkErr 
+        ? "Error de conexión con el servidor. Por favor, reintenta en unos instantes." 
+        : (rawMsg || "Error al eliminar la banda de tu usuario");
+      setErrorMessage(userFriendlyMsg);
       setLeavingBandId(null);
     }
   };
@@ -230,7 +235,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         }
 
         // If paid plan, redirect to Stripe Checkout!
-        if (planKey !== 'ensayo' && planKey !== 'promo' && res.band_id) {
+        if (planKey !== 'ensayo' && planKey !== 'promo' && planKey !== 'promo_plus' && res.band_id) {
           try {
             await api.startCheckout({
               planId: planKey,
@@ -649,7 +654,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
                   {/* Plan Badge (Static in beta/promo mode) */}
                   <div className="mt-1 flex items-center justify-center">
-                    {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' ? (
+                    {SIMPLE_PROMO_ONLY_BAND_CREATION || band.plan === 'promo' || band.plan === 'promo_plus' ? (
                       <span
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shadow-xs"
                         style={{
@@ -789,7 +794,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       type="text"
                       value={newBandLeaderName}
                       onChange={(e) => setNewBandLeaderName(e.target.value)}
-                      placeholder="Ej: Diego (Guitarra & Mánager)"
+                      placeholder="Ej: Kurt Cobain (Guitarra & Mánager)"
                       className="w-full px-4 py-2.5 rounded-2xl text-xs bg-neutral-950 border border-neutral-800 text-white placeholder-neutral-500 focus:border-amber-500/70 focus:outline-none transition-colors"
                     />
                   </div>

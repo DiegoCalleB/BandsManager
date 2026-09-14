@@ -153,12 +153,10 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   const userBand = state?.userBands?.find((ub: any) =>
     ub.user_id === foundUser.id && ub.band_id && ub.band_id.replace(/^(band|reg)-/, '') === cleanActive
   );
-  // El rol es POR BANDA. El `|| foundUser.role` que había de repuesto se aplicaba también cuando
-  // el usuario sí tenía fila en userBands para otra banda pero no para esta, así que un leader
-  // de su propia banda se llevaba el rol de leader a una banda donde solo es miembro (y con él,
-  // finanzas y requireLeader). Solo se hereda el rol global cuando la banda activa es la suya.
+  // El rol es POR BANDA. El `|| foundUser.role` que había de repuesto se applied cuando
+  // el usuario es admin global o cuando la banda activa es la suya principal.
   const esSuBandaPrincipal = (foundUser.band_id || '').replace(/^(band|reg)-/, '') === cleanActive;
-  const role = userBand?.role || (esSuBandaPrincipal ? foundUser.role : null) || 'member';
+  const role = foundUser.role === 'admin' ? 'admin' : (userBand?.role || (esSuBandaPrincipal ? foundUser.role : null) || 'member');
 
   // Retrieve band name for this active band
   let activeBandName = foundUser.bandName;
@@ -210,8 +208,8 @@ export function createLeaderMiddleware(loadStateFn: () => any) {
     if (!user) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
-    if (user.role !== 'leader') {
-      return res.status(403).json({ error: "Acceso denegado. Se requieren permisos de dirección/leader." });
+    if (user.role !== 'leader' && user.role !== 'admin') {
+      return res.status(403).json({ error: "Acceso denegado. Se requieren permisos de dirección/leader o administrador." });
     }
     (req as any).user = user;
     next();

@@ -3,9 +3,65 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import multer from "multer";
+import ffmpeg from "fluent-ffmpeg";
 import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+
+/**
+ * Optimizador transparente de archivos de audio.
+ * Si el usuario sube un archivo de audio (.wav, .flac, .aiff, .m4a, .wma, etc. o mp3 pesado > 2MB),
+ * lo recodifica en segundo plano a MP3 de alta fidelidad (256kbps), reduciendo el peso de almacenamiento
+ * en Supabase/disco hasta un 93% sin pérdida de calidad auditiva apreciable.
+ */
+async function compressAudioFileIfNeeded(inputPath: string): Promise<{ finalPath: string; wasCompressed: boolean; newMime: string; newExt: string }> {
+  const ext = path.extname(inputPath).toLowerCase().replace('.', '');
+  const isAudioExt = ['wav', 'flac', 'aiff', 'aif', 'alac', 'm4a', 'wma', 'ogg', 'opus'].includes(ext);
+  
+  if (!fs.existsSync(inputPath)) {
+    return { finalPath: inputPath, wasCompressed: false, newMime: 'application/octet-stream', newExt: ext };
+  }
+
+  const stats = fs.statSync(inputPath);
+  
+  // Si no es un formato de audio pesado o es un mp3 pequeño (< 2MB), no hace falta comprimir
+  if (!isAudioExt && (ext !== 'mp3' || stats.size < 2 * 1024 * 1024)) {
+    const defaultMime = ext === 'mp3' ? 'audio/mpeg' : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'application/octet-stream';
+    return { finalPath: inputPath, wasCompressed: false, newMime: defaultMime, newExt: ext };
+  }
+
+  const outputPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '-opt.mp3');
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      ffmpeg(inputPath)
+        .audioBitrate("256k")
+        .output(outputPath)
+        .on("end", () => resolve())
+        .on("error", (err) => reject(err))
+        .run();
+    });
+
+    if (fs.existsSync(outputPath) && fs.statSync(outputPath).size > 0) {
+      const origMB = (stats.size / 1024 / 1024).toFixed(2);
+      const newMB = (fs.statSync(outputPath).size / 1024 / 1024).toFixed(2);
+      console.log(`[Audio Upload Optimizer] Audio optimizado con éxito: ${inputPath} (${origMB}MB) -> (${newMB}MB)`);
+
+      const finalCompressedPath = inputPath.replace(new RegExp(`\\.${ext}$`, 'i'), '.mp3');
+      fs.unlinkSync(inputPath);
+      fs.renameSync(outputPath, finalCompressedPath);
+
+      return { finalPath: finalCompressedPath, wasCompressed: true, newMime: 'audio/mpeg', newExt: 'mp3' };
+    }
+  } catch (err: any) {
+    console.warn(`[Audio Upload Optimizer] Aviso al comprimir audio con FFmpeg, usando original:`, err?.message || err);
+    if (fs.existsSync(outputPath)) {
+      try { fs.unlinkSync(outputPath); } catch (_) {}
+    }
+  }
+
+  return { finalPath: inputPath, wasCompressed: false, newMime: 'audio/mpeg', newExt: ext };
+}
 
 /**
  * Sub-carpeta pedida por el cliente, saneada. Cuelga siempre de la carpeta de la banda: se
@@ -38,18 +94,19 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 // express.static como por Supabase Storage, ejecutando cualquier <script> que contenga en el
 // navegador de quien abra la URL — XSS almacenado. Solo se permiten los tipos que la app
 // realmente usa (audio, imagen, PDF, documentos), nunca HTML/SVG/JS.
-const EXTENSIONES_PERMITIDAS = new Set([
+export const EXTENSIONES_PERMITIDAS = new Set([
   // Audio
-  'mp3', 'wav', 'm4a', 'flac', 'ogg', 'aac', 'wma',
+  'mp3', 'wav', 'm4a', 'flac', 'ogg', 'aac', 'wma', 'aiff', 'aif', 'alac', 'opus',
   // Imagen (sin svg: es HTML/JS ejecutable disfrazado de imagen)
   'jpg', 'jpeg', 'png', 'webp', 'gif',
   // Vídeo
-  'mp4', 'mov', 'webm',
+  'mp4', 'mov', 'webm', 'mkv', 'avi',
   // Documentos
   'pdf', 'doc', 'docx'
 ]);
 
-function extensionPermitida(originalname: string): boolean {
+export function extensionPermitida(originalname: string): boolean {
+  if (!originalname || typeof originalname !== 'string') return false;
   const ext = path.extname(originalname).slice(1).toLowerCase();
   return EXTENSIONES_PERMITIDAS.has(ext);
 }
@@ -59,6 +116,24 @@ const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFi
     return cb(new Error('Tipo de archivo no permitido.'));
   }
   cb(null, true);
+};
+
+const multerChunkFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  const original = file.originalname || '';
+  // Strips chunk extensions like .part0, .part1, .part
+  const strippedPart = original.replace(/\.part\d*$/i, '');
+  const bodyFilename = req.body?.filename || '';
+
+  if (
+    extensionPermitida(original) ||
+    extensionPermitida(strippedPart) ||
+    (bodyFilename && extensionPermitida(bodyFilename)) ||
+    original.endsWith('.bin') ||
+    original.endsWith('.part')
+  ) {
+    return cb(null, true);
+  }
+  return cb(new Error('Tipo de archivo no permitido.'));
 };
 
 // Multer storage engine for direct binary disk streaming (handles files > 1GB)
@@ -83,8 +158,8 @@ const uploadMiddleware = multer({
 const multerChunkStorage = multer.memoryStorage();
 const uploadChunkMiddleware = multer({
   storage: multerChunkStorage,
-  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB per chunk limit
-  fileFilter: multerFileFilter
+  limits: { fileSize: 30 * 1024 * 1024 }, // 30MB per chunk limit
+  fileFilter: multerChunkFileFilter
 });
 
 // Sin este envoltorio, un fileFilter rechazado llega a next(err) y responde con la página de
@@ -174,6 +249,106 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
   }
 });
 
+async function listRecursiveStorageFiles(supabase: any, bucketName: string, folder = ""): Promise<Array<{ path: string; size: number }>> {
+  const { data: items, error } = await supabase.storage.from(bucketName).list(folder, { limit: 1000 });
+  if (error) return [];
+  let all: Array<{ path: string; size: number }> = [];
+  for (const item of items || []) {
+    const itemPath = folder ? `${folder}/${item.name}` : item.name;
+    if (!item.id && !item.metadata) {
+      const sub = await listRecursiveStorageFiles(supabase, bucketName, itemPath);
+      all.push(...sub);
+    } else {
+      all.push({ path: itemPath, size: item.metadata?.size || 0 });
+    }
+  }
+  return all;
+}
+
+const PERMITTED_CLEANUP_KEYWORDS = [
+  "ruta", "ruta-66", "ruta_66", "ruta66",
+  "bakandeya", "arritmia", "vertice", "vértice",
+  "fer_y_dani", "nuevo__lbum"
+];
+
+// Endpoint de diagnóstico de almacenamiento en Supabase Storage
+router.get("/storage-stats", requireAuth, async (req, res) => {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return res.status(500).json({ error: "No Supabase client available" });
+  }
+
+  const bucketName = getBucketName();
+  try {
+    const files = await listRecursiveStorageFiles(supabase!, bucketName);
+    const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
+
+    return res.json({
+      success: true,
+      bucket: bucketName,
+      totalFiles: files.length,
+      totalSizeMB: Number((totalBytes / (1024 * 1024)).toFixed(2)),
+      allowedBands: ["Ruta 66", "Bakandeya", "Arritmia", "Vértice"]
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message || String(err) });
+  }
+});
+
+// Endpoint para ejecutar la limpieza de multimedia no perteneciente a las 4 bandas permitidas
+router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return res.status(500).json({ error: "No Supabase client available" });
+  }
+
+  const bucketName = getBucketName();
+  try {
+    const allFiles = await listRecursiveStorageFiles(supabase!, bucketName);
+    const toDelete: string[] = [];
+    let deleteBytes = 0;
+
+    allFiles.forEach(f => {
+      const pLower = f.path.toLowerCase();
+      const isAllowed = PERMITTED_CLEANUP_KEYWORDS.some(kw => pLower.includes(kw));
+      if (!isAllowed) {
+        toDelete.push(f.path);
+        deleteBytes += f.size;
+      }
+    });
+
+    if (toDelete.length === 0) {
+      return res.json({
+        success: true,
+        message: "No hay multimedia no utilizada para eliminar.",
+        freedMB: 0
+      });
+    }
+
+    // Delete in batches of 100
+    const BATCH_SIZE = 100;
+    let deletedCount = 0;
+    for (let i = 0; i < toDelete.length; i += BATCH_SIZE) {
+      const batch = toDelete.slice(i, i + BATCH_SIZE);
+      const { data, error } = await supabase.storage.from(bucketName).remove(batch);
+      if (!error) {
+        deletedCount += (data?.length || batch.length);
+      }
+    }
+
+    const freedMB = Number((deleteBytes / (1024 * 1024)).toFixed(2));
+
+    return res.json({
+      success: true,
+      message: `Limpieza completada. Se eliminaron ${deletedCount} archivos multimedia.`,
+      freedMB,
+      deletedFiles: deletedCount
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message || String(err) });
+  }
+});
+
 router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req: any, res: any) => {
   try {
     let filePath = "";
@@ -215,6 +390,13 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
     } else {
       return res.status(400).json({ error: "Missing file or base64 payload" });
     }
+
+    // Optimizador transparente: si es un audio pesado (.wav, .flac, .m4a, etc.), se comprime a MP3 256k
+    const compResult = await compressAudioFileIfNeeded(filePath);
+    filePath = compResult.finalPath;
+    uniqueName = path.basename(filePath);
+    mimeType = compResult.newMime;
+    buffer = null; // Forzar lectura del archivo optimizado desde disco
 
     let finalUrl = `/uploads/${uniqueName}`;
     let storageEngine = "local";
@@ -282,6 +464,15 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
       return res.status(400).json({ error: "Missing required chunk metadata (uploadId, chunkIndex, totalChunks, filename)" });
     }
 
+    const bandaPedida = bandaSolicitada(req);
+    if (bandaPedida && !puedeEscribirEnBanda(req, bandaPedida)) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
+    }
+
+    if (!extensionPermitida(filename)) {
+      return res.status(400).json({ error: "Tipo de archivo no permitido." });
+    }
+
     const cIdx = parseInt(chunkIndex, 10);
     const tChunks = parseInt(totalChunks, 10);
 
@@ -338,14 +529,19 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
       console.warn("Chunk cleanup notice:", e);
     }
 
-    const finalUrl = `/uploads/${uniqueName}`;
+    // Optimizador transparente para archivos de audio reensamblados
+    const compResult = await compressAudioFileIfNeeded(finalFilePath);
+    const effectiveFilePath = compResult.finalPath;
+    const effectiveUniqueName = path.basename(effectiveFilePath);
+
+    const finalUrl = `/uploads/${effectiveUniqueName}`;
 
     return res.json({
       success: true,
       completed: true,
       url: finalUrl,
-      filePath: finalFilePath,
-      filename: uniqueName,
+      filePath: effectiveFilePath,
+      filename: effectiveUniqueName,
       originalName: filename,
       storage: "local"
     });

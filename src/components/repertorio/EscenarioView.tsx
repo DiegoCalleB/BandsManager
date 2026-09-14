@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+
+const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, Setlist, SetlistItem } from '../../types';
 import { 
   Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart,
@@ -213,11 +215,17 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
           fundido está desactivado, el segundo simplemente no se usa nunca. */}
       <audio
         ref={stageAudioRef as any}
+        src={SILENT_AUDIO_URI}
+        preload="none"
+        onError={(e) => e.preventDefault()}
         onEnded={handleStageAudioEnded}
         onTimeUpdate={(e) => handleStageTimeUpdate(Math.round(e.currentTarget.currentTime))}
       />
       <audio
         ref={stageAudioRefB as any}
+        src={SILENT_AUDIO_URI}
+        preload="none"
+        onError={(e) => e.preventDefault()}
         onEnded={handleStageAudioEnded}
       />
 

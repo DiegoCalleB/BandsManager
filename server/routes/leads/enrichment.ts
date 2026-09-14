@@ -588,7 +588,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
           try {
             const query = `${lead.nombre_sala}, ${lead.ciudad || ''}, España`;
             const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=es`, {
-              headers: { 'User-Agent': 'BakandeyaBookingApp/1.0 (diego.delacalleb@gmail.com)' }
+              headers: { 'User-Agent': 'BandManagerApp/1.0 (info@bandmanager.io)' }
             });
             if (geoRes.ok) {
               const geoData: any = await geoRes.json();

@@ -5,6 +5,7 @@ import { googleSignIn } from '../utils/gmail';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 import { ModalPortal } from './common/ModalPortal';
+import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -15,6 +16,7 @@ type ViewState = 'login' | 'register' | 'plans' | 'activate' | 'reset-password';
 
 export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   const [view, setView] = useState<ViewState>('login');
+  const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
 
   // --- Login State ---
   const [username, setUsername] = useState('');
@@ -487,34 +489,30 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
         {/* Soft Golden Background Ambient Glow */}
         <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[520px] h-[520px] bg-[#f2ca50]/8 rounded-full blur-[110px] pointer-events-none" />
 
-        {/* --- BRANDING LOGO & TYPOGRAPHY (Only for Login/Register) --- */}
-        {view !== 'plans' && (
-          <div className="relative flex flex-col items-center justify-center pt-2 pb-1 text-center w-full">
-            {/* Ambient Spotlight behind logo */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-44 bg-[#f2ca50]/10 rounded-full blur-2xl pointer-events-none" />
-            
-            <div className="relative group cursor-pointer w-full max-w-[320px] sm:max-w-[360px] flex justify-center">
-              <img 
-                src="/bandmanager_login_logo.png" 
-                alt="BandManager.io - Plataforma Integral para Bandas"
-                className="w-full h-auto max-h-48 object-contain drop-shadow-[0_12px_32px_rgba(242,202,80,0.22)] group-hover:scale-[1.015] transition-all duration-300"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
-                }}
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            <div className="mt-3.5 max-w-sm text-center px-4">
-              <p className="text-sm text-neutral-300 font-normal leading-relaxed tracking-tight">
-                Tú piensa en tu música.{' '}
-                <span className="text-[#f2ca50] font-semibold block sm:inline mt-0.5 sm:mt-0">
-                  ¡BandManager.io se encarga de todo lo demás!
-                </span>
-              </p>
-            </div>
+        {/* Top Language Switcher */}
+        <div className="w-full flex justify-end items-center gap-1.5 mb-1 px-2 z-20">
+          <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-neutral-900/80 border border-neutral-800 backdrop-blur-sm">
+            {SUPPORTED_LANGUAGES.map((l) => {
+              const isSelected = currentAppLang === l.code;
+              return (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setAppLang(l.code)}
+                  className={`px-2 py-1 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1 ${
+                    isSelected
+                      ? 'bg-[#f2ca50] text-neutral-950 font-bold shadow-xs scale-105'
+                      : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+                  }`}
+                  title={l.label}
+                >
+                  <span>{l.flag}</span>
+                  <span className="hidden sm:inline">{l.label.slice(0, 3)}</span>
+                </button>
+              );
+            })}
           </div>
-        )}
+        </div>
 
         {/* --- ERROR ALERT --- */}
         {error && view !== 'plans' && (
@@ -546,7 +544,27 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             LOGIN VIEW
             ========================================= */}
         {view === 'login' && (
-          <div className="w-full animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+          <div className="w-full p-6 sm:p-7 bg-[#111116]/95 border border-[#f2ca50]/30 rounded-3xl backdrop-blur-xl shadow-[0_24px_70px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+            
+            {/* INTEGRATED LOGO INSIDE CARD */}
+            <div className="relative flex flex-col items-center justify-center pt-1 pb-1 text-center w-full">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[#f2ca50]/12 rounded-full blur-3xl pointer-events-none animate-pulse" />
+              
+              <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
+                <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)]">
+                  <img 
+                    src="/bandmanageriodefinitiva.jpeg" 
+                    alt="BandManager.io - Plataforma Integral para Bandas"
+                    className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
+                    }}
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              </div>
+            </div>
+
             {resetSuccessMsg && (
               <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-xs text-emerald-400 flex items-center gap-2 animate-in fade-in">
                 <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
@@ -562,7 +580,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Correo electrónico o Usuario"
-                  className="w-full pl-11 pr-4 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+                  className="w-full pl-11 pr-4 py-3.5 bg-[#17171f]/90 border border-neutral-800/90 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/20 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
                   required
                 />
               </div>
@@ -574,7 +592,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Contraseña"
-                  className="w-full pl-11 pr-11 py-3.5 bg-[#131317]/90 border border-neutral-800/90 focus:border-[#f2ca50]/50 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all shadow-inner"
+                  className="w-full pl-11 pr-11 py-3.5 bg-[#17171f]/90 border border-neutral-800/90 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/20 rounded-2xl text-sm text-neutral-100 placeholder:text-neutral-500 outline-none transition-all duration-200 shadow-inner"
                   required
                 />
                 <button
@@ -588,13 +606,16 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
               {/* Recordar contraseña & Restablecer contraseña */}
               <div className="flex items-center justify-between text-xs text-neutral-400 px-1 pt-0.5">
-                <label className="flex items-center gap-2 cursor-pointer select-none hover:text-neutral-200 transition-colors">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-neutral-700 bg-[#131317] text-[#f2ca50] focus:ring-[#f2ca50]/50 accent-[#f2ca50] cursor-pointer"
-                  />
+                <label className="flex items-center gap-2 cursor-pointer select-none text-neutral-300 hover:text-white transition-colors">
+                  <div className={`w-4 h-4 rounded-md border flex items-center justify-center transition-all duration-200 ${rememberMe ? 'bg-[#f2ca50] border-[#f2ca50] text-neutral-950 shadow-[0_0_10px_rgba(242,202,80,0.4)]' : 'bg-[#17171f] border-neutral-700/80'}`}>
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="sr-only"
+                    />
+                    {rememberMe && <Check className="w-3 h-3 stroke-[3]" />}
+                  </div>
                   <span>Recordar contraseña</span>
                 </label>
                 <button
@@ -615,7 +636,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-4 mt-4 rounded-2xl bg-[#f2ca50] hover:bg-[#f5d778] text-neutral-950 font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(242,202,80,0.15)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
+                className="w-full py-3.5 px-4 mt-4 rounded-2xl bg-gradient-to-r from-[#f2ca50] to-[#e6b938] hover:from-[#f7dc82] hover:to-[#f2ca50] text-neutral-950 font-bold text-sm tracking-wide transition-all duration-200 shadow-[0_4px_24px_rgba(242,202,80,0.22)] hover:shadow-[0_6px_30px_rgba(242,202,80,0.35)] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center cursor-pointer"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -628,18 +649,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
               </button>
             </form>
 
-            <div className="relative mt-6 mb-2">
+            <div className="relative mt-5 mb-1">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-neutral-800"></div>
+                <div className="w-full border-t border-neutral-800/80"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-[#09090b] text-neutral-500">O continuar con</span>
+                <span className="px-2.5 bg-[#111116] text-neutral-500 font-medium">O continuar con</span>
               </div>
             </div>
 
             <SocialButtons />
 
-            <div className="text-center mt-6 text-xs text-neutral-400 flex items-center justify-center gap-2 flex-wrap">
+            <div className="text-center mt-5 text-xs text-neutral-400 flex items-center justify-center gap-2 flex-wrap">
               <span>¿No tienes cuenta?</span>
               <button 
                 type="button"
@@ -666,6 +687,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 Activar invitación
               </button>
             </div>
+
+            <div className="pt-3 border-t border-neutral-800/60 text-center text-[11px] text-neutral-400/90 flex items-center justify-center gap-1.5 font-medium">
+              <Shield className="w-3.5 h-3.5 text-[#f2ca50]" />
+              <span>Acceso seguro cifrado · Datos 100% privados de tu banda</span>
+            </div>
           </div>
         )}
 
@@ -673,7 +699,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             RESET PASSWORD VIEW
             ========================================= */}
         {view === 'reset-password' && (
-          <div className="w-full animate-in slide-in-from-bottom-4 duration-300 space-y-4">
+          <div className="w-full p-6 sm:p-7 bg-[#111116]/90 border border-[#f2ca50]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
             <div className="flex items-center gap-2.5 mb-2">
               <button
                 type="button"
@@ -863,7 +889,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             REGISTER VIEW
             ========================================= */}
         {view === 'register' && (
-          <div className="w-full animate-in slide-in-from-bottom-4 duration-300">
+          <div className="w-full p-6 sm:p-7 bg-[#111116]/90 border border-[#f2ca50]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
             <form onSubmit={handleRegisterSubmit} className="w-full space-y-3.5">
               <div className="relative flex items-center">
                 <User className="w-4 h-4 text-[#f2ca50] absolute left-4 pointer-events-none" />
@@ -974,7 +1000,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
             ACTIVATE ACCOUNT VIEW (NEW!)
             ========================================= */}
         {view === 'activate' && (
-          <div className="w-full animate-in slide-in-from-bottom-4 duration-300">
+          <div className="w-full p-6 sm:p-7 bg-[#111116]/90 border border-[#f2ca50]/25 rounded-3xl backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.65)] animate-in slide-in-from-bottom-4 duration-300 space-y-4">
             {activateStep === 1 ? (
               <div className="space-y-4">
                 <div className="text-center space-y-2 mb-4">

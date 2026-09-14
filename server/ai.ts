@@ -11,6 +11,7 @@ export const TIMEOUT_IA_MS = 60_000;
 export const TIMEOUT_IA_LARGO_MS = 300_000;
 
 export const FALLBACK_MODELS = [
+  "gemini-3.8-flash",
   "gemini-3.7-flash",
   "gemini-flash-latest",
   "gemini-3.1-flash-lite"
@@ -279,6 +280,10 @@ export async function generateContentWithFallback(
         console.warn("[Gemini API] El proyecto ha superado su límite de gasto mensual (spending cap) en AI Studio. Pasando inmediatamente a proveedores de respaldo...");
         break;
       }
+      if (isSpendCapOrQuotaError(err)) {
+        // Pausa breve de retroceso (1200ms) para amortiguar picos de RPM/TPM por minuto
+        await new Promise(resolve => setTimeout(resolve, 1200));
+      }
     }
   }
 
@@ -368,7 +373,7 @@ export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): 
   if (bandConfig?.enlacesRedes?.spotify) links.spotify = bandConfig.enlacesRedes.spotify;
   if (bandConfig?.enlacesRedes?.youtube) links.youtube = bandConfig.enlacesRedes.youtube;
   if (bandId) {
-    const base = process.env.APP_URL || "https://bands-manager.up.railway.app";
+    const base = process.env.APP_URL || "https://bandmanager.io";
     links.epk = `${base}/epk?band=${encodeURIComponent(bandId)}`;
   }
   return links;

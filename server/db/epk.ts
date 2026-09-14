@@ -13,36 +13,36 @@ const BAKANDEYA_DEFAULT_EPK = {
     tiktok: "https://tiktok.com/@bakandeya_oficial",
     appleMusic: "https://music.apple.com/artist/bakandeya",
     bandcamp: "https://bakandeya.bandcamp.com",
-    website: "https://bands-manager.up.railway.app",
+    website: "https://bandmanager.io",
     whatsapp: "+34612345678",
     facebook: "https://facebook.com/bakandeyaoficial",
     twitter: "https://x.com/bakandeya_band"
   },
   contacto_booking: {
-    nombre: "Booking & Management Bakandeya",
-    email: "diego.delacalleb@gmail.com",
-    telefono: "+34 612 345 678"
+    nombre: "Booking & Management",
+    email: "",
+    telefono: ""
   },
   temas_destacados_ids: ["s-1", "s-2", "s-3"],
   incentivo_fans: {
-    mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
-    enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
-    codigoDescuento: "BAKANDEYA-FAN-10"
+    mensajeAgradecimiento: "¡Muchas gracias por unirte a nuestra comunidad! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
+    enlaceDescarga: "https://bandmanager.io/descargas/tema-inedito-directo.mp3",
+    codigoDescuento: "FAN-10"
   },
   donacion_revolut: {
     habilitado: true,
-    revolutTag: "bakandeya",
-    revolutUrl: "https://revolut.me/bakandeya",
+    revolutTag: "",
+    revolutUrl: "",
     titulo: "Colabora con una aportación económica",
     descripcion: "Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos."
   },
   ciudades_config: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"],
   firma_email: {
-    nombreRemitente: "Diego de la Calle",
-    cargo: "Booking & Management | Bakandeya",
-    telefono: "+34 612 345 678",
-    email: "diego.delacalleb@gmail.com",
-    textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+    nombreRemitente: "Booking & Management",
+    cargo: "Booking & Management",
+    telefono: "",
+    email: "",
+    textoPie: "Música en directo y conciertos",
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
     redesSociales: {
@@ -52,7 +52,7 @@ const BAKANDEYA_DEFAULT_EPK = {
       tiktok: "https://tiktok.com/@bakandeya_oficial",
       appleMusic: "https://music.apple.com/artist/bakandeya",
       bandcamp: "https://bakandeya.bandcamp.com",
-      website: "https://bands-manager.up.railway.app",
+      website: "https://bandmanager.io",
       whatsapp: "+34612345678"
     }
   }
@@ -161,7 +161,10 @@ export async function dbGetEpkConfig(bandId: string) {
     traducciones: data.traducciones || {},
     audioPreview: data.audio_preview || {},
     cifrasClave: data.cifras_clave || {},
-    resenasPrensa: data.resenas_prensa || {}
+    resenasPrensa: data.resenas_prensa || {},
+    plantilla: (data.plantilla as any) || 'stage',
+    ordenSecciones: (data.orden_secciones as any) || undefined,
+    seccionesOcultas: (data.secciones_ocultas as any) || undefined
   };
 }
 
@@ -295,7 +298,10 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
     traducciones: mergedTraducciones,
     audio_preview: (config.audioPreview !== undefined ? config.audioPreview : (config.audio_preview !== undefined ? config.audio_preview : existing?.audioPreview)) || {},
     cifras_clave: (config.cifrasClave !== undefined ? config.cifrasClave : (config.cifras_clave !== undefined ? config.cifras_clave : existing?.cifrasClave)) || {},
-    resenas_prensa: (config.resenasPrensa !== undefined ? config.resenasPrensa : (config.resenas_prensa !== undefined ? config.resenas_prensa : existing?.resenasPrensa)) || {}
+    resenas_prensa: (config.resenasPrensa !== undefined ? config.resenasPrensa : (config.resenas_prensa !== undefined ? config.resenas_prensa : existing?.resenasPrensa)) || {},
+    plantilla: (config.plantilla !== undefined ? config.plantilla : existing?.plantilla) || 'stage',
+    orden_secciones: (config.ordenSecciones !== undefined ? config.ordenSecciones : (config.orden_secciones !== undefined ? config.orden_secciones : existing?.ordenSecciones)) || null,
+    secciones_ocultas: (config.seccionesOcultas !== undefined ? config.seccionesOcultas : (config.secciones_ocultas !== undefined ? config.secciones_ocultas : existing?.seccionesOcultas)) || null
   };
 
   let data: any = null;

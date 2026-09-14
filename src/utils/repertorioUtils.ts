@@ -210,13 +210,65 @@ export function getSongMemberNote(song?: any, memberKey?: string, memberName?: s
 
   // Check in notasPorMiembro array if exists
   if (Array.isArray(song.notasPorMiembro)) {
-    const found = song.notasPorMiembro.find((n: any) => 
-      (memberKey && n.userId === memberKey) || 
+    const found = song.notasPorMiembro.find((n: any) =>
+      (memberKey && n.userId === memberKey) ||
       (memberName && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase())
     );
     if (found && found.nota) return found.nota;
   }
 
   return '';
+}
+
+export type ReadinessLevel = 'aprendiendo' | 'casi_lista' | 'lista';
+
+export const READINESS_LEVELS: { value: ReadinessLevel; label: string; icon: string; colorClass: string }[] = [
+  { value: 'aprendiendo', label: 'Aprendiendo', icon: '🌱', colorClass: 'text-amber-400 bg-amber-500/10 border-amber-500/30' },
+  { value: 'casi_lista', label: 'Casi lista', icon: '🔶', colorClass: 'text-orange-400 bg-orange-500/10 border-orange-500/30' },
+  { value: 'lista', label: 'Lista para directo', icon: '✅', colorClass: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' }
+];
+
+/** Nivel de preparación de UN miembro concreto con una canción (null = todavía no ha opinado). */
+export function getMemberReadiness(song?: any, memberKey?: string, memberName?: string): ReadinessLevel | null {
+  if (!song || !Array.isArray(song.notasPorMiembro)) return null;
+  const found = song.notasPorMiembro.find((n: any) =>
+    (memberKey && n.userId === memberKey) ||
+    (memberName && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase())
+  );
+  return found?.estadoPreparacion || null;
+}
+
+/** Devuelve el array notasPorMiembro actualizado con el nuevo nivel de preparación de un miembro,
+ *  sin tocar la nota de texto libre que ya tuviera. Quien llama debe guardar el resultado (p.ej.
+ *  onUpdateSong({ ...song, notasPorMiembro: nuevoArray })) — esta función no muta nada. */
+export function withMemberReadiness(song: any, memberKey: string | undefined, memberName: string, estado: ReadinessLevel): any[] {
+  const existing: any[] = Array.isArray(song?.notasPorMiembro) ? [...song.notasPorMiembro] : [];
+  const idx = existing.findIndex((n: any) =>
+    (memberKey && n.userId === memberKey) ||
+    (!memberKey && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase())
+  );
+  if (idx >= 0) {
+    existing[idx] = { ...existing[idx], estadoPreparacion: estado, updatedAt: new Date().toISOString() };
+  } else {
+    existing.push({ userId: memberKey, memberName, nota: '', estadoPreparacion: estado, updatedAt: new Date().toISOString() });
+  }
+  return existing;
+}
+
+/** Resumen agregado de preparación de la banda para una canción: cuántos miembros han marcado
+ *  cada nivel, sobre el total de miembros de la banda (no solo los que ya opinaron). */
+export function getReadinessSummary(song: any, totalMembers: number): { lista: number; casiLista: number; aprendiendo: number; sinOpinar: number; total: number } {
+  const notas: any[] = Array.isArray(song?.notasPorMiembro) ? song.notasPorMiembro : [];
+  const lista = notas.filter(n => n.estadoPreparacion === 'lista').length;
+  const casiLista = notas.filter(n => n.estadoPreparacion === 'casi_lista').length;
+  const aprendiendo = notas.filter(n => n.estadoPreparacion === 'aprendiendo').length;
+  const opinaron = lista + casiLista + aprendiendo;
+  return {
+    lista,
+    casiLista,
+    aprendiendo,
+    sinOpinar: Math.max(0, totalMembers - opinaron),
+    total: totalMembers
+  };
 }
 

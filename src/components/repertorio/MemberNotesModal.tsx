@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { X, Users, Save, Plus, Music, Sparkles, Check } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import {
+  BandMemberOption,
+  resolveBandMembers,
+  getSongMemberNote,
+  getMemberReadiness,
+  getReadinessSummary,
+  READINESS_LEVELS,
+  ReadinessLevel
+} from '../../utils/repertorioUtils';
 import { ModalPortal } from '../common/ModalPortal';
 
 interface MemberNotesModalProps {
@@ -39,6 +47,19 @@ export function MemberNotesModal({
     song?.notasRepertorio || song?.notasInternas || ''
   );
 
+  // Nivel de preparación de cada miembro con esta canción de cara al próximo bolo. Vive aparte de
+  // memberNotes (texto libre para imprimir) porque son dos cosas distintas: "qué debe recordar" vs
+  // "¿ya se la sabe?". Clave por nombre en minúsculas, igual que memberNotes, para reutilizar el
+  // mismo patrón de lookup que ya usa este modal.
+  const [memberReadiness, setMemberReadiness] = useState<Record<string, ReadinessLevel | null>>(() => {
+    const initial: Record<string, ReadinessLevel | null> = {};
+    if (!song) return initial;
+    resolvedMembers.forEach(m => {
+      initial[m.name.toLowerCase()] = getMemberReadiness(song, m.id, m.name);
+    });
+    return initial;
+  });
+
   const [newMemberName, setNewMemberName] = useState<string>('');
   const [newMemberInstrument, setNewMemberInstrument] = useState<string>('');
   const [showAddCustomMember, setShowAddCustomMember] = useState<boolean>(false);
@@ -54,6 +75,13 @@ export function MemberNotesModal({
     setMemberNotes(prev => ({
       ...prev,
       [key.toLowerCase()]: text
+    }));
+  };
+
+  const handleReadinessChange = (memberKey: string, estado: ReadinessLevel) => {
+    setMemberReadiness(prev => ({
+      ...prev,
+      [memberKey.toLowerCase()]: prev[memberKey.toLowerCase()] === estado ? null : estado
     }));
   };
 
@@ -92,10 +120,32 @@ export function MemberNotesModal({
       }
     });
 
+    // Preparación por miembro: parte de lo que ya hubiera guardado y aplica los cambios de esta
+    // sesión, incluido "quitar" un nivel marcado por error (toggle a null en handleReadinessChange).
+    const updatedNotasPorMiembro = Array.isArray(song.notasPorMiembro) ? [...song.notasPorMiembro] : [];
+    allMembersToDisplay.forEach(member => {
+      const key = member.name.toLowerCase();
+      const estado = memberReadiness[key];
+      const idx = updatedNotasPorMiembro.findIndex(n =>
+        (member.id && n.userId === member.id) || (n.memberName && n.memberName.toLowerCase() === key)
+      );
+      if (estado) {
+        if (idx >= 0) {
+          updatedNotasPorMiembro[idx] = { ...updatedNotasPorMiembro[idx], estadoPreparacion: estado, updatedAt: new Date().toISOString() };
+        } else {
+          updatedNotasPorMiembro.push({ userId: member.id, memberName: member.name, nota: '', estadoPreparacion: estado, updatedAt: new Date().toISOString() });
+        }
+      } else if (idx >= 0) {
+        const { estadoPreparacion, ...rest } = updatedNotasPorMiembro[idx];
+        updatedNotasPorMiembro[idx] = rest;
+      }
+    });
+
     const updatedSong: Song = {
       ...song,
       notasRepertorio: generalRepertorioNote.trim(),
-      notasMiembros: updatedNotasMiembros
+      notasMiembros: updatedNotasMiembros,
+      notasPorMiembro: updatedNotasPorMiembro
     };
 
     onSaveSongNotes(updatedSong);
@@ -132,13 +182,29 @@ export function MemberNotesModal({
               </p>
             </div>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Resumen de preparación de la banda con esta canción — de un vistazo, quién falta */}
+        {(() => {
+          const summary = getReadinessSummary({ notasPorMiembro: Object.entries(memberReadiness).filter(([, v]) => v).map(([k, v]) => ({ memberName: k, estadoPreparacion: v })) }, allMembersToDisplay.length);
+          return (
+            <div className="flex items-center gap-2 flex-wrap pt-3 text-[11px] font-mono">
+              <span className="text-neutral-500 uppercase font-bold">Preparación de la banda:</span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">✅ {summary.lista} listos</span>
+              <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/25">🔶 {summary.casiLista} casi</span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/25">🌱 {summary.aprendiendo} aprendiendo</span>
+              {summary.sinOpinar > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-500 border border-neutral-700">{summary.sinOpinar} sin marcar</span>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Informational Tip */}
         <div className={`p-3 rounded-xl my-3 text-xs flex items-start gap-2.5 ${
@@ -275,6 +341,25 @@ export function MemberNotesModal({
                         <Check className="w-3 h-3" /> Con notas
                       </span>
                     )}
+                  </div>
+
+                  {/* Nivel de preparación de este miembro con la canción para el próximo bolo */}
+                  <div className="flex items-center gap-1.5 mb-2">
+                    {READINESS_LEVELS.map(level => (
+                      <button
+                        key={level.value}
+                        type="button"
+                        onClick={() => handleReadinessChange(memberKey, level.value)}
+                        title={level.label}
+                        className={`text-[10px] font-mono px-2 py-1 rounded-lg border transition-all ${
+                          memberReadiness[memberKey] === level.value
+                            ? level.colorClass
+                            : 'bg-white/5 text-neutral-500 border-transparent hover:border-white/10'
+                        }`}
+                      >
+                        {level.icon} {level.label}
+                      </button>
+                    ))}
                   </div>
 
                   <textarea

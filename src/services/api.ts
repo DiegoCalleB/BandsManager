@@ -49,8 +49,9 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
+    const detailedMessage = errorData.message || errorData.error || errorData.detail || `Error en la petición HTTP (${response.status})`;
     throw new ApiError(
-      errorData.error || `Error en la petición HTTP (${response.status})`,
+      typeof detailedMessage === 'string' ? detailedMessage : JSON.stringify(detailedMessage),
       response.status,
       errorData
     );
@@ -519,6 +520,51 @@ export const api = {
   // Repertorio de la banda activa (lo resuelve el header x-band-id de getAuthHeaders)
   async getSongs(): Promise<{ songs: any[] }> {
     return request<{ songs: any[] }>('/api/songs');
+  },
+
+  async createSong(song: any): Promise<any> {
+    return request('/api/songs', {
+      method: 'POST',
+      body: JSON.stringify(song)
+    });
+  },
+
+  async updateSong(id: string, updatedFields: any): Promise<any> {
+    return request(`/api/songs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updatedFields)
+    });
+  },
+
+  async deleteSong(id: string): Promise<any> {
+    return request(`/api/songs/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
+  // Setlists
+  async getSetlists(): Promise<{ setlists: any[] }> {
+    return request<{ setlists: any[] }>('/api/setlists');
+  },
+
+  async createSetlist(setlist: any): Promise<any> {
+    return request('/api/setlists', {
+      method: 'POST',
+      body: JSON.stringify(setlist)
+    });
+  },
+
+  async updateSetlist(id: string, updatedFields: any): Promise<any> {
+    return request(`/api/setlists/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updatedFields)
+    });
+  },
+
+  async deleteSetlist(id: string): Promise<any> {
+    return request(`/api/setlists/${id}`, {
+      method: 'DELETE'
+    });
   },
 
   // Schedules (Smart Gate)

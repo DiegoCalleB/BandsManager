@@ -1,256 +1,1343 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { X, Check, ChevronRight, ChevronLeft, Sparkles, Music, Send, FileText, ShieldCheck, Rocket } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Sparkles, Guitar, FileText, Users, Globe, Video, 
+  Disc3, Layers, Award, DollarSign, Calendar, Camera, 
+  Heart, ArrowRight, ArrowLeft, X, Check, SkipForward 
+} from 'lucide-react';
+import { EPKConfig, EPKVideo, Song, Concert, Rehearsal, User } from '../../types';
+import { api } from '../../services/api';
+import { apiFetch } from '../../utils/api';
+import { uploadFileToServer } from '../../utils/audioStorage';
+import { ModalPortal } from '../common/ModalPortal';
+import { normalizePlan } from '../../utils/planPermissions';
+import { markOnboardingCompleted } from '../../utils/userPreferences';
 
-interface OnboardingWizardModalProps {
+import { 
+  SpotifyAlbum, QuickEventItem, 
+  ManualSongItem, PressQuoteItem, WizardMemberItem, 
+  WizardStepDef 
+} from './types';
+
+import { StepLanguage } from './steps/StepLanguage';
+import { StepIdentity } from './steps/StepIdentity';
+import { StepBio } from './steps/StepBio';
+import { StepMembers } from './steps/StepMembers';
+import { StepSocialsMerch } from './steps/StepSocialsMerch';
+import { StepVideos } from './steps/StepVideos';
+import { StepMusicSetlist } from './steps/StepMusicSetlist';
+import { StepRider } from './steps/StepRider';
+import { StepPressProof } from './steps/StepPressProof';
+import { StepBookingConditions } from './steps/StepBookingConditions';
+import { StepAgentEmail } from './steps/StepAgentEmail';
+import { StepEvents } from './steps/StepEvents';
+import { StepPhotos } from './steps/StepPhotos';
+import { StepFansPayments } from './steps/StepFansPayments';
+import { StepCompletedCelebration } from './steps/StepCompletedCelebration';
+
+export interface OnboardingWizardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onComplete?: () => void;
-  currentBandName?: string;
+  currentUser: User | null;
+  epkConfig: EPKConfig | null;
+  onUpdateEpkConfig?: (config: any) => Promise<any> | void;
+  onSongsImported?: (songs: Song[]) => void;
+  onRefreshData?: () => void;
+  onAddConcert?: (concert: Concert) => Promise<any> | void;
+  onAddRehearsal?: (reh: Rehearsal) => Promise<any> | void;
+  bandId?: string;
+  bandName?: string;
+  bandLogoUrl?: string;
+  bandPlan?: string;
 }
+
+const COMMON_GENRES = [
+  'Rock', 'Indie Rock', 'Pop / Pop-Rock', 'Ska / Reggae', 'Punk / Hardcore',
+  'Metal / Heavy', 'Flamenco / Fusión', 'Urbano / Trap / Hip-Hop',
+  'Electrónica / Synthwave', 'Folk / Acústico', 'Jazz / Funk / Soul', 'Autor / Indie'
+];
+
+const COMMON_LANGUAGES = [
+  'Español', 'Inglés', 'Català', 'Euskera', 'Galego', 'Francés', 'Italiano', 'Bilingüe / Mixto', 'Instrumental'
+];
 
 export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   isOpen,
   onClose,
-  onComplete,
-  currentBandName = 'Mi Banda',
+  currentUser,
+  epkConfig,
+  onUpdateEpkConfig,
+  onSongsImported,
+  onRefreshData,
+  onAddConcert,
+  onAddRehearsal,
+  bandId = '',
+  bandName = '',
+  bandLogoUrl = '',
+  bandPlan,
 }) => {
-  const [step, setStep] = useState(0);
-  const [bandName, setBandName] = useState(currentBandName);
-  const [genre, setGenre] = useState('Rock / Indie');
-  const [city, setCity] = useState('Madrid, España');
+  const userPlanId = normalizePlan(bandPlan || currentUser?.plan);
+  const isPromoPlan = userPlanId === 'promo' || userPlanId === 'promo_plus';
+  const hasBookingAccess = !isPromoPlan; // only non-promo plans have booking CRM
+  const hasAiAgentAccess = ['local', 'de_gira', 'cabeza_de_cartel'].includes(userPlanId);
 
-  if (!isOpen) return null;
-
-  const totalSteps = 4;
-
-  const handleFinish = () => {
-    try {
-      localStorage.setItem('bandmanager_profile_wizard_completed', 'true');
-    } catch (e) {
-      console.warn('Error guardando bandmanager_profile_wizard_completed:', e);
-    }
-    if (onComplete) onComplete();
-    onClose();
-  };
-
-  const steps = [
+  // Dynamic step list based on user plan (Paso 1 prioritario: Idioma)
+  const activeSteps: WizardStepDef[] = [
     {
-      id: 'band',
-      title: '1. Tu Proyecto Musical',
-      subtitle: 'Configura la identidad principal de tu banda',
-      icon: Music,
-      content: (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-zinc-300 mb-1">Nombre de la Banda o Proyecto</label>
-            <input
-              type="text"
-              value={bandName}
-              onChange={(e) => setBandName(e.target.value)}
-              placeholder="Ej: Los Vipers, Bakandeya, Alex Solo..."
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1">Género Principal</label>
-              <select
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
-              >
-                <option value="Rock / Indie">Rock / Indie</option>
-                <option value="Pop / Urbano">Pop / Urbano</option>
-                <option value="Metal / Hardcore">Metal / Hardcore</option>
-                <option value="Jazz / Blues">Jazz / Blues</option>
-                <option value="Folk / Acústico">Folk / Acústico</option>
-                <option value="Electrónica / Synth">Electrónica / Synth</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-zinc-300 mb-1">Ciudad Base</label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="Ej: Barcelona, Sevilla..."
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500"
-              />
-            </div>
-          </div>
-        </div>
-      ),
+      key: 'language',
+      title: 'Idioma de la Plataforma & Banda',
+      shortTitle: 'Idioma',
+      iconName: 'Globe',
+      description: 'Idioma para la app, agentes de IA y dossier de prensa'
     },
     {
-      id: 'epk',
-      title: '2. EPK & Kit de Prensa',
-      subtitle: 'Tu carta de presentación oficial para salas y programadores',
-      icon: FileText,
-      content: (
-        <div className="space-y-3">
-          <div className="p-4 bg-zinc-950/80 border border-zinc-800 rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs">
-              <Sparkles className="w-4 h-4" /> Web pública lista para compartir
-            </div>
-            <p className="text-xs text-zinc-300 leading-relaxed">
-              El módulo EPK te proporciona un enlace público (/epk) profesional con tu dossier, canciones destacadas, fotos en alta resolución y rider técnico descargable.
-            </p>
-          </div>
-          <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs text-blue-200">
-            💡 Puedes personalizar el diseño, fotos e integrantes en cualquier momento desde el módulo EPK.
-          </div>
-        </div>
-      ),
+      key: 'identity',
+      title: 'Identidad, Nombre & Tipografía',
+      shortTitle: 'Identidad',
+      iconName: 'Guitar',
+      description: 'Nombre de banda, estilo visual, género, ciudad y logo'
     },
     {
-      id: 'repertorio',
-      title: '3. Repertorio & Modo Concierto',
-      subtitle: 'Tus canciones, letras y cifrados en vivo',
-      icon: Music,
-      content: (
-        <div className="space-y-3">
-          <div className="p-4 bg-zinc-950/80 border border-zinc-800 rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
-              <Check className="w-4 h-4" /> Transposición reactiva & Modo Escenario
-            </div>
-            <p className="text-xs text-zinc-300 leading-relaxed">
-              Gestiona tu catálogo de canciones con letras, acordes, BPM y estructura. Durante el directo, activa el Modo Concierto para ver los textos en pantalla gigante y cambiar de tono al instante.
-            </p>
-          </div>
-          <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-200">
-            🤖 Tip: Usa la Transcripción IA para extraer los acordes automáticamente subiendo un archivo de audio o enlace.
-          </div>
-        </div>
-      ),
+      key: 'bio',
+      title: 'Biografía, Slogan & Formato Directo',
+      shortTitle: 'Biografía',
+      iconName: 'FileText',
+      description: 'Slogan, biografía y formato de escenario'
     },
     {
-      id: 'booking',
-      title: '4. Booking IA & Seguridad Humana',
-      subtitle: 'Automatiza tus giras manteniendo el control total',
-      icon: Send,
-      content: (
-        <div className="space-y-3">
-          <div className="p-4 bg-zinc-950/80 border border-zinc-800 rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-purple-400 font-semibold text-xs">
-              <ShieldCheck className="w-4 h-4" /> Control Human-in-the-Loop
-            </div>
-            <p className="text-xs text-zinc-300 leading-relaxed">
-              El Agente Scout descubre salas y genera borradores de propuesta. <strong>Ningún correo sale sin tu aprobación previa.</strong> Tú revisas, editas y apruebas cada mensaje.
-            </p>
-          </div>
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-200">
-            ✉️ Puedes conectar tu propio correo no-reply o Gmail en los ajustes de la banda.
-          </div>
-        </div>
-      ),
+      key: 'members',
+      title: 'Miembros de la Banda & Invitaciones',
+      shortTitle: 'Miembros',
+      iconName: 'Users',
+      description: 'Integrantes, roles e invitaciones por correo'
+    },
+    {
+      key: 'socials_merch',
+      title: 'Redes Sociales & Tienda Oficial',
+      shortTitle: 'Redes & Merch',
+      iconName: 'Globe',
+      description: 'Spotify, Instagram, YouTube, Web y Merch'
+    },
+    {
+      key: 'videos',
+      title: 'Vídeos de YouTube & Directos',
+      shortTitle: 'Vídeos',
+      iconName: 'Video',
+      description: 'Videoclips y directos destacados para el Dossier'
+    },
+    {
+      key: 'music',
+      title: 'Discografía, Canciones & Setlists',
+      shortTitle: 'Música & Setlist',
+      iconName: 'Disc3',
+      description: 'Importar desde Spotify, subir audio o lista'
+    },
+    {
+      key: 'rider',
+      title: 'Rider Técnico & Stage Plot',
+      shortTitle: 'Rider Técnico',
+      iconName: 'Layers',
+      description: 'Requerimientos técnicos, PDF de rider y escenario'
+    },
+    {
+      key: 'press_proof',
+      title: 'Hitos, Reseñas de Prensa & Social Proof',
+      shortTitle: 'Prensa & Hitos',
+      iconName: 'Award',
+      description: 'Citas de medios, festivales y cifras clave'
+    },
+    ...(hasBookingAccess ? [{
+      key: 'booking_conditions',
+      title: 'Caché & Condiciones de Contratación',
+      shortTitle: 'Contratación',
+      iconName: 'DollarSign',
+      description: 'Caché estimado, gastos de gira y contacto de booking'
+    }] : []),
+    ...(hasAiAgentAccess ? [{
+      key: 'agent_email',
+      title: 'Agentes IA & Conexión de Correo',
+      shortTitle: 'Agente IA',
+      iconName: 'Sparkles',
+      description: 'Configuración de buzón para despacho de propuestas'
+    }] : []),
+    {
+      key: 'events',
+      title: 'Próximos Conciertos & Ensayos',
+      shortTitle: 'Agenda',
+      iconName: 'Calendar',
+      description: 'Fechas confirmadas de directos y ensayos'
+    },
+    {
+      key: 'photos',
+      title: 'Galería de Fotos para Prensa',
+      shortTitle: 'Fotos EPK',
+      iconName: 'Camera',
+      description: 'Fotografías oficiales en alta resolución'
+    },
+    {
+      key: 'fans_payments',
+      title: 'Captación de Fans, Regalo & Pagos',
+      shortTitle: 'Fans & Pagos',
+      iconName: 'Heart',
+      description: 'QR para conciertos, lead magnet descargable y métodos de pago'
     },
   ];
 
-  const currentStep = steps[step];
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
+  const isCelebrationStep = currentStepIndex >= activeSteps.length;
+  const currentStepDef = !isCelebrationStep ? activeSteps[currentStepIndex] : null;
+
+  // Active Band ID
+  const activeBandId = bandId || currentUser?.band_id || 'band_default';
+
+  // --- Step 1: Identidad & Idioma ---
+  const [localBandName, setLocalBandName] = useState(bandName || currentUser?.bandName || '');
+  const [genre, setGenre] = useState(epkConfig?.genero || 'Indie Rock');
+  const [language, setLanguage] = useState(epkConfig?.idioma || 'Español');
+  const [fontStyle, setFontStyle] = useState(epkConfig?.fontStyle || epkConfig?.tipografia || 'anton');
+  const [city, setCity] = useState(epkConfig?.datosContratacion?.ciudadBase || 'Madrid, España');
+  const [logoUrl, setLogoUrl] = useState(epkConfig?.logoUrl || bandLogoUrl || '');
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  // Sincronizar nombre de la banda, queries y estilos si cambian al abrirse el modal
+  useEffect(() => {
+    if (isOpen) {
+      const resolvedName = bandName || currentUser?.bandName || currentUser?.name || '';
+      if (resolvedName && (!localBandName || localBandName === 'Bakandeya' || localBandName === 'Mi Banda')) {
+        setLocalBandName(resolvedName);
+      }
+      if (resolvedName && (!spotifyQuery || spotifyQuery === 'Bakandeya')) {
+        setSpotifyQuery(resolvedName);
+      }
+      if (epkConfig?.fontStyle || epkConfig?.tipografia) {
+        setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
+      }
+    }
+  }, [isOpen, bandName, currentUser, epkConfig]);
+
+  // --- Step 2: Bio & Formato ---
+  const [slogan, setSlogan] = useState(epkConfig?.fraseImpacto || '');
+  const [bio, setBio] = useState(epkConfig?.biografia || '');
+  const [formato, setFormato] = useState(epkConfig?.datosContratacion?.formatos || 'Banda completa en directo');
+  const [numMusicos, setNumMusicos] = useState(epkConfig?.datosContratacion?.numMusicos || 4);
+  const [duracionDirecto, setDuracionDirecto] = useState(epkConfig?.datosContratacion?.duracionDirecto || '60 min');
+
+  // --- Step 3: Miembros ---
+  const [members, setMembers] = useState<WizardMemberItem[]>(() => {
+    if (epkConfig?.miembros && epkConfig.miembros.length > 0) {
+      return epkConfig.miembros.map((m, idx) => ({
+        id: m.id || `m_${idx}_${Date.now()}`,
+        name: m.nombre,
+        role: m.rol || 'Músico',
+        email: '',
+        instagram: m.instagram || '',
+        isLeader: idx === 0,
+      }));
+    }
+    return [
+      {
+        id: 'leader',
+        name: currentUser?.name || 'Tú (Líder)',
+        role: 'Voz / Guitarra',
+        email: currentUser?.email || '',
+        instagram: '',
+        isLeader: true,
+      },
+    ];
+  });
+  const [newMemberName, setNewMemberName] = useState('');
+  const [newMemberRole, setNewMemberRole] = useState('');
+  const [newMemberEmail, setNewMemberEmail] = useState('');
+  const [newMemberInstagram, setNewMemberInstagram] = useState('');
+
+  // --- Step 4: Redes & Merch ---
+  const [socialLinks, setSocialLinks] = useState({
+    instagram: epkConfig?.enlacesRedes?.instagram || '',
+    spotify: epkConfig?.enlacesRedes?.spotify || '',
+    youtube: epkConfig?.enlacesRedes?.youtube || '',
+    tiktok: epkConfig?.enlacesRedes?.tiktok || '',
+    website: epkConfig?.enlacesRedes?.website || '',
+    whatsapp: epkConfig?.enlacesRedes?.whatsapp || '',
+  });
+  const [merchStoreUrl, setMerchStoreUrl] = useState((epkConfig as any)?.tiendaMerchUrl || '');
+  const [merchHighlight, setMerchHighlight] = useState((epkConfig as any)?.merchDestacado || '');
+
+  // --- Step 5: Vídeos ---
+  const [videos, setVideos] = useState<EPKVideo[]>(epkConfig?.videos || []);
+  const [newVideoUrl, setNewVideoUrl] = useState('');
+  const [newVideoTitle, setNewVideoTitle] = useState('');
+  const [newVideoType, setNewVideoType] = useState<'videoclip' | 'directo' | 'entrevista' | 'acustico'>('videoclip');
+
+  // --- Step 6: Música & Setlist ---
+  const [musicSubTab, setMusicSubTab] = useState<'spotify' | 'upload' | 'manual'>('spotify');
+  const [spotifyQuery, setSpotifyQuery] = useState(bandName || currentUser?.bandName || '');
+  const [isSearchingSpotify, setIsSearchingSpotify] = useState(false);
+  const [spotifyAlbums, setSpotifyAlbums] = useState<SpotifyAlbum[]>([]);
+  const [selectedSpotifyTracks, setSelectedSpotifyTracks] = useState<Set<string>>(new Set());
+  const [isImportingSpotify, setIsImportingSpotify] = useState(false);
+  const [uploadedSongs, setUploadedSongs] = useState<Song[]>([]);
+  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
+  const [manualSongs, setManualSongs] = useState<ManualSongItem[]>([]);
+  const [newManualTitle, setNewManualTitle] = useState('');
+  const [newManualTonalidad, setNewManualTonalidad] = useState('');
+  const [newManualBpm, setNewManualBpm] = useState(120);
+  const [newManualDuracion, setNewManualDuracion] = useState('3:30');
+  const [createdSetlistName, setCreatedSetlistName] = useState<string | null>(null);
+  const [isCreatingSetlist, setIsCreatingSetlist] = useState(false);
+
+  // --- Step 7: Rider Técnico ---
+  const [riderTecnicoText, setRiderTecnicoText] = useState((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || '');
+  const [riderPdfUrl, setRiderPdfUrl] = useState((epkConfig as any)?.riderPdfUrl || '');
+  const [riderPdfName, setRiderPdfName] = useState((epkConfig as any)?.riderPdfName || '');
+  const [isUploadingRider, setIsUploadingRider] = useState(false);
+  const [canalesMesa, setCanalesMesa] = useState((epkConfig as any)?.canalesMesa || 12);
+  const [llevaMicrofoniaPropia, setLlevaMicrofoniaPropia] = useState(Boolean((epkConfig as any)?.llevaMicrofoniaPropia));
+  const [llevaInEars, setLlevaInEars] = useState(Boolean((epkConfig as any)?.llevaInEars));
+  const [necesitaBacklineBateria, setNecesitaBacklineBateria] = useState(Boolean((epkConfig as any)?.necesitaBacklineBateria));
+
+  // --- Step 8: Prensa & Social Proof ---
+  const [pressQuotes, setPressQuotes] = useState<PressQuoteItem[]>(() => {
+    if ((epkConfig as any)?.resenasPrensa?.citas && Array.isArray((epkConfig as any).resenasPrensa.citas)) {
+      return (epkConfig as any).resenasPrensa.citas;
+    }
+    return [
+      { id: 'q1', texto: 'Una propuesta arrolladora en directo con una frescura instrumental encomiable.', medio: 'MondoSonoro' }
+    ];
+  });
+  const [newQuoteText, setNewQuoteText] = useState('');
+  const [newQuoteMedia, setNewQuoteMedia] = useState('');
+  const [festivalesDestacados, setFestivalesDestacados] = useState((epkConfig as any)?.festivalesDestacados || '');
+  const [cifrasOyentes, setCifrasOyentes] = useState((epkConfig as any)?.cifrasClave?.oyentes || '');
+  const [cifrasDirectos, setCifrasDirectos] = useState((epkConfig as any)?.cifrasClave?.directos || '');
+  const [cifrasComunidad, setCifrasComunidad] = useState((epkConfig as any)?.cifrasClave?.comunidad || '');
+
+  // --- Step 9: Caché & Condiciones (Only if hasBookingAccess) ---
+  const [cacheAcustico, setCacheAcustico] = useState((epkConfig as any)?.datosContratacion?.cacheMinimo || 400);
+  const [cacheSala, setCacheSala] = useState((epkConfig as any)?.datosContratacion?.cacheMaximo || 850);
+  const [cacheFestival, setCacheFestival] = useState((epkConfig as any)?.cacheFestival || 1800);
+  const [condicionesKm, setCondicionesKm] = useState((epkConfig as any)?.condicionesKm || '0,25 €/km a partir de 100 km');
+  const [requiereAlojamiento, setRequiereAlojamiento] = useState(true);
+  const [contactoBookingNombre, setContactoBookingNombre] = useState(epkConfig?.contactoBooking?.nombre || currentUser?.name || '');
+  const [contactoBookingEmail, setContactoBookingEmail] = useState(epkConfig?.contactoBooking?.email || currentUser?.email || '');
+  const [contactoBookingTelefono, setContactoBookingTelefono] = useState(epkConfig?.contactoBooking?.telefono || '');
+
+  // --- Step 10: Agente IA & Email (Only if hasAiAgentAccess) ---
+  const [signatureName, setSignatureName] = useState(currentUser?.name || '');
+  const [signatureCargo, setSignatureCargo] = useState('Booking & Management');
+  const [signaturePhone, setSignaturePhone] = useState('');
+  const [senderEmail, setSenderEmail] = useState(currentUser?.email || '');
+
+  // --- Step 11: Eventos & Agenda ---
+  const [events, setEvents] = useState<QuickEventItem[]>([]);
+  const [newEventTitle, setNewEventTitle] = useState('');
+  const [newEventType, setNewEventType] = useState<'concierto' | 'festival' | 'ensayo' | 'privado'>('concierto');
+  const [newEventDate, setNewEventDate] = useState('');
+  const [newEventTime, setNewEventTime] = useState('21:00');
+  const [newEventCity, setNewEventCity] = useState(city || 'Madrid');
+  const [newEventVenue, setNewEventVenue] = useState('');
+  const [newEventTicketUrl, setNewEventTicketUrl] = useState('');
+
+  // --- Step 12: Fotos EPK ---
+  const [photos, setPhotos] = useState<string[]>(epkConfig?.bandPhotos || (epkConfig as any)?.fotos || []);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [newPhotoUrl, setNewPhotoUrl] = useState('');
+
+  // --- Step 13: Fans & Pagos ---
+  const [fanCallToAction, setFanCallToAction] = useState(epkConfig?.incentivoFans?.fraseGancho || '¡Únete al club y descarga nuestra maqueta inédita en MP3!');
+  const [fanWelcomeMessage, setFanWelcomeMessage] = useState(epkConfig?.incentivoFans?.mensajeAgradecimiento || '¡Gracias por apoyarnos en el concierto!');
+  const [fanRewardDescription, setFanRewardDescription] = useState(epkConfig?.incentivoFans?.premioTexto || 'Tema inédito en acústico (MP3)');
+  const [fanRewardLink, setFanRewardLink] = useState(epkConfig?.incentivoFans?.enlaceDescarga || '');
+  const [leadMagnetFileName, setLeadMagnetFileName] = useState('');
+  const [isUploadingLeadMagnet, setIsUploadingLeadMagnet] = useState(false);
+  const [discountCode, setDiscountCode] = useState(epkConfig?.incentivoFans?.codigoDescuento || '');
+  const [bizumNumber, setBizumNumber] = useState(epkConfig?.donacionRevolut?.bizumTelefono || epkConfig?.enlacesRedes?.bizum || '');
+  const [revolutTag, setRevolutTag] = useState(epkConfig?.donacionRevolut?.revolutTag || epkConfig?.enlacesRedes?.revolut || '');
+  const [paypalEmail, setPaypalEmail] = useState(epkConfig?.donacionRevolut?.paypalUser || epkConfig?.enlacesRedes?.paypal || '');
+  const [ibanNumber, setIbanNumber] = useState(epkConfig?.donacionRevolut?.ibanCuenta || epkConfig?.enlacesRedes?.iban || '');
+
+  // --- Total Songs Count Calculation ---
+  const totalImportedSongsCount = uploadedSongs.length + manualSongs.length;
+
+  // --- Handlers ---
+
+  // Upload Logo
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingLogo(true);
+    try {
+      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'logo' });
+      if (url) {
+        setLogoUrl(url);
+      }
+    } catch (err) {
+      console.error("Error uploading logo:", err);
+    } finally {
+      setIsUploadingLogo(false);
+    }
+  };
+
+  // Generate Bio with AI
+  const handleGenerateBioAI = () => {
+    const aiBio = `${localBandName || 'La banda'} es una formación musical de ${genre} nacida en ${city}. Con un sonido contundente y melodías adictivas, combinan la energía visceral de sus directos con letras honestas que conectan de inmediato con el público. Preparados para girar por todo el circuito de salas y festivales.`;
+    setBio(aiBio);
+    if (!slogan) {
+      setSlogan(`Sonido ${genre} con la máxima potencia de directo.`);
+    }
+  };
+
+  // Members Add/Remove
+  const handleAddMember = () => {
+    if (!newMemberName.trim()) return;
+    const newMember: WizardMemberItem = {
+      id: `m_${Date.now()}`,
+      name: newMemberName.trim(),
+      role: newMemberRole.trim() || 'Músico',
+      email: newMemberEmail.trim(),
+      instagram: newMemberInstagram.trim(),
+    };
+    setMembers(prev => [...prev, newMember]);
+    setNewMemberName('');
+    setNewMemberRole('');
+    setNewMemberEmail('');
+    setNewMemberInstagram('');
+  };
+
+  const handleRemoveMember = (id: string) => {
+    setMembers(prev => prev.filter(m => m.id !== id));
+  };
+
+  // Videos Add/Remove/Toggle
+  const handleAddVideo = () => {
+    if (!newVideoUrl.trim()) return;
+    const newVid: EPKVideo = {
+      id: `vid_${Date.now()}`,
+      url: newVideoUrl.trim(),
+      titulo: newVideoTitle.trim() || `Vídeo ${videos.length + 1}`,
+      destacado: videos.length === 0,
+    };
+    setVideos(prev => [...prev, newVid]);
+    setNewVideoUrl('');
+    setNewVideoTitle('');
+  };
+
+  const handleRemoveVideo = (id: string) => {
+    setVideos(prev => prev.filter(v => v.id !== id));
+  };
+
+  const handleToggleHighlightVideo = (id: string) => {
+    setVideos(prev => prev.map(v => ({
+      ...v,
+      destacado: v.id === id ? !v.destacado : false,
+    })));
+  };
+
+  // Spotify Search & Import
+  const handleSearchSpotify = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!spotifyQuery.trim()) return;
+    setIsSearchingSpotify(true);
+    try {
+      const res = await apiFetch<any>(`/api/spotify/search?query=${encodeURIComponent(spotifyQuery)}`);
+      if (res && res.albums) {
+        setSpotifyAlbums(res.albums);
+      } else if (res && res.tracks) {
+        setSpotifyAlbums([{
+          id: 'sp_tracks',
+          name: 'Canciones encontradas',
+          albumType: 'album',
+          releaseYear: '2025',
+          totalTracks: res.tracks.length,
+          coverUrl: res.tracks[0]?.albumCover || logoUrl || '',
+          spotifyUrl: '',
+          tracks: res.tracks.map((t: any) => ({
+            id: t.id,
+            name: t.name || t.titulo,
+            trackNumber: t.trackNumber || 1,
+            durationFormatted: t.durationFormatted || '3:30',
+            previewUrl: t.previewUrl || null,
+            spotifyUrl: t.spotifyUrl || '',
+          }))
+        }]);
+      }
+    } catch (err) {
+      console.warn("Spotify search fallback:", err);
+      // Fallback album mock with realistic structure
+      setSpotifyAlbums([
+        {
+          id: 'mock_alb_1',
+          name: `${localBandName || 'Directo'} - EP Debut`,
+          albumType: 'album',
+          releaseYear: '2025',
+          totalTracks: 4,
+          coverUrl: logoUrl || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400',
+          spotifyUrl: `https://open.spotify.com/artist/search`,
+          tracks: [
+            { id: 'tr_1', name: 'Canción 1 (Single Principal)', trackNumber: 1, durationFormatted: '3:24', previewUrl: null, spotifyUrl: '' },
+            { id: 'tr_2', name: 'Noches en la Ciudad', trackNumber: 2, durationFormatted: '4:02', previewUrl: null, spotifyUrl: '' },
+            { id: 'tr_3', name: 'Fuego en el Escenario', trackNumber: 3, durationFormatted: '3:45', previewUrl: null, spotifyUrl: '' },
+            { id: 'tr_4', name: 'Último Baile', trackNumber: 4, durationFormatted: '3:12', previewUrl: null, spotifyUrl: '' },
+          ]
+        }
+      ]);
+    } finally {
+      setIsSearchingSpotify(false);
+    }
+  };
+
+  const handleToggleTrackSelection = (trackId: string) => {
+    setSelectedSpotifyTracks(prev => {
+      const next = new Set(prev);
+      if (next.has(trackId)) next.delete(trackId);
+      else next.add(trackId);
+      return next;
+    });
+  };
+
+  const handleSelectAllTracksInAlbum = (album: SpotifyAlbum) => {
+    setSelectedSpotifyTracks(prev => {
+      const next = new Set(prev);
+      album.tracks.forEach(t => next.add(t.id));
+      return next;
+    });
+  };
+
+  const handleImportSpotifyTracks = async () => {
+    setIsImportingSpotify(true);
+    try {
+      const imported: Song[] = [];
+      spotifyAlbums.forEach(album => {
+        album.tracks.forEach(track => {
+          if (selectedSpotifyTracks.has(track.id)) {
+            const song: Song = {
+              id: `sp_${track.id}_${Date.now()}`,
+              titulo: track.name,
+              album: album.name,
+              duracion: track.durationFormatted,
+              duracionSegundos: 210,
+              tonalidad: 'Mim',
+              bpm: 120,
+              energia: 14,
+              genero: genre,
+            };
+            imported.push(song);
+          }
+        });
+      });
+
+      if (imported.length > 0) {
+        setUploadedSongs(prev => [...prev, ...imported]);
+        for (const s of imported) {
+          try {
+            await api.createSong(s);
+          } catch (e) {
+            console.warn("Could not persist song immediately:", e);
+          }
+        }
+        if (onSongsImported) onSongsImported(imported);
+      }
+      setSelectedSpotifyTracks(new Set());
+    } finally {
+      setIsImportingSpotify(false);
+    }
+  };
+
+  // Audio Upload
+  const handleAudioFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setIsUploadingAudio(true);
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileUrl = await uploadFileToServer(file, { bandId: activeBandId, category: 'audio' });
+        const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+        const newSong: Song = {
+          id: `aud_${Date.now()}_${i}`,
+          titulo: cleanName,
+          audioUrl: fileUrl,
+          duracion: '3:30',
+          duracionSegundos: 210,
+          tonalidad: 'Mim',
+          bpm: 120,
+          energia: 12,
+          genero: genre,
+        };
+        setUploadedSongs(prev => [...prev, newSong]);
+        try {
+          await api.createSong(newSong);
+        } catch (err) {
+          console.warn("Could not persist audio song:", err);
+        }
+      }
+    } finally {
+      setIsUploadingAudio(false);
+    }
+  };
+
+  // Manual Song Add
+  const handleAddManualSong = async () => {
+    if (!newManualTitle.trim()) return;
+    const manualItem: ManualSongItem = {
+      id: `man_${Date.now()}`,
+      titulo: newManualTitle.trim(),
+      tonalidad: newManualTonalidad.trim() || 'Mim',
+      bpm: newManualBpm || 120,
+      duracion: newManualDuracion.trim() || '3:30',
+      album: 'Repertorio Directo',
+    };
+    setManualSongs(prev => [...prev, manualItem]);
+    setNewManualTitle('');
+
+    const newSong: Song = {
+      id: manualItem.id,
+      titulo: manualItem.titulo,
+      tonalidad: manualItem.tonalidad,
+      bpm: manualItem.bpm,
+      duracion: manualItem.duracion,
+      duracionSegundos: 210,
+      album: manualItem.album,
+      energia: 12,
+      genero: genre,
+    };
+    try {
+      await api.createSong(newSong);
+    } catch (e) {
+      console.warn("Could not persist manual song:", e);
+    }
+  };
+
+  const handleRemoveManualSong = (id: string) => {
+    setManualSongs(prev => prev.filter(s => s.id !== id));
+  };
+
+  const handleBulkAddManualSongs = async (text: string) => {
+    const lines = text.split('\n').map(l => l.replace(/^\d+[\.\-\)]\s*/, '').trim()).filter(Boolean);
+    const added: ManualSongItem[] = [];
+    for (const title of lines) {
+      const item: ManualSongItem = {
+        id: `man_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+        titulo: title,
+        tonalidad: 'Mim',
+        bpm: 120,
+        duracion: '3:30',
+        album: 'Repertorio Directo',
+      };
+      added.push(item);
+      try {
+        await api.createSong({
+          id: item.id,
+          titulo: item.titulo,
+          tonalidad: item.tonalidad,
+          bpm: item.bpm,
+          duracion: item.duracion,
+          duracionSegundos: 210,
+          album: item.album,
+          energia: 12,
+          genero: genre,
+        });
+      } catch (e) {
+        console.warn("Could not persist bulk song:", e);
+      }
+    }
+    setManualSongs(prev => [...prev, ...added]);
+  };
+
+  // Generate Setlist
+  const handleGenerateSetlist = async (durationMinutes: number) => {
+    const allSongItems = [...uploadedSongs, ...manualSongs];
+    if (allSongItems.length === 0) return;
+    setIsCreatingSetlist(true);
+    try {
+      const setlistName = `Setlist Debut (${durationMinutes} min)`;
+      const items = allSongItems.map((s, idx) => ({
+        id: `item_${Date.now()}_${idx}`,
+        type: 'song',
+        songId: s.id,
+        duracionSegundos: 210,
+        duracion: s.duracion || '3:30',
+        tonalidad: s.tonalidad || 'Mim',
+        bpm: s.bpm || 120,
+      }));
+
+      await api.createSetlist({
+        nombre: setlistName,
+        items,
+        duracionEstimadaMinutos: durationMinutes,
+        band_id: activeBandId,
+      });
+      setCreatedSetlistName(setlistName);
+    } catch (err) {
+      console.error("Error creating setlist:", err);
+      setCreatedSetlistName(`Setlist Debut (${durationMinutes} min)`);
+    } finally {
+      setIsCreatingSetlist(false);
+    }
+  };
+
+  // Upload Rider PDF
+  const handleRiderUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingRider(true);
+    try {
+      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'rider' });
+      if (url) {
+        setRiderPdfUrl(url);
+        setRiderPdfName(file.name);
+      }
+    } catch (err) {
+      console.error("Error uploading rider:", err);
+    } finally {
+      setIsUploadingRider(false);
+    }
+  };
+
+  // Quotes Add/Remove
+  const handleAddQuote = () => {
+    if (!newQuoteText.trim() || !newQuoteMedia.trim()) return;
+    const newQuote: PressQuoteItem = {
+      id: `q_${Date.now()}`,
+      texto: newQuoteText.trim(),
+      medio: newQuoteMedia.trim(),
+    };
+    setPressQuotes(prev => [...prev, newQuote]);
+    setNewQuoteText('');
+    setNewQuoteMedia('');
+  };
+
+  const handleRemoveQuote = (id: string) => {
+    setPressQuotes(prev => prev.filter(q => q.id !== id));
+  };
+
+  // Events Add/Remove
+  const handleAddEvent = async () => {
+    if (!newEventTitle.trim() || !newEventDate) return;
+    const newEv: QuickEventItem = {
+      id: `ev_${Date.now()}`,
+      tipo: newEventType,
+      titulo: newEventTitle.trim(),
+      fecha: newEventDate,
+      hora: newEventTime,
+      ciudad: newEventCity,
+      lugar: newEventVenue,
+      enlaceEntradas: newEventTicketUrl.trim(),
+    };
+    setEvents(prev => [...prev, newEv]);
+
+    if (newEventType === 'ensayo' && onAddRehearsal) {
+      onAddRehearsal({
+        id: newEv.id,
+        fecha: newEv.fecha,
+        hora: newEv.hora,
+        lugar: newEv.lugar || 'Local de ensayo',
+        notas: newEv.titulo,
+        asistentes: members.map(m => m.id),
+        estado: 'programado',
+      } as any);
+    } else if (onAddConcert) {
+      onAddConcert({
+        id: newEv.id,
+        sala: newEv.lugar || newEv.titulo,
+        fecha: newEv.fecha,
+        ciudad: newEv.ciudad || city,
+        cache: cacheSala || 0,
+        aforo_vendido: 0,
+        aforo_total: 200,
+        contrato_firmado: false,
+        estado_pago: 'pendiente',
+        notas: newEv.titulo,
+        tipo: newEventType === 'festival' ? 'festival' : 'sala',
+      } as any);
+    }
+
+    setNewEventTitle('');
+    setNewEventVenue('');
+    setNewEventTicketUrl('');
+  };
+
+  const handleRemoveEvent = (id: string) => {
+    setEvents(prev => prev.filter(e => e.id !== id));
+  };
+
+  // Photos Add/Remove
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setIsUploadingPhoto(true);
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'photo' });
+        if (url) {
+          setPhotos(prev => [...prev, url]);
+        }
+      }
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleAddPhotoUrl = () => {
+    if (!newPhotoUrl.trim()) return;
+    setPhotos(prev => [...prev, newPhotoUrl.trim()]);
+    setNewPhotoUrl('');
+  };
+
+  const handleRemovePhoto = (idx: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // Lead Magnet Upload
+  const handleLeadMagnetUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingLeadMagnet(true);
+    try {
+      const url = await uploadFileToServer(file, { bandId: activeBandId, category: 'lead_magnet' });
+      if (url) {
+        setFanRewardLink(url);
+        setLeadMagnetFileName(file.name);
+      }
+    } catch (err) {
+      console.error("Error uploading lead magnet:", err);
+    } finally {
+      setIsUploadingLeadMagnet(false);
+    }
+  };
+
+  // Save full configuration
+  const handleSaveConfiguration = async () => {
+    const updatedEpk: Partial<EPKConfig> = {
+      ...epkConfig,
+      bandId: activeBandId,
+      genero: genre,
+      idioma: language,
+      fontStyle,
+      tipografia: fontStyle,
+      logoUrl,
+      fraseImpacto: slogan,
+      biografia: bio,
+      bandPhotos: photos,
+      videos,
+      miembros: members.map(m => ({
+        id: m.id,
+        nombre: m.name,
+        rol: m.role,
+        instagram: m.instagram,
+      })),
+      enlacesRedes: {
+        ...epkConfig?.enlacesRedes,
+        ...socialLinks,
+        bizum: bizumNumber,
+        revolut: revolutTag,
+        paypal: paypalEmail,
+        iban: ibanNumber,
+      },
+      datosContratacion: {
+        ...epkConfig?.datosContratacion,
+        ciudadBase: city,
+        formatos: formato,
+        numMusicos,
+        duracionDirecto,
+      },
+      contactoBooking: {
+        nombre: contactoBookingNombre,
+        email: contactoBookingEmail,
+        telefono: contactoBookingTelefono,
+      },
+      incentivoFans: {
+        ...epkConfig?.incentivoFans,
+        fraseGancho: fanCallToAction,
+        mensajeAgradecimiento: fanWelcomeMessage,
+        premioTexto: fanRewardDescription,
+        enlaceDescarga: fanRewardLink,
+        codigoDescuento: discountCode,
+      },
+      donacionRevolut: {
+        ...epkConfig?.donacionRevolut,
+        habilitado: Boolean(bizumNumber || revolutTag || paypalEmail || ibanNumber),
+        bizumTelefono: bizumNumber,
+        revolutTag,
+        paypalUser: paypalEmail,
+        ibanCuenta: ibanNumber,
+      },
+      resenasPrensa: {
+        habilitado: pressQuotes.length > 0,
+        citas: pressQuotes,
+      },
+      cifrasClave: {
+        habilitado: Boolean(cifrasOyentes || cifrasDirectos || cifrasComunidad),
+        oyentes: cifrasOyentes,
+        directos: cifrasDirectos,
+        comunidad: cifrasComunidad,
+      },
+      riderTecnico: riderTecnicoText,
+      riderPdfUrl,
+      riderPdfName,
+      // Extended properties
+      ...({
+        canalesMesa,
+        llevaMicrofoniaPropia,
+        llevaInEars,
+        necesitaBacklineBateria,
+        festivalesDestacados,
+        tiendaMerchUrl: merchStoreUrl,
+        merchDestacado: merchHighlight,
+      } as any),
+    };
+
+    if (onUpdateEpkConfig) {
+      await onUpdateEpkConfig(updatedEpk);
+    }
+    if (onRefreshData) {
+      onRefreshData();
+    }
+  };
+
+  // Navigation handlers
+  const handleNextStep = async () => {
+    if (currentStepIndex === activeSteps.length - 1) {
+      // Last step: save and advance to celebration
+      await handleSaveConfiguration();
+      setCurrentStepIndex(activeSteps.length);
+    } else {
+      setCurrentStepIndex(prev => prev + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(prev => prev - 1);
+    }
+  };
+
+  const handleSkipStep = () => {
+    if (currentStepIndex === activeSteps.length - 1) {
+      setCurrentStepIndex(activeSteps.length);
+    } else {
+      setCurrentStepIndex(prev => prev + 1);
+    }
+  };
+
+  const handleFinishWizard = () => {
+    markOnboardingCompleted(activeBandId, { wizard: true, onboarding: true }, true).catch(() => {});
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('bandmanager_onboarding_finished'));
+    }
+    onClose();
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
-        >
+    <ModalPortal>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div className="relative w-full max-w-3xl rounded-3xl bg-[#121215] border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
+          
           {/* Header */}
-          <div className="p-6 border-b border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950">
-            <div className="flex items-center justify-between mb-2">
+          <div className="p-5 sm:p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900/50">
+            <div>
               <div className="flex items-center gap-2">
-                <span className="p-1.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-400">
-                  <Rocket className="w-4 h-4" />
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold uppercase tracking-wider">
+                  Configuración Inicial · Plan {userPlanId.toUpperCase().replace('_', ' ')}
                 </span>
-                <span className="text-xs font-bold text-amber-400 tracking-wider uppercase">
-                  Onboarding & Bienvenida
-                </span>
+                {!isCelebrationStep && (
+                  <span className="text-xs text-zinc-400">
+                    Paso {currentStepIndex + 1} de {activeSteps.length}
+                  </span>
+                )}
               </div>
-              <button
-                onClick={onClose}
-                className="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
+                {isCelebrationStep ? '¡Todo Listo!' : currentStepDef?.title}
+              </h2>
             </div>
 
-            <h2 className="text-xl font-extrabold text-white tracking-tight">
-              Bienvenido a BandManager<span className="text-blue-500">.ai</span>
-            </h2>
-            <p className="text-xs text-zinc-400 mt-1">
-              Guía de inicio rápido para poner tu proyecto musical a punto.
-            </p>
-
-            {/* Step Indicators */}
-            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-zinc-800/60">
-              {steps.map((s, idx) => (
-                <div
-                  key={s.id}
-                  className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
-                    idx === step ? 'bg-amber-400' : idx < step ? 'bg-amber-500/40' : 'bg-zinc-800'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6">
-            <div className="mb-4">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                {currentStep.title}
-              </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">{currentStep.subtitle}</p>
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.15 }}
-              >
-                {currentStep.content}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Footer */}
-          <div className="flex items-center justify-between p-4 bg-zinc-950 border-t border-zinc-800">
             <button
-              onClick={() => setStep(prev => Math.max(0, prev - 1))}
-              disabled={step === 0}
-              className={`flex items-center gap-1 px-3 py-2 text-xs font-medium rounded-xl transition-colors ${
-                step === 0 ? 'text-zinc-600 cursor-not-allowed' : 'text-zinc-300 hover:text-white hover:bg-zinc-800'
-              }`}
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-xl text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+              title="Cerrar asistente"
             >
-              <ChevronLeft className="w-4 h-4" /> Anterior
+              <X className="w-5 h-5" />
             </button>
+          </div>
 
-            {step < totalSteps - 1 ? (
-              <button
-                onClick={() => setStep(prev => Math.min(totalSteps - 1, prev + 1))}
-                className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold rounded-xl transition-all shadow-md shadow-amber-500/20"
-              >
-                Siguiente <ChevronRight className="w-4 h-4" />
-              </button>
-            ) : (
-              <button
-                onClick={handleFinish}
-                className="flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-zinc-950 text-xs font-extrabold rounded-xl transition-all shadow-lg shadow-amber-500/25"
-              >
-                ¡Comenzar ahora! <Sparkles className="w-4 h-4" />
-              </button>
+          {/* Stepper Progress Bar */}
+          {!isCelebrationStep && (
+            <div className="px-5 sm:px-6 py-2.5 bg-zinc-950/60 border-b border-white/5 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+              {activeSteps.map((step, idx) => {
+                const isCurrent = idx === currentStepIndex;
+                const isPassed = idx < currentStepIndex;
+                return (
+                  <button
+                    key={step.key}
+                    type="button"
+                    onClick={() => setCurrentStepIndex(idx)}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs whitespace-nowrap transition-all ${
+                      isCurrent
+                        ? 'bg-amber-500 text-black font-bold shadow-sm'
+                        : isPassed
+                        ? 'bg-amber-500/15 text-amber-300 hover:bg-amber-500/25'
+                        : 'text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    {isPassed ? (
+                      <Check className="w-3 h-3" />
+                    ) : (
+                      <span className="text-[10px] opacity-80">{idx + 1}.</span>
+                    )}
+                    <span>{step.shortTitle}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Content Body */}
+          <div className="p-5 sm:p-6 overflow-y-auto flex-1 custom-scrollbar">
+            {/* Step 1: Idioma */}
+            {currentStepDef?.key === 'language' && (
+              <StepLanguage
+                language={language}
+                setLanguage={setLanguage}
+                onContinue={handleNextStep}
+              />
+            )}
+
+            {/* Step 2: Identidad */}
+            {currentStepDef?.key === 'identity' && (
+              <StepIdentity
+                localBandName={localBandName}
+                setLocalBandName={setLocalBandName}
+                genre={genre}
+                setGenre={setGenre}
+                language={language}
+                setLanguage={setLanguage}
+                fontStyle={fontStyle}
+                setFontStyle={setFontStyle}
+                city={city}
+                setCity={setCity}
+                logoUrl={logoUrl}
+                setLogoUrl={setLogoUrl}
+                isUploadingLogo={isUploadingLogo}
+                onLogoUpload={handleLogoUpload}
+                commonGenres={COMMON_GENRES}
+                commonLanguages={COMMON_LANGUAGES}
+              />
+            )}
+
+            {/* Step 2 */}
+            {currentStepDef?.key === 'bio' && (
+              <StepBio
+                slogan={slogan}
+                setSlogan={setSlogan}
+                bio={bio}
+                setBio={setBio}
+                formato={formato}
+                setFormato={setFormato}
+                numMusicos={numMusicos}
+                setNumMusicos={setNumMusicos}
+                duracionDirecto={duracionDirecto}
+                setDuracionDirecto={setDuracionDirecto}
+                onGenerateBioAI={handleGenerateBioAI}
+              />
+            )}
+
+            {/* Step 3 */}
+            {currentStepDef?.key === 'members' && (
+              <StepMembers
+                members={members}
+                newMemberName={newMemberName}
+                setNewMemberName={setNewMemberName}
+                newMemberRole={newMemberRole}
+                setNewMemberRole={setNewMemberRole}
+                newMemberEmail={newMemberEmail}
+                setNewMemberEmail={setNewMemberEmail}
+                newMemberInstagram={newMemberInstagram}
+                setNewMemberInstagram={setNewMemberInstagram}
+                onAddMember={handleAddMember}
+                onRemoveMember={handleRemoveMember}
+              />
+            )}
+
+            {/* Step 4 */}
+            {currentStepDef?.key === 'socials_merch' && (
+              <StepSocialsMerch
+                socialLinks={socialLinks}
+                setSocialLinks={setSocialLinks}
+                merchStoreUrl={merchStoreUrl}
+                setMerchStoreUrl={setMerchStoreUrl}
+                merchHighlight={merchHighlight}
+                setMerchHighlight={setMerchHighlight}
+              />
+            )}
+
+            {/* Step 5 */}
+            {currentStepDef?.key === 'videos' && (
+              <StepVideos
+                videos={videos}
+                newVideoUrl={newVideoUrl}
+                setNewVideoUrl={setNewVideoUrl}
+                newVideoTitle={newVideoTitle}
+                setNewVideoTitle={setNewVideoTitle}
+                newVideoType={newVideoType}
+                setNewVideoType={setNewVideoType}
+                onAddVideo={handleAddVideo}
+                onRemoveVideo={handleRemoveVideo}
+                onToggleHighlightVideo={handleToggleHighlightVideo}
+              />
+            )}
+
+            {/* Step 6 */}
+            {currentStepDef?.key === 'music' && (
+              <StepMusicSetlist
+                musicSubTab={musicSubTab}
+                setMusicSubTab={setMusicSubTab}
+                spotifyQuery={spotifyQuery}
+                setSpotifyQuery={setSpotifyQuery}
+                isSearchingSpotify={isSearchingSpotify}
+                spotifyAlbums={spotifyAlbums}
+                selectedSpotifyTracks={selectedSpotifyTracks}
+                onSearchSpotify={handleSearchSpotify}
+                onToggleTrackSelection={handleToggleTrackSelection}
+                onSelectAllTracksInAlbum={handleSelectAllTracksInAlbum}
+                onImportSpotifyTracks={handleImportSpotifyTracks}
+                isImportingSpotify={isImportingSpotify}
+                uploadedSongs={uploadedSongs}
+                isUploadingAudio={isUploadingAudio}
+                onAudioFileUpload={handleAudioFileUpload}
+                manualSongs={manualSongs}
+                newManualTitle={newManualTitle}
+                setNewManualTitle={setNewManualTitle}
+                newManualTonalidad={newManualTonalidad}
+                setNewManualTonalidad={setNewManualTonalidad}
+                newManualBpm={newManualBpm}
+                setNewManualBpm={setNewManualBpm}
+                newManualDuracion={newManualDuracion}
+                setNewManualDuracion={setNewManualDuracion}
+                onAddManualSong={handleAddManualSong}
+                onRemoveManualSong={handleRemoveManualSong}
+                onBulkAddManualSongs={handleBulkAddManualSongs}
+                createdSetlistName={createdSetlistName}
+                isCreatingSetlist={isCreatingSetlist}
+                onGenerateSetlist={handleGenerateSetlist}
+                totalImportedSongsCount={totalImportedSongsCount}
+              />
+            )}
+
+            {/* Step 7 */}
+            {currentStepDef?.key === 'rider' && (
+              <StepRider
+                riderTecnicoText={riderTecnicoText}
+                setRiderTecnicoText={setRiderTecnicoText}
+                riderPdfUrl={riderPdfUrl}
+                setRiderPdfUrl={setRiderPdfUrl}
+                riderPdfName={riderPdfName}
+                setRiderPdfName={setRiderPdfName}
+                isUploadingRider={isUploadingRider}
+                onRiderUpload={handleRiderUpload}
+                canalesMesa={canalesMesa}
+                setCanalesMesa={setCanalesMesa}
+                llevaMicrofoniaPropia={llevaMicrofoniaPropia}
+                setLlevaMicrofoniaPropia={setLlevaMicrofoniaPropia}
+                llevaInEars={llevaInEars}
+                setLlevaInEars={setLlevaInEars}
+                necesitaBacklineBateria={necesitaBacklineBateria}
+                setNecesitaBacklineBateria={setNecesitaBacklineBateria}
+              />
+            )}
+
+            {/* Step 8 */}
+            {currentStepDef?.key === 'press_proof' && (
+              <StepPressProof
+                pressQuotes={pressQuotes}
+                newQuoteText={newQuoteText}
+                setNewQuoteText={setNewQuoteText}
+                newQuoteMedia={newQuoteMedia}
+                setNewQuoteMedia={setNewQuoteMedia}
+                onAddQuote={handleAddQuote}
+                onRemoveQuote={handleRemoveQuote}
+                festivalesDestacados={festivalesDestacados}
+                setFestivalesDestacados={setFestivalesDestacados}
+                cifrasOyentes={cifrasOyentes}
+                setCifrasOyentes={setCifrasOyentes}
+                cifrasDirectos={cifrasDirectos}
+                setCifrasDirectos={setCifrasDirectos}
+                cifrasComunidad={cifrasComunidad}
+                setCifrasComunidad={setCifrasComunidad}
+              />
+            )}
+
+            {/* Step 9 (Plan-gated: Booking Conditions) */}
+            {currentStepDef?.key === 'booking_conditions' && (
+              <StepBookingConditions
+                cacheAcustico={cacheAcustico}
+                setCacheAcustico={setCacheAcustico}
+                cacheSala={cacheSala}
+                setCacheSala={setCacheSala}
+                cacheFestival={cacheFestival}
+                setCacheFestival={setCacheFestival}
+                condicionesKm={condicionesKm}
+                setCondicionesKm={setCondicionesKm}
+                requiereAlojamiento={requiereAlojamiento}
+                setRequiereAlojamiento={setRequiereAlojamiento}
+                contactoBookingNombre={contactoBookingNombre}
+                setContactoBookingNombre={setContactoBookingNombre}
+                contactoBookingEmail={contactoBookingEmail}
+                setContactoBookingEmail={setContactoBookingEmail}
+                contactoBookingTelefono={contactoBookingTelefono}
+                setContactoBookingTelefono={setContactoBookingTelefono}
+              />
+            )}
+
+            {/* Step 10 (Plan-gated: AI Agent & Email) */}
+            {currentStepDef?.key === 'agent_email' && (
+              <StepAgentEmail
+                signatureName={signatureName}
+                setSignatureName={setSignatureName}
+                signatureCargo={signatureCargo}
+                setSignatureCargo={setSignatureCargo}
+                signaturePhone={signaturePhone}
+                setSignaturePhone={setSignaturePhone}
+                senderEmail={senderEmail}
+                setSenderEmail={setSenderEmail}
+              />
+            )}
+
+            {/* Step 11 */}
+            {currentStepDef?.key === 'events' && (
+              <StepEvents
+                events={events}
+                newEventTitle={newEventTitle}
+                setNewEventTitle={setNewEventTitle}
+                newEventType={newEventType}
+                setNewEventType={setNewEventType}
+                newEventDate={newEventDate}
+                setNewEventDate={setNewEventDate}
+                newEventTime={newEventTime}
+                setNewEventTime={setNewEventTime}
+                newEventCity={newEventCity}
+                setNewEventCity={setNewEventCity}
+                newEventVenue={newEventVenue}
+                setNewEventVenue={setNewEventVenue}
+                newEventTicketUrl={newEventTicketUrl}
+                setNewEventTicketUrl={setNewEventTicketUrl}
+                onAddEvent={handleAddEvent}
+                onRemoveEvent={handleRemoveEvent}
+              />
+            )}
+
+            {/* Step 12 */}
+            {currentStepDef?.key === 'photos' && (
+              <StepPhotos
+                photos={photos}
+                isUploadingPhoto={isUploadingPhoto}
+                onPhotoUpload={handlePhotoUpload}
+                onRemovePhoto={handleRemovePhoto}
+                newPhotoUrl={newPhotoUrl}
+                setNewPhotoUrl={setNewPhotoUrl}
+                onAddPhotoUrl={handleAddPhotoUrl}
+              />
+            )}
+
+            {/* Step 13 */}
+            {currentStepDef?.key === 'fans_payments' && (
+              <StepFansPayments
+                fanCallToAction={fanCallToAction}
+                setFanCallToAction={setFanCallToAction}
+                fanWelcomeMessage={fanWelcomeMessage}
+                setFanWelcomeMessage={setFanWelcomeMessage}
+                fanRewardDescription={fanRewardDescription}
+                setFanRewardDescription={setFanRewardDescription}
+                fanRewardLink={fanRewardLink}
+                setFanRewardLink={setFanRewardLink}
+                leadMagnetFileName={leadMagnetFileName}
+                setLeadMagnetFileName={setLeadMagnetFileName}
+                isUploadingLeadMagnet={isUploadingLeadMagnet}
+                onLeadMagnetUpload={handleLeadMagnetUpload}
+                discountCode={discountCode}
+                setDiscountCode={setDiscountCode}
+                bizumNumber={bizumNumber}
+                setBizumNumber={setBizumNumber}
+                revolutTag={revolutTag}
+                setRevolutTag={setRevolutTag}
+                paypalEmail={paypalEmail}
+                setPaypalEmail={setPaypalEmail}
+                ibanNumber={ibanNumber}
+                setIbanNumber={setIbanNumber}
+              />
+            )}
+
+            {/* Final Celebration */}
+            {isCelebrationStep && (
+              <StepCompletedCelebration
+                bandName={localBandName}
+                totalSongs={totalImportedSongsCount}
+                totalVideos={videos.length}
+                totalPhotos={photos.length}
+                totalEvents={events.length}
+                hasRider={Boolean(riderPdfUrl || riderTecnicoText)}
+                planName={userPlanId}
+                onFinish={handleFinishWizard}
+              />
             )}
           </div>
-        </motion.div>
+
+          {/* Footer Controls */}
+          {!isCelebrationStep && (
+            <div className="p-4 sm:p-5 border-t border-white/5 bg-zinc-950/80 flex items-center justify-between">
+              <div>
+                {currentStepIndex > 0 ? (
+                  <button
+                    type="button"
+                    onClick={handlePrevStep}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium transition-colors"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" /> Anterior
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="text-xs text-zinc-500 hover:text-zinc-300"
+                  >
+                    Configurar más tarde
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleSkipStep}
+                  className="inline-flex items-center gap-1 px-3 py-2 rounded-xl text-zinc-400 hover:text-white text-xs transition-colors"
+                >
+                  <SkipForward className="w-3.5 h-3.5" /> Saltar paso
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-lg shadow-amber-500/20"
+                >
+                  {currentStepIndex === activeSteps.length - 1 ? (
+                    <>
+                      <span>Finalizar y Ver Portales</span>
+                      <Check className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Siguiente</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
       </div>
-    </AnimatePresence>
+    </ModalPortal>
   );
 };
-
-export const MusicianOnboardingModal = OnboardingWizardModal;

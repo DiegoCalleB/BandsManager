@@ -1,76 +1,73 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModuleTutorialId } from '../types/tutorial';
+import { isTutorialSeen, markTutorialSeen, isOnboardingCompleted, TUTORIAL_STORAGE_PREFIX } from '../utils/userPreferences';
 
-const TUTORIAL_PREFIX = 'bandmanager_tutorial_seen_';
-
-export interface TutorialStep {
-  title: string;
-  description: string;
-  icon?: string;
-  tip?: string;
-}
-
-export interface ModuleTutorialContent {
-  moduleId: string;
-  moduleTitle: string;
-  badge?: string;
-  steps: TutorialStep[];
-}
-
-export function useModuleTutorial(moduleId: string) {
-  const storageKey = `${TUTORIAL_PREFIX}${moduleId}`;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [hasSeen, setHasSeen] = useState<boolean>(true);
+export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime = true) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const seen = localStorage.getItem(storageKey);
-      setHasSeen(seen === 'true');
-    } catch {
-      setHasSeen(false);
-    }
-  }, [storageKey]);
+    const checkAndOpen = () => {
+      try {
+        // Si el usuario aún no ha terminado el onboarding general de la banda,
+        // NO abrir automáticamente tutoriales contextuales por encima del asistente.
+        const { onboardingCompleted, wizardCompleted } = isOnboardingCompleted();
+        const isOnboardingActive = !onboardingCompleted || !wizardCompleted;
+
+        const seen = isTutorialSeen(moduleId);
+        if (!seen && autoOpenFirstTime && !isOnboardingActive) {
+          // Small timeout to allow the main module to mount cleanly and avoid layout shift
+          const timer = setTimeout(() => {
+            setIsOpen(true);
+          }, 350);
+          return () => clearTimeout(timer);
+        }
+      } catch {
+        // localStorage may be unavailable or disabled
+      } finally {
+        setHasLoaded(true);
+      }
+    };
+
+    const cleanup = checkAndOpen();
+
+    // Cuando el asistente de onboarding termine o se cierre, abrir el tutorial contextual si aplica
+    const handleOnboardingFinished = () => {
+      checkAndOpen();
+    };
+
+    window.addEventListener('bandmanager_onboarding_finished', handleOnboardingFinished);
+
+    return () => {
+      if (typeof cleanup === 'function') cleanup();
+      window.removeEventListener('bandmanager_onboarding_finished', handleOnboardingFinished);
+    };
+  }, [moduleId, autoOpenFirstTime]);
 
   const openTutorial = useCallback(() => {
     setIsOpen(true);
   }, []);
 
-  const closeTutorial = useCallback(() => {
+  const closeTutorial = useCallback((markAsSeen = true) => {
     setIsOpen(false);
-    try {
-      localStorage.setItem(storageKey, 'true');
-      setHasSeen(true);
-    } catch (e) {
-      console.warn('No se pudo guardar estado del tutorial:', e);
+    if (markAsSeen) {
+      markTutorialSeen(moduleId, true).catch(() => {});
     }
-  }, [storageKey]);
+  }, [moduleId]);
 
-  const resetTutorial = useCallback(() => {
+  const resetTutorialSeen = useCallback(() => {
     try {
-      localStorage.removeItem(storageKey);
-      setHasSeen(false);
-      setIsOpen(true);
-    } catch (e) {
-      console.warn('Error al resetear tutorial:', e);
+      localStorage.removeItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`);
+    } catch {
+      // ignore
     }
-  }, [storageKey]);
+  }, [moduleId]);
 
   return {
     isOpen,
-    hasSeen,
+    hasLoaded,
     openTutorial,
     closeTutorial,
-    resetTutorial,
+    resetTutorialSeen
   };
-}
-
-export function resetAllTutorials() {
-  try {
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith(TUTORIAL_PREFIX) || key === 'bandmanager_profile_wizard_completed') {
-        localStorage.removeItem(key);
-      }
-    });
-  } catch (e) {
-    console.warn('Error borrando tutoriales:', e);
-  }
 }

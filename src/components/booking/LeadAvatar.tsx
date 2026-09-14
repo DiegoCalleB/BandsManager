@@ -24,8 +24,8 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({
   }, [lead.id, lead.imagen_url]);
 
   // Clean raw image URL: convert icon.horse URLs to Google Favicon API
-  let imgUrl = lead.imagen_url || '';
-  if (imgUrl.includes('icon.horse/icon/')) {
+  let imgUrl: string | null = lead.imagen_url && lead.imagen_url.trim() !== '' ? lead.imagen_url : null;
+  if (imgUrl && imgUrl.includes('icon.horse/icon/')) {
     const domain = imgUrl.replace('https://icon.horse/icon/', '').replace('http://icon.horse/icon/', '').split('/')[0];
     if (domain) {
       imgUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;

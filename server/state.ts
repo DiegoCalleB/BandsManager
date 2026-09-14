@@ -50,36 +50,36 @@ const DEFAULT_EPK_CONFIG = {
     tiktok: "https://tiktok.com/@bakandeya_oficial",
     appleMusic: "https://music.apple.com/artist/bakandeya",
     bandcamp: "https://bakandeya.bandcamp.com",
-    website: "https://bands-manager.up.railway.app",
+    website: "https://bandmanager.io",
     whatsapp: "+34612345678",
     facebook: "https://facebook.com/bakandeyaoficial",
     twitter: "https://x.com/bakandeya_band"
   },
   contactoBooking: {
-    nombre: "Booking & Management Bakandeya",
-    email: "diego.delacalleb@gmail.com",
-    telefono: "+34 612 345 678"
+    nombre: "Booking & Management",
+    email: "",
+    telefono: ""
   },
   temasDestacadosIds: ["s-1", "s-2", "s-3"],
   incentivoFans: {
-    mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
-    enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
-    codigoDescuento: "BAKANDEYA-FAN-10"
+    mensajeAgradecimiento: "¡Muchas gracias por unirte a nuestra comunidad! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
+    enlaceDescarga: "https://bandmanager.io/descargas/tema-inedito-directo.mp3",
+    codigoDescuento: "FAN-10"
   },
   donacionRevolut: {
     habilitado: true,
-    revolutTag: "bakandeya",
-    revolutUrl: "https://revolut.me/bakandeya",
-    titulo: "Colabora con Bakandeya con una aportación económica",
+    revolutTag: "",
+    revolutUrl: "",
+    titulo: "Colabora con la banda con una aportación económica",
     descripcion: "Tu apoyo directo y voluntario nos permite financiar gastos de furgoneta de gira, grabación de nuevos sencillos en estudio y material independiente sin intermediarios."
   },
   ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"],
   firmaEmail: {
-    nombreRemitente: "Diego de la Calle",
-    cargo: "Booking & Management | Bakandeya",
-    telefono: "+34 612 345 678",
-    email: "diego.delacalleb@gmail.com",
-    textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+    nombreRemitente: "Booking & Management",
+    cargo: "Booking & Management",
+    telefono: "",
+    email: "",
+    textoPie: "Música en directo y conciertos",
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
     redesSociales: {
@@ -89,7 +89,7 @@ const DEFAULT_EPK_CONFIG = {
       tiktok: "https://tiktok.com/@bakandeya_oficial",
       appleMusic: "https://music.apple.com/artist/bakandeya",
       bandcamp: "https://bakandeya.bandcamp.com",
-      website: "https://bands-manager.up.railway.app",
+      website: "https://bandmanager.io",
       whatsapp: "+34612345678"
     }
   }
@@ -750,7 +750,17 @@ export function getAutonomyConfigForBand(state: any, bandId: string): any {
   return existing;
 }
 
+let inMemoryStateCache: any = null;
+
+export function invalidateStateCache(): void {
+  inMemoryStateCache = null;
+}
+
 export function loadState(): any {
+  if (inMemoryStateCache) {
+    return inMemoryStateCache;
+  }
+
   if (fs.existsSync(DATA_FILE)) {
     try {
       const content = fs.readFileSync(DATA_FILE, "utf-8");
@@ -882,6 +892,8 @@ export function loadState(): any {
 
       if (changed) {
         saveState(state);
+      } else {
+        inMemoryStateCache = state;
       }
 
       return state;
@@ -927,15 +939,26 @@ export function loadState(): any {
   ensureBakandeyaBandId(defaultState);
   ensureUniqueIdsInState(defaultState);
   saveState(defaultState);
+  inMemoryStateCache = defaultState;
   return defaultState;
 }
 
 export function saveState(state: any) {
   try {
     ensureUniqueIdsInState(state);
-    const tmpFile = `${DATA_FILE}.tmp`;
-    fs.writeFileSync(tmpFile, JSON.stringify(state, null, 2), "utf-8");
-    fs.renameSync(tmpFile, DATA_FILE);
+    inMemoryStateCache = state;
+    const tmpFile = `${DATA_FILE}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
+    const content = JSON.stringify(state, null, 2);
+    fs.writeFileSync(tmpFile, content, "utf-8");
+    try {
+      fs.renameSync(tmpFile, DATA_FILE);
+    } catch (renameErr) {
+      // Fallback si rename falla entre montajes o permisos de disco
+      fs.writeFileSync(DATA_FILE, content, "utf-8");
+      if (fs.existsSync(tmpFile)) {
+        try { fs.unlinkSync(tmpFile); } catch (_) {}
+      }
+    }
   } catch (e) {
     console.error("Error saving data.json", e);
   }

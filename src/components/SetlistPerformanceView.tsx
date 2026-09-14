@@ -643,6 +643,14 @@ const TeleprompterBlockPage: React.FC<{ item: SetlistItem; meta: { icon: string;
 const ScannedSheetPage: React.FC<{ song: Song }> = ({ song }) => {
   const isImage = isImageDocument(song.estructuraDocumentoNombre, song.estructuraDocumentoUrl);
 
+  if (!song.estructuraDocumentoUrl || song.estructuraDocumentoUrl.trim() === '') {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-neutral-950 p-4 text-neutral-500 text-sm">
+        No hay documento adjunto disponible
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full flex items-center justify-center bg-neutral-950 p-1 sm:p-4">
       {isImage ? (

@@ -168,7 +168,7 @@ Contacto de la oficina de Bakandeya. Queremos proponer una fecha para nuestra gi
 
 Nuestra fusión de ska instrumental clásico con bases electrónicas potentes encaja como anillo al dedo con el perfil de vuestra sala 2. Ofrecemos una noche de baile total, con el respaldo de nuestra fanbase en Cataluña (tenemos unos 15.000 oyentes mensuales en el área de Barcelona).
 
-Dossier interactivo: https://bands-manager.up.railway.app/epk
+Dossier interactivo: https://bandmanager.io/epk
 
 ¿Cómo tenéis las fechas libres para los fines de semana de Diciembre?
 
@@ -324,7 +324,7 @@ Nos complace presentarles la propuesta musical de Bakandeya de cara a su escenar
 
 Bakandeya ofrece una fusión sin precedentes de ska instrumental, reggae africano y electrónica analógica europea, logrando un sonido multicultural que encaja a la perfección con la filosofía del festival. Nuestro show invita a la danza y el encuentro a través del ritmo.
 
-EPK y dossier: https://bands-manager.up.railway.app/epk
+EPK y dossier: https://bandmanager.io/epk
 
 Esperamos que nuestra propuesta sea de su agrado para complementar las noches de fusión.
 
@@ -624,7 +624,7 @@ Os saludamos desde Bakandeya. Les hacemos llegar nuestro dossier con motivo del 
 
 Nos ponemos a vuestra disposición para tocar en acústico en los estudios de Prado del Rey o realizar una entrevista telefónica sobre el concepto sonoro del violín solista y las percusiones recicladas.
 
-Audio en calidad broadcast y bio: https://bands-manager.up.railway.app/epk
+Audio en calidad broadcast y bio: https://bandmanager.io/epk
 
 Atentamente,
 Bakandeya Agent Manager IA`,
@@ -706,7 +706,7 @@ Bakandeya Agent Manager IA`,
 
 Os contactamos desde Bakandeya para presentar nuestra propuesta de directo en vuestra emblemática sala de Malasaña. Combinamos bases electrónicas analógicas, violín eléctrico y percusiones con una energía arrolladora ideal para el público de Siroco.
 
-Dossier y música: https://bands-manager.up.railway.app/epk
+Dossier y música: https://bandmanager.io/epk
 
 ¿Tendríais fecha disponible para programar un showcase o concierto este trimestre?
 
@@ -1247,6 +1247,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Directo Casa México',
     estadoTema: 'listo',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+    audioUrl: '/audio/samples/sample_01_groove_apertura.mp3',
     notasInternas: 'Intro del directo en Casa México'
   },
   {
@@ -1260,7 +1262,9 @@ export const INITIAL_SONGS = [
     afinacion: 'E Standard',
     albumDisco: 'Directo Casa México',
     estadoTema: 'listo',
-    esVersionCovers: false
+    esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+    audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3'
   },
   {
     id: 'song-cm-3',
@@ -1273,7 +1277,9 @@ export const INITIAL_SONGS = [
     afinacion: 'E Standard',
     albumDisco: 'Directo Casa México',
     estadoTema: 'listo',
-    esVersionCovers: false
+    esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
+    audioUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3'
   },
   {
     id: 'song-cm-4',
@@ -1286,7 +1292,9 @@ export const INITIAL_SONGS = [
     afinacion: 'E Standard',
     albumDisco: 'Directo Casa México',
     estadoTema: 'listo',
-    esVersionCovers: false
+    esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+    audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3'
   },
   {
     id: 'song-cm-5',
@@ -1299,7 +1307,9 @@ export const INITIAL_SONGS = [
     afinacion: 'E Standard',
     albumDisco: 'Directo Casa México',
     estadoTema: 'listo',
-    esVersionCovers: false
+    esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
+    audioUrl: '/audio/samples/sample_02_balada_medianoche.mp3'
   },
   {
     id: 'song-1',
@@ -1313,6 +1323,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Álbum Debut (2025)',
     estadoTema: 'listo',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+    audioUrl: '/audio/samples/sample_01_groove_apertura.mp3',
     enlaceAcordes: 'https://drive.google.com',
     notasInternas: 'Intro con sección de vientos y solo de trompeta. Gran fuerza en estribillos.'
   },
@@ -1328,6 +1340,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Álbum Debut (2025)',
     estadoTema: 'listo',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+    audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
     notasInternas: 'Subida progresiva al final. Tema estelar de cierre en festival.'
   },
   {
@@ -1342,6 +1356,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'EP Cacharros & Ritmo',
     estadoTema: 'listo',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
+    audioUrl: '/audio/samples/sample_02_balada_medianoche.mp3',
     notasInternas: 'Afinación especial en guitarra antes de empezar.'
   },
   {
@@ -1356,6 +1372,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Single 2026',
     estadoTema: 'listo',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+    audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
     notasInternas: 'Ritmo acelerado ska. Ideal para subir la energía a mitad del concierto.'
   },
   {
@@ -1370,6 +1388,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Álbum Debut (2025)',
     estadoTema: 'listo',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
+    audioUrl: '/audio/samples/sample_04_brisa_mediterranea.mp3',
     notasInternas: 'Balada rock progresiva con solo de violín de Raúl en la sección central.'
   },
   {
@@ -1383,7 +1403,9 @@ export const INITIAL_SONGS = [
     afinacion: 'E Standard',
     albumDisco: 'Álbum Debut (2025)',
     estadoTema: 'listo',
-    esVersionCovers: false
+    esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_01_groove_apertura.mp3',
+    audioUrl: '/audio/samples/sample_01_groove_apertura.mp3'
   },
   {
     id: 'song-7',
@@ -1397,6 +1419,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Inéditas / En Proceso',
     estadoTema: 'ensayando',
     esVersionCovers: false,
+    audioPrincipalUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
+    audioUrl: '/audio/samples/sample_03_fuego_asfalto.mp3',
     notasInternas: 'Sátira sobre los bots y mánagers virtuales. Ensayando para el próximo EP.'
   },
   {
@@ -1411,6 +1435,8 @@ export const INITIAL_SONGS = [
     albumDisco: 'Covers & Versiones',
     estadoTema: 'listo',
     esVersionCovers: true,
+    audioPrincipalUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
+    audioUrl: '/audio/samples/sample_05_cierre_triunfal.mp3',
     notasInternas: 'Versión acelerada adaptada a vientos y ritmo ska-rock.'
   }
 ];

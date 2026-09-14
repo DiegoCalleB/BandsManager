@@ -478,8 +478,14 @@ export const exportMasterMixAudioBlob = async (
 
       const arrBuf = await res.arrayBuffer();
       const audioBuf = await tempCtx.decodeAudioData(arrBuf);
+      // desfaseMs negativo retrasa la ENTRADA de la pista en la mezcla (usado para colocar pistas
+      // generadas por IA en un punto concreto de la canción, no solo micro-ajustes de latencia) —
+      // igual que ya interpreta la reproducción en vivo. Antes solo se contaba la duración extra
+      // cuando el desfase era positivo, así que una pista retrasada se podía cortar al final del
+      // render por quedarse corto el buffer total.
       const offsetSec = (tr.desfaseMs || 0) / 1000;
-      const trackEndSec = audioBuf.duration + Math.max(0, offsetSec);
+      const entryDelaySec = offsetSec < 0 ? -offsetSec : 0;
+      const trackEndSec = audioBuf.duration + entryDelaySec;
       if (trackEndSec > maxTotalDuration) {
         maxTotalDuration = trackEndSec;
       }
@@ -556,9 +562,14 @@ export const exportMasterMixAudioBlob = async (
       gainNode.connect(masterLimiter);
     }
 
-    // Start timestamp with latency offset shift
-    const startOffsetSec = Math.max(0, (input.desfaseMs || 0) / 1000);
-    source.start(startOffsetSec);
+    // desfaseMs > 0: la pista se adelanta dentro de su propio audio (micro-corrección de latencia
+    // clásica). desfaseMs < 0: la pista se retrasa en la mezcla — arranca más tarde en el render,
+    // desde el principio de su propio audio (usado para colocar pistas de IA en un punto concreto
+    // de la canción). Mismo criterio que la reproducción en vivo (ver SongStudioModal).
+    const desfaseSec = (input.desfaseMs || 0) / 1000;
+    const renderStartSec = desfaseSec < 0 ? -desfaseSec : 0;
+    const bufferOffsetSec = desfaseSec > 0 ? Math.min(desfaseSec, Math.max(0, buffer.duration - 0.01)) : 0;
+    source.start(renderStartSec, bufferOffsetSec);
   });
 
   // 4. Render master mix buffer offline
@@ -568,5 +579,67 @@ export const exportMasterMixAudioBlob = async (
   normalizeAudioBuffer(renderedBuffer, -1);
 
   return audioBufferToWavBlob(renderedBuffer);
+};
+
+export interface AutoBalanceTrackInput {
+  id: string;
+  audioUrl: string;
+}
+
+/**
+ * Analiza el RMS real de cada pista (no el pico, que engaña con transitorios) y devuelve el
+ * volumen sugerido (0-1) para nivelarlas todas al oído de la más floja — típicamente un bajo o
+ * una voz grabada de más lejos que una batería a saco. Solo puede atenuar, nunca subir por
+ * encima de 1.0: el fader no tiene margen para "amplificar" una pista floja sin clipping real,
+ * así que la nivelación va siempre hacia abajo respecto a la pista más silenciosa del grupo.
+ */
+export const computeAutoBalanceVolumes = async (
+  tracks: AutoBalanceTrackInput[],
+  resolveUrlFn?: (url: string) => Promise<string>
+): Promise<Record<string, number>> => {
+  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const rmsById: Record<string, number> = {};
+
+  try {
+    for (const tr of tracks) {
+      try {
+        const resolved = resolveUrlFn ? await resolveUrlFn(tr.audioUrl) : tr.audioUrl;
+        const res = await fetch(resolved);
+        const arrBuf = await res.arrayBuffer();
+        const buffer = await tempCtx.decodeAudioData(arrBuf);
+
+        let sumSquares = 0;
+        let sampleCount = 0;
+        for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+          const data = buffer.getChannelData(ch);
+          // Muestreo cada N samples: con canciones de varios minutos no hace falta recorrer
+          // cada sample para tener una estimación de RMS fiable, y así no bloqueamos el hilo.
+          const step = Math.max(1, Math.floor(data.length / 200000));
+          for (let i = 0; i < data.length; i += step) {
+            sumSquares += data[i] * data[i];
+            sampleCount++;
+          }
+        }
+        rmsById[tr.id] = sampleCount > 0 ? Math.sqrt(sumSquares / sampleCount) : 0;
+      } catch (err) {
+        console.warn('[Auto-Balance] No se pudo analizar la pista para nivelar volumen:', tr.audioUrl, err);
+      }
+    }
+  } finally {
+    tempCtx.close();
+  }
+
+  const SILENCE_FLOOR = 0.0005;
+  const validRms = Object.values(rmsById).filter(v => v > SILENCE_FLOOR);
+  if (validRms.length === 0) return {};
+
+  const minRms = Math.min(...validRms);
+  const volumes: Record<string, number> = {};
+  for (const [id, rms] of Object.entries(rmsById)) {
+    // Pista silenciosa o que no se pudo analizar: no tocar su volumen actual.
+    if (rms <= SILENCE_FLOOR) continue;
+    volumes[id] = Math.max(0.15, Math.min(1, minRms / rms));
+  }
+  return volumes;
 };
 

@@ -33,12 +33,29 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
   variant,
   children,
 }) => {
-  const items = group.itemIds.map((id) => NAV_ITEMS[id]).filter((item) => !item.adminOnly || isAdmin);
+  const items = group.itemIds
+    .map((id) => NAV_ITEMS[id])
+    .filter((item) => (!item.adminOnly || isAdmin) && hasModuleAccess(currentActiveBandPlan, item.id));
   if (items.length === 0) return null;
 
   const headerPadding = variant === 'desktop' ? 'px-3' : 'px-3.5';
 
+  const isGroupActive = items.some((i) => i.id === currentView);
+
   const handleHeaderClick = () => {
+    if (!isGroupActive && items.length > 0) {
+      const targetItem = items[0];
+      onNavigate(targetItem.id);
+      if (!isOpen) {
+        onToggleOpen();
+      }
+    } else {
+      onToggleOpen();
+    }
+  };
+
+  const handleChevronClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onToggleOpen();
   };
 
@@ -47,11 +64,24 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
       <button
         type="button"
         onClick={handleHeaderClick}
-        className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer`}
+        className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+          isGroupActive ? 'text-amber-400 font-extrabold' : 'text-neutral-500 hover:text-neutral-300'
+        }`}
         aria-expanded={isOpen}
       >
-        <span>{t(group.titleKey, group.titleDefault)}</span>
-        {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        <span className="flex items-center gap-1.5">
+          {isGroupActive && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#f59e0b]" />}
+          <span>{t(group.titleKey, group.titleDefault)}</span>
+        </span>
+        <span
+          role="button"
+          tabIndex={0}
+          onClick={handleChevronClick}
+          className="p-1 -mr-1 rounded hover:bg-neutral-800/60 transition-colors"
+          title={isOpen ? 'Plegar sección' : 'Desplegar sección'}
+        >
+          {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        </span>
       </button>
 
       {isOpen && (

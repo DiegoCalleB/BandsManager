@@ -1,139 +1,227 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronRight, ChevronLeft, CheckCircle2, Sparkles, BookOpen, Music, Send, FileText, Mic, Users } from 'lucide-react';
-import { ModuleTutorialContent } from '../../hooks/useModuleTutorial';
-
-export const TUTORIAL_DATA: Record<string, ModuleTutorialContent> = {
-  booking: {
-    moduleId: 'booking',
-    moduleTitle: 'Guía Rápida: Booking CRM & Agentes IA',
-    badge: 'Módulo de Booking',
-    steps: [
-      {
-        title: '1. Agente Scout: Descubre Salas',
-        description: 'El Scout busca y enriquece automáticamente salas de conciertos y festivales afines a tu género musical con datos de contacto verificados.',
-        tip: 'Usa los filtros por ciudad y capacidad para afinar tu búsqueda.',
-        icon: 'Send'
-      },
-      {
-        title: '2. Generación de Pitches Personalizados',
-        description: 'La IA analiza la identidad de tu banda (Tone DNA) y crea redactados profesionales adaptados a cada sala.',
-        tip: 'Revisa siempre la caché o mínimo garantizado antes de solicitar propuesta.',
-        icon: 'Sparkles'
-      },
-      {
-        title: '3. Aprobación Humana (Human-in-the-Loop)',
-        description: 'Los correos NUNCA se envían sin tu autorización. Revisa el borrador, edita lo que quieras y pulsa "Aprobar" para despachar.',
-        tip: 'Puedes configurar tu cuenta de correo en Ajustes para enviar desde tu propio email.',
-        icon: 'CheckCircle2'
-      }
-    ]
-  },
-  repertorio: {
-    moduleId: 'repertorio',
-    moduleTitle: 'Guía Rápida: Repertorio, Acordes & Setlists',
-    badge: 'Módulo de Música',
-    steps: [
-      {
-        title: '1. Catálogo & Acordes reactivos',
-        description: 'Organiza todas tus canciones con tonalidad, BPM, estructura y letras. Traspon acordes en tiempo real para adaptarlos a tu voz.',
-        tip: 'Formatos soportados en letras: [Am]Texto para cifrado americano automático.',
-        icon: 'Music'
-      },
-      {
-        title: '2. Transcripción por IA',
-        description: 'Sube un archivo de audio o pega un enlace para que la IA extraiga la estructura, acordes sugeridos y tempo automáticamente.',
-        tip: 'Puedes validar los acordes sugeridos antes de guardarlos en el catálogo.',
-        icon: 'Sparkles'
-      },
-      {
-        title: '3. Modo Concierto & Escenario',
-        description: 'Crea Setlists ordenados y activa el Modo Concierto con vista limpia sin distracciones, cambio de tono y pedalera bluetooth.',
-        tip: 'Usa el botón de pantalla completa para ver la letra a gran tamaño en el escenario.',
-        icon: 'BookOpen'
-      }
-    ]
-  },
-  epk: {
-    moduleId: 'epk',
-    moduleTitle: 'Guía Rápida: EPK & Dossier de Prensa',
-    badge: 'Kit de Prensa',
-    steps: [
-      {
-        title: '1. Tu Web Pública de Banda',
-        description: 'El EPK genera una web pública elegante orientada a la contratación para salas, festivales y prensa.',
-        tip: 'Comparte tu enlace /epk directo en propuestas o redes sociales.',
-        icon: 'FileText'
-      },
-      {
-        title: '2. Formación, Rider & Pistas',
-        description: 'Configura tus temas destacados, formación de integrantes, fotos en alta resolución y rider técnico descargable.',
-        tip: 'Añade el enlace de Spotify o YouTube para que los programadores escuchen tu música.',
-        icon: 'Sparkles'
-      }
-    ]
-  },
-  studio: {
-    moduleId: 'studio',
-    moduleTitle: 'Guía Rápida: AI Sound Studio & DAW',
-    badge: 'Estudio Virtual',
-    steps: [
-      {
-        title: '1. Grabación Multipista & Panning',
-        description: 'Graba pistas de audio directamente desde el navegador con ajuste de latencia, panning estéreo e inspección de picos.',
-        tip: 'Usa presets de latencia (PC, Móvil, Bluetooth) para una sincronía perfecta.',
-        icon: 'Mic'
-      },
-      {
-        title: '2. Claqueta & Mezcla Master',
-        description: 'Activa la claqueta de entrada (Count-in 4 beeps), ajusta EQ de 3 bandas por pista y exporta la mezcla final en WAV.',
-        tip: 'Normaliza los picos de mezcla a -1dBFS antes de exportar.',
-        icon: 'Sparkles'
-      }
-    ]
-  },
-  fans: {
-    moduleId: 'fans',
-    moduleTitle: 'Guía Rápida: Captación de Fans & QR Conciertos',
-    badge: 'Comunidad de Fans',
-    steps: [
-      {
-        title: '1. QR Dinámico para Conciertos',
-        description: 'Genera códigos QR personalizados para proyectar en el escenario o imprimir en carteles durante tus directos.',
-        tip: 'Los fans escanean el QR y acceden al formulario público "Únete".',
-        icon: 'Users'
-      },
-      {
-        title: '2. Fidelización & Regalo de Bienvenida',
-        description: 'Configura incentivos automáticos (descuentos de merch, descargas de temas inéditos o pegatinas de bienvenida).',
-        tip: 'Exporta tu base de fans en Excel cuando quieras.',
-        icon: 'Sparkles'
-      }
-    ]
-  }
-};
+import {
+  X, ChevronLeft, ChevronRight, Check, BookOpen, Music, QrCode,
+  Calendar, Disc, FileText, Sliders, Sparkles, Share2, Mic,
+  Users, Smartphone, Radio, Layers, Zap, HelpCircle, Printer,
+  Target, MapPin, MousePointer, Maximize2, Minimize2
+} from 'lucide-react';
+import { ModuleTutorialConfig, ModuleTutorialId } from '../../types/tutorial';
+import { MODULE_TUTORIALS } from '../../config/moduleTutorials';
+import { ModalPortal } from './ModalPortal';
 
 interface ModuleTutorialModalProps {
+  moduleId: ModuleTutorialId;
   isOpen: boolean;
-  onClose: () => void;
-  moduleId: string;
+  onClose: (markAsSeen?: boolean) => void;
 }
 
-export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ isOpen, onClose, moduleId }) => {
-  const tutorial = TUTORIAL_DATA[moduleId] || TUTORIAL_DATA.booking;
+const ICON_MAP = {
+  BookOpen,
+  Music,
+  QrCode,
+  Calendar,
+  Disc,
+  FileText,
+  Sliders,
+  Sparkles,
+  Share2,
+  Mic,
+  Users,
+  Smartphone,
+  Radio,
+  Layers,
+  Zap,
+  HelpCircle,
+  Printer
+};
+
+export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
+  moduleId,
+  isOpen,
+  onClose
+}) => {
+  const tutorialConfig: ModuleTutorialConfig | undefined = MODULE_TUTORIALS[moduleId];
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [dontShowAgain, setDontShowAgain] = useState(true);
+  const [isFloatingMode, setIsFloatingMode] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth >= 768 : true
+  );
+  const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const [targetFound, setTargetFound] = useState(false);
+  const [isHighlighting, setIsHighlighting] = useState(false);
 
-  if (!isOpen) return null;
+  // Monitor window size to adapt between desktop floating mode and full-screen mobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  const currentStep = tutorial.steps[currentStepIndex] || tutorial.steps[0];
-  const isLastStep = currentStepIndex === tutorial.steps.length - 1;
+  // Reset step index and default directly to floating mode whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentStepIndex(0);
+      setIsFloatingMode(true);
+    }
+  }, [isOpen]);
+
+  const effectiveFloatingMode = isDesktop && isFloatingMode;
+  const currentStep = tutorialConfig?.steps[currentStepIndex];
+
+  // Locate target element in the DOM and calculate its bounding box
+  const locateTargetElement = useCallback((shouldScroll = false) => {
+    if (!currentStep?.uiTarget?.selector) {
+      setTargetRect(null);
+      setTargetFound(false);
+      return null;
+    }
+
+    const selectors = currentStep.uiTarget.selector.split(',').map(s => s.trim());
+    let el: Element | null = null;
+    for (const sel of selectors) {
+      try {
+        const found = document.querySelector(sel);
+        if (found) {
+          el = found;
+          break;
+        }
+      } catch (err) {
+        // Ignore invalid selectors safely
+      }
+    }
+
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      setTargetRect(rect);
+      setTargetFound(true);
+
+      if (shouldScroll) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+
+      setIsHighlighting(true);
+      setTimeout(() => setIsHighlighting(false), 2600);
+      return el;
+    } else {
+      setTargetRect(null);
+      setTargetFound(false);
+      return null;
+    }
+  }, [currentStep?.uiTarget?.selector]);
+
+  // Monitor position and scroll to target when step changes or floating mode is active
+  useEffect(() => {
+    if (!isOpen || !currentStep) return;
+
+    const timer = setTimeout(() => {
+      locateTargetElement(effectiveFloatingMode);
+    }, 180);
+
+    const handleScrollOrResize = () => {
+      locateTargetElement(false);
+    };
+
+    window.addEventListener('scroll', handleScrollOrResize, true);
+    window.addEventListener('resize', handleScrollOrResize);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleScrollOrResize);
+    };
+  }, [isOpen, currentStepIndex, effectiveFloatingMode, locateTargetElement, currentStep]);
+
+  // Keyboard navigation: Escape to close, Left/Right arrows to step
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose(dontShowAgain);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        handleNext();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        handlePrev();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  });
+
+  // Reposicionar automáticamente la tarjeta flotante si coincide con la posición del elemento señalado en pantalla
+  const dockPosition = useMemo<'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'>(() => {
+    if (!targetRect || typeof window === 'undefined') return 'bottom-right';
+
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+    const cardW = 460;
+    const cardH = 490;
+    const buffer = 40;
+
+    const checkCollision = (area: { left: number; right: number; top: number; bottom: number }) => {
+      return (
+        targetRect.left - buffer < area.right &&
+        targetRect.right + buffer > area.left &&
+        targetRect.top - buffer < area.bottom &&
+        targetRect.bottom + buffer > area.top
+      );
+    };
+
+    // 1. Por defecto: Esquina inferior derecha
+    const bottomRightArea = {
+      left: winW - cardW,
+      right: winW,
+      top: winH - cardH,
+      bottom: winH,
+    };
+    if (!checkCollision(bottomRightArea)) {
+      return 'bottom-right';
+    }
+
+    // 2. Si tapa el control en la esquina inferior derecha, mover a la esquina inferior izquierda
+    const bottomLeftArea = {
+      left: 0,
+      right: cardW,
+      top: winH - cardH,
+      bottom: winH,
+    };
+    if (!checkCollision(bottomLeftArea)) {
+      return 'bottom-left';
+    }
+
+    // 3. Si ambos lados inferiores colisionan, mover a la esquina superior derecha
+    const topRightArea = {
+      left: winW - cardW,
+      right: winW,
+      top: 0,
+      bottom: cardH,
+    };
+    if (!checkCollision(topRightArea)) {
+      return 'top-right';
+    }
+
+    // 4. Último recurso: esquina superior izquierda
+    return 'top-left';
+  }, [targetRect]);
+
+  if (!isOpen || !tutorialConfig || !currentStep) return null;
+
+  const totalSteps = tutorialConfig.steps.length;
+  const isFirstStep = currentStepIndex === 0;
+  const isLastStep = currentStepIndex === totalSteps - 1;
 
   const handleNext = () => {
     if (isLastStep) {
-      onClose();
-      setCurrentStepIndex(0);
+      onClose(dontShowAgain);
     } else {
-      setCurrentStepIndex(prev => prev + 1);
+      setCurrentStepIndex(prev => Math.min(totalSteps - 1, prev + 1));
     }
   };
 
@@ -141,122 +229,373 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({ isOpen
     setCurrentStepIndex(prev => Math.max(0, prev - 1));
   };
 
-  const renderIcon = (iconName?: string) => {
-    switch (iconName) {
-      case 'Sparkles': return <Sparkles className="w-6 h-6 text-amber-400" />;
-      case 'Music': return <Music className="w-6 h-6 text-blue-400" />;
-      case 'Send': return <Send className="w-6 h-6 text-emerald-400" />;
-      case 'FileText': return <FileText className="w-6 h-6 text-purple-400" />;
-      case 'Mic': return <Mic className="w-6 h-6 text-rose-400" />;
-      case 'Users': return <Users className="w-6 h-6 text-cyan-400" />;
-      default: return <BookOpen className="w-6 h-6 text-amber-400" />;
+  // Color accents based on module
+  const accentStyles = {
+    purple: {
+      badgeBg: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+      iconBox: 'bg-purple-500/20 text-purple-400 border-purple-500/30 shadow-purple-500/10',
+      activeDot: 'bg-purple-400 w-7',
+      primaryBtn: 'bg-purple-600 hover:bg-purple-500 text-white shadow-purple-900/30',
+      hookBorder: 'border-purple-500/25 bg-purple-500/10 text-purple-100',
+      highlightText: 'text-purple-400',
+      targetCard: 'border-purple-500/40 bg-purple-500/5',
+      targetBadge: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+      targetBtn: 'bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border-purple-500/40'
+    },
+    amber: {
+      badgeBg: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+      iconBox: 'bg-amber-500/20 text-amber-400 border-amber-500/30 shadow-amber-500/10',
+      activeDot: 'bg-amber-400 w-7',
+      primaryBtn: 'bg-amber-500 hover:bg-amber-400 text-stone-950 font-black shadow-amber-900/30',
+      hookBorder: 'border-amber-500/25 bg-amber-500/10 text-amber-100',
+      highlightText: 'text-amber-400',
+      targetCard: 'border-amber-500/40 bg-amber-500/5',
+      targetBadge: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+      targetBtn: 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40'
+    },
+    blue: {
+      badgeBg: 'bg-sky-500/15 text-sky-300 border-sky-500/30',
+      iconBox: 'bg-sky-500/20 text-sky-400 border-sky-500/30 shadow-sky-500/10',
+      activeDot: 'bg-sky-400 w-7',
+      primaryBtn: 'bg-sky-500 hover:bg-sky-400 text-stone-950 font-bold shadow-sky-900/30',
+      hookBorder: 'border-sky-500/25 bg-sky-500/10 text-sky-100',
+      highlightText: 'text-sky-400',
+      targetCard: 'border-sky-500/40 bg-sky-500/5',
+      targetBadge: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+      targetBtn: 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border-sky-500/40'
+    },
+    emerald: {
+      badgeBg: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+      iconBox: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-emerald-500/10',
+      activeDot: 'bg-emerald-400 w-7',
+      primaryBtn: 'bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black shadow-emerald-900/30',
+      hookBorder: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-100',
+      highlightText: 'text-emerald-400',
+      targetCard: 'border-emerald-500/40 bg-emerald-500/5',
+      targetBadge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+      targetBtn: 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/40'
+    },
+    rose: {
+      badgeBg: 'bg-rose-500/15 text-rose-300 border-rose-500/30',
+      iconBox: 'bg-rose-500/20 text-rose-400 border-rose-500/30 shadow-rose-500/10',
+      activeDot: 'bg-rose-400 w-7',
+      primaryBtn: 'bg-rose-500 hover:bg-rose-400 text-white font-bold shadow-rose-900/30',
+      hookBorder: 'border-rose-500/25 bg-rose-500/10 text-rose-100',
+      highlightText: 'text-rose-400',
+      targetCard: 'border-rose-500/40 bg-rose-500/5',
+      targetBadge: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+      targetBtn: 'bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border-rose-500/40'
     }
-  };
+  }[tutorialConfig.accent];
+
+  const CurrentIcon = ICON_MAP[currentStep.iconName] || BookOpen;
+
+  const dockClass = {
+    'bottom-right': 'items-end justify-end',
+    'bottom-left': 'items-end justify-start',
+    'top-right': 'items-start justify-end',
+    'top-left': 'items-start justify-start',
+  }[dockPosition];
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-zinc-800 bg-zinc-950/50">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-500/10 border border-amber-500/20 rounded-xl">
-                {renderIcon(currentStep.icon)}
-              </div>
-              <div>
-                <span className="text-[11px] font-semibold text-amber-400 tracking-wider uppercase">
-                  {tutorial.badge || 'Guía Rápida'}
-                </span>
-                <h3 className="text-base font-bold text-white leading-tight">
-                  {tutorial.moduleTitle}
-                </h3>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
-              title="Cerrar"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+    <ModalPortal isOpen={isOpen} onClose={() => onClose(dontShowAgain)}>
+      {/* SPOTLIGHT LIVE HIGHLIGHT ON THE APP'S SCREEN (Only on Desktop Floating Mode) */}
+      {targetRect && effectiveFloatingMode && (
+        <div className="fixed inset-0 z-[9999] pointer-events-none">
+          <div
+            className="absolute border-2 sm:border-3 border-amber-400 rounded-xl transition-all duration-300 shadow-[0_0_35px_rgba(251,191,36,0.75)] animate-pulse pointer-events-none"
+            style={{
+              top: Math.max(0, targetRect.top - 4),
+              left: Math.max(0, targetRect.left - 4),
+              width: targetRect.width + 8,
+              height: targetRect.height + 8,
+            }}
+          >
+            {/* Corner Ping Beacon */}
+            <span className="absolute -top-2 -right-2 flex h-4 w-4">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border border-slate-900"></span>
+            </span>
 
-          {/* Body */}
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs text-zinc-400 font-medium">
-                Paso {currentStepIndex + 1} de {tutorial.steps.length}
+            {/* Target Tooltip Badge */}
+            <div 
+              className={`absolute ${targetRect.top < 36 ? '-bottom-7' : '-top-7'} left-0 px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 font-mono font-black text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-lg whitespace-nowrap`}
+            >
+              <span>👉 {currentStep.uiTarget?.label || 'Aquí'}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div 
+        id={`tutorial-modal-overlay-${moduleId}`}
+        className={
+          effectiveFloatingMode
+            ? `fixed inset-0 z-[10000] pointer-events-none p-3 sm:p-5 flex ${dockClass} transition-all duration-300`
+            : "fixed inset-0 z-[10000] bg-black/85 backdrop-blur-md flex items-center justify-center p-0 md:p-4 overflow-y-auto"
+        }
+        onClick={(e) => {
+          if (!effectiveFloatingMode && e.target === e.currentTarget) {
+            onClose(dontShowAgain);
+          }
+        }}
+      >
+        <motion.div
+          id={`tutorial-modal-dialog-${moduleId}`}
+          layout
+          initial={{ opacity: 0, scale: 0.96, y: 12 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+          className={
+            effectiveFloatingMode
+              ? "pointer-events-auto relative w-full sm:w-[440px] max-w-[calc(100vw-24px)] bg-[#131217]/95 backdrop-blur-md border-2 border-amber-500/50 rounded-2xl shadow-2xl shadow-black/95 overflow-hidden flex flex-col"
+              : "relative w-full h-full md:h-auto md:max-w-xl bg-[#131217] border-0 md:border md:border-stone-800/90 rounded-none md:rounded-3xl shadow-2xl shadow-black/80 overflow-hidden flex flex-col my-0 md:my-auto"
+          }
+        >
+          {/* TOP BAR: Module Badge + Mode Switcher (Desktop only) + Steps dots + Close button */}
+          <div className="p-3.5 sm:p-4 border-b border-stone-800/70 flex items-center justify-between bg-stone-900/50 shrink-0">
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase border ${accentStyles.badgeBg}`}>
+                {tutorialConfig.badge}
               </span>
-              <div className="flex gap-1.5">
-                {tutorial.steps.map((_, idx) => (
-                  <div
+              <span className="text-[11px] font-mono text-stone-400 hidden xs:inline">
+                Paso {currentStepIndex + 1}/{totalSteps}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {/* Toggle Floating Tour Card / Centered Card - Only on Desktop */}
+              {isDesktop && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextMode = !isFloatingMode;
+                    setIsFloatingMode(nextMode);
+                    if (nextMode) {
+                      setTimeout(() => locateTargetElement(true), 150);
+                    }
+                  }}
+                  className="p-1.5 px-2 rounded-lg text-stone-400 hover:text-amber-300 hover:bg-stone-800/80 transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-mono"
+                  title={isFloatingMode ? "Expandir a tarjeta centrada" : "Fijar como tarjeta flotante en esquina para ver la pantalla"}
+                >
+                  {isFloatingMode ? (
+                    <>
+                      <Maximize2 className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Centrar</span>
+                    </>
+                  ) : (
+                    <>
+                      <Minimize2 className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Flotante</span>
+                    </>
+                  )}
+                </button>
+              )}
+
+              {/* Dots navigation */}
+              <div className="flex items-center gap-1.5 mx-1">
+                {tutorialConfig.steps.map((_, idx) => (
+                  <button
                     key={idx}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      idx === currentStepIndex ? 'w-6 bg-amber-400' : 'w-2 bg-zinc-800'
+                    type="button"
+                    onClick={() => setCurrentStepIndex(idx)}
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      idx === currentStepIndex
+                        ? accentStyles.activeDot
+                        : 'w-1.5 bg-stone-700 hover:bg-stone-500'
                     }`}
+                    title={`Ir al paso ${idx + 1}`}
                   />
                 ))}
               </div>
-            </div>
 
+              <button
+                id={`tutorial-close-btn-${moduleId}`}
+                type="button"
+                onClick={() => onClose(dontShowAgain)}
+                className="p-1.5 rounded-xl text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
+                title="Cerrar guía (Esc)"
+              >
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* MAIN STEP CONTENT */}
+          <div className={`p-4 sm:p-5 space-y-4 overflow-y-auto flex-1 ${effectiveFloatingMode ? 'max-h-[60vh]' : 'max-h-none md:max-h-[70vh]'}`}>
             <AnimatePresence mode="wait">
               <motion.div
-                key={currentStepIndex}
+                key={currentStep.id}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-4"
+                transition={{ duration: 0.16 }}
+                className="space-y-3.5"
               >
-                <h4 className="text-lg font-semibold text-zinc-100">
-                  {currentStep.title}
-                </h4>
-                <p className="text-sm text-zinc-300 leading-relaxed">
+                {/* Step Header with Icon */}
+                <div className="flex items-start gap-3">
+                  <div className={`p-2.5 rounded-xl border shadow-inner shrink-0 ${accentStyles.iconBox}`}>
+                    <CurrentIcon className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-stone-400 font-semibold block">
+                      {currentStep.badge}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold font-display tracking-tight text-white leading-snug">
+                      {currentStep.title}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Practical Takeaway / Musician Hook */}
+                <div className={`p-3 rounded-xl border text-xs leading-relaxed font-sans ${accentStyles.hookBorder}`}>
+                  <p className="font-medium">
+                    {currentStep.musicianHook}
+                  </p>
+                </div>
+
+                {/* TARJETITA DE REFERENCIA AL BOTÓN O SECCIÓN EN LA APP */}
+                {currentStep.uiTarget && (
+                  <div className={`rounded-2xl border p-3.5 space-y-2.5 shadow-sm ${accentStyles.targetCard}`}>
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <div className="flex items-center gap-1.5">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                        </span>
+                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-amber-300">
+                          {currentStep.uiTarget.type === 'button'
+                            ? '🔘 Botón en pantalla'
+                            : currentStep.uiTarget.type === 'tab'
+                            ? '📑 Pestaña / Vista'
+                            : currentStep.uiTarget.type === 'menu'
+                            ? '⚙️ Menú de opciones'
+                            : currentStep.uiTarget.type === 'section'
+                            ? '📦 Bloque / Sección'
+                            : '🎯 Control en pantalla'}
+                        </span>
+                      </div>
+
+                      {/* Botón Señalar en Pantalla - SOLO EN ESCRITORIO (en móvil no cabe ni tiene sentido) */}
+                      {isDesktop && currentStep.uiTarget.selector && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsFloatingMode(true);
+                            setTimeout(() => locateTargetElement(true), 100);
+                          }}
+                          className={`text-[11px] font-mono font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-xs ${accentStyles.targetBtn}`}
+                          title="Fijar modo flotante y enfocar este elemento en la pantalla"
+                        >
+                          <Target className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Señalar en pantalla</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Nombre del elemento simulando botón o control */}
+                    <div className="flex items-center gap-2 p-2 rounded-xl bg-stone-950/90 border border-stone-800 text-xs shadow-inner">
+                      <span className="text-amber-400 font-mono font-black text-xs shrink-0">
+                        {currentStep.uiTarget.type === 'button' ? '▶' : '▪'}
+                      </span>
+                      <span className="font-bold text-white font-mono truncate">
+                        {currentStep.uiTarget.label}
+                      </span>
+                    </div>
+
+                    {/* Ubicación y Para qué sirve */}
+                    <div className="grid grid-cols-1 gap-1.5 text-[11px] font-mono text-stone-300">
+                      <div className="flex items-start gap-1.5 text-stone-400">
+                        <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                        <span className="leading-tight"><strong className="text-stone-300 font-semibold">Dónde está:</strong> {currentStep.uiTarget.location}</span>
+                      </div>
+                      <div className="flex items-start gap-1.5 text-stone-400">
+                        <MousePointer className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                        <span className="leading-tight"><strong className="text-stone-300 font-semibold">Para qué sirve:</strong> {currentStep.uiTarget.actionHint}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step Description */}
+                <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
                   {currentStep.description}
                 </p>
 
-                {currentStep.tip && (
-                  <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-200 flex items-start gap-2.5">
-                    <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Consejo:</strong> {currentStep.tip}</span>
-                  </div>
-                )}
+                {/* Key takeaways pills / cards */}
+                <div className={`grid gap-2 pt-0.5 ${effectiveFloatingMode ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
+                  {currentStep.keyPoints.map((point, i) => (
+                    <div 
+                      key={i}
+                      className="p-2.5 rounded-xl bg-stone-900/70 border border-stone-800/80 flex flex-col justify-between space-y-0.5 hover:border-stone-700/80 transition-colors"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <Check className={`w-3.5 h-3.5 shrink-0 ${accentStyles.highlightText}`} />
+                        <h4 className="text-xs font-bold text-white font-mono">
+                          {point.title}
+                        </h4>
+                      </div>
+                      <p className="text-[11px] text-stone-400 leading-normal pl-5">
+                        {point.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between p-4 bg-zinc-950/80 border-t border-zinc-800">
-            <button
-              onClick={handlePrev}
-              disabled={currentStepIndex === 0}
-              className={`flex items-center gap-1 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
-                currentStepIndex === 0
-                  ? 'text-zinc-600 cursor-not-allowed'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-800'
-              }`}
-            >
-              <ChevronLeft className="w-4 h-4" /> Anterior
-            </button>
+          {/* BOTTOM ACTIONS BAR */}
+          <div className="p-3.5 sm:p-4 border-t border-stone-800/80 bg-stone-950/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0">
+            {/* Don't show again toggle */}
+            <label className="flex items-center gap-2 cursor-pointer select-none text-[11px] font-mono text-stone-400 hover:text-stone-300">
+              <input
+                id={`tutorial-dont-show-again-checkbox-${moduleId}`}
+                type="checkbox"
+                checked={dontShowAgain}
+                onChange={(e) => setDontShowAgain(e.target.checked)}
+                className="rounded border-stone-700 bg-stone-900 text-amber-500 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5 cursor-pointer"
+              />
+              <span className="truncate">No volver a abrir automáticamente</span>
+            </label>
 
-            <button
-              onClick={handleNext}
-              className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold rounded-xl transition-all shadow-md shadow-amber-500/20"
-            >
-              {isLastStep ? (
-                <>Entendido <CheckCircle2 className="w-4 h-4" /></>
-              ) : (
-                <>Siguiente <ChevronRight className="w-4 h-4" /></>
+            {/* Nav buttons */}
+            <div className="flex items-center gap-2 shrink-0">
+              {!isFirstStep && (
+                <button
+                  id={`tutorial-prev-btn-${moduleId}`}
+                  type="button"
+                  onClick={handlePrev}
+                  className="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  <span>Anterior</span>
+                </button>
               )}
-            </button>
+
+              <button
+                id={`tutorial-next-btn-${moduleId}`}
+                type="button"
+                onClick={handleNext}
+                className={`flex-1 sm:flex-none px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-lg ${accentStyles.primaryBtn}`}
+              >
+                {isLastStep ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>¡Entendido, a tocar!</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Siguiente</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </ModalPortal>
   );
 };

@@ -1,8 +1,17 @@
 # 🎸 AGENTS.md — Instrucciones y Directivas del Agente de Código (BandManager.io / Bakandeya)
 
-> **Contexto del Proyecto:** Esta aplicación es el núcleo técnico de un **Trabajo Fin de Máster (TFM) sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica**.
+> **🏆 DIRECTIVA SUPREMA Y OBJETIVO DE HONOR (TFM DE ÉLITE):**
+> Este proyecto constituye el núcleo técnico y práctico del **Trabajo Fin de Máster (TFM) sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica**. 
 > 
-> **Misión:** Desarrollar la plataforma integral definitiva (**BandManager.io**) que todo músico y banda independiente necesita para automatizar su booking, logística, prensa, contenido en redes, repertorio y finanzas.
+> **La meta innegociable es obtener la Mención de Honor (Matrícula de Honor)** y posicionar este TFM como **el mejor trabajo de toda la historia del máster**, de la promoción actual y de todas las promociones futuras. Debe sobresalir de manera indiscutible frente a cualquier otro proyecto presentado, superando con creces los estándares académicos y técnicos habituales, demostrando una arquitectura, robustez, elegancia y nivel de acabado superior incluso a lo que el claustro docente del máster podría concebir o construir conjuntamente.
+> 
+> **Misión de Producto:** Desarrollar la plataforma integral definitiva (**BandManager.io**) que todo músico y banda independiente necesita para automatizar su booking, logística de gira, prensa, contenido viral en redes, repertorio multipista con IA y finanzas.
+>
+> **Criterios de Excelencia Continua:**
+> - **Cero Tolerancia a Fallos:** Cero errores de TypeScript (`npx tsc --noEmit`), suite de tests pasando al 100% (880+ tests), trazabilidad y sanitización total de datos.
+> - **Artesanía de Software de Nivel Producción:** Resiliencia ante caídas de red, idempotencia, persistencia blindada (Supabase PostgreSQL), seguridad anti-SSRF y separación multi-tenancy infalible.
+> - **Blindaje Inexpugnable y Protección de Derechos de Autor (IP):** Protección de grado bancario para las maquetas inéditas, stems, letras, caché de negociaciones y datos de fans de los músicos. La plataforma está concebida para resistir intentos de sabotaje, ataques de denegación de servicio (DDoS), inyecciones y scraping malicioso por parte de competidores o agencias tradicionales de management.
+> - **Experiencia de Usuario Insuperable:** Rendimiento inmediato (~8ms en caché), interfaces intuitivas, densas pero despejadas, diseño responsive impecable y feedback visual transparente sin fallbacks silenciosos.
 
 ---
 
@@ -48,6 +57,20 @@
 2. **Validación Inflexible en Servidor (`server/utils/planLimits.ts`):**
    * Queda estrictamente prohibido confiar de forma exclusiva en la UI (`src/utils/planPermissions.ts`).
    * Toda mutación en API REST que cree registros (leads, medios, canciones, bandas, fans) DEBE validar los límites en el servidor con `checkRecordLimit(...)` para evitar que peticiones HTTP directas con token se salten el plan contratado.
+
+### 2.4 Blindaje Anti-Sabotaje, Protección de Propiedad Intelectual (IP) y Ciberseguridad Defensiva
+1. **Custodia Criptográfica de la Obra Musical (Derechos de Autor):**
+   * Las maquetas inéditas, stems aislados, pistas multipista, letras y grabaciones de ensayo son propiedad exclusiva e inalienable del músico.
+   * Queda prohibido exponer URLs directas o predecibles sin validación de pertenencia a la banda (`band_id` autenticado mediante sesión JWT).
+   * El almacenamiento en Supabase Storage debe respetar la jerarquía `stems/{bandId}/{songHash}/...` con políticas RLS y rutas acotadas para evitar accesos cruzados o fugas de material no publicado.
+2. **Defensa contra Espionaje Comercial y Scraping Malicioso:**
+   * La base de datos de salas, contactos privados de programadores, cachés de negociación, contratos, cachés de tarifas y agendas de gira son activos estratégicos de alto valor.
+   * Los endpoints de exportación masiva (`/api/download-excel`, `/api/export-leads`) deben aplicar *rate limiting* estricto y scoping intransigente por `band_id` para neutralizar intentos de exfiltración masiva por competidores o agencias externas.
+3. **Inmunidad contra Sabotaje y Ataques Web (Hardening Integral):**
+   * **Mitigación Anti-DDoS y Agotamiento de Recursos:** Limitadores de tasa independientes por IP y por sesión (`iaRateLimiter`, `authRateLimiter`, `generalRateLimiter`) para impedir ataques de fuerza bruta o de denegación de servicio económico en endpoints de IA.
+   * **Prevención de Inyecciones (SQLi, NoSQLi, XSS):** Todas las consultas a Supabase se canalizan parametrizadas mediante el cliente tipado oficial o funciones de sanitización.
+   * **Sanitización de Archivos y Path Traversal:** Validadores dedicados (`subcarpetaSegura`, `rutaFuenteSegura`) impiden la manipulación de rutas en el sistema de archivos del servidor.
+   * **Blindaje SSRF:** Toda conexión externa (webhooks, scraping de prensa/salas) pasa obligatoriamente por resolución DNS y verificación de rangos reservados con `esUrlExternaSegura`.
 
 ---
 

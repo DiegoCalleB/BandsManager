@@ -9,7 +9,7 @@ export function useInteractionLog(
   const [interactionType, setInteractionType] = useState<'Llamada' | 'WhatsApp' | 'Email' | 'Reunión' | 'Otro'>('Llamada');
   const [interactionNotes, setInteractionNotes] = useState<string>('');
   const [interactionResultado, setInteractionResultado] = useState<'Interesado' | 'Enviar propuesta' | 'Seguimiento pendiente' | 'Rechazado' | 'Info recibida' | 'Acuerdo cerrado'>('Seguimiento pendiente');
-  const [interactionAutor, setInteractionAutor] = useState<string>('Diego / Filgue');
+  const [interactionAutor, setInteractionAutor] = useState<string>('Mánager / Booking');
 
   const handleAddInteractionLog = (e: FormEvent) => {
     e.preventDefault();

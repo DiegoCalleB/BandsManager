@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 import helmet from "helmet";
 import path from "path";
 import * as XLSX from "xlsx";
@@ -13,7 +14,7 @@ import { startSocialRadarScheduler } from "./server/services/socialRadarService.
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 
-import usersRouter from "./server/routes/users.js";
+import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
 import postsRouter from "./server/routes/posts.js";
 import metricsRouter from "./server/routes/metrics.js";
 import chatRouter from "./server/routes/chat.js";
@@ -76,6 +77,8 @@ app.use(helmet({
   referrerPolicy: { policy: "strict-origin-when-cross-origin" }
 }));
 
+app.use(compression());
+
 app.use(
   express.json({
     limit: "50mb",
@@ -116,6 +119,11 @@ app.use("/uploads", (req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   next();
 }, express.static(path.join(process.cwd(), "public", "uploads")));
+
+app.use("/audio", (req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+}, express.static(path.join(process.cwd(), "public", "audio")));
 
 app.use("/transposed", (req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -503,7 +511,8 @@ async function startServer() {
       server: {
         middlewareMode: true,
         hmr: false,
-        ws: false
+        ws: false,
+        allowedHosts: true,
       },
       appType: "spa",
     });
@@ -532,6 +541,20 @@ async function startServer() {
 
   const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`BandManager.io server running on http://localhost:${PORT}`);
+    // Ampliación de socket timeout para procesos de inferencia pesados (GPU neural)
+    server.timeout = 420000;
+    server.keepAliveTimeout = 430000;
+    server.headersTimeout = 440000;
+    // Comprobación de seguridad en arranque: Webhook secret de Replicate
+    if (!process.env.REPLICATE_WEBHOOK_SECRET) {
+      console.error("[Seguridad Webhook] ❌ REPLICATE_WEBHOOK_SECRET no está configurado en las variables de entorno. Las peticiones a /api/webhooks/replicate-stems serán rechazadas con HTTP 401 (Fail-Closed).");
+    }
+    // Initialize Admin SuperUser Account
+    try {
+      ensureAdminUserExists(loadState()).catch(e => console.warn("Notice: Admin account init:", e));
+    } catch (e) {
+      console.warn("Notice: Admin account init:", e);
+    }
     // Start background autonomous Social Radar Agent
     try {
       startSocialRadarScheduler();

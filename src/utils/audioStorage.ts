@@ -387,6 +387,55 @@ export function fileToBase64(file: File | Blob): Promise<string> {
 }
 
 /**
+ * Safely fetches an audio URL as a Blob, handling IndexedDB keys, base64 data URLs,
+ * Blob URLs, and external HTTP/HTTPS streams safely without scheme errors.
+ */
+export async function getAudioBlobFromUrl(url: string): Promise<Blob> {
+  if (!url || typeof url !== 'string' || !url.trim()) {
+    throw new Error('Invalid or empty audio URL provided');
+  }
+  const resolved = await resolveAudioUrl(url.trim());
+  if (!resolved || !resolved.trim()) {
+    throw new Error('Could not resolve audio URL');
+  }
+
+  const trimmedResolved = resolved.trim();
+
+  // Handle base64 data URLs directly without fetch()
+  if (trimmedResolved.startsWith('data:')) {
+    const parts = trimmedResolved.split(',');
+    if (parts.length < 2) {
+      throw new Error('Invalid data URL format');
+    }
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'audio/mpeg';
+    const bstr = atob(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  }
+
+  // Handle blob or http/https URLs via fetch
+  const res = await fetch(trimmedResolved);
+  if (!res.ok) {
+    throw new Error(`HTTP error ${res.status} fetching audio`);
+  }
+  return await res.blob();
+}
+
+/**
+ * Safely fetches an audio URL as an ArrayBuffer, handling IndexedDB keys, base64 data URLs,
+ * Blob URLs, and external HTTP/HTTPS streams safely without scheme errors.
+ */
+export async function getAudioArrayBufferFromUrl(url: string): Promise<ArrayBuffer> {
+  const blob = await getAudioBlobFromUrl(url);
+  return await blob.arrayBuffer();
+}
+
+/**
  * Resolve an audio URL string, supporting IndexedDB stored audio keys (indexeddb:key)
  * and Google Drive stream URLs.
  */
@@ -443,10 +492,11 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
         const sanitizedIdeas = await Promise.all(
           (song.audioIdeas || []).map(async (idea: any) => {
             let ideaUrl = idea.audioUrl || '';
-            if (ideaUrl.startsWith('data:audio') && ideaUrl.length > 10000) {
-              const key = `audio_idea_${idea.id}`;
+            if (ideaUrl.startsWith('data:audio') || ideaUrl.startsWith('blob:')) {
+              const key = `audio_idea_${idea.id || Date.now()}`;
               try {
-                await saveAudioToStorage(key, ideaUrl);
+                const blob = await getAudioBlobFromUrl(ideaUrl);
+                await saveAudioToStorage(key, blob);
                 ideaUrl = `indexeddb:${key}`;
               } catch (err) {
                 console.warn('Failed saving idea audio to IndexedDB:', err);
@@ -456,10 +506,11 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
             const sanitizedPistas = await Promise.all(
               (idea.pistas || []).map(async (pista: any) => {
                 let trackUrl = pista.audioUrl || '';
-                if (trackUrl.startsWith('data:audio') && trackUrl.length > 10000) {
-                  const key = `audio_track_${pista.id}`;
+                if (trackUrl.startsWith('data:audio') || trackUrl.startsWith('blob:')) {
+                  const key = `audio_track_${pista.id || Date.now()}`;
                   try {
-                    await saveAudioToStorage(key, trackUrl);
+                    const blob = await getAudioBlobFromUrl(trackUrl);
+                    await saveAudioToStorage(key, blob);
                     trackUrl = `indexeddb:${key}`;
                   } catch (err) {
                     console.warn('Failed saving track audio to IndexedDB:', err);

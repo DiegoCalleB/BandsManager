@@ -174,20 +174,17 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     spotify: "https://open.spotify.com/artist/bakandeya",
     youtube: "https://youtube.com/@bakandeya_oficial",
     tiktok: "https://tiktok.com/@bakandeya_oficial",
-    website: "https://bands-manager.up.railway.app"
+    website: "https://bandmanager.io"
   };
 
-  const [resolvedBandId, setResolvedBandId] = useState<string>('band-bakandeya');
-  const [bandName, setBandName] = useState<string>('Bakandeya');
-  const [logoUrl, setLogoUrl] = useState<string | null>('/logo_bakandeya.jpg');
-  const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(DEFAULT_BAKANDEYA_SOCIALS);
+  const [resolvedBandId, setResolvedBandId] = useState<string>('band-active');
+  const [bandName, setBandName] = useState<string>('');
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [socialLinks, setSocialLinks] = useState<SocialLinks | undefined>(undefined);
   const [contactoBooking, setContactoBooking] = useState<{
     email?: string;
     telefono?: string;
-  } | null>({
-    email: 'diego.delacalleb@gmail.com',
-    telefono: '+34 612 345 678'
-  });
+  } | null>(null);
   const [donacionRevolut, setDonacionRevolut] = useState<{
     habilitado?: boolean;
     revolutTag?: string;
@@ -195,11 +192,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     paypalUser?: string;
     paypalUrl?: string;
     bizumTelefono?: string;
-    metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum';
+    ibanCuenta?: string;
+    metodoPorDefecto?: 'revolut' | 'paypal' | 'bizum' | 'iban';
     titulo?: string;
     descripcion?: string;
   } | null>(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum'>('revolut');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'revolut' | 'paypal' | 'bizum' | 'iban'>('revolut');
   const [copiedBizum, setCopiedBizum] = useState(false);
   const [miembros, setMiembros] = useState<BandMember[]>([]);
   const [upcomingConcerts, setUpcomingConcerts] = useState<Concert[]>([]);
@@ -366,16 +364,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setBandName('Bakandeya');
       setLogoUrl('/logo_bakandeya.jpg');
       setSocialLinks(DEFAULT_BAKANDEYA_SOCIALS);
-      setContactoBooking({
-        email: 'diego.delacalleb@gmail.com',
-        telefono: '+34 612 345 678'
-      });
-      setMiembros([
-        { id: 'm-1', nombre: 'Diego de la Calle', rol: 'Voz & Guitarra' },
-        { id: 'm-2', nombre: 'José Filgueira', rol: 'Bajo & Coros' },
-        { id: 'm-3', nombre: 'Jon Quel', rol: 'Batería' },
-        { id: 'm-4', nombre: 'Elyar Pashang', rol: 'Metales & Percusión' }
-      ]);
+      setContactoBooking(null);
+      setMiembros([]);
     } else if (queryBand) {
       const formatted = cleanId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       setBandName(formatted);
@@ -433,13 +423,8 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
           if (data.epkConfig?.miembros && Array.isArray(data.epkConfig.miembros) && data.epkConfig.miembros.length > 0) {
             setMiembros(data.epkConfig.miembros);
-          } else if (cleanId === 'bakandeya') {
-            setMiembros([
-              { id: 'm-1', nombre: 'Diego de la Calle', rol: 'Voz & Guitarra' },
-              { id: 'm-2', nombre: 'José Filgueira', rol: 'Bajo & Coros' },
-              { id: 'm-3', nombre: 'Jon Quel', rol: 'Batería' },
-              { id: 'm-4', nombre: 'Elyar Pashang', rol: 'Metales & Percusión' }
-            ]);
+          } else {
+            setMiembros([]);
           }
 
           if (data.epkConfig?.donacionRevolut) {
@@ -574,10 +559,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
   // lo ve en italiano por defecto, no en español. EpkLanguage y FanFormLanguage comparten
   // exactamente los mismos códigos (es/en/it/cs), así que conciertoLanguage vale tal cual.
   const epkUrl = (typeof window !== 'undefined'
-    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre')
-        ? 'https://bands-manager.up.railway.app/epk'
-        : `${window.location.origin}/epk`)
-    : 'https://bands-manager.up.railway.app/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
+    ? (window.location.origin.includes('localhost') || window.location.origin.includes('ais-dev') || window.location.origin.includes('ais-pre') || window.location.origin.includes('run.app')
+        ? `${window.location.origin}/epk`
+        : 'https://bandmanager.io/epk')
+    : 'https://bandmanager.io/epk') + `?band=${encodeURIComponent(resolvedBandId)}&lang=${encodeURIComponent(conciertoLanguage)}`;
 
   const renderRevolutCard = (contextType: 'redes' | 'form' | 'success' = 'redes') => {
     if ((!revolutUrl && !paypalUrl && !hasBizum) || donacionRevolut?.habilitado === false) return null;

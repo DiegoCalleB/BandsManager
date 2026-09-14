@@ -240,15 +240,23 @@ export function mapSongRecord(s: any) {
     audioPrincipalUrl: audioUrl,
     audio_principal_url: audioUrl,
     audioUrl,
-    audioIdeas: s.audio_ideas || s.audioIdeas || (audioUrl ? [{
-      id: `idea_${s.id}`,
-      titulo: "Audio Oficial",
-      seccion: "general" as const,
-      audioUrl,
-      subidoPor: "Sync",
-      fecha: new Date().toISOString()
-    }] : []),
-    audio_ideas: s.audio_ideas || s.audioIdeas || [],
+    audioIdeas: (Array.isArray(s.audio_ideas) && s.audio_ideas.length > 0)
+      ? s.audio_ideas
+      : (Array.isArray(s.audioIdeas) && s.audioIdeas.length > 0)
+        ? s.audioIdeas
+        : (audioUrl ? [{
+            id: `idea_${s.id}`,
+            titulo: "Audio Oficial",
+            seccion: "general" as const,
+            audioUrl,
+            subidoPor: "Sync",
+            fecha: new Date().toISOString()
+          }] : []),
+    audio_ideas: (Array.isArray(s.audio_ideas) && s.audio_ideas.length > 0)
+      ? s.audio_ideas
+      : (Array.isArray(s.audioIdeas) && s.audioIdeas.length > 0)
+        ? s.audioIdeas
+        : [],
     cifradoTexto: s.cifrado_texto || s.cifradoTexto || "",
     cifrado_texto: s.cifrado_texto || s.cifradoTexto || "",
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
@@ -282,7 +290,34 @@ export async function dbGetSongs(bandId: string) {
     .order("titulo", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (songs): ${error.message}`);
-  return (data || []).map(mapSongRecord);
+
+  let songsData = data || [];
+
+  // Auto-poblado si no hay canciones o si falta el catálogo inicial de Bakandeya
+  if (songsData.length === 0 && (noPrefix === 'bakandeya' || noPrefix === '' || candidateIds.includes('band-bakandeya'))) {
+    console.log(`[Repertorio] Auto-poblando catálogo de canciones iniciales de Bakandeya en Supabase...`);
+    const seedTargetBandId = rawClean || 'band-bakandeya';
+    try {
+      for (const song of INITIAL_SONGS) {
+        await dbUpsertSong(song, seedTargetBandId);
+      }
+      const { data: reFetched } = await sb
+        .from("songs")
+        .select("*")
+        .in("band_id", candidateIds)
+        .order("titulo", { ascending: true });
+      if (reFetched && reFetched.length > 0) {
+        songsData = reFetched;
+      } else {
+        return INITIAL_SONGS.map(mapSongRecord);
+      }
+    } catch (seedErr) {
+      console.error("[Repertorio] Error auto-poblando canciones iniciales:", seedErr);
+      return INITIAL_SONGS.map(mapSongRecord);
+    }
+  }
+
+  return songsData.map(mapSongRecord);
 }
 
 // Para campos de texto libre que el usuario puede vaciar a propósito (cifrado_texto,
@@ -307,14 +342,45 @@ export async function dbUpsertSong(song: any, bandId: string) {
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id que no pertenece a la banda del
   // usuario no se reutiliza nunca.
   let finalSongId = song.id;
-  let existing: { id: string; band_id: string; audio_principal_url?: string } | null = null;
+  let existing: { id: string; band_id: string; audio_principal_url?: string; audio_ideas?: any[] } | null = null;
   if (finalSongId) {
-    const { data } = await sb.from("songs").select("id, band_id, audio_principal_url").eq("id", finalSongId).maybeSingle();
+    const { data } = await sb.from("songs").select("id, band_id, audio_principal_url, audio_ideas").eq("id", finalSongId).maybeSingle();
     existing = data;
     if (existing && existing.band_id !== targetBandId) {
       finalSongId = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
       existing = null;
     }
+  }
+
+  // Fusionar inteligentemente audio_ideas para NO perder pistas/stems extraídas previamente
+  const existingIdeas = existing?.audio_ideas || [];
+  let incomingIdeas = song.audioIdeas || song.audio_ideas;
+
+  if ((!incomingIdeas || !Array.isArray(incomingIdeas) || incomingIdeas.length === 0) && existingIdeas.length > 0) {
+    incomingIdeas = existingIdeas;
+  } else if (Array.isArray(incomingIdeas) && existingIdeas.length > 0) {
+    incomingIdeas = incomingIdeas.map((incIdea: any) => {
+      const existingMatch = existingIdeas.find(
+        (e: any) => e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo)
+      );
+      if (existingMatch && (!incIdea.pistas || incIdea.pistas.length === 0) && existingMatch.pistas && existingMatch.pistas.length > 0) {
+        return {
+          ...incIdea,
+          pistas: existingMatch.pistas
+        };
+      }
+      return incIdea;
+    });
+
+    // Preservar cualquier idea previa que contenga stems/pistas si no venía en el payload entrante
+    existingIdeas.forEach((e: any) => {
+      if (e.pistas && e.pistas.length > 0) {
+        const existsInIncoming = incomingIdeas.some((inc: any) => inc.id === e.id || inc.titulo === e.titulo);
+        if (!existsInIncoming) {
+          incomingIdeas.push(e);
+        }
+      }
+    });
   }
 
   const payload: any = {
@@ -359,7 +425,7 @@ export async function dbUpsertSong(song: any, bandId: string) {
     notas_miembros: song.notasMiembros || song.notas_miembros || {},
     notas_por_miembro: song.notasPorMiembro || song.notas_por_miembro || [],
     audio_principal_url: song.audioPrincipalUrl || song.audio_principal_url || song.audioUrl || song.audio_url || "",
-    audio_ideas: song.audioIdeas || song.audio_ideas || [],
+    audio_ideas: incomingIdeas || [],
     cifrado_texto: preferClearableString(song.cifradoTexto, song.cifrado_texto),
     guia_sustituto: song.guiaSustituto || song.guia_sustituto || {},
     enlace_acordes: preferClearableString(song.enlaceAcordes, song.enlace_acordes),
@@ -427,7 +493,33 @@ export async function dbGetSetlists(bandId: string) {
     .order("fecha_ultima_edicion", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (setlists): ${error.message}`);
-  return (data || []).map(sl => ({
+
+  let setlistData = data || [];
+
+  if (setlistData.length === 0 && (noPrefix === 'bakandeya' || noPrefix === '' || candidateIds.includes('band-bakandeya'))) {
+    console.log(`[Repertorio] Auto-poblando setlists iniciales de Bakandeya en Supabase...`);
+    const seedTargetBandId = rawClean || 'band-bakandeya';
+    try {
+      for (const setlist of INITIAL_SETLISTS) {
+        await dbUpsertSetlist(setlist, seedTargetBandId);
+      }
+      const { data: reFetched } = await sb
+        .from("setlists")
+        .select("*")
+        .in("band_id", candidateIds)
+        .order("fecha_ultima_edicion", { ascending: false });
+      if (reFetched && reFetched.length > 0) {
+        setlistData = reFetched;
+      } else {
+        return INITIAL_SETLISTS.map(sl => ({ ...sl, items: sl.items || [] }));
+      }
+    } catch (seedErr) {
+      console.error("[Repertorio] Error auto-poblando setlists iniciales:", seedErr);
+      return INITIAL_SETLISTS.map(sl => ({ ...sl, items: sl.items || [] }));
+    }
+  }
+
+  return setlistData.map(sl => ({
     ...sl,
     items: sl.items || []
   }));

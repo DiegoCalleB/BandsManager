@@ -17,8 +17,32 @@ import { dbGetRunOfShow, dbGetGearChecklists } from "./production.js";
 import { dbGetCampaigns } from "./campaigns.js";
 import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 
+const bandStateCache = new Map<string, { timestamp: number; result: any }>();
+const BAND_CACHE_TTL_MS = 10_000; // 10s TTL cache for fast reads
+
+export function invalidateBandStateCache(bandId?: string) {
+  if (bandId) {
+    try {
+      const cleanId = cleanBandId(bandId);
+      for (const key of bandStateCache.keys()) {
+        if (key.startsWith(`${cleanId}:`)) {
+          bandStateCache.delete(key);
+        }
+      }
+    } catch (_) {}
+  } else {
+    bandStateCache.clear();
+  }
+}
+
 export async function loadStateFromSupabase(bandId: string, user?: any) {
   const cleanId = cleanBandId(bandId);
+  const cacheKey = `${cleanId}:${user?.id || 'anonymous'}`;
+  const cached = bandStateCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < BAND_CACHE_TTL_MS) {
+    return cached.result;
+  }
+
   await ensureRegisteredBandExists(cleanId, user?.bandName || user?.band_name);
 
   // Determine all bands relevant to this user (for multi-band calendar view)
@@ -89,7 +113,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     dbGetCategoryTemplates(cleanId).catch(() => ({}))
   ]);
 
-  return {
+  const resState = {
     leads,
     rehearsals,
     concerts,
@@ -117,22 +141,22 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
         tiktok: "https://tiktok.com/@bakandeya_oficial",
         appleMusic: "https://music.apple.com/artist/bakandeya",
         bandcamp: "https://bakandeya.bandcamp.com",
-        website: "https://bands-manager.up.railway.app",
+        website: "https://bandmanager.io",
         whatsapp: "+34612345678",
         facebook: "https://facebook.com/bakandeyaoficial",
         twitter: "https://x.com/bakandeya_band"
       },
       contactoBooking: {
-        nombre: "Booking & Management Bakandeya",
-        email: "diego.delacalleb@gmail.com",
-        telefono: "+34 612 345 678"
+        nombre: "Booking & Management",
+        email: "",
+        telefono: ""
       },
       firmaEmail: {
-        nombreRemitente: "Diego de la Calle",
-        cargo: "Booking & Management | Bakandeya",
-        telefono: "+34 612 345 678",
-        email: "diego.delacalleb@gmail.com",
-        textoPie: "Bakandeya — Música en directo, mestizaje y ska-rock",
+        nombreRemitente: "Booking & Management",
+        cargo: "Booking & Management",
+        telefono: "",
+        email: "",
+        textoPie: "Música en directo y conciertos",
         incluirIconosRedes: true,
         adjuntarDossierPorDefecto: true,
         redesSociales: {
@@ -142,14 +166,14 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
           tiktok: "https://tiktok.com/@bakandeya_oficial",
           appleMusic: "https://music.apple.com/artist/bakandeya",
           bandcamp: "https://bakandeya.bandcamp.com",
-          website: "https://bands-manager.up.railway.app",
+          website: "https://bandmanager.io",
           whatsapp: "+34612345678"
         }
       },
       temasDestacadosIds: ["s-1", "s-2", "s-3"],
       incentivoFans: {
         mensajeAgradecimiento: "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
-        enlaceDescarga: "https://bands-manager.up.railway.app/descargas/tema-inedito-directo.mp3",
+        enlaceDescarga: "https://bandmanager.io/descargas/tema-inedito-directo.mp3",
         codigoDescuento: "BAKANDEYA-FAN-10"
       },
       ciudadesConfig: ["Madrid", "Sevilla", "Barcelona", "Málaga", "Valencia", "Granada", "Cádiz"]
@@ -177,6 +201,9 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     users,
     categoryTemplates
   };
+
+  bandStateCache.set(cacheKey, { timestamp: Date.now(), result: resState });
+  return resState;
 }
 
 // ----------------------------------------------------

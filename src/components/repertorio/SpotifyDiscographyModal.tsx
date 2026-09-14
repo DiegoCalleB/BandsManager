@@ -63,7 +63,7 @@ interface SpotifyDiscographyModalProps {
 export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = ({
   isOpen,
   onClose,
-  bandName = 'Bakandeya',
+  bandName = '',
   existingSongs = [],
   colors,
   isStitchLight,
@@ -333,7 +333,7 @@ export const SpotifyDiscographyModal: React.FC<SpotifyDiscographyModalProps> = (
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Nombre de la banda (ej: Bakandeya) o URL de Spotify (https://open.spotify.com/artist/...)"
+                placeholder="Nombre de tu banda o URL de Spotify (https://open.spotify.com/artist/...)"
                 className={`w-full pl-10 pr-4 py-2.5 rounded-2xl text-sm font-mono border focus:outline-none focus:ring-2 focus:ring-[#1db954] transition-all ${
                   isStitchLight
                     ? 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400'

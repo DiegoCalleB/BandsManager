@@ -86,6 +86,29 @@ describe('buildAvailableBandsForUser', () => {
     expect(propia?.plan).toBe('promo');
   });
 
+  it('permite que un usuario tenga planes distintos en cada banda a la que pertenece', async () => {
+    const state = {
+      userBands: [
+        { user_id: 'u5', band_id: 'band-promo', role: 'member' },
+        { user_id: 'u5', band_id: 'band-plus', role: 'leader' }
+      ],
+      registeredBands: [
+        { band_id: 'band-promo', nombre_banda: 'Banda Festival', plan: 'promo' },
+        { band_id: 'band-plus', nombre_banda: 'Banda Repertoire', plan: 'promo_plus' }
+      ],
+      users: [],
+      epkConfigsByBand: {}
+    };
+    const user = { id: 'u5', email: 'musico@ejemplo.com', band_id: 'band-promo', plan: 'promo' };
+
+    const bands = await buildAvailableBandsForUser(state, user);
+    const bandaPromo = bands.find((b: any) => b.band_id === 'band-promo');
+    const bandaPlus = bands.find((b: any) => b.band_id === 'band-plus');
+
+    expect(bandaPromo?.plan).toBe('promo');
+    expect(bandaPlus?.plan).toBe('promo_plus');
+  });
+
   it('un usuario sin band_id no se etiqueta con la identidad de Bakandeya', async () => {
     const state = baseState();
     const user = { id: 'u4', email: 'cuenta-rota@ejemplo.com' }; // sin band_id ni main_band_id
@@ -94,5 +117,25 @@ describe('buildAvailableBandsForUser', () => {
     expect(bands.length).toBe(1);
     expect(bands[0].band_id).not.toBe('band-bakandeya');
     expect(bands[0].bandName).not.toMatch(/bakandeya/i);
+  });
+
+  it('una nueva banda sin logo configurado no hereda el logo de otra banda (ej: Ruta 66)', async () => {
+    const state = {
+      userBands: [
+        { user_id: 'u6', band_id: 'band-nuevabanda', role: 'leader' }
+      ],
+      registeredBands: [
+        { band_id: 'band-nuevabanda', nombre_banda: 'Nueva Banda Indie', logo_url: '' },
+        { band_id: 'band-ruta66', nombre_banda: 'Ruta 66', logo_url: 'https://example.com/ruta66.png' }
+      ],
+      users: [],
+      epkConfigsByBand: {}
+    };
+    const user = { id: 'u6', email: 'indie@ejemplo.com', band_id: 'band-nuevabanda' };
+
+    const bands = await buildAvailableBandsForUser(state, user);
+    const nuevaBanda = bands.find((b: any) => b.band_id === 'band-nuevabanda');
+    expect(nuevaBanda).toBeDefined();
+    expect(nuevaBanda?.logoUrl).toBeFalsy();
   });
 });

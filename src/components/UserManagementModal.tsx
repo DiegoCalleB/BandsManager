@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { ModalPortal } from './common/ModalPortal';
+import { STEM_INSTRUMENT_CATEGORIES, NON_STEM_ROLES } from '../config/stemInstruments';
 
 interface UserManagementModalProps {
  currentUser: User;
@@ -259,6 +260,10 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
             : 'bg-neutral-900 -neutral-800 text-neutral-100'
         }`}
       >
+ <datalist id="instrument-suggestions">
+ {STEM_INSTRUMENT_CATEGORIES.map(cat => <option key={cat} value={cat} />)}
+ {NON_STEM_ROLES.map(role => <option key={role} value={role} />)}
+ </datalist>
  {/* Modal Header */}
  <div className={`px-6 py-4 flex justify-between items-center ${
  isStitchLight ? '-slate-200 bg-slate-50' : '-neutral-800 bg-neutral-950/60'
@@ -564,6 +569,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  </label>
  <input
  type="text"
+ list="instrument-suggestions"
  value={newInstrument}
  onChange={(e) => setNewInstrument(e.target.value)}
  placeholder="Ej: Violín, Percusión, Batería, Sintetizador, Técnico de Sonido"
@@ -571,6 +577,9 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
  isStitchLight ? 'bg-slate-50 -slate-200' : 'bg-neutral-950 -neutral-800'
  }`}
  />
+ <p className="text-[10px] text-neutral-500">
+ Usa uno de los nombres sugeridos (Voz, Batería, Bajo, Guitarras, Teclados, Arreglos) para que el modo Ensayo Individual y Mi Monitor encuentren su pista aislada automáticamente.
+ </p>
  </div>
 
  <div className="space-y-1.5">
@@ -656,6 +665,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
       </label>
       <input
         type="text"
+        list="instrument-suggestions"
         value={assocInstrument}
         onChange={(e) => setAssocInstrument(e.target.value)}
         placeholder="Ej: Guitarra, Bajista, Manager, Coros"

@@ -11,13 +11,13 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
-import { normalizePlan } from '../utils/planPermissions';
+import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
 import { 
  Search, MapPin, Music, Mic, DoorClosed, Globe, Phone, Instagram, 
  Plus, X, Calendar, AlertCircle, Sparkles, Loader2, Check, RefreshCw, 
  Database, Bot, Activity, ArrowRight, CheckCircle2, Radio, Building2,
  Clock, CheckCircle, Hourglass, Send, Users, ShieldCheck, Play, Navigation,
- FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown
+ FileText, BookOpen, Disc3, Truck, Heart, Info, Copy, Sliders, Gift, Crown, QrCode
 } from 'lucide-react';
 
 export type NavigationOptions = {
@@ -91,8 +91,14 @@ export default function Dashboard({
  const [isAutonomyModalOpen, setIsAutonomyModalOpen] = useState(false);
  const [syncLoading, setSyncLoading] = useState(false);
 
- // Band view filter state: 'active' (Solo la banda activa) vs 'all' (Todas las bandas asignadas)
- const [agendaFilterMode, setAgendaFilterMode] = useState<'active' | 'all'>('active');
+ // Band view filter state: 'all' (Todas las bandas asignadas por defecto) vs 'active' (Solo la banda activa)
+ const [agendaFilterMode, setAgendaFilterMode] = useState<'active' | 'all'>('all');
+
+ const isPromo = isPromoPlanProp ?? (
+   normalizePlan(currentUser?.plan) === 'promo' ||
+   normalizePlan(currentUser?.plan) === 'promo_plus' ||
+   Boolean(availableBands && availableBands.find(b => (b.band_id === currentBandId || (b as any).id === currentBandId) && (normalizePlan((b as any).plan) === 'promo' || normalizePlan((b as any).plan) === 'promo_plus')))
+ );
 
  // Scraper states
  const [isScraping, setIsScraping] = useState(false);
@@ -337,6 +343,18 @@ export default function Dashboard({
  return isSameBandId(r.band_id, activeBandId);
  });
 
+ // Helper to resolve the correct band name for each event
+ const getEventBandName = (bandId?: string, explicitBandName?: string) => {
+   if (explicitBandName) return explicitBandName;
+   if (!bandId || isSameBandId(bandId, activeBandId)) return activeBandName;
+   const match = (availableBands || []).find(b => isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId));
+   return match?.bandName || match?.name || (isSameBandId(bandId, 'band-bakandeya') ? 'Bakandeya' : 'Banda');
+ };
+
+ const hasMultipleBands = (availableBands && availableBands.length > 1) || 
+   concerts.some(c => c.band_id && !isSameBandId(c.band_id, activeBandId)) || 
+   rehearsals.some(r => r.band_id && !isSameBandId(r.band_id, activeBandId));
+
  // Build upcoming agenda dates
  const upcomingEvents: Array<{
  id: string;
@@ -372,8 +390,10 @@ export default function Dashboard({
  locationQuery: c.direccion || `${c.sala}, ${c.ciudad}`,
  address: c.direccion,
  badge: c.contrato_firmado ? 'Contrato Firmado' : 'Confirmado',
- bandName: c.bandName || activeBandName,
- details: `Caché: ${c.cache ? `${c.cache}€` : 'A convenir'} • Aforo: ${c.aforo_total || 500} pax`
+ bandName: getEventBandName(c.band_id, c.bandName),
+ details: isPromo
+   ? (c.aforo_total ? `Aforo: ${c.aforo_total} pax` : 'Concierto confirmado')
+   : `Caché: ${c.cache ? `${c.cache}€` : 'A convenir'} • Aforo: ${c.aforo_total || 500} pax`
  });
  });
 
@@ -396,7 +416,7 @@ export default function Dashboard({
  locationQuery: `${r.lugar || 'Local de Ensayo'}, Madrid`,
  address: undefined,
  badge: r.estado === 'completado' ? 'Completado' : 'Programado',
- bandName: r.bandName || activeBandName,
+ bandName: getEventBandName(r.band_id, r.bandName),
  details: `Horario: ${r.hora || '18:00'} • Asistentes: ${r.asistentes ? (Array.isArray(r.asistentes) ? r.asistentes.join(', ') : r.asistentes) : 'Todos'}`
  });
  });
@@ -416,53 +436,124 @@ export default function Dashboard({
  // una sin dejarse alguna (ya pasó: la sección de "Acciones Rápidas" y el botón flotante de
  // Agente IA se colaban). Así que en vez de parchear el dashboard grande, Promo tiene su
  // propio resumen reducido, aparte, que solo usa lo que ese plan permite: EPK, calendario y fans.
-  const isPromo = isPromoPlanProp ?? (
-    normalizePlan(currentUser?.plan) === 'promo' ||
-    Boolean(availableBands && availableBands.find(b => (b.band_id === currentBandId || (b as any).id === currentBandId) && normalizePlan((b as any).plan) === 'promo'))
-  );
  if (isPromo) {
+    const totalFansCount = (fans || []).length;
+    const maxPromoFans = 250;
+
     return (
-      <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
-        <div className="mb-2 flex items-center justify-between">
+      <div className={`space-y-6 ${isStitchLight ? "text-slate-800" : "text-zinc-100"} font-sans w-full max-w-full overflow-x-hidden`}>
+        <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
-            <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">Panel de {activeBandName}</p>
+            <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">
+              Panel de {activeBandName}
+              {agendaFilterMode === 'all' && hasMultipleBands && (
+                <span className="ml-2 text-amber-400 lowercase font-normal">(vista global de todas tus bandas)</span>
+              )}
+            </p>
           </div>
-          <button
-            type="button"
-            onClick={() => onNavigate && onNavigate('calendario')}
-            className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-md flex items-center gap-1.5"
-          >
-            <Calendar className="w-4 h-4" />
-            <span>Ver Calendario Completo</span>
-          </button>
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              type="button"
+              onClick={() => onNavigate && onNavigate("fans")}
+              className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+            >
+              <QrCode className="w-4 h-4 text-amber-400" />
+              <span>Códigos QR & Fans</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate && onNavigate("epk")}
+              className="px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+            >
+              <BookOpen className="w-4 h-4 text-purple-400" />
+              <span>Dossier EPK</span>
+            </button>
+            {hasModuleAccess(currentUser?.plan, "repertorio") && (
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("repertorio")}
+                className="px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+              >
+                <Disc3 className="w-4 h-4 text-sky-400" />
+                <span>Repertorio</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => onNavigate && onNavigate("calendario")}
+              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Calendario</span>
+            </button>
+          </div>
         </div>
 
-        {/* 1. SECCIÓN ÚNICA: PRÓXIMAS FECHAS Y AGENDA */}
+        {/* 1. SECCIÓN PRINCIPAL AL INICIO: PRÓXIMAS FECHAS Y AGENDA */}
         <div className="p-6 rounded-2xl bg-[#18181b]/90 border border-neutral-800/80 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b border-neutral-800">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold font-display uppercase tracking-wider text-neutral-100">
+                <h3 className="text-base font-bold font-display uppercase tracking-wider text-neutral-100 flex items-center gap-2">
                   Próximas Fechas y Agenda
                 </h3>
                 <p className="text-xs font-mono text-neutral-400">
-                  Conciertos y ensayos programados para {activeBandName}.
+                  {agendaFilterMode === 'all' 
+                    ? 'Conciertos y ensayos de todas tus bandas asignadas.' 
+                    : `Conciertos y ensayos programados para ${activeBandName}.`}
                 </p>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => onNavigate && onNavigate('calendario')}
-              className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
-            >
-              <span>Ver agenda completa</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              {/* Band Filter Mode Toggle */}
+              <div className={`flex items-center rounded-xl p-1 gap-1 border ${
+                isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-stone-900 border-stone-800'
+              }`}>
+                <button
+                  id="dashboard-promo-agenda-all-bands-btn"
+                  onClick={() => setAgendaFilterMode('all')}
+                  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                    agendaFilterMode === 'all'
+                      ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                  title="Ver eventos de todas las bandas"
+                >
+                  <Users className="w-3 h-3 shrink-0" />
+                  <span>Todas</span>
+                  <span className="ml-1 text-[9px] font-mono opacity-80">({concerts.length + rehearsals.length})</span>
+                </button>
+
+                <button
+                  id="dashboard-promo-agenda-active-band-btn"
+                  onClick={() => setAgendaFilterMode('active')}
+                  className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
+                    agendaFilterMode === 'active'
+                      ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                  title={`Ver solo eventos de ${activeBandName}`}
+                >
+                  <Music className="w-3 h-3 shrink-0" />
+                  <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
+                  <span className="ml-1 text-[9px] font-mono opacity-80">({activeBandConcerts.length + activeBandRehearsals.length})</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate('calendario')}
+                className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+              >
+                <span>Ver agenda completa</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           {upcomingEvents.length > 0 ? (
@@ -492,6 +583,12 @@ export default function Dashboard({
                         }`}>
                           {item.type}
                         </span>
+                        {(agendaFilterMode === 'all' || hasMultipleBands) && item.bandName && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 border border-stone-700/60 truncate max-w-[120px] flex items-center gap-1">
+                            <Music className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+                            <span className="truncate">{item.bandName}</span>
+                          </span>
+                        )}
                         <span className="text-[10px] font-mono text-neutral-400">
                           • {item.badge}
                         </span>
@@ -532,6 +629,85 @@ export default function Dashboard({
               </button>
             </div>
           )}
+        </div>
+
+        {/* 2. TARJETAS RÁPIDAS DE CAPTURA QR, FANS Y DOSSIER */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Card 1: Códigos QR & Captura de Fans */}
+          <div className="p-5 rounded-2xl bg-[#18181b]/90 border border-amber-500/20 shadow-sm flex flex-col justify-between space-y-4 hover:border-amber-500/40 transition-all">
+            <div>
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
+                    <QrCode className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+                      Captura QR & Fans
+                    </h3>
+                    <p className="text-[11px] font-mono text-neutral-400">
+                      QRs para directos, flyers y captación de audiencia
+                    </p>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                  {totalFansCount} / {maxPromoFans} Fans
+                </span>
+              </div>
+              <p className="text-xs text-neutral-300 mt-3 leading-relaxed">
+                Genera códigos QR de alta resolución (SVG y PNG 4K) y flyers imprimibles listos para proyectar o colocar en salas y festivales.
+              </p>
+            </div>
+
+            <div className="pt-2 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("fans")}
+                className="flex-1 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <QrCode className="w-4 h-4" />
+                <span>Gestionar QRs y Fans</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2: Dossier EPK Digital */}
+          <div className="p-5 rounded-2xl bg-[#18181b]/90 border border-purple-500/20 shadow-sm flex flex-col justify-between space-y-4 hover:border-purple-500/40 transition-all">
+            <div>
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100">
+                      Dossier (EPK) Digital
+                    </h3>
+                    <p className="text-[11px] font-mono text-neutral-400">
+                      Prensa, rider técnico, vídeos y bio online
+                    </p>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                  Público
+                </span>
+              </div>
+              <p className="text-xs text-neutral-300 mt-3 leading-relaxed">
+                Tu carta de presentación oficial para festivales, promotores y medios. Personalizable y accesible desde cualquier dispositivo.
+              </p>
+            </div>
+
+            <div className="pt-2 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onNavigate && onNavigate("epk")}
+                className="flex-1 px-3.5 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>Editar Dossier EPK</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -637,7 +813,7 @@ export default function Dashboard({
         {/* List of upcoming events */}
         {upcomingEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {upcomingEvents.slice(0, 3).map((item) => (
+            {upcomingEvents.slice(0, 6).map((item) => (
               <div 
                 key={item.id}
                 onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: item.id, selectedDate: item.dateStr })}
@@ -663,6 +839,12 @@ export default function Dashboard({
                       }`}>
                         {item.type}
                       </span>
+                      {(agendaFilterMode === 'all' || hasMultipleBands) && item.bandName && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 border border-stone-700/60 truncate max-w-[120px] flex items-center gap-1">
+                          <Music className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+                          <span className="truncate">{item.bandName}</span>
+                        </span>
+                      )}
                       <span className="text-[10px] font-mono text-neutral-400 truncate">
                         • {item.badge}
                       </span>

@@ -2561,7 +2561,7 @@ export default function ReelsCenter({
  <div className={`flex md:flex-col justify-end items-end gap-2 md: md: pt-2.5 md:pt-0 md:pl-4 shrink-0 ${
  isStitchLight ? '-slate-200' : '-neutral-900'
  }`}>
- <span className="text-[8px] font-mono text-neutral-500">Responsable: {post.responsable || 'Diego'}</span>
+ <span className="text-[8px] font-mono text-neutral-500">Responsable: {post.responsable || 'Community Manager'}</span>
  <button
  id={`delete-post-${post.id}`}
  onClick={async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { rutaAlmacenamientoClip } from '../storage';
+import { rutaAlmacenamientoClip, rutaAlmacenamientoStem } from '../storage';
 
 describe('rutaAlmacenamientoClip', () => {
   it('mete el clip en una carpeta propia de la banda', () => {
@@ -22,5 +22,25 @@ describe('rutaAlmacenamientoClip', () => {
     const a = rutaAlmacenamientoClip('band-a', 'clip.mp4');
     const b = rutaAlmacenamientoClip('band-b', 'clip.mp4');
     expect(a).not.toBe(b);
+  });
+});
+
+describe('rutaAlmacenamientoStem', () => {
+  it('organiza los stems en la jerarquía bandas/{banda}/stems/{hash}/{stem}', () => {
+    expect(rutaAlmacenamientoStem('band-acdc', 'stem-voz.wav', 'songhash123')).toBe(
+      'bandas/band-acdc/stems/songhash123/stem-voz.wav'
+    );
+  });
+
+  it('sanea caracteres peligrosos e inyecciones de ruta en banda, hash y stem', () => {
+    expect(rutaAlmacenamientoStem('../band extraña', 'voz?.wav', 'hash/../evil')).toBe(
+      'bandas/___band_extra_a/stems/hash____evil/voz_.wav'
+    );
+  });
+
+  it('proporciona valores por defecto seguros cuando los argumentos vienen vacíos', () => {
+    expect(rutaAlmacenamientoStem('', '', '')).toBe(
+      'bandas/sin-banda/stems/general/stem'
+    );
   });
 });

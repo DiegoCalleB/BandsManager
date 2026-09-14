@@ -267,6 +267,9 @@ CREATE TABLE IF NOT EXISTS epk_configs (
     -- Versiones en otros idiomas del contenido que escribe la banda (biografía, lema, bios de
     -- los miembros...). Clave = código de idioma; ver EPKTranslations en src/types.ts.
     traducciones JSONB DEFAULT '{}'::jsonb,
+    plantilla TEXT DEFAULT 'stage',
+    orden_secciones JSONB DEFAULT '[]'::jsonb,
+    secciones_ocultas JSONB DEFAULT '[]'::jsonb,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -855,4 +858,77 @@ CREATE TABLE IF NOT EXISTS setlist_shortcuts (
 CREATE INDEX IF NOT EXISTS idx_setlist_shortcuts_band ON setlist_shortcuts(band_id);
 ALTER TABLE setlist_shortcuts ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON setlist_shortcuts FOR ALL USING (true);
+
+-- 34. song_stems_cache (Caché persistente L2 y mutex distribuido de pistas separadas por IA)
+CREATE TABLE IF NOT EXISTS song_stems_cache (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  song_hash TEXT NOT NULL,
+  engine TEXT NOT NULL,
+  engine_used TEXT,
+  is_neural BOOLEAN DEFAULT false,
+  degraded BOOLEAN DEFAULT false,
+  status TEXT DEFAULT 'completed', -- 'pending' | 'completed' | 'failed'
+  locked_at TIMESTAMPTZ,
+  locked_by TEXT,
+  timing_breakdown JSONB DEFAULT '{}'::jsonb,
+  stems_map JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT unique_band_song_engine UNIQUE (band_id, song_hash, engine)
+);
+CREATE INDEX IF NOT EXISTS idx_song_stems_cache_lookup ON song_stems_cache(band_id, song_hash, engine);
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS engine_used text NOT NULL DEFAULT '';
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'completed';
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS locked_at timestamptz;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS locked_by text;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS is_neural boolean NOT NULL DEFAULT false;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS degraded boolean NOT NULL DEFAULT false;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS degraded_reason text;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS stems_map jsonb NOT NULL DEFAULT '{}'::jsonb;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS timing_breakdown jsonb DEFAULT '{}'::jsonb;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS audio_url text;
+ALTER TABLE song_stems_cache ADD COLUMN IF NOT EXISTS song_title text;
+ALTER TABLE song_stems_cache ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON song_stems_cache FOR ALL USING (true);
+
+-- 35. stem_storage_retry_queue (Cola persistente de subida de stems a Supabase Storage con backoff)
+CREATE TABLE IF NOT EXISTS stem_storage_retry_queue (
+  id TEXT PRIMARY KEY,
+  file_path TEXT NOT NULL,
+  storage_sub_path TEXT NOT NULL,
+  mime_type TEXT DEFAULT 'audio/mpeg',
+  band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  attempts INTEGER DEFAULT 0,
+  max_attempts INTEGER DEFAULT 5,
+  next_retry_at BIGINT NOT NULL,
+  last_error TEXT,
+  status TEXT DEFAULT 'pending', -- 'pending' | 'completed' | 'exhausted'
+  created_at BIGINT NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_stem_storage_retry_status ON stem_storage_retry_queue(status, next_retry_at);
+ALTER TABLE stem_storage_retry_queue ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON stem_storage_retry_queue FOR ALL USING (true);
+
+-- 36. stem_prediction_jobs (Registro y conciliación asíncrona de predicciones de GPUs en la nube)
+CREATE TABLE IF NOT EXISTS stem_prediction_jobs (
+  id TEXT PRIMARY KEY,
+  band_id TEXT REFERENCES registered_bands(band_id) ON DELETE CASCADE,
+  song_hash TEXT,
+  engine TEXT,
+  provider TEXT DEFAULT 'replicate',
+  status TEXT NOT NULL DEFAULT 'processing', -- 'processing' | 'succeeded' | 'failed' | 'canceled'
+  audio_url TEXT,
+  song_title TEXT,
+  webhook_received_at TIMESTAMPTZ,
+  webhook_signature_verified BOOLEAN DEFAULT false,
+  result_stems_map JSONB,
+  error_message TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_stem_prediction_jobs_status ON stem_prediction_jobs(status, created_at DESC);
+ALTER TABLE stem_prediction_jobs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON stem_prediction_jobs FOR ALL USING (true);
 

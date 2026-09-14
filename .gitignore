@@ -16,3 +16,7 @@ bun.lock
 data.json
 public/clips/
 supabase/.temp/
+
+# Worktrees temporales de agentes de Claude Code (isolation: "worktree") - copias de
+# trabajo efímeras, nunca contenido real del proyecto.
+.claude/

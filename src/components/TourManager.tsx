@@ -85,10 +85,10 @@ export default function TourManager({
       }));
     }
     return [
-      { id: 'usr-1', name: 'Diego (Voz / Guitarra)', role: 'Músico', instrument: 'Voz / Guitarra' },
-      { id: 'usr-2', name: 'José (Batería)', role: 'Músico', instrument: 'Batería' },
-      { id: 'usr-3', name: 'Carlos (Bajo)', role: 'Músico', instrument: 'Bajo' },
-      { id: 'usr-4', name: 'Laura (Teclados)', role: 'Músico', instrument: 'Teclados' },
+      { id: 'usr-1', name: 'Voz Principal / Guitarra', role: 'Músico', instrument: 'Voz / Guitarra' },
+      { id: 'usr-2', name: 'Batería / Percusión', role: 'Músico', instrument: 'Batería' },
+      { id: 'usr-3', name: 'Bajo', role: 'Músico', instrument: 'Bajo' },
+      { id: 'usr-4', name: 'Teclados / Sintes', role: 'Músico', instrument: 'Teclados' },
       { id: 'usr-5', name: 'Técnico de Sonido', role: 'Staff', instrument: 'Sonido / P.A.' }
     ];
   }, [bandUsers]);

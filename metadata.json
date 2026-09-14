@@ -1,0 +1,6 @@
+{
+  "name": "BandManager.io",
+  "description": "Plataforma integral para músicos y bandas independientes: automatización de booking, logística de gira, repertorio, EPK, captación de fans y finanzas con IA agéntica.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
