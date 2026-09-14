@@ -2321,9 +2321,114 @@ async function callLyriaWithRetries(model: string, prompt: string, maxAttempts =
   throw new Error(`Lyria ${model} no devolvió audio tras ${maxAttempts} intentos (${lastDiagnostics}).`);
 }
 
+/**
+ * Genera una pista de acompañamiento con MusicGen (Meta, vía Replicate) CONDICIONADA al audio
+ * real de la canción — a diferencia de Lyria (que solo recibe texto), este modelo escucha la
+ * melodía/acordes/ritmo del audio de referencia y genera algo pensado para encajar con ESA
+ * canción concreta, no una composición genérica adivinada desde una descripción. Esto es lo que
+ * hace posible el "encaja a la perfección" tipo Moisés que Lyria nunca pudo dar.
+ */
+async function generateMusicGenTrack(
+  sourceAudioUrl: string,
+  instrument: string,
+  genreLabel: string,
+  bpm: number,
+  key: string,
+  bandId: string,
+  songHash: string,
+  requestHost: string | undefined,
+  overrideToken?: string
+): Promise<{ audioUrl?: string; error?: string }> {
+  const rawToken = overrideToken || process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || "";
+  const token = rawToken.trim().replace(/^["']|["']$/g, '').replace(/^(Token|Bearer)\s+/i, '');
+  if (!token) {
+    return { error: 'No se encontró REPLICATE_API_TOKEN en el entorno del servidor.' };
+  }
+
+  const effectiveHash = songHash || crypto.createHash('md5').update(sourceAudioUrl).digest('hex').substring(0, 10);
+  let resolvedAudioUrl: string;
+  try {
+    resolvedAudioUrl = await ensurePublicAudioUrl(sourceAudioUrl, bandId, effectiveHash, requestHost);
+  } catch (resolveErr: any) {
+    return { error: `No se pudo preparar el audio de referencia: ${resolveErr?.message || resolveErr}` };
+  }
+
+  const prompt = `${instrument}, ${genreLabel}, tight studio arrangement that complements the reference track, ${bpm || 120} BPM, key of ${key || 'Am'}`;
+  const reqHeaders = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+  let response = await fetchReplicateWithRetry('https://api.replicate.com/v1/models/meta/musicgen/predictions', {
+    method: 'POST',
+    headers: reqHeaders,
+    body: JSON.stringify({
+      input: {
+        model_version: 'melody',
+        prompt,
+        input_audio: resolvedAudioUrl,
+        continuation: false,
+        duration: 30,
+        output_format: 'mp3',
+        normalization_strategy: 'peak'
+      }
+    })
+  });
+
+  if (!response.ok) {
+    const errBody = await response.text();
+    console.warn(`[MusicGen] Petición inicial falló (${response.status}):`, errBody);
+    return { error: `MusicGen respondió ${response.status}: ${errBody.substring(0, 300)}` };
+  }
+
+  let prediction = await response.json();
+  const predictionId = prediction.id;
+  const startTime = Date.now();
+
+  while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
+    if (Date.now() - startTime > 240000) {
+      return { error: `MusicGen superó los 4 minutos de espera (Estado: ${prediction.status}).` };
+    }
+    await new Promise(r => setTimeout(r, 2000));
+    const pollRes = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (pollRes.ok) {
+      prediction = await pollRes.json();
+    }
+  }
+
+  if (prediction.status !== 'succeeded') {
+    const predError = prediction.error ? String(prediction.error) : 'Sin detalle';
+    console.warn(`[MusicGen] Predicción no completada (${prediction.status}):`, predError);
+    return { error: `MusicGen no completó la generación (${prediction.status}): ${predError}` };
+  }
+
+  const rawOutputUrl = Array.isArray(prediction.output) ? prediction.output[0] : prediction.output;
+  if (!rawOutputUrl || typeof rawOutputUrl !== 'string') {
+    return { error: 'MusicGen no devolvió una URL de audio válida.' };
+  }
+
+  // Persistir de forma permanente en Supabase Storage — la URL de Replicate es efímera y expira.
+  try {
+    const fileRes = await fetch(rawOutputUrl, { signal: AbortSignal.timeout(45000) });
+    if (fileRes.ok) {
+      const buffer = Buffer.from(await fileRes.arrayBuffer());
+      const cleanInst = instrument.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const filename = `musicgen-${cleanInst}-${Date.now()}.mp3`;
+      const storageSubPath = rutaAlmacenamientoStem(bandId, filename, effectiveHash);
+      const persistedUrl = await uploadBufferToSupabase(buffer, storageSubPath, 'audio/mpeg');
+      if (persistedUrl) {
+        return { audioUrl: persistedUrl };
+      }
+    }
+  } catch (persistErr) {
+    console.warn('[MusicGen] No se pudo persistir el resultado en Supabase, se usa la URL efímera de Replicate:', persistErr);
+  }
+
+  return { audioUrl: rawOutputUrl };
+}
+
 router.post("/ai-generate-instrument-track", requireAuth, iaRateLimiter, async (req, res) => {
   try {
-    const { instrument, songTitle, sectionName, bpm, key, style, genero, lyrics, contextPrompt, targetDurationSec } = req.body;
+    const { instrument, songTitle, sectionName, bpm, key, style, genero, lyrics, contextPrompt, targetDurationSec, sourceAudioUrl, songHash } = req.body;
 
     const requestedInst = instrument || "Guitarra Solista";
     // Diego reportó que un tema de rock salía sonando a salsa/merengue — Lyria puede desviarse de
@@ -2332,6 +2437,45 @@ router.post("/ai-generate-instrument-track", requireAuth, iaRateLimiter, async (
     // donde los modelos generativos prestan más atención (primacía/recencia), y lo repetimos varias
     // veces con lenguaje explícito de restricción en vez de dejarlo como un dato más entre otros.
     const genreLabel = genero || style || "el estilo de la banda";
+
+    let bandId = "sin-banda";
+    try {
+      bandId = getTargetBandId(req);
+    } catch {
+      bandId = (req as any).user?.band_id || "sin-banda";
+    }
+
+    // Intento principal: MusicGen (Meta, vía Replicate) condicionado al audio REAL de la idea —
+    // escucha melodía/acordes/ritmo en vez de adivinar desde texto, así que encaja de verdad con
+    // ESTA canción concreta (lo que Lyria nunca pudo hacer, solo recibe una descripción). Solo si
+    // no hay audio de referencia disponible, o MusicGen falla, se cae a Lyria como red de seguridad.
+    if (sourceAudioUrl) {
+      const musicGenResult = await generateMusicGenTrack(
+        sourceAudioUrl,
+        requestedInst,
+        genreLabel,
+        bpm,
+        key,
+        bandId,
+        songHash,
+        req.get('host'),
+        req.body.replicateToken
+      );
+      if (musicGenResult.audioUrl) {
+        return res.json({
+          success: true,
+          instrument: requestedInst,
+          trackName: `Pista IA: ${requestedInst} (${key || 'Am'}, ${bpm || 120} BPM)`,
+          audioUrl: musicGenResult.audioUrl,
+          modelUsed: 'musicgen-melody',
+          arrangementNotes: `Generado escuchando el audio real de la canción con MusicGen (Meta) — condicionado a la melodía, acordes y ritmo originales, no adivinado desde una descripción de texto. [MusicGen · condicionado al audio]`,
+          bpm: bpm || 120,
+          key: key || "Am"
+        });
+      }
+      console.warn('[AI Track Gen] MusicGen falló, cayendo a Lyria (solo texto):', musicGenResult.error);
+    }
+
     const basePrompt = `STRICT GENRE CONSTRAINT: this track MUST sound like ${genreLabel}. Do NOT generate any other genre, rhythm feel, or instrumentation style.
 
 Compose and generate a high quality studio arrangement track for the instrument: "${requestedInst}", strictly in the ${genreLabel} genre.

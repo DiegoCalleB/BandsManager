@@ -824,6 +824,31 @@ export default function SongStudioModal({
     setAiTrackGenPreview(null);
     try {
       setIsGeneratingAiTrack(true);
+
+      // Audio real de la idea para que el motor (MusicGen) pueda ESCUCHAR melodía/acordes/ritmo
+      // en vez de adivinar desde una descripción de texto — mismo saneado que ya hace la
+      // separación de stems para blobs/IndexedDB, que Replicate no puede ir a buscar por sí solo.
+      let sourceAudioUrl: string | undefined = targetIdea.audioUrl || undefined;
+      try {
+        if (sourceAudioUrl) {
+          const resolved = await resolveAudioUrl(sourceAudioUrl);
+          if (resolved) sourceAudioUrl = resolved;
+          if (sourceAudioUrl.startsWith('indexeddb:') || sourceAudioUrl.startsWith('blob:') || sourceAudioUrl.startsWith('data:')) {
+            const blob = await getAudioBlobFromUrl(targetIdea.audioUrl);
+            const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
+            const file = new File([blob], `source-audio-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
+            const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
+            const uploadedUrl = await uploadFileToServer(file, { category: 'stems', folder: 'inputs', bandId: bandIdToUse });
+            if (uploadedUrl && (uploadedUrl.startsWith('http://') || uploadedUrl.startsWith('https://') || uploadedUrl.startsWith('/'))) {
+              sourceAudioUrl = uploadedUrl;
+            }
+          }
+        }
+      } catch (prepErr) {
+        console.warn('[AI Track Gen] No se pudo preparar el audio de referencia, se generará solo por texto:', prepErr);
+        sourceAudioUrl = undefined;
+      }
+
       const data = await apiFetch('/api/ai-generate-instrument-track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -836,16 +861,18 @@ export default function SongStudioModal({
           genero: song.genero,
           style: aiTrackGenMode === 'presets' ? aiTrackGenStyle : undefined,
           contextPrompt: aiTrackGenMode === 'custom' ? aiTrackGenPrompt : undefined,
-          targetDurationSec: song.duracionSegundos || undefined
+          targetDurationSec: song.duracionSegundos || undefined,
+          sourceAudioUrl
         })
       });
 
-      if (!data.audioBase64) {
-        throw new Error('La IA no devolvió audio esta vez (puede pasar con Lyria). Prueba a regenerar o cambia el estilo/instrucción.');
+      const generatedAudioUrl = data.audioUrl || (data.audioBase64 ? `data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}` : null);
+      if (!generatedAudioUrl) {
+        throw new Error('La IA no devolvió audio esta vez (puede pasar con Lyria/MusicGen). Prueba a regenerar o cambia el estilo/instrucción.');
       }
 
       setAiTrackGenPreview({
-        audioUrl: `data:${data.mimeType || 'audio/wav'};base64,${data.audioBase64}`,
+        audioUrl: generatedAudioUrl,
         trackName: data.trackName || `Pista IA: ${aiTrackGenInstrument}`,
         arrangementNotes: data.arrangementNotes || 'Generado en armonía con la tonalidad y BPM.'
       });
@@ -5386,7 +5413,7 @@ export default function SongStudioModal({
 
             <div className="space-y-4 text-xs font-sans">
               <p className="text-neutral-300 leading-relaxed">
-                Genera una pista de acompañamiento con IA para <strong>"{showAiTrackGenModal.titulo}"</strong> en la tonalidad (<strong>{song.tonalidad || 'Am'}</strong>) y tempo (<strong>{song.bpm || 120} BPM</strong>) de la canción — perfecta para practicar cuando falta un instrumento en la demo, no para sustituir a nadie de la banda.
+                Genera una pista de acompañamiento con IA para <strong>"{showAiTrackGenModal.titulo}"</strong> — <strong className="text-purple-300">escuchando el audio real de la idea</strong> (melodía, acordes y ritmo), no solo adivinando desde una descripción, para que encaje de verdad. Perfecta para practicar cuando falta un instrumento en la demo, no para sustituir a nadie de la banda.
               </p>
 
               <div>
