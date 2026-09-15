@@ -95,7 +95,7 @@ export function EnergyChart({
   onReorder,
   onEnergyChange,
   showIdealCurve = true,
-  showBpmLine = true
+  showBpmLine = false
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;

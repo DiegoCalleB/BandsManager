@@ -633,6 +633,10 @@ export default function RepertorioSetlists({
  // Curva "ideal" de referencia superpuesta al Mapa de Energía — visible por defecto, con su
  // propio toggle porque puede distraer una vez que ya conoces bien tu propio repertorio.
  const [showIdealCurve, setShowIdealCurve] = useState<boolean>(true);
+ // Apagada por defecto: superpuesta a la curva de energía (ya de por sí con varios colores +
+ // curva ideal + avisos de choque), la línea de BPM saturaba demasiado el gráfico en pantallas
+ // estrechas de móvil — se deja como opt-in para quien quiera mirarla en un momento concreto.
+ const [showBpmLine, setShowBpmLine] = useState<boolean>(false);
  // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
  // "⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
  // justo la queja: "estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
@@ -2820,6 +2824,17 @@ export default function RepertorioSetlists({
                             <span>〰️ Curva ideal</span>
                             <span>{showIdealCurve ? 'ON' : 'OFF'}</span>
                           </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowBpmLine((v) => !v)}
+                            className={`w-full px-2 py-1 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+                              showBpmLine ? 'bg-neutral-700 text-neutral-200' : 'bg-neutral-800 text-neutral-500'
+                            }`}
+                            title="Línea de BPM en un eje secundario — apagada por defecto para no saturar el gráfico en pantallas estrechas"
+                          >
+                            <span>🥁 Línea de BPM</span>
+                            <span>{showBpmLine ? 'ON' : 'OFF'}</span>
+                          </button>
                           <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t border-neutral-800">
                             <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
                             <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
@@ -2907,6 +2922,7 @@ export default function RepertorioSetlists({
                   onEnergyChange={handleEnergyChartDrag}
                   height={256}
                   showIdealCurve={showIdealCurve}
+                  showBpmLine={showBpmLine}
                 />
 
                 {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
