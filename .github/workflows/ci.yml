@@ -93,3 +93,23 @@ jobs:
 
       - name: Tests
         run: npm test
+
+      # Smoke E2E con Playwright (e2e/) - corre contra el servidor de dev sin credenciales de
+      # Supabase/Stripe/Gemini (login funciona contra los usuarios semilla de src/db_seed.ts,
+      # ver AGENTS.md §5.1.2). continue-on-error hasta que esté verificado en un par de runs
+      # reales de GitHub Actions (solo se probó dentro del entorno de Claude Code al escribirlo)
+      # - quitar continue-on-error en cuanto esté confirmado en verde aquí.
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E smoke tests
+        continue-on-error: true
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
