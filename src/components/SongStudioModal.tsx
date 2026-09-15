@@ -1060,6 +1060,7 @@ export default function SongStudioModal({
 
     const isAudible = (hasSoloInSession ? !!tr.solo : true) && !tr.muted;
     const targetGain = isAudible ? Math.max(0, tr.volumen ?? 1) : 0;
+    lastPerTrackGainRef.current[trackId] = targetGain;
 
     // Apply direct HTML5 Audio element volume baseline first to prevent silence on cross-origin stems
     try {
@@ -1335,6 +1336,11 @@ export default function SongStudioModal({
 
   // Audio elements refs map for multitrack: trackAudioRefs.current[trackId]
   const trackAudioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
+  // Última ganancia POR PISTA aplicada (antes de multiplicar por el master) — updateTrackAudioDSP
+  // la actualiza cada vez que corre. Hace falta guardarla aparte porque el efecto de más abajo
+  // que reacciona a cambios del master necesita recalcular el volumen de cada <audio> sin volver
+  // a evaluar mute/solo/volumen de cada pista desde cero.
+  const lastPerTrackGainRef = useRef<Record<string, number>>({});
   const pendingPlayPromiseRefs = useRef<Record<string, Promise<void>>>({});
   const lastPlayAttemptMapRef = useRef<Record<string, number>>({});
   
@@ -1368,6 +1374,18 @@ export default function SongStudioModal({
     if (masterGainNodeRef.current) {
       masterGainNodeRef.current.gain.value = masterVolume;
     }
+    // El GainNode de arriba solo alcanza a las pistas mismo-origen/blob (ver comentario encima de
+    // getOrCreateMasterGain) — para la mayoría de pistas reales (Supabase Storage, origen cruzado)
+    // el master no tenía NINGÚN efecto audible hasta este bucle: había que tocarlo a mano en cada
+    // <audio> con la última ganancia por pista que updateTrackAudioDSP ya llevaba guardada.
+    for (const [trackId, el] of Object.entries(trackAudioRefs.current)) {
+      if (!el) continue;
+      const perTrackGain = lastPerTrackGainRef.current[trackId] ?? 1;
+      try {
+        el.volume = applyMasterToElementVolume(perTrackGain);
+      } catch {}
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [masterVolume]);
 
   const ideasList = song.audioIdeas || [];
