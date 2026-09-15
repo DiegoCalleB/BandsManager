@@ -63,8 +63,6 @@ interface PracticeModePanelProps {
   onApplyAsMainChords?: (cifradoTexto: string, guiaSustituto?: SongSubstituteGuide) => void;
 }
 
-const SPEED_OPTIONS = [0.5, 0.6, 0.75, 0.85, 1, 1.15];
-
 function buildStorageKey(song: Song, idea: SongAudioIdea, currentUser?: User): string {
   const who = currentUser?.username || currentUser?.id || currentUser?.name || 'anon';
   return `practiceMix:${song.band_id || 'sinbanda'}:${song.id}:${idea.id}:${who}`;
@@ -370,6 +368,19 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     Object.values(audioRefs.current).forEach(el => { if (el) el.playbackRate = val; });
   };
 
+  // El BPM real de la canción (detectado por Iris o puesto a mano) como referencia — el ratio de
+  // velocidad (playbackRate) es lo único que el audio entiende de verdad, pero un músico piensa
+  // en BPM, no en porcentajes, así que el control se expresa siempre en BPM y por debajo se
+  // traduce al ratio que necesita el elemento <audio>.
+  const baseBpm = song.bpm && song.bpm > 0 ? song.bpm : 120;
+  const targetBpm = Math.round(baseBpm * speed);
+  const nudgeBpm = (delta: number) => {
+    const minBpm = Math.round(baseBpm * 0.4);
+    const maxBpm = Math.round(baseBpm * 1.6);
+    const newBpm = Math.max(minBpm, Math.min(maxBpm, targetBpm + delta));
+    changeSpeed(newBpm / baseBpm);
+  };
+
   const handleSeekBarChange = (val: number) => {
     seekAll(val);
   };
@@ -537,18 +548,41 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1">
                 <Gauge className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-[10px] font-mono text-neutral-400">Velocidad</span>
-                <select
-                  value={speed}
-                  onChange={(e) => changeSpeed(Number(e.target.value))}
-                  className={`text-xs font-mono rounded-lg px-2 py-1 outline-none ${isStitchLight ? 'bg-white border border-slate-200' : 'bg-neutral-900 border border-neutral-700'}`}
-                >
-                  {SPEED_OPTIONS.map(s => (
-                    <option key={s} value={s}>{Math.round(s * 100)}%</option>
-                  ))}
-                </select>
+                <span className="text-[10px] font-mono text-neutral-400 mr-0.5">Tempo</span>
+                <button
+                  onClick={() => nudgeBpm(-5)}
+                  title="-5 BPM"
+                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                >-5</button>
+                <button
+                  onClick={() => nudgeBpm(-1)}
+                  title="-1 BPM"
+                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                >-1</button>
+                <span className={`text-xs font-mono font-bold w-16 text-center px-1 py-1 rounded-lg ${speed !== 1 ? 'text-amber-300' : 'text-neutral-200'}`}>
+                  {targetBpm} BPM
+                </span>
+                <button
+                  onClick={() => nudgeBpm(1)}
+                  title="+1 BPM"
+                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                >+1</button>
+                <button
+                  onClick={() => nudgeBpm(5)}
+                  title="+5 BPM"
+                  className="text-[10px] font-mono px-1.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200"
+                >+5</button>
+                {speed !== 1 && (
+                  <button
+                    onClick={() => changeSpeed(1)}
+                    title={`Volver al tempo original (${baseBpm} BPM)`}
+                    className="text-[10px] font-mono px-2 py-1 rounded-lg text-neutral-400 hover:text-white"
+                  >
+                    ↺ {baseBpm}
+                  </button>
+                )}
               </div>
 
               <div className="flex items-center gap-1.5">

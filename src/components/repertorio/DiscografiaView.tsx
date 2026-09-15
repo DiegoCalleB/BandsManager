@@ -291,13 +291,17 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     });
   };
 
-  // Repesca manual: analiza la dinámica interna (partes lentas/rápidas) de las canciones con
-  // audio que todavía no se han analizado. Lo normal es que esto ya haya pasado solo al
-  // guardar cada tema (ver dbUpsertSong en el servidor); esto es solo para ponerse al día con
-  // canciones subidas antes de que existiera esta feature.
+  // Repesca manual: analiza dinámica interna, BPM y tonalidad de las canciones con audio que
+  // todavía no se han analizado. Lo normal es que esto ya haya pasado solo al guardar cada tema
+  // (ver dbUpsertSong en el servidor); esto es solo para ponerse al día con canciones subidas
+  // antes de que existiera cada parte de esta feature — que no es toda a la vez: BPM y tonalidad
+  // se añadieron después de la dinámica, así que una canción puede tener dinámica calculada y
+  // aun así no tener nunca bpmDetectadoEn/tonalidadDetectadaEn. Sin comprobar los tres por
+  // separado, esas canciones nunca volverían a aparecer como pendientes aunque el botón se
+  // pulse mil veces.
   const songsPendingDynamicsAnalysis = safeSongs.filter((s) => {
     const audio = s.audioPrincipalUrl || (s as any).audioUrl;
-    return Boolean(audio) && !s.energiaVariacionCalculadaEn;
+    return Boolean(audio) && (!s.energiaVariacionCalculadaEn || !s.bpmDetectadoEn || !s.tonalidadDetectadaEn);
   });
 
   const handleAnalyzeAllDynamics = async () => {

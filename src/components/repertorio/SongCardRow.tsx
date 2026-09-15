@@ -251,13 +251,14 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 text-[10px] sm:text-[11px] font-mono flex-wrap">
             {/* Tone & BPM pill */}
             <span
+              title={(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? 'Detectado automáticamente por Iris desde el audio' : undefined}
               className={`px-1.5 py-0.5 rounded font-bold ${
                 isStitchLight
                   ? 'bg-slate-100 text-slate-700 border border-slate-200'
                   : 'bg-white/5 text-zinc-300 border border-white/10'
               }`}
             >
-              {song.tonalidad || '—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}
+              {song.tonalidad || '—'}{song.bpm ? ` • ${song.bpm} BPM` : ''}{(song.bpmDetectadoEn || song.tonalidadDetectadaEn) ? ' 🤖' : ''}
             </span>
 
             {/* Duration */}
