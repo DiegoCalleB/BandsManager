@@ -616,6 +616,8 @@ export interface AudioTrack {
   eqLow?: number; // 3-Band EQ Low Shelf Gain in dB (-12 to +12)
   eqMid?: number; // 3-Band EQ Mid Peaking Gain in dB (-12 to +12)
   eqHigh?: number; // 3-Band EQ High Shelf Gain in dB (-12 to +12)
+  colorHue?: number; // Tono (0-360) fijo asignado a la pista al crearla, para que su color de
+                      // identidad en el mezclador no cambie si el usuario reordena las pistas
 }
 
 export interface SongAudioIdea {
