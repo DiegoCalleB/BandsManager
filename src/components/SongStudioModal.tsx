@@ -174,30 +174,11 @@ const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', numb
 };
 const formatEurEstimate = (n: number) => n.toFixed(2).replace('.', ',');
 
-// Guiño a Iris (diosa del arcoíris): cada pista tiene un color de familia de instrumento fijo y
-// suave para identificarla de un vistazo (onda + número de pista), en vez del mismo tono para todas.
-// Los instrumentos conocidos siguen un orden de arcoíris; cualquier otro texto libre cae en un hash
-// determinista, así que el mismo nombre de instrumento siempre sale con el mismo color.
-const INSTRUMENT_RAINBOW_HUES: Record<string, number> = {
-  voz: 350, vocal: 350, vocals: 350, coro: 325, coros: 325,
-  batería: 20, bateria: 20, drums: 20, percusión: 20, percusion: 20,
-  bajo: 45, bass: 45,
-  guitarra: 130, guitarras: 130, guitar: 130,
-  teclado: 175, teclados: 175, piano: 175, keys: 175,
-  vientos: 205, metales: 205, brass: 205,
-  cuerdas: 240, strings: 240, violín: 240, violin: 240,
-  sintetizador: 275, synth: 275, arreglos: 275,
-};
-const hashHueFromText = (text: string): number => {
-  let h = 0;
-  for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) >>> 0;
-  return h % 360;
-};
-const getTrackRainbowHue = (instrumento?: string, fallbackSeed?: string): number => {
-  const key = (instrumento || '').toLowerCase().trim();
-  const matchedKey = Object.keys(INSTRUMENT_RAINBOW_HUES).find(k => key.includes(k));
-  return matchedKey ? INSTRUMENT_RAINBOW_HUES[matchedKey] : hashHueFromText(key || fallbackSeed || 'pista');
-};
+// Guiño a Iris (diosa del arcoíris): cada pista se colorea según su posición en la lista,
+// recorriendo el arcoíris en orden (rojo, naranja, amarillo, verde, cian, azul, violeta...) de
+// arriba abajo — así el propio mezclador se ve como un arcoíris real, no colores al azar por
+// instrumento (eso rompía el orden visual: la pista 1 podía salir amarilla y la 2 rosa).
+const RAINBOW_HUE_STEPS = [355, 25, 48, 130, 175, 220, 280];
 // Convierte HSL a hex para poder seguir usando el truco de "hex + 2 dígitos de alpha" que ya
 // usa WaveformTrack internamente (color + '40', color + '50'...) sin tener que tocar ese componente.
 const hslToHex = (h: number, s: number, l: number): string => {
@@ -208,8 +189,9 @@ const hslToHex = (h: number, s: number, l: number): string => {
   const toHex = (x: number) => Math.round(255 * x).toString(16).padStart(2, '0');
   return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 };
-const getTrackRainbowColor = (instrumento?: string, fallbackSeed?: string, alphaHex?: string): string => {
-  const hex = hslToHex(getTrackRainbowHue(instrumento, fallbackSeed), 60, 68);
+const getTrackRainbowColor = (index: number, alphaHex?: string): string => {
+  const hue = RAINBOW_HUE_STEPS[index % RAINBOW_HUE_STEPS.length];
+  const hex = hslToHex(hue, 60, 68);
   return alphaHex ? `${hex}${alphaHex}` : hex;
 };
 
@@ -4000,9 +3982,9 @@ export default function SongStudioModal({
                                           <span
                                             className="w-4 h-4 rounded font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border"
                                             style={{
-                                              backgroundColor: getTrackRainbowColor(tr.instrumento, tr.nombre, '30'),
-                                              borderColor: getTrackRainbowColor(tr.instrumento, tr.nombre, '80'),
-                                              color: getTrackRainbowColor(tr.instrumento, tr.nombre)
+                                              backgroundColor: getTrackRainbowColor(idx, '30'),
+                                              borderColor: getTrackRainbowColor(idx, '80'),
+                                              color: getTrackRainbowColor(idx)
                                             }}
                                           >
                                             {idx + 1}
@@ -4111,7 +4093,7 @@ export default function SongStudioModal({
                                         <WaveformTrack
                                           ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
                                           audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
-                                          color={getTrackRainbowColor(tr.instrumento, tr.nombre)}
+                                          color={getTrackRainbowColor(idx)}
                                           masterDuration={duration || 30}
                                           trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
                                           currentTime={currentTime}
