@@ -3753,7 +3753,7 @@ export default function SongStudioModal({
                           title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
                         >
                           <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
-                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Pistas (IA)'}</span>
+                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar con Iris'}</span>
                         </button>
                         <button
                           type="button"
