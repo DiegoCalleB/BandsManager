@@ -1,38 +1,36 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio, detectarBpmDesdeAudio, calcularEnergiaBpmVolumen } from "../utils/audioEnergy.js";
+import { detectarTonalidadDesdeAudio } from "../utils/audioKey.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 
 /**
- * Analiza y persiste la dinámica interna del audio de un tema. Usada tanto por el disparo
- * automático (en segundo plano tras guardar) como por la repesca manual de todo el repertorio.
+ * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
+ * (Iris ya nos obliga a decodificar el audio de todas formas, así que aprovechamos la misma
+ * pasada). Usada tanto por el disparo automático (en segundo plano tras guardar) como por la
+ * repesca manual de todo el repertorio.
+ *
  * Nunca lanza: si ffmpeg falla o el audio no es analizable, la canción se queda sin variación,
- * exactamente igual que si nunca se hubiera subido audio.
+ * exactamente igual que si nunca se hubiera subido audio. BPM y tonalidad son best-effort e
+ * independientes entre sí: uno puede fallar (audio demasiado ambiguo, tempo fuera de rango...)
+ * sin tumbar al otro ni a la dinámica.
  */
 export async function analizarYGuardarDinamicaCancion(
   songId: string,
   audioUrl: string,
   bandId: string
-): Promise<{ variacion: number; audioAnalizable: boolean }> {
+): Promise<{ variacion: number; audioAnalizable: boolean; bpmDetectado: number | null; tonalidadDetectada: string | null }> {
   const curva = await analizarEnergiaAudio(audioUrl, { timeoutMs: 90_000 });
   const audioAnalizable = curva.length > 1;
   const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
   const energiaDbPromedio = audioAnalizable ? calcularVolumenPromedioAudio(curva) : null;
   const energiaBpmDetectado = audioAnalizable ? detectarBpmDesdeAudio(curva) : null;
+  // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede
+  // fallar el análisis de dinámica y aun así ser perfectamente decodificable para tonalidad,
+  // así que no se condiciona a `audioAnalizable`.
+  const tonalidadDetectada = await detectarTonalidadDesdeAudio(audioUrl, { timeoutMs: 90_000 }).catch(() => null);
 
-  // Si el audio no se pudo analizar (descarga fallida, ffmpeg sin salida, etc.) NO se marca
-  // energia_variacion_calculada_en: dejar la canción "sin analizar" para que la próxima repesca
-  // la reintente, en vez de guardar un 0 falso que la deja marcada como analizada para siempre.
-  if (!audioAnalizable) {
-    return { variacion: 0, audioAnalizable: false };
-  }
-
-  // UPDATE (no dbUpsertSong): dbUpsertSong reescribe la fila entera con sus valores por
-  // defecto para cualquier campo que no venga en el objeto — perfecto para un guardado desde
-  // el formulario (que manda la canción completa), pero borraría título/audio/bpm/etc. si se
-  // usara aquí con solo estos dos campos. Un UPDATE solo toca las columnas indicadas.
-  //
   // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
   // canciones antiguas pueden tener el band_id guardado con o sin prefijo band-/reg-, y un
   // .eq() con un único formato exacto puede no matchear ninguna fila. Un UPDATE de Supabase que
@@ -48,14 +46,39 @@ export async function analizarYGuardarDinamicaCancion(
     `reg-${noPrefix}`
   ])).filter(Boolean);
 
+  const ahora = new Date().toISOString();
+  const cambios: Record<string, any> = {};
+  if (audioAnalizable) {
+    cambios.energia_db_promedio = energiaDbPromedio;
+    cambios.energia_bpm_detectado = energiaBpmDetectado;
+    cambios.energia_variacion = variacion;
+    cambios.energia_variacion_calculada_en = ahora;
+    // El BPM detectado ya alimentaba solo el recalibrado interno de energía; ahora también
+    // rellena el campo bpm que ve el usuario (metrónomo, acordes...), no solo un número interno.
+    if (energiaBpmDetectado !== null) {
+      cambios.bpm = energiaBpmDetectado;
+      cambios.bpm_detectado_en = ahora;
+    }
+  }
+  if (tonalidadDetectada) {
+    cambios.tonalidad = tonalidadDetectada.tonalidad;
+    cambios.tonalidad_detectada_en = ahora;
+  }
+
+  // Si no hay NADA que guardar (ni dinámica ni BPM ni tonalidad), no tocar la fila: así una
+  // repesca manual sobre una canción sin análisis posible puede reintentarse más tarde en vez
+  // de quedar marcada como "analizada" con un 0 falso.
+  if (Object.keys(cambios).length === 0) {
+    return { variacion: 0, audioAnalizable: false, bpmDetectado: null, tonalidadDetectada: null };
+  }
+
+  // UPDATE (no dbUpsertSong): dbUpsertSong reescribe la fila entera con sus valores por
+  // defecto para cualquier campo que no venga en el objeto — perfecto para un guardado desde
+  // el formulario (que manda la canción completa), pero borraría título/audio/bpm/etc. si se
+  // usara aquí con solo estos dos campos. Un UPDATE solo toca las columnas indicadas.
   const { data, error } = await sb
     .from("songs")
-    .update({
-      energia_db_promedio: energiaDbPromedio,
-      energia_bpm_detectado: energiaBpmDetectado,
-      energia_variacion: variacion,
-      energia_variacion_calculada_en: new Date().toISOString()
-    })
+    .update(cambios)
     .eq("id", songId)
     .in("band_id", candidateIds)
     .select("id");
@@ -65,10 +88,18 @@ export async function analizarYGuardarDinamicaCancion(
   }
 
   // Tras guardar, recalibrar todas las energías de la banda para que estén normalizadas
-  // relativas unas a otras usando BPM + volumen híbrido.
-  await recalibrarEnergiasDelRepertorio(bandId);
+  // relativas unas a otras usando BPM + volumen híbrido. Solo tiene sentido si hubo dinámica
+  // nueva que aportar (si solo se detectó tonalidad, energía no ha cambiado).
+  if (audioAnalizable) {
+    await recalibrarEnergiasDelRepertorio(bandId);
+  }
 
-  return { variacion, audioAnalizable: true };
+  return {
+    variacion,
+    audioAnalizable,
+    bpmDetectado: audioAnalizable ? energiaBpmDetectado : null,
+    tonalidadDetectada: tonalidadDetectada?.tonalidad ?? null
+  };
 }
 
 /**
@@ -186,6 +217,78 @@ function dispararAnalisisDinamicaEnSegundoPlano(songId: string, audioUrl: string
   });
 }
 
+// Orden de preferencia de pistas para redetectar tonalidad tras una separación de Iris: el bajo
+// casi siempre toca la fundamental real de cada acorde (la pista más limpia posible para esto),
+// y de ahí para abajo, cualquier otra pista armónica sin voz ni batería de por medio sigue
+// dando mejor señal que la mezcla completa.
+const ORDEN_PREFERENCIA_STEM_TONALIDAD = ["Bajo", "Arreglos", "Guitarras", "Teclados"];
+
+/**
+ * Busca, entre las pistas que acaban de llegar en un guardado (y que NO existían antes — o sea,
+ * recién separadas por Iris), la mejor candidata para redetectar tonalidad: la primera que
+ * aparezca según `ORDEN_PREFERENCIA_STEM_TONALIDAD`.
+ */
+function encontrarMejorStemNuevoParaTonalidad(existingIdeas: any[], incomingIdeas: any[]): string | null {
+  const idsExistentes = new Set(
+    (existingIdeas || []).flatMap((idea: any) => (idea.pistas || []).map((p: any) => p?.id))
+  );
+  const urlPorInstrumento = new Map<string, string>();
+  for (const idea of incomingIdeas || []) {
+    for (const pista of idea?.pistas || []) {
+      if (!pista || idsExistentes.has(pista.id)) continue;
+      if (pista.instrumento && pista.audioUrl && !urlPorInstrumento.has(pista.instrumento)) {
+        urlPorInstrumento.set(pista.instrumento, pista.audioUrl);
+      }
+    }
+  }
+  for (const instrumento of ORDEN_PREFERENCIA_STEM_TONALIDAD) {
+    const url = urlPorInstrumento.get(instrumento);
+    if (url) return url;
+  }
+  return null;
+}
+
+/**
+ * Redetecta SOLO la tonalidad (no BPM ni dinámica: esas ya se midieron sobre la mezcla completa
+ * y una pista aislada de un único instrumento no aporta nada nuevo ahí) usando una pista ya
+ * separada por Iris en vez de la mezcla completa — menos ruido de voz/batería de por medio,
+ * mejor croma. Se dispara sola tras cada separación nueva, sin que el usuario tenga que pedirlo.
+ */
+export async function detectarYGuardarTonalidadDesdeStem(
+  songId: string,
+  stemAudioUrl: string,
+  bandId: string
+): Promise<{ tonalidad: string } | null> {
+  const resultado = await detectarTonalidadDesdeAudio(stemAudioUrl, { timeoutMs: 90_000 });
+  if (!resultado) return null;
+
+  const sb = getSupabase();
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(new Set([
+    rawClean,
+    noPrefix,
+    `band-${noPrefix}`,
+    `reg-${noPrefix}`
+  ])).filter(Boolean);
+
+  const { error } = await sb
+    .from("songs")
+    .update({ tonalidad: resultado.tonalidad, tonalidad_detectada_en: new Date().toISOString() })
+    .eq("id", songId)
+    .in("band_id", candidateIds);
+  if (error) throw new Error(`Supabase Error (guardar tonalidad desde stem): ${error.message}`);
+
+  return { tonalidad: resultado.tonalidad };
+}
+
+/** Igual que `detectarYGuardarTonalidadDesdeStem`, pero sin bloquear al llamador ni propagar errores. */
+function dispararDeteccionTonalidadDesdeStemEnSegundoPlano(songId: string, stemAudioUrl: string, bandId: string): void {
+  detectarYGuardarTonalidadDesdeStem(songId, stemAudioUrl, bandId).catch((err) => {
+    console.error(`[Repertorio] No se pudo redetectar la tonalidad desde el stem de la canción ${songId}:`, err?.message || err);
+  });
+}
+
 export function mapSongRecord(s: any) {
   if (!s || typeof s !== "object") return s;
   const audioUrl = s.audio_principal_url || s.audioPrincipalUrl || s.audio_url || s.audioUrl || "";
@@ -204,6 +307,10 @@ export function mapSongRecord(s: any) {
     duracion_minutos: Number(s.duracion_minutos ?? s.duracionMinutos ?? 3),
     tonalidad: s.tonalidad || "Mim",
     bpm: Number(s.bpm || 120),
+    bpmDetectadoEn: s.bpm_detectado_en || s.bpmDetectadoEn || undefined,
+    bpm_detectado_en: s.bpm_detectado_en || s.bpmDetectadoEn || undefined,
+    tonalidadDetectadaEn: s.tonalidad_detectada_en || s.tonalidadDetectadaEn || undefined,
+    tonalidad_detectada_en: s.tonalidad_detectada_en || s.tonalidadDetectadaEn || undefined,
     afinacion: s.afinacion || "Estándar E",
     albumDisco,
     album_disco: albumDisco,
@@ -462,6 +569,14 @@ export async function dbUpsertSong(song: any, bandId: string) {
   const audioCambio = !existing || existing.audio_principal_url !== audioNuevo;
   if (audioNuevo && audioCambio) {
     dispararAnalisisDinamicaEnSegundoPlano(finalSongId, audioNuevo, targetBandId);
+  }
+
+  // Si este guardado trae una pista recién separada por Iris (bajo, arreglos...), aprovechar
+  // para redetectar la tonalidad con esa señal más limpia — independiente de si cambió el audio
+  // principal, porque separar pistas no lo toca.
+  const stemNuevoParaTonalidad = encontrarMejorStemNuevoParaTonalidad(existingIdeas, incomingIdeas);
+  if (stemNuevoParaTonalidad) {
+    dispararDeteccionTonalidadDesdeStemEnSegundoPlano(finalSongId, stemNuevoParaTonalidad, targetBandId);
   }
 
   return mapSongRecord(data || payload);

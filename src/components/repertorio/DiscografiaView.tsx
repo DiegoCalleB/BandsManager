@@ -316,7 +316,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
         const song = pending[siguiente++];
         const audio = song.audioPrincipalUrl || (song as any).audioUrl;
         try {
-          const result = await apiFetch<{ variacionDetectada: number; audioAnalizable: boolean }>(`/api/songs/${song.id}/analizar-dinamica`, {
+          const result = await apiFetch<{ variacionDetectada: number; audioAnalizable: boolean; bpmDetectado: number | null; tonalidadDetectada: string | null }>(`/api/songs/${song.id}/analizar-dinamica`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ audioUrl: audio }),
@@ -329,7 +329,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           }
           const ahora = new Date().toISOString();
           setSongs((prev) =>
-            prev.map((s) => (s.id === song.id ? { ...s, energiaVariacion: result.variacionDetectada, energiaVariacionCalculadaEn: ahora } : s))
+            prev.map((s) => (s.id === song.id ? {
+              ...s,
+              energiaVariacion: result.variacionDetectada,
+              energiaVariacionCalculadaEn: ahora,
+              ...(result.bpmDetectado !== null ? { bpm: result.bpmDetectado, bpmDetectadoEn: ahora } : {}),
+              ...(result.tonalidadDetectada ? { tonalidad: result.tonalidadDetectada, tonalidadDetectadaEn: ahora } : {})
+            } : s))
           );
         } catch (err) {
           console.warn(`No se pudo analizar la dinámica interna de "${song.titulo}":`, err);
@@ -534,7 +540,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   onClick={handleAnalyzeAllDynamics}
                   disabled={dynamicsAnalysis?.running}
                   className="px-2 py-1 rounded-xl bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/40 disabled:opacity-70 disabled:cursor-wait text-sky-300 hover:text-sky-200 font-bold text-[11px] font-mono flex items-center gap-1 cursor-pointer shadow-sm transition-all"
-                  title="Detecta automáticamente qué canciones tienen subidas y bajadas de energía internas"
+                  title="Analiza el audio con Iris: dinámica interna, BPM y tonalidad de cada canción"
                 >
                   {dynamicsAnalysis?.running ? (
                     <>
@@ -544,7 +550,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   ) : (
                     <>
                       <Headphones className="w-3 h-3 text-sky-400" />
-                      <span className="hidden xs:inline">Dinámica</span>
+                      <span className="hidden xs:inline">Audio IA</span>
                       <span>({songsPendingDynamicsAnalysis.length})</span>
                     </>
                   )}

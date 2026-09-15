@@ -347,17 +347,51 @@ export function resumirEnergiaParaPrompt(ventanas: VentanaEnergia[]): string {
  * cada 0.5s — la mitad de rápido que la propia muestra, así que la detección de BPM era
  * físicamente imposible por mucho que se afinara el algoritmo.
  *
- * Para una `fuente` remota, se descarga primero a un fichero temporal en vez de pasarle la URL
- * directamente a `-i`: el ffmpeg-static empaquetado aquí crashea (segfault, verificado a mano)
- * leyendo ciertas URLs https de storage en streaming — el mismo motivo por el que
- * `getAudioSnippetPath` (server/routes/concert_to_album.ts) ya hace fetch+fichero temporal en
- * vez de darle la URL cruda a ffmpeg. Sin esto, el análisis fallaba en TODAS las canciones con
- * audio remoto y el catch de abajo lo tragaba en silencio, guardando variación=0 como si el
- * análisis hubiera ido bien.
+ * Para una `fuente` remota, ver `resolverFuenteAudioLocal` (descarga a temporal primero: el
+ * ffmpeg-static empaquetado aquí crashea leyendo ciertas URLs https en streaming). Sin esto, el
+ * análisis fallaba en TODAS las canciones con audio remoto y el catch de abajo lo tragaba en
+ * silencio, guardando variación=0 como si el análisis hubiera ido bien.
  *
  * Nunca lanza: si no se puede medir, se devuelve una curva vacía y el análisis sigue con la
  * transcripción como antes.
  */
+/**
+ * Resuelve una fuente de audio (URL remota o ruta local) a un fichero local que ffmpeg pueda
+ * leer de forma fiable, descargándola a un temporal si hace falta.
+ *
+ * Se descarga primero a un fichero temporal en vez de pasarle la URL directamente a `-i`: el
+ * ffmpeg-static empaquetado aquí crashea (segfault, verificado a mano) leyendo ciertas URLs
+ * https de storage en streaming — el mismo motivo por el que `getAudioSnippetPath`
+ * (server/routes/concert_to_album.ts) ya hace fetch+fichero temporal en vez de darle la URL
+ * cruda a ffmpeg.
+ *
+ * Devuelve `null` si la descarga falla. Quien llame debe invocar `limpiar()` cuando termine
+ * (borra el temporal si se creó uno; no hace nada si la fuente ya era un fichero local).
+ */
+export async function resolverFuenteAudioLocal(
+  fuente: string
+): Promise<{ ruta: string; limpiar: () => void } | null> {
+  if (!fuente) return null;
+  if (!/^https?:\/\//i.test(fuente)) {
+    return { ruta: fuente, limpiar: () => {} };
+  }
+
+  try {
+    const resp = await fetch(fuente);
+    if (!resp.ok) {
+      console.error(`[Audio] No se pudo descargar el audio (HTTP ${resp.status}): ${fuente}`);
+      return null;
+    }
+    const buffer = Buffer.from(await resp.arrayBuffer());
+    const ficheroTemporal = path.join(os.tmpdir(), `audio_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.audio`);
+    fs.writeFileSync(ficheroTemporal, buffer);
+    return { ruta: ficheroTemporal, limpiar: () => fs.unlink(ficheroTemporal, () => {}) };
+  } catch (err: any) {
+    console.error("[Audio] No se pudo descargar el audio para analizarlo:", String(err?.message || err).substring(0, 200));
+    return null;
+  }
+}
+
 export async function analizarEnergiaAudio(
   fuente: string,
   opciones: { timeoutMs?: number; maxDuracion?: number } = {}
@@ -365,24 +399,9 @@ export async function analizarEnergiaAudio(
   const binario = ffmpegStatic as unknown as string;
   if (!binario || !fuente) return [];
 
-  let rutaLocal = fuente;
-  let ficheroTemporal: string | null = null;
-  if (/^https?:\/\//i.test(fuente)) {
-    try {
-      const resp = await fetch(fuente);
-      if (!resp.ok) {
-        console.error(`[Audio] No se pudo descargar el audio (HTTP ${resp.status}): ${fuente}`);
-        return [];
-      }
-      const buffer = Buffer.from(await resp.arrayBuffer());
-      ficheroTemporal = path.join(os.tmpdir(), `energia_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.audio`);
-      fs.writeFileSync(ficheroTemporal, buffer);
-      rutaLocal = ficheroTemporal;
-    } catch (err: any) {
-      console.error("[Audio] No se pudo descargar el audio para analizarlo:", String(err?.message || err).substring(0, 200));
-      return [];
-    }
-  }
+  const resuelto = await resolverFuenteAudioLocal(fuente);
+  if (!resuelto) return [];
+  const { ruta: rutaLocal, limpiar: limpiarTemporal } = resuelto;
 
   const args: string[] = ["-hide_banner", "-nostdin"];
   if (opciones.maxDuracion && opciones.maxDuracion > 0) {
@@ -406,9 +425,7 @@ export async function analizarEnergiaAudio(
     console.error("[Audio] No se pudo medir la energía del audio:", String(err?.message || err).substring(0, 200));
     return [];
   } finally {
-    if (ficheroTemporal) {
-      fs.unlink(ficheroTemporal, () => {});
-    }
+    limpiarTemporal();
   }
 }
 

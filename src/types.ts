@@ -667,6 +667,11 @@ export interface Song {
   duracionMinutos?: number;
   tonalidad: string; // e.g. "Am", "G", "C#m"
   bpm: number; // e.g. 128
+  // ISO timestamp de la última vez que Iris detectó bpm/tonalidad automáticamente desde el
+  // audio (análisis de la mezcla completa, o redetección con una pista ya separada — más
+  // fiable). undefined si el valor actual es el que puso el usuario a mano.
+  bpmDetectadoEn?: string;
+  tonalidadDetectadaEn?: string;
   afinacion?: string; // e.g. "E Standard", "Drop D"
   albumDisco?: string; // e.g. "Álbum Debut (2025)", "EP Cacharros", "Single", "Inédita / En Proceso"
   ordenAlbum?: number; // Position/track number within the album

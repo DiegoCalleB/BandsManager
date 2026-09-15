@@ -184,7 +184,14 @@ export function SongModal({
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-neutral-400 mb-1">Tonalidad / Clave</label>
+                <label className="block text-neutral-400 mb-1">
+                  Tonalidad / Clave
+                  {editingSong?.tonalidadDetectadaEn && (
+                    <span className="ml-1.5 text-[10px] font-normal text-indigo-400/80" title="Detectado automáticamente por Iris desde el audio — corrígelo si no coincide">
+                      · detectado con Iris
+                    </span>
+                  )}
+                </label>
                 <input
                   name="tonalidad"
                   type="text"
@@ -197,7 +204,14 @@ export function SongModal({
               </div>
 
               <div>
-                <label className="block text-neutral-400 mb-1">BPM / Tempo</label>
+                <label className="block text-neutral-400 mb-1">
+                  BPM / Tempo
+                  {editingSong?.bpmDetectadoEn && (
+                    <span className="ml-1.5 text-[10px] font-normal text-indigo-400/80" title="Detectado automáticamente por Iris desde el audio — corrígelo si no coincide">
+                      · detectado con Iris
+                    </span>
+                  )}
+                </label>
                 <input
                   name="bpm"
                   type="number"

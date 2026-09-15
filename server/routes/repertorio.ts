@@ -173,8 +173,8 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
     }
 
-    const { variacion, audioAnalizable } = await analizarYGuardarDinamicaCancion(id, audioUrl, userBandId);
-    res.json({ success: true, variacionDetectada: variacion, audioAnalizable });
+    const { variacion, audioAnalizable, bpmDetectado, tonalidadDetectada } = await analizarYGuardarDinamicaCancion(id, audioUrl, userBandId);
+    res.json({ success: true, variacionDetectada: variacion, audioAnalizable, bpmDetectado, tonalidadDetectada });
   } catch (err: any) {
     console.error("Error analizando dinámica interna de la canción:", err);
     res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
