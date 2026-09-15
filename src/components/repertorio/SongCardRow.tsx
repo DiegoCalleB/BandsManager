@@ -139,7 +139,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           : 'bg-[#161616] hover:bg-[#1c1c1c] border-white/5 text-zinc-300'
       } ${draggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
-      <div className="flex items-center gap-2 sm:gap-3 p-2 sm:px-3.5 sm:py-2.5">
+      <div className="flex items-center gap-2 sm:gap-3 p-2 sm:px-3.5 sm:py-2.5 overflow-x-auto">
         {/* Drag Handle (when draggable) */}
         {draggable && (
           <div 
@@ -201,9 +201,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
           {index}
         </span>
 
-        {/* Central Info: Title, Details & Badges */}
+        {/* Central Info: Title, Details & Badges — mismo arreglo que ya usa RepertorioSetlists:
+            con flex-1 min-w-0 a secas, en móvil con muchos badges/botones vecinos "shrink-0" el
+            título se comía todo el hueco negativo y acababa en 0px (título ilegible). En móvil
+            pasa a shrink-0 con un tope de ancho fijo (nunca baja de ahí) y la fila entera hace
+            scroll horizontal si algo no cabe; en escritorio sigue siendo flexible como antes. */}
         <div
-          className="flex-1 min-w-0 cursor-pointer"
+          className="shrink-0 max-w-[50vw] sm:max-w-none sm:flex-1 sm:min-w-0 cursor-pointer"
           onClick={() => {
             if (onSelect) onSelect();
           }}
