@@ -52,7 +52,7 @@ import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../
 import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { parseTonalidad, evaluarTransicionArmonica } from '../utils/harmonicAnalysis';
-import { optimizarOrdenPorTransiciones, costeTotalTransiciones, HuecoCancion } from '../utils/setlistCompatibility';
+import { optimizarOrdenPorTransiciones, costeTotalTransiciones, sugerirMejorPuntoParaChapa, SugerenciaChapa, HuecoCancion } from '../utils/setlistCompatibility';
 import { getSemitoneDifference } from '../utils/chordUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
@@ -688,6 +688,9 @@ export default function RepertorioSetlists({
  // Mensaje breve tras "Optimizar orden" (mejora %, o "ya estaba bien") — se autodesvanece solo,
  // sin necesidad de un sistema de toasts global para un mensaje puntual como este.
  const [optimizeSummary, setOptimizeSummary] = useState<string | null>(null);
+ // Sugerencia activa de "¿dónde meto una chapa?" — se queda fija (no se autodesvanece como el
+ // resumen de arriba) hasta que el usuario la inserta o pide otra, porque trae una acción propia.
+ const [chapaSuggestion, setChapaSuggestion] = useState<SugerenciaChapa | null>(null);
 
  // Datos del Mapa de Energía, memoizados por setlist/repertorio real — si se recalculan en
  // cada render (p.ej. cada vez que cambia highlightedSongIds al hacer hover), Recharts ve un
@@ -1856,6 +1859,28 @@ export default function RepertorioSetlists({
    applySetlistItemsChange(newItems, sourceKey);
  };
 
+ // Busca el mejor hueco del setlist ACTUAL para meter una chapa/interludio — la transición entre
+ // dos canciones ya consecutivas que más "chirría" (choque de tonalidad + salto de tempo/energía).
+ // No reordena nada: solo sugiere, y el usuario decide si la inserta.
+ const suggestChapaSpot = () => {
+   if (!activeSetlist) return;
+   const sugerencia = sugerirMejorPuntoParaChapa(activeSetlist.items, songs);
+   setChapaSuggestion(sugerencia);
+   if (!sugerencia) {
+     setOptimizeSummary('👍 Las transiciones ya van suaves — no hace falta forzar una chapa en ningún punto concreto.');
+     window.setTimeout(() => setOptimizeSummary(null), 7000);
+   }
+ };
+
+ // Inserta la chapa sugerida justo donde se calculó — reutiliza el mismo flujo que "+ Añadir
+ // bloque" del editor manual (handleAddItemToSetlist ya sabe rellenar título/duración por defecto
+ // para el subtipo 'chapa').
+ const insertSuggestedChapa = () => {
+   if (!chapaSuggestion) return;
+   handleAddItemToSetlist(undefined, 'chapa', undefined, undefined, undefined, undefined, chapaSuggestion.insertAfterItemId);
+   setChapaSuggestion(null);
+ };
+
  // Reordena solo las CANCIONES (nunca los bloques de chapa/presentación/bis, que el usuario
  // colocó a propósito en un punto concreto del show) para minimizar el coste total de transición
  // — choque de tonalidad + salto de tempo + salto de energía entre temas consecutivos. La
@@ -1863,6 +1888,7 @@ export default function RepertorioSetlists({
  // que ya eligió el usuario, no un dato más a optimizar.
  const optimizeSetlistTransitions = () => {
    if (!activeSetlist) return;
+   setChapaSuggestion(null); // el orden va a cambiar: cualquier sugerencia calculada sobre el orden anterior queda obsoleta
    const items = activeSetlist.items;
    const songPositions: number[] = [];
    const slots: HuecoCancion[] = [];
@@ -2760,6 +2786,16 @@ export default function RepertorioSetlists({
                   </button>
                 )}
                 {showEnergyMap && (
+                  <button
+                    type="button"
+                    onClick={suggestChapaSpot}
+                    className="px-2 py-0.5 rounded-lg bg-sky-900/40 hover:bg-sky-800/60 text-sky-300 hover:text-sky-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+                    title="Busca la transición entre canciones que más chirría (tonalidad, tempo, energía) — ahí es donde una chapa/interludio hablado se nota menos"
+                  >
+                    💬 ¿Dónde chapa?
+                  </button>
+                )}
+                {showEnergyMap && (
                   <div className="relative">
                     <button
                       type="button"
@@ -2829,6 +2865,35 @@ export default function RepertorioSetlists({
                     {optimizeSummary}
                   </p>
                 )}
+                {chapaSuggestion && (() => {
+                  const motivos: string[] = [];
+                  if (chapaSuggestion.coste.harmonyRelation === 'choque') motivos.push('choque de tonalidad');
+                  if (chapaSuggestion.coste.bpmDiff != null && chapaSuggestion.coste.bpmDiff >= 15) motivos.push(`salto de ${Math.round(chapaSuggestion.coste.bpmDiff)} BPM`);
+                  if (chapaSuggestion.coste.energyDiff != null && chapaSuggestion.coste.energyDiff >= 6) motivos.push('salto grande de energía');
+                  return (
+                    <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-sky-300 bg-sky-900/20 border border-sky-700/40 rounded-lg px-2 py-1">
+                      <span>
+                        💬 Mejor sitio para una chapa: entre <b>"{chapaSuggestion.cancionAntes}"</b> y <b>"{chapaSuggestion.cancionDespues}"</b>
+                        {motivos.length > 0 ? ` — ${motivos.join(', ')}.` : '.'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={insertSuggestedChapa}
+                        className="px-1.5 py-0.5 rounded-lg bg-sky-800/60 hover:bg-sky-700/80 text-sky-100 transition-all cursor-pointer font-medium shrink-0"
+                      >
+                        ➕ Insertar aquí
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setChapaSuggestion(null)}
+                        className="text-sky-400 hover:text-sky-200 transition-all cursor-pointer shrink-0"
+                        title="Descartar sugerencia"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  );
+                })()}
 
                 <EnergyChart
                   setlistKey={activeSetlist.id}

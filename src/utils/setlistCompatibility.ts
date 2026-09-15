@@ -77,6 +77,50 @@ export interface HuecoCancion {
   song: Song;
 }
 
+export interface SugerenciaChapa {
+  /** Id del item (canción) tras el cual se debería insertar la chapa/interludio. */
+  insertAfterItemId: string;
+  cancionAntes: string;
+  cancionDespues: string;
+  coste: CosteTransicion;
+}
+
+/** Por debajo de este coste, la transición ya es lo bastante suave como para no merecer forzar
+ * una chapa ahí solo por sugerir algo. */
+const UMBRAL_COSTE_SUGERIR_CHAPA = 0.4;
+
+/**
+ * Encuentra el mejor punto del setlist ACTUAL (sin reordenar) para meter una chapa/interludio
+ * hablado: la transición entre canciones YA consecutivas con más coste (choque de tonalidad +
+ * salto de tempo + salto de energía). Justo ahí es donde más se nota el "pegote" en directo —
+ * un corte hablado rompe el segue directo, así que el choque deja de sufrirse de golpe.
+ *
+ * Solo mira pares de canciones que ya están consecutivas de verdad (sin ningún bloque de por
+ * medio): insertar una segunda chapa junto a una que ya existe no soluciona nada nuevo.
+ * Devuelve null si la peor transición ya es razonablemente suave (no hay nada que merezca la pena).
+ */
+export function sugerirMejorPuntoParaChapa(items: SetlistItem[], songs: Song[]): SugerenciaChapa | null {
+  let mejor: SugerenciaChapa | null = null;
+
+  for (let i = 0; i < items.length - 1; i++) {
+    const actual = items[i];
+    const siguiente = items[i + 1];
+    if (actual.tipoItem !== 'cancion' || siguiente.tipoItem !== 'cancion') continue;
+
+    const songA = songs.find((s) => s.id === actual.songId);
+    const songB = songs.find((s) => s.id === siguiente.songId);
+    if (!songA || !songB) continue;
+
+    const coste = calcularCosteTransicion(songA, songB);
+    if (!mejor || coste.total > mejor.coste.total) {
+      mejor = { insertAfterItemId: actual.id, cancionAntes: songA.titulo, cancionDespues: songB.titulo, coste };
+    }
+  }
+
+  if (!mejor || mejor.coste.total < UMBRAL_COSTE_SUGERIR_CHAPA) return null;
+  return mejor;
+}
+
 /** Suma el coste de todas las transiciones consecutivas de un orden dado. */
 export function costeTotalTransiciones(orden: HuecoCancion[]): number {
   let total = 0;

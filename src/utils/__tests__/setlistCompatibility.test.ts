@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcularCosteTransicion, costeTotalTransiciones, optimizarOrdenPorTransiciones, HuecoCancion } from '../setlistCompatibility';
+import { calcularCosteTransicion, costeTotalTransiciones, optimizarOrdenPorTransiciones, sugerirMejorPuntoParaChapa, HuecoCancion } from '../setlistCompatibility';
 import { Song, SetlistItem } from '../../types';
 
 function song(id: string, overrides: Partial<Song> = {}): Song {
@@ -90,5 +90,46 @@ describe('optimizarOrdenPorTransiciones', () => {
     const songs = [song('a'), song('b')];
     const orden = optimizarOrdenPorTransiciones(songs.map(slot));
     expect(orden.map((h) => h.song.id)).toEqual(['a', 'b']);
+  });
+});
+
+describe('sugerirMejorPuntoParaChapa', () => {
+  it('sugiere insertar justo tras la canción de la peor transición', () => {
+    const s1 = song('s1', { tonalidad: 'C', bpm: 120, energia: 12 });
+    const s2 = song('s2', { tonalidad: 'C', bpm: 121, energia: 13 }); // transición suave con s1
+    const s3 = song('s3', { tonalidad: 'F#', bpm: 190, energia: 20 }); // choque real con s2
+    const items: SetlistItem[] = [
+      { id: 'i1', tipoItem: 'cancion', songId: 's1' },
+      { id: 'i2', tipoItem: 'cancion', songId: 's2' },
+      { id: 'i3', tipoItem: 'cancion', songId: 's3' }
+    ];
+    const sugerencia = sugerirMejorPuntoParaChapa(items, [s1, s2, s3]);
+    expect(sugerencia).not.toBeNull();
+    expect(sugerencia!.insertAfterItemId).toBe('i2');
+    expect(sugerencia!.cancionAntes).toBe('s2');
+    expect(sugerencia!.cancionDespues).toBe('s3');
+  });
+
+  it('no sugiere nada si todas las transiciones ya son suaves', () => {
+    const s1 = song('s1', { tonalidad: 'C', bpm: 120, energia: 12 });
+    const s2 = song('s2', { tonalidad: 'C', bpm: 122, energia: 13 });
+    const s3 = song('s3', { tonalidad: 'G', bpm: 124, energia: 14 });
+    const items: SetlistItem[] = [
+      { id: 'i1', tipoItem: 'cancion', songId: 's1' },
+      { id: 'i2', tipoItem: 'cancion', songId: 's2' },
+      { id: 'i3', tipoItem: 'cancion', songId: 's3' }
+    ];
+    expect(sugerirMejorPuntoParaChapa(items, [s1, s2, s3])).toBeNull();
+  });
+
+  it('nunca sugiere un par ya separado por un bloque existente', () => {
+    const s1 = song('s1', { tonalidad: 'C', bpm: 80, energia: 4 });
+    const s2 = song('s2', { tonalidad: 'F#', bpm: 200, energia: 20 }); // choque brutal, pero ya hay una chapa entre medias
+    const items: SetlistItem[] = [
+      { id: 'i1', tipoItem: 'cancion', songId: 's1' },
+      { id: 'i-chapa', tipoItem: 'bloque', bloqueSubtipo: 'chapa' },
+      { id: 'i2', tipoItem: 'cancion', songId: 's2' }
+    ];
+    expect(sugerirMejorPuntoParaChapa(items, [s1, s2])).toBeNull();
   });
 });
