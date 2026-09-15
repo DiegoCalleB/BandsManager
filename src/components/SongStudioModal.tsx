@@ -160,7 +160,7 @@ const LiveMicWaveformCanvas: React.FC<{
 const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
 const IrisPrismBanner: React.FC = () => {
   return (
-    <div className="w-full h-28 flex items-center justify-center overflow-hidden rounded-xl bg-black border border-white/10">
+    <div className="w-full h-28 md:h-56 flex items-center justify-center overflow-hidden rounded-xl bg-black border border-white/10">
       <video
         className="w-full h-full object-contain pointer-events-none"
         src="/videos/iris-prism-banner.mp4"
@@ -5710,7 +5710,7 @@ export default function SongStudioModal({
       {/* MODAL DE PROGRESO DE SEPARACIÓN DE STEMS IA */}
       {stemProgressModal && stemProgressModal.isOpen && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md md:max-w-2xl w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
 
             {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
                 -mx-6 cancela el padding del modal para que ocupe todo el ancho, de borde a borde. */}
