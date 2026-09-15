@@ -148,6 +148,9 @@
   ```
 * **Cobertura Actual:** ~560 tests, 56 files. Áreas mejor cubiertas: `server/utils` (auth, multi-tenancy, SSRF) y `server/db` (band-scoping). Áreas débiles: `server/routes/*.ts` (handlers inline).
 * **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
+* **TDD selectivo (no obligatorio salvo en dos áreas):** TDD estricto (test antes que código) NO es la norma en este proyecto — la velocidad de iteración depende de poder arreglar un bug o probar una idea en minutos, y aquí se cambia de diseño a media implementación con frecuencia, lo que dejaría obsoleto un test escrito primero junto con el código que describía. El estándar general sigue siendo el actual: tests escritos junto al fix o la feature, no antes.
+  * **Excepción obligatoria — aislamiento multi-banda (`band_id`/RLS) y todo lo que toca dinero (Stripe, ledger de IA):** aquí sí se escribe el test del caso límite **antes** de tocar el código. Un bug en estas dos áreas no es un fallo visual, es "una banda ve datos de otra" o "se cobra mal".
+  * En ambas, el test debe verificar un **invariante**, no la implementación de hoy (ej. "ninguna query devuelve filas de otro `band_id`", "el ledger nunca queda negativo sin un evento que lo explique"), siguiendo el patrón de escaneo estático de `bandIdTrustBoundary.test.ts` en vez de un mock atado a una función concreta — así el test sigue protegiendo aunque la implementación cambie por completo.
 
 ### 5.2 Frontend (React 19 + Vite + CSS)
 * **Diseño e Interfaz Premium:** Interfaces vibrantes con dark mode moderno, glassmorphism, micro-animaciones (`motion`), iconografía clara (`lucide-react`) y tipografía cuidada. Sin placeholders.
