@@ -148,10 +148,46 @@ const LiveMicWaveformCanvas: React.FC<{
   }, [isRecording, stream, audioCtx, color, height]);
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="w-full h-full block rounded border border-red-500/40 bg-black/50"
     />
+  );
+};
+
+// Guiño de marca a Iris mientras se procesa: un rayo de luz blanco entra en el prisma y sale
+// descompuesto en el arcoíris de 6 colores — la misma paleta que colorea las pistas del mezclador.
+const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
+const IrisPrismBanner: React.FC = () => {
+  const targets = [10, 20, 28, 36, 44, 54];
+  return (
+    <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-xl bg-black/40 border border-white/10">
+      <svg viewBox="0 0 160 64" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+        {/* Prisma */}
+        <polygon points="62,14 62,50 86,32" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
+        {/* Rayo de luz blanco entrando en el prisma */}
+        <motion.rect
+          x={0} y={30} width={62} height={4} rx={2} fill="white"
+          animate={{ opacity: [0.25, 0.9, 0.25] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+        />
+        <motion.circle
+          cy={32} r={3} fill="white"
+          animate={{ cx: [0, 60, 0], opacity: [0, 1, 0] }}
+          transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
+        />
+        {/* Espectro de 6 colores saliendo del prisma */}
+        {targets.map((y, i) => (
+          <motion.line
+            key={i}
+            x1={86} y1={32} x2={155} y2={y}
+            stroke={IRIS_PRISM_RAY_COLORS[i]} strokeWidth={3} strokeLinecap="round"
+            animate={{ opacity: [0.25, 1, 0.25] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut', delay: i * 0.12 }}
+          />
+        ))}
+      </svg>
+    </div>
   );
 };
 
@@ -5647,7 +5683,12 @@ export default function SongStudioModal({
       {stemProgressModal && stemProgressModal.isOpen && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
           <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
-            
+
+            {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris */}
+            {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+              <IrisPrismBanner />
+            )}
+
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
@@ -5693,10 +5734,10 @@ export default function SongStudioModal({
                 <div>
                   <h3 className="font-mono font-bold text-sm text-white flex items-center gap-2">
                     {stemProgressModal.stage === 'completed'
-                      ? '¡Separación de Stems Completada!'
+                      ? '¡Separación de Pistas Completada!'
                       : stemProgressModal.stage === 'error'
                       ? stemProgressModal.errorTitle || 'Error en la Separación'
-                      : 'Separando Pistas por IA'}
+                      : 'Iris está separando tus pistas'}
                   </h3>
                   <p className="text-[11px] text-neutral-400 font-sans">
                     {stemProgressModal.ideaTitle} • <span className="text-amber-300">{stemProgressModal.songTitle}</span>
