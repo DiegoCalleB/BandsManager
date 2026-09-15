@@ -410,15 +410,6 @@ export default function SongStudioModal({
     };
   } | null>(null);
 
-  // Si el proceso termina (bien o mal) mientras el usuario tenía la píldora minimizada, se
-  // reabre solo: completado/error son estados que necesitan que el usuario los vea (celebrar,
-  // o decidir qué hacer con un fallo), no algo para dejar pasar desapercibido en una esquina.
-  useEffect(() => {
-    if (stemProgressModal?.minimized && (stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error')) {
-      setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null);
-    }
-  }, [stemProgressModal?.stage, stemProgressModal?.minimized]);
-
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
     setIsSeparatingStemsAi(true);
@@ -6390,31 +6381,56 @@ export default function SongStudioModal({
       )}
 
       {/* Píldora flotante: Iris sigue separando en segundo plano mientras el usuario minimizado
-          sigue trabajando en el resto del Studio (reproducir ideas, ver acordes, etc.) */}
-      {stemProgressModal && stemProgressModal.isOpen && stemProgressModal.minimized && (
-        <button
-          type="button"
-          onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null)}
-          className="fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-md border border-amber-500/40 shadow-2xl p-3 text-left cursor-pointer hover:border-amber-400/70 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200"
-          title="Reabrir el progreso de Iris"
-        >
-          <div className="flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-amber-400 animate-pulse shrink-0" />
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-mono font-bold text-white truncate">Iris separando pistas…</p>
-              <p className="text-[10px] font-mono text-neutral-400 truncate">{stemProgressModal.ideaTitle}</p>
+          sigue trabajando en el resto del Studio (reproducir ideas, ver acordes, etc.).
+          Al terminar (bien o mal) NO se reabre el modal solo — interrumpiría lo que el usuario
+          esté haciendo en ese momento (escribiendo, con el móvil en el bolsillo...). En vez de
+          eso, la píldora cambia de color y parpadea para avisar, y él decide cuándo mirarla. */}
+      {stemProgressModal && stemProgressModal.isOpen && stemProgressModal.minimized && (() => {
+        const terminado = stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error';
+        const esError = stemProgressModal.stage === 'error';
+        return (
+          <button
+            type="button"
+            onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null)}
+            className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-md shadow-2xl p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
+              !terminado
+                ? 'border border-amber-500/40 hover:border-amber-400/70'
+                : esError
+                ? 'border-2 border-rose-500/70 hover:border-rose-400 animate-pulse'
+                : 'border-2 border-emerald-500/70 hover:border-emerald-400 animate-pulse'
+            }`}
+            title={terminado ? 'Iris ha terminado — toca para ver el resultado' : 'Reabrir el progreso de Iris'}
+          >
+            <div className="flex items-center gap-2">
+              {!terminado ? (
+                <Cpu className="w-4 h-4 text-amber-400 animate-pulse shrink-0" />
+              ) : esError ? (
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              )}
+              <div className="min-w-0 flex-1">
+                <p className={`text-[11px] font-mono font-bold truncate ${!terminado ? 'text-white' : esError ? 'text-rose-300' : 'text-emerald-300'}`}>
+                  {!terminado ? 'Iris separando pistas…' : esError ? '¡Iris ha tenido un error!' : '¡Pistas listas!'}
+                </p>
+                <p className="text-[10px] font-mono text-neutral-400 truncate">{stemProgressModal.ideaTitle}</p>
+              </div>
+              {!terminado && (
+                <span className="font-mono text-xs font-bold text-amber-400 shrink-0">{Math.round(stemProgressModal.progressPct)}%</span>
+              )}
+              <Maximize2 className="w-3 h-3 text-neutral-500 shrink-0" />
             </div>
-            <span className="font-mono text-xs font-bold text-amber-400 shrink-0">{Math.round(stemProgressModal.progressPct)}%</span>
-            <Maximize2 className="w-3 h-3 text-neutral-500 shrink-0" />
-          </div>
-          <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-white/10">
-            <div
-              className="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
-              style={{ width: `${Math.max(5, stemProgressModal.progressPct)}%` }}
-            />
-          </div>
-        </button>
-      )}
+            <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-white/10">
+              <div
+                className={`h-full rounded-full transition-all duration-300 ${
+                  !terminado ? 'bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400' : esError ? 'bg-rose-500' : 'bg-emerald-400'
+                }`}
+                style={{ width: `${terminado ? 100 : Math.max(5, stemProgressModal.progressPct)}%` }}
+              />
+            </div>
+          </button>
+        );
+      })()}
 
       {/* Tutorial Interactivo Paso a Paso */}
       <ModuleTutorialModal
