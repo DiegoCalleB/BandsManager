@@ -174,10 +174,11 @@ const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', numb
 };
 const formatEurEstimate = (n: number) => n.toFixed(2).replace('.', ',');
 
-// Guiño a Iris (diosa del arcoíris): cada pista se colorea según su posición en la lista,
-// recorriendo el arcoíris en orden (rojo, naranja, amarillo, verde, cian, azul, violeta...) de
-// arriba abajo — así el propio mezclador se ve como un arcoíris real, no colores al azar por
-// instrumento (eso rompía el orden visual: la pista 1 podía salir amarilla y la 2 rosa).
+// Guiño a Iris (diosa del arcoíris): cada pista se colorea recorriendo el arcoíris en orden
+// (rojo, naranja, amarillo, verde, cian, azul, violeta...). Por defecto sigue la posición en la
+// lista, pero en cuanto el usuario reordena pistas a mano, cada una "congela" su color en
+// tr.colorHue para que se lo lleve consigo al moverse — a partir de ahí el arcoíris ya no sale
+// perfectamente en orden, y eso es justo lo esperado: gana la posición que elige el usuario.
 const RAINBOW_HUE_STEPS = [355, 25, 48, 130, 175, 220, 280];
 // Convierte HSL a hex para poder seguir usando el truco de "hex + 2 dígitos de alpha" que ya
 // usa WaveformTrack internamente (color + '40', color + '50'...) sin tener que tocar ese componente.
@@ -189,8 +190,8 @@ const hslToHex = (h: number, s: number, l: number): string => {
   const toHex = (x: number) => Math.round(255 * x).toString(16).padStart(2, '0');
   return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 };
-const getTrackRainbowColor = (index: number, alphaHex?: string): string => {
-  const hue = RAINBOW_HUE_STEPS[index % RAINBOW_HUE_STEPS.length];
+const getTrackRainbowColor = (tr: AudioTrack, fallbackIndex: number, alphaHex?: string): string => {
+  const hue = typeof tr.colorHue === 'number' ? tr.colorHue : RAINBOW_HUE_STEPS[fallbackIndex % RAINBOW_HUE_STEPS.length];
   const hex = hslToHex(hue, 60, 68);
   return alphaHex ? `${hex}${alphaHex}` : hex;
 };
@@ -2191,14 +2192,35 @@ export default function SongStudioModal({
         if (el) el.pause();
 
         const updatedTracks = tracks.filter(tr => tr.id !== trackId);
-        const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { 
-          ...i, 
+        const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? {
+          ...i,
           pistas: updatedTracks,
           audioUrl: updatedTracks[0]?.audioUrl || i.audioUrl
         } : i);
         onUpdateSong({ ...song, audioIdeas: updatedIdeas });
       }
     });
+  };
+
+  // Reordenar pistas a mano (guiño a Iris: al mover, cada pista "congela" su color de arcoíris
+  // actual en colorHue para que se lo lleve consigo — a partir de ahí el orden visual del
+  // arcoíris ya no será perfecto, pero cada pista mantiene su identidad de color).
+  const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
+    const tracks = getIdeaTracks(idea);
+    const fromIndex = tracks.findIndex(t => t.id === trackId);
+    const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1;
+    if (fromIndex === -1 || toIndex < 0 || toIndex >= tracks.length) return;
+
+    const stampedTracks = tracks.map((t, i) => ({
+      ...t,
+      colorHue: typeof t.colorHue === 'number' ? t.colorHue : RAINBOW_HUE_STEPS[i % RAINBOW_HUE_STEPS.length]
+    }));
+    const reordered = [...stampedTracks];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+
+    const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: reordered } : i);
+    onUpdateSong({ ...song, audioIdeas: updatedIdeas });
   };
 
   // --- OVERDUB / ADDING NEW TRACK TO IDEA ---
@@ -3982,9 +4004,9 @@ export default function SongStudioModal({
                                           <span
                                             className="w-4 h-4 rounded font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border"
                                             style={{
-                                              backgroundColor: getTrackRainbowColor(idx, '30'),
-                                              borderColor: getTrackRainbowColor(idx, '80'),
-                                              color: getTrackRainbowColor(idx)
+                                              backgroundColor: getTrackRainbowColor(tr, idx, '30'),
+                                              borderColor: getTrackRainbowColor(tr, idx, '80'),
+                                              color: getTrackRainbowColor(tr, idx)
                                             }}
                                           >
                                             {idx + 1}
@@ -4093,7 +4115,7 @@ export default function SongStudioModal({
                                         <WaveformTrack
                                           ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
                                           audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
-                                          color={getTrackRainbowColor(idx)}
+                                          color={getTrackRainbowColor(tr, idx)}
                                           masterDuration={duration || 30}
                                           trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
                                           currentTime={currentTime}
@@ -4297,9 +4319,30 @@ export default function SongStudioModal({
                                     </div>
                                   </div>
 
-                                  {/* Row 4: Borrar pista — acción destructiva, fuera de la fila
-                                      principal, solo aquí en Ajustes donde no se pulsa sin querer */}
-                                  <div className="flex justify-end border-t border-purple-500/10 pt-2">
+                                  {/* Row 4: Reordenar / Borrar pista — acciones ocasionales, fuera de
+                                      la fila principal para que no se pulsen sin querer */}
+                                  <div className="flex items-center justify-between border-t border-purple-500/10 pt-2">
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-neutral-400 font-bold mr-1">Orden:</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleMoveTrack(idea, tr.id, 'up')}
+                                        disabled={idx === 0}
+                                        className="px-1.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
+                                        title="Subir pista"
+                                      >
+                                        <ChevronUp className="w-3.5 h-3.5" />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleMoveTrack(idea, tr.id, 'down')}
+                                        disabled={idx === tracks.length - 1}
+                                        className="px-1.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-all"
+                                        title="Bajar pista"
+                                      >
+                                        <ChevronDown className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
                                     <button
                                       type="button"
                                       onClick={() => handleDeleteTrack(idea, tr.id)}
