@@ -31,7 +31,7 @@ import {
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
   Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
   FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
-  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical
+  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical, GripVertical
 } from 'lucide-react';
 
 
@@ -148,10 +148,46 @@ const LiveMicWaveformCanvas: React.FC<{
   }, [isRecording, stream, audioCtx, color, height]);
 
   return (
-    <canvas 
-      ref={canvasRef} 
+    <canvas
+      ref={canvasRef}
       className="w-full h-full block rounded border border-red-500/40 bg-black/50"
     />
+  );
+};
+
+// Guiño de marca a Iris mientras se procesa: un rayo de luz blanco entra en el prisma y sale
+// descompuesto en el arcoíris de 6 colores — la misma paleta que colorea las pistas del mezclador.
+const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
+const IrisPrismBanner: React.FC = () => {
+  const targets = [10, 20, 28, 36, 44, 54];
+  return (
+    <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-xl bg-black/40 border border-white/10">
+      <svg viewBox="0 0 160 64" className="w-full h-full" preserveAspectRatio="none">
+        {/* Prisma */}
+        <polygon points="62,14 62,50 86,32" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
+        {/* Rayo de luz blanco entrando en el prisma */}
+        <motion.rect
+          x={0} y={30} width={62} height={4} rx={2} fill="white"
+          animate={{ opacity: [0.25, 0.9, 0.25] }}
+          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+        />
+        <motion.circle
+          cy={32} r={3} fill="white"
+          animate={{ cx: [0, 60, 0], opacity: [0, 1, 0] }}
+          transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
+        />
+        {/* Espectro de 6 colores saliendo del prisma, hasta el borde del viewBox */}
+        {targets.map((y, i) => (
+          <motion.line
+            key={i}
+            x1={86} y1={32} x2={160} y2={y}
+            stroke={IRIS_PRISM_RAY_COLORS[i]} strokeWidth={3} strokeLinecap="round"
+            animate={{ opacity: [0.25, 1, 0.25] }}
+            transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut', delay: i * 0.12 }}
+          />
+        ))}
+      </svg>
+    </div>
   );
 };
 
@@ -598,7 +634,7 @@ export default function SongStudioModal({
           } else {
             newTracks.push({
               id: `stem-ai-${instClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-              nombre: st.trackName || `Stem IA (${st.instrument})`,
+              nombre: st.trackName || `Pista IA (${st.instrument})`,
               audioUrl: st.audioUrl,
               autor: engineAuthor,
               instrumento: st.instrument,
@@ -2205,22 +2241,41 @@ export default function SongStudioModal({
   // Reordenar pistas a mano (guiño a Iris: al mover, cada pista "congela" su color de arcoíris
   // actual en colorHue para que se lo lleve consigo — a partir de ahí el orden visual del
   // arcoíris ya no será perfecto, pero cada pista mantiene su identidad de color).
-  const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
-    const tracks = getIdeaTracks(idea);
-    const fromIndex = tracks.findIndex(t => t.id === trackId);
-    const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1;
-    if (fromIndex === -1 || toIndex < 0 || toIndex >= tracks.length) return;
-
-    const stampedTracks = tracks.map((t, i) => ({
+  const stampTrackColors = (tracks: AudioTrack[]): AudioTrack[] =>
+    tracks.map((t, i) => ({
       ...t,
       colorHue: typeof t.colorHue === 'number' ? t.colorHue : RAINBOW_HUE_STEPS[i % RAINBOW_HUE_STEPS.length]
     }));
-    const reordered = [...stampedTracks];
+
+  const reorderIdeaTracks = (idea: SongAudioIdea, fromIndex: number, toIndex: number) => {
+    const tracks = getIdeaTracks(idea);
+    if (fromIndex === -1 || toIndex < 0 || toIndex >= tracks.length || fromIndex === toIndex) return;
+
+    const reordered = stampTrackColors(tracks);
     const [moved] = reordered.splice(fromIndex, 1);
     reordered.splice(toIndex, 0, moved);
 
     const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: reordered } : i);
     onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+  };
+
+  const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
+    const tracks = getIdeaTracks(idea);
+    const fromIndex = tracks.findIndex(t => t.id === trackId);
+    reorderIdeaTracks(idea, fromIndex, direction === 'up' ? fromIndex - 1 : fromIndex + 1);
+  };
+
+  // Arrastrar y soltar para reordenar pistas — mismo sistema (handle GripVertical + HTML5 drag)
+  // que ya usa el repertorio para reordenar canciones y setlists.
+  const [draggedTrackInfo, setDraggedTrackInfo] = useState<{ ideaId: string; index: number } | null>(null);
+  const [dragOverTrackIndex, setDragOverTrackIndex] = useState<number | null>(null);
+
+  const handleDropTrack = (idea: SongAudioIdea, dropIndex: number) => {
+    if (draggedTrackInfo && draggedTrackInfo.ideaId === idea.id) {
+      reorderIdeaTracks(idea, draggedTrackInfo.index, dropIndex);
+    }
+    setDraggedTrackInfo(null);
+    setDragOverTrackIndex(null);
   };
 
   // --- OVERDUB / ADDING NEW TRACK TO IDEA ---
@@ -3753,7 +3808,7 @@ export default function SongStudioModal({
                           title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
                         >
                           <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
-                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Pistas (IA)'}</span>
+                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar con Iris'}</span>
                         </button>
                         <button
                           type="button"
@@ -3979,11 +4034,21 @@ export default function SongStudioModal({
                                 const vol = tr.volumen ?? 1;
                                 const isEditing = editingTrackId === tr.id;
 
+                                const isDraggingThisTrack = draggedTrackInfo?.ideaId === idea.id && draggedTrackInfo.index === idx;
+                                const isDragOverThisTrack = dragOverTrackIndex === idx && draggedTrackInfo?.ideaId === idea.id && !isDraggingThisTrack;
+
                                 return (
                                   <div
                                     key={tr.id}
+                                    onDragOver={(e) => { e.preventDefault(); if (draggedTrackInfo?.ideaId === idea.id) setDragOverTrackIndex(idx); }}
+                                    onDragLeave={() => setDragOverTrackIndex(prev => (prev === idx ? null : prev))}
+                                    onDrop={(e) => { e.preventDefault(); handleDropTrack(idea, idx); }}
                                     className={`rounded-xl border overflow-hidden transition-all ${
-                                      isMuted
+                                      isDraggingThisTrack
+                                        ? 'opacity-30 scale-[0.98] border-dashed border-indigo-400'
+                                        : isDragOverThisTrack
+                                        ? 'border-indigo-400 ring-2 ring-indigo-400/50 bg-indigo-500/10'
+                                        : isMuted
                                         ? 'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]'
                                         : isSolo
                                           ? 'bg-amber-500/10 border-amber-400/80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30'
@@ -3992,13 +4057,28 @@ export default function SongStudioModal({
                                             : 'bg-white/5 border-white/10 hover:border-white/20'
                                     }`}
                                   >
-                                    {/* Cubase-style compact row: name/controls sidebar left of the waveform on tablet/desktop; on mobile the sidebar becomes a bar above the waveform instead (too narrow to sit side by side) */}
-                                    <div className="flex flex-col sm:flex-row sm:items-stretch">
-                                      {/* Sidebar: name + transport controls, 2 compact lines */}
-                                      <div
-                                        className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
-                                        title={tr.instrumento || undefined}
-                                      >
+                                    <div className="flex items-stretch">
+                                      {/* Asa de arrastre grande, ocupa todo el alto de la fila — igual sistema
+                                          (HTML5 drag nativo) que ya funciona en el repertorio, pero con un
+                                          objetivo táctil mucho mayor que un icono suelto */}
+                                      {tracks.length > 1 && (
+                                        <div
+                                          draggable
+                                          onDragStart={() => setDraggedTrackInfo({ ideaId: idea.id, index: idx })}
+                                          onDragEnd={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
+                                          className="w-7 shrink-0 flex items-center justify-center bg-black/30 hover:bg-black/50 active:bg-indigo-500/20 border-r border-white/10 cursor-grab active:cursor-grabbing touch-none select-none"
+                                          title="Arrastrar para reordenar pista"
+                                        >
+                                          <GripVertical className="w-4 h-4 text-neutral-400" />
+                                        </div>
+                                      )}
+                                      {/* Cubase-style compact row: name/controls sidebar left of the waveform on tablet/desktop; on mobile the sidebar becomes a bar above the waveform instead (too narrow to sit side by side) */}
+                                      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-stretch">
+                                        {/* Sidebar: name + transport controls, 2 compact lines */}
+                                        <div
+                                          className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
+                                          title={tr.instrumento || undefined}
+                                        >
                                         {/* Line 1: number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
                                         <div className="flex items-center gap-1 min-w-0">
                                           <span
@@ -4130,6 +4210,7 @@ export default function SongStudioModal({
                                             }
                                           }}
                                         />
+                                      </div>
                                       </div>
                                     </div>
 
@@ -4747,6 +4828,39 @@ export default function SongStudioModal({
           )}
 
         </div>
+
+        {/* Mini-transporte fijo: reproducir/pausar la idea activa sin tener que volver a subir
+            hasta la cabecera cuando estás abajo del todo viendo las últimas pistas */}
+        {(() => {
+          const ideas = song.audioIdeas || [];
+          const activeIdea =
+            ideas.find(i => i.id === playingIdeaId) ||
+            (expandedIdeaIds.size === 1 ? ideas.find(i => expandedIdeaIds.has(i.id)) : undefined);
+          if (!activeIdea) return null;
+          const isPlaying = playingIdeaId === activeIdea.id;
+          const curTime = currentTimeMap[activeIdea.id] || 0;
+          const dur = durationMap[activeIdea.id] || 0;
+          return (
+            <div className="border-t border-white/10 bg-zinc-950/95 backdrop-blur-sm px-3 sm:px-4 py-2 flex items-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.4)]">
+              <button
+                type="button"
+                onClick={() => togglePlayIdea(activeIdea)}
+                className={`p-2.5 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer shrink-0 ${
+                  isPlaying ? 'bg-amber-500 text-zinc-950' : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
+                }`}
+                title="Play / Pausa"
+              >
+                {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+              </button>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-white truncate">{activeIdea.titulo}</p>
+                <p className="text-[10px] font-mono text-neutral-400">
+                  {formatTime(curTime)} <span className="text-neutral-600">/</span> {formatTime(dur)}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
 
       </div>
 
@@ -5614,7 +5728,15 @@ export default function SongStudioModal({
       {stemProgressModal && stemProgressModal.isOpen && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
           <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
-            
+
+            {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
+                -mx-6 cancela el padding del modal para que ocupe todo el ancho, de borde a borde. */}
+            {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
+              <div className="-mx-6">
+                <IrisPrismBanner />
+              </div>
+            )}
+
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
@@ -5660,10 +5782,10 @@ export default function SongStudioModal({
                 <div>
                   <h3 className="font-mono font-bold text-sm text-white flex items-center gap-2">
                     {stemProgressModal.stage === 'completed'
-                      ? '¡Separación de Stems Completada!'
+                      ? '¡Separación de Pistas Completada!'
                       : stemProgressModal.stage === 'error'
                       ? stemProgressModal.errorTitle || 'Error en la Separación'
-                      : 'Separando Pistas por IA'}
+                      : 'Iris está separando tus pistas'}
                   </h3>
                   <p className="text-[11px] text-neutral-400 font-sans">
                     {stemProgressModal.ideaTitle} • <span className="text-amber-300">{stemProgressModal.songTitle}</span>
@@ -5755,11 +5877,11 @@ export default function SongStudioModal({
                 {/* Animated Equalizer Visualizer */}
                 <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 h-8">
-                    <div className="w-1.5 bg-amber-400 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height: '60%' }} />
-                    <div className="w-1.5 bg-purple-400 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height: '90%' }} />
-                    <div className="w-1.5 bg-indigo-400 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height: '40%' }} />
-                    <div className="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height: '100%' }} />
-                    <div className="w-1.5 bg-amber-400 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height: '75%' }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height: '60%', backgroundColor: IRIS_PRISM_RAY_COLORS[0] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height: '90%', backgroundColor: IRIS_PRISM_RAY_COLORS[1] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height: '40%', backgroundColor: IRIS_PRISM_RAY_COLORS[2] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height: '100%', backgroundColor: IRIS_PRISM_RAY_COLORS[4] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height: '75%', backgroundColor: IRIS_PRISM_RAY_COLORS[5] }} />
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-mono font-bold text-amber-200 animate-pulse">
