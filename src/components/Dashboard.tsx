@@ -709,6 +709,14 @@ export default function Dashboard({
             </div>
           </div>
         </div>
+
+        {/* APOYO AL PROYECTO Y CONSUMO DE IA: el resumen reducido de Promo se salta el dashboard
+            grande de más abajo por completo, así que sin esto las bandas en Promo nunca veían
+            ni el CTA de Ko-fi ni cuánta IA llevan gastada este mes. */}
+        <div className="space-y-3">
+          <AiSupportWidget variant="card" />
+          <AiUsageCard isStitchLight={isStitchLight} />
+        </div>
       </div>
     );
   }
@@ -741,16 +749,6 @@ export default function Dashboard({
           </button>
         </div>
       </div>
-
-      {/* APOYO AL PROYECTO Y CONSUMO DE IA — arriba del todo: en móvil, tras el header, para
-          que no dependa de bajar más allá de las secciones de Agenda/Booking (que en pantallas
-          estrechas ocupan mucho alto y lo dejaban fuera de la vista inicial). */}
-      {!isPromo && (
-        <div className="space-y-3">
-          <AiSupportWidget variant="card" />
-          <AiUsageCard isStitchLight={isStitchLight} />
-        </div>
-      )}
 
       {/* 1. SECCIÓN PRINCIPAL: PRÓXIMAS FECHAS Y AGENDA */}
       <div className={`p-5 rounded-2xl transition-all border ${
@@ -896,6 +894,15 @@ export default function Dashboard({
           </div>
         )}
       </div>
+
+      {/* APOYO AL PROYECTO Y CONSUMO DE IA — justo debajo de la agenda, no lo primero que se ve
+          nada más entrar (Diego: eso debe seguir siendo la agenda de fechas). */}
+      {!isPromo && (
+        <div className="space-y-3">
+          <AiSupportWidget variant="card" />
+          <AiUsageCard isStitchLight={isStitchLight} />
+        </div>
+      )}
 
       {/* 2. SECCIÓN: CORREOS Y ACCIONES PENDIENTES */}
       <div className={`p-5 rounded-2xl transition-all border ${

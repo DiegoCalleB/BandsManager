@@ -929,29 +929,51 @@ export default function App() {
  })}
  </nav>
 
- {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes) */}
- {!isPromoPlan && (
- <div
-   onClick={() => { handleNavigate('planes'); setIsMobileMenuOpen(false); }}
-   className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
-   title="Ver uso de créditos IA y planes"
- >
-   <div className="flex items-center justify-between gap-1 mb-1.5">
-     <div className="flex items-center gap-1.5">
-       <Zap className="w-3 h-3 text-amber-400" />
-       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+ {/* Mobile AI Credits Widget (oculto en plan Promo: no tiene créditos IA ni acceso a Planes).
+     Antes tenía datos inventados a fuego ("340 / 800", "Plan De Gira" fijos, sin mirar el plan
+     real de la banda) - se sustituye por el mismo cálculo que ya usa la versión de escritorio,
+     para no enseñar un número que no tiene nada que ver con la banda que estás viendo. */}
+ {!isPromoPlan && (() => {
+   const userPlan = currentActiveBandPlan;
+   const pDef = getPlanDefinition(userPlan);
+   const totalCredits = userPlan === 'cabeza_de_cartel' ? 2500 : userPlan === 'de_gira' ? 800 : userPlan === 'local' ? 300 : 100;
+   const estimatedUsed = Math.min(totalCredits, Math.max(12, (leads.length * 2) + posts.length));
+   const pct = Math.min(100, Math.round((estimatedUsed / totalCredits) * 100));
+
+   return (
+     <div
+       onClick={() => { handleNavigate('planes'); setIsMobileMenuOpen(false); }}
+       className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
+       title="Ver uso de créditos IA y planes"
+     >
+       <div className="flex items-center justify-between gap-1 mb-1.5">
+         <div className="flex items-center gap-1.5">
+           <Zap className="w-3 h-3 text-amber-400" />
+           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+         </div>
+         <span className="text-[10px] font-mono font-bold text-amber-300">{estimatedUsed} / {totalCredits}</span>
+       </div>
+       <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
+         <div
+           className={`h-full rounded-full transition-all duration-500 ${
+             pct > 85 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : 'bg-gradient-to-r from-amber-400 to-amber-500'
+           }`}
+           style={{ width: `${pct}%` }}
+         />
+       </div>
+       <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+         <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
+         <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
+       </div>
      </div>
-     <span className="text-[10px] font-mono font-bold text-amber-300">340 / 800</span>
-   </div>
-   <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
-     <div className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 shadow-xs" style={{ width: '42.5%' }} />
-   </div>
-   <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
-     <span>Plan De Gira</span>
-     <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
-   </div>
- </div>
- )}
+   );
+ })()}
+
+ {/* Ko-fi en el menú móvil: sin esto, en móvil el CTA de apoyo solo salía en la tarjeta del
+     Resumen - un usuario que vive navegando por Booking/Repertorio/etc. y nunca entra en
+     Resumen no lo veía nunca. Sin gate de plan: el gasto de IA (y el apoyo a él) no depende
+     de qué plan tengas. */}
+ <AiSupportWidget variant="sidebar" />
 
  {/* Drawer User Footer */}
  <div className="p-4 mt-auto border-[#22211F]/50">
@@ -1217,7 +1239,7 @@ export default function App() {
    );
  })()}
 
- {!isPromoPlan && <AiSupportWidget variant="sidebar" />}
+ <AiSupportWidget variant="sidebar" />
 
  {/* Bottom User Profile */}
  <div className="p-4 mt-auto border-[#22211F]/50">
