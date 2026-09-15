@@ -600,10 +600,6 @@ export default function RepertorioSetlists({
 
  // Selected item in active setlist (for intelligent insertion beneath selected song)
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
-  // Pestaña activa del setlist: cada una pinta su panel EN LÍNEA aquí mismo (nunca abre un modal
-  // ni pantalla completa solo por seleccionarla) — Imprimir y Directo llevan su propio botón
-  // explícito para abrir la vista completa cuando el usuario de verdad lo pide.
-  const [setlistTab, setSetlistTab] = useState<'temas' | 'imprimir' | 'directo'>('temas');
   const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<string | null>(null);
   const [dragOverCatalogSongId, setDragOverCatalogSongId] = useState<string | null>(null);
 
@@ -2560,10 +2556,36 @@ export default function RepertorioSetlists({
  />
 
  <div className="flex items-center gap-1.5 shrink-0">
- {/* Imprimir y Modo Escenario se movieron a la fila de pestañas de abajo (Temas / Imprimir /
-     Directo) — antes vivían aquí como botones sueltos y quedaban apretados junto al título en
-     móvil, con el de Atril fácil de pasar por alto pese a ser la acción más usada en directo.
-     Imprimir sigue disponible también en el menú "⋯" de aquí abajo, por si acaso. */}
+ {/* IMPRIMIR REPERTORIO — directo a 1 clic, bien a mano */}
+ <button
+ id="btn-print-setlist-header"
+ type="button"
+ onClick={() => setShowPdfPreview(true)}
+ className="shrink-0 px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-[#d1b375] hover:text-white border border-[#d1b375]/40 font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+ title="Imprimir repertorio o exportar a PDF / atril en papel"
+ >
+ <Printer className="w-3.5 h-3.5 text-[#d1b375]" />
+ <span>Imprimir</span>
+ </button>
+
+ {/* MODO ESCENARIO / ATRIL: acción principal para directo */}
+ <button
+ id="btn-stage-mode-header"
+ type="button"
+ onClick={() => {
+   if (activeSetlist) {
+     cacheActiveStageSetlist(activeSetlist, songs, bandId);
+     setPerformanceSetlistId(activeSetlist.id);
+   }
+ }}
+ className="shrink-0 px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-amber-950/30"
+ title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
+ >
+ <Mic className="w-3.5 h-3.5" />
+ <span className="hidden sm:inline">Modo Escenario</span>
+ <span className="sm:hidden">Atril</span>
+ </button>
+
  <div className="relative shrink-0">
  <button
  type="button"
@@ -2630,57 +2652,11 @@ export default function RepertorioSetlists({
   {(() => {
     return (
       <div className="flex flex-col gap-2">
-        {/* Selector de modo del setlist activo — cada pestaña muestra su panel AQUÍ MISMO, en
-            línea (nunca un modal ni pantalla completa solo por cambiar de pestaña): Temas es la
-            lista + Mapa de Energía (siempre debajo, ver showEnergyMap), Imprimir y Directo son
-            paneles propios con su resumen y un botón explícito para abrir la vista completa
-            (PDF a medida / teleprompter a pantalla completa) cuando el usuario lo pida de verdad. */}
+        {/* Sin pestañas: el repertorio (lista + Mapa de Energía) se ve siempre entero, tal cual.
+            Hubo un experimento con pestañas Temas/Imprimir/Directo — se quitó porque ninguna
+            aportaba de verdad (Imprimir y Directo abren su propia vista completa desde el menú
+            "⋯" y el botón de Modo Escenario de aquí abajo, no necesitan hueco propio). */}
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1 rounded-xl bg-black/40 border border-neutral-800/80">
-          <div className="flex items-center gap-1 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => { setSetlistTab('temas'); setShowConcertPlayer(false); }}
-              className={`flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                setlistTab === 'temas'
-                  ? 'bg-[#d1b375]/20 text-[#f2ca50] border border-[#f2ca50]/30 shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-            >
-              <Music className="w-3.5 h-3.5" />
-              <span>Temas ({activeSetlistMetrics.songCount})</span>
-            </button>
-
-            <button
-              id="btn-print-setlist-header"
-              type="button"
-              onClick={() => { setSetlistTab('imprimir'); setShowConcertPlayer(false); }}
-              className={`flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                setlistTab === 'imprimir'
-                  ? 'bg-[#d1b375]/20 text-[#f2ca50] border border-[#f2ca50]/30 shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-              title="Imprimir repertorio o exportar a PDF / atril en papel"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Imprimir</span>
-            </button>
-
-            <button
-              id="btn-stage-mode-header"
-              type="button"
-              onClick={() => { setSetlistTab('directo'); setShowConcertPlayer(false); }}
-              className={`flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                setlistTab === 'directo'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-              title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
-            >
-              <Mic className="w-3.5 h-3.5" />
-              <span>Directo</span>
-            </button>
-          </div>
-
           {/* Resumen en una línea y botón asistente IA */}
           <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto px-1">
             <button
@@ -2757,7 +2733,7 @@ export default function RepertorioSetlists({
         {/* MAPA Y CURVA DE ENERGÍA DEL SHOW — parte de la vista Temas por defecto (antes exigía
             cambiar a una pestaña "Curva Dinámica" aparte, redundante con el propio toggle 👁️ de
             aquí abajo). El botón 👁️ sigue pudiendo ocultarlo si estorba. */}
-        {setlistTab === 'temas' && energyAnalysis.points.length > 0 && (
+        {energyAnalysis.points.length > 0 && (
           <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2 animate-fadeIn">
             <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-neutral-400">
               {/* Título corto y la ayuda en el tooltip: el hint largo entre paréntesis ocupaba
@@ -3178,62 +3154,6 @@ export default function RepertorioSetlists({
           </div>
         )}
 
-        {/* PANEL IMPRIMIR — en línea, nunca abre el modal grande de exportación solo por entrar
-            en la pestaña. El diseño completo (estilos, atril en papel, edición por canción) sigue
-            viviendo en PdfExportModal — aquí solo un resumen y el botón explícito para abrirlo. */}
-        {setlistTab === 'imprimir' && (
-          <div className="p-4 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-3 animate-fadeIn text-center">
-            <Printer className="w-8 h-8 text-[#d1b375] mx-auto" />
-            <div>
-              <p className="font-bold text-white">{activeSetlist.nombre}</p>
-              <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
-                {activeSetlistMetrics.songCount} temas · {activeSetlistMetrics.formattedTime}
-              </p>
-            </div>
-            <p className="text-[10.5px] text-neutral-400 max-w-sm mx-auto">
-              Exporta a PDF con estilos a elegir (rock de escenario, festival, atril limpio, FOH),
-              edita notas por canción y descarga o comparte listo para imprimir.
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowPdfPreview(true)}
-              className="px-4 py-2 rounded-xl bg-[#d1b375] hover:bg-[#e0c489] text-black font-mono font-bold text-xs transition-all cursor-pointer inline-flex items-center gap-2"
-            >
-              <Printer className="w-3.5 h-3.5" /> Abrir vista de impresión / PDF
-            </button>
-          </div>
-        )}
-
-        {/* PANEL DIRECTO — en línea, igual que Imprimir: el teleprompter a pantalla completa
-            (SetlistPerformanceView) sigue siendo lo mejor para leer en un escenario real bajo
-            luces/sol, así que se queda como acción explícita, no automática al entrar aquí. */}
-        {setlistTab === 'directo' && (
-          <div className="p-4 rounded-xl bg-neutral-900/90 border border-amber-800/40 space-y-3 animate-fadeIn text-center">
-            <Mic className="w-8 h-8 text-amber-400 mx-auto" />
-            <div>
-              <p className="font-bold text-white">{activeSetlist.nombre}</p>
-              <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
-                {activeSetlistMetrics.songCount} temas · {activeSetlistMetrics.formattedTime}
-              </p>
-            </div>
-            <p className="text-[10.5px] text-neutral-400 max-w-sm mx-auto">
-              Teleprompter a pantalla completa: letras, acordes y notas grandes, desliza entre
-              temas, modo antideslumbrante para sol/focos y pantalla que no se apaga sola.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                if (activeSetlist) {
-                  cacheActiveStageSetlist(activeSetlist, songs, bandId);
-                  setPerformanceSetlistId(activeSetlist.id);
-                }
-              }}
-              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs transition-all cursor-pointer inline-flex items-center gap-2"
-            >
-              <Mic className="w-3.5 h-3.5" /> Empezar Modo Directo (pantalla completa)
-            </button>
-          </div>
-        )}
       </div>
     );
   })()}

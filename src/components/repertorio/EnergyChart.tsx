@@ -608,6 +608,7 @@ export function EnergyChart({
               const isDraggingThis = draggingFromIndex === payload.idx;
               const canEditThisEnergy = !!onEnergyChange && payload.songId != null;
               const canDragThis = !!onReorder || canEditThisEnergy;
+              const dotRadius = isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault;
               return (
                 <React.Fragment key={`dot-${payload.id}`}>
                   {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
@@ -634,7 +635,7 @@ export function EnergyChart({
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
+                    r={dotRadius}
                     fill={payload.color}
                     stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
                     strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
@@ -656,24 +657,33 @@ export function EnergyChart({
                     onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
                   />
                   {/* Etiqueta de tonalidad — puramente informativa, nunca captura el puntero (si
-                      no, taparía la diana táctil del punto justo debajo). */}
-                  {showTonalidad && payload.tonalidad && (
-                    <text
-                      x={cx}
-                      y={cy - (isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault) - 6}
-                      textAnchor="middle"
-                      fontSize={compact ? 7.5 : 9}
-                      fontFamily="monospace"
-                      fontWeight={600}
-                      fill="#fbbf24"
-                      stroke="#000000"
-                      strokeWidth={1.8}
-                      paintOrder="stroke"
-                      pointerEvents="none"
-                    >
-                      {payload.tonalidad}
-                    </text>
-                  )}
+                      no, taparía la diana táctil del punto justo debajo). Los picos de energía
+                      más alta caen cerca del borde superior del gráfico (que recorta con
+                      overflow-hidden) — por debajo de este margen, la etiqueta se pinta DEBAJO
+                      del punto en vez de encima para que nunca se corte. */}
+                  {showTonalidad && payload.tonalidad && (() => {
+                    const labelFontSize = compact ? 7.5 : 9;
+                    const espacioArriba = cy - dotRadius - 6 - labelFontSize;
+                    const margenSuperior = compact ? 8 : 14; // mismo valor que el margin.top del ComposedChart
+                    const pintarAbajo = espacioArriba < margenSuperior;
+                    return (
+                      <text
+                        x={cx}
+                        y={pintarAbajo ? cy + dotRadius + labelFontSize + 4 : cy - dotRadius - 6}
+                        textAnchor="middle"
+                        fontSize={labelFontSize}
+                        fontFamily="monospace"
+                        fontWeight={600}
+                        fill="#fbbf24"
+                        stroke="#000000"
+                        strokeWidth={1.8}
+                        paintOrder="stroke"
+                        pointerEvents="none"
+                      >
+                        {payload.tonalidad}
+                      </text>
+                    );
+                  })()}
                 </React.Fragment>
               );
             }}
