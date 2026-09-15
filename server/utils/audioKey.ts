@@ -93,10 +93,15 @@ async function extraerPcmMono(
   opciones: { timeoutMs?: number; maxDuracionSeg?: number } = {}
 ): Promise<Float32Array | null> {
   const binario = ffmpegStatic as unknown as string;
+  // TODO(diagnóstico temporal): quitar en cuanto se confirme el fallo en producción.
+  console.log(`[Audio] extraerPcmMono: binario ffmpeg-static=${binario || 'AUSENTE'} fuente=${fuente ? fuente.slice(0, 80) + '…' : 'vacía'}`);
   if (!binario || !fuente) return null;
 
   const resuelto = await resolverFuenteAudioLocal(fuente);
-  if (!resuelto) return null;
+  if (!resuelto) {
+    console.error('[Audio] extraerPcmMono: resolverFuenteAudioLocal devolvió null (descarga fallida)');
+    return null;
+  }
   const { ruta: rutaLocal, limpiar } = resuelto;
 
   const args: string[] = ["-hide_banner", "-nostdin", "-t", String(Math.floor(opciones.maxDuracionSeg ?? 360))];
@@ -104,6 +109,8 @@ async function extraerPcmMono(
 
   try {
     const buffer = await ejecutarBinario(binario, args, { timeoutMs: opciones.timeoutMs ?? 120_000 });
+    // TODO(diagnóstico temporal): quitar en cuanto se confirme el fallo en producción.
+    console.log(`[Audio] PCM extraído: ${buffer?.length ?? 0} bytes (mínimo necesario: ${VENTANA * 4})`);
     if (!buffer || buffer.length < VENTANA * 4) return null;
     // .slice() en vez de leer buffer.buffer directamente: un Buffer puede vivir sobre un
     // ArrayBuffer compartido/más grande (pool interno de Node) con un byteOffset != 0 — leerlo
