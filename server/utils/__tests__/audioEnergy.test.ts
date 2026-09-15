@@ -11,6 +11,7 @@ import {
   DB_SILENCIO,
   type PuntoEnergia,
   construirFiltroPreprocesamientoDirecto,
+  resolverFuenteAudioLocal,
 } from '../audioEnergy';
 
 /** Salida real de `ametadata=print`, tal cual la escupe ffmpeg. */
@@ -166,6 +167,25 @@ describe('analizarEnergiaAudio', () => {
 
   it('sin fuente no llama a ffmpeg', async () => {
     await expect(analizarEnergiaAudio('')).resolves.toEqual([]);
+  });
+});
+
+describe('resolverFuenteAudioLocal', () => {
+  // blob:/data:/indexeddb: son URLs que solo existen en la memoria del navegador que las creó —
+  // pasárselas a ffmpeg tal cual (como si fueran una ruta local) fallaba con un críptico
+  // "Protocol not found" en vez de reconocer que ese audio nunca llegó a subirse de verdad.
+  it.each(['blob:', 'data:', 'indexeddb:'])('rechaza URLs %s (locales del navegador) sin intentar tratarlas como ruta local', async (prefijo) => {
+    await expect(resolverFuenteAudioLocal(`${prefijo}https://ejemplo.com/algo`)).resolves.toBeNull();
+  });
+
+  it('una ruta local de verdad no se rechaza', async () => {
+    const resultado = await resolverFuenteAudioLocal('/tmp/audio_real.mp3');
+    expect(resultado).not.toBeNull();
+    expect(resultado?.ruta).toBe('/tmp/audio_real.mp3');
+  });
+
+  it('sin fuente devuelve null', async () => {
+    await expect(resolverFuenteAudioLocal('')).resolves.toBeNull();
   });
 });
 

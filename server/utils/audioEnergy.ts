@@ -372,6 +372,18 @@ export async function resolverFuenteAudioLocal(
   fuente: string
 ): Promise<{ ruta: string; limpiar: () => void } | null> {
   if (!fuente) return null;
+
+  // blob:/data:/indexeddb: son URLs que solo existen en la memoria del navegador que las creó
+  // (el objeto vive en esa pestaña concreta) — no un fichero real en ESTE servidor ni una URL
+  // remota descargable. Sin este chequeo caían en la rama de "es una ruta local" de abajo y se
+  // le pasaban tal cual a ffmpeg, que fallaba con un críptico "Protocol not found" en vez de un
+  // motivo claro. Esto no tiene arreglo aquí: la canción tiene que resubirse desde el cliente a
+  // almacenamiento permanente (Supabase) para que el servidor pueda llegar a su audio.
+  if (/^(blob|data|indexeddb):/i.test(fuente)) {
+    console.error(`[Audio] URL de audio no accesible desde el servidor (${fuente.split(':')[0]}: es local del navegador, no un fichero real): ${fuente.slice(0, 80)}…`);
+    return null;
+  }
+
   if (!/^https?:\/\//i.test(fuente)) {
     return { ruta: fuente, limpiar: () => {} };
   }

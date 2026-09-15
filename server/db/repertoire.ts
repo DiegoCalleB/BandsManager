@@ -21,14 +21,11 @@ export async function analizarYGuardarDinamicaCancion(
   audioUrl: string,
   bandId: string
 ): Promise<{ variacion: number; audioAnalizable: boolean; bpmDetectado: number | null; tonalidadDetectada: string | null }> {
-  // TODO(diagnóstico temporal): quitar en cuanto se confirme el fallo en producción.
-  console.log(`[Repertorio] analizarYGuardarDinamicaCancion: song=${songId} audioUrl=${audioUrl?.slice(0, 80)}…`);
   const curva = await analizarEnergiaAudio(audioUrl, { timeoutMs: 90_000 });
   const audioAnalizable = curva.length > 1;
   const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
   const energiaDbPromedio = audioAnalizable ? calcularVolumenPromedioAudio(curva) : null;
   const energiaBpmDetectado = audioAnalizable ? detectarBpmDesdeAudio(curva) : null;
-  console.log(`[Repertorio] Curva de energía: ${curva.length} puntos, audioAnalizable=${audioAnalizable}, bpmDetectado=${energiaBpmDetectado}`);
   // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede
   // fallar el análisis de dinámica y aun así ser perfectamente decodificable para tonalidad,
   // así que no se condiciona a `audioAnalizable`.
@@ -36,7 +33,7 @@ export async function analizarYGuardarDinamicaCancion(
     console.error(`[Repertorio] detectarTonalidadDesdeAudio lanzó (no debería):`, err?.message || err);
     return null;
   });
-  console.log(`[Repertorio] Tonalidad detectada (mezcla completa):`, tonalidadDetectada);
+  console.log(`[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? 'ok' : 'no analizable'} bpm=${energiaBpmDetectado ?? '-'} tonalidad=${tonalidadDetectada?.tonalidad ?? '-'}`);
 
   // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
   // canciones antiguas pueden tener el band_id guardado con o sin prefijo band-/reg-, y un
@@ -256,8 +253,6 @@ function encontrarMejorStemNuevoParaTonalidad(existingIdeas: any[], incomingIdea
     const url = urlPorInstrumento.get(instrumento);
     if (url) { elegido = url; break; }
   }
-  // TODO(diagnóstico temporal): quitar este log en cuanto se confirme por qué la redetección de
-  // tonalidad tras separar con Iris no deja rastro en producción — ver conversación 2026-09-15.
   console.log(`[Repertorio] Chequeo stem→tonalidad: pistas vistas=[${instrumentosVistos.join(', ')}] → elegido=${elegido ? elegido.slice(0, 60) + '…' : 'ninguno'}`);
   return elegido;
 }
@@ -583,8 +578,6 @@ export async function dbUpsertSong(song: any, bandId: string) {
   // principal es nuevo o ha cambiado, se analiza solo, sin que el usuario tenga que hacer nada.
   const audioNuevo = payload.audio_principal_url;
   const audioCambio = !existing || existing.audio_principal_url !== audioNuevo;
-  // TODO(diagnóstico temporal): quitar en cuanto se confirme el fallo en producción.
-  console.log(`[Repertorio] dbUpsertSong(${finalSongId}): audioNuevo=${Boolean(audioNuevo)} audioCambio=${audioCambio} → ${audioNuevo && audioCambio ? 'dispara dinámica/BPM' : 'NO dispara (audio principal sin cambios)'}`);
   if (audioNuevo && audioCambio) {
     dispararAnalisisDinamicaEnSegundoPlano(finalSongId, audioNuevo, targetBandId);
   }

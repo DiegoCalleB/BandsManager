@@ -410,6 +410,41 @@ export default function SongStudioModal({
     };
   } | null>(null);
 
+  /**
+   * Resuelve la URL de audio de una idea a una URL real y permanente en el servidor, subiéndola
+   * si hace falta.
+   *
+   * `idea.audioUrl` puede ser legítimamente blob:/indexeddb:/data: justo después de grabar o
+   * importar audio (vive local en el navegador hasta que algo lo sube de verdad) — nunca lanza,
+   * si algo falla devuelve la URL original tal cual en vez de bloquear a quien llama.
+   *
+   * Usar esto SIEMPRE antes de mandar el audio de una idea a cualquier sitio que no sea el
+   * propio navegador (separar pistas, fijarla como maqueta principal de la canción...): guardar
+   * una blob: url como si fuera permanente dejaba una referencia rota en cuanto se usaba fuera
+   * de esa pestaña — server-side ni siquiera puede descargarla para analizar BPM/tonalidad.
+   */
+  const resolverAudioUrlParaSubida = async (rawUrl: string): Promise<string> => {
+    let resultado = rawUrl;
+    try {
+      const resolved = await resolveAudioUrl(rawUrl);
+      if (resolved) resultado = resolved;
+
+      if (resultado.startsWith('indexeddb:') || resultado.startsWith('blob:') || resultado.startsWith('data:')) {
+        const blob = await getAudioBlobFromUrl(rawUrl);
+        const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
+        const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
+        const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
+        const uploadedUrl = await uploadFileToServer(file, { category: 'stems', folder: 'inputs', bandId: bandIdToUse });
+        if (uploadedUrl && (uploadedUrl.startsWith('http://') || uploadedUrl.startsWith('https://') || uploadedUrl.startsWith('/'))) {
+          resultado = uploadedUrl;
+        }
+      }
+    } catch (err) {
+      console.warn('[Audio] No se pudo resolver la URL de audio a una permanente:', err);
+    }
+    return resultado;
+  };
+
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
     setIsSeparatingStemsAi(true);
@@ -466,26 +501,7 @@ export default function SongStudioModal({
           : 'Preparando espectro de audio en el motor local...'
       } : null);
 
-      let sendableAudioUrl = targetIdea.audioUrl;
-      try {
-        const resolved = await resolveAudioUrl(targetIdea.audioUrl);
-        if (resolved) {
-          sendableAudioUrl = resolved;
-        }
-
-        if (sendableAudioUrl.startsWith('indexeddb:') || sendableAudioUrl.startsWith('blob:') || sendableAudioUrl.startsWith('data:')) {
-          const blob = await getAudioBlobFromUrl(targetIdea.audioUrl);
-          const ext = blob.type.includes('wav') ? 'wav' : blob.type.includes('flac') ? 'flac' : 'mp3';
-          const file = new File([blob], `input-audio-idea-${Date.now()}.${ext}`, { type: blob.type || 'audio/mpeg' });
-          const bandIdToUse = localStorage.getItem('bandmanager_band_id') || undefined;
-          const uploadedUrl = await uploadFileToServer(file, { category: 'stems', folder: 'inputs', bandId: bandIdToUse });
-          if (uploadedUrl && (uploadedUrl.startsWith('http://') || uploadedUrl.startsWith('https://') || uploadedUrl.startsWith('/'))) {
-            sendableAudioUrl = uploadedUrl;
-          }
-        }
-      } catch (prepErr) {
-        console.warn("[Stem Separation Frontend] Error preparando audio para el servidor:", prepErr);
-      }
+      const sendableAudioUrl = await resolverAudioUrlParaSubida(targetIdea.audioUrl);
 
       const stepProcessingText =
         engineToUse === 'mvsep-mdx23'
@@ -4694,10 +4710,15 @@ export default function SongStudioModal({
 
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
+                          // resolverAudioUrlParaSubida: si esta idea es una grabación reciente
+                          // aún no subida (blob:/indexeddb: local del navegador), la sube antes
+                          // de fijarla como maqueta — si no, la canción se quedaba con una URL
+                          // que ni el propio servidor puede llegar a descargar.
+                          const audioUrlPermanente = await resolverAudioUrlParaSubida(idea.audioUrl);
                           onUpdateSong({
                             ...song,
-                            audioPrincipalUrl: idea.audioUrl
+                            audioPrincipalUrl: audioUrlPermanente
                           });
                           alert(`"${idea.titulo}" establecida como Maqueta Principal del tema.`);
                         }}
