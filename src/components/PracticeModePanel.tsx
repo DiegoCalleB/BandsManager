@@ -626,14 +626,14 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => setMetronomeOn(v => !v)}
-                  title={`Metrónomo sincronizado a ${song.bpm || 120} BPM`}
+                  title={`Metrónomo (claqueta) — sigue el tempo de arriba, sube y baja a la vez con la canción. Ahora mismo: ${targetBpm} BPM`}
                   className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-lg border ${
                     metronomeOn
                       ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
                       : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
                   }`}
                 >
-                  <Timer className="w-3.5 h-3.5" /> {song.bpm || 120} BPM
+                  <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
                 </button>
               </div>
             </div>
