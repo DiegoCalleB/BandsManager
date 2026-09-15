@@ -598,7 +598,7 @@ export default function SongStudioModal({
           } else {
             newTracks.push({
               id: `stem-ai-${instClean}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-              nombre: st.trackName || `Stem IA (${st.instrument})`,
+              nombre: st.trackName || `Pista IA (${st.instrument})`,
               audioUrl: st.audioUrl,
               autor: engineAuthor,
               instrumento: st.instrument,

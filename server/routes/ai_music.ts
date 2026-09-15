@@ -36,32 +36,32 @@ const router = express.Router();
 
 const STEM_METADATA: Record<string, { trackName: string; description: string; recommendedVolume: number }> = {
   "Voz": {
-    trackName: "🎤 Stem IA: Voz Principal (Aislada)",
+    trackName: "🎤 Pista IA: Voz Principal (Aislada)",
     description: "Voz principal aislada en alta calidad mediante aprendizaje profundo. Permite silenciar la voz para ensayar cantando en directo.",
     recommendedVolume: 1.0
   },
   "Batería": {
-    trackName: "🥁 Stem IA: Batería & Percusión",
+    trackName: "🥁 Pista IA: Batería & Percusión",
     description: "Pista aislada de batería, caja, bombo y platillos en alta fidelidad.",
     recommendedVolume: 0.9
   },
   "Bajo": {
-    trackName: "🎸 Stem IA: Bajo (Sub-Bass)",
+    trackName: "🎸 Pista IA: Bajo (Sub-Bass)",
     description: "Línea de bajo aislada y frecuencias fundamentales de grave.",
     recommendedVolume: 0.95
   },
   "Guitarras": {
-    trackName: "🎸 Stem IA: Guitarras (Rítmicas & Solos)",
+    trackName: "🎸 Pista IA: Guitarras (Rítmicas & Solos)",
     description: "Guitarras eléctricas y acústicas aisladas sin acople de voz ni batería.",
     recommendedVolume: 0.85
   },
   "Teclados": {
-    trackName: "🎹 Stem IA: Teclados & Piano",
+    trackName: "🎹 Pista IA: Teclados & Piano",
     description: "Pianos, sintetizadores y órganos aislados.",
     recommendedVolume: 0.85
   },
   "Arreglos": {
-    trackName: "🎺 Stem IA: Arreglos, Sintes & Cuerdas",
+    trackName: "🎺 Pista IA: Arreglos, Sintes & Cuerdas",
     description: "Sección de vientos, cuerdas, sintetizadores y efectos secundarios.",
     recommendedVolume: 0.85
   }
@@ -89,8 +89,8 @@ function sortStemsMapCanonically<T>(stemsMap: Record<string, T>): Record<string,
 function buildFormattedStems(stemsMap: Record<string, any>) {
   return Object.entries(sortStemsMapCanonically(stemsMap || {})).map(([instrument, rawValue]) => {
     const meta = STEM_METADATA[instrument] || {
-      trackName: `Stem IA: ${instrument}`,
-      description: `Stem aislado de ${instrument}.`,
+      trackName: `Pista IA: ${instrument}`,
+      description: `Pista aislada de ${instrument}.`,
       recommendedVolume: 0.85
     };
     const url = typeof rawValue === "object" ? rawValue.url : rawValue;
@@ -1172,7 +1172,7 @@ async function processMdx23Stems(
       console.log(`[MDX23 Neural] Output posicional (array) de ${values.length} stems detectado. Mapeando por orden: ${labels.join(', ') || 'desconocido, se etiquetará genéricamente'}`);
       values.forEach((url: unknown, idx: number) => {
         if (typeof url !== 'string') return;
-        const label = labels[idx] || `Stem IA ${idx + 1}`;
+        const label = labels[idx] || `Pista IA ${idx + 1}`;
         rawStemsMap[label] = url;
       });
     } else {
@@ -1651,7 +1651,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         stems: [
           {
             instrument: "Voz",
-            trackName: "🎤 Stem IA: Voz Principal (Aislada)",
+            trackName: "🎤 Pista IA: Voz Principal (Aislada)",
             dspFilterType: "bandpass",
             cutoffFrequencyHz: 1250,
             qFactor: 1.8,
@@ -1661,7 +1661,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           },
           {
             instrument: "Batería",
-            trackName: "🥁 Stem IA: Batería & Percusión",
+            trackName: "🥁 Pista IA: Batería & Percusión",
             dspFilterType: "highpass",
             cutoffFrequencyHz: 1800,
             qFactor: 1.2,
@@ -1671,7 +1671,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           },
           {
             instrument: "Bajo",
-            trackName: "🎸 Stem IA: Bajo (Sub-Bass)",
+            trackName: "🎸 Pista IA: Bajo (Sub-Bass)",
             dspFilterType: "lowpass",
             cutoffFrequencyHz: 220,
             qFactor: 2.0,
@@ -1681,7 +1681,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           },
           {
             instrument: "Guitarras",
-            trackName: "🎹 Stem IA: Guitarras & Teclados",
+            trackName: "🎹 Pista IA: Guitarras & Teclados",
             dspFilterType: "bandpass",
             cutoffFrequencyHz: 750,
             qFactor: 1.5,
@@ -1691,7 +1691,7 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
           },
           {
             instrument: "Arreglos",
-            trackName: "🎺 Stem IA: Vientos, Cuerdas & Solos",
+            trackName: "🎺 Pista IA: Vientos, Cuerdas & Solos",
             dspFilterType: "bandpass",
             cutoffFrequencyHz: 2400,
             qFactor: 2.2,

@@ -47,11 +47,11 @@ export async function separateAudioIntoStems(audioUrl: string): Promise<Isolated
     const sideChannelBuffer = createSideChannelBuffer(tempCtx, audioBuffer);
 
     const stemTypes = [
-      { instrument: 'Voz', trackName: '🎤 Stem IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
-      { instrument: 'Batería', trackName: '🥁 Stem IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
-      { instrument: 'Bajo', trackName: '🎸 Stem IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
-      { instrument: 'Guitarras', trackName: '🎹 Stem IA: Guitarras & Teclados', volume: 0.85, sourceBuf: sideChannelBuffer },
-      { instrument: 'Arreglos', trackName: '🎺 Stem IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: sideChannelBuffer }
+      { instrument: 'Voz', trackName: '🎤 Pista IA: Voz Principal (Aislada)', volume: 1.0, sourceBuf: vocalBuffer },
+      { instrument: 'Batería', trackName: '🥁 Pista IA: Batería & Percusión', volume: 0.9, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Bajo', trackName: '🎸 Pista IA: Bajo (Sub-Bass)', volume: 0.95, sourceBuf: vocalCancelledBuffer },
+      { instrument: 'Guitarras', trackName: '🎹 Pista IA: Guitarras & Teclados', volume: 0.85, sourceBuf: sideChannelBuffer },
+      { instrument: 'Arreglos', trackName: '🎺 Pista IA: Vientos, Cuerdas & Solos', volume: 0.85, sourceBuf: sideChannelBuffer }
     ];
 
     const results: IsolatedStemResult[] = [];
