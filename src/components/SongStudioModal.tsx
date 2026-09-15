@@ -165,14 +165,53 @@ interface SongStudioModalProps {
   currentUser?: User;
 }
 
-// Coste aproximado por canción de cada motor de Aaron, solo para orientar al usuario (no viene de
+// Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
 // una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
-const AARON_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
   'mvsep-mdx23': 0.08,
   'demucs': 0.03,
   'dsp-server': 0
 };
 const formatEurEstimate = (n: number) => n.toFixed(2).replace('.', ',');
+
+// Guiño a Iris (diosa del arcoíris): cada pista tiene un color de familia de instrumento fijo y
+// suave para identificarla de un vistazo (onda + número de pista), en vez del mismo tono para todas.
+// Los instrumentos conocidos siguen un orden de arcoíris; cualquier otro texto libre cae en un hash
+// determinista, así que el mismo nombre de instrumento siempre sale con el mismo color.
+const INSTRUMENT_RAINBOW_HUES: Record<string, number> = {
+  voz: 350, vocal: 350, vocals: 350, coro: 325, coros: 325,
+  batería: 20, bateria: 20, drums: 20, percusión: 20, percusion: 20,
+  bajo: 45, bass: 45,
+  guitarra: 130, guitarras: 130, guitar: 130,
+  teclado: 175, teclados: 175, piano: 175, keys: 175,
+  vientos: 205, metales: 205, brass: 205,
+  cuerdas: 240, strings: 240, violín: 240, violin: 240,
+  sintetizador: 275, synth: 275, arreglos: 275,
+};
+const hashHueFromText = (text: string): number => {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) >>> 0;
+  return h % 360;
+};
+const getTrackRainbowHue = (instrumento?: string, fallbackSeed?: string): number => {
+  const key = (instrumento || '').toLowerCase().trim();
+  const matchedKey = Object.keys(INSTRUMENT_RAINBOW_HUES).find(k => key.includes(k));
+  return matchedKey ? INSTRUMENT_RAINBOW_HUES[matchedKey] : hashHueFromText(key || fallbackSeed || 'pista');
+};
+// Convierte HSL a hex para poder seguir usando el truco de "hex + 2 dígitos de alpha" que ya
+// usa WaveformTrack internamente (color + '40', color + '50'...) sin tener que tocar ese componente.
+const hslToHex = (h: number, s: number, l: number): string => {
+  const sat = s / 100, light = l / 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = sat * Math.min(light, 1 - light);
+  const f = (n: number) => light - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  const toHex = (x: number) => Math.round(255 * x).toString(16).padStart(2, '0');
+  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+};
+const getTrackRainbowColor = (instrumento?: string, fallbackSeed?: string, alphaHex?: string): string => {
+  const hex = hslToHex(getTrackRainbowHue(instrumento, fallbackSeed), 60, 68);
+  return alphaHex ? `${hex}${alphaHex}` : hex;
+};
 
 const SECCIONES_TEMA: { key: SongAudioIdea['seccion']; label: string; icon: string; color: string }[] = [
   { key: 'general', label: 'Idea General / Demo', icon: '🎵', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' },
@@ -365,16 +404,16 @@ export default function SongStudioModal({
     };
   } | null>(null);
 
-  // Separación de pistas con IA (motor propio "Aaron", con dos niveles de calidad + fallback local)
+  // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
     setIsSeparatingStemsAi(true);
     setSeparationElapsedSeconds(0);
     const engineToUse = overrideEngine || selectedStemEngine;
 
     const stepInitText =
-      engineToUse === 'mvsep-mdx23' ? "Iniciando Aaron Studio (red neuronal de máxima calidad)..." :
-      engineToUse === 'demucs' ? 'Iniciando Aaron Cloud (red neuronal en la nube)...' :
-      'Iniciando Aaron Básico (procesamiento local, gratis)...';
+      engineToUse === 'mvsep-mdx23' ? "Iniciando Iris Studio (red neuronal de máxima calidad)..." :
+      engineToUse === 'demucs' ? 'Iniciando Iris Cloud (red neuronal en la nube)...' :
+      'Iniciando Iris Básico (procesamiento local, gratis)...';
 
     setStemProgressModal({
       isOpen: true,
@@ -444,10 +483,10 @@ export default function SongStudioModal({
 
       const stepProcessingText =
         engineToUse === 'mvsep-mdx23'
-          ? "Aaron Studio aislando pistas vocales e instrumentales..."
+          ? "Iris Studio aislando pistas vocales e instrumentales..."
           : engineToUse === 'demucs'
-          ? 'Aaron Cloud aislando Voz, Batería, Bajo, Guitarras...'
-          : 'Aaron Básico realizando filtrado de frecuencias (gratis)...';
+          ? 'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
+          : 'Iris Básico realizando filtrado de frecuencias (gratis)...';
 
       setStemProgressModal(prev => prev ? {
         ...prev,
@@ -479,9 +518,9 @@ export default function SongStudioModal({
         const pollStartedAt = Date.now();
         const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
         const engineLabel =
-          engineToUse === 'mvsep-mdx23' ? "Aaron Studio" :
-          engineToUse === 'demucs' ? 'Aaron Cloud' :
-          'Aaron Básico';
+          engineToUse === 'mvsep-mdx23' ? "Iris Studio" :
+          engineToUse === 'demucs' ? 'Iris Cloud' :
+          'Iris Básico';
         while (true) {
           await new Promise(r => setTimeout(r, 4000));
           const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
@@ -537,12 +576,12 @@ export default function SongStudioModal({
 
       if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
         const engineAuthor = data.degraded
-          ? 'Aaron Básico (Modo Degradado)'
+          ? 'Iris Básico (Modo Degradado)'
           : data.separationEngine?.includes('MVSEP')
-          ? 'Aaron Studio'
+          ? 'Iris Studio'
           : data.isNeural
-          ? 'Aaron Cloud'
-          : 'Aaron Básico (gratis)';
+          ? 'Iris Cloud'
+          : 'Iris Básico (gratis)';
         data.stems.forEach((st: any) => {
           if (!st.audioUrl) return;
 
@@ -658,8 +697,8 @@ export default function SongStudioModal({
       }
 
       const finalSeparationEngine = data.degraded
-        ? 'Aaron Básico (modo degradado)'
-        : engineToUse === 'mvsep-mdx23' ? 'Aaron Studio' : engineToUse === 'demucs' ? 'Aaron Cloud' : 'Aaron Básico';
+        ? 'Iris Básico (modo degradado)'
+        : engineToUse === 'mvsep-mdx23' ? 'Iris Studio' : engineToUse === 'demucs' ? 'Iris Cloud' : 'Iris Básico';
       const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? {
         ...i,
         pistas: newTracks,
@@ -3716,7 +3755,7 @@ export default function SongStudioModal({
                           type="button"
                           onClick={() => setShowMoisesStemsModal(idea)}
                           className="px-2 py-1.5 border-l border-amber-600/60 hover:bg-amber-400/30 text-zinc-950 transition-all cursor-pointer flex items-center"
-                          title="Elegir motor de separación (Aaron Studio, Aaron Cloud o Aaron Básico) o comparar calidad"
+                          title="Elegir motor de separación (Iris Studio, Iris Cloud o Iris Básico) o comparar calidad"
                         >
                           <Sliders className="w-3.5 h-3.5" />
                         </button>
@@ -3915,7 +3954,7 @@ export default function SongStudioModal({
                                   type="button"
                                   onClick={() => setShowMoisesStemsModal(idea)}
                                   className="px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
-                                  title="Comparar calidad con otro motor de Aaron o volver a separar"
+                                  title="Comparar calidad con otro motor de Iris o volver a separar"
                                 >
                                   <RefreshCw className="w-3 h-3" />
                                   <span className="hidden sm:inline">Comparar Motor</span>
@@ -3956,9 +3995,16 @@ export default function SongStudioModal({
                                         className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
                                         title={tr.instrumento || undefined}
                                       >
-                                        {/* Line 1: number badge + name + edit */}
+                                        {/* Line 1: number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
                                         <div className="flex items-center gap-1 min-w-0">
-                                          <span className="w-4 h-4 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono text-[9px] font-bold flex items-center justify-center shrink-0">
+                                          <span
+                                            className="w-4 h-4 rounded font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border"
+                                            style={{
+                                              backgroundColor: getTrackRainbowColor(tr.instrumento, tr.nombre, '30'),
+                                              borderColor: getTrackRainbowColor(tr.instrumento, tr.nombre, '80'),
+                                              color: getTrackRainbowColor(tr.instrumento, tr.nombre)
+                                            }}
+                                          >
                                             {idx + 1}
                                           </span>
 
@@ -4065,7 +4111,7 @@ export default function SongStudioModal({
                                         <WaveformTrack
                                           ref={(el) => { trackAudioRefs.current[tr.id] = el as HTMLAudioElement; }}
                                           audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
-                                          color={isSolo ? '#f59e0b' : (isMuted ? '#52525b' : '#818cf8')}
+                                          color={getTrackRainbowColor(tr.instrumento, tr.nombre)}
                                           masterDuration={duration || 30}
                                           trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
                                           currentTime={currentTime}
@@ -4955,7 +5001,7 @@ export default function SongStudioModal({
             <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
               <div className="flex items-center gap-2 text-amber-400 font-mono font-bold text-sm">
                 <Sliders className="w-5 h-5 text-amber-400" />
-                <span>Aaron — Separador de Pistas con IA</span>
+                <span>Iris — Separador de Pistas con IA</span>
               </div>
               <button
                 type="button"
@@ -4991,7 +5037,7 @@ export default function SongStudioModal({
                 }`}
               >
                 <Cpu className="w-3.5 h-3.5" />
-                <span>2. ¿Cómo funciona Aaron?</span>
+                <span>2. ¿Cómo funciona Iris?</span>
               </button>
 
               <button
@@ -5063,11 +5109,11 @@ export default function SongStudioModal({
                   </p>
                 </div>
 
-                {/* SELECTOR DE MOTOR AARON: STUDIO / CLOUD / BÁSICO */}
+                {/* SELECTOR DE MOTOR IRIS: STUDIO / CLOUD / BÁSICO */}
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Aaron:
+                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
                       selectedStemEngine === 'mvsep-mdx23'
@@ -5076,14 +5122,14 @@ export default function SongStudioModal({
                         ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
                         : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
                     }`}>
-                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Aaron Studio"}
-                      {selectedStemEngine === 'demucs' && '⚡ Aaron Cloud'}
-                      {selectedStemEngine === 'dsp-server' && '⚙️ Aaron Básico (gratis)'}
+                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Iris Studio"}
+                      {selectedStemEngine === 'demucs' && '⚡ Iris Cloud'}
+                      {selectedStemEngine === 'dsp-server' && '⚙️ Iris Básico (gratis)'}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    {/* Aaron Studio */}
+                    {/* Iris Studio */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('mvsep-mdx23')}
@@ -5095,7 +5141,7 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Aaron Studio
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Iris Studio
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-black border border-amber-500/30">
                           Máxima calidad
@@ -5105,11 +5151,11 @@ export default function SongStudioModal({
                         Combina dos redes neuronales de alta precisión para aislar voz, bajo, batería y demás fuentes al máximo detalle.
                       </span>
                       <span className="text-[9px] text-amber-400/80 font-bold">
-                        🐢 Más lento, ~{formatEurEstimate(AARON_ENGINE_COST_EUR['mvsep-mdx23'])}€ estimado por canción.
+                        🐢 Más lento, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['mvsep-mdx23'])}€ estimado por canción.
                       </span>
                     </button>
 
-                    {/* Aaron Cloud */}
+                    {/* Iris Cloud */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('demucs')}
@@ -5121,7 +5167,7 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Aaron Cloud
+                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Iris Cloud
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-black border border-purple-500/30">
                           Recomendado
@@ -5131,11 +5177,11 @@ export default function SongStudioModal({
                         Red neuronal en la nube probada en estudio para aislamiento directo de Voz, Batería, Bajo y Guitarras.
                       </span>
                       <span className="text-[9px] text-emerald-400 font-bold">
-                        ⚡ Rápido, ~{formatEurEstimate(AARON_ENGINE_COST_EUR['demucs'])}€ estimado por canción.
+                        ⚡ Rápido, ~{formatEurEstimate(IRIS_ENGINE_COST_EUR['demucs'])}€ estimado por canción.
                       </span>
                     </button>
 
-                    {/* Aaron Básico (local) */}
+                    {/* Iris Básico (local) */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('dsp-server')}
@@ -5147,7 +5193,7 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Cpu className="w-3.5 h-3.5 text-blue-400" /> Aaron Básico
+                          <Cpu className="w-3.5 h-3.5 text-blue-400" /> Iris Básico
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-black border border-blue-500/30">
                           100% Gratis
@@ -5188,35 +5234,35 @@ export default function SongStudioModal({
                   {selectedStemEngine === 'mvsep-mdx23' && (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-                      <span>✨ Separar con Aaron Studio</span>
+                      <span>✨ Separar con Iris Studio</span>
                     </>
                   )}
                   {selectedStemEngine === 'demucs' && (
                     <>
                       <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
-                      <span>⚡ Separar con Aaron Cloud</span>
+                      <span>⚡ Separar con Iris Cloud</span>
                     </>
                   )}
                   {selectedStemEngine === 'dsp-server' && (
                     <>
                       <Cpu className="w-4 h-4 text-cyan-200" />
-                      <span>⚙️ Separar con Aaron Básico (gratis)</span>
+                      <span>⚙️ Separar con Iris Básico (gratis)</span>
                     </>
                   )}
                 </button>
               </div>
             )}
 
-            {/* TAB 2: ¿CÓMO FUNCIONA AARON? */}
+            {/* TAB 2: ¿CÓMO FUNCIONA IRIS? */}
             {moisesTab === 'how_it_works' && (
               <div className="space-y-4 text-xs text-neutral-300 leading-relaxed font-sans">
                 <div className="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-200 space-y-2">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
                     <Cpu className="w-4 h-4 text-indigo-400" />
-                    ¿Cómo consigue Aaron separar audio de forma tan precisa?
+                    ¿Cómo consigue Iris separar audio de forma tan precisa?
                   </h4>
                   <p className="text-neutral-300 leading-normal">
-                    Aaron se apoya en redes neuronales de <strong>Deep Learning (Aprendizaje Profundo)</strong> entrenadas específicamente para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales).
+                    Iris se apoya en redes neuronales de <strong>Deep Learning (Aprendizaje Profundo)</strong> entrenadas específicamente para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales).
                   </p>
                 </div>
 
@@ -5644,10 +5690,10 @@ export default function SongStudioModal({
                 }`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
                   {stemProgressModal.engineChoice === 'mvsep-mdx23'
-                    ? '✨ Aaron Studio'
+                    ? '✨ Iris Studio'
                     : stemProgressModal.engineChoice === 'demucs'
-                    ? '⚡ Aaron Cloud'
-                    : '⚙️ Aaron Básico'}
+                    ? '⚡ Iris Cloud'
+                    : '⚙️ Iris Básico'}
                 </span>
               )}
             </div>
@@ -5763,7 +5809,7 @@ export default function SongStudioModal({
                       <span>⚠️ Modo Degradado Activo (Filtros DSP Básicos)</span>
                     </div>
                     <p className="text-[11px] text-neutral-200 font-sans leading-relaxed">
-                      {stemProgressModal.degradedReason || 'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Aaron Básico (filtrado por frecuencias de señal).'}
+                      {stemProgressModal.degradedReason || 'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Iris Básico (filtrado por frecuencias de señal).'}
                     </p>
                     <div className="pt-1 text-[10px] font-mono text-amber-300">
                       💡 Para separación de calidad de estudio, comprueba la configuración del proveedor de IA en Ajustes.
@@ -5785,11 +5831,11 @@ export default function SongStudioModal({
                       </span>
                     </div>
                     <p className="text-[11px] text-neutral-300 font-sans leading-relaxed">
-                      Procesado con <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border border-white/10">{stemProgressModal.separationEngine || 'Aaron'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
+                      Procesado con <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border border-white/10">{stemProgressModal.separationEngine || 'Iris'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
                     </p>
                     {stemProgressModal.engineChoice && (
                       <p className="text-[10px] text-emerald-400/70 font-mono">
-                        💶 Coste estimado: {AARON_ENGINE_COST_EUR[stemProgressModal.engineChoice] > 0 ? `~${formatEurEstimate(AARON_ENGINE_COST_EUR[stemProgressModal.engineChoice])}€` : 'gratis'}
+                        💶 Coste estimado: {IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice] > 0 ? `~${formatEurEstimate(IRIS_ENGINE_COST_EUR[stemProgressModal.engineChoice])}€` : 'gratis'}
                       </p>
                     )}
                   </div>
@@ -5859,7 +5905,7 @@ export default function SongStudioModal({
                       ¿Quieres comparar la pureza del aislamiento vocal y sangrado armónico? Selecciona un motor alternativo para re-procesar:
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-                      {/* Aaron Studio */}
+                      {/* Iris Studio */}
                       <button
                         type="button"
                         onClick={() => {
@@ -5873,7 +5919,7 @@ export default function SongStudioModal({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-white">✨ Aaron Studio</span>
+                          <span className="font-bold text-xs text-white">✨ Iris Studio</span>
                           {stemProgressModal.engineChoice === 'mvsep-mdx23' && (
                             <span className="text-[9px] px-1 py-0.2 rounded bg-amber-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
@@ -5881,7 +5927,7 @@ export default function SongStudioModal({
                         <span className="text-[10px] text-neutral-400">Máxima calidad (ensamble)</span>
                       </button>
 
-                      {/* Aaron Cloud */}
+                      {/* Iris Cloud */}
                       <button
                         type="button"
                         onClick={() => {
@@ -5895,7 +5941,7 @@ export default function SongStudioModal({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-white">⚡ Aaron Cloud</span>
+                          <span className="font-bold text-xs text-white">⚡ Iris Cloud</span>
                           {stemProgressModal.engineChoice === 'demucs' && (
                             <span className="text-[9px] px-1 py-0.2 rounded bg-purple-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
@@ -5903,7 +5949,7 @@ export default function SongStudioModal({
                         <span className="text-[10px] text-neutral-400">Recomendado (6 canales)</span>
                       </button>
 
-                      {/* Aaron Básico */}
+                      {/* Iris Básico */}
                       <button
                         type="button"
                         onClick={() => {
@@ -5917,7 +5963,7 @@ export default function SongStudioModal({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-white">⚙️ Aaron Básico</span>
+                          <span className="font-bold text-xs text-white">⚙️ Iris Básico</span>
                           {stemProgressModal.engineChoice === 'dsp-server' && (
                             <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
@@ -6133,8 +6179,8 @@ export default function SongStudioModal({
                         <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                         <span>
                           {stemProgressModal.engineChoice === 'dsp-server'
-                            ? 'Probar con Aaron Studio'
-                            : 'Separar con Aaron Básico (Gratis)'}
+                            ? 'Probar con Iris Studio'
+                            : 'Separar con Iris Básico (Gratis)'}
                         </span>
                       </button>
                     )}
