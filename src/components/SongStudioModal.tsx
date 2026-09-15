@@ -5001,7 +5001,7 @@ export default function SongStudioModal({
             <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
               <div className="flex items-center gap-2 text-amber-400 font-mono font-bold text-sm">
                 <Sliders className="w-5 h-5 text-amber-400" />
-                <span>Iris — Separador de Pistas con IA</span>
+                <span>Iris Espectro — Separador de Pistas con IA</span>
               </div>
               <button
                 type="button"
@@ -5113,7 +5113,7 @@ export default function SongStudioModal({
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris:
+                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Iris Espectro:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
                       selectedStemEngine === 'mvsep-mdx23'
@@ -5259,10 +5259,10 @@ export default function SongStudioModal({
                 <div className="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-200 space-y-2">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
                     <Cpu className="w-4 h-4 text-indigo-400" />
-                    ¿Cómo consigue Iris separar audio de forma tan precisa?
+                    ¿Cómo consigue Iris Espectro separar audio de forma tan precisa?
                   </h4>
                   <p className="text-neutral-300 leading-normal">
-                    Iris se apoya en redes neuronales de <strong>Deep Learning (Aprendizaje Profundo)</strong> entrenadas específicamente para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales).
+                    Iris Espectro se apoya en redes neuronales de <strong>Deep Learning (Aprendizaje Profundo)</strong> entrenadas específicamente para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales).
                   </p>
                 </div>
 
