@@ -165,6 +165,11 @@
 * **Consumo de API:** Todas las llamadas HTTP desde componentes deben canalizarse a través de `src/services/api.ts` o `src/utils/api.ts` (inyecta automáticamente JWT de auth y cabeceras `x-band-id`).
 * **Excepción i18n:** El componente del EPK público (`/epk`) se renderiza fuera de `LanguageProvider` para prevenir que Google Translate altere nombres de canciones o bandas.
 
+### 5.3 Code smells — hábito de revisión, no un "sistema" nuevo
+* **Qué es y qué NO es:** un code smell no es un fallo de comportamiento (eso lo pillan los tests) — es código que funciona pero está mal diseñado y va a morder más adelante: duplicación, funciones/componentes enormes, parámetros booleanos que cambian el comportamiento entero, abstracciones que nadie usa, código muerto. No hace falta montar tooling nuevo para esto: ya existen dos capas.
+* **Capa 1 — ESLint (`npm run lint:eslint`):** ya cubre parte (`no-explicit-any`, `no-unused-vars`, hooks mal usados). La deuda existente (~2816 hallazgos) va con ratchet en CI — no crece, no se arregla toda de golpe (ver comentario en `.github/workflows/ci.yml`).
+* **Capa 2 — hábito antes de cada merge grande:** pasar la skill `/code-review` (bugs + limpieza) o `/simplify` (solo limpieza: reutilización, simplificación, eficiencia) de Claude Code sobre el diff antes de mergear algo grande a `develop`. No es un paso automático de CI — es un hábito manual, a criterio de quien merge.
+
 ---
 
 ## 🧘 6. Simplicidad en Pantalla (REGLA TRANSVERSAL — aplica a TODA la app)
