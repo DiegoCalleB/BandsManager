@@ -175,11 +175,11 @@ const IRIS_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', numb
 const formatEurEstimate = (n: number) => n.toFixed(2).replace('.', ',');
 
 // Guiño a Iris (diosa del arcoíris): cada pista se colorea recorriendo el arcoíris en orden
-// (rojo, naranja, amarillo, verde, cian, azul, violeta...). Por defecto sigue la posición en la
+// (rojo, naranja, amarillo, verde, azul, violeta). Por defecto sigue la posición en la
 // lista, pero en cuanto el usuario reordena pistas a mano, cada una "congela" su color en
 // tr.colorHue para que se lo lleve consigo al moverse — a partir de ahí el arcoíris ya no sale
 // perfectamente en orden, y eso es justo lo esperado: gana la posición que elige el usuario.
-const RAINBOW_HUE_STEPS = [355, 25, 48, 130, 175, 220, 280];
+const RAINBOW_HUE_STEPS = [355, 28, 50, 135, 215, 280]; // Rojo, Naranja, Amarillo, Verde, Azul, Violeta
 // Convierte HSL a hex para poder seguir usando el truco de "hex + 2 dígitos de alpha" que ya
 // usa WaveformTrack internamente (color + '40', color + '50'...) sin tener que tocar ese componente.
 const hslToHex = (h: number, s: number, l: number): string => {
