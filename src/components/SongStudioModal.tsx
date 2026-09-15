@@ -4748,6 +4748,39 @@ export default function SongStudioModal({
 
         </div>
 
+        {/* Mini-transporte fijo: reproducir/pausar la idea activa sin tener que volver a subir
+            hasta la cabecera cuando estás abajo del todo viendo las últimas pistas */}
+        {(() => {
+          const ideas = song.audioIdeas || [];
+          const activeIdea =
+            ideas.find(i => i.id === playingIdeaId) ||
+            (expandedIdeaIds.size === 1 ? ideas.find(i => expandedIdeaIds.has(i.id)) : undefined);
+          if (!activeIdea) return null;
+          const isPlaying = playingIdeaId === activeIdea.id;
+          const curTime = currentTimeMap[activeIdea.id] || 0;
+          const dur = durationMap[activeIdea.id] || 0;
+          return (
+            <div className="border-t border-white/10 bg-zinc-950/95 backdrop-blur-sm px-3 sm:px-4 py-2 flex items-center gap-3 shadow-[0_-4px_12px_rgba(0,0,0,0.4)]">
+              <button
+                type="button"
+                onClick={() => togglePlayIdea(activeIdea)}
+                className={`p-2.5 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer shrink-0 ${
+                  isPlaying ? 'bg-amber-500 text-zinc-950' : 'bg-emerald-500 hover:bg-emerald-400 text-zinc-950'
+                }`}
+                title="Play / Pausa"
+              >
+                {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+              </button>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold text-white truncate">{activeIdea.titulo}</p>
+                <p className="text-[10px] font-mono text-neutral-400">
+                  {formatTime(curTime)} <span className="text-neutral-600">/</span> {formatTime(dur)}
+                </p>
+              </div>
+            </div>
+          );
+        })()}
+
       </div>
 
       <SongStudioAiGeneratorModal
