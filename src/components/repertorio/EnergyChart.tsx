@@ -36,6 +36,9 @@ export interface EnergyChartPoint {
    * quintas) — ver evaluarTransicionArmonica en harmonicAnalysis.ts. Se marca con un aviso entre
    * ambos puntos, igual que ya se hace con los eventos de "speech". */
   harmonyClash?: boolean;
+  /** Tonalidad de la canción (detectada o manual, p.ej. "Am", "C", "F#"), null/undefined si no
+   * hay dato o es un evento de "speech". Se muestra como etiqueta de texto junto al punto. */
+  tonalidad?: string | null;
 }
 
 export interface EnergyChartZone {
@@ -74,6 +77,14 @@ interface EnergyChartProps {
   showIdealCurve?: boolean;
   /** Muestra/oculta la línea de BPM (eje secundario a la derecha). Por defecto visible. */
   showBpmLine?: boolean;
+  /** Muestra/oculta la etiqueta de tonalidad junto a cada punto. Apagada por defecto — con el
+   * gráfico ya lleno de curvas y avisos, es otra capa de texto que solo conviene cuando se busca
+   * específicamente la tonalidad (normalmente en modo zoom, con más espacio entre puntos). */
+  showTonalidad?: boolean;
+  /** Ancho fijo en px para el gráfico (en vez de 100% del contenedor) — "modo zoom": más espacio
+   * horizontal entre puntos para leer etiquetas (tonalidad, BPM) sin que se pisen. El que llama
+   * es responsable de envolver el componente en un contenedor con scroll horizontal. */
+  expandedWidthPx?: number;
 }
 
 /**
@@ -95,7 +106,9 @@ export function EnergyChart({
   onReorder,
   onEnergyChange,
   showIdealCurve = true,
-  showBpmLine = false
+  showBpmLine = false,
+  showTonalidad = false,
+  expandedWidthPx
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;
@@ -320,6 +333,8 @@ export function EnergyChart({
       className={`relative ${compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'} ${animMode === 'entrance' && !compact ? 'energy-map-grand-entrance' : ''}`}
       style={{
         height,
+        width: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
+        minWidth: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
         cursor: draggingFromIndex !== null ? (dragAxis === 'y' ? 'ns-resize' : 'ew-resize') : undefined
       }}
     >
@@ -517,6 +532,9 @@ export function EnergyChart({
                       {typeof d.bpm === 'number' && (
                         <p className="text-sky-300 mt-0.5">🥁 {d.bpm} BPM</p>
                       )}
+                      {d.tonalidad && (
+                        <p className="text-amber-300 mt-0.5">🎼 {d.tonalidad}</p>
+                      )}
                       {d.variance > 0 && (
                         <p className="text-sky-300 mt-0.5">
                           🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
@@ -637,6 +655,25 @@ export function EnergyChart({
                     }}
                     onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
                   />
+                  {/* Etiqueta de tonalidad — puramente informativa, nunca captura el puntero (si
+                      no, taparía la diana táctil del punto justo debajo). */}
+                  {showTonalidad && payload.tonalidad && (
+                    <text
+                      x={cx}
+                      y={cy - (isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault) - 6}
+                      textAnchor="middle"
+                      fontSize={compact ? 9 : 11}
+                      fontFamily="monospace"
+                      fontWeight={600}
+                      fill="#fbbf24"
+                      stroke="#000000"
+                      strokeWidth={2.5}
+                      paintOrder="stroke"
+                      pointerEvents="none"
+                    >
+                      {payload.tonalidad}
+                    </text>
+                  )}
                 </React.Fragment>
               );
             }}

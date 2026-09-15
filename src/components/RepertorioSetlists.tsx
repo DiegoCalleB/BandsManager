@@ -637,6 +637,12 @@ export default function RepertorioSetlists({
  // curva ideal + avisos de choque), la línea de BPM saturaba demasiado el gráfico en pantallas
  // estrechas de móvil — se deja como opt-in para quien quiera mirarla en un momento concreto.
  const [showBpmLine, setShowBpmLine] = useState<boolean>(false);
+ // Igual que el BPM: la tonalidad de cada canción como etiqueta junto al punto, apagada por
+ // defecto — con muchos temas seguidos las etiquetas se pisan si no hay hueco (ver chartZoom).
+ const [showTonalidad, setShowTonalidad] = useState<boolean>(false);
+ // "Modo zoom": ensancha el gráfico (más separación horizontal entre puntos) dentro de un
+ // contenedor con scroll propio, para poder leer BPM/tonalidad por tramos sin que se amontonen.
+ const [chartZoom, setChartZoom] = useState<boolean>(false);
  // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
  // "⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
  // justo la queja: "estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
@@ -741,7 +747,8 @@ export default function RepertorioSetlists({
     isSong: pt.isSong,
     isSpeechEvent,
     bpm: isSpeechEvent ? null : (typeof pt.song?.bpm === 'number' && pt.song.bpm > 0 ? pt.song.bpm : null),
-    harmonyClash
+    harmonyClash,
+    tonalidad: isSpeechEvent ? null : (pt.song?.tonalidad?.trim() || null)
    };
   });
 
@@ -2835,6 +2842,28 @@ export default function RepertorioSetlists({
                             <span>🥁 Línea de BPM</span>
                             <span>{showBpmLine ? 'ON' : 'OFF'}</span>
                           </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowTonalidad((v) => !v)}
+                            className={`w-full px-2 py-1 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+                              showTonalidad ? 'bg-neutral-700 text-neutral-200' : 'bg-neutral-800 text-neutral-500'
+                            }`}
+                            title="Tonalidad de cada canción junto a su punto — con muchos temas seguidos, usa el zoom (🔍) para separarlos y leerlos bien"
+                          >
+                            <span>🎼 Tonalidad</span>
+                            <span>{showTonalidad ? 'ON' : 'OFF'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setChartZoom((v) => !v)}
+                            className={`w-full px-2 py-1 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+                              chartZoom ? 'bg-neutral-700 text-neutral-200' : 'bg-neutral-800 text-neutral-500'
+                            }`}
+                            title="Ensancha el gráfico y añade scroll horizontal — más espacio entre puntos para leer tonalidad/BPM por tramos"
+                          >
+                            <span>🔍 Zoom (más espacio)</span>
+                            <span>{chartZoom ? 'ON' : 'OFF'}</span>
+                          </button>
                           <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t border-neutral-800">
                             <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
                             <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#059669' }} />🎵 Media</span>
@@ -2910,20 +2939,24 @@ export default function RepertorioSetlists({
                   );
                 })()}
 
-                <EnergyChart
-                  setlistKey={activeSetlist.id}
-                  chartData={chartData}
-                  yDomain={yDomain}
-                  zonasEnergia={ZONAS_ENERGIA}
-                  highlightedSongIds={highlightedSongIds}
-                  selectedSetlistItemId={selectedSetlistItemId}
-                  onSelectItem={setSelectedSetlistItemId}
-                  onReorder={reorderSetlistItems}
-                  onEnergyChange={handleEnergyChartDrag}
-                  height={256}
-                  showIdealCurve={showIdealCurve}
-                  showBpmLine={showBpmLine}
-                />
+                <div className={chartZoom ? 'overflow-x-auto -mx-1 px-1' : undefined}>
+                  <EnergyChart
+                    setlistKey={activeSetlist.id}
+                    chartData={chartData}
+                    yDomain={yDomain}
+                    zonasEnergia={ZONAS_ENERGIA}
+                    highlightedSongIds={highlightedSongIds}
+                    selectedSetlistItemId={selectedSetlistItemId}
+                    onSelectItem={setSelectedSetlistItemId}
+                    onReorder={reorderSetlistItems}
+                    onEnergyChange={handleEnergyChartDrag}
+                    height={256}
+                    showIdealCurve={showIdealCurve}
+                    showBpmLine={showBpmLine}
+                    showTonalidad={showTonalidad}
+                    expandedWidthPx={chartZoom ? Math.max(700, chartData.length * 60) : undefined}
+                  />
+                </div>
 
                 {/* Joystick/D-pad del punto seleccionado: ◀▶ mueve el tema de posición, ▲▼ sube o
                     baja su energía un punto exacto — alternativa al arrastre del gráfico para
