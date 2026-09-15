@@ -877,16 +877,18 @@ export default function Dashboard({
             ))}
           </div>
         ) : (
-          <div className="p-6 rounded-xl bg-[#121214] border border-stone-800/80 text-center space-y-2.5">
-            <Calendar className="w-7 h-7 text-neutral-500 mx-auto" />
-            <div>
-              <p className="text-xs font-bold text-neutral-200 font-display">No hay próximas fechas programadas</p>
-              <p className="text-[11px] font-mono text-neutral-400 mt-0.5">Añade conciertos o ensayos desde el calendario para sincronizar la agenda.</p>
+          // En móvil este estado vacío se comía media pantalla (icono grande + título + párrafo
+          // + botón, cada uno con su margen) y empujaba todo lo de abajo -incluido el widget de
+          // Ko-fi- fuera de la vista. En una sola fila cabe lo mismo dicho más corto.
+          <div className="px-4 py-3 rounded-xl bg-[#121214] border border-stone-800/80 flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Calendar className="w-4 h-4 text-neutral-500 shrink-0" />
+              <p className="text-xs font-mono text-neutral-400 truncate">Sin próximas fechas programadas</p>
             </div>
             <button
               type="button"
               onClick={() => onNavigate && onNavigate('calendario')}
-              className="px-3.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 shrink-0"
             >
               <Plus className="w-3 h-3" />
               <span>Programar Fecha</span>
