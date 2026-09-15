@@ -637,6 +637,21 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
                 </button>
               </div>
             </div>
+
+            <div className="flex items-center gap-2 px-0.5">
+              <span className="text-[10px] font-mono text-neutral-500 w-10 text-right">{Math.round(baseBpm * 0.4)}</span>
+              <input
+                type="range"
+                min={Math.round(baseBpm * 0.4)}
+                max={Math.round(baseBpm * 1.6)}
+                step={1}
+                value={targetBpm}
+                onChange={(e) => changeSpeed(Number(e.target.value) / baseBpm)}
+                title="Ajuste fino de tempo — arrastra para cualquier BPM exacto"
+                className="flex-1 accent-amber-500"
+              />
+              <span className="text-[10px] font-mono text-neutral-500 w-10">{Math.round(baseBpm * 1.6)}</span>
+            </div>
           </div>
 
           {/* Mezcla manual por pista */}
