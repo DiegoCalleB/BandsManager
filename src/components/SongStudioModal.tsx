@@ -4040,7 +4040,9 @@ export default function SongStudioModal({
                                 return (
                                   <div
                                     key={tr.id}
-                                    data-track-row-idx={idx}
+                                    onDragOver={(e) => { e.preventDefault(); if (draggedTrackInfo?.ideaId === idea.id) setDragOverTrackIndex(idx); }}
+                                    onDragLeave={() => setDragOverTrackIndex(prev => (prev === idx ? null : prev))}
+                                    onDrop={(e) => { e.preventDefault(); handleDropTrack(idea, idx); }}
                                     className={`rounded-xl border overflow-hidden transition-all ${
                                       isDraggingThisTrack
                                         ? 'opacity-30 scale-[0.98] border-dashed border-indigo-400'
@@ -4055,47 +4057,30 @@ export default function SongStudioModal({
                                             : 'bg-white/5 border-white/10 hover:border-white/20'
                                     }`}
                                   >
-                                    {/* Cubase-style compact row: name/controls sidebar left of the waveform on tablet/desktop; on mobile the sidebar becomes a bar above the waveform instead (too narrow to sit side by side) */}
-                                    <div className="flex flex-col sm:flex-row sm:items-stretch">
-                                      {/* Sidebar: name + transport controls, 2 compact lines */}
-                                      <div
-                                        className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
-                                        title={tr.instrumento || undefined}
-                                      >
-                                        {/* Line 1: asa de arrastre + number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
+                                    <div className="flex items-stretch">
+                                      {/* Asa de arrastre grande, ocupa todo el alto de la fila — igual sistema
+                                          (HTML5 drag nativo) que ya funciona en el repertorio, pero con un
+                                          objetivo táctil mucho mayor que un icono suelto */}
+                                      {tracks.length > 1 && (
+                                        <div
+                                          draggable
+                                          onDragStart={() => setDraggedTrackInfo({ ideaId: idea.id, index: idx })}
+                                          onDragEnd={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
+                                          className="w-7 shrink-0 flex items-center justify-center bg-black/30 hover:bg-black/50 active:bg-indigo-500/20 border-r border-white/10 cursor-grab active:cursor-grabbing touch-none select-none"
+                                          title="Arrastrar para reordenar pista"
+                                        >
+                                          <GripVertical className="w-4 h-4 text-neutral-400" />
+                                        </div>
+                                      )}
+                                      {/* Cubase-style compact row: name/controls sidebar left of the waveform on tablet/desktop; on mobile the sidebar becomes a bar above the waveform instead (too narrow to sit side by side) */}
+                                      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-stretch">
+                                        {/* Sidebar: name + transport controls, 2 compact lines */}
+                                        <div
+                                          className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
+                                          title={tr.instrumento || undefined}
+                                        >
+                                        {/* Line 1: number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
                                         <div className="flex items-center gap-1 min-w-0">
-                                          {tracks.length > 1 && (
-                                            <span
-                                              onPointerDown={(e) => {
-                                                e.preventDefault();
-                                                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-                                                setDraggedTrackInfo({ ideaId: idea.id, index: idx });
-                                                setDragOverTrackIndex(idx);
-                                              }}
-                                              onPointerMove={(e) => {
-                                                if (!draggedTrackInfo || draggedTrackInfo.ideaId !== idea.id) return;
-                                                const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
-                                                const rowEl = el?.closest('[data-track-row-idx]') as HTMLElement | null;
-                                                if (rowEl) {
-                                                  const overIdx = parseInt(rowEl.getAttribute('data-track-row-idx') || '', 10);
-                                                  if (!isNaN(overIdx)) setDragOverTrackIndex(overIdx);
-                                                }
-                                              }}
-                                              onPointerUp={() => {
-                                                if (draggedTrackInfo?.ideaId === idea.id && dragOverTrackIndex !== null) {
-                                                  handleDropTrack(idea, dragOverTrackIndex);
-                                                } else {
-                                                  setDraggedTrackInfo(null);
-                                                  setDragOverTrackIndex(null);
-                                                }
-                                              }}
-                                              onPointerCancel={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
-                                              className="text-neutral-500 hover:text-neutral-300 cursor-grab active:cursor-grabbing shrink-0 -ml-0.5 touch-none select-none"
-                                              title="Arrastrar para reordenar pista"
-                                            >
-                                              <GripVertical className="w-3 h-3" />
-                                            </span>
-                                          )}
                                           <span
                                             className="w-4 h-4 rounded font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border"
                                             style={{
@@ -4225,6 +4210,7 @@ export default function SongStudioModal({
                                             }
                                           }}
                                         />
+                                      </div>
                                       </div>
                                     </div>
 
