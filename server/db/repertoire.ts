@@ -1,6 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
-import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio, calcularEnergiaBpmVolumen } from "../utils/audioEnergy.js";
+import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio, calcularEnergiaMultifactor } from "../utils/audioEnergy.js";
 import { analizarAudioConIris, detectarTonalidadDesdeAudio } from "../utils/audioKey.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
@@ -34,11 +34,11 @@ export async function analizarYGuardarDinamicaCancion(
   // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede
   // fallar el análisis de dinámica y aun así ser perfectamente decodificable para BPM/tonalidad,
   // así que no se condiciona a `audioAnalizable`.
-  const { bpm: bpmDetectado, tonalidad: tonalidadDetectada } = await analizarAudioConIris(audioUrl, { timeoutMs: 90_000 }).catch((err) => {
+  const { bpm: bpmDetectado, tonalidad: tonalidadDetectada, onsetDensity } = await analizarAudioConIris(audioUrl, { timeoutMs: 90_000 }).catch((err) => {
     console.error(`[Repertorio] analizarAudioConIris lanzó (no debería):`, err?.message || err);
-    return { bpm: null, tonalidad: null };
+    return { bpm: null, tonalidad: null, onsetDensity: null };
   });
-  console.log(`[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? 'ok' : 'no analizable'} bpm=${bpmDetectado ?? '-'} tonalidad=${tonalidadDetectada?.tonalidad ?? '-'}`);
+  console.log(`[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? 'ok' : 'no analizable'} bpm=${bpmDetectado ?? '-'} tonalidad=${tonalidadDetectada?.tonalidad ?? '-'} densidadOnsets=${onsetDensity?.toFixed(2) ?? '-'}`);
 
   // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
   // canciones antiguas pueden tener el band_id guardado con o sin prefijo band-/reg-, y un
@@ -68,6 +68,9 @@ export async function analizarYGuardarDinamicaCancion(
     cambios.energia_bpm_detectado = bpmDetectado; // sigue alimentando el recalibrado interno de energía
     cambios.bpm = bpmDetectado;
     cambios.bpm_detectado_en = ahora;
+  }
+  if (onsetDensity !== null) {
+    cambios.energia_onset_density = onsetDensity; // tercera señal del recalibrado de energía
   }
   if (tonalidadDetectada) {
     cambios.tonalidad = tonalidadDetectada.tonalidad;
@@ -99,7 +102,7 @@ export async function analizarYGuardarDinamicaCancion(
   // Tras guardar, recalibrar todas las energías de la banda para que estén normalizadas
   // relativas unas a otras usando BPM + volumen híbrido. Solo tiene sentido si hubo dinámica o
   // BPM nuevos que aportar (si solo se detectó tonalidad, la energía no ha cambiado).
-  if (audioAnalizable || bpmDetectado !== null) {
+  if (audioAnalizable || bpmDetectado !== null || onsetDensity !== null) {
     await recalibrarEnergiasDelRepertorio(bandId);
   }
 
@@ -165,10 +168,10 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
   // debe pisarlo silenciosamente solo porque se analizó el audio de otra canción del repertorio.
   const { data: songs, error: fetchError } = await sb
     .from("songs")
-    .select("id, energia_db_promedio, energia_bpm_detectado")
+    .select("id, energia_db_promedio, energia_bpm_detectado, energia_onset_density")
     .in("band_id", candidateIds)
     .eq("energia_manual", false)
-    .or("energia_db_promedio.not.is.null,energia_bpm_detectado.not.is.null");
+    .or("energia_db_promedio.not.is.null,energia_bpm_detectado.not.is.null,energia_onset_density.not.is.null");
 
   if (fetchError) {
     console.error("[Repertorio] Error fetching songs for recalibration:", fetchError.message);
@@ -176,38 +179,46 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
   }
   if (!songs || songs.length === 0) return;
 
-  // Calcular min/max para normalizar BPM y dB
+  // Calcular min/max para normalizar BPM, dB y densidad de onsets
   const bpms = songs
     .map((s) => s.energia_bpm_detectado as number)
     .filter((bpm) => typeof bpm === "number");
   const dbs = songs
     .map((s) => s.energia_db_promedio as number)
     .filter((db) => typeof db === "number");
+  const onsetDensities = songs
+    .map((s) => s.energia_onset_density as number)
+    .filter((d) => typeof d === "number");
 
-  if (bpms.length === 0 && dbs.length === 0) return;
+  if (bpms.length === 0 && dbs.length === 0 && onsetDensities.length === 0) return;
 
-  // min/max SOLO de canciones con dato real: una canción sin BPM detectable no debe
+  // min/max SOLO de canciones con dato real: una canción sin BPM/densidad detectable no debe
   // ensanchar ni desplazar el rango que usa el resto de la banda para normalizarse.
   const bandStats = {
     minBpm: bpms.length > 0 ? Math.min(...bpms) : 120,
     maxBpm: bpms.length > 0 ? Math.max(...bpms) : 120,
     minDb: dbs.length > 0 ? Math.min(...dbs) : -25,
-    maxDb: dbs.length > 0 ? Math.max(...dbs) : -25
+    maxDb: dbs.length > 0 ? Math.max(...dbs) : -25,
+    minOnsetDensity: onsetDensities.length > 0 ? Math.min(...onsetDensities) : 2,
+    maxOnsetDensity: onsetDensities.length > 0 ? Math.max(...onsetDensities) : 2
   };
 
-  // Fallback para la canción SIN bpm/db detectado: la mediana real de la banda (no un
-  // 120 fijo), para que esa canción caiga cerca del centro de la distribución real en
+  // Fallback para la canción SIN bpm/db/densidad detectado: la mediana real de la banda (no un
+  // valor fijo), para que esa canción caiga cerca del centro de la distribución real en
   // vez de en un punto arbitrario que puede quedar fuera del rango observado.
   const sortedBpms = [...bpms].sort((a, b) => a - b);
   const medianBpm = sortedBpms.length > 0 ? sortedBpms[Math.floor(sortedBpms.length / 2)] : 120;
   const sortedDbs = [...dbs].sort((a, b) => a - b);
   const medianDb = sortedDbs.length > 0 ? sortedDbs[Math.floor(sortedDbs.length / 2)] : -25;
+  const sortedOnsetDensities = [...onsetDensities].sort((a, b) => a - b);
+  const medianOnsetDensity = sortedOnsetDensities.length > 0 ? sortedOnsetDensities[Math.floor(sortedOnsetDensities.length / 2)] : 2;
 
-  // Mapea cada canción a 1-20 usando la fórmula híbrida
+  // Mapea cada canción a 1-20 usando la fórmula multifactor (tempo + densidad rítmica + volumen)
   for (const song of songs) {
     const bpm = song.energia_bpm_detectado ?? medianBpm;
     const db = song.energia_db_promedio ?? medianDb;
-    const energia = calcularEnergiaBpmVolumen(bpm, db, bandStats);
+    const onsetDensity = song.energia_onset_density ?? medianOnsetDensity;
+    const energia = calcularEnergiaMultifactor(bpm, db, onsetDensity, bandStats);
 
     const { error: updateError } = await sb
       .from("songs")

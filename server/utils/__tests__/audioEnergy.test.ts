@@ -6,7 +6,7 @@ import {
   analizarEnergiaAudio,
   medirVariacionInterna,
   calcularVolumenPromedioAudio,
-  calcularEnergiaBpmVolumen,
+  calcularEnergiaMultifactor,
   DB_SILENCIO,
   type PuntoEnergia,
   construirFiltroPreprocesamientoDirecto,
@@ -206,27 +206,36 @@ describe('calcularVolumenPromedioAudio', () => {
 });
 
 
-describe('calcularEnergiaBpmVolumen', () => {
-  const bandStats = { minBpm: 80, maxBpm: 160, minDb: -35, maxDb: -15 };
+describe('calcularEnergiaMultifactor', () => {
+  const bandStats = { minBpm: 80, maxBpm: 160, minDb: -35, maxDb: -15, minOnsetDensity: 1, maxOnsetDensity: 5 };
 
-  it('tempo rápido + volumen alto da energía cerca del máximo', () => {
-    const energia = calcularEnergiaBpmVolumen(160, -15, bandStats);
+  it('tempo rápido + volumen alto + densidad rítmica alta da energía cerca del máximo', () => {
+    const energia = calcularEnergiaMultifactor(160, -15, 5, bandStats);
     expect(energia).toBeGreaterThanOrEqual(17);
   });
 
-  it('tempo lento + volumen bajo da energía cerca del mínimo', () => {
-    const energia = calcularEnergiaBpmVolumen(80, -35, bandStats);
+  it('tempo lento + volumen bajo + densidad rítmica baja da energía cerca del mínimo', () => {
+    const energia = calcularEnergiaMultifactor(80, -35, 1, bandStats);
     expect(energia).toBeLessThanOrEqual(4);
   });
 
   it('nunca se sale de 1-20', () => {
-    expect(calcularEnergiaBpmVolumen(1000, 0, bandStats)).toBeLessThanOrEqual(20);
-    expect(calcularEnergiaBpmVolumen(-1000, -200, bandStats)).toBeGreaterThanOrEqual(1);
+    expect(calcularEnergiaMultifactor(1000, 0, 100, bandStats)).toBeLessThanOrEqual(20);
+    expect(calcularEnergiaMultifactor(-1000, -200, -100, bandStats)).toBeGreaterThanOrEqual(1);
   });
 
-  it('con toda la banda en el mismo tempo y volumen, no inventa contraste: energía media', () => {
-    const plano = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25 };
-    expect(calcularEnergiaBpmVolumen(120, -25, plano)).toBe(10);
+  it('con toda la banda en el mismo tempo, volumen y densidad, no inventa contraste: energía media', () => {
+    const plano = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25, minOnsetDensity: 3, maxOnsetDensity: 3 };
+    expect(calcularEnergiaMultifactor(120, -25, 3, plano)).toBe(10);
+  });
+
+  it('un tercer factor con más rango que los otros dos no impide diferenciar por él', () => {
+    // BPM y dB planos (sin variedad real), pero la densidad rítmica sí varía en la banda: la
+    // canción más densa debe puntuar más alto que la más espaciada.
+    const bandStatsDensidadVaria = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25, minOnsetDensity: 1, maxOnsetDensity: 6 };
+    const densa = calcularEnergiaMultifactor(120, -25, 6, bandStatsDensidadVaria);
+    const espaciada = calcularEnergiaMultifactor(120, -25, 1, bandStatsDensidadVaria);
+    expect(densa).toBeGreaterThan(espaciada);
   });
 });
 

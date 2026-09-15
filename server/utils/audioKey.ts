@@ -395,22 +395,32 @@ export function detectarBpmDesdeOnsets(onsets: number[]): number | null {
 }
 
 /**
- * Analiza BPM y tonalidad en una sola pasada: una única extracción de PCM (la parte cara —
- * descargar y decodificar el audio) alimenta tanto el detector de onsets/BPM como el croma/
- * tonalidad, en vez de descargar el mismo audio dos veces para dos análisis independientes.
+ * Analiza BPM, tonalidad y densidad rítmica en una sola pasada: una única extracción de PCM (la
+ * parte cara — descargar y decodificar el audio) alimenta el detector de onsets/BPM, el croma/
+ * tonalidad Y la densidad de onsets, en vez de descargar el mismo audio varias veces para
+ * análisis independientes.
+ *
+ * `onsetDensity` (onsets por segundo) es gratis aquí: son los mismos onsets que ya calcula el
+ * detector de BPM, solo divididos por la duración analizada. Alimenta `calcularEnergiaMultifactor`
+ * en audioEnergy.ts como tercera señal de energía, independiente del volumen de la mezcla — un
+ * tema con muchos ataques por segundo (batería/percusión densa) suena más "cañero" aunque esté
+ * grabado o masterizado más flojo que otro más espaciado.
  */
 export async function analizarAudioConIris(
   fuente: string,
   opciones: { timeoutMs?: number; maxDuracionSeg?: number } = {}
-): Promise<{ bpm: number | null; tonalidad: TonalidadDetectada | null }> {
+): Promise<{ bpm: number | null; tonalidad: TonalidadDetectada | null; onsetDensity: number | null }> {
   const pcm = await extraerPcmMono(fuente, opciones);
-  if (!pcm) return { bpm: null, tonalidad: null };
+  if (!pcm) return { bpm: null, tonalidad: null, onsetDensity: null };
 
   const onsets = detectarOnsetsDesdePcm(pcm, SAMPLE_RATE);
   const bpm = detectarBpmDesdeOnsets(onsets);
 
+  const duracionSeg = pcm.length / SAMPLE_RATE;
+  const onsetDensity = duracionSeg > 1 && onsets.length >= 2 ? onsets.length / duracionSeg : null;
+
   const croma = calcularCromaDesdePcm(pcm, SAMPLE_RATE);
   const tonalidad = croma ? detectarTonalidadDesdeCroma(croma) : null;
 
-  return { bpm, tonalidad };
+  return { bpm, tonalidad, onsetDensity };
 }

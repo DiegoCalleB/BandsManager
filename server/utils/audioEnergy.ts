@@ -172,41 +172,49 @@ export function calcularVolumenPromedioAudio(curva: PuntoEnergia[]): number | nu
 }
 
 /**
- * Calcula la energía global (1-20) combinando BPM detectado + volumen promedio,
- * ambos normalizados relativos a la banda.
+ * Calcula la energía global (1-20) combinando tres señales del audio real, cada una normalizada
+ * relativa al resto de la banda a partes iguales:
+ *  - tempo (BPM detectado): más rápido, más energía.
+ *  - densidad rítmica (onsets/segundo, de analizarAudioConIris en audioKey.ts): cuántos ataques
+ *    por segundo tiene el tema — independiente del volumen de la mezcla. Dos temas al mismo BPM
+ *    pueden sonar muy distinto de "cañeros" según lo densa que sea la base rítmica.
+ *  - volumen medio (dB): sigue siendo una señal real, pero antes era la MITAD del cálculo (solo
+ *    BPM+volumen) — con eso, un tema lento pero grabado/masterizado más alto podía puntuar más
+ *    "energético" que uno rápido y denso grabado más flojo. A un tercio, el sesgo de
+ *    masterización pesa menos frente a las otras dos señales.
  *
- * Se usa cuando se recalibra el repertorio: lee bpm y db_promedio de todas las canciones,
- * normaliza cada uno en su rango de banda, y promedia para la energía final.
+ * Se usa cuando se recalibra el repertorio: lee bpm, densidad de onsets y db_promedio de todas
+ * las canciones, normaliza cada uno en su rango de banda, y promedia para la energía final.
  */
-export function calcularEnergiaBpmVolumen(bpmDetectado: number, dbPromedio: number, bandStats: {
+export function calcularEnergiaMultifactor(bpmDetectado: number, dbPromedio: number, onsetDensity: number, bandStats: {
   minBpm: number;
   maxBpm: number;
   minDb: number;
   maxDb: number;
+  minOnsetDensity: number;
+  maxOnsetDensity: number;
 }): number {
-  // Si el rango es muy pequeño, usar default
-  if (bandStats.maxBpm - bandStats.minBpm < 5 && bandStats.maxDb - bandStats.minDb < 1) {
+  const bpmRango = bandStats.maxBpm - bandStats.minBpm;
+  const dbRango = bandStats.maxDb - bandStats.minDb;
+  const onsetRango = bandStats.maxOnsetDensity - bandStats.minOnsetDensity;
+
+  // Si las tres señales son casi idénticas en toda la banda, diferenciar sería ruido de
+  // redondeo, no una lectura real de qué tema suena más "cañero" que otro.
+  if (bpmRango < 5 && dbRango < 1 && onsetRango < 0.15) {
     return 10;
   }
 
-  // Normalizar BPM a 0-10
-  let bpmNorm = 5; // default si solo hay 1 BPM
-  const bpmRango = bandStats.maxBpm - bandStats.minBpm;
-  if (bpmRango > 5) {
-    bpmNorm = ((bpmDetectado - bandStats.minBpm) / bpmRango) * 10;
-    bpmNorm = Math.max(0, Math.min(10, bpmNorm));
-  }
+  const normalizar = (valor: number, min: number, rango: number, rangoMinimoUtil: number): number => {
+    if (rango <= rangoMinimoUtil) return 5; // default si apenas hay variedad en esta señal
+    return Math.max(0, Math.min(10, ((valor - min) / rango) * 10));
+  };
 
-  // Normalizar volumen a 0-10
-  let dbNorm = 5; // default si solo hay 1 volumen
-  const dbRango = bandStats.maxDb - bandStats.minDb;
-  if (dbRango > 0.5) {
-    dbNorm = ((dbPromedio - bandStats.minDb) / dbRango) * 10;
-    dbNorm = Math.max(0, Math.min(10, dbNorm));
-  }
+  const bpmNorm = normalizar(bpmDetectado, bandStats.minBpm, bpmRango, 5);
+  const dbNorm = normalizar(dbPromedio, bandStats.minDb, dbRango, 0.5);
+  const onsetNorm = normalizar(onsetDensity, bandStats.minOnsetDensity, onsetRango, 0.15);
 
-  // Promediar ambos factores y mapear a 1-20
-  const promedio = (bpmNorm + dbNorm) / 2; // 0-10
+  // Promediar los tres factores y mapear a 1-20
+  const promedio = (bpmNorm + dbNorm + onsetNorm) / 3; // 0-10
   const energia = Math.round(1 + (promedio / 10) * 19);
 
   return Math.max(1, Math.min(20, energia));
