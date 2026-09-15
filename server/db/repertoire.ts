@@ -1,7 +1,7 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
-import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio, detectarBpmDesdeAudio, calcularEnergiaBpmVolumen } from "../utils/audioEnergy.js";
-import { detectarTonalidadDesdeAudio } from "../utils/audioKey.js";
+import { analizarEnergiaAudio, medirVariacionInterna, calcularVolumenPromedioAudio, calcularEnergiaBpmVolumen } from "../utils/audioEnergy.js";
+import { analizarAudioConIris, detectarTonalidadDesdeAudio } from "../utils/audioKey.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 
@@ -15,6 +15,12 @@ import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
  * exactamente igual que si nunca se hubiera subido audio. BPM y tonalidad son best-effort e
  * independientes entre sí: uno puede fallar (audio demasiado ambiguo, tempo fuera de rango...)
  * sin tumbar al otro ni a la dinámica.
+ *
+ * El BPM YA NO sale de la curva de energía de `astats` (100ms de resolución): sobre audio real
+ * eso cuantizaba cualquier intervalo entre golpes a un múltiplo de 0.1s antes de llegar al
+ * histograma, y en producción colapsó 23 canciones bien distintas en solo 3 valores de BPM
+ * (100/118/154). `analizarAudioConIris` mide onsets por flujo espectral sobre el PCM real
+ * (~23ms de resolución), que ya no está pegado a esa rejilla.
  */
 export async function analizarYGuardarDinamicaCancion(
   songId: string,
@@ -25,15 +31,14 @@ export async function analizarYGuardarDinamicaCancion(
   const audioAnalizable = curva.length > 1;
   const variacion = audioAnalizable ? medirVariacionInterna(curva) : 0;
   const energiaDbPromedio = audioAnalizable ? calcularVolumenPromedioAudio(curva) : null;
-  const energiaBpmDetectado = audioAnalizable ? detectarBpmDesdeAudio(curva) : null;
   // Independiente de la curva de energía (usa su propia extracción de PCM): un audio puede
-  // fallar el análisis de dinámica y aun así ser perfectamente decodificable para tonalidad,
+  // fallar el análisis de dinámica y aun así ser perfectamente decodificable para BPM/tonalidad,
   // así que no se condiciona a `audioAnalizable`.
-  const tonalidadDetectada = await detectarTonalidadDesdeAudio(audioUrl, { timeoutMs: 90_000 }).catch((err) => {
-    console.error(`[Repertorio] detectarTonalidadDesdeAudio lanzó (no debería):`, err?.message || err);
-    return null;
+  const { bpm: bpmDetectado, tonalidad: tonalidadDetectada } = await analizarAudioConIris(audioUrl, { timeoutMs: 90_000 }).catch((err) => {
+    console.error(`[Repertorio] analizarAudioConIris lanzó (no debería):`, err?.message || err);
+    return { bpm: null, tonalidad: null };
   });
-  console.log(`[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? 'ok' : 'no analizable'} bpm=${energiaBpmDetectado ?? '-'} tonalidad=${tonalidadDetectada?.tonalidad ?? '-'}`);
+  console.log(`[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? 'ok' : 'no analizable'} bpm=${bpmDetectado ?? '-'} tonalidad=${tonalidadDetectada?.tonalidad ?? '-'}`);
 
   // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
   // canciones antiguas pueden tener el band_id guardado con o sin prefijo band-/reg-, y un
@@ -54,15 +59,15 @@ export async function analizarYGuardarDinamicaCancion(
   const cambios: Record<string, any> = {};
   if (audioAnalizable) {
     cambios.energia_db_promedio = energiaDbPromedio;
-    cambios.energia_bpm_detectado = energiaBpmDetectado;
     cambios.energia_variacion = variacion;
     cambios.energia_variacion_calculada_en = ahora;
-    // El BPM detectado ya alimentaba solo el recalibrado interno de energía; ahora también
-    // rellena el campo bpm que ve el usuario (metrónomo, acordes...), no solo un número interno.
-    if (energiaBpmDetectado !== null) {
-      cambios.bpm = energiaBpmDetectado;
-      cambios.bpm_detectado_en = ahora;
-    }
+  }
+  // Independiente de audioAnalizable: el BPM ya no sale de la curva de energía, así que puede
+  // detectarse aunque esa curva concreta haya fallado (y viceversa).
+  if (bpmDetectado !== null) {
+    cambios.energia_bpm_detectado = bpmDetectado; // sigue alimentando el recalibrado interno de energía
+    cambios.bpm = bpmDetectado;
+    cambios.bpm_detectado_en = ahora;
   }
   if (tonalidadDetectada) {
     cambios.tonalidad = tonalidadDetectada.tonalidad;
@@ -92,16 +97,16 @@ export async function analizarYGuardarDinamicaCancion(
   }
 
   // Tras guardar, recalibrar todas las energías de la banda para que estén normalizadas
-  // relativas unas a otras usando BPM + volumen híbrido. Solo tiene sentido si hubo dinámica
-  // nueva que aportar (si solo se detectó tonalidad, energía no ha cambiado).
-  if (audioAnalizable) {
+  // relativas unas a otras usando BPM + volumen híbrido. Solo tiene sentido si hubo dinámica o
+  // BPM nuevos que aportar (si solo se detectó tonalidad, la energía no ha cambiado).
+  if (audioAnalizable || bpmDetectado !== null) {
     await recalibrarEnergiasDelRepertorio(bandId);
   }
 
   return {
     variacion,
     audioAnalizable,
-    bpmDetectado: audioAnalizable ? energiaBpmDetectado : null,
+    bpmDetectado,
     tonalidadDetectada: tonalidadDetectada?.tonalidad ?? null
   };
 }

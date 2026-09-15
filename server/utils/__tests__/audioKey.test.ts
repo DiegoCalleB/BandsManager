@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcularCromaDesdePcm, detectarTonalidadDesdeCroma } from '../audioKey.js';
+import { calcularCromaDesdePcm, detectarTonalidadDesdeCroma, detectarOnsetsDesdePcm, detectarBpmDesdeOnsets } from '../audioKey.js';
 
 const SAMPLE_RATE = 11025;
 
@@ -9,6 +9,30 @@ function generarTonoPuro(freq: number, duracionSeg = 5, sampleRate = SAMPLE_RATE
   const pcm = new Float32Array(n);
   for (let i = 0; i < n; i++) {
     pcm[i] = 0.5 * Math.sin((2 * Math.PI * freq * i) / sampleRate);
+  }
+  return pcm;
+}
+
+/**
+ * Genera un "click" percusivo (ráfaga de banda ancha con caída exponencial, como un golpe de
+ * caja/hi-hat) cada `beatInterval` segundos — a diferencia de un tono puro sostenido, esto
+ * simula ataques reales que un detector de onsets tiene que localizar en el tiempo, no solo
+ * detectar que "hay sonido".
+ */
+function generarClicksPcm(bpm: number, duracionSeg: number, sampleRate = SAMPLE_RATE): Float32Array {
+  const n = Math.round(duracionSeg * sampleRate);
+  const pcm = new Float32Array(n);
+  const beatInterval = 60 / bpm;
+  const clickDurSamples = Math.round(0.012 * sampleRate);
+  for (let t = 0; t < duracionSeg; t += beatInterval) {
+    const inicio = Math.round(t * sampleRate);
+    for (let i = 0; i < clickDurSamples && inicio + i < n; i++) {
+      const decay = Math.exp(-i / (clickDurSamples * 0.3));
+      const banda = Math.sin((2 * Math.PI * 2200 * i) / sampleRate)
+        + Math.sin((2 * Math.PI * 4700 * i) / sampleRate)
+        + Math.sin((2 * Math.PI * 7300 * i) / sampleRate);
+      pcm[inicio + i] += decay * banda * 0.25;
+    }
   }
   return pcm;
 }
@@ -91,5 +115,55 @@ describe('detectarTonalidadDesdeCroma', () => {
     const resultado = detectarTonalidadDesdeCroma(croma.map((v) => v / total));
     expect(resultado).not.toBeNull();
     expect(resultado!.margen).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe('detectarOnsetsDesdePcm + detectarBpmDesdeOnsets', () => {
+  // Regresión directa del fallo real en producción: el detector anterior (sobre la curva RMS de
+  // 100ms de ffmpeg astats) cuantizaba cualquier intervalo entre golpes a un múltiplo de 0.1s,
+  // así que 23 canciones bien distintas colapsaron en solo 3 valores de BPM (100/118/154). Estos
+  // tests generan golpes reales (no un pulso sintético perfecto pegado a esa misma rejilla) y
+  // comprueban que BPMs distintos siguen dando resultados distintos.
+
+  it('detecta un tempo lento (90 BPM) desde golpes percusivos', () => {
+    const bpm = detectarBpmDesdeOnsets(detectarOnsetsDesdePcm(generarClicksPcm(90, 15), SAMPLE_RATE));
+    expect(bpm).not.toBeNull();
+    expect(bpm).toBeGreaterThanOrEqual(85);
+    expect(bpm).toBeLessThanOrEqual(95);
+  });
+
+  it('detecta un tempo medio (128 BPM) desde golpes percusivos', () => {
+    const bpm = detectarBpmDesdeOnsets(detectarOnsetsDesdePcm(generarClicksPcm(128, 15), SAMPLE_RATE));
+    expect(bpm).not.toBeNull();
+    expect(bpm).toBeGreaterThanOrEqual(122);
+    expect(bpm).toBeLessThanOrEqual(134);
+  });
+
+  it('detecta un tempo rápido (168 BPM) desde golpes percusivos', () => {
+    const bpm = detectarBpmDesdeOnsets(detectarOnsetsDesdePcm(generarClicksPcm(168, 15), SAMPLE_RATE));
+    expect(bpm).not.toBeNull();
+    expect(bpm).toBeGreaterThanOrEqual(160);
+    expect(bpm).toBeLessThanOrEqual(176);
+  });
+
+  it('tres tempos distintos dan tres BPMs distintos — no colapsan en el mismo valor cuantizado', () => {
+    const bpm90 = detectarBpmDesdeOnsets(detectarOnsetsDesdePcm(generarClicksPcm(90, 15), SAMPLE_RATE));
+    const bpm128 = detectarBpmDesdeOnsets(detectarOnsetsDesdePcm(generarClicksPcm(128, 15), SAMPLE_RATE));
+    const bpm168 = detectarBpmDesdeOnsets(detectarOnsetsDesdePcm(generarClicksPcm(168, 15), SAMPLE_RATE));
+    expect(new Set([bpm90, bpm128, bpm168]).size).toBe(3);
+  });
+
+  it('silencio total no inventa golpes: no hay onsets', () => {
+    const pcm = new Float32Array(Math.round(10 * SAMPLE_RATE));
+    expect(detectarOnsetsDesdePcm(pcm, SAMPLE_RATE)).toEqual([]);
+  });
+
+  it('con muy pocos onsets no inventa un BPM: devuelve null', () => {
+    expect(detectarBpmDesdeOnsets([0.5, 1.0])).toBeNull();
+    expect(detectarBpmDesdeOnsets([])).toBeNull();
+  });
+
+  it('demasiado corto para un solo frame de análisis devuelve sin onsets', () => {
+    expect(detectarOnsetsDesdePcm(new Float32Array(10), SAMPLE_RATE)).toEqual([]);
   });
 });
