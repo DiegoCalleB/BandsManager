@@ -662,12 +662,12 @@ export function EnergyChart({
                       x={cx}
                       y={cy - (isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault) - 6}
                       textAnchor="middle"
-                      fontSize={compact ? 9 : 11}
+                      fontSize={compact ? 7.5 : 9}
                       fontFamily="monospace"
                       fontWeight={600}
                       fill="#fbbf24"
                       stroke="#000000"
-                      strokeWidth={2.5}
+                      strokeWidth={1.8}
                       paintOrder="stroke"
                       pointerEvents="none"
                     >

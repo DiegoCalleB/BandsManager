@@ -600,8 +600,6 @@ export default function RepertorioSetlists({
 
  // Selected item in active setlist (for intelligent insertion beneath selected song)
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
-  // Modo de vista del setlist activo: 'canciones' (lista directa de temas) o 'energia' (curva y mapa de dinámica con joystick)
-  const [setlistViewMode, setSetlistViewMode] = useState<'canciones' | 'energia'>('canciones');
   const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<string | null>(null);
   const [dragOverCatalogSongId, setDragOverCatalogSongId] = useState<string | null>(null);
 
@@ -637,9 +635,10 @@ export default function RepertorioSetlists({
  // curva ideal + avisos de choque), la línea de BPM saturaba demasiado el gráfico en pantallas
  // estrechas de móvil — se deja como opt-in para quien quiera mirarla en un momento concreto.
  const [showBpmLine, setShowBpmLine] = useState<boolean>(false);
- // Igual que el BPM: la tonalidad de cada canción como etiqueta junto al punto, apagada por
- // defecto — con muchos temas seguidos las etiquetas se pisan si no hay hueco (ver chartZoom).
- const [showTonalidad, setShowTonalidad] = useState<boolean>(false);
+ // A diferencia del BPM, la tonalidad se ve por defecto — es la que más pedía Diego. Con muchos
+ // temas seguidos las etiquetas se pisan si no hay hueco: para eso está el botón 🎼 de un toque
+ // (o el zoom 🔍) para ocultarla o separarla rápido.
+ const [showTonalidad, setShowTonalidad] = useState<boolean>(true);
  // "Modo zoom": ensancha el gráfico (más separación horizontal entre puntos) dentro de un
  // contenedor con scroll propio, para poder leer BPM/tonalidad por tramos sin que se amontonen.
  const [chartZoom, setChartZoom] = useState<boolean>(false);
@@ -2557,36 +2556,10 @@ export default function RepertorioSetlists({
  />
 
  <div className="flex items-center gap-1.5 shrink-0">
- {/* IMPRIMIR REPERTORIO — directo a 1 clic, bien a mano */}
- <button
- id="btn-print-setlist-header"
- type="button"
- onClick={() => setShowPdfPreview(true)}
- className="shrink-0 px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-[#d1b375] hover:text-white border border-[#d1b375]/40 font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
- title="Imprimir repertorio o exportar a PDF / atril en papel"
- >
- <Printer className="w-3.5 h-3.5 text-[#d1b375]" />
- <span>Imprimir</span>
- </button>
-
- {/* MODO ESCENARIO / ATRIL: acción principal para directo */}
- <button
- id="btn-stage-mode-header"
- type="button"
- onClick={() => {
-   if (activeSetlist) {
-     cacheActiveStageSetlist(activeSetlist, songs, bandId);
-     setPerformanceSetlistId(activeSetlist.id);
-   }
- }}
- className="shrink-0 px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-amber-950/30"
- title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
- >
- <Mic className="w-3.5 h-3.5" />
- <span className="hidden sm:inline">Modo Escenario</span>
- <span className="sm:hidden">Atril</span>
- </button>
-
+ {/* Imprimir y Modo Escenario se movieron a la fila de pestañas de abajo (Temas / Imprimir /
+     Directo) — antes vivían aquí como botones sueltos y quedaban apretados junto al título en
+     móvil, con el de Atril fácil de pasar por alto pese a ser la acción más usada en directo.
+     Imprimir sigue disponible también en el menú "⋯" de aquí abajo, por si acaso. */}
  <div className="relative shrink-0">
  <button
  type="button"
@@ -2653,40 +2626,46 @@ export default function RepertorioSetlists({
   {(() => {
     return (
       <div className="flex flex-col gap-2">
-        {/* Selector de modo del setlist activo (Temas / Curva Dinámica / Directo) */}
+        {/* Selector de modo del setlist activo — Temas es la vista residente (lista + Mapa de
+            Energía, ya siempre visible ahí debajo, ver showEnergyMap); Imprimir y Directo son
+            accesos directos a acciones que abren un modal propio, agrupados aquí en vez de
+            sueltos por el header, donde Directo pasaba desapercibido. */}
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1 rounded-xl bg-black/40 border border-neutral-800/80">
           <div className="flex items-center gap-1 w-full sm:w-auto">
             <button
               type="button"
-              onClick={() => {
-                setSetlistViewMode('canciones');
-                setShowConcertPlayer(false);
-              }}
-              className={`flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                setlistViewMode === 'canciones'
-                  ? 'bg-[#d1b375]/20 text-[#f2ca50] border border-[#f2ca50]/30 shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
+              onClick={() => setShowConcertPlayer(false)}
+              className="flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer bg-[#d1b375]/20 text-[#f2ca50] border border-[#f2ca50]/30 shadow-sm"
             >
               <Music className="w-3.5 h-3.5" />
               <span>Temas ({activeSetlistMetrics.songCount})</span>
             </button>
 
             <button
+              id="btn-print-setlist-header"
+              type="button"
+              onClick={() => setShowPdfPreview(true)}
+              className="flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer text-neutral-400 hover:text-white"
+              title="Imprimir repertorio o exportar a PDF / atril en papel"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              <span>Imprimir</span>
+            </button>
+
+            <button
+              id="btn-stage-mode-header"
               type="button"
               onClick={() => {
-                setSetlistViewMode('energia');
-                setShowEnergyMap(true);
-                setShowConcertPlayer(false);
+                if (activeSetlist) {
+                  cacheActiveStageSetlist(activeSetlist, songs, bandId);
+                  setPerformanceSetlistId(activeSetlist.id);
+                }
               }}
-              className={`flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                setlistViewMode === 'energia'
-                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30 shadow-sm'
-                  : 'text-neutral-400 hover:text-white'
-              }`}
+              className="flex-1 sm:flex-initial px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition cursor-pointer text-amber-400 hover:text-amber-300"
+              title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
             >
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Curva Dinámica</span>
+              <Mic className="w-3.5 h-3.5" />
+              <span>Directo</span>
             </button>
           </div>
 
@@ -2763,8 +2742,10 @@ export default function RepertorioSetlists({
           </div>
         )}
 
-        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW — Visible exclusivamente en modo 'energia' */}
-        {energyAnalysis.points.length > 0 && setlistViewMode === 'energia' && (
+        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW — parte de la vista Temas por defecto (antes exigía
+            cambiar a una pestaña "Curva Dinámica" aparte, redundante con el propio toggle 👁️ de
+            aquí abajo). El botón 👁️ sigue pudiendo ocultarlo si estorba. */}
+        {energyAnalysis.points.length > 0 && (
           <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2 animate-fadeIn">
             <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-neutral-400">
               {/* Título corto y la ayuda en el tooltip: el hint largo entre paréntesis ocupaba
@@ -2874,6 +2855,18 @@ export default function RepertorioSetlists({
                       </>
                     )}
                   </div>
+                )}
+                {showEnergyMap && (
+                  <button
+                    type="button"
+                    onClick={() => setShowTonalidad((v) => !v)}
+                    className={`p-1 rounded-lg transition-all cursor-pointer ${
+                      showTonalidad ? 'bg-amber-500/20 text-amber-300' : 'bg-neutral-800 text-neutral-400 hover:text-white'
+                    }`}
+                    title={showTonalidad ? 'Ocultar tonalidades del gráfico' : 'Mostrar tonalidades en el gráfico'}
+                  >
+                    🎼
+                  </button>
                 )}
                 <button
                   type="button"
