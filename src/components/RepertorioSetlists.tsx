@@ -51,6 +51,8 @@ import {
 import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../utils/repertorioUtils';
 import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
+import { parseTonalidad, evaluarTransicionArmonica } from '../utils/harmonicAnalysis';
+import { optimizarOrdenPorTransiciones, costeTotalTransiciones, HuecoCancion } from '../utils/setlistCompatibility';
 import { getSemitoneDifference } from '../utils/chordUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
 import { titlesMatch } from '../utils/songTitleMatch';
@@ -683,6 +685,9 @@ export default function RepertorioSetlists({
  // "Aplicar" de esa sugerencia concreta puede convertirse en "Deshacer" solo mientras siga siendo
  // la acción más reciente (la única que este snapshot de un solo nivel puede revertir de verdad).
  const [undoReorderSnapshot, setUndoReorderSnapshot] = useState<{ setlistId: string; items: Setlist['items']; sourceKey: string } | null>(null);
+ // Mensaje breve tras "Optimizar orden" (mejora %, o "ya estaba bien") — se autodesvanece solo,
+ // sin necesidad de un sistema de toasts global para un mensaje puntual como este.
+ const [optimizeSummary, setOptimizeSummary] = useState<string | null>(null);
 
  // Datos del Mapa de Energía, memoizados por setlist/repertorio real — si se recalculan en
  // cada render (p.ej. cada vez que cambia highlightedSongIds al hacer hover), Recharts ve un
@@ -704,6 +709,16 @@ export default function RepertorioSetlists({
    // pico falso ahí. Se marcan en el gráfico con su propia línea vertical (ver EnergyChart) en
    // vez de ensuciar la curva con un valor inventado.
    const isSpeechEvent = !pt.isSong;
+   // Choque de tonalidad con la SIGUIENTE canción real del setlist (círculo de quintas) — se
+   // salta cualquier evento de "speech" de por medio para comparar canciones de verdad, no una
+   // canción contra una chapa/interludio que no tiene tonalidad.
+   let harmonyClash = false;
+   if (!isSpeechEvent && pt.song?.tonalidad) {
+    const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
+    const keyA = parseTonalidad(pt.song.tonalidad);
+    const keyB = siguienteCancion?.song?.tonalidad ? parseTonalidad(siguienteCancion.song.tonalidad) : null;
+    if (keyA && keyB) harmonyClash = evaluarTransicionArmonica(keyA, keyB) === 'choque';
+   }
    return {
     idx,
     id: pt.item.id,
@@ -717,7 +732,9 @@ export default function RepertorioSetlists({
     label: pt.info.label,
     variance: pt.variance,
     isSong: pt.isSong,
-    isSpeechEvent
+    isSpeechEvent,
+    bpm: isSpeechEvent ? null : (typeof pt.song?.bpm === 'number' && pt.song.bpm > 0 ? pt.song.bpm : null),
+    harmonyClash
    };
   });
 
@@ -1839,6 +1856,44 @@ export default function RepertorioSetlists({
    applySetlistItemsChange(newItems, sourceKey);
  };
 
+ // Reordena solo las CANCIONES (nunca los bloques de chapa/presentación/bis, que el usuario
+ // colocó a propósito en un punto concreto del show) para minimizar el coste total de transición
+ // — choque de tonalidad + salto de tempo + salto de energía entre temas consecutivos. La
+ // primera canción del setlist nunca se mueve (ver optimizarOrdenPorTransiciones): es la apertura
+ // que ya eligió el usuario, no un dato más a optimizar.
+ const optimizeSetlistTransitions = () => {
+   if (!activeSetlist) return;
+   const items = activeSetlist.items;
+   const songPositions: number[] = [];
+   const slots: HuecoCancion[] = [];
+   items.forEach((item, i) => {
+     if (item.tipoItem === 'cancion' && item.songId) {
+       const song = songs.find((s) => s.id === item.songId);
+       if (song) {
+         songPositions.push(i);
+         slots.push({ item, song });
+       }
+     }
+   });
+   if (slots.length < 3) return; // con 2 canciones o menos no hay nada que reordenar
+
+   const costeAntes = costeTotalTransiciones(slots);
+   const optimizado = optimizarOrdenPorTransiciones(slots);
+   const costeDespues = costeTotalTransiciones(optimizado);
+
+   const newItems = [...items];
+   songPositions.forEach((pos, idx) => { newItems[pos] = optimizado[idx].item; });
+   applySetlistItemsChange(newItems, 'optimize-transitions');
+
+   const mejoraPct = costeAntes > 0 ? Math.round((1 - costeDespues / costeAntes) * 100) : 0;
+   setOptimizeSummary(
+     mejoraPct > 0
+       ? `🎯 Orden optimizado: transiciones un ${mejoraPct}% más suaves (tonalidad + tempo + energía).`
+       : 'El orden actual ya es prácticamente el mejor posible para estas transiciones.'
+   );
+   window.setTimeout(() => setOptimizeSummary(null), 7000);
+ };
+
  // Quita el item en `index` (usado por el plan de "Setlist Perfecto" para retirar una canción que
  // no encaja — a diferencia de handleRemoveSetlistItem, que borra por id desde la lista visual,
  // esto trabaja por índice porque así es como el plan referencia sus posiciones).
@@ -2695,6 +2750,16 @@ export default function RepertorioSetlists({
                   </button>
                 )}
                 {showEnergyMap && (
+                  <button
+                    type="button"
+                    onClick={optimizeSetlistTransitions}
+                    className="px-2 py-0.5 rounded-lg bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 hover:text-emerald-100 transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center gap-1"
+                    title="Reordena las canciones (nunca las chapas/bloques) para suavizar los saltos de tonalidad, tempo y energía entre temas consecutivos — sin tocar tu canción de apertura"
+                  >
+                    🎯 Optimizar orden
+                  </button>
+                )}
+                {showEnergyMap && (
                   <div className="relative">
                     <button
                       type="button"
@@ -2759,6 +2824,11 @@ export default function RepertorioSetlists({
                 <p className="text-[9px] text-neutral-500">
                   💡 Toca un punto para reordenar o cambiar su energía — la energía es de la canción, se aplica en todos tus repertorios.
                 </p>
+                {optimizeSummary && (
+                  <p className="text-[10px] font-mono text-emerald-300 bg-emerald-900/20 border border-emerald-700/40 rounded-lg px-2 py-1">
+                    {optimizeSummary}
+                  </p>
+                )}
 
                 <EnergyChart
                   setlistKey={activeSetlist.id}

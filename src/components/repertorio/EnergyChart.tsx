@@ -29,6 +29,13 @@ export interface EnergyChartPoint {
    * propia (las canciones reales del bis puntúan por su cuenta justo después). Se marcan en el
    * gráfico con una línea vertical propia en vez de contar como un punto más de la curva. */
   isSpeechEvent?: boolean;
+  /** BPM de la canción (detectado o manual) — null/undefined si no hay dato o es un evento de
+   * "speech". Se pinta como línea fina en un eje secundario, superpuesta a la curva de energía. */
+  bpm?: number | null;
+  /** true si la transición de ESTA canción a la SIGUIENTE es un choque de tonalidad (círculo de
+   * quintas) — ver evaluarTransicionArmonica en harmonicAnalysis.ts. Se marca con un aviso entre
+   * ambos puntos, igual que ya se hace con los eventos de "speech". */
+  harmonyClash?: boolean;
 }
 
 export interface EnergyChartZone {
@@ -65,6 +72,8 @@ interface EnergyChartProps {
   /** Muestra/oculta la curva "ideal" de referencia (línea discontinua por debajo de la curva
    * real). Por defecto visible; el toggle vive en el componente que llama a EnergyChart. */
   showIdealCurve?: boolean;
+  /** Muestra/oculta la línea de BPM (eje secundario a la derecha). Por defecto visible. */
+  showBpmLine?: boolean;
 }
 
 /**
@@ -85,7 +94,8 @@ export function EnergyChart({
   compact = false,
   onReorder,
   onEnergyChange,
-  showIdealCurve = true
+  showIdealCurve = true,
+  showBpmLine = true
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;
@@ -429,6 +439,20 @@ export function EnergyChart({
             />
           ))}
 
+          {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
+              camino entre ambos puntos, mismo patrón que los eventos de "speech" de arriba. */}
+          {chartData.filter((d) => d.harmonyClash).map((d) => (
+            <ReferenceLine
+              key={`clash-${d.id}`}
+              x={d.idx + 0.5}
+              stroke="#f43f5e"
+              strokeDasharray="3 3"
+              strokeOpacity={0.8}
+              ifOverflow="extendDomain"
+              label={{ value: '⚡', position: 'insideTop', fontSize: compact ? 10 : 13 }}
+            />
+          ))}
+
           <XAxis
             dataKey="idx"
             tickFormatter={(v: number) => `#${v + 1}`}
@@ -444,6 +468,7 @@ export function EnergyChart({
               energía del grid. Es una transformación puramente de presentación (÷2 en la
               etiqueta), no cambia la posición real de la curva. */}
           <YAxis
+            yAxisId="energy"
             domain={yDomain}
             tickFormatter={(v: number) => `${Math.round(v / 2)}`}
             stroke="#666666"
@@ -453,6 +478,22 @@ export function EnergyChart({
             width={compact ? 0 : 22}
             hide={compact}
           />
+          {/* Eje secundario de BPM, a la derecha — misma curva temporal, escala independiente
+              (60-200 vs 1-20 de energía no tienen nada que ver, superponerlas en el mismo eje
+              sería ilegible). Dominio con margen para que la línea no toque los bordes. */}
+          {showBpmLine && (
+            <YAxis
+              yAxisId="bpm"
+              orientation="right"
+              domain={['dataMin - 15', 'dataMax + 15']}
+              stroke="#38bdf8"
+              fontSize={fontSize}
+              tickLine={false}
+              axisLine={false}
+              width={compact ? 0 : 26}
+              hide={compact}
+            />
+          )}
 
           <RechartsTooltip
             cursor={{ stroke: '#666', strokeDasharray: '3 3' }}
@@ -471,6 +512,9 @@ export function EnergyChart({
                       <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
                         <span>{d.icon}</span> {d.label} ({d.score}/20)
                       </p>
+                      {typeof d.bpm === 'number' && (
+                        <p className="text-sky-300 mt-0.5">🥁 {d.bpm} BPM</p>
+                      )}
                       {d.variance > 0 && (
                         <p className="text-sky-300 mt-0.5">
                           🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
@@ -480,6 +524,9 @@ export function EnergyChart({
                         <p className="text-neutral-400 mt-0.5">
                           〰️ Ideal aquí: ~{d.idealScore}/20
                         </p>
+                      )}
+                      {d.harmonyClash && (
+                        <p className="text-rose-400 mt-0.5">⚡ Choque de tonalidad con la siguiente</p>
                       )}
                     </>
                   )}
@@ -493,6 +540,7 @@ export function EnergyChart({
               análisis. Discontinua y en gris neutro para no competir con los colores reales. */}
           {showIdealCurve && (
             <Line
+              yAxisId="energy"
               type="monotone"
               dataKey="idealScore"
               stroke="#9ca3af"
@@ -513,6 +561,7 @@ export function EnergyChart({
               encima de los eventos de "speech" (score null) sin dibujar un bajón ahí, uniendo
               directamente las canciones real de antes y de después. */}
           <Area
+            yAxisId="energy"
             type="monotone"
             dataKey="score"
             stroke={`url(#energyStrokeGradient${gradientSuffix})`}
@@ -590,6 +639,28 @@ export function EnergyChart({
               );
             }}
           />
+
+          {/* Línea de BPM, en el eje secundario — puramente informativa (no arrastrable, no
+              afecta al reordenamiento): deja ver de un vistazo si el orden actual tiene saltos
+              de tempo bruscos entre temas consecutivos. connectNulls salta los eventos de
+              "speech" igual que la curva de energía. */}
+          {showBpmLine && (
+            <Line
+              yAxisId="bpm"
+              type="monotone"
+              dataKey="bpm"
+              stroke="#38bdf8"
+              strokeWidth={compact ? 1.5 : 2}
+              strokeOpacity={0.85}
+              dot={{ r: compact ? 2 : 3, fill: '#38bdf8', strokeWidth: 0 }}
+              activeDot={{ r: compact ? 3 : 4.5, fill: '#38bdf8' }}
+              isAnimationActive={!compact}
+              animationDuration={curveAnimationDuration}
+              animationEasing={curveAnimationEasing}
+              legendType="none"
+              connectNulls
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </div>
