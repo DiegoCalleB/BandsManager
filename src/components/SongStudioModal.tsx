@@ -165,6 +165,15 @@ interface SongStudioModalProps {
   currentUser?: User;
 }
 
+// Coste aproximado por canción de cada motor de Aaron, solo para orientar al usuario (no viene de
+// una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
+const AARON_ENGINE_COST_EUR: Record<'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+  'mvsep-mdx23': 0.08,
+  'demucs': 0.03,
+  'dsp-server': 0
+};
+const formatEurEstimate = (n: number) => n.toFixed(2).replace('.', ',');
+
 const SECCIONES_TEMA: { key: SongAudioIdea['seccion']; label: string; icon: string; color: string }[] = [
   { key: 'general', label: 'Idea General / Demo', icon: '🎵', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30' },
   { key: 'intro', label: 'Intro', icon: '🚀', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
@@ -356,16 +365,16 @@ export default function SongStudioModal({
     };
   } | null>(null);
 
-  // AI Multimodal Audio Stem Separation Handler (MVSEP-MDX23 + Demucs v4 + Server DSP)
+  // Separación de pistas con IA (motor propio "Aaron", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
     setIsSeparatingStemsAi(true);
     setSeparationElapsedSeconds(0);
     const engineToUse = overrideEngine || selectedStemEngine;
 
-    const stepInitText = 
-      engineToUse === 'mvsep-mdx23' ? "Iniciando red neuronal MVSEP-MDX23 (MDX-Net + Demucs4)..." :
-      engineToUse === 'demucs' ? 'Iniciando y optimizando flujo de audio para HT-Demucs v4 (Replicate Cloud GPU)...' :
-      'Iniciando filtros DSP de procesamiento estéreo local ($0)...';
+    const stepInitText =
+      engineToUse === 'mvsep-mdx23' ? "Iniciando Aaron Studio (red neuronal de máxima calidad)..." :
+      engineToUse === 'demucs' ? 'Iniciando Aaron Cloud (red neuronal en la nube)...' :
+      'Iniciando Aaron Básico (procesamiento local, gratis)...';
 
     setStemProgressModal({
       isOpen: true,
@@ -408,8 +417,8 @@ export default function SongStudioModal({
         stage: 'preparing',
         progressPct: 25,
         currentStepText: engineToUse !== 'dsp-server'
-          ? 'Verificando URL pública y enviando audio al cluster GPU Replicate...' 
-          : 'Preparando espectro de audio para motor DSP local...'
+          ? 'Verificando el audio y enviándolo a la nube...'
+          : 'Preparando espectro de audio en el motor local...'
       } : null);
 
       let sendableAudioUrl = targetIdea.audioUrl;
@@ -435,10 +444,10 @@ export default function SongStudioModal({
 
       const stepProcessingText =
         engineToUse === 'mvsep-mdx23'
-          ? "Red Neuronal MVSEP-MDX23 (MDX-Net + Demucs4) aislando pistas vocales e instrumentales..."
+          ? "Aaron Studio aislando pistas vocales e instrumentales..."
           : engineToUse === 'demucs'
-          ? 'Red Neuronal HT-Demucs v4 (Replicate Cloud GPU) aislando Voz, Batería, Bajo, Guitarras...'
-          : 'Motor FFmpeg DSP Local realizando filtrado de frecuencias ($0)...';
+          ? 'Aaron Cloud aislando Voz, Batería, Bajo, Guitarras...'
+          : 'Aaron Básico realizando filtrado de frecuencias (gratis)...';
 
       setStemProgressModal(prev => prev ? {
         ...prev,
@@ -470,9 +479,9 @@ export default function SongStudioModal({
         const pollStartedAt = Date.now();
         const maxWaitMs = 20 * 60 * 1000; // El job sigue vivo en el servidor aunque dejemos de esperar aquí
         const engineLabel =
-          engineToUse === 'mvsep-mdx23' ? "MVSEP-MDX23 (MDX-Net + Demucs4)" :
-          engineToUse === 'demucs' ? 'HT-Demucs v4' :
-          'Motor DSP Local';
+          engineToUse === 'mvsep-mdx23' ? "Aaron Studio" :
+          engineToUse === 'demucs' ? 'Aaron Cloud' :
+          'Aaron Básico';
         while (true) {
           await new Promise(r => setTimeout(r, 4000));
           const elapsedSec = Math.round((Date.now() - pollStartedAt) / 1000);
@@ -482,9 +491,9 @@ export default function SongStudioModal({
             engineToUse === 'dsp-server'
               ? `${stepProcessingText} (${elapsedSec}s transcurridos)`
               : elapsedSec < 12
-              ? `📤 Subiendo tu audio al clúster GPU de Replicate (${engineLabel})... (${elapsedSec}s)`
+              ? `📤 Subiendo tu audio a ${engineLabel}... (${elapsedSec}s)`
               : elapsedSec < 40
-              ? `🧊 Arrancando el contenedor GPU — si el modelo llevaba un rato sin usarse, tarda hasta ~1 min en "despertar" (cold start)... (${elapsedSec}s)`
+              ? `🧊 Arrancando el motor — si llevaba un rato sin usarse, tarda hasta ~1 min en "despertar"... (${elapsedSec}s)`
               : `🎛️ ${engineLabel} separando voz, batería, bajo, guitarras, teclados y arreglos por frecuencia... (${elapsedSec}s transcurridos, puede tardar varios minutos)`;
           setStemProgressModal(prev => prev ? {
             ...prev,
@@ -528,12 +537,12 @@ export default function SongStudioModal({
 
       if (data.stems && Array.isArray(data.stems) && data.stems.length > 0) {
         const engineAuthor = data.degraded
-          ? 'FFmpeg DSP Local (Modo Degradado)'
+          ? 'Aaron Básico (Modo Degradado)'
           : data.separationEngine?.includes('MVSEP')
-          ? 'MVSEP-MDX23 Neural AI (MDX-Net + Demucs4)'
+          ? 'Aaron Studio'
           : data.isNeural
-          ? 'HT-Demucs v4 Neural (Replicate Cloud GPU)'
-          : 'FFmpeg DSP Local ($0)';
+          ? 'Aaron Cloud'
+          : 'Aaron Básico (gratis)';
         data.stems.forEach((st: any) => {
           if (!st.audioUrl) return;
 
@@ -648,7 +657,9 @@ export default function SongStudioModal({
         console.warn('[Stem Separation] Auto-Balance inicial falló, se mantienen los volúmenes por defecto:', balanceErr);
       }
 
-      const finalSeparationEngine = data.separationEngine || (data.isNeural ? (engineToUse === 'mvsep-mdx23' ? 'MVSEP-MDX23 Neural Ensemble' : 'HT-Demucs v4 Neural (Replicate Cloud GPU)') : 'FFmpeg DSP Local (Sin Replicate)');
+      const finalSeparationEngine = data.degraded
+        ? 'Aaron Básico (modo degradado)'
+        : engineToUse === 'mvsep-mdx23' ? 'Aaron Studio' : engineToUse === 'demucs' ? 'Aaron Cloud' : 'Aaron Básico';
       const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? {
         ...i,
         pistas: newTracks,
@@ -758,14 +769,14 @@ export default function SongStudioModal({
         errorType === 'ffmpeg_processing_error' ? 'Error en Filtros Espectrales FFmpeg' :
         errorType === 'supabase_credentials_missing' ? 'Credenciales de Supabase no Configuradas' :
         errorType === 'supabase_storage_error' ? 'Error de Almacenamiento en Supabase Storage' :
-        errorType === 'billing_required' ? 'Saldo o Facturación Requerida en Replicate (HTTP 402)' :
-        errorType === 'auth_invalid' ? 'Token de Replicate Inválido o Expirado (HTTP 401)' :
-        errorType === 'token_missing' ? 'Token de Replicate No Configurado' :
-        errorType === 'audio_unsupported' ? 'Formato de Audio Rechazado por Replicate (HTTP 422)' :
-        errorType === 'rate_limit' ? 'Límite de Peticiones en Replicate Alcanzado (HTTP 429)' :
-        errorType === 'timeout' ? 'Tiempo de Espera en GPU Replicate Excedido (>120s)' :
-        errorType === 'gpu_failure' ? 'Fallo en el Contenedor GPU de Demucs (Replicate)' :
-        errorType === 'server_error' ? 'Fallo Temporal en la Infraestructura de Replicate' :
+        errorType === 'billing_required' ? 'Saldo o Facturación Requerida en el Servicio de IA (HTTP 402)' :
+        errorType === 'auth_invalid' ? 'Token de Acceso Inválido o Expirado (HTTP 401)' :
+        errorType === 'token_missing' ? 'Token de Acceso No Configurado' :
+        errorType === 'audio_unsupported' ? 'Formato de Audio Rechazado por el Servicio de IA (HTTP 422)' :
+        errorType === 'rate_limit' ? 'Límite de Peticiones Alcanzado (HTTP 429)' :
+        errorType === 'timeout' ? 'Tiempo de Espera en la Nube Excedido (>120s)' :
+        errorType === 'gpu_failure' ? 'Fallo en el Contenedor de Procesamiento en la Nube' :
+        errorType === 'server_error' ? 'Fallo Temporal en la Infraestructura de IA' :
         'Inconveniente en la Separación de Pistas'
       );
 
@@ -3574,7 +3585,7 @@ export default function SongStudioModal({
                             <h4 className="text-base font-bold text-white flex items-center gap-2 flex-wrap">
                               {idea.titulo}
                               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">
-                                {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas (Stems)'}
+                                {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas separadas'}
                               </span>
                               {isPlaying && (
                                 <div className="flex items-end gap-0.5 h-4 px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40">
@@ -3699,13 +3710,13 @@ export default function SongStudioModal({
                           title="Separar voces, batería, bajo y guitarras en pistas aisladas con el motor seleccionado"
                         >
                           <Cpu className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-zinc-950' : 'text-zinc-950'}`} />
-                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Stems (IA)'}</span>
+                          <span>{isSeparatingStemsAi ? 'Separando...' : '🎛️ Separar Pistas (IA)'}</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowMoisesStemsModal(idea)}
                           className="px-2 py-1.5 border-l border-amber-600/60 hover:bg-amber-400/30 text-zinc-950 transition-all cursor-pointer flex items-center"
-                          title="Elegir motor (MVSEP-MDX23, Demucs v4, DSP) o comparar calidad"
+                          title="Elegir motor de separación (Aaron Studio, Aaron Cloud o Aaron Básico) o comparar calidad"
                         >
                           <Sliders className="w-3.5 h-3.5" />
                         </button>
@@ -3904,7 +3915,7 @@ export default function SongStudioModal({
                                   type="button"
                                   onClick={() => setShowMoisesStemsModal(idea)}
                                   className="px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 transition-all cursor-pointer"
-                                  title="Comparar calidad con otro motor (MVSEP-MDX23, Demucs v4, DSP) o re-separar"
+                                  title="Comparar calidad con otro motor de Aaron o volver a separar"
                                 >
                                   <RefreshCw className="w-3 h-3" />
                                   <span className="hidden sm:inline">Comparar Motor</span>
@@ -4944,7 +4955,7 @@ export default function SongStudioModal({
             <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
               <div className="flex items-center gap-2 text-amber-400 font-mono font-bold text-sm">
                 <Sliders className="w-5 h-5 text-amber-400" />
-                <span>Separador de Stems & IA de Audio (Estilo Moises)</span>
+                <span>Aaron — Separador de Pistas con IA</span>
               </div>
               <button
                 type="button"
@@ -4967,7 +4978,7 @@ export default function SongStudioModal({
                 }`}
               >
                 <Sliders className="w-3.5 h-3.5" />
-                <span>1. Canales Stems</span>
+                <span>1. Pistas Separadas</span>
               </button>
 
               <button
@@ -4980,7 +4991,7 @@ export default function SongStudioModal({
                 }`}
               >
                 <Cpu className="w-3.5 h-3.5" />
-                <span>2. ¿Cómo funciona la IA de Moises?</span>
+                <span>2. ¿Cómo funciona Aaron?</span>
               </button>
 
               <button
@@ -4993,15 +5004,15 @@ export default function SongStudioModal({
                 }`}
               >
                 <Upload className="w-3.5 h-3.5" />
-                <span>3. Subir Stems Aislados</span>
+                <span>3. Subir Pistas Aisladas</span>
               </button>
             </div>
 
-            {/* TAB 1: CANALES STEMS & HABILITACIÓN */}
+            {/* TAB 1: CANALES DE PISTAS SEPARADAS & HABILITACIÓN */}
             {moisesTab === 'stems' && (
               <div className="space-y-4 text-xs text-neutral-300 leading-relaxed">
                 <p className="text-neutral-300 font-sans">
-                  BandManager crea canales de pistas independientes denominados <strong>Stems</strong> (Voz, Batería, Bajo, Guitarras) para controlar el volumen, silenciar (Mute) o dejar en Solo cada instrumento en tus ensayos y composición.
+                  BandManager crea canales de pistas independientes (Voz, Batería, Bajo, Guitarras) para controlar el volumen, silenciar (Mute) o dejar en Solo cada instrumento en tus ensayos y composición.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-[11px]">
@@ -5048,31 +5059,31 @@ export default function SongStudioModal({
                     Controles Activos en la Línea de Tiempo:
                   </span>
                   <p className="text-neutral-300">
-                    Al activar los Stems, cada instrumento tendrá su propia pista con botones <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, Fader de Volumen (0-100%), Ecualizador de 3 bandas (Graves, Medios, Agudos) y Paneo L/R estéreo.
+                    Al separar las pistas, cada instrumento tendrá su propia pista con botones <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, Fader de Volumen (0-100%), Ecualizador de 3 bandas (Graves, Medios, Agudos) y Paneo L/R estéreo.
                   </p>
                 </div>
 
-                {/* SELECTOR DE MOTOR: MVSEP-MDX23 / DEMUCS V4 / DSP LOCAL */}
+                {/* SELECTOR DE MOTOR AARON: STUDIO / CLOUD / BÁSICO */}
                 <div className="p-3.5 rounded-xl bg-zinc-900 border border-white/10 space-y-3 font-mono text-[11px]">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-white flex items-center gap-1.5">
-                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Separación:
+                      <Sliders className="w-3.5 h-3.5 text-amber-400" /> Selecciona el Motor de Aaron:
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
                       selectedStemEngine === 'mvsep-mdx23'
                         ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                        : selectedStemEngine === 'demucs' 
-                        ? 'bg-purple-500/10 text-purple-300 border-purple-500/30' 
+                        : selectedStemEngine === 'demucs'
+                        ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
                         : 'bg-blue-500/10 text-blue-300 border-blue-500/30'
                     }`}>
-                      {selectedStemEngine === 'mvsep-mdx23' && "✨ MVSEP-MDX23 Neural (MDX'23)"}
-                      {selectedStemEngine === 'demucs' && '⚡ HT-Demucs v4'}
-                      {selectedStemEngine === 'dsp-server' && '⚙️ Servidor Local DSP ($0)'}
+                      {selectedStemEngine === 'mvsep-mdx23' && "✨ Aaron Studio"}
+                      {selectedStemEngine === 'demucs' && '⚡ Aaron Cloud'}
+                      {selectedStemEngine === 'dsp-server' && '⚙️ Aaron Básico (gratis)'}
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    {/* MVSEP-MDX23 */}
+                    {/* Aaron Studio */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('mvsep-mdx23')}
@@ -5084,21 +5095,21 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> MVSEP-MDX23
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Aaron Studio
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-black border border-amber-500/30">
-                          MDX-Net + Demucs4
+                          Máxima calidad
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal">
-                        Modelo neural híbrido de alta precisión del reto MDX'23 para aislar voz, bajo, batería y demás fuentes.
+                        Combina dos redes neuronales de alta precisión para aislar voz, bajo, batería y demás fuentes al máximo detalle.
                       </span>
                       <span className="text-[9px] text-amber-400/80 font-bold">
-                        🐢 Más lento: combina 2 modelos (ensemble) para máximo detalle.
+                        🐢 Más lento, ~{formatEurEstimate(AARON_ENGINE_COST_EUR['mvsep-mdx23'])}€ estimado por canción.
                       </span>
                     </button>
 
-                    {/* HT-Demucs v4 */}
+                    {/* Aaron Cloud */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('demucs')}
@@ -5110,21 +5121,21 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> HT-Demucs v4
+                          <Sparkles className="w-3.5 h-3.5 text-purple-400" /> Aaron Cloud
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-black border border-purple-500/30">
-                          6 Canales GPU
+                          Recomendado
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal">
-                        Red Demucs v4 multicanal probada en estudio para aislamiento directo en GPU Cloud.
+                        Red neuronal en la nube probada en estudio para aislamiento directo de Voz, Batería, Bajo y Guitarras.
                       </span>
                       <span className="text-[9px] text-emerald-400 font-bold">
-                        ⚡ Recomendado: un único modelo, mucho más rápido que el ensemble.
+                        ⚡ Rápido, ~{formatEurEstimate(AARON_ENGINE_COST_EUR['demucs'])}€ estimado por canción.
                       </span>
                     </button>
 
-                    {/* DSP Local Server */}
+                    {/* Aaron Básico (local) */}
                     <button
                       type="button"
                       onClick={() => setSelectedStemEngine('dsp-server')}
@@ -5136,14 +5147,14 @@ export default function SongStudioModal({
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-xs flex items-center gap-1.5 text-white">
-                          <Cpu className="w-3.5 h-3.5 text-blue-400" /> FFmpeg DSP Local
+                          <Cpu className="w-3.5 h-3.5 text-blue-400" /> Aaron Básico
                         </span>
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-black border border-blue-500/30">
-                          100% Gratis ($0)
+                          100% Gratis
                         </span>
                       </div>
                       <span className="text-[10px] text-neutral-300 leading-normal">
-                        Filtros DSP de frecuencia y Mid/Side en CPU. Rápido, 100% gratuito y sin consumo de créditos de IA.
+                        Filtros de frecuencia y Mid/Side procesados en nuestro propio servidor. Rápido y sin coste.
                       </span>
                     </button>
                   </div>
@@ -5152,7 +5163,7 @@ export default function SongStudioModal({
                   <div className="p-2 rounded-lg bg-emerald-950/30 border border-emerald-500/20 text-emerald-300 text-[10px] flex items-center gap-2">
                     <span className="text-emerald-400 font-bold">🛡️ Cero Coste Duplicado:</span>
                     <span className="text-neutral-300">
-                      Los stems procesados se persisten en Supabase y caché de servidor por hash de pista. Nunca pagarás 2 veces por la misma canción.
+                      Las pistas procesadas se guardan en la nube por hash de canción. Nunca pagarás 2 veces por la misma canción.
                     </span>
                   </div>
                 </div>
@@ -5177,35 +5188,35 @@ export default function SongStudioModal({
                   {selectedStemEngine === 'mvsep-mdx23' && (
                     <>
                       <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
-                      <span>✨ Separar con MVSEP-MDX23 (Demucs4 + MDX-Net Ensemble)</span>
+                      <span>✨ Separar con Aaron Studio</span>
                     </>
                   )}
                   {selectedStemEngine === 'demucs' && (
                     <>
                       <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
-                      <span>⚡ Separar con HT-Demucs v4 (Cloud GPU Replicate)</span>
+                      <span>⚡ Separar con Aaron Cloud</span>
                     </>
                   )}
                   {selectedStemEngine === 'dsp-server' && (
                     <>
                       <Cpu className="w-4 h-4 text-cyan-200" />
-                      <span>⚙️ Separar Stems con DSP Local (FFmpeg - Coste $0)</span>
+                      <span>⚙️ Separar con Aaron Básico (gratis)</span>
                     </>
                   )}
                 </button>
               </div>
             )}
 
-            {/* TAB 2: ¿CÓMO FUNCIONA MOISES Y LA IA? */}
+            {/* TAB 2: ¿CÓMO FUNCIONA AARON? */}
             {moisesTab === 'how_it_works' && (
               <div className="space-y-4 text-xs text-neutral-300 leading-relaxed font-sans">
                 <div className="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-indigo-200 space-y-2">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
                     <Cpu className="w-4 h-4 text-indigo-400" />
-                    ¿Cómo consigue Moises separar audio de forma tan precisa?
+                    ¿Cómo consigue Aaron separar audio de forma tan precisa?
                   </h4>
                   <p className="text-neutral-300 leading-normal">
-                    Moises se apoya en modelos de <strong>Deep Learning (Aprendizaje Profundo)</strong> para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales) como <strong>HT-Demucs (Hybrid Transformer Demucs)</strong> y <strong>MDX-Net</strong>.
+                    Aaron se apoya en redes neuronales de <strong>Deep Learning (Aprendizaje Profundo)</strong> entrenadas específicamente para <em>Music Source Separation</em> (Separación de fuentes sonoras musicales).
                   </p>
                 </div>
 
@@ -5220,7 +5231,7 @@ export default function SongStudioModal({
                   <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
                     <span className="font-bold text-indigo-300 block">2. Arquitectura de Dominio Dual (Tiempo + Frecuencia):</span>
                     <p className="text-neutral-400 font-sans">
-                      A diferencia de filtros clásicos, HT-Demucs procesa tanto la forma de onda pura en el tiempo (para transitorios de batería) como el espectrograma de frecuencias con capas de <strong>Transformers & U-Nets</strong>.
+                      A diferencia de filtros clásicos, la red procesa tanto la forma de onda pura en el tiempo (para transitorios de batería) como el espectrograma de frecuencias con capas neuronales especializadas.
                     </p>
                   </div>
 
@@ -5234,27 +5245,27 @@ export default function SongStudioModal({
                   <div className="p-3 rounded-xl bg-black/50 border border-white/10 space-y-1">
                     <span className="font-bold text-emerald-300 block">4. Entrenamiento Masivo en Clusters de GPUs:</span>
                     <p className="text-neutral-400 font-sans">
-                      Estos modelos se entrenan con miles de temas grabados en pistas separadas en estudio (MusDB18). Al procesar, ejecutan inferencia acelerada mediante ONNX Runtime / TensorRT en servidores de GPU dedicadas.
+                      Estos modelos se entrenan con miles de temas grabados en pistas separadas en estudio. Al procesar, ejecutan inferencia acelerada en servidores de GPU dedicadas.
                     </p>
                   </div>
                 </div>
 
                 <div className="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700 text-zinc-300 text-[11px] font-mono">
-                  💡 <strong>Integración en BandManager:</strong> Nuestra app combina filtros DSP en tiempo real mediante Web Audio API con ruteo de nodos `BiquadFilterNode` para silenciar la voz o batería en vivo, y te permite subir archivos de audio de Stems exportados de Moises para máxima calidad.
+                  💡 <strong>Integración en BandManager:</strong> Nuestra app combina filtros DSP en tiempo real mediante Web Audio API con ruteo de nodos `BiquadFilterNode` para silenciar la voz o batería en vivo, y te permite subir pistas ya separadas en otro programa para máxima calidad.
                 </div>
               </div>
             )}
 
-            {/* TAB 3: SUBIR STEMS AISLADOS DE MOISES O ESTUDIO */}
+            {/* TAB 3: SUBIR PISTAS YA SEPARADAS EN OTRO PROGRAMA */}
             {moisesTab === 'upload' && (
               <div className="space-y-4 text-xs text-neutral-300 leading-relaxed font-sans">
                 <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-200 space-y-1">
                   <h4 className="font-bold text-white text-sm flex items-center gap-2 font-mono">
                     <Upload className="w-4 h-4 text-emerald-400" />
-                    Cargar Pistas Separadas (Stems de Moises / Demucs / Estudio)
+                    Cargar Pistas Separadas
                   </h4>
                   <p className="text-neutral-300 text-[11px]">
-                    Si ya has procesado un tema en Moises, Lalal.ai o Demucs y tienes los archivos MP3/WAV independientes, súbelos aquí para añadirlos directamente a la mezcla multipista de esta sección.
+                    Si ya has procesado un tema en otro programa de separación de pistas y tienes los archivos MP3/WAV independientes, súbelos aquí para añadirlos directamente a la mezcla multipista de esta sección.
                   </p>
                 </div>
 
@@ -5266,10 +5277,10 @@ export default function SongStudioModal({
                       onChange={(e) => setUploadingStemInstrument(e.target.value)}
                       className="w-full bg-black/60 border border-neutral-700 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500"
                     >
-                      <option value="Voz">🎤 Stem: Voz Aislada (Vocals)</option>
-                      <option value="Batería">🥁 Stem: Batería Aislada (Drums)</option>
-                      <option value="Bajo">🎸 Stem: Bajo Aislado (Bass)</option>
-                      <option value="Guitarras">🎹 Stem: Guitarras / Teclados (Other)</option>
+                      <option value="Voz">🎤 Pista: Voz Aislada</option>
+                      <option value="Batería">🥁 Pista: Batería Aislada</option>
+                      <option value="Bajo">🎸 Pista: Bajo Aislado</option>
+                      <option value="Guitarras">🎹 Pista: Guitarras / Teclados</option>
                     </select>
                   </div>
 
@@ -5289,9 +5300,9 @@ export default function SongStudioModal({
 
                           const newTrack: AudioTrack = {
                             id: `stem-file-${uploadingStemInstrument.toLowerCase()}-${Date.now()}`,
-                            nombre: `Stem (${uploadingStemInstrument}): ${file.name.replace(/\.[^/.]+$/, '')}`,
+                            nombre: `Pista (${uploadingStemInstrument}): ${file.name.replace(/\.[^/.]+$/, '')}`,
                             audioUrl: uploadedUrl,
-                            autor: 'Moises AI Import',
+                            autor: 'Importado (pista externa)',
                             instrumento: uploadingStemInstrument,
                             fecha: new Date().toISOString().split('T')[0],
                             volumen: 1,
@@ -5620,7 +5631,7 @@ export default function SongStudioModal({
                     : stemProgressModal.errorType === 'gpu_failure'
                     ? '⚡ Worker GPU'
                     : stemProgressModal.errorType === 'server_error'
-                    ? '☁️ Replicate 5xx'
+                    ? '☁️ Error del Servicio'
                     : '⚠️ Error'}
                 </span>
               ) : stemProgressModal.stage !== 'completed' && (
@@ -5633,10 +5644,10 @@ export default function SongStudioModal({
                 }`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
                   {stemProgressModal.engineChoice === 'mvsep-mdx23'
-                    ? '✨ MVSEP-MDX23 Ensemble'
+                    ? '✨ Aaron Studio'
                     : stemProgressModal.engineChoice === 'demucs'
-                    ? '⚡ Demucs v4 Cloud GPU'
-                    : '⚙️ FFmpeg DSP Local'}
+                    ? '⚡ Aaron Cloud'
+                    : '⚙️ Aaron Básico'}
                 </span>
               )}
             </div>
@@ -5720,8 +5731,8 @@ export default function SongStudioModal({
                     )}
                     <span>
                       {stemProgressModal.engineChoice !== 'dsp-server' || stemProgressModal.isNeural
-                        ? '2. Inferencia Neuronal (Replicate Cloud GPU)'
-                        : '2. Procesamiento de Señal DSP Mid-Side (Servidor Local - Sin Replicate)'}
+                        ? '2. Inferencia Neuronal en la Nube'
+                        : '2. Procesamiento de Señal en el Servidor Local'}
                     </span>
                   </div>
 
@@ -5752,10 +5763,10 @@ export default function SongStudioModal({
                       <span>⚠️ Modo Degradado Activo (Filtros DSP Básicos)</span>
                     </div>
                     <p className="text-[11px] text-neutral-200 font-sans leading-relaxed">
-                      {stemProgressModal.degradedReason || 'El modelo de Inteligencia Artificial neuronal no estaba disponible o no se configuraron credenciales de Replicate. Las pistas se han generado mediante filtrado por frecuencias de señal (DSP básico).'}
+                      {stemProgressModal.degradedReason || 'El motor neuronal no estaba disponible en este momento. Las pistas se han generado con Aaron Básico (filtrado por frecuencias de señal).'}
                     </p>
                     <div className="pt-1 text-[10px] font-mono text-amber-300">
-                      💡 Para separación de calidad de estudio con aislamiento de fuentes (MDX\'23 / Demucs v4), añade tu <code className="bg-black/50 px-1 py-0.5 rounded text-amber-200">REPLICATE_API_TOKEN</code> en Ajustes.
+                      💡 Para separación de calidad de estudio, comprueba la configuración del proveedor de IA en Ajustes.
                     </div>
                   </div>
                 ) : (
@@ -5763,19 +5774,24 @@ export default function SongStudioModal({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-xs">
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>¡Pistas de Stems Generadas con Éxito!</span>
+                        <span>¡Pistas Separadas con Éxito!</span>
                       </div>
                       <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-bold ${
-                        stemProgressModal.isNeural 
-                          ? 'bg-purple-950/80 text-purple-300 border-purple-500/40' 
+                        stemProgressModal.isNeural
+                          ? 'bg-purple-950/80 text-purple-300 border-purple-500/40'
                           : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
                       }`}>
-                        {stemProgressModal.isNeural ? '🧠 Red Neuronal Cloud GPU' : '⚙️ Motor DSP Local'}
+                        {stemProgressModal.isNeural ? '🧠 Red Neuronal en la Nube' : '⚙️ Motor Local'}
                       </span>
                     </div>
                     <p className="text-[11px] text-neutral-300 font-sans leading-relaxed">
-                      Procesado con el motor <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border border-white/10">{stemProgressModal.separationEngine || 'Neural AI'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
+                      Procesado con <strong className="text-white bg-black/40 px-1.5 py-0.5 rounded border border-white/10">{stemProgressModal.separationEngine || 'Aaron'}</strong>. Cada instrumento cuenta con controles independientes de <strong>Mute (M)</strong>, <strong>Solo (S)</strong>, fader de volumen y ecualizador en el mezclador.
                     </p>
+                    {stemProgressModal.engineChoice && (
+                      <p className="text-[10px] text-emerald-400/70 font-mono">
+                        💶 Coste estimado: {AARON_ENGINE_COST_EUR[stemProgressModal.engineChoice] > 0 ? `~${formatEurEstimate(AARON_ENGINE_COST_EUR[stemProgressModal.engineChoice])}€` : 'gratis'}
+                      </p>
+                    )}
                   </div>
                 )}
 
@@ -5843,7 +5859,7 @@ export default function SongStudioModal({
                       ¿Quieres comparar la pureza del aislamiento vocal y sangrado armónico? Selecciona un motor alternativo para re-procesar:
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-                      {/* MVSEP-MDX23 */}
+                      {/* Aaron Studio */}
                       <button
                         type="button"
                         onClick={() => {
@@ -5857,15 +5873,15 @@ export default function SongStudioModal({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-white">✨ MVSEP-MDX23</span>
+                          <span className="font-bold text-xs text-white">✨ Aaron Studio</span>
                           {stemProgressModal.engineChoice === 'mvsep-mdx23' && (
                             <span className="text-[9px] px-1 py-0.2 rounded bg-amber-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
                         </div>
-                        <span className="text-[10px] text-neutral-400">MDX-Net + Demucs4 (Ensamble SOTA)</span>
+                        <span className="text-[10px] text-neutral-400">Máxima calidad (ensamble)</span>
                       </button>
 
-                      {/* HT-Demucs v4 */}
+                      {/* Aaron Cloud */}
                       <button
                         type="button"
                         onClick={() => {
@@ -5879,15 +5895,15 @@ export default function SongStudioModal({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-white">⚡ HT-Demucs v4</span>
+                          <span className="font-bold text-xs text-white">⚡ Aaron Cloud</span>
                           {stemProgressModal.engineChoice === 'demucs' && (
                             <span className="text-[9px] px-1 py-0.2 rounded bg-purple-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
                         </div>
-                        <span className="text-[10px] text-neutral-400">Hybrid Transformer (6 canales)</span>
+                        <span className="text-[10px] text-neutral-400">Recomendado (6 canales)</span>
                       </button>
 
-                      {/* DSP Local */}
+                      {/* Aaron Básico */}
                       <button
                         type="button"
                         onClick={() => {
@@ -5901,12 +5917,12 @@ export default function SongStudioModal({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-xs text-white">⚙️ DSP Local</span>
+                          <span className="font-bold text-xs text-white">⚙️ Aaron Básico</span>
                           {stemProgressModal.engineChoice === 'dsp-server' && (
                             <span className="text-[9px] px-1 py-0.2 rounded bg-emerald-400 text-zinc-950 font-black">ACTIVO</span>
                           )}
                         </div>
-                        <span className="text-[10px] text-neutral-400">FFmpeg Servidor ($0 Coste)</span>
+                        <span className="text-[10px] text-neutral-400">Servidor local (gratis)</span>
                       </button>
                     </div>
                   </div>
@@ -5947,7 +5963,7 @@ export default function SongStudioModal({
                       <AlertCircle className="w-3.5 h-3.5 text-zinc-400" />
                     )}
                     <span>
-                      {stemProgressModal.errorProvider === 'replicate' && 'Origen: Replicate AI (Demucs v4 Cloud GPU)'}
+                      {stemProgressModal.errorProvider === 'replicate' && 'Origen: Proveedor de IA en la Nube'}
                       {stemProgressModal.errorProvider === 'gemini' && 'Origen: Google Gemini API (GenAI)'}
                       {stemProgressModal.errorProvider === 'ffmpeg' && 'Origen: Librería Local FFmpeg (Motor DSP)'}
                       {stemProgressModal.errorProvider === 'supabase' && 'Origen: Supabase Storage (Almacenamiento)'}
@@ -6025,7 +6041,7 @@ export default function SongStudioModal({
                       className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-zinc-950 font-mono text-xs font-black transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                     >
                       <CreditCard className="w-4 h-4" />
-                      <span>Recargar Saldo en Replicate Billing</span>
+                      <span>Recargar Saldo del Proveedor de IA</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
@@ -6038,7 +6054,7 @@ export default function SongStudioModal({
                       className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                     >
                       <Key className="w-4 h-4" />
-                      <span>Gestionar Tokens en Replicate API</span>
+                      <span>Gestionar Token del Proveedor de IA</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
@@ -6053,7 +6069,7 @@ export default function SongStudioModal({
                       className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                     >
                       <RefreshCw className="w-4 h-4" />
-                      <span>Reintentar con Replicate Cloud GPU</span>
+                      <span>Reintentar en la Nube</span>
                     </button>
                   )}
 
@@ -6065,7 +6081,7 @@ export default function SongStudioModal({
                       className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                     >
                       <Activity className="w-4 h-4" />
-                      <span>Comprobar Estado en Replicate Status</span>
+                      <span>Comprobar Estado del Servicio</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
@@ -6117,8 +6133,8 @@ export default function SongStudioModal({
                         <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                         <span>
                           {stemProgressModal.engineChoice === 'dsp-server'
-                            ? 'Probar con MVSEP-MDX23'
-                            : 'Separar con Motor DSP Local (Gratis)'}
+                            ? 'Probar con Aaron Studio'
+                            : 'Separar con Aaron Básico (Gratis)'}
                         </span>
                       </button>
                     )}
