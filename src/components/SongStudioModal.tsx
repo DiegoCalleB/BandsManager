@@ -159,34 +159,17 @@ const LiveMicWaveformCanvas: React.FC<{
 // descompuesto en el arcoíris de 6 colores — la misma paleta que colorea las pistas del mezclador.
 const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
 const IrisPrismBanner: React.FC = () => {
-  const targets = [10, 20, 28, 36, 44, 54];
   return (
-    <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-xl bg-black/40 border border-white/10">
-      <svg viewBox="0 0 160 64" className="w-full h-full" preserveAspectRatio="none">
-        {/* Prisma */}
-        <polygon points="62,14 62,50 86,32" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
-        {/* Rayo de luz blanco entrando en el prisma */}
-        <motion.rect
-          x={0} y={30} width={62} height={4} rx={2} fill="white"
-          animate={{ opacity: [0.25, 0.9, 0.25] }}
-          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
-        />
-        <motion.circle
-          cy={32} r={3} fill="white"
-          animate={{ cx: [0, 60, 0], opacity: [0, 1, 0] }}
-          transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
-        />
-        {/* Espectro de 6 colores saliendo del prisma, hasta el borde del viewBox */}
-        {targets.map((y, i) => (
-          <motion.line
-            key={i}
-            x1={86} y1={32} x2={160} y2={y}
-            stroke={IRIS_PRISM_RAY_COLORS[i]} strokeWidth={3} strokeLinecap="round"
-            animate={{ opacity: [0.25, 1, 0.25] }}
-            transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut', delay: i * 0.12 }}
-          />
-        ))}
-      </svg>
+    <div className="w-full h-28 flex items-center justify-center overflow-hidden rounded-xl bg-black border border-white/10">
+      <video
+        className="w-full h-full object-cover pointer-events-none"
+        src="/videos/iris-prism-banner.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+      />
     </div>
   );
 };
