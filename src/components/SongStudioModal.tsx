@@ -378,6 +378,10 @@ export default function SongStudioModal({
     targetIdea?: SongAudioIdea;
     stage: 'preparing' | 'demucs' | 'persisting' | 'completed' | 'error';
     progressPct: number;
+    /** El usuario minimizó el modal para seguir trabajando mientras Iris separa en segundo
+     *  plano — el proceso sigue corriendo igual (vive en este mismo componente, no en el modal),
+     *  solo cambia lo que se renderiza: el overlay completo o una píldora flotante discreta. */
+    minimized?: boolean;
     /** Timestamp (Date.now()) de cuándo empezó la fase de inferencia neuronal/DSP — única fuente
      *  de verdad para calcular su % de progreso, así el timer rápido de la barra y el polling de
      *  estado (cada 4s) nunca vuelven a pisarse el uno al otro con valores distintos. */
@@ -405,6 +409,15 @@ export default function SongStudioModal({
       totalSec?: string;
     };
   } | null>(null);
+
+  // Si el proceso termina (bien o mal) mientras el usuario tenía la píldora minimizada, se
+  // reabre solo: completado/error son estados que necesitan que el usuario los vea (celebrar,
+  // o decidir qué hacer con un fallo), no algo para dejar pasar desapercibido en una esquina.
+  useEffect(() => {
+    if (stemProgressModal?.minimized && (stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error')) {
+      setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null);
+    }
+  }, [stemProgressModal?.stage, stemProgressModal?.minimized]);
 
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (targetIdea: SongAudioIdea, overrideEngine?: 'mvsep-mdx23' | 'demucs' | 'dsp-server') => {
@@ -5708,7 +5721,7 @@ export default function SongStudioModal({
       )}
 
       {/* MODAL DE PROGRESO DE SEPARACIÓN DE STEMS IA */}
-      {stemProgressModal && stemProgressModal.isOpen && (
+      {stemProgressModal && stemProgressModal.isOpen && !stemProgressModal.minimized && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
           <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md md:max-w-2xl w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
 
@@ -5811,20 +5824,30 @@ export default function SongStudioModal({
                     : '⚠️ Error'}
                 </span>
               ) : stemProgressModal.stage !== 'completed' && (
-                <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border flex items-center gap-1.5 animate-pulse ${
-                  stemProgressModal.engineChoice === 'mvsep-mdx23'
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                    : stemProgressModal.engineChoice === 'demucs'
-                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
-                    : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
-                }`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
-                  {stemProgressModal.engineChoice === 'mvsep-mdx23'
-                    ? '✨ Iris Studio'
-                    : stemProgressModal.engineChoice === 'demucs'
-                    ? '⚡ Iris Cloud'
-                    : '⚙️ Iris Básico'}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border flex items-center gap-1.5 animate-pulse ${
+                    stemProgressModal.engineChoice === 'mvsep-mdx23'
+                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                      : stemProgressModal.engineChoice === 'demucs'
+                      ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                      : 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                  }`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping" />
+                    {stemProgressModal.engineChoice === 'mvsep-mdx23'
+                      ? '✨ Iris Studio'
+                      : stemProgressModal.engineChoice === 'demucs'
+                      ? '⚡ Iris Cloud'
+                      : '⚙️ Iris Básico'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: true } : null)}
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer shrink-0"
+                    title="Minimizar y seguir trabajando mientras Iris separa las pistas"
+                  >
+                    <Minimize2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               )}
             </div>
 
@@ -6364,6 +6387,33 @@ export default function SongStudioModal({
 
           </div>
         </div>
+      )}
+
+      {/* Píldora flotante: Iris sigue separando en segundo plano mientras el usuario minimizado
+          sigue trabajando en el resto del Studio (reproducir ideas, ver acordes, etc.) */}
+      {stemProgressModal && stemProgressModal.isOpen && stemProgressModal.minimized && (
+        <button
+          type="button"
+          onClick={() => setStemProgressModal(prev => prev ? { ...prev, minimized: false } : null)}
+          className="fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-2xl bg-zinc-950/95 backdrop-blur-md border border-amber-500/40 shadow-2xl p-3 text-left cursor-pointer hover:border-amber-400/70 transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200"
+          title="Reabrir el progreso de Iris"
+        >
+          <div className="flex items-center gap-2">
+            <Cpu className="w-4 h-4 text-amber-400 animate-pulse shrink-0" />
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-mono font-bold text-white truncate">Iris separando pistas…</p>
+              <p className="text-[10px] font-mono text-neutral-400 truncate">{stemProgressModal.ideaTitle}</p>
+            </div>
+            <span className="font-mono text-xs font-bold text-amber-400 shrink-0">{Math.round(stemProgressModal.progressPct)}%</span>
+            <Maximize2 className="w-3 h-3 text-neutral-500 shrink-0" />
+          </div>
+          <div className="mt-2 w-full h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-white/10">
+            <div
+              className="h-full bg-gradient-to-r from-amber-500 via-purple-500 to-emerald-400 rounded-full transition-all duration-300"
+              style={{ width: `${Math.max(5, stemProgressModal.progressPct)}%` }}
+            />
+          </div>
+        </button>
       )}
 
       {/* Tutorial Interactivo Paso a Paso */}
