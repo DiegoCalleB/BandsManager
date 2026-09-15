@@ -160,9 +160,9 @@ const LiveMicWaveformCanvas: React.FC<{
 const IRIS_PRISM_RAY_COLORS = ['#ff6b6b', '#ffab4a', '#ffe066', '#6fe89a', '#5b9dff', '#c084fc'];
 const IrisPrismBanner: React.FC = () => {
   return (
-    <div className="w-full h-28 md:h-56 flex items-center justify-center overflow-hidden rounded-xl bg-black border border-white/10">
+    <div className="w-full aspect-video flex items-center justify-center overflow-hidden rounded-xl bg-black border border-white/10">
       <video
-        className="w-full h-full object-contain pointer-events-none"
+        className="w-full h-full object-cover pointer-events-none"
         src="/videos/iris-prism-banner.mp4"
         autoPlay
         loop
