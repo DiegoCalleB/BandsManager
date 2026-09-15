@@ -5874,11 +5874,11 @@ export default function SongStudioModal({
                 {/* Animated Equalizer Visualizer */}
                 <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between">
                   <div className="flex items-center gap-1.5 h-8">
-                    <div className="w-1.5 bg-amber-400 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height: '60%' }} />
-                    <div className="w-1.5 bg-purple-400 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height: '90%' }} />
-                    <div className="w-1.5 bg-indigo-400 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height: '40%' }} />
-                    <div className="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height: '100%' }} />
-                    <div className="w-1.5 bg-amber-400 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height: '75%' }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_100ms]" style={{ height: '60%', backgroundColor: IRIS_PRISM_RAY_COLORS[0] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_300ms]" style={{ height: '90%', backgroundColor: IRIS_PRISM_RAY_COLORS[1] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_200ms]" style={{ height: '40%', backgroundColor: IRIS_PRISM_RAY_COLORS[2] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_400ms]" style={{ height: '100%', backgroundColor: IRIS_PRISM_RAY_COLORS[4] }} />
+                    <div className="w-1.5 rounded-full animate-[bounce_1s_infinite_150ms]" style={{ height: '75%', backgroundColor: IRIS_PRISM_RAY_COLORS[5] }} />
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-mono font-bold text-amber-200 animate-pulse">
