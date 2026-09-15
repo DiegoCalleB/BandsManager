@@ -5729,9 +5729,12 @@ export default function SongStudioModal({
         <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[1200] flex items-center justify-center p-4">
           <div className="bg-zinc-950 border border-amber-500/40 rounded-2xl max-w-md w-full p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
 
-            {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris */}
+            {/* Guiño de marca: rayo blanco entrando en el prisma de Iris, saliendo en arcoíris.
+                -mx-6 cancela el padding del modal para que ocupe todo el ancho, de borde a borde. */}
             {stemProgressModal.stage !== 'completed' && stemProgressModal.stage !== 'error' && (
-              <IrisPrismBanner />
+              <div className="-mx-6">
+                <IrisPrismBanner />
+              </div>
             )}
 
             {/* Header */}
