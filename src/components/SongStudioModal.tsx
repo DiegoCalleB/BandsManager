@@ -162,7 +162,7 @@ const IrisPrismBanner: React.FC = () => {
   return (
     <div className="w-full h-28 flex items-center justify-center overflow-hidden rounded-xl bg-black border border-white/10">
       <video
-        className="w-full h-full object-cover pointer-events-none"
+        className="w-full h-full object-contain pointer-events-none"
         src="/videos/iris-prism-banner.mp4"
         autoPlay
         loop
