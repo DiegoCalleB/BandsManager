@@ -11,6 +11,7 @@ import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsMod
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
 import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
 import { 
  Search, MapPin, Music, Mic, DoorClosed, Globe, Phone, Instagram, 
@@ -1101,45 +1102,9 @@ export default function Dashboard({
           selectedLead={selectedLead}
           onClose={() => setSelectedLead(null)}
           onUpdateLead={onUpdateLead}
-          getStatusBadgeClass={(status) => {
-            const norm = normalizeStatus(status);
-            switch (norm) {
-              case 'nuevo': return 'bg-stone-500/20 text-stone-300';
-              case 'pendiente_aprobacion': return 'bg-amber-500/20 text-amber-300';
-              case 'aprobado': return 'bg-emerald-500/20 text-emerald-300';
-              case 'esperando_respuesta': return 'bg-sky-500/20 text-sky-300';
-              case 'interesado': return 'bg-emerald-500/20 text-emerald-300';
-              case 'negociando': return 'bg-purple-500/20 text-purple-300';
-              case 'no_interesado': return 'bg-zinc-800 text-zinc-400';
-              default: return 'bg-zinc-800 text-zinc-300';
-            }
-          }}
-          getStatusLabel={(status) => {
-            const norm = normalizeStatus(status);
-            switch (norm) {
-              case 'nuevo': return 'Por Contactar';
-              case 'pendiente_aprobacion': return 'Por Aprobar';
-              case 'aprobado': return 'Aprobado';
-              case 'esperando_respuesta': return 'Email Enviado';
-              case 'interesado': return 'Interesado';
-              case 'negociando': return 'Negociando';
-              case 'no_interesado': return 'No Interesado';
-              default: return String(status).toUpperCase();
-            }
-          }}
-          getStatusDotColor={(status) => {
-            const norm = normalizeStatus(status);
-            switch (norm) {
-              case 'nuevo': return 'bg-[#a39e9b]';
-              case 'pendiente_aprobacion': return 'bg-[#f2ca50] animate-pulse';
-              case 'aprobado': return 'bg-[#10b981]';
-              case 'esperando_respuesta': return 'bg-[#38bdf8]';
-              case 'interesado': return 'bg-[#10b981]';
-              case 'negociando': return 'bg-[#38bdf8]';
-              case 'no_interesado': return 'bg-[#85736b]';
-              default: return 'bg-[#85736b]';
-            }
-          }}
+          getStatusBadgeClass={(status) => leadStatusBadgeClass(normalizeStatus(status), isStitchLight)}
+          getStatusLabel={(status) => leadStatusLabel(normalizeStatus(status), String(status).toUpperCase())}
+          getStatusDotColor={(status) => leadStatusDotColor(normalizeStatus(status))}
           normalizeStatus={normalizeStatus}
           normalizeType={normalizeType}
           autoDetectVenueAddress={autoDetectVenueAddress}

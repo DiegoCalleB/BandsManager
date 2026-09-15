@@ -82,12 +82,13 @@ interface BookingCRMProps {
   onCampaignChange?: (campaign: BookingCampaign | null) => void;
 }
 
-import { 
-  normalizeStatus, 
-  normalizeType, 
-  autoDetectVenueAddress, 
-  VENUE_ADDRESS_DATABASE 
+import {
+  normalizeStatus,
+  normalizeType,
+  autoDetectVenueAddress,
+  VENUE_ADDRESS_DATABASE
 } from '../utils/bookingUtils';
+import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
 
 export { 
   normalizeStatus, 
@@ -456,34 +457,6 @@ export default function BookingCRM({
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
 
- const getTypeBadgeClass = (typeVal: any) => {
- const norm = normalizeType(typeVal);
- switch (norm) {
- case 'sala': return isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400';
- case 'festival': return isStitchLight ? 'bg-fuchsia-50 text-fuchsia-700' : 'bg-fuchsia-500/10 text-fuchsia-400';
- case 'discoteca': return isStitchLight ? 'bg-purple-50 text-purple-700' : 'bg-purple-500/10 text-purple-400';
- case 'ayuntamiento': return isStitchLight ? 'bg-[#d1b375]/15 text-[#d1b375]' : 'bg-[#d1b375]/15/30 text-[#d1b375]/80';
- case 'grupo': return isStitchLight ? (isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]') : 'bg-[#10b981]/15/30 text-[#10b981]/80';
- case 'productora': return isStitchLight ? 'bg-cyan-50 text-cyan-700' : 'bg-cyan-500/10 text-cyan-400';
- case 'medio': return isStitchLight ? 'bg-rose-500/15 text-rose-400' : 'bg-rose-500/15 text-rose-400';
- default: return isStitchLight ? 'bg-slate-50 text-slate-700' : 'bg-neutral-800 text-neutral-300';
- }
- };
-
- const getTypeLabel = (typeVal: any) => {
- const norm = normalizeType(typeVal);
- switch (norm) {
- case 'sala': return '🏛️ Sala / Teatro';
- case 'festival': return '🎪 Festival';
- case 'discoteca': return '🪩 Discoteca / Clubbing';
- case 'ayuntamiento': return '🎆 Ayuntamiento / Fiestas';
- case 'grupo': return '🎸 Grupo / Banda Co-Booking';
- case 'productora': return '💼 Management / Agencia';
- case 'medio': return '📻 Medio (Radio / Prensa)';
- default: return '🏛️ Sala / Teatro';
- }
- };
-
  // Filter leads by active section tab
  const sectionLeads = useMemo(() => {
     const seen = new Set<string>();
@@ -754,65 +727,14 @@ export default function BookingCRM({
  setSelectedLead(createdLead);
  };
 
- const getStatusDotColor = (status: LeadStatus | string) => {
- const norm = normalizeStatus(status);
- switch (norm) {
- case 'nuevo': return 'bg-amber-400';
- case 'esperando_respuesta':
- case 'enviado': return 'bg-sky-400';
- case 'respondido': return 'bg-indigo-400';
- case 'negociando': return 'bg-purple-400';
- case 'confirmado': return 'bg-emerald-400';
- case 'aplazado': return 'bg-yellow-500';
- case 'no_interesado': return 'bg-neutral-500';
- case 'pendiente_aprobacion': return 'bg-amber-400';
- case 'aprobado':
- case 'aprobado_propuesta':
- case 'aprobado_respuesta': return 'bg-emerald-400';
- case 'borrador_creado': return 'bg-cyan-400';
- default: return 'bg-stone-400';
- }
- };
+ const getStatusDotColor = (status: LeadStatus | string) =>
+ leadStatusDotColor(normalizeStatus(status));
 
- const getStatusBadgeClass = (status: LeadStatus | string) => {
- const norm = normalizeStatus(status);
- switch (norm) {
- case 'nuevo': return isStitchLight ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30';
- case 'esperando_respuesta':
- case 'enviado': return isStitchLight ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-sky-500/15 text-sky-300 border border-sky-500/30';
- case 'respondido': return isStitchLight ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30';
- case 'negociando': return isStitchLight ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-purple-500/15 text-purple-300 border border-purple-500/30';
- case 'confirmado': return isStitchLight ? 'bg-emerald-50 text-emerald-700 font-bold border border-emerald-300' : 'bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40';
- case 'aplazado': return isStitchLight ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-yellow-500/15 text-yellow-300 border border-yellow-500/30';
- case 'no_interesado': return isStitchLight ? 'bg-slate-100 text-slate-500 border border-slate-200' : 'bg-neutral-800/80 text-neutral-400 border border-neutral-700/50';
- case 'pendiente_aprobacion': return isStitchLight ? 'bg-amber-50 text-amber-700 border border-amber-300' : 'bg-amber-500/15 text-amber-400 border border-amber-500/40';
- case 'aprobado':
- case 'aprobado_propuesta':
- case 'aprobado_respuesta': return isStitchLight ? 'bg-emerald-50 text-emerald-700 border border-emerald-300' : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/40';
- case 'borrador_creado': return isStitchLight ? 'bg-cyan-50 text-cyan-700 border border-cyan-300' : 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40';
- default: return isStitchLight ? 'bg-slate-50 text-slate-500' : 'bg-neutral-800/60 text-neutral-400';
- }
- };
+ const getStatusBadgeClass = (status: LeadStatus | string) =>
+ leadStatusBadgeClass(normalizeStatus(status), isStitchLight);
 
- const getStatusLabel = (status: LeadStatus | string) => {
- const norm = normalizeStatus(status);
- switch (norm) {
- case 'nuevo': return 'Por contactar';
- case 'esperando_respuesta':
- case 'enviado': return 'Contactado';
- case 'respondido': return 'En conversación';
- case 'negociando': return 'Negociando';
- case 'confirmado': return 'Confirmado 🎉';
- case 'aplazado': return 'Aplazado ⏳';
- case 'no_interesado': return 'Descartado';
- case 'pendiente_aprobacion': return 'Borrador por aprobar';
- case 'aprobado':
- case 'aprobado_propuesta':
- case 'aprobado_respuesta': return 'En cola de envío';
- case 'borrador_creado': return 'Borrador en tu email 📝';
- default: return String(status);
- }
- };
+ const getStatusLabel = (status: LeadStatus | string) =>
+ leadStatusLabel(normalizeStatus(status), String(status));
 
  const handleOpenLead = (lead: Lead) => {
  setSelectedLead(lead);
