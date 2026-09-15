@@ -4040,9 +4040,7 @@ export default function SongStudioModal({
                                 return (
                                   <div
                                     key={tr.id}
-                                    onDragOver={(e) => { e.preventDefault(); if (draggedTrackInfo?.ideaId === idea.id) setDragOverTrackIndex(idx); }}
-                                    onDragLeave={() => setDragOverTrackIndex(prev => (prev === idx ? null : prev))}
-                                    onDrop={(e) => { e.preventDefault(); handleDropTrack(idea, idx); }}
+                                    data-track-row-idx={idx}
                                     className={`rounded-xl border overflow-hidden transition-all ${
                                       isDraggingThisTrack
                                         ? 'opacity-30 scale-[0.98] border-dashed border-indigo-400'
@@ -4068,10 +4066,31 @@ export default function SongStudioModal({
                                         <div className="flex items-center gap-1 min-w-0">
                                           {tracks.length > 1 && (
                                             <span
-                                              draggable
-                                              onDragStart={() => setDraggedTrackInfo({ ideaId: idea.id, index: idx })}
-                                              onDragEnd={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
-                                              className="text-neutral-500 hover:text-neutral-300 cursor-grab active:cursor-grabbing shrink-0 -ml-0.5"
+                                              onPointerDown={(e) => {
+                                                e.preventDefault();
+                                                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                                                setDraggedTrackInfo({ ideaId: idea.id, index: idx });
+                                                setDragOverTrackIndex(idx);
+                                              }}
+                                              onPointerMove={(e) => {
+                                                if (!draggedTrackInfo || draggedTrackInfo.ideaId !== idea.id) return;
+                                                const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
+                                                const rowEl = el?.closest('[data-track-row-idx]') as HTMLElement | null;
+                                                if (rowEl) {
+                                                  const overIdx = parseInt(rowEl.getAttribute('data-track-row-idx') || '', 10);
+                                                  if (!isNaN(overIdx)) setDragOverTrackIndex(overIdx);
+                                                }
+                                              }}
+                                              onPointerUp={() => {
+                                                if (draggedTrackInfo?.ideaId === idea.id && dragOverTrackIndex !== null) {
+                                                  handleDropTrack(idea, dragOverTrackIndex);
+                                                } else {
+                                                  setDraggedTrackInfo(null);
+                                                  setDragOverTrackIndex(null);
+                                                }
+                                              }}
+                                              onPointerCancel={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
+                                              className="text-neutral-500 hover:text-neutral-300 cursor-grab active:cursor-grabbing shrink-0 -ml-0.5 touch-none select-none"
                                               title="Arrastrar para reordenar pista"
                                             >
                                               <GripVertical className="w-3 h-3" />
