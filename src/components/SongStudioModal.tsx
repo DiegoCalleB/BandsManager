@@ -31,7 +31,7 @@ import {
   Square, Repeat, Flag, RotateCcw, Headphones, ShieldCheck, Filter, Share2,
   Maximize2, Minimize2, Cpu, Activity, Info, CheckCircle2, AlertCircle,
   FileAudio, HardDrive, Clock, Timer, CreditCard, Key, ExternalLink,
-  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical
+  ChevronDown, ChevronUp, AlertTriangle, Copy, Bot, Database, MoreVertical, GripVertical
 } from 'lucide-react';
 
 
@@ -2241,22 +2241,41 @@ export default function SongStudioModal({
   // Reordenar pistas a mano (guiño a Iris: al mover, cada pista "congela" su color de arcoíris
   // actual en colorHue para que se lo lleve consigo — a partir de ahí el orden visual del
   // arcoíris ya no será perfecto, pero cada pista mantiene su identidad de color).
-  const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
-    const tracks = getIdeaTracks(idea);
-    const fromIndex = tracks.findIndex(t => t.id === trackId);
-    const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1;
-    if (fromIndex === -1 || toIndex < 0 || toIndex >= tracks.length) return;
-
-    const stampedTracks = tracks.map((t, i) => ({
+  const stampTrackColors = (tracks: AudioTrack[]): AudioTrack[] =>
+    tracks.map((t, i) => ({
       ...t,
       colorHue: typeof t.colorHue === 'number' ? t.colorHue : RAINBOW_HUE_STEPS[i % RAINBOW_HUE_STEPS.length]
     }));
-    const reordered = [...stampedTracks];
+
+  const reorderIdeaTracks = (idea: SongAudioIdea, fromIndex: number, toIndex: number) => {
+    const tracks = getIdeaTracks(idea);
+    if (fromIndex === -1 || toIndex < 0 || toIndex >= tracks.length || fromIndex === toIndex) return;
+
+    const reordered = stampTrackColors(tracks);
     const [moved] = reordered.splice(fromIndex, 1);
     reordered.splice(toIndex, 0, moved);
 
     const updatedIdeas = (song.audioIdeas || []).map(i => i.id === idea.id ? { ...i, pistas: reordered } : i);
     onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+  };
+
+  const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
+    const tracks = getIdeaTracks(idea);
+    const fromIndex = tracks.findIndex(t => t.id === trackId);
+    reorderIdeaTracks(idea, fromIndex, direction === 'up' ? fromIndex - 1 : fromIndex + 1);
+  };
+
+  // Arrastrar y soltar para reordenar pistas — mismo sistema (handle GripVertical + HTML5 drag)
+  // que ya usa el repertorio para reordenar canciones y setlists.
+  const [draggedTrackInfo, setDraggedTrackInfo] = useState<{ ideaId: string; index: number } | null>(null);
+  const [dragOverTrackIndex, setDragOverTrackIndex] = useState<number | null>(null);
+
+  const handleDropTrack = (idea: SongAudioIdea, dropIndex: number) => {
+    if (draggedTrackInfo && draggedTrackInfo.ideaId === idea.id) {
+      reorderIdeaTracks(idea, draggedTrackInfo.index, dropIndex);
+    }
+    setDraggedTrackInfo(null);
+    setDragOverTrackIndex(null);
   };
 
   // --- OVERDUB / ADDING NEW TRACK TO IDEA ---
@@ -4015,11 +4034,21 @@ export default function SongStudioModal({
                                 const vol = tr.volumen ?? 1;
                                 const isEditing = editingTrackId === tr.id;
 
+                                const isDraggingThisTrack = draggedTrackInfo?.ideaId === idea.id && draggedTrackInfo.index === idx;
+                                const isDragOverThisTrack = dragOverTrackIndex === idx && draggedTrackInfo?.ideaId === idea.id && !isDraggingThisTrack;
+
                                 return (
                                   <div
                                     key={tr.id}
+                                    onDragOver={(e) => { e.preventDefault(); if (draggedTrackInfo?.ideaId === idea.id) setDragOverTrackIndex(idx); }}
+                                    onDragLeave={() => setDragOverTrackIndex(prev => (prev === idx ? null : prev))}
+                                    onDrop={(e) => { e.preventDefault(); handleDropTrack(idea, idx); }}
                                     className={`rounded-xl border overflow-hidden transition-all ${
-                                      isMuted
+                                      isDraggingThisTrack
+                                        ? 'opacity-30 scale-[0.98] border-dashed border-indigo-400'
+                                        : isDragOverThisTrack
+                                        ? 'border-indigo-400 ring-2 ring-indigo-400/50 bg-indigo-500/10'
+                                        : isMuted
                                         ? 'bg-red-950/20 border-red-900/40 opacity-50 grayscale-[30%]'
                                         : isSolo
                                           ? 'bg-amber-500/10 border-amber-400/80 ring-1 ring-amber-400/40 border-l-4 border-l-amber-400 shadow-lg shadow-amber-950/30'
@@ -4035,8 +4064,19 @@ export default function SongStudioModal({
                                         className="w-full sm:w-[190px] shrink-0 flex flex-col justify-center gap-1 px-2 py-1 border-b sm:border-b-0 sm:border-r border-white/10 bg-black/25"
                                         title={tr.instrumento || undefined}
                                       >
-                                        {/* Line 1: number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
+                                        {/* Line 1: asa de arrastre + number badge (coloreado por familia de instrumento, guiño a Iris) + name + edit */}
                                         <div className="flex items-center gap-1 min-w-0">
+                                          {tracks.length > 1 && (
+                                            <span
+                                              draggable
+                                              onDragStart={() => setDraggedTrackInfo({ ideaId: idea.id, index: idx })}
+                                              onDragEnd={() => { setDraggedTrackInfo(null); setDragOverTrackIndex(null); }}
+                                              className="text-neutral-500 hover:text-neutral-300 cursor-grab active:cursor-grabbing shrink-0 -ml-0.5"
+                                              title="Arrastrar para reordenar pista"
+                                            >
+                                              <GripVertical className="w-3 h-3" />
+                                            </span>
+                                          )}
                                           <span
                                             className="w-4 h-4 rounded font-mono text-[9px] font-bold flex items-center justify-center shrink-0 border"
                                             style={{

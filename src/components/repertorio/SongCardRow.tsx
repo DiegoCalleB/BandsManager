@@ -308,12 +308,13 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
 
         {/* Right Section: Direct Quick Actions + Overflow ⋯ Menu */}
         <div className="shrink-0 flex items-center gap-1 sm:gap-1.5" onClick={(e) => e.stopPropagation()}>
-          {/* 1. Direct Acordes / Chords Button */}
+          {/* 1. Direct Acordes / Chords Button (oculto en móvil: vive en el menú ⋯ para dejar
+                sitio al título, que si no se queda sin espacio y se corta a 1-2 letras) */}
           {onOpenChords && (
             <button
               type="button"
               onClick={onOpenChords}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-mono font-bold items-center gap-1 transition-all cursor-pointer border ${
                 isStitchLight
                   ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
                   : 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border-emerald-500/30'
@@ -349,12 +350,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             </button>
           )}
 
-          {/* 3. Direct Member Notes Button */}
+          {/* 3. Direct Member Notes Button (oculto en móvil, ver nota arriba) */}
           {onOpenMemberNotes && (
             <button
               type="button"
               onClick={onOpenMemberNotes}
-              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+              className={`hidden sm:flex p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-mono font-bold items-center gap-1 transition-all cursor-pointer border ${
                 hasMemberNotes
                   ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40 shadow-xs'
                   : isStitchLight
@@ -368,12 +369,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             </button>
           )}
 
-          {/* 4. Direct Edit Song Button (Pencil icon) */}
+          {/* 4. Direct Edit Song Button (Pencil icon) (oculto en móvil, ver nota arriba) */}
           {onEditSong && (
             <button
               type="button"
               onClick={onEditSong}
-              className={`p-1.5 sm:px-2 sm:py-1 rounded-lg text-xs font-mono font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+              className={`hidden sm:flex p-1.5 sm:px-2 sm:py-1 rounded-lg text-xs font-mono font-bold items-center gap-1 transition-all cursor-pointer border ${
                 isStitchLight
                   ? 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
                   : 'bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border-white/10'
@@ -437,6 +438,38 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                 }`}
               >
                 <div className="py-1 space-y-0.5">
+                  {/* Acordes / Notas / Editar: solo en móvil, en escritorio ya son botones directos */}
+                  {onOpenChords && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowMenu(false); onOpenChords(); }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Ver Acordes</span>
+                    </button>
+                  )}
+                  {onOpenMemberNotes && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowMenu(false); onOpenMemberNotes(); }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                    >
+                      <Users className="w-3.5 h-3.5" />
+                      <span>Notas por Miembro</span>
+                    </button>
+                  )}
+                  {onEditSong && (
+                    <button
+                      type="button"
+                      onClick={() => { setShowMenu(false); onEditSong(); }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-zinc-300 transition-colors flex items-center gap-2 cursor-pointer sm:hidden"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Editar Canción</span>
+                    </button>
+                  )}
+
                   {/* Studio / Grabadora Multipista */}
                   {onOpenStudio && (
                     <button
