@@ -20,3 +20,7 @@ supabase/.temp/
 # Worktrees temporales de agentes de Claude Code (isolation: "worktree") - copias de
 # trabajo efímeras, nunca contenido real del proyecto.
 .claude/
+
+# Salida de cada corrida de Playwright (e2e/) - informe HTML, trazas y capturas de fallos.
+playwright-report/
+test-results/
