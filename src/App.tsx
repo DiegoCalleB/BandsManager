@@ -1005,7 +1005,7 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/logo_bandmanager_symbol.png"
+ src="/logo_bandmanager_symbol.png?v=4"
  alt="BandManager.io"
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
@@ -1272,7 +1272,7 @@ export default function App() {
  <div className="flex items-center justify-between px-2">
  <div className="flex items-center gap-2">
  <img 
- src="/logo_bandmanager_symbol.png"
+ src="/logo_bandmanager_symbol.png?v=4"
  alt="BandManager.io"
  className="w-7 h-7 object-contain shrink-0 transition-all cursor-pointer"
  referrerPolicy="no-referrer"
