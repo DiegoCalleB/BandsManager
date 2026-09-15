@@ -162,7 +162,7 @@ const IrisPrismBanner: React.FC = () => {
   const targets = [10, 20, 28, 36, 44, 54];
   return (
     <div className="w-full h-16 flex items-center justify-center overflow-hidden rounded-xl bg-black/40 border border-white/10">
-      <svg viewBox="0 0 160 64" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+      <svg viewBox="0 0 160 64" className="w-full h-full" preserveAspectRatio="none">
         {/* Prisma */}
         <polygon points="62,14 62,50 86,32" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" />
         {/* Rayo de luz blanco entrando en el prisma */}
@@ -176,11 +176,11 @@ const IrisPrismBanner: React.FC = () => {
           animate={{ cx: [0, 60, 0], opacity: [0, 1, 0] }}
           transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
         />
-        {/* Espectro de 6 colores saliendo del prisma */}
+        {/* Espectro de 6 colores saliendo del prisma, hasta el borde del viewBox */}
         {targets.map((y, i) => (
           <motion.line
             key={i}
-            x1={86} y1={32} x2={155} y2={y}
+            x1={86} y1={32} x2={160} y2={y}
             stroke={IRIS_PRISM_RAY_COLORS[i]} strokeWidth={3} strokeLinecap="round"
             animate={{ opacity: [0.25, 1, 0.25] }}
             transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut', delay: i * 0.12 }}
