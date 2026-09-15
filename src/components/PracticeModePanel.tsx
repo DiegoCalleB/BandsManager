@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer } from 'lucide-react';
+import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target } from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
@@ -90,6 +90,10 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const [isAutoBalancing, setIsAutoBalancing] = useState(false);
   const [semitonesOffset, setSemitonesOffset] = useState(0);
   const [metronomeOn, setMetronomeOn] = useState(false);
+  // Instante (en segundos, tiempo "real" de la canción, no afectado por `speed`) del primer golpe de
+  // compás marcado a mano — permite alinear la claqueta con canciones que no empiezan justo en el
+  // beat 1 (intro, silencio, cuenta suelta). 0 = sin marcar, se asume que el compás cae en el segundo 0.
+  const [beatAnchorSec, setBeatAnchorSec] = useState(0);
   // Se incrementa cada vez que ensureAudioLoaded crea elementos <audio> nuevos, para forzar un
   // re-render y que los puentes de trasposición (TrackPitchShiftBridge) reciban el elemento real
   // en vez del null inicial — audioRefs es un ref, mutarlo no dispara render por sí solo.
@@ -110,6 +114,8 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   const myCategory = useMemo(() => matchInstrumentToStemCategory(currentUser?.instrument), [currentUser?.instrument]);
   const myTrack = useMemo(() => tracks.find(t => t.instrumento === myCategory) || null, [tracks, myCategory]);
 
+  const beatAnchorStorageKey = useMemo(() => `${storageKey}:beatAnchor`, [storageKey]);
+
   // Cargar la mezcla personal guardada de este usuario para esta idea concreta
   useEffect(() => {
     try {
@@ -118,12 +124,18 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
     } catch {
       setOverrides({});
     }
+    try {
+      const rawAnchor = localStorage.getItem(beatAnchorStorageKey);
+      setBeatAnchorSec(rawAnchor ? Number(rawAnchor) || 0 : 0);
+    } catch {
+      setBeatAnchorSec(0);
+    }
     setLoopA(null);
     setLoopB(null);
     setSpeed(1);
     setSemitonesOffset(0);
     setMetronomeOn(false);
-  }, [storageKey]);
+  }, [storageKey, beatAnchorStorageKey]);
 
   // Persistir la mezcla personal (solo en este dispositivo, nunca en el documento de la canción)
   useEffect(() => {
@@ -135,6 +147,17 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
       }
     } catch {}
   }, [storageKey, overrides]);
+
+  // Persistir el compás marcado (por dispositivo, igual que el resto de ajustes de práctica)
+  useEffect(() => {
+    try {
+      if (beatAnchorSec > 0) {
+        localStorage.setItem(beatAnchorStorageKey, String(beatAnchorSec));
+      } else {
+        localStorage.removeItem(beatAnchorStorageKey);
+      }
+    } catch {}
+  }, [beatAnchorStorageKey, beatAnchorSec]);
 
   const getEffective = useCallback((tr: AudioTrack): AudioTrack => {
     const ov = overrides[tr.id];
@@ -251,17 +274,29 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
   // Recalcula en qué instante exacto (reloj de AudioContext) debería sonar el próximo clic del
   // metrónomo para que coincida con `atTime` de la reproducción — se llama al arrancar, al cambiar
   // de velocidad/BPM y en cada salto (seek, bucle A/B) para que nunca se desincronice.
-  const resyncMetronomeAt = useCallback((atTime: number) => {
+  const resyncMetronomeAt = useCallback((atTime: number, anchorOverride?: number) => {
     if (!metronomeCtxRef.current) {
       metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
     const ctx = metronomeCtxRef.current;
     if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+    const anchor = anchorOverride ?? beatAnchorSec;
     const secPerBeat = 60 / (song.bpm || 120) / speed;
-    const nextBeatIndex = Math.ceil(atTime / secPerBeat);
+    const relativeTime = atTime - anchor;
+    const nextBeatIndex = Math.ceil(relativeTime / secPerBeat);
     metronomeBeatCounterRef.current = nextBeatIndex;
-    metronomeNextClickTimeRef.current = ctx.currentTime + (nextBeatIndex * secPerBeat - atTime);
-  }, [song.bpm, speed]);
+    metronomeNextClickTimeRef.current = ctx.currentTime + (anchor + nextBeatIndex * secPerBeat - atTime);
+  }, [song.bpm, speed, beatAnchorSec]);
+
+  // Marca el instante actual como el primer golpe de compás — la claqueta reajusta su rejilla
+  // para que ese punto (y cada `secPerBeat` desde ahí, hacia delante y hacia atrás) sea un beat.
+  const markBeatAnchor = useCallback(() => {
+    const t = currentTime;
+    setBeatAnchorSec(t);
+    if (metronomeOn && isPlaying) {
+      resyncMetronomeAt(t, t);
+    }
+  }, [currentTime, metronomeOn, isPlaying, resyncMetronomeAt]);
 
   const metronomeSchedulerTick = useCallback(() => {
     const ctx = metronomeCtxRef.current;
@@ -635,6 +670,29 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
                 >
                   <Timer className="w-3.5 h-3.5" /> {targetBpm} BPM
                 </button>
+                <button
+                  onClick={markBeatAnchor}
+                  title="Marcar beat de compás — ponte en el primer golpe fuerte del compás (en cualquier punto de la canción) y pulsa aquí: la claqueta recalcula toda su rejilla a partir de ese instante"
+                  className={`flex items-center gap-1 text-[10px] font-mono px-2 py-1 rounded-lg border ${
+                    beatAnchorSec > 0
+                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                      : 'bg-neutral-800 border-transparent text-neutral-400 hover:text-white'
+                  }`}
+                >
+                  <Target className="w-3.5 h-3.5" /> {beatAnchorSec > 0 ? `Compás ${formatTime(beatAnchorSec)}` : 'Marcar beat de compás'}
+                </button>
+                {beatAnchorSec > 0 && (
+                  <button
+                    onClick={() => {
+                      setBeatAnchorSec(0);
+                      if (metronomeOn && isPlaying) resyncMetronomeAt(currentTime, 0);
+                    }}
+                    title="Quitar el compás marcado (volver a asumir que empieza en 0:00)"
+                    className="text-[10px] font-mono px-1.5 py-1 rounded-lg text-neutral-400 hover:text-white"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
             </div>
 
