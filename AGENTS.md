@@ -50,6 +50,7 @@
 4. **Almacenamiento de Archivos (Supabase Storage):**
    * Los archivos estáticos y clips multimedia procesados deben subirse a **Supabase Storage**, nunca al disco efímero de Railway.
    * Servir uploads estáticos con cabeceras `X-Content-Type-Options: nosniff`.
+5. **`/security-review` antes de mergear, disparado por superficie tocada (no obligatorio siempre):** pasar la skill `/security-review` de Claude Code cuando el diff toca `band_id`/`bandAccess.ts`, auth, un `fetch()` de URL de usuario, subida de archivos, o el envío de emails de los agentes (§3). No es un checklist universal en cada merge — eso se acaba saltando por cansancio en un proyecto de iteración rápida, igual que la excepción de TDD (§5.3.1) tampoco es "todo con test antes"; es corrección/seguridad, no limpieza de código, así que vive aquí y no junto a `/code-review`/`/simplify` en §5.4.
 
 ### 2.3 Control de Planes de Suscripción y Límites Servidor/Cliente (Plan Promo)
 1. **Jerarquía y Normalización de Planes (`normalizePlan`):**
