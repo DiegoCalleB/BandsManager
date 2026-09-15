@@ -3538,6 +3538,9 @@ export default function SongStudioModal({
                   const hasVoted = votes.includes(currentUsername);
                   const tracks = getIdeaTracks(idea);
                   const isAddingTrack = addingTrackIdeaId === idea.id;
+                  // Con una sola idea en el catálogo no hay nada que "priorizar" plegando —
+                  // se abre directa, sin necesidad de tocar el chevron para empezar a trabajar.
+                  const isIdeaExpanded = filteredIdeas.length === 1 || expandedIdeaIds.has(idea.id);
 
                   return (
                     <motion.div
@@ -3559,10 +3562,10 @@ export default function SongStudioModal({
                           <button
                             type="button"
                             onClick={() => toggleIdeaExpanded(idea.id)}
-                            title={expandedIdeaIds.has(idea.id) ? 'Plegar idea' : 'Expandir idea'}
+                            title={isIdeaExpanded ? 'Plegar idea' : 'Expandir idea'}
                             className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0"
                           >
-                            {expandedIdeaIds.has(idea.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                            {isIdeaExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                           </button>
                           <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border shrink-0 ${sectionInfo.color}`}>
                             {sectionInfo.icon} {sectionInfo.label}
@@ -3674,7 +3677,7 @@ export default function SongStudioModal({
                         </div>
                       </div>
 
-                    {expandedIdeaIds.has(idea.id) && (
+                    {isIdeaExpanded && (
                     <>
                     {idea.notas && (
                       <p className="text-xs text-neutral-300 italic bg-black/20 p-2.5 rounded-xl border border-white/5">
