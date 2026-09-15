@@ -427,15 +427,17 @@ export function EnergyChart({
 
           {/* Eventos de "speech" (chapa, presentación, interludio...): no cuentan como un bajón de
               energía (score null + connectNulls en la curva de abajo), pero se marcan con su
-              propia línea vertical para que sigan siendo visibles en el gráfico. */}
+              propia línea vertical + el icono de su subtipo (💬 chapa, 🎤 presentación, 💣 bis...)
+              para que se lea de un vistazo qué es cada marcador, sin confundirlo con la curva. */}
           {chartData.filter((d) => d.isSpeechEvent).map((d) => (
             <ReferenceLine
               key={`speech-${d.id}`}
               x={d.idx}
-              stroke="#52525b"
+              stroke="#94a3b8"
+              strokeWidth={1.5}
               strokeDasharray="2 3"
               ifOverflow="extendDomain"
-              label={compact ? undefined : { value: d.icon, position: 'insideTop', fontSize: 11, fill: '#a1a1aa' }}
+              label={{ value: d.icon, position: 'insideTop', fontSize: compact ? 13 : 20, fill: '#e5e7eb' }}
             />
           ))}
 
