@@ -758,4 +758,17 @@ router.post("/optimize-wavs", requireAuth, async (req, res) => {
   }
 });
 
+// Enriquece e investiga por internet tonalidades y BPMs de temas sin audio o versiones
+router.post("/enrich-missing-audio", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { enrichMissingAudioSongsForBand } = await import("../utils/enrichCoversWithoutAudio.js");
+    const result = await enrichMissingAudioSongsForBand(userBandId);
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    console.error("Error in /enrich-missing-audio:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error enriqueciendo canciones sin audio" });
+  }
+});
+
 export default router;

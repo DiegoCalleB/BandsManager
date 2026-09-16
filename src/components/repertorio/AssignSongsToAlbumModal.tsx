@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 
 interface AssignSongsToAlbumModalProps {
@@ -226,7 +227,7 @@ export function AssignSongsToAlbumModal({
                       </div>
                       <div className="truncate">
                         <div className="text-xs font-bold truncate flex items-center gap-1.5">
-                          <span>{song.titulo}</span>
+                          <span>{formatSongTitle(song.titulo)}</span>
                           {song.tonalidad && <span className="text-[10px] text-[#1db954] font-mono">({song.tonalidad})</span>}
                         </div>
                         <div className="text-[10px] text-neutral-500 truncate">

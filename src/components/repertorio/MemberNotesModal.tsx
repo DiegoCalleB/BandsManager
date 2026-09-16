@@ -10,6 +10,7 @@ import {
   READINESS_LEVELS,
   ReadinessLevel
 } from '../../utils/repertorioUtils';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 
 interface MemberNotesModalProps {
@@ -178,7 +179,7 @@ export function MemberNotesModal({
               </h3>
               <p className="text-xs text-neutral-400 font-sans flex items-center gap-1.5 mt-0.5">
                 <Music className="w-3.5 h-3.5 text-[#1db954]" />
-                Canción: <span className="font-bold text-white">{song.titulo}</span> {song.tonalidad && `(${song.tonalidad})`}
+                Canción: <span className="font-bold text-white">{formatSongTitle(song.titulo)}</span> {song.tonalidad && `(${song.tonalidad})`}
               </p>
             </div>
           </div>

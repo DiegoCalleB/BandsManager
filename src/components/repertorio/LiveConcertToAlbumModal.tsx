@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck } from 'lucide-react';
+import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck, Tag, Target } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
@@ -16,6 +16,11 @@ export interface TrackCutItem {
   tonalidad?: string;
   bpm?: number;
   audioUrl?: string;
+  cueIn?: number;
+  cueOut?: number;
+  hasApplauseIntro?: boolean;
+  hasApplauseOutro?: boolean;
+  cueConfidence?: number;
 }
 
 interface LiveConcertToAlbumModalProps {
@@ -79,6 +84,11 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   const [history, setHistory] = useState<TrackCutItem[][]>([]);
   const [redoStack, setRedoStack] = useState<TrackCutItem[][]>([]);
   const [analyzedSourcePath, setAnalyzedSourcePath] = useState('');
+
+  // Quick Naming & Batch Renaming Assistant state
+  const [showQuickNamingModal, setShowQuickNamingModal] = useState(false);
+  const [batchPastedText, setBatchPastedText] = useState('');
+  const [quickNamingActiveTab, setQuickNamingActiveTab] = useState<'table' | 'paste'>('table');
 
   // Push snapshot to history stack before mutating tracks
   const pushHistorySnapshot = () => {
@@ -389,7 +399,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
     current: number;
     total: number;
     title: string;
+    stopRequested?: boolean;
   } | null>(null);
+  const [isDetectingCues, setIsDetectingCues] = useState(false);
 
   if (!isOpen) return null;
 
@@ -402,7 +414,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
     setErrorMessage(null);
     setIsAnalyzing(true);
-    setAnalysisStatus('Extrayendo metadatos y analizando silenciogramas con yt-dlp / FFmpeg...');
+    setAnalysisStatus('Extrayendo metadatos y analizando silenciogramas...');
     setGeneratedResult(null);
 
     try {
@@ -420,9 +432,9 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
       setAnalysisStatus(
         useAi
           ? transcribeFirst
-            ? 'Transcribiendo y analizando el audio completo con Gemini IA para alinear cortes y letras...'
-            : 'Enviando a Gemini 1.5 Flash para análisis multimodal acústico y estructuración...'
-          : 'Parseando capítulos, descripciones y ejecutando detección de silencios en FFmpeg...'
+            ? 'Transcribiendo y analizando el audio completo con IA para alinear cortes y letras...'
+            : 'Analizando acústica y detectando estructura del concierto...'
+          : 'Detectando silencios, pausas y capítulos del concierto...'
       );
 
       const response = await fetch('/api/concert-to-album/analyze', {
@@ -465,7 +477,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
 
     setErrorMessage(null);
     setIsProcessing(true);
-    setProcessingStatus('Troceando archivos de audio con FFmpeg de alto rendimiento (Stream Copy)...');
+    setProcessingStatus('Troceando archivos de audio de alta fidelidad...');
 
     try {
       const response = await fetch('/api/concert-to-album/process', {
@@ -561,6 +573,56 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
     });
   };
 
+  // Quick naming & speech title helpers
+  const handleSuggestTitleFromSpeech = (trackIndex: number) => {
+    const track = tracks.find((t) => t.index === trackIndex);
+    if (!track || !track.speechTranscription) return;
+
+    const cleanSpeech = track.speechTranscription.replace(/[\n\r]+/g, ' ').trim();
+    const firstPhrase = cleanSpeech.split(/[.!?]/)[0].trim();
+    const suggested = firstPhrase.length > 45 ? `${firstPhrase.slice(0, 42)}...` : firstPhrase;
+    if (suggested) {
+      handleUpdateTrack(trackIndex, 'title', `Speech: "${suggested}"`);
+    }
+  };
+
+  const handleApplyBatchPastedNames = () => {
+    if (!batchPastedText.trim()) return;
+    pushHistorySnapshot();
+
+    const lines = batchPastedText
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    if (lines.length === 0) return;
+
+    setTracks((prev) => {
+      return prev.map((tr, idx) => {
+        if (idx >= lines.length) return tr;
+
+        let cleanName = lines[idx];
+        // Strip leading numbering: "1.", "01.", "1 -", "1)", "#1", etc.
+        cleanName = cleanName.replace(/^(?:#?\d+[\.\)\-:\s]+|\s*[-–—]\s*)+/i, '').trim();
+        if (!cleanName) cleanName = lines[idx];
+
+        // Auto-detect if it sounds like a speech or dialogue
+        const lower = cleanName.toLowerCase();
+        const isSpeechKeyword = /speech|presentaci[oó]n|saludo|hablado|charla|an[eé]cdota|intro hablada|palabras|agradecimiento|bises?\s+hablado|chapa/i.test(lower);
+        const newType = isSpeechKeyword ? 'dialogo' : tr.type;
+
+        return {
+          ...tr,
+          title: cleanName,
+          type: newType,
+        };
+      });
+    });
+
+    setBatchPastedText('');
+    setShowQuickNamingModal(false);
+  };
+
   // Audio scrubber helper methods
   const handleSeekSnippet = (timeSecs: number) => {
     setSnippetCurrentTime(timeSecs);
@@ -604,9 +666,18 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
   };
 
   // Preview snippet playback (Generates or plays audio for a single cut item)
-  const handlePlaySnippetPreview = async (track: TrackCutItem) => {
+  const handlePlaySnippetPreview = async (track: TrackCutItem, startFromCue: boolean = false) => {
+    const cueOffset = startFromCue && track.cueIn && track.cueIn > 0 ? track.cueIn : 0;
+
     if (activeSnippet && activeSnippet.trackIndex === track.index) {
       if (snippetAudioRef.current) {
+        if (startFromCue && track.cueIn) {
+          snippetAudioRef.current.currentTime = track.cueIn;
+          setSnippetCurrentTime(track.cueIn);
+          snippetAudioRef.current.play();
+          setSnippetIsPlaying(true);
+          return;
+        }
         if (snippetIsPlaying) {
           snippetAudioRef.current.pause();
         } else {
@@ -624,8 +695,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
         start: track.start,
         end: track.end,
       });
-      setSnippetCurrentTime(0);
+      setSnippetCurrentTime(cueOffset);
       setSnippetIsPlaying(true);
+      setTimeout(() => {
+        if (snippetAudioRef.current && cueOffset > 0) {
+          snippetAudioRef.current.currentTime = cueOffset;
+        }
+      }, 100);
       return;
     }
 
@@ -639,7 +715,7 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
         start: track.start,
         end: track.end,
       });
-      setSnippetCurrentTime(0);
+      setSnippetCurrentTime(cueOffset);
       setSnippetIsPlaying(true);
       return;
     }
@@ -673,8 +749,13 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
           start: track.start,
           end: track.end,
         });
-        setSnippetCurrentTime(0);
+        setSnippetCurrentTime(cueOffset);
         setSnippetIsPlaying(true);
+        setTimeout(() => {
+          if (snippetAudioRef.current && cueOffset > 0) {
+            snippetAudioRef.current.currentTime = cueOffset;
+          }
+        }, 150);
       }
     } catch (err: any) {
       console.error('Error generating snippet preview:', err);
@@ -714,6 +795,83 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
       alert(err.message || 'No se pudo completar la auto-clasificación.');
     } finally {
       setIsClassifying(false);
+    }
+  };
+
+  // Autodetectar CUEs de inicio musical para cada pista
+  const handleAutoDetectCues = async () => {
+    if (!tracks || tracks.length === 0) return;
+    setIsDetectingCues(true);
+    try {
+      const response = await fetch('/api/concert-to-album/detect-cues', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tracks,
+          sourceFilePath: analyzedSourcePath,
+          url: youtubeUrl.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Error al autodetectar CUEs de inicio.');
+      }
+
+      const data = await response.json();
+      if (data.tracks) {
+        pushHistorySnapshot();
+        setTracks(data.tracks);
+      }
+    } catch (err: any) {
+      console.error('Error auto-detecting cues:', err);
+      alert(err.message || 'No se pudo completar la autodetección de CUEs.');
+    } finally {
+      setIsDetectingCues(false);
+    }
+  };
+
+  // Ajustar el inicio de una pista a su CUE In exacto
+  const handleSnapTrackStartToCue = (trackIndex: number) => {
+    const idx = tracks.findIndex((t) => t.index === trackIndex);
+    if (idx < 0) return;
+    const track = tracks[idx];
+    if (!track.cueIn || track.cueIn <= 0.1) return;
+
+    pushHistorySnapshot();
+    const newStart = Math.round((track.start + track.cueIn) * 10) / 10;
+    const newDuration = Math.max(0.5, Math.round((track.end - newStart) * 10) / 10);
+    const updated = [...tracks];
+    updated[idx] = {
+      ...track,
+      start: newStart,
+      duration: newDuration,
+      cueIn: 0,
+    };
+    setTracks(updated);
+  };
+
+  // Ajustar todos los temas musicales a sus CUEs detectados
+  const handleSnapAllTracksToCues = () => {
+    pushHistorySnapshot();
+    let adjustedCount = 0;
+    const updated = tracks.map((t) => {
+      if (t.type === 'musica' && t.cueIn && t.cueIn > 0.2) {
+        const newStart = Math.round((t.start + t.cueIn) * 10) / 10;
+        const newDuration = Math.max(0.5, Math.round((t.end - newStart) * 10) / 10);
+        adjustedCount++;
+        return {
+          ...t,
+          start: newStart,
+          duration: newDuration,
+          cueIn: 0,
+        };
+      }
+      return t;
+    });
+    setTracks(updated);
+    if (adjustedCount > 0) {
+      alert(`Se han ajustado los puntos de inicio de ${adjustedCount} temas para arrancar exactamente en la entrada musical.`);
     }
   };
 
@@ -1128,10 +1286,6 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
               <h3 className="text-sm font-bold uppercase tracking-wider text-amber-500 flex items-center gap-2">
                 <Radio className="w-4 h-4" /> 1. Ingesta del Concierto (YouTube o Archivo Local)
               </h3>
-              <div className="flex items-center gap-2 text-xs text-slate-400">
-                <span className="px-2 py-0.5 bg-slate-800 text-slate-300 rounded font-mono">yt-dlp</span>
-                <span className="px-2 py-0.5 bg-slate-800 text-slate-300 rounded font-mono">FFmpeg</span>
-              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1409,6 +1563,36 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                   </div>
 
                   <button
+                    onClick={() => setShowQuickNamingModal(true)}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-600/30 text-sky-200 border border-sky-500/40 hover:bg-sky-600/50 flex items-center gap-1.5 transition-all shadow-sm"
+                    title="Abrir asistente para nombrar todos los temas y speeches rápidamente o pegar tu setlist"
+                  >
+                    <Tag className="w-3.5 h-3.5 text-sky-400" />
+                    <span>🏷️ Nombrar Temas & Speeches</span>
+                  </button>
+
+                  <button
+                    onClick={handleAutoDetectCues}
+                    disabled={isDetectingCues || tracks.length === 0}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-600/30 text-sky-200 border border-sky-500/40 hover:bg-sky-600/50 flex items-center gap-1.5 transition-all shadow-sm"
+                    title="Analiza la envolvente de audio para detectar con precisión el ataque musical de cada tema, descartando ruidos, charla o aplausos"
+                  >
+                    <Target className={`w-3.5 h-3.5 text-sky-400 ${isDetectingCues ? 'animate-spin' : ''}`} />
+                    <span>{isDetectingCues ? 'Detectando CUEs...' : '🎯 Autodetectar CUEs de Inicio'}</span>
+                  </button>
+
+                  {tracks.some((t) => t.type === 'musica' && typeof t.cueIn === 'number' && t.cueIn > 0.2) && (
+                    <button
+                      onClick={handleSnapAllTracksToCues}
+                      className="px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-500 text-slate-950 hover:bg-sky-400 shadow-md flex items-center gap-1.5 font-bold animate-pulse"
+                      title="Ajusta automáticamente los tiempos de inicio de todos los temas musicales al punto CUE exacto de entrada musical"
+                    >
+                      <Target className="w-3.5 h-3.5" />
+                      <span>⚡ Ajustar Inicios a CUEs</span>
+                    </button>
+                  )}
+
+                  <button
                     onClick={handleAutoClassifyTracks}
                     disabled={isClassifying || isTranscribingAll}
                     className="px-3 py-1.5 text-xs font-bold rounded-lg bg-purple-600/30 text-purple-200 border border-purple-500/40 hover:bg-purple-600/50 flex items-center gap-1.5 transition-all"
@@ -1566,13 +1750,14 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                           : 'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
                       }`}
                     >
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        {/* Checkbox, Index & Type */}
+                      {/* Top Row: Track Controls, Type, Timestamps, and Actions */}
+                      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-slate-800/60">
+                        {/* Checkbox, Index & Type Switcher */}
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => handleToggleSelectTrack(track.index)}
-                            className="text-slate-400 hover:text-amber-400 p-0.5"
+                            className="text-slate-400 hover:text-amber-400 p-0.5 transition-colors"
                             title="Seleccionar para fusionar varias pistas"
                           >
                             {isSelected ? (
@@ -1582,132 +1767,255 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                             )}
                           </button>
 
-                          <span className="w-6 text-center font-mono font-bold text-xs text-slate-400">
+                          <span className="w-7 text-center font-mono font-black text-xs text-slate-300 bg-slate-900/90 px-1.5 py-0.5 rounded border border-slate-800">
                             #{String(track.index).padStart(2, '0')}
                           </span>
 
                           <select
                             value={track.type}
-                            onChange={(e) => handleUpdateTrack(track.index, 'type', e.target.value)}
-                            className={`text-xs font-bold px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                            onChange={(e) => {
+                              const newType = e.target.value as 'musica' | 'dialogo';
+                              handleUpdateTrack(track.index, 'type', newType);
+                              if (newType === 'dialogo' && (track.title.startsWith('Tema ') || track.title.startsWith('Pista '))) {
+                                handleUpdateTrack(track.index, 'title', `Presentación / Speech ${track.index}`);
+                              } else if (newType === 'musica' && (track.title.startsWith('Presentación') || track.title.startsWith('Speech'))) {
+                                handleUpdateTrack(track.index, 'title', `Tema ${track.index}`);
+                              }
+                            }}
+                            className={`text-xs font-black px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
                               track.type === 'musica'
                                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 hover:bg-amber-500/30'
                                 : 'bg-purple-500/20 text-purple-300 border-purple-500/50 hover:bg-purple-500/30'
                             }`}
-                            title="Haz clic para cambiar entre Canción y Speech/Presentación"
+                            title="Haz clic para alternar entre Canción y Speech/Presentación"
                           >
                             <option value="musica">🎵 Canción Completa</option>
-                            <option value="dialogo">🗣️ Speech / Presentación (con o sin música)</option>
+                            <option value="dialogo">🗣️ Speech / Presentación</option>
                           </select>
                         </div>
 
-                        {/* Title input */}
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={track.title}
-                            onChange={(e) => handleUpdateTrack(track.index, 'title', e.target.value)}
-                            className={`w-full px-3 py-1.5 text-xs font-semibold rounded border ${
-                              isStitchLight
-                                ? 'bg-white border-slate-300 text-slate-900'
-                                : 'bg-slate-900 border-slate-700 text-slate-100'
-                            }`}
-                            placeholder="Nombre del Tema o Presentación..."
-                          />
-                        </div>
+                        {/* Timestamps & Actions */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          {/* Timestamps */}
+                          <div className="flex items-center gap-1.5 text-xs font-mono bg-slate-950/80 px-2 py-1 rounded-lg border border-slate-800">
+                            <span className="text-slate-400 text-[11px]">Inicio:</span>
+                            <input
+                              type="text"
+                              value={formatSeconds(track.start)}
+                              onChange={(e) => handleUpdateTrack(track.index, 'start', parseTimeToSeconds(e.target.value))}
+                              className="w-14 px-1 py-0.5 text-center bg-slate-900 border border-slate-700 rounded text-amber-400 text-xs font-bold"
+                              title="Tiempo de inicio (MM:SS)"
+                            />
+                            <span className="text-slate-400 text-[11px]">Fin:</span>
+                            <input
+                              type="text"
+                              value={formatSeconds(track.end)}
+                              onChange={(e) => handleUpdateTrack(track.index, 'end', parseTimeToSeconds(e.target.value))}
+                              className="w-14 px-1 py-0.5 text-center bg-slate-900 border border-slate-700 rounded text-amber-400 text-xs font-bold"
+                              title="Tiempo de fin (MM:SS)"
+                            />
+                            <span className="text-slate-400 font-bold text-[11px]">({formatSeconds(track.duration)})</span>
+                          </div>
 
-                        {/* Timestamps */}
-                        <div className="flex items-center gap-2 text-xs font-mono">
-                          <span className="text-slate-400">Inicio:</span>
-                          <input
-                            type="text"
-                            value={formatSeconds(track.start)}
-                            onChange={(e) => handleUpdateTrack(track.index, 'start', parseTimeToSeconds(e.target.value))}
-                            className="w-16 px-1.5 py-1 text-center bg-slate-900 border border-slate-700 rounded text-amber-400 text-xs font-bold"
-                          />
-                          <span className="text-slate-400">Fin:</span>
-                          <input
-                            type="text"
-                            value={formatSeconds(track.end)}
-                            onChange={(e) => handleUpdateTrack(track.index, 'end', parseTimeToSeconds(e.target.value))}
-                            className="w-16 px-1.5 py-1 text-center bg-slate-900 border border-slate-700 rounded text-amber-400 text-xs font-bold"
-                          />
-                          <span className="text-slate-500">({formatSeconds(track.duration)})</span>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-1.5">
-                          {/* Play snippet preview button */}
-                          <button
-                            onClick={() => handlePlaySnippetPreview(track)}
-                            disabled={isLoadingPreview}
-                            className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all ${
-                              isPlayingThis
-                                ? 'bg-amber-500 text-slate-950 animate-pulse'
-                                : 'bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 border border-slate-700'
-                            }`}
-                            title="Reproducir este trozo para escucharlo y clasificarlo"
-                          >
-                            {isLoadingPreview ? (
-                              <>
-                                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                                <span className="hidden sm:inline">Generando...</span>
-                              </>
-                            ) : isPlayingThis ? (
-                              <>
-                                <Pause className="w-3.5 h-3.5" />
-                                <span className="hidden sm:inline">Pausar</span>
-                              </>
-                            ) : (
-                              <>
-                                <Play className="w-3.5 h-3.5" />
-                                <span className="hidden sm:inline">Escuchar</span>
-                              </>
-                            )}
-                          </button>
-
-                          {/* Split track in two button */}
-                          <button
-                            onClick={() => handleSplitTrack(track.index)}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-400 border border-slate-700 flex items-center gap-1 text-xs font-bold"
-                            title="Dividir este tramo en 2 partes (por el segundo actual de reproducción o por la mitad)"
-                          >
-                            <Scissors className="w-3.5 h-3.5" />
-                            <span className="hidden xl:inline text-[10px]">Dividir</span>
-                          </button>
-
-                          {/* Merge with next button */}
-                          {idx < tracks.length - 1 && (
-                            <button
-                              onClick={() => handleMergeWithNext(track.index)}
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700"
-                              title={`Fusionar este trozo con el siguiente (#${track.index + 1})`}
-                            >
-                              <Combine className="w-3.5 h-3.5" />
-                            </button>
+                          {/* CUE In detected badge & snap buttons */}
+                          {typeof track.cueIn === 'number' && track.cueIn > 0.1 && (
+                            <div className="flex items-center gap-1.5 bg-sky-950/70 border border-sky-500/40 text-sky-200 px-2.5 py-1 rounded-lg text-xs font-mono shadow-sm">
+                              <Target className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                              <span className="text-[11px]">
+                                CUE: <strong>+{track.cueIn.toFixed(1)}s</strong>
+                              </span>
+                              <button
+                                onClick={() => handlePlaySnippetPreview(track, true)}
+                                className="px-1.5 py-0.5 bg-sky-600 hover:bg-sky-500 text-white rounded font-sans text-[10px] font-bold flex items-center gap-1 transition-all cursor-pointer"
+                                title="Reproducir desde el punto CUE de entrada musical"
+                              >
+                                <Play className="w-2.5 h-2.5" /> Desde CUE
+                              </button>
+                              <button
+                                onClick={() => handleSnapTrackStartToCue(track.index)}
+                                className="px-1.5 py-0.5 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/40 rounded font-sans text-[10px] font-bold transition-all cursor-pointer"
+                                title="Ajustar tiempo de inicio para que arranque exactamente en este CUE musical"
+                              >
+                                ⚡ Ajustar Inicio
+                              </button>
+                            </div>
                           )}
 
-                          <button
-                            onClick={() => handleMoveTrack(track.index, 'up')}
-                            className="p-1 rounded hover:bg-slate-800 text-slate-400"
-                            title="Mover arriba"
-                          >
-                            <ArrowUp className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleMoveTrack(track.index, 'down')}
-                            className="p-1 rounded hover:bg-slate-800 text-slate-400"
-                            title="Mover abajo"
-                          >
-                            <ArrowDown className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTrack(track.index)}
-                            className="p-1 rounded hover:bg-red-500/20 text-red-400"
-                            title="Eliminar corte"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          {track.hasApplauseIntro && (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center gap-1" title="Se detectó charla o aplauso antes de la entrada musical">
+                              👏 Charla previa
+                            </span>
+                          )}
+
+                          {/* Actions */}
+                          <div className="flex items-center gap-1">
+                            {/* Play snippet preview button */}
+                            <button
+                              onClick={() => handlePlaySnippetPreview(track)}
+                              disabled={isLoadingPreview}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all ${
+                                isPlayingThis
+                                  ? 'bg-amber-500 text-slate-950 animate-pulse'
+                                  : 'bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 border border-slate-700'
+                              }`}
+                              title="Reproducir este trozo para escucharlo y clasificarlo"
+                            >
+                              {isLoadingPreview ? (
+                                <>
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                  <span className="hidden sm:inline">Generando...</span>
+                                </>
+                              ) : isPlayingThis ? (
+                                <>
+                                  <Pause className="w-3.5 h-3.5" />
+                                  <span className="hidden sm:inline">Pausar</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="w-3.5 h-3.5" />
+                                  <span className="hidden sm:inline">Escuchar</span>
+                                </>
+                              )}
+                            </button>
+
+                            {/* Split track in two button */}
+                            <button
+                              onClick={() => handleSplitTrack(track.index)}
+                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-400 border border-slate-700 flex items-center gap-1 text-xs font-bold"
+                              title="Dividir este tramo en 2 partes"
+                            >
+                              <Scissors className="w-3.5 h-3.5" />
+                              <span className="hidden xl:inline text-[10px]">Dividir</span>
+                            </button>
+
+                            {/* Merge with next button */}
+                            {idx < tracks.length - 1 && (
+                              <button
+                                onClick={() => handleMergeWithNext(track.index)}
+                                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700"
+                                title={`Fusionar con el siguiente (#${track.index + 1})`}
+                              >
+                                <Combine className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+
+                            <button
+                              onClick={() => handleMoveTrack(track.index, 'up')}
+                              className="p-1 rounded hover:bg-slate-800 text-slate-400"
+                              title="Mover arriba"
+                            >
+                              <ArrowUp className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleMoveTrack(track.index, 'down')}
+                              className="p-1 rounded hover:bg-slate-800 text-slate-400"
+                              title="Mover abajo"
+                            >
+                              <ArrowDown className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteTrack(track.index)}
+                              className="p-1 rounded hover:bg-red-500/20 text-red-400"
+                              title="Eliminar corte"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Prominent Dedicated Title Row with Quick Presets */}
+                      <div className="pt-2.5 space-y-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {track.type === 'musica' ? (
+                              <Music2 className="w-4 h-4 text-amber-400" />
+                            ) : (
+                              <span className="text-base">🗣️</span>
+                            )}
+                            <label className="text-xs font-black tracking-wide uppercase text-slate-300">
+                              {track.type === 'musica' ? 'Nombre del Tema:' : 'Nombre del Speech:'}
+                            </label>
+                          </div>
+
+                          <div className="flex-1 relative">
+                            <input
+                              type="text"
+                              value={track.title}
+                              onChange={(e) => handleUpdateTrack(track.index, 'title', e.target.value)}
+                              className={`w-full px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${
+                                isStitchLight
+                                  ? 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
+                                  : track.type === 'musica'
+                                  ? 'bg-slate-950/90 border-amber-500/40 text-amber-100 placeholder-slate-500 focus:border-amber-400 focus:ring-1 focus:ring-amber-400'
+                                  : 'bg-slate-950/90 border-purple-500/40 text-purple-100 placeholder-slate-500 focus:border-purple-400 focus:ring-1 focus:ring-purple-400'
+                              }`}
+                              placeholder={
+                                track.type === 'musica'
+                                  ? `Ej: Tema ${track.index} (o escribe el nombre de la canción)...`
+                                  : `Ej: Presentación de la banda / Saludo al público / Anécdota...`
+                              }
+                            />
+                            {track.title && (
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateTrack(track.index, 'title', '')}
+                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-0.5"
+                                title="Limpiar nombre"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Quick Presets for Songs and Speeches */}
+                        <div className="flex flex-wrap items-center gap-1.5 pl-0 sm:pl-6 text-[11px]">
+                          <span className="text-slate-500 text-[10px] font-semibold">Sugerencias rápidas:</span>
+                          {track.type === 'dialogo' ? (
+                            <>
+                              {['Presentación de la Banda', 'Saludo al Público', 'Anécdota / Historia', 'Agradecimientos', 'Presentación del Tema', 'Despedida / Bises'].map((preset) => (
+                                <button
+                                  key={preset}
+                                  type="button"
+                                  onClick={() => handleUpdateTrack(track.index, 'title', preset)}
+                                  className="px-2 py-0.5 rounded bg-purple-950/60 hover:bg-purple-800/60 text-purple-300 border border-purple-500/30 text-[10px] font-medium transition-all"
+                                >
+                                  + {preset}
+                                </button>
+                              ))}
+                              {track.speechTranscription && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSuggestTitleFromSpeech(track.index)}
+                                  className="px-2 py-0.5 rounded bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-400/40 text-[10px] font-bold transition-all flex items-center gap-1"
+                                  title="Extrae las primeras palabras del speech para usarlas como nombre"
+                                >
+                                  <Sparkles className="w-3 h-3 text-purple-400" />
+                                  <span>💡 Usar frase del speech</span>
+                                </button>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {['Intro Instrumental', 'Solo / Jam', 'Acústico', 'Fin de Concierto / Outro', 'Bis / Encore'].map((preset) => (
+                                <button
+                                  key={preset}
+                                  type="button"
+                                  onClick={() => {
+                                    if (track.title && !track.title.includes(preset)) {
+                                      handleUpdateTrack(track.index, 'title', `${track.title} (${preset})`);
+                                    } else {
+                                      handleUpdateTrack(track.index, 'title', `${preset} ${track.index}`);
+                                    }
+                                  }}
+                                  className="px-2 py-0.5 rounded bg-amber-950/60 hover:bg-amber-800/60 text-amber-300 border border-amber-500/30 text-[10px] font-medium transition-all"
+                                >
+                                  + {preset}
+                                </button>
+                              ))}
+                            </>
+                          )}
                         </div>
                       </div>
 
@@ -1848,6 +2156,29 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                             </div>
 
                             <div className="flex flex-wrap items-center gap-1.5">
+                              {/* Jump to detected CUE In if available */}
+                              {(() => {
+                                const currentTrack = tracks.find((t) => t.index === activeSnippet.trackIndex);
+                                if (currentTrack?.cueIn && currentTrack.cueIn > 0.1) {
+                                  return (
+                                    <button
+                                      onClick={() => {
+                                        if (snippetAudioRef.current && currentTrack.cueIn) {
+                                          snippetAudioRef.current.currentTime = currentTrack.cueIn;
+                                          setSnippetCurrentTime(currentTrack.cueIn);
+                                        }
+                                      }}
+                                      className="px-2.5 py-1 text-[10px] font-bold rounded bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/40 transition-all flex items-center gap-1 cursor-pointer"
+                                      title="Saltar al CUE In de entrada musical detectado"
+                                    >
+                                      <Target className="w-3 h-3 text-sky-400" />
+                                      <span>🎯 Ir a CUE (+{currentTrack.cueIn.toFixed(1)}s)</span>
+                                    </button>
+                                  );
+                                }
+                                return null;
+                              })()}
+
                               {/* Set start/end markers from current position */}
                               <button
                                 onClick={() => handleSetStartFromCurrentSnippet(activeSnippet.trackIndex)}
@@ -2193,6 +2524,268 @@ export const LiveConcertToAlbumModal: React.FC<LiveConcertToAlbumModalProps> = (
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        )}
+        {/* Modal: Asistente para Nombrar Temas y Speeches */}
+        {showQuickNamingModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-fade-in">
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl text-slate-100 max-h-[90vh] flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400">
+                    <Tag className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-extrabold text-slate-100 flex items-center gap-2">
+                      <span>Nombrar Temas y Speeches</span>
+                      <span className="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                        {tracks.length} cortes
+                      </span>
+                    </h3>
+                    <p className="text-[11px] text-slate-400">
+                      Personaliza el título de cada canción o presentación, o pega tu lista/setlist completo en lote
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowQuickNamingModal(false)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Tabs */}
+              <div className="flex items-center gap-2 border-b border-slate-800 pb-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setQuickNamingActiveTab('table')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                    quickNamingActiveTab === 'table'
+                      ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Sliders className="w-3.5 h-3.5" />
+                  <span>Lista Rápida Editable</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setQuickNamingActiveTab('paste')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                    quickNamingActiveTab === 'paste'
+                      ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Pegar Setlist / Lista en Bloque</span>
+                </button>
+              </div>
+
+              {/* Tab 1: Quick Table */}
+              {quickNamingActiveTab === 'table' && (
+                <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[300px]">
+                  <div className="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+                    <span>💡 Edita directamente el título de cada corte o cambia su tipo entre 🎵 Canción y 🗣️ Speech. Pulsa Tab para avanzar al siguiente.</span>
+                    <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
+                      <span className="text-amber-400">🎵 {tracks.filter((t) => t.type === 'musica').length} temas</span>
+                      <span className="text-purple-400">🗣️ {tracks.filter((t) => t.type === 'dialogo').length} speeches</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    {tracks.map((tr) => (
+                      <div
+                        key={`quick-rename-${tr.index}`}
+                        className={`p-2.5 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center gap-2.5 ${
+                          tr.type === 'musica'
+                            ? 'bg-amber-950/20 border-amber-500/20 hover:border-amber-500/40'
+                            : 'bg-purple-950/20 border-purple-500/20 hover:border-purple-500/40'
+                        }`}
+                      >
+                        {/* Index + Type Toggle Button */}
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="w-7 text-center font-mono font-black text-xs text-slate-300 bg-slate-950 px-1.5 py-1 rounded border border-slate-800">
+                            #{String(tr.index).padStart(2, '0')}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newType = tr.type === 'musica' ? 'dialogo' : 'musica';
+                              handleUpdateTrack(tr.index, 'type', newType);
+                              if (newType === 'dialogo' && (tr.title.startsWith('Tema ') || tr.title.startsWith('Pista '))) {
+                                handleUpdateTrack(tr.index, 'title', `Presentación / Speech ${tr.index}`);
+                              } else if (newType === 'musica' && (tr.title.startsWith('Presentación') || tr.title.startsWith('Speech'))) {
+                                handleUpdateTrack(tr.index, 'title', `Tema ${tr.index}`);
+                              }
+                            }}
+                            className={`px-2 py-1 rounded-lg text-xs font-bold border transition-all flex items-center gap-1 cursor-pointer ${
+                              tr.type === 'musica'
+                                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30'
+                                : 'bg-purple-500/20 text-purple-300 border-purple-500/40 hover:bg-purple-500/30'
+                            }`}
+                            title="Haz clic para alternar entre Canción y Speech"
+                          >
+                            {tr.type === 'musica' ? '🎵 Canción' : '🗣️ Speech'}
+                          </button>
+
+                          <span className="text-[11px] font-mono text-slate-400">
+                            {formatSeconds(tr.duration)}
+                          </span>
+                        </div>
+
+                        {/* Title Input */}
+                        <div className="flex-1 min-w-0 relative">
+                          <input
+                            type="text"
+                            value={tr.title}
+                            onChange={(e) => handleUpdateTrack(tr.index, 'title', e.target.value)}
+                            placeholder={tr.type === 'musica' ? 'Nombre del tema...' : 'Nombre de la presentación o speech...'}
+                            className={`w-full px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${
+                              tr.type === 'musica'
+                                ? 'bg-slate-950 border-amber-500/30 text-amber-100 focus:border-amber-500'
+                                : 'bg-slate-950 border-purple-500/30 text-purple-100 focus:border-purple-500'
+                            }`}
+                          />
+                          {tr.title && (
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateTrack(tr.index, 'title', '')}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Quick Presets Per Row */}
+                        <div className="flex items-center gap-1 shrink-0">
+                          {tr.type === 'dialogo' ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateTrack(tr.index, 'title', 'Presentación de la Banda')}
+                                className="px-1.5 py-0.5 rounded bg-purple-950 hover:bg-purple-800 text-purple-300 text-[10px] border border-purple-500/30"
+                              >
+                                Banda
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateTrack(tr.index, 'title', 'Saludo al Público')}
+                                className="px-1.5 py-0.5 rounded bg-purple-950 hover:bg-purple-800 text-purple-300 text-[10px] border border-purple-500/30"
+                              >
+                                Saludo
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateTrack(tr.index, 'title', 'Despedida / Bises')}
+                                className="px-1.5 py-0.5 rounded bg-purple-950 hover:bg-purple-800 text-purple-300 text-[10px] border border-purple-500/30"
+                              >
+                                Despedida
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi, '');
+                                  handleUpdateTrack(tr.index, 'title', `${base} (Intro)`);
+                                }}
+                                className="px-1.5 py-0.5 rounded bg-amber-950 hover:bg-amber-800 text-amber-300 text-[10px] border border-amber-500/30"
+                              >
+                                +Intro
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi, '');
+                                  handleUpdateTrack(tr.index, 'title', `${base} (Acústico)`);
+                                }}
+                                className="px-1.5 py-0.5 rounded bg-amber-950 hover:bg-amber-800 text-amber-300 text-[10px] border border-amber-500/30"
+                              >
+                                +Acústico
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const base = tr.title.replace(/\s*\((?:Intro|Outro|Acústico)\)/gi, '');
+                                  handleUpdateTrack(tr.index, 'title', `${base} (Outro)`);
+                                }}
+                                className="px-1.5 py-0.5 rounded bg-amber-950 hover:bg-amber-800 text-amber-300 text-[10px] border border-amber-500/30"
+                              >
+                                +Outro
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab 2: Batch Paste */}
+              {quickNamingActiveTab === 'paste' && (
+                <div className="flex-1 overflow-y-auto space-y-3 min-h-[300px]">
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-2">
+                    <p className="font-bold text-sky-400 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-sky-400" />
+                      Pega el Setlist o Lista de Canciones y Speeches (una por línea)
+                    </p>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Copia la lista desde tu WhatsApp, notas o papel de escenario y pégala aquí. El asistente asignará cada línea a la pista correspondiente (#1, #2, #3...) y limpiará automáticamente números iniciales ("1.", "01 -", etc.).
+                    </p>
+                    <p className="text-[11px] text-purple-300">
+                      💡 Si una línea contiene palabras como <em>"speech"</em>, <em>"presentación"</em>, <em>"saludo"</em>, <em>"charla"</em> o <em>"agradecimientos"</em>, la clasificará automáticamente como Speech.
+                    </p>
+                  </div>
+
+                  <textarea
+                    value={batchPastedText}
+                    onChange={(e) => setBatchPastedText(e.target.value)}
+                    rows={10}
+                    placeholder={`1. Intro y Saludo al Público\n2. Noches de Garaje\n3. Charla sobre el nuevo disco\n4. Ska del Norte\n5. Canto a la Sombra\n6. Presentación de los músicos\n7. Gira Sin Fin`}
+                    className="w-full p-3 font-mono text-xs rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-sky-500 leading-relaxed"
+                  />
+
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>
+                      Líneas detectadas:{' '}
+                      <strong className="text-sky-400">
+                        {batchPastedText.split('\n').filter((l) => l.trim().length > 0).length}
+                      </strong>{' '}
+                      / Cortes en concierto: <strong className="text-amber-400">{tracks.length}</strong>
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={handleApplyBatchPastedNames}
+                      disabled={!batchPastedText.trim()}
+                      className="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-sky-500/20 disabled:opacity-50 transition-all flex items-center gap-1.5"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Aplicar Nombres a las Pistas</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Footer */}
+              <div className="pt-3 border-t border-slate-800 flex justify-end shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowQuickNamingModal(false)}
+                  className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors"
+                >
+                  Listo / Cerrar
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -24,6 +24,7 @@ import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { formatSongTitle } from '../utils/formatSongTitle';
 import { 
   X, Play, Pause, Mic, Upload, Volume2, VolumeX, MessageSquare, 
   ThumbsUp, Plus, Music, User as UserIcon, Sparkles, Trash2, Send, Disc,
@@ -3029,7 +3030,7 @@ export default function SongStudioModal({
                   className="text-xl font-bold tracking-tight text-white"
                   title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
                 >
-                  {song.titulo}
+                  {formatSongTitle(song.titulo)}
                 </h2>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase font-semibold">
                   {song.estadoTema || 'componiendo'}

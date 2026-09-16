@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
 import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 
 interface SongModalProps {
@@ -169,12 +170,20 @@ export function SongModal({
             </div>
 
             <div>
-              <label className="block text-neutral-400 mb-1">Título de la Canción *</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-neutral-400">Título de la Canción *</label>
+                <span className="text-[10px] text-indigo-400 font-medium">✨ Formato Nombres Propios automático</span>
+              </div>
               <input
                 name="titulo"
                 type="text"
                 required
-                defaultValue={editingSong?.titulo || ''}
+                defaultValue={editingSong ? formatSongTitle(editingSong.titulo) : ''}
+                onBlur={(e) => {
+                  if (e.target.value) {
+                    e.target.value = formatSongTitle(e.target.value);
+                  }
+                }}
                 className={`w-full p-2.5 rounded-lg focus:outline-none border border-neutral-800 ${
                   isStitchLight ? 'bg-white text-slate-900' : 'bg-neutral-900 text-white'
                 }`}

@@ -72,6 +72,88 @@ export function calcularCosteTransicion(a: Song, b: Song): CosteTransicion {
   };
 }
 
+export interface EvaluacionUnion {
+  status: 'ok' | 'review';
+  icon: '✓' | '✕';
+  scorePercent: number;
+  title: string;
+  shortBadge: string;
+  motivos: string[];
+  coste: CosteTransicion;
+  badgeBg: string;
+  badgeText: string;
+  badgeBorder: string;
+}
+
+/**
+ * Evalúa de forma integral la unión entre dos canciones consecutivas (✓ o ✕)
+ * para que el músico sepa al instante si la transición es armónica y fluida o si requiere revisión.
+ */
+export function evaluarCalidadUnion(songA: Song, songB: Song): EvaluacionUnion {
+  const coste = calcularCosteTransicion(songA, songB);
+  const scorePercent = Math.round(Math.max(0, Math.min(100, (1 - coste.total) * 100)));
+  const motivos: string[] = [];
+  const avisosCriticos: string[] = [];
+
+  // 1. Armonía
+  if (coste.harmonyRelation === 'choque') {
+    avisosCriticos.push(`Choque tonal (${songA.tonalidad || '?'} ➔ ${songB.tonalidad || '?'})`);
+  } else if (coste.harmonyRelation === 'identica') {
+    motivos.push(`Misma tonalidad (${songA.tonalidad || '?'})`);
+  } else if (coste.harmonyRelation === 'compatible') {
+    motivos.push(`Tonalidades afines (${songA.tonalidad || '?'} ➔ ${songB.tonalidad || '?'})`);
+  }
+
+  // 2. Tempo (BPM)
+  if (coste.bpmDiff !== null) {
+    if (coste.bpmDiff >= 25) {
+      avisosCriticos.push(`Salto de ${Math.round(coste.bpmDiff)} BPM (${songA.bpm} ➔ ${songB.bpm})`);
+    } else if (coste.bpmDiff <= 8) {
+      motivos.push(`Tempo continuo (Δ${Math.round(coste.bpmDiff)} BPM)`);
+    } else {
+      motivos.push(`Salto moderado (Δ${Math.round(coste.bpmDiff)} BPM)`);
+    }
+  }
+
+  // 3. Energía
+  if (coste.energyDiff !== null) {
+    if (coste.energyDiff >= 8) {
+      avisosCriticos.push(`Salto de energía (Δ${Math.round(coste.energyDiff)} pts)`);
+    } else if (coste.energyDiff <= 3) {
+      motivos.push('Energía fluida');
+    }
+  }
+
+  const isOk = avisosCriticos.length === 0 && scorePercent >= 60 && coste.harmonyRelation !== 'choque';
+  const status: 'ok' | 'review' = isOk ? 'ok' : 'review';
+  const icon = isOk ? '✓' : '✕';
+
+  const title = isOk
+    ? `Unión fluida y armónica (${scorePercent}%)`
+    : `Revisar unión (${scorePercent}%${avisosCriticos.length > 0 ? ` · ${avisosCriticos[0]}` : ''})`;
+
+  const shortBadge = isOk
+    ? `✓ OK (${scorePercent}%)`
+    : `✕ Revisar (${scorePercent}%)`;
+
+  const badgeBg = isOk ? 'bg-emerald-500/15' : 'bg-rose-500/15';
+  const badgeText = isOk ? 'text-emerald-300' : 'text-rose-300';
+  const badgeBorder = isOk ? 'border-emerald-500/35' : 'border-rose-500/40';
+
+  return {
+    status,
+    icon,
+    scorePercent,
+    title,
+    shortBadge,
+    motivos: avisosCriticos.length > 0 ? avisosCriticos : motivos,
+    coste,
+    badgeBg,
+    badgeText,
+    badgeBorder
+  };
+}
+
 export interface HuecoCancion {
   item: SetlistItem;
   song: Song;

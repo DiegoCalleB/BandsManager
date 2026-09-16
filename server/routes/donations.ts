@@ -38,7 +38,13 @@ router.get("/donations/status", requireAuth, async (req, res) => {
       return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
     }
 
-    const owedCents = await dbGetAiDebtCents(banda.bandId);
+    let owedCents = 0;
+    try {
+      owedCents = await dbGetAiDebtCents(banda.bandId);
+    } catch (innerErr: any) {
+      console.warn("[Donations] Error no crítico al calcular deuda IA, usando 0:", innerErr?.message);
+    }
+
     return res.json({
       success: true,
       owed_cents: owedCents,
@@ -47,7 +53,12 @@ router.get("/donations/status", requireAuth, async (req, res) => {
     });
   } catch (err: any) {
     console.error("[Donations] Error al calcular la deuda de IA:", err);
-    return res.status(500).json({ success: false, error: err?.message || "Error al calcular el consumo de IA." });
+    return res.json({
+      success: true,
+      owed_cents: 0,
+      owed_eur: 0,
+      suggested_cents: STRIPE_MIN_EUR_CENTS
+    });
   }
 });
 

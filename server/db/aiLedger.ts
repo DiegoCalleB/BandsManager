@@ -30,11 +30,27 @@ export async function dbRecordAiUsage(params: {
 /** Deuda viva (sin liquidar) de una banda, en céntimos de euro. */
 export async function dbGetAiDebtCents(bandId: string): Promise<number> {
   const sb = getSupabase();
-  const { data, error } = await sb.rpc("get_ai_debt_cents", { p_band_id: bandId });
-  if (error) {
-    throw new Error(`No se pudo calcular la deuda de IA: ${error.message}`);
+  try {
+    const { data, error } = await sb.rpc("get_ai_debt_cents", { p_band_id: bandId });
+    if (!error && data !== null && data !== undefined) {
+      return Number(data) || 0;
+    }
+    // Fallback directo a la tabla ai_token_ledger si la función RPC aún no está en el schema cache
+    const { data: rows, error: tableErr } = await sb
+      .from("ai_token_ledger")
+      .select("estimated_cost_eur")
+      .eq("band_id", bandId)
+      .is("settled_at", null);
+
+    if (!tableErr && rows) {
+      const sumEur = rows.reduce((acc: number, r: any) => acc + (Number(r.estimated_cost_eur) || 0), 0);
+      return Math.max(0, Math.round(sumEur * 100));
+    }
+    return 0;
+  } catch (err: any) {
+    console.warn("[AiLedger] Fallback deuda IA a 0 tras error:", err?.message);
+    return 0;
   }
-  return Number(data) || 0;
 }
 
 export interface SettleAiDonationResult {

@@ -12,13 +12,14 @@ import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../u
 // uploadToSupabaseIfAvailable vivía aquí; ahora la comparte también el generador de Reels,
 // para que el clip renderizado sobreviva a un redeploy del disco efímero de Railway.
 import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
-import { construirFiltroPreprocesamientoDirecto } from "../utils/audioEnergy.js";
+import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO, PuntoEnergia } from "../utils/audioEnergy.js";
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
 }
 
 const router = express.Router();
+
 
 
 /**
@@ -68,7 +69,147 @@ interface TrackItem {
   bpm?: number;
   audioUrl?: string;
   videoUrl?: string;
+  cueIn?: number;
+  cueOut?: number;
+  hasApplauseIntro?: boolean;
+  hasApplauseOutro?: boolean;
+  cueConfidence?: number;
 }
+
+export interface AudioCueResult {
+  cueIn: number;
+  cueOut: number;
+  duration: number;
+  introSilenceSec: number;
+  outroSilenceSec: number;
+  hasApplauseIntro: boolean;
+  hasApplauseOutro: boolean;
+  confidence: number;
+}
+
+/**
+ * Autodetecta con precisión milimétrica los CUEs de inicio y fin musical de una pista de audio (MP3 local).
+ * Utiliza astats/RMS vía FFmpeg a ~10 muestras/segundo para hallar la primera entrada musical
+ * sostenida (descartando charlas, ruidos de sala, afinaciones y aplausos iniciales) con un margen
+ * pre-roll óptimo (350ms) para conservar el golpe o anacrusa inicial.
+ */
+export async function detectCuesForAudioFile(
+  filePath: string,
+  options: {
+    minSilenceDb?: number;
+    preRollSec?: number;
+    postRollSec?: number;
+    maxScanSec?: number;
+  } = {}
+): Promise<AudioCueResult> {
+  const {
+    minSilenceDb = -38,
+    preRollSec = 0.35,
+    postRollSec = 0.5,
+    maxScanSec = 60,
+  } = options;
+
+  try {
+    if (!filePath || !fs.existsSync(filePath)) {
+      return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0 };
+    }
+
+    const curva = await analizarEnergiaAudio(filePath, { maxDuracion: 900 });
+    if (!curva || curva.length === 0) {
+      return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0.5 };
+    }
+
+    const totalDuration = curva[curva.length - 1]?.t || 0;
+    const dbs = curva.map((c) => c.db).filter((d) => d > DB_SILENCIO + 10);
+    if (dbs.length === 0 || totalDuration <= 0) {
+      return { cueIn: 0, cueOut: totalDuration, duration: totalDuration, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0.5 };
+    }
+
+    const sortedDbs = [...dbs].sort((a, b) => a - b);
+    const noiseFloor = sortedDbs[Math.floor(sortedDbs.length * 0.1)] || -60;
+    const maxDb = Math.max(...dbs);
+    const dynamicThreshold = Math.max(minSilenceDb, noiseFloor + 10, maxDb - 16, -34);
+
+    // --- DETECCIÓN CUE IN (ENTRADA MUSICAL REAL) ---
+    let attackTime = 0;
+    let hasApplauseIntro = false;
+    const maxIntroSec = Math.min(maxScanSec, totalDuration * 0.4);
+
+    for (let i = 0; i < curva.length; i++) {
+      const pt = curva[i];
+      if (pt.t > maxIntroSec) break;
+
+      // Si hay energía antes del ataque pero no llega al umbral musical, es charla o aplauso
+      if (pt.db > noiseFloor + 4 && pt.db < dynamicThreshold) {
+        hasApplauseIntro = true;
+      }
+
+      if (pt.db >= dynamicThreshold) {
+        // Confirmar sustain durante al menos 3 muestras consecutivas (~0.3s)
+        let sustained = true;
+        for (let s = 1; s <= 3; s++) {
+          if (i + s < curva.length && curva[i + s].db < dynamicThreshold - 4) {
+            sustained = false;
+            break;
+          }
+        }
+        if (sustained) {
+          attackTime = pt.t;
+          break;
+        }
+      }
+    }
+
+    const cueIn = Math.max(0, Math.round((attackTime - preRollSec) * 10) / 10);
+
+    // --- DETECCIÓN CUE OUT (FINAL MUSICAL ANTES DE OVACIÓN O SILENCIO) ---
+    let decayTime = totalDuration;
+    let hasApplauseOutro = false;
+    const minOutroSec = Math.max(0, totalDuration - Math.min(75, totalDuration * 0.45));
+
+    for (let i = curva.length - 1; i >= 0; i--) {
+      const pt = curva[i];
+      if (pt.t < minOutroSec) break;
+
+      if (pt.db > noiseFloor + 4 && pt.db < dynamicThreshold) {
+        hasApplauseOutro = true;
+      }
+
+      if (pt.db >= dynamicThreshold) {
+        let sustained = true;
+        for (let s = 1; s <= 3; s++) {
+          if (i - s >= 0 && curva[i - s].db < dynamicThreshold - 4) {
+            sustained = false;
+            break;
+          }
+        }
+        if (sustained) {
+          decayTime = pt.t;
+          break;
+        }
+      }
+    }
+
+    const cueOut = Math.min(totalDuration, Math.round((decayTime + postRollSec) * 10) / 10);
+    const introSilenceSec = Math.max(0, Math.round(cueIn * 10) / 10);
+    const outroSilenceSec = Math.max(0, Math.round((totalDuration - cueOut) * 10) / 10);
+
+    return {
+      cueIn,
+      cueOut,
+      duration: Math.round(totalDuration * 10) / 10,
+      introSilenceSec,
+      outroSilenceSec,
+      hasApplauseIntro,
+      hasApplauseOutro,
+      confidence: cueIn > 0 || cueOut < totalDuration ? 0.95 : 0.85,
+    };
+  } catch (err: any) {
+    console.warn(`[CUE Detection] Error en ${filePath}:`, err?.message || err);
+    return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0 };
+  }
+}
+
 
 
 // Routes for YouTube Cookies Management
@@ -695,6 +836,30 @@ router.post("/process", requireAuth, async (req, res) => {
         console.warn(`[Concert Slicer] FFmpeg slice error on track ${track.index}:`, ffErr.message);
       }
 
+      // Autodetectar CUEs de inicio y fin musical real en el tema generado
+      let cueIn = 0;
+      let cueOut = duration;
+      let hasApplauseIntro = false;
+      let hasApplauseOutro = false;
+      let cueConfidence = 0.5;
+
+      if (fs.existsSync(mp3Path)) {
+        try {
+          const cueAnalysis = await detectCuesForAudioFile(mp3Path, {
+            preRollSec: isSong ? 0.35 : 0.1, // 350ms para capturar ataque musical sin meter discurso previo
+            postRollSec: 0.5,
+          });
+          cueIn = cueAnalysis.cueIn;
+          cueOut = cueAnalysis.cueOut;
+          hasApplauseIntro = cueAnalysis.hasApplauseIntro;
+          hasApplauseOutro = cueAnalysis.hasApplauseOutro;
+          cueConfidence = cueAnalysis.confidence;
+          console.log(`[Concert Slicer] Track ${track.index} CUEs detectados -> CUE In: +${cueIn}s, CUE Out: ${cueOut}s (applause: ${hasApplauseIntro ? 'intro ' : ''}${hasApplauseOutro ? 'outro' : ''})`);
+        } catch (cueErr: any) {
+          console.warn(`[Concert Slicer] Error detectando CUE para pista ${track.index}:`, cueErr.message);
+        }
+      }
+
       let audioUrl = mp3RelativeUrl;
 
       // Upload track MP3 to Supabase Storage if available
@@ -707,6 +872,11 @@ router.post("/process", requireAuth, async (req, res) => {
       processedTracks.push({
         ...track,
         audioUrl,
+        cueIn,
+        cueOut,
+        hasApplauseIntro,
+        hasApplauseOutro,
+        cueConfidence,
       });
     }
 
@@ -735,7 +905,19 @@ router.post("/process", requireAuth, async (req, res) => {
       cueLines.push(`  TRACK ${String(t.index).padStart(2, "0")} AUDIO`);
       cueLines.push(`    TITLE "${t.title.replace(/"/g, "'")}"`);
       cueLines.push(`    PERFORMER "${manifest.artist.replace(/"/g, "'")}"`);
-      cueLines.push(`    INDEX 01 ${timestampCue}`);
+
+      // Si se detectó CUE In (> 0.2s), escribir INDEX 00 para pregap/intro y INDEX 01 para el ataque musical exacto
+      if (typeof t.cueIn === "number" && t.cueIn > 0.2) {
+        cueLines.push(`    INDEX 00 ${timestampCue}`);
+        const effectiveStart = t.start + t.cueIn;
+        const eMins = Math.floor(effectiveStart / 60);
+        const eSecs = Math.floor(effectiveStart % 60);
+        const eFrames = Math.floor((effectiveStart % 1) * 75);
+        const musicStartCue = `${String(eMins).padStart(2, "0")}:${String(eSecs).padStart(2, "0")}:${String(eFrames).padStart(2, "0")}`;
+        cueLines.push(`    INDEX 01 ${musicStartCue}`);
+      } else {
+        cueLines.push(`    INDEX 01 ${timestampCue}`);
+      }
     });
     fs.writeFileSync(path.join(outputDir, "repertoire.cue"), cueLines.join("\n"));
 
@@ -804,6 +986,72 @@ router.post("/process", requireAuth, async (req, res) => {
     res.status(500).json({ error: err.message || "Error al trocear y generar el disco en el servidor." });
   }
 });
+
+// Endpoint para autodetectar los CUEs de inicio y fin musical de las pistas
+router.post("/detect-cues", requireAuth, async (req, res) => {
+  try {
+    const { tracks, sourceFilePath, url } = req.body;
+    if (!tracks || !Array.isArray(tracks) || tracks.length === 0) {
+      return res.status(400).json({ error: "Se requiere un array de pistas para detectar CUEs." });
+    }
+
+    const updatedTracks: TrackItem[] = [];
+
+    for (const track of tracks) {
+      let cueIn = typeof track.cueIn === "number" ? track.cueIn : 0;
+      let cueOut = typeof track.cueOut === "number" ? track.cueOut : track.duration;
+      let hasApplauseIntro = Boolean(track.hasApplauseIntro);
+      let hasApplauseOutro = Boolean(track.hasApplauseOutro);
+      let cueConfidence = typeof track.cueConfidence === "number" ? track.cueConfidence : 0.5;
+
+      try {
+        const snippetPath = await getAudioSnippetPath({
+          audioUrl: track.audioUrl,
+          sourceFilePath,
+          url,
+          start: track.start,
+          end: Math.min(track.end, track.start + Math.min(90, track.duration)),
+          trackIndex: track.index,
+          allowSyntheticFallback: false,
+        });
+
+        if (snippetPath && fs.existsSync(snippetPath)) {
+          const analysis = await detectCuesForAudioFile(snippetPath, {
+            preRollSec: track.type === "musica" ? 0.35 : 0.1,
+            postRollSec: 0.5,
+          });
+
+          if (analysis.confidence > 0) {
+            cueIn = analysis.cueIn;
+            hasApplauseIntro = analysis.hasApplauseIntro;
+            cueConfidence = analysis.confidence;
+            if (track.duration <= 90 && analysis.cueOut > 0) {
+              cueOut = analysis.cueOut;
+              hasApplauseOutro = analysis.hasApplauseOutro;
+            }
+          }
+        }
+      } catch (trackErr: any) {
+        console.warn(`[CUE Detection API] Error en pista ${track.index}:`, trackErr.message);
+      }
+
+      updatedTracks.push({
+        ...track,
+        cueIn,
+        cueOut,
+        hasApplauseIntro,
+        hasApplauseOutro,
+        cueConfidence,
+      });
+    }
+
+    return res.json({ success: true, tracks: updatedTracks });
+  } catch (err: any) {
+    console.error("[CUE Detection API Error]:", err);
+    return res.status(500).json({ error: err.message || "Error al autodetectar CUEs de los temas." });
+  }
+});
+
 
 // Helper to extract audio snippet buffer or file path for direct preview and Gemini multimodal listening
 // Exported for reuse by other routes (e.g. repertorio.ts) that need to feed real audio to Gemini.

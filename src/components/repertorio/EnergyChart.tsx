@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { getEnergyInfo } from '../../utils/energyPacingUtils';
+import { EvaluacionUnion } from '../../utils/setlistCompatibility';
 
 export interface EnergyChartPoint {
   idx: number;
@@ -39,6 +40,10 @@ export interface EnergyChartPoint {
   /** Tonalidad de la canción (detectada o manual, p.ej. "Am", "C", "F#"), null/undefined si no
    * hay dato o es un evento de "speech". Se muestra como etiqueta de texto junto al punto. */
   tonalidad?: string | null;
+  /** Evaluación integral de la unión (✓ o ✕) con la SIGUIENTE canción del repertorio. */
+  transitionToNext?: EvaluacionUnion | null;
+  /** Evaluación integral de la unión (✓ o ✕) desde la ANTERIOR canción del repertorio. */
+  transitionFromPrev?: EvaluacionUnion | null;
 }
 
 export interface EnergyChartZone {
@@ -81,6 +86,10 @@ interface EnergyChartProps {
    * gráfico ya lleno de curvas y avisos, es otra capa de texto que solo conviene cuando se busca
    * específicamente la tonalidad (normalmente en modo zoom, con más espacio entre puntos). */
   showTonalidad?: boolean;
+  /** Muestra/oculta los indicadores de unión (✓ / ✕) en cada transición del gráfico. */
+  showTransitionBadges?: boolean;
+  /** Callback para probar la unión de audio/acústica con la canción anterior en el setlist al seleccionar un punto. */
+  onPreviewTransition?: (selectedIndex: number) => void;
   /** Ancho fijo en px para el gráfico (en vez de 100% del contenedor) — "modo zoom": más espacio
    * horizontal entre puntos para leer etiquetas (tonalidad, BPM) sin que se pisen. El que llama
    * es responsable de envolver el componente en un contenedor con scroll horizontal. */
@@ -108,6 +117,8 @@ export function EnergyChart({
   showIdealCurve = true,
   showBpmLine = false,
   showTonalidad = false,
+  showTransitionBadges = true,
+  onPreviewTransition,
   expandedWidthPx
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
@@ -458,7 +469,7 @@ export function EnergyChart({
 
           {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
               camino entre ambos puntos, mismo patrón que los eventos de "speech" de arriba. */}
-          {chartData.filter((d) => d.harmonyClash).map((d) => (
+          {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
             <ReferenceLine
               key={`clash-${d.id}`}
               x={d.idx + 0.5}
@@ -469,6 +480,30 @@ export function EnergyChart({
               label={{ value: '⚡', position: 'insideTop', fontSize: compact ? 10 : 13 }}
             />
           ))}
+
+          {/* Indicadores de unión (✓ o ✕) entre temas consecutivos calculados por armonía, BPM y energía */}
+          {showTransitionBadges && chartData.filter((d) => d.transitionToNext).map((d) => {
+            const tr = d.transitionToNext!;
+            const isOk = tr.status === 'ok';
+            return (
+              <ReferenceLine
+                key={`trans-${d.id}`}
+                x={d.idx + 0.5}
+                stroke={isOk ? '#10b981' : '#f43f5e'}
+                strokeWidth={isOk ? 1 : 1.5}
+                strokeDasharray={isOk ? '2 3' : '3 2'}
+                strokeOpacity={isOk ? 0.45 : 0.85}
+                ifOverflow="extendDomain"
+                label={{
+                  value: isOk ? '✓' : tr.coste.harmonyRelation === 'choque' ? '✕ ⚡' : '✕',
+                  position: 'insideTop',
+                  fill: isOk ? '#34d399' : '#f87171',
+                  fontSize: compact ? (isOk ? 9 : 10) : (isOk ? 11 : 12),
+                  fontWeight: 900
+                }}
+              />
+            );
+          })}
 
           <XAxis
             dataKey="idx"
@@ -518,11 +553,11 @@ export function EnergyChart({
               if (!active || !payload?.length) return null;
               const d = payload[0].payload;
               return (
-                <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[180px]">
+                <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[200px]">
                   <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
                   {d.isSpeechEvent ? (
                     <p className="text-neutral-400 flex items-center gap-1 mt-0.5">
-                      <span>{d.icon}</span> Interludio — no cuenta como energía
+                      <span>{d.icon}</span> Interludio / Pausa — meseta de energía
                     </p>
                   ) : (
                     <>
@@ -545,8 +580,31 @@ export function EnergyChart({
                           〰️ Ideal aquí: ~{d.idealScore}/20
                         </p>
                       )}
-                      {d.harmonyClash && (
-                        <p className="text-rose-400 mt-0.5">⚡ Choque de tonalidad con la siguiente</p>
+                      {d.transitionFromPrev && (
+                        <div className={`mt-1.5 pt-1 border-t border-neutral-800 ${
+                          d.transitionFromPrev.status === 'ok' ? 'text-emerald-300' : 'text-rose-300'
+                        }`}>
+                          <div className="flex items-center gap-1 font-bold">
+                            <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
+                              d.transitionFromPrev.status === 'ok'
+                                ? 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-300'
+                                : 'bg-rose-500/20 border border-rose-500/50 text-rose-300'
+                            }`}>
+                              {d.transitionFromPrev.icon}
+                            </span>
+                            <span>Unión con #{d.idx}: {d.transitionFromPrev.status === 'ok' ? 'Fluida' : 'Revisar'} ({d.transitionFromPrev.scorePercent}%)</span>
+                          </div>
+                          {d.transitionFromPrev.motivos.length > 0 && (
+                            <p className="text-[8px] text-neutral-400 pl-4 mt-0.5 leading-tight">
+                              {d.transitionFromPrev.motivos.join(' · ')}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {d.idx > 0 && onPreviewTransition && (
+                        <p className="text-[#f2ca50] font-semibold mt-1 pt-1 border-t border-neutral-800 flex items-center gap-1 cursor-pointer hover:underline">
+                          🎧 Probar unión con #{d.idx}
+                        </p>
                       )}
                     </>
                   )}
@@ -595,7 +653,19 @@ export function EnergyChart({
             // Recharts dibuja su propio "activeDot" ENCIMA del dot personalizado al pasar el
             // ratón cerca — con onReorder eso tapa el <circle> real y se traga el mousedown
             // antes de que llegue a nuestro handler de arrastre, así que se desactiva aquí.
-            activeDot={(onReorder || onEnergyChange) ? false : { r: dotSelected, strokeWidth: 2, stroke: '#ffffff' }}
+            activeDot={(onReorder || onEnergyChange) ? false : (activeDotProps: any) => {
+              if (activeDotProps?.payload?.isSpeechEvent) return <React.Fragment key="speech-act-dot" />;
+              return (
+                <circle
+                  cx={activeDotProps.cx}
+                  cy={activeDotProps.cy}
+                  r={dotSelected}
+                  strokeWidth={2}
+                  stroke="#ffffff"
+                  fill={activeDotProps.payload?.color || '#fbbf24'}
+                />
+              );
+            }}
             dot={(dotProps: any) => {
               const { cx, cy, payload, index } = dotProps;
               // payload.score null (eventos de "speech") no tiene una posición real que dibujar —

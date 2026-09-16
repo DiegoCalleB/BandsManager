@@ -25,6 +25,7 @@ import {
   Upload
 } from 'lucide-react';
 import { Song, SongSubstituteGuide } from '../types';
+import { formatSongTitle } from '../utils/formatSongTitle';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
 import { formatSongShareText } from '../utils/shareUtils';
@@ -235,7 +236,7 @@ export function SongChordsViewerModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold tracking-tight text-white">{song.titulo}</h2>
+                <h2 className="text-xl font-bold tracking-tight text-white">{formatSongTitle(song.titulo)}</h2>
                 {song.esVersionCovers && (
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-900/60 text-blue-300 border border-blue-500/30">
                     Cover

@@ -159,20 +159,90 @@ export interface Lead {
   festival_end_date?: string;
 }
 
+export interface RehearsalAgendaItem {
+  id: string;
+  tipo: 'cancion' | 'calentamiento' | 'pausa' | 'intro' | 'outro' | 'seccion_especifica' | 'improvisacion';
+  titulo: string;
+  songId?: string;
+  duracionEstimadaMin: number;
+  duracionRealSeg?: number;
+  enfoque?: string; // Ej: "Afinar el solo de guitarra y la entrada del bajo", "Cuidar la segunda voz del estribillo"
+  prioridad?: 'alta' | 'media' | 'baja';
+  evaluacion?: 'bordada' | 'regular' | 'repetir'; // 🟢 Bordada, 🟡 Regular, 🔴 Repetir
+  completado?: boolean;
+  notas?: string;
+}
+
+export interface RehearsalObjective {
+  id: string;
+  texto: string;
+  completado: boolean;
+  responsable?: string;
+}
+
+export interface RehearsalRecording {
+  id: string;
+  titulo: string;
+  audioUrl: string;
+  duracionSeg: number;
+  duracionSegundos?: number;
+  grabadoEn: string;
+  songId?: string;
+  tipo: 'toma_completa' | 'idea_riff' | 'nota_voz_debate' | 'fragmento';
+  notas?: string;
+}
+
+export interface RehearsalActa {
+  resumenIa?: string;
+  resumenEjecutivo?: string;
+  audioNotaVozUrl?: string;
+  puntosClave?: string[];
+  cancionesDestacadas?: string[];
+  cancionesBordadas?: string[];
+  cancionesAPulir?: string[];
+  cancionesParaRepetir?: string[];
+  deberesPorMiembro?: Array<{ miembro: string; tarea: string }>;
+  deberesCasa?: Array<{
+    id: string;
+    miembro?: string;
+    tarea: string;
+    hecho: boolean;
+  }>;
+  generadoEn?: string;
+}
+
 export interface Rehearsal {
   id: string;
   band_id?: string;
   bandName?: string;
   fecha: string;
   hora: string;
+  horaFin?: string;
   lugar: string;
   asistentes: string[];
   notas: string;
-  estado: 'programado' | 'cancelado' | 'completado';
+  estado: 'programado' | 'cancelado' | 'completado' | 'en_curso';
+  tipo_evento?: 'ensayo' | 'reunion' | 'otro';
+  asunto?: string;
+  enlace_reunion?: string;
   setlistId?: string;
   convocatoria_tipo?: 'completa' | 'parcial';
   convocados_ids?: string[];
   convocados_nombres?: string[];
+  // Módulo de Ensayos Pro
+  agenda?: RehearsalAgendaItem[];
+  objetivos?: RehearsalObjective[];
+  duracionEstimadaMin?: number;
+  duracionRealSeg?: number;
+  cronometroEstado?: {
+    segundosTranscurridos: number;
+    enPausa: boolean;
+    ultimoInicio?: string;
+  };
+  acta?: RehearsalActa;
+  grabaciones?: RehearsalRecording[];
+  ratingGeneral?: number;
+  temperaturaLocal?: string;
 }
 
 export interface ConcertExpenseBreakdown {
@@ -703,6 +773,17 @@ export interface Song {
   estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
   estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
   speechTranscription?: string; // Audio/speech transcription from live cutting
+  // Puntos CUE y detección automática de inicio/fin de música real (para saltar
+  // huecos de silencio, afinaciones o aplausos del directo al inicio y final)
+  cueIn?: number; // Segundo de inicio de la música real (e.g. 4.5)
+  cueOut?: number; // Segundo de final de la música real antes de aplausos/silencio (e.g. 215.2)
+  trimSilenceDetectedAt?: string; // ISO timestamp del último análisis acústico
+  applauseDetected?: {
+    intro?: boolean;
+    outro?: boolean;
+    introDurationSec?: number;
+    outroDurationSec?: number;
+  };
   // Un humano ha comparado los acordes extraídos por la IA contra el documento original y
   // confirma que son correctos. Sin esto, en directo no hay forma de distinguir un cifrado ya
   // revisado de uno recién subido en el que nadie ha confiado todavía.

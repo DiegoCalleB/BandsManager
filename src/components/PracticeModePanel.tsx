@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target } from 'lucide-react';
+import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target, Sliders } from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
@@ -59,6 +59,8 @@ interface PracticeModePanelProps {
   currentUser?: User;
   isStitchLight?: boolean;
   onClose: () => void;
+  /** Permite abrir el Modo Studio multipista completo de este tema */
+  onOpenStudio?: () => void;
   /** Si se define, se ofrece un botón para sustituir el cifrado principal de la canción por el de esta pista aislada. */
   onApplyAsMainChords?: (cifradoTexto: string, guiaSustituto?: SongSubstituteGuide) => void;
 }
@@ -75,7 +77,7 @@ function formatTime(totalSeconds: number): string {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
-export default function PracticeModePanel({ song, idea, tracks, currentUser, isStitchLight, onClose, onApplyAsMainChords }: PracticeModePanelProps) {
+export default function PracticeModePanel({ song, idea, tracks, currentUser, isStitchLight, onClose, onOpenStudio, onApplyAsMainChords }: PracticeModePanelProps) {
   const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
   const [overrides, setOverrides] = useState<Record<string, TrackOverride>>({});
@@ -526,9 +528,22 @@ export default function PracticeModePanel({ song, idea, tracks, currentUser, isS
               <p className="text-[11px] text-neutral-400 truncate">{song.titulo} · {idea.titulo}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-neutral-800/60 text-neutral-400 hover:text-white shrink-0">
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            {onOpenStudio && (
+              <button
+                type="button"
+                onClick={onOpenStudio}
+                className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[#f2ca50]/15 hover:bg-[#f2ca50]/25 text-[#f2ca50] border border-[#f2ca50]/40 flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-sm"
+                title="Abrir Studio multipista completo de este tema"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Modo Studio</span>
+              </button>
+            )}
+            <button onClick={onClose} className="p-2 rounded-lg hover:bg-neutral-800/60 text-neutral-400 hover:text-white shrink-0 cursor-pointer">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="overflow-y-auto p-5 space-y-4">

@@ -7,7 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { 
  Disc3, Music, Plus, Search, X, Edit3, Trash2, Copy,
  Download, Clock, Mic, FileText, Check, Layers, ExternalLink, Printer, 
- Sparkles, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
+ Sparkles, Brain, Sliders, CheckCircle2, ChevronLeft, ChevronRight, HelpCircle, Eye, EyeOff, Headphones,
  Play, Pause, Volume2, Upload, Zap, MessageSquare, Radio, Flag,
  SkipBack, SkipForward, Repeat, Square, VolumeX, Disc, MicOff, Heart, Camera, Image, Star,
   ChevronUp, ChevronDown, ListPlus, Users,
@@ -42,6 +42,7 @@ import { SpotifyDiscographyModal } from './repertorio/SpotifyDiscographyModal';
 import { EscenarioView } from './repertorio/EscenarioView';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
 import { cacheActiveStageSetlist } from '../utils/stageOfflineCache';
+import { formatSongTitle, normalizeSongTitlesInList } from '../utils/formatSongTitle';
 import { AlbumCover } from "./AlbumCover";
 import SpotifyPlayerBar from './SpotifyPlayerBar';
 import { 
@@ -52,9 +53,10 @@ import { calculateSetlistStats, resolveBandMembers, BandMemberOption } from '../
 import { queuePendingSetlistSync, clearPendingSetlistSync, getPendingSetlistSyncs } from '../utils/offlineSync';
 import { analyzeSetlistEnergy, getEnergyInfo, calcularCurvaEnergiaIdeal } from '../utils/energyPacingUtils';
 import { parseTonalidad, evaluarTransicionArmonica } from '../utils/harmonicAnalysis';
-import { optimizarOrdenPorTransiciones, costeTotalTransiciones, sugerirMejorPuntoParaChapa, SugerenciaChapa, HuecoCancion } from '../utils/setlistCompatibility';
+import { optimizarOrdenPorTransiciones, costeTotalTransiciones, sugerirMejorPuntoParaChapa, SugerenciaChapa, HuecoCancion, evaluarCalidadUnion, EvaluacionUnion } from '../utils/setlistCompatibility';
 import { getSemitoneDifference } from '../utils/chordUtils';
 import { EnergyChart, EnergyChartPoint } from './repertorio/EnergyChart';
+import { SongTransitionPreviewModal } from './repertorio/SongTransitionPreviewModal';
 import { titlesMatch } from '../utils/songTitleMatch';
 import { SAMPLER_SONGS, SAMPLER_SETLISTS } from '../config/sampleRepertoire';
 
@@ -503,6 +505,7 @@ export default function RepertorioSetlists({
 
  // Performance mode for showing song structures during concert
  const [performanceSetlistId, setPerformanceSetlistId] = useState<string | null>(null);
+ const [performanceInitialMode, setPerformanceInitialMode] = useState<'directo' | 'ensayo'>('directo');
 
  // Custom "quick add" shortcuts the band created itself for the "Rápidos" row below, on top of
  // the built-in ones (Presentación, Chapa, BIS...). Persisted per band in Supabase via
@@ -598,6 +601,40 @@ export default function RepertorioSetlists({
  const [activeChordsSong, setActiveChordsSong] = useState<Song | null>(null);
  const [activeMemberNotesSong, setActiveMemberNotesSong] = useState<Song | null>(null);
 
+ // Transition Preview Modal State (para comprobar el enlace auditivo/armónico entre temas consecutivos)
+ const [transitionPreviewData, setTransitionPreviewData] = useState<{
+   isOpen: boolean;
+   songA: Song | null;
+   songB: Song | null;
+   itemA: SetlistItem | null;
+   itemB: SetlistItem | null;
+   indexA: number;
+   indexB: number;
+ } | null>(null);
+
+ const handleOpenTransitionPreview = useCallback((idxA: number, idxB: number) => {
+   if (!activeSetlist || !activeSetlist.items) return;
+   const items = activeSetlist.items;
+   if (idxA < 0 || idxB < 0 || idxA >= items.length || idxB >= items.length) return;
+
+   const itA = items[idxA];
+   const itB = items[idxB];
+   const sA = itA?.songId ? songs.find((s) => s.id === itA.songId) : null;
+   const sB = itB?.songId ? songs.find((s) => s.id === itB.songId) : null;
+
+   if (sA && sB) {
+     setTransitionPreviewData({
+       isOpen: true,
+       songA: sA,
+       songB: sB,
+       itemA: itA,
+       itemB: itB,
+       indexA: idxA,
+       indexB: idxB
+     });
+   }
+ }, [activeSetlist, songs]);
+
  // Selected item in active setlist (for intelligent insertion beneath selected song)
  const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<string | null>(null);
   const [draggedCatalogSongId, setDraggedCatalogSongId] = useState<string | null>(null);
@@ -642,6 +679,8 @@ export default function RepertorioSetlists({
  // "Modo zoom": ensancha el gráfico (más separación horizontal entre puntos) dentro de un
  // contenedor con scroll propio, para poder leer BPM/tonalidad por tramos sin que se amontonen.
  const [chartZoom, setChartZoom] = useState<boolean>(false);
+ // Mostrar u ocultar los indicadores de unión (ticks ✓ o aspas ✕) en el mapa de energía
+ const [showTransitionBadges, setShowTransitionBadges] = useState<boolean>(true);
  // Ajustes secundarios del gráfico (curva ideal, leyenda de colores) agrupados en un solo menú
  // "⚙️" en vez de ir cada uno como botón/fila propia — demasiadas opciones sueltas a la vista era
  // justo la queja: "estamos empezando a crear un monstruo con demasiadas opciones en pantalla".
@@ -731,6 +770,19 @@ export default function RepertorioSetlists({
     const keyB = siguienteCancion?.song?.tonalidad ? parseTonalidad(siguienteCancion.song.tonalidad) : null;
     if (keyA && keyB) harmonyClash = evaluarTransicionArmonica(keyA, keyB) === 'choque';
    }
+   let transitionToNext: EvaluacionUnion | null = null;
+   let transitionFromPrev: EvaluacionUnion | null = null;
+   if (!isSpeechEvent && pt.song) {
+     const siguienteCancion = analysis.points.slice(idx + 1).find((p) => p.isSong);
+     if (siguienteCancion?.song) {
+       transitionToNext = evaluarCalidadUnion(pt.song, siguienteCancion.song);
+     }
+     const anteriorCancion = analysis.points.slice(0, idx).reverse().find((p) => p.isSong);
+     if (anteriorCancion?.song) {
+       transitionFromPrev = evaluarCalidadUnion(anteriorCancion.song, pt.song);
+     }
+   }
+
    return {
     idx,
     id: pt.item.id,
@@ -747,7 +799,9 @@ export default function RepertorioSetlists({
     isSpeechEvent,
     bpm: isSpeechEvent ? null : (typeof pt.song?.bpm === 'number' && pt.song.bpm > 0 ? pt.song.bpm : null),
     harmonyClash,
-    tonalidad: isSpeechEvent ? null : (pt.song?.tonalidad?.trim() || null)
+    tonalidad: isSpeechEvent ? null : (pt.song?.tonalidad?.trim() || null),
+    transitionToNext,
+    transitionFromPrev
    };
   });
 
@@ -1679,6 +1733,39 @@ export default function RepertorioSetlists({
    });
  };
 
+  const handleNormalizeCatalogTitles = async () => {
+    const { updatedSongs, changedCount } = normalizeSongTitlesInList(songs);
+    if (changedCount === 0) {
+      setStatusBanner({
+        text: '✨ Todos los temas del catálogo ya tienen formato con mayúsculas de nombres propios.',
+        type: 'success'
+      });
+      setTimeout(() => setStatusBanner(null), 3500);
+      return;
+    }
+
+    setSongs(updatedSongs);
+    saveSongsToLocalStorageSafely(updatedSongs);
+    setStatusBanner({
+      text: `✨ Se han normalizado ${changedCount} temas con mayúsculas de nombres propios.`,
+      type: 'success'
+    });
+    setTimeout(() => setStatusBanner(null), 4000);
+
+    const changed = updatedSongs.filter(s => {
+      const orig = songs.find(o => o.id === s.id);
+      return orig && orig.titulo !== s.titulo;
+    });
+
+    for (const songToUpdate of changed) {
+      fetch(`/api/songs/${songToUpdate.id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(songToUpdate)
+      }).catch(err => console.warn('Error saving normalized song:', songToUpdate.id, err));
+    }
+  };
+
  // Setlist Operations
  const handleCreateSetlist = () => {
    setSetlistModalData({ isOpen: true, setlistToEdit: null });
@@ -2536,14 +2623,11 @@ export default function RepertorioSetlists({
   {activeTab === 'setlists' && (
   <div className="w-full">
   {/* MAIN EDITOR FOR ACTIVE SETLIST */}
-  <div className={`w-full p-3.5 sm:p-4 rounded-2xl space-y-3 ${colors.card} `}>
+  <div className={`w-full p-4 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4 border ${isStitchLight ? 'bg-white border-slate-200' : 'bg-[#16161a]/95 border-neutral-800/80 backdrop-blur-sm'} shadow-sm`}>
  {activeSetlist ? (
  <>
- {/* CABECERA COMPACTA: nombre del setlist + un único menú "⋯" con las acciones secundarias.
-     Antes eran tres botones de texto (Compartir / Asignar / Imprimir) + descripción, que en
-     móvil se apilaban en varias líneas empujando el gráfico fuera de pantalla. Ninguna acción
-     se ha perdido: todas viven en el menú (ver AGENTS.md §6). */}
- <div className="flex items-center gap-1.5">
+ {/* CABECERA COMPACTA: nombre del setlist + un único menú "⋯" con las acciones secundarias. */}
+ <div className="flex items-center gap-2">
  <input
  type="text"
  value={activeSetlist.nombre}
@@ -2552,20 +2636,67 @@ export default function RepertorioSetlists({
  setSetlists(prev => prev.map(s => s.id === activeSetlist.id ? { ...s, nombre: val } : s));
  }}
  title={activeSetlist.descripcion || 'Nombre del repertorio'}
- className={`flex-1 min-w-0 text-sm sm:text-base font-bold font-mono border-dashed focus:border-amber-400 bg-transparent focus:outline-none ${colors.text}`}
+ className={`flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-lg px-2 py-1 bg-transparent hover:bg-neutral-800/40 focus:bg-neutral-800/70 focus:outline-none focus:ring-1 focus:ring-amber-500/50 ${isStitchLight ? 'text-slate-900' : 'text-zinc-100'}`}
  />
 
- <div className="flex items-center gap-1.5 shrink-0">
- {/* IMPRIMIR REPERTORIO — directo a 1 clic, bien a mano */}
+ <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+ {/* IMPRIMIR REPERTORIO */}
  <button
  id="btn-print-setlist-header"
  type="button"
  onClick={() => setShowPdfPreview(true)}
- className="shrink-0 px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-[#d1b375] hover:text-white border border-[#d1b375]/40 font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+ className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl font-medium text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs ${
+   isStitchLight 
+     ? 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200'
+     : 'bg-neutral-800/90 hover:bg-neutral-700 text-zinc-200 hover:text-white border border-neutral-700/80'
+ }`}
  title="Imprimir repertorio o exportar a PDF / atril en papel"
  >
- <Printer className="w-3.5 h-3.5 text-[#d1b375]" />
- <span>Imprimir</span>
+ <Printer className="w-3.5 h-3.5 text-zinc-400" />
+ <span className="hidden xs:inline">Imprimir</span>
+ </button>
+
+ {/* CEREBRO IA: ANÁLISIS DE DINÁMICA, ENERGÍA Y NARRATIVA */}
+ <button
+ id="btn-ai-analysis-header"
+ type="button"
+ onClick={() => setShowAIAnalysisModal(true)}
+ className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
+   isStitchLight 
+     ? 'bg-purple-100 hover:bg-purple-200 text-purple-950 border border-purple-300'
+     : 'bg-purple-950/50 hover:bg-purple-900/70 text-purple-200 hover:text-white border border-purple-500/40 shadow-[0_0_12px_rgba(168,85,247,0.18)]'
+ }`}
+ title="Cerebro IA: Análisis de narrativa, curva de energía, transiciones de tono y sugerencias"
+ >
+ <Brain className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+ <span className="hidden sm:inline">Cerebro IA</span>
+ <span className="sm:hidden">IA</span>
+ {aiAnalysisResult?.overallScore && (
+   <span className="px-1.5 py-0.2 rounded-full bg-purple-500/20 text-[10px] font-mono font-bold text-purple-300 border border-purple-500/30">
+     {aiAnalysisResult.overallScore}
+   </span>
+ )}
+ </button>
+
+ {/* OPTIMIZAR IA: SETLIST PERFECTO */}
+ <button
+ id="btn-ai-perfect-header"
+ type="button"
+ onClick={() => {
+   setPerfectSetlistPlan(null);
+   setPerfectSetlistError(null);
+   setShowPerfectSetlistModal(true);
+ }}
+ className={`shrink-0 px-2.5 sm:px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 ${
+   isStitchLight 
+     ? 'bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300'
+     : 'bg-amber-950/40 hover:bg-amber-900/60 text-amber-200 hover:text-white border border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.18)]'
+ }`}
+ title="Optimizar IA: Generar el setlist perfecto con orden dinámico ideal y clímax de concierto"
+ >
+ <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+ <span className="hidden sm:inline">Optimizar IA</span>
+ <span className="sm:hidden">Optimizar</span>
  </button>
 
  {/* MODO ESCENARIO / ATRIL: acción principal para directo */}
@@ -2575,10 +2706,11 @@ export default function RepertorioSetlists({
  onClick={() => {
    if (activeSetlist) {
      cacheActiveStageSetlist(activeSetlist, songs, bandId);
+     setPerformanceInitialMode('directo');
      setPerformanceSetlistId(activeSetlist.id);
    }
  }}
- className="shrink-0 px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-[11px] sm:text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-amber-950/30"
+ className="shrink-0 px-3.5 py-1.5 rounded-xl bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
  title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
  >
  <Mic className="w-3.5 h-3.5" />
@@ -2586,11 +2718,34 @@ export default function RepertorioSetlists({
  <span className="sm:hidden">Atril</span>
  </button>
 
+ {/* MODO ENSAYO: atril de ensayo con pistas Iris */}
+ <button
+ id="btn-rehearsal-mode-header"
+ type="button"
+ onClick={() => {
+   if (activeSetlist) {
+     cacheActiveStageSetlist(activeSetlist, songs, bandId);
+     setPerformanceInitialMode('ensayo');
+     setPerformanceSetlistId(activeSetlist.id);
+   }
+ }}
+ className="shrink-0 px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95"
+ title="Modo Ensayo: atril optimizado para ensayo con pistas Iris, silenciamiento de instrumentos y metrónomo"
+ >
+ <Headphones className="w-3.5 h-3.5 text-emerald-400" />
+ <span className="hidden sm:inline">Modo Ensayo</span>
+ <span className="sm:hidden">Ensayo</span>
+ </button>
+
  <div className="relative shrink-0">
  <button
  type="button"
  onClick={() => setShowSetlistActionsMenu((v) => !v)}
- className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+ className={`p-1.5 rounded-xl transition-colors cursor-pointer border ${
+   isStitchLight
+     ? 'text-slate-500 hover:text-slate-900 hover:bg-slate-100 border-transparent hover:border-slate-200'
+     : 'text-zinc-400 hover:text-white hover:bg-neutral-800 border-transparent hover:border-neutral-700'
+ }`}
  title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
  >
  <MoreHorizontal className="w-4 h-4" />
@@ -2598,46 +2753,62 @@ export default function RepertorioSetlists({
  {showSetlistActionsMenu && (
  <>
  <div className="fixed inset-0 z-30" onClick={() => setShowSetlistActionsMenu(false)} />
- <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-0.5 text-[11px] font-mono">
+ <div className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-2xl border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+   isStitchLight
+     ? 'border-slate-200 bg-white text-slate-800'
+     : 'border-neutral-800 bg-[#16161a] text-zinc-200'
+ }`}>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleShareSetlist(activeSetlist); }}
- className="w-full text-left px-2.5 py-2 rounded-lg text-emerald-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ className={`w-full text-left px-2.5 py-2 rounded-xl text-emerald-400 transition cursor-pointer flex items-center gap-2 ${
+   isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+ }`}
  >
  <MessageSquare className="w-3.5 h-3.5 shrink-0" /> Compartir repertorio
  </button>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setAssigningSetlist(activeSetlist); }}
- className="w-full text-left px-2.5 py-2 rounded-lg text-[#10b981] hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ className={`w-full text-left px-2.5 py-2 rounded-xl text-emerald-400 transition cursor-pointer flex items-center gap-2 ${
+   isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+ }`}
  >
  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Asignar a bolo/ensayo
  </button>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setShowPdfPreview(true); }}
- className="w-full text-left px-2.5 py-2 rounded-lg text-[#d1b375] hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ className={`w-full text-left px-2.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
+   isStitchLight ? 'text-slate-800 hover:bg-slate-100' : 'text-zinc-200 hover:bg-neutral-800/80'
+ }`}
  >
  <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir / PDF
  </button>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDuplicateSetlist(activeSetlist); }}
- className="w-full text-left px-2.5 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ className={`w-full text-left px-2.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
+   isStitchLight ? 'text-slate-700 hover:bg-slate-100' : 'text-zinc-300 hover:bg-neutral-800/80'
+ }`}
  >
  <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar setlist
  </button>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); setSetlistModalData({ isOpen: true, setlistToEdit: activeSetlist }); }}
- className="w-full text-left px-2.5 py-2 rounded-lg text-neutral-300 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ className={`w-full text-left px-2.5 py-2 rounded-xl transition cursor-pointer flex items-center gap-2 ${
+   isStitchLight ? 'text-slate-700 hover:bg-slate-100' : 'text-zinc-300 hover:bg-neutral-800/80'
+ }`}
  >
  <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar detalles
  </button>
  <button
  type="button"
  onClick={() => { setShowSetlistActionsMenu(false); handleDeleteSetlist(activeSetlist.id); }}
- className="w-full text-left px-2.5 py-2 rounded-lg text-rose-400 hover:bg-neutral-800 transition cursor-pointer flex items-center gap-2"
+ className={`w-full text-left px-2.5 py-2 rounded-xl text-rose-400 transition cursor-pointer flex items-center gap-2 ${
+   isStitchLight ? 'hover:bg-rose-50' : 'hover:bg-rose-950/40'
+ }`}
  >
  <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar setlist
  </button>
@@ -2646,36 +2817,34 @@ export default function RepertorioSetlists({
  )}
  </div>
  </div>
-  </div>
+ </div>
 
   {/* SETLIST VIEW MODES & SUMMARY BAR */}
   {(() => {
     return (
-      <div className="flex flex-col gap-2">
-        {/* Sin pestañas: el repertorio (lista + Mapa de Energía) se ve siempre entero, tal cual.
-            Hubo un experimento con pestañas Temas/Imprimir/Directo — se quitó porque ninguna
-            aportaba de verdad (Imprimir y Directo abren su propia vista completa desde el menú
-            "⋯" y el botón de Modo Escenario de aquí abajo, no necesitan hueco propio). */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1 rounded-xl bg-black/40 border border-neutral-800/80">
+      <div className="flex flex-col gap-2.5">
+        <div className={`flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 p-1.5 rounded-xl border ${
+          isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-neutral-900/90 border-white/5'
+        }`}>
           {/* Resumen en una línea y botón asistente IA */}
-          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto px-1">
+          <div className="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto px-1.5">
             <button
               type="button"
               onClick={() => setShowSetlistStats((v) => !v)}
-              className="flex items-center gap-1 text-[10px] font-mono hover:opacity-80 transition cursor-pointer text-neutral-300"
+              className="flex items-center gap-1.5 text-xs hover:opacity-80 transition cursor-pointer text-zinc-300"
               title={showSetlistStats ? 'Ocultar métricas secundarias' : 'Ver interludios, bloques y perfil de dinámica'}
             >
-              <span className="font-bold text-[#d1b375]">⏱️ {activeSetlistMetrics.formattedTime}</span>
-              <span className="text-neutral-600">·</span>
-              <span className="font-bold text-[#10b981]">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
-              <span className="text-neutral-500 text-[9px]">{showSetlistStats ? '▲' : '▼'}</span>
+              <span className="font-semibold text-zinc-100">⏱️ {activeSetlistMetrics.formattedTime}</span>
+              <span className="text-zinc-600">·</span>
+              <span className="font-bold text-amber-400">⚡ {activeSetlistMetrics.avgBpm} BPM</span>
+              <span className="text-zinc-500 text-[10px]">{showSetlistStats ? '▲' : '▼'}</span>
             </button>
 
             <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setShowAssistantChooser((v) => !v)}
-                className="px-2 py-1 rounded-lg bg-purple-800/50 hover:bg-purple-700 text-purple-300 hover:text-purple-100 transition-all cursor-pointer font-bold text-[10px] font-mono flex items-center gap-1"
+                className="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 hover:text-amber-200 transition-all cursor-pointer font-bold text-xs flex items-center gap-1.5 shadow-xs"
                 title="Asistente IA del repertorio"
               >
                 🧠 <span className="hidden xs:inline">Asistente IA</span>
@@ -2683,17 +2852,23 @@ export default function RepertorioSetlists({
               {showAssistantChooser && (
                 <>
                   <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
-                  <div className="absolute right-0 top-full mt-1.5 z-40 w-72 rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl p-1.5 space-y-1">
+                  <div className={`absolute right-0 top-full mt-1.5 z-40 w-72 rounded-2xl border shadow-2xl p-1.5 space-y-1 text-xs backdrop-blur-md ${
+                    isStitchLight
+                      ? 'border-slate-200 bg-white text-slate-800'
+                      : 'border-neutral-800 bg-[#16161a] text-zinc-200'
+                  }`}>
                     <button
                       type="button"
                       onClick={() => {
                         setShowAssistantChooser(false);
                         setShowAIAnalysisModal(true);
                       }}
-                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer"
+                      className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer ${
+                        isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+                      }`}
                     >
-                      <span className="text-sm font-medium text-purple-300 flex items-center gap-1.5">📖 Ver análisis</span>
-                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
+                      <span className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">📖 Ver análisis</span>
+                      <span className="block text-[11px] text-zinc-400 mt-0.5">Arco narrativo, puntuación y sugerencias explicadas.</span>
                     </button>
                     <button
                       type="button"
@@ -2703,10 +2878,12 @@ export default function RepertorioSetlists({
                         setPerfectSetlistError(null);
                         setShowPerfectSetlistModal(true);
                       }}
-                      className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-800 transition-all cursor-pointer"
+                      className={`w-full text-left p-2.5 rounded-xl transition-all cursor-pointer ${
+                        isStitchLight ? 'hover:bg-slate-100' : 'hover:bg-neutral-800/80'
+                      }`}
                     >
-                      <span className="text-sm font-medium text-emerald-300 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
-                      <span className="block text-[10.5px] text-neutral-400 mt-0.5">Reordena y optimiza canciones sobre una copia.</span>
+                      <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">🪄 Generar plan de cambios</span>
+                      <span className="block text-[11px] text-zinc-400 mt-0.5">Reordena y optimiza canciones sobre una copia.</span>
                     </button>
                   </div>
                 </>
@@ -2717,29 +2894,27 @@ export default function RepertorioSetlists({
 
         {/* Métricas secundarias, solo si se piden */}
         {showSetlistStats && (
-          <div className="flex flex-wrap items-center gap-1.5 px-1 text-[10px] font-mono">
-            <span className="px-2 py-0.5 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20">
+          <div className="flex flex-wrap items-center gap-1.5 px-1 text-xs">
+            <span className="px-2 py-0.5 rounded-lg bg-sky-500/10 text-sky-300 font-medium border border-sky-500/20">
               💬 {activeSetlistMetrics.eventCount} interludios
             </span>
-            <span className="px-2 py-0.5 rounded-lg bg-yellow-500/10 text-[#f2ca50] font-bold border border-yellow-500/20">
+            <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-300 font-medium border border-amber-500/20">
               ⚡ {activeSetlistMetrics.blockCount} bloques
             </span>
-            <span className="px-2 py-0.5 rounded-lg bg-purple-500/15 text-purple-300 border border-purple-500/30 font-bold">
+            <span className="px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">
               {energyAnalysis.profileLabel}
             </span>
           </div>
         )}
 
-        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW — parte de la vista Temas por defecto (antes exigía
-            cambiar a una pestaña "Curva Dinámica" aparte, redundante con el propio toggle 👁️ de
-            aquí abajo). El botón 👁️ sigue pudiendo ocultarlo si estorba. */}
+        {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
         {energyAnalysis.points.length > 0 && (
-          <div className="p-2.5 rounded-xl bg-neutral-900/90 border border-neutral-800 space-y-2 animate-fadeIn">
-            <div className="flex items-center justify-between gap-2 text-[10px] font-mono text-neutral-400">
-              {/* Título corto y la ayuda en el tooltip: el hint largo entre paréntesis ocupaba
-                  4 líneas en móvil justo encima del gráfico (AGENTS.md §6). */}
+          <div className={`p-3 sm:p-4 rounded-2xl border space-y-2.5 animate-fadeIn ${
+            isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800/80'
+          }`}>
+            <div className="flex items-center justify-between gap-2 text-xs text-slate-400">
               <span
-                className="font-bold uppercase tracking-wider text-white truncate"
+                className="font-semibold uppercase tracking-wider text-slate-200 truncate text-[11px]"
                 title="Arrastra un punto en horizontal para reordenar el setlist, o en vertical para cambiar su energía. También puedes seleccionarlo y usar las flechas."
               >
                 📈 Mapa de Energía
@@ -2832,6 +3007,17 @@ export default function RepertorioSetlists({
                           >
                             <span>🔍 Zoom (más espacio)</span>
                             <span>{chartZoom ? 'ON' : 'OFF'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowTransitionBadges((v) => !v)}
+                            className={`w-full px-2 py-1 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-medium flex items-center justify-between ${
+                              showTransitionBadges ? 'bg-neutral-700 text-neutral-200' : 'bg-neutral-800 text-neutral-500'
+                            }`}
+                            title="Muestra u oculta los ticks (✓) y aspas (✕) de calidad de unión entre temas en el gráfico"
+                          >
+                            <span>✓ / ✕ Calidad de uniones</span>
+                            <span>{showTransitionBadges ? 'ON' : 'OFF'}</span>
                           </button>
                           <div className="flex flex-col gap-1 text-[9px] text-neutral-300 pt-1 border-t border-neutral-800">
                             <span className="flex items-center gap-1.5"><i className="w-2 h-2 rounded-full inline-block" style={{ background: '#0284c7' }} />🌙 Balada</span>
@@ -2928,7 +3114,13 @@ export default function RepertorioSetlists({
                     zonasEnergia={ZONAS_ENERGIA}
                     highlightedSongIds={highlightedSongIds}
                     selectedSetlistItemId={selectedSetlistItemId}
-                    onSelectItem={setSelectedSetlistItemId}
+                    showTransitionBadges={showTransitionBadges}
+                    onSelectItem={(id) => {
+                      setSelectedSetlistItemId(id);
+                    }}
+                    onPreviewTransition={(selIdx) => {
+                      if (selIdx > 0) handleOpenTransitionPreview(selIdx - 1, selIdx);
+                    }}
                     onReorder={reorderSetlistItems}
                     onEnergyChange={handleEnergyChartDrag}
                     height={256}
@@ -2962,6 +3154,9 @@ export default function RepertorioSetlists({
                     : undefined;
                   const prevName = selectedIndex > 0 ? chartData[selectedIndex - 1]?.name : null;
                   const nextName = selectedIndex < chartData.length - 1 ? chartData[selectedIndex + 1]?.name : null;
+                  const hasPrevSong = selectedIndex > 0 && chartData[selectedIndex - 1]?.songId && point.songId;
+                  const hasNextSong = selectedIndex < chartData.length - 1 && chartData[selectedIndex + 1]?.songId && point.songId;
+
                   return (
                     <div className="w-full flex flex-col items-center gap-1.5 pt-1.5 pb-0.5">
                       {canEditEnergy && (
@@ -3037,6 +3232,70 @@ export default function RepertorioSetlists({
                           <ChevronDown className="w-4 h-4" />
                         </button>
                       )}
+
+                      {/* Botones de acción para probar transiciones de audio con tema anterior o siguiente */}
+                      {(hasPrevSong || hasNextSong) && (() => {
+                        const evalPrev = point.transitionFromPrev;
+                        const evalNext = point.transitionToNext;
+                        return (
+                          <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5">
+                            {hasPrevSong && (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenTransitionPreview(selectedIndex - 1, selectedIndex)}
+                                className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
+                                  evalPrev?.status === 'ok'
+                                    ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border-emerald-500/35 hover:border-emerald-500/70'
+                                    : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border-rose-500/35 hover:border-rose-500/70'
+                                }`}
+                                title={evalPrev ? `${evalPrev.title}: ${evalPrev.motivos.join(', ')}` : `Comprobar cómo suena la unión de "${prevName}" con "${point.name}"`}
+                              >
+                                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                                  evalPrev?.status === 'ok' ? 'bg-emerald-500/30 text-emerald-200' : 'bg-rose-500/30 text-rose-200'
+                                }`}>
+                                  {evalPrev ? evalPrev.icon : '⚡'}
+                                </span>
+                                <div className="flex flex-col text-left leading-none">
+                                  <div className="flex items-center gap-1">
+                                    <span>Unión con #{selectedIndex} ({prevName})</span>
+                                    {evalPrev && <span className="text-[10px] font-mono opacity-80">({evalPrev.scorePercent}%)</span>}
+                                  </div>
+                                  {evalPrev && evalPrev.motivos.length > 0 && (
+                                    <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">{evalPrev.motivos[0]}</span>
+                                  )}
+                                </div>
+                              </button>
+                            )}
+                            {hasNextSong && (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenTransitionPreview(selectedIndex, selectedIndex + 1)}
+                                className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95 ${
+                                  evalNext?.status === 'ok'
+                                    ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border-emerald-500/35 hover:border-emerald-500/70'
+                                    : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border-rose-500/35 hover:border-rose-500/70'
+                                }`}
+                                title={evalNext ? `${evalNext.title}: ${evalNext.motivos.join(', ')}` : `Comprobar cómo suena la unión de "${point.name}" con "${nextName}"`}
+                              >
+                                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                                  evalNext?.status === 'ok' ? 'bg-emerald-500/30 text-emerald-200' : 'bg-rose-500/30 text-rose-200'
+                                }`}>
+                                  {evalNext ? evalNext.icon : '⚡'}
+                                </span>
+                                <div className="flex flex-col text-left leading-none">
+                                  <div className="flex items-center gap-1">
+                                    <span>Unión con #{selectedIndex + 2} ({nextName})</span>
+                                    {evalNext && <span className="text-[10px] font-mono opacity-80">({evalNext.scorePercent}%)</span>}
+                                  </div>
+                                  {evalNext && evalNext.motivos.length > 0 && (
+                                    <span className="text-[9px] font-normal opacity-75 mt-0.5 max-w-[200px] truncate">{evalNext.motivos[0]}</span>
+                                  )}
+                                </div>
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   );
                 })()}
@@ -3185,10 +3444,10 @@ export default function RepertorioSetlists({
   />
 
   {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
-  <div className="space-y-1.5 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
+  <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
   {activeSetlist.items.length === 0 ? (
-  <div className="text-center py-10 border-dashed rounded-xl text-neutral-500 text-[10px] font-mono">
-  No hay canciones en este repertorio. Usa el menú de arriba para añadir temas.
+  <div className="text-center py-12 border border-dashed border-slate-800/80 rounded-2xl text-slate-400 text-xs">
+  No hay canciones en este repertorio. Usa la barra superior para añadir temas o eventos.
   </div>
   ) : (
   activeSetlist.items.map((it, index) => {
@@ -3216,9 +3475,7 @@ export default function RepertorioSetlists({
     setExpandedSetlistItemIds(newSet);
   };
 
-  // Reproducir esta canción sin tener que expandir la fila — manda a la misma barra Spotify
-  // persistente de abajo, con la cola limitada a este repertorio en su orden (igual que
-  // "Reproducir desde aquí" antes, pero accesible con un solo tap en la fila compacta).
+  // Reproducir esta canción sin tener que expandir la fila
   const isPlayingThisRow = activePlayerSong?.id === song.id && isPlayerPlaying;
   const playThisSong = () => {
     const setlistSongs = activeSetlist.items
@@ -3230,15 +3487,6 @@ export default function RepertorioSetlists({
       ? getSemitoneDifference(song.tonalidad, it.tonalidadDeseada)
       : null;
     const transposeSemitones = diffResult ?? 0;
-    console.log('🎵 playThisSong:', {
-      songTitle: song.titulo,
-      originalKey: song.tonalidad,
-      desiredKey: it.tonalidadDeseada,
-      getSemitoneDifferenceResult: diffResult,
-      transposeSemitones,
-      it
-    });
-    // Transpose semitones computed for player
     selectPlayerSongWithQueue(song, true, setlistSongs, transposeSemitones);
   };
 
@@ -3254,68 +3502,58 @@ export default function RepertorioSetlists({
   onDrop={(e) => { e.preventDefault(); handleDropItem(index); }}
   onDragEnd={() => { setDraggedItemIndex(null); setDragOverItemIndex(null); }}
   onClick={() => {
-  // Seleccionar la canción (para el joystick del gráfico, o para insertar justo debajo) ya
-  // expande sus detalles de paso — antes hacían falta dos taps distintos (seleccionar + chevron)
-  // para ver la afinación/disco/cantante del tema que se acaba de elegir. El chevron sigue
-  // sirviendo para expandir sin seleccionar. AGENTS.md §6.
   if (!isSelected && !isExpanded) {
   setExpandedSetlistItemIds(new Set(expandedSetlistItemIds).add(it.id));
   }
   setSelectedSetlistItemId(isSelected ? null : it.id);
   }}
-  className={`group border rounded-lg transition-all cursor-pointer ${
+  className={`group border rounded-xl transition-all cursor-pointer ${
   isDragging ? 'opacity-40 scale-[0.98]' : ''
   } ${
-  isDragOver ? 'border-amber-400 border-2 scale-[1.01] bg-amber-500/10 shadow-lg' : ''
+  isDragOver ? 'border-indigo-400 border-2 scale-[1.01] bg-indigo-500/10 shadow-lg' : ''
   } ${
   isSelected
-    ? 'border-amber-400 ring-2 ring-amber-400/30 bg-amber-500/10 shadow-md'
+    ? 'border-indigo-500 ring-2 ring-indigo-500/20 bg-indigo-500/10 shadow-sm'
     : isStitchLight
       ? 'bg-white border-slate-200 hover:border-slate-300'
-      : 'bg-neutral-900/80 border-neutral-800/80 hover:border-neutral-700'
+      : 'bg-slate-900/80 border-slate-800/80 hover:border-slate-700/80'
   }`}
   >
   {/* MAIN ROW - COMPACT */}
-  <div className="flex items-center gap-2 px-2.5 py-1.5 overflow-x-auto">
+  <div className="flex items-center gap-2.5 px-3 py-2 overflow-x-auto">
     {/* Drag Handle */}
     <div
-      className="cursor-grab active:cursor-grabbing text-neutral-500 hover:text-amber-400 transition-colors shrink-0"
+      className="cursor-grab active:cursor-grabbing text-slate-500 hover:text-indigo-400 transition-colors shrink-0"
       title="Arrastrar y soltar para reordenar"
       onClick={(e) => e.stopPropagation()}
     >
       <GripVertical className="w-3.5 h-3.5" />
     </div>
 
-    {/* Index / Play: número por defecto, botón de play al pasar el ratón (o siempre tocable en
-        móvil, aunque no cambie de icono sin hover) — reproduce sin tener que expandir la fila,
-        mismo patrón que ya usa la fila del Catálogo. */}
+    {/* Index / Play */}
     <button
       type="button"
       onClick={(e) => { e.stopPropagation(); playThisSong(); }}
-      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-[#1db954] text-black sm:bg-transparent sm:group-hover:bg-[#1db954] sm:group-hover:text-black"
+      className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all cursor-pointer bg-emerald-600 text-white sm:bg-transparent sm:group-hover:bg-emerald-600 sm:group-hover:text-white"
       title={isPlayingThisRow ? 'Sonando ahora' : 'Reproducir esta canción'}
     >
       {isPlayingThisRow ? (
         <div className="flex items-center gap-0.5">
-          <span className="w-0.5 h-2 bg-[#1db954] rounded-full animate-pulse" />
-          <span className="w-0.5 h-2.5 bg-[#1ed760] rounded-full animate-pulse delay-75" />
-          <span className="w-0.5 h-1.5 bg-[#1db954] rounded-full animate-pulse delay-150" />
+          <span className="w-0.5 h-2 bg-emerald-400 rounded-full animate-pulse" />
+          <span className="w-0.5 h-2.5 bg-emerald-300 rounded-full animate-pulse delay-75" />
+          <span className="w-0.5 h-1.5 bg-emerald-400 rounded-full animate-pulse delay-150" />
         </div>
       ) : (
         <>
-          <span className="sm:group-hover:hidden font-mono font-bold text-[9px] text-[#d1b375]">{songIndex + 1}</span>
-          <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-black" />
+          <span className="sm:group-hover:hidden text-xs font-semibold text-slate-400">{songIndex + 1}</span>
+          <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-white" />
         </>
       )}
     </button>
 
-    {/* Title + metadata in one line — shrink-0 con tope máximo: antes era el único elemento
-        "encogible" de la fila (todo lo demás es shrink-0), así que en móvil, con tantos
-        badges + 5 iconos de acción compitiendo por sitio, se comía todo el hueco negativo
-        y acababa en 0px de ancho (título invisible). Con shrink-0 + max-width nunca baja de
-        su contenido hasta ese tope, y el overflow-x-auto de la fila absorbe el resto. */}
-    <span className={`text-[13px] font-bold font-mono ${colors.text} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={song.titulo}>
-      {song.titulo}
+    {/* Title + metadata */}
+    <span className={`text-sm font-semibold tracking-tight ${isStitchLight ? 'text-slate-900' : 'text-slate-100'} truncate shrink-0 max-w-[42vw] sm:max-w-[220px]`} title={formatSongTitle(song.titulo)}>
+      {formatSongTitle(song.titulo)}
     </span>
 
     {(() => {
@@ -3523,6 +3761,30 @@ export default function RepertorioSetlists({
     >
       <Headphones className="w-3.5 h-3.5 text-indigo-400" />
     </button>
+
+    {/* Probar unión con tema anterior con indicador de calidad (✓ o ✕) */}
+    {index > 0 && activeSetlist.items[index - 1]?.songId && (() => {
+      const prevSong = songs.find(s => s.id === activeSetlist.items[index - 1].songId);
+      const evalUnion = prevSong && song ? evaluarCalidadUnion(prevSong, song) : null;
+      return (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpenTransitionPreview(index - 1, index);
+          }}
+          className={`px-1.5 py-0.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 transition-all cursor-pointer shrink-0 border ${
+            evalUnion?.status === 'ok'
+              ? 'bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border-emerald-500/35 hover:border-emerald-500/60'
+              : 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border-rose-500/35 hover:border-rose-500/60'
+          }`}
+          title={evalUnion ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(', ')}` : "🎧 Probar unión y transición con la canción anterior"}
+        >
+          <span>{evalUnion?.icon || '⚡'}</span>
+          <Headphones className="w-3 h-3" />
+        </button>
+      );
+    })()}
 
     {/* Edit song button */}
     <button
@@ -3855,175 +4117,205 @@ export default function RepertorioSetlists({
        onShareSong={(song) => handleShareSong(song)}
      />
    ) : (
- <div className="space-y-5">
- {/* SPOTIFY PLAYLIST HERO BANNER — una sola fila compacta: portada pequeña + título/metadata + acciones, en vez del hero apilado de antes que llegaba a ocupar media pantalla en portátil. */}
- <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1b3e24] via-[#182a1e] to-[#121212] p-3 sm:p-4 border border-white/10 shadow-lg">
-   <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
-     <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-[#181818] shadow-lg overflow-hidden border border-white/10 flex items-center justify-center group">
-       <AlbumCover
-         title={`Repertorio ${bName}`}
-         artist={bName}
-         coverUrl={filteredSongs[0]?.portadaUrl}
-         size={64}
-         onPlay={() => {
-           const first = filteredSongs[0];
-           if (first) {
-             selectPlayerSongWithQueue(first, true, null);
-           }
-         }}
-         isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
-       />
-       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-         <Sparkles className="w-5 h-5 text-[#1db954] animate-pulse" />
-       </div>
-     </div>
+ <div className="space-y-4">
+ {/* CATALOG PLAYLIST HERO BANNER */}
+  <div className={`relative overflow-hidden rounded-2xl sm:rounded-3xl p-4 sm:p-5 border shadow-sm ${
+    isStitchLight
+      ? 'bg-gradient-to-r from-slate-50 via-indigo-50/30 to-slate-50 border-slate-200 text-slate-900'
+      : 'bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border-slate-800/80 text-white'
+  }`}>
+    <div className="relative z-10 flex flex-wrap items-center gap-3 sm:gap-4">
+      <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-800 shadow-md overflow-hidden border border-slate-700/80 flex items-center justify-center group">
+        <AlbumCover
+          title={`Repertorio ${bName}`}
+          artist={bName}
+          coverUrl={filteredSongs[0]?.portadaUrl}
+          size={64}
+          onPlay={() => {
+            const first = filteredSongs[0];
+            if (first) {
+              selectPlayerSongWithQueue(first, true, null);
+            }
+          }}
+          isPlaying={!!(activePlayerSong && isPlayerPlaying && filteredSongs.some(s => s.id === activePlayerSong.id))}
+        />
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <Sparkles className="w-5 h-5 text-indigo-400 animate-pulse" />
+        </div>
+      </div>
 
-     <div className="flex-1 min-w-[180px]">
-       <div className="flex items-center gap-1.5 text-[9px] font-mono font-extrabold uppercase tracking-widest text-[#1db954]">
-         <Disc3 className="w-3 h-3 animate-spin-slow" />
-         <span>Discografía & Canciones</span>
-       </div>
-       <h1 className="text-base sm:text-lg font-extrabold text-white tracking-tight leading-tight truncate">
-         Discografía de {bName}
-       </h1>
-       <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-zinc-400 mt-0.5">
-         <span className="text-[#1db954] font-bold">{songs.length} temas</span>
-         <span>•</span>
-         <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
-         <span>•</span>
-         <span className="text-amber-400 font-semibold">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
-       </div>
-     </div>
+      <div className="flex-1 min-w-[180px]">
+        <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-indigo-400">
+          <Disc3 className="w-3.5 h-3.5 animate-spin-slow" />
+          <span>Discografía & Canciones</span>
+        </div>
+        <h1 className="text-base sm:text-lg font-bold tracking-tight leading-tight truncate mt-0.5">
+          Discografía de {bName}
+        </h1>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 mt-1">
+          <span className="text-emerald-400 font-medium">{songs.length} temas</span>
+          <span>•</span>
+          <span>{Math.round(songs.reduce((acc, s) => acc + (s.duracionSegundos || 210), 0) / 60)} min</span>
+          <span>•</span>
+          <span className="text-amber-400 font-medium">{songs.filter(s => s.favoritoGeneral).length} Favoritos</span>
+        </div>
+      </div>
 
-     <div className="flex items-center gap-2 shrink-0">
-       <button
-         onClick={() => {
-           if (filteredSongs.length > 0) {
-             const first = filteredSongs[0];
-             selectPlayerSongWithQueue(first, true, null);
-           }
-         }}
-         className="w-9 h-9 rounded-full bg-[#1db954] hover:bg-[#1ed760] hover:scale-105 text-black font-bold flex items-center justify-center shadow-lg transition-all cursor-pointer active:scale-95"
-         title="Reproducir Catálogo"
-       >
-         {activePlayerSong && isPlayerPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-       </button>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          onClick={() => {
+            if (filteredSongs.length > 0) {
+              const first = filteredSongs[0];
+              selectPlayerSongWithQueue(first, true, null);
+            }
+          }}
+          className="w-10 h-10 rounded-full bg-emerald-600 hover:bg-emerald-500 hover:scale-105 text-white font-medium flex items-center justify-center shadow-md transition-all cursor-pointer active:scale-95"
+          title="Reproducir Catálogo"
+        >
+          {activePlayerSong && isPlayerPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+        </button>
 
-       <button
-         onClick={() => setCatalogStatusFilter(catalogStatusFilter === 'favoritos' ? 'todos' : 'favoritos')}
-         className={`px-3 py-1.5 rounded-full text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border whitespace-nowrap ${
-           catalogStatusFilter === 'favoritos'
-             ? 'bg-[#1db954]/20 text-[#1ed760] border-[#1db954]/40 shadow-md'
-             : 'bg-white/5 text-zinc-300 border-white/10 hover:bg-white/10 hover:text-white'
-         }`}
-       >
-         <Sparkles className="w-3 h-3 text-[#1db954]" />
-         <span>{catalogStatusFilter === 'favoritos' ? 'Solo Favoritos' : 'Filtrar Favoritos'}</span>
-       </button>
+        <button
+          onClick={() => setCatalogStatusFilter(catalogStatusFilter === 'favoritos' ? 'todos' : 'favoritos')}
+          className={`px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer border whitespace-nowrap ${
+            catalogStatusFilter === 'favoritos'
+              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-xs'
+              : 'bg-slate-800/80 text-slate-300 border-slate-700/80 hover:bg-slate-700 hover:text-white'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <span>{catalogStatusFilter === 'favoritos' ? 'Solo Favoritos' : 'Filtrar Favoritos'}</span>
+        </button>
 
-       <button
-         id="btn-add-song"
-         onClick={() => { setEditingSong(null); setShowSongModal(true); }}
-         className="px-3 py-1.5 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-[10px] font-mono flex items-center gap-1.5 cursor-pointer shadow-lg transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
-       >
-         <Plus className="w-3.5 h-3.5" />
-         <span>Añadir Tema</span>
-       </button>
-     </div>
-   </div>
- </div>
-
- {/* CATALOG FILTERS BAR */}
- <div className={`p-4 rounded-2xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center ${colors.card} `}>
- <div className="relative flex-1">
- <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-neutral-500 pointer-events-none" />
- <input
- id="search-songs"
- type="text"
- placeholder="Buscar temas por título, tonalidad, voz principal o notas..."
- value={catalogSearch}
- onChange={(e) => setCatalogSearch(e.target.value)}
- className={`w-full rounded-lg pl-9 ${catalogSearch ? 'pr-8' : 'pr-3'} py-1.5 text-[10px] focus:outline-none font-mono transition-all ${
- isStitchLight 
- ? 'bg-white text-slate-800 focus:border-indigo-500 placeholder:text-slate-400' 
- : 'bg-[#131313] text-[#e5e2e1] focus:border-[#f2ca50]/50 placeholder:text-neutral-600'
- }`}
- />
- {catalogSearch && (
- <button
- id="search-songs-clear"
- type="button"
- onClick={() => setCatalogSearch('')}
- className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
- isStitchLight ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
- }`}
- title="Borrar búsqueda"
- >
- <X className="w-3.5 h-3.5" />
- </button>
- )}
- </div>
-
- <div className="flex gap-2 flex-wrap sm:flex-nowrap">
- {/* Album dropdown */}
- <select
- value={catalogAlbumFilter}
- onChange={(e) => setCatalogAlbumFilter(e.target.value)}
- className={`text-[10px] font-mono py-1.5 px-3 rounded-lg focus:outline-none cursor-pointer ${
- isStitchLight ? 'bg-white text-slate-800' : 'bg-[#131313] text-neutral-200'
- }`}
- >
- <option value="todos">Todos los Discos / EPs</option>
- {albumsList.filter(a => a !== 'todos').map(alb => (
- <option key={alb} value={alb}>{alb}</option>
- ))}
- </select>
-
- {/* Status dropdown */}
- <select
- value={catalogStatusFilter}
- onChange={(e) => setCatalogStatusFilter(e.target.value)}
- className={`text-[10px] font-mono py-1.5 px-3 rounded-lg focus:outline-none cursor-pointer ${
- isStitchLight ? 'bg-white text-slate-800' : 'bg-[#131313] text-neutral-200'
- }`}
- >
- <option value="todos">Todos los estados</option>
- <option value="listo">Listo para Directo</option>
- <option value="ensayando">Ensayando</option>
- <option value="componiendo">Componiendo</option>
- <option value="descartado">Descartado</option>
-            </select>
-            <button
-              onClick={() => setGroupByAlbum(!groupByAlbum)}
-              className={`px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase transition-all ${groupByAlbum ? (isStitchLight ? 'bg-indigo-100 text-indigo-700' : 'bg-[#f2ca50]/20 text-[#f2ca50]' ) : (isStitchLight ? 'bg-slate-50 text-slate-500' : 'bg-neutral-800 text-neutral-400')}`}
-            >
-              Agrupar por Álbum
-            </button>
-
-  <button
-  id="btn-add-song"
-  onClick={() => { setEditingSong(null); setShowSongModal(true); }}
-  className="px-4 py-2 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-extrabold text-xs font-mono flex items-center gap-1.5 cursor-pointer whitespace-nowrap shadow-lg transition-all hover:scale-105"
-  >
-  <Plus className="w-4 h-4" />
-  <span>Añadir Tema</span>
-  </button>
-  </div>
+        <button
+          id="btn-add-song"
+          onClick={() => { setEditingSong(null); setShowSongModal(true); }}
+          className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          <span>Añadir Tema</span>
+        </button>
+      </div>
+    </div>
   </div>
 
-  {/* BULK ACTIONS BAR (appears once at least one catalog song is checked) */}
+  {/* CATALOG FILTERS BAR */}
+  <div className={`p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center border shadow-sm ${
+    isStitchLight ? 'bg-white border-slate-200' : 'bg-slate-900/60 border-slate-800/80 backdrop-blur-sm'
+  }`}>
+    <div className="relative flex-1">
+      <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500 pointer-events-none" />
+      <input
+        id="search-songs"
+        type="text"
+        placeholder="Buscar temas por título, tonalidad, voz principal o notas..."
+        value={catalogSearch}
+        onChange={(e) => setCatalogSearch(e.target.value)}
+        className={`w-full rounded-xl pl-9.5 ${catalogSearch ? 'pr-8' : 'pr-3'} py-2 text-xs focus:outline-none transition-all border ${
+          isStitchLight 
+            ? 'bg-white text-slate-800 border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 placeholder:text-slate-400' 
+            : 'bg-slate-950/60 text-slate-100 border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 placeholder:text-slate-500'
+        }`}
+      />
+      {catalogSearch && (
+        <button
+          id="search-songs-clear"
+          type="button"
+          onClick={() => setCatalogSearch('')}
+          className={`absolute right-2.5 top-2 p-0.5 rounded-full transition-colors cursor-pointer ${
+            isStitchLight ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' : 'text-slate-400 hover:text-white hover:bg-slate-800'
+          }`}
+          title="Borrar búsqueda"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
+
+    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+      {/* Album dropdown */}
+      <select
+        value={catalogAlbumFilter}
+        onChange={(e) => setCatalogAlbumFilter(e.target.value)}
+        className={`text-xs py-2 px-3 rounded-xl focus:outline-none cursor-pointer border ${
+          isStitchLight ? 'bg-white text-slate-800 border-slate-200' : 'bg-slate-800/90 text-slate-200 border-slate-700/80'
+        }`}
+      >
+        <option value="todos">Todos los Discos / EPs</option>
+        {albumsList.filter(a => a !== 'todos').map(alb => (
+          <option key={alb} value={alb}>{alb}</option>
+        ))}
+      </select>
+
+      {/* Status dropdown */}
+      <select
+        value={catalogStatusFilter}
+        onChange={(e) => setCatalogStatusFilter(e.target.value)}
+        className={`text-xs py-2 px-3 rounded-xl focus:outline-none cursor-pointer border ${
+          isStitchLight ? 'bg-white text-slate-800 border-slate-200' : 'bg-slate-800/90 text-slate-200 border-slate-700/80'
+        }`}
+      >
+        <option value="todos">Todos los estados</option>
+        <option value="listo">Listo para Directo</option>
+        <option value="ensayando">Ensayando</option>
+        <option value="componiendo">Componiendo</option>
+        <option value="descartado">Descartado</option>
+      </select>
+
+      <button
+        onClick={() => setGroupByAlbum(!groupByAlbum)}
+        className={`px-3.5 py-2 rounded-xl text-xs font-medium transition-all border ${
+          groupByAlbum
+            ? isStitchLight
+              ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+              : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
+            : isStitchLight
+              ? 'bg-slate-50 text-slate-600 border-slate-200'
+              : 'bg-slate-800/80 text-slate-300 border-slate-700/80 hover:bg-slate-700'
+        }`}
+      >
+        Agrupar por Álbum
+      </button>
+
+      <button
+        id="btn-normalize-titles"
+        type="button"
+        onClick={handleNormalizeCatalogTitles}
+        title="Formatea todos los títulos del catálogo con Mayúsculas de Nombres Propios (evita títulos todos en mayúsculas o minúsculas)"
+        className={`px-3 py-2 rounded-xl text-xs font-medium transition-all border flex items-center gap-1.5 shadow-2xs hover:scale-[1.02] active:scale-95 whitespace-nowrap cursor-pointer ${
+          isStitchLight
+            ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
+            : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
+        }`}
+      >
+        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+        <span>Nombres Propios</span>
+      </button>
+
+      <button
+        id="btn-add-song-filter"
+        onClick={() => { setEditingSong(null); setShowSongModal(true); }}
+        className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-95 whitespace-nowrap"
+      >
+        <Plus className="w-3.5 h-3.5" />
+        <span>Añadir Tema</span>
+      </button>
+    </div>
+  </div>
+
+  {/* BULK ACTIONS BAR */}
   {selectedCatalogIds.size > 0 && (
-    <div className={`p-3 rounded-2xl flex flex-wrap items-center justify-between gap-3 border ${
-      isStitchLight ? 'bg-indigo-50 border-indigo-200' : 'bg-[#1db954]/10 border-[#1db954]/30'
+    <div className={`p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-3 border ${
+      isStitchLight ? 'bg-indigo-50 border-indigo-200 text-indigo-900' : 'bg-indigo-950/40 border-indigo-800/60 text-indigo-200'
     }`}>
-      <span className="text-xs font-mono font-bold text-[#1db954]">
+      <span className="text-xs font-medium">
         {selectedCatalogIds.size} canciones seleccionadas
       </span>
       <div className="flex items-center gap-2 flex-wrap">
         <button
           type="button"
           onClick={() => handleBulkAddSelectedToSetlist(Array.from(selectedCatalogIds))}
-          className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-[#1db954] hover:bg-[#1ed760] text-black cursor-pointer transition-all flex items-center gap-1.5"
+          className="px-3.5 py-1.5 rounded-xl text-xs font-medium bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer transition-all flex items-center gap-1.5 shadow-xs"
         >
           <ListPlus className="w-3.5 h-3.5" />
           <span>Añadir a Repertorio…</span>
@@ -4031,7 +4323,7 @@ export default function RepertorioSetlists({
         <button
           type="button"
           onClick={() => handleBulkDeleteSongs(Array.from(selectedCatalogIds))}
-          className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
+          className="px-3.5 py-1.5 rounded-xl text-xs font-medium bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 cursor-pointer transition-all flex items-center gap-1.5"
         >
           <Trash2 className="w-3.5 h-3.5" />
           <span>Eliminar Seleccionadas</span>
@@ -4039,7 +4331,7 @@ export default function RepertorioSetlists({
         <button
           type="button"
           onClick={clearCatalogSelection}
-          className="px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-neutral-300 cursor-pointer transition-all"
+          className="px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer transition-all border border-slate-700/80"
         >
           Cancelar
         </button>
@@ -4048,10 +4340,10 @@ export default function RepertorioSetlists({
   )}
 
   {/* UNIFIED TRACKLIST / CATÁLOGO DE TEMAS */}
-  <div className={`rounded-2xl overflow-hidden shadow-2xl border ${isStitchLight ? 'bg-white border-slate-200' : 'bg-[#121212] border-zinc-800/80'}`}>
+  <div className={`rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm border ${isStitchLight ? 'bg-white border-slate-200' : 'bg-slate-900/60 border-slate-800/80 backdrop-blur-sm'}`}>
     {/* Grid Aligned Header with Bulk Select & Column Identifiers */}
-    <div className={`flex items-center justify-between px-3.5 py-2.5 border-b text-[11px] font-mono uppercase tracking-wider ${
-      isStitchLight ? 'bg-slate-100/90 border-slate-200 text-slate-600' : 'bg-black/40 border-zinc-800/80 text-zinc-400'
+    <div className={`flex items-center justify-between px-4 py-3 border-b text-xs uppercase tracking-wider ${
+      isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-600' : 'bg-slate-950/40 border-slate-800/80 text-slate-400'
     }`}>
       <div className="flex items-center gap-2.5 min-w-0">
         <input
@@ -4064,23 +4356,23 @@ export default function RepertorioSetlists({
               clearCatalogSelection();
             }
           }}
-          className="w-3.5 h-3.5 cursor-pointer accent-[#1db954]"
+          className="w-3.5 h-3.5 cursor-pointer accent-indigo-600"
           title="Seleccionar todo lo filtrado"
         />
-        <span className="font-semibold text-zinc-200">
+        <span className="font-semibold text-slate-200">
           {selectedCatalogIds.size > 0 ? `${selectedCatalogIds.size} seleccionadas` : `${filteredSongs.length} temas`}
         </span>
-        <span className="hidden md:inline text-[10px] opacity-60">
+        <span className="hidden md:inline text-[11px] opacity-60">
           • Tono · BPM · Duración · Estado
         </span>
       </div>
 
-      <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] font-mono text-zinc-400">
+      <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-slate-400">
         <span className="hidden lg:inline opacity-70">Acciones rápidas:</span>
-        <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/30">Acordes</span>
-        <span className="px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300 font-bold border border-indigo-500/30">Studio</span>
-        <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30">Notas Miembros</span>
-        <span className="hidden sm:inline px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 font-bold border border-zinc-700">Editar</span>
+        <span className="px-2 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-400 font-medium border border-emerald-500/30">Acordes</span>
+        <span className="px-2 py-0.5 rounded-lg bg-indigo-500/15 text-indigo-300 font-medium border border-indigo-500/30">Studio</span>
+        <span className="px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-300 font-medium border border-amber-500/30">Notas</span>
+        <span className="hidden sm:inline px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 font-medium border border-slate-700">Editar</span>
       </div>
     </div>
 
@@ -4659,12 +4951,56 @@ export default function RepertorioSetlists({
     onCreated={handleSetlistImported}
   />
 
-  {/* SETLIST PERFORMANCE VIEW (CONCIERTO EN VIVO) */}
+  {/* SETLIST PERFORMANCE VIEW (CONCIERTO EN VIVO O MODO ENSAYO) */}
   {performanceSetlistId && (
     <SetlistPerformanceView
       setlist={setlists.find(s => s.id === performanceSetlistId)!}
       songs={songs}
+      initialMode={performanceInitialMode}
       onClose={() => setPerformanceSetlistId(null)}
+      onOpenStudioModal={(song) => handleOpenStudioModal(song)}
+      onUpdateSong={handleUpdateSongFromStudio}
+      currentUser={currentUser}
+    />
+  )}
+
+  {/* SONG TRANSITION PREVIEW MODAL (PROBAR UNIÓN Y ENLACE AUDITIVO ENTRE TEMAS) */}
+  {transitionPreviewData?.isOpen && transitionPreviewData.songA && transitionPreviewData.songB && (
+    <SongTransitionPreviewModal
+      isOpen={transitionPreviewData.isOpen}
+      onClose={() => setTransitionPreviewData(null)}
+      songA={transitionPreviewData.songA}
+      songB={transitionPreviewData.songB}
+      itemA={transitionPreviewData.itemA}
+      itemB={transitionPreviewData.itemB}
+      indexA={transitionPreviewData.indexA}
+      indexB={transitionPreviewData.indexB}
+      totalItemsCount={activeSetlist?.items?.length || 0}
+      onNavigateTransition={(newIdxA, newIdxB) => {
+        handleOpenTransitionPreview(newIdxA, newIdxB);
+      }}
+      onSwapSongs={(idxA, idxB) => {
+        reorderSetlistItems(idxA, idxB);
+        setTransitionPreviewData((prev) => (prev ? {
+          ...prev,
+          songA: prev.songB,
+          songB: prev.songA,
+          itemA: prev.itemB,
+          itemB: prev.itemA
+        } : null));
+      }}
+      onInsertInterludio={(afterItemId) => {
+        handleAddItemToSetlist(
+          undefined,
+          'chapa',
+          'Charla / Interludio',
+          1,
+          60,
+          'Transición hablada para modular tono o descanso',
+          afterItemId
+        );
+      }}
+      onUpdateSong={handleUpdateSongFromStudio}
     />
   )}
 
