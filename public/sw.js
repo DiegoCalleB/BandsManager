@@ -11,7 +11,16 @@ self.addEventListener("install", () => {
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+  // Este SW nunca escribe en caché (ver comentario de arriba), pero una versión anterior sí
+  // pudo hacerlo antes de este cambio. Purgar aquí asegura que nadie se quede sirviendo un
+  // bundle viejo desde una caché huérfana, y que las actualizaciones se apliquen al instante
+  // sin pedirle al usuario que borre datos del navegador a mano.
+  event.waitUntil(
+    Promise.all([
+      caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))),
+      self.clients.claim(),
+    ])
+  );
 });
 
 self.addEventListener("fetch", (event) => {
