@@ -44,7 +44,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * Las llamadas de cron/triggers de PostgreSQL usan `requireCronOrAuth` validado por el secreto `CRON_SECRET`.
 2. **Protección de Endpoints de IA Generativa:**
    * Todo endpoint que consuma modelos de IA o consumo de cuotas pagadas (ej. `/api/generate-music` en `ai_music.ts` o `/write-reels-copy` en `chat.ts`) DEBE requerir `requireAuth` Y la tasa de limitación `iaRateLimiter` (`server/middleware/rateLimiter.ts`).
-   * Limitadores hermanos para otras superficies de abuso: `authRateLimiter`/`loginRateLimiter` (fuerza bruta en login) y `generalRateLimiter` (resto de la API).
+   * Limitadores hermanos reales (no inventes nombres — solo existen estos cuatro): `loginRateLimiter` (fuerza bruta en login, 10/min), `iaRateLimiter` (análisis IA, 20/5min por usuario), `renderRateLimiter` (renderizado de clips, 10/5min por usuario — lanza ffmpeg, el más caro en CPU/disco), `donationRateLimiter` (checkout de Stripe/donaciones, 10/5min por usuario).
+   * **No existe un rate limiter general para el resto de la API** — solo estas cuatro superficies específicas (login, IA, render, donaciones) están cubiertas. Es un gap real, no una simplificación de esta documentación: cualquier otro endpoint mutante sin uno de estos cuatro limitadores solo tiene `requireAuth` conteniendo el abuso, nada de rate limiting.
 3. **Protección SSRF (Server-Side Request Forgery):**
    * Cualquier petición `fetch()` saliente realizada por el servidor a URLs provistas por usuarios (ej. scraping de webs de salas) DEBE pasar obligatoriamente por `esUrlExternaSegura` (`server/utils/ssrfGuard.ts`), que bloquea IP privadas/reservadas y re-valida DNS.
 4. **Almacenamiento de Archivos (Supabase Storage):**
@@ -55,15 +56,23 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 7. **Recordatorio automático de `/security-review` (`.claude/hooks/security-review-reminder.js`):** hook de Claude Code (`PostToolUse`, configurado en `.claude/settings.json`) que avisa cuando un `Edit`/`Write` toca un archivo de la superficie sensible del punto 5 (`bandAccess.ts`, `ssrfGuard.ts`, `auth.ts`, `emailAgentClient.ts`, `agentEngine.ts`, `lectorAgent.ts`, rutas de `leads`/`billing`/`donations`, `aiLedger.ts`, `rateLimiter.ts`, y `bandDna.ts`/`promptsManager.ts` por construir el prompt final con datos externos, punto 6). No bloquea nada ni sustituye el criterio humano/del agente — es solo un empujón para que el aviso del punto 5 no dependa de que alguien se acuerde. Toma efecto en la siguiente sesión de Claude Code (los hooks se cargan al arrancar, no en caliente).
 
 ### 2.3 Control de Planes de Suscripción y Límites Servidor/Cliente
-1. **Jerarquía de Planes y Límites (`normalizePlan` + `checkRecordLimit`):**
-   * `promo` (Tier 0): Calendario/QRs/EPK/Fans gratis. Máximos: **250 fans, 0 leads, 0 canciones en CRM, 0 IA/mes**. `allowedModules: ['resumen', 'calendario', 'epk', 'fans']`.
-   * `ensayo` (Tier 1): Noveles/Gratis. Máximos: **500 fans, 10 leads/mes, 50 canciones, 100k tokens IA/mes**. Acceso básico a booking CRM.
-   * `local` (Tier 2): Iniciación. Máximos: **2k fans, 50 leads/mes, 200 canciones, 500k tokens IA/mes**. Campaña básica de booking.
-   * `de_gira` (Tier 3): Pro/Automatizado. Máximos: **10k fans, 200 leads/mes, 1k canciones, 2M tokens IA/mes**. Agentes de booking activos, transiciones de setlist.
-   * `cabeza_de_cartel` (Tier 4): Multi-banda/Agencias. Máximos: **Ilimitado**. Acceso a todas las funciones, múltiples perfiles de banda, webhooks custom.
+1. **Jerarquía de Planes y Límites — números reales de `server/utils/planLimits.ts` (`PLAN_LIMITS`) y `server/routes/billing.ts` (`PLAN_CREDITS`), no los redondeados de una versión anterior de esta tabla:**
+
+   | Plan | Fans | Leads | Canciones | Contactos medios | Bandas | Créditos IA/mes |
+   |---|---|---|---|---|---|---|
+   | `promo` | 250 | 0 | 25 | 0 | 1 | 0 |
+   | `promo_plus` | 250 | 0 | 25 | 0 | 1 | 0 |
+   | `ensayo` | 10 | 10 | 5 | 0 | 1 | 100 |
+   | `local` | 100 | 50 | 20 | 10 | 1 | 300 |
+   | `de_gira` | ∞ | ∞ | ∞ | ∞ | 1 | 800 |
+   | `cabeza_de_cartel` | ∞ | ∞ | ∞ | ∞ | 5 | 2500 |
+
+   * **`promo_plus` tiene los mismos límites que `promo` hoy** (confirmado en código, no es un error de esta tabla) — la diferencia entre ambos es solo de `allowedModules`/features de cara al usuario (Promo+ añade Setlists/Discografía a la UI), no de cuota. Si alguna vez se le da un límite propio, actualiza esta tabla en el mismo commit.
+   * "Créditos IA" es un contador propio (`creditos_periodo`/`creditos_usados` por banda, `POST /billing/consume-credits`) — **no son tokens ni tiene relación con `server/db/aiLedger.ts`** (§4 punto 10, ese es un ledger de deuda/donación aparte, no una cuota mensual). No mezclar los dos sistemas al tocar código de límites de IA.
+   * `allowedModules` varía bastante entre planes (ej. `promo`/`promo_plus` no incluyen `booking`; `ensayo` en adelante sí) — antes de asumir qué módulos tiene un plan, mira `src/utils/planPermissions.ts` (`PLANS`) directamente en vez de memorizar una lista aquí.
 2. **Validación Inflexible en Servidor (`server/utils/planLimits.ts`):**
    * Queda estrictamente prohibido confiar de forma exclusiva en la UI (`src/utils/planPermissions.ts`).
-   * Toda mutación en API REST que cree registros (leads, medios, canciones, bandas, fans) DEBE validar los límites en el servidor con `checkRecordLimit(...)` para evitar que peticiones HTTP directas con token se salten el plan contratado.
+   * Toda mutación en API REST que cree registros (leads, medios, canciones, bandas, fans) DEBE validar los límites en el servidor con `checkRecordLimit(...)` para evitar que peticiones HTTP directas con token se salten el plan contratado. **Los créditos IA no pasan por `checkRecordLimit`** — su enforcement vive en `billing.ts`, es un mecanismo distinto.
 
 ### 2.4 Blindaje Anti-Sabotaje, Protección de Propiedad Intelectual (IP) y Ciberseguridad Defensiva
 1. **Custodia Criptográfica de la Obra Musical (Derechos de Autor):**
@@ -196,7 +205,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Tests:** número vivo — correr `npm test` para el real (no fiarse de una cifra escrita aquí, caduca en el próximo commit).
 * **Cobertura reportada vs real:** `npm run test:coverage` da ~36% de statements, pero solo mide archivos que tests importan (cero cobertura de React: 0 de 150 componentes, ~96k líneas). El % no refleja cobertura de la app entera, solo del backend tocable sin servidor.
 * **Dentro de lo medido:** `server/utils` bien cubierto. `server/db/core.ts` + escáner estático (`bandIdTrustBoundary.test.ts`) protegen multi-tenancy. Resto de `server/db` y `server/routes/*.ts` sin test — importa solo en §5.3.1 (multi-tenancy/dinero).
-* **Excepción de TDD (`band_id`/dinero):** `bandAccess.ts` y `server/db/aiLedger.ts` cumplen con tests antes de código. `billing.ts`/`donations.ts` (Stripe/Ko-fi) todavía no — pendiente de cobertura obligatoria.
+* **Excepción de TDD (`band_id`/dinero):** `bandAccess.ts`, `server/db/aiLedger.ts`, `billing.ts` y `donations.ts` (Stripe/Ko-fi) ya tienen tests reales (`server/routes/__tests__/billing.test.ts`, `.../donations.test.ts`) — la cobertura pendiente que mencionaba una versión anterior de este punto ya se hizo.
 * **Por qué esas áreas están débiles — testability, no pereza:** `server/utils`/`server/db` están mejor cubiertos porque son funciones puras exportadas, fáciles de testear contra un `req`/`bandId` falso; `server/routes/*.ts` está peor cubierto porque mezcla lógica de negocio directamente con `req`/`res` de Express dentro del propio handler — no es que falte tiempo, es que esos handlers no se pueden testear sin levantar el servidor entero. **Extraer a una función pura testeable (patrón `bandAccess.ts`) cuando:** (a) el handler hace algo más que parsear el request y delegar — cálculo, validación con varias ramas, transformación de datos; (b) toca `band_id` o dinero (excepción de TDD más abajo — sin algo testeable no hay nada que testear antes de tocar el código); (c) el síntoma más simple — si no puedes escribir el test sin arrancar Express, esa es la señal, no una excusa para saltártelo.
 * **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
 * **TDD selectivo (no obligatorio salvo en dos áreas):** TDD estricto (test antes que código) NO es la norma en este proyecto — la velocidad de iteración depende de poder arreglar un bug o probar una idea en minutos, y aquí se cambia de diseño a media implementación con frecuencia, lo que dejaría obsoleto un test escrito primero junto con el código que describía. El estándar general sigue siendo el actual: tests escritos junto al fix o la feature, no antes.
@@ -213,7 +222,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ### 5.4 Code smells — hábito de revisión, no un "sistema" nuevo
 * **Qué es y qué NO es:** un code smell no es un fallo de comportamiento (eso lo pillan los tests) — es código que funciona pero está mal diseñado y va a morder más adelante: duplicación, funciones/componentes enormes, parámetros booleanos que cambian el comportamiento entero, abstracciones que nadie usa, código muerto. No hace falta montar tooling nuevo para esto: ya existen dos capas.
-* **Capa 1 — ESLint (`npm run lint:eslint`):** ya cubre parte (`no-explicit-any`, `no-unused-vars`, hooks mal usados). La deuda existente (~2816 hallazgos) va con ratchet en CI — no crece, no se arregla toda de golpe (ver comentario en `.github/workflows/ci.yml`).
+* **Capa 1 — ESLint (`npm run lint:eslint`):** ya cubre parte (`no-explicit-any`, `no-unused-vars`, hooks mal usados). La deuda existente va con ratchet en CI — no crece, no se arregla toda de golpe (ver comentario en `.github/workflows/ci.yml`). **Hallazgos:** número vivo, igual que los tests (§5.3.1) — correr `npm run lint:eslint` para el real, no fiarse de una cifra escrita aquí.
 * **Capa 2 — hábito antes de cada merge grande:** pasar la skill `/code-review` (bugs + limpieza) o `/simplify` (solo limpieza: reutilización, simplificación, eficiencia) de Claude Code sobre el diff antes de mergear algo grande a `develop`. No es un paso automático de CI — es un hábito manual, a criterio de quien merge.
 * **Dead code — deliberadamente sin tooling (`knip`/`ts-prune`) todavía:** ESLint solo pilla variables/imports locales no usados, no exports sin uso entre archivos. No se instala una herramienta de detección automática porque en este proyecto genera falsos positivos: hay código deliberadamente dormido detrás de un flag (ej. `LoginModal.tsx` completo, escondido tras `USE_SIMPLE_LOGIN = true` en `App.tsx`, conservado a propósito para cuando se reabra el registro con los 4 planes) que una herramienta automática marcaría como muerto sin estarlo. Revisar dead code real sigue siendo manual, vía `/code-review`/`/simplify`.
 * **Type code de estado del lead — centralizado:** `src/utils/leadStatusPresentation.ts` es la única fuente para color/etiqueta. Evita duplicación entre `BookingCRM.tsx` y `Dashboard.tsx` (ya resuelta).
