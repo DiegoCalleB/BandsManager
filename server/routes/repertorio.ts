@@ -129,9 +129,7 @@ router.post("/songs", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El título del tema es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    if (!(newSong as any).band_id) {
-      (newSong as any).band_id = userBandId;
-    }
+    (newSong as any).band_id = userBandId;
     if (!newSong.id) {
       newSong.id = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     }
@@ -235,9 +233,7 @@ router.post("/setlists", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El nombre del repertorio es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    if (!(newSetlist as any).band_id) {
-      (newSetlist as any).band_id = userBandId;
-    }
+    (newSetlist as any).band_id = userBandId;
     if (!newSetlist.id) {
       newSetlist.id = `setlist-${Date.now()}`;
     }

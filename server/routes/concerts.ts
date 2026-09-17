@@ -75,9 +75,7 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const newRehearsal: Rehearsal = req.body;
-    if (!(newRehearsal as any).band_id) {
-      (newRehearsal as any).band_id = userBandId;
-    }
+    (newRehearsal as any).band_id = userBandId;
     const saved = await dbUpsertRehearsal(newRehearsal, userBandId);
     
     const state = loadState();
@@ -153,9 +151,7 @@ router.post("/concerts", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const newConcert: Concert = req.body;
-    if (!(newConcert as any).band_id) {
-      (newConcert as any).band_id = userBandId;
-    }
+    (newConcert as any).band_id = userBandId;
     const saved = await dbUpsertConcert(newConcert, userBandId);
 
     const state = loadState();
@@ -205,7 +201,7 @@ router.delete("/concerts/:id", requireAuth, async (req, res) => {
 
 // Sync all concerts with Supabase
 router.post("/concerts/sync", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = getTargetBandId(req);
   try {
     const dbConcerts = await dbGetConcerts(userBandId);
     const state = loadState();
@@ -228,7 +224,7 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
 
 // Get logistics
 router.get("/logistics", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = getTargetBandId(req);
   if (!userBandId) {
     return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
   }
@@ -251,7 +247,7 @@ router.get("/logistics", requireAuth, async (req, res) => {
 
 // Update/set run of show for a date
 router.post("/logistics/runofshow", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = getTargetBandId(req);
   if (!userBandId) {
     return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
   }
@@ -278,7 +274,7 @@ router.post("/logistics/runofshow", requireAuth, async (req, res) => {
 
 // Update/set gear checklist for a date
 router.post("/logistics/gear", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = getTargetBandId(req);
   if (!userBandId) {
     return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
   }
@@ -305,7 +301,7 @@ router.post("/logistics/gear", requireAuth, async (req, res) => {
 
 // Get payments (Admin only)
 router.get("/payments", requireAuth, requireLeader, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = getTargetBandId(req);
   try {
     const dbPayments = await dbGetPayments(userBandId);
     res.json(dbPayments);
@@ -317,7 +313,7 @@ router.get("/payments", requireAuth, requireLeader, async (req, res) => {
 
 // Create payment (Admin only)
 router.post("/payments", requireAuth, requireLeader, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = getTargetBandId(req);
   const newPayment: Payment = req.body;
   const saved = await dbUpsertPayment(newPayment, userBandId);
 
@@ -330,7 +326,7 @@ router.post("/payments", requireAuth, requireLeader, async (req, res) => {
 
 // Update payment status (Admin only)
 router.put("/payments/:id", requireAuth, requireLeader, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = getTargetBandId(req);
   const { id } = req.params;
   const updated = { ...req.body, id };
   const saved = await dbUpsertPayment(updated, userBandId);
@@ -349,7 +345,7 @@ router.put("/payments/:id", requireAuth, requireLeader, async (req, res) => {
 
 // Sync all payments/finances with Supabase (Admin only)
 router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = getTargetBandId(req);
   try {
     const dbPayments = await dbGetPayments(userBandId);
     const state = loadState();
@@ -382,7 +378,7 @@ router.post("/messages", requireAuth, (req, res) => {
 // Devuelve la URL firmada del feed para las bandas del usuario. Es lo que la aplicación
 // enseña para copiar o suscribirse: la firma no se calcula en el cliente.
 router.get("/calendar-feed-url", requireAuth, (req, res) => {
-  const pedidas = String(req.query.band_id || (req as any).user?.band_id || "")
+  const pedidas = String(req.query.band_id || getTargetBandId(req) || "")
     .split(",")
     .map((b) => b.trim())
     .filter(Boolean);

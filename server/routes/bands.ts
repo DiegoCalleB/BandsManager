@@ -5,7 +5,7 @@ import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDele
 import { enviarEmail } from "../services/emailAgentClient.js";
 import { tieneGmailOAuthConectado, enviarEmailGmailApi } from "../services/gmailApiClient.js";
 import { sendTransactionalEmail } from "../services/transactionalEmail.js";
-import { buildServerEmailHtml } from "../utils/emailTemplate.js";
+import { buildServerEmailHtml, buildBandNotificationEmailHtml } from "../utils/emailTemplate.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -739,7 +739,9 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
       event_time,
       event_location,
       recipients = [], // array de emails
+      recipient_members = [], // array de nombres de convocados
       custom_notes,
+      setlist_summary,
       send_email = true
     } = req.body;
 
@@ -747,15 +749,25 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "Falta el título del evento" });
     }
 
+    const registeredBand = await dbGetRegisteredBandById(bandId);
+    const bandName = registeredBand?.name || 'Tu Banda';
+
     const eventLabel = event_type === 'concierto' ? 'Concierto' : event_type === 'ensayo' ? 'Ensayo' : 'Reunión';
-    const subject = `🔔 Recordatorio de ${eventLabel}: ${event_title} (${event_date})`;
     
-    const bodyText = `Hola,\n\nTe enviamos este recordatorio para el próximo ${eventLabel.toLowerCase()}:\n\n` +
-      `📌 Evento: ${event_title}\n` +
-      `📅 Fecha: ${event_date}${event_time ? ` a las ${event_time}` : ''}\n` +
-      `📍 Lugar: ${event_location || 'Por determinar'}\n` +
-      (custom_notes ? `\n📝 Notas adicionales:\n${custom_notes}\n` : '') +
-      `\n\nPor favor, confirma tu asistencia en la plataforma BandManager.io.\n\n¡Un saludo!`;
+    // Identificación clara de la BANDA lo primero en el Asunto
+    const subject = `[Banda: ${bandName}] 🔔 Recordatorio de ${eventLabel}: ${event_title} (${event_date})`;
+
+    const html = buildBandNotificationEmailHtml({
+      bandName,
+      eventLabel,
+      eventTitle: event_title,
+      eventDate: event_date,
+      eventTime: event_time,
+      eventLocation: event_location,
+      recipientMembers: recipient_members,
+      customNotes: custom_notes,
+      setlistSummary: setlist_summary
+    });
 
     let emailSent = false;
     let emailError = null;
@@ -763,47 +775,18 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
     if (send_email && Array.isArray(recipients) && recipients.length > 0) {
       const emailList = recipients.filter((r: any) => typeof r === 'string' && r.includes('@'));
       if (emailList.length > 0) {
-        const hasGmail = await tieneGmailOAuthConectado(bandId);
-        const registeredBand = await dbGetRegisteredBandById(bandId);
-        const bandName = registeredBand?.name || 'BandManager';
-        const { html } = buildServerEmailHtml({
-          pitchText: bodyText,
-          bandName,
-          bandId
-        });
-
         for (const targetEmail of emailList) {
           try {
-            if (hasGmail) {
-              await enviarEmailGmailApi(bandId, {
-                to: targetEmail,
-                subject,
-                body: bodyText,
-                html
-              });
+            // Las notificaciones internas del sistema se envían siempre desde BandManager (no-reply@bandmanager.io)
+            const txRes = await sendTransactionalEmail({
+              to: targetEmail,
+              subject,
+              html
+            });
+            if (txRes.success) {
               emailSent = true;
             } else {
-              try {
-                await enviarEmail(bandId, {
-                  to: targetEmail,
-                  subject,
-                  body: bodyText,
-                  html
-                });
-                emailSent = true;
-              } catch (smtpErr: any) {
-                console.warn(`[Reminder Email Fallback] La banda ${bandId} no tiene email propio configurado (${smtpErr?.message}). Enviando vía correo transaccional...`);
-                const txRes = await sendTransactionalEmail({
-                  to: targetEmail,
-                  subject: `[${bandName}] ${subject}`,
-                  html
-                });
-                if (txRes.success) {
-                  emailSent = true;
-                } else {
-                  throw new Error(txRes.error || smtpErr?.message || "No se pudo enviar el correo");
-                }
-              }
+              throw new Error(txRes.error || "Error despachando correo transaccional de notificación");
             }
           } catch (err: any) {
             console.error(`Error enviando email de recordatorio a ${targetEmail}:`, err?.message || err);

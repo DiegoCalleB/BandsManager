@@ -1417,6 +1417,7 @@ export default function App() {
  initialSelectedDate={bookingOptions.selectedDate}
  currentBandId={currentActiveBandId}
  currentBandName={currentActiveBandName}
+ currentBandLogo={currentActiveBandLogo}
  availableBands={availableBands}
  bandUsers={bandUsers}
  currentUser={currentUser}
