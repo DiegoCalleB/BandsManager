@@ -48,10 +48,13 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * Servir uploads estáticos con cabeceras `X-Content-Type-Options: nosniff`.
 5. **`/security-review` antes de mergear, disparado por superficie tocada (no obligatorio siempre):** pasar la skill `/security-review` de Claude Code cuando el diff toca `band_id`/`bandAccess.ts`, auth, un `fetch()` de URL de usuario, subida de archivos, o el envío de emails de los agentes (§3). No es un checklist universal en cada merge — eso se acaba saltando por cansancio en un proyecto de iteración rápida, igual que la excepción de TDD (§5.3.1) tampoco es "todo con test antes"; es corrección/seguridad, no limpieza de código, así que vive aquí y no junto a `/code-review`/`/simplify` en §5.4.
 
-### 2.3 Control de Planes de Suscripción y Límites Servidor/Cliente (Plan Promo)
-1. **Jerarquía y Normalización de Planes (`normalizePlan`):**
-   * El sistema soporta 5 niveles de suscripción: `promo` (Tier 0 - Calendario/QRs Fans/Dossier gratis), `ensayo` (Tier 1 - Noveles/Gratis), `local` (Tier 2 - Iniciación), `de_gira` (Tier 3 - Pro/Automatizado), `cabeza_de_cartel` (Tier 4 - Multi-banda/Agencias).
-   * **Plan Promo (`promo`):** Diseñado para bandas que acuden a festivales o showcases y solo necesitan su Dossier EPK, QR de difusión, captación de base de fans (hasta 250 fans) y calendario, sin consumo de créditos IA ni acceso al booking CRM (`allowedModules: ['resumen', 'calendario', 'epk', 'fans']`).
+### 2.3 Control de Planes de Suscripción y Límites Servidor/Cliente
+1. **Jerarquía de Planes y Límites (`normalizePlan` + `checkRecordLimit`):**
+   * `promo` (Tier 0): Calendario/QRs/EPK/Fans gratis. Máximos: **250 fans, 0 leads, 0 canciones en CRM, 0 IA/mes**. `allowedModules: ['resumen', 'calendario', 'epk', 'fans']`.
+   * `ensayo` (Tier 1): Noveles/Gratis. Máximos: **500 fans, 10 leads/mes, 50 canciones, 100k tokens IA/mes**. Acceso básico a booking CRM.
+   * `local` (Tier 2): Iniciación. Máximos: **2k fans, 50 leads/mes, 200 canciones, 500k tokens IA/mes**. Campaña básica de booking.
+   * `de_gira` (Tier 3): Pro/Automatizado. Máximos: **10k fans, 200 leads/mes, 1k canciones, 2M tokens IA/mes**. Agentes de booking activos, transiciones de setlist.
+   * `cabeza_de_cartel` (Tier 4): Multi-banda/Agencias. Máximos: **Ilimitado**. Acceso a todas las funciones, múltiples perfiles de banda, webhooks custom.
 2. **Validación Inflexible en Servidor (`server/utils/planLimits.ts`):**
    * Queda estrictamente prohibido confiar de forma exclusiva en la UI (`src/utils/planPermissions.ts`).
    * Toda mutación en API REST que cree registros (leads, medios, canciones, bandas, fans) DEBE validar los límites en el servidor con `checkRecordLimit(...)` para evitar que peticiones HTTP directas con token se salten el plan contratado.
@@ -64,7 +67,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 2. **Defensa contra Espionaje Comercial y Scraping Malicioso:**
    * La base de datos de salas, contactos privados de programadores, cachés de negociación, contratos, cachés de tarifas y agendas de gira son activos estratégicos de alto valor.
    * Los endpoints de exportación masiva (`/api/download-excel`, `/api/export-leads`) deben aplicar *rate limiting* estricto y scoping intransigente por `band_id` para neutralizar intentos de exfiltración masiva por competidores o agencias externas.
-3. **Inmunidad contra Sabotaje y Ataques Web (Hardening Integral):** rate limiting y SSRF ya cubiertos en §2.2.2/§2.2.3 (no se repiten aquí). Lo que añade este punto:
+3. **Inmunidad contra Sabotaje y Ataques Web (Hardening Integral):** rate limiting (§2.2 punto 2) y SSRF (§2.2 punto 3) ya cubiertos arriba. Lo que añade este punto:
    * **Prevención de Inyecciones (SQLi, NoSQLi, XSS):** Todas las consultas a Supabase se canalizan parametrizadas mediante el cliente tipado oficial o funciones de sanitización.
    * **Sanitización de Archivos y Path Traversal:** Validadores dedicados (`subcarpetaSegura`, `rutaFuenteSegura`) impiden la manipulación de rutas en el sistema de archivos del servidor.
 
@@ -84,7 +87,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
      * `nuevo`: Lead registrado por el Scout o manualmente.
      * `contactado` / `esperando_respuesta`: Email inicial enviado.
      * `respondido`: La sala ha respondido; conversación activa.
-     * `negociando`: Negociación de fechas, caché, taquilla o tech rider.
+     * `negociando`: Negociación de fechas, caché (tarifa), taquilla o tech rider.
      * `confirmado`: Concierto cerrado; transferido a logística de gira y calendario.
      * `aplazado`: Programación llena o pospuesto para próxima temporada.
      * `no_interesado`: Descartado formalmente.
@@ -95,11 +98,11 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
      * `borrador_creado`: Borrador depositado en Gmail/IMAP a la espera de envío.
 
 3. **Ciclo de Vida de los Agentes de Booking:**
-   * **Scout:** Descubre y enriquece salas en Supabase en estado `nuevo`.
-   * **Redactor:** Genera propuesta personalizada en `pitch_generado` y marca sub-estado `pendiente_aprobacion`.
-   * **Usuario (Human-in-the-Loop):** Valida o edita el texto y aprueba (`aprobado_propuesta` o `aprobado_respuesta`).
-   * **Enviador** (`server/services/agentEngine.ts`): Despacha registros aprobados respetando la ventana comercial de la banda y rate-limits.
-   * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages` y detecta borradores de Gmail enviados manualmente.
+   * **Scout:** Descubre y enriquece salas en Supabase, las marca como estado `nuevo`.
+   * **Redactor:** Genera propuesta personalizada por IA, marca sub-estado como `pendiente_aprobacion` (lead listo para revisión humana).
+   * **Usuario (Human-in-the-Loop):** Lee/edita el borrador y aprueba explícitamente, transicionando a `aprobado_propuesta` (pitch inicial) o `aprobado_respuesta` (réplica a sala).
+   * **Enviador** (`server/services/agentEngine.ts`): Lee leads en estado aprobado, despacha respetando ventana comercial de la banda y rate-limits. Registra el envío en `lead_messages`.
+   * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.
 
 4. **Conexión de Correo por Banda (Gmail OAuth2 vs IMAP):**
    * Cada banda conecta su propio buzón. El sistema prefiere automáticamente **Gmail OAuth2** (`band_gmail_oauth_accounts`) sobre IMAP/SMTP (`band_email_accounts`).
@@ -191,7 +194,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Por qué esas áreas están débiles — testability, no pereza:** `server/utils`/`server/db` están mejor cubiertos porque son funciones puras exportadas, fáciles de testear contra un `req`/`bandId` falso; `server/routes/*.ts` está peor cubierto porque mezcla lógica de negocio directamente con `req`/`res` de Express dentro del propio handler — no es que falte tiempo, es que esos handlers no se pueden testear sin levantar el servidor entero. **Extraer a una función pura testeable (patrón `bandAccess.ts`) cuando:** (a) el handler hace algo más que parsear el request y delegar — cálculo, validación con varias ramas, transformación de datos; (b) toca `band_id` o dinero (excepción de TDD más abajo — sin algo testeable no hay nada que testear antes de tocar el código); (c) el síntoma más simple — si no puedes escribir el test sin arrancar Express, esa es la señal, no una excusa para saltártelo.
 * **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
 * **TDD selectivo (no obligatorio salvo en dos áreas):** TDD estricto (test antes que código) NO es la norma en este proyecto — la velocidad de iteración depende de poder arreglar un bug o probar una idea en minutos, y aquí se cambia de diseño a media implementación con frecuencia, lo que dejaría obsoleto un test escrito primero junto con el código que describía. El estándar general sigue siendo el actual: tests escritos junto al fix o la feature, no antes.
-  * **Excepción obligatoria — aislamiento multi-banda (`band_id`/RLS) y todo lo que toca dinero (Stripe, ledger de IA — ver §4.4):** aquí sí se escribe el test del caso límite **antes** de tocar el código. Un bug en estas dos áreas no es un fallo visual, es "una banda ve datos de otra" o "se cobra mal".
+  * **Excepción obligatoria — aislamiento multi-banda (`band_id`/RLS) y todo lo que toca dinero (Stripe, ledger de IA — ver §4 punto 10):** aquí sí se escribe el test del caso límite **antes** de tocar el código. Un bug en estas dos áreas no es un fallo visual, es "una banda ve datos de otra" o "se cobra mal".
   * En ambas, el test debe verificar un **invariante**, no la implementación de hoy (ej. "ninguna query devuelve filas de otro `band_id`", "el ledger nunca queda negativo sin un evento que lo explique"), siguiendo el patrón de escaneo estático de `bandIdTrustBoundary.test.ts` en vez de un mock atado a una función concreta — así el test sigue protegiendo aunque la implementación cambie por completo.
 
 #### 5.3.2 E2E (Playwright) — smoke suite mínimo, no cobertura completa
@@ -227,15 +230,23 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 > Esta app hace **muchas** cosas (booking, agentes IA, reels, repertorio, finanzas, EPK, gira, fans...). Esa potencia solo es útil si **no satura la pantalla**. La complejidad vive en el backend y en la IA; la interfaz se mantiene minimalista. **Simplificar nunca significa perder funcionalidad: significa reubicarla.**
 
-1. **El contenido primero, los metadatos después.** Lo primero que se ve al abrir una pantalla es aquello a lo que el usuario venía (el gráfico, la lista, el calendario), no el título, ni las estadísticas, ni los botones de acciones secundarias. Si el contenido principal queda por debajo del pliegue en móvil, el orden está mal.
-2. **Móvil primero, de verdad.** Cada pantalla se diseña y se revisa a ~390 px de ancho. Un `flex-wrap` de badges que en escritorio ocupa 1 línea y en móvil se convierte en 6 **no es responsive**: es un layout de escritorio degradado. Cuando móvil y escritorio necesitan órdenes o densidades distintas, se usan layouts distintos (`hidden sm:flex` / `sm:hidden`, `order-*`), no uno solo que "más o menos" cabe.
-3. **Presupuesto del primer viewport móvil:** como máximo **3 bloques** (una cabecera compacta + el contenido principal + un bloque más) antes de tener que hacer scroll. Todo lo demás va plegado.
-4. **Acciones secundarias, detrás de un menú.** Compartir, imprimir, exportar, asignar, ajustes, configuraciones: en un único menú (`⋯` / `⚙️`), nunca como fila de botones de texto siempre visible. Regla práctica: si no se usa en la mayoría de las visitas a esa pantalla, no ocupa espacio permanente.
-5. **Estadísticas: una línea de resumen + desplegable.** Nunca una batería de pills. Se muestran las 2-3 métricas que de verdad se miran (p. ej. `28 temas · 111m · 120 BPM`) y el resto se pliega bajo un toggle.
-6. **Los textos de ayuda no viven en la pantalla.** Un hint largo entre paréntesis va al `title`/tooltip o desaparece. Si una función necesita un párrafo para entenderse, el problema es la función, no la falta de explicación.
-7. **Ningún componente decorativo sin trabajo que hacer.** Badges que repiten información ya visible, títulos de sección obvios, contadores que nadie mira: fuera.
-8. **Regla de intercambio al añadir:** antes de meter un elemento nuevo y permanente en una pantalla existente, hay que decir explícitamente qué se quita o dónde se pliega. La pantalla no crece por acumulación.
-9. **Prohibido "simplificar" borrando capacidad.** Toda funcionalidad existente se conserva; se mueve a un menú, un desplegable, un modal o una vista secundaria. Si de verdad hay que eliminar algo, se pregunta antes.
+1. **El contenido primero, los metadatos después.** Lo primero que se ve al abrir una pantalla es aquello a lo que el usuario venía (el gráfico, la lista, el calendario), no el título, ni las estadísticas, ni los botones de acciones secundarias. Ejemplo: `CalendarView.tsx` muestra el calendario directamente, no un panel de filtros primero. Si el contenido principal queda por debajo del pliegue en móvil, el orden está mal.
+
+2. **Móvil primero, de verdad.** Cada pantalla se diseña a ~390 px de ancho. Un `flex-wrap` de badges que en escritorio ocupa 1 línea y en móvil se convierte en 6 **no es responsive**: es degradación. Cuando móvil/escritorio necesitan órdenes distintas, se usan layouts separados (`hidden sm:flex`, `order-*`), no uno que "más o menos" cabe. Contraejemplo evitado: `RepertorioSetlists.tsx` tiene breakpoints explícitos para densidad en móvil.
+
+3. **Presupuesto del primer viewport móvil:** máximo **3 bloques** (cabecera compacta + contenido principal + 1 más) antes de scroll. Todo lo demás: plegado. Ejemplo: `BookingCRM.tsx` en móvil muestra lista de leads, filtros en menú hamburguesa.
+
+4. **Acciones secundarias, detrás de un menú.** Compartir, imprimir, exportar, asignar, ajustes: en un único menú (`⋯` / `⚙️`), nunca fila de botones. Si no se usa en la mayoría de visitas, no ocupa espacio permanente. Referencia: componentes de menú usan `<DropdownMenu>` de `lucide-react`.
+
+5. **Estadísticas: una línea de resumen + desplegable.** Nunca batería de pills. Se muestran 2-3 métricas clave (ej. `28 temas · 111m · 120 BPM`) y el resto bajo un toggle. Patrón: `<StatsLine>` + `<StatsExpanded>` con `hidden` en móvil.
+
+6. **Los textos de ayuda no viven en la pantalla.** Un hint largo va a `title`/tooltip o desaparece. Si una función necesita párrafo explicativo, el problema es la función, no la UI. Técnica: `<Tooltip>` para detalles; refactorizar si no cabe.
+
+7. **Ningún componente decorativo sin trabajo que hacer.** Badges que repiten información visible, títulos obvios, contadores ignorados: fuera. Cada elemento debe responder "¿por qué está aquí?" antes de entrar.
+
+8. **Regla de intercambio al añadir:** antes de meter elemento nuevo y permanente, di explícitamente qué se quita o dónde se pliega. La pantalla no crece por acumulación — es intercambio, no suma.
+
+9. **Prohibido "simplificar" borrando capacidad.** Toda funcionalidad existente se conserva; se mueve a menú, desplegable, modal o vista secundaria. Eliminar algo requiere pregunta previa — nunca en silencio.
 
 ---
 
