@@ -686,6 +686,59 @@ export default function CalendarView({
    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
  }, []);
 
+ // Ficha Modal Emergente y Navegación Cronológica: lista unificada de conciertos + ensayos
+ // de la banda activa, ordenada por fecha, para poder pasar de uno a otro con < / > sin
+ // tener que volver al calendario y buscar el siguiente a mano.
+ const [showEventFichaModal, setShowEventFichaModal] = useState(false);
+
+ const allChronologicalEvents = React.useMemo(() => {
+   type ChronoEvent = { id: string; fecha: string; kind: 'concert' | 'rehearsal'; data: Concert | Rehearsal };
+   const combined: ChronoEvent[] = [
+     ...activeBandConcerts.map(c => ({ id: c.id, fecha: c.fecha, kind: 'concert' as const, data: c })),
+     ...activeBandRehearsals.map(r => ({ id: r.id, fecha: r.fecha, kind: 'rehearsal' as const, data: r })),
+   ];
+   combined.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+   return combined;
+ }, [activeBandConcerts, activeBandRehearsals]);
+
+ const handleSelectEvent = React.useCallback((evt: { id: string; fecha: string }) => {
+   const dateStr = evt.fecha.split('T')[0];
+   const parts = dateStr.split('-');
+   if (parts.length === 3) {
+     const y = parseInt(parts[0], 10);
+     const m = parseInt(parts[1], 10) - 1;
+     const d = parseInt(parts[2], 10);
+     if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+       setSelectedDate(new Date(y, m, d));
+     }
+   }
+   setSelectedEventId(evt.id);
+   setShowEventFichaModal(true);
+ }, []);
+
+ const activeChronoIndex = React.useMemo(
+   () => (selectedEventId ? allChronologicalEvents.findIndex(e => e.id === selectedEventId) : -1),
+   [allChronologicalEvents, selectedEventId]
+ );
+
+ const goToAdjacentEvent = React.useCallback((direction: 1 | -1) => {
+   if (allChronologicalEvents.length === 0) return;
+   const currentIndex = activeChronoIndex >= 0 ? activeChronoIndex : 0;
+   const nextIndex = (currentIndex + direction + allChronologicalEvents.length) % allChronologicalEvents.length;
+   handleSelectEvent(allChronologicalEvents[nextIndex].data);
+ }, [allChronologicalEvents, activeChronoIndex, handleSelectEvent]);
+
+ // Atajos de teclado de la Ficha Modal: Esc ya lo gestiona ModalPortal internamente.
+ useEffect(() => {
+   if (!showEventFichaModal) return;
+   const handleKeyDown = (e: KeyboardEvent) => {
+     if (e.key === 'ArrowLeft') goToAdjacentEvent(-1);
+     else if (e.key === 'ArrowRight') goToAdjacentEvent(1);
+   };
+   window.addEventListener('keydown', handleKeyDown);
+   return () => window.removeEventListener('keydown', handleKeyDown);
+ }, [showEventFichaModal, goToAdjacentEvent]);
+
  useEffect(() => {
  let isMounted = true;
  fetch('/api/setlists')
@@ -1721,8 +1774,7 @@ export default function CalendarView({
                         key={c.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(new Date(year, month, cell.day));
-                          setSelectedEventId(c.id);
+                          handleSelectEvent(c);
                         }}
                         className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
                           isSelected ? 'bg-stone-950/20 text-stone-950' : 'bg-amber-500/25 text-amber-300 border border-amber-500/40'
@@ -1760,8 +1812,7 @@ export default function CalendarView({
                         key={r.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(new Date(year, month, cell.day));
-                          setSelectedEventId(r.id);
+                          handleSelectEvent(r);
                         }}
                         className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
                           isSelected
@@ -1919,8 +1970,7 @@ export default function CalendarView({
                         key={c.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(d);
-                          setSelectedEventId(c.id);
+                          handleSelectEvent(c);
                         }}
                         className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
                           isEvtSelected
@@ -1975,8 +2025,7 @@ export default function CalendarView({
                         key={r.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(d);
-                          setSelectedEventId(r.id);
+                          handleSelectEvent(r);
                         }}
                         className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
                           isEvtSelected
@@ -2172,10 +2221,7 @@ export default function CalendarView({
                       return (
                         <div
                           key={evt.id}
-                          onClick={() => {
-                            setSelectedDate(d);
-                            setSelectedEventId(evt.id);
-                          }}
+                          onClick={() => handleSelectEvent(evt)}
                           className={`flex items-center justify-between p-2.5 rounded-lg cursor-pointer border transition-all ${
                             isEvtSelected
                               ? 'bg-amber-500/20 border-amber-400 shadow-md ring-1 ring-amber-400/50'
@@ -2511,6 +2557,31 @@ export default function CalendarView({
                 )}
               </button>
             </div>
+
+            {/* Botón destacado "VER FICHA (MODAL)": abre la Ficha Modal centrada del evento activo,
+                o el primero programado si todavía no hay ninguno seleccionado. */}
+            <button
+              id="calendar-view-ficha-modal-btn"
+              onClick={() => {
+                if (allChronologicalEvents.length === 0) return;
+                if (activeChronoIndex >= 0) {
+                  setShowEventFichaModal(true);
+                } else {
+                  handleSelectEvent(allChronologicalEvents[0].data);
+                }
+              }}
+              disabled={allChronologicalEvents.length === 0}
+              title="Ver la ficha del evento en un modal centrado, con navegación entre eventos"
+              className="px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg border border-amber-300/60 bg-gradient-to-r from-amber-400 to-yellow-600 text-stone-950 shadow-lg shadow-amber-500/20 transition-all cursor-pointer flex items-center gap-1.5 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-110"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">VER FICHA (MODAL)</span>
+              {allChronologicalEvents.length > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-stone-950/20 text-stone-950 font-black">
+                  {(activeChronoIndex >= 0 ? activeChronoIndex + 1 : 1)}/{allChronologicalEvents.length}
+                </span>
+              )}
+            </button>
 
             {/* Botón de Pantalla Completa */}
             <button
@@ -3142,6 +3213,21 @@ export default function CalendarView({
  </p>
  </div>
  <div className="flex flex-col gap-1.5 shrink-0 self-start">
+ {(selectedConcert || selectedRehearsal) && (
+ <button
+ type="button"
+ onClick={() => setShowEventFichaModal(true)}
+ className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer items-center gap-1 ${
+ isStitchLight
+ ? 'bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100'
+ : 'bg-gradient-to-r from-amber-500/20 to-yellow-600/20 border-amber-400/60 text-amber-300 hover:from-amber-500/30 hover:to-yellow-600/30'
+ }`}
+ title="Ampliar esta ficha en un modal centrado"
+ >
+ <Maximize2 className="w-3 h-3" />
+ Ampliar
+ </button>
+ )}
  {(selectedConcert || selectedRehearsal) && (
  <button
  type="button"
@@ -5257,6 +5343,173 @@ export default function CalendarView({
  </div>
  </ModalPortal>
  )}
+
+ {/* Ficha Modal Emergente y Centrada del Evento, con navegación cronológica < / > entre
+     todos los conciertos y ensayos de la banda activa. */}
+ {showEventFichaModal && (() => {
+   const modalEvent = selectedConcert || selectedRehearsal;
+   const modalBandInfo = getBandIdentity(modalEvent?.band_id, (modalEvent as any)?.bandName || (modalEvent as any)?.band_name);
+   const modalPosLabel = allChronologicalEvents.length > 0
+     ? `${activeChronoIndex >= 0 ? activeChronoIndex + 1 : 1} de ${allChronologicalEvents.length}`
+     : '';
+   return (
+     <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
+       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+         <div className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[92vh] overflow-y-auto ${
+           isStitchLight ? 'bg-white border-amber-300 text-slate-900' : 'bg-[#141414] border-amber-500/50 text-neutral-100 shadow-amber-500/10'
+         }`}>
+           {/* Barra superior del modal: navegación cronológica entre eventos */}
+           <div className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 border-b backdrop-blur-md ${
+             isStitchLight ? 'bg-white/95 border-amber-200' : 'bg-[#141414]/95 border-amber-500/30'
+           }`}>
+             <button
+               type="button"
+               onClick={() => goToAdjacentEvent(-1)}
+               disabled={allChronologicalEvents.length === 0}
+               className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+               title="Evento anterior (←)"
+             >
+               <ChevronLeft className="w-4 h-4" />
+               <span className="hidden sm:inline">Anterior</span>
+             </button>
+
+             <div className="flex flex-col items-center min-w-0">
+               <span className="text-[9px] font-mono uppercase tracking-widest text-amber-400/80 font-bold">Ficha de Evento</span>
+               {modalPosLabel && (
+                 <span className={`text-[10px] font-mono font-bold ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>{modalPosLabel}</span>
+               )}
+             </div>
+
+             <div className="flex items-center gap-1.5">
+               <button
+                 type="button"
+                 onClick={() => goToAdjacentEvent(1)}
+                 disabled={allChronologicalEvents.length === 0}
+                 className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                 title="Evento siguiente (→)"
+               >
+                 <span className="hidden sm:inline">Siguiente</span>
+                 <ChevronRight className="w-4 h-4" />
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setShowEventFichaModal(false)}
+                 className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+                 title="Cerrar (Esc)"
+               >
+                 ✕
+               </button>
+             </div>
+           </div>
+
+           <div className="p-5 sm:p-7">
+             {/* Cabecera: Logo HD + identidad de banda + título */}
+             <div className="flex items-center gap-4 pb-4 mb-4 border-b border-amber-500/20">
+               {modalBandInfo.logoUrl ? (
+                 <img
+                   src={modalBandInfo.logoUrl}
+                   alt={modalBandInfo.name}
+                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-contain bg-black/40 p-1.5 shrink-0 border border-amber-400/40 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+                   onError={(e) => {
+                     (e.currentTarget as HTMLElement).style.display = 'none';
+                     const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
+                     if (fb) (fb as HTMLElement).classList.remove('hidden');
+                   }}
+                 />
+               ) : null}
+               <span className={`fallback-initials-modal w-16 h-16 sm:w-20 sm:h-20 rounded-2xl shrink-0 flex items-center justify-center text-2xl font-black drop-shadow-lg ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}>
+                 {modalBandInfo.initials}
+               </span>
+               <div className="min-w-0 flex-1">
+                 <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center gap-1">
+                   🎸 {modalBandInfo.name}
+                 </span>
+                 <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
+                 <p className={`text-[11px] font-mono mt-0.5 ${textSub}`}>
+                   {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+                 </p>
+               </div>
+               {(selectedConcert || selectedRehearsal) && (
+                 <button
+                   type="button"
+                   onClick={() => {
+                     setShowEventFichaModal(false);
+                     if (selectedConcert) setViewingConcert(selectedConcert);
+                     if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
+                   }}
+                   className="shrink-0 px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-neutral-900 border-amber-500/40 text-amber-300 hover:bg-neutral-800"
+                 >
+                   ✎ Editar
+                 </button>
+               )}
+             </div>
+
+             {/* Ficha de detalles: hora, lugar, compensación, gira, convocatoria y notas */}
+             <div className={`space-y-3 rounded-lg p-4 ${isStitchLight ? 'bg-slate-50' : 'bg-[#131313]/60'}`}>
+               <div className="flex items-center gap-2 text-[11px]">
+                 <Clock className={`w-4 h-4 shrink-0 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`} />
+                 <span className={`font-mono ${textSub}`}>Hora:</span>
+                 <span className={`font-bold font-mono ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>{selectedEventDetails.time}</span>
+               </div>
+               <div className="flex items-start gap-2 text-[11px]">
+                 <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'}`} />
+                 <div className="flex-1 min-w-0">
+                   <span className={`font-mono ${textSub}`}>Lugar:</span>
+                   <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
+                   {selectedEventDetails.direccion && (
+                     <p className={`text-[11px] font-sans mt-1 ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>
+                       <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
+                     </p>
+                   )}
+                 </div>
+               </div>
+               {selectedEventDetails.locationQuery && selectedEventDetails.type !== 'free' && (
+                 <div className="pt-2 flex justify-center">
+                   <DirectionsCard
+                     query={selectedEventDetails.locationQuery}
+                     locationName={selectedEventDetails.lugar}
+                     address={selectedEventDetails.direccion}
+                     isStitchLight={isStitchLight}
+                   />
+                 </div>
+               )}
+               {!isPromoPlan && selectedEventDetails.type === 'concert' && (
+                 <div className="flex items-center gap-2 text-[11px] pt-2 border-t border-neutral-800/40">
+                   <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
+                   <span className={`font-mono ${textSub}`}>Compensación:</span>
+                   <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
+                 </div>
+               )}
+               {selectedConcert?.giraNombre && (
+                 <div className="flex items-center gap-2 text-[11px] pt-2 border-t border-neutral-800/40">
+                   <Navigation className="w-4 h-4 text-amber-400 shrink-0" />
+                   <span className={`font-mono ${textSub}`}>Gira:</span>
+                   <span className="font-bold font-mono text-amber-400">🚐 {selectedConcert.giraNombre}</span>
+                 </div>
+               )}
+               {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
+                 <div className="flex items-center gap-2 text-[11px] pt-2 border-t border-neutral-800/40">
+                   <Users className="w-4 h-4 text-sky-400 shrink-0" />
+                   <span className={`font-mono ${textSub}`}>Convocatoria:</span>
+                   <span className="font-bold font-mono text-sky-400">
+                     {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
+                       ? 'Banda Completa'
+                       : `Parcial (${(selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres || []).join(', ') || 'Seleccionados'})`}
+                   </span>
+                 </div>
+               )}
+               {selectedEventDetails.notes && (
+                 <div className={`text-[11px] font-sans italic pt-2 border-t border-neutral-800/40 leading-relaxed ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                   &ldquo;{selectedEventDetails.notes}&rdquo;
+                 </div>
+               )}
+             </div>
+           </div>
+         </div>
+       </div>
+     </ModalPortal>
+   );
+ })()}
 
  {/* Tutorial Interactivo Paso a Paso */}
  <ModuleTutorialModal
