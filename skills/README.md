@@ -86,7 +86,7 @@ Referencia directa: `/skills/NOMBRE_SKILL/SKILL.md`
 
 ## 📖 Flujo Típico de Desarrollo
 
-1. **Lee** `context/AGENT_CONTEXT.md` (5 min, visión general)
+1. **Lee** `AGENTS.md` (raíz del repo) — es la fuente de verdad de instrucciones del proyecto, no este directorio
 2. **Identifica** qué área tocas (agentes, seguridad, UX, DB)
 3. **Carga el Skill correspondiente** desde aquí
 4. **Sigue el checklist** del skill antes de hacer PR
@@ -96,10 +96,12 @@ Referencia directa: `/skills/NOMBRE_SKILL/SKILL.md`
 
 ## 🔄 Sincronización Entre Tools
 
-Estos skills son **single source of truth**. Si usas múltiples herramientas:
-- **Claude Code** → Lee desde aquí o desde `.claude/skills/` (symlink/copia)
-- **Google AI Studio** → Lee desde `.gemini/skills/` (symlink a `/skills/`)
-- **GitHub Copilot** → Referencia directa desde `.copilot/skills/` o `/skills/`
+`/skills/` (aquí) es la fuente única. `.claude/skills/` y `.gemini/skills/` son **copias reales** (no symlinks — un symlink no sobrevive de forma fiable un build/deploy de Railway), una por herramienta:
+- **Claude Code** → lee desde `.claude/skills/` (copia real, se carga con `/skill <nombre>`)
+- **Google AI Studio** → lee desde `.gemini/skills/` (copia real)
+- **GitHub Copilot** → referencia directa a `/skills/` (sin copia propia, referencia el path en el prompt)
+
+**Importante — esto es una copia manual, no automática:** si editas un `SKILL.md`, cópialo también a `.claude/skills/<nombre>/` y `.gemini/skills/<nombre>/` en el mismo commit. No hay tooling que lo sincronice solo todavía — es la misma trampa de deriva que tuvo `context/` (retirado; ver `git log -- context/` si hace falta recuperar algo de esa carpeta), así que no dejes que las copias se desincronicen del original.
 
 ---
 
@@ -122,6 +124,6 @@ Estos skills son **single source of truth**. Si usas múltiples herramientas:
 
 ---
 
-**Para agentes de IA:** Lee primero `context/AGENT_CONTEXT.md`, luego ve al skill específico.
+**Para agentes de IA:** Lee primero `AGENTS.md` (raíz), luego ve al skill específico.
 
-**Última actualización:** 2026-09-08
+**Última actualización:** 2026-09-17

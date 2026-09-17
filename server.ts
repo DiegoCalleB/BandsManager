@@ -481,7 +481,10 @@ app.get("/api/state", async (req, res) => {
 });
 
 // Static clip serving
-app.use("/clips", express.static(path.join(process.cwd(), "public", "clips")));
+app.use("/clips", (req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+}, express.static(path.join(process.cwd(), "public", "clips")));
 
 // 404 catch-all for API endpoints to prevent returning index.html for missing routes
 app.use("/api/*", (req, res) => {
