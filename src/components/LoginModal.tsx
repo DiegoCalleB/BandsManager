@@ -217,9 +217,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       setResetMaskedEmail(data.emailMasked);
-      if (data.code) {
-        setResetCode(data.code);
-      }
       setResetSuccessMsg(data.message || 'Código de recuperación generado.');
       setResetStep(2);
     } catch (err: any) {
@@ -727,11 +724,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
                 <div className="space-y-1">
                   <p>{resetSuccessMsg}</p>
-                  {resetCode && (
-                    <p className="font-mono bg-emerald-950/60 text-emerald-300 px-2 py-1 rounded text-center font-bold tracking-widest border border-emerald-500/20 mt-1">
-                      Código de verificación: {resetCode}
-                    </p>
-                  )}
                 </div>
               </div>
             )}
@@ -751,7 +743,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 </div>
 
                 <p className="text-[11px] text-neutral-400 px-1 leading-tight">
-                  ⚡ Se generará un código de verificación de 6 dígitos, que aparecerá aquí mismo en pantalla para restablecer tu contraseña.
+                  ⚡ Te enviaremos un código de verificación de 6 dígitos por correo electrónico para restablecer tu contraseña.
                 </p>
 
                 <button
@@ -784,17 +776,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       required
                     />
                   </div>
-                  {resetCode && (
-                    <div className="flex justify-end pt-0.5">
-                      <button
-                        type="button"
-                        onClick={() => setError(null)}
-                        className="text-[11px] text-[#f2ca50] hover:underline font-mono flex items-center gap-1 cursor-pointer"
-                      >
-                        ✓ Código cargado: {resetCode}
-                      </button>
-                    </div>
-                  )}
                 </div>
 
                 <div className="space-y-1">

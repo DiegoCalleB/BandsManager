@@ -691,15 +691,20 @@ export default function CalendarView({
  // tener que volver al calendario y buscar el siguiente a mano.
  const [showEventFichaModal, setShowEventFichaModal] = useState(false);
 
+ // Usa filteredConcerts/filteredRehearsals (no activeBandConcerts/activeBandRehearsals): esas
+ // dos ya respetan el toggle "Todos / banda activa" y la convocatoria con el que se pintan el
+ // resto de vistas del calendario (mes, semana, agenda). Si la navegación de la Ficha Modal
+ // usara solo la banda activa, un clic en un evento de "Todos" caía fuera de la lista y el
+ // contador se quedaba clavado en "1 de 1" aunque hubiera 8 eventos visibles en pantalla.
  const allChronologicalEvents = React.useMemo(() => {
    type ChronoEvent = { id: string; fecha: string; kind: 'concert' | 'rehearsal'; data: Concert | Rehearsal };
    const combined: ChronoEvent[] = [
-     ...activeBandConcerts.map(c => ({ id: c.id, fecha: c.fecha, kind: 'concert' as const, data: c })),
-     ...activeBandRehearsals.map(r => ({ id: r.id, fecha: r.fecha, kind: 'rehearsal' as const, data: r })),
+     ...filteredConcerts.map(c => ({ id: c.id, fecha: c.fecha, kind: 'concert' as const, data: c })),
+     ...filteredRehearsals.map(r => ({ id: r.id, fecha: r.fecha, kind: 'rehearsal' as const, data: r })),
    ];
    combined.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
    return combined;
- }, [activeBandConcerts, activeBandRehearsals]);
+ }, [filteredConcerts, filteredRehearsals]);
 
  const handleSelectEvent = React.useCallback((evt: { id: string; fecha: string }) => {
    const dateStr = evt.fecha.split('T')[0];

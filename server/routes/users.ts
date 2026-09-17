@@ -19,6 +19,7 @@ import {
   dbMigrateAllPlansToNewTiers,
   dbCleanCorruptedLeadFields
 } from "../db.js";
+import { sendTransactionalEmail } from "../services/transactionalEmail.js";
 
 // Run asynchronous migration & cleanup checks on database records
 dbMigrateAllPlansToNewTiers().catch(() => {});
@@ -1078,11 +1079,32 @@ router.post("/auth/reset-password/request", loginRateLimiter, async (req, res) =
     maskedEmail = `${maskedName}@${domain}`;
   }
 
+  // El código solo vale como prueba de que el usuario controla ESE correo si de verdad se lo
+  // enviamos ahí; devolverlo en la respuesta (como hacía antes esta ruta) rompe la comprobación
+  // por completo y deja resetear la contraseña de cualquiera con solo saber su email/usuario.
+  if (user.email && user.email.includes("@")) {
+    sendTransactionalEmail({
+      to: user.email,
+      subject: `Tu código de recuperación de contraseña: ${code}`,
+      html: `
+        <div style="font-family: sans-serif; background:#09090b; color:#f4f4f5; padding:32px;">
+          <h2 style="margin:0 0 16px 0;">Recuperación de contraseña</h2>
+          <p>Usa este código para restablecer tu contraseña en BandManager. Caduca en 15 minutos.</p>
+          <p style="font-size:32px; font-weight:800; letter-spacing:6px; background:#18181b; border:1px solid #27272a; border-radius:8px; padding:16px; text-align:center;">${code}</p>
+          <p style="font-size:13px; color:#a1a1aa;">Si no has solicitado este cambio, ignora este correo.</p>
+        </div>
+      `
+    }).catch((err) => {
+      console.error(`Error enviando email de reseteo de contraseña a ${user.email}:`, err?.message || err);
+    });
+  } else {
+    console.error(`No se pudo enviar el código de reseteo: el usuario "${cleanInput}" no tiene un email válido.`);
+  }
+
   return res.json({
     success: true,
-    message: `Código de verificación generado para ${maskedEmail}`,
-    emailMasked: maskedEmail,
-    code
+    message: `Código de verificación enviado a ${maskedEmail}`,
+    emailMasked: maskedEmail
   });
 });
 

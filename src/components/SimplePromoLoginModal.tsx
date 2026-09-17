@@ -126,7 +126,6 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         throw new Error(data.error || 'No se pudo procesar la solicitud.');
       }
       setResetMaskedEmail(data.emailMasked);
-      if (data.code) setResetCode(data.code);
       setResetSuccessMsg(data.message || 'Código de recuperación generado.');
       setResetStep(2);
     } catch (err: any) {
