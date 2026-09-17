@@ -22,19 +22,20 @@ La interacción con Supabase sigue una arquitectura modular en tres capas:
 ## 📝 2. Convención para Handlers de Base de Datos (`server/db/*.ts`)
 
 ### Firma Estándar de Mutación (Upsert / Update / Delete)
-Toda función de persistencia debe recibir explícitamente el `bandId` validado:
+Toda función de persistencia debe recibir explícitamente el `bandId` validado. El cliente de Supabase se obtiene con `getSupabase()` desde `./core.js` — **no existe** `server/supabaseClient.ts`; es un error común de memoria, no un archivo real del repo:
 
 ```typescript
-import { supabase } from '../supabaseClient.js';
+import { getSupabase } from './core.js';
 
 export async function dbUpsertConcert(concertData: Partial<Concert>, bandId: string): Promise<Concert> {
+  const sb = getSupabase();
   const payload = {
     ...concertData,
     band_id: bandId, // ✅ Garantiza que el registro pertenece a la banda
     updated_at: new Date().toISOString()
   };
 
-  const { data, error } = await supabase
+  const { data, error } = await sb
     .from('concerts')
     .upsert(payload)
     .select()
@@ -74,9 +75,11 @@ CREATE INDEX IF NOT EXISTS idx_band_campaigns_band_id ON public.band_campaigns(b
 
 ---
 
-## 🔐 4. Row Level Security (RLS) en Supabase
+## 🔐 4. Row Level Security (RLS) en Supabase — estado real, no aspiracional
 
-Para mayor seguridad a nivel de base de datos, las tablas en producción activan RLS garantizando que el usuario solo acceda a su `band_id`:
+**Cómo está hoy, de verdad:** las 40 políticas RLS de `supabase_schema.sql` son `USING (true)` ("Permitir acceso total al backend") en todas las tablas — RLS está *activado* pero *no restringe nada*. El aislamiento por `band_id` es 100% responsabilidad de la capa de aplicación (`getTargetBandId(req)`, ver skill `security-multitenancy`) — no hay red de seguridad de base de datos por debajo si esa capa falla. No generes código asumiendo que una política `USING (band_id = ...)` ya existe: no es así, y una tabla nueva sigue el mismo patrón (`USING (true)`) salvo que se decida explícitamente reforzarla.
+
+**Si el mánager pide reforzar RLS de verdad** (dirección de hardening, no el patrón por defecto de este proyecto):
 
 ```sql
 ALTER TABLE public.band_campaigns ENABLE ROW LEVEL SECURITY;
@@ -85,6 +88,8 @@ CREATE POLICY "Aislamiento por Banda" ON public.band_campaigns
     FOR ALL
     USING (band_id = auth.jwt() ->> 'band_id');
 ```
+
+Antes de aplicar esto a una tabla existente, confirma que el JWT que usa el backend para conectar a Supabase realmente lleva un claim `band_id` explotable así — si el backend se conecta con la service role key (que **bypasea RLS por completo**), esta política no protege nada y el cambio da una falsa sensación de seguridad.
 
 ---
 

@@ -36,6 +36,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * Las funciones de acceso a datos (`dbUpsertX(objeto, bandId)`) deben usar ÚNICAMENTE el `bandId` resuelto por el middleware/sesión.
    * Queda estrictamente prohibido el patrón peligroso `cleanBandId(objeto.band_id || bandId)`. Existe una prueba estática en CI (`server/db/__tests__/bandIdTrustBoundary.test.ts`) que escaneará y fallará el build si se reintroduce este patrón.
 3. **Filtros de Exportación Bulk:** Endpoints como `GET /api/download-excel` deben filtrar los resultados estrictamente por el `band_id` autenticado.
+4. **RLS en Supabase — activado pero no restrictivo, no es una red de seguridad real:** las 40 políticas de Row Level Security en `supabase_schema.sql` son `USING (true)` ("Permitir acceso total al backend") en todas las tablas. El aislamiento multi-banda real es **100% capa de aplicación** (`getTargetBandId`, puntos 1-2 de arriba) — si algún día hay un bug ahí, o la service role key se usa mal en un contexto nuevo, no hay ningún filtro de RLS por debajo que lo contenga. No asumas lo contrario al leer ejemplos de RLS estricto en `skills/supabase-architect/SKILL.md` — esos son una dirección de hardening recomendada, no una descripción de cómo está configurado hoy.
 
 ### 2.2 Seguridad API, Auth & Sanitización
 1. **Autenticación y Middleware:** 
@@ -87,7 +88,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * `dispatch_mode` (`autonomy_configs`) decide solo qué pasa DESPUÉS de esa aprobación (borrador en Gmail/IMAP para revisión final o despacho directo). Nunca omite la aprobación.
    * **Interruptor de Seguridad Global:** `AGENT_EMAIL_MODE=send` en variables de entorno del servidor. Si no está en `send`, el sistema actúa en modo seguro (`draft`).
 
-2. **Modelo de Estados en 2 Dimensiones (CRM + Agentes IA):**
+2. **Modelo de Estados en 2 Dimensiones (CRM + Agentes IA):** es un único campo (`Lead.estado`, tipo `LeadStatus` en `src/types.ts`) — las "2 dimensiones" son una agrupación conceptual del mismo enum, no dos columnas de Supabase. `pitch_generado` es un campo de **texto** aparte (el contenido del email), nunca un valor de `estado`. El tipo tiene además valores legacy/transicionales fuera de esta lista curada (`enviado`, `interesado`, `aprobado`, `descartado`) — si necesitas el listado completo y exacto, mira `src/types.ts` directamente en vez de fiarte de esta lista.
    * **Dimensión 1: Estado del Lead en el Embudo CRM (`estado`):**
      * `nuevo`: Lead registrado por el Scout o manualmente.
      * `contactado` / `esperando_respuesta`: Email inicial enviado.
@@ -132,7 +133,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 3. **Campañas de Booking (`server/routes/campaigns.ts`):**
    * Gestión de campañas masivas segmentadas con scoping estricto por `band_id` resuelto en sesión.
 
-4. **Gestión de Ensayos (`server/routes/rehearsals.ts`, `src/components/ensayos/`):**
+4. **Gestión de Ensayos (endpoints en `server/routes/concerts.ts`, capa de datos en `server/db/rehearsals.ts`, `src/components/ensayos/`):**
    * Orden del día, cronómetro de bloque, grabación/acta, modo local en vivo.
    * Cálculo de duración total, detección de cues de audio para precisar transiciones.
    * Integración con repertorio para vincular canciones a ensayos y extraer métricas de desempeño.

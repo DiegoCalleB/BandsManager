@@ -118,4 +118,5 @@ if (!limitCheck.allowed) {
 - [ ] ¿Las URLs externas pasan por `esUrlExternaSegura`?
 - [ ] ¿Los endpoints de IA incluyen `requireAuth` e `iaRateLimiter`?
 - [ ] ¿Se han ejecutado los tests de trust boundary (`npx vitest run server/db/__tests__/bandIdTrustBoundary.test.ts`)?
+- [ ] Si el diff toca datos externos (scraping, email entrante) que llegan a un prompt de IA: ¿pasa por `sanitizeExternalText` (`server/utils/promptSafety.ts`)? Ver skill `agentic-harness` para el detalle.
 

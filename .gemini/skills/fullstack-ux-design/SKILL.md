@@ -44,6 +44,13 @@ export function CardMetrica({ titulo, valor, icono: Icon }: Props) {
 - **Sin Placeholders:** Usar datos reales o generar imágenes de demostración si se requieren recursos visuales.
 - **Consumo de API Centralizado:** Utilizar siempre `src/services/api.ts` o `src/utils/api.ts` para llamadas HTTP. No hacer `fetch()` directo desde componentes.
 
+### Simplicidad en Pantalla (AGENTS.md §6 — regla transversal, léela completa antes de tocar UI)
+Lo de arriba (animaciones, glassmorphism) es la capa visual; esto manda sobre ella cuando entran en conflicto. Resumen de lo no negociable:
+- **Móvil primero de verdad**, ~390px, máximo 3 bloques antes de scroll en el primer viewport.
+- **Acciones secundarias detrás de un menú** (`⋯`/`⚙️`), nunca fila de botones siempre visible.
+- **Ningún componente decorativo sin trabajo que hacer** — un badge/animación bonita que no aporta información no entra solo porque "queda bien".
+- **Simplificar nunca es borrar funcionalidad** — se reubica (menú, modal, vista secundaria), nunca desaparece en silencio.
+
 ---
 
 ## ⚙️ 2. Estándares de Backend (Express + TypeScript)
@@ -96,3 +103,4 @@ describe('bandAccess helper', () => {
 - [ ] ¿Todas las peticiones HTTP usan `src/services/api.ts`?
 - [ ] ¿El handler asíncrono tiene un bloque `try/catch` adecuado?
 - [ ] ¿`npx tsc --noEmit` compila sin errores nuevos?
+- [ ] ¿Cabe en 3 bloques el primer viewport móvil (~390px)? ¿Las acciones secundarias están detrás de un menú?
