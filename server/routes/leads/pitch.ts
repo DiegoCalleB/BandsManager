@@ -6,6 +6,7 @@ import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback, isCampaignActive } from "../../utils/bandDna.js";
 import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, refineAllToneDnaCategoriesForBand, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
+import { sanitizeExternalText } from "../../utils/promptSafety.js";
 
 const router = express.Router();
 
@@ -63,9 +64,9 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
 
     const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache, negotiationStartCacheByType);
 
-    const prompt = `Redacta una propuesta comercial y artística de concierto para "${lead.nombre_sala}" en ${lead.ciudad || 'España'} (Tipo: ${lead.tipo || 'sala'}, Aforo: ${lead.aforo || 'N/D'}).
+    const prompt = `Redacta una propuesta comercial y artística de concierto para "${sanitizeExternalText(lead.nombre_sala)}" en ${sanitizeExternalText(lead.ciudad) || 'España'} (Tipo: ${sanitizeExternalText(lead.tipo) || 'sala'}, Aforo: ${lead.aforo || 'N/D'}).
 ${feedbackDetails.length > 0 ? `\nINSTRUCCIONES ADICIONALES DEL MÁNAGER:\n${feedbackDetails.join('\n')}` : ''}
-${lead.pitch_generado ? `\n(Versión previa de referencia: "${lead.pitch_generado.substring(0, 150)}...")` : ''}`;
+${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalText(lead.pitch_generado.substring(0, 150))}...")` : ''}`;
 
     const pitchLinks = {
       spotify: bandDna.spotifyUrl,
@@ -163,11 +164,11 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
 
     const systemPrompt = buildEnhancedPitchSystemPrompt(bandDna, globalMemory, lead, activeCampaign, bandMinCache, negotiationStartCacheByType);
 
-    const prompt = `Reescribe y perfecciona el correo de pitch para "${lead.nombre_sala}" en ${lead.ciudad || "España"} (Tipo: ${lead.tipo || "sala"}, Aforo: ${lead.aforo || "N/D"}).
+    const prompt = `Reescribe y perfecciona el correo de pitch para "${sanitizeExternalText(lead.nombre_sala)}" en ${sanitizeExternalText(lead.ciudad) || "España"} (Tipo: ${sanitizeExternalText(lead.tipo) || "sala"}, Aforo: ${lead.aforo || "N/D"}).
 
-PITCH ANTERIOR:
+PITCH ANTERIOR (texto generado por nuestra propia IA en una vuelta anterior, no del destinatario):
 """
-${previousPitch || "Sin pitch anterior."}
+${sanitizeExternalText(previousPitch || "Sin pitch anterior.", 3000)}
 """
 
 FEEDBACK E INSTRUCCIONES ESPECÍFICAS DEL MÁNAGER:
