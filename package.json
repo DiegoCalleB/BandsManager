@@ -14,6 +14,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "lint:eslint": "eslint .",
+    "verify:docs": "node scripts/verify-docs-refs.cjs",
     "prepare": "husky || exit 0"
   },
   "dependencies": {
@@ -83,6 +84,8 @@
     "vitest": "^4.1.10"
   },
   "lint-staged": {
-    "**/*.{ts,tsx}": "eslint --fix"
+    "**/*.{ts,tsx}": "eslint --fix",
+    "{AGENTS,CLAUDE,TOOL_COMPATIBILITY,AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
+    "skills/**/*.md": "node scripts/verify-docs-refs.cjs"
   }
 }
