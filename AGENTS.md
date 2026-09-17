@@ -1,17 +1,13 @@
-# 🎸 AGENTS.md — Instrucciones y Directivas del Agente de Código (BandManager.io / Bakandeya)
+# AGENTS.md — Instrucciones para agentes de código (BandManager.io / Bakandeya)
 
-> **🏆 DIRECTIVA SUPREMA Y OBJETIVO DE HONOR (TFM DE ÉLITE):**
-> Este proyecto constituye el núcleo técnico y práctico del **Trabajo Fin de Máster (TFM) sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica**. 
-> 
-> **La meta innegociable es obtener la Mención de Honor (Matrícula de Honor)** y posicionar este TFM como **el mejor trabajo de toda la historia del máster**, de la promoción actual y de todas las promociones futuras. Debe sobresalir de manera indiscutible frente a cualquier otro proyecto presentado, superando con creces los estándares académicos y técnicos habituales, demostrando una arquitectura, robustez, elegancia y nivel de acabado superior incluso a lo que el claustro docente del máster podría concebir o construir conjuntamente.
-> 
-> **Misión de Producto:** Desarrollar la plataforma integral definitiva (**BandManager.io**) que todo músico y banda independiente necesita para automatizar su booking, logística de gira, prensa, contenido viral en redes, repertorio multipista con IA y finanzas.
->
-> **Criterios de Excelencia Continua:**
-> - **Cero Tolerancia a Fallos Nuevos:** cero errores nuevos de TypeScript sobre el baseline de CI (§5.1, margen de 5 para no romper por una actualización menor de `@types`, nunca "cero absoluto" — eso contradiría el propio ratchet documentado más abajo), suite de tests pasando al 100% (895 tests a 2026-09-15, ver §5.3.1 para el número vivo), trazabilidad y sanitización total de datos.
-> - **Artesanía de Software de Nivel Producción:** Resiliencia ante caídas de red, idempotencia, persistencia blindada (Supabase PostgreSQL), seguridad anti-SSRF y separación multi-tenancy infalible.
-> - **Blindaje Inexpugnable y Protección de Derechos de Autor (IP):** Protección de grado bancario para las maquetas inéditas, stems, letras, caché de negociaciones y datos de fans de los músicos. La plataforma está concebida para resistir intentos de sabotaje, ataques de denegación de servicio (DDoS), inyecciones y scraping malicioso por parte de competidores o agencias tradicionales de management.
-> - **Experiencia de Usuario Insuperable:** Rendimiento inmediato (~8ms en caché), interfaces intuitivas, densas pero despejadas, diseño responsive impecable y feedback visual transparente sin fallbacks silenciosos.
+Plataforma integral para bandas y artistas independientes (booking CRM, agentes de IA, EPK, repertorio, finanzas) y núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica. Este documento tiene precedencia sobre convenciones genéricas — léelo antes de tocar el repositorio.
+
+**No negociable, sin excepción:**
+- Ningún dato de una banda visible para otra (§2.1).
+- Ningún envío de email automatizado por un agente sin aprobación humana explícita (§3).
+- Cero errores *nuevos* de TypeScript sobre el baseline de CI (§5.1) — la deuda existente no se exige arreglar de golpe, pero no crece.
+
+**Índice:** 1. Arquitectura · 2. Seguridad y multi-tenancy · 3. Agentes IA · 4. Subsistemas · 5. Código y calidad · 6. Simplicidad en pantalla · 7. Eficiencia de desarrollo
 
 ---
 
@@ -161,7 +157,7 @@
 * **La cobertura real tiene una trampa — mide el backend, no el proyecto:** `npm run test:coverage` da ~36% de statements, pero ese % es solo sobre los ficheros que algún test llega a importar. Ni un componente React ni un hook aparecen en el reporte (0 de 150 ficheros de `src/components/`, ~96.770 líneas) — el bloque sin medir es casi el doble del que sí se mide (~50.870 líneas de backend+utils). No leer ese % como "cobertura del proyecto".
 * **Dentro de lo medido:** `server/utils` está bien cubierto de verdad. `server/db` NO en conjunto — solo `core.ts` (`cleanBandId`/`normalizePlan`) lo está, más el escáner estático de `bandIdTrustBoundary.test.ts`, que protege el patrón peligroso sin necesitar ejecutar el archivo (no suma % pero sí protege). El resto de `server/db` y todo `server/routes/*.ts` están al nivel de "sin cubrir" — ver más abajo para cuándo eso importa de verdad.
 * **Excepción de TDD (`band_id`/dinero, ver más abajo) — estado real:** `bandAccess.ts` y `server/db/aiLedger.ts` la cumplen (ver `server/db/__tests__/`). `billing.ts`/`donations.ts` (Stripe/Ko-fi) todavía no — pendiente. Investigación completa de cómo se llegó a este diagnóstico: commits `5b16d39`/`ef403f4`.
-* **Por qué esas áreas están débiles — testability, no pereza:** `server/utils`/`server/db` están mejor cubiertos porque son funciones puras exportadas, fáciles de testear contra un `req`/`bandId` falso; `server/routes/*.ts` está peor cubierto porque mezcla lógica de negocio directamente con `req`/`res` de Express dentro del propio handler — no es que falte tiempo, es que esos handlers no se pueden testear sin levantar el servidor entero. **Extraer a una función pura testeable (patrón `bandAccess.ts`) cuando:** (a) el handler hace algo más que parsear el request y delegar — cálculo, validación con varias ramas, transformación de datos; (b) toca `band_id` o dinero (ya crítico por §5.3.1, y sin algo testeable no hay nada que testear antes de tocar el código); (c) el síntoma más simple — si no puedes escribir el test sin arrancar Express, esa es la señal, no una excusa para saltártelo.
+* **Por qué esas áreas están débiles — testability, no pereza:** `server/utils`/`server/db` están mejor cubiertos porque son funciones puras exportadas, fáciles de testear contra un `req`/`bandId` falso; `server/routes/*.ts` está peor cubierto porque mezcla lógica de negocio directamente con `req`/`res` de Express dentro del propio handler — no es que falte tiempo, es que esos handlers no se pueden testear sin levantar el servidor entero. **Extraer a una función pura testeable (patrón `bandAccess.ts`) cuando:** (a) el handler hace algo más que parsear el request y delegar — cálculo, validación con varias ramas, transformación de datos; (b) toca `band_id` o dinero (excepción de TDD más abajo — sin algo testeable no hay nada que testear antes de tocar el código); (c) el síntoma más simple — si no puedes escribir el test sin arrancar Express, esa es la señal, no una excusa para saltártelo.
 * **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
 * **TDD selectivo (no obligatorio salvo en dos áreas):** TDD estricto (test antes que código) NO es la norma en este proyecto — la velocidad de iteración depende de poder arreglar un bug o probar una idea en minutos, y aquí se cambia de diseño a media implementación con frecuencia, lo que dejaría obsoleto un test escrito primero junto con el código que describía. El estándar general sigue siendo el actual: tests escritos junto al fix o la feature, no antes.
   * **Excepción obligatoria — aislamiento multi-banda (`band_id`/RLS) y todo lo que toca dinero (Stripe, ledger de IA — ver §4.4):** aquí sí se escribe el test del caso límite **antes** de tocar el código. Un bug en estas dos áreas no es un fallo visual, es "una banda ve datos de otra" o "se cobra mal".
@@ -188,6 +184,12 @@
   * **Pasos pequeños y mecánicos** (extraer función, renombrar, mover) en vez de una reescritura grande de una sentada — cada paso revertible por separado.
   * Ejemplo aplicado: el refactor de `leadStatusPresentation.ts` (ver arriba) — commit aparte, sin tocar lógica de negocio, verificado 1:1 contra el código original antes de mergear.
 
+### 5.5 Quality gate local (Husky + lint-staged)
+* **Qué hace:** `.husky/pre-commit` corre `lint-staged`, que ejecuta `eslint --fix` solo sobre los `.ts`/`.tsx` que se van a commitear — milisegundos, no minutos. Pilla typos y errores reales (`no-unused-vars`, etc.) antes de que salgan de la máquina.
+* **Por qué no repite lo que ya hace CI:** `tsc`/`eslint` completo/`vitest`/E2E siguen viviendo solo en `.github/workflows/ci.yml`. Correrlos también en cada commit local frenaría la iteración sin aportar nada que CI no detecte igual en el push.
+* **Escape hatch:** `git commit --no-verify` salta el hook para un commit puntual (ej. un WIP que sabes que no compila del todo). Úsalo con criterio, no como costumbre.
+* **A prueba de romper el deploy:** el script `prepare` (`"husky || exit 0"`) nunca hace fallar `npm ci`/`npm install` aunque no se puedan instalar los hooks (ej. un build de Railway sin `.git` disponible) — la instalación de dependencias nunca depende de que Husky funcione.
+
 ---
 
 ## 🧘 6. Simplicidad en Pantalla (REGLA TRANSVERSAL — aplica a TODA la app)
@@ -208,9 +210,7 @@
 
 ## ⚡ 7. Eficiencia de Desarrollo y Economía de Tokens
 
-> Reescrito 2026-09-15: la versión anterior de esta sección nombraba herramientas (`view_file`, `replace_file_content`) y una convención de ficheros (`implementation_plan.md`/`task.md`/`walkthrough.md`) que nunca existieron en este repo (cero commits, en ninguna rama) — boilerplate de otra plantilla, nunca adaptado a Claude Code, y el punto 4 contradecía directamente el comportamiento por defecto de Claude Code (no crea documentos de planificación salvo que se le pidan explícitamente).
-
 1. **Lecturas dirigidas:** en un archivo largo, leer solo el rango de líneas relevante cuando la herramienta lo permita, no el archivo entero, si solo hace falta tocar una función o interfaz concreta.
 2. **Ediciones quirúrgicas:** diffs mínimos y contiguos sobre el archivo existente, no reescrituras completas salvo que el cambio lo justifique.
 3. **Cero salida redundante:** respuestas directas, concisas y orientadas a la acción.
-4. **Sin documentos de planificación por defecto:** no crear `.md` de plan/tareas/resumen de cambios a menos que se pida explícitamente — la herramienta de seguimiento de tareas nativa del agente (cuando exista) cumple esa función sin ensuciar el repo con archivos que nadie vuelve a abrir.
+4. **Sin documentos de planificación por defecto:** no crear `.md` de plan/tareas/resumen de cambios (`implementation_plan.md`, `task.md`, `walkthrough.md`...) a menos que se pida explícitamente — ni existen en este repo ni encajan con cómo trabaja Claude Code por defecto; la herramienta de seguimiento de tareas nativa del agente (cuando exista) cumple esa función sin ensuciar el repo con archivos que nadie vuelve a abrir.
