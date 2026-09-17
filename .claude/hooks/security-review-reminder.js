@@ -16,7 +16,11 @@ const SENSITIVE_PATTERNS = [
   /server\/routes\/billing/i,
   /server\/routes\/donations/i,
   /server\/db\/aiLedger/i,
-  /rateLimiter/i
+  /rateLimiter/i,
+  // Construyen el prompt final que ve el LLM con datos externos (nombre de sala, hilo de
+  // email, notas scrapeadas) - el mismo motivo por el que existe promptSafety.ts (§2.2.6).
+  /bandDna/i,
+  /promptsManager/i
 ];
 
 let input = "";
