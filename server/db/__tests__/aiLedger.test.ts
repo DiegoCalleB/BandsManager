@@ -102,9 +102,24 @@ describe('dbGetAiDebtCents', () => {
     await expect(dbGetAiDebtCents('band-x')).resolves.toBe(0);
   });
 
-  it('nunca informa "deuda 0" en silencio cuando la RPC realmente falló', async () => {
+  it('si la RPC falla, intenta fallback a tabla ai_token_ledger antes de devolver 0', async () => {
     rpcMock.mockResolvedValue({ data: null, error: { message: 'timeout' } });
-    await expect(dbGetAiDebtCents('band-x')).rejects.toThrow(/timeout/);
+    fromMock.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockResolvedValue({ data: [{ estimated_cost_eur: 5.50 }], error: null })
+    });
+    await expect(dbGetAiDebtCents('band-x')).resolves.toBe(550);
+  });
+
+  it('si RPC y fallback fallan, devuelve 0 (nunca rechaza, nunca NaN)', async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: 'timeout' } });
+    fromMock.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockResolvedValue({ data: null, error: { message: 'table error' } })
+    });
+    await expect(dbGetAiDebtCents('band-x')).resolves.toBe(0);
   });
 });
 
