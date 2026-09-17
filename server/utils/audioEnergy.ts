@@ -172,144 +172,49 @@ export function calcularVolumenPromedioAudio(curva: PuntoEnergia[]): number | nu
 }
 
 /**
- * Detecta el tempo (BPM) real del tema a partir de los golpes de energía en el audio.
+ * Calcula la energía global (1-20) combinando tres señales del audio real, cada una normalizada
+ * relativa al resto de la banda a partes iguales:
+ *  - tempo (BPM detectado): más rápido, más energía.
+ *  - densidad rítmica (onsets/segundo, de analizarAudioConIris en audioKey.ts): cuántos ataques
+ *    por segundo tiene el tema — independiente del volumen de la mezcla. Dos temas al mismo BPM
+ *    pueden sonar muy distinto de "cañeros" según lo densa que sea la base rítmica.
+ *  - volumen medio (dB): sigue siendo una señal real, pero antes era la MITAD del cálculo (solo
+ *    BPM+volumen) — con eso, un tema lento pero grabado/masterizado más alto podía puntuar más
+ *    "energético" que uno rápido y denso grabado más flojo. A un tercio, el sesgo de
+ *    masterización pesa menos frente a las otras dos señales.
  *
- * La versión anterior de esta función medía sobre una curva de 1 muestra/segundo y
- * confundía índices de array con tiempo real — con esos datos era imposible distinguir
- * un golpe de otro en cualquier tema por encima de 60 BPM (un tema a 120 BPM golpea cada
- * 0.5s, dos veces más rápido que la propia muestra), así que casi todas las canciones
- * caían en el valor por defecto. Con el muestreo ahora a ~10/segundo (ver
- * `analizarEnergiaAudio`) esto ya mide golpes de verdad, usando timestamps reales.
- *
- * Algoritmo: flujo de energía (subidas de RMS, que es donde ataca una nota) → picos
- * locales por encima de un umbral adaptativo → intervalos entre picos → moda del
- * histograma de esos intervalos (más robusto que la media/mediana ante síncopas) →
- * corrección de octava (doblar/partir por 2 si el tempo cae fuera del rango típico de
- * un cover de rock, el error de octava clásico de cualquier detector de tempo).
- *
- * Devuelve `null` (no un valor inventado) cuando no hay suficientes golpes para fiarse
- * del resultado — así `recalibrarEnergiasDelRepertorio` no deja que un "120" de relleno
- * contamine el rango real de la banda.
+ * Se usa cuando se recalibra el repertorio: lee bpm, densidad de onsets y db_promedio de todas
+ * las canciones, normaliza cada uno en su rango de banda, y promedia para la energía final.
  */
-export function detectarBpmDesdeAudio(curva: PuntoEnergia[]): number | null {
-  if (!Array.isArray(curva) || curva.length < 8) return null;
-
-  const ordenada = [...curva].sort((a, b) => a.t - b.t);
-  const puntos = ordenada.filter((p) => p.db > DB_SILENCIO + 10); // descarta silencio
-  if (puntos.length < 8) return null;
-
-  const dbs = puntos.map((p) => p.db);
-  const min = Math.min(...dbs);
-  const max = Math.max(...dbs);
-  const rango = max - min;
-  if (rango < 1) return null; // audio demasiado uniforme, no hay ritmo que medir
-
-  const normalizado = dbs.map((db) => (db - min) / rango);
-
-  // Flujo de energía: solo subidas (los ataques de nota), igual que un onset detector
-  // clásico de flujo espectral pero aplicado sobre RMS.
-  const flujo: number[] = [0];
-  for (let i = 1; i < normalizado.length; i++) {
-    flujo.push(Math.max(0, normalizado[i] - normalizado[i - 1]));
-  }
-
-  const media = flujo.reduce((a, b) => a + b, 0) / flujo.length;
-  const varianza = flujo.reduce((a, b) => a + (b - media) ** 2, 0) / flujo.length;
-  const umbral = media + Math.sqrt(varianza) * 0.5;
-  if (umbral <= 0) return null;
-
-  // Picos locales del flujo, exigiendo 150ms de separación mínima (tope ~400 BPM,
-  // de sobra para cualquier cover de rock) para no contar el mismo golpe dos veces.
-  const SEPARACION_MINIMA = 0.15;
-  const onsetTimes: number[] = [];
-  let ultimoOnset = -Infinity;
-
-  for (let i = 1; i < flujo.length - 1; i++) {
-    const esPicoLocal = flujo[i] >= flujo[i - 1] && flujo[i] >= flujo[i + 1];
-    if (esPicoLocal && flujo[i] > umbral && puntos[i].t - ultimoOnset >= SEPARACION_MINIMA) {
-      onsetTimes.push(puntos[i].t);
-      ultimoOnset = puntos[i].t;
-    }
-  }
-
-  if (onsetTimes.length < 6) return null; // muy pocos golpes detectados para fiarse
-
-  // Inter-onset intervals reales, en segundos (no índices de array).
-  const iois: number[] = [];
-  for (let i = 1; i < onsetTimes.length; i++) {
-    const ioi = onsetTimes[i] - onsetTimes[i - 1];
-    if (ioi >= 0.25 && ioi <= 1.5) iois.push(ioi); // 40-240 BPM
-  }
-  if (iois.length < 4) return null;
-
-  // Moda del histograma de IOIs (bins de 30ms): el pulso real se repite más que
-  // cualquier síncopa aislada, así que gana el bin con más votos.
-  const BIN = 0.03;
-  const contador = new Map<number, number>();
-  for (const ioi of iois) {
-    const bin = Math.round(ioi / BIN);
-    contador.set(bin, (contador.get(bin) || 0) + 1);
-  }
-  let mejorBin = 0;
-  let mejorCount = 0;
-  for (const [bin, count] of contador) {
-    if (count > mejorCount) {
-      mejorCount = count;
-      mejorBin = bin;
-    }
-  }
-  if (mejorBin <= 0) return null;
-
-  let bpm = 60 / (mejorBin * BIN);
-
-  // Corrección de octava: los detectores de tempo confunden fácilmente el pulso con
-  // su doble o su mitad (ej. detectar las corcheas en vez de la negra). Plegar al
-  // rango típico de un cover de rock (70-180) antes de aceptar el resultado.
-  while (bpm < 70) bpm *= 2;
-  while (bpm > 180) bpm /= 2;
-
-  bpm = Math.round(bpm);
-  if (bpm < 40 || bpm > 220) return null;
-
-  return bpm;
-}
-
-/**
- * Calcula la energía global (1-20) combinando BPM detectado + volumen promedio,
- * ambos normalizados relativos a la banda.
- *
- * Se usa cuando se recalibra el repertorio: lee bpm y db_promedio de todas las canciones,
- * normaliza cada uno en su rango de banda, y promedia para la energía final.
- */
-export function calcularEnergiaBpmVolumen(bpmDetectado: number, dbPromedio: number, bandStats: {
+export function calcularEnergiaMultifactor(bpmDetectado: number, dbPromedio: number, onsetDensity: number, bandStats: {
   minBpm: number;
   maxBpm: number;
   minDb: number;
   maxDb: number;
+  minOnsetDensity: number;
+  maxOnsetDensity: number;
 }): number {
-  // Si el rango es muy pequeño, usar default
-  if (bandStats.maxBpm - bandStats.minBpm < 5 && bandStats.maxDb - bandStats.minDb < 1) {
+  const bpmRango = bandStats.maxBpm - bandStats.minBpm;
+  const dbRango = bandStats.maxDb - bandStats.minDb;
+  const onsetRango = bandStats.maxOnsetDensity - bandStats.minOnsetDensity;
+
+  // Si las tres señales son casi idénticas en toda la banda, diferenciar sería ruido de
+  // redondeo, no una lectura real de qué tema suena más "cañero" que otro.
+  if (bpmRango < 5 && dbRango < 1 && onsetRango < 0.15) {
     return 10;
   }
 
-  // Normalizar BPM a 0-10
-  let bpmNorm = 5; // default si solo hay 1 BPM
-  const bpmRango = bandStats.maxBpm - bandStats.minBpm;
-  if (bpmRango > 5) {
-    bpmNorm = ((bpmDetectado - bandStats.minBpm) / bpmRango) * 10;
-    bpmNorm = Math.max(0, Math.min(10, bpmNorm));
-  }
+  const normalizar = (valor: number, min: number, rango: number, rangoMinimoUtil: number): number => {
+    if (rango <= rangoMinimoUtil) return 5; // default si apenas hay variedad en esta señal
+    return Math.max(0, Math.min(10, ((valor - min) / rango) * 10));
+  };
 
-  // Normalizar volumen a 0-10
-  let dbNorm = 5; // default si solo hay 1 volumen
-  const dbRango = bandStats.maxDb - bandStats.minDb;
-  if (dbRango > 0.5) {
-    dbNorm = ((dbPromedio - bandStats.minDb) / dbRango) * 10;
-    dbNorm = Math.max(0, Math.min(10, dbNorm));
-  }
+  const bpmNorm = normalizar(bpmDetectado, bandStats.minBpm, bpmRango, 5);
+  const dbNorm = normalizar(dbPromedio, bandStats.minDb, dbRango, 0.5);
+  const onsetNorm = normalizar(onsetDensity, bandStats.minOnsetDensity, onsetRango, 0.15);
 
-  // Promediar ambos factores y mapear a 1-20
-  const promedio = (bpmNorm + dbNorm) / 2; // 0-10
+  // Promediar los tres factores y mapear a 1-20
+  const promedio = (bpmNorm + dbNorm + onsetNorm) / 3; // 0-10
   const energia = Math.round(1 + (promedio / 10) * 19);
 
   return Math.max(1, Math.min(20, energia));
@@ -341,11 +246,13 @@ export function resumirEnergiaParaPrompt(ventanas: VentanaEnergia[]): string {
  *
  * `asetnsamples` fuerza el tamaño de frame — sin esto, astats usa el frame nativo del
  * decodificador (~23ms, variable) y `reset=1` (que cuenta frames, no tiempo) da una
- * frecuencia irregular. Frames de 100ms (n=800 a 8kHz) dan ~10 mediciones/segundo: es
- * la resolución mínima que hace falta para que `detectarBpmDesdeAudio` pueda ver golpes
- * de batería individuales. Antes esto medía 1 vez por segundo, y un tema a 120 BPM golpea
- * cada 0.5s — la mitad de rápido que la propia muestra, así que la detección de BPM era
- * físicamente imposible por mucho que se afinara el algoritmo.
+ * frecuencia irregular. Frames de 100ms (n=800 a 8kHz) dan ~10 mediciones/segundo: de sobra
+ * para elegir qué ventana de 30s suena más fuerte (`ventanasConMasEnergia`) o medir contraste
+ * interno (`medirVariacionInterna`), que es todo lo que esta curva alimenta ahora. El BPM ya
+ * NO sale de aquí: 100ms de resolución cuantiza cualquier intervalo entre golpes a un múltiplo
+ * de 0.1s, así que sobre audio real (no un pulso sintético perfecto) el tempo detectado
+ * colapsaba en un puñado de valores en vez de reflejar el tempo real — ver `analizarAudioConIris`
+ * en audioKey.ts, que mide onsets por flujo espectral sobre el PCM real (~23ms de resolución).
  *
  * Para una `fuente` remota, ver `resolverFuenteAudioLocal` (descarga a temporal primero: el
  * ffmpeg-static empaquetado aquí crashea leyendo ciertas URLs https en streaming). Sin esto, el

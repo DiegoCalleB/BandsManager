@@ -2,6 +2,10 @@ import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
 import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
+import { enviarEmail } from "../services/emailAgentClient.js";
+import { tieneGmailOAuthConectado, enviarEmailGmailApi } from "../services/gmailApiClient.js";
+import { sendTransactionalEmail } from "../services/transactionalEmail.js";
+import { buildServerEmailHtml, buildBandNotificationEmailHtml } from "../utils/emailTemplate.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
@@ -715,6 +719,94 @@ router.post("/bands/email-account", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error saving band email account:", err);
     res.status(500).json({ error: "Error al guardar la cuenta de email de la banda" });
+  }
+});
+
+// --------------------------------------------------
+// ENVÍO DE RECORDATORIOS Y NOTIFICACIONES DE CALENDARIO
+// --------------------------------------------------
+router.post("/bands/send-reminder", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    if (!bandId) {
+      return res.status(403).json({ error: "No tienes permiso para enviar recordatorios en esta banda." });
+    }
+
+    const {
+      event_title,
+      event_type, // 'concierto' | 'ensayo' | 'reunion'
+      event_date,
+      event_time,
+      event_location,
+      recipients = [], // array de emails
+      recipient_members = [], // array de nombres de convocados
+      custom_notes,
+      setlist_summary,
+      send_email = true
+    } = req.body;
+
+    if (!event_title) {
+      return res.status(400).json({ error: "Falta el título del evento" });
+    }
+
+    const registeredBand = await dbGetRegisteredBandById(bandId);
+    const bandName = registeredBand?.name || 'Tu Banda';
+
+    const eventLabel = event_type === 'concierto' ? 'Concierto' : event_type === 'ensayo' ? 'Ensayo' : 'Reunión';
+    
+    // Identificación clara de la BANDA lo primero en el Asunto
+    const subject = `[Banda: ${bandName}] 🔔 Recordatorio de ${eventLabel}: ${event_title} (${event_date})`;
+
+    const html = buildBandNotificationEmailHtml({
+      bandName,
+      eventLabel,
+      eventTitle: event_title,
+      eventDate: event_date,
+      eventTime: event_time,
+      eventLocation: event_location,
+      recipientMembers: recipient_members,
+      customNotes: custom_notes,
+      setlistSummary: setlist_summary
+    });
+
+    let emailSent = false;
+    let emailError = null;
+
+    if (send_email && Array.isArray(recipients) && recipients.length > 0) {
+      const emailList = recipients.filter((r: any) => typeof r === 'string' && r.includes('@'));
+      if (emailList.length > 0) {
+        for (const targetEmail of emailList) {
+          try {
+            // Las notificaciones internas del sistema se envían siempre desde BandManager (no-reply@bandmanager.io)
+            const txRes = await sendTransactionalEmail({
+              to: targetEmail,
+              subject,
+              html
+            });
+            if (txRes.success) {
+              emailSent = true;
+            } else {
+              throw new Error(txRes.error || "Error despachando correo transaccional de notificación");
+            }
+          } catch (err: any) {
+            console.error(`Error enviando email de recordatorio a ${targetEmail}:`, err?.message || err);
+            emailError = err?.message || "Error al despachar el correo.";
+          }
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      emailSent,
+      emailError,
+      message: emailSent
+        ? `Recordatorio enviado por correo a ${recipients.length} destinatario(s).`
+        : "Notificación procesada correctamente en la plataforma."
+    });
+  } catch (err: any) {
+    console.error("Error en /bands/send-reminder:", err);
+    res.status(500).json({ error: err?.message || "Error procesando el recordatorio" });
   }
 });
 

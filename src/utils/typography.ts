@@ -1,4 +1,4 @@
-export type FontPresetKey = 'plus_jakarta' | 'outfit' | 'inter' | 'dm_sans' | 'lora' | 'space_grotesk' | 'sora';
+export type FontPresetKey = 'helvetica' | 'plus_jakarta' | 'outfit' | 'inter' | 'dm_sans' | 'lora' | 'space_grotesk' | 'sora';
 
 export interface FontPreset {
   id: FontPresetKey;
@@ -13,13 +13,23 @@ export interface FontPreset {
 
 export const FONT_PRESETS: FontPreset[] = [
   {
+    id: 'helvetica',
+    name: 'Helvetica Modern',
+    subtitle: 'Limpia, Neoclásica & Profesional',
+    displayFont: '"Helvetica Neue", Helvetica, "Inter", Arial, sans-serif',
+    bodyFont: '"Helvetica Neue", Helvetica, "Inter", Arial, sans-serif',
+    description: 'Estilo internacional limpio y equilibrado. Elimina cualquier aspecto retro o de programador para ofrecer una lectura sofisticada y accesible.',
+    badge: 'Recomendada',
+    isSoft: true,
+  },
+  {
     id: 'plus_jakarta',
     name: 'Plus Jakarta Sans',
     subtitle: 'Limpia & Equilibrada',
     displayFont: '"Plus Jakarta Sans", sans-serif',
     bodyFont: '"Plus Jakarta Sans", sans-serif',
     description: 'Limpia, equilibrada y muy suave a la vista. Elimina la dureza visual y le da un aspecto profesional y moderno.',
-    badge: 'Recomendada',
+    badge: 'Suave',
     isSoft: true,
   },
   {
@@ -89,7 +99,7 @@ export function getStoredFontPreset(): FontPresetKey {
   if (saved && FONT_PRESETS.some(p => p.id === saved)) {
     return saved;
   }
-  return 'plus_jakarta'; // Default to Plus Jakarta Sans for a much cleaner, softer look
+  return 'helvetica'; // Default to Helvetica Modern for a clean modern style
 }
 
 export function applyFontPreset(presetKey: FontPresetKey) {

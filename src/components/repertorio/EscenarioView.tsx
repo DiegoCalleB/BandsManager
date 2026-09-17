@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from '../RepertorioSetlists';
 import { cacheActiveStageSetlist } from '../../utils/stageOfflineCache';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 
 interface EscenarioViewProps {
   activeSetlist: Setlist | null;
@@ -270,7 +271,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   ) : null}
                   {isCrossfading && nextStageSong && (
                     <span className="px-2 py-0.5 rounded-full text-[9px] bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold flex items-center gap-1 animate-pulse">
-                      🔀 Fundiendo → {nextStageSong.titulo}
+                      🔀 Fundiendo → {formatSongTitle(nextStageSong.titulo)}
                     </span>
                   )}
                 </div>
@@ -279,7 +280,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                   <span>
                     {currentStageItem
                       ? (currentStageItem.tipoItem === 'cancion'
-                          ? currentStageSong?.titulo || 'Canción'
+                          ? (currentStageSong ? formatSongTitle(currentStageSong.titulo) : 'Canción')
                           : currentStageItem.tituloCustom || 'Interludio / Presentación')
                       : 'Listos para iniciar el concierto'}
                   </span>
@@ -538,7 +539,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
                 <div className="flex items-center gap-2">
                   <FileText className="w-4 h-4 text-[#1ed760]" />
                   <h4 className="font-mono text-sm font-black text-white">
-                    {currentStageSong ? currentStageSong.titulo : 'Sin tema seleccionado'}
+                    {currentStageSong ? formatSongTitle(currentStageSong.titulo) : 'Sin tema seleccionado'}
                   </h4>
                   {currentStageSong?.afinacion && (
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
@@ -664,7 +665,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
 
                       <div className="col-span-6">
                         <div className="text-base sm:text-lg font-bold font-mono text-white flex items-center gap-2">
-                          <span>{s.titulo}</span>
+                          <span>{formatSongTitle(s.titulo)}</span>
                           {isPlayingThis && (
                             <div className="flex items-end gap-0.5 h-3">
                               <span className="w-0.5 h-full bg-[#1db954] animate-pulse" />

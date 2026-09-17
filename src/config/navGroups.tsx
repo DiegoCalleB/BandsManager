@@ -1,9 +1,9 @@
 import type { LucideIcon } from 'lucide-react';
-import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase } from 'lucide-react';
+import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase, Mic2 } from 'lucide-react';
 
 export type NavItemId =
   | 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'giras'
-  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'chat' | 'finanzas' | 'merchan'
+  | 'epk' | 'fans' | 'reels' | 'repertorio' | 'ensayos' | 'catalogo' | 'discografia' | 'chat' | 'finanzas' | 'merchan'
   | 'metronome' | 'tuner';
 
 export interface NavItemDef {
@@ -29,6 +29,7 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   fans: { id: 'fans', icon: QrCode, labelKey: 'nav.fans', labelDefault: 'Captura QR & Fans' },
   reels: { id: 'reels', icon: Video, labelKey: 'nav.reels', labelDefault: 'Reels Center' },
   repertorio: { id: 'repertorio', icon: Disc3, labelKey: 'nav.repertorio', labelDefault: 'Repertorios' },
+  ensayos: { id: 'ensayos', icon: Mic2, labelKey: 'nav.ensayos', labelDefault: 'Ensayos' },
   catalogo: { id: 'catalogo', icon: Music, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
   discografia: { id: 'discografia', icon: Disc2, labelKey: 'nav.discografia', labelDefault: 'Discografía' },
   chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
@@ -60,8 +61,8 @@ export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen', 'calendario'];
 export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
 
 /**
- * Agrupación para desktop: incluye los 2 módulos de música
- * (repertorios y discografía) cuando el plan desbloquea
+ * Agrupación para desktop: incluye los 3 módulos de música
+ * (repertorios, ensayos y discografía) cuando el plan desbloquea
  * suficientes módulos (ver MIN_MODULES_FOR_GROUPED_NAV).
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
@@ -75,7 +76,7 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'discografia'],
+    itemIds: ['repertorio', 'ensayos', 'discografia'],
   },
   {
     id: 'promocion',
@@ -98,8 +99,8 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
 ];
 
 /**
- * Agrupación para móvil: mismos 2 módulos de música que desktop (repertorio,
- * discografia).
+ * Agrupación para móvil: mismos 3 módulos de música que desktop (repertorio,
+ * ensayos, discografia).
  */
 export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
   {
@@ -112,7 +113,7 @@ export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'discografia'],
+    itemIds: ['repertorio', 'ensayos', 'discografia'],
   },
   {
     id: 'promocion',
@@ -145,7 +146,7 @@ export const NAV_GROUPS = NAV_GROUPS_DESKTOP;
  * solo en vista agrupada.
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'discografia', 'chat', 'finanzas', 'merchan',
+  'resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
 ];
 
 /**
@@ -155,7 +156,7 @@ export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
  * sidebar — mantiene la lista de módulos principales para scroll horizontal.)
  */
 export const TOP_TABS_ORDER_IDS: NavItemId[] = [
-  'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'discografia', 'chat', 'finanzas', 'merchan',
+  'resumen', 'booking', 'medios', 'management', 'calendario', 'bandas', 'giras', 'epk', 'fans', 'reels', 'repertorio', 'ensayos', 'discografia', 'chat', 'finanzas', 'merchan',
 ];
 
 // Todos los planes (incluyendo `promo` y `promo_plus`) agrupan sus secciones en el menú (Música, Promoción, etc.).

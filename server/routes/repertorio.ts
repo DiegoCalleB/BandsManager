@@ -129,9 +129,7 @@ router.post("/songs", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El título del tema es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    if (!(newSong as any).band_id) {
-      (newSong as any).band_id = userBandId;
-    }
+    (newSong as any).band_id = userBandId;
     if (!newSong.id) {
       newSong.id = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     }
@@ -235,9 +233,7 @@ router.post("/setlists", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El nombre del repertorio es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    if (!(newSetlist as any).band_id) {
-      (newSetlist as any).band_id = userBandId;
-    }
+    (newSetlist as any).band_id = userBandId;
     if (!newSetlist.id) {
       newSetlist.id = `setlist-${Date.now()}`;
     }
@@ -755,6 +751,19 @@ router.post("/optimize-wavs", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error in /optimize-wavs:", err);
     res.status(500).json({ success: false, error: err?.message || "Error optimizando audios WAV" });
+  }
+});
+
+// Enriquece e investiga por internet tonalidades y BPMs de temas sin audio o versiones
+router.post("/enrich-missing-audio", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const { enrichMissingAudioSongsForBand } = await import("../utils/enrichCoversWithoutAudio.js");
+    const result = await enrichMissingAudioSongsForBand(userBandId);
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    console.error("Error in /enrich-missing-audio:", err);
+    res.status(500).json({ success: false, error: err?.message || "Error enriqueciendo canciones sin audio" });
   }
 });
 

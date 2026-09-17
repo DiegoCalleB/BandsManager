@@ -200,6 +200,7 @@ CREATE TABLE IF NOT EXISTS rehearsals (
     band_name TEXT,
     fecha TEXT NOT NULL,
     hora TEXT,
+    hora_fin TEXT,
     lugar TEXT,
     asistentes JSONB DEFAULT '[]'::jsonb,
     notas TEXT,
@@ -208,6 +209,15 @@ CREATE TABLE IF NOT EXISTS rehearsals (
     convocatoria_tipo TEXT DEFAULT 'completa',
     convocados_ids JSONB DEFAULT '[]'::jsonb,
     convocados_nombres JSONB DEFAULT '[]'::jsonb,
+    agenda JSONB DEFAULT '[]'::jsonb,
+    objetivos JSONB DEFAULT '[]'::jsonb,
+    duracion_estimada_min INTEGER DEFAULT 0,
+    duracion_real_seg INTEGER DEFAULT 0,
+    cronometro_estado JSONB DEFAULT '{}'::jsonb,
+    acta JSONB DEFAULT '{}'::jsonb,
+    grabaciones JSONB DEFAULT '[]'::jsonb,
+    rating_general INTEGER,
+    temperatura_local TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

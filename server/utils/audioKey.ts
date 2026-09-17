@@ -88,7 +88,7 @@ function ejecutarBinario(binario: string, args: string[], opciones: { timeoutMs?
  * no es solo un límite de tiempo de cómputo, también acota cuánto hay que descargar/decodificar
  * de audio remoto largo (una grabación de concierto entero podría ser de 40 minutos).
  */
-async function extraerPcmMono(
+export async function extraerPcmMono(
   fuente: string,
   opciones: { timeoutMs?: number; maxDuracionSeg?: number } = {}
 ): Promise<Float32Array | null> {
@@ -274,7 +274,7 @@ export function detectarTonalidadDesdeCroma(croma: number[]): TonalidadDetectada
 /**
  * Detecta la tonalidad de un audio de principio a fin: extrae PCM, calcula el croma y correlaciona.
  * Nunca lanza — si algo falla o el resultado es demasiado ambiguo, devuelve `null` en vez de una
- * tonalidad inventada (igual que `detectarBpmDesdeAudio` en audioEnergy.ts).
+ * tonalidad inventada (igual que `detectarBpmDesdeOnsets` más abajo).
  */
 export async function detectarTonalidadDesdeAudio(
   fuente: string,
@@ -285,4 +285,142 @@ export async function detectarTonalidadDesdeAudio(
   const croma = calcularCromaDesdePcm(pcm, SAMPLE_RATE);
   if (!croma) return null;
   return detectarTonalidadDesdeCroma(croma);
+}
+
+// Ventana/salto del detector de onsets: 1024 muestras (~93ms) de contexto espectral, pero con
+// un salto de solo 256 (~23ms) entre frames — la resolución temporal real del detector es el
+// SALTO, no la ventana. El primer detector de BPM de esta app (detectarBpmDesdeAudio en
+// audioEnergy.ts) medía onsets sobre la curva de energía de ffmpeg astats, que solo da un punto
+// cada 100ms: cualquier intervalo entre golpes quedaba forzosamente redondeado a un múltiplo de
+// 0.1s antes de llegar siquiera al histograma, así que sobre audio real (no un pulso sintético
+// perfecto) el resultado colapsaba en un puñado de valores "cuantizados" (100/118/154 BPM en 23
+// canciones bien distintas, detectado en producción) en vez de reflejar el tempo real de cada
+// tema. Con 23ms de resolución el intervalo entre golpes ya no está pegado a esa rejilla.
+const ONSET_VENTANA = 1024;
+const ONSET_HOP = 256;
+
+/**
+ * Detecta instantes de onset (ataques de nota/golpe de batería) por flujo espectral: la suma de
+ * subidas de magnitud entre espectros de frames consecutivos — el detector de onsets clásico de
+ * la literatura (Bello et al.), mucho más sensible que mirar solo el volumen total porque ve
+ * ataques que no necesariamente suben el volumen agregado (un platillo entrando sobre un acorde
+ * sostenido, por ejemplo).
+ */
+export function detectarOnsetsDesdePcm(pcm: Float32Array, sampleRate: number): number[] {
+  if (!pcm || pcm.length < ONSET_VENTANA) return [];
+
+  const ventana = ventanaHann(ONSET_VENTANA);
+  const totalFrames = Math.floor((pcm.length - ONSET_VENTANA) / ONSET_HOP) + 1;
+  if (totalFrames < 8) return [];
+
+  const espectros: Float64Array[] = new Array(totalFrames);
+  for (let f = 0; f < totalFrames; f++) {
+    const inicio = f * ONSET_HOP;
+    const re = new Float64Array(ONSET_VENTANA);
+    const im = new Float64Array(ONSET_VENTANA);
+    for (let i = 0; i < ONSET_VENTANA; i++) re[i] = pcm[inicio + i] * ventana[i];
+    fft(re, im);
+    const mag = new Float64Array(ONSET_VENTANA / 2);
+    for (let bin = 0; bin < mag.length; bin++) mag[bin] = Math.sqrt(re[bin] * re[bin] + im[bin] * im[bin]);
+    espectros[f] = mag;
+  }
+
+  const flujo = new Float64Array(totalFrames);
+  for (let f = 1; f < totalFrames; f++) {
+    const prev = espectros[f - 1], cur = espectros[f];
+    let suma = 0;
+    for (let bin = 0; bin < cur.length; bin++) {
+      const diff = cur[bin] - prev[bin];
+      if (diff > 0) suma += diff; // solo subidas: es lo que marca un ataque, no una caída de energía
+    }
+    flujo[f] = suma;
+  }
+
+  const media = flujo.reduce((a, b) => a + b, 0) / flujo.length;
+  const varianza = flujo.reduce((a, b) => a + (b - media) ** 2, 0) / flujo.length;
+  const umbral = media + Math.sqrt(varianza) * 0.5;
+  if (umbral <= 0) return [];
+
+  const hopSeg = ONSET_HOP / sampleRate;
+  const SEPARACION_MINIMA = 0.1; // 100ms de separación mínima entre onsets → tope ~600bpm, de sobra
+  const onsets: number[] = [];
+  let ultimo = -Infinity;
+  for (let f = 1; f < flujo.length - 1; f++) {
+    const esPicoLocal = flujo[f] >= flujo[f - 1] && flujo[f] >= flujo[f + 1];
+    const t = f * hopSeg;
+    if (esPicoLocal && flujo[f] > umbral && t - ultimo >= SEPARACION_MINIMA) {
+      onsets.push(t);
+      ultimo = t;
+    }
+  }
+  return onsets;
+}
+
+/**
+ * Convierte una lista de onsets (segundos) en un BPM: intervalos entre onsets consecutivos →
+ * moda del histograma (el pulso real se repite más que cualquier síncopa aislada) → corrección
+ * de octava al rango típico de un cover de rock (70-180 BPM, dobla/parte por 2 si hace falta).
+ * Misma lógica que la versión anterior sobre la curva de energía, pero aquí los onsets tienen
+ * precisión real de ~23ms en vez de estar pegados a una rejilla de 100ms.
+ */
+export function detectarBpmDesdeOnsets(onsets: number[]): number | null {
+  if (!onsets || onsets.length < 6) return null;
+
+  const iois: number[] = [];
+  for (let i = 1; i < onsets.length; i++) {
+    const ioi = onsets[i] - onsets[i - 1];
+    if (ioi >= 0.25 && ioi <= 1.5) iois.push(ioi); // 40-240 BPM
+  }
+  if (iois.length < 4) return null;
+
+  const BIN = 0.015; // bins de 15ms — la mitad de finos que antes, ahora que los onsets ya no
+                      // están cuantizados a 100ms no hace falta un bin tan ancho para agrupar
+  const contador = new Map<number, number>();
+  for (const ioi of iois) {
+    const bin = Math.round(ioi / BIN);
+    contador.set(bin, (contador.get(bin) || 0) + 1);
+  }
+  let mejorBin = 0, mejorCount = 0;
+  for (const [bin, count] of contador) {
+    if (count > mejorCount) { mejorCount = count; mejorBin = bin; }
+  }
+  if (mejorBin <= 0) return null;
+
+  let bpm = 60 / (mejorBin * BIN);
+  while (bpm < 70) bpm *= 2;
+  while (bpm > 180) bpm /= 2;
+  bpm = Math.round(bpm);
+  if (bpm < 40 || bpm > 220) return null;
+  return bpm;
+}
+
+/**
+ * Analiza BPM, tonalidad y densidad rítmica en una sola pasada: una única extracción de PCM (la
+ * parte cara — descargar y decodificar el audio) alimenta el detector de onsets/BPM, el croma/
+ * tonalidad Y la densidad de onsets, en vez de descargar el mismo audio varias veces para
+ * análisis independientes.
+ *
+ * `onsetDensity` (onsets por segundo) es gratis aquí: son los mismos onsets que ya calcula el
+ * detector de BPM, solo divididos por la duración analizada. Alimenta `calcularEnergiaMultifactor`
+ * en audioEnergy.ts como tercera señal de energía, independiente del volumen de la mezcla — un
+ * tema con muchos ataques por segundo (batería/percusión densa) suena más "cañero" aunque esté
+ * grabado o masterizado más flojo que otro más espaciado.
+ */
+export async function analizarAudioConIris(
+  fuente: string,
+  opciones: { timeoutMs?: number; maxDuracionSeg?: number } = {}
+): Promise<{ bpm: number | null; tonalidad: TonalidadDetectada | null; onsetDensity: number | null }> {
+  const pcm = await extraerPcmMono(fuente, opciones);
+  if (!pcm) return { bpm: null, tonalidad: null, onsetDensity: null };
+
+  const onsets = detectarOnsetsDesdePcm(pcm, SAMPLE_RATE);
+  const bpm = detectarBpmDesdeOnsets(onsets);
+
+  const duracionSeg = pcm.length / SAMPLE_RATE;
+  const onsetDensity = duracionSeg > 1 && onsets.length >= 2 ? onsets.length / duracionSeg : null;
+
+  const croma = calcularCromaDesdePcm(pcm, SAMPLE_RATE);
+  const tonalidad = croma ? detectarTonalidadDesdeCroma(croma) : null;
+
+  return { bpm, tonalidad, onsetDensity };
 }

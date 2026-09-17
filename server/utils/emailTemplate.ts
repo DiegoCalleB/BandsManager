@@ -223,3 +223,131 @@ ${adjuntarDossier ? `Dossier: ${webEpkUrl}` : ''}
 
   return { html, text, cleanPitch };
 }
+
+/**
+ * Plantilla de email rica para notificaciones de calendario, ensayos y eventos.
+ * Diseñada para enviarse desde no-reply@bandmanager.io identificando prioritariamente a la BANDA.
+ */
+export function buildBandNotificationEmailHtml(params: {
+  bandName: string;
+  eventLabel: string;
+  eventTitle: string;
+  eventDate: string;
+  eventTime?: string;
+  eventLocation?: string;
+  recipientMembers?: string[];
+  customNotes?: string;
+  setlistSummary?: string;
+  appUrl?: string;
+}): string {
+  const {
+    bandName,
+    eventLabel,
+    eventTitle,
+    eventDate,
+    eventTime,
+    eventLocation,
+    recipientMembers = [],
+    customNotes,
+    setlistSummary,
+    appUrl = process.env.APP_URL || 'https://bandmanager.io'
+  } = params;
+
+  const eventBadgeColor =
+    eventLabel.toLowerCase() === 'concierto'
+      ? '#ef4444'
+      : eventLabel.toLowerCase() === 'ensayo'
+      ? '#3b82f6'
+      : '#8b5cf6';
+
+  const memberListText = recipientMembers.length > 0 ? recipientMembers.join(', ') : 'Toda la banda';
+
+  return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recordatorio BandManager - ${bandName}</title>
+</head>
+<body style="font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; padding: 0;">
+  <div style="max-width: 600px; margin: 24px auto; background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    
+    <!-- HEADER BRANDING -->
+    <div style="background: linear-gradient(135deg, #18181b 0%, #09090b 100%); padding: 24px; text-align: center; border-bottom: 1px solid #27272a;">
+      <div style="font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">
+        BandManager<span style="color: #3b82f6;">.io</span>
+      </div>
+      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #71717a; margin-top: 4px; font-family: monospace;">
+        Notificación de Calendario & Ensayos
+      </div>
+    </div>
+
+    <!-- MAIN BAND HIGHLIGHT CARD (IDENTIFICACIÓN PRIMARIA DE LA BANDA) -->
+    <div style="padding: 24px;">
+      
+      <!-- IDENTIFICADOR DESTACADO DE BANDA -->
+      <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px;">
+        <div style="font-size: 11px; text-transform: uppercase; font-family: monospace; color: #60a5fa; font-weight: 700; letter-spacing: 0.5px;">
+          🎸 BANDA / GRUPO
+        </div>
+        <div style="font-size: 22px; font-weight: 800; color: #ffffff; margin-top: 2px;">
+          ${bandName}
+        </div>
+        <div style="display: inline-block; background-color: ${eventBadgeColor}; color: #ffffff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-top: 8px; font-family: monospace; text-transform: uppercase;">
+          ${eventLabel}: ${eventTitle}
+        </div>
+      </div>
+
+      <!-- DETALLES DEL EVENTO -->
+      <div style="font-size: 15px; font-weight: 600; color: #e4e4e7; margin-bottom: 12px;">
+        📌 Detalles de la citación:
+      </div>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #d4d4d8;">
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; width: 130px; color: #a1a1aa; font-weight: 600;">📅 Fecha:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #ffffff; font-weight: 700;">${eventDate}${eventTime ? ` a las <span style="color: #60a5fa;">${eventTime}</span>` : ''}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600;">📍 Lugar / Ubicación:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #f4f4f5;">${eventLocation || 'Por determinar'}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600;">👥 Convocados:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #f4f4f5;">${memberListText}</td>
+        </tr>
+        ${customNotes ? `
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600; vertical-align: top;">📝 Notas / Tareas:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #fde047; font-weight: 500; line-height: 1.5;">${customNotes.replace(/\n/g, '<br>')}</td>
+        </tr>
+        ` : ''}
+        ${setlistSummary ? `
+        <tr>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #a1a1aa; font-weight: 600; vertical-align: top;">🎵 Repertorio / Setlist:</td>
+          <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #38bdf8; font-weight: 500;">${setlistSummary}</td>
+        </tr>
+        ` : ''}
+      </table>
+
+      <!-- CALL TO ACTION -->
+      <div style="text-align: center; margin-top: 28px; margin-bottom: 12px;">
+        <a href="${appUrl}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-family: sans-serif;">
+          Abrir Calendario en BandManager.io
+        </a>
+      </div>
+
+    </div>
+
+    <!-- FOOTER NO-REPLY -->
+    <div style="background-color: #09090b; padding: 16px 24px; text-align: center; font-size: 11px; color: #71717a; border-top: 1px solid #27272a;">
+      Notificación automática del sistema para los miembros de <strong>${bandName}</strong>.<br>
+      Correo enviado desde <span style="color: #a1a1aa;">no-reply@bandmanager.io</span>. Por favor no respondas a este correo.
+    </div>
+
+  </div>
+</body>
+</html>
+  `.trim();
+}

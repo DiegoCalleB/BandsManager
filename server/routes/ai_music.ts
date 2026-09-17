@@ -866,18 +866,18 @@ async function processNeuralStemsReplicate(
     let prediction = await response.json();
     const predictionId = prediction.id;
 
-    // Polling a Replicate con tiempo límite ampliado a 360s (6 minutos)
+    // Polling a Replicate con tiempo límite de 180s (3 minutos)
     const startTime = Date.now();
     while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-      if (Date.now() - startTime > 360000) {
-        console.warn("Demucs separation timeout en Replicate (>360s)...");
+      if (Date.now() - startTime > 180000) {
+        console.warn("Demucs separation timeout en Replicate (>180s)...");
         const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-4).join(' | ');
         return {
           stemsMap: null,
           provider: 'replicate',
           errorType: 'timeout',
-          errorTitle: 'Tiempo de Espera en GPU Excedido (>6 min)',
-          error: `La separación en la GPU de Replicate superó los 6 minutos de espera (Estado: ${prediction.status}).`,
+          errorTitle: 'Tiempo de Espera en GPU Excedido (>3 min)',
+          error: `La separación en la GPU de Replicate superó los 3 minutos de espera (Estado: ${prediction.status}).`,
           actionAdvice: 'La máquina de Replicate puede haber tardado en inicializar. Vuelve a intentarlo o usa la separación con el Motor DSP local.',
           errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs: ${lastLogs || 'Sin logs disponibles'}`,
           httpStatus: 504
@@ -1103,15 +1103,15 @@ async function processMdx23Stems(
 
   const startTime = Date.now();
   while (prediction.status !== 'succeeded' && prediction.status !== 'failed' && prediction.status !== 'canceled') {
-    if (Date.now() - startTime > 360000) {
-      console.warn(`[MDX23 Neural] Timeout en Replicate (>360s) para predicción ${predictionId}`);
+    if (Date.now() - startTime > 180000) {
+      console.warn(`[MDX23 Neural] Timeout en Replicate (>180s) para predicción ${predictionId}`);
       const lastLogs = String(prediction.logs || '').trim().split('\n').filter(Boolean).slice(-6).join('\n');
       return {
         stemsMap: null,
         provider: 'replicate',
         errorType: 'timeout',
         errorTitle: `Tiempo de Espera Excedido en GPU (${modelFriendlyName})`,
-        error: `La inferencia en Replicate superó los 6 minutos de espera (Estado: ${prediction.status}).`,
+        error: `La inferencia en Replicate superó los 3 minutos de espera (Estado: ${prediction.status}).`,
         actionAdvice: 'Puedes reintentar o separar las pistas con el Motor DSP local.',
         errorDetail: `Prediction ID: ${predictionId}\nStatus: ${prediction.status}\nLogs:\n${lastLogs || 'Sin logs'}`,
         httpStatus: 504
@@ -1840,44 +1840,52 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
     // ========================================================================
     if (inFlightSeparations.has(cacheKey)) {
       console.log(`[Stem Separator] ⏳ Deduplicación activa: Petición en curso para ${cacheKey}. Esperando al trabajo original sin duplicar gasto...`);
-      const inFlightRes = await inFlightSeparations.get(cacheKey)!;
-      if (inFlightRes.errorInfo) {
-        const diag = inFlightRes.errorInfo;
-        return res.status(diag.httpStatus || 502).json({
-          provider: diag.provider || 'replicate',
-          error: diag.errorTitle || 'Fallo en la inferencia',
-          message: diag.error || 'La inferencia no devolvió resultados.',
-          errorType: diag.errorType || 'generic',
-          errorTitle: diag.errorTitle || 'Error en Inferencia',
-          actionAdvice: diag.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.',
-          details: diag.errorDetail,
-          engine: selectedEngine
-        });
-      }
-      if (inFlightRes.stemsMap && Object.keys(inFlightRes.stemsMap).length > 0) {
-        const inFlightEngineUsed = inFlightRes.engineUsed || (inFlightRes.isNeural ? inFlightRes.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
-        const inFlightDegraded = !inFlightRes.isNeural && !isUserExplicitDsp;
-        return res.json({
-          success: true,
-          audioUrl: audioUrl || "",
-          separationEngine: inFlightRes.engine,
-          engineUsed: inFlightEngineUsed,
-          degraded: inFlightDegraded,
-          degradedReason: inFlightDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
-          isNeural: inFlightRes.isNeural,
-          cached: true,
-          executionTimeMs: 12,
-          executionTimeSec: "0.0s",
-          timingBreakdown: { ...inFlightRes.timingBreakdown, deduplicated: true },
-          replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
-          falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
-          songTitle: songTitle || "Canción",
-          sectionName: sectionName || "General",
-          detectedBpm: bpm || 120,
-          detectedKey: key || "Am",
-          analysisSummary: `Stems sincronizados desde el trabajo en ejecución (${inFlightRes.engine}). 0 llamadas duplicadas a la GPU.`,
-          stems: buildFormattedStems(inFlightRes.stemsMap)
-        });
+      try {
+        const inFlightRes = await Promise.race([
+          inFlightSeparations.get(cacheKey)!,
+          new Promise<any>((_, reject) => setTimeout(() => reject(new Error('Deduplication wait timeout (60s)')), 60000))
+        ]);
+        if (inFlightRes.errorInfo) {
+          const diag = inFlightRes.errorInfo;
+          return res.status(diag.httpStatus || 502).json({
+            provider: diag.provider || 'replicate',
+            error: diag.errorTitle || 'Fallo en la inferencia',
+            message: diag.error || 'La inferencia no devolvió resultados.',
+            errorType: diag.errorType || 'generic',
+            errorTitle: diag.errorTitle || 'Error en Inferencia',
+            actionAdvice: diag.actionAdvice || 'Puedes intentar de nuevo o utilizar el Motor DSP local.',
+            details: diag.errorDetail,
+            engine: selectedEngine
+          });
+        }
+        if (inFlightRes.stemsMap && Object.keys(inFlightRes.stemsMap).length > 0) {
+          const inFlightEngineUsed = inFlightRes.engineUsed || (inFlightRes.isNeural ? inFlightRes.engine : (isUserExplicitDsp ? 'dsp-server' : 'dsp_fallback'));
+          const inFlightDegraded = !inFlightRes.isNeural && !isUserExplicitDsp;
+          return res.json({
+            success: true,
+            audioUrl: audioUrl || "",
+            separationEngine: inFlightRes.engine,
+            engineUsed: inFlightEngineUsed,
+            degraded: inFlightDegraded,
+            degradedReason: inFlightDegraded ? "Sin credenciales activas o servicio de IA disponible; procesado con filtros básicos DSP" : undefined,
+            isNeural: inFlightRes.isNeural,
+            cached: true,
+            executionTimeMs: 12,
+            executionTimeSec: "0.0s",
+            timingBreakdown: { ...inFlightRes.timingBreakdown, deduplicated: true },
+            replicateConfigured: !!(process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY),
+            falConfigured: !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
+            songTitle: songTitle || "Canción",
+            sectionName: sectionName || "General",
+            detectedBpm: bpm || 120,
+            detectedKey: key || "Am",
+            analysisSummary: `Stems sincronizados desde el trabajo en ejecución (${inFlightRes.engine}). 0 llamadas duplicadas a la GPU.`,
+            stems: buildFormattedStems(inFlightRes.stemsMap)
+          });
+        }
+      } catch (inFlightWaitErr) {
+        console.warn(`[Stem Separator] Timeout esperando trabajo en vuelo para ${cacheKey}. Procediendo con ejecución directa.`);
+        inFlightSeparations.delete(cacheKey);
       }
     }
 

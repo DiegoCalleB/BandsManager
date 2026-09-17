@@ -168,11 +168,25 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
       // Evento o bloque del show — el "bis" en sí es solo una marca de "aquí empieza el bis", no
       // una canción con energía propia: las canciones reales que forman el bis ya puntúan como
       // canciones normales justo después de este marcador. Ponerle un score de 20 aquí sería
-      // inventar un pico que no sale de ningún dato real — por eso todos los eventos (bis
-      // incluido) comparten el mismo score de relleno bajo; el gráfico los excluye igual de la
-      // curva de energía (ver isSpeechEvent en RepertorioSetlists.tsx), solo cambia el icono para
-      // poder distinguir visualmente dónde empieza el bis.
-      const isBis = item.tipoItem === 'bloque' && item.bloqueSubtipo === 'bis';
+      // inventar un pico que no sale de ningún dato real — por eso todos los eventos comparten el
+      // mismo score de relleno bajo; el gráfico los excluye igual de la curva de energía (ver
+      // isSpeechEvent en RepertorioSetlists.tsx), solo cambia el icono según el subtipo para
+      // poder distinguir de un vistazo qué es cada marcador (mismos iconos que SHOW_ITEM_TYPES en
+      // RepertorioSetlists.tsx — si se añade un subtipo nuevo ahí, añadirlo aquí también).
+      const subtipo = item.bloqueSubtipo || 'otro';
+      const ICONOS_BLOQUE: Record<string, string> = {
+        header: '⚡',
+        presentacion: '🎤',
+        intro_tema: '🗣️',
+        beatbox: '🥁',
+        solo_performance: '🎸',
+        cambio_instrumento: '🔧',
+        chapa: '💬',
+        descanso: '⏸️',
+        bis: '💣',
+        otro: '📌'
+      };
+      const isBis = subtipo === 'bis';
       const score = 4;
       points.push({
         index,
@@ -185,7 +199,7 @@ export function analyzeSetlistEnergy(items: SetlistItem[], songs: Song[]): Setli
           category: 'balada',
           score,
           label: item.tituloCustom || 'Evento Show',
-          icon: isBis ? '💣' : '💬',
+          icon: ICONOS_BLOQUE[subtipo] || '📌',
           hexColor: isBis ? '#a21caf' : '#64748b',
           bgClass: isBis ? 'bg-fuchsia-500/15' : 'bg-slate-700/30',
           textClass: isBis ? 'text-fuchsia-400' : 'text-slate-400',

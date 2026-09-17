@@ -12,12 +12,13 @@ describe('planPermissions - PROMO y PROMO+', () => {
   it('define correctamente el plan promo básico', () => {
     const promo = PLANS.promo;
     expect(promo.id).toBe('promo');
-    expect(promo.allowedModules).toEqual(['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'catalogo', 'discografia']);
+    expect(promo.allowedModules).toEqual(['resumen', 'calendario', 'epk', 'fans', 'repertorio', 'ensayos', 'catalogo', 'discografia']);
     expect(hasModuleAccess('promo', 'resumen')).toBe(true);
     expect(hasModuleAccess('promo', 'calendario')).toBe(true);
     expect(hasModuleAccess('promo', 'epk')).toBe(true);
     expect(hasModuleAccess('promo', 'fans')).toBe(true);
     expect(hasModuleAccess('promo', 'repertorio')).toBe(true);
+    expect(hasModuleAccess('promo', 'ensayos')).toBe(true);
     expect(hasModuleAccess('promo', 'discografia')).toBe(true);
     expect(hasModuleAccess('promo', 'catalogo')).toBe(true);
     expect(hasModuleAccess('promo', 'booking')).toBe(false);

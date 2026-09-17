@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { titlesMatch } from '../../utils/songTitleMatch';
 import { getEnergyInfo } from '../../utils/energyPacingUtils';
+import { EvaluacionUnion } from '../../utils/setlistCompatibility';
 
 export interface EnergyChartPoint {
   idx: number;
@@ -29,6 +30,20 @@ export interface EnergyChartPoint {
    * propia (las canciones reales del bis puntúan por su cuenta justo después). Se marcan en el
    * gráfico con una línea vertical propia en vez de contar como un punto más de la curva. */
   isSpeechEvent?: boolean;
+  /** BPM de la canción (detectado o manual) — null/undefined si no hay dato o es un evento de
+   * "speech". Se pinta como línea fina en un eje secundario, superpuesta a la curva de energía. */
+  bpm?: number | null;
+  /** true si la transición de ESTA canción a la SIGUIENTE es un choque de tonalidad (círculo de
+   * quintas) — ver evaluarTransicionArmonica en harmonicAnalysis.ts. Se marca con un aviso entre
+   * ambos puntos, igual que ya se hace con los eventos de "speech". */
+  harmonyClash?: boolean;
+  /** Tonalidad de la canción (detectada o manual, p.ej. "Am", "C", "F#"), null/undefined si no
+   * hay dato o es un evento de "speech". Se muestra como etiqueta de texto junto al punto. */
+  tonalidad?: string | null;
+  /** Evaluación integral de la unión (✓ o ✕) con la SIGUIENTE canción del repertorio. */
+  transitionToNext?: EvaluacionUnion | null;
+  /** Evaluación integral de la unión (✓ o ✕) desde la ANTERIOR canción del repertorio. */
+  transitionFromPrev?: EvaluacionUnion | null;
 }
 
 export interface EnergyChartZone {
@@ -65,6 +80,20 @@ interface EnergyChartProps {
   /** Muestra/oculta la curva "ideal" de referencia (línea discontinua por debajo de la curva
    * real). Por defecto visible; el toggle vive en el componente que llama a EnergyChart. */
   showIdealCurve?: boolean;
+  /** Muestra/oculta la línea de BPM (eje secundario a la derecha). Por defecto visible. */
+  showBpmLine?: boolean;
+  /** Muestra/oculta la etiqueta de tonalidad junto a cada punto. Apagada por defecto — con el
+   * gráfico ya lleno de curvas y avisos, es otra capa de texto que solo conviene cuando se busca
+   * específicamente la tonalidad (normalmente en modo zoom, con más espacio entre puntos). */
+  showTonalidad?: boolean;
+  /** Muestra/oculta los indicadores de unión (✓ / ✕) en cada transición del gráfico. */
+  showTransitionBadges?: boolean;
+  /** Callback para probar la unión de audio/acústica con la canción anterior en el setlist al seleccionar un punto. */
+  onPreviewTransition?: (selectedIndex: number) => void;
+  /** Ancho fijo en px para el gráfico (en vez de 100% del contenedor) — "modo zoom": más espacio
+   * horizontal entre puntos para leer etiquetas (tonalidad, BPM) sin que se pisen. El que llama
+   * es responsable de envolver el componente en un contenedor con scroll horizontal. */
+  expandedWidthPx?: number;
 }
 
 /**
@@ -85,7 +114,12 @@ export function EnergyChart({
   compact = false,
   onReorder,
   onEnergyChange,
-  showIdealCurve = true
+  showIdealCurve = true,
+  showBpmLine = false,
+  showTonalidad = false,
+  showTransitionBadges = true,
+  onPreviewTransition,
+  expandedWidthPx
 }: EnergyChartProps) {
   const gradientSuffix = compact ? '-compact' : '';
   const fontSize = compact ? 8 : 9;
@@ -310,6 +344,8 @@ export function EnergyChart({
       className={`relative ${compact ? 'w-full bg-black/70 rounded-lg overflow-hidden' : 'energy-map-glow w-full bg-black/70 rounded-lg overflow-hidden'} ${animMode === 'entrance' && !compact ? 'energy-map-grand-entrance' : ''}`}
       style={{
         height,
+        width: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
+        minWidth: expandedWidthPx ? `${expandedWidthPx}px` : undefined,
         cursor: draggingFromIndex !== null ? (dragAxis === 'y' ? 'ns-resize' : 'ew-resize') : undefined
       }}
     >
@@ -417,17 +453,57 @@ export function EnergyChart({
 
           {/* Eventos de "speech" (chapa, presentación, interludio...): no cuentan como un bajón de
               energía (score null + connectNulls en la curva de abajo), pero se marcan con su
-              propia línea vertical para que sigan siendo visibles en el gráfico. */}
+              propia línea vertical + el icono de su subtipo (💬 chapa, 🎤 presentación, 💣 bis...)
+              para que se lea de un vistazo qué es cada marcador, sin confundirlo con la curva. */}
           {chartData.filter((d) => d.isSpeechEvent).map((d) => (
             <ReferenceLine
               key={`speech-${d.id}`}
               x={d.idx}
-              stroke="#52525b"
+              stroke="#94a3b8"
+              strokeWidth={1.5}
               strokeDasharray="2 3"
               ifOverflow="extendDomain"
-              label={compact ? undefined : { value: d.icon, position: 'insideTop', fontSize: 11, fill: '#a1a1aa' }}
+              label={{ value: d.icon, position: 'insideTop', fontSize: compact ? 13 : 20, fill: '#e5e7eb' }}
             />
           ))}
+
+          {/* Choque de tonalidad con la SIGUIENTE canción (círculo de quintas) — se marca a medio
+              camino entre ambos puntos, mismo patrón que los eventos de "speech" de arriba. */}
+          {!showTransitionBadges && chartData.filter((d) => d.harmonyClash).map((d) => (
+            <ReferenceLine
+              key={`clash-${d.id}`}
+              x={d.idx + 0.5}
+              stroke="#f43f5e"
+              strokeDasharray="3 3"
+              strokeOpacity={0.8}
+              ifOverflow="extendDomain"
+              label={{ value: '⚡', position: 'insideTop', fontSize: compact ? 10 : 13 }}
+            />
+          ))}
+
+          {/* Indicadores de unión (✓ o ✕) entre temas consecutivos calculados por armonía, BPM y energía */}
+          {showTransitionBadges && chartData.filter((d) => d.transitionToNext).map((d) => {
+            const tr = d.transitionToNext!;
+            const isOk = tr.status === 'ok';
+            return (
+              <ReferenceLine
+                key={`trans-${d.id}`}
+                x={d.idx + 0.5}
+                stroke={isOk ? '#10b981' : '#f43f5e'}
+                strokeWidth={isOk ? 1 : 1.5}
+                strokeDasharray={isOk ? '2 3' : '3 2'}
+                strokeOpacity={isOk ? 0.45 : 0.85}
+                ifOverflow="extendDomain"
+                label={{
+                  value: isOk ? '✓' : tr.coste.harmonyRelation === 'choque' ? '✕ ⚡' : '✕',
+                  position: 'insideTop',
+                  fill: isOk ? '#34d399' : '#f87171',
+                  fontSize: compact ? (isOk ? 9 : 10) : (isOk ? 11 : 12),
+                  fontWeight: 900
+                }}
+              />
+            );
+          })}
 
           <XAxis
             dataKey="idx"
@@ -444,6 +520,7 @@ export function EnergyChart({
               energía del grid. Es una transformación puramente de presentación (÷2 en la
               etiqueta), no cambia la posición real de la curva. */}
           <YAxis
+            yAxisId="energy"
             domain={yDomain}
             tickFormatter={(v: number) => `${Math.round(v / 2)}`}
             stroke="#666666"
@@ -453,6 +530,22 @@ export function EnergyChart({
             width={compact ? 0 : 22}
             hide={compact}
           />
+          {/* Eje secundario de BPM, a la derecha — misma curva temporal, escala independiente
+              (60-200 vs 1-20 de energía no tienen nada que ver, superponerlas en el mismo eje
+              sería ilegible). Dominio con margen para que la línea no toque los bordes. */}
+          {showBpmLine && (
+            <YAxis
+              yAxisId="bpm"
+              orientation="right"
+              domain={['dataMin - 15', 'dataMax + 15']}
+              stroke="#38bdf8"
+              fontSize={fontSize}
+              tickLine={false}
+              axisLine={false}
+              width={compact ? 0 : 26}
+              hide={compact}
+            />
+          )}
 
           <RechartsTooltip
             cursor={{ stroke: '#666', strokeDasharray: '3 3' }}
@@ -460,17 +553,23 @@ export function EnergyChart({
               if (!active || !payload?.length) return null;
               const d = payload[0].payload;
               return (
-                <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[180px]">
+                <div className="bg-black text-white text-[9px] font-mono py-1.5 px-2.5 rounded-lg shadow-xl border border-neutral-700 max-w-[200px]">
                   <p className="font-bold text-[#d1b375] text-[10px]">#{d.idx + 1} {d.name}</p>
                   {d.isSpeechEvent ? (
                     <p className="text-neutral-400 flex items-center gap-1 mt-0.5">
-                      <span>{d.icon}</span> Interludio — no cuenta como energía
+                      <span>{d.icon}</span> Interludio / Pausa — meseta de energía
                     </p>
                   ) : (
                     <>
                       <p className="text-neutral-300 flex items-center gap-1 mt-0.5">
                         <span>{d.icon}</span> {d.label} ({d.score}/20)
                       </p>
+                      {typeof d.bpm === 'number' && (
+                        <p className="text-sky-300 mt-0.5">🥁 {d.bpm} BPM</p>
+                      )}
+                      {d.tonalidad && (
+                        <p className="text-amber-300 mt-0.5">🎼 {d.tonalidad}</p>
+                      )}
                       {d.variance > 0 && (
                         <p className="text-sky-300 mt-0.5">
                           🎧 Dinámica interna: {d.variance >= 6 ? 'alta (sube y baja mucho)' : d.variance >= 3 ? 'media' : 'suave'}
@@ -479,6 +578,32 @@ export function EnergyChart({
                       {showIdealCurve && typeof d.idealScore === 'number' && Math.abs(d.idealScore - d.score) >= 2 && (
                         <p className="text-neutral-400 mt-0.5">
                           〰️ Ideal aquí: ~{d.idealScore}/20
+                        </p>
+                      )}
+                      {d.transitionFromPrev && (
+                        <div className={`mt-1.5 pt-1 border-t border-neutral-800 ${
+                          d.transitionFromPrev.status === 'ok' ? 'text-emerald-300' : 'text-rose-300'
+                        }`}>
+                          <div className="flex items-center gap-1 font-bold">
+                            <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 ${
+                              d.transitionFromPrev.status === 'ok'
+                                ? 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-300'
+                                : 'bg-rose-500/20 border border-rose-500/50 text-rose-300'
+                            }`}>
+                              {d.transitionFromPrev.icon}
+                            </span>
+                            <span>Unión con #{d.idx}: {d.transitionFromPrev.status === 'ok' ? 'Fluida' : 'Revisar'} ({d.transitionFromPrev.scorePercent}%)</span>
+                          </div>
+                          {d.transitionFromPrev.motivos.length > 0 && (
+                            <p className="text-[8px] text-neutral-400 pl-4 mt-0.5 leading-tight">
+                              {d.transitionFromPrev.motivos.join(' · ')}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {d.idx > 0 && onPreviewTransition && (
+                        <p className="text-[#f2ca50] font-semibold mt-1 pt-1 border-t border-neutral-800 flex items-center gap-1 cursor-pointer hover:underline">
+                          🎧 Probar unión con #{d.idx}
                         </p>
                       )}
                     </>
@@ -493,6 +618,7 @@ export function EnergyChart({
               análisis. Discontinua y en gris neutro para no competir con los colores reales. */}
           {showIdealCurve && (
             <Line
+              yAxisId="energy"
               type="monotone"
               dataKey="idealScore"
               stroke="#9ca3af"
@@ -513,6 +639,7 @@ export function EnergyChart({
               encima de los eventos de "speech" (score null) sin dibujar un bajón ahí, uniendo
               directamente las canciones real de antes y de después. */}
           <Area
+            yAxisId="energy"
             type="monotone"
             dataKey="score"
             stroke={`url(#energyStrokeGradient${gradientSuffix})`}
@@ -526,7 +653,19 @@ export function EnergyChart({
             // Recharts dibuja su propio "activeDot" ENCIMA del dot personalizado al pasar el
             // ratón cerca — con onReorder eso tapa el <circle> real y se traga el mousedown
             // antes de que llegue a nuestro handler de arrastre, así que se desactiva aquí.
-            activeDot={(onReorder || onEnergyChange) ? false : { r: dotSelected, strokeWidth: 2, stroke: '#ffffff' }}
+            activeDot={(onReorder || onEnergyChange) ? false : (activeDotProps: any) => {
+              if (activeDotProps?.payload?.isSpeechEvent) return <React.Fragment key="speech-act-dot" />;
+              return (
+                <circle
+                  cx={activeDotProps.cx}
+                  cy={activeDotProps.cy}
+                  r={dotSelected}
+                  strokeWidth={2}
+                  stroke="#ffffff"
+                  fill={activeDotProps.payload?.color || '#fbbf24'}
+                />
+              );
+            }}
             dot={(dotProps: any) => {
               const { cx, cy, payload, index } = dotProps;
               // payload.score null (eventos de "speech") no tiene una posición real que dibujar —
@@ -539,6 +678,7 @@ export function EnergyChart({
               const isDraggingThis = draggingFromIndex === payload.idx;
               const canEditThisEnergy = !!onEnergyChange && payload.songId != null;
               const canDragThis = !!onReorder || canEditThisEnergy;
+              const dotRadius = isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault;
               return (
                 <React.Fragment key={`dot-${payload.id}`}>
                   {/* Diana táctil invisible: el punto visible (r=3.5-8px) es demasiado pequeño
@@ -565,7 +705,7 @@ export function EnergyChart({
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={isDraggingThis ? dotHighlighted : isHighlighted ? dotHighlighted : isSelected ? dotSelected : dotDefault}
+                    r={dotRadius}
                     fill={payload.color}
                     stroke={isHighlighted ? payload.color : isSelected ? '#ffffff' : '#0a0a0a'}
                     strokeWidth={isHighlighted ? 2 : isSelected ? 2 : 1.5}
@@ -586,10 +726,60 @@ export function EnergyChart({
                     }}
                     onClick={() => { if (draggingFromIndex === null) onSelectItem?.(payload.id); }}
                   />
+                  {/* Etiqueta de tonalidad — puramente informativa, nunca captura el puntero (si
+                      no, taparía la diana táctil del punto justo debajo). Los picos de energía
+                      más alta caen cerca del borde superior del gráfico (que recorta con
+                      overflow-hidden) — por debajo de este margen, la etiqueta se pinta DEBAJO
+                      del punto en vez de encima para que nunca se corte. */}
+                  {showTonalidad && payload.tonalidad && (() => {
+                    const labelFontSize = compact ? 7.5 : 9;
+                    const espacioArriba = cy - dotRadius - 6 - labelFontSize;
+                    const margenSuperior = compact ? 8 : 14; // mismo valor que el margin.top del ComposedChart
+                    const pintarAbajo = espacioArriba < margenSuperior;
+                    return (
+                      <text
+                        x={cx}
+                        y={pintarAbajo ? cy + dotRadius + labelFontSize + 4 : cy - dotRadius - 6}
+                        textAnchor="middle"
+                        fontSize={labelFontSize}
+                        fontFamily="monospace"
+                        fontWeight={600}
+                        fill="#fbbf24"
+                        stroke="#000000"
+                        strokeWidth={1.8}
+                        paintOrder="stroke"
+                        pointerEvents="none"
+                      >
+                        {payload.tonalidad}
+                      </text>
+                    );
+                  })()}
                 </React.Fragment>
               );
             }}
           />
+
+          {/* Línea de BPM, en el eje secundario — puramente informativa (no arrastrable, no
+              afecta al reordenamiento): deja ver de un vistazo si el orden actual tiene saltos
+              de tempo bruscos entre temas consecutivos. connectNulls salta los eventos de
+              "speech" igual que la curva de energía. */}
+          {showBpmLine && (
+            <Line
+              yAxisId="bpm"
+              type="monotone"
+              dataKey="bpm"
+              stroke="#38bdf8"
+              strokeWidth={compact ? 1.5 : 2}
+              strokeOpacity={0.85}
+              dot={{ r: compact ? 2 : 3, fill: '#38bdf8', strokeWidth: 0 }}
+              activeDot={{ r: compact ? 3 : 4.5, fill: '#38bdf8' }}
+              isAnimationActive={!compact}
+              animationDuration={curveAnimationDuration}
+              animationEasing={curveAnimationEasing}
+              legendType="none"
+              connectNulls
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </div>

@@ -13,7 +13,7 @@ import {
  Target, Search, ShieldCheck, Mail, Clock, Check, X, RefreshCw, RotateCcw,
  MapPin, Users, Bot, MessageSquare, Edit3, Settings, Sparkles, Send, LogOut, Loader2, Building, Radio, Building2, Tent, Landmark, Disc3, Briefcase,
  PlusCircle, Newspaper, Tv, Headphones, Globe, FileText, Plus, SlidersHorizontal, Map as MapIcon, List, LayoutGrid,
- Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet
+ Share2, Repeat, Truck, Handshake, Music, Zap, Upload, Image as ImageIcon, Download, Phone, PhoneCall, MessageCircle, Bookmark, BookmarkCheck, Filter, Trash2, History, Calendar, ListFilter, CheckCircle2, Save, Star, ChevronDown, ChevronUp, Wrench, FileSpreadsheet, Copy
 } from 'lucide-react';
 import { VenueMap } from './VenueMap';
 import { AddLeadModal } from './booking/AddLeadModal';
@@ -21,6 +21,8 @@ import { GooglePlacesExplorerModal } from './booking/GooglePlacesExplorerModal';
 import { CRMContactEnricherModal } from './booking/CRMContactEnricherModal';
 import { ExcelImportModal } from './booking/ExcelImportModal';
 import { ExportLeadsModal } from './booking/ExportLeadsModal';
+import { LeadDuplicatesModal } from './booking/LeadDuplicatesModal';
+import { findDuplicateLeads } from '../utils/duplicateLeads';
 import { TemplateConfigSection } from './booking/TemplateConfigSection';
 import { ExampleThreadsSection } from './booking/ExampleThreadsSection';
 import { NegotiationSimulationModal } from './booking/NegotiationSimulationModal';
@@ -285,6 +287,9 @@ export default function BookingCRM({
  const [isContactEnricherOpen, setIsContactEnricherOpen] = useState(false);
  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
  const [isExportLeadsOpen, setIsExportLeadsOpen] = useState(false);
+ const [isDuplicatesModalOpen, setIsDuplicatesModalOpen] = useState(false);
+ const duplicateGroups = useMemo(() => findDuplicateLeads(leads), [leads]);
+ const duplicateGroupsCount = duplicateGroups.length;
  const [isDispatchingEmails, setIsDispatchingEmails] = useState(false);
 
  const handleTriggerEnviadorAgent = async (leadId?: string) => {
@@ -1114,6 +1119,11 @@ export default function BookingCRM({
               {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
             </span>
           )}
+          {duplicateGroupsCount > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full bg-[#f2ca50] text-[#2c2200] text-[10px] font-black" title={`${duplicateGroupsCount} grupos de duplicados detectados`}>
+              {duplicateGroupsCount} dup
+            </span>
+          )}
           {isMobileToolsOpen ? <ChevronUp className="w-3 h-3 ml-0.5" /> : <ChevronDown className="w-3 h-3 ml-0.5" />}
         </button>
       </div>
@@ -1180,6 +1190,27 @@ export default function BookingCRM({
               Importar Excel / CSV (Bandas y Salas)
             </span>
             <ChevronDown className="w-3.5 h-3.5 opacity-60 -rotate-90" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsDuplicatesModalOpen(true);
+              setIsMobileToolsOpen(false);
+            }}
+            className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold bg-[#f2ca50]/15 hover:bg-[#f2ca50]/25 text-[#f2ca50] border border-[#f2ca50]/40 transition-all cursor-pointer shadow-sm active:scale-98"
+          >
+            <span className="flex items-center gap-2">
+              <Copy className="w-4 h-4 text-[#f2ca50]" />
+              Detector y Limpiador de Duplicados
+            </span>
+            {duplicateGroupsCount > 0 ? (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-[#f2ca50] text-[#2c2200]">
+                {duplicateGroupsCount} {duplicateGroupsCount === 1 ? 'grupo' : 'grupos'}
+              </span>
+            ) : (
+              <span className="text-[10px] text-zinc-400 font-normal">0 duplicados</span>
+            )}
           </button>
 
           <button
@@ -2623,6 +2654,15 @@ export default function BookingCRM({
     filteredLeads={filteredLeads}
     selectedLeadIds={selectedLeadIds}
     bandName={effectiveBandName}
+  />
+
+  <LeadDuplicatesModal
+    isOpen={isDuplicatesModalOpen}
+    onClose={() => setIsDuplicatesModalOpen(false)}
+    leads={leads}
+    onUpdateLead={(lead) => onUpdateLead(lead.id, lead)}
+    onDeleteLead={onDeleteLead}
+    isStitchLight={isStitchLight}
   />
 
 

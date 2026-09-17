@@ -3,6 +3,7 @@ import { X, Search, Check, ListPlus, Star } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { formatSecondsToMmSs } from '../../utils/repertorioUtils';
+import { formatSongTitle } from '../../utils/formatSongTitle';
 
 interface AddSongsToSetlistModalProps {
   isOpen: boolean;
@@ -193,7 +194,7 @@ export function AddSongsToSetlistModal({
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-white truncate">{s.titulo}</span>
+                        <span className="text-xs font-bold text-white truncate">{formatSongTitle(s.titulo)}</span>
                         {s.favoritoGeneral && <Star className="w-3 h-3 text-amber-400 fill-amber-400 shrink-0" />}
                         {alreadyInSetlist && (
                           <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-neutral-700 text-neutral-300 shrink-0">

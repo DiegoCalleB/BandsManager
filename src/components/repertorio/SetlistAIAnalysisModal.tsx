@@ -184,6 +184,11 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
   // del PDF (que es texto real seleccionable), esto es lo que hace falta para compartir de un
   // vistazo por WhatsApp: una captura tal cual se ve en pantalla.
   const analysisContentRef = useRef<HTMLDivElement>(null);
+  // Contenedor con scroll propio del modal (overflow-y-auto) — al lanzar un (re)análisis se hace
+  // scroll a top aquí, para que el usuario vea el estado de progreso desde arriba en vez de
+  // quedarse mirando donde estuviera desplazado (normalmente abajo del todo, tras pulsar
+  // "Reanalizar" al final de un análisis anterior).
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   /** Serializa el SVG del gráfico ya renderizado a un data: URI, listo para <img src="..."> o para dibujar en un canvas. Null si el gráfico no está montado (p.ej. setlist vacío). */
   const getChartSvgDataUrl = (): string | null => {
@@ -223,6 +228,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
   const handleAnalyze = async () => {
     setLoading(true);
     setError(null);
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
     try {
       const result = await api.analyzeSetlistWithAI(setlistId);
       if (result.success && result.analysis) {
@@ -470,6 +476,7 @@ export function SetlistAIAnalysisModal({ isOpen, onClose, setlistId, setlistName
     // por si aun así el usuario quiere apartarlo a un lado.
     <div className="fixed inset-0 flex items-start justify-center z-50 p-4 pt-12 pointer-events-none">
       <div
+        ref={scrollContainerRef}
         className="bg-neutral-900 rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-neutral-700 shadow-2xl pointer-events-auto"
         style={{ transform: `translate(${dragOffset.x}px, ${dragOffset.y}px)` }}
       >

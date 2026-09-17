@@ -214,3 +214,36 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 2. **Ediciones quirúrgicas:** diffs mínimos y contiguos sobre el archivo existente, no reescrituras completas salvo que el cambio lo justifique.
 3. **Cero salida redundante:** respuestas directas, concisas y orientadas a la acción.
 4. **Sin documentos de planificación por defecto:** no crear `.md` de plan/tareas/resumen de cambios (`implementation_plan.md`, `task.md`, `walkthrough.md`...) a menos que se pida explícitamente — ni existen en este repo ni encajan con cómo trabaja Claude Code por defecto; la herramienta de seguimiento de tareas nativa del agente (cuando exista) cumple esa función sin ensuciar el repo con archivos que nadie vuelve a abrir.
+
+---
+
+## ⚖️ 8. Riesgos Legales Detectados — Pendientes de Mitigar (auditoría 2026-09-16)
+
+> Esta sección existe para que estos flecos no se pierdan entre commits. `TERMS_OF_SERVICE.md` protege la propiedad intelectual del código frente a terceros, pero **no cubre nada de lo de abajo** — eso es sobre cómo la app trata datos y contenido de terceros, y es responsabilidad de quien opera el servicio, no del texto legal del repo. No bloquea el desarrollo del TFM; sí bloquea pasar a producción con usuarios reales sin resolver al menos los dos puntos 🔴.
+
+1. 🔴 **Descarga de YouTube sin verificar titularidad (`server/routes/concert_to_album.ts`, `server/routes/reels.ts`, `server/utils/youtubeSource.ts`):**
+   * Usan `ytdl-core`/`yt-dlp` con banderas anti-bot y gestión de cookies explícitas para saltarse los bloqueos de YouTube (comentarios propios en el código lo documentan: "el que se comía los bloqueos antibot de YouTube").
+   * Incumplimiento de los ToS de YouTube por diseño, y si la URL introducida no es contenido propio del usuario, **infracción de copyright** al descargar/reprocesar/redistribuir el clip.
+   * Hoy no hay ninguna verificación de que el vídeo pertenezca al usuario (ni checkbox de titularidad, ni comprobación de canal propio).
+   * **Mitigación mínima antes de producción:** exigir confirmación explícita de titularidad del contenido antes de procesar, y valorar restringir a canal propio verificado.
+
+2. 🔴 **Credenciales de email en texto plano (`server/db/emailAccounts.ts`):**
+   * El `app_password` de Gmail de cada banda se guarda sin cifrar en Supabase. Solo se excluye de las respuestas HTTP (`const { app_password, ...safe } = account`), no se cifra en reposo.
+   * Da acceso de lectura/escritura completo al buzón conectado. Una fuga de esa tabla compromete el correo de todas las bandas conectadas — expuesto directamente al régimen sancionador del art. 32 RGPD (deber de seguridad en el tratamiento).
+   * **Mitigación mínima:** cifrar `app_password` en reposo (AES con clave en variable de entorno, como mínimo) antes de manejar cuentas de bandas reales, no solo de prueba.
+
+3. 🟠 **Emails comerciales automatizados sin mecanismo de baja (`server/routes/leads/pitch.ts`, `server/services/emailAgentClient.ts`, `server/services/agentEngine.ts`):**
+   * El pipeline de outreach a salas/festivales no incluye enlace ni gestión de baja (`unsubscribe`) visible en el código.
+   * La LSSICE (art. 21, España) exige opción de baja en toda comunicación comercial no solicitada; sanción de hasta 30.000€ por infracción grave.
+   * **Mitigación:** añadir enlace/mecanismo de baja y registrar el opt-out por lead antes de escalar el volumen de envíos.
+
+4. 🟠 **Scraping de redes sociales con user-agent falseado (`server/services/socialRadarService.ts`):**
+   * `scrapeChannelMetrics` suplanta un navegador real (`User-Agent` de Chrome hardcodeado) para leer Instagram/TikTok/YouTube.
+   * No es delito, pero incumple los ToS de esas plataformas → riesgo de bloqueo de IP/cuenta de la banda, no de sanción legal.
+   * **Mitigación:** documentar el riesgo de bloqueo al usuario, y preferir APIs oficiales donde existan en vez de scraping cuando el volumen crezca.
+
+5. 🟠 **Datos personales de contactos de salas/festivales sin base de legitimación documentada (`server/routes/leads/enrichment.ts`, `places.ts`):**
+   * Nombre, email y teléfono de personas de contacto de salas se scrapean, enriquecen y almacenan como parte del lead. Son datos personales de terceros (no solo datos de la entidad "sala"), tratados sin una base de legitimación RGPD explícita en el propio sistema (interés legítimo probablemente aplicable, pero no documentado).
+   * **Mitigación:** documentar la base de legitimación (interés legítimo B2B) en una política de privacidad real, y ofrecer vía de baja/oposición al tratamiento.
+
+**Ya resuelto correctamente, no tocar sin razón:** `PublicFanCapture.tsx` sí implementa checkbox de consentimiento RGPD explícito (`consentimientoRGPD`) antes de capturar el email de un fan — usar ese componente como referencia de patrón cuando se añadan otros formularios de captación de datos de terceros.

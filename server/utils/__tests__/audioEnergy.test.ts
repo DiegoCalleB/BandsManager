@@ -6,8 +6,7 @@ import {
   analizarEnergiaAudio,
   medirVariacionInterna,
   calcularVolumenPromedioAudio,
-  detectarBpmDesdeAudio,
-  calcularEnergiaBpmVolumen,
+  calcularEnergiaMultifactor,
   DB_SILENCIO,
   type PuntoEnergia,
   construirFiltroPreprocesamientoDirecto,
@@ -206,96 +205,37 @@ describe('calcularVolumenPromedioAudio', () => {
   });
 });
 
-describe('detectarBpmDesdeAudio', () => {
-  /**
-   * Simula un pulso rítmico: un golpe cada `beatInterval` segundos (dB alto en el golpe,
-   * decayendo linealmente hasta el siguiente), muestreado a `hop` segundos — el mismo
-   * ~10 muestras/segundo que produce ahora `analizarEnergiaAudio`. Sin esta resolución
-   * fraccional el detector no puede ver más de un golpe por segundo (ver comentario en
-   * el propio `detectarBpmDesdeAudio`).
-   */
-  function generarCurvaConPulso(bpm: number, duracionSeg: number, hop = 0.1): PuntoEnergia[] {
-    const beatInterval = 60 / bpm;
-    const curva: PuntoEnergia[] = [];
-    for (let i = 0; i * hop < duracionSeg; i++) {
-      const t = i * hop;
-      const fase = ((t % beatInterval) + beatInterval) % beatInterval / beatInterval; // 0 en el golpe
-      const db = -10 - fase * 20; // -10 en el golpe, cae hasta -30 justo antes del siguiente
-      curva.push({ t, db });
-    }
-    return curva;
-  }
 
-  it('detecta un tempo lento (90 BPM) desde los golpes de energía', () => {
-    const bpm = detectarBpmDesdeAudio(generarCurvaConPulso(90, 20));
-    expect(bpm).not.toBeNull();
-    expect(bpm).toBeGreaterThanOrEqual(85);
-    expect(bpm).toBeLessThanOrEqual(95);
-  });
+describe('calcularEnergiaMultifactor', () => {
+  const bandStats = { minBpm: 80, maxBpm: 160, minDb: -35, maxDb: -15, minOnsetDensity: 1, maxOnsetDensity: 5 };
 
-  it('detecta un tempo medio (120 BPM) desde los golpes de energía', () => {
-    const bpm = detectarBpmDesdeAudio(generarCurvaConPulso(120, 20));
-    expect(bpm).not.toBeNull();
-    expect(bpm).toBeGreaterThanOrEqual(115);
-    expect(bpm).toBeLessThanOrEqual(125);
-  });
-
-  it('detecta un tempo rápido (160 BPM) desde los golpes de energía', () => {
-    const bpm = detectarBpmDesdeAudio(generarCurvaConPulso(160, 20));
-    expect(bpm).not.toBeNull();
-    expect(bpm).toBeGreaterThanOrEqual(150);
-    expect(bpm).toBeLessThanOrEqual(170);
-  });
-
-  it('con volumen plano (sin golpes) no inventa un BPM: devuelve null', () => {
-    const plana: PuntoEnergia[] = [];
-    for (let i = 0; i < 200; i++) plana.push({ t: i * 0.1, db: -20 });
-    expect(detectarBpmDesdeAudio(plana)).toBeNull();
-  });
-
-  it('con muy pocos puntos devuelve null en vez de un valor de relleno', () => {
-    expect(detectarBpmDesdeAudio([])).toBeNull();
-    expect(detectarBpmDesdeAudio(null as any)).toBeNull();
-    expect(detectarBpmDesdeAudio([{ t: 0, db: -20 }])).toBeNull();
-  });
-
-  it('una curva muestreada a 1/segundo (formato antiguo) no puede fiarse: devuelve null en vez de un 120 falso', () => {
-    // Antes de la corrección, esto es justo lo que producía siempre `energia_bpm_detectado = 120`
-    // sin haber medido nada real: una curva de 1 muestra/segundo no puede resolver un pulso
-    // de más de 60 BPM (dos golpes caben en el hueco entre dos muestras).
-    const curva: PuntoEnergia[] = [];
-    for (let t = 0; t < 30; t++) curva.push({ t, db: t % 2 === 0 ? -10 : -30 });
-    // Con solo 1 muestra/segundo el resultado no es fiable: o null, o cae dentro de un
-    // rango amplio — nunca debe devolver ciegamente 120 como si fuera una medición real.
-    const bpm = detectarBpmDesdeAudio(curva);
-    if (bpm !== null) {
-      expect(bpm).toBeGreaterThanOrEqual(40);
-      expect(bpm).toBeLessThanOrEqual(220);
-    }
-  });
-});
-
-describe('calcularEnergiaBpmVolumen', () => {
-  const bandStats = { minBpm: 80, maxBpm: 160, minDb: -35, maxDb: -15 };
-
-  it('tempo rápido + volumen alto da energía cerca del máximo', () => {
-    const energia = calcularEnergiaBpmVolumen(160, -15, bandStats);
+  it('tempo rápido + volumen alto + densidad rítmica alta da energía cerca del máximo', () => {
+    const energia = calcularEnergiaMultifactor(160, -15, 5, bandStats);
     expect(energia).toBeGreaterThanOrEqual(17);
   });
 
-  it('tempo lento + volumen bajo da energía cerca del mínimo', () => {
-    const energia = calcularEnergiaBpmVolumen(80, -35, bandStats);
+  it('tempo lento + volumen bajo + densidad rítmica baja da energía cerca del mínimo', () => {
+    const energia = calcularEnergiaMultifactor(80, -35, 1, bandStats);
     expect(energia).toBeLessThanOrEqual(4);
   });
 
   it('nunca se sale de 1-20', () => {
-    expect(calcularEnergiaBpmVolumen(1000, 0, bandStats)).toBeLessThanOrEqual(20);
-    expect(calcularEnergiaBpmVolumen(-1000, -200, bandStats)).toBeGreaterThanOrEqual(1);
+    expect(calcularEnergiaMultifactor(1000, 0, 100, bandStats)).toBeLessThanOrEqual(20);
+    expect(calcularEnergiaMultifactor(-1000, -200, -100, bandStats)).toBeGreaterThanOrEqual(1);
   });
 
-  it('con toda la banda en el mismo tempo y volumen, no inventa contraste: energía media', () => {
-    const plano = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25 };
-    expect(calcularEnergiaBpmVolumen(120, -25, plano)).toBe(10);
+  it('con toda la banda en el mismo tempo, volumen y densidad, no inventa contraste: energía media', () => {
+    const plano = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25, minOnsetDensity: 3, maxOnsetDensity: 3 };
+    expect(calcularEnergiaMultifactor(120, -25, 3, plano)).toBe(10);
+  });
+
+  it('un tercer factor con más rango que los otros dos no impide diferenciar por él', () => {
+    // BPM y dB planos (sin variedad real), pero la densidad rítmica sí varía en la banda: la
+    // canción más densa debe puntuar más alto que la más espaciada.
+    const bandStatsDensidadVaria = { minBpm: 120, maxBpm: 120, minDb: -25, maxDb: -25, minOnsetDensity: 1, maxOnsetDensity: 6 };
+    const densa = calcularEnergiaMultifactor(120, -25, 6, bandStatsDensidadVaria);
+    const espaciada = calcularEnergiaMultifactor(120, -25, 1, bandStatsDensidadVaria);
+    expect(densa).toBeGreaterThan(espaciada);
   });
 });
 

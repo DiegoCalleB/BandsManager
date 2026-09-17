@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Rehearsal, Concert, ThemeColors, BookingCampaign } from '../types';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2 } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
+import { apiFetch } from '../utils/api';
+import { triggerNativeMobileNotification } from '../utils/webPush';
 import { FAN_FORM_LANGUAGES } from '../i18n/fansTranslations';
 import { normalizePlan, hasModuleAccess } from '../utils/planPermissions';
 import { 
@@ -21,6 +23,7 @@ import {
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
+import { SetlistPerformanceView } from './SetlistPerformanceView';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -39,10 +42,12 @@ interface CalendarViewProps {
  initialSelectedDate?: string;
  currentBandId?: string;
  currentBandName?: string;
- availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
+ currentBandLogo?: string;
+ availableBands?: Array<{ band_id: string; bandName: string; name?: string; logoUrl?: string; logo_url?: string; imagen_url?: string; avatar_url?: string }>;
  bandUsers?: Array<{ id: string; name: string; username?: string; role?: string; instrument?: string; band_id?: string; bandName?: string }>;
  currentUser?: { id?: string; name?: string; username?: string; email?: string; role?: string; band_id?: string; instrument?: string; plan?: string; ui_preferences?: any };
  isPromoPlan?: boolean;
+ onShowNotification?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
 interface RunOfShowItem {
@@ -75,10 +80,12 @@ export default function CalendarView({
  initialSelectedDate,
  currentBandId = '',
  currentBandName = '',
+ currentBandLogo = '',
  availableBands = [],
  bandUsers = [],
  currentUser,
- isPromoPlan: isPromoPlanProp
+ isPromoPlan: isPromoPlanProp,
+ onShowNotification
 }: CalendarViewProps) {
  const isPromoPlan = isPromoPlanProp ?? (
    normalizePlan(currentUser?.plan) === 'promo' ||
@@ -110,51 +117,69 @@ export default function CalendarView({
   return clean1 === clean2;
  }, []);
 
- // Build list of all user's assigned bands
+ // Build list of all user's assigned bands with logo resolution
  const effectiveBandsList = React.useMemo(() => {
-  const map = new Map<string, { band_id: string; bandName: string }>();
+  const map = new Map<string, { band_id: string; bandName: string; logoUrl?: string }>();
 
-  const addBandToMap = (id?: string, name?: string) => {
+  let customLogos: Record<string, string> = {};
+  try {
+    const raw = localStorage.getItem('bandmanager_custom_band_logos');
+    if (raw) customLogos = JSON.parse(raw);
+  } catch {}
+
+  const addBandToMap = (id?: string, name?: string, logo?: string) => {
    if (!id) return;
-   const cleanKey = id.replace(/^(band|reg)-/, '');
+   const cleanKey = id.replace(/^(band|reg)-/, '').trim().toLowerCase();
+
+   let resolvedLogo = logo || customLogos[cleanKey] || '';
+   if (!resolvedLogo && isSameBandId(id, activeBandId) && currentBandLogo) {
+     resolvedLogo = currentBandLogo;
+   }
+   if (!resolvedLogo && (cleanKey === 'bakandeya' || name?.toLowerCase().includes('bakandeya') || id.toLowerCase().includes('bakandeya'))) {
+     resolvedLogo = '/logo_bakandeya_bueno_sin_fondo.png';
+   }
+
    if (!map.has(cleanKey)) {
     const displayName = name || (
      cleanKey === 'bakandeya' ? 'Bakandeya' :
      cleanKey === 'repercusion' ? 'Repercusion' :
      cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1)
     );
-    map.set(cleanKey, { band_id: id, bandName: displayName });
-   } else if (name && map.get(cleanKey)?.bandName === cleanKey) {
-    map.set(cleanKey, { band_id: id, bandName: name });
+    map.set(cleanKey, { band_id: id, bandName: displayName, logoUrl: resolvedLogo });
+   } else {
+    const existing = map.get(cleanKey)!;
+    if (resolvedLogo && !existing.logoUrl) existing.logoUrl = resolvedLogo;
+    if (name && existing.bandName === cleanKey) existing.bandName = name;
    }
   };
 
   if (activeBandId) {
-   addBandToMap(activeBandId, activeBandName);
+   addBandToMap(activeBandId, activeBandName, currentBandLogo);
   }
 
   if (availableBands && availableBands.length > 0) {
-   availableBands.forEach(b => {
-    const id = b.band_id || (b as any).id;
-    const name = b.bandName || b.name || (b as any).nombre_banda;
-    addBandToMap(id, name);
+   availableBands.forEach((b: any) => {
+    const id = b.band_id || b.id;
+    const name = b.bandName || b.name || b.nombre_banda;
+    const logo = b.logoUrl || b.logo_url || b.imagen_url || b.avatar_url;
+    addBandToMap(id, name, logo);
    });
   }
 
-  concerts.forEach(c => {
+  concerts.forEach((c: any) => {
    if (c.band_id) {
-    addBandToMap(c.band_id, c.bandName);
+    addBandToMap(c.band_id, c.bandName, c.bandLogo || c.logoUrl);
    }
   });
 
-  rehearsals.forEach(r => {
+  rehearsals.forEach((r: any) => {
    if (r.band_id) {
-    addBandToMap(r.band_id, r.bandName);
+    addBandToMap(r.band_id, r.bandName, r.bandLogo || r.logoUrl);
    }
   });
 
   return Array.from(map.values());
- }, [activeBandId, activeBandName, availableBands, concerts, rehearsals]);
+ }, [activeBandId, activeBandName, currentBandLogo, availableBands, concerts, rehearsals, isSameBandId]);
 
  // Helper to accurately derive the band name for any concert or rehearsal event
  const getEventBandName = React.useCallback((e: { bandName?: string; band_id?: string } | null | undefined): string => {
@@ -256,6 +281,107 @@ export default function CalendarView({
  // Convocatoria form state
  const [convocatoriaTipo, setConvocatoriaTipo] = useState<'completa' | 'parcial'>('completa');
  const [convocadosIds, setConvocadosIds] = useState<string[]>([]);
+
+ // Event Reminder Modal State
+ const [showReminderModal, setShowReminderModal] = useState(false);
+ const [reminderSending, setReminderSending] = useState(false);
+ const [reminderSuccessMsg, setReminderSuccessMsg] = useState<string | null>(null);
+ const [reminderErrorMsg, setReminderErrorMsg] = useState<string | null>(null);
+ const [reminderNotes, setReminderNotes] = useState('');
+ const [reminderSendEmail, setReminderSendEmail] = useState(true);
+ const [reminderSendPush, setReminderSendPush] = useState(true);
+
+ const handleSendEventReminder = async () => {
+   const evt = selectedConcert || selectedRehearsal;
+   if (!evt) return;
+
+   setReminderSending(true);
+   setReminderSuccessMsg(null);
+   setReminderErrorMsg(null);
+
+   const eventType = selectedConcert ? 'concierto' : (selectedRehearsal?.tipo_evento === 'reunion' ? 'reunion' : 'ensayo');
+   const eventTitle = selectedConcert ? selectedConcert.sala : (selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento');
+   const eventDate = `${selectedDate.getDate()} de ${monthNames[selectedDate.getMonth()]}, ${selectedDate.getFullYear()}`;
+   const eventTime = selectedRehearsal?.hora || '';
+   const eventLocation = selectedConcert ? `${selectedConcert.sala}, ${selectedConcert.ciudad}` : (selectedRehearsal?.lugar || '');
+
+   const recipientEmails = effectiveBandMembers
+     .map((m: any) => m.email)
+     .filter((e: string | undefined): e is string => !!e && e.includes('@'));
+
+   if (recipientEmails.length === 0 && currentUser?.email) {
+     recipientEmails.push(currentUser.email);
+   }
+
+   let pushSent = false;
+   let emailSent = false;
+   let pushMsg = '';
+   let emailMsg = '';
+
+   try {
+     if (reminderSendPush) {
+       const notifTitle = `🔔 ${eventType.toUpperCase()}: ${eventTitle}`;
+       const notifBody = `📅 ${eventDate}${eventTime ? ` a las ${eventTime}` : ''}${eventLocation ? ` (${eventLocation})` : ''}${reminderNotes ? `\n💡 ${reminderNotes}` : ''}`;
+       const pushResult = await triggerNativeMobileNotification(notifTitle, { body: notifBody });
+       if (pushResult.success) {
+         pushSent = true;
+         pushMsg = '📱 Notificación enviada al dispositivo móvil';
+       } else {
+         pushMsg = `📱 Móvil: ${pushResult.status}`;
+       }
+     }
+
+     if (reminderSendEmail) {
+       try {
+         const data = await apiFetch<any>('/api/bands/send-reminder', {
+           method: 'POST',
+           body: JSON.stringify({
+             event_title: eventTitle,
+             event_type: eventType,
+             event_date: eventDate,
+             event_time: eventTime,
+             event_location: eventLocation,
+             recipients: recipientEmails,
+             custom_notes: reminderNotes,
+             send_email: true
+           })
+         });
+
+         if (data && data.success) {
+           emailSent = true;
+           emailMsg = '📧 Correo enviado a la banda';
+         } else {
+           emailMsg = data?.error || 'No se pudo enviar el correo';
+         }
+       } catch (apiErr: any) {
+         console.warn('Error enviando correo de recordatorio:', apiErr);
+         emailMsg = apiErr?.message || 'Error en envío de correo';
+       }
+     }
+
+     if (pushSent || emailSent) {
+       const messages = [pushSent ? pushMsg : null, emailSent ? emailMsg : null].filter(Boolean).join(' y ');
+       setReminderSuccessMsg(`¡Recordatorio enviado con éxito! (${messages})`);
+       onShowNotification?.('🔔 Recordatorio enviado correctamente', 'success');
+       setTimeout(() => {
+         setShowReminderModal(false);
+         setReminderSuccessMsg(null);
+         setReminderNotes('');
+       }, 2200);
+     } else {
+       const errDetails = [
+         reminderSendPush ? pushMsg : null,
+         reminderSendEmail ? emailMsg : null
+       ].filter(Boolean).join('. ');
+       setReminderErrorMsg(`No se pudo enviar el recordatorio: ${errDetails}`);
+     }
+   } catch (err: any) {
+     console.error('Error enviando recordatorio:', err);
+     setReminderErrorMsg(err?.message || 'Error al procesar el recordatorio');
+   } finally {
+     setReminderSending(false);
+   }
+ };
 
  // Filter helper by Convocatoria (Banda Completa vs Convocatoria Parcial)
  const matchesConvocatoria = React.useCallback((evt: Concert | Rehearsal) => {
@@ -362,6 +488,7 @@ export default function CalendarView({
  const [devicePrefs, setDevicePrefs] = useState<{ mobile: CalendarMonthsView; desktop: CalendarMonthsView }>(() => getAllDevicePreferences());
  const [selectedConfigDevice, setSelectedConfigDevice] = useState<DeviceType>(() => detectDeviceType());
  const [twoMonthsMode, setTwoMonthsMode] = useState<boolean>(() => isTwoMonthsDefault());
+ const [calendarViewMode, setCalendarViewMode] = useState<'1m' | '2m' | 'week' | 'agenda'>(() => isTwoMonthsDefault() ? '2m' : '1m');
  const [showViewConfigPopover, setShowViewConfigPopover] = useState<boolean>(false);
  const [configToast, setConfigToast] = useState<string | null>(null);
  const [isSavingPref, setIsSavingPref] = useState<boolean>(false);
@@ -374,7 +501,9 @@ export default function CalendarView({
    const updated = getAllDevicePreferences();
    setDevicePrefs(updated);
    const curDev = detectDeviceType();
-   setTwoMonthsMode(updated[curDev] === '2');
+   const is2m = updated[curDev] === '2';
+   setTwoMonthsMode(is2m);
+   setCalendarViewMode(prev => (prev === 'week' || prev === 'agenda') ? prev : (is2m ? '2m' : '1m'));
   }
  }, [currentUser]);
 
@@ -403,6 +532,7 @@ export default function CalendarView({
 
   if (targetDevice === currentDeviceType) {
    setTwoMonthsMode(mode === '2');
+   setCalendarViewMode(mode === '2' ? '2m' : '1m');
   }
 
   const isCloudSaved = await setCalendarDefaultMonths(mode, targetDevice, true);
@@ -461,7 +591,16 @@ export default function CalendarView({
  };
 
  // Creation Modals state
- const [showCreateModal, setShowCreateModal] = useState<'rehearsal' | 'concert' | null>(null);
+ const [showCreateModal, setShowCreateModal] = useState<'rehearsal' | 'concert' | 'reunion' | null>(null);
+  const [showAddEventDropdown, setShowAddEventDropdown] = useState(false);
+
+  // Form fields for new Reunion
+  const [reuHora, setReuHora] = useState('19:30 - 20:30');
+  const [reuLugar, setReuLugar] = useState('Online (Google Meet)');
+  const [reuAsunto, setReuAsunto] = useState('Coordinación de gira y tareas');
+  const [reuEnlace, setReuEnlace] = useState('');
+  const [reuNotas, setReuNotas] = useState('1. Repasar próximas fechas y logística.\n2. Presupuestos y gastos.\n3. Nuevos temas del repertorio.');
+  const [reuEstado, setReuEstado] = useState<'programado' | 'completado' | 'cancelado'>('programado');
 
  // Reset convocatoria state when opening modal
  useEffect(() => {
@@ -487,6 +626,7 @@ export default function CalendarView({
  // Form fields for new Concert
  const [concCiudad, setConcCiudad] = useState('Madrid');
  const [concSala, setConcSala] = useState('');
+ const [concDireccion, setConcDireccion] = useState('');
  const [concCache, setConcCache] = useState('1200');
  const [concAforo, setConcAforo] = useState('300');
  const [concContrato, setConcContrato] = useState(true);
@@ -506,6 +646,46 @@ export default function CalendarView({
  }
  });
 
+ // Canciones para la vista de escenario / teleprompter
+ const [availableSongs, setAvailableSongs] = useState<any[]>(() => {
+ try {
+ const saved = localStorage.getItem('bakandeya_songs_data');
+ return saved ? JSON.parse(saved) : [];
+ } catch {
+ return [];
+ }
+ });
+
+ // Estado para la vista de directo / modo escenario desde el calendario
+ const [activeStageSetlist, setActiveStageSetlist] = useState<any | null>(null);
+ const [activeStageInitialMode, setActiveStageInitialMode] = useState<'directo' | 'ensayo'>('directo');
+
+ // Estado y lógica para la vista a Pantalla Completa del Calendario
+ const [isCalendarFullscreen, setIsCalendarFullscreen] = useState(false);
+ const calendarContainerRef = useRef<HTMLDivElement>(null);
+
+ const toggleCalendarFullscreen = React.useCallback(() => {
+   if (!isCalendarFullscreen) {
+     if (calendarContainerRef.current && calendarContainerRef.current.requestFullscreen) {
+       calendarContainerRef.current.requestFullscreen().catch(() => {});
+     }
+     setIsCalendarFullscreen(true);
+   } else {
+     if (document.fullscreenElement) {
+       document.exitFullscreen().catch(() => {});
+     }
+     setIsCalendarFullscreen(false);
+   }
+ }, [isCalendarFullscreen]);
+
+ useEffect(() => {
+   const handleFullscreenChange = () => {
+     setIsCalendarFullscreen(!!document.fullscreenElement);
+   };
+   document.addEventListener('fullscreenchange', handleFullscreenChange);
+   return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+ }, []);
+
  useEffect(() => {
  let isMounted = true;
  fetch('/api/setlists')
@@ -521,6 +701,20 @@ export default function CalendarView({
  }
  })
  .catch(() => {});
+
+ api.getSongs()
+ .then(res => {
+ if (!isMounted) return;
+ const songsList = Array.isArray(res) ? res : (res?.songs || []);
+ if (songsList && songsList.length > 0) {
+ setAvailableSongs(songsList);
+ try {
+ localStorage.setItem('bakandeya_songs_data', JSON.stringify(songsList));
+ } catch (e) {}
+ }
+ })
+ .catch(() => {});
+
  return () => { isMounted = false; };
  }, [activeBandId]);
 
@@ -564,22 +758,26 @@ export default function CalendarView({
  }, [viewingRehearsal]);
 
  const handleSaveRehearsalEdit = (e: React.FormEvent) => {
- e.preventDefault();
- if (!viewingRehearsal || !editRehearsalDraft) return;
- onUpdateRehearsal(viewingRehearsal.id, {
- fecha: editRehearsalDraft.fecha,
- hora: editRehearsalDraft.hora?.trim() || '',
- lugar: editRehearsalDraft.lugar?.trim() || 'Local de Ensayo',
- estado: editRehearsalDraft.estado || 'programado',
- notas: editRehearsalDraft.notas?.trim() || '',
- convocatoria_tipo: editRehearsalDraft.convocatoria_tipo,
- convocados_ids: editRehearsalDraft.convocados_ids,
- setlistId: editRehearsalDraft.setlistId || undefined
- });
- setViewingRehearsal(null);
- setSyncSuccessMessage(`¡Ensayo en ${editRehearsalDraft.lugar} actualizado!`);
- setTimeout(() => setSyncSuccessMessage(''), 5000);
- };
+    e.preventDefault();
+    if (!viewingRehearsal || !editRehearsalDraft) return;
+    const isReu = editRehearsalDraft.tipo_evento === 'reunion';
+    onUpdateRehearsal(viewingRehearsal.id, {
+      fecha: editRehearsalDraft.fecha,
+      hora: editRehearsalDraft.hora?.trim() || '',
+      lugar: editRehearsalDraft.lugar?.trim() || (isReu ? 'Online' : 'Local de Ensayo'),
+      tipo_evento: editRehearsalDraft.tipo_evento || 'ensayo',
+      asunto: editRehearsalDraft.asunto?.trim() || undefined,
+      enlace_reunion: editRehearsalDraft.enlace_reunion?.trim() || undefined,
+      estado: editRehearsalDraft.estado || 'programado',
+      notas: editRehearsalDraft.notas?.trim() || '',
+      convocatoria_tipo: editRehearsalDraft.convocatoria_tipo,
+      convocados_ids: editRehearsalDraft.convocados_ids,
+      setlistId: editRehearsalDraft.setlistId || undefined
+    });
+    setViewingRehearsal(null);
+    setSyncSuccessMessage(`¡${isReu ? 'Reunión' : 'Ensayo'} ${isReu ? (editRehearsalDraft.asunto || 'actualizada') : `en ${editRehearsalDraft.lugar}`} actualizada!`);
+    setTimeout(() => setSyncSuccessMessage(''), 5000);
+  };
 
  const currentYear = viewDate.getFullYear();
  const currentMonth = viewDate.getMonth(); // 0 to 11
@@ -592,6 +790,22 @@ export default function CalendarView({
  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
  ];
+
+ const fullWeekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+ const getWeekDays = (baseDate: Date) => {
+   const curr = new Date(baseDate);
+   const dayIndex = (curr.getDay() + 6) % 7;
+   const monday = new Date(curr);
+   monday.setDate(curr.getDate() - dayIndex);
+   const days: Date[] = [];
+   for (let i = 0; i < 7; i++) {
+     const nextDay = new Date(monday);
+     nextDay.setDate(monday.getDate() + i);
+     days.push(nextDay);
+   }
+   return days;
+ };
 
  const todayStr = React.useMemo(() => {
  const now = new Date();
@@ -652,28 +866,29 @@ export default function CalendarView({
 
  // Filter rehearsals that are today or in the future
  filteredRehearsals.forEach(r => {
- if (!r.fecha || r.fecha < todayStr) return;
- const parts = r.fecha.split('-');
- if (parts.length !== 3) return;
- const day = parts[2];
- const monthIdx = parseInt(parts[1], 10) - 1;
- const month = monthNames[monthIdx] ? monthNames[monthIdx].slice(0, 3).toUpperCase() : 'ENE';
+    if (!r.fecha || r.fecha < todayStr) return;
+    const parts = r.fecha.split('-');
+    if (parts.length !== 3) return;
+    const day = parts[2];
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    const month = monthNames[monthIdx] ? monthNames[monthIdx].slice(0, 3).toUpperCase() : 'ENE';
+    const isReu = r.tipo_evento === 'reunion';
 
- list.push({
- id: r.id,
- type: 'ensayo',
- title: r.lugar ? `Ensayo en ${r.lugar}` : 'Ensayo General',
- fecha: r.fecha,
- day,
- month,
- salaOrLugar: r.lugar || 'Local de Ensayo',
- ciudad: undefined,
- direccion: undefined,
- locationQuery: `${r.lugar || 'Local de Ensayo'}, Madrid`,
- bandName: getEventBandName(r),
- badge: r.estado === 'completado' ? 'Completado' : 'Programado'
- });
- });
+    list.push({
+      id: r.id,
+      type: (isReu ? 'reunion' : 'ensayo') as any,
+      title: isReu ? (r.asunto || 'Reunión de Banda') : (r.lugar ? `Ensayo en ${r.lugar}` : 'Ensayo General'),
+      fecha: r.fecha,
+      day,
+      month,
+      salaOrLugar: isReu ? (r.lugar || 'Online') : (r.lugar || 'Local de Ensayo'),
+      ciudad: undefined,
+      direccion: undefined,
+      locationQuery: isReu ? (r.lugar && !r.lugar.toLowerCase().includes('online') && !r.lugar.toLowerCase().includes('http') ? r.lugar : undefined) : `${r.lugar || 'Local de Ensayo'}, Madrid`,
+      bandName: getEventBandName(r),
+      badge: isReu ? (r.estado === 'completado' ? 'Realizada' : 'Convocada') : (r.estado === 'completado' ? 'Completado' : 'Programado')
+    });
+  });
 
  // Add campaign target dates (only if no confirmed concert on that same date)
  (campaigns || []).forEach(camp => {
@@ -730,12 +945,38 @@ export default function CalendarView({
 
   const handlePrevMonth = () => {
     setSlideDirection('right');
-    setViewDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+    if (calendarViewMode === 'week') {
+      setSelectedDate(prev => {
+        const nextD = new Date(prev);
+        nextD.setDate(nextD.getDate() - 7);
+        return nextD;
+      });
+      setViewDate(prev => {
+        const nextD = new Date(selectedDate);
+        nextD.setDate(nextD.getDate() - 7);
+        return new Date(nextD.getFullYear(), nextD.getMonth(), 1);
+      });
+    } else {
+      setViewDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+    }
   };
 
   const handleNextMonth = () => {
     setSlideDirection('left');
-    setViewDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+    if (calendarViewMode === 'week') {
+      setSelectedDate(prev => {
+        const nextD = new Date(prev);
+        nextD.setDate(nextD.getDate() + 7);
+        return nextD;
+      });
+      setViewDate(prev => {
+        const nextD = new Date(selectedDate);
+        nextD.setDate(nextD.getDate() + 7);
+        return new Date(nextD.getFullYear(), nextD.getMonth(), 1);
+      });
+    } else {
+      setViewDate(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+    }
   };
 
   const handleGoToday = () => {
@@ -912,7 +1153,38 @@ export default function CalendarView({
  setShowCreateModal(null);
  };
 
- const handleSaveNewConcert = (e: React.FormEvent) => {
+   const handleSaveNewReunion = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+    const targetBand = effectiveBandsList.find(b => b.band_id === selectedBandIdForNewEvent) || { band_id: activeBandId, bandName: activeBandName };
+    const selectedMembers = effectiveBandMembers.filter(m => convocadosIds.includes(m.id));
+    const newReunion: Rehearsal = {
+      id: `reu-${Date.now()}`,
+      fecha: formattedDate,
+      hora: reuHora.trim() || '19:30 - 20:30',
+      lugar: reuLugar.trim() || 'Online (Google Meet)',
+      tipo_evento: 'reunion',
+      asunto: reuAsunto.trim() || 'Reunión de Banda',
+      enlace_reunion: reuEnlace.trim() || undefined,
+      asistentes: convocatoriaTipo === 'completa' ? ['Banda Completa'] : selectedMembers.map(m => m.name),
+      notas: reuNotas.trim() || 'Orden del día',
+      estado: reuEstado,
+      band_id: targetBand.band_id,
+      bandName: targetBand.bandName,
+      convocatoria_tipo: convocatoriaTipo,
+      convocados_ids: convocatoriaTipo === 'parcial' ? convocadosIds : undefined,
+      convocados_nombres: convocatoriaTipo === 'parcial' ? selectedMembers.map(m => m.name) : undefined,
+    };
+
+    if (onAddRehearsal) {
+      onAddRehearsal(newReunion);
+      setSyncSuccessMessage(`¡Reunión de ${targetBand.bandName} convocada para el ${formattedDate}!`);
+      setTimeout(() => setSyncSuccessMessage(''), 5000);
+    }
+    setShowCreateModal(null);
+  };
+
+  const handleSaveNewConcert = (e: React.FormEvent) => {
  e.preventDefault();
  const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
  const targetBand = effectiveBandsList.find(b => b.band_id === selectedBandIdForNewEvent) || { band_id: activeBandId, bandName: activeBandName };
@@ -1215,10 +1487,14 @@ export default function CalendarView({
 
  // Lista combinada del día, para el selector de eventos cuando hay más de uno (2 conciertos, o
  // concierto + ensayo). El orden importa poco aquí: solo hace falta encontrar cuál es "el activo".
- const dayEventsList: Array<{ kind: 'concert' | 'rehearsal'; id: string; label: string }> = [
- ...selectedEvents.concerts.map(c => ({ kind: 'concert' as const, id: c.id, label: `Concierto: ${c.sala}` })),
- ...selectedEvents.rehearsals.map(r => ({ kind: 'rehearsal' as const, id: r.id, label: `Ensayo: ${r.lugar.split(',')[0]}` })),
- ];
+ const dayEventsList: Array<{ kind: 'concert' | 'rehearsal' | 'reunion'; id: string; label: string }> = [
+    ...selectedEvents.concerts.map(c => ({ kind: 'concert' as const, id: c.id, label: `Concierto: ${c.sala}` })),
+    ...selectedEvents.rehearsals.map(r => ({
+      kind: (r.tipo_evento === 'reunion' ? 'reunion' : 'rehearsal') as 'reunion' | 'rehearsal',
+      id: r.id,
+      label: r.tipo_evento === 'reunion' ? `Reunión: ${r.asunto || r.lugar}` : `Ensayo: ${r.lugar.split(',')[0]}`
+    })),
+  ];
  const hasMultipleDayEvents = dayEventsList.length > 1;
 
  // El evento activo es el que se eligió explícitamente (chip del selector, o deep-link por
@@ -1238,49 +1514,112 @@ export default function CalendarView({
  );
  const rehearsalTypeLabel = isGeneralRehearsal ? 'Ensayo General' : 'Ensayo';
 
- const selectedEventTitle = selectedConcert
- ? `Concierto: ${selectedConcert.sala}`
- : selectedRehearsal
- ? `${rehearsalTypeLabel}: ${selectedRehearsal.lugar.split(',')[0]}`
- : `Día Libre`;
+ const isReunion = selectedRehearsal?.tipo_evento === 'reunion';
+  const selectedEventTitle = selectedConcert
+    ? `Concierto: ${selectedConcert.sala}`
+    : selectedRehearsal
+    ? (isReunion ? `Reunión: ${selectedRehearsal.asunto || 'Reunión de Banda'}` : `${rehearsalTypeLabel}: ${selectedRehearsal.lugar.split(',')[0]}`)
+    : `Día Libre`;
 
  const currentSetlistId = selectedConcert?.setlistId || selectedRehearsal?.setlistId;
  const assignedSetlist = availableSetlists.find((s: any) => s.id === currentSetlistId);
 
  const selectedEventDetails = selectedConcert
- ? {
- type: 'concert',
- time: '21:30',
- lugar: `${selectedConcert.sala}, ${selectedConcert.ciudad}`,
- direccion: selectedConcert.direccion,
- fee: `${selectedConcert.cache} € (Caché Pactado)`,
- notes: selectedConcert.notas,
- locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`
- }
- : selectedRehearsal
- ? {
- type: isGeneralRehearsal ? 'rehearsal_general' : 'rehearsal',
- time: selectedRehearsal.hora,
- lugar: selectedRehearsal.lugar,
- direccion: undefined,
- fee: 'Gratuito',
- notes: selectedRehearsal.notas,
- locationQuery: selectedRehearsal.lugar
- }
- : {
- type: 'free',
- time: '--:--',
- lugar: 'Sin evento agendado',
- direccion: undefined,
- fee: '--',
- notes: 'Día de descanso de la banda para composing o ensayos individuales.',
- locationQuery: undefined
- };
+    ? {
+        type: 'concert',
+        time: '21:30',
+        lugar: `${selectedConcert.sala}, ${selectedConcert.ciudad}`,
+        direccion: selectedConcert.direccion,
+        fee: `${selectedConcert.cache} € (Caché Pactado)`,
+        notes: selectedConcert.notas,
+        locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`
+      }
+    : selectedRehearsal
+    ? {
+        type: isReunion ? 'reunion' : (isGeneralRehearsal ? 'rehearsal_general' : 'rehearsal'),
+        time: selectedRehearsal.hora,
+        lugar: selectedRehearsal.lugar,
+        asunto: selectedRehearsal.asunto,
+        enlace_reunion: selectedRehearsal.enlace_reunion,
+        direccion: undefined,
+        fee: isReunion ? 'Reunión Interna' : 'Gratuito',
+        notes: selectedRehearsal.notas,
+        locationQuery: isReunion && (selectedRehearsal.lugar.toLowerCase().includes('online') || selectedRehearsal.lugar.toLowerCase().includes('http')) ? undefined : selectedRehearsal.lugar
+      }
+    : {
+        type: 'free',
+        time: '--:--',
+        lugar: 'Sin evento agendado',
+        direccion: undefined,
+        fee: '--',
+        notes: 'Día de descanso de la banda para composing o ensayos individuales.',
+        locationQuery: undefined
+      };
 
  const isStitchLight = colors.name?.toLowerCase().includes('light') || colors.bg.includes('f8fafc') || colors.bg.includes('white') || colors.bg.includes('slate-50') || false;
  const textTitle = isStitchLight ? 'text-slate-900' : 'text-neutral-100';
  const textSub = isStitchLight ? 'text-slate-500' : 'text-neutral-400';
  const textMuted = isStitchLight ? 'text-slate-400' : 'text-neutral-500';
+
+ // Paleta de colores e identificador visual de bandas (estilo Google Calendar)
+ const BAND_COLOR_PALETTES = [
+  { bg: 'bg-amber-500/20 text-amber-300 border-amber-500/40', badge: 'bg-amber-500 text-stone-950', dot: 'bg-amber-400', accent: '#f59e0b' },
+  { bg: 'bg-sky-500/20 text-sky-300 border-sky-500/40', badge: 'bg-sky-500 text-white', dot: 'bg-sky-400', accent: '#0284c7' },
+  { bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40', badge: 'bg-purple-500 text-white', dot: 'bg-purple-400', accent: '#a855f7' },
+  { bg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40', badge: 'bg-emerald-500 text-stone-950', dot: 'bg-emerald-400', accent: '#10b981' },
+  { bg: 'bg-rose-500/20 text-rose-300 border-rose-500/40', badge: 'bg-rose-500 text-white', dot: 'bg-rose-400', accent: '#f43f5e' },
+  { bg: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40', badge: 'bg-indigo-500 text-white', dot: 'bg-indigo-400', accent: '#6366f1' },
+  { bg: 'bg-teal-500/20 text-teal-300 border-teal-500/40', badge: 'bg-teal-500 text-stone-950', dot: 'bg-teal-400', accent: '#14b8a6' },
+  { bg: 'bg-orange-500/20 text-orange-300 border-orange-500/40', badge: 'bg-orange-500 text-stone-950', dot: 'bg-orange-400', accent: '#f97316' },
+ ];
+
+ const getBandIdentity = React.useCallback((bandId?: string, bandNameFallback?: string) => {
+  const name = getEventBandName({ band_id: bandId, bandName: bandNameFallback });
+  const cleanId = (bandId || '').replace(/^(band|reg)-/, '').trim().toLowerCase();
+  const cleanName = (name || '').trim().toLowerCase();
+
+  const found = effectiveBandsList.find(b => isSameBandId(b.band_id, bandId));
+  let logoUrl = found?.logoUrl || (found as any)?.logo_url || (found as any)?.imagen_url || (found as any)?.avatar_url || '';
+
+  if (!logoUrl && availableBands && availableBands.length > 0) {
+    const match = availableBands.find((b: any) => isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId));
+    if (match) {
+      logoUrl = (match as any).logoUrl || (match as any).logo_url || (match as any).imagen_url || (match as any).avatar_url || '';
+    }
+  }
+
+  if (!logoUrl) {
+    try {
+      const raw = localStorage.getItem('bandmanager_custom_band_logos');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed[cleanId]) logoUrl = parsed[cleanId];
+      }
+    } catch {}
+  }
+
+  if (!logoUrl && (isSameBandId(activeBandId, bandId) || cleanName === activeBandName?.trim().toLowerCase())) {
+    logoUrl = currentBandLogo || '';
+  }
+
+  if (!logoUrl && (cleanId === 'bakandeya' || cleanName.includes('bakandeya') || cleanId === '' || !bandId)) {
+    logoUrl = '/logo_bakandeya_bueno_sin_fondo.png';
+  }
+  
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const initials = words.length >= 2 
+    ? (words[0][0] + words[1][0]).toUpperCase()
+    : (name.slice(0, 2)).toUpperCase();
+
+  let hash = 0;
+  const str = (bandId || name || 'band');
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  }
+  const palette = BAND_COLOR_PALETTES[hash % BAND_COLOR_PALETTES.length];
+
+  return { name, initials, logoUrl, palette };
+ }, [effectiveBandsList, getEventBandName, isSameBandId, availableBands, activeBandId, activeBandName, currentBandLogo]);
 
  // Render month grid function
  const renderMonthGrid = (year: number, month: number, showMonthHeader: boolean = false) => {
@@ -1359,222 +1698,681 @@ export default function CalendarView({
  }
 
  return (
- <button
- id={`calendar-day-${formattedDate}`}
- key={`day-${formattedDate}`}
- onClick={(e) => {
-   if (hasMouseDragged.current || hasSwipedTouch.current) {
-     e.stopPropagation();
-     return;
-   }
-   setSelectedDate(new Date(year, month, cell.day));
- }}
- className={`aspect-square rounded-xl flex flex-col items-center justify-between p-1.5 relative transition-all duration-150 cursor-pointer ${borderAndBgClass}`}
- >
- {isToday && (
- <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[7px] font-mono font-black uppercase px-1.5 py-[1px] rounded-full border shadow-md z-30 ${
- isSelected 
- ? 'bg-slate-950 text-amber-400 border-amber-300' 
- : 'bg-amber-500 text-slate-950 border-amber-300'
- }`}>
- HOY
- </span>
- )}
+              <button
+                key={`day-${year}-${month}-${cell.day}`}
+                onClick={() => setSelectedDate(new Date(year, month, cell.day))}
+                className={`relative aspect-square p-1 sm:p-1.5 rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className={`text-[11px] sm:text-xs font-mono font-bold ${isSelected ? 'text-stone-950 font-black' : isToday ? 'text-amber-400' : ''}`}>
+                    {cell.day}
+                  </span>
+                  {isToday && !isSelected && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 animate-ping" />
+                  )}
+                </div>
 
- <span className={`text-xs font-mono font-bold ${
- isSelected 
- ? isStitchLight ? 'text-white' : 'text-slate-950 font-black' 
- : isToday
- ? 'text-amber-300 font-extrabold'
- : hasConcert
- ? 'text-amber-300 font-bold'
- : hasRehearsal
- ? 'text-emerald-300 font-bold'
- : hasCampaign
- ? 'text-purple-300 font-bold'
- : isStitchLight ? 'text-slate-800' : 'text-slate-200'
- }`}>
- {cell.day}
- </span>
- 
- {/* Responsive Band & Event Indicators */}
- <div className="w-full flex flex-col items-center justify-center gap-0.5 mb-0.5">
- {/* Desktop / Tablet Band Badges */}
- {dayEvents.length > 0 ? (
- <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5 overflow-hidden">
- {dayEvents.slice(0, 2).map((e, idx) => {
- const bName = getEventBandName(e);
- const isConc = 'sala' in e;
- return (
- <div
- key={e.id || idx}
- className={`text-[8px] font-mono font-extrabold px-1 py-[1px] rounded border truncate w-full text-center leading-tight ${
- isConc
- ? 'bg-amber-500/25 text-amber-200 border-amber-500/50'
- : 'bg-emerald-500/25 text-emerald-200 border-emerald-500/50'
- }`}
- title={`${bName}: ${isConc ? 'Concierto' : 'Ensayo'}`}
- >
- {bName}
- </div>
- );
- })}
- {dayEvents.length > 2 && (
- <div className="text-[7px] font-mono text-neutral-400 text-center font-bold">
- +{dayEvents.length - 2} más
- </div>
- )}
- </div>
- ) : hasCampaign && activeDateCampaign ? (
- <div className="hidden sm:flex flex-col gap-0.5 w-full px-0.5 overflow-hidden">
-   <div 
-     className="text-[7.5px] font-mono font-extrabold px-1 py-[1px] rounded border truncate w-full text-center leading-tight bg-purple-500/25 text-purple-200 border-purple-500/50 flex items-center justify-center gap-0.5"
-     title={`Fecha objetivo: ${activeDateCampaign.name} (Salas en ${activeDateCampaign.targetCities?.join(', ') || 'España'})`}
-   >
-     <span>🎯</span>
-     <span className="truncate">Posible Bolo</span>
-   </div>
- </div>
- ) : null}
-
- {/* Mobile Compact Band Badges / Dots */}
- <div className="flex sm:hidden gap-1 justify-center items-center w-full">
- {dayEvents.length > 0 ? (
- dayEvents.slice(0, 3).map((e, idx) => {
- const bName = getEventBandName(e);
- const isConc = 'sala' in e;
- return (
- <span
- key={e.id || idx}
- className={`text-[7px] font-mono font-black px-1 py-[0.5px] rounded border leading-none truncate max-w-[28px] ${
- isConc
- ? 'bg-amber-500/30 text-amber-200 border-amber-500/60'
- : 'bg-emerald-500/30 text-emerald-200 border-emerald-500/60'
- }`}
- title={`${bName}: ${isConc ? 'Concierto' : 'Ensayo'}`}
- >
- {bName.slice(0, 3).toUpperCase()}
- </span>
- );
- })
- ) : hasCampaign ? (
-   <span className="text-[7px] font-mono font-black px-1 py-[0.5px] rounded border bg-purple-500/30 text-purple-200 border-purple-500/60">
-     🎯 BOLO
-   </span>
- ) : null}
- </div>
- </div>
- </button>
- );
- })}
- </div>
- </div>
- );
- };
-
- return (
- <div className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${isStitchLight ? 'text-slate-800' : 'text-[#e5e2e1]'} font-sans items-stretch w-full max-w-full overflow-x-hidden`}>
- 
- {/* LEFT: MONTH GRID CALENDAR (2/3 width) */}
- <div className={`${colors.card} p-6 flex flex-col justify-between lg:col-span-2`}>
- <div>
- {/* Header */}
-  <div className={`pb-4 mb-4 border-b ${isStitchLight ? "border-slate-200" : "border-zinc-800"}`}>
-    {/* Top title & Action buttons */}
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <div className="min-w-0">
-        <h4 className={`text-[10px] font-mono uppercase tracking-widest ${isStitchLight ? "text-sky-500 font-bold" : "text-[#f2ca50]"}`}>
-          Calendario de Directos y Ensayos
-        </h4>
-        <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
-          <span className="shrink-0 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-1" title="Eventos visibles vs Total">
-            <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/{concerts.length + rehearsals.length}
-          </span>
-          <span className="shrink-0 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/20" title="Directos y conciertos públicos">
-            <Mic className="w-3 h-3 text-emerald-400" /> {filteredConcerts.length} directos
-          </span>
-          <span className="shrink-0 px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400 flex items-center gap-1 border border-purple-500/20" title="Ensayos de banda">
-            <DoorClosed className="w-3 h-3 text-purple-400" /> {filteredRehearsals.length} ensayos
-          </span>
+                {/* Mini Badges / Event Indicators con identificación clara de banda (Logo/Iniciales + Nombre + Tipo) */}
+                <div className="w-full space-y-0.5 overflow-hidden">
+                  {dayConcerts.slice(0, 1).map(c => {
+                    const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
+                    return (
+                      <div
+                        key={c.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDate(new Date(year, month, cell.day));
+                          setSelectedEventId(c.id);
+                        }}
+                        className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
+                          isSelected ? 'bg-stone-950/20 text-stone-950' : 'bg-amber-500/25 text-amber-300 border border-amber-500/40'
+                        }`}
+                        title={`Concierto [${bandInfo.name}]: ${c.sala} (${c.ciudad})`}
+                      >
+                        {bandInfo.logoUrl ? (
+                          <img
+                            src={bandInfo.logoUrl}
+                            alt={bandInfo.name}
+                            className="w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/60"
+                            onError={(e) => {
+                              (e.currentTarget as HTMLElement).style.display = 'none';
+                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                              if (fb) (fb as HTMLElement).classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                          {bandInfo.initials}
+                        </span>
+                        <span className="truncate flex items-center gap-0.5">
+                          <span>🎸</span>
+                          <span className="font-extrabold text-white opacity-95">{bandInfo.name}</span>
+                          <span className="opacity-75">· {c.ciudad || c.sala}</span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                  {dayRehearsals.slice(0, 1).map(r => {
+                    const isReu = r.tipo_evento === 'reunion';
+                    const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
+                    return (
+                      <div
+                        key={r.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDate(new Date(year, month, cell.day));
+                          setSelectedEventId(r.id);
+                        }}
+                        className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
+                          isSelected
+                            ? 'bg-stone-950/20 text-stone-950'
+                            : isReu
+                            ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-500/40'
+                            : 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
+                        }`}
+                        title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
+                      >
+                        {bandInfo.logoUrl ? (
+                          <img
+                            src={bandInfo.logoUrl}
+                            alt={bandInfo.name}
+                            className={`w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isReu ? 'border-indigo-400/60' : 'border-emerald-400/60'}`}
+                            onError={(e) => {
+                              (e.currentTarget as HTMLElement).style.display = 'none';
+                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                              if (fb) (fb as HTMLElement).classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                          {bandInfo.initials}
+                        </span>
+                        <span className="truncate flex items-center gap-0.5">
+                          <span>{isReu ? '🤝' : '🥁'}</span>
+                          <span className="font-extrabold text-white opacity-95">{bandInfo.name}</span>
+                          <span className="opacity-75">· {isReu ? (r.asunto || 'Reunión') : (r.lugar.split(',')[0])}</span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                  {dayEvents.length > 2 && (
+                    <div className="text-[8px] font-mono text-center opacity-80">
+                      +{dayEvents.length - 2} más
+                    </div>
+                  )}
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
+    );
+  };
 
-      {/* Action buttons */}
-      <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
-        <ModuleTutorialTrigger
-          moduleId="calendario"
-          onClick={openTutorial}
-          label="Guía rápida"
-        />
+  // Render Week View (Google Calendar Style: 7 días detallados con logos de banda)
+  const renderWeekView = () => {
+    const weekDays = getWeekDays(selectedDate);
+    return (
+      <div className="w-full flex flex-col gap-3">
+        {/* Selector de días de la semana con badges */}
+        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+          {weekDays.map((d, idx) => {
+            const isToday = realToday.toDateString() === d.toDateString();
+            const isSelected = selectedDate.toDateString() === d.toDateString();
+            const dayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            const { concerts: cList, rehearsals: rList } = getEventsForDateStr(dayStr);
+            const totalEvents = cList.length + rList.length;
 
-        <button
-          id="create-rehearsal-btn"
-          onClick={() => setShowCreateModal("rehearsal")}
-          className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
-            isStitchLight
-              ? "bg-emerald-600 hover:bg-emerald-500 text-white"
-              : "bg-[#10b981] hover:bg-[#34d399] text-stone-950 font-bold"
-          }`}
-          title="Crear ensayo"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>+ Ensayo</span>
-        </button>
+            return (
+              <button
+                key={dayStr}
+                onClick={() => setSelectedDate(d)}
+                className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all cursor-pointer border ${
+                  isSelected
+                    ? isStitchLight
+                      ? 'bg-sky-500 text-white border-sky-400 shadow-md font-bold'
+                      : 'bg-amber-500 text-stone-950 border-amber-300 shadow-lg font-black'
+                    : isToday
+                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/60 font-bold'
+                    : isStitchLight
+                    ? 'bg-white border-slate-200 text-slate-700 hover:border-sky-300'
+                    : 'bg-slate-900/90 border-slate-800 text-slate-300 hover:border-amber-500/50'
+                }`}
+              >
+                <span className="text-[10px] font-mono uppercase tracking-wider opacity-80">
+                  {fullWeekdays[idx].slice(0, 3)}
+                </span>
+                <span className="text-sm sm:text-base font-bold font-mono my-0.5">
+                  {d.getDate()}
+                </span>
+                {totalEvents > 0 && (
+                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                    isSelected
+                      ? 'bg-black/20 text-inherit'
+                      : 'bg-[#d1b375]/20 text-[#d1b375]'
+                  }`}>
+                    {totalEvents} {totalEvents === 1 ? 'evt' : 'evts'}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
-        <button
-          id="create-concert-btn"
-          onClick={() => setShowCreateModal("concert")}
-          className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
-            isStitchLight
-              ? "bg-amber-600 hover:bg-amber-500 text-white"
-              : "bg-[#d1b375] hover:bg-[#e2c486] text-stone-950 font-bold"
-          }`}
-          title="Crear concierto"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>+ Concierto</span>
-        </button>
+        {/* 7 Columnas de la semana estilo Google Calendar */}
+        <div className="w-full overflow-x-auto pb-2">
+          <div className="grid grid-cols-7 gap-2 min-w-[700px] lg:min-w-0 min-h-[420px]">
+          {weekDays.map((d, idx) => {
+            const isToday = realToday.toDateString() === d.toDateString();
+            const isSelected = selectedDate.toDateString() === d.toDateString();
+            const dayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            const { concerts: dayConcerts, rehearsals: dayRehearsals } = getEventsForDateStr(dayStr);
+            const campaigns = getCampaignsForDate(dayStr);
 
-        {!isPromoPlan && (
-          <>
-            <button
-              id="export-ics-btn"
-              onClick={() => setShowSyncModal(true)}
-              className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
-                isStitchLight
-                  ? "bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300/80"
-                  : "bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-500/30"
-              }`}
-              title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
-            >
-              <Radio className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-              <span>Sincronizar Calendario</span>
-            </button>
-          </>
+            return (
+              <div
+                key={`col-${dayStr}`}
+                onClick={() => setSelectedDate(d)}
+                className={`flex flex-col rounded-xl p-2 sm:p-2.5 transition-all border min-w-0 ${
+                  isSelected
+                    ? isStitchLight
+                      ? 'bg-sky-50/50 border-sky-300 ring-1 ring-sky-400'
+                      : 'bg-slate-900/90 border-amber-500/60 ring-1 ring-amber-500/40'
+                    : isToday
+                    ? isStitchLight
+                      ? 'bg-amber-50/40 border-amber-300'
+                      : 'bg-slate-900/60 border-amber-500/30'
+                    : isStitchLight
+                    ? 'bg-white border-slate-200'
+                    : 'bg-slate-900/50 border-slate-800/80'
+                }`}
+              >
+                <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/50">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className={`text-xs font-mono font-bold truncate ${isSelected ? 'text-amber-400' : isToday ? 'text-amber-300' : 'text-slate-400'}`}>
+                      {fullWeekdays[idx].slice(0, 3)} {d.getDate()}
+                    </span>
+                    {isToday && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping shrink-0" />
+                    )}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedDate(d);
+                      setShowCreateModal('concert');
+                    }}
+                    title="Añadir evento a este día"
+                    className="p-1 rounded hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer shrink-0"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                </div>
+
+                {/* Lista de eventos del día */}
+                <div className="flex-1 flex flex-col gap-1.5 overflow-y-auto max-h-[360px]">
+                  {dayConcerts.map(c => {
+                    const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
+                    const isEvtSelected = selectedEventId === c.id;
+                    return (
+                      <div
+                        key={c.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDate(d);
+                          setSelectedEventId(c.id);
+                        }}
+                        className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
+                          isEvtSelected
+                            ? 'bg-amber-500/25 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                            : 'bg-amber-950/30 border-amber-500/40 hover:border-amber-400 hover:bg-amber-900/30'
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5 mb-1 min-w-0">
+                          {bandInfo.logoUrl ? (
+                            <img
+                              src={bandInfo.logoUrl}
+                              alt={bandInfo.name}
+                              className="w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/60"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLElement).style.display = 'none';
+                                const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                if (fb) (fb as HTMLElement).classList.remove('hidden');
+                              }}
+                            />
+                          ) : null}
+                          <span className={`fallback-initials w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[8px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                            {bandInfo.initials}
+                          </span>
+                          <span className="text-[10px] font-bold text-amber-200 truncate" title={bandInfo.name}>
+                            {bandInfo.name}
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-bold text-white truncate flex items-center gap-1">
+                          <span>🎸</span>
+                          <span className="truncate">{c.sala}</span>
+                        </div>
+                        {c.ciudad && (
+                          <div className="text-[10px] text-amber-300/80 truncate">
+                            📍 {c.ciudad}
+                          </div>
+                        )}
+                        {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
+                          <div className="text-[9px] font-mono text-neutral-400 mt-1">
+                            🕒 {(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {dayRehearsals.map(r => {
+                    const isReu = r.tipo_evento === 'reunion';
+                    const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
+                    const isEvtSelected = selectedEventId === r.id;
+                    return (
+                      <div
+                        key={r.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedDate(d);
+                          setSelectedEventId(r.id);
+                        }}
+                        className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
+                          isEvtSelected
+                            ? isReu
+                              ? 'bg-indigo-500/25 border-indigo-400 ring-1 ring-indigo-400/50 shadow-md'
+                              : 'bg-emerald-500/25 border-emerald-400 ring-1 ring-emerald-400/50 shadow-md'
+                            : isReu
+                            ? 'bg-indigo-950/30 border-indigo-500/40 hover:border-indigo-400 hover:bg-indigo-900/30'
+                            : 'bg-emerald-950/30 border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-900/30'
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5 mb-1 min-w-0">
+                          {bandInfo.logoUrl ? (
+                            <img
+                              src={bandInfo.logoUrl}
+                              alt={bandInfo.name}
+                              className={`w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isReu ? 'border-indigo-400/60' : 'border-emerald-400/60'}`}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLElement).style.display = 'none';
+                                const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                if (fb) (fb as HTMLElement).classList.remove('hidden');
+                              }}
+                            />
+                          ) : null}
+                          <span className={`fallback-initials w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[8px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                            {bandInfo.initials}
+                          </span>
+                          <span className={`text-[10px] font-bold truncate ${isReu ? 'text-indigo-200' : 'text-emerald-200'}`} title={bandInfo.name}>
+                            {bandInfo.name}
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-bold text-white truncate flex items-center gap-1">
+                          <span>{isReu ? '🤝' : '🥁'}</span>
+                          <span className="truncate">{isReu ? (r.asunto || 'Reunión') : r.lugar}</span>
+                        </div>
+                        {r.hora && (
+                          <div className="text-[9px] font-mono text-neutral-400 mt-1">
+                            🕒 {r.hora}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  {campaigns.map(camp => (
+                    <div
+                      key={camp.id}
+                      className="p-1.5 rounded-lg border border-purple-500/40 bg-purple-950/25 text-[10px] text-purple-200"
+                    >
+                      🎯 {camp.name}
+                    </div>
+                  ))}
+
+                  {dayConcerts.length === 0 && dayRehearsals.length === 0 && campaigns.length === 0 && (
+                    <div className="h-24 flex flex-col items-center justify-center text-center p-2 rounded border border-dashed border-slate-800/60 text-slate-600">
+                      <span className="text-[10px]">Sin eventos</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render Agenda View (Google Calendar Style: lista cronológica de eventos con logos e información detallada)
+  const renderAgendaView = () => {
+    const allEventsList: Array<{
+      date: Date;
+      dateStr: string;
+      type: 'concert' | 'rehearsal';
+      event: Concert | Rehearsal;
+    }> = [];
+
+    const startRange = new Date(currentYear, currentMonth, 1);
+    const endRange = new Date(currentYear, currentMonth + 2, 0);
+
+    concerts.forEach(c => {
+      const d = new Date(c.fecha);
+      if (!isNaN(d.getTime()) && d >= startRange && d <= endRange) {
+        allEventsList.push({
+          date: d,
+          dateStr: c.fecha.split('T')[0],
+          type: 'concert',
+          event: c
+        });
+      }
+    });
+
+    rehearsals.forEach(r => {
+      const d = new Date(r.fecha);
+      if (!isNaN(d.getTime()) && d >= startRange && d <= endRange) {
+        allEventsList.push({
+          date: d,
+          dateStr: r.fecha.split('T')[0],
+          type: 'rehearsal',
+          event: r
+        });
+      }
+    });
+
+    allEventsList.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    const groupedByDate: { [dateStr: string]: typeof allEventsList } = {};
+    allEventsList.forEach(item => {
+      if (!groupedByDate[item.dateStr]) groupedByDate[item.dateStr] = [];
+      groupedByDate[item.dateStr].push(item);
+    });
+
+    const dateKeys = Object.keys(groupedByDate).sort();
+
+    return (
+      <div className="w-full flex flex-col gap-4">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
+          <div className="flex items-center gap-2">
+            <List className="w-4 h-4 text-[#d1b375]" />
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
+              Agenda Cronológica ({allEventsList.length} eventos programados)
+            </span>
+          </div>
+          <button
+            onClick={() => setShowCreateModal('concert')}
+            className="px-2.5 py-1 rounded-lg text-xs font-bold font-mono bg-[#d1b375] text-stone-950 hover:bg-[#d1b375]/90 transition-all cursor-pointer flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Añadir Evento</span>
+          </button>
+        </div>
+
+        {dateKeys.length === 0 ? (
+          <div className="p-8 text-center rounded-2xl border border-dashed border-slate-800/80 bg-slate-950/40">
+            <Calendar className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+            <p className="text-sm font-bold text-slate-400">No hay eventos en este periodo</p>
+            <p className="text-xs text-slate-500 mt-1">Usa el botón "Añadir Evento" o cambia de mes para ver otras fechas</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {dateKeys.map(dateStr => {
+              const items = groupedByDate[dateStr];
+              const d = new Date(dateStr + 'T12:00:00');
+              const isToday = realToday.toDateString() === d.toDateString();
+              const isSelected = selectedDate.toDateString() === d.toDateString();
+              const dayName = fullWeekdays[(d.getDay() + 6) % 7];
+
+              return (
+                <div
+                  key={dateStr}
+                  className={`rounded-xl border transition-all p-3 ${
+                    isSelected
+                      ? 'bg-slate-900/90 border-amber-500/60 ring-1 ring-amber-500/30'
+                      : isToday
+                      ? 'bg-slate-900/70 border-amber-500/40'
+                      : 'bg-slate-900/40 border-slate-800/80 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2.5 pb-2 border-b border-slate-800/60">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+                        isToday ? 'bg-amber-500 text-stone-950 font-black' : 'bg-slate-800 text-slate-300'
+                      }`}>
+                        {dayName}, {d.getDate()} de {monthNames[d.getMonth()]}
+                      </span>
+                      {isToday && (
+                        <span className="text-[10px] font-mono font-bold uppercase text-amber-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                          Hoy
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSelectedDate(d);
+                        setShowCreateModal('concert');
+                      }}
+                      className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer"
+                      title="Añadir a esta fecha"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    {items.map(({ type, event: evt }) => {
+                      const isConcert = type === 'concert';
+                      const c = isConcert ? (evt as Concert) : null;
+                      const r = !isConcert ? (evt as Rehearsal) : null;
+                      const isReu = r?.tipo_evento === 'reunion';
+                      const bandInfo = getBandIdentity(evt.band_id, (evt as any).bandName || (evt as any).band_name);
+                      const isEvtSelected = selectedEventId === evt.id;
+
+                      return (
+                        <div
+                          key={evt.id}
+                          onClick={() => {
+                            setSelectedDate(d);
+                            setSelectedEventId(evt.id);
+                          }}
+                          className={`flex items-center justify-between p-2.5 rounded-lg cursor-pointer border transition-all ${
+                            isEvtSelected
+                              ? 'bg-amber-500/20 border-amber-400 shadow-md ring-1 ring-amber-400/50'
+                              : isConcert
+                              ? 'bg-amber-950/20 border-amber-500/30 hover:border-amber-400/80 hover:bg-amber-900/20'
+                              : isReu
+                              ? 'bg-indigo-950/20 border-indigo-500/30 hover:border-indigo-400/80 hover:bg-indigo-900/20'
+                              : 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-400/80 hover:bg-emerald-900/20'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            {/* Logo o iniciales de la banda */}
+                            {bandInfo.logoUrl ? (
+                              <img
+                                src={bandInfo.logoUrl}
+                                alt={bandInfo.name}
+                                className="w-8 h-8 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-white/20 shadow-xs"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLElement).style.display = 'none';
+                                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                  if (fb) (fb as HTMLElement).classList.remove('hidden');
+                                }}
+                              />
+                            ) : null}
+                            <span className={`fallback-initials w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-black shadow-xs ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                              {bandInfo.initials}
+                            </span>
+
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className={`text-xs font-bold font-mono px-1.5 py-0.2 rounded border ${
+                                  isConcert
+                                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                    : isReu
+                                    ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40'
+                                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                }`}>
+                                  {isConcert ? '🎸 Concierto' : isReu ? '🤝 Reunión' : '🥁 Ensayo'}
+                                </span>
+                                <span className="text-xs font-bold text-white truncate">
+                                  {bandInfo.name}
+                                </span>
+                              </div>
+                              <div className="text-xs text-slate-300 font-medium truncate mt-0.5">
+                                {isConcert ? `${c?.sala}${c?.ciudad ? ` (${c?.ciudad})` : ''}` : isReu ? (r?.asunto || 'Reunión de coordinación') : r?.lugar}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 shrink-0">
+                            {((evt as any).hora || ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')) && (
+                              <span className="text-xs font-mono text-neutral-400 flex items-center gap-1">
+                                <Clock className="w-3 h-3 text-neutral-500" />
+                                {(evt as any).hora || ((evt as any).fecha?.includes('T') ? (evt as any).fecha.split('T')[1].slice(0, 5) : '')}
+                              </span>
+                            )}
+                            <ChevronRight className="w-4 h-4 text-slate-500" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
-    </div>
+    );
+  };
 
-    {/* Month Navigation & Band Selector */}
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mt-3 pt-2">
-      {/* Month Title & Nav */}
-      <div className="flex items-center justify-between sm:justify-start gap-3 flex-wrap">
-        <h2 className={`text-lg sm:text-xl font-bold font-display uppercase tracking-wider ${textTitle}`}>
-          {twoMonthsMode ? (
-            <>
-              {monthNames[currentMonth]} - {monthNames[nextMonth]} <span className="text-[#d1b375] font-mono text-base">{currentYear === nextMonthYear ? currentYear : `${currentYear}/${nextMonthYear}`}</span>
-            </>
-          ) : (
-            <>
-              {monthNames[currentMonth]} <span className="text-[#d1b375] font-mono text-base">{currentYear}</span>
-            </>
-          )}
-        </h2>
+  return (
+    <div
+      ref={calendarContainerRef}
+      className={`grid grid-cols-1 lg:grid-cols-3 gap-6 ${isStitchLight ? 'text-slate-800 bg-slate-100' : 'text-[#e5e2e1] bg-neutral-950'} font-sans items-stretch w-full max-w-full overflow-x-hidden ${
+        isCalendarFullscreen ? 'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto' : ''
+      }`}
+    >
+      {/* LEFT: MONTH GRID CALENDAR (2/3 width) */}
+      <div className={`${colors.card} p-6 flex flex-col justify-between lg:col-span-2`}>
+        <div>
+          {/* Header */}
+          <div className={`pb-4 mb-4 border-b ${isStitchLight ? "border-slate-200" : "border-zinc-800"}`}>
+            {/* Top title & Action buttons */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h4 className={`text-[10px] font-mono uppercase tracking-widest ${isStitchLight ? "text-sky-500 font-bold" : "text-[#f2ca50]"}`}>
+                  Calendario de Directos, Ensayos y Reuniones
+                </h4>
+                <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold mt-1 overflow-x-auto no-scrollbar pb-0.5 max-w-full">
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center gap-1" title="Eventos visibles vs Total">
+                    <Calendar className="w-3 h-3" /> {filteredConcerts.length + filteredRehearsals.length}/{concerts.length + rehearsals.length}
+                  </span>
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/20" title="Directos y conciertos públicos">
+                    <Mic className="w-3 h-3 text-emerald-400" /> {filteredConcerts.length} directos
+                  </span>
+                  <span className="shrink-0 px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400 flex items-center gap-1 border border-purple-500/20" title="Ensayos de banda">
+                    <DoorClosed className="w-3 h-3 text-purple-400" /> {filteredRehearsals.filter(r => r.tipo_evento !== 'reunion').length} ensayos
+                  </span>
+                  {filteredRehearsals.filter(r => r.tipo_evento === 'reunion').length > 0 && (
+                    <span className="shrink-0 px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 flex items-center gap-1 border border-indigo-500/20" title="Reuniones de coordinación">
+                      <span>🤝</span> {filteredRehearsals.filter(r => r.tipo_evento === 'reunion').length} reuniones
+                    </span>
+                  )}
+                </div>
+              </div>
 
-        <div className="flex items-center gap-1.5">
+              {/* Action buttons */}
+              <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+                <ModuleTutorialTrigger
+                  moduleId="calendario"
+                  onClick={openTutorial}
+                  label="Guía rápida"
+                />
+
+                {/* Unified Add Event Button (Prevents button clutter) */}
+                <div className="relative inline-block text-left">
+                  <button
+                    id="create-event-unified-btn"
+                    onClick={() => setShowAddEventDropdown(!showAddEventDropdown)}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
+                      isStitchLight
+                        ? "bg-amber-600 hover:bg-amber-500 text-white"
+                        : "bg-[#d1b375] hover:bg-[#e2c486] text-stone-950 font-bold"
+                    }`}
+                    title="Añadir Concierto, Ensayo o Reunión"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>+ Evento</span>
+                    <ChevronDown className="w-3 h-3 ml-0.5 opacity-80" />
+                  </button>
+
+                  {showAddEventDropdown && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setShowAddEventDropdown(false)} />
+                      <div className={`absolute right-0 mt-1.5 w-48 rounded-xl shadow-2xl z-50 py-1.5 border overflow-hidden animate-in fade-in duration-150 backdrop-blur-md ${
+                        isStitchLight ? "bg-white/95 border-slate-200 text-slate-800" : "bg-neutral-900/95 border-zinc-800 text-neutral-100"
+                      }`}>
+                        <div className="px-3 py-1 text-[9px] font-mono uppercase tracking-widest text-neutral-400 border-b border-neutral-800/40 mb-1">
+                          Añadir al Calendario
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { setShowAddEventDropdown(false); setShowCreateModal('concert'); }}
+                          className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-amber-500/15 hover:text-amber-400 transition-colors cursor-pointer"
+                        >
+                          <span>🎸</span>
+                          <span>+ Concierto</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setShowAddEventDropdown(false); setShowCreateModal('rehearsal'); }}
+                          className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-emerald-500/15 hover:text-emerald-400 transition-colors cursor-pointer"
+                        >
+                          <span>🥁</span>
+                          <span>+ Ensayo</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setShowAddEventDropdown(false); setShowCreateModal('reunion'); }}
+                          className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-indigo-500/15 hover:text-indigo-400 transition-colors cursor-pointer"
+                        >
+                          <span>🤝</span>
+                          <span>+ Reunión</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {!isPromoPlan && (
+                  <button
+                    id="export-ics-btn"
+                    onClick={() => setShowSyncModal(true)}
+                    className={`inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 shadow-xs ${
+                      isStitchLight
+                        ? "bg-slate-200 hover:bg-slate-300 text-slate-800 border border-slate-300/80"
+                        : "bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-500/30"
+                    }`}
+                    title="Sincronizar automáticamente con Google Calendar, Apple Calendar o Outlook"
+                  >
+                    <Radio className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                    <span>Sincronizar</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Month Navigation & Band Selector */}
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mt-3 pt-2">
+      {/* Left: Navigation Buttons + Month/Period Title (Rock-solid, never jumps) */}
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={handlePrevMonth}
-            className={`p-1 rounded-lg transition-all cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-all cursor-pointer ${
               isStitchLight ? "bg-slate-200 hover:bg-slate-300 text-slate-700" : "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
             }`}
             title="Meses anteriores (o desliza a la derecha)"
@@ -1583,7 +2381,7 @@ export default function CalendarView({
           </button>
           <button
             onClick={handleNextMonth}
-            className={`p-1 rounded-lg transition-all cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-all cursor-pointer ${
               isStitchLight ? "bg-slate-200 hover:bg-slate-300 text-slate-700" : "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
             }`}
             title="Meses siguientes (o desliza a la izquierda)"
@@ -1592,29 +2390,64 @@ export default function CalendarView({
           </button>
           <button
             onClick={handleGoToday}
-            className="text-[10px] font-mono font-bold uppercase px-2 py-1 rounded-md bg-[#d1b375]/15 text-[#d1b375] hover:bg-[#d1b375]/25 transition-all cursor-pointer"
+            className="text-[11px] font-mono font-bold uppercase px-2.5 py-1 rounded-md bg-[#d1b375]/15 text-[#d1b375] hover:bg-[#d1b375]/25 transition-all cursor-pointer shrink-0"
             title="Ir al mes y día actual"
           >
             Hoy
           </button>
-          <span 
-            className="inline-flex items-center gap-1 text-[9px] font-mono text-neutral-400/80 px-1.5 py-0.5 rounded bg-neutral-800/40 border border-neutral-700/30 select-none cursor-default"
-            title="Puedes cambiar de mes deslizando con el dedo, ratón o trackpad"
-          >
-            ⇄ Deslizar
-          </span>
+        </div>
 
-          {/* 1 Mes vs 2 Meses + Configuración de vista por defecto */}
-          <div className="relative inline-flex items-center" ref={viewConfigRef}>
+        <h2 className={`text-base sm:text-lg lg:text-xl font-bold font-display uppercase tracking-wider truncate min-w-0 ${textTitle}`}>
+          {calendarViewMode === '2m' ? (
+            <>
+              {monthNames[currentMonth]} - {monthNames[nextMonth]} <span className="text-[#d1b375] font-mono text-base">{currentYear === nextMonthYear ? currentYear : `${currentYear}/${nextMonthYear}`}</span>
+            </>
+          ) : calendarViewMode === 'week' ? (
+            (() => {
+              const week = getWeekDays(selectedDate);
+              const first = week[0];
+              const last = week[6];
+              return (
+                <>
+                  Semana {first.getDate()} {monthNames[first.getMonth()].slice(0, 3)} - {last.getDate()} {monthNames[last.getMonth()].slice(0, 3)} <span className="text-[#d1b375] font-mono text-base">{last.getFullYear()}</span>
+                </>
+              );
+            })()
+          ) : calendarViewMode === 'agenda' ? (
+            <>
+              Agenda <span className="text-[#d1b375] font-mono text-base">{monthNames[currentMonth]} {currentYear}</span>
+            </>
+          ) : (
+            <>
+              {monthNames[currentMonth]} <span className="text-[#d1b375] font-mono text-base">{currentYear}</span>
+            </>
+          )}
+        </h2>
+      </div>
+
+      {/* Right: View Switchers + Band Filter */}
+      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-between lg:justify-end shrink-0">
+        <span 
+          className="hidden xl:inline-flex items-center gap-1 text-[9px] font-mono text-neutral-400/80 px-1.5 py-0.5 rounded bg-neutral-800/40 border border-neutral-700/30 select-none cursor-default shrink-0"
+          title="Puedes cambiar de mes deslizando con el dedo, ratón o trackpad"
+        >
+          ⇄ Deslizar
+        </span>
+
+        {/* Vistas estilo Google Calendar: 1M | 2M | Semana | Agenda + Configuración */}
+        <div className="relative inline-flex items-center shrink-0" ref={viewConfigRef}>
             <div className={`flex items-center rounded-lg p-0.5 ${
               isStitchLight ? "bg-slate-200" : "bg-neutral-900 border border-zinc-800"
             }`}>
               <button
                 id="calendar-view-1m-btn"
-                onClick={() => setTwoMonthsMode(false)}
+                onClick={() => {
+                  setCalendarViewMode('1m');
+                  setTwoMonthsMode(false);
+                }}
                 title={devicePrefs[currentDeviceType] === '1' ? "Ver 1 mes (predeterminado al iniciar en este dispositivo)" : "Ver 1 mes"}
                 className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
-                  !twoMonthsMode
+                  calendarViewMode === '1m'
                     ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
                     : "text-neutral-400 hover:text-neutral-200"
                 }`}
@@ -1623,15 +2456,44 @@ export default function CalendarView({
               </button>
               <button
                 id="calendar-view-2m-btn"
-                onClick={() => setTwoMonthsMode(true)}
+                onClick={() => {
+                  setCalendarViewMode('2m');
+                  setTwoMonthsMode(true);
+                }}
                 title={devicePrefs[currentDeviceType] === '2' ? "Ver 2 meses (predeterminado al iniciar en este dispositivo)" : "Ver 2 meses"}
                 className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer ${
-                  twoMonthsMode
+                  calendarViewMode === '2m'
                     ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
                     : "text-neutral-400 hover:text-neutral-200"
                 }`}
               >
                 2M
+              </button>
+              <button
+                id="calendar-view-week-btn"
+                onClick={() => setCalendarViewMode('week')}
+                title="Vista Semana estilo Google Calendar (7 días detallados)"
+                className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+                  calendarViewMode === 'week'
+                    ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                <CalendarDays className="w-3 h-3" />
+                <span className="hidden sm:inline">Semana</span>
+              </button>
+              <button
+                id="calendar-view-agenda-btn"
+                onClick={() => setCalendarViewMode('agenda')}
+                title="Vista Agenda / Lista estilo Google Calendar"
+                className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded transition-all cursor-pointer flex items-center gap-1 ${
+                  calendarViewMode === 'agenda'
+                    ? isStitchLight ? "bg-sky-500 text-white" : "bg-[#d1b375] text-stone-950 font-black"
+                    : "text-neutral-400 hover:text-neutral-200"
+                }`}
+              >
+                <List className="w-3 h-3" />
+                <span className="hidden sm:inline">Agenda</span>
               </button>
               <button
                 id="calendar-view-config-btn"
@@ -1649,6 +2511,23 @@ export default function CalendarView({
                 )}
               </button>
             </div>
+
+            {/* Botón de Pantalla Completa */}
+            <button
+              id="calendar-fullscreen-btn"
+              onClick={toggleCalendarFullscreen}
+              title={isCalendarFullscreen ? "Salir de pantalla completa (Esc)" : "Ver el calendario a pantalla completa"}
+              className={`px-2 py-1 text-[10px] font-mono font-bold rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                isCalendarFullscreen
+                  ? "bg-amber-500 text-black border-amber-400 font-black shadow-lg shadow-amber-500/20"
+                  : isStitchLight
+                  ? "bg-slate-200 hover:bg-slate-300 text-slate-800 border-slate-300"
+                  : "bg-neutral-900 hover:bg-neutral-800 text-amber-300 border-amber-500/30"
+              }`}
+            >
+              {isCalendarFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">{isCalendarFullscreen ? 'Salir' : 'Pantalla Completa'}</span>
+            </button>
 
             {/* Popover desplegable de configuración de vista por defecto por dispositivo */}
             {showViewConfigPopover && (
@@ -1819,11 +2698,10 @@ export default function CalendarView({
             )}
           </div>
         </div>
-      </div>
 
-      {/* Band Filter Mode Segment Toggle */}
-      {isMultiBandUser && (
-        <div className={`w-full md:w-auto flex items-center rounded-xl p-1 gap-1 border ${
+        {/* Band Filter Mode Segment Toggle */}
+        {isMultiBandUser && (
+          <div className={`flex items-center rounded-xl p-1 gap-1 border shrink-0 ${
           isStitchLight ? "bg-slate-100 border-slate-200" : "bg-zinc-900/90 border-zinc-800"
         }`}>
           <button
@@ -1923,7 +2801,7 @@ export default function CalendarView({
  >
  <AnimatePresence mode="wait" custom={slideDirection}>
  <motion.div
- key={`${currentYear}-${currentMonth}`}
+ key={`${calendarViewMode}-${currentYear}-${currentMonth}`}
  custom={slideDirection}
  variants={{
  enter: (direction: 'left' | 'right' | null) => ({
@@ -1944,13 +2822,20 @@ export default function CalendarView({
  exit="exit"
  transition={{ duration: 0.18, ease: "easeOut" }}
  style={dragOffset !== 0 ? { transform: `translateX(${dragOffset}px)` } : undefined}
- className={`flex flex-col ${twoMonthsMode ? 'xl:flex-row gap-6' : 'gap-4'} transition-transform duration-75`}
+ className={`flex flex-col ${calendarViewMode === '2m' ? 'xl:flex-row gap-6' : 'gap-4'} transition-transform duration-75`}
  >
- {renderMonthGrid(currentYear, currentMonth, twoMonthsMode)}
- {twoMonthsMode && renderMonthGrid(nextMonthYear, nextMonth, true)}
+ {calendarViewMode === 'week' ? (
+   renderWeekView()
+ ) : calendarViewMode === 'agenda' ? (
+   renderAgendaView()
+ ) : (
+   <>
+     {renderMonthGrid(currentYear, currentMonth, calendarViewMode === '2m')}
+     {calendarViewMode === '2m' && renderMonthGrid(nextMonthYear, nextMonth, true)}
+   </>
+ )}
  </motion.div>
  </AnimatePresence>
- </div>
  </div>
 
  {/* Legend */}
@@ -1962,6 +2847,10 @@ export default function CalendarView({
  <div className="flex items-center gap-1.5">
  <span className={`w-2 h-2 rounded-full ${isStitchLight ? 'bg-[#10b981]' : 'bg-[#b8d6b8] shadow-[0_0_8px_#b8d6b8]'}`} />
  <span>Ensayo</span>
+ </div>
+ <div className="flex items-center gap-1.5">
+ <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]" />
+ <span>Reunión</span>
  </div>
  <div className="flex items-center gap-1.5">
  <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_8px_#a855f7]" />
@@ -2253,6 +3142,25 @@ export default function CalendarView({
  </p>
  </div>
  <div className="flex flex-col gap-1.5 shrink-0 self-start">
+ {(selectedConcert || selectedRehearsal) && (
+ <button
+ type="button"
+ onClick={() => {
+ setReminderNotes('');
+ setReminderSuccessMsg(null);
+ setReminderErrorMsg(null);
+ setShowReminderModal(true);
+ }}
+ className={`px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
+ isStitchLight
+ ? 'bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100'
+ : 'bg-neutral-900 border-sky-500/40 text-sky-300 hover:bg-neutral-800'
+ }`}
+ title="Enviar un recordatorio por correo/notificación a los convocados"
+ >
+ 🔔 Notificar Banda
+ </button>
+ )}
  {selectedConcert && (
  <button
  type="button"
@@ -2503,8 +3411,50 @@ export default function CalendarView({
   </div>
   );
   })()}
+            {/* WIDGET REUNIÓN (ENLACE VIDEOCONFERENCIA / ASUNTO) */}
+            {selectedRehearsal?.tipo_evento === 'reunion' && (
+              <div className={`mt-3 pt-3 border-t ${isStitchLight ? 'border-slate-200' : 'border-neutral-800/80'}`}>
+                <div className="flex items-center justify-between gap-1 mb-2">
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-indigo-400">
+                    <Video className="w-3.5 h-3.5 shrink-0 text-indigo-400" />
+                    <span>Detalles de la Reunión:</span>
+                  </div>
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                    🤝 Coordinación
+                  </span>
+                </div>
 
- {/* REPERTORIO / SETLIST ASIGNADO */}
+                <div className={`p-2.5 rounded-xl border space-y-2 ${
+                  isStitchLight ? 'bg-white border-slate-200 shadow-sm' : 'bg-neutral-950/80 border-indigo-500/20'
+                }`}>
+                  {selectedRehearsal.asunto && (
+                    <div className="text-[11px] font-semibold text-indigo-300">
+                      📌 {selectedRehearsal.asunto}
+                    </div>
+                  )}
+                  <div className="text-[10px] text-neutral-300 flex items-center gap-1.5">
+                    <span>📍 {selectedRehearsal.lugar}</span>
+                  </div>
+
+                  {selectedRehearsal.enlace_reunion && (
+                    <div className="pt-1 flex items-center gap-2">
+                      <a
+                        href={selectedRehearsal.enlace_reunion.startsWith('http') ? selectedRehearsal.enlace_reunion : `https://${selectedRehearsal.enlace_reunion}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+                      >
+                        <Video className="w-3.5 h-3.5" />
+                        <span>Unirse a Videollamada</span>
+                        <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* REPERTORIO / SETLIST ASIGNADO */}
  {(!isPromoPlan || hasModuleAccess(currentUser?.plan, 'repertorio')) && (selectedConcert || selectedRehearsal) && (
  <div className={` pt-2.5 mt-2.5 ${isStitchLight ? '-slate-100' : '-neutral-900'}`}>
  <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -2540,6 +3490,24 @@ export default function CalendarView({
  </option>
  ))}
  </select>
+
+ {assignedSetlist && (
+ <div className="mt-2.5 flex items-center gap-2">
+ <button
+ type="button"
+ id="calendar-launch-stage-mode-btn"
+ onClick={() => {
+ setActiveStageInitialMode(selectedConcert ? 'directo' : 'ensayo');
+ setActiveStageSetlist(assignedSetlist);
+ }}
+ className="flex-1 py-2 px-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+ title="Lanzar Modo Escenario / Vista de Directo para este evento"
+ >
+ <Radio className="w-3.5 h-3.5 animate-pulse text-black" />
+ <span>{selectedConcert ? 'Lanzar Modo Escenario' : 'Lanzar Modo Ensayo'}</span>
+ </button>
+ </div>
+ )}
  </div>
  )}
  </div>
@@ -2927,497 +3895,593 @@ export default function CalendarView({
  </div>
  </div>
 
- {/* CREATE REHEARSAL MODAL */}
- {showCreateModal === 'rehearsal' && (
- <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
- }`}>
- <button
- onClick={() => setShowCreateModal(null)}
- className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
- >
- ✕
- </button>
- <div className="flex items-center gap-2 mb-4">
- <span className="p-2 rounded-lg bg-[#10b981]/15 text-[#10b981]">
- <Calendar className="w-5 h-5" />
- </span>
- <div>
- <h3 className="font-bold text-base font-display">Crear Nuevo Ensayo</h3>
- <p className="text-[10px] font-mono text-neutral-400">
- Fecha: {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
- </p>
- </div>
- </div>
+ {/* UNIFIED CREATE EVENT MODAL (Concierto | Ensayo | Reunión) */}
+      {showCreateModal && (
+        <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+            <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+              isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
+            }`}>
+              <button
+                onClick={() => setShowCreateModal(null)}
+                className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                ✕
+              </button>
 
- <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Horario del Ensayo</label>
- <input
- type="text"
- value={rehTime}
- onChange={(e) => setRehTime(e.target.value)}
- placeholder="ej. 18:00 - 21:00"
- required
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
+              {/* Segmented Event Type Selector */}
+              <div className="flex items-center justify-between gap-1 p-1 bg-black/30 rounded-xl mb-5 border border-white/5">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal('concert')}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    showCreateModal === 'concert'
+                      ? 'bg-amber-500 text-stone-950 shadow-md font-black'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  <span>🎸</span>
+                  <span>Concierto</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal('rehearsal')}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    showCreateModal === 'rehearsal'
+                      ? 'bg-emerald-500 text-stone-950 shadow-md font-black'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  <span>🥁</span>
+                  <span>Ensayo</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal('reunion')}
+                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    showCreateModal === 'reunion'
+                      ? 'bg-indigo-500 text-white shadow-md font-black'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  <span>🤝</span>
+                  <span>Reunión</span>
+                </button>
+              </div>
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Lugar / Local</label>
- <input
- type="text"
- value={rehLugar}
- onChange={(e) => setRehLugar(e.target.value)}
- placeholder="ej. Rock Palace, Madrid (Local 4)"
- required
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
+              {/* Header Date Info */}
+              <div className="flex items-center gap-2 mb-4">
+                <span className={`p-2 rounded-lg ${
+                  showCreateModal === 'concert'
+                    ? 'bg-[#d1b375]/15 text-[#d1b375]'
+                    : showCreateModal === 'reunion'
+                    ? 'bg-indigo-500/15 text-indigo-400'
+                    : 'bg-[#10b981]/15 text-[#10b981]'
+                }`}>
+                  {showCreateModal === 'concert' ? (
+                    <Sparkles className="w-5 h-5" />
+                  ) : showCreateModal === 'reunion' ? (
+                    <Handshake className="w-5 h-5" />
+                  ) : (
+                    <Calendar className="w-5 h-5" />
+                  )}
+                </span>
+                <div>
+                  <h3 className="font-bold text-base font-display">
+                    {showCreateModal === 'concert' && 'Crear Nuevo Concierto'}
+                    {showCreateModal === 'rehearsal' && 'Crear Nuevo Ensayo'}
+                    {showCreateModal === 'reunion' && 'Crear Nueva Reunión'}
+                  </h3>
+                  <p className="text-[10px] font-mono text-neutral-400">
+                    Fecha: {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+                  </p>
+                </div>
+              </div>
 
- {isMultiBandUser && (
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Banda del Evento</label>
- <select
- value={selectedBandIdForNewEvent}
- onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- {effectiveBandsList.map(b => (
- <option key={b.band_id} value={b.band_id}>{b.bandName}</option>
- ))}
- </select>
- </div>
- )}
+              {/* FORM: REUNIÓN */}
+              {showCreateModal === 'reunion' && (
+                <form onSubmit={handleSaveNewReunion} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold">Asunto / Objetivo de la Reunión</label>
+                    <input
+                      type="text"
+                      value={reuAsunto}
+                      onChange={(e) => setReuAsunto(e.target.value)}
+                      placeholder="ej. Coordinación de gira de verano y reparto de tareas"
+                      required
+                      className={`w-full px-2 py-1.5 text-xs rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+                      }`}
+                    />
+                  </div>
 
- {/* Convocatoria selector */}
- <div className="space-y-2 border-t pt-3 border-neutral-800">
- <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center gap-1">
- <Users className="w-3 h-3 text-sky-400" />
- <span>Tipo de Convocatoria</span>
- </label>
- <select
- value={convocatoriaTipo}
- onChange={(e) => {
- const val = e.target.value as 'completa' | 'parcial';
- setConvocatoriaTipo(val);
- if (val === 'completa') {
- setConvocadosIds(effectiveBandMembers.map(m => m.id));
- }
- }}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="completa">Banda Completa (Todos los miembros convocados)</option>
- <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
- </select>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Horario</label>
+                      <input
+                        type="text"
+                        value={reuHora}
+                        onChange={(e) => setReuHora(e.target.value)}
+                        placeholder="ej. 19:00 - 20:00"
+                        required
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Lugar / Plataforma</label>
+                      <input
+                        type="text"
+                        value={reuLugar}
+                        onChange={(e) => setReuLugar(e.target.value)}
+                        placeholder="ej. Online (Google Meet) o Bar Local"
+                        required
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      />
+                    </div>
+                  </div>
 
- {convocatoriaTipo === 'parcial' && (
- <div className={`p-2.5 rounded-xl space-y-2 text-[10px] border ${
- isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-neutral-900 border-zinc-800 text-neutral-200'
- }`}>
- <span className="font-mono font-bold block text-neutral-400">Selecciona miembros convocados:</span>
- <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
- {effectiveBandMembers.map(member => {
- const isChecked = convocadosIds.includes(member.id);
- return (
- <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
- <input
- type="checkbox"
- checked={isChecked}
- onChange={(e) => {
- if (e.target.checked) {
- setConvocadosIds(prev => [...prev, member.id]);
- } else {
- setConvocadosIds(prev => prev.filter(id => id !== member.id));
- }
- }}
- className="rounded text-amber-500 focus:ring-0 w-3.5 h-3.5 cursor-pointer"
- />
- <span>{member.name} {member.role === 'leader' ? '(Líder)' : ''}</span>
- </label>
- );
- })}
- </div>
- <p className="text-[9px] text-amber-400 font-mono italic mt-1">
- * Este ensayo solo aparecerá en el calendario de los miembros convocados.
- </p>
- </div>
- )}
- </div>
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 flex items-center gap-1.5">
+                      <Video className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Enlace a Videollamada (Opcional)</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={reuEnlace}
+                      onChange={(e) => setReuEnlace(e.target.value)}
+                      placeholder="https://meet.google.com/xxx-xxxx-xxx o Zoom"
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Estado</label>
- <select
- value={rehEstado}
- onChange={(e) => setRehEstado(e.target.value as any)}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="programado">Programado</option>
- <option value="completado">Completado</option>
- <option value="cancelado">Cancelado</option>
- </select>
- </div>
+                  {isMultiBandUser && (
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Banda del Evento</label>
+                      <select
+                        value={selectedBandIdForNewEvent}
+                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      >
+                        {effectiveBandsList.map(b => (
+                          <option key={b.band_id} value={b.band_id}>{b.bandName}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
- <span className="flex items-center gap-1 text-[#10b981]">
- <Music className="w-3 h-3" />
- <span>Repertorio / Setlist a Ensayar</span>
- </span>
- {rehSetlistId && (
- <span className="text-[9px] font-mono text-[#10b981]">
- {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
- </span>
- )}
- </label>
- <select
- value={rehSetlistId}
- onChange={(e) => setRehSetlistId(e.target.value)}
- className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
- }`}
- >
- <option value="">-- Sin repertorio asignado --</option>
- {availableSetlists.map((s: any) => (
- <option key={s.id} value={s.id}>
- {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
- </option>
- ))}
- </select>
- </div>
+                  {/* Convocatoria selector */}
+                  <div className="space-y-2 border-t pt-3 border-neutral-800">
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center gap-1">
+                      <Users className="w-3 h-3 text-indigo-400" />
+                      <span>Asistentes Convocados</span>
+                    </label>
+                    <select
+                      value={convocatoriaTipo}
+                      onChange={(e) => {
+                        const val = e.target.value as 'completa' | 'parcial';
+                        setConvocatoriaTipo(val);
+                        if (val === 'completa') {
+                          setConvocadosIds(effectiveBandMembers.map(m => m.id));
+                        }
+                      }}
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    >
+                      <option value="completa">Toda la Banda (Todos los miembros convocados)</option>
+                      <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
+                    </select>
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Objetivo del Ensayo</label>
- <textarea
- value={rehNotas}
- onChange={(e) => setRehNotas(e.target.value)}
- rows={3}
- placeholder="ej. Montar la estructura de la canción nueva y probar dinámicas de volumen."
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
+                    {convocatoriaTipo === 'parcial' && (
+                      <div className={`p-2.5 rounded-xl space-y-2 text-[10px] border ${
+                        isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-neutral-900 border-zinc-800 text-neutral-200'
+                      }`}>
+                        <span className="font-mono font-bold block text-neutral-400">Selecciona miembros convocados:</span>
+                        <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                          {effectiveBandMembers.map(member => {
+                            const isChecked = convocadosIds.includes(member.id);
+                            return (
+                              <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setConvocadosIds(prev => [...prev, member.id]);
+                                    } else {
+                                      setConvocadosIds(prev => prev.filter(id => id !== member.id));
+                                    }
+                                  }}
+                                  className="rounded text-indigo-500 focus:ring-0 w-3.5 h-3.5 cursor-pointer"
+                                />
+                                <span>{member.name} {member.role === 'leader' ? '(Líder)' : ''}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
- <div className="pt-2 flex justify-end gap-2">
- <button
- type="button"
- onClick={() => setShowCreateModal(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
- >
- Cancelar
- </button>
- <button
- type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg transition-all cursor-pointer shadow-md ${
- isStitchLight ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-[#10b981] hover:bg-[#34d399] text-stone-950 font-bold shadow-emerald-500/20'
- }`}
- >
- Guardar Ensayo
- </button>
- </div>
- </form>
- </div>
- </div>
- </ModalPortal>
- )}
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Orden del Día / Notas</label>
+                    <textarea
+                      value={rehNotas}
+                      onChange={(e) => setRehNotas(e.target.value)}
+                      rows={3}
+                      placeholder="ej. 1. Definir fechas de estudio. 2. Presupuesto de merchandising. 3. Reparto de tareas de redes."
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
 
- {/* CREATE CONCERT MODAL */}
- {showCreateModal === 'concert' && (
- <ModalPortal isOpen={true} onClose={() => setShowCreateModal(null)}>
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
- }`}>
- <button
- onClick={() => setShowCreateModal(null)}
- className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
- >
- ✕
- </button>
- <div className="flex items-center gap-2 mb-4">
- <span className="p-2 rounded-lg bg-[#d1b375]/15 text-[#d1b375]">
- <Sparkles className="w-5 h-5" />
- </span>
- <div>
- <h3 className="font-bold text-base font-display">Crear Nuevo Concierto</h3>
- <p className="text-[10px] font-mono text-neutral-400">
- Fecha: {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
- </p>
- </div>
- </div>
+                  <div className="pt-2 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateModal(null)}
+                      className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg transition-all cursor-pointer shadow-md ${
+                        isStitchLight ? 'bg-indigo-600 hover:bg-indigo-500 text-white' : 'bg-indigo-600 hover:bg-indigo-500 text-white font-bold shadow-indigo-500/20'
+                      }`}
+                    >
+                      Guardar Reunión
+                    </button>
+                  </div>
+                </form>
+              )}
 
- <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
- <div className="grid grid-cols-2 gap-3">
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Ciudad</label>
- <input
- type="text"
- value={concCiudad}
- onChange={(e) => setConcCiudad(e.target.value)}
- placeholder="ej. Madrid"
- required
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Sala / Evento</label>
- <input
- type="text"
- value={concSala}
- onChange={(e) => setConcSala(e.target.value)}
- placeholder="ej. Sala El Sol"
- required
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
- </div>
+              {/* FORM: ENSAYO */}
+              {showCreateModal === 'rehearsal' && (
+                <form onSubmit={handleSaveNewRehearsal} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Horario del Ensayo</label>
+                    <input
+                      type="text"
+                      value={rehTime}
+                      onChange={(e) => setRehTime(e.target.value)}
+                      placeholder="ej. 18:00 - 21:00"
+                      required
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
 
- <div className={isPromoPlan ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3"}>
- {!isPromoPlan && (
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Caché (€)</label>
- <input
- type="number"
- value={concCache}
- onChange={(e) => setConcCache(e.target.value)}
- placeholder="1200"
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
- )}
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Aforo Máximo</label>
- <input
- type="number"
- value={concAforo}
- onChange={(e) => setConcAforo(e.target.value)}
- placeholder="300"
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
- </div>
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Lugar / Local</label>
+                    <input
+                      type="text"
+                      value={rehLugar}
+                      onChange={(e) => setRehLugar(e.target.value)}
+                      placeholder="ej. Rock Palace, Madrid (Local 4)"
+                      required
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
 
- <div className="grid grid-cols-2 gap-3">
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Tipo de Evento</label>
- <select
- value={concTipo}
- onChange={(e) => setConcTipo(e.target.value as any)}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="propio">Concierto Propio</option>
- <option value="festival">Festival / Macroevento</option>
- <option value="privado">Evento Privado / Boda</option>
- </select>
- </div>
+                  {isMultiBandUser && (
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Banda del Evento</label>
+                      <select
+                        value={selectedBandIdForNewEvent}
+                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      >
+                        {effectiveBandsList.map(b => (
+                          <option key={b.band_id} value={b.band_id}>{b.bandName}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Estado de Pago</label>
- <select
- value={concEstadoPago}
- onChange={(e) => setConcEstadoPago(e.target.value as any)}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="pendiente">Pendiente</option>
- <option value="anticipo">Anticipo / Parcial</option>
- <option value="pagado">Cobrado 100%</option>
- </select>
- </div>
- </div>
+                  {/* Convocatoria selector */}
+                  <div className="space-y-2 border-t pt-3 border-neutral-800">
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center gap-1">
+                      <Users className="w-3 h-3 text-sky-400" />
+                      <span>Tipo de Convocatoria</span>
+                    </label>
+                    <select
+                      value={convocatoriaTipo}
+                      onChange={(e) => {
+                        const val = e.target.value as 'completa' | 'parcial';
+                        setConvocatoriaTipo(val);
+                        if (val === 'completa') {
+                          setConvocadosIds(effectiveBandMembers.map(m => m.id));
+                        }
+                      }}
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    >
+                      <option value="completa">Banda Completa (Todos los miembros convocados)</option>
+                      <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
+                    </select>
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Idioma del formulario "Únete" (QR de fans)</label>
- <select
- value={concIdioma}
- onChange={(e) => setConcIdioma(e.target.value)}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="">Español (por defecto)</option>
- {FAN_FORM_LANGUAGES.filter(l => l.code !== 'es').map(l => (
- <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
- ))}
- </select>
- </div>
+                    {convocatoriaTipo === 'parcial' && (
+                      <div className={`p-2.5 rounded-xl space-y-2 text-[10px] border ${
+                        isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-neutral-900 border-zinc-800 text-neutral-200'
+                      }`}>
+                        <span className="font-mono font-bold block text-neutral-400">Selecciona miembros convocados:</span>
+                        <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                          {effectiveBandMembers.map(member => {
+                            const isChecked = convocadosIds.includes(member.id);
+                            return (
+                              <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setConvocadosIds(prev => [...prev, member.id]);
+                                    } else {
+                                      setConvocadosIds(prev => prev.filter(id => id !== member.id));
+                                    }
+                                  }}
+                                  className="rounded text-amber-500 focus:ring-0 w-3.5 h-3.5 cursor-pointer"
+                                />
+                                <span>{member.name} {member.role === 'leader' ? '(Líder)' : ''}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                        <p className="text-[9px] text-amber-400 font-mono italic mt-1">
+                          * Este ensayo solo aparecerá en el calendario de los miembros convocados.
+                        </p>
+                      </div>
+                    )}
+                  </div>
 
-  {isMultiBandUser && (
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Banda del Evento</label>
- <select
- value={selectedBandIdForNewEvent}
- onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- {effectiveBandsList.map(b => (
- <option key={b.band_id} value={b.band_id}>{b.bandName}</option>
- ))}
- </select>
- </div>
- )}
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Estado</label>
+                    <select
+                      value={rehEstado}
+                      onChange={(e) => setRehEstado(e.target.value as any)}
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    >
+                      <option value="programado">Programado</option>
+                      <option value="completado">Completado</option>
+                      <option value="cancelado">Cancelado</option>
+                    </select>
+                  </div>
 
- {/* Convocatoria selector */}
- <div className="space-y-2 border-t pt-3 border-neutral-800">
- <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center gap-1">
- <Users className="w-3 h-3 text-[#d1b375]" />
- <span>Tipo de Convocatoria</span>
- </label>
- <select
- value={convocatoriaTipo}
- onChange={(e) => {
- const val = e.target.value as 'completa' | 'parcial';
- setConvocatoriaTipo(val);
- if (val === 'completa') {
- setConvocadosIds(effectiveBandMembers.map(m => m.id));
- }
- }}
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- >
- <option value="completa">Banda Completa (Todos los miembros convocados)</option>
- <option value="parcial">Convocatoria Parcial (Seleccionar miembros)</option>
- </select>
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-[#10b981]">
+                        <Music className="w-3 h-3" />
+                        <span>Repertorio / Setlist a Ensayar</span>
+                      </span>
+                      {rehSetlistId && (
+                        <span className="text-[9px] font-mono text-[#10b981]">
+                          {availableSetlists.find((s: any) => s.id === rehSetlistId)?.items?.length || 0} temas
+                        </span>
+                      )}
+                    </label>
+                    <select
+                      value={rehSetlistId}
+                      onChange={(e) => setRehSetlistId(e.target.value)}
+                      className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+                      }`}
+                    >
+                      <option value="">-- Sin repertorio asignado --</option>
+                      {availableSetlists.map((s: any) => (
+                        <option key={s.id} value={s.id}>
+                          {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
- {convocatoriaTipo === 'parcial' && (
- <div className={`p-2.5 rounded-xl space-y-2 text-[10px] border ${
- isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-neutral-900 border-zinc-800 text-neutral-200'
- }`}>
- <span className="font-mono font-bold block text-neutral-400">Selecciona miembros convocados:</span>
- <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
- {effectiveBandMembers.map(member => {
- const isChecked = convocadosIds.includes(member.id);
- return (
- <label key={member.id} className="flex items-center gap-2 cursor-pointer select-none font-mono">
- <input
- type="checkbox"
- checked={isChecked}
- onChange={(e) => {
- if (e.target.checked) {
- setConvocadosIds(prev => [...prev, member.id]);
- } else {
- setConvocadosIds(prev => prev.filter(id => id !== member.id));
- }
- }}
- className="rounded text-[#d1b375] focus:ring-0 w-3.5 h-3.5 cursor-pointer"
- />
- <span>{member.name} {member.role === 'leader' ? '(Líder)' : ''}</span>
- </label>
- );
- })}
- </div>
- <p className="text-[9px] text-amber-400 font-mono italic mt-1">
- * Este concierto solo aparecerá en el calendario de los miembros convocados.
- </p>
- </div>
- )}
- </div>
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Objetivo del Ensayo</label>
+                    <textarea
+                      value={rehNotas}
+                      onChange={(e) => setRehNotas(e.target.value)}
+                      rows={3}
+                      placeholder="ej. Montar la estructura de la canción nueva y probar dinámicas de volumen."
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
 
- <div className="flex items-center gap-2 py-1">
- <input
- type="checkbox"
- id="concContrato"
- checked={concContrato}
- onChange={(e) => setConcContrato(e.target.checked)}
- className="rounded text-[#d1b375] focus:ring-0 w-4 h-4 cursor-pointer"
- />
- <label htmlFor="concContrato" className="text-[10px] font-mono cursor-pointer select-none">
- Contrato firmado y verificado
- </label>
- </div>
+                  <div className="pt-2 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateModal(null)}
+                      className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg transition-all cursor-pointer shadow-md ${
+                        isStitchLight ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-[#10b981] hover:bg-[#34d399] text-stone-950 font-bold shadow-emerald-500/20'
+                      }`}
+                    >
+                      Guardar Ensayo
+                    </button>
+                  </div>
+                </form>
+              )}
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
- <span className="flex items-center gap-1 text-[#d1b375]">
- <Disc3 className="w-3 h-3" />
- <span>Repertorio / Setlist del Concierto</span>
- </span>
- {concSetlistId && (
- <span className="text-[9px] font-mono text-[#10b981]">
- {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
- </span>
- )}
- </label>
- <select
- value={concSetlistId}
- onChange={(e) => setConcSetlistId(e.target.value)}
- className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
- }`}
- >
- <option value="">-- Sin repertorio asignado --</option>
- {availableSetlists.map((s: any) => (
- <option key={s.id} value={s.id}>
- {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
- </option>
- ))}
- </select>
- </div>
+              {/* FORM: CONCIERTO */}
+              {showCreateModal === 'concert' && (
+                <form onSubmit={handleSaveNewConcert} className="space-y-3.5">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Ciudad</label>
+                      <input
+                        type="text"
+                        value={concCiudad}
+                        onChange={(e) => setConcCiudad(e.target.value)}
+                        placeholder="ej. Madrid"
+                        required
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Sala / Recinto</label>
+                      <input
+                        type="text"
+                        value={concSala}
+                        onChange={(e) => setConcSala(e.target.value)}
+                        placeholder="ej. Sala Sol"
+                        required
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      />
+                    </div>
+                  </div>
 
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Cláusulas Técnicas</label>
- <textarea
- value={concNotas}
- onChange={(e) => setConcNotas(e.target.value)}
- rows={2}
- placeholder="ej. Prueba de sonido a las 18:30h. Catering frío y 4 camerinos incluidos."
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Dirección Exacta</label>
+                    <input
+                      type="text"
+                      value={concDireccion}
+                      onChange={(e) => setConcDireccion(e.target.value)}
+                      placeholder="ej. Calle Jardines 3, 28013 Madrid"
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
 
- <div className="pt-2 flex justify-end gap-2">
- <button
- type="button"
- onClick={() => setShowCreateModal(null)}
- className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
- >
- Cancelar
- </button>
- <button
- type="submit"
- className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg transition-all cursor-pointer shadow-md ${
- isStitchLight ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-[#d1b375] hover:bg-[#e2c486] text-stone-950 font-bold shadow-amber-500/20'
- }`}
- >
- Guardar Concierto
- </button>
- </div>
- </form>
- </div>
- </div>
- </ModalPortal>
- )}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Caché (€)</label>
+                      <input
+                        type="number"
+                        value={concCache}
+                        onChange={(e) => setConcCache(e.target.value)}
+                        placeholder="800"
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Estado de Pago</label>
+                      <select
+                        value={concEstadoPago}
+                        onChange={(e) => setConcEstadoPago(e.target.value as any)}
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      >
+                        <option value="pendiente">Pendiente</option>
+                        <option value="pagado">Pagado</option>
+                        <option value="anticipo">Anticipo</option>
+                      </select>
+                    </div>
+                  </div>
 
- {/* EDIT CONCERT MODAL (Ficha del Concierto) */}
+                  {isMultiBandUser && (
+                    <div>
+                      <label className="block text-[10px] font-mono text-neutral-400 mb-1">Banda del Evento</label>
+                      <select
+                        value={selectedBandIdForNewEvent}
+                        onChange={(e) => setSelectedBandIdForNewEvent(e.target.value)}
+                        className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                          isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                        }`}
+                      >
+                        {effectiveBandsList.map(b => (
+                          <option key={b.band_id} value={b.band_id}>{b.bandName}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-[#d1b375]">
+                        <Music className="w-3 h-3" />
+                        <span>Repertorio / Setlist del Concierto</span>
+                      </span>
+                      {concSetlistId && (
+                        <span className="text-[9px] font-mono text-[#10b981]">
+                          {availableSetlists.find((s: any) => s.id === concSetlistId)?.items?.length || 0} temas
+                        </span>
+                      )}
+                    </label>
+                    <select
+                      value={concSetlistId}
+                      onChange={(e) => setConcSetlistId(e.target.value)}
+                      className={`w-full px-2 py-1.5 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900 border border-slate-300' : 'bg-neutral-900 text-white border border-neutral-800'
+                      }`}
+                    >
+                      <option value="">-- Sin repertorio asignado --</option>
+                      {availableSetlists.map((s: any) => (
+                        <option key={s.id} value={s.id}>
+                          {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.filter((i: any) => i.tipoItem === 'cancion')?.length ?? s.items?.length ?? 0} temas
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Cláusulas Técnicas</label>
+                    <textarea
+                      value={concNotas}
+                      onChange={(e) => setConcNotas(e.target.value)}
+                      rows={2}
+                      placeholder="ej. Prueba de sonido a las 18:30h. Catering frío y 4 camerinos incluidos."
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
+
+                  <div className="pt-2 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowCreateModal(null)}
+                      className="px-2 py-1 text-[10px] font-mono rounded-lg text-neutral-300 hover:bg-neutral-800 transition-colors cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className={`px-3 py-1.5 text-[11px] font-mono font-bold rounded-lg transition-all cursor-pointer shadow-md ${
+                        isStitchLight ? 'bg-amber-600 hover:bg-amber-500 text-white' : 'bg-[#d1b375] hover:bg-[#e2c486] text-stone-950 font-bold shadow-amber-500/20'
+                      }`}
+                    >
+                      Guardar Concierto
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </ModalPortal>
+      )}
+
+      {/* EDIT CONCERT MODAL (Ficha del Concierto) */}
  {viewingConcert && editDraft && (
  <ModalPortal isOpen={true} onClose={() => setViewingConcert(null)}>
  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
@@ -3659,43 +4723,67 @@ export default function CalendarView({
 
  {/* EDIT REHEARSAL MODAL (Ficha del Ensayo) */}
  {viewingRehearsal && editRehearsalDraft && (
- <ModalPortal isOpen={true} onClose={() => setViewingRehearsal(null)}>
- <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
- <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
- isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
- }`}>
- <button
- onClick={() => setViewingRehearsal(null)}
- className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
- >
- ✕
- </button>
- <div className="flex items-center gap-2 mb-4">
- <span className="p-2 rounded-lg bg-[#10b981]/15 text-[#10b981]">
- <Calendar className="w-5 h-5" />
- </span>
- <div>
- <h3 className="font-bold text-base font-display">Ficha del Ensayo</h3>
+        <ModalPortal isOpen={true} onClose={() => setViewingRehearsal(null)}>
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
+            <div className={`w-full max-w-md rounded-2xl p-6 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto ${
+              isStitchLight ? 'bg-white text-slate-900' : 'bg-[#181818] text-neutral-100'
+            }`}>
+              <button
+                onClick={() => setViewingRehearsal(null)}
+                className="absolute top-4 right-4 p-1 rounded-full text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+              >
+                ✕
+              </button>
+              <div className="flex items-center gap-2 mb-4">
+                <span className={`p-2 rounded-lg ${
+                  editRehearsalDraft.tipo_evento === 'reunion' ? 'bg-indigo-500/15 text-indigo-400' : 'bg-[#10b981]/15 text-[#10b981]'
+                }`}>
+                  {editRehearsalDraft.tipo_evento === 'reunion' ? <Handshake className="w-5 h-5" /> : <Calendar className="w-5 h-5" />}
+                </span>
+                <div>
+                  <h3 className="font-bold text-base font-display">
+                    {editRehearsalDraft.tipo_evento === 'reunion' ? 'Ficha de la Reunión' : 'Ficha del Ensayo'}
+                  </h3>
  <p className="text-[10px] font-mono text-neutral-400">{editRehearsalDraft.lugar} · {editRehearsalDraft.fecha}</p>
  </div>
  </div>
 
  <form onSubmit={handleSaveRehearsalEdit} className="space-y-3.5">
- <div className="grid grid-cols-2 gap-3">
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Fecha</label>
- <input
- type="date"
- value={editRehearsalDraft.fecha}
- onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, fecha: e.target.value } : prev)}
- required
- className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
- isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
- }`}
- />
- </div>
- <div>
- <label className="block text-[10px] font-mono text-neutral-400 mb-1">Horario</label>
+                {editRehearsalDraft.tipo_evento === 'reunion' && (
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 font-bold">Asunto / Objetivo</label>
+                    <input
+                      type="text"
+                      value={editRehearsalDraft.asunto || ''}
+                      onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, asunto: e.target.value } : prev)}
+                      placeholder="ej. Coordinación de gira y reparto de tareas"
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
+                )}
+
+                {editRehearsalDraft.tipo_evento === 'reunion' && (
+                  <div>
+                    <label className="block text-[10px] font-mono text-neutral-400 mb-1 flex items-center gap-1">
+                      <Video className="w-3 h-3 text-indigo-400" />
+                      <span>Enlace a Videollamada</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={editRehearsalDraft.enlace_reunion || ''}
+                      onChange={(e) => setEditRehearsalDraft(prev => prev ? { ...prev, enlace_reunion: e.target.value } : prev)}
+                      placeholder="https://meet.google.com/xxx o Zoom"
+                      className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none font-mono ${
+                        isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+                      }`}
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-[10px] font-mono text-neutral-400 mb-1">Horario</label>
  <input
  type="text"
  value={editRehearsalDraft.hora}
@@ -3706,7 +4794,6 @@ export default function CalendarView({
  isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
  }`}
  />
- </div>
  </div>
 
  <div>
@@ -4033,12 +5120,161 @@ export default function CalendarView({
  </ModalPortal>
  )}
 
+ {/* Modal de Enviar Recordatorio / Notificación de Calendario */}
+ {showReminderModal && (
+ <ModalPortal>
+ <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+ <div className={`max-w-md w-full rounded-2xl border p-5 shadow-2xl relative ${
+ isStitchLight ? 'bg-white border-slate-200 text-slate-900' : 'bg-neutral-950 border-neutral-800 text-white'
+ }`}>
+ <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+ <div className="flex items-center gap-2">
+ <div className="p-2 rounded-xl bg-sky-500/10 text-sky-400">
+ <Bell className="w-5 h-5" />
+ </div>
+ <div>
+ <h3 className="font-bold text-sm">Enviar Recordatorio a la Banda</h3>
+ <p className="text-[10px] text-neutral-400 font-mono truncate max-w-[200px]">
+ {selectedConcert ? `Concierto: ${selectedConcert.sala}` : (selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Evento')}
+ </p>
+ </div>
+ </div>
+ <button
+ onClick={() => setShowReminderModal(false)}
+ className="text-neutral-400 hover:text-white text-sm font-bold cursor-pointer p-1"
+ >
+ ✕
+ </button>
+ </div>
+
+ <div className="py-4 space-y-4 text-xs">
+ {reminderSuccessMsg && (
+ <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl font-mono text-[11px]">
+ {reminderSuccessMsg}
+ </div>
+ )}
+
+ {reminderErrorMsg && (
+ <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl font-mono text-[11px]">
+ {reminderErrorMsg}
+ </div>
+ )}
+
+ <div className={`p-3 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/80 border-neutral-800'}`}>
+ <div className="font-mono text-[10px] text-sky-400 font-bold mb-1 uppercase tracking-wider">Detalles del Evento</div>
+ <p className="font-semibold">{selectedConcert ? `Concierto en ${selectedConcert.sala} (${selectedConcert.ciudad})` : (selectedRehearsal?.asunto || selectedRehearsal?.lugar || 'Ensayo/Reunión')}</p>
+ <p className="text-[11px] text-neutral-400 font-mono mt-0.5">
+ 📅 {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+ {selectedRehearsal?.hora ? ` a las ${selectedRehearsal.hora}` : ''}
+ </p>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-1">
+ Destinatarios ({effectiveBandMembers.length} miembros)
+ </label>
+ <div className="flex flex-wrap gap-1 font-mono text-[10px]">
+ {effectiveBandMembers.map((m: any, idx: number) => (
+ <span key={idx} className="px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-300 border border-sky-500/20">
+ 👤 {m.name} {m.email ? `(${m.email})` : ''}
+ </span>
+ ))}
+ </div>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-1">
+ Nota adicional / Indicaciones (Opcional)
+ </label>
+ <textarea
+ value={reminderNotes}
+ onChange={(e) => setReminderNotes(e.target.value)}
+ placeholder="Ej: Traer la lista de repertorio revisada o llegar 15 min antes para probar sonido..."
+ rows={3}
+ className={`w-full p-2 text-xs rounded-xl border outline-none font-sans ${
+ isStitchLight ? 'bg-slate-50 border-slate-200 text-slate-900' : 'bg-neutral-900 border-neutral-800 text-white'
+ }`}
+ />
+ </div>
+
+ <div className="space-y-2 pt-1 border-t border-neutral-800/60">
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      id="chk-send-push"
+      checked={reminderSendPush}
+      onChange={(e) => setReminderSendPush(e.target.checked)}
+      className="rounded border-neutral-700 cursor-pointer accent-sky-500"
+    />
+    <label htmlFor="chk-send-push" className="text-[11px] text-sky-300 cursor-pointer font-mono font-medium flex items-center gap-1">
+      📱 Notificación Push en móvil / navegador (PWA)
+    </label>
+  </div>
+
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      id="chk-send-email"
+      checked={reminderSendEmail}
+      onChange={(e) => setReminderSendEmail(e.target.checked)}
+      className="rounded border-neutral-700 cursor-pointer accent-sky-500"
+    />
+    <label htmlFor="chk-send-email" className="text-[11px] text-neutral-300 cursor-pointer font-mono flex items-center gap-1">
+      📧 Enviar correo electrónico a la banda
+    </label>
+  </div>
+</div>
+ </div>
+
+ <div className="pt-3 border-t border-neutral-800 flex items-center justify-end gap-2">
+ <button
+ type="button"
+ onClick={() => setShowReminderModal(false)}
+ className="px-3 py-1.5 rounded-xl border border-neutral-700 text-xs text-neutral-300 hover:bg-neutral-800 font-mono cursor-pointer"
+ >
+ Cancelar
+ </button>
+ <button
+ type="button"
+ disabled={reminderSending}
+ onClick={handleSendEventReminder}
+ className="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-xs font-bold text-slate-950 font-mono flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-all shadow-md"
+ >
+ {reminderSending ? (
+ <>
+ <Loader2 className="w-3.5 h-3.5 animate-spin" />
+ <span>Enviando...</span>
+ </>
+ ) : (
+ <>
+ <Send className="w-3.5 h-3.5" />
+ <span>Enviar Recordatorio</span>
+ </>
+ )}
+ </button>
+ </div>
+ </div>
+ </div>
+ </ModalPortal>
+ )}
+
  {/* Tutorial Interactivo Paso a Paso */}
  <ModuleTutorialModal
    moduleId="calendario"
    isOpen={isTutorialOpen}
    onClose={closeTutorial}
  />
+
+ {/* Vista de Directo / Modo Escenario asociado a la fecha del calendario */}
+ {activeStageSetlist && (
+   <SetlistPerformanceView
+     setlist={activeStageSetlist}
+     songs={availableSongs}
+     initialMode={activeStageInitialMode}
+     onClose={() => setActiveStageSetlist(null)}
+     currentUser={currentUser as any}
+   />
+ )}
 
  </div>
  );

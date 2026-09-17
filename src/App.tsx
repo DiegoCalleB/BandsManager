@@ -46,6 +46,7 @@ const RepertorioSetlists = safeLazy(() => import('./components/RepertorioSetlist
 const Merchan = safeLazy(() => import('./components/Merchan'));
 const Chatbot = safeLazy(() => import('./components/Chatbot'));
 const EPKManager = safeLazy(() => import('./components/EPKManager'));
+const EnsayosManager = safeLazy(() => import('./components/ensayos/EnsayosManager').then(m => ({ default: m.EnsayosManager })));
 const FansPanel = safeLazy(() => import('./components/FansPanel'));
 const FansLanding = safeLazy(() => import('./components/FansLanding'));
 const PublicMusiciansLanding = safeLazy(() => import('./components/PublicMusiciansLanding').then(m => ({ default: m.PublicMusiciansLanding })));
@@ -261,8 +262,8 @@ export default function App() {
   };
 
   // Active View State mapping directly to the Stitch Design doc
-  type MainView = 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
-  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
+  type MainView = 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'ensayos' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes';
+  const VALID_VIEWS: MainView[] = ['resumen', 'booking', 'medios', 'management', 'bandas', 'calendario', 'ensayos', 'reels', 'repertorio', 'catalogo', 'discografia', 'finanzas', 'chat', 'giras', 'merchan', 'epk', 'fans', 'planes'];
   const CURRENT_VIEW_STORAGE_KEY = 'bandmanager_current_view';
   const [currentView, setCurrentView] = useState<MainView>(() => {
     // Recordar la última pantalla entre recargas (F5): sin esto, cualquier refresh (incluido el
@@ -307,7 +308,7 @@ export default function App() {
   }>({});
 
   const handleNavigate = (
-    view: 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
+    view: 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'ensayos' | 'reels' | 'repertorio' | 'catalogo' | 'discografia' | 'finanzas' | 'chat' | 'giras' | 'merchan' | 'epk' | 'fans' | 'planes' | 'metronome' | 'tuner',
     options?: {
       sectionTab?: 'salas' | 'medios' | 'grupos';
       statusFilter?: LeadStatus | 'todos' | string;
@@ -1416,11 +1417,31 @@ export default function App() {
  initialSelectedDate={bookingOptions.selectedDate}
  currentBandId={currentActiveBandId}
  currentBandName={currentActiveBandName}
+ currentBandLogo={currentActiveBandLogo}
  availableBands={availableBands}
  bandUsers={bandUsers}
  currentUser={currentUser}
  isPromoPlan={isPromoPlan}
  />
+ )}
+ {currentView === 'ensayos' && (
+   <ErrorBoundary fallbackTitle="Ensayos & Local en Vivo">
+     <EnsayosManager
+       rehearsals={activeBandRehearsals}
+       onSaveRehearsal={(r) => {
+         if (r.id) {
+           handleUpdateRehearsal(r.id, r);
+         } else {
+           handleAddRehearsal(r as any);
+         }
+       }}
+       onDeleteRehearsal={handleDeleteRehearsal}
+       concerts={activeBandConcerts}
+       colors={colors}
+       currentBandId={currentActiveBandId}
+       bandUsers={bandUsers}
+     />
+   </ErrorBoundary>
  )}
  {currentView === 'reels' && (
  <ReelsCenter

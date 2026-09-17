@@ -898,7 +898,9 @@ export const api = {
 
   // Advanced AI analysis of setlist energy and pacing
   async analyzeSetlistWithAI(setlistId: string): Promise<{ success: boolean; analysis?: any; error?: string }> {
-    return request(`/api/repertorio/setlists/${encodeURIComponent(setlistId)}/analyze`, {
+    // repertorioRouter se monta en /api (no /api/repertorio) y la ruta real del servidor es
+    // "analyze-with-ai", no "analyze" — ver server/routes/repertorio.ts.
+    return request(`/api/setlists/${encodeURIComponent(setlistId)}/analyze-with-ai`, {
       method: 'POST'
     });
   },
