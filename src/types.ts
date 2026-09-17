@@ -283,6 +283,8 @@ export interface Concert {
   idioma?: string;
   customQrUrl?: string;
   customQrSlug?: string;
+  entradasUrl?: string;
+  entradasLugarFisico?: string;
 }
 
 export interface EmailSignatureConfig {
