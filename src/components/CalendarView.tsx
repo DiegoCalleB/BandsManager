@@ -800,7 +800,9 @@ export default function CalendarView({
  tipo: editDraft.tipo,
  notas: editDraft.notas?.trim() || '',
  idioma: editDraft.idioma || undefined,
- setlistId: editDraft.setlistId || undefined
+ setlistId: editDraft.setlistId || undefined,
+ entradasUrl: editDraft.entradasUrl?.trim() || undefined,
+ entradasLugarFisico: editDraft.entradasLugarFisico?.trim() || undefined
  });
  setViewingConcert(null);
  setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
@@ -1590,7 +1592,9 @@ export default function CalendarView({
         direccion: selectedConcert.direccion,
         fee: `${selectedConcert.cache} € (Caché Pactado)`,
         notes: selectedConcert.notas,
-        locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`
+        locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`,
+        entradasUrl: selectedConcert.entradasUrl,
+        entradasLugarFisico: selectedConcert.entradasLugarFisico
       }
     : selectedRehearsal
     ? {
@@ -3377,6 +3381,27 @@ export default function CalendarView({
  <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
  </div>
  )}
+ {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
+ <div className="flex flex-col gap-1.5 pt-2 mt-1 border-t border-neutral-800/40">
+ {selectedEventDetails.entradasUrl && (
+ <a
+ href={selectedEventDetails.entradasUrl}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-emerald-500 text-stone-950 hover:bg-emerald-400 transition-colors w-fit"
+ >
+ <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+ </a>
+ )}
+ {selectedEventDetails.entradasLugarFisico && (
+ <div className="flex items-center gap-2 text-[10px]">
+ <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+ <span className={`font-mono ${textSub}`}>También en:</span>
+ <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
+ </div>
+ )}
+ </div>
+ )}
  {!isPromoPlan && selectedEventDetails.type === 'concert' && selectedConcert && (() => {
  const g = selectedConcert.gastosDetalle;
  const totalG = g ? ((g.gasolina || 0) + (g.dietas || 0) + (g.alquilerVehiculo || 0) + (g.alojamiento || 0) + (g.otros || 0)) : (selectedConcert.gastosEstimadosTipicos || 150);
@@ -4691,6 +4716,36 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1 flex items-center gap-1">
+ <Ticket className="w-3 h-3 text-emerald-400" />
+ Enlace para Comprar Entradas
+ </label>
+ <input
+ type="url"
+ value={editDraft.entradasUrl || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, entradasUrl: e.target.value } : prev)}
+ placeholder="https://taquilla.com/tu-concierto"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Punto de Venta Físico</label>
+ <input
+ type="text"
+ value={editDraft.entradasLugarFisico || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, entradasLugarFisico: e.target.value } : prev)}
+ placeholder="ej. Potential Hardcore, Vallecas"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ </div>
+
+ <div className="grid grid-cols-2 gap-3">
+ <div>
  <label className="block text-[10px] font-mono text-neutral-400 mb-1">Tipo de Evento</label>
  <select
  value={editDraft.tipo}
@@ -5483,6 +5538,27 @@ export default function CalendarView({
                    <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
                    <span className={`font-mono ${textSub}`}>Compensación:</span>
                    <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
+                 </div>
+               )}
+               {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
+                 <div className="flex flex-col gap-1.5 pt-2 border-t border-neutral-800/40">
+                   {selectedEventDetails.entradasUrl && (
+                     <a
+                       href={selectedEventDetails.entradasUrl}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold bg-emerald-500 text-stone-950 hover:bg-emerald-400 transition-colors w-fit"
+                     >
+                       <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+                     </a>
+                   )}
+                   {selectedEventDetails.entradasLugarFisico && (
+                     <div className="flex items-center gap-2 text-[11px]">
+                       <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                       <span className={`font-mono ${textSub}`}>También en:</span>
+                       <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
+                     </div>
+                   )}
                  </div>
                )}
                {selectedConcert?.giraNombre && (

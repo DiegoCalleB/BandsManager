@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Download, Share2, ExternalLink,
   Check, Mail, Phone, MapPin, Play, Pause,
-  Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe
+  Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe, Ticket
 } from 'lucide-react';
 import { EPKConfig, Song, Concert, EPKSectionId } from '../types';
 import { SocialPlatformsList } from './SocialPlatformsList';
@@ -583,21 +583,42 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         </h2>
         <div className="space-y-2.5">
           {concerts.map(c => (
-            <div key={c.id} className={`${styles.card} border rounded-xl p-3.5 flex items-center justify-between gap-4`}>
-              <div className="flex items-center gap-3">
-                <span className={`px-2.5 py-1 rounded ${styles.badge} font-mono text-xs font-bold shrink-0 border`}>
-                  {c.fecha}
-                </span>
-                <div>
-                  <h4 className="font-bold text-sm leading-tight">{c.sala}</h4>
-                  <p className="text-xs opacity-75 flex items-center gap-1">
-                    <MapPin className="w-3 h-3 opacity-80" /> {c.ciudad}
-                  </p>
+            <div key={c.id} className={`${styles.card} border rounded-xl p-3.5 space-y-2.5`}>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className={`px-2.5 py-1 rounded ${styles.badge} font-mono text-xs font-bold shrink-0 border`}>
+                    {c.fecha}
+                  </span>
+                  <div>
+                    <h4 className="font-bold text-sm leading-tight">{c.sala}</h4>
+                    <p className="text-xs opacity-75 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 opacity-80" /> {c.ciudad}
+                    </p>
+                  </div>
                 </div>
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize border`}>
+                  {c.tipo}
+                </span>
               </div>
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize border`}>
-                {c.tipo}
-              </span>
+              {(c.entradasUrl || c.entradasLugarFisico) && (
+                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-current/10 print:hidden">
+                  {c.entradasUrl && (
+                    <a
+                      href={c.entradasUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-stone-950 text-xs font-bold hover:bg-emerald-400 transition-colors"
+                    >
+                      <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+                    </a>
+                  )}
+                  {c.entradasLugarFisico && (
+                    <span className="text-xs opacity-75">
+                      📍 También en: {c.entradasLugarFisico}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

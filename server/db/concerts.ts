@@ -27,7 +27,9 @@ export async function dbGetConcerts(bandId: string | string[]) {
     giraId: c.gira_id || c.giraId || undefined,
     giraNombre: c.gira_nombre || c.giraNombre || undefined,
     idioma: c.idioma || undefined,
-    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined
+    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined,
+    entradasUrl: c.entradas_url || c.entradasUrl || undefined,
+    entradasLugarFisico: c.entradas_lugar_fisico || c.entradasLugarFisico || undefined
   }));
 }
 
@@ -75,7 +77,9 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     gira_id: concert.gira_id || concert.giraId || null,
     gira_nombre: concert.gira_nombre || concert.giraNombre || null,
     idioma: concert.idioma || "",
-    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null
+    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null,
+    entradas_url: concert.entradas_url || concert.entradasUrl || null,
+    entradas_lugar_fisico: concert.entradas_lugar_fisico || concert.entradasLugarFisico || null
   };
 
   let data: any = null;
@@ -111,7 +115,9 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     ...data,
     giraId: concert.giraId || concert.gira_id,
     giraNombre: concert.giraNombre || concert.gira_nombre,
-    idioma: data?.idioma || concert.idioma
+    idioma: data?.idioma || concert.idioma,
+    entradasUrl: data?.entradas_url || concert.entradasUrl,
+    entradasLugarFisico: data?.entradas_lugar_fisico || concert.entradasLugarFisico
   };
 }
 
