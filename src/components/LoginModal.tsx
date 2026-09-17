@@ -548,16 +548,30 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[#f2ca50]/12 rounded-full blur-3xl pointer-events-none animate-pulse" />
               
               <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
-                <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)]">
-                  <img 
-                    src="/bandmanageriodefinitiva.jpeg" 
-                    alt="BandManager.io - Plataforma Integral para Bandas"
-                    className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+                <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    poster="/bandmanageriodefinitiva.jpeg"
+                    aria-label="BandManager.io - Plataforma Integral para Bandas"
+                    className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem]"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
+                      const container = (e.currentTarget as HTMLVideoElement).parentElement;
+                      if (container) {
+                        (e.currentTarget as HTMLVideoElement).style.display = 'none';
+                        const fallback = document.createElement('img');
+                        fallback.src = '/bandmanageriodefinitiva.jpeg';
+                        fallback.alt = 'BandManager.io - Plataforma Integral para Bandas';
+                        fallback.className = 'w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem]';
+                        container.appendChild(fallback);
+                      }
                     }}
-                    referrerPolicy="no-referrer"
-                  />
+                  >
+                    <source src="/login-animation.mp4" type="video/mp4" />
+                  </video>
                 </div>
               </div>
             </div>
