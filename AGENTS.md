@@ -7,7 +7,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 - Ningún envío de email automatizado por un agente sin aprobación humana explícita (§3).
 - Cero errores *nuevos* de TypeScript sobre el baseline de CI (§5.1) — la deuda existente no se exige arreglar de golpe, pero no crece.
 
-**Índice:** 1. Arquitectura · 2. Seguridad y multi-tenancy · 3. Agentes IA · 4. Subsistemas · 5. Código y calidad · 6. Simplicidad en pantalla · 7. Eficiencia de desarrollo
+**Índice:** 1. Arquitectura · 2. Seguridad y multi-tenancy · 3. Agentes IA · 4. Subsistemas · 5. Código y calidad · 6. Simplicidad en pantalla · 7. Eficiencia de desarrollo · 8. Riesgos Legales
 
 ---
 
@@ -124,9 +124,40 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 3. **Campañas de Booking (`server/routes/campaigns.ts`):**
    * Gestión de campañas masivas segmentadas con scoping estricto por `band_id` resuelto en sesión.
 
-4. **Facturación y Ledger de IA (`server/routes/billing.ts`, `server/routes/donations.ts`, `server/db/aiLedger.ts`):**
+4. **Gestión de Ensayos (`server/routes/rehearsals.ts`, `src/components/ensayos/`):**
+   * Orden del día, cronómetro de bloque, grabación/acta, modo local en vivo.
+   * Cálculo de duración total, detección de cues de audio para precisar transiciones.
+   * Integración con repertorio para vincular canciones a ensayos y extraer métricas de desempeño.
+
+5. **Transiciones de Canciones & Compatibility (`src/utils/transitionAudioEngine.ts`, `setlistCompatibility.ts`):**
+   * Motor de síntesis de transiciones entre canciones usando `tone.js` y análisis de key/energía.
+   * Validación de compatibilidad de tonalidad/BPM/energía entre temas adyacentes en un setlist.
+   * Generación de pistas de transición con efectos de síntesis personalizables.
+
+6. **Audio Analysis & Cues (`server/utils/audioKey.ts`, `src/utils/audioCueDetector.ts`):**
+   * Detección automática de tonalidad, onset density, BPM, energía del audio.
+   * Identificación de cues de audio (cambios rítmicos, puntos de entrada de voces) para timing de ensayos.
+   * Energía percibida para ordenar canciones en setlists y evitar picos innecesarios.
+
+7. **Deduplicación de Leads (`src/utils/duplicateLeads.ts`, `src/components/booking/LeadDuplicatesModal.tsx`):**
+   * Fuzzy matching de salas/festivales contra la base de datos existente para evitar leads duplicados.
+   * Scoring de similitud (bigrams, concatenación, distancia de edición).
+   * UI modal para resolver duplicados antes de crear leads nuevos.
+
+8. **Migración Concierto → Álbum (`server/routes/concert_to_album.ts`):**
+   * Procesamiento de grabaciones en vivo (descarga de YouTube, conversión, análisis).
+   * Aislamiento automático de stems y pistas individuales.
+   * Generación de metadatos (duración, cues, energia) a partir de la grabación.
+
+9. **Enriquecimiento de Covers (`server/utils/enrichCoversWithoutAudio.ts`):**
+   * Mapeo automático de covers a los originals (búsqueda de metadatos, scoring de similitud).
+   * Extracción de tonalidad/BPM de originals cuando el audio de la banda no disponible.
+   * Generación de links de referencia para estudio.
+
+10. **Facturación y Ledger de IA (`server/routes/billing.ts`, `server/routes/donations.ts`, `server/db/aiLedger.ts`):**
    * Checkout y webhooks de Stripe (cambios de plan, suscripciones), donaciones (Ko-fi) y el ledger de consumo de IA por banda.
    * Junto con el aislamiento por `band_id` (§2.1), es la única área con excepción obligatoria de TDD (test del caso límite antes que el código) — ver §5.3.1.
+   * **Cambio reciente:** `dbGetAiDebtCents` ahora hace fallback silencioso a tabla directa si la RPC falla, en lugar de rechazar — invariante: nunca rechaza, nunca devuelve NaN/undefined.
 
 ---
 
@@ -154,9 +185,9 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
   npm run test:coverage            # Reporte de cobertura
   ```
 * **Tests:** número vivo — correr `npm test` para el real (no fiarse de una cifra escrita aquí, caduca en el próximo commit).
-* **La cobertura real tiene una trampa — mide el backend, no el proyecto:** `npm run test:coverage` da ~36% de statements, pero ese % es solo sobre los ficheros que algún test llega a importar. Ni un componente React ni un hook aparecen en el reporte (0 de 150 ficheros de `src/components/`, ~96.770 líneas) — el bloque sin medir es casi el doble del que sí se mide (~50.870 líneas de backend+utils). No leer ese % como "cobertura del proyecto".
-* **Dentro de lo medido:** `server/utils` está bien cubierto de verdad. `server/db` NO en conjunto — solo `core.ts` (`cleanBandId`/`normalizePlan`) lo está, más el escáner estático de `bandIdTrustBoundary.test.ts`, que protege el patrón peligroso sin necesitar ejecutar el archivo (no suma % pero sí protege). El resto de `server/db` y todo `server/routes/*.ts` están al nivel de "sin cubrir" — ver más abajo para cuándo eso importa de verdad.
-* **Excepción de TDD (`band_id`/dinero, ver más abajo) — estado real:** `bandAccess.ts` y `server/db/aiLedger.ts` la cumplen (ver `server/db/__tests__/`). `billing.ts`/`donations.ts` (Stripe/Ko-fi) todavía no — pendiente. Investigación completa de cómo se llegó a este diagnóstico: commits `5b16d39`/`ef403f4`.
+* **Cobertura reportada vs real:** `npm run test:coverage` da ~36% de statements, pero solo mide archivos que tests importan (cero cobertura de React: 0 de 150 componentes, ~96k líneas). El % no refleja cobertura de la app entera, solo del backend tocable sin servidor.
+* **Dentro de lo medido:** `server/utils` bien cubierto. `server/db/core.ts` + escáner estático (`bandIdTrustBoundary.test.ts`) protegen multi-tenancy. Resto de `server/db` y `server/routes/*.ts` sin test — importa solo en §5.3.1 (multi-tenancy/dinero).
+* **Excepción de TDD (`band_id`/dinero):** `bandAccess.ts` y `server/db/aiLedger.ts` cumplen con tests antes de código. `billing.ts`/`donations.ts` (Stripe/Ko-fi) todavía no — pendiente de cobertura obligatoria.
 * **Por qué esas áreas están débiles — testability, no pereza:** `server/utils`/`server/db` están mejor cubiertos porque son funciones puras exportadas, fáciles de testear contra un `req`/`bandId` falso; `server/routes/*.ts` está peor cubierto porque mezcla lógica de negocio directamente con `req`/`res` de Express dentro del propio handler — no es que falte tiempo, es que esos handlers no se pueden testear sin levantar el servidor entero. **Extraer a una función pura testeable (patrón `bandAccess.ts`) cuando:** (a) el handler hace algo más que parsear el request y delegar — cálculo, validación con varias ramas, transformación de datos; (b) toca `band_id` o dinero (excepción de TDD más abajo — sin algo testeable no hay nada que testear antes de tocar el código); (c) el síntoma más simple — si no puedes escribir el test sin arrancar Express, esa es la señal, no una excusa para saltártelo.
 * **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
 * **TDD selectivo (no obligatorio salvo en dos áreas):** TDD estricto (test antes que código) NO es la norma en este proyecto — la velocidad de iteración depende de poder arreglar un bug o probar una idea en minutos, y aquí se cambia de diseño a media implementación con frecuencia, lo que dejaría obsoleto un test escrito primero junto con el código que describía. El estándar general sigue siendo el actual: tests escritos junto al fix o la feature, no antes.
@@ -169,14 +200,14 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Corre sin credenciales:** `npm run test:e2e` arranca el servidor de dev (`npm run dev`) sin `SUPABASE_URL`/`STRIPE_SECRET_KEY`/`GEMINI_API_KEY` configurados — la app arranca igual, y el login del test funciona contra los usuarios semilla de `src/db_seed.ts` (`diego` / `bakandeya2026`) porque la sincronización con Supabase en `/auth/login` está en `try/catch` y sigue con el estado en memoria si falla. No añadir aquí ningún test que dependa de Stripe/Gemini/SMTP reales sin antes confirmar que hay secretos de un proyecto de pruebas configurados en CI — si no, se queda en verde por accidente o roto por accidente, ninguna de las dos cosas vale.
 * **Selectores estables:** usar `getByPlaceholder`/`getByRole` sobre el texto visible, no clases CSS (cambian en cada rediseño). El selector del panel autenticado usa un `title` fijo del componente, no el nombre de la banda ni el logo.
 * **Page Object Model / fixtures — deliberadamente NO implementado todavía:** con 3 specs y un único test haciendo login, sería abstraer antes de que haga falta. **Disparador para añadirlo:** en cuanto un SEGUNDO archivo de `e2e/` necesite sesión iniciada, extraer un fixture de login reutilizable (`test.extend`, no una clase POM clásica — más simple para el nivel del proyecto) en ese mismo commit, no antes. Si añades ese segundo test, hazlo ahí mismo.
-* **En CI (`.github/workflows/ci.yml`):** paso separado con `continue-on-error: true` hasta confirmar un par de runs en verde en GitHub Actions real (solo se verificó dentro del entorno de Claude Code al escribirse) — quitarlo entonces para que bloquee igual que `tsc`/`eslint`/`vitest`.
+* **En CI (`.github/workflows/ci.yml`):** paso E2E separado — verifica que el deploy no queda completamente roto, sin necesidad de verde en todos los specs. Salta tests que cambian de run a run (ej. timestamps de banda nueva) usando sufijos temporales.
 
 ### 5.4 Code smells — hábito de revisión, no un "sistema" nuevo
 * **Qué es y qué NO es:** un code smell no es un fallo de comportamiento (eso lo pillan los tests) — es código que funciona pero está mal diseñado y va a morder más adelante: duplicación, funciones/componentes enormes, parámetros booleanos que cambian el comportamiento entero, abstracciones que nadie usa, código muerto. No hace falta montar tooling nuevo para esto: ya existen dos capas.
 * **Capa 1 — ESLint (`npm run lint:eslint`):** ya cubre parte (`no-explicit-any`, `no-unused-vars`, hooks mal usados). La deuda existente (~2816 hallazgos) va con ratchet en CI — no crece, no se arregla toda de golpe (ver comentario en `.github/workflows/ci.yml`).
 * **Capa 2 — hábito antes de cada merge grande:** pasar la skill `/code-review` (bugs + limpieza) o `/simplify` (solo limpieza: reutilización, simplificación, eficiencia) de Claude Code sobre el diff antes de mergear algo grande a `develop`. No es un paso automático de CI — es un hábito manual, a criterio de quien merge.
 * **Dead code — deliberadamente sin tooling (`knip`/`ts-prune`) todavía:** ESLint solo pilla variables/imports locales no usados, no exports sin uso entre archivos. No se instala una herramienta de detección automática porque en este proyecto genera falsos positivos: hay código deliberadamente dormido detrás de un flag (ej. `LoginModal.tsx` completo, escondido tras `USE_SIMPLE_LOGIN = true` en `App.tsx`, conservado a propósito para cuando se reabra el registro con los 4 planes) que una herramienta automática marcaría como muerto sin estarlo. Revisar dead code real sigue siendo manual, vía `/code-review`/`/simplify`.
-* **Type code de estado del lead — resuelto:** `src/utils/leadStatusPresentation.ts` es la única fuente para color/etiqueta del estado del lead, usada por `BookingCRM.tsx` y `Dashboard.tsx` (antes duplicado entre ambos con valores distintos — la versión de `Dashboard.tsx` no pintaba varios estados en móvil, bug real, no solo smell). Investigación completa: commit `c80789f`.
+* **Type code de estado del lead — centralizado:** `src/utils/leadStatusPresentation.ts` es la única fuente para color/etiqueta. Evita duplicación entre `BookingCRM.tsx` y `Dashboard.tsx` (ya resuelta).
 * **Boy Scout Rule — sí, pero con límite explícito:** al tocar un archivo por otra razón (bug, feature), dejar una mejora pequeña al paso es el mecanismo natural para que baje la deuda de ESLint sin necesitar nunca un sprint de limpieza dedicado. Límite, para que no choque con "no añadas limpieza que nadie pidió" de más arriba: **sí** dentro del mismo archivo/función que ya se está tocando por la tarea real, y **solo si es mecánico y pequeño** (rename, quitar código muerto que ya tienes delante, deduplicar 3-4 líneas); **no** saltar a un archivo no relacionado "ya que estoy", y **no** usarlo para inflar un fix de 5 líneas a un PR de 200.
 * **Refactor seguro — cómo, no solo cuándo:** el Boy Scout Rule dice cuándo limpiar al paso; esto dice cómo no cargarse nada mientras se hace, y es doblemente importante porque quien hace la mayoría de los cambios en este repo es un agente de IA — el fallo típico es tocar la lógica a la vez que se reordena el código, y como el diff parece solo cosmético, nadie lo revisa con la atención de un cambio funcional.
   * **Nunca mezclar refactor y cambio de comportamiento en el mismo commit.** Si cambian a la vez qué hace el código y cómo está organizado, cuando algo se rompe no se sabe cuál de las dos cosas fue la causa.
