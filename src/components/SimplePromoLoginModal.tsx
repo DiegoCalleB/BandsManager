@@ -35,10 +35,9 @@ function tieneConexionMala(): boolean {
 }
 
 // Logo animado con fallback a la imagen estática (por conexión mala o por fallo real de carga).
-// Sin loop a propósito: es una animación de "revelado" (barras que crecen de la nada, logo que
-// se dibuja, luces que barren), no un movimiento cíclico - repetirla en bucle fuerza un corte
-// visible al volver del final al principio. Se reproduce una vez y se queda congelada en el
-// último fotograma, que ya lleva el logo + naming compuesto.
+// Con loop: el logo ya está completo desde el primer fotograma (solo las partículas de fondo
+// se mueven de forma constante), así que el corte final→inicio no se nota y puede repetirse
+// indefinidamente.
 // Es su propio componente porque USE_SIMPLE_LOGIN (App.tsx) hace que esta ventana sea la que de
 // verdad se muestra en producción hoy - LoginModal.tsx tiene la misma pieza pero no se está
 // renderizando - y aquí se necesita en dos sitios (login y alta).
@@ -66,6 +65,7 @@ const LoginBrandVideo: React.FC = () => {
       ref={ref}
       autoPlay
       muted
+      loop
       playsInline
       preload="auto"
       poster={LOGIN_POSTER}
