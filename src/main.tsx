@@ -1,10 +1,14 @@
 import './utils/domTranslatePatch';
+import { initFrontendErrorTracking } from './utils/errorTracking';
 import {StrictMode, Suspense, lazy} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
+
+// Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
+initFrontendErrorTracking();
 
 // Rutas públicas (/epk, /musicos) se cargan bajo demanda
 const PublicEPK = lazy(() => import('./components/PublicEPK'));

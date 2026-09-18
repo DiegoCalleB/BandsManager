@@ -729,7 +729,8 @@ export default function CalendarView({
  const goToAdjacentEvent = React.useCallback((direction: 1 | -1) => {
    if (allChronologicalEvents.length === 0) return;
    const currentIndex = activeChronoIndex >= 0 ? activeChronoIndex : 0;
-   const nextIndex = (currentIndex + direction + allChronologicalEvents.length) % allChronologicalEvents.length;
+   const nextIndex = currentIndex + direction;
+   if (nextIndex < 0 || nextIndex >= allChronologicalEvents.length) return;
    handleSelectEvent(allChronologicalEvents[nextIndex].data);
  }, [allChronologicalEvents, activeChronoIndex, handleSelectEvent]);
 
@@ -1308,17 +1309,19 @@ export default function CalendarView({
 
  // Al cambiar de día, olvidar qué evento estaba elegido: si no, un día con un solo evento podía
  // heredar el id de otro día y no encontrar coincidencia (se ve el primero, que es el
- // comportamiento correcto, pero por accidente en vez de por diseño).
- //
- // El efecto de más arriba (initialSelectedEventId) también cambia selectedDate en el mismo golpe
- // que fija selectedEventId, y los dos efectos se disparan por separado tras ese commit: sin el
- // "prev === initialSelectedEventId", este reset ganaba la carrera y deshacía el deep-link justo
- // después de fijarlo, así que un enlace a un evento concreto de un día con varios acababa
- // mostrando el primero en vez del pedido.
- useEffect(() => {
- setSelectedEventId(prev => (initialSelectedEventId && prev === initialSelectedEventId) ? prev : null);
- // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [selectedDateKey]);
+  // Al cambiar la fecha seleccionada en la cuadrícula, reseteamos el id de evento activo solo si la Ficha Modal
+  // no está abierta y si el evento anterior no pertenecía al nuevo día seleccionado.
+  useEffect(() => {
+    if (showEventFichaModal) return;
+    setSelectedEventId(prev => {
+      if (!prev) return null;
+      if (initialSelectedEventId && prev === initialSelectedEventId) return prev;
+      const belongsToNewDate = filteredConcerts.some(c => c.id === prev && c.fecha === selectedDateKey) ||
+                               filteredRehearsals.some(r => r.id === prev && r.fecha === selectedDateKey);
+      return belongsToNewDate ? prev : null;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDateKey, showEventFichaModal]);
 
  const defaultInitialRunOfShow: Record<string, RunOfShowItem[]> = {
  '2026-07-23': [
@@ -5425,7 +5428,7 @@ export default function CalendarView({
              <button
                type="button"
                onClick={() => goToAdjacentEvent(-1)}
-               disabled={allChronologicalEvents.length === 0}
+               disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                title="Evento anterior (←)"
              >
@@ -5444,7 +5447,7 @@ export default function CalendarView({
                <button
                  type="button"
                  onClick={() => goToAdjacentEvent(1)}
-                 disabled={allChronologicalEvents.length === 0}
+                 disabled={allChronologicalEvents.length === 0 || activeChronoIndex < 0 || activeChronoIndex >= allChronologicalEvents.length - 1}
                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                  title="Evento siguiente (→)"
                >
