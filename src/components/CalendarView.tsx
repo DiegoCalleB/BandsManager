@@ -1801,9 +1801,9 @@ export default function CalendarView({
               <button
                 key={`day-${year}-${month}-${cell.day}`}
                 onClick={() => setSelectedDate(new Date(year, month, cell.day))}
-                className={`relative aspect-square p-1 sm:p-1.5 rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
+                className={`relative min-h-[72px] sm:min-h-[85px] p-1.5 rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer ${borderAndBgClass}`}
               >
-                <div className="flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full mb-1">
                   <span className={`text-[11px] sm:text-xs font-mono font-bold ${isSelected ? 'text-stone-950 font-black' : isToday ? 'text-amber-400' : ''}`}>
                     {cell.day}
                   </span>
@@ -1812,8 +1812,8 @@ export default function CalendarView({
                   )}
                 </div>
 
-                {/* Badges de eventos Multilínea Inteligentes y Dinámicos (máximo 2 por casilla + contador) */}
-                <div className="w-full space-y-1 overflow-hidden my-auto">
+                {/* Badges de eventos Multilínea Inteligentes y Altamente Legibles */}
+                <div className="w-full space-y-1 my-auto">
                   {dayEvents.slice(0, 2).map((evt) => {
                     const isConcert = 'sala' in evt;
                     const isReu = !isConcert && (evt as Rehearsal).tipo_evento === 'reunion';
@@ -1821,16 +1821,16 @@ export default function CalendarView({
 
                     const icon = isConcert ? '🎸' : (isReu ? '🤝' : '🥁');
                     const titleText = isConcert
-                      ? `${(evt as Concert).sala}${(evt as Concert).ciudad ? `, ${(evt as Concert).ciudad}` : ''}`
+                      ? `${(evt as Concert).sala}${(evt as Concert).ciudad ? ` (${(evt as Concert).ciudad})` : ''}`
                       : (isReu ? ((evt as Rehearsal).asunto || (evt as Rehearsal).lugar) : (evt as Rehearsal).lugar.split(',')[0]);
 
                     const badgeBg = isSelected
-                      ? 'bg-stone-950/30 text-stone-950 border-stone-950/40'
+                      ? 'bg-stone-950/40 text-stone-950 border-stone-950/50'
                       : isConcert
-                      ? 'bg-amber-500/25 text-amber-200 border-amber-500/40 hover:bg-amber-500/35'
+                      ? 'bg-amber-950/50 text-amber-100 border-amber-500/50 hover:bg-amber-900/60'
                       : isReu
-                      ? 'bg-indigo-500/25 text-indigo-200 border-indigo-500/40 hover:bg-indigo-500/35'
-                      : 'bg-emerald-500/25 text-emerald-200 border-emerald-500/40 hover:bg-emerald-500/35';
+                      ? 'bg-indigo-950/50 text-indigo-100 border-indigo-500/50 hover:bg-indigo-900/60'
+                      : 'bg-emerald-950/50 text-emerald-100 border-emerald-500/50 hover:bg-emerald-900/60';
 
                     return (
                       <div
@@ -1839,15 +1839,15 @@ export default function CalendarView({
                           e.stopPropagation();
                           handleSelectEvent(evt);
                         }}
-                        className={`w-full p-1 rounded-md border text-[8px] sm:text-[9px] font-mono leading-tight transition-all cursor-pointer ${badgeBg}`}
+                        className={`w-full p-1 sm:p-1.5 rounded-md border leading-tight transition-all cursor-pointer ${badgeBg}`}
                         title={`${isConcert ? 'Concierto' : isReu ? 'Reunión' : 'Ensayo'} [${bandInfo.name}]: ${titleText}`}
                       >
-                        <div className="flex items-center gap-1 font-bold mb-0.5 truncate">
+                        <div className="flex items-center gap-1 font-bold mb-0.5 min-w-0">
                           {bandInfo.logoUrl ? (
                             <img
                               src={bandInfo.logoUrl}
                               alt={bandInfo.name}
-                              className="w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/50"
+                              className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/50"
                               onError={(e) => {
                                 (e.currentTarget as HTMLElement).style.display = 'none';
                                 const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -1855,20 +1855,20 @@ export default function CalendarView({
                               }}
                             />
                           ) : null}
-                          <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                          <span className={`fallback-initials w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
                             {bandInfo.initials}
                           </span>
-                          <span className="font-extrabold text-white truncate">{bandInfo.name}</span>
+                          <span className="text-[8px] sm:text-[9.5px] font-extrabold text-white truncate">{bandInfo.name}</span>
                         </div>
-                        <div className="text-[7.5px] sm:text-[8.5px] opacity-90 font-medium line-clamp-2 break-words flex items-start gap-0.5">
+                        <div className="text-[8.5px] sm:text-[10px] font-bold text-amber-200/90 whitespace-normal break-words line-clamp-3 flex items-start gap-1">
                           <span className="shrink-0">{icon}</span>
-                          <span className="min-w-0">{titleText}</span>
+                          <span className="min-w-0 leading-tight">{titleText}</span>
                         </div>
                       </div>
                     );
                   })}
                   {dayEvents.length > 2 && (
-                    <div className="text-[7.5px] sm:text-[8.5px] font-mono font-bold text-center py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                    <div className="text-[8px] sm:text-[9px] font-mono font-bold text-center py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
                       +{dayEvents.length - 2} más
                     </div>
                   )}
