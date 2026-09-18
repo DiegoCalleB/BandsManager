@@ -734,6 +734,41 @@ export default function CalendarView({
    handleSelectEvent(allChronologicalEvents[nextIndex].data);
  }, [allChronologicalEvents, activeChronoIndex, handleSelectEvent]);
 
+ // Gestos táctiles de la Ficha Modal para pasar de evento deslizando a izquierda/derecha en móvil
+ const modalTouchStartX = useRef<number | null>(null);
+ const modalTouchStartY = useRef<number | null>(null);
+ const modalTouchDeltaX = useRef<number>(0);
+
+ const handleModalTouchStart = React.useCallback((e: React.TouchEvent) => {
+   if (e.touches.length !== 1) return;
+   modalTouchStartX.current = e.touches[0].clientX;
+   modalTouchStartY.current = e.touches[0].clientY;
+   modalTouchDeltaX.current = 0;
+ }, []);
+
+ const handleModalTouchMove = React.useCallback((e: React.TouchEvent) => {
+   if (modalTouchStartX.current === null || modalTouchStartY.current === null) return;
+   const diffX = e.touches[0].clientX - modalTouchStartX.current;
+   const diffY = e.touches[0].clientY - modalTouchStartY.current;
+   if (Math.abs(diffX) > Math.abs(diffY)) {
+     modalTouchDeltaX.current = diffX;
+   }
+ }, []);
+
+ const handleModalTouchEnd = React.useCallback(() => {
+   if (modalTouchStartX.current === null) return;
+   const dx = modalTouchDeltaX.current;
+   const threshold = 40; // 40px para activar cambio de evento
+   if (dx < -threshold) {
+     goToAdjacentEvent(1);
+   } else if (dx > threshold) {
+     goToAdjacentEvent(-1);
+   }
+   modalTouchStartX.current = null;
+   modalTouchStartY.current = null;
+   modalTouchDeltaX.current = 0;
+ }, [goToAdjacentEvent]);
+
  // Atajos de teclado de la Ficha Modal: Esc ya lo gestiona ModalPortal internamente.
  useEffect(() => {
    if (!showEventFichaModal) return;
@@ -5386,7 +5421,11 @@ export default function CalendarView({
    return (
      <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
        <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-         <div className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
+         <div 
+           onTouchStart={handleModalTouchStart}
+           onTouchMove={handleModalTouchMove}
+           onTouchEnd={handleModalTouchEnd}
+           className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
            isStitchLight ? 'bg-white border-amber-300 text-slate-900' : 'bg-[#141414] border-amber-500/50 text-neutral-100 shadow-amber-500/10'
          }`}>
            {/* Barra superior del modal: navegación cronológica entre eventos */}
