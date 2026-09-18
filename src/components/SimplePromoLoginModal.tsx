@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Shield, Sparkles, Music, Zap } from 'lucide-react';
 import { User as UserType } from '../types';
-import { googleSignIn } from '../utils/gmail';
+import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
 
@@ -118,14 +118,11 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
     try {
       setLoading(true);
       setError(null);
-      const res = await googleSignIn();
-      if (!res) return;
-      if (!res.user) {
-        throw new Error('No se pudo obtener la información de la cuenta de Google.');
-      }
+      const googleUser = await signInWithGoogleIdentity();
+      if (!googleUser) return; // User closed popup
 
-      const email = res.user.email || '';
-      const displayName = res.user.displayName || email.split('@')[0] || 'Miembro Banda';
+      const email = googleUser.email;
+      const displayName = (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : (googleUser.name || email.split('@')[0]);
 
       try {
         const response = await fetch('/api/auth/google', {
@@ -133,9 +130,9 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,
-            name: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : displayName,
-            uid: res.user.uid,
-            accessToken: res.accessToken,
+            name: displayName,
+            uid: googleUser.sub,
+            accessToken: googleUser.accessToken,
             bandName: (view === 'register' && regBandName.trim()) ? regBandName.trim() : undefined,
             leaderName: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
           })
@@ -153,8 +150,8 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
       }
 
       const fallbackUser: UserType = {
-        id: res.user.uid || `user-${Date.now()}`,
-        username: email || 'usuario_google',
+        id: googleUser.sub || `user-${Date.now()}`,
+        username: email,
         name: displayName,
         bandName: (view === 'register' && regBandName.trim()) || 'Mi Banda',
         email: email,
@@ -162,27 +159,8 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         plan: 'promo',
         createdAt: new Date().toISOString()
       };
-      onLoginSuccess(fallbackUser, res.accessToken);
+      onLoginSuccess(fallbackUser, googleUser.accessToken || '');
     } catch (err: any) {
-      const errCode = err?.code || '';
-      const errMsg = String(err?.message || '').toLowerCase();
-      if (
-        errCode === 'auth/popup-closed-by-user' ||
-        errCode === 'auth/cancelled-popup-request' ||
-        errMsg.includes('popup-closed-by-user') ||
-        errMsg.includes('closed-by-user')
-      ) {
-        return;
-      }
-      if (
-        errMsg.includes('access_denied') ||
-        errMsg.includes('blocked') ||
-        errMsg.includes('verification') ||
-        errCode.includes('access-denied')
-      ) {
-        setError('Google ha bloqueado el acceso OAuth temporalmente. Puedes iniciar sesión o registrarte con tu correo y contraseña directamente.');
-        return;
-      }
       console.error("Error al iniciar sesión con Google:", err);
       setError(err.message || 'Error al conectar con Google OAuth.');
     } finally {

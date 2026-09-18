@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { User as UserType } from '../types';
-import { googleSignIn } from '../utils/gmail';
+import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 import { ModalPortal } from './common/ModalPortal';
@@ -384,17 +384,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     try {
       setLoading(true);
       setError(null);
-      const res = await googleSignIn();
-      if (!res) {
-        // User closed or cancelled Google popup window gracefully
-        return;
-      }
-      if (!res.user) {
-        throw new Error('No se pudo obtener la información de la cuenta de Google.');
-      }
+      const googleUser = await signInWithGoogleIdentity();
+      if (!googleUser) return; // User closed or cancelled popup
 
-      const email = res.user.email || '';
-      const displayName = res.user.displayName || email.split('@')[0] || 'Miembro Banda';
+      const email = googleUser.email;
+      const displayName = (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : (googleUser.name || email.split('@')[0]);
 
       // Call backend API /api/auth/google
       try {
@@ -403,9 +397,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,
-            name: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : displayName,
-            uid: res.user.uid,
-            accessToken: res.accessToken,
+            name: displayName,
+            uid: googleUser.sub,
+            accessToken: googleUser.accessToken,
             bandName: (view === 'register' && regBandName.trim()) ? regBandName.trim() : undefined,
             leaderName: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
           })
@@ -424,37 +418,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       // Fallback local login if backend is unreachable
       const fallbackUser: UserType = {
-        id: res.user.uid || `user-${Date.now()}`,
-        username: email || 'usuario_google',
+        id: googleUser.sub || `user-${Date.now()}`,
+        username: email,
         name: displayName,
-        bandName: 'Bakandeya',
+        bandName: (view === 'register' && regBandName.trim()) || 'Mi Banda',
         email: email,
         role: 'leader',
-        plan: 'profesional',
+        plan: 'promo',
         createdAt: new Date().toISOString()
       };
-      onLoginSuccess(fallbackUser, res.accessToken);
+      onLoginSuccess(fallbackUser, googleUser.accessToken || '');
     } catch (err: any) {
-      const errCode = err?.code || '';
-      const errMsg = String(err?.message || '').toLowerCase();
-      if (
-        errCode === 'auth/popup-closed-by-user' ||
-        errCode === 'auth/cancelled-popup-request' ||
-        errMsg.includes('popup-closed-by-user') ||
-        errMsg.includes('closed-by-user')
-      ) {
-        // Ignore user cancellation gracefully
-        return;
-      }
-      if (
-        errMsg.includes('access_denied') ||
-        errMsg.includes('blocked') ||
-        errMsg.includes('verification') ||
-        errCode.includes('access-denied')
-      ) {
-        setError('Google ha bloqueado el acceso OAuth porque el proyecto de Firebase está en modo Pruebas. Puedes iniciar sesión o registrarte con tu correo y contraseña directamente abajo sin pasar por Google.');
-        return;
-      }
       console.error("Error al iniciar sesión con Google:", err);
       setError(err.message || 'Error al conectar con Google OAuth.');
     } finally {
