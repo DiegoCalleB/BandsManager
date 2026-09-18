@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Shield, Sparkles, Music, Zap } from 'lucide-react';
 import { User as UserType } from '../types';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
@@ -13,6 +13,47 @@ interface SimplePromoLoginModalProps {
 }
 
 type ViewState = 'login' | 'register' | 'reset-password';
+
+// Logo animado con fallback a la imagen estática. Es su propio componente porque
+// USE_SIMPLE_LOGIN (App.tsx) hace que esta ventana sea la que de verdad se muestra en
+// producción hoy - LoginModal.tsx tiene la misma pieza pero no se está renderizando -
+// y aquí se necesita en dos sitios (login y alta).
+const LoginBrandVideo: React.FC = () => {
+  const ref = useRef<HTMLVideoElement | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true;
+    el.play().catch(() => {});
+  }, []);
+  if (failed) {
+    return (
+      <img
+        src="/bandmanageriodefinitiva.jpeg"
+        alt="BandManager.io"
+        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+      />
+    );
+  }
+  return (
+    <video
+      ref={ref}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      poster="/bandmanageriodefinitiva.jpeg"
+      aria-label="BandManager.io - Plataforma Integral para Bandas"
+      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+      onError={() => setFailed(true)}
+    >
+      <source src="/login-animation.mp4" type="video/mp4" />
+      <source src="/login-animation.webm" type="video/webm" />
+    </video>
+  );
+};
 
 export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ onLoginSuccess }) => {
   const [view, setView] = useState<ViewState>('login');
@@ -200,13 +241,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
                     <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50]">
-                      <img
-                        src="/bandmanageriodefinitiva.jpeg"
-                        alt="BandManager.io"
-                        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
-                        referrerPolicy="no-referrer"
-                      />
+                      <LoginBrandVideo />
                     </div>
                   </div>
                 </div>
@@ -261,13 +296,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
                     <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50]">
-                      <img
-                        src="/bandmanageriodefinitiva.jpeg"
-                        alt="BandManager.io"
-                        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
-                        referrerPolicy="no-referrer"
-                      />
+                      <LoginBrandVideo />
                     </div>
                   </div>
                   <p className="mt-3 text-sm text-neutral-300 font-medium">
