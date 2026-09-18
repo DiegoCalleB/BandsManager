@@ -593,7 +593,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       ref={loginVideoRef}
                       autoPlay
                       muted
-                      loop
                       playsInline
                       preload="auto"
                       poster={LOGIN_POSTER}
