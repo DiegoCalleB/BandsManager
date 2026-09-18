@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Shield, Sparkles, Music, Zap } from 'lucide-react';
 import { User as UserType } from '../types';
+import { googleSignIn } from '../utils/gmail';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
 
@@ -111,6 +112,89 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
   const [resetConfirmPassword, setResetConfirmPassword] = useState('');
   const [resetSuccessMsg, setResetSuccessMsg] = useState<string | null>(null);
   const [resetMaskedEmail, setResetMaskedEmail] = useState<string | null>(null);
+
+  // --- Google Social Login / Registration ---
+  const handleGoogleSocialSignIn = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await googleSignIn();
+      if (!res) return;
+      if (!res.user) {
+        throw new Error('No se pudo obtener la información de la cuenta de Google.');
+      }
+
+      const email = res.user.email || '';
+      const displayName = res.user.displayName || email.split('@')[0] || 'Miembro Banda';
+
+      try {
+        const response = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : displayName,
+            uid: res.user.uid,
+            accessToken: res.accessToken,
+            bandName: (view === 'register' && regBandName.trim()) ? regBandName.trim() : undefined,
+            leaderName: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.token) {
+          localStorage.setItem('bakandeya_token', data.token);
+          guardarCookieDeSesion(data.token);
+          onLoginSuccess(data.user, data.token, data.availableBands);
+          return;
+        }
+      } catch (backendErr) {
+        console.warn("API de auth Google fallo, iniciando sesion local:", backendErr);
+      }
+
+      const fallbackUser: UserType = {
+        id: res.user.uid || `user-${Date.now()}`,
+        username: email || 'usuario_google',
+        name: displayName,
+        bandName: (view === 'register' && regBandName.trim()) || 'Mi Banda',
+        email: email,
+        role: 'leader',
+        plan: 'promo',
+        createdAt: new Date().toISOString()
+      };
+      onLoginSuccess(fallbackUser, res.accessToken);
+    } catch (err: any) {
+      const errCode = err?.code || '';
+      const errMsg = String(err?.message || '').toLowerCase();
+      if (
+        errCode === 'auth/popup-closed-by-user' ||
+        errCode === 'auth/cancelled-popup-request' ||
+        errMsg.includes('popup-closed-by-user') ||
+        errMsg.includes('closed-by-user')
+      ) {
+        return;
+      }
+      if (
+        errMsg.includes('access_denied') ||
+        errMsg.includes('blocked') ||
+        errMsg.includes('verification') ||
+        errCode.includes('access-denied')
+      ) {
+        setError('Google ha bloqueado el acceso OAuth temporalmente. Puedes iniciar sesión o registrarte con tu correo y contraseña directamente.');
+        return;
+      }
+      console.error("Error al iniciar sesión con Google:", err);
+      setError(err.message || 'Error al conectar con Google OAuth.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const GoogleIcon = () => (
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+      <path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"/>
+    </svg>
+  );
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -304,6 +388,26 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     {loading ? 'Entrando...' : 'Entrar a mi cuenta'}
                   </button>
                 </form>
+
+                <div className="relative mt-3 mb-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-neutral-800/80"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2.5 bg-[#111116] text-neutral-500 font-medium">O continuar con</span>
+                  </div>
+                </div>
+
+                <button 
+                  type="button" 
+                  onClick={handleGoogleSocialSignIn}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] border border-neutral-800/80 rounded-2xl text-sm font-medium text-neutral-200 hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
+                >
+                  <GoogleIcon />
+                  <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
+                </button>
+
                 <p className="text-center text-xs text-neutral-400 pt-1">
                   ¿Primera vez por aquí?{' '}
                   <button type="button" onClick={() => { setError(null); setView('register'); }} className="text-[#f2ca50] hover:underline font-medium cursor-pointer">
@@ -359,6 +463,26 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     {loading ? 'Creando cuenta...' : (<><span>Crear mi Dossier y QR</span><ArrowRight className="w-4 h-4" /></>)}
                   </button>
                 </form>
+
+                <div className="relative mt-3 mb-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-neutral-800/80"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2.5 bg-[#111116] text-neutral-500 font-medium">O registrarme con</span>
+                  </div>
+                </div>
+
+                <button 
+                  type="button" 
+                  onClick={handleGoogleSocialSignIn}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] border border-neutral-800/80 rounded-2xl text-sm font-medium text-neutral-200 hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
+                >
+                  <GoogleIcon />
+                  <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
+                </button>
+
                 <p className="text-center text-xs text-neutral-400">
                   ¿Ya tienes cuenta?{' '}
                   <button type="button" onClick={() => { setError(null); setView('login'); }} className="text-[#f2ca50] hover:underline font-medium cursor-pointer">

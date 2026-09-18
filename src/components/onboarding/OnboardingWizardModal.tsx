@@ -198,21 +198,93 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   const [logoUrl, setLogoUrl] = useState(epkConfig?.logoUrl || bandLogoUrl || '');
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
-  // Sincronizar nombre de la banda, queries y estilos si cambian al abrirse el modal
+  // Sincronizar datos de la banda cuando se abre el modal o cambia la banda/epkConfig
   useEffect(() => {
     if (isOpen) {
-      const resolvedName = bandName || currentUser?.bandName || currentUser?.name || '';
-      if (resolvedName && (!localBandName || localBandName === 'Bakandeya' || localBandName === 'Mi Banda')) {
+      const cleanActive = (activeBandId || '').replace(/^(band|reg)-/, '').toLowerCase();
+      const isBakandeyaBand = cleanActive === 'bakandeya';
+
+      const resolvedName = (bandName && bandName !== 'Banda' && bandName !== 'BAKANDEYA' ? bandName : '') ||
+                           (currentUser?.bandName && currentUser.bandName !== 'Banda' ? currentUser.bandName : '') ||
+                           (epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') && epkConfig.contactoBooking.nombre.toLowerCase() !== 'banda' ? epkConfig.contactoBooking.nombre : '') ||
+                           '';
+
+      if (resolvedName) {
         setLocalBandName(resolvedName);
-      }
-      if (resolvedName && (!spotifyQuery || spotifyQuery === 'Bakandeya')) {
         setSpotifyQuery(resolvedName);
+        if (!contactoBookingNombre || contactoBookingNombre === 'Booking & Management' || contactoBookingNombre === 'Contacto' || contactoBookingNombre === 'Tú (Líder)' || contactoBookingNombre === 'Banda') {
+          setContactoBookingNombre(resolvedName);
+        }
       }
-      if (epkConfig?.fontStyle || epkConfig?.tipografia) {
-        setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
+
+      if (epkConfig) {
+        if (epkConfig.genero) setGenre(epkConfig.genero);
+        if (epkConfig.idioma) setLanguage(epkConfig.idioma);
+        if (epkConfig.fontStyle || epkConfig.tipografia) setFontStyle(epkConfig.fontStyle || epkConfig.tipografia || 'anton');
+        if (epkConfig.datosContratacion?.ciudadBase) setCity(epkConfig.datosContratacion.ciudadBase);
+        if (epkConfig.logoUrl) setLogoUrl(epkConfig.logoUrl);
+        if (epkConfig.fraseImpacto) setSlogan(epkConfig.fraseImpacto);
+
+        // Bio: no cargar la biografía de Bakandeya si estamos en otra banda
+        if (epkConfig.biografia) {
+          if (isBakandeyaBand || !epkConfig.biografia.toLowerCase().includes('bakandeya')) {
+            setBio(epkConfig.biografia);
+          } else {
+            setBio('');
+          }
+        } else {
+          setBio('');
+        }
+
+        // Miembros: no cargar la alineación de Bakandeya si estamos en otra banda
+        if (epkConfig.miembros && Array.isArray(epkConfig.miembros) && epkConfig.miembros.length > 0) {
+          const tieneBakandeya = !isBakandeyaBand && epkConfig.miembros.some(m => String(m.nombre || '').toLowerCase().includes('filgue') || String(m.nombre || '').toLowerCase().includes('bakandeya'));
+          if (!tieneBakandeya) {
+            setMembers(epkConfig.miembros.map((m, idx) => ({
+              id: m.id || `m_${idx}_${Date.now()}`,
+              name: m.nombre,
+              role: m.rol || 'Músico',
+              email: '',
+              instagram: m.instagram || '',
+              isLeader: idx === 0,
+            })));
+          }
+        }
+
+        if (epkConfig.enlacesRedes) {
+          setSocialLinks({
+            instagram: epkConfig.enlacesRedes.instagram || '',
+            spotify: epkConfig.enlacesRedes.spotify || '',
+            youtube: epkConfig.enlacesRedes.youtube || '',
+            tiktok: epkConfig.enlacesRedes.tiktok || '',
+            website: epkConfig.enlacesRedes.website || '',
+            whatsapp: epkConfig.enlacesRedes.whatsapp || '',
+          });
+        }
+        if (epkConfig.videos) setVideos(epkConfig.videos);
+        if ((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra) {
+          setRiderTecnicoText((epkConfig as any)?.riderTecnico || epkConfig?.dossierTextoExtra || '');
+        }
+        if ((epkConfig as any)?.riderPdfUrl) setRiderPdfUrl((epkConfig as any).riderPdfUrl);
+        if ((epkConfig as any)?.riderPdfName) setRiderPdfName((epkConfig as any).riderPdfName);
+        if (epkConfig.bandPhotos || (epkConfig as any)?.fotos) {
+          setPhotos(epkConfig.bandPhotos || (epkConfig as any)?.fotos || []);
+        }
+        if ((epkConfig as any)?.resenasPrensa?.citas && Array.isArray((epkConfig as any).resenasPrensa.citas)) {
+          setPressQuotes((epkConfig as any).resenasPrensa.citas);
+        } else if (!isBakandeyaBand) {
+          setPressQuotes([]);
+        }
+        if (epkConfig.contactoBooking) {
+          if (epkConfig.contactoBooking.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') && epkConfig.contactoBooking.nombre.toLowerCase() !== 'banda') {
+            setContactoBookingNombre(epkConfig.contactoBooking.nombre);
+          }
+          if (epkConfig.contactoBooking.email) setContactoBookingEmail(epkConfig.contactoBooking.email);
+          if (epkConfig.contactoBooking.telefono) setContactoBookingTelefono(epkConfig.contactoBooking.telefono);
+        }
       }
     }
-  }, [isOpen, bandName, currentUser, epkConfig]);
+  }, [isOpen, activeBandId, bandName, currentUser, epkConfig]);
 
   // --- Step 2: Bio & Formato ---
   const [slogan, setSlogan] = useState(epkConfig?.fraseImpacto || '');
@@ -807,9 +879,11 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
   // Save full configuration
   const handleSaveConfiguration = async () => {
+    const finalBandName = (localBandName || bandName || currentUser?.bandName || '').trim();
     const updatedEpk: Partial<EPKConfig> = {
       ...epkConfig,
       bandId: activeBandId,
+      bandName: finalBandName,
       genero: genre,
       idioma: language,
       fontStyle,
@@ -841,7 +915,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         duracionDirecto,
       },
       contactoBooking: {
-        nombre: contactoBookingNombre,
+        nombre: finalBandName || contactoBookingNombre || bandName,
         email: contactoBookingEmail,
         telefono: contactoBookingTelefono,
       },
