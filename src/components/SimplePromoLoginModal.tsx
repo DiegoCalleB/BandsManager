@@ -52,6 +52,12 @@ const LoginBrandVideo: React.FC = () => {
     el.muted = true;
     el.play().catch(() => {});
   }, []);
+  const handleReplay = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.currentTime = 0;
+    el.play().catch(() => {});
+  };
   if (failed || skipVideo) {
     return (
       <img
@@ -70,8 +76,9 @@ const LoginBrandVideo: React.FC = () => {
       preload="auto"
       poster={LOGIN_POSTER}
       aria-label="BandManager.io - Plataforma Integral para Bandas"
-      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden cursor-pointer"
       onError={() => setFailed(true)}
+      onMouseEnter={handleReplay}
     >
       <source src="/login-animation.mp4" type="video/mp4" />
       <source src="/login-animation.webm" type="video/webm" />

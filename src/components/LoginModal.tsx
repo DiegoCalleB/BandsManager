@@ -50,6 +50,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     el.muted = true;
     el.play().catch(() => {});
   }, []);
+  const handleReplayLoginVideo = () => {
+    const el = loginVideoRef.current;
+    if (!el) return;
+    el.currentTime = 0;
+    el.play().catch(() => {});
+  };
 
   // --- Login State ---
   const [username, setUsername] = useState('');
@@ -597,8 +603,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       preload="auto"
                       poster={LOGIN_POSTER}
                       aria-label="BandManager.io - Plataforma Integral para Bandas"
-                      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem]"
+                      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] cursor-pointer"
                       onError={() => setVideoLoadFailed(true)}
+                      onMouseEnter={handleReplayLoginVideo}
                     >
                       <source src="/login-animation.mp4" type="video/mp4" />
                       <source src="/login-animation.webm" type="video/webm" />
