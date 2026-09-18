@@ -1,4 +1,4 @@
-# AGENTS.md — Instrucciones para agentes de código (BandManager.io / Bakandeya)
+# AGENTS.md — Instrucciones para agentes de código (BandManager.io)
 
 Plataforma integral para bandas y artistas independientes (booking CRM, agentes de IA, EPK, repertorio, finanzas) y núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica. Este documento tiene precedencia sobre convenciones genéricas — léelo antes de tocar el repositorio.
 
