@@ -2485,13 +2485,6 @@ export default function CalendarView({
 
       {/* Right: View Switchers + Band Filter */}
       <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-between lg:justify-end shrink-0">
-        <span 
-          className="hidden xl:inline-flex items-center gap-1 text-[9px] font-mono text-neutral-400/80 px-1.5 py-0.5 rounded bg-neutral-800/40 border border-neutral-700/30 select-none cursor-default shrink-0"
-          title="Puedes cambiar de mes deslizando con el dedo, ratón o trackpad"
-        >
-          ⇄ Deslizar
-        </span>
-
         {/* Vistas estilo Google Calendar: 1M | 2M | Semana | Agenda + Configuración */}
         <div className="relative inline-flex items-center shrink-0" ref={viewConfigRef}>
             <div className={`flex items-center rounded-lg p-0.5 ${
@@ -2569,31 +2562,6 @@ export default function CalendarView({
                 )}
               </button>
             </div>
-
-            {/* Botón destacado "VER FICHA (MODAL)": abre la Ficha Modal centrada del evento activo,
-                o el primero programado si todavía no hay ninguno seleccionado. */}
-            <button
-              id="calendar-view-ficha-modal-btn"
-              onClick={() => {
-                if (allChronologicalEvents.length === 0) return;
-                if (activeChronoIndex >= 0) {
-                  setShowEventFichaModal(true);
-                } else {
-                  handleSelectEvent(allChronologicalEvents[0].data);
-                }
-              }}
-              disabled={allChronologicalEvents.length === 0}
-              title="Ver la ficha del evento en un modal centrado, con navegación entre eventos"
-              className="px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg border border-amber-300/60 bg-gradient-to-r from-amber-400 to-yellow-600 text-stone-950 shadow-lg shadow-amber-500/20 transition-all cursor-pointer flex items-center gap-1.5 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-110"
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">VER FICHA (MODAL)</span>
-              {allChronologicalEvents.length > 0 && (
-                <span className="px-1.5 py-0.5 rounded-full bg-stone-950/20 text-stone-950 font-black">
-                  {(activeChronoIndex >= 0 ? activeChronoIndex + 1 : 1)}/{allChronologicalEvents.length}
-                </span>
-              )}
-            </button>
 
             {/* Botón de Pantalla Completa */}
             <button
@@ -5417,8 +5385,8 @@ export default function CalendarView({
      : '';
    return (
      <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
-       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-         <div className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[92vh] overflow-y-auto ${
+       <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+         <div className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
            isStitchLight ? 'bg-white border-amber-300 text-slate-900' : 'bg-[#141414] border-amber-500/50 text-neutral-100 shadow-amber-500/10'
          }`}>
            {/* Barra superior del modal: navegación cronológica entre eventos */}
