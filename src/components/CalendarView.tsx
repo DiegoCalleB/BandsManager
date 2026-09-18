@@ -1812,89 +1812,63 @@ export default function CalendarView({
                   )}
                 </div>
 
-                {/* Mini Badges / Event Indicators con identificación clara de banda (Logo/Iniciales + Nombre + Tipo) */}
-                <div className="w-full space-y-0.5 overflow-hidden">
-                  {dayConcerts.slice(0, 1).map(c => {
-                    const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
+                {/* Badges de eventos Multilínea Inteligentes y Dinámicos (máximo 2 por casilla + contador) */}
+                <div className="w-full space-y-1 overflow-hidden my-auto">
+                  {dayEvents.slice(0, 2).map((evt) => {
+                    const isConcert = 'sala' in evt;
+                    const isReu = !isConcert && (evt as Rehearsal).tipo_evento === 'reunion';
+                    const bandInfo = getBandIdentity(evt.band_id, (evt as any).bandName || (evt as any).band_name);
+
+                    const icon = isConcert ? '🎸' : (isReu ? '🤝' : '🥁');
+                    const titleText = isConcert
+                      ? `${(evt as Concert).sala}${(evt as Concert).ciudad ? `, ${(evt as Concert).ciudad}` : ''}`
+                      : (isReu ? ((evt as Rehearsal).asunto || (evt as Rehearsal).lugar) : (evt as Rehearsal).lugar.split(',')[0]);
+
+                    const badgeBg = isSelected
+                      ? 'bg-stone-950/30 text-stone-950 border-stone-950/40'
+                      : isConcert
+                      ? 'bg-amber-500/25 text-amber-200 border-amber-500/40 hover:bg-amber-500/35'
+                      : isReu
+                      ? 'bg-indigo-500/25 text-indigo-200 border-indigo-500/40 hover:bg-indigo-500/35'
+                      : 'bg-emerald-500/25 text-emerald-200 border-emerald-500/40 hover:bg-emerald-500/35';
+
                     return (
                       <div
-                        key={c.id}
+                        key={evt.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleSelectEvent(c);
+                          handleSelectEvent(evt);
                         }}
-                        className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
-                          isSelected ? 'bg-stone-950/20 text-stone-950' : 'bg-amber-500/25 text-amber-300 border border-amber-500/40'
-                        }`}
-                        title={`Concierto [${bandInfo.name}]: ${c.sala} (${c.ciudad})`}
+                        className={`w-full p-1 rounded-md border text-[8px] sm:text-[9px] font-mono leading-tight transition-all cursor-pointer ${badgeBg}`}
+                        title={`${isConcert ? 'Concierto' : isReu ? 'Reunión' : 'Ensayo'} [${bandInfo.name}]: ${titleText}`}
                       >
-                        {bandInfo.logoUrl ? (
-                          <img
-                            src={bandInfo.logoUrl}
-                            alt={bandInfo.name}
-                            className="w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/60"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display = 'none';
-                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                              if (fb) (fb as HTMLElement).classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
-                          {bandInfo.initials}
-                        </span>
-                        <span className="truncate flex items-center gap-0.5">
-                          <span>🎸</span>
-                          <span className="font-extrabold text-white opacity-95">{bandInfo.name}</span>
-                          <span className="opacity-75">· {c.ciudad || c.sala}</span>
-                        </span>
-                      </div>
-                    );
-                  })}
-                  {dayRehearsals.slice(0, 1).map(r => {
-                    const isReu = r.tipo_evento === 'reunion';
-                    const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
-                    return (
-                      <div
-                        key={r.id}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSelectEvent(r);
-                        }}
-                        className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
-                          isSelected
-                            ? 'bg-stone-950/20 text-stone-950'
-                            : isReu
-                            ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-500/40'
-                            : 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
-                        }`}
-                        title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
-                      >
-                        {bandInfo.logoUrl ? (
-                          <img
-                            src={bandInfo.logoUrl}
-                            alt={bandInfo.name}
-                            className={`w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isReu ? 'border-indigo-400/60' : 'border-emerald-400/60'}`}
-                            onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display = 'none';
-                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                              if (fb) (fb as HTMLElement).classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
-                          {bandInfo.initials}
-                        </span>
-                        <span className="truncate flex items-center gap-0.5">
-                          <span>{isReu ? '🤝' : '🥁'}</span>
-                          <span className="font-extrabold text-white opacity-95">{bandInfo.name}</span>
-                          <span className="opacity-75">· {isReu ? (r.asunto || 'Reunión') : (r.lugar.split(',')[0])}</span>
-                        </span>
+                        <div className="flex items-center gap-1 font-bold mb-0.5 truncate">
+                          {bandInfo.logoUrl ? (
+                            <img
+                              src={bandInfo.logoUrl}
+                              alt={bandInfo.name}
+                              className="w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/50"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLElement).style.display = 'none';
+                                const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
+                                if (fb) (fb as HTMLElement).classList.remove('hidden');
+                              }}
+                            />
+                          ) : null}
+                          <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                            {bandInfo.initials}
+                          </span>
+                          <span className="font-extrabold text-white truncate">{bandInfo.name}</span>
+                        </div>
+                        <div className="text-[7.5px] sm:text-[8.5px] opacity-90 font-medium line-clamp-2 break-words flex items-start gap-0.5">
+                          <span className="shrink-0">{icon}</span>
+                          <span className="min-w-0">{titleText}</span>
+                        </div>
                       </div>
                     );
                   })}
                   {dayEvents.length > 2 && (
-                    <div className="text-[8px] font-mono text-center opacity-80">
+                    <div className="text-[7.5px] sm:text-[8.5px] font-mono font-bold text-center py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
                       +{dayEvents.length - 2} más
                     </div>
                   )}
