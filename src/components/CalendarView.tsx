@@ -1801,10 +1801,12 @@ export default function CalendarView({
               <button
                 key={`day-${year}-${month}-${cell.day}`}
                 onClick={() => setSelectedDate(new Date(year, month, cell.day))}
-                className={`relative min-h-[72px] sm:min-h-[85px] p-1.5 rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer ${borderAndBgClass}`}
+                className={`relative ${
+                  calendarViewMode === '2m' ? 'min-h-[58px] sm:min-h-[70px] p-1' : 'min-h-[72px] sm:min-h-[85px] p-1.5'
+                } rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer ${borderAndBgClass}`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <span className={`text-[11px] sm:text-xs font-mono font-bold ${isSelected ? 'text-stone-950 font-black' : isToday ? 'text-amber-400' : ''}`}>
+                <div className="flex items-center justify-between w-full mb-0.5">
+                  <span className={`text-[10px] sm:text-xs font-mono font-bold ${isSelected ? 'text-stone-950 font-black' : isToday ? 'text-amber-400' : ''}`}>
                     {cell.day}
                   </span>
                   {isToday && !isSelected && (
@@ -1812,7 +1814,7 @@ export default function CalendarView({
                   )}
                 </div>
 
-                {/* Badges de eventos Multilínea Inteligentes y Altamente Legibles */}
+                {/* Badges de eventos Inteligentes y Adaptativos (1M amplio / 2M ultra-limpio con Logo HD destacado) */}
                 <div className="w-full space-y-1 my-auto">
                   {dayEvents.slice(0, 2).map((evt) => {
                     const isConcert = 'sala' in evt;
@@ -1827,10 +1829,10 @@ export default function CalendarView({
                     const badgeBg = isSelected
                       ? 'bg-stone-950/40 text-stone-950 border-stone-950/50'
                       : isConcert
-                      ? 'bg-amber-950/50 text-amber-100 border-amber-500/50 hover:bg-amber-900/60'
+                      ? 'bg-amber-950/60 text-amber-100 border-amber-500/50 hover:bg-amber-900/70'
                       : isReu
-                      ? 'bg-indigo-950/50 text-indigo-100 border-indigo-500/50 hover:bg-indigo-900/60'
-                      : 'bg-emerald-950/50 text-emerald-100 border-emerald-500/50 hover:bg-emerald-900/60';
+                      ? 'bg-indigo-950/60 text-indigo-100 border-indigo-500/50 hover:bg-indigo-900/70'
+                      : 'bg-emerald-950/60 text-emerald-100 border-emerald-500/50 hover:bg-emerald-900/70';
 
                     return (
                       <div
@@ -1839,7 +1841,7 @@ export default function CalendarView({
                           e.stopPropagation();
                           handleSelectEvent(evt);
                         }}
-                        className={`w-full p-1 sm:p-1.5 rounded-md border leading-tight transition-all cursor-pointer ${badgeBg}`}
+                        className={`w-full p-1 rounded-md border leading-tight transition-all cursor-pointer ${badgeBg}`}
                         title={`${isConcert ? 'Concierto' : isReu ? 'Reunión' : 'Ensayo'} [${bandInfo.name}]: ${titleText}`}
                       >
                         <div className="flex items-center gap-1 font-bold mb-0.5 min-w-0">
@@ -1847,7 +1849,7 @@ export default function CalendarView({
                             <img
                               src={bandInfo.logoUrl}
                               alt={bandInfo.name}
-                              className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/50"
+                              className="w-4 h-4 sm:w-5 sm:h-5 rounded-full object-contain bg-black/70 p-0.5 shrink-0 border border-amber-400/60 drop-shadow-xs"
                               onError={(e) => {
                                 (e.currentTarget as HTMLElement).style.display = 'none';
                                 const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -1855,20 +1857,24 @@ export default function CalendarView({
                               }}
                             />
                           ) : null}
-                          <span className={`fallback-initials w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                          <span className={`fallback-initials w-4 h-4 sm:w-5 sm:h-5 rounded-full shrink-0 flex items-center justify-center text-[7.5px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
                             {bandInfo.initials}
                           </span>
                           <span className="text-[8px] sm:text-[9.5px] font-extrabold text-white truncate">{bandInfo.name}</span>
                         </div>
-                        <div className="text-[8.5px] sm:text-[10px] font-bold text-amber-200/90 whitespace-normal break-words line-clamp-3 flex items-start gap-1">
+                        <div className={`text-[8px] sm:text-[9.5px] font-bold text-amber-200/90 flex items-start gap-0.5 ${
+                          calendarViewMode === '2m'
+                            ? 'truncate'
+                            : 'whitespace-normal break-words line-clamp-2'
+                        }`}>
                           <span className="shrink-0">{icon}</span>
-                          <span className="min-w-0 leading-tight">{titleText}</span>
+                          <span className="truncate">{titleText}</span>
                         </div>
                       </div>
                     );
                   })}
                   {dayEvents.length > 2 && (
-                    <div className="text-[8px] sm:text-[9px] font-mono font-bold text-center py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                    <div className="text-[7.5px] sm:text-[8.5px] font-mono font-bold text-center py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
                       +{dayEvents.length - 2} más
                     </div>
                   )}
@@ -2321,8 +2327,8 @@ export default function CalendarView({
         isCalendarFullscreen ? 'fixed inset-0 z-50 p-4 sm:p-6 overflow-y-auto' : ''
       }`}
     >
-      {/* LEFT: MONTH GRID CALENDAR (2/3 width) */}
-      <div className={`${colors.card} p-6 flex flex-col justify-between lg:col-span-2`}>
+      {/* LEFT: MONTH GRID CALENDAR (3/3 width in 2M mode, 2/3 in 1M mode) */}
+      <div className={`${colors.card} p-6 flex flex-col justify-between ${calendarViewMode === '2m' ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
         <div>
           {/* Header */}
           <div className={`pb-4 mb-4 border-b ${isStitchLight ? "border-slate-200" : "border-zinc-800"}`}>
