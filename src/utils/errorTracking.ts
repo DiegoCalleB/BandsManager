@@ -19,10 +19,28 @@ export function initFrontendErrorTracking(): void {
     ],
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
+    ignoreErrors: [
+      // Ruido de desarrollo e HMR de Vite
+      'WebSocket closed without opened',
+      'Failed to resolve module specifier',
+      // Ruido de extensiones de navegador / traductores / AdBlockers
+      'ERR_BLOCKED_BY_CLIENT',
+      'ResizeObserver loop limit exceeded',
+      'ResizeObserver loop completed with undelivered notifications',
+      'updateFrom',
+    ],
+    beforeSend(event) {
+      // Descarta errores causados por extensiones del navegador del usuario (chrome-extension:// o moz-extension://)
+      const stack = event.exception?.values?.[0]?.stacktrace?.frames;
+      if (stack && stack.some(frame => frame.filename?.includes('extension://'))) {
+        return null;
+      }
+      return event;
+    },
   });
 
   habilitado = true;
-  console.log('[ErrorTracking] Sentry Frontend activado.');
+  console.log('[ErrorTracking] Sentry Frontend activado con filtros anti-ruido.');
 }
 
 export function captureFrontendError(err: unknown, context?: Record<string, unknown>): void {
