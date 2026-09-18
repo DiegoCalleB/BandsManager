@@ -14,23 +14,44 @@ interface SimplePromoLoginModalProps {
 
 type ViewState = 'login' | 'register' | 'reset-password';
 
-// Logo animado con fallback a la imagen estática. Es su propio componente porque
-// USE_SIMPLE_LOGIN (App.tsx) hace que esta ventana sea la que de verdad se muestra en
-// producción hoy - LoginModal.tsx tiene la misma pieza pero no se está renderizando -
-// y aquí se necesita en dos sitios (login y alta).
+// El poster tiene que ser un fotograma real del propio vídeo YA recortado (mismo encuadre,
+// misma proporción 720x1024): el JPEG de marca genérico es un render cuadrado sin recortar,
+// así que al arrancar el vídeo la imagen "saltaba" a otro encuadre.
+const LOGIN_POSTER = '/login-animation-poster.jpg';
+
+// Network Information API: no estandarizada en todos los navegadores (Safari/Firefox no la
+// tienen), por eso el chequeo es "opt-out": si no existe o no se puede leer, se asume conexión
+// buena y se intenta el vídeo igualmente - degradar solo cuando hay evidencia real de que la
+// red va mal (2G/slow-2g o modo Ahorro de Datos activado).
+function tieneConexionMala(): boolean {
+  try {
+    const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (!conn) return false;
+    if (conn.saveData) return true;
+    return conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
+  } catch {
+    return false;
+  }
+}
+
+// Logo animado con fallback a la imagen estática (por conexión mala o por fallo real de carga).
+// Es su propio componente porque USE_SIMPLE_LOGIN (App.tsx) hace que esta ventana sea la que de
+// verdad se muestra en producción hoy - LoginModal.tsx tiene la misma pieza pero no se está
+// renderizando - y aquí se necesita en dos sitios (login y alta).
 const LoginBrandVideo: React.FC = () => {
   const ref = useRef<HTMLVideoElement | null>(null);
   const [failed, setFailed] = useState(false);
+  const [skipVideo] = useState(tieneConexionMala);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     el.muted = true;
     el.play().catch(() => {});
   }, []);
-  if (failed) {
+  if (failed || skipVideo) {
     return (
       <img
-        src="/bandmanageriodefinitiva.jpeg"
+        src={LOGIN_POSTER}
         alt="BandManager.io"
         className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
       />
@@ -44,7 +65,7 @@ const LoginBrandVideo: React.FC = () => {
       loop
       playsInline
       preload="auto"
-      poster="/bandmanageriodefinitiva.jpeg"
+      poster={LOGIN_POSTER}
       aria-label="BandManager.io - Plataforma Integral para Bandas"
       className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
       onError={() => setFailed(true)}
