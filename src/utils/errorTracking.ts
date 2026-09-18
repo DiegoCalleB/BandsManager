@@ -14,6 +14,11 @@ export function initFrontendErrorTracking(): void {
     dsn,
     environment: import.meta.env.MODE || 'production',
     tracesSampleRate: 0.1,
+    integrations: [
+      Sentry.replayIntegration(),
+    ],
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
   });
 
   habilitado = true;
