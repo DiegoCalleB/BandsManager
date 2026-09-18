@@ -64,6 +64,11 @@ Si usas **Claude Code, AI Studio, Copilot u otra herramienta IA**, lee primero [
    - Dark mode
    - Acciones: max 3 permanentes, resto en menú
 
+9. **→ `BRAND_IDENTITY.md`** (5 min) — Identidad de marca
+   - Logo, tipografía (Inter), paleta de colores (Jet Black, Dijon Yellow, Obsidian Black)
+   - Voz y tono de marca
+   - Dónde vive cada pieza en el código
+
 ---
 
 ## 📂 Estructura de Archivos
@@ -81,6 +86,7 @@ context/
 ├── TESTING_STRATEGY.md 🧪         ← Qué testear, cómo, checklist pre-PR
 ├── CODE_STANDARDS.md              ← Estándares de código
 ├── UI_UX_GUIDELINES.md            ← Diseño & frontend
+├── BRAND_IDENTITY.md              ← Logo, colores, tipografía, voz de marca
 └── GLOSSARY.md                    ← Términos clave (referencia)
 ```
 
@@ -134,6 +140,7 @@ context/
 | "¿Estados de un lead?" | `BUSINESS_RULES.md` #2 + `GLOSSARY.md` |
 | "¿Cómo arreglamos multi-tenancy?" | `SECURITY.md` #1-2 |
 | "¿UI design principles?" | `UI_UX_GUIDELINES.md` + `SIMPLICITY_FIRST.md` |
+| "¿Colores/tipografía/logo de marca?" | `BRAND_IDENTITY.md` |
 | "¿Qué testear?" | `TESTING_STRATEGY.md` (qué sí, qué no, checklist) |
 | "¿Cómo testear?" | `TESTING_STRATEGY.md` + `CODE_STANDARDS.md` #4 |
 | "¿Qué es EPK?" | `GLOSSARY.md` |
