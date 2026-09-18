@@ -1844,12 +1844,12 @@ export default function CalendarView({
                         className={`w-full p-1 rounded-md border leading-tight transition-all cursor-pointer ${badgeBg}`}
                         title={`${isConcert ? 'Concierto' : isReu ? 'Reunión' : 'Ensayo'} [${bandInfo.name}]: ${titleText}`}
                       >
-                        <div className="flex items-center gap-1 font-bold mb-0.5 min-w-0">
+                        <div className="flex items-center gap-1.5 font-bold mb-1 min-w-0">
                           {bandInfo.logoUrl ? (
                             <img
                               src={bandInfo.logoUrl}
                               alt={bandInfo.name}
-                              className="w-4 h-4 sm:w-5 sm:h-5 rounded-full object-contain bg-black/70 p-0.5 shrink-0 border border-amber-400/60 drop-shadow-xs"
+                              className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg object-contain bg-black/80 p-0.5 shrink-0 border-2 border-amber-400/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ring-1 ring-black/50"
                               onError={(e) => {
                                 (e.currentTarget as HTMLElement).style.display = 'none';
                                 const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -1857,10 +1857,10 @@ export default function CalendarView({
                               }}
                             />
                           ) : null}
-                          <span className={`fallback-initials w-4 h-4 sm:w-5 sm:h-5 rounded-full shrink-0 flex items-center justify-center text-[7.5px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
+                          <span className={`fallback-initials w-6 h-6 sm:w-7 sm:h-7 rounded-lg shrink-0 flex items-center justify-center text-[9px] sm:text-[10px] font-black shadow-md border-2 border-amber-400/80 ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
                             {bandInfo.initials}
                           </span>
-                          <span className="text-[8px] sm:text-[9.5px] font-extrabold text-white truncate">{bandInfo.name}</span>
+                          <span className="text-[8.5px] sm:text-[10px] font-extrabold text-white truncate leading-snug">{bandInfo.name}</span>
                         </div>
                         <div className={`text-[8px] sm:text-[9.5px] font-bold text-amber-200/90 flex items-start gap-0.5 ${
                           calendarViewMode === '2m'
