@@ -12,8 +12,14 @@ Esta skill establece los principios de desarrollo frontend y backend para lograr
 ## 💎 1. Estándares de Diseño Frontend (UI/UX)
 
 ### Paleta de Colores & Estética
-- **Dark Mode Elegante:** Fondos oscuros profundos (`#0f172a`, `#1e293b`), paneles con glassmorphism (`backdrop-blur-md bg-slate-900/80 border border-slate-800`).
-- **Acentos Armónicos:** Evitar colores genéricos puros (rojo/verde chillón). Usar degradados sutiles (`bg-gradient-to-r from-purple-500 to-indigo-600`, esmeralda sutil para éxito `#10b981`, ámbar cálido para advertencias `#f59e0b`).
+Identidad de marca real (Brand Book, Pomelli, confirmado 2026-09-18 contra lo ya implementado — no son sugerencias, son los colores de BandManager.io):
+- **Jet Black `#09090B`:** fondo general de la app (dark mode).
+- **Obsidian Black `#111116`:** fondo de tarjetas, modales y paneles.
+- **Dijon Yellow `#F2CA50`** (también visto como `#d1b375`): color de marca / acento primario — botones principales, bordes activos, estados seleccionados, highlights. Es EL color de BandManager, no un ámbar genérico de warning.
+- **Pure White `#FFFFFF`:** texto sobre fondo oscuro.
+- **Tipografía:** Inter (`src/index.css`) como fuente base en toda la app.
+- Colores semánticos aparte de la marca (no la sustituyen): esmeralda `#10b981` para éxito/positivo, rojo para error/destructivo. Usar degradados sutiles solo para estos estados semánticos, nunca para reemplazar el ámbar de marca en acciones primarias.
+- **Glassmorphism:** paneles con `backdrop-blur-md bg-neutral-900/80 border border-neutral-800` (o `border-[#f2ca50]/30` cuando el panel debe leerse como "de marca", no neutro).
 - **Tipografía & Jerarquía:** Títulos claros en negrita, tamaños de fuente proporcionales y contraste WCAG adecuado.
 
 ### Micro-Animaciones & Motion (React 19 + `motion`)
