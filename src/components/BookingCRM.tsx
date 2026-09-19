@@ -956,7 +956,7 @@ export default function BookingCRM({
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !== 'todos' ? 1 : 0) + (typeFilter !== 'todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
  return (
- <div className={`space-y-4 ${isStitchLight ? 'text-slate-800' : 'text-[#e5e2e1]'} font-sans w-full max-w-full overflow-x-hidden`}>
+ <div className="space-y-4 text-[var(--ink)] font-sans w-full max-w-full overflow-x-hidden">
  
  {/* 2. LEADS CRM WORKSPACE */}
  <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}>
@@ -969,21 +969,21 @@ export default function BookingCRM({
   <div className="flex flex-col gap-3">
     <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
       {/* SECCIONES PRINCIPALES DE CONTACTOS: ESCENARIOS, MEDIOS Y MANAGEMENT/PRODUCTORAS */}
-      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/90 border border-white/5 overflow-x-auto w-full sm:w-auto scrollbar-none">
+      <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-pill)] bg-[var(--sunken)] overflow-x-auto w-full sm:w-auto scrollbar-none">
         <button
           id="section-tab-salas"
           type="button"
           onClick={() => handleSelectSectionTab('salas')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
             sectionTab === 'salas'
-              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+              : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
           }`}
         >
           <Building2 className="w-3.5 h-3.5 shrink-0" />
           <span>Escenarios</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
-            sectionTab === 'salas' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
+            sectionTab === 'salas' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
           }`}>
             {leads.filter(l => !normalizeType(l.tipo).includes('medio') && !['grupo', 'agencia', 'manager', 'productora', 'sello'].includes(normalizeType(l.tipo))).length}
           </span>
@@ -993,16 +993,16 @@ export default function BookingCRM({
           id="section-tab-medios"
           type="button"
           onClick={() => handleSelectSectionTab('medios')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
             sectionTab === 'medios'
-              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+              : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
           }`}
         >
           <Radio className="w-3.5 h-3.5 shrink-0" />
           <span>Medios y Prensa</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
-            sectionTab === 'medios' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
+            sectionTab === 'medios' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
           }`}>
             {leads.filter(l => normalizeType(l.tipo) === 'medio').length}
           </span>
@@ -1012,16 +1012,16 @@ export default function BookingCRM({
           id="section-tab-grupos"
           type="button"
           onClick={() => handleSelectSectionTab('grupos')}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
             sectionTab === 'grupos'
-              ? 'bg-[#f2ca50] text-[#2c2200] font-bold shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/5'
+              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+              : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
           }`}
         >
           <Briefcase className="w-3.5 h-3.5 shrink-0" />
           <span>Management & Productoras</span>
-          <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold ${
-            sectionTab === 'grupos' ? 'bg-black/20 text-[#2c2200]' : 'bg-zinc-800 text-zinc-400'
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums ${
+            sectionTab === 'grupos' ? 'bg-black/15 text-[var(--on-acc)]' : 'bg-[var(--sunken)] text-[var(--ink-3)]'
           }`}>
             {leads.filter(l => ['agencia', 'manager', 'productora', 'sello', 'promotora', 'management'].some(t => normalizeType(l.tipo).includes(t))).length}
           </span>
@@ -1037,13 +1037,13 @@ export default function BookingCRM({
               onSectionChange('bandas');
             }
           }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer text-zinc-400 hover:text-zinc-200 hover:bg-white/5"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)]"
           title="Ver Red de Co-Booking y Grupos Amigos"
         >
-          <Users className="w-3.5 h-3.5 shrink-0 text-[#f2ca50]" />
+          <Users className="w-3.5 h-3.5 shrink-0 text-[var(--acc-ink)]" />
           <span>Grupos</span>
           {typeof bandsCount === 'number' && bandsCount > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-md font-mono font-bold bg-zinc-800 text-zinc-400">
+            <span className="text-[10px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold tabular-nums bg-[var(--sunken)] text-[var(--ink-3)]">
               {bandsCount}
             </span>
           )}
@@ -1076,7 +1076,7 @@ export default function BookingCRM({
             });
             setIsAddingLeadModalOpen(true);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#f2ca50] hover:bg-[#e5bc40] text-[#2c2200] shadow-sm active:scale-95 cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] active:scale-95 cursor-pointer"
           title="Añadir contacto"
         >
           <PlusCircle className="w-3.5 h-3.5" />
@@ -1092,10 +1092,10 @@ export default function BookingCRM({
           id="export-leads-btn"
           type="button"
           onClick={() => setIsExportLeadsOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-950/80 hover:bg-emerald-900 text-emerald-200 border border-emerald-600/50 shadow-sm active:scale-95 cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] active:scale-95 cursor-pointer"
           title="Exportar base de datos a Excel / CSV o JSON"
         >
-          <Download className="w-3.5 h-3.5 text-emerald-400" />
+          <Download className="w-3.5 h-3.5 text-[var(--ink-3)]" />
           <span className="hidden sm:inline">Exportar Leads</span>
           <span className="sm:hidden">Exportar</span>
         </button>
@@ -1104,23 +1104,23 @@ export default function BookingCRM({
           id="open-tools-btn"
           type="button"
           onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
             isMobileToolsOpen
-              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-              : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:text-white hover:bg-zinc-800'
+              ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+              : 'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
           }`}
           title="Herramientas, Scout, Excel y Agentes IA"
         >
-          <Bot className="w-3.5 h-3.5 text-amber-400" />
+          <Bot className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
           <span className="hidden sm:inline">Herramientas e IA</span>
           <span className="sm:hidden">Herramientas</span>
           {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length > 0 && (
-            <span className="px-1.5 py-0.2 rounded-full bg-indigo-500/30 text-indigo-200 text-[10px] font-mono font-bold">
+            <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-semibold tabular-nums">
               {leads.filter(l => !l.email_contacto || l.email_contacto.trim() === '').length}
             </span>
           )}
           {duplicateGroupsCount > 0 && (
-            <span className="px-1.5 py-0.2 rounded-full bg-[#f2ca50] text-[#2c2200] text-[10px] font-black" title={`${duplicateGroupsCount} grupos de duplicados detectados`}>
+            <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--alert-soft)] text-[var(--alert)] text-[10px] font-bold" title={`${duplicateGroupsCount} grupos de duplicados detectados`}>
               {duplicateGroupsCount} dup
             </span>
           )}
@@ -1276,29 +1276,21 @@ export default function BookingCRM({
    <div className="flex-1 flex gap-2">
      {/* Search Input */}
      <div className="relative flex-1">
-       <Search className={`absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors ${
-         isStitchLight ? 'text-indigo-600' : 'text-[#f2ca50]'
-       }`} />
+       <Search className="absolute left-3 top-2.5 h-4 w-4 pointer-events-none transition-colors text-[var(--acc-ink)]" />
        <input
          id="crm-search"
          type="text"
          placeholder={sectionTab === 'medios' ? "🔍 Buscar medio..." : sectionTab === 'grupos' ? "🔍 Buscar management..." : "🔍 Buscar escenario..."}
          value={searchTerm}
          onChange={(e) => setSearchTerm(e.target.value)}
-         className={`w-full rounded-xl pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-all border shadow-sm ${
-           isStitchLight 
-             ? 'bg-white text-slate-900 border-indigo-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 placeholder:text-slate-400' 
-             : 'bg-[#141414] text-white border-white/10 focus:border-[#f2ca50] focus:ring-2 focus:ring-[#f2ca50]/30 placeholder:text-neutral-500'
-         }`}
+         className={`w-full rounded-[var(--r-m)] pl-9 ${searchTerm ? 'pr-8' : 'pr-3'} py-2 text-xs font-semibold font-sans transition-colors bg-[var(--sunken)] text-[var(--ink)] focus:ring-2 focus:ring-[var(--acc)]/40 placeholder:text-[var(--ink-3)]`}
        />
        {searchTerm && (
          <button
            id="crm-search-clear"
            type="button"
            onClick={() => setSearchTerm('')}
-           className={`absolute right-2.5 top-2.5 p-0.5 rounded-full transition-colors cursor-pointer ${
-             isStitchLight ? 'text-slate-400 hover:text-slate-700 hover:bg-slate-100' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
-           }`}
+           className="absolute right-2.5 top-2.5 p-0.5 rounded-[var(--r-pill)] transition-colors cursor-pointer text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--sunken)]"
            title="Borrar búsqueda"
          >
            <X className="w-3.5 h-3.5" />
@@ -1313,12 +1305,10 @@ export default function BookingCRM({
          value={typeFilter}
          onChange={(e) => setTypeFilter(e.target.value as any)}
          aria-label="Filtrar por tipo"
-         className={`px-3 py-2 pr-7 rounded-xl text-xs font-semibold font-sans transition-all border shadow-sm cursor-pointer appearance-none ${
+         className={`px-3 py-2 pr-7 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors cursor-pointer appearance-none ${
            typeFilter !== 'todos'
-             ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
-             : isStitchLight
-             ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-             : 'bg-[#181716] text-zinc-300 border-white/10 hover:bg-zinc-800'
+             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+             : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
          }`}
        >
          {sectionTab === 'medios' ? (
@@ -1357,19 +1347,17 @@ export default function BookingCRM({
        id="toggle-filters-btn"
        type="button"
        onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-       className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 cursor-pointer ${
+       className={`flex items-center gap-1.5 px-3 py-2 rounded-[var(--r-m)] text-xs font-bold transition-colors shrink-0 cursor-pointer ${
          activeFiltersCount > 0 || isMobileFiltersOpen
-           ? 'bg-[#eab308]/20 text-[#eab308] border-[#eab308]/60 shadow-xs'
-           : isStitchLight
-           ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-           : 'bg-[#181716] text-zinc-300 border-white/10 hover:text-white hover:bg-zinc-800'
+           ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+           : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
        }`}
        title="Filtros avanzados y búsquedas guardadas"
      >
        <Filter className="w-3.5 h-3.5" />
        <span className="hidden sm:inline">Filtros</span>
        {activeFiltersCount > 0 && (
-         <span className="w-4 h-4 rounded-full bg-[#eab308] text-black text-[10px] font-black flex items-center justify-center">
+         <span className="w-4 h-4 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-[10px] font-bold flex items-center justify-center">
            {activeFiltersCount}
          </span>
        )}
@@ -1381,17 +1369,17 @@ export default function BookingCRM({
          id="crm-campaign-filter-btn"
          type="button"
          onClick={() => setFilterByCampaign(!filterByCampaign)}
-         className={`px-3 py-2 rounded-xl text-xs font-semibold font-sans transition-all flex items-center gap-1.5 border shadow-xs shrink-0 cursor-pointer ${
+         className={`px-3 py-2 rounded-[var(--r-m)] text-xs font-semibold font-sans transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer ${
            filterByCampaign
-             ? (isStitchLight ? 'bg-purple-600 text-white border-purple-700 font-bold' : 'bg-purple-600/90 hover:bg-purple-600 text-white border-purple-500/80 font-bold shadow-purple-950/40')
-             : (isStitchLight ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50' : 'bg-[#181716] text-zinc-300 border-white/10 hover:text-white hover:bg-zinc-800')
+             ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+             : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
          }`}
          title={filterByCampaign ? "Quitar filtro de campaña (ver todas las salas)" : "Filtrar únicamente salas objetivo de la campaña"}
        >
-         <Target className="w-3.5 h-3.5 text-purple-300 shrink-0" />
+         <Target className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
          <span className="hidden sm:inline">{filterByCampaign ? 'Filtro Campaña' : 'Filtrar Campaña'}</span>
          {filterByCampaign && (
-           <span className="px-1.5 py-0.2 rounded-full bg-purple-950/70 text-purple-200 text-[10px] font-mono font-bold">
+           <span className="px-1.5 py-0.2 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] text-[10px] font-semibold tabular-nums">
              {filteredLeads.length}
            </span>
          )}
@@ -1400,17 +1388,15 @@ export default function BookingCRM({
    </div>
 
    {/* View Mode Toggle Switcher */}
-   <div className={`p-1 rounded-xl flex items-center justify-between sm:justify-start gap-1 shrink-0 ${
-     isStitchLight ? 'bg-slate-100 border border-slate-200' : 'bg-[#131313] border border-white/5'
-   }`}>
+   <div className="p-1 rounded-[var(--r-m)] flex items-center justify-between sm:justify-start gap-1 shrink-0 bg-[var(--sunken)]">
      <button
        id="crm-view-grid"
        type="button"
        onClick={() => setViewMode('grid')}
-       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
          viewMode === 'grid'
-           ? isStitchLight ? 'bg-slate-900 text-white shadow-sm' : 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-sm'
-           : isStitchLight ? 'text-slate-600 hover:text-slate-900' : 'text-neutral-400 hover:text-white'
+           ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+           : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
        }`}
        title="Vista en Tarjetas"
      >
@@ -1421,10 +1407,10 @@ export default function BookingCRM({
        id="crm-view-table"
        type="button"
        onClick={() => setViewMode('table')}
-       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+       className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
          viewMode === 'table'
-           ? isStitchLight ? 'bg-slate-900 text-white shadow-sm' : 'bg-[#f2ca50] text-[#3c2f00] font-bold shadow-sm'
-           : isStitchLight ? 'text-slate-600 hover:text-slate-900' : 'text-neutral-400 hover:text-white'
+           ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+           : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
        }`}
        title="Vista en Detalles / Tabla"
      >
@@ -1435,16 +1421,14 @@ export default function BookingCRM({
         id="crm-view-map"
         type="button"
         onClick={() => setViewMode('map')}
-        className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+        className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
           viewMode === 'map'
-            ? 'bg-sky-500 text-slate-950 font-bold shadow-md shadow-sky-500/20'
-            : isStitchLight
-            ? 'bg-sky-50 text-sky-700 border border-sky-300 hover:bg-sky-100 shadow-sm'
-            : 'bg-sky-500/15 text-sky-300 border border-sky-500/40 hover:bg-sky-500/25'
+            ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+            : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
         }`}
         title="Vista en Mapa GPS Interactivo"
       >
-        <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-slate-950' : 'text-sky-400'}`} />
+        <MapIcon className={`w-3.5 h-3.5 ${viewMode === 'map' ? 'text-[var(--on-acc)]' : 'text-[var(--ink-3)]'}`} />
         <span>Mapa</span>
       </button>
     </div>
@@ -1455,19 +1439,19 @@ export default function BookingCRM({
 
   {/* Enrich Status Banner */}
   {enrichStatusMsg && (
-    <div className={`p-2.5 rounded-lg text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
+    <div className={`p-2.5 rounded-[var(--r-m)] text-[10px] font-sans flex items-center justify-between gap-2 animate-fadeIn ${
       enrichStatusMsg.includes('¡Éxito!')
-        ? isStitchLight ? 'bg-emerald-100 text-emerald-700' : 'bg-[#10b981]/15 text-[#10b981]'
-        : isStitchLight ? 'bg-sky-500/15 text-sky-400' : 'bg-sky-500/15 text-sky-400'
+        ? 'bg-[var(--ok-soft)] text-[var(--ok)]'
+        : 'bg-[var(--sunken)] text-[var(--ink-2)]'
     }`}>
       <div className="flex items-center gap-2">
-        <MapPin className="w-4 h-4 text-sky-400 shrink-0 animate-bounce" />
+        <MapPin className={`w-4 h-4 shrink-0 animate-bounce ${enrichStatusMsg.includes('¡Éxito!') ? 'text-[var(--ok)]' : 'text-[var(--ink-3)]'}`} />
         <span>{enrichStatusMsg}</span>
       </div>
       <button 
         type="button" 
         onClick={() => setEnrichStatusMsg('')}
-        className="p-0.5 rounded hover:opacity-75 cursor-pointer"
+        className="p-0.5 rounded-[var(--r-s)] hover:opacity-75 cursor-pointer"
       >
         <X className="w-3.5 h-3.5" />
       </button>
@@ -1815,21 +1799,17 @@ export default function BookingCRM({
           id={`crm-filter-${tab.key}`}
           key={tab.key}
           onClick={() => setStatusFilter(tab.key)}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-semibold transition-colors shrink-0 cursor-pointer flex items-center gap-1.5 ${
             isSelected
-              ? isStitchLight
-                ? 'bg-slate-900 text-white shadow-xs font-bold'
-                : 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-xs'
-              : isStitchLight
-                ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                : 'text-neutral-400 hover:text-white bg-zinc-900/40 hover:bg-zinc-800 border border-white/5'
+              ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold'
+              : 'text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--sunken)]'
           }`}
         >
           <span>{tab.label}</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-[var(--r-pill)] tabular-nums ${
             isSelected 
-              ? isStitchLight ? 'bg-white/20 text-white' : 'bg-amber-500/30 text-amber-200' 
-              : 'bg-black/30 text-neutral-400'
+              ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' 
+              : 'bg-black/10 text-[var(--ink-3)]'
           }`}>
             {count}
           </span>

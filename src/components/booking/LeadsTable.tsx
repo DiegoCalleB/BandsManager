@@ -80,10 +80,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
 
   if (filteredLeads.length === 0) {
     return (
-      <div className="p-8 text-center rounded-2xl bg-[#121110] border border-zinc-800/80 my-4">
-        <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-2 opacity-60" />
-        <p className="text-zinc-300 font-bold text-sm">No se encontraron medios o espacios</p>
-        <p className="text-zinc-500 text-xs mt-1">Prueba a cambiar los filtros o los términos de búsqueda.</p>
+      <div className="p-8 text-center rounded-[var(--r-l)] bg-[var(--surface)] my-4">
+        <Sparkles className="w-8 h-8 text-[var(--acc-ink)] mx-auto mb-2 opacity-60" />
+        <p className="text-[var(--ink-2)] font-bold text-sm">No se encontraron medios o espacios</p>
+        <p className="text-[var(--ink-3)] text-xs mt-1">Prueba a cambiar los filtros o los términos de búsqueda.</p>
       </div>
     );
   }
@@ -98,10 +98,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               <button
                 key={type}
                 onClick={() => setMediaTypeFilter(type as any)}
-                className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-colors cursor-pointer ${
+                className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-bold capitalize transition-colors cursor-pointer ${
                   mediaTypeFilter === type 
-                    ? 'bg-[#f2ca50] text-black' 
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                    ? 'bg-[var(--acc)] text-[var(--on-acc)]' 
+                    : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
                 }`}
               >
                 {type}
@@ -330,10 +330,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="overflow-x-auto rounded-2xl border border-zinc-800/80 bg-[#121110] shadow-lg pb-10">
+        <div className="overflow-x-auto rounded-[var(--r-l)] bg-[var(--surface)] pb-10">
           <table className="w-full text-left border-collapse min-w-[980px]">
             <thead>
-              <tr className="border-b border-zinc-800 text-[10px] font-mono uppercase tracking-wider text-zinc-400 bg-black/40">
+              <tr className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ink-3)] bg-[var(--sunken)]">
                 
                 {/* Select All Checkbox Header */}
                 {onToggleSelectLead && (
@@ -344,7 +344,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         ref={headerCheckboxRef}
                         checked={isAllSelected}
                         onChange={isAllSelected ? onDeselectAll : onSelectAllFiltered}
-                        className="w-4 h-4 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
+                        className="w-4 h-4 rounded-[var(--r-s)] text-[var(--acc)] focus:ring-[var(--acc)]/40 bg-[var(--sunken)] cursor-pointer accent-[var(--acc)]"
                         title={isAllSelected ? "Deseleccionar todos" : "Seleccionar todos los resultados"}
                       />
                     </div>
@@ -366,7 +366,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                 <th className="py-3.5 px-4 min-w-[160px] text-right whitespace-nowrap">Acciones Rápidas</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60 text-xs font-mono align-middle">
+            <tbody className="divide-y divide-[var(--hair)] text-xs align-middle">
               {filteredLeads.map((lead, idx) => {
                 const isDetailOpen = selectedLead?.id === lead.id;
                 const isChecked = selectedLeadIds.includes(lead.id);
@@ -379,10 +379,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     onClick={() => onSelectLead(lead)}
                     className={`transition-colors cursor-pointer ${
                       isChecked
-                        ? 'bg-[#1e1c17] border-l-2 border-l-[#f2ca50]'
+                        ? 'bg-[var(--acc-soft)]'
                         : isDetailOpen 
-                        ? 'bg-[#1A1918] border-l-2 border-l-purple-400' 
-                        : 'hover:bg-zinc-900/60'
+                        ? 'bg-[var(--sunken)]' 
+                        : 'hover:bg-[var(--sunken)]'
                     }`}
                   >
                     {/* Row Select Checkbox */}
@@ -403,7 +403,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               onToggleSelectLead(lead.id, e);
                             }}
-                            className="w-4 h-4 rounded border-zinc-700 text-[#f2ca50] focus:ring-[#f2ca50]/50 bg-zinc-900 cursor-pointer accent-[#f2ca50]"
+                            className="w-4 h-4 rounded-[var(--r-s)] text-[var(--acc)] focus:ring-[var(--acc)]/40 bg-[var(--sunken)] cursor-pointer accent-[var(--acc)]"
                             title={isChecked ? "Deseleccionar" : "Seleccionar"}
                           />
                         </div>
@@ -431,12 +431,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <span className="truncate font-bold text-xs sm:text-sm text-zinc-100 block max-w-[160px] notranslate" translate="no" title={lead.nombre_sala}>
+                            <span className="truncate font-bold text-xs sm:text-sm text-[var(--ink)] block max-w-[160px] notranslate" translate="no" title={lead.nombre_sala}>
                               {lead.nombre_sala}
                             </span>
                             <VerifiedBadge isVerified={isLeadVerificado(lead)} size="sm" />
                           </div>
-                          <span className="text-[10px] text-zinc-400 font-sans font-normal truncate block">
+                          <span className="text-[10px] text-[var(--ink-3)] font-sans font-normal truncate block">
                             {lead.genero || 'Sin género'}
                           </span>
                         </div>
@@ -451,12 +451,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       <LeadHealthBadge lead={lead} showDescription={false} size="sm" />
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[110px] text-zinc-300 align-middle">
+                    <td className="py-3.5 px-4 min-w-[110px] text-[var(--ink-2)] align-middle">
                       <span className="font-semibold">{lead.ciudad || 'España'}</span>
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[90px] text-zinc-300 align-middle">
-                      <span className={lead.roster ? 'text-amber-300 font-semibold' : 'text-zinc-200'}>
+                    <td className="py-3.5 px-4 min-w-[90px] text-[var(--ink-2)] align-middle">
+                      <span className={lead.roster ? 'text-[var(--acc-ink)] font-semibold' : 'text-[var(--ink)]'}>
                         {lead.roster ? `Róster: ${lead.roster}` : (lead.aforo ? `${lead.aforo} pax` : 'n/d')}
                       </span>
                     </td>
@@ -488,8 +488,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                       onClick={(e) => e.stopPropagation()}
                                       className={`font-normal truncate max-w-[140px] inline-block ${
                                         broken
-                                          ? 'text-red-400 hover:text-red-300 line-through'
-                                          : 'text-sky-400 hover:text-sky-300'
+                                          ? 'text-[var(--alert)] hover:brightness-110 line-through'
+                                          : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
                                       }`}
                                       title={lead.email_contacto}
                                     >
@@ -497,7 +497,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                     </a>
                                     {broken && (
                                       <div title={bounced ? 'Email rebotado - el destinatario no existe' : 'Email inválido - no se puede contactar'}>
-                                        <AlertCircle className="w-3.5 h-3.5 text-red-400 flex-shrink-0" />
+                                        <AlertCircle className="w-3.5 h-3.5 text-[var(--alert)] flex-shrink-0" />
                                       </div>
                                     )}
                                   </>
@@ -505,11 +505,11 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               })()}
                             </>
                           ) : (
-                            <span className="text-zinc-600 italic text-[11px]">Sin email</span>
+                            <span className="text-[var(--ink-3)] italic text-[11px]">Sin email</span>
                           )}
                         </div>
                         {phoneClean && (
-                          <div className="flex items-center gap-1.5 text-zinc-400">
+                          <div className="flex items-center gap-1.5 text-[var(--ink-3)]">
                             <span>{lead.telefono}</span>
                           </div>
                         )}
@@ -525,10 +525,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             target="_blank"
                             rel="noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 rounded-lg transition-colors inline-flex items-center"
+                            className="p-1.5 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors inline-flex items-center"
                             title="WhatsApp directo"
                           >
-                            <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+                            <MessageCircle className="w-3.5 h-3.5 text-[var(--ink-3)]" />
                           </a>
                         )}
 
@@ -536,10 +536,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <a
                             href={`tel:${lead.telefono}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-sky-950/80 hover:bg-sky-900 border border-sky-700/60 text-sky-300 rounded-lg transition-colors inline-flex items-center"
+                            className="p-1.5 bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)] rounded-[var(--r-s)] transition-colors inline-flex items-center"
                             title="Llamar teléfono"
                           >
-                            <PhoneCall className="w-3.5 h-3.5 text-sky-400" />
+                            <PhoneCall className="w-3.5 h-3.5 text-[var(--ink-3)]" />
                           </a>
                         )}
 
@@ -547,10 +547,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <button
                             type="button"
                             onClick={(e) => handleQuickApprovePitch(e, lead)}
-                            className="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/60 text-amber-300 rounded-lg text-[10px] font-bold transition-all cursor-pointer inline-flex items-center gap-1"
+                            className="px-2 py-1 bg-[var(--ok-soft)] hover:brightness-95 text-[var(--ok)] rounded-[var(--r-s)] text-[10px] font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
                             title="Aprobar pitch directamente"
                           >
-                            <CheckCircle2 className="w-3 h-3 text-amber-400" />
+                            <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
                             <span>Aprobar</span>
                           </button>
                         )}
@@ -561,10 +561,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             e.stopPropagation();
                             onSelectLead(lead);
                           }}
-                          className={`p-1.5 rounded-lg transition-colors inline-flex items-center ${
+                          className={`p-1.5 rounded-[var(--r-s)] transition-colors inline-flex items-center ${
                             isDetailOpen
-                              ? 'bg-[#f2ca50] text-black font-bold'
-                              : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300'
+                              ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold'
+                              : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-2)]'
                           }`}
                           title="Abrir ficha"
                         >
