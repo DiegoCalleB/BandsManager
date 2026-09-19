@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase, Mic2 } from 'lucide-react';
+import { LayoutGrid, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase, Mic2 } from 'lucide-react';
 
 export type NavItemId =
   | 'resumen' | 'booking' | 'medios' | 'management' | 'bandas' | 'calendario' | 'giras'
@@ -18,7 +18,7 @@ export interface NavItemDef {
 // define todas las claves 'nav.*' usadas aquí), así que labelDefault en la práctica solo
 // se usa si esa clave llegara a faltar del diccionario — mismo texto en los tres navs.
 export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
-  resumen: { id: 'resumen', icon: Table, labelKey: 'nav.resumen', labelDefault: 'Resumen' },
+  resumen: { id: 'resumen', icon: LayoutGrid, labelKey: 'nav.resumen', labelDefault: 'Dashboard' },
   booking: { id: 'booking', icon: Building2, labelKey: 'nav.booking', labelDefault: 'Escenarios' },
   medios: { id: 'medios', icon: Radio, labelKey: 'nav.medios', labelDefault: 'Medios' },
   management: { id: 'management', icon: Briefcase, labelKey: 'nav.management', labelDefault: 'Management' },

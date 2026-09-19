@@ -18,6 +18,7 @@ interface SpotifyPlayerBarProps {
   colors: ThemeColors;
   onSelectSong: (song: Song, autoPlay?: boolean) => void;
   onOpenStudio: (song: Song) => void;
+  onOpenIris?: (song: Song) => void;
   onUpdateSong?: (song: Song) => void;
   onClosePlayer: () => void;
   autoPlay?: boolean;
@@ -51,6 +52,7 @@ export default function SpotifyPlayerBar({
   colors,
   onSelectSong,
   onOpenStudio,
+  onOpenIris,
   onUpdateSong,
   onClosePlayer,
   autoPlay = false,
@@ -501,11 +503,7 @@ export default function SpotifyPlayerBar({
   // En móvil: bottom-[64px] para no tapar la barra de navegación inferior (h-16 = 64px).
   // Cuando está minimizado, ajustar el bottom para que solo se vea la tira de ~2.5rem sin tapar el navbar.
   return (
-    <div className={`fixed ${
-      isMinimized ? 'bottom-[104px] sm:bottom-0' : 'bottom-[64px] sm:bottom-0'
-    } left-0 md:left-[240px] right-0 z-50 transition-all duration-300 shadow-2xl ${
-      isMinimized ? 'translate-y-[calc(100%-2.5rem)]' : 'translate-y-0'
-    }`}>
+    <div className="fixed bottom-[64px] md:bottom-0 left-0 md:left-[240px] right-0 z-50 transition-all duration-300 shadow-2xl">
       {/* Dos <audio> en vez de uno (ver activeSlotRef arriba) — solo el activo actualiza el reloj
           en pantalla y decide cuándo fundir; el otro solo se usa como pista temporal de solape. */}
       <audio
@@ -527,8 +525,115 @@ export default function SpotifyPlayerBar({
         onEnded={() => { if (activeSlotRef.current === 'B') handleEnded(); }}
       />
 
-      <div className="bg-[#121212]/98 backdrop-blur-2xl border-t border-[#282828] text-white px-4 py-3 max-w-full shadow-2xl">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="bg-[#121212]/98 backdrop-blur-2xl border-t border-[#282828] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-full shadow-2xl">
+        {isMinimized ? (
+          /* Minimized Compact Strip: single-row bar sitting strictly above mobile bottom navbar */
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            {/* Left: Thumbnail & Song Info (click to expand) */}
+            <div
+              onClick={() => setIsMinimized(false)}
+              className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer group"
+              title="Haz clic para expandir el reproductor"
+            >
+              <div className="relative shrink-0 w-10 h-10 rounded-lg bg-[#282828] shadow-md overflow-hidden border border-white/5">
+                {song.portadaUrl ? (
+                  <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-[#1db954]/30 via-zinc-800 to-black flex items-center justify-center">
+                    <Disc className={`w-5 h-5 ${isPlaying ? 'animate-spin-slow text-[#1db954]' : 'text-zinc-400'}`} />
+                  </div>
+                )}
+                {isPlaying && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center gap-0.5">
+                    <span className="w-0.5 h-3 bg-[#1db954] rounded-full animate-pulse" />
+                    <span className="w-0.5 h-4 bg-[#1ed760] rounded-full animate-pulse delay-75" />
+                    <span className="w-0.5 h-2 bg-[#1db954] rounded-full animate-pulse delay-150" />
+                  </div>
+                )}
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs sm:text-sm font-bold text-white truncate group-hover:text-[#1db954] transition">{song.titulo}</h4>
+                  {isDrive && (
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0">
+                      Drive
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-[#b3b3b3] font-mono mt-0.5 truncate">
+                  <span className="text-white font-medium">{song.artista || 'Banda'}</span>
+                  <span>•</span>
+                  <span className="text-[#1db954] font-semibold">
+                    {song.tonalidad || 'Am'}
+                    {transposeSemitones !== 0 && (
+                      <span className="text-[#ff6b9d] ml-1 font-bold">
+                        ➔ {transposeChordToken(song.tonalidad || 'Am', transposeSemitones, /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test((song.tonalidad || 'Am').trim()) ? 'ES' : 'EN')} ({transposeSemitones > 0 ? `+${transposeSemitones}` : transposeSemitones} st)
+                      </span>
+                    )}
+                  </span>
+                  <span>•</span>
+                  <span>{song.bpm} BPM</span>
+                  {isCrossfading && nextQueueSong && (
+                    <span className="text-sky-400 font-semibold animate-pulse hidden xs:inline">
+                      • 🔀 → {nextQueueSong.titulo}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Quick Controls */}
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => handlePrev()}
+                className="p-1.5 text-[#b3b3b3] hover:text-white transition cursor-pointer active:scale-90"
+                title="Canción Anterior"
+              >
+                <SkipBack className="w-4 h-4 fill-current" />
+              </button>
+
+              <button
+                type="button"
+                onClick={togglePlayPause}
+                className="w-8 h-8 rounded-full bg-[#1db954] hover:bg-[#1ed760] text-black font-bold flex items-center justify-center shadow-md cursor-pointer transition hover:scale-105 active:scale-95"
+                title={isPlaying ? "Pausar" : "Reproducir"}
+              >
+                {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleNext(false)}
+                className="p-1.5 text-[#b3b3b3] hover:text-white transition cursor-pointer active:scale-90"
+                title="Siguiente Canción"
+              >
+                <SkipForward className="w-4 h-4 fill-current" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsMinimized(false)}
+                className="p-1.5 text-zinc-400 hover:text-white cursor-pointer ml-1"
+                title="Expandir Reproductor"
+              >
+                <ChevronUp className="w-5 h-5 text-[#1db954]" />
+              </button>
+
+              <button
+                type="button"
+                onClick={onClosePlayer}
+                className="p-1.5 text-zinc-500 hover:text-white transition cursor-pointer"
+                title="Cerrar Reproductor"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Full Expanded Player */
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
 
           {/* Left: Song Info */}
           <div className="flex items-center justify-between w-full md:w-1/4 min-w-0">
@@ -755,6 +860,16 @@ export default function SpotifyPlayerBar({
               <span className="text-[11px]">Estudio</span>
             </button>
 
+            {/* Iris Stem Separator Button */}
+            <button
+              onClick={() => onOpenIris ? onOpenIris(song) : onOpenStudio(song)}
+              className="px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shadow-xs"
+              title="Procesar y separar voces e instrumentos con Iris (IA Stems)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span className="hidden sm:inline text-[11px]">Iris</span>
+            </button>
+
             {/* Volume */}
             <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-[#282828]">
               <button
@@ -789,6 +904,7 @@ export default function SpotifyPlayerBar({
           </div>
 
         </div>
+        )}
       </div>
     </div>
   );

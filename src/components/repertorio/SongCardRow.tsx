@@ -18,8 +18,11 @@ import {
   Volume2,
   Music,
   Check,
-  GripVertical
+  GripVertical,
+  Sparkles,
+  Cpu
 } from 'lucide-react';
+import { hasIrisStems } from '../../utils/irisTracks';
 
 export interface SongCardRowProps {
   song: Song;
@@ -32,6 +35,7 @@ export interface SongCardRowProps {
   onOpenChords?: () => void;
   onOpenMemberNotes?: () => void;
   onOpenStudio?: () => void;
+  onOpenIris?: () => void;
   onEditSong?: () => void;
   onDeleteSong?: () => void;
   onShareSong?: () => void;
@@ -68,6 +72,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   onOpenChords,
   onOpenMemberNotes,
   onOpenStudio,
+  onOpenIris,
   onEditSong,
   onDeleteSong,
   onShareSong,
@@ -352,6 +357,29 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             </button>
           )}
 
+          {/* 2b. Direct Iris Stem Separator Button */}
+          {(onOpenIris || onOpenStudio) && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onOpenIris) onOpenIris();
+                else if (onOpenStudio) onOpenStudio();
+              }}
+              className={`p-1.5 sm:px-2.5 sm:py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+                hasIrisStems(song)
+                  ? 'bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 text-amber-300 border-amber-500/40 shadow-xs'
+                  : isStitchLight
+                  ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-200'
+                  : 'bg-neutral-900 hover:bg-neutral-800 text-amber-300 border-amber-500/30'
+              }`}
+              title={hasIrisStems(song) ? 'Ver pistas e instrumentos separados con Iris' : 'Procesar esta canción con Iris (Separador de Pistas/Stems con IA)'}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 animate-pulse" />
+              <span className="hidden sm:inline text-xs font-mono">Iris</span>
+            </button>
+          )}
+
           {/* 3. Direct Member Notes Button */}
           {onOpenMemberNotes && (
             <button
@@ -484,6 +512,22 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                     >
                       <Headphones className="w-3.5 h-3.5 text-indigo-400" />
                       <span>Abrir Studio / Grabadora</span>
+                    </button>
+                  )}
+
+                  {/* Iris Stem Separator */}
+                  {(onOpenIris || onOpenStudio) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        if (onOpenIris) onOpenIris();
+                        else if (onOpenStudio) onOpenStudio();
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 text-amber-300 transition-colors flex items-center gap-2 cursor-pointer font-bold"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                      <span>{hasIrisStems(song) ? '🎛️ Ver Pistas Iris Separadas' : '✨ Procesar con Iris (IA Stems)'}</span>
                     </button>
                   )}
 

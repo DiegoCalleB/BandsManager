@@ -1,31 +1,58 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
+function parseSafeArray(val: any): string[] {
+  if (!val) return [];
+  if (Array.isArray(val)) return val.map(x => typeof x === 'string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
+  if (typeof val === 'string' && val.trim()) {
+    const s = val.trim();
+    if (s.startsWith('[') && s.endsWith(']')) {
+      try {
+        const p = JSON.parse(s);
+        if (Array.isArray(p)) return p.map(x => typeof x === 'string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
+      } catch {}
+    }
+    return s.split(',').map(x => x.trim()).filter(Boolean);
+  }
+  return [];
+}
+
 export async function dbGetRehearsals(bandId: string | string[]) {
   const sb = getSupabase();
   let query = sb.from("rehearsals").select("*");
+  let allowedIds: string[] = [];
+
   if (Array.isArray(bandId)) {
-    const cleanIds = bandId.map(id => cleanBandId(id)).filter(Boolean);
-    if (cleanIds.length === 1) {
-      query = query.eq("band_id", cleanIds[0]);
-    } else if (cleanIds.length > 1) {
-      query = query.in("band_id", cleanIds);
+    allowedIds = bandId.map(id => cleanBandId(id)).filter(id => id && id !== '__sin_banda__');
+    if (allowedIds.length === 0) return [];
+    if (allowedIds.length === 1) {
+      query = query.eq("band_id", allowedIds[0]);
+    } else {
+      query = query.in("band_id", allowedIds);
     }
   } else {
-    query = query.eq("band_id", cleanBandId(bandId));
+    const cleanId = cleanBandId(bandId);
+    if (!cleanId || cleanId === '__sin_banda__' || cleanId === 'all') return [];
+    allowedIds = [cleanId];
+    query = query.eq("band_id", cleanId);
   }
   const { data, error } = await query.order("fecha", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (rehearsals): ${error.message}`);
-  return (data || []).map(r => ({
+
+  // Validation layer: filter out any records that do not belong to the allowed band IDs
+  const allowedSet = new Set(allowedIds);
+  const validatedData = (data || []).filter(r => r.band_id && allowedSet.has(cleanBandId(r.band_id)));
+
+  return validatedData.map(r => ({
     ...r,
     tipo_evento: r.tipo_evento || r.tipoEvento || 'ensayo',
     asunto: r.asunto || '',
     enlace_reunion: r.enlace_reunion || r.enlaceReunion || '',
     horaFin: r.hora_fin || r.horaFin || undefined,
-    asistentes: r.asistentes || [],
-    convocados_ids: r.convocados_ids || [],
-    convocados_nombres: r.convocados_nombres || [],
+    asistentes: parseSafeArray(r.asistentes),
+    convocados_ids: parseSafeArray(r.convocados_ids),
+    convocados_nombres: parseSafeArray(r.convocados_nombres),
     agenda: r.agenda || [],
     objetivos: r.objetivos || [],
     duracionEstimadaMin: r.duracion_estimada_min ?? r.duracionEstimadaMin ?? undefined,
@@ -67,13 +94,13 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
     tipo_evento: rehearsal.tipo_evento || rehearsal.tipoEvento || 'ensayo',
     asunto: rehearsal.asunto || '',
     enlace_reunion: rehearsal.enlace_reunion || rehearsal.enlaceReunion || '',
-    asistentes: rehearsal.asistentes || [],
+    asistentes: parseSafeArray(rehearsal.asistentes),
     notas: rehearsal.notas || "",
     estado: rehearsal.estado || "programado",
     setlist_id: rehearsal.setlist_id || rehearsal.setlistId || null,
     convocatoria_tipo: rehearsal.convocatoria_tipo || rehearsal.convocatoriaTipo || "completa",
-    convocados_ids: rehearsal.convocados_ids || rehearsal.convocadosIds || [],
-    convocados_nombres: rehearsal.convocados_nombres || rehearsal.convocadosNombres || [],
+    convocados_ids: parseSafeArray(rehearsal.convocados_ids || rehearsal.convocadosIds),
+    convocados_nombres: parseSafeArray(rehearsal.convocados_nombres || rehearsal.convocadosNombres),
     agenda: rehearsal.agenda || [],
     objetivos: rehearsal.objetivos || [],
     duracion_estimada_min: rehearsal.duracion_estimada_min ?? rehearsal.duracionEstimadaMin ?? 0,

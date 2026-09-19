@@ -23,6 +23,7 @@ import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
+import { getSongIrisStemIdea } from '../utils/irisTracks';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { formatSongTitle } from '../utils/formatSongTitle';
 import { 
@@ -183,6 +184,7 @@ interface SongStudioModalProps {
   onUpdateSong: (updatedSong: Song) => void;
   currentUsername?: string;
   currentUser?: User;
+  initialOpenIrisModal?: boolean;
 }
 
 // Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
@@ -265,7 +267,8 @@ export default function SongStudioModal({
   onClose,
   onUpdateSong,
   currentUsername = 'Tu Nombre',
-  currentUser
+  currentUser,
+  initialOpenIrisModal = false
 }: SongStudioModalProps) {
   const songRef = useRef<Song>(song);
   useEffect(() => {
@@ -347,6 +350,28 @@ export default function SongStudioModal({
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [uploadingStemInstrument, setUploadingStemInstrument] = useState<string>('Voz');
+
+  // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo "Procesar con Iris"
+  useEffect(() => {
+    if (initialOpenIrisModal) {
+      const existingIrisIdea = getSongIrisStemIdea(song);
+      if (existingIrisIdea) {
+        setShowMoisesStemsModal(existingIrisIdea);
+      } else if (song.audioIdeas && song.audioIdeas.length > 0) {
+        setShowMoisesStemsModal(song.audioIdeas[0]);
+      } else {
+        const fallbackIdea: SongAudioIdea = {
+          id: `idea-main-${song.id || Date.now()}`,
+          titulo: `Maqueta Principal (${song.titulo})`,
+          audioUrl: song.audioPrincipalUrl || (song as any).audioUrl || '',
+          subidoPor: currentUsername || 'Banda',
+          seccion: 'general',
+          fecha: new Date().toLocaleDateString('es-ES')
+        };
+        setShowMoisesStemsModal(fallbackIdea);
+      }
+    }
+  }, [initialOpenIrisModal, song, currentUsername]);
 
   // AI Instrument Track Generator State — guarda la idea de destino (no un simple boolean) para
   // saber a qué mezcla añadir la pista generada; antes se asumía siempre audioIdeas[0], ignorando
@@ -722,14 +747,21 @@ export default function SongStudioModal({
       const finalSeparationEngine = data.degraded
         ? 'Iris Básico (modo degradado)'
         : engineToUse === 'mvsep-mdx23' ? 'Iris Studio' : engineToUse === 'demucs' ? 'Iris Cloud' : 'Iris Básico';
-      const updatedIdeas = (song.audioIdeas || []).map(i => i.id === targetIdea.id ? {
-        ...i,
+      const existingIndex = (song.audioIdeas || []).findIndex(i => i.id === targetIdea.id);
+      let updatedIdeas = song.audioIdeas ? [...song.audioIdeas] : [];
+      const updatedIdeaContent: SongAudioIdea = {
+        ...targetIdea,
         pistas: newTracks,
         stemEngineUsed: finalSeparationEngine,
         stemIsNeural: !!data.isNeural,
         stemDegraded: !!data.degraded,
         stemProcessedAt: new Date().toISOString()
-      } : i);
+      };
+      if (existingIndex >= 0) {
+        updatedIdeas[existingIndex] = { ...updatedIdeas[existingIndex], ...updatedIdeaContent };
+      } else {
+        updatedIdeas.push(updatedIdeaContent);
+      }
       onUpdateSong({ ...song, audioIdeas: updatedIdeas });
 
       const stemsInfo = newTracks.map(t => ({

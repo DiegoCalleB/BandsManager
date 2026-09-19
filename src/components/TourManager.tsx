@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from '../types';
 import { calculateVehiclesFuelCost } from '../utils/tourUtils';
 import { ModalPortal } from './common/ModalPortal';
+import { HolidayDateWarning } from './common/HolidayDateWarning';
 import { 
   Plus, Edit3, Trash2, MapPin, Truck, Calendar, DollarSign, 
   Activity, TrendingUp, Calculator, Users, CheckSquare, Square, 
@@ -697,18 +698,21 @@ export default function TourManager({
                           <span className="text-[10px] text-neutral-500 italic">Sin paradas configuradas</span>
                         ) : (
                           tour.stops.slice(0, 4).map((stop, idx) => (
-                            <div key={`tour-${tour.id || index}-stop-${stop.id || idx}-${idx}`} className="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-black/20 border border-white/5">
-                              <div className="flex items-center gap-2 min-w-0">
-                                <span className="text-sky-400 font-mono text-xs font-bold">{idx + 1}.</span>
-                                <span className="font-bold truncate text-slate-100 text-xs sm:text-sm">{stop.ciudad || 'Por determinar'}</span>
-                                <span className="text-zinc-300 text-xs font-semibold truncate">({stop.sala || 'Sala tbd'})</span>
+                            <div key={`tour-${tour.id || index}-stop-${stop.id || idx}-${idx}`} className="py-1 px-2 rounded-lg bg-black/20 border border-white/5 space-y-1">
+                              <div className="flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <span className="text-sky-400 font-mono text-xs font-bold">{idx + 1}.</span>
+                                  <span className="font-bold truncate text-slate-100 text-xs sm:text-sm">{stop.ciudad || 'Por determinar'}</span>
+                                  <span className="text-zinc-300 text-xs font-semibold truncate">({stop.sala || 'Sala tbd'})</span>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
+                                  {stop.ingresoCacheEstimated ? (
+                                    <span className="text-emerald-400 font-bold">+{stop.ingresoCacheEstimated}€</span>
+                                  ) : null}
+                                  <span className="text-amber-300 font-mono text-xs font-bold">{stop.fecha}</span>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
-                                {stop.ingresoCacheEstimated ? (
-                                  <span className="text-emerald-400 font-bold">+{stop.ingresoCacheEstimated}€</span>
-                                ) : null}
-                                <span className="text-amber-300 font-mono text-xs font-bold">{stop.fecha}</span>
-                              </div>
+                              <HolidayDateWarning date={stop.fecha} city={stop.ciudad} compact />
                             </div>
                           ))
                         )}
@@ -1192,6 +1196,9 @@ export default function TourManager({
                               />
                             </div>
                           </div>
+
+                          {/* Auditor de Festivos y Puentes para la Parada de Gira */}
+                          <HolidayDateWarning date={stop.fecha} city={stop.ciudad} className="mb-3" />
 
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-white/5">
                             <div>

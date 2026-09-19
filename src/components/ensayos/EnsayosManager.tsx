@@ -240,10 +240,12 @@ export function EnsayosManager({
                 {currentRehearsal?.lugar || 'Local de ensayo'}
               </span>
 
-              {currentRehearsal?.convocados_nombres && currentRehearsal.convocados_nombres.length > 0 && (
+              {currentRehearsal?.convocados_nombres && (
                 <span className="flex items-center gap-1.5 text-neutral-400">
                   <Users className="w-3.5 h-3.5 text-neutral-500" />
-                  {currentRehearsal.convocados_nombres.join(', ')}
+                  {Array.isArray(currentRehearsal.convocados_nombres)
+                    ? currentRehearsal.convocados_nombres.join(', ')
+                    : String(currentRehearsal.convocados_nombres)}
                 </span>
               )}
             </div>

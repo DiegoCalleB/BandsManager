@@ -1614,7 +1614,7 @@ export default function App() {
  </main>
 
  {/* User Management Modal for Band Leader */}
- {showUserManagementModal && isAdmin && !isPromoPlan && (
+ {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
  <UserManagementModal
  currentUser={currentUser}
  users={bandUsers}
@@ -1636,7 +1636,7 @@ export default function App() {
  }}
  isStitchLight={false}
  isAdmin={isAdmin}
- onOpenBandManagement={!isPromoPlan ? () => setShowUserManagementModal(true) : undefined}
+ onOpenBandManagement={() => setShowUserManagementModal(true)}
  currentTheme={currentTheme}
  onThemeChange={handleThemeChange}
  currentFont={currentFont}
@@ -1761,6 +1761,7 @@ export default function App() {
   }}
   onSetMainBand={handleSetMainBand}
   onOpenRegisterBand={() => handleNavigate('bandas')}
+  onOpenBandManagement={() => setShowUserManagementModal(true)}
  />
 
   {/* Soft Limits Upgrade Modal */}

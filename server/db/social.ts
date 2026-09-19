@@ -3,14 +3,15 @@ import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetSocialPosts(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("social_posts")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("fecha", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (social_posts): ${error.message}`);
-  return data || [];
+  return (data || []).filter(p => cleanBandId(p.band_id) === cleanId);
 }
 
 export async function dbUpsertSocialPost(post: any, bandId: string) {
@@ -67,7 +68,8 @@ export async function dbGetSocialMetrics(bandId: string) {
     .order("fecha", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (social_metrics): ${error.message}`);
-  return (data || []).map((m: any) => {
+  const validBandIds = new Set(bandIds.map(id => cleanBandId(id)));
+  return (data || []).filter((m: any) => validBandIds.has(cleanBandId(m.band_id))).map((m: any) => {
     const ig = Number(m.instagram ?? m.instagram_followers ?? 0);
     const tk = Number(m.tiktok ?? m.tiktok_followers ?? 0);
     const yt = Number(m.youtube ?? m.youtube_subscribers ?? 0);

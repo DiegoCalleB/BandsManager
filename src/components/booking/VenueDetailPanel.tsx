@@ -12,6 +12,7 @@ import { api } from '../../services/api';
 import { MultiModelPitchComparatorModal } from './MultiModelPitchComparatorModal';
 import { BoloConfirmadoSetlistModal } from './BoloConfirmadoSetlistModal';
 import { formatFestivalDateRange, toIsoDateString } from '../../utils/festivalDateFormat';
+import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import {
   Edit3,
   X,
@@ -626,11 +627,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
                       : (selectedLead.aforo ? `${selectedLead.aforo} pax` : 'Aforo n/d'))}
               </p>
               {selectedLead.festival_start_date && selectedLead.festival_end_date && (
-                <p className="text-xs sm:text-sm font-sans mt-1 text-amber-400 flex items-center gap-1.5">
-                  <span className="text-lg">🎪</span>
-                  <span className="font-semibold">Festival/Evento:</span>
-                  <span>{formatFestivalDateRange(selectedLead.festival_start_date, selectedLead.festival_end_date)}</span>
-                </p>
+                <div className="space-y-1 mt-1">
+                  <p className="text-xs sm:text-sm font-sans text-amber-400 flex items-center gap-1.5">
+                    <span className="text-lg">🎪</span>
+                    <span className="font-semibold">Festival/Evento:</span>
+                    <span>{formatFestivalDateRange(selectedLead.festival_start_date, selectedLead.festival_end_date)}</span>
+                  </p>
+                  <HolidayDateWarning date={selectedLead.festival_start_date} city={selectedLead.ciudad} compact />
+                </div>
               )}
             </div>
           </div>
@@ -1423,28 +1427,39 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
             {/* Active Campaign Context Banner in Pitch Section */}
             {activeCampaign && (activeCampaign.isActive !== false) && (
-              <div className="mb-2.5 p-2.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border border-purple-500/30 rounded-xl flex items-center justify-between gap-2 shadow-xs">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-xs shrink-0">🎯</span>
-                  <div className="min-w-0">
-                    <span className="text-[11px] font-bold text-purple-200 truncate block">
-                      Campaña: {activeCampaign.name}
-                    </span>
-                    <span className="text-[10px] text-purple-300/80 truncate block">
-                      Fechas objetivo: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(', ') : 'Próximos meses')} · Aforo: {activeCampaign.minCapacity || 0}-{activeCampaign.maxCapacity || 'sin límite'} pax
-                    </span>
+              <div className="mb-2.5 p-2.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border border-purple-500/30 rounded-xl space-y-2 shadow-xs">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-xs shrink-0">🎯</span>
+                    <div className="min-w-0">
+                      <span className="text-[11px] font-bold text-purple-200 truncate block">
+                        Campaña: {activeCampaign.name}
+                      </span>
+                      <span className="text-[10px] text-purple-300/80 truncate block">
+                        Fechas objetivo: {activeCampaign.targetDatesText || (Array.isArray(activeCampaign.targetDates) ? activeCampaign.targetDates.join(', ') : 'Próximos meses')} · Aforo: {activeCampaign.minCapacity || 0}-{activeCampaign.maxCapacity || 'sin límite'} pax
+                      </span>
+                    </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => handleRegeneratePitchWithFeedback()}
+                    disabled={isRegeneratingPitch}
+                    className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 shadow-sm disabled:opacity-50"
+                    title="Reescribe el pitch adaptándolo a las fechas y aforo de esta campaña"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    <span>Adaptar a Campaña</span>
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRegeneratePitchWithFeedback()}
-                  disabled={isRegeneratingPitch}
-                  className="px-2.5 py-1 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded text-[10px] flex items-center gap-1 transition-all cursor-pointer shrink-0 shadow-sm disabled:opacity-50"
-                  title="Reescribe el pitch adaptándolo a las fechas y aforo de esta campaña"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  <span>Adaptar a Campaña</span>
-                </button>
+
+                {/* Chequeo de festivos en fechas de campaña para la ciudad de este lead */}
+                {Array.isArray(activeCampaign.targetDates) && activeCampaign.targetDates.length > 0 && selectedLead.ciudad && (
+                  <div className="flex flex-wrap gap-1 pt-1 border-t border-purple-500/20">
+                    {activeCampaign.targetDates.map((tDate) => (
+                      <HolidayDateWarning key={tDate} date={tDate} city={selectedLead.ciudad} compact />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

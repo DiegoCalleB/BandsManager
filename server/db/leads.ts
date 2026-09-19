@@ -122,7 +122,9 @@ export async function dbGetLeads(bandId: string): Promise<any[]> {
     .order("nombre_sala", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
-  return (data || []).map(l => ({
+  // Validation layer: guarantee strict band_id isolation
+  const validated = (data || []).filter(l => cleanBandId(l.band_id) === cleanId);
+  return validated.map(l => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || [],
@@ -166,7 +168,10 @@ export async function dbGetLeadsPaginated(bandId: string, options: GetLeadsOptio
 
   if (error) throw new Error(`Supabase Error (leads paginated): ${error.message}`);
   
-  const leads = (data || []).map(l => ({
+  // Validation layer: guarantee strict band_id isolation
+  const validated = (data || []).filter(l => cleanBandId(l.band_id) === cleanId);
+
+  const leads = validated.map(l => ({
     ...l,
     historial_feedback_pitch: l.historial_feedback_pitch || [],
     historial_contacto: l.historial_contacto || [],
@@ -196,6 +201,9 @@ export async function dbGetLeadById(id: string, bandId?: string) {
 
   if (error) throw new Error(`Supabase Error (getLeadById): ${error.message}`);
   if (!data) return null;
+  if (bandId && bandId.trim() && cleanBandId(data.band_id) !== cleanBandId(bandId)) {
+    return null;
+  }
   return {
     ...data,
     historial_feedback_pitch: data.historial_feedback_pitch || [],

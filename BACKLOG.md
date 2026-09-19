@@ -8,6 +8,45 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+## 🏛️ Planes Maestros de Arquitectura, IA y Negocio (Listos para Implementación)
+
+### 1. Plan Maestro Defensivo, Acuerdos 1-Click y Directo (`plan_anti_fraude.md`)
+* **Qué:** Sistema completo de cierre de conciertos sin fricción con enlace público 1-Click (`/deal/view/:token`), firma electrónica simple válida bajo Reglamento eIDAS (UE 910/2014) con hash SHA-256 inmutable, minimización estricta de datos RGPD, detección de atribución CRM sin espionaje (el *Nudge Elegante* de reactivación) y las 6 innovaciones agénticas de directo:
+  1. *WhatsApp Magic Share* para técnico de sonido (ficha de cabina live) y portero (lista de puerta táctil).
+  2. *Modo Escenario Offline* con Service Workers e IndexedDB a prueba de sótanos sin cobertura.
+  3. *Dynamic Touring Yield Management* (optimización de rutas y relleno de fechas huérfanas con caché dinámico).
+  4. *Tech Rider Auto-Adaptativo ("Self-Healing Rider")* con visión artificial y equivalencias de inventario de sala.
+  5. *Director de Concierto en Vivo* con ajuste dinámico del Setlist por compatibilidad tonal y toque de queda.
+  6. *Smart Settlement Post-Show* integrado con BandSplit.
+* **Por qué importa:** Resuelve el problema del "bypass" del CRM mediante incentivos de valor real en vez de sanciones policiales, protege legal y fiscalmente a las bandas y salas, y posiciona a la plataforma como la más avanzada del mundo en tecnología de directo.
+* **Documento maestro:** `plan_anti_fraude.md`
+* **Estado:** Especificado y validado en arquitectura. Listo para implementar P0 (Esquema SQL + Endpoints `/api/deals` bajo `getTargetBandId` + Vista Web Responsive 1-Click).
+
+### 2. Plan Económico y Técnico de IA (`plan_gestion_tokens_ia.md`)
+* **Qué:** Modelo híbrido de dos niveles para el uso de modelos de lenguaje y generación multimedia:
+  1. *Texto Ilimitado con Fair Use* (Scout, Redactor, Lector, Contestador, Chat) protegido por una ventana móvil de 5 horas que resetea cuota cada 15 minutos, sin que el usuario sienta barreras artificiales de recarga.
+  2. *Cupos de Estudio Multimedia* para tareas pesadas de GPU/CPU (Separación de Stems con Replicate/Iris y Renderizado de Reels con Remotion/FFmpeg), con pases mensuales + acumulador permanente (*Rollover con tope*) y bonificaciones vitalicias por conciertos confirmados (`studio_bonus_stems`, `studio_bonus_reels`).
+* **Por qué importa:** Garantiza un margen bruto superior al 98% (coste por usuario activo < 0,15 €/mes), elimina la frustración de la "moneda virtual de créditos" en tareas conversacionales y alinea la economía del SaaS con la rentabilidad empresarial.
+* **Documento maestro:** `plan_gestion_tokens_ia.md`
+* **Estado:** Especificado y validado económicamente. Listo para aterrizar en `planLimits.ts` y controladores de billing.
+
+### 3. BandSplit / TourCount: El "CFO de Banda con IA" para Gira y Local (`splitband.md`)
+* **Qué:** Mucho más que un Splitwise tradicional: el primer Director Financiero de Banda con IA (AI Band CFO) para bolos y vida de local:
+  1. *Dualidad Gira vs. Día a Día*: Cubre tanto los gastos del viaje (gasoil, furgoneta, peajes) como la rutina del local de ensayo (Dani compró una pantalla 4x12, Javi compró cuerdas/cables, alquiler mensual del local, camisetas de merch).
+  2. *Los 4 Caminos de Compensación*:
+     - Vía 1: Reembolso 1-Click desde la Caja Común / Bote de la app si hay fondos.
+     - Vía 2: Compensación en el próximo concierto a las 3 AM ("deuda flotante de banda" saldada con el sobre antes de repartir el neto).
+     - Vía 3: Escote directo entre miembros con Deep Links a Bizum para gastos mensuales fijos (alquiler de local).
+     - Vía 4: Registro de Activos de Banda con reparto de propiedad (% por músico) y amortización justa si alguien se va del grupo.
+  3. *Voice-to-Expense & Tax OCR con IA*: Registro en furgoneta por voz, desglose de IVA (10%/21%) y exclusión de gastos personales no deducibles.
+  4. *Árbitro Imparcial con "Pacto de Banda"*: Mediador neutral que resuelve discrepancias objetivamente según las reglas acordadas por el grupo.
+  5. *Tour CFO Predictivo*: Cálculo en vivo del umbral de rentabilidad de la gira durante el trayecto y kilometraje GPS automático.
+* **Por qué importa:** Resuelve la causa número 1 de discusiones y ruptura de bandas (el dinero y las cuentas tanto en gira como en el local), automatiza la contabilidad y protege el patrimonio de los músicos.
+* **Documento maestro:** `splitband.md`
+* **Estado:** Especificado con arquitectura de IA, modelo de compensación y esquema DDL listos.
+
+---
+
 ## 💡 Ideas por explorar
 
 ### Subida de vídeo de fans vía QR como gancho de conversión hacia el landing
@@ -37,4 +76,24 @@ _(vacío)_
 
 ## ✅ Hecho
 
-_(vacío — mover aquí con fecha cuando se implemente algo de arriba)_
+### Previsión meteorológica por hora y alertas de escenario en eventos del calendario (Outdoor & Stage Weather Alerts)
+* **Fecha:** Septiembre 2026
+* **Qué se implementó:**
+  1. **Servicio meteorológico Open-Meteo (`weatherService.ts`)**: Integración sin API Key necesaria (código y datos abiertos), con geocodificación automática de ciudades, previsión horaria (temperatura, sensación térmica, probabilidad y volumen de lluvia en mm, ráfagas y velocidad de viento en km/h, código WMO) y caché en memoria para alto rendimiento.
+  2. **Sistema Inteligente de Alertas de Escenario (Lluvia, Frío Extremo, Viento Extremo, Tormentas)**:
+     - **Clasificación por severidad** (`danger` vs `warning`) con badges de alta visibilidad (`🔴 PELIGRO DE ESCENARIO` y `🟡 PRECAUCIÓN`).
+     - **Alerta de Lluvia y Tormenta Eléctrica**: Detección de lluvia intensa (>=40%, >=0.5mm) y tormentas WMO con protocolo de protección eléctrica, carpas y diferenciales.
+     - **Alerta de Frío Extremo**: Detección de bajas temperaturas (<=8°C, sensación <=6°C) con consejos para atemperar guitarras/bajos de madera antes de afinar y calentamiento vocal intensivo.
+     - **Alerta de Viento Extremo**: Detección de rachas (>=40 km/h o >=55 km/h en danger) con directrices de seguridad para PA volada, trusses, retirada de telones opacos (efecto vela) y uso de antivientos en microfonía.
+     - **Tarjetas interactivas desplegables**: Protocolo técnico detallado paso a paso para el rider y el equipo técnico.
+  3. **Visualización Omnipresente y No Intrusiva en el Calendario (`CalendarView.tsx`)**:
+     - **Celdas del mes**: Indicadores de alerta meteorológica (🌧️, ⚡, ❄️, 💨) junto al número del día si hay conciertos con meteorología adversa.
+     - **Panel lateral del día**: `EventWeatherCard` integrado para consultar el clima y alertas sin necesidad de abrir el modal.
+     - **Cabecera del modal de evento**: Badges activos de advertencia sincronizados con la ficha del concierto.
+     - **Convocatoria 1-Click para WhatsApp**: Las alertas meteorológicas activas se adjuntan automáticamente en el texto formateado de la convocatoria de la banda.
+  4. **Hub Integral de Gestión en Modal de Eventos (`CalendarView.tsx`)**:
+     - **Edición completa**: Acceso inmediato a edición del evento.
+     - **Notificaciones a músicos**: Envío de recordatorio con hora, lugar y previsión.
+     - **Convocatoria 1-Click para WhatsApp**: Generación y apertura directa de ficha de convocatoria optimizada con emoticón meteorológico y detalles del bolo.
+     - **Copia al portapapeles**: Copia formateada de la ficha de convocatoria.
+     - **Eliminación segura in-modal**: Confirmación inline para eliminar conciertos o ensayos directamente desde el modal sin perder contexto.
