@@ -643,12 +643,12 @@ export default function App() {
  >
  {/* LEFT SIDEBAR */}
  {/* MOBILE TOP BAR */}
- <header className="md:hidden flex flex-col bg-[#121110] border-b border-[#22211F] sticky top-0 z-30 shrink-0 shadow-md">
+ <header className="md:hidden flex flex-col bg-[var(--surface)] sticky top-0 z-30 shrink-0">
  {/* Top Brand & Menu Row */}
  <div className="flex items-center justify-between px-4 pt-3 pb-2">
  <div 
   onClick={() => setShowBandSwitcherModal(true)}
-  className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-all p-1 -ml-1 rounded-xl hover:bg-neutral-900/60"
+  className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-colors p-1 -ml-1 rounded-[var(--r-m)] hover:bg-[var(--sunken)]"
   title="Toca para cambiar de banda"
  >
   <div className="relative shrink-0">
@@ -656,11 +656,11 @@ export default function App() {
     <img 
      src={currentActiveBandLogo} 
      alt="Logo" 
-     className="w-12 h-12 sm:w-14 sm:h-14 object-contain p-1 bg-neutral-950/90 rounded-xl border border-amber-500/50 shadow-md shrink-0 group-hover:border-amber-400"
+     className="w-12 h-12 sm:w-14 sm:h-14 object-contain p-1 bg-[var(--sunken)] rounded-[var(--r-m)] shrink-0"
      referrerPolicy="no-referrer"
     />
    ) : (
-    <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0">
+    <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center font-bold text-xs shrink-0">
      {currentActiveBandName[0]?.toUpperCase() || 'B'}
     </div>
    )}
@@ -669,19 +669,19 @@ export default function App() {
 
   <div className="flex flex-col">
    <div className="flex items-center gap-1.5">
-    <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`} translate="no">
+    <h1 className={`font-bold font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-none truncate max-w-[150px] sm:max-w-[200px] notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : 'text-xs sm:text-sm'}`} translate="no">
      {currentActiveBandName}
     </h1>
-    <ChevronDown className="w-3.5 h-3.5 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
-    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${syncStatus === 'synced' ? 'bg-emerald-400/20' : syncStatus === 'error' ? 'bg-rose-500' : 'bg-zinc-400 animate-pulse'}`} />
+    <ChevronDown className="w-3.5 h-3.5 text-[var(--acc-ink)] group-hover:translate-y-0.5 transition-transform" />
+    <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)] animate-pulse'}`} />
    </div>
    <button
     type="button"
     onClick={(e) => { e.stopPropagation(); setShowUserProfileModal(true); }}
-    className="inline-flex items-center gap-1 px-1.5 py-0.5 mt-0.5 rounded-full text-[8.5px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/30 w-fit cursor-pointer transition-all hover:scale-105"
+    className="inline-flex items-center gap-1 px-1.5 py-0.5 mt-0.5 rounded-[var(--r-pill)] text-[9px] font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] w-fit cursor-pointer transition-colors"
     title="Plan actual. Clic para gestionar suscripción (Upgrade / Downgrade)"
    >
-    <Sparkles className="w-2 h-2 text-amber-400" />
+    <Sparkles className="w-2 h-2" />
     <span>{getPlanDefinition(currentActiveBandPlan).name}</span>
    </button>
   </div>
@@ -690,24 +690,24 @@ export default function App() {
   <button
    type="button"
    onClick={() => setShowOnboardingModal(true)}
-   className="px-2 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20"
+   className="px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:brightness-95"
    title="Guía rápida: ¿Por dónde empezar?"
   >
-   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-   <span className="text-[10px] hidden xs:inline font-mono">Guía</span>
+   <Sparkles className="w-3.5 h-3.5" />
+   <span className="text-[10px] hidden xs:inline">Guía</span>
   </button>
   {!isPromoPlan && (
   <button
    onClick={() => setShowCampaignModal(true)}
-   className={`px-2 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+   className={`px-2 py-1.5 rounded-[var(--r-pill)] text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
      activeCampaign
-       ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-xs'
-       : 'bg-[#1A1918] text-neutral-400 border-[#22211F] hover:text-white'
+       ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+       : 'bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)]'
    }`}
    title="Gestionar Campañas de Booking"
   >
-   <Target className="w-3.5 h-3.5 text-purple-400" />
-   <span className="text-[10px] hidden xs:inline font-mono">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
+   <Target className="w-3.5 h-3.5" />
+   <span className="text-[10px] hidden xs:inline">{activeCampaign ? 'Campaña' : 'Campañas'}</span>
   </button>
   )}
  </div>
@@ -719,7 +719,7 @@ export default function App() {
      Resumen/Calendario navegan directo; Música/Promoción abren un sheet con sus
      sub-módulos; Más abre el drawer completo (Contactos, Negocio, Herramientas,
      Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
- <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[#121110] border-t border-[#22211F] shadow-[0_-6px_20px_rgba(0,0,0,0.35)]">
+ <nav className="md:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[var(--surface)]">
  {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
    let isActive = false;
    if (openGroupSheetId) {
@@ -771,8 +771,8 @@ export default function App() {
        aria-label={slotLabel}
        title={slotLabel}
      >
-       <span className={`flex items-center justify-center w-10 h-10 rounded-xl transition-colors ${
-         isActive ? 'bg-amber-500/20 text-amber-400' : 'text-neutral-400'
+       <span className={`flex items-center justify-center w-10 h-10 rounded-[var(--r-pill)] transition-colors ${
+         isActive ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]' : 'text-[var(--ink-3)]'
        }`}>
          <IconComp className="w-5 h-5" />
        </span>
@@ -792,9 +792,9 @@ export default function App() {
  className="md:hidden fixed inset-x-0 top-0 bottom-16 z-40 bg-black/70"
  onClick={() => setOpenGroupSheetId(null)}
  />
- <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[#121110] border-t border-[#22211F] rounded-t-2xl shadow-2xl">
- <div className="w-9 h-1 rounded-full bg-[#33302a] mx-auto mt-2.5 mb-1" />
- <div className="px-4 pt-1 pb-2 text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+ <div className="md:hidden fixed inset-x-0 bottom-16 z-40 max-h-[60vh] overflow-y-auto bg-[var(--surface)] rounded-t-[var(--r-xl)]">
+ <div className="w-9 h-1 rounded-[var(--r-pill)] bg-[var(--sunken)] mx-auto mt-2.5 mb-1" />
+ <div className="px-4 pt-1 pb-2 text-[12px] font-semibold text-[var(--ink-3)]">
  {t(group.titleKey, group.titleDefault)}
  </div>
  <div className="px-3 pb-4 flex flex-col gap-1">
@@ -828,35 +828,35 @@ export default function App() {
  onClick={() => setIsMobileMenuOpen(false)}
  />
  {/* Drawer panel */}
- <div className="relative w-[280px] max-w-[85vw] bg-[#121110] border-[#22211F] flex flex-col h-full z-10 overflow-y-auto shadow-2xl">
+ <div className="relative w-[280px] max-w-[85vw] bg-[var(--surface)] flex flex-col h-full z-10 overflow-y-auto">
  {/* Drawer Header */}
- <div className="p-4 flex items-center justify-between border-[#22211F]/50 bg-gradient-to-b from-[#1A1918] to-[#121110]">
+ <div className="p-4 flex items-center justify-between">
  <div className="flex items-center gap-2.5">
  {currentActiveBandLogo ? (
  <img 
  src={currentActiveBandLogo} 
  alt="Logo" 
- className="w-14 h-14 object-contain p-1 bg-neutral-950/90 rounded-xl border border-amber-500/50 shadow-md shrink-0"
+ className="w-14 h-14 object-contain p-1 bg-[var(--sunken)] rounded-[var(--r-m)] shrink-0"
  referrerPolicy="no-referrer"
  />
  ) : (
- <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-bold text-sm shrink-0">
+ <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] flex items-center justify-center font-bold text-sm shrink-0">
  {currentActiveBandName[0]?.toUpperCase() || 'B'}
  </div>
  )}
  <div className="flex flex-col">
- <h1 className={`font-bold font-display tracking-wider uppercase text-zinc-100 leading-tight notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : currentActiveBandName.length > 12 ? 'text-sm' : 'text-base'}`} translate="no">
+ <h1 className={`font-bold font-display tracking-wide text-[var(--ink)] leading-tight notranslate ${currentActiveBandName.length > 20 ? 'text-xs' : currentActiveBandName.length > 12 ? 'text-sm' : 'text-base'}`} translate="no">
  {currentActiveBandName}
  </h1>
  <div className="flex items-center gap-1.5 mt-1">
- <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${syncStatus === 'synced' ? 'bg-emerald-400/20' : syncStatus === 'error' ? 'bg-rose-500' : 'bg-zinc-400 animate-pulse'}`} />
- <span className="text-[10px] font-sans text-[#9a9591]">Banda activa</span>
+ <span className={`w-1.5 h-1.5 rounded-[var(--r-pill)] shrink-0 ${syncStatus === 'synced' ? 'bg-[var(--ok)]/30' : syncStatus === 'error' ? 'bg-[var(--alert)]' : 'bg-[var(--ink-3)] animate-pulse'}`} />
+ <span className="text-[10px] font-sans text-[var(--ink-3)]">Banda activa</span>
  </div>
  </div>
  </div>
  <button
  onClick={() => setIsMobileMenuOpen(false)}
- className="p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-[#22211F] cursor-pointer"
+ className="p-1.5 text-[var(--ink-3)] hover:text-[var(--ink)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] cursor-pointer"
  >
  <X className="w-5 h-5" />
  </button>
@@ -944,27 +944,27 @@ export default function App() {
    return (
      <div
        onClick={() => { handleNavigate('planes'); setIsMobileMenuOpen(false); }}
-       className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
+       className="mx-3 my-2 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 transition-colors cursor-pointer group"
        title="Ver uso de créditos IA y planes"
      >
        <div className="flex items-center justify-between gap-1 mb-1.5">
          <div className="flex items-center gap-1.5">
-           <Zap className="w-3 h-3 text-amber-400" />
-           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+           <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
+           <span className="text-[11px] font-semibold text-[var(--ink-2)]">Créditos IA</span>
          </div>
-         <span className="text-[10px] font-mono font-bold text-amber-300">{estimatedUsed} / {totalCredits}</span>
+         <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">{estimatedUsed} / {totalCredits}</span>
        </div>
-       <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
+       <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
          <div
-           className={`h-full rounded-full transition-all duration-500 ${
-             pct > 85 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : 'bg-gradient-to-r from-amber-400 to-amber-500'
+           className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
+             pct > 85 ? 'bg-[var(--alert)]' : 'bg-[var(--acc)]'
            }`}
            style={{ width: `${pct}%` }}
          />
        </div>
-       <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+       <div className="flex items-center justify-between text-[10px] text-[var(--ink-3)] mt-1">
          <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
-         <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
+         <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
        </div>
      </div>
    );
@@ -977,24 +977,24 @@ export default function App() {
  <AiSupportWidget variant="sidebar" />
 
  {/* Drawer User Footer */}
- <div className="p-4 mt-auto border-[#22211F]/50">
+ <div className="p-4 mt-auto">
  {currentUser && (
-  <div className="flex flex-col gap-2 mb-4 p-2.5 rounded-xl bg-[#1A1918] border border-[#22211F]">
+  <div className="flex flex-col gap-2 mb-4 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
    <div 
     onClick={() => { setShowUserProfileModal(true); setIsMobileMenuOpen(false); }}
     className="flex items-center gap-3 w-full cursor-pointer text-left group"
    >
     <div 
-     className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[#121110] text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
-     style={{ backgroundColor: currentUser.avatarColor || '#eab308' }}
+     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-white text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
+     style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
     >
      {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
     </div>
     <div className="flex flex-col min-w-0 flex-1">
-     <span className="text-[12px] font-bold font-sans text-zinc-100 truncate">
+     <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
       {currentUser.name}
      </span>
-     <span className="text-[10px] font-mono text-[#9a9591] truncate" title={currentUser.email || currentUser.username}>
+     <span className="text-[10px] text-[var(--ink-3)] truncate" title={currentUser.email || currentUser.username}>
       {currentUser.email || currentUser.username}
      </span>
     </div>
@@ -1012,14 +1012,14 @@ export default function App() {
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
- <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
+ <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-3)] uppercase leading-none">
  BANDMANAGER<span className="text-[#f2ca50]">.io</span>
  </span>
  </div>
  </div>
  <button
  onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
- className="p-1.5 text-neutral-500 hover:text-rose-300 rounded-lg hover:bg-[#22211F] transition-colors cursor-pointer"
+ className="p-1.5 text-[var(--ink-3)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
  title="Cerrar Sesión"
  >
  <LogOut className="w-4 h-4" />
@@ -1030,12 +1030,12 @@ export default function App() {
  </div>
  )}
 
- <aside className="hidden md:flex w-[240px] shrink-0 bg-[#121110] border-[#22211F] flex-col h-screen sticky top-0 overflow-y-auto">
+ <aside className="hidden md:flex w-[240px] shrink-0 bg-[var(--surface)] flex-col h-screen sticky top-0 overflow-y-auto">
  
  {/* Brand Header (Clickable Netflix Style Switcher) */}
  <div 
   onClick={() => setShowBandSwitcherModal(true)}
-  className="p-3.5 flex flex-col gap-2 items-center text-center border-b border-[#22211F]/60 bg-gradient-to-b from-[#1c1a18] to-[#121110] cursor-pointer group transition-all duration-300 hover:bg-[#181716] relative"
+  className="p-3.5 flex flex-col gap-2 items-center text-center cursor-pointer group transition-colors duration-300 hover:bg-[var(--sunken)] relative"
   title="Haz clic para cambiar de banda"
  >
   <div className="relative group/logo">
@@ -1043,13 +1043,13 @@ export default function App() {
   <img 
   src={currentActiveBandLogo} 
   alt="Logo" 
-  className="w-24 h-24 xl:w-28 xl:h-28 object-contain p-2 bg-neutral-950/80 rounded-2xl shadow-lg shadow-black/60 border border-[#333130] group-hover:border-amber-400/90 group-hover:scale-105 transition-all duration-300 shrink-0"
+  className="w-24 h-24 xl:w-28 xl:h-28 object-contain p-2 bg-[var(--sunken)] rounded-[var(--r-l)] group-hover:scale-105 transition-transform duration-300 shrink-0"
   referrerPolicy="no-referrer"
   />
   ) : (
-  <div className="w-24 h-24 xl:w-28 xl:h-28 rounded-2xl shadow-lg shadow-black/50 border border-[#333130] group-hover:border-amber-400 bg-[#1A1918] flex flex-col items-center justify-center text-amber-400 gap-1 p-2 shrink-0 group-hover:scale-105 transition-all duration-300">
+  <div className="w-24 h-24 xl:w-28 xl:h-28 rounded-[var(--r-l)] bg-[var(--sunken)] flex flex-col items-center justify-center text-[var(--acc-ink)] gap-1 p-2 shrink-0 group-hover:scale-105 transition-transform duration-300">
   <Guitar className="w-6 h-6 opacity-80 group-hover:scale-110 transition-transform" />
-  <span className="text-[9px] font-bold font-mono text-zinc-300 uppercase tracking-widest text-center">
+  <span className="text-[9px] font-bold text-[var(--ink-2)] text-center">
   {currentActiveBandName}
   </span>
   </div>
@@ -1058,7 +1058,7 @@ export default function App() {
 
   <div className="flex flex-col items-center w-full px-1 gap-1">
   <div className="flex items-center justify-center gap-1 w-full">
-   <h1 className={`font-black font-display tracking-wider uppercase text-zinc-100 group-hover:text-amber-400 transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
+   <h1 className={`font-black font-display tracking-wide text-[var(--ink)] group-hover:text-[var(--acc-ink)] transition-colors leading-tight text-center break-words line-clamp-2 max-w-full notranslate ${
      currentActiveBandName.length > 22 
        ? 'text-xs' 
        : currentActiveBandName.length > 14 
@@ -1069,10 +1069,10 @@ export default function App() {
    }`} translate="no">
    {currentActiveBandName}
    </h1>
-   <ChevronDown className="w-4 h-4 text-amber-400 group-hover:translate-y-0.5 transition-transform shrink-0" />
+   <ChevronDown className="w-4 h-4 text-[var(--acc-ink)] group-hover:translate-y-0.5 transition-transform shrink-0" />
   </div>
-  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-extrabold uppercase tracking-wider bg-amber-400/15 text-amber-300 border border-amber-400/30 shadow-sm">
-   <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] text-[10px] font-bold bg-[var(--acc-soft)] text-[var(--acc-ink)]">
+   <Sparkles className="w-2.5 h-2.5" />
    {getPlanDefinition(currentActiveBandPlan).name}
   </span>
   </div>
@@ -1082,10 +1082,10 @@ export default function App() {
   <button
    type="button"
    onClick={() => setShowOnboardingModal(true)}
-   className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl text-[11px] font-mono font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all cursor-pointer shadow-xs active:scale-95"
+   className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-[var(--r-pill)] text-[11px] font-bold bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] transition-colors cursor-pointer active:scale-95"
    title="Guía interactiva para nuevos músicos"
   >
-   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+   <Sparkles className="w-3.5 h-3.5" />
    <span>¿Por dónde empezar?</span>
   </button>
  </div>
@@ -1160,12 +1160,12 @@ export default function App() {
 
  {/* Campañas de Booking (oculto en plan Promo, no tiene acceso a Booking) */}
  {!isPromoPlan && (
-   <div className="px-3 pt-3 pb-2 border-t border-[#22211F]/60 space-y-1.5">
+   <div className="px-3 pt-3 pb-2 space-y-1.5">
      <div className="flex items-center justify-between px-1">
-       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">Campañas</p>
+       <p className="text-[11px] font-semibold text-[var(--ink-3)]">Campañas</p>
        <button
          onClick={() => setShowCampaignModal(true)}
-         className="text-[10px] font-mono text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer"
+         className="text-[11px] font-semibold text-[var(--acc-ink)] hover:brightness-90 flex items-center gap-1 cursor-pointer"
          title="Gestionar Campañas de Booking"
        >
          <Target className="w-3 h-3" />
@@ -1176,28 +1176,28 @@ export default function App() {
      {/* Quick Campaign Switcher / Status */}
      <button
        onClick={() => setShowCampaignModal(true)}
-       className={`w-full flex items-center justify-between p-2 rounded-xl border text-left transition-all cursor-pointer group ${
+       className={`w-full flex items-center justify-between p-2 rounded-[var(--r-m)] text-left transition-colors cursor-pointer group ${
          activeCampaign
-           ? 'bg-purple-500/15 border-purple-500/40 text-purple-300 shadow-xs'
-           : 'bg-[#181716] border-[#22211F] hover:border-neutral-700 text-neutral-400 hover:text-neutral-200'
+           ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+           : 'bg-[var(--sunken)] hover:brightness-95 text-[var(--ink-3)] hover:text-[var(--ink-2)]'
        }`}
        title="Configurar y activar campañas de booking con fechas objetivo"
      >
        <div className="flex items-center gap-2 min-w-0">
-         <div className={`p-1 rounded-lg ${activeCampaign ? 'bg-purple-500/30 text-purple-300' : 'bg-neutral-800 text-neutral-400'}`}>
+         <div className={`p-1 rounded-[var(--r-s)] ${activeCampaign ? 'bg-[var(--acc)]/25 text-[var(--acc-ink)]' : 'bg-[var(--surface)] text-[var(--ink-3)]'}`}>
            <Target className="w-3.5 h-3.5" />
          </div>
          <div className="flex flex-col min-w-0">
            <span className="text-[11px] font-bold truncate leading-tight">
              {activeCampaign ? activeCampaign.name : 'Modo Campaña'}
            </span>
-           <span className="text-[9px] font-mono text-neutral-500 truncate">
+           <span className="text-[10px] text-[var(--ink-3)] truncate">
              {activeCampaign ? `${activeCampaign.targetDates?.length || 0} fechas en calendario` : 'Sin campaña activa'}
            </span>
          </div>
        </div>
-       <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 shrink-0">
-         {activeCampaign ? 'ACTIVA' : 'ELEGIR'}
+       <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--acc-ink)] shrink-0">
+         {activeCampaign ? 'Activa' : 'Elegir'}
        </span>
      </button>
    </div>
@@ -1214,27 +1214,27 @@ export default function App() {
    return (
      <div 
        onClick={() => handleNavigate('planes')}
-       className="mx-3 my-2 p-2.5 rounded-xl bg-gradient-to-b from-[#181716] to-[#121110] border border-amber-500/25 hover:border-amber-500/50 transition-all cursor-pointer group shadow-sm"
+       className="mx-3 my-2 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-95 transition-colors cursor-pointer group"
        title="Ver consumo de créditos IA y planes"
      >
        <div className="flex items-center justify-between gap-1 mb-1.5">
          <div className="flex items-center gap-1.5">
-           <Zap className="w-3 h-3 text-amber-400 animate-pulse" />
-           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-300">Créditos IA</span>
+           <Zap className="w-3 h-3 text-[var(--acc-ink)]" />
+           <span className="text-[11px] font-semibold text-[var(--ink-2)]">Créditos IA</span>
          </div>
-         <span className="text-[10px] font-mono font-bold text-amber-300">{estimatedUsed} / {totalCredits}</span>
+         <span className="text-[10px] font-semibold tabular-nums text-[var(--ink-2)]">{estimatedUsed} / {totalCredits}</span>
        </div>
-       <div className="w-full h-1.5 rounded-full bg-neutral-900 overflow-hidden border border-neutral-800">
+       <div className="w-full h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)] overflow-hidden">
          <div 
-           className={`h-full rounded-full transition-all duration-500 ${
-             pct > 85 ? 'bg-gradient-to-r from-rose-500 to-rose-400' : 'bg-gradient-to-r from-amber-400 to-amber-500'
+           className={`h-full rounded-[var(--r-pill)] transition-all duration-500 ${
+             pct > 85 ? 'bg-[var(--alert)]' : 'bg-[var(--acc)]'
            }`} 
            style={{ width: `${pct}%` }} 
          />
        </div>
-       <div className="flex items-center justify-between text-[9px] font-mono text-neutral-400 mt-1">
+       <div className="flex items-center justify-between text-[10px] text-[var(--ink-3)] mt-1">
          <span className="truncate max-w-[100px]">Plan {pDef.name}</span>
-         <span className="text-amber-400 group-hover:text-amber-300 font-bold transition-colors">Planes →</span>
+         <span className="text-[var(--acc-ink)] font-semibold transition-colors">Planes →</span>
        </div>
      </div>
    );
@@ -1243,24 +1243,24 @@ export default function App() {
  <AiSupportWidget variant="sidebar" />
 
  {/* Bottom User Profile */}
- <div className="p-4 mt-auto border-[#22211F]/50">
+ <div className="p-4 mt-auto">
  {currentUser && (
-  <div className="flex flex-col gap-2 mb-4 p-2.5 rounded-xl bg-[#1A1918] border border-[#22211F]">
+  <div className="flex flex-col gap-2 mb-4 p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
    <div 
     onClick={() => setShowUserProfileModal(true)}
     className="flex items-center gap-3 w-full cursor-pointer text-left group"
    >
     <div 
-     className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[#121110] text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
-     style={{ backgroundColor: currentUser.avatarColor || '#eab308' }}
+     className="w-8 h-8 rounded-[var(--r-s)] flex items-center justify-center font-bold text-white text-xs font-sans shrink-0 uppercase transition-transform group-hover:scale-105"
+     style={{ backgroundColor: currentUser.avatarColor || 'var(--acc)' }}
     >
      {currentUser.name ? currentUser.name.slice(0, 2) : 'US'}
     </div>
     <div className="flex flex-col min-w-0 flex-1">
-     <span className="text-[12px] font-bold font-sans text-zinc-100 truncate">
+     <span className="text-[12px] font-bold font-sans text-[var(--ink)] truncate">
       {currentUser.name}
      </span>
-     <span className="text-[10px] font-mono text-[#9a9591] truncate" title={currentUser.email || currentUser.username}>
+     <span className="text-[10px] text-[var(--ink-3)] truncate" title={currentUser.email || currentUser.username}>
       {currentUser.email || currentUser.username}
      </span>
     </div>
@@ -1279,7 +1279,7 @@ export default function App() {
  referrerPolicy="no-referrer"
  />
  <div className="flex flex-col text-left">
- <span className="text-[9px] font-bold font-display tracking-wider text-neutral-400 uppercase leading-none">
+ <span className="text-[9px] font-bold font-display tracking-wider text-[var(--ink-3)] uppercase leading-none">
  BANDMANAGER<span className="text-[#f2ca50]">.io</span>
  </span>
  </div>
@@ -1287,7 +1287,7 @@ export default function App() {
  <div className="flex items-center gap-1.5">
   <button
   onClick={handleLogout}
-  className="p-1.5 text-neutral-500 hover:text-rose-300 rounded-lg hover:bg-[#22211F] transition-colors cursor-pointer"
+  className="p-1.5 text-[var(--ink-3)] hover:text-[var(--alert)] rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors cursor-pointer"
   title="Cerrar Sesión"
   >
   <LogOut className="w-4 h-4" />

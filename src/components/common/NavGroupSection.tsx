@@ -64,20 +64,20 @@ export const NavGroupSection: React.FC<NavGroupSectionProps> = ({
       <button
         type="button"
         onClick={handleHeaderClick}
-        className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-          isGroupActive ? 'text-amber-400 font-extrabold' : 'text-neutral-500 hover:text-neutral-300'
+        className={`w-full flex items-center justify-between ${headerPadding} py-1.5 text-[11px] font-semibold transition-colors cursor-pointer ${
+          isGroupActive ? 'text-[var(--acc-ink)]' : 'text-[var(--ink-3)] hover:text-[var(--ink-2)]'
         }`}
         aria-expanded={isOpen}
       >
         <span className="flex items-center gap-1.5">
-          {isGroupActive && <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_6px_#f59e0b]" />}
+          {isGroupActive && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)]" />}
           <span>{t(group.titleKey, group.titleDefault)}</span>
         </span>
         <span
           role="button"
           tabIndex={0}
           onClick={handleChevronClick}
-          className="p-1 -mr-1 rounded hover:bg-neutral-800/60 transition-colors"
+          className="p-1 -mr-1 rounded-[var(--r-s)] hover:bg-[var(--sunken)] transition-colors"
           title={isOpen ? 'Plegar sección' : 'Desplegar sección'}
         >
           {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
