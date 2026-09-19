@@ -15,7 +15,9 @@
     "test:e2e": "playwright test",
     "lint:eslint": "eslint .",
     "verify:docs": "node scripts/verify-docs-refs.cjs",
-    "prepare": "husky || exit 0"
+    "prepare": "husky || exit 0",
+    "test:visual": "playwright test --project=visual",
+    "test:visual:update": "playwright test --project=visual --update-snapshots"
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",
