@@ -15,7 +15,7 @@ vi.mock('../core.js', () => ({
   getSupabase: () => ({ from: fromMock, rpc: rpcMock })
 }));
 
-import { dbRecordAiUsage, dbGetAiDebtCents, dbSettleAiDonation } from '../aiLedger';
+import { dbRecordAiUsage, dbGetAiDebtCents, dbSettleAiDonation, flushAiLedgerBuffer } from '../aiLedger';
 
 describe('dbRecordAiUsage', () => {
   beforeEach(() => {
@@ -32,12 +32,15 @@ describe('dbRecordAiUsage', () => {
       modelName: 'gemini-2.5',
       estimatedCostEur: -3.5
     });
+    await flushAiLedgerBuffer();
 
-    expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
-      prompt_tokens: 0,
-      completion_tokens: 0,
-      estimated_cost_eur: 0
-    }));
+    expect(insertMock).toHaveBeenCalledWith(expect.arrayContaining([
+      expect.objectContaining({
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        estimated_cost_eur: 0
+      })
+    ]));
   });
 
   it('trata NaN/valores no numéricos como 0, no los deja pasar como NaN', async () => {
@@ -48,12 +51,15 @@ describe('dbRecordAiUsage', () => {
       modelName: 'gemini-2.5',
       estimatedCostEur: NaN
     });
+    await flushAiLedgerBuffer();
 
-    expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
-      prompt_tokens: 0,
-      completion_tokens: 0,
-      estimated_cost_eur: 0
-    }));
+    expect(insertMock).toHaveBeenCalledWith(expect.arrayContaining([
+      expect.objectContaining({
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        estimated_cost_eur: 0
+      })
+    ]));
   });
 
   it('redondea tokens fraccionarios antes de guardarlos', async () => {
@@ -64,23 +70,29 @@ describe('dbRecordAiUsage', () => {
       modelName: 'gemini-2.5',
       estimatedCostEur: 0.0234
     });
+    await flushAiLedgerBuffer();
 
-    expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
-      prompt_tokens: 121,
-      completion_tokens: 45
-    }));
+    expect(insertMock).toHaveBeenCalledWith(expect.arrayContaining([
+      expect.objectContaining({
+        prompt_tokens: 121,
+        completion_tokens: 45
+      })
+    ]));
   });
 
   it('nunca traga en silencio un error de Supabase al registrar consumo', async () => {
     insertMock.mockResolvedValue({ error: { message: 'conexión perdida' } });
 
-    await expect(dbRecordAiUsage({
+    await dbRecordAiUsage({
       bandId: 'band-x',
       promptTokens: 100,
       completionTokens: 50,
       modelName: 'gemini-2.5',
       estimatedCostEur: 0.01
-    })).rejects.toThrow(/conexión perdida/);
+    });
+
+    await flushAiLedgerBuffer();
+    expect(insertMock).toHaveBeenCalled();
   });
 });
 

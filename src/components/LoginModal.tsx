@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { User as UserType } from '../types';
-import { googleSignIn } from '../utils/gmail';
+import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { BandNameStylerHelper } from './common/BandNameStylerHelper';
 import { ModalPortal } from './common/ModalPortal';
@@ -14,9 +14,48 @@ interface LoginModalProps {
 
 type ViewState = 'login' | 'register' | 'plans' | 'activate' | 'reset-password';
 
+// El poster tiene que ser un fotograma real del propio vídeo YA recortado (mismo encuadre,
+// misma proporción 720x1024): el JPEG de marca genérico es un render cuadrado sin recortar,
+// así que al arrancar el vídeo la imagen "saltaba" a otro encuadre.
+const LOGIN_POSTER = '/login-animation-poster.jpg';
+
+// Network Information API: no estandarizada en todos los navegadores (Safari/Firefox no la
+// tienen), por eso el chequeo es "opt-out": si no existe o no se puede leer, se asume conexión
+// buena y se intenta el vídeo igualmente - degradar solo cuando hay evidencia real de que la
+// red va mal (2G/slow-2g o modo Ahorro de Datos activado).
+function tieneConexionMala(): boolean {
+  try {
+    const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (!conn) return false;
+    if (conn.saveData) return true;
+    return conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
+  } catch {
+    return false;
+  }
+}
+
 export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   const [view, setView] = useState<ViewState>('login');
   const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
+
+  // El atributo JSX `muted` en un <video> no basta en algunos navegadores: si el motor evalúa
+  // el autoplay antes de que React termine de aplicar props al nodo, lo bloquea por política de
+  // autoplay con sonido. Fijar `muted` a pelo en el elemento y forzar play() cubre esos casos.
+  const loginVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoLoadFailed, setVideoLoadFailed] = useState(false);
+  const [skipVideo] = useState(tieneConexionMala);
+  useEffect(() => {
+    const el = loginVideoRef.current;
+    if (!el) return;
+    el.muted = true;
+    el.play().catch(() => {});
+  }, []);
+  const handleReplayLoginVideo = () => {
+    const el = loginVideoRef.current;
+    if (!el) return;
+    el.currentTime = 0;
+    el.play().catch(() => {});
+  };
 
   // --- Login State ---
   const [username, setUsername] = useState('');
@@ -217,9 +256,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       setResetMaskedEmail(data.emailMasked);
-      if (data.code) {
-        setResetCode(data.code);
-      }
       setResetSuccessMsg(data.message || 'Código de recuperación generado.');
       setResetStep(2);
     } catch (err: any) {
@@ -348,17 +384,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     try {
       setLoading(true);
       setError(null);
-      const res = await googleSignIn();
-      if (!res) {
-        // User closed or cancelled Google popup window gracefully
-        return;
-      }
-      if (!res.user) {
-        throw new Error('No se pudo obtener la información de la cuenta de Google.');
-      }
+      const googleUser = await signInWithGoogleIdentity();
+      if (!googleUser) return; // User closed or cancelled popup
 
-      const email = res.user.email || '';
-      const displayName = res.user.displayName || email.split('@')[0] || 'Miembro Banda';
+      const email = googleUser.email;
+      const displayName = (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : (googleUser.name || email.split('@')[0]);
 
       // Call backend API /api/auth/google
       try {
@@ -367,9 +397,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,
-            name: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : displayName,
-            uid: res.user.uid,
-            accessToken: res.accessToken,
+            name: displayName,
+            uid: googleUser.sub,
+            accessToken: googleUser.accessToken,
             bandName: (view === 'register' && regBandName.trim()) ? regBandName.trim() : undefined,
             leaderName: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
           })
@@ -388,37 +418,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
       // Fallback local login if backend is unreachable
       const fallbackUser: UserType = {
-        id: res.user.uid || `user-${Date.now()}`,
-        username: email || 'usuario_google',
+        id: googleUser.sub || `user-${Date.now()}`,
+        username: email,
         name: displayName,
-        bandName: 'Bakandeya',
+        bandName: (view === 'register' && regBandName.trim()) || 'Mi Banda',
         email: email,
         role: 'leader',
-        plan: 'profesional',
+        plan: 'promo',
         createdAt: new Date().toISOString()
       };
-      onLoginSuccess(fallbackUser, res.accessToken);
+      onLoginSuccess(fallbackUser, googleUser.accessToken || '');
     } catch (err: any) {
-      const errCode = err?.code || '';
-      const errMsg = String(err?.message || '').toLowerCase();
-      if (
-        errCode === 'auth/popup-closed-by-user' ||
-        errCode === 'auth/cancelled-popup-request' ||
-        errMsg.includes('popup-closed-by-user') ||
-        errMsg.includes('closed-by-user')
-      ) {
-        // Ignore user cancellation gracefully
-        return;
-      }
-      if (
-        errMsg.includes('access_denied') ||
-        errMsg.includes('blocked') ||
-        errMsg.includes('verification') ||
-        errCode.includes('access-denied')
-      ) {
-        setError('Google ha bloqueado el acceso OAuth porque el proyecto de Firebase está en modo Pruebas. Puedes iniciar sesión o registrarte con tu correo y contraseña directamente abajo sin pasar por Google.');
-        return;
-      }
       console.error("Error al iniciar sesión con Google:", err);
       setError(err.message || 'Error al conectar con Google OAuth.');
     } finally {
@@ -551,16 +561,30 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-48 bg-[#f2ca50]/12 rounded-full blur-3xl pointer-events-none animate-pulse" />
               
               <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
-                <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)]">
-                  <img 
-                    src="/bandmanageriodefinitiva.jpeg" 
-                    alt="BandManager.io - Plataforma Integral para Bandas"
-                    className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg';
-                    }}
-                    referrerPolicy="no-referrer"
-                  />
+                <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50] group-hover:shadow-[0_20px_50px_rgba(242,202,80,0.45)] overflow-hidden">
+                  {(videoLoadFailed || skipVideo) ? (
+                    <img
+                      src={LOGIN_POSTER}
+                      alt="BandManager.io - Plataforma Integral para Bandas"
+                      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem]"
+                    />
+                  ) : (
+                    <video
+                      ref={loginVideoRef}
+                      autoPlay
+                      muted
+                      playsInline
+                      preload="auto"
+                      poster={LOGIN_POSTER}
+                      aria-label="BandManager.io - Plataforma Integral para Bandas"
+                      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] cursor-pointer"
+                      onError={() => setVideoLoadFailed(true)}
+                      onMouseEnter={handleReplayLoginVideo}
+                    >
+                      <source src="/login-animation.mp4" type="video/mp4" />
+                      <source src="/login-animation.webm" type="video/webm" />
+                    </video>
+                  )}
                 </div>
               </div>
             </div>
@@ -727,11 +751,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-400" />
                 <div className="space-y-1">
                   <p>{resetSuccessMsg}</p>
-                  {resetCode && (
-                    <p className="font-mono bg-emerald-950/60 text-emerald-300 px-2 py-1 rounded text-center font-bold tracking-widest border border-emerald-500/20 mt-1">
-                      Código de verificación: {resetCode}
-                    </p>
-                  )}
                 </div>
               </div>
             )}
@@ -751,7 +770,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                 </div>
 
                 <p className="text-[11px] text-neutral-400 px-1 leading-tight">
-                  ⚡ Se generará un código de verificación de 6 dígitos, que aparecerá aquí mismo en pantalla para restablecer tu contraseña.
+                  ⚡ Te enviaremos un código de verificación de 6 dígitos por correo electrónico para restablecer tu contraseña.
                 </p>
 
                 <button
@@ -784,17 +803,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                       required
                     />
                   </div>
-                  {resetCode && (
-                    <div className="flex justify-end pt-0.5">
-                      <button
-                        type="button"
-                        onClick={() => setError(null)}
-                        className="text-[11px] text-[#f2ca50] hover:underline font-mono flex items-center gap-1 cursor-pointer"
-                      >
-                        ✓ Código cargado: {resetCode}
-                      </button>
-                    </div>
-                  )}
                 </div>
 
                 <div className="space-y-1">

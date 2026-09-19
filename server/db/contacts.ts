@@ -3,14 +3,16 @@ import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetBandContacts(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("band_contacts")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("nombre_banda", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (band_contacts): ${error.message}`);
-  return (data || []).map(b => ({
+  const validated = (data || []).filter(b => cleanBandId(b.band_id) === cleanId);
+  return validated.map(b => ({
     ...b,
     dna_expresion: b.dna_expresion || {}
   }));

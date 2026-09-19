@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Guitar, Check, Plus, Sparkles, X, Shield, ArrowRight, Loader2, Camera, Upload, Trash2, Crown, Mail, ArrowUpRight, Star, Search, ArrowLeft, ArrowRight as ArrowRightIcon, GripVertical, Music, MapPin, Zap, User as UserIcon, ArrowUpDown, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
+import { Guitar, Check, Plus, Sparkles, X, Shield, ArrowRight, Loader2, Camera, Upload, Trash2, Crown, Mail, ArrowUpRight, Star, Search, ArrowLeft, ArrowRight as ArrowRightIcon, GripVertical, Music, MapPin, Zap, User as UserIcon, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Settings, Users } from 'lucide-react';
 import { User } from '../types';
 import { cleanBandId, isSameBandId } from '../utils/bandUtils';
 import { uploadFileToServer } from '../utils/audioStorage';
@@ -22,6 +22,7 @@ interface BandSwitcherModalProps {
   onSwitchBand: (bandId: string) => Promise<any>;
   onSetMainBand?: (bandId: string) => Promise<any>;
   onOpenRegisterBand?: () => void;
+  onOpenBandManagement?: (bandId?: string) => void;
   epkConfig?: any;
   onUpdateEpkConfig?: (config: any) => Promise<any> | void;
   onRefreshData?: () => void;
@@ -35,6 +36,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
   onSwitchBand,
   onSetMainBand,
   onOpenRegisterBand,
+  onOpenBandManagement,
   epkConfig,
   onUpdateEpkConfig,
   onRefreshData,
@@ -599,20 +601,41 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                       </div>
                     </div>
 
-                    {/* Top Right: Delete Button (Trash) */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        handleRequestLeaveBand(band.band_id, band.bandName);
-                      }}
-                      disabled={!!leavingBandId}
-                      className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-400 bg-black/60 hover:bg-rose-950/40 border border-neutral-700/80 hover:border-rose-500/50 transition-all cursor-pointer z-30"
-                      title="Eliminar esta banda de mi usuario"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {/* Top Right: Manage Team (Gear) + Delete Button (Trash) */}
+                    <div className="flex items-center gap-1 z-30">
+                      {onOpenBandManagement && (
+                        <button
+                          type="button"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            if (!isActive && onSwitchBand) {
+                              await onSwitchBand(band.band_id);
+                            }
+                            onClose();
+                            onOpenBandManagement(band.band_id);
+                          }}
+                          className="p-1.5 rounded-lg text-neutral-400 hover:text-amber-300 bg-black/60 hover:bg-neutral-800 border border-neutral-700/80 hover:border-amber-500/60 transition-all cursor-pointer shadow-xs"
+                          title="Gestionar músicos e integrantes"
+                        >
+                          <Settings className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleRequestLeaveBand(band.band_id, band.bandName);
+                        }}
+                        disabled={!!leavingBandId}
+                        className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-400 bg-black/60 hover:bg-rose-950/40 border border-neutral-700/80 hover:border-rose-500/50 transition-all cursor-pointer"
+                        title="Eliminar esta banda de mi usuario"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Central Logo Avatar (Display only - no file picker) */}

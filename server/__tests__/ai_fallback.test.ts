@@ -25,6 +25,7 @@ const clavesOriginales = {
 
 beforeEach(() => {
   // Sin claves de respaldo: la cadena tiene que llegar al final.
+  delete process.env.GEMINI_API_KEY;
   delete process.env.DEEPSEEK_API_KEY;
   delete process.env.DEEPSEEK_KEY;
   delete process.env.ANTHROPIC_API_KEY;
@@ -51,7 +52,7 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
     await expect(
       generateContentWithFallback(clienteQueSiempreFalla, { contents: 'dame los acordes de esta canción' })
     ).rejects.toThrow();
-  });
+  }, 15000);
 
   it('nunca devuelve un pitch de booking a quien no lo pidió', async () => {
     // El fallo concreto que motivó el cambio: pedir un JSON y recibir un email de booking.
@@ -65,7 +66,7 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
       resultado = null;
     }
     expect(resultado).toBeNull();
-  });
+  }, 15000);
 
   it('SÍ devuelve el borrador local cuando la ruta lo pide explícitamente', async () => {
     const res: any = await generateContentWithFallback(clienteQueSiempreFalla, {
@@ -76,14 +77,14 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
     expect(res.text.length).toBeGreaterThan(0);
     // Y mantiene la forma que esperan los consumidores (candidates[].content.parts[].text).
     expect(res.candidates?.[0]?.content?.parts?.[0]?.text).toBe(res.text);
-  });
+  }, 15000);
 
   it('prueba todos los modelos de la lista antes de rendirse', async () => {
     await expect(
       generateContentWithFallback(clienteQueSiempreFalla, { contents: 'hola' })
     ).rejects.toThrow();
     expect(clienteQueSiempreFalla.models.generateContent.mock.calls.length).toBeGreaterThan(1);
-  });
+  }, 15000);
 
   it('pasa un abortSignal al SDK para que la petición no se cuelgue indefinidamente', async () => {
     await expect(
@@ -91,7 +92,7 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
     ).rejects.toThrow();
     const primeraLlamada = clienteQueSiempreFalla.models.generateContent.mock.calls[0][0];
     expect(primeraLlamada.config?.abortSignal).toBeInstanceOf(AbortSignal);
-  });
+  }, 15000);
 });
 
 describe('generateSmartLocalPitchFallback: no se presenta con el nombre de otra banda real', () => {

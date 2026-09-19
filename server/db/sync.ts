@@ -45,31 +45,40 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
 
   await ensureRegisteredBandExists(cleanId, user?.bandName || user?.band_name);
 
-  // Determine all bands relevant to this user (for multi-band calendar view)
+  // Determine all bands relevant to this user (strictly authorized bands only)
   const userBandIds = new Set<string>();
-  userBandIds.add(cleanId);
+  if (cleanId && cleanId !== '__sin_banda__') {
+    userBandIds.add(cleanId);
+  }
   if (user) {
     if (user.band_id) userBandIds.add(cleanBandId(user.band_id));
     if (user.main_band_id) userBandIds.add(cleanBandId(user.main_band_id));
     if (Array.isArray(user.allowedBandIds)) {
-      user.allowedBandIds.forEach((b: string) => userBandIds.add(cleanBandId(b)));
+      user.allowedBandIds.forEach((b: string) => {
+        const cb = cleanBandId(b);
+        if (cb && cb !== '__sin_banda__') userBandIds.add(cb);
+      });
     }
   }
 
-  // Also query userBands relations from Supabase for this user
+  // Also query userBands relations from Supabase for this specific user ID
   if (user?.id) {
     try {
       const sb = getSupabase();
       const { data: uBands } = await sb.from("user_bands").select("band_id").eq("user_id", user.id);
       if (uBands && Array.isArray(uBands)) {
         uBands.forEach((ub: any) => {
-          if (ub.band_id) userBandIds.add(cleanBandId(ub.band_id));
+          if (ub.band_id) {
+            const cb = cleanBandId(ub.band_id);
+            if (cb && cb !== '__sin_banda__') userBandIds.add(cb);
+          }
         });
       }
     } catch (_) {}
   }
 
   const allRelevantBandIds = Array.from(userBandIds);
+  const eventsBandParam = allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId;
 
   const [
     leads,
@@ -93,8 +102,8 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     categoryTemplates
   ] = await Promise.all([
     dbGetLeads(cleanId).catch(() => []),
-    dbGetRehearsals(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
-    dbGetConcerts(allRelevantBandIds.length > 1 ? allRelevantBandIds : cleanId).catch(() => []),
+    dbGetRehearsals(eventsBandParam).catch(() => []),
+    dbGetConcerts(eventsBandParam).catch(() => []),
     dbGetSongs(cleanId).catch(() => []),
     dbGetSetlists(cleanId).catch(() => []),
     dbGetEpkConfig(cleanId).catch(() => null),
@@ -113,19 +122,45 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     dbGetCategoryTemplates(cleanId).catch(() => ({}))
   ]);
 
+  // Strict tenant scoping and validation layer
+  const activeBandSet = new Set([cleanId, cleanId.startsWith('band-') ? cleanId.replace(/^band-/, '') : `band-${cleanId}`]);
+  const permittedBandsSet = new Set(allRelevantBandIds.flatMap(id => [id, id.startsWith('band-') ? id.replace(/^band-/, '') : `band-${id}`]));
+
+  // Calendar events: visible for all bands the user is permitted to see
+  const validatedConcerts = (concerts || []).filter((c: any) => c.band_id && permittedBandsSet.has(cleanBandId(c.band_id)));
+  const validatedRehearsals = (rehearsals || []).filter((r: any) => r.band_id && permittedBandsSet.has(cleanBandId(r.band_id)));
+
+  // All other modules: strictly scoped to the active band
+  const validatedLeads = (leads || []).filter((l: any) => l.band_id && activeBandSet.has(cleanBandId(l.band_id)));
+  const validatedSongs = (songs || []).filter((s: any) => s.band_id && activeBandSet.has(cleanBandId(s.band_id)));
+  const validatedSetlists = (setlists || []).filter((s: any) => s.band_id && activeBandSet.has(cleanBandId(s.band_id)));
+  const validatedPosts = (posts || []).filter((p: any) => p.band_id && activeBandSet.has(cleanBandId(p.band_id)));
+  const validatedPayments = (payments || []).filter((p: any) => p.band_id && activeBandSet.has(cleanBandId(p.band_id)));
+  const validatedTours = (tours || []).filter((t: any) => t.band_id && activeBandSet.has(cleanBandId(t.band_id)));
+  const validatedFans = (fans || []).filter((f: any) => f.band_id && activeBandSet.has(cleanBandId(f.band_id)));
+  const validatedBands = (bands || []).filter((b: any) => b.band_id && activeBandSet.has(cleanBandId(b.band_id)));
+  const validatedCampaigns = (campaigns || []).filter((c: any) => c.band_id && activeBandSet.has(cleanBandId(c.band_id)));
+
+  // Strict tenant scoping: never leak other bands' registered info to unauthorized users
+  const filteredRegisteredBands = (registeredBands || []).filter((b: any) => {
+    const rawBandId = b.band_id ? b.band_id : (b.id ?? '');
+    const bId = cleanBandId(rawBandId);
+    return allRelevantBandIds.includes(bId);
+  });
+
   const resState = {
-    leads,
-    rehearsals,
-    concerts,
-    posts,
-    payments,
+    leads: validatedLeads,
+    rehearsals: validatedRehearsals,
+    concerts: validatedConcerts,
+    posts: validatedPosts,
+    payments: validatedPayments,
     metrics,
-    songs,
-    setlists,
-    bands,
-    tours,
-    fans,
-    campaigns,
+    songs: validatedSongs,
+    setlists: validatedSetlists,
+    bands: validatedBands,
+    tours: validatedTours,
+    fans: validatedFans,
+    campaigns: validatedCampaigns,
     messages: [],
     runOfShow,
     gearChecklists,
@@ -197,7 +232,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
       notifyOnEveryProposal: true,
       requireHumanForFinalSignOff: true
     },
-    registeredBands,
+    registeredBands: filteredRegisteredBands,
     users,
     categoryTemplates
   };

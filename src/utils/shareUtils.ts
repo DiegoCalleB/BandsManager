@@ -274,9 +274,11 @@ export function formatRehearsalShareText(
   parts.push(`📍 *Lugar:* ${rehearsal.lugar}`);
 
   if (rehearsal.convocados_nombres && rehearsal.convocados_nombres.length > 0) {
-    parts.push(`👥 *Convocados:* ${rehearsal.convocados_nombres.join(', ')}`);
+    const list = Array.isArray(rehearsal.convocados_nombres) ? rehearsal.convocados_nombres.join(', ') : String(rehearsal.convocados_nombres);
+    parts.push(`👥 *Convocados:* ${list}`);
   } else if (rehearsal.asistentes && rehearsal.asistentes.length > 0) {
-    parts.push(`👥 *Asistentes:* ${rehearsal.asistentes.join(', ')}`);
+    const list = Array.isArray(rehearsal.asistentes) ? rehearsal.asistentes.join(', ') : String(rehearsal.asistentes);
+    parts.push(`👥 *Asistentes:* ${list}`);
   }
 
   if (setlistName) {
@@ -309,7 +311,8 @@ export function formatConcertShareText(
   if (concert.cache > 0) parts.push(`💰 *Caché acordado:* ${concert.cache}€`);
 
   if (concert.convocados_nombres && concert.convocados_nombres.length > 0) {
-    parts.push(`👥 *Músicos convocados:* ${concert.convocados_nombres.join(', ')}`);
+    const list = Array.isArray(concert.convocados_nombres) ? concert.convocados_nombres.join(', ') : String(concert.convocados_nombres);
+    parts.push(`👥 *Músicos convocados:* ${list}`);
   }
 
   if (setlistName) {

@@ -649,7 +649,7 @@ export default function App() {
  <div 
   onClick={() => setShowBandSwitcherModal(true)}
   className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-all p-1 -ml-1 rounded-xl hover:bg-neutral-900/60"
-  title="Toca para cambiar de banda (Estilo Netflix)"
+  title="Toca para cambiar de banda"
  >
   <div className="relative shrink-0">
    {currentActiveBandLogo ? (
@@ -1036,7 +1036,7 @@ export default function App() {
  <div 
   onClick={() => setShowBandSwitcherModal(true)}
   className="p-3.5 flex flex-col gap-2 items-center text-center border-b border-[#22211F]/60 bg-gradient-to-b from-[#1c1a18] to-[#121110] cursor-pointer group transition-all duration-300 hover:bg-[#181716] relative"
-  title="Haz clic para cambiar de banda (Estilo Netflix)"
+  title="Haz clic para cambiar de banda"
  >
   <div className="relative group/logo">
   {currentActiveBandLogo ? (
@@ -1614,7 +1614,7 @@ export default function App() {
  </main>
 
  {/* User Management Modal for Band Leader */}
- {showUserManagementModal && isAdmin && !isPromoPlan && (
+ {showUserManagementModal && (isAdmin || currentUser?.role === 'leader' || currentUser?.role === 'admin') && (
  <UserManagementModal
  currentUser={currentUser}
  users={bandUsers}
@@ -1636,7 +1636,7 @@ export default function App() {
  }}
  isStitchLight={false}
  isAdmin={isAdmin}
- onOpenBandManagement={!isPromoPlan ? () => setShowUserManagementModal(true) : undefined}
+ onOpenBandManagement={() => setShowUserManagementModal(true)}
  currentTheme={currentTheme}
  onThemeChange={handleThemeChange}
  currentFont={currentFont}
@@ -1761,6 +1761,7 @@ export default function App() {
   }}
   onSetMainBand={handleSetMainBand}
   onOpenRegisterBand={() => handleNavigate('bandas')}
+  onOpenBandManagement={() => setShowUserManagementModal(true)}
  />
 
   {/* Soft Limits Upgrade Modal */}

@@ -4,20 +4,31 @@ import { ensureRegisteredBandExists } from "./bands.js";
 export async function dbGetConcerts(bandId: string | string[]) {
   const sb = getSupabase();
   let query = sb.from("concerts").select("*");
+  let allowedIds: string[] = [];
+
   if (Array.isArray(bandId)) {
-    const cleanIds = bandId.map(id => cleanBandId(id)).filter(Boolean);
-    if (cleanIds.length === 1) {
-      query = query.eq("band_id", cleanIds[0]);
-    } else if (cleanIds.length > 1) {
-      query = query.in("band_id", cleanIds);
+    allowedIds = bandId.map(id => cleanBandId(id)).filter(id => id && id !== '__sin_banda__');
+    if (allowedIds.length === 0) return [];
+    if (allowedIds.length === 1) {
+      query = query.eq("band_id", allowedIds[0]);
+    } else {
+      query = query.in("band_id", allowedIds);
     }
   } else {
-    query = query.eq("band_id", cleanBandId(bandId));
+    const cleanId = cleanBandId(bandId);
+    if (!cleanId || cleanId === '__sin_banda__' || cleanId === 'all') return [];
+    allowedIds = [cleanId];
+    query = query.eq("band_id", cleanId);
   }
   const { data, error } = await query.order("fecha", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (concerts): ${error.message}`);
-  return (data || []).map(c => ({
+  
+  // Validation layer: filter out any records that do not belong to the allowed band IDs
+  const allowedSet = new Set(allowedIds);
+  const validatedData = (data || []).filter(c => c.band_id && allowedSet.has(cleanBandId(c.band_id)));
+
+  return validatedData.map(c => ({
     ...c,
     gastosDetalle: c.gastos_detalle || c.gastosDetalle || {},
     gastos_detalle: c.gastos_detalle || c.gastosDetalle || {},
@@ -27,7 +38,9 @@ export async function dbGetConcerts(bandId: string | string[]) {
     giraId: c.gira_id || c.giraId || undefined,
     giraNombre: c.gira_nombre || c.giraNombre || undefined,
     idioma: c.idioma || undefined,
-    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined
+    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined,
+    entradasUrl: c.entradas_url || c.entradasUrl || undefined,
+    entradasLugarFisico: c.entradas_lugar_fisico || c.entradasLugarFisico || undefined
   }));
 }
 
@@ -75,7 +88,10 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     gira_id: concert.gira_id || concert.giraId || null,
     gira_nombre: concert.gira_nombre || concert.giraNombre || null,
     idioma: concert.idioma || "",
-    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null
+    is_posible: Boolean(concert.is_posible ?? concert.isPosible),
+    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null,
+    entradas_url: concert.entradas_url || concert.entradasUrl || null,
+    entradas_lugar_fisico: concert.entradas_lugar_fisico || concert.entradasLugarFisico || null
   };
 
   let data: any = null;
@@ -111,7 +127,10 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     ...data,
     giraId: concert.giraId || concert.gira_id,
     giraNombre: concert.giraNombre || concert.gira_nombre,
-    idioma: data?.idioma || concert.idioma
+    idioma: data?.idioma || concert.idioma,
+    is_posible: data?.is_posible ?? concert.is_posible ?? concert.isPosible ?? false,
+    entradasUrl: data?.entradas_url || concert.entradasUrl,
+    entradasLugarFisico: data?.entradas_lugar_fisico || concert.entradasLugarFisico
   };
 }
 

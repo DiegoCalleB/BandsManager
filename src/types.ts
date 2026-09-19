@@ -254,6 +254,56 @@ export interface ConcertExpenseBreakdown {
   notasGastos?: string;
 }
 
+export interface KeyContactItem {
+  id: string;
+  nombre: string;
+  rol: string;
+  telefono: string;
+  email?: string;
+  notas?: string;
+}
+
+export interface TechnicalLogistics {
+  horaLlegada?: string;
+  horaPruebaSonido?: string;
+  horaAperturaPuertas?: string;
+  horaShow?: string;
+  horaCierreToque?: string;
+  paEspecificaciones?: string;
+  monitoresTipo?: string;
+  canalesMonitores?: string;
+  backlineInfo?: string;
+  potenciaElectrica?: string;
+  inputList?: string;
+  notasTecnicas?: string;
+}
+
+export interface CierreMaterialItem {
+  id: string;
+  categoria: 'escenario' | 'camerino' | 'furgoneta' | 'general';
+  item: string;
+  checked: boolean;
+  responsable?: string;
+}
+
+export interface MerchBoloItem {
+  id: string;
+  nombre: string;
+  categoria?: 'camisetas' | 'vinilos' | 'musica' | 'accesorios' | 'otro';
+  talla?: string;
+  precioUnitario: number;
+  stockInicial: number; // Que sube a la furgoneta
+  stockFinal: number;   // Stock al terminar la noche
+}
+
+export interface MerchControlBolo {
+  items: MerchBoloItem[];
+  fondoCajaInicial?: number;
+  ingresosEfectivo: number;
+  ingresosBizum: number;
+  notas?: string;
+}
+
 export interface Concert {
   id: string;
   band_id?: string;
@@ -269,9 +319,9 @@ export interface Concert {
   estado_pago: 'pendiente' | 'pagado' | 'anticipo';
   notas: string;
   // 'sala'/'ayuntamiento' los usan el scout/chatbot (mismas categorías que Lead.tipo);
-  // 'propio'/'privado' los usa el alta manual desde el calendario. Se aceptan ambos
-  // convenios a la vez porque ya conviven datos reales con uno y otro.
-  tipo: 'sala' | 'festival' | 'ayuntamiento' | 'propio' | 'privado';
+  // 'propio'/'privado'/'posible' los usa el alta manual desde el calendario.
+  tipo: 'sala' | 'festival' | 'ayuntamiento' | 'propio' | 'privado' | 'posible';
+  is_posible?: boolean;
   setlistId?: string;
   gastosDetalle?: ConcertExpenseBreakdown;
   gastosEstimadosTipicos?: number;
@@ -283,6 +333,12 @@ export interface Concert {
   idioma?: string;
   customQrUrl?: string;
   customQrSlug?: string;
+  entradasUrl?: string;
+  entradasLugarFisico?: string;
+  logisticaTecnica?: TechnicalLogistics;
+  contactosClave?: KeyContactItem[];
+  cierreMaterial?: CierreMaterialItem[];
+  merchControl?: MerchControlBolo;
 }
 
 export interface EmailSignatureConfig {

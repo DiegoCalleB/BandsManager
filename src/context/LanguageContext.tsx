@@ -20,7 +20,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
   es: {
     // Navigation
-    'nav.resumen': 'Resumen',
+    'nav.resumen': 'Dashboard',
     'nav.booking': 'Escenarios',
     'nav.medios': 'Medios',
     'nav.management': 'Management',

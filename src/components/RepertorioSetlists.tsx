@@ -591,9 +591,11 @@ export default function RepertorioSetlists({
 
  // Studio Ideas Modal State
  const [activeStudioSong, setActiveStudioSong] = useState<Song | null>(null);
+ const [activeStudioOpenIris, setActiveStudioOpenIris] = useState<boolean>(false);
 
- const handleOpenStudioModal = useCallback((song: Song | null) => {
+ const handleOpenStudioModal = useCallback((song: Song | null, opts?: { openIris?: boolean }) => {
    setIsPlayerPlaying(false);
+   setActiveStudioOpenIris(!!opts?.openIris);
    setActiveStudioSong(song);
  }, [setIsPlayerPlaying]);
 
@@ -4419,6 +4421,7 @@ export default function RepertorioSetlists({
                 onOpenChords={() => setActiveChordsSong(s)}
                 onOpenMemberNotes={() => setActiveMemberNotesSong(s)}
                 onOpenStudio={() => handleOpenStudioModal(s)}
+                onOpenIris={() => handleOpenStudioModal(s, { openIris: true })}
                 onEditSong={() => {
                   setEditingSong(s);
                   setShowSongModal(true);
@@ -4751,10 +4754,14 @@ export default function RepertorioSetlists({
  song={activeStudioSong}
  colors={colors}
  isStitchLight={isStitchLight}
- onClose={() => setActiveStudioSong(null)}
+ onClose={() => {
+   setActiveStudioSong(null);
+   setActiveStudioOpenIris(false);
+ }}
  onUpdateSong={handleUpdateSongFromStudio}
  currentUser={currentUser}
  currentUsername={currentUser?.name || currentUser?.username}
+ initialOpenIrisModal={activeStudioOpenIris}
  />
  )}
 
@@ -4773,6 +4780,7 @@ export default function RepertorioSetlists({
  colors={colors}
  onSelectSong={(newSong, autoPlay) => handleSelectPlayerSong(newSong, autoPlay)}
  onOpenStudio={(songToOpen) => handleOpenStudioModal(songToOpen)}
+ onOpenIris={(songToOpen) => handleOpenStudioModal(songToOpen, { openIris: true })}
  onUpdateSong={handleUpdateSongFromStudio}
  onClosePlayer={() => selectPlayerSongWithQueue(null, false, null)}
  autoPlay={playerAutoPlay}

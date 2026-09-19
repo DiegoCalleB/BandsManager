@@ -754,7 +754,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         isOpen={showFansPreviewModal}
         onClose={() => setShowFansPreviewModal(false)}
         currentBandId={activeBandId}
-        currentBandName={currentUser?.bandName || config.contactoBooking?.nombre || (isBakandeya ? 'Bakandeya' : 'Tu Banda')}
+        currentBandName={(currentUser?.bandName && currentUser.bandName !== 'Banda' ? currentUser.bandName : '') || (config.contactoBooking?.nombre && config.contactoBooking.nombre !== 'Banda' ? config.contactoBooking.nombre : '') || (isBakandeya ? 'Bakandeya' : (cleanBandId ? cleanBandId.charAt(0).toUpperCase() + cleanBandId.slice(1) : 'Tu Banda'))}
         currentBandLogo={config.logoUrl}
         epkConfig={config}
       />

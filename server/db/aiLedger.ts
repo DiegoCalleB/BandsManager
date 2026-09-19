@@ -1,34 +1,99 @@
 import { getSupabase } from "./core.js";
 
-/**
- * Registra un consumo de tokens de IA para una banda. Es un INSERT puro (nada de
- * leer-modificar-escribir un contador), así que dos llamadas concurrentes
- * para la misma banda no compiten entre sí: cada una es su propia fila y
- * Postgres las serializa solo. La suma de deuda vive en `get_ai_debt_cents`,
- * que lee esas filas cuando hace falta en vez de mantener un total en caché.
- */
-export async function dbRecordAiUsage(params: {
+export interface RecordAiUsageParams {
   bandId: string;
   promptTokens: number;
   completionTokens: number;
   modelName: string;
   estimatedCostEur: number;
-}): Promise<void> {
-  const sb = getSupabase();
-  const { error } = await sb.from("ai_token_ledger").insert({
+}
+
+const BATCH_FLUSH_INTERVAL_MS = 10_000;
+const BATCH_FLUSH_SIZE_THRESHOLD = 20;
+
+interface PendingLedgerEntry {
+  band_id: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  model_name: string;
+  estimated_cost_eur: number;
+}
+
+let pendingLedgerEntries: PendingLedgerEntry[] = [];
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+let isFlushing = false;
+
+function scheduleAutoFlush() {
+  if (flushTimer) return;
+  flushTimer = setTimeout(() => {
+    flushTimer = null;
+    flushAiLedgerBuffer().catch((err) => {
+      console.warn("[AI Ledger Buffer] Error en auto-flush dferido:", err?.message || err);
+    });
+  }, BATCH_FLUSH_INTERVAL_MS);
+  if (typeof flushTimer === "object" && flushTimer && "unref" in flushTimer) {
+    (flushTimer as any).unref();
+  }
+}
+
+/**
+ * Vacía en lote (bulk insert) todos los registros de consumo de IA acumulados en el buffer de memoria a Supabase.
+ */
+export async function flushAiLedgerBuffer(): Promise<void> {
+  if (pendingLedgerEntries.length === 0 || isFlushing) return;
+
+  isFlushing = true;
+  const entriesToInsert = [...pendingLedgerEntries];
+  pendingLedgerEntries = [];
+
+  try {
+    const sb = getSupabase();
+    const { error } = await sb.from("ai_token_ledger").insert(entriesToInsert);
+    if (error) {
+      console.error("[AI Ledger Buffer] Error al escribir lote en Supabase, re-encolando:", error.message);
+      pendingLedgerEntries = [...entriesToInsert, ...pendingLedgerEntries];
+    }
+  } catch (err: any) {
+    console.error("[AI Ledger Buffer] Excepción al volcar lote a Supabase:", err?.message || err);
+    pendingLedgerEntries = [...entriesToInsert, ...pendingLedgerEntries];
+  } finally {
+    isFlushing = false;
+  }
+}
+
+/** Permite conocer el número de entradas actualmente retenidas en el buffer (útil para tests e inspección). */
+export function getPendingLedgerBufferSize(): number {
+  return pendingLedgerEntries.length;
+}
+
+/**
+ * Registra un consumo de tokens de IA para una banda de forma ultra-rápida en memoria.
+ * Acumula en un buffer local y vuelca en lote (bulk insert) hacia Postgres cada 10s o al llegar a 20 entradas,
+ * ahorrando cientos de llamadas de red individuales y reduciendo la latencia de la IA a 0ms.
+ */
+export async function dbRecordAiUsage(params: RecordAiUsageParams): Promise<void> {
+  if (!params.bandId) return;
+
+  pendingLedgerEntries.push({
     band_id: params.bandId,
     prompt_tokens: Math.max(0, Math.round(params.promptTokens) || 0),
     completion_tokens: Math.max(0, Math.round(params.completionTokens) || 0),
     model_name: params.modelName,
     estimated_cost_eur: Math.max(0, params.estimatedCostEur || 0)
   });
-  if (error) {
-    throw new Error(`No se pudo registrar el consumo de IA: ${error.message}`);
+
+  if (pendingLedgerEntries.length >= BATCH_FLUSH_SIZE_THRESHOLD) {
+    flushAiLedgerBuffer().catch((err) => {
+      console.warn("[AI Ledger Buffer] Error en flush por umbral de tamaño:", err?.message || err);
+    });
+  } else {
+    scheduleAutoFlush();
   }
 }
 
 /** Deuda viva (sin liquidar) de una banda, en céntimos de euro. */
 export async function dbGetAiDebtCents(bandId: string): Promise<number> {
+  await flushAiLedgerBuffer();
   const sb = getSupabase();
   try {
     const { data, error } = await sb.rpc("get_ai_debt_cents", { p_band_id: bandId });
@@ -72,6 +137,7 @@ export async function dbSettleAiDonation(
   amountPaidCents: number,
   stripeEventId: string
 ): Promise<SettleAiDonationResult> {
+  await flushAiLedgerBuffer();
   const sb = getSupabase();
   const { data, error } = await sb.rpc("settle_ai_donation", {
     p_band_id: bandId,

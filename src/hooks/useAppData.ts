@@ -71,14 +71,49 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     });
   };
 
+  const parseSafeList = (val: any): string[] => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val.map(x => typeof x === 'string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
+    if (typeof val === 'string' && val.trim()) {
+      const trimmed = val.trim();
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) return parsed.map(x => typeof x === 'string' ? x : (x?.name || x?.nombre || String(x))).filter(Boolean);
+        } catch {}
+      }
+      return trimmed.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
+  const normalizeRehearsal = (r: any): Rehearsal => {
+    if (!r) return r;
+    return {
+      ...r,
+      asistentes: parseSafeList(r.asistentes),
+      convocados_nombres: r.convocados_nombres ? parseSafeList(r.convocados_nombres) : undefined,
+      convocados_ids: r.convocados_ids ? parseSafeList(r.convocados_ids) : undefined,
+    };
+  };
+
+  const normalizeConcert = (c: any): Concert => {
+    if (!c) return c;
+    return {
+      ...c,
+      convocados_nombres: c.convocados_nombres ? parseSafeList(c.convocados_nombres) : undefined,
+      convocados_ids: c.convocados_ids ? parseSafeList(c.convocados_ids) : undefined,
+    };
+  };
+
   const fetchState = useCallback(async (retryCount = 0) => {
     setSyncStatus('syncing');
     try {
       const data = await api.getState();
       setLeads(dedupeById(data.leads || []));
-      setRehearsals(dedupeById(data.rehearsals || []));
+      setRehearsals(dedupeById((data.rehearsals || []).map(normalizeRehearsal)));
       setTours(dedupeById(data.tours || []));
-      setConcerts(dedupeById(data.concerts || []));
+      setConcerts(dedupeById((data.concerts || []).map(normalizeConcert)));
       setPosts(dedupeById(data.posts || []));
       setPayments(dedupeById(data.payments || []));
       setMessages(dedupeById(data.messages || []));
@@ -189,7 +224,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateRehearsal = async (id: string, updatedFields: Partial<Rehearsal>) => {
-    setRehearsals(prev => prev.map(r => r.id === id ? { ...r, ...updatedFields } : r));
+    setRehearsals(prev => prev.map(r => r.id === id ? normalizeRehearsal({ ...r, ...updatedFields }) : r));
     try {
       await api.updateRehearsal(id, updatedFields);
     } catch (e) {
@@ -199,7 +234,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateConcert = async (id: string, updatedFields: Partial<Concert>) => {
-    setConcerts(prev => prev.map(c => c.id === id ? { ...c, ...updatedFields } : c));
+    setConcerts(prev => prev.map(c => c.id === id ? normalizeConcert({ ...c, ...updatedFields }) : c));
     try {
       await api.updateConcert(id, updatedFields);
     } catch (e) {
@@ -279,9 +314,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddRehearsal = async (reh: Rehearsal) => {
-    setRehearsals(prev => dedupeById([...prev.filter(r => r.id !== reh.id), reh]));
+    const normalized = normalizeRehearsal(reh);
+    setRehearsals(prev => dedupeById([...prev.filter(r => r.id !== normalized.id), normalized]));
     try {
-      await api.createRehearsal(reh);
+      await api.createRehearsal(normalized);
     } catch (e) {
       console.error('Error adding rehearsal:', e);
       fetchState();
@@ -289,9 +325,10 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleAddConcert = async (concert: Concert) => {
-    setConcerts(prev => dedupeById([...prev.filter(c => c.id !== concert.id), concert]));
+    const normalized = normalizeConcert(concert);
+    setConcerts(prev => dedupeById([...prev.filter(c => c.id !== normalized.id), normalized]));
     try {
-      await api.createConcert(concert);
+      await api.createConcert(normalized);
     } catch (e) {
       console.error('Error adding concert:', e);
       fetchState();

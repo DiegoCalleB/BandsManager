@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookingCampaign, PitchTemplateCategory } from '../../types';
+import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import {
   Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Sparkles,
   ChevronRight, Compass, ArrowRight, ShieldCheck, Flame,
@@ -320,47 +321,52 @@ export function CampaignManagerModal({
                 <label className="block text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400 mb-1">
                   Fechas Objetivo (se marcarán en Calendario y pitches IA) *
                 </label>
-                <div className="flex flex-wrap gap-2 mb-2.5">
-                  {formData.targetDates?.map((date, idx) => (
-                    <div 
-                      key={idx}
-                      className="flex items-center gap-1.5 bg-[#1a1918] px-2.5 py-1.5 rounded-xl border border-purple-500/30 text-zinc-100"
-                    >
-                      <Calendar className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                <div className="space-y-2 mb-2.5">
+                  <div className="flex flex-wrap gap-2">
+                    {formData.targetDates?.map((date, idx) => (
+                      <div 
+                        key={idx}
+                        className="flex flex-col gap-1 bg-[#1a1918] px-2.5 py-1.5 rounded-xl border border-purple-500/30 text-zinc-100"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                          <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => {
+                              if (!e.target.value) return;
+                              const next = [...(formData.targetDates || [])];
+                              next[idx] = e.target.value;
+                              next.sort();
+                              setFormData({ ...formData, targetDates: next });
+                            }}
+                            className="bg-transparent text-xs font-mono font-bold text-zinc-100 border-0 p-0 focus:ring-0 cursor-pointer"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveDate(idx)}
+                            className="text-neutral-400 hover:text-red-400 ml-1"
+                            title="Eliminar fecha"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <HolidayDateWarning date={date} compact />
+                      </div>
+                    ))}
+
+                    <div className="flex items-center gap-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 border-dashed rounded-xl px-2.5 py-1 text-purple-300">
+                      <Plus className="w-3.5 h-3.5" />
+                      <span className="text-[11px] font-mono font-bold">Añadir Fecha:</span>
                       <input
                         type="date"
-                        value={date}
                         onChange={(e) => {
-                          if (!e.target.value) return;
-                          const next = [...(formData.targetDates || [])];
-                          next[idx] = e.target.value;
-                          next.sort();
-                          setFormData({ ...formData, targetDates: next });
+                          handleAddDate(e.target.value);
+                          e.target.value = '';
                         }}
-                        className="bg-transparent text-xs font-mono font-bold text-zinc-100 border-0 p-0 focus:ring-0 cursor-pointer"
+                        className="bg-transparent text-xs font-mono text-purple-200 border-0 p-0 focus:ring-0 cursor-pointer"
                       />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveDate(idx)}
-                        className="text-neutral-400 hover:text-red-400 ml-1"
-                        title="Eliminar fecha"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
                     </div>
-                  ))}
-
-                  <div className="flex items-center gap-1.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 border-dashed rounded-xl px-2.5 py-1 text-purple-300">
-                    <Plus className="w-3.5 h-3.5" />
-                    <span className="text-[11px] font-mono font-bold">Añadir Fecha:</span>
-                    <input
-                      type="date"
-                      onChange={(e) => {
-                        handleAddDate(e.target.value);
-                        e.target.value = '';
-                      }}
-                      className="bg-transparent text-xs font-mono text-purple-200 border-0 p-0 focus:ring-0 cursor-pointer"
-                    />
                   </div>
                 </div>
                 <p className="text-[11px] text-neutral-400 italic">

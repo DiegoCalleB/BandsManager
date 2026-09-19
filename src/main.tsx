@@ -1,10 +1,14 @@
 import './utils/domTranslatePatch';
+import { initFrontendErrorTracking } from './utils/errorTracking';
 import {StrictMode, Suspense, lazy} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
+
+// Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
+initFrontendErrorTracking();
 
 // Rutas públicas (/epk, /musicos) se cargan bajo demanda
 const PublicEPK = lazy(() => import('./components/PublicEPK'));
@@ -38,9 +42,22 @@ const esRutaPublicaMusicos = /^\/(musicos|musicians|para-musicos|waitlist-musico
 // no usa useLanguage() en ningún sitio, así que no necesita el contexto para nada.
 // PWA: solo en producción, para no interferir con el hot-reload del dev server ni con vitest.
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  // Si ya había una pestaña bajo control de un SW previo, un cambio de controlador significa
+  // que se activó una versión nueva (que ya purgó las cachés viejas, ver sw.js): recargamos una
+  // sola vez para que la interfaz se ponga al día sin que el usuario tenga que borrar nada a
+  // mano. En la primera visita nunca hay controller todavía, así que no dispara un refresco fantasma.
+  const hadController = !!navigator.serviceWorker.controller;
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   });
+  if (hadController) {
+    let hasReloadedForUpdate = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hasReloadedForUpdate) return;
+      hasReloadedForUpdate = true;
+      window.location.reload();
+    });
+  }
 }
 
 createRoot(document.getElementById('root')!).render(

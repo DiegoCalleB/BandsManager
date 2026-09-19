@@ -36,7 +36,7 @@ export function useAuth() {
     }
   });
 
-  const isAdmin = Boolean(currentUser && currentUser.role === 'leader');
+  const isAdmin = Boolean(currentUser && (currentUser.role === 'leader' || currentUser.role === 'admin'));
 
   // Set 30-day cookie helper
   const syncSessionCookie = useCallback((token: string) => {

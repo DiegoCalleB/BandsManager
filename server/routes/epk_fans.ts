@@ -393,12 +393,12 @@ router.get("/public/epk", async (req, res) => {
       });
     }
 
-    let bandName = regBand?.nombre_banda;
-    if (!bandName && epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya')) {
-      bandName = epkConfig.contactoBooking.nombre;
+    let bandName = (regBand?.nombre_banda && regBand.nombre_banda.trim().toLowerCase() !== 'banda') ? regBand.nombre_banda.trim() : '';
+    if (!bandName && epkConfig?.contactoBooking?.nombre && !epkConfig.contactoBooking.nombre.toLowerCase().includes('bakandeya') && epkConfig.contactoBooking.nombre.trim().toLowerCase() !== 'banda') {
+      bandName = epkConfig.contactoBooking.nombre.trim();
     }
     if (!bandName) {
-      bandName = cleanBandId === 'bakandeya' ? 'Bakandeya' : (cleanBandId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+      bandName = cleanBandId === 'bakandeya' ? 'Bakandeya' : (cleanBandId.split(/[-_]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
     }
 
     // La fuente de verdad de temas y conciertos es Supabase, igual que para el epkConfig de

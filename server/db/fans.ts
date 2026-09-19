@@ -3,14 +3,16 @@ import { ensureRegisteredBandExists } from "./bands.js";
 
 export async function dbGetFans(bandId: string) {
   const sb = getSupabase();
+  const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
     .from("fans")
     .select("*")
-    .eq("band_id", cleanBandId(bandId))
+    .eq("band_id", cleanId)
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(`Supabase Error (fans): ${error.message}`);
-  return (data || []).map(f => ({
+  const validated = (data || []).filter(f => cleanBandId(f.band_id) === cleanId);
+  return validated.map(f => ({
     ...f,
     comoConocio: f.como_conocio,
     conciertoOrigenId: f.concierto_origen_id,

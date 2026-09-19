@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Rehearsal, Concert, ThemeColors, BookingCampaign } from '../types';
+import { Rehearsal, Concert, ThemeColors, BookingCampaign, KeyContactItem, TechnicalLogistics, CierreMaterialItem, MerchBoloItem, MerchControlBolo } from '../types';
 import DirectionsCard from './DirectionsCard';
-import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2 } from 'lucide-react';
+import { Calendar, Mic, DoorClosed, Clock, MapPin, CheckSquare, Sparkles, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Plus, Trash2, Download, Navigation, Disc3, Music, Users, Ticket, Link2, Check, Copy, ExternalLink, Radio, Target, Flame, Building2, Eye, QrCode, Settings, Smartphone, Monitor, Cloud, ChevronDown, Video, Handshake, Bell, Send, Loader2, List, CalendarDays, Maximize2, Minimize2, MessageCircle, MessageSquare, Share2, AlertTriangle, Thermometer, Edit, Phone, Wrench, ShieldCheck, Truck, Volume2, Zap, CheckCircle2, RotateCcw, UserCheck, Layers, ArrowUpRight, Shirt, Coins, CreditCard, Banknote, Calculator, ShoppingBag, Tag } from 'lucide-react';
+import { EventWeatherCard } from './calendar/EventWeatherCard';
+import { CalendarWeatherBadge, AnimatedWeatherIcon } from './calendar/AnimatedWeatherIcon';
+import { getCachedEventWeatherAlerts, WeatherAlert } from '../services/weatherService';
 import QRCode from 'react-qr-code';
 import { ModalPortal } from './common/ModalPortal';
 import { api } from '../services/api';
@@ -24,6 +27,7 @@ import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { ModuleTutorialTrigger } from './common/ModuleTutorialTrigger';
 import { SetlistPerformanceView } from './SetlistPerformanceView';
+import { HolidayDateWarning } from './common/HolidayDateWarning';
 
 interface CalendarViewProps {
  colors: ThemeColors;
@@ -63,6 +67,91 @@ interface GearItem {
  checked: boolean;
 }
 
+export const getDetailedDateInfo = (dateInput: string | Date | undefined | null) => {
+  if (!dateInput) return null;
+  let d: Date;
+  if (typeof dateInput === 'string') {
+    const cleanStr = dateInput.split('T')[0].trim();
+    const parts = cleanStr.split('-');
+    if (parts.length === 3) {
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      d = new Date(y, m, day, 12, 0, 0);
+    } else {
+      d = new Date(dateInput);
+    }
+  } else {
+    d = new Date(dateInput.getFullYear(), dateInput.getMonth(), dateInput.getDate(), 12, 0, 0);
+  }
+  if (isNaN(d.getTime())) return null;
+
+  const dayNamesLong = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const dayNamesShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+  const monthNamesLong = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const monthNamesShort = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+
+  const dayOfWeek = dayNamesLong[d.getDay()];
+  const dayOfWeekShort = dayNamesShort[d.getDay()];
+  const dayNum = d.getDate();
+  const monthLong = monthNamesLong[d.getMonth()];
+  const monthShort = monthNamesShort[d.getMonth()];
+  const year = d.getFullYear();
+
+  // Indicador temporal relativo
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
+  const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+  let relativeLabel = '';
+  let relativeBadgeClass = '';
+  if (diffDays === 0) {
+    relativeLabel = '¡HOY!';
+    relativeBadgeClass = 'bg-emerald-500 text-stone-950 font-black shadow-xs animate-pulse';
+  } else if (diffDays === 1) {
+    relativeLabel = 'Mañana';
+    relativeBadgeClass = 'bg-amber-400 text-stone-950 font-black shadow-xs';
+  } else if (diffDays === 2) {
+    relativeLabel = 'Pasado mañana';
+    relativeBadgeClass = 'bg-amber-500/20 text-amber-300 border border-amber-500/40';
+  } else if (diffDays > 2 && diffDays <= 7) {
+    relativeLabel = `En ${diffDays} días`;
+    relativeBadgeClass = 'bg-sky-500/20 text-sky-300 border border-sky-500/40';
+  } else if (diffDays > 7 && diffDays <= 30) {
+    const weeks = Math.round(diffDays / 7);
+    relativeLabel = `En ${diffDays} días (${weeks} sem)`;
+    relativeBadgeClass = 'bg-sky-950/40 text-sky-300 border border-sky-500/30';
+  } else if (diffDays > 30) {
+    const months = Math.round(diffDays / 30);
+    relativeLabel = `En ${diffDays} días (~${months} mes${months > 1 ? 'es' : ''})`;
+    relativeBadgeClass = 'bg-neutral-800 text-neutral-300 border border-neutral-700';
+  } else if (diffDays === -1) {
+    relativeLabel = 'Ayer';
+    relativeBadgeClass = 'bg-neutral-800 text-neutral-400 border border-neutral-700';
+  } else {
+    relativeLabel = `Celebrado (hace ${Math.abs(diffDays)} d)`;
+    relativeBadgeClass = 'bg-neutral-900 text-neutral-500 border border-neutral-800';
+  }
+
+  return {
+    dayOfWeek,
+    dayOfWeekShort,
+    dayNum,
+    monthLong,
+    monthShort,
+    year,
+    fullFormatted: `${dayOfWeek}, ${dayNum} de ${monthLong} de ${year}`,
+    shortFormatted: `${dayOfWeekShort} ${dayNum} ${monthShort}`,
+    diffDays,
+    relativeLabel,
+    relativeBadgeClass
+  };
+};
+
 export default function CalendarView({
  colors,
  rehearsals,
@@ -100,6 +189,8 @@ export default function CalendarView({
  // era invisible salvo el pequeño acceso directo de "editar ficha" en las chapas del día.
  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
  const [copiedQrId, setCopiedQrId] = useState<string | null>(null);
+ const [copiedEventModalId, setCopiedEventModalId] = useState<string | null>(null);
+ const [deletingEventConfirmId, setDeletingEventConfirmId] = useState<string | null>(null);
 
  // Band view filter state: 'all' (Todas las bandas asignadas por defecto) vs 'active' (Solo la banda activa)
  const [filterBandMode, setFilterBandMode] = useState<'active' | 'all'>('all');
@@ -198,8 +289,15 @@ export default function CalendarView({
   return activeBandName || 'Tu Banda';
  }, [effectiveBandsList, activeBandName, isSameBandId]);
 
- // Check if current user is in multiple bands
- const isMultiBandUser = effectiveBandsList.length > 1;
+ // Check if current user is in multiple bands or has access to multiple bands' events
+ const isMultiBandUser =
+  effectiveBandsList.length > 1 ||
+  (availableBands && availableBands.length > 1) ||
+  currentUser?.role === 'admin' ||
+  currentUser?.role === 'leader' ||
+  (currentUser as any)?.is_admin ||
+  concerts.some(c => c.band_id && !isSameBandId(c.band_id, activeBandId)) ||
+  rehearsals.some(r => r.band_id && !isSameBandId(r.band_id, activeBandId));
 
  // Form state for selected band when creating rehearsal/concert
  const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] = useState(activeBandId);
@@ -412,14 +510,14 @@ export default function CalendarView({
  // Filtered concerts & rehearsals depending on filterBandMode and Convocatoria
  const filteredConcerts = React.useMemo(() => {
   let list = concerts;
-  if (filterBandMode === 'active' || !isMultiBandUser) {
+  if (filterBandMode === 'active') {
    list = concerts.filter(c => {
     if (!c.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
     return isSameBandId(c.band_id, activeBandId);
    });
   }
   return list.filter(matchesConvocatoria);
- }, [concerts, filterBandMode, activeBandId, isMultiBandUser, matchesConvocatoria, isSameBandId]);
+ }, [concerts, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
 
  
   const activeBandConcerts = React.useMemo(() => {
@@ -438,14 +536,14 @@ export default function CalendarView({
 
   const filteredRehearsals = React.useMemo(() => {
   let list = rehearsals;
-  if (filterBandMode === 'active' || !isMultiBandUser) {
+  if (filterBandMode === 'active') {
    list = rehearsals.filter(r => {
     if (!r.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
     return isSameBandId(r.band_id, activeBandId);
    });
   }
   return list.filter(matchesConvocatoria);
- }, [rehearsals, filterBandMode, activeBandId, isMultiBandUser, matchesConvocatoria, isSameBandId]);
+ }, [rehearsals, filterBandMode, activeBandId, matchesConvocatoria, isSameBandId]);
 
  // Handle initial selected date / event ID passed as props
  useEffect(() => {
@@ -550,7 +648,8 @@ export default function CalendarView({
   }, 2200);
  };
 
- const [activeTab, setActiveTab] = useState<'runofshow' | 'gear' | 'roadbook'>('runofshow');
+ const [activeTab, setActiveTab] = useState<'runofshow' | 'tecnica' | 'contactos' | 'merchan' | 'cierre' | 'gear' | 'roadbook'>('runofshow');
+ const [modalActiveTab, setModalActiveTab] = useState<'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'cierre'>('resumen');
 
  // Roadbooks state per event date
  interface RoadbookInfo {
@@ -561,7 +660,121 @@ export default function CalendarView({
  hotelDireccion: string;
  cateringInfo: string;
  inputList: string;
+ horaLlegada?: string;
+ horaPruebaSonido?: string;
+ horaAperturaPuertas?: string;
+ horaShow?: string;
+ horaCierreToque?: string;
+ paEspecificaciones?: string;
+ monitoresTipo?: string;
+ canalesMonitores?: string;
+ backlineInfo?: string;
+ potenciaElectrica?: string;
+ notasTecnicas?: string;
+ contactosClave?: KeyContactItem[];
+ cierreMaterial?: CierreMaterialItem[];
+ merchControl?: MerchControlBolo;
  }
+
+ // Form states for adding Key Contact
+ const [showAddContactForm, setShowAddContactForm] = useState(false);
+ const [newContactNombre, setNewContactNombre] = useState('');
+ const [newContactRol, setNewContactRol] = useState('Promotor / Sala');
+ const [newContactTelefono, setNewContactTelefono] = useState('');
+ const [newContactEmail, setNewContactEmail] = useState('');
+ const [newContactNotas, setNewContactNotas] = useState('');
+
+ // Form states for adding Cierre Item
+ const [newCierreItemText, setNewCierreItemText] = useState('');
+ const [newCierreItemCat, setNewCierreItemCat] = useState<'escenario' | 'camerino' | 'furgoneta'>('escenario');
+
+ // Form states for Merch Control
+ const [showAddMerchForm, setShowAddMerchForm] = useState(false);
+ const [newMerchNombre, setNewMerchNombre] = useState('');
+ const [newMerchCategoria, setNewMerchCategoria] = useState<'camisetas' | 'vinilos' | 'musica' | 'accesorios' | 'otro'>('camisetas');
+ const [newMerchTalla, setNewMerchTalla] = useState('');
+ const [newMerchPrecio, setNewMerchPrecio] = useState<string>('20');
+ const [newMerchStockInicial, setNewMerchStockInicial] = useState<string>('15');
+ const [merchCopiedToast, setMerchCopiedToast] = useState(false);
+
+ const getDefaultRoadbook = (concert?: Concert | null): RoadbookInfo => {
+ const salaNombre = concert?.sala || 'Sala de Conciertos';
+ const ciudadNombre = concert?.ciudad || 'Madrid';
+ return {
+ contactoPromotor: `Manuel (Producción ${salaNombre})`,
+ telefonoPromotor: '+34 654 321 987',
+ tecnicoSonido: 'Carlos (FOH / Sonido)',
+ hotelNombre: 'Hotel de Gira',
+ hotelDireccion: ciudadNombre,
+ cateringInfo: 'Cena caliente tras prueba de sonido + aguas, fruta y toallas en camerino',
+ inputList: '1. Bombo (Beta 52)\n2. Caja Top (SM57)\n3. Hi-Hat (KM184)\n4. Bajo (D.I. Radial J48)\n5. Guitarra 1 (e906)\n6. Guitarra 2 (SM57)\n7. Teclado L/R (2x D.I.)\n8. Trompeta (Clip DPA)\n9. Saxo (Clip DPA)\n10. Voz Principal (Beta 58)\n11. Coro Gtr (SM58)\n12. Coro Teclado (SM58)',
+ horaLlegada: '17:00',
+ horaPruebaSonido: '18:00 - 19:30',
+ horaAperturaPuertas: '20:30',
+ horaShow: concert?.fecha ? '21:30' : '21:30',
+ horaCierreToque: '01:00',
+ paEspecificaciones: 'Sistema Line Array estéreo homogéneo (D&B / L-Acoustics / Meyer) con subwoofers dedicados y presión adecuada.',
+ monitoresTipo: 'In-Ears estéreo de la banda (traemos transmisores propios) + 2 cuñas de refuerzo en frontal de escenario.',
+ canalesMonitores: '4 envíos auxiliares independientes XLR a rack de IEMs.',
+ backlineInfo: 'Sala aporta: Batería básica (bombo, toms, pie hihat, 3 pies plato). Banda trae: Caja, platos, pedal bombo, amplificadores de guitarra/bajo y pedaleras.',
+ potenciaElectrica: '2 tomas Schuko 220V / 16A limpias en frontal y trasera de escenario.',
+ notasTecnicas: 'Muelle de carga lateral disponible desde las 16:30. Acceso a prueba de sonido puntual.',
+ contactosClave: [
+ {
+ id: 'ct-1',
+ nombre: `Manuel Producción (${salaNombre})`,
+ rol: 'Promotor / Sala',
+ telefono: '+34 654 321 987',
+ email: 'produccion@conciertos.es',
+ notas: 'Contacto principal para accesos, llaves camerino y cobro de taquilla/caché.'
+ },
+ {
+ id: 'ct-2',
+ nombre: 'Carlos Sonido (FOH)',
+ rol: 'Técnico de Sonido (P.A.)',
+ telefono: '+34 612 345 678',
+ email: 'sonido@salaslive.com',
+ notas: 'A cargo de la mesa de mezclas en sala y chequeo de líneas de microfonía.'
+ },
+ {
+ id: 'ct-3',
+ nombre: 'Laura Hospitalidad',
+ rol: 'Producción / Camerinos',
+ telefono: '+34 699 112 233',
+ email: 'camerinos@venues.com',
+ notas: 'Catering, toallas, acreditaciones y acceso a furgoneta de carga.'
+ }
+ ],
+ cierreMaterial: [
+ { id: 'cm-1', categoria: 'escenario', item: 'Instrumentos principales y estuches rígidos (guitarras, bajo, metales/teclado)', checked: false },
+ { id: 'cm-2', categoria: 'escenario', item: 'Pedaleras de efectos, alimentadores y fuentes de corriente', checked: false },
+ { id: 'cm-3', categoria: 'escenario', item: 'Cables jack / XLR propios, alargaderas y adaptadores', checked: false },
+ { id: 'cm-4', categoria: 'escenario', item: 'Petacas de in-ears, auriculares y transmisores inalámbricos', checked: false },
+ { id: 'cm-5', categoria: 'escenario', item: 'Pies de micro y soportes de instrumento de la banda', checked: false },
+ { id: 'cm-6', categoria: 'escenario', item: 'Micrófonos vocales y pinzas especiales', checked: false },
+ { id: 'cm-7', categoria: 'camerino', item: 'Ropa de directo, calzado y fundas de ropa', checked: false },
+ { id: 'cm-8', categoria: 'camerino', item: 'Mochilas personales, carteras, teléfonos y documentación', checked: false },
+ { id: 'cm-9', categoria: 'camerino', item: 'Cargadores de móvil, powerbanks y tablets de partituras', checked: false },
+ { id: 'cm-10', categoria: 'camerino', item: 'Caja de Merchandising, datáfono y dinero recaudado en efectivo', checked: false },
+ { id: 'cm-11', categoria: 'furgoneta', item: 'Todo el backline estibado y trincado con cinchas de amarre', checked: false },
+ { id: 'cm-12', categoria: 'furgoneta', item: 'Portón trasero y puertas laterales cerradas con candado/alarma', checked: false },
+ { id: 'cm-13', categoria: 'furgoneta', item: 'Inspección visual final de camerino y escenario (¡cero olvidos!)', checked: false }
+      ],
+ merchControl: {
+ items: [
+ { id: 'mb-1', nombre: 'Camiseta Gira Oficial', categoria: 'camisetas', talla: 'M', precioUnitario: 20, stockInicial: 15, stockFinal: 5 },
+ { id: 'mb-2', nombre: 'Camiseta Gira Oficial', categoria: 'camisetas', talla: 'L', precioUnitario: 20, stockInicial: 20, stockFinal: 6 },
+ { id: 'mb-3', nombre: 'Vinilo LP 12" Edición Limitada', categoria: 'vinilos', talla: 'LP', precioUnitario: 25, stockInicial: 15, stockFinal: 7 },
+ { id: 'mb-4', nombre: 'Pack Púas de Colección + Pegatinas', categoria: 'accesorios', talla: 'Pack', precioUnitario: 5, stockInicial: 40, stockFinal: 12 },
+ { id: 'mb-5', nombre: 'Totebag Algodón Serigrafiada', categoria: 'accesorios', talla: 'Única', precioUnitario: 12, stockInicial: 15, stockFinal: 5 }
+ ],
+ fondoCajaInicial: 50,
+ ingresosEfectivo: 480,
+ ingresosBizum: 460,
+ notas: 'Mesa de merchandising bien ubicada junto al acceso principal. Gran tirón de vinilos y camisetas tras el show.'
+ }
+ };
+ };
 
  const [allRoadbooks, setAllRoadbooks] = useState<Record<string, RoadbookInfo>>(() => {
  try {
@@ -588,6 +801,224 @@ export default function CalendarView({
  try {
  localStorage.setItem('bakandeya_roadbooks', JSON.stringify(updated));
  } catch {}
+ };
+
+ const getCurrentRoadbook = (dateKey: string, concert?: Concert | null): RoadbookInfo => {
+ const existing = allRoadbooks[dateKey];
+ const def = getDefaultRoadbook(concert);
+ if (!existing) return def;
+ return {
+ ...def,
+ ...existing,
+ contactosClave: existing.contactosClave && existing.contactosClave.length > 0 ? existing.contactosClave : def.contactosClave,
+ cierreMaterial: existing.cierreMaterial && existing.cierreMaterial.length > 0 ? existing.cierreMaterial : def.cierreMaterial,
+ merchControl: existing.merchControl && existing.merchControl.items && existing.merchControl.items.length > 0 ? existing.merchControl : def.merchControl
+ };
+ };
+
+ const updateRoadbookField = (dateKey: string, partial: Partial<RoadbookInfo>) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const updated: RoadbookInfo = { ...current, ...partial };
+ saveRoadbook(dateKey, updated);
+ if (selectedConcert && onUpdateConcert) {
+ onUpdateConcert(selectedConcert.id, {
+ logisticaTecnica: {
+ horaLlegada: updated.horaLlegada,
+ horaPruebaSonido: updated.horaPruebaSonido,
+ horaAperturaPuertas: updated.horaAperturaPuertas,
+ horaShow: updated.horaShow,
+ horaCierreToque: updated.horaCierreToque,
+ paEspecificaciones: updated.paEspecificaciones,
+ monitoresTipo: updated.monitoresTipo,
+ canalesMonitores: updated.canalesMonitores,
+ backlineInfo: updated.backlineInfo,
+ potenciaElectrica: updated.potenciaElectrica,
+ inputList: updated.inputList,
+ notasTecnicas: updated.notasTecnicas
+ },
+ contactosClave: updated.contactosClave,
+ cierreMaterial: updated.cierreMaterial,
+ merchControl: updated.merchControl
+ });
+ }
+ };
+
+ const handleToggleCierreItem = (itemId: string, dateKey: string) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const updatedList = (current.cierreMaterial || []).map(item =>
+ item.id === itemId ? { ...item, checked: !item.checked } : item
+ );
+ updateRoadbookField(dateKey, { cierreMaterial: updatedList });
+ };
+
+ const handleToggleAllCierreItems = (dateKey: string, checkAll: boolean) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const updatedList = (current.cierreMaterial || []).map(item => ({ ...item, checked: checkAll }));
+ updateRoadbookField(dateKey, { cierreMaterial: updatedList });
+ };
+
+ const handleAddCierreItem = (dateKey: string, e?: React.FormEvent) => {
+ if (e) e.preventDefault();
+ if (!newCierreItemText.trim()) return;
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const newItem: CierreMaterialItem = {
+ id: `cm-${Date.now()}`,
+ categoria: newCierreItemCat,
+ item: newCierreItemText.trim(),
+ checked: false
+ };
+ updateRoadbookField(dateKey, { cierreMaterial: [...(current.cierreMaterial || []), newItem] });
+ setNewCierreItemText('');
+ };
+
+ const handleDeleteCierreItem = (itemId: string, dateKey: string) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const updatedList = (current.cierreMaterial || []).filter(item => item.id !== itemId);
+ updateRoadbookField(dateKey, { cierreMaterial: updatedList });
+ };
+
+ const handleAddKeyContact = (dateKey: string, e?: React.FormEvent) => {
+ if (e) e.preventDefault();
+ if (!newContactNombre.trim() || !newContactTelefono.trim()) return;
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const newContact: KeyContactItem = {
+ id: `ct-${Date.now()}`,
+ nombre: newContactNombre.trim(),
+ rol: newContactRol,
+ telefono: newContactTelefono.trim(),
+ email: newContactEmail.trim() || undefined,
+ notas: newContactNotas.trim() || undefined
+ };
+ updateRoadbookField(dateKey, { contactosClave: [...(current.contactosClave || []), newContact] });
+ setNewContactNombre('');
+ setNewContactTelefono('');
+ setNewContactEmail('');
+ setNewContactNotas('');
+ setShowAddContactForm(false);
+ };
+
+ const handleDeleteKeyContact = (contactId: string, dateKey: string) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const updatedList = (current.contactosClave || []).filter(c => c.id !== contactId);
+ updateRoadbookField(dateKey, { contactosClave: updatedList });
+ };
+
+ const openWhatsAppContact = (contact: KeyContactItem, eventDateStr: string, venueName: string) => {
+ const cleanPhone = contact.telefono.replace(/[^0-9]/g, '');
+ const bandName = getBandIdentity(selectedConcert?.band_id).name || 'la banda';
+ const msg = `¡Hola ${contact.nombre}! Te escribo de parte de ${bandName} con respecto al concierto en ${venueName} el día ${eventDateStr}. ¿Cómo estás? Quería consultar unos detalles de producción.`;
+ const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
+ window.open(url, '_blank', 'noopener,noreferrer');
+ };
+
+ const handleUpdateMerchItem = (dateKey: string, itemId: string, updates: Partial<MerchBoloItem>) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+ const updatedItems = merch.items.map(item =>
+ item.id === itemId ? { ...item, ...updates } : item
+ );
+ updateRoadbookField(dateKey, {
+ merchControl: {
+ ...merch,
+ items: updatedItems
+ }
+ });
+ };
+
+ const handleAddMerchItem = (dateKey: string, e?: React.FormEvent) => {
+ if (e) e.preventDefault();
+ if (!newMerchNombre.trim()) return;
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+ const precio = Math.max(0, parseFloat(newMerchPrecio) || 0);
+ const stockIni = Math.max(0, parseInt(newMerchStockInicial, 10) || 0);
+ const newItem: MerchBoloItem = {
+ id: `mb-${Date.now()}`,
+ nombre: newMerchNombre.trim(),
+ categoria: newMerchCategoria,
+ talla: newMerchTalla.trim() || undefined,
+ precioUnitario: precio,
+ stockInicial: stockIni,
+ stockFinal: stockIni
+ };
+ updateRoadbookField(dateKey, {
+ merchControl: {
+ ...merch,
+ items: [...merch.items, newItem]
+ }
+ });
+ setNewMerchNombre('');
+ setNewMerchTalla('');
+ setShowAddMerchForm(false);
+ };
+
+ const handleDeleteMerchItem = (dateKey: string, itemId: string) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+ const updatedItems = merch.items.filter(item => item.id !== itemId);
+ updateRoadbookField(dateKey, {
+ merchControl: {
+ ...merch,
+ items: updatedItems
+ }
+ });
+ };
+
+ const handleUpdateMerchTotals = (dateKey: string, updates: Partial<MerchControlBolo>) => {
+ const current = getCurrentRoadbook(dateKey, selectedConcert);
+ const merch = current.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+ updateRoadbookField(dateKey, {
+ merchControl: {
+ ...merch,
+ ...updates
+ }
+ });
+ };
+
+ const handleCopyMerchSummary = (roadbook: RoadbookInfo, dateKey: string, concert?: Concert | null) => {
+ const merch = roadbook.merchControl || getDefaultRoadbook(concert).merchControl!;
+ const sala = concert?.sala || 'Sala de Conciertos';
+ const ciudad = concert?.ciudad || '';
+ 
+ let totalVendidas = 0;
+ let totalVentaTeorica = 0;
+ const desgloseItems: string[] = [];
+
+ merch.items.forEach(item => {
+ const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
+ if (vendidas > 0) {
+ const subtotal = vendidas * (item.precioUnitario || 0);
+ totalVendidas += vendidas;
+ totalVentaTeorica += subtotal;
+ desgloseItems.push(`• ${item.nombre}${item.talla ? ` (${item.talla})` : ''}: ${vendidas} uds × ${item.precioUnitario}€ = ${subtotal}€ (quedan: ${item.stockFinal})`);
+ }
+ });
+
+ const totalCobrado = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
+ const diferencia = totalCobrado - totalVentaTeorica;
+
+ const texto = [
+ `👕 *CONTROL DE MERCHANDISING - ${sala.toUpperCase()}*`,
+ `📅 Fecha: ${dateKey}${ciudad ? ` | 📍 ${ciudad}` : ''}`,
+ `━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+ `📦 *Artículos vendidos:* ${totalVendidas} unidades`,
+ `💰 *Ventas Teóricas:* ${totalVentaTeorica.toFixed(2)} €`,
+ ``,
+ `💳 *DESGLOSE DE INGRESOS (ARQUEO):*`,
+ `💵 Efectivo recaudado: ${(merch.ingresosEfectivo || 0).toFixed(2)} €`,
+ `📱 Bizum / TPV: ${(merch.ingresosBizum || 0).toFixed(2)} €`,
+ `🏷️ Total Cobrado Real: ${totalCobrado.toFixed(2)} €`,
+ merch.fondoCajaInicial ? `🪙 Fondo de caja inicial: ${merch.fondoCajaInicial.toFixed(2)} €` : null,
+ `⚖️ Cuadre de caja: ${diferencia === 0 ? '✓ ¡CAJA CUADRADA EXACTA!' : diferencia > 0 ? `+${diferencia.toFixed(2)} € (Superávit / Propinas)` : `${diferencia.toFixed(2)} € (Descuadre por verificar)`}`,
+ ``,
+ `📋 *DETALLE POR ARTÍCULO:*`,
+ ...(desgloseItems.length > 0 ? desgloseItems : ['(Sin ventas registradas todavía)']),
+ merch.notas ? `\n📝 *Notas:* ${merch.notas}` : ''
+ ].filter(Boolean).join('\n');
+
+ navigator.clipboard.writeText(texto);
+ setMerchCopiedToast(true);
+ setTimeout(() => setMerchCopiedToast(false), 3000);
  };
 
  // Creation Modals state
@@ -635,6 +1066,7 @@ export default function CalendarView({
  const [concNotas, setConcNotas] = useState('Concierto agendado desde el calendario');
  const [concIdioma, setConcIdioma] = useState('');
  const [concSetlistId, setConcSetlistId] = useState<string>('');
+ const [concIsPosible, setConcIsPosible] = useState(false);
 
  // Setlists disponibles para ensayos y conciertos
  const [availableSetlists, setAvailableSetlists] = useState<any[]>(() => {
@@ -685,6 +1117,101 @@ export default function CalendarView({
    document.addEventListener('fullscreenchange', handleFullscreenChange);
    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
  }, []);
+
+ // Ficha Modal Emergente y Navegación Cronológica: lista unificada de conciertos + ensayos
+ // de la banda activa, ordenada por fecha, para poder pasar de uno a otro con < / > sin
+ // tener que volver al calendario y buscar el siguiente a mano.
+ const [showEventFichaModal, setShowEventFichaModal] = useState(false);
+ const [modalWeatherAlerts, setModalWeatherAlerts] = useState<WeatherAlert[]>([]);
+
+ // Usa filteredConcerts/filteredRehearsals (no activeBandConcerts/activeBandRehearsals): esas
+ // dos ya respetan el toggle "Todos / banda activa" y la convocatoria con el que se pintan el
+ // resto de vistas del calendario (mes, semana, agenda). Si la navegación de la Ficha Modal
+ // usara solo la banda activa, un clic en un evento de "Todos" caía fuera de la lista y el
+ // contador se quedaba clavado en "1 de 1" aunque hubiera 8 eventos visibles en pantalla.
+ const allChronologicalEvents = React.useMemo(() => {
+   type ChronoEvent = { id: string; fecha: string; kind: 'concert' | 'rehearsal'; data: Concert | Rehearsal };
+   const combined: ChronoEvent[] = [
+     ...filteredConcerts.map(c => ({ id: c.id, fecha: c.fecha, kind: 'concert' as const, data: c })),
+     ...filteredRehearsals.map(r => ({ id: r.id, fecha: r.fecha, kind: 'rehearsal' as const, data: r })),
+   ];
+   combined.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+   return combined;
+ }, [filteredConcerts, filteredRehearsals]);
+
+ const handleSelectEvent = React.useCallback((evt: { id: string; fecha: string }) => {
+   const dateStr = evt.fecha.split('T')[0];
+   const parts = dateStr.split('-');
+   if (parts.length === 3) {
+     const y = parseInt(parts[0], 10);
+     const m = parseInt(parts[1], 10) - 1;
+     const d = parseInt(parts[2], 10);
+     if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+       setSelectedDate(new Date(y, m, d));
+     }
+   }
+   setSelectedEventId(evt.id);
+   setShowEventFichaModal(true);
+ }, []);
+
+ const activeChronoIndex = React.useMemo(
+   () => (selectedEventId ? allChronologicalEvents.findIndex(e => e.id === selectedEventId) : -1),
+   [allChronologicalEvents, selectedEventId]
+ );
+
+ const goToAdjacentEvent = React.useCallback((direction: 1 | -1) => {
+   if (allChronologicalEvents.length === 0) return;
+   const currentIndex = activeChronoIndex >= 0 ? activeChronoIndex : 0;
+   const nextIndex = currentIndex + direction;
+   if (nextIndex < 0 || nextIndex >= allChronologicalEvents.length) return;
+   handleSelectEvent(allChronologicalEvents[nextIndex].data);
+ }, [allChronologicalEvents, activeChronoIndex, handleSelectEvent]);
+
+ // Gestos táctiles de la Ficha Modal para pasar de evento deslizando a izquierda/derecha en móvil
+ const modalTouchStartX = useRef<number | null>(null);
+ const modalTouchStartY = useRef<number | null>(null);
+ const modalTouchDeltaX = useRef<number>(0);
+
+ const handleModalTouchStart = React.useCallback((e: React.TouchEvent) => {
+   if (e.touches.length !== 1) return;
+   modalTouchStartX.current = e.touches[0].clientX;
+   modalTouchStartY.current = e.touches[0].clientY;
+   modalTouchDeltaX.current = 0;
+ }, []);
+
+ const handleModalTouchMove = React.useCallback((e: React.TouchEvent) => {
+   if (modalTouchStartX.current === null || modalTouchStartY.current === null) return;
+   const diffX = e.touches[0].clientX - modalTouchStartX.current;
+   const diffY = e.touches[0].clientY - modalTouchStartY.current;
+   if (Math.abs(diffX) > Math.abs(diffY)) {
+     modalTouchDeltaX.current = diffX;
+   }
+ }, []);
+
+ const handleModalTouchEnd = React.useCallback(() => {
+   if (modalTouchStartX.current === null) return;
+   const dx = modalTouchDeltaX.current;
+   const threshold = 40; // 40px para activar cambio de evento
+   if (dx < -threshold) {
+     goToAdjacentEvent(1);
+   } else if (dx > threshold) {
+     goToAdjacentEvent(-1);
+   }
+   modalTouchStartX.current = null;
+   modalTouchStartY.current = null;
+   modalTouchDeltaX.current = 0;
+ }, [goToAdjacentEvent]);
+
+ // Atajos de teclado de la Ficha Modal: Esc ya lo gestiona ModalPortal internamente.
+ useEffect(() => {
+   if (!showEventFichaModal) return;
+   const handleKeyDown = (e: KeyboardEvent) => {
+     if (e.key === 'ArrowLeft') goToAdjacentEvent(-1);
+     else if (e.key === 'ArrowRight') goToAdjacentEvent(1);
+   };
+   window.addEventListener('keydown', handleKeyDown);
+   return () => window.removeEventListener('keydown', handleKeyDown);
+ }, [showEventFichaModal, goToAdjacentEvent]);
 
  useEffect(() => {
  let isMounted = true;
@@ -740,9 +1267,12 @@ export default function CalendarView({
  contrato_firmado: editDraft.contrato_firmado,
  estado_pago: editDraft.estado_pago,
  tipo: editDraft.tipo,
+ is_posible: editDraft.is_posible,
  notas: editDraft.notas?.trim() || '',
  idioma: editDraft.idioma || undefined,
- setlistId: editDraft.setlistId || undefined
+ setlistId: editDraft.setlistId || undefined,
+ entradasUrl: editDraft.entradasUrl?.trim() || undefined,
+ entradasLugarFisico: editDraft.entradasLugarFisico?.trim() || undefined
  });
  setViewingConcert(null);
  setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
@@ -1201,6 +1731,7 @@ export default function CalendarView({
  estado_pago: concEstadoPago,
  notas: concNotas.trim(),
  tipo: concTipo,
+ is_posible: concIsPosible,
  band_id: targetBand.band_id,
  bandName: targetBand.bandName,
  convocatoria_tipo: convocatoriaTipo,
@@ -1248,17 +1779,19 @@ export default function CalendarView({
 
  // Al cambiar de día, olvidar qué evento estaba elegido: si no, un día con un solo evento podía
  // heredar el id de otro día y no encontrar coincidencia (se ve el primero, que es el
- // comportamiento correcto, pero por accidente en vez de por diseño).
- //
- // El efecto de más arriba (initialSelectedEventId) también cambia selectedDate en el mismo golpe
- // que fija selectedEventId, y los dos efectos se disparan por separado tras ese commit: sin el
- // "prev === initialSelectedEventId", este reset ganaba la carrera y deshacía el deep-link justo
- // después de fijarlo, así que un enlace a un evento concreto de un día con varios acababa
- // mostrando el primero en vez del pedido.
- useEffect(() => {
- setSelectedEventId(prev => (initialSelectedEventId && prev === initialSelectedEventId) ? prev : null);
- // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [selectedDateKey]);
+  // Al cambiar la fecha seleccionada en la cuadrícula, reseteamos el id de evento activo solo si la Ficha Modal
+  // no está abierta y si el evento anterior no pertenecía al nuevo día seleccionado.
+  useEffect(() => {
+    if (showEventFichaModal) return;
+    setSelectedEventId(prev => {
+      if (!prev) return null;
+      if (initialSelectedEventId && prev === initialSelectedEventId) return prev;
+      const belongsToNewDate = filteredConcerts.some(c => c.id === prev && c.fecha === selectedDateKey) ||
+                               filteredRehearsals.some(r => r.id === prev && r.fecha === selectedDateKey);
+      return belongsToNewDate ? prev : null;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDateKey, showEventFichaModal]);
 
  const defaultInitialRunOfShow: Record<string, RunOfShowItem[]> = {
  '2026-07-23': [
@@ -1532,7 +2065,9 @@ export default function CalendarView({
         direccion: selectedConcert.direccion,
         fee: `${selectedConcert.cache} € (Caché Pactado)`,
         notes: selectedConcert.notas,
-        locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`
+        locationQuery: selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`,
+        entradasUrl: selectedConcert.entradasUrl,
+        entradasLugarFisico: selectedConcert.entradasLugarFisico
       }
     : selectedRehearsal
     ? {
@@ -1621,6 +2156,80 @@ export default function CalendarView({
   return { name, initials, logoUrl, palette };
  }, [effectiveBandsList, getEventBandName, isSameBandId, availableBands, activeBandId, activeBandName, currentBandLogo]);
 
+ const getEventShareText = React.useCallback((event: Concert | Rehearsal, isConcert: boolean) => {
+   const bandInfo = getBandIdentity(event.band_id, (event as any).bandName || (event as any).band_name);
+   const dateObj = new Date(event.fecha);
+   const dateFormatted = !isNaN(dateObj.getTime())
+     ? `${dateObj.getDate()} de ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`
+     : event.fecha;
+
+   let msg = `🎸 *CONVOCATORIA: ${bandInfo.name.toUpperCase()}*\n`;
+   if (isConcert) {
+     const c = event as Concert;
+     msg += `🎤 *Concierto:* ${c.sala} (${c.ciudad})\n`;
+     msg += `📅 *Fecha:* ${dateFormatted}\n`;
+     msg += `⏰ *Hora Show:* 21:30h (Prueba de sonido: 18:30h)\n`;
+     if (c.direccion) msg += `📍 *Dirección:* ${c.direccion}\n`;
+     if (c.cache && !isPromoPlan) msg += `💰 *Caché acordado:* ${c.cache} €\n`;
+     if (c.giraNombre) msg += `🚐 *Gira:* ${c.giraNombre}\n`;
+     if (c.entradasUrl) msg += `🎟️ *Venta de entradas:* ${c.entradasUrl}\n`;
+     if (c.notas) msg += `📝 *Notas / Rider:* ${c.notas}\n`;
+
+     // Alertas meteorológicas en la convocatoria
+     const weatherAlerts = getCachedEventWeatherAlerts(c.ciudad, c.fecha);
+     if (weatherAlerts.length > 0) {
+       msg += `\n⚠️ *ALERTAS METEOROLÓGICAS DE ESCENARIO:*\n`;
+       weatherAlerts.forEach(a => {
+         msg += `• ${a.badge}: ${a.shortAdvice}\n`;
+       });
+     }
+   } else {
+     const r = event as Rehearsal;
+     msg += `🥁 *Ensayo / Convocatoria:* ${r.lugar}\n`;
+     msg += `📅 *Fecha:* ${dateFormatted}\n`;
+     msg += `⏰ *Hora:* ${r.hora}\n`;
+     if (r.asunto) msg += `🎯 *Asunto:* ${r.asunto}\n`;
+     if (r.enlace_reunion) msg += `🔗 *Enlace:* ${r.enlace_reunion}\n`;
+     if (r.notas) msg += `📝 *Notas:* ${r.notas}\n`;
+   }
+   msg += `\n⚡ *Gestionado con BandManager.io*`;
+   return msg;
+ }, [getBandIdentity, isPromoPlan, monthNames]);
+
+ const handleShareEventWhatsApp = React.useCallback((event: Concert | Rehearsal, isConcert: boolean) => {
+   const msg = getEventShareText(event, isConcert);
+   const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+   window.open(waUrl, '_blank', 'noopener,noreferrer');
+ }, [getEventShareText]);
+
+ const handleCopyEventFicha = React.useCallback((event: Concert | Rehearsal, isConcert: boolean) => {
+   const msg = getEventShareText(event, isConcert);
+   navigator.clipboard.writeText(msg);
+   setCopiedEventModalId(event.id);
+   setTimeout(() => setCopiedEventModalId(null), 2500);
+   if (onShowNotification) onShowNotification('Ficha del evento copiada al portapapeles', 'success');
+ }, [getEventShareText, onShowNotification]);
+
+ const handleNotifyBandMembers = React.useCallback((event: Concert | Rehearsal, isConcert: boolean) => {
+   const title = isConcert ? `Concierto en ${(event as Concert).sala}` : `Ensayo en ${(event as Rehearsal).lugar}`;
+   const body = `Convocatoria: ${event.fecha} a las ${isConcert ? '21:30' : (event as Rehearsal).hora}`;
+   triggerNativeMobileNotification(title, { body });
+   setShowReminderModal(true);
+   if (onShowNotification) onShowNotification('Convocatoria enviada a los músicos de la banda', 'success');
+ }, [onShowNotification]);
+
+ const handleDeleteEventFromModal = React.useCallback((eventId: string, isConcert: boolean) => {
+   if (isConcert && onDeleteConcert) {
+     onDeleteConcert(eventId);
+   } else if (!isConcert && onDeleteRehearsal) {
+     onDeleteRehearsal(eventId);
+   }
+   setDeletingEventConfirmId(null);
+   setShowEventFichaModal(false);
+   setSelectedEventId(null);
+   if (onShowNotification) onShowNotification('Evento eliminado del calendario', 'info');
+ }, [onDeleteConcert, onDeleteRehearsal, onShowNotification]);
+
  // Render month grid function
  const renderMonthGrid = (year: number, month: number, showMonthHeader: boolean = false) => {
  const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -1668,6 +2277,8 @@ export default function CalendarView({
  const hasCampaign = dayCampaigns.length > 0;
  const activeDateCampaign = dayCampaigns.find(c => c.isActive) || dayCampaigns[0];
  const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
+ const dayWeatherAlerts = dayConcerts.flatMap(c => getCachedEventWeatherAlerts(c.ciudad, formattedDate));
+ const primaryAlert = dayWeatherAlerts[0];
 
  const isSelected = selectedDate.getFullYear() === year &&
  selectedDate.getMonth() === month &&
@@ -1700,103 +2311,93 @@ export default function CalendarView({
  return (
               <button
                 key={`day-${year}-${month}-${cell.day}`}
-                onClick={() => setSelectedDate(new Date(year, month, cell.day))}
-                className={`relative aspect-square p-1 sm:p-1.5 rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
+                onClick={() => {
+                  setSelectedDate(new Date(year, month, cell.day));
+                  if (dayEvents.length > 0) {
+                    setSelectedEventId(dayEvents[0].id);
+                  }
+                }}
+                className={`relative min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-xl flex flex-col justify-between transition-all duration-200 cursor-pointer overflow-hidden ${borderAndBgClass}`}
               >
                 <div className="flex items-center justify-between w-full">
                   <span className={`text-[11px] sm:text-xs font-mono font-bold ${isSelected ? 'text-stone-950 font-black' : isToday ? 'text-amber-400' : ''}`}>
                     {cell.day}
                   </span>
-                  {isToday && !isSelected && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 animate-ping" />
-                  )}
+                  <div className="flex items-center gap-1">
+                    {primaryAlert && (
+                      <CalendarWeatherBadge alert={primaryAlert} compact />
+                    )}
+                    {isToday && !isSelected && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0 animate-ping" />
+                    )}
+                  </div>
                 </div>
 
-                {/* Mini Badges / Event Indicators con identificación clara de banda (Logo/Iniciales + Nombre + Tipo) */}
-                <div className="w-full space-y-0.5 overflow-hidden">
-                  {dayConcerts.slice(0, 1).map(c => {
+                {/* Mini Badges / Event Indicators con texto claro y legible */}
+                <div className="w-full space-y-0.5 sm:space-y-1 overflow-hidden">
+                  {dayConcerts.slice(0, 2).map(c => {
                     const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
+                    const venueLabel = c.sala || c.ciudad || 'Concierto';
+                    const isPosible = Boolean(c.is_posible || (c as any).isPosible);
                     return (
                       <div
                         key={c.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(new Date(year, month, cell.day));
-                          setSelectedEventId(c.id);
+                          handleSelectEvent(c);
                         }}
-                        className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
-                          isSelected ? 'bg-stone-950/20 text-stone-950' : 'bg-amber-500/25 text-amber-300 border border-amber-500/40'
+                        className={`text-[8px] sm:text-[9.5px] font-mono font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
+                          isSelected 
+                            ? 'bg-stone-950/25 text-stone-950 font-black' 
+                            : isPosible
+                            ? 'bg-purple-500/25 text-purple-200 border border-purple-500/40 hover:bg-purple-500/35 hover:text-white shadow-xs'
+                            : 'bg-amber-500/25 text-amber-200 border border-amber-500/40 hover:bg-amber-500/35 hover:text-white shadow-xs'
                         }`}
-                        title={`Concierto [${bandInfo.name}]: ${c.sala} (${c.ciudad})`}
+                        title={`${isPosible ? 'Posible Concierto' : 'Concierto'} [${bandInfo.name}]: ${c.sala} (${c.ciudad})${c.cache ? ` · Caché: ${c.cache}€` : ''}`}
                       >
-                        {bandInfo.logoUrl ? (
-                          <img
-                            src={bandInfo.logoUrl}
-                            alt={bandInfo.name}
-                            className="w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/60"
-                            onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display = 'none';
-                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                              if (fb) (fb as HTMLElement).classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
-                          {bandInfo.initials}
+                        <span className="shrink-0 text-[8.5px] leading-none">{isPosible ? '🎯' : '🎸'}</span>
+                        <span className="truncate font-extrabold tracking-tight">
+                          {venueLabel}
                         </span>
-                        <span className="truncate flex items-center gap-0.5">
-                          <span>🎸</span>
-                          <span className="font-extrabold text-white opacity-95">{bandInfo.name}</span>
-                          <span className="opacity-75">· {c.ciudad || c.sala}</span>
-                        </span>
+                        {c.ciudad && c.sala && (
+                          <span className="hidden md:inline opacity-75 text-[8px] shrink-0 font-normal">
+                            · {c.ciudad}
+                          </span>
+                        )}
                       </div>
                     );
                   })}
-                  {dayRehearsals.slice(0, 1).map(r => {
+                  {dayRehearsals.slice(0, dayConcerts.length > 0 ? 1 : 2).map(r => {
                     const isReu = r.tipo_evento === 'reunion';
                     const bandInfo = getBandIdentity(r.band_id, (r as any).bandName || (r as any).band_name);
+                    const rehearsalLabel = isReu
+                      ? (r.asunto || 'Reunión')
+                      : (r.lugar.split(',')[0].replace(/Rehearsal|Studios/gi, '').trim() || 'Ensayo');
                     return (
                       <div
                         key={r.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(new Date(year, month, cell.day));
-                          setSelectedEventId(r.id);
+                          handleSelectEvent(r);
                         }}
-                        className={`text-[8px] sm:text-[9px] font-mono font-bold truncate px-1 py-0.5 rounded flex items-center gap-1 ${
+                        className={`text-[8px] sm:text-[9.5px] font-mono font-bold truncate px-1 sm:px-1.5 py-0.5 rounded flex items-center gap-1 transition-all ${
                           isSelected
-                            ? 'bg-stone-950/20 text-stone-950'
+                            ? 'bg-stone-950/25 text-stone-950 font-black'
                             : isReu
-                            ? 'bg-indigo-500/25 text-indigo-300 border border-indigo-500/40'
-                            : 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40'
+                            ? 'bg-indigo-500/25 text-indigo-200 border border-indigo-500/40 hover:bg-indigo-500/35 hover:text-white shadow-xs'
+                            : 'bg-emerald-500/25 text-emerald-200 border border-emerald-500/40 hover:bg-emerald-500/35 hover:text-white shadow-xs'
                         }`}
                         title={isReu ? `Reunión [${bandInfo.name}]: ${r.asunto || r.lugar}` : `Ensayo [${bandInfo.name}]: ${r.lugar}`}
                       >
-                        {bandInfo.logoUrl ? (
-                          <img
-                            src={bandInfo.logoUrl}
-                            alt={bandInfo.name}
-                            className={`w-3.5 h-3.5 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isReu ? 'border-indigo-400/60' : 'border-emerald-400/60'}`}
-                            onError={(e) => {
-                              (e.currentTarget as HTMLElement).style.display = 'none';
-                              const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
-                              if (fb) (fb as HTMLElement).classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span className={`fallback-initials w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
-                          {bandInfo.initials}
-                        </span>
-                        <span className="truncate flex items-center gap-0.5">
-                          <span>{isReu ? '🤝' : '🥁'}</span>
-                          <span className="font-extrabold text-white opacity-95">{bandInfo.name}</span>
-                          <span className="opacity-75">· {isReu ? (r.asunto || 'Reunión') : (r.lugar.split(',')[0])}</span>
+                        <span className="shrink-0 text-[8.5px] leading-none">{isReu ? '🤝' : '🥁'}</span>
+                        <span className="truncate font-extrabold tracking-tight">
+                          {rehearsalLabel}
                         </span>
                       </div>
                     );
                   })}
-                  {dayEvents.length > 2 && (
-                    <div className="text-[8px] font-mono text-center opacity-80">
+                  {dayEvents.length > (dayConcerts.length > 0 ? 2 : 2) && (
+                    <div className="text-[7.5px] sm:text-[8.5px] font-mono text-center font-bold text-amber-300 opacity-90">
                       +{dayEvents.length - 2} más
                     </div>
                   )}
@@ -1892,6 +2493,13 @@ export default function CalendarView({
                     <span className={`text-xs font-mono font-bold truncate ${isSelected ? 'text-amber-400' : isToday ? 'text-amber-300' : 'text-slate-400'}`}>
                       {fullWeekdays[idx].slice(0, 3)} {d.getDate()}
                     </span>
+                    {(() => {
+                      const dIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                      const cCity = dayConcerts.find(c => c.ciudad)?.ciudad;
+                      if (!cCity) return null;
+                      const wAlerts = getCachedEventWeatherAlerts(cCity, dIso);
+                      return wAlerts[0] ? <CalendarWeatherBadge alert={wAlerts[0]} compact /> : null;
+                    })()}
                     {isToday && (
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping shrink-0" />
                     )}
@@ -1914,17 +2522,21 @@ export default function CalendarView({
                   {dayConcerts.map(c => {
                     const bandInfo = getBandIdentity(c.band_id, (c as any).bandName || (c as any).band_name);
                     const isEvtSelected = selectedEventId === c.id;
+                    const isPosible = Boolean(c.is_posible || (c as any).isPosible);
                     return (
                       <div
                         key={c.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(d);
-                          setSelectedEventId(c.id);
+                          handleSelectEvent(c);
                         }}
                         className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
                           isEvtSelected
-                            ? 'bg-amber-500/25 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                            ? isPosible
+                              ? 'bg-purple-500/25 border-purple-400 ring-1 ring-purple-400/50 shadow-md'
+                              : 'bg-amber-500/25 border-amber-400 ring-1 ring-amber-400/50 shadow-md'
+                            : isPosible
+                            ? 'bg-purple-950/30 border-purple-500/40 hover:border-purple-400 hover:bg-purple-900/30 text-purple-200'
                             : 'bg-amber-950/30 border-amber-500/40 hover:border-amber-400 hover:bg-amber-900/30'
                         }`}
                       >
@@ -1933,7 +2545,7 @@ export default function CalendarView({
                             <img
                               src={bandInfo.logoUrl}
                               alt={bandInfo.name}
-                              className="w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border border-amber-400/60"
+                              className={`w-4 h-4 rounded-full object-contain bg-black/60 p-0.5 shrink-0 border ${isPosible ? 'border-purple-400/60' : 'border-amber-400/60'}`}
                               onError={(e) => {
                                 (e.currentTarget as HTMLElement).style.display = 'none';
                                 const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials');
@@ -1944,12 +2556,17 @@ export default function CalendarView({
                           <span className={`fallback-initials w-4 h-4 rounded-full shrink-0 flex items-center justify-center text-[8px] font-black ${bandInfo.palette.badge} ${bandInfo.logoUrl ? 'hidden' : ''}`}>
                             {bandInfo.initials}
                           </span>
-                          <span className="text-[10px] font-bold text-amber-200 truncate" title={bandInfo.name}>
+                          <span className={`text-[10px] font-bold ${isPosible ? 'text-purple-200' : 'text-amber-200'} truncate`} title={bandInfo.name}>
                             {bandInfo.name}
                           </span>
+                          {isPosible && (
+                            <span className="ml-auto text-[8px] font-mono uppercase font-black px-1.5 py-0.5 rounded bg-purple-500/30 text-purple-200 border border-purple-500/40">
+                              Posible
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] font-bold text-white truncate flex items-center gap-1">
-                          <span>🎸</span>
+                          <span>{isPosible ? '🎯' : '🎸'}</span>
                           <span className="truncate">{c.sala}</span>
                         </div>
                         {c.ciudad && (
@@ -1957,6 +2574,7 @@ export default function CalendarView({
                             📍 {c.ciudad}
                           </div>
                         )}
+                        <HolidayDateWarning date={c.fecha} city={c.ciudad} compact className="mt-1" />
                         {((c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')) && (
                           <div className="text-[9px] font-mono text-neutral-400 mt-1">
                             🕒 {(c as any).hora || (c.fecha.includes('T') ? c.fecha.split('T')[1].slice(0, 5) : '')}
@@ -1975,8 +2593,7 @@ export default function CalendarView({
                         key={r.id}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedDate(d);
-                          setSelectedEventId(r.id);
+                          handleSelectEvent(r);
                         }}
                         className={`p-2 rounded-lg cursor-pointer transition-all border text-left min-w-0 ${
                           isEvtSelected
@@ -2172,10 +2789,7 @@ export default function CalendarView({
                       return (
                         <div
                           key={evt.id}
-                          onClick={() => {
-                            setSelectedDate(d);
-                            setSelectedEventId(evt.id);
-                          }}
+                          onClick={() => handleSelectEvent(evt)}
                           className={`flex items-center justify-between p-2.5 rounded-lg cursor-pointer border transition-all ${
                             isEvtSelected
                               ? 'bg-amber-500/20 border-amber-400 shadow-md ring-1 ring-amber-400/50'
@@ -2219,8 +2833,12 @@ export default function CalendarView({
                                   {bandInfo.name}
                                 </span>
                               </div>
-                              <div className="text-xs text-slate-300 font-medium truncate mt-0.5">
-                                {isConcert ? `${c?.sala}${c?.ciudad ? ` (${c?.ciudad})` : ''}` : isReu ? (r?.asunto || 'Reunión de coordinación') : r?.lugar}
+                              <div className="text-xs text-slate-300 font-medium truncate mt-0.5 flex items-center gap-1.5 flex-wrap">
+                                <span>{isConcert ? `${c?.sala}${c?.ciudad ? ` (${c?.ciudad})` : ''}` : isReu ? (r?.asunto || 'Reunión de coordinación') : r?.lugar}</span>
+                                {isConcert && c?.ciudad && (() => {
+                                  const alerts = getCachedEventWeatherAlerts(c.ciudad, dateStr);
+                                  return alerts[0] ? <CalendarWeatherBadge alert={alerts[0]} /> : null;
+                                })()}
                               </div>
                             </div>
                           </div>
@@ -2319,11 +2937,19 @@ export default function CalendarView({
                         </div>
                         <button
                           type="button"
-                          onClick={() => { setShowAddEventDropdown(false); setShowCreateModal('concert'); }}
+                          onClick={() => { setShowAddEventDropdown(false); setConcIsPosible(false); setShowCreateModal('concert'); }}
                           className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-amber-500/15 hover:text-amber-400 transition-colors cursor-pointer"
                         >
                           <span>🎸</span>
                           <span>+ Concierto</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setShowAddEventDropdown(false); setConcIsPosible(true); setShowCreateModal('concert'); }}
+                          className="w-full px-3 py-2 text-left text-xs font-mono font-bold flex items-center gap-2 hover:bg-purple-500/15 hover:text-purple-400 transition-colors cursor-pointer"
+                        >
+                          <span>🎯</span>
+                          <span>+ Bolo Posible</span>
                         </button>
                         <button
                           type="button"
@@ -2427,13 +3053,6 @@ export default function CalendarView({
 
       {/* Right: View Switchers + Band Filter */}
       <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-between lg:justify-end shrink-0">
-        <span 
-          className="hidden xl:inline-flex items-center gap-1 text-[9px] font-mono text-neutral-400/80 px-1.5 py-0.5 rounded bg-neutral-800/40 border border-neutral-700/30 select-none cursor-default shrink-0"
-          title="Puedes cambiar de mes deslizando con el dedo, ratón o trackpad"
-        >
-          ⇄ Deslizar
-        </span>
-
         {/* Vistas estilo Google Calendar: 1M | 2M | Semana | Agenda + Configuración */}
         <div className="relative inline-flex items-center shrink-0" ref={viewConfigRef}>
             <div className={`flex items-center rounded-lg p-0.5 ${
@@ -2838,6 +3457,380 @@ export default function CalendarView({
  </AnimatePresence>
  </div>
 
+ {/* SELECTED DAY AGENDA CARD - Inmediatamente visible bajo el calendario */}
+ <div
+   id="calendar-selected-day-banner"
+   className={`mt-5 p-4 rounded-2xl border transition-all duration-200 ${
+     isStitchLight
+       ? 'bg-white border-slate-200 shadow-sm'
+       : 'bg-neutral-900/95 border-zinc-800 shadow-xl'
+   }`}
+ >
+   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+     <div className="flex items-center gap-3">
+       <div className={`w-10 h-10 rounded-xl flex flex-col items-center justify-center font-mono font-black shrink-0 border ${
+         isStitchLight
+           ? 'bg-sky-50 border-sky-200 text-sky-700'
+           : 'bg-amber-500/15 border-amber-500/40 text-amber-300'
+       }`}>
+         <span className="text-sm leading-none">{selectedDate.getDate()}</span>
+         <span className="text-[8px] uppercase tracking-wider mt-0.5 opacity-80">
+           {monthNames[selectedDate.getMonth()]?.slice(0, 3)}
+         </span>
+       </div>
+       <div>
+         <div className="flex items-center gap-2 flex-wrap">
+           <h4 className={`text-sm sm:text-base font-bold font-display capitalize ${textTitle}`}>
+             {selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+           </h4>
+           {dayEventsList.length > 0 && (
+             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+               {dayEventsList.length} {dayEventsList.length === 1 ? 'evento' : 'eventos'}
+             </span>
+           )}
+         </div>
+         <p className={`text-[11px] font-mono ${textSub}`}>
+           {dayEventsList.length === 0
+             ? 'Día libre · Sin actividad programada'
+             : selectedConcert
+             ? `Concierto en ${selectedConcert.sala}${selectedConcert.ciudad ? ` (${selectedConcert.ciudad})` : ''}`
+             : selectedRehearsal
+             ? (selectedRehearsal.tipo_evento === 'reunion' ? `Reunión: ${selectedRehearsal.asunto || 'Coordinación'}` : `Ensayo en ${selectedRehearsal.lugar}`)
+             : 'Eventos del día'}
+         </p>
+       </div>
+     </div>
+
+     {/* Botones de acción rápida para la fecha seleccionada */}
+     <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
+       <button
+         type="button"
+         onClick={() => setShowCreateModal('concert')}
+         className="px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+       >
+         <span>🎸</span> + Concierto
+       </button>
+       <button
+         type="button"
+         onClick={() => setShowCreateModal('rehearsal')}
+         className="px-2.5 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+       >
+         <span>🥁</span> + Ensayo
+       </button>
+     </div>
+   </div>
+
+   {/* Contenido de eventos del día */}
+   {dayEventsList.length === 0 ? (
+     <div className="py-4 text-center">
+       <p className={`text-xs font-mono ${textSub}`}>
+         No hay conciertos ni ensayos programados para este día.
+       </p>
+       <p className={`text-[10px] font-mono mt-1 ${textMuted}`}>
+         Pulsa en <span className="text-amber-400 font-bold">+ Concierto</span> o <span className="text-emerald-400 font-bold">+ Ensayo</span> para agendar en esta fecha.
+       </p>
+     </div>
+   ) : (
+     <div className="mt-3 space-y-2.5">
+       {/* Selector de eventos si el día tiene más de uno */}
+       {hasMultipleDayEvents && (
+         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 mb-2">
+           <span className="text-[10px] font-mono text-neutral-400 shrink-0 mr-1">Ver evento:</span>
+           {dayEventsList.map(evt => {
+             const isActive = evt.id === activeDayEventId;
+             return (
+               <button
+                 key={evt.id}
+                 type="button"
+                 onClick={() => setSelectedEventId(evt.id)}
+                 className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border transition-all cursor-pointer shrink-0 ${
+                   isActive
+                     ? evt.kind === 'concert'
+                       ? 'bg-amber-500/30 border-amber-400 text-amber-200 shadow-xs'
+                       : 'bg-emerald-500/30 border-emerald-400 text-emerald-200 shadow-xs'
+                     : 'bg-neutral-800/80 border-neutral-700 text-neutral-400 hover:bg-neutral-700'
+                 }`}
+               >
+                 {evt.label}
+               </button>
+             );
+           })}
+         </div>
+       )}
+
+       {/* Tarjeta detallada del concierto activo */}
+       {selectedConcert && (() => {
+         const bandInfo = getBandIdentity(selectedConcert.band_id, (selectedConcert as any).bandName || (selectedConcert as any).band_name);
+         return (
+           <div className="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/40 space-y-2.5">
+             <div className="flex items-start justify-between gap-3 flex-wrap">
+               <div className="min-w-0">
+                 <div className="flex items-center gap-2 flex-wrap mb-1">
+                   <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-amber-500 text-stone-950 shadow-xs">
+                     🎸 Concierto
+                   </span>
+                   <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-neutral-800 text-neutral-200 border border-neutral-700">
+                     {bandInfo.name}
+                   </span>
+                   {selectedConcert.cache ? (
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black text-amber-300 bg-amber-500/10 border border-amber-500/30">
+                       💰 {selectedConcert.cache.toLocaleString('es-ES')} €
+                     </span>
+                   ) : null}
+                   <span className={`px-2 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase ${
+                     selectedConcert.estado_pago === 'pagado'
+                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                       : selectedConcert.estado_pago === 'anticipo'
+                       ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                       : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                   }`}>
+                     {selectedConcert.estado_pago === 'pagado' ? '✓ Cobrado' : selectedConcert.estado_pago === 'anticipo' ? 'Anticipo recibido' : 'Pendiente cobro'}
+                   </span>
+                 </div>
+                 <h3 className={`text-base sm:text-lg font-bold font-display ${textTitle} flex items-center gap-1.5 flex-wrap`}>
+                   <span>{selectedConcert.sala}</span>
+                   {selectedConcert.ciudad && (
+                     <span className="text-amber-400 font-normal text-sm sm:text-base">
+                       ({selectedConcert.ciudad})
+                     </span>
+                   )}
+                 </h3>
+                 {selectedConcert.direccion && (
+                   <p className="text-[10px] font-mono text-neutral-400 mt-0.5">
+                     📍 {selectedConcert.direccion}
+                   </p>
+                 )}
+               </div>
+
+               {/* Botones de acción: Accesos directos y Abrir Ficha */}
+               <div className="flex items-center gap-1.5 flex-wrap">
+                 <button
+                   type="button"
+                   onClick={() => {
+                     setModalActiveTab('tecnica');
+                     setShowEventFichaModal(true);
+                   }}
+                   className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   title="1. Logística técnica y rider"
+                 >
+                   <Wrench className="w-3 h-3" />
+                   <span>1. Técnica</span>
+                 </button>
+                 <button
+                   type="button"
+                   onClick={() => {
+                     setModalActiveTab('contactos');
+                     setShowEventFichaModal(true);
+                   }}
+                   className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   title="2. Contactos clave y WhatsApp directo"
+                 >
+                   <Phone className="w-3 h-3" />
+                   <span>2. Contactos</span>
+                 </button>
+                 <button
+                   type="button"
+                   onClick={() => {
+                     setModalActiveTab('cierre');
+                     setShowEventFichaModal(true);
+                   }}
+                   className="px-2 py-1 rounded-lg text-[10px] font-mono font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   title="5. Checklist de cierre de material y carga de furgoneta"
+                 >
+                   <ShieldCheck className="w-3 h-3" />
+                   <span>5. Cierre Material</span>
+                 </button>
+                 <button
+                   type="button"
+                   onClick={() => {
+                     setModalActiveTab('resumen');
+                     setShowEventFichaModal(true);
+                   }}
+                   className="px-3 py-1.5 rounded-lg text-xs font-mono font-black bg-amber-500 hover:bg-amber-400 text-stone-950 flex items-center gap-1.5 cursor-pointer shadow-md shadow-amber-500/20 transition-all active:scale-95"
+                 >
+                   <Maximize2 className="w-3.5 h-3.5" />
+                   <span>Abrir Ficha Completa</span>
+                 </button>
+               </div>
+             </div>
+
+             {/* Fila de metadatos adicionales */}
+             <div className="flex items-center gap-3 text-[10px] font-mono text-neutral-300 flex-wrap pt-1 border-t border-amber-500/20">
+               {selectedConcert.aforo_total ? (
+                 <span className="flex items-center gap-1">
+                   <span>👥</span> Aforo: {selectedConcert.aforo_vendido || 0} / {selectedConcert.aforo_total}
+                 </span>
+               ) : null}
+               <span className="flex items-center gap-1">
+                 <span>📄</span> {selectedConcert.contrato_firmado ? 'Contrato firmado' : 'Contrato pendiente'}
+               </span>
+               {selectedConcert.tipo && (
+                 <span className="flex items-center gap-1 uppercase opacity-80">
+                   <span>🏷️</span> Tipo: {selectedConcert.tipo}
+                 </span>
+               )}
+             </div>
+
+             {/* Botones secundarios */}
+             <div className="flex items-center gap-2 pt-1 flex-wrap">
+               <button
+                 type="button"
+                 onClick={() => {
+                   setReminderNotes('');
+                   setReminderSuccessMsg(null);
+                   setReminderErrorMsg(null);
+                   setShowReminderModal(true);
+                 }}
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-sky-300 border border-sky-500/30 flex items-center gap-1 cursor-pointer"
+               >
+                 <Bell className="w-3 h-3 text-sky-400" />
+                 <span>Notificar Banda</span>
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setViewingConcert(selectedConcert)}
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-amber-300 border border-amber-500/30 flex items-center gap-1 cursor-pointer"
+               >
+                 <Edit className="w-3 h-3 text-amber-400" />
+                 <span>Editar Concierto</span>
+               </button>
+               {(selectedConcert.direccion || selectedConcert.sala) && (
+                 <a
+                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                     selectedConcert.direccion || `${selectedConcert.sala}, ${selectedConcert.ciudad}`
+                   )}`}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 cursor-pointer"
+                 >
+                   <MapPin className="w-3 h-3 text-emerald-400" />
+                   <span>Google Maps</span>
+                 </a>
+               )}
+             </div>
+           </div>
+         );
+       })()}
+
+       {/* Tarjeta detallada del ensayo activo */}
+       {selectedRehearsal && (() => {
+         const isReu = selectedRehearsal.tipo_evento === 'reunion';
+         const bandInfo = getBandIdentity(selectedRehearsal.band_id, (selectedRehearsal as any).bandName || (selectedRehearsal as any).band_name);
+         return (
+           <div className={`p-3.5 rounded-xl border space-y-2.5 ${
+             isReu
+               ? 'bg-indigo-950/20 border-indigo-500/40'
+               : 'bg-emerald-950/20 border-emerald-500/40'
+           }`}>
+             <div className="flex items-start justify-between gap-3 flex-wrap">
+               <div className="min-w-0">
+                 <div className="flex items-center gap-2 flex-wrap mb-1">
+                   <span className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider ${
+                     isReu ? 'bg-indigo-500 text-white' : 'bg-emerald-500 text-stone-950'
+                   }`}>
+                     {isReu ? '🤝 Reunión' : '🥁 Ensayo'}
+                   </span>
+                   <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-neutral-800 text-neutral-200 border border-neutral-700">
+                     {bandInfo.name}
+                   </span>
+                   {selectedRehearsal.hora && (
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-neutral-300 bg-neutral-800 border border-neutral-700">
+                       🕒 {selectedRehearsal.hora}
+                     </span>
+                   )}
+                 </div>
+                 <h3 className={`text-base sm:text-lg font-bold font-display ${textTitle}`}>
+                   {isReu ? (selectedRehearsal.asunto || 'Reunión de Banda') : selectedRehearsal.lugar}
+                 </h3>
+                 {isReu && selectedRehearsal.enlace_reunion && (
+                   <p className="text-[10px] font-mono text-sky-400 mt-0.5 truncate">
+                     🔗 {selectedRehearsal.enlace_reunion}
+                   </p>
+                 )}
+                 {!isReu && selectedRehearsal.notas && (
+                   <p className="text-[10px] font-mono text-neutral-400 mt-0.5 line-clamp-2">
+                     📝 {selectedRehearsal.notas}
+                   </p>
+                 )}
+               </div>
+
+               {/* Botón de acción principal: Abrir Ficha */}
+               <button
+                 type="button"
+                 onClick={() => setShowEventFichaModal(true)}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-black flex items-center gap-1.5 cursor-pointer shadow-md transition-all active:scale-95 ${
+                   isReu
+                     ? 'bg-indigo-500 hover:bg-indigo-400 text-white shadow-indigo-500/20'
+                     : 'bg-emerald-500 hover:bg-emerald-400 text-stone-950 shadow-emerald-500/20'
+                 }`}
+               >
+                 <Maximize2 className="w-3.5 h-3.5" />
+                 <span>Abrir Ficha</span>
+               </button>
+             </div>
+
+             {/* Fila de asistentes */}
+             {(() => {
+               const raw = selectedRehearsal.asistentes;
+               let list: string[] = [];
+               if (Array.isArray(raw)) {
+                 list = raw;
+               } else if (typeof raw === 'string' && (raw as string).trim()) {
+                 const s = (raw as string).trim();
+                 if (s.startsWith('[') && s.endsWith(']')) {
+                   try {
+                     const p = JSON.parse(s);
+                     if (Array.isArray(p)) list = p;
+                   } catch {}
+                 }
+                 if (list.length === 0) {
+                   list = s.split(',').map(x => x.trim()).filter(Boolean);
+                 }
+               }
+               if (list.length === 0) return null;
+               return (
+                 <div className="flex items-center gap-2 text-[10px] font-mono text-neutral-300 flex-wrap pt-1 border-t border-white/10">
+                   <span className="text-neutral-400">Convocados:</span>
+                   {list.map((a, i) => (
+                     <span key={i} className="px-1.5 py-0.5 rounded bg-neutral-800 border border-neutral-700 text-neutral-200">
+                       {typeof a === 'string' ? a : String(a)}
+                     </span>
+                   ))}
+                 </div>
+               );
+             })()}
+
+             {/* Botones secundarios */}
+             <div className="flex items-center gap-2 pt-1 flex-wrap">
+               <button
+                 type="button"
+                 onClick={() => {
+                   setReminderNotes('');
+                   setReminderSuccessMsg(null);
+                   setReminderErrorMsg(null);
+                   setShowReminderModal(true);
+                 }}
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-sky-300 border border-sky-500/30 flex items-center gap-1 cursor-pointer"
+               >
+                 <Bell className="w-3 h-3 text-sky-400" />
+                 <span>Notificar Convocatoria</span>
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setViewingRehearsal(selectedRehearsal)}
+                 className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold bg-neutral-800 hover:bg-neutral-700 text-emerald-300 border border-emerald-500/30 flex items-center gap-1 cursor-pointer"
+               >
+                 <Edit className="w-3 h-3 text-emerald-400" />
+                 <span>Editar Ensayo</span>
+               </button>
+             </div>
+           </div>
+         );
+       })()}
+     </div>
+   )}
+ </div>
+
  {/* Legend */}
  <div className={`flex flex-wrap gap-4 text-[10px] font-mono pt-4 mt-6 ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
  <div className="flex items-center gap-1.5">
@@ -3145,6 +4138,21 @@ export default function CalendarView({
  {(selectedConcert || selectedRehearsal) && (
  <button
  type="button"
+ onClick={() => setShowEventFichaModal(true)}
+ className={`hidden lg:flex px-2.5 py-1.5 text-[10px] font-mono font-bold rounded-lg border transition-colors cursor-pointer items-center gap-1 ${
+ isStitchLight
+ ? 'bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100'
+ : 'bg-gradient-to-r from-amber-500/20 to-yellow-600/20 border-amber-400/60 text-amber-300 hover:from-amber-500/30 hover:to-yellow-600/30'
+ }`}
+ title="Ampliar esta ficha en un modal centrado"
+ >
+ <Maximize2 className="w-3 h-3" />
+ Ampliar
+ </button>
+ )}
+ {(selectedConcert || selectedRehearsal) && (
+ <button
+ type="button"
  onClick={() => {
  setReminderNotes('');
  setReminderSuccessMsg(null);
@@ -3248,6 +4256,18 @@ export default function CalendarView({
  </div>
  )}
 
+ {/* Previsión Meteorológica Rápida en Panel Lateral */}
+ {(selectedConcert?.ciudad || (selectedRehearsal?.lugar && selectedRehearsal.lugar.length > 2)) && (
+   <div className="mb-4">
+     <EventWeatherCard
+       city={selectedConcert?.ciudad || selectedRehearsal?.lugar?.split(',')[1]?.trim() || selectedRehearsal?.lugar?.split('-')[1]?.trim() || selectedRehearsal?.lugar || ''}
+       dateStr={selectedDateKey}
+       timeStr={selectedConcert ? '21:30' : (selectedRehearsal?.hora || '18:00')}
+       isStitchLight={isStitchLight}
+     />
+   </div>
+ )}
+
  {/* Core Info */}
  <div className={`space-y-3 mb-6 rounded-lg p-3 ${
  isStitchLight ? 'bg-slate-50' : 'bg-[#131313]/60'
@@ -3284,6 +4304,27 @@ export default function CalendarView({
  <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
  <span className={`font-mono ${textSub}`}>Compensación:</span>
  <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
+ </div>
+ )}
+ {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
+ <div className="flex flex-col gap-1.5 pt-2 mt-1 border-t border-neutral-800/40">
+ {selectedEventDetails.entradasUrl && (
+ <a
+ href={selectedEventDetails.entradasUrl}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold bg-emerald-500 text-stone-950 hover:bg-emerald-400 transition-colors w-fit"
+ >
+ <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+ </a>
+ )}
+ {selectedEventDetails.entradasLugarFisico && (
+ <div className="flex items-center gap-2 text-[10px]">
+ <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+ <span className={`font-mono ${textSub}`}>También en:</span>
+ <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
+ </div>
+ )}
  </div>
  )}
  {!isPromoPlan && selectedEventDetails.type === 'concert' && selectedConcert && (() => {
@@ -3326,7 +4367,12 @@ export default function CalendarView({
   <span className="font-bold font-mono text-sky-400">
   {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
   ? 'Banda Completa'
-  : `Parcial (${(selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres || []).join(', ') || 'Seleccionados'})`}
+  : `Parcial (${(() => {
+      const raw: any = selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres;
+      if (Array.isArray(raw)) return raw.join(', ') || 'Seleccionados';
+      if (typeof raw === 'string' && raw.trim()) return raw.trim();
+      return 'Seleccionados';
+    })()})`}
   </span>
   </div>
   )}
@@ -3513,51 +4559,115 @@ export default function CalendarView({
  </div>
 
  {/* Subtabs for Checklist */}
- <div className={`flex mb-4 ${isStitchLight ? '-slate-100' : '-neutral-900'}`}>
+ <div className={`flex flex-wrap gap-1 mb-4 pb-1 border-b ${isStitchLight ? 'border-slate-200' : 'border-neutral-800'}`}>
  <button
  id="calendar-subtab-runofshow"
  onClick={() => setActiveTab('runofshow')}
- className={`flex-1 pb-2 text-[10px] font-mono uppercase tracking-widest cursor-pointer transition-colors ${
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
  activeTab === 'runofshow'
  ? isStitchLight
- ? ' text-sky-400 font-bold'
- : ' text-[#f2ca50] font-bold'
+ ? 'bg-amber-100 text-amber-900 font-bold'
+ : 'bg-amber-400/20 text-[#f2ca50] font-bold'
  : isStitchLight
- ? 'text-slate-400 hover:text-slate-600'
- : 'text-neutral-500 hover:text-neutral-300'
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
  }`}
  >
- Timing del Bolo
+ Timing
  </button>
  <button
- id="calendar-subtab-gear"
- onClick={() => setActiveTab('gear')}
- className={`flex-1 pb-2 text-[10px] font-mono uppercase tracking-widest cursor-pointer transition-colors ${
- activeTab === 'gear'
+ id="calendar-subtab-tecnica"
+ onClick={() => setActiveTab('tecnica')}
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ activeTab === 'tecnica'
  ? isStitchLight
- ? ' text-sky-400 font-bold'
- : ' text-[#ffb596] font-bold'
+ ? 'bg-sky-100 text-sky-900 font-bold'
+ : 'bg-sky-500/20 text-sky-400 font-bold'
  : isStitchLight
- ? 'text-slate-400 hover:text-slate-600'
- : 'text-neutral-500 hover:text-neutral-300'
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
  }`}
  >
- Cacharros
+ <Wrench className="w-2.5 h-2.5" />
+ <span>1. Logística</span>
+ </button>
+ <button
+ id="calendar-subtab-contactos"
+ onClick={() => setActiveTab('contactos')}
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ activeTab === 'contactos'
+ ? isStitchLight
+ ? 'bg-emerald-100 text-emerald-900 font-bold'
+ : 'bg-emerald-500/20 text-emerald-400 font-bold'
+ : isStitchLight
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ <Users className="w-2.5 h-2.5" />
+ <span>2. Contactos</span>
+ </button>
+ <button
+ id="calendar-subtab-merchan"
+ onClick={() => setActiveTab('merchan')}
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ activeTab === 'merchan'
+ ? isStitchLight
+ ? 'bg-amber-100 text-amber-900 font-bold'
+ : 'bg-amber-500/20 text-amber-400 font-bold'
+ : isStitchLight
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ <Shirt className="w-2.5 h-2.5" />
+ <span>3. Merchan</span>
+ </button>
+ <button
+ id="calendar-subtab-cierre"
+ onClick={() => setActiveTab('cierre')}
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors flex items-center gap-1 ${
+ activeTab === 'cierre'
+ ? isStitchLight
+ ? 'bg-purple-100 text-purple-900 font-bold'
+ : 'bg-purple-500/20 text-purple-400 font-bold'
+ : isStitchLight
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ <ShieldCheck className="w-2.5 h-2.5" />
+ <span>5. Cierre</span>
  </button>
  <button
  id="calendar-subtab-roadbook"
  onClick={() => setActiveTab('roadbook')}
- className={`flex-1 pb-2 text-[10px] font-mono uppercase tracking-widest cursor-pointer transition-colors ${
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
  activeTab === 'roadbook'
  ? isStitchLight
- ? ' text-sky-400 font-bold'
- : ' text-[#10b981] font-bold'
+ ? 'bg-teal-100 text-teal-900 font-bold'
+ : 'bg-teal-500/20 text-[#10b981] font-bold'
  : isStitchLight
- ? 'text-slate-400 hover:text-slate-600'
- : 'text-neutral-500 hover:text-neutral-300'
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
  }`}
  >
- Hoja de Ruta & Rider
+ Ruta
+ </button>
+ <button
+ id="calendar-subtab-gear"
+ onClick={() => setActiveTab('gear')}
+ className={`px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded cursor-pointer transition-colors ${
+ activeTab === 'gear'
+ ? isStitchLight
+ ? 'bg-orange-100 text-orange-900 font-bold'
+ : 'bg-orange-500/20 text-[#ffb596] font-bold'
+ : isStitchLight
+ ? 'text-slate-500 hover:text-slate-800'
+ : 'text-neutral-400 hover:text-neutral-200'
+ }`}
+ >
+ Cacharros
  </button>
  </div>
 
@@ -3731,6 +4841,310 @@ export default function CalendarView({
  >
  <Download className="w-3.5 h-3.5" />
  <span>Imprimir / Exportar Hoja de Ruta (PDF)</span>
+ </button>
+ </div>
+ );
+ })()}
+ </div>
+ ) : activeTab === 'tecnica' ? (
+ <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+ {(() => {
+ const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
+ return (
+ <div className="space-y-2.5">
+ <div className={`p-2.5 rounded-lg border ${isStitchLight ? 'bg-sky-50/70 border-sky-100' : 'bg-sky-950/20 border-sky-800/40'}`}>
+ <div className="flex items-center justify-between mb-2">
+ <span className="font-bold flex items-center gap-1 text-sky-400 font-mono uppercase text-[10px]">
+ <Wrench className="w-3 h-3" /> 1. Logística Técnica
+ </span>
+ <button
+ type="button"
+ onClick={() => {
+ setModalActiveTab('tecnica');
+ setShowEventFichaModal(true);
+ }}
+ className="text-[9px] underline text-sky-400 hover:text-sky-300 font-mono cursor-pointer"
+ >
+ Editar Completo →
+ </button>
+ </div>
+ <div className="grid grid-cols-2 gap-1.5 text-[9px]">
+ <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+ <span className="block text-neutral-400 font-mono uppercase text-[8px]">Prueba de Sonido</span>
+ <span className="font-bold text-amber-400">{currentRb.horaPruebaSonido || '18:00'}</span>
+ </div>
+ <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+ <span className="block text-neutral-400 font-mono uppercase text-[8px]">Horario Show</span>
+ <span className="font-bold text-emerald-400">{currentRb.horaShow || '21:30'}</span>
+ </div>
+ <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+ <span className="block text-neutral-400 font-mono uppercase text-[8px]">Técnico Sonido FOH</span>
+ <span className="font-medium truncate">{currentRb.tecnicoSonido || 'Propio / Sala'}</span>
+ </div>
+ <div className={`p-1.5 rounded ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+ <span className="block text-neutral-400 font-mono uppercase text-[8px]">Sistema P.A.</span>
+ <span className="font-medium truncate">{currentRb.paEspecificaciones ? 'Especificado' : 'Estándar Sala'}</span>
+ </div>
+ </div>
+ {currentRb.backlineInfo && (
+ <div className={`mt-2 p-1.5 rounded text-[9px] ${isStitchLight ? 'bg-white' : 'bg-neutral-900/80'}`}>
+ <span className="block text-neutral-400 font-mono uppercase text-[8px]">Backline & Rider</span>
+ <p className="line-clamp-2 text-neutral-300">{currentRb.backlineInfo}</p>
+ </div>
+ )}
+ </div>
+ <button
+ type="button"
+ onClick={() => {
+ setModalActiveTab('tecnica');
+ setShowEventFichaModal(true);
+ }}
+ className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ >
+ <Wrench className="w-3 h-3" />
+ <span>Abrir Logística Técnica Completa</span>
+ </button>
+ </div>
+ );
+ })()}
+ </div>
+ ) : activeTab === 'contactos' ? (
+ <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+ {(() => {
+ const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
+ const contacts = currentRb.contactosClave || [];
+ return (
+ <div className="space-y-2">
+ <div className="flex items-center justify-between">
+ <span className="font-mono uppercase font-bold text-emerald-400 text-[10px] flex items-center gap-1">
+ <Users className="w-3 h-3" /> 2. Contactos Clave ({contacts.length})
+ </span>
+ <button
+ type="button"
+ onClick={() => {
+ setModalActiveTab('contactos');
+ setShowEventFichaModal(true);
+ }}
+ className="text-[9px] underline text-emerald-400 hover:text-emerald-300 font-mono cursor-pointer"
+ >
+ + Gestionar →
+ </button>
+ </div>
+ {contacts.length === 0 ? (
+ <p className={`text-[10px] italic text-center py-3 ${textMuted}`}>No hay contactos clave agregados.</p>
+ ) : (
+ <div className="space-y-1.5">
+ {contacts.map((c) => (
+ <div key={c.id} className={`p-2 rounded-lg border flex items-center justify-between gap-2 ${isStitchLight ? 'bg-white border-slate-200' : 'bg-neutral-900/80 border-neutral-800'}`}>
+ <div className="min-w-0">
+ <div className="font-bold truncate text-[10px]">{c.nombre}</div>
+ <div className="text-[9px] text-neutral-400 font-mono flex items-center gap-1">
+ <span className="px-1 py-0.2 rounded bg-emerald-500/10 text-emerald-400 text-[8px] uppercase">{c.rol}</span>
+ <span>{c.telefono}</span>
+ </div>
+ </div>
+ <div className="flex items-center gap-1 shrink-0">
+ {c.telefono && (
+ <>
+ <a
+ href={`https://wa.me/${c.telefono.replace(/[^0-9]/g, '')}`}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="p-1 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30"
+ title="WhatsApp"
+ >
+ <MessageCircle className="w-3 h-3" />
+ </a>
+ <a
+ href={`tel:${c.telefono}`}
+ className="p-1 rounded bg-sky-500/20 text-sky-400 hover:bg-sky-500/30"
+ title="Llamar"
+ >
+ <Phone className="w-3 h-3" />
+ </a>
+ </>
+ )}
+ </div>
+ </div>
+ ))}
+ </div>
+ )}
+ <button
+ type="button"
+ onClick={() => {
+ setModalActiveTab('contactos');
+ setShowEventFichaModal(true);
+ }}
+ className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ >
+ <Plus className="w-3 h-3" />
+ <span>Añadir Contactos Clave</span>
+ </button>
+ </div>
+ );
+ })()}
+ </div>
+ ) : activeTab === 'merchan' ? (
+ <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+ {(() => {
+ const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
+ const merch = currentRb.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+ const items = merch.items || [];
+ const totalInicial = items.reduce((acc, i) => acc + (i.stockInicial || 0), 0);
+ const totalFinal = items.reduce((acc, i) => acc + (i.stockFinal || 0), 0);
+ const totalVendidas = Math.max(0, totalInicial - totalFinal);
+ const totalTeorico = items.reduce((acc, i) => acc + Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) * (i.precioUnitario || 0), 0);
+ const totalCobrado = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
+ const cuadreDiff = totalCobrado - totalTeorico;
+
+ return (
+ <div className="space-y-2">
+ <div className="flex items-center justify-between">
+ <span className="font-mono uppercase font-bold text-amber-400 text-[10px] flex items-center gap-1">
+ <Shirt className="w-3 h-3" /> 3. Merch ({totalVendidas}/{totalInicial} uds)
+ </span>
+ <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+ {totalTeorico.toFixed(0)}€ ventas
+ </span>
+ </div>
+
+ {/* Arqueo Rápido */}
+ <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
+ <div className="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 flex flex-col">
+ <span className="text-emerald-400/80 text-[8px] flex items-center gap-0.5">
+ <Banknote className="w-2.5 h-2.5" /> Efectivo
+ </span>
+ <span className="font-bold text-emerald-300 text-[11px]">
+ {(merch.ingresosEfectivo || 0).toFixed(0)}€
+ </span>
+ </div>
+ <div className="p-1.5 rounded bg-sky-500/10 border border-sky-500/20 flex flex-col">
+ <span className="text-sky-400/80 text-[8px] flex items-center gap-0.5">
+ <Smartphone className="w-2.5 h-2.5" /> Bizum / TPV
+ </span>
+ <span className="font-bold text-sky-300 text-[11px]">
+ {(merch.ingresosBizum || 0).toFixed(0)}€
+ </span>
+ </div>
+ </div>
+
+ <div className="flex items-center justify-between text-[8.5px] font-mono px-1 py-0.5 rounded bg-neutral-900/60 border border-neutral-800">
+ <span className="text-neutral-400">Total cobrado: <strong className="text-white">{totalCobrado.toFixed(0)}€</strong></span>
+ <span className={`font-bold ${cuadreDiff === 0 ? 'text-emerald-400' : cuadreDiff > 0 ? 'text-sky-400' : 'text-amber-400'}`}>
+ {cuadreDiff === 0 ? '✓ Cuadrada' : cuadreDiff > 0 ? `+${cuadreDiff.toFixed(0)}€ propina` : `${cuadreDiff.toFixed(0)}€ descuadre`}
+ </span>
+ </div>
+
+ {/* Stock furgoneta vs fin */}
+ <div className="space-y-1">
+ {items.slice(0, 4).map((item) => {
+ const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
+ return (
+ <div
+ key={item.id}
+ className={`p-1.5 rounded flex items-center justify-between ${
+ isStitchLight ? 'bg-white text-slate-800' : 'bg-neutral-900 text-neutral-200'
+ }`}
+ >
+ <div className="truncate pr-2">
+ <p className="font-medium truncate text-[9.5px]">
+ {item.nombre} {item.talla ? `(${item.talla})` : ''}
+ </p>
+ <p className="text-[8px] text-neutral-400 font-mono">
+ {item.stockInicial} furgón ➔ {item.stockFinal} quedan
+ </p>
+ </div>
+ <div className="text-right shrink-0">
+ <span className="text-[9px] font-mono font-bold text-amber-400">
+ {vendidas} vend.
+ </span>
+ <p className="text-[8px] font-mono text-neutral-400">
+ {(vendidas * item.precioUnitario).toFixed(0)}€
+ </p>
+ </div>
+ </div>
+ );
+ })}
+ </div>
+
+ {items.length > 4 && (
+ <p className="text-[8px] text-center font-mono text-neutral-400">
+ +{items.length - 4} productos más en inventario
+ </p>
+ )}
+
+ <button
+ type="button"
+ onClick={() => {
+ setModalActiveTab('merchan');
+ setShowEventFichaModal(true);
+ }}
+ className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ >
+ <Shirt className="w-3 h-3" />
+ <span>Control Merchandising Completo</span>
+ </button>
+ </div>
+ );
+ })()}
+ </div>
+ ) : activeTab === 'cierre' ? (
+ <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-[10px]">
+ {(() => {
+ const currentRb = getCurrentRoadbook(selectedDateKey, selectedConcert);
+ const items = currentRb.cierreMaterial || [];
+ const checkedCount = items.filter(i => i.checked).length;
+ const progress = items.length > 0 ? Math.round((checkedCount / items.length) * 100) : 0;
+ return (
+ <div className="space-y-2">
+ <div className="flex items-center justify-between">
+ <span className="font-mono uppercase font-bold text-purple-400 text-[10px] flex items-center gap-1">
+ <ShieldCheck className="w-3 h-3" /> 5. Cierre Material ({checkedCount}/{items.length})
+ </span>
+ <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${progress === 100 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-purple-500/20 text-purple-300'}`}>
+ {progress}%
+ </span>
+ </div>
+ <div className="w-full bg-neutral-800 rounded-full h-1.5 overflow-hidden">
+ <div
+ className={`h-full transition-all duration-300 ${progress === 100 ? 'bg-emerald-500' : 'bg-purple-500'}`}
+ style={{ width: `${progress}%` }}
+ />
+ </div>
+ <div className="space-y-1">
+ {items.map((item) => (
+ <div
+ key={item.id}
+ onClick={() => handleToggleCierreItem(item.id, selectedDateKey)}
+ className={`p-1.5 rounded flex items-center gap-2 cursor-pointer transition-colors ${
+ item.checked
+ ? isStitchLight ? 'bg-emerald-50/70 text-slate-400 line-through' : 'bg-neutral-900/40 text-neutral-500 line-through'
+ : isStitchLight ? 'bg-white text-slate-800 hover:bg-slate-50' : 'bg-neutral-900 text-neutral-200 hover:bg-neutral-850'
+ }`}
+ >
+ <input
+ type="checkbox"
+ checked={item.checked}
+ onChange={() => {}}
+ className="rounded text-purple-500 h-3 w-3 cursor-pointer"
+ />
+ <span className="flex-1 truncate text-[9.5px]">{item.item}</span>
+ <span className="text-[8px] font-mono uppercase px-1 rounded bg-neutral-800 text-neutral-400 shrink-0">
+ {item.categoria}
+ </span>
+ </div>
+ ))}
+ </div>
+ <button
+ type="button"
+ onClick={() => {
+ setModalActiveTab('cierre');
+ setShowEventFichaModal(true);
+ }}
+ className="w-full py-1.5 px-2 rounded-lg text-[10px] font-mono font-bold bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+ >
+ <ShieldCheck className="w-3 h-3" />
+ <span>Checklist Cierre Completo</span>
  </button>
  </div>
  );
@@ -3913,9 +5327,9 @@ export default function CalendarView({
               <div className="flex items-center justify-between gap-1 p-1 bg-black/30 rounded-xl mb-5 border border-white/5">
                 <button
                   type="button"
-                  onClick={() => setShowCreateModal('concert')}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                    showCreateModal === 'concert'
+                  onClick={() => { setShowCreateModal('concert'); setConcIsPosible(false); }}
+                  className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                    showCreateModal === 'concert' && !concIsPosible
                       ? 'bg-amber-500 text-stone-950 shadow-md font-black'
                       : 'text-neutral-400 hover:text-neutral-200'
                   }`}
@@ -3925,8 +5339,20 @@ export default function CalendarView({
                 </button>
                 <button
                   type="button"
+                  onClick={() => { setShowCreateModal('concert'); setConcIsPosible(true); }}
+                  className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
+                    showCreateModal === 'concert' && concIsPosible
+                      ? 'bg-purple-500 text-white shadow-md font-black'
+                      : 'text-neutral-400 hover:text-neutral-200'
+                  }`}
+                >
+                  <span>🎯</span>
+                  <span>Posible</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => setShowCreateModal('rehearsal')}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                     showCreateModal === 'rehearsal'
                       ? 'bg-emerald-500 text-stone-950 shadow-md font-black'
                       : 'text-neutral-400 hover:text-neutral-200'
@@ -3938,7 +5364,7 @@ export default function CalendarView({
                 <button
                   type="button"
                   onClick={() => setShowCreateModal('reunion')}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`flex-1 py-1.5 px-1.5 rounded-lg text-[11px] font-mono font-bold flex items-center justify-center gap-1 transition-all cursor-pointer ${
                     showCreateModal === 'reunion'
                       ? 'bg-indigo-500 text-white shadow-md font-black'
                       : 'text-neutral-400 hover:text-neutral-200'
@@ -3953,7 +5379,9 @@ export default function CalendarView({
               <div className="flex items-center gap-2 mb-4">
                 <span className={`p-2 rounded-lg ${
                   showCreateModal === 'concert'
-                    ? 'bg-[#d1b375]/15 text-[#d1b375]'
+                    ? concIsPosible
+                      ? 'bg-purple-500/15 text-purple-400'
+                      : 'bg-[#d1b375]/15 text-[#d1b375]'
                     : showCreateModal === 'reunion'
                     ? 'bg-indigo-500/15 text-indigo-400'
                     : 'bg-[#10b981]/15 text-[#10b981]'
@@ -3968,7 +5396,7 @@ export default function CalendarView({
                 </span>
                 <div>
                   <h3 className="font-bold text-base font-display">
-                    {showCreateModal === 'concert' && 'Crear Nuevo Concierto'}
+                    {showCreateModal === 'concert' && (concIsPosible ? 'Crear Concierto Posible (Bolo Tentativo)' : 'Crear Nuevo Concierto')}
                     {showCreateModal === 'rehearsal' && 'Crear Nuevo Ensayo'}
                     {showCreateModal === 'reunion' && 'Crear Nueva Reunión'}
                   </h3>
@@ -4370,6 +5798,9 @@ export default function CalendarView({
                     />
                   </div>
 
+                  {/* Auditor de Festivos y Puentes */}
+                  <HolidayDateWarning date={selectedDate} city={concCiudad} />
+
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-[10px] font-mono text-neutral-400 mb-1">Caché (€)</label>
@@ -4444,8 +5875,20 @@ export default function CalendarView({
                     </select>
                   </div>
 
+                  <div className="flex items-center gap-2 py-1 px-2 rounded-lg bg-purple-950/20 border border-purple-500/30">
+                    <input
+                      type="checkbox"
+                      id="concIsPosibleCheck"
+                      checked={concIsPosible}
+                      onChange={(e) => setConcIsPosible(e.target.checked)}
+                      className="rounded text-purple-500 focus:ring-0 w-4 h-4 cursor-pointer"
+                    />
+                    <label htmlFor="concIsPosibleCheck" className="text-[10px] font-mono cursor-pointer select-none font-bold text-purple-300 flex items-center gap-1">
+                      🎯 Concierto Posible / En negociación (Bolo Tentativo)
+                    </label>
+                  </div>
+
                   <div>
-                    <label className="block text-[10px] font-mono text-neutral-400 mb-1">Notas / Cláusulas Técnicas</label>
                     <textarea
                       value={concNotas}
                       onChange={(e) => setConcNotas(e.target.value)}
@@ -4600,6 +6043,36 @@ export default function CalendarView({
 
  <div className="grid grid-cols-2 gap-3">
  <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1 flex items-center gap-1">
+ <Ticket className="w-3 h-3 text-emerald-400" />
+ Enlace para Comprar Entradas
+ </label>
+ <input
+ type="url"
+ value={editDraft.entradasUrl || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, entradasUrl: e.target.value } : prev)}
+ placeholder="https://taquilla.com/tu-concierto"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Punto de Venta Físico</label>
+ <input
+ type="text"
+ value={editDraft.entradasLugarFisico || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, entradasLugarFisico: e.target.value } : prev)}
+ placeholder="ej. Potential Hardcore, Vallecas"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
+ </div>
+ </div>
+
+ <div className="grid grid-cols-2 gap-3">
+ <div>
  <label className="block text-[10px] font-mono text-neutral-400 mb-1">Tipo de Evento</label>
  <select
  value={editDraft.tipo}
@@ -4655,6 +6128,19 @@ export default function CalendarView({
  />
  <label htmlFor="editContrato" className="text-[10px] font-mono cursor-pointer select-none">
  Contrato firmado y verificado
+ </label>
+ </div>
+
+ <div className="flex items-center gap-2 py-1 px-2 rounded-lg bg-purple-950/20 border border-purple-500/30">
+ <input
+ type="checkbox"
+ id="editIsPosibleCheck"
+ checked={Boolean(editDraft.is_posible ?? (editDraft as any).isPosible)}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, is_posible: e.target.checked } : prev)}
+ className="rounded text-purple-500 focus:ring-0 w-4 h-4 cursor-pointer"
+ />
+ <label htmlFor="editIsPosibleCheck" className="text-[10px] font-mono cursor-pointer select-none font-bold text-purple-300 flex items-center gap-1">
+ 🎯 Concierto Posible / En negociación (Bolo Tentativo)
  </label>
  </div>
 
@@ -5257,6 +6743,1684 @@ export default function CalendarView({
  </div>
  </ModalPortal>
  )}
+
+ {/* Ficha Modal Emergente y Centrada del Evento, con navegación cronológica < / > entre
+     todos los conciertos y ensayos de la banda activa. */}
+ {showEventFichaModal && (() => {
+   const modalEvent = selectedConcert || selectedRehearsal;
+   const isConcert = !!selectedConcert;
+   const modalBandInfo = getBandIdentity(modalEvent?.band_id, (modalEvent as any)?.bandName || (modalEvent as any)?.band_name);
+   const modalPosLabel = allChronologicalEvents.length > 0
+     ? `${activeChronoIndex >= 0 ? activeChronoIndex + 1 : 1} de ${allChronologicalEvents.length}`
+     : '';
+   const eventCity = selectedConcert?.ciudad || (selectedRehearsal?.lugar?.includes(',') ? selectedRehearsal.lugar.split(',').pop()?.trim() : '') || (selectedRehearsal && !selectedRehearsal.lugar?.toLowerCase().includes('online') ? selectedRehearsal.lugar : '') || '';
+   const eventDateStr = modalEvent ? modalEvent.fecha.split('T')[0] : '';
+   const eventTimeStr = selectedConcert ? '21:30' : (selectedRehearsal?.hora || '20:00');
+   const isConfirmingDelete = deletingEventConfirmId === modalEvent?.id;
+   const modalRoadbookKey = eventDateStr || selectedDateKey;
+   const modalRoadbook = getCurrentRoadbook(modalRoadbookKey, selectedConcert);
+   return (
+     <ModalPortal isOpen={showEventFichaModal} onClose={() => setShowEventFichaModal(false)}>
+       <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 pt-10 sm:pt-16 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+         <div 
+           onTouchStart={handleModalTouchStart}
+           onTouchMove={handleModalTouchMove}
+           onTouchEnd={handleModalTouchEnd}
+           className={`relative w-full max-w-3xl rounded-2xl border-2 shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto ${
+           isStitchLight ? 'bg-white border-amber-300 text-slate-900' : 'bg-[#141414] border-amber-500/50 text-neutral-100 shadow-amber-500/10'
+         }`}>
+           {/* Barra superior del modal: navegación cronológica entre eventos */}
+           <div className={`sticky top-0 z-10 flex items-center justify-between gap-2 px-4 sm:px-6 py-3 border-b backdrop-blur-md ${
+             isStitchLight ? 'bg-white/95 border-amber-200' : 'bg-[#141414]/95 border-amber-500/30'
+           }`}>
+             <button
+               type="button"
+               onClick={() => goToAdjacentEvent(-1)}
+               disabled={allChronologicalEvents.length === 0 || activeChronoIndex <= 0}
+               className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+               title="Evento anterior (←)"
+             >
+               <ChevronLeft className="w-4 h-4" />
+               <span className="hidden sm:inline">Anterior</span>
+             </button>
+
+             <div className="flex flex-col items-center min-w-0">
+               <span className="text-[9px] font-mono uppercase tracking-widest text-amber-400/80 font-bold">Ficha de Evento</span>
+               {modalPosLabel && (
+                 <span className={`text-[10px] font-mono font-bold ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>{modalPosLabel}</span>
+               )}
+             </div>
+
+             <div className="flex items-center gap-1.5">
+               <button
+                 type="button"
+                 onClick={() => goToAdjacentEvent(1)}
+                 disabled={allChronologicalEvents.length === 0 || activeChronoIndex < 0 || activeChronoIndex >= allChronologicalEvents.length - 1}
+                 className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] font-mono font-bold border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                 title="Evento siguiente (→)"
+               >
+                 <span className="hidden sm:inline">Siguiente</span>
+                 <ChevronRight className="w-4 h-4" />
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setShowEventFichaModal(false)}
+                 className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors cursor-pointer"
+                 title="Cerrar (Esc)"
+               >
+                 ✕
+               </button>
+             </div>
+           </div>
+
+           <div className="p-5 sm:p-7 space-y-4">
+             {/* Cabecera: Logo HD + identidad de banda + título + barra de acciones */}
+             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-amber-500/20">
+               <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                 {modalBandInfo.logoUrl ? (
+                   <img
+                     src={modalBandInfo.logoUrl}
+                     alt={modalBandInfo.name}
+                     className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-contain bg-black/40 p-1 shrink-0 border border-amber-400/40 drop-shadow-[0_4px_12px_rgba(245,158,11,0.35)]"
+                     onError={(e) => {
+                       (e.currentTarget as HTMLElement).style.display = 'none';
+                       const fb = e.currentTarget.parentElement?.querySelector('.fallback-initials-modal');
+                       if (fb) (fb as HTMLElement).classList.remove('hidden');
+                     }}
+                   />
+                 ) : null}
+                 <span className={`fallback-initials-modal w-14 h-14 sm:w-16 sm:h-16 rounded-2xl shrink-0 flex items-center justify-center text-xl font-black drop-shadow-lg ${modalBandInfo.palette.badge} ${modalBandInfo.logoUrl ? 'hidden' : ''}`}>
+                   {modalBandInfo.initials}
+                 </span>
+                 <div className="min-w-0 flex-1">
+                   <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center gap-1">
+                     🎸 {modalBandInfo.name}
+                   </span>
+                   <h3 className={`text-xl font-bold font-display tracking-wide mt-1 truncate ${textTitle}`}>{selectedEventTitle}</h3>
+                   <p className={`text-[11px] font-mono mt-0.5 ${textSub}`}>
+                     {selectedDate.getDate()} de {monthNames[selectedDate.getMonth()]}, {selectedDate.getFullYear()}
+                   </p>
+                   {modalWeatherAlerts.length > 0 && (
+                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                       {modalWeatherAlerts.map(alert => (
+                         <CalendarWeatherBadge key={alert.id} alert={alert} />
+                       ))}
+                     </div>
+                   )}
+                 </div>
+               </div>
+
+               {/* Barra de Acciones del Evento (Editar, WhatsApp, Notificar, Copiar, Eliminar) */}
+               {modalEvent && (
+                 <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                   <button
+                     type="button"
+                     onClick={() => {
+                       setShowEventFichaModal(false);
+                       if (selectedConcert) setViewingConcert(selectedConcert);
+                       if (selectedRehearsal) setViewingRehearsal(selectedRehearsal);
+                     }}
+                     className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-neutral-900 border-amber-500/40 text-amber-300 hover:bg-neutral-800 flex items-center gap-1"
+                     title="Editar todos los campos de este evento"
+                   >
+                     ✎ Editar
+                   </button>
+
+                   <button
+                     type="button"
+                     onClick={() => handleShareEventWhatsApp(modalEvent, isConcert)}
+                     className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-emerald-950/40 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/50 flex items-center gap-1"
+                     title="Compartir convocatoria por WhatsApp"
+                   >
+                     <Share2 className="w-3.5 h-3.5" />
+                     <span className="hidden xs:inline">WhatsApp</span>
+                   </button>
+
+                   <button
+                     type="button"
+                     onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
+                     className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-sky-950/40 border-sky-500/40 text-sky-300 hover:bg-sky-900/50 flex items-center gap-1"
+                     title="Enviar recordatorio / notificación push a los músicos"
+                   >
+                     <Bell className="w-3.5 h-3.5" />
+                     <span className="hidden xs:inline">Notificar</span>
+                   </button>
+
+                   <button
+                     type="button"
+                     onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
+                     className={`px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${
+                       copiedEventModalId === modalEvent.id
+                         ? 'bg-emerald-500 border-emerald-400 text-stone-950'
+                         : 'bg-neutral-900 border-neutral-700 text-neutral-300 hover:bg-neutral-800'
+                     }`}
+                     title="Copiar texto de convocatoria al portapapeles"
+                   >
+                     {copiedEventModalId === modalEvent.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                     <span className="hidden xs:inline">{copiedEventModalId === modalEvent.id ? 'Copiado' : 'Copiar'}</span>
+                   </button>
+
+                   <button
+                     type="button"
+                     onClick={() => setDeletingEventConfirmId(modalEvent.id)}
+                     className="px-2.5 py-1.5 text-[11px] font-mono font-bold rounded-lg border transition-colors cursor-pointer bg-rose-950/40 border-rose-500/40 text-rose-300 hover:bg-rose-900/50 flex items-center gap-1"
+                     title="Eliminar este evento del calendario"
+                   >
+                     <Trash2 className="w-3.5 h-3.5" />
+                     <span className="hidden xs:inline">Eliminar</span>
+                   </button>
+                 </div>
+               )}
+             </div>
+
+             {/* Panel de Confirmación de Eliminación In-Modal */}
+             {isConfirmingDelete && modalEvent && (
+               <div className="p-3.5 rounded-xl border border-rose-500/50 bg-rose-950/60 text-rose-100 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
+                 <div className="flex items-center gap-2">
+                   <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+                   <div>
+                     <p className="text-xs font-mono font-bold text-rose-200">
+                       ¿Confirmas que deseas eliminar este {isConcert ? 'concierto' : 'ensayo'}?
+                     </p>
+                     <p className="text-[10px] text-rose-300/80 font-sans">
+                       Esta acción es definitiva y retirará el evento del calendario y agenda de la banda.
+                     </p>
+                   </div>
+                 </div>
+                 <div className="flex items-center gap-2 shrink-0">
+                   <button
+                     type="button"
+                     onClick={() => setDeletingEventConfirmId(null)}
+                     className="px-3 py-1.5 text-xs font-mono rounded-lg border border-neutral-600 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 transition-colors cursor-pointer"
+                   >
+                     Cancelar
+                   </button>
+                   <button
+                     type="button"
+                     onClick={() => handleDeleteEventFromModal(modalEvent.id, isConcert)}
+                     className="px-3.5 py-1.5 text-xs font-mono font-bold rounded-lg bg-rose-600 hover:bg-rose-500 text-white shadow-lg transition-colors cursor-pointer"
+                   >
+                     Sí, Eliminar Definitivamente
+                   </button>
+                 </div>
+               </div>
+             )}
+
+             {/* Previsión Meteorológica Open-Meteo para el Evento */}
+             {eventCity && eventDateStr && (
+               <EventWeatherCard
+                 city={eventCity}
+                 dateStr={eventDateStr}
+                 timeStr={eventTimeStr}
+                 isStitchLight={isStitchLight}
+                 onAlertsDetected={(alerts) => setModalWeatherAlerts(alerts)}
+               />
+             )}
+
+             {/* Pestañas de Navegación de la Ficha */}
+             <div className={`flex items-center gap-1.5 border-b pb-2.5 overflow-x-auto ${isStitchLight ? 'border-amber-200' : 'border-neutral-800'}`}>
+               <button
+                 type="button"
+                 onClick={() => setModalActiveTab('resumen')}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                   modalActiveTab === 'resumen'
+                     ? 'bg-amber-500 text-stone-950 shadow-sm'
+                     : isStitchLight
+                     ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                     : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+                 }`}
+               >
+                 <span>📋 Resumen & Info</span>
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setModalActiveTab('tecnica')}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                   modalActiveTab === 'tecnica'
+                     ? 'bg-sky-500 text-stone-950 shadow-sm'
+                     : isStitchLight
+                     ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                     : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+                 }`}
+               >
+                 <Wrench className="w-3.5 h-3.5" />
+                 <span>1. Logística Técnica</span>
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setModalActiveTab('contactos')}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                   modalActiveTab === 'contactos'
+                     ? 'bg-emerald-500 text-stone-950 shadow-sm'
+                     : isStitchLight
+                     ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                     : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+                 }`}
+               >
+                 <Phone className="w-3.5 h-3.5" />
+                 <span>2. Contactos Clave</span>
+                 {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0 && (
+                   <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/25 font-mono">
+                     {modalRoadbook.contactosClave.length}
+                   </span>
+                 )}
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setModalActiveTab('merchan')}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                   modalActiveTab === 'merchan'
+                     ? 'bg-amber-500 text-stone-950 shadow-sm'
+                     : isStitchLight
+                     ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                     : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+                 }`}
+               >
+                 <Shirt className="w-3.5 h-3.5" />
+                 <span>3. Control Merchandising</span>
+                 {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0 && (
+                   <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/25 font-mono">
+                     {modalRoadbook.merchControl.items.length}
+                   </span>
+                 )}
+               </button>
+               <button
+                 type="button"
+                 onClick={() => setModalActiveTab('cierre')}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                   modalActiveTab === 'cierre'
+                     ? 'bg-purple-500 text-white shadow-sm'
+                     : isStitchLight
+                     ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                     : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+                 }`}
+               >
+                 <ShieldCheck className="w-3.5 h-3.5" />
+                 <span>5. Cierre Material</span>
+                 {modalRoadbook.cierreMaterial && modalRoadbook.cierreMaterial.length > 0 && (
+                   <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                     modalRoadbook.cierreMaterial.every(i => i.checked)
+                       ? 'bg-emerald-500 text-stone-950 font-black'
+                       : 'bg-black/25'
+                   }`}>
+                     {modalRoadbook.cierreMaterial.filter(i => i.checked).length}/{modalRoadbook.cierreMaterial.length}
+                   </span>
+                 )}
+               </button>
+             </div>
+
+             {/* TAB 1: RESUMEN GENERAL & DETALLES */}
+             {modalActiveTab === 'resumen' && (
+               <div className="space-y-4">
+                 <div className={`space-y-3 rounded-xl p-4 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#131313]/80 border border-neutral-800'}`}>
+                   <div className="flex items-center gap-2 text-[11px]">
+                     <Clock className={`w-4 h-4 shrink-0 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`} />
+                     <span className={`font-mono ${textSub}`}>Hora:</span>
+                     <span className={`font-bold font-mono ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>{selectedEventDetails.time}</span>
+                   </div>
+                   <div className="flex items-start gap-2 text-[11px]">
+                     <MapPin className={`w-4 h-4 shrink-0 mt-0.5 ${isStitchLight ? 'text-sky-400' : 'text-[#ffb596]'}`} />
+                     <div className="flex-1 min-w-0">
+                       <span className={`font-mono ${textSub}`}>Lugar:</span>
+                       <p className={`font-medium font-sans mt-0.5 ${textTitle}`}>{selectedEventDetails.lugar}</p>
+                       {selectedEventDetails.direccion && (
+                         <p className={`text-[11px] font-sans mt-1 ${isStitchLight ? 'text-slate-600' : 'text-neutral-300'}`}>
+                           <span className="font-semibold font-mono">Dirección:</span> {selectedEventDetails.direccion}
+                         </p>
+                       )}
+                     </div>
+                   </div>
+                   {selectedEventDetails.locationQuery && selectedEventDetails.type !== 'free' && (
+                     <div className="pt-2 flex justify-center">
+                       <DirectionsCard
+                         query={selectedEventDetails.locationQuery}
+                         locationName={selectedEventDetails.lugar}
+                         address={selectedEventDetails.direccion}
+                         isStitchLight={isStitchLight}
+                       />
+                     </div>
+                   )}
+                   {!isPromoPlan && selectedEventDetails.type === 'concert' && (
+                     <div className="flex items-center gap-2 text-[11px] pt-2 border-t border-neutral-800/40">
+                       <Sparkles className="w-4 h-4 text-[#10b981] shrink-0" />
+                       <span className={`font-mono ${textSub}`}>Compensación:</span>
+                       <span className="text-[#10b981] dark:text-[#b8d6b8] font-bold font-mono">{selectedEventDetails.fee}</span>
+                     </div>
+                   )}
+                   {selectedEventDetails.type === 'concert' && (selectedEventDetails.entradasUrl || selectedEventDetails.entradasLugarFisico) && (
+                     <div className="flex flex-col gap-1.5 pt-2 border-t border-neutral-800/40">
+                       {selectedEventDetails.entradasUrl && (
+                         <a
+                           href={selectedEventDetails.entradasUrl}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono font-bold bg-emerald-500 text-stone-950 hover:bg-emerald-400 transition-colors w-fit"
+                         >
+                           <Ticket className="w-3.5 h-3.5" /> Comprar Entradas
+                         </a>
+                       )}
+                       {selectedEventDetails.entradasLugarFisico && (
+                         <div className="flex items-center gap-2 text-[11px]">
+                           <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
+                           <span className={`font-mono ${textSub}`}>También en:</span>
+                           <span className="font-semibold font-mono">{selectedEventDetails.entradasLugarFisico}</span>
+                         </div>
+                       )}
+                     </div>
+                   )}
+                   {selectedConcert?.giraNombre && (
+                     <div className="flex items-center gap-2 text-[11px] pt-2 border-t border-neutral-800/40">
+                       <Navigation className="w-4 h-4 text-amber-400 shrink-0" />
+                       <span className={`font-mono ${textSub}`}>Gira:</span>
+                       <span className="font-bold font-mono text-amber-400">🚐 {selectedConcert.giraNombre}</span>
+                     </div>
+                   )}
+                   {!isPromoPlan && (selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) && (
+                     <div className="flex items-center gap-2 text-[11px] pt-2 border-t border-neutral-800/40">
+                       <Users className="w-4 h-4 text-sky-400 shrink-0" />
+                       <span className={`font-mono ${textSub}`}>Convocatoria:</span>
+                       <span className="font-bold font-mono text-sky-400">
+                         {(selectedConcert?.convocatoria_tipo || selectedRehearsal?.convocatoria_tipo) === 'completa'
+                           ? 'Banda Completa'
+                           : `Parcial (${(() => {
+                               const raw: any = selectedConcert?.convocados_nombres || selectedRehearsal?.convocados_nombres;
+                               if (Array.isArray(raw)) return raw.join(', ') || 'Seleccionados';
+                               if (typeof raw === 'string' && raw.trim()) return raw.trim();
+                               return 'Seleccionados';
+                             })()})`}
+                       </span>
+                     </div>
+                   )}
+                   {selectedEventDetails.notes && (
+                     <div className={`text-[11px] font-sans italic pt-2 border-t border-neutral-800/40 leading-relaxed ${isStitchLight ? 'text-slate-500' : 'text-neutral-400'}`}>
+                       &ldquo;{selectedEventDetails.notes}&rdquo;
+                     </div>
+                   )}
+                 </div>
+
+                 {/* Accesos rápidos a los 3 módulos clave en el resumen */}
+                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+                   <div 
+                     onClick={() => setModalActiveTab('tecnica')}
+                     className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-sky-500/60 ${
+                       isStitchLight ? 'bg-sky-50/70 border-sky-200' : 'bg-sky-950/20 border-sky-500/30'
+                     }`}
+                   >
+                     <div className="flex items-center gap-1.5 text-sky-400 font-mono font-bold text-xs mb-1">
+                       <Wrench className="w-3.5 h-3.5" />
+                       <span>1. Logística Técnica</span>
+                     </div>
+                     <p className={`text-[11px] font-mono ${textSub}`}>
+                       {modalRoadbook.horaPruebaSonido ? `Prueba: ${modalRoadbook.horaPruebaSonido}` : 'Configurar rider, P.A. y horarios'}
+                     </p>
+                     <span className="text-[10px] text-sky-400 font-mono font-semibold underline mt-1 inline-block">
+                       Abrir sección técnica →
+                     </span>
+                   </div>
+
+                   <div 
+                     onClick={() => setModalActiveTab('contactos')}
+                     className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-emerald-500/60 ${
+                       isStitchLight ? 'bg-emerald-50/70 border-emerald-200' : 'bg-emerald-950/20 border-emerald-500/30'
+                     }`}
+                   >
+                     <div className="flex items-center gap-1.5 text-emerald-400 font-mono font-bold text-xs mb-1">
+                       <Phone className="w-3.5 h-3.5" />
+                       <span>2. Contactos Clave</span>
+                     </div>
+                     <p className={`text-[11px] font-mono ${textSub}`}>
+                       {modalRoadbook.contactosClave && modalRoadbook.contactosClave.length > 0
+                         ? `${modalRoadbook.contactosClave.length} contactos (WhatsApp directo)`
+                         : 'Añadir contactos de sala y técnicos'}
+                     </p>
+                     <span className="text-[10px] text-emerald-400 font-mono font-semibold underline mt-1 inline-block">
+                       Ver directorio →
+                     </span>
+                   </div>
+
+                   <div 
+                     onClick={() => setModalActiveTab('merchan')}
+                     className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-amber-500/60 ${
+                       isStitchLight ? 'bg-amber-50/70 border-amber-200' : 'bg-amber-950/20 border-amber-500/30'
+                     }`}
+                   >
+                     <div className="flex items-center gap-1.5 text-amber-400 font-mono font-bold text-xs mb-1">
+                       <Shirt className="w-3.5 h-3.5" />
+                       <span>3. Control Merchandising</span>
+                     </div>
+                     <p className={`text-[11px] font-mono ${textSub}`}>
+                       {modalRoadbook.merchControl && modalRoadbook.merchControl.items && modalRoadbook.merchControl.items.length > 0
+                         ? `${modalRoadbook.merchControl.items.length} productos | ${(modalRoadbook.merchControl.ingresosEfectivo || 0) + (modalRoadbook.merchControl.ingresosBizum || 0)}€ arqueo`
+                         : 'Stock furgón vs final, Bizum y efectivo'}
+                     </p>
+                     <span className="text-[10px] text-amber-400 font-mono font-semibold underline mt-1 inline-block">
+                       Abrir control de ventas →
+                     </span>
+                   </div>
+
+                   <div 
+                     onClick={() => setModalActiveTab('cierre')}
+                     className={`p-3 rounded-xl border transition-all cursor-pointer hover:border-purple-500/60 ${
+                       isStitchLight ? 'bg-purple-50/70 border-purple-200' : 'bg-purple-950/20 border-purple-500/30'
+                     }`}
+                   >
+                     <div className="flex items-center gap-1.5 text-purple-400 font-mono font-bold text-xs mb-1">
+                       <ShieldCheck className="w-3.5 h-3.5" />
+                       <span>5. Cierre Material</span>
+                     </div>
+                     <p className={`text-[11px] font-mono ${textSub}`}>
+                       {modalRoadbook.cierreMaterial
+                         ? `${modalRoadbook.cierreMaterial.filter(i => i.checked).length}/${modalRoadbook.cierreMaterial.length} verificados`
+                         : 'Checklist de carga de furgoneta'}
+                     </p>
+                     <span className="text-[10px] text-purple-400 font-mono font-semibold underline mt-1 inline-block">
+                       Hacer checklist →
+                     </span>
+                   </div>
+                 </div>
+               </div>
+             )}
+
+             {/* TAB 2: 1. LOGÍSTICA TÉCNICA */}
+             {modalActiveTab === 'tecnica' && (
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between pb-1 border-b border-sky-500/20">
+                   <div className="flex items-center gap-2">
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-sky-500 text-stone-950">
+                       Sección 1
+                     </span>
+                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+                       Logística Técnica, Horarios & Rider
+                     </h3>
+                   </div>
+                   <span className="text-[10px] font-mono text-neutral-400">
+                     Guardado automático local
+                   </span>
+                 </div>
+
+                 {/* Horarios de Producción */}
+                 <div className={`p-4 rounded-xl space-y-3 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#141414] border border-neutral-800'}`}>
+                   <h4 className="text-xs font-mono font-bold text-sky-400 flex items-center gap-1.5">
+                     <Clock className="w-3.5 h-3.5" />
+                     <span>Cronograma de Producción del Día</span>
+                   </h4>
+                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-xs">
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Llegada / Descarga</label>
+                       <input
+                         type="text"
+                         value={modalRoadbook.horaLlegada || '17:00'}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaLlegada: e.target.value })}
+                         placeholder="17:00"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Prueba Sonido</label>
+                       <input
+                         type="text"
+                         value={modalRoadbook.horaPruebaSonido || '18:00 - 19:30'}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaPruebaSonido: e.target.value })}
+                         placeholder="18:00 - 19:30"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Apertura Puertas</label>
+                       <input
+                         type="text"
+                         value={modalRoadbook.horaAperturaPuertas || '20:30'}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaAperturaPuertas: e.target.value })}
+                         placeholder="20:30"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 text-amber-400`}>Show / Directo</label>
+                       <input
+                         type="text"
+                         value={modalRoadbook.horaShow || '21:30'}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaShow: e.target.value })}
+                         placeholder="21:30"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border border-amber-500/50 font-bold ${
+                           isStitchLight ? 'bg-amber-50 text-slate-900' : 'bg-amber-950/30 text-amber-200'
+                         }`}
+                       />
+                     </div>
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>Toque de Queda</label>
+                       <input
+                         type="text"
+                         value={modalRoadbook.horaCierreToque || '01:00'}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { horaCierreToque: e.target.value })}
+                         placeholder="01:00"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Sonido P.A. & Monitores */}
+                 <div className={`p-4 rounded-xl space-y-3 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#141414] border border-neutral-800'}`}>
+                   <h4 className="text-xs font-mono font-bold text-sky-400 flex items-center gap-1.5">
+                     <Wrench className="w-3.5 h-3.5" />
+                     <span>Sistema de Sonido (P.A. & Monitoreo)</span>
+                   </h4>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+                         Especificaciones P.A. de Sala
+                       </label>
+                       <textarea
+                         rows={2}
+                         value={modalRoadbook.paEspecificaciones || ''}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { paEspecificaciones: e.target.value })}
+                         placeholder="Ej: Line Array L-Acoustics / D&B, subwoofers estéreo, presión homogénea"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+                         Monitoreo (In-Ears / Cuñas)
+                       </label>
+                       <textarea
+                         rows={2}
+                         value={modalRoadbook.monitoresTipo || ''}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { monitoresTipo: e.target.value })}
+                         placeholder="Ej: In-Ears estéreo de la banda (traemos transmisores) + 2 cuñas de refuerzo"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                   </div>
+                   <div>
+                     <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+                       Canales de Envíos Auxiliares
+                     </label>
+                     <input
+                       type="text"
+                       value={modalRoadbook.canalesMonitores || ''}
+                       onChange={(e) => updateRoadbookField(modalRoadbookKey, { canalesMonitores: e.target.value })}
+                       placeholder="Ej: 4 envíos auxiliares XLR independientes a rack de IEMs"
+                       className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                         isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                       }`}
+                     />
+                   </div>
+                 </div>
+
+                 {/* Backline y Electricidad */}
+                 <div className={`p-4 rounded-xl space-y-3 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#141414] border border-neutral-800'}`}>
+                   <h4 className="text-xs font-mono font-bold text-sky-400 flex items-center gap-1.5">
+                     <Truck className="w-3.5 h-3.5" />
+                     <span>Backline Aportado vs Traído & Toma Eléctrica</span>
+                   </h4>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+                         Backline (Sala vs Banda)
+                       </label>
+                       <textarea
+                         rows={3}
+                         value={modalRoadbook.backlineInfo || ''}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { backlineInfo: e.target.value })}
+                         placeholder="Sala aporta: Batería básica. Banda trae: Platos, pedal, guitarras, amplificadores y teclado."
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                     <div>
+                       <label className={`block text-[10px] font-mono uppercase font-bold mb-1 ${textSub}`}>
+                         Potencia y Tomas Eléctricas en Escenario
+                       </label>
+                       <textarea
+                         rows={3}
+                         value={modalRoadbook.potenciaElectrica || ''}
+                         onChange={(e) => updateRoadbookField(modalRoadbookKey, { potenciaElectrica: e.target.value })}
+                         placeholder="Ej: 2 líneas independientes Schuko 220V 16A limpias (frontal y trasera)"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                   </div>
+                 </div>
+
+                 {/* Input List / Rider de Canales */}
+                 <div className={`p-4 rounded-xl space-y-2.5 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#141414] border border-neutral-800'}`}>
+                   <div className="flex items-center justify-between">
+                     <h4 className="text-xs font-mono font-bold text-sky-400 flex items-center gap-1.5">
+                       <span>🎛️</span>
+                       <span>Input List / Lista de Canales de Microfonía</span>
+                     </h4>
+                     <span className="text-[10px] font-mono text-neutral-400">
+                       {(modalRoadbook.inputList || '').split('\n').filter(Boolean).length} canales especificados
+                     </span>
+                   </div>
+                   <textarea
+                     rows={6}
+                     value={modalRoadbook.inputList || ''}
+                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { inputList: e.target.value })}
+                     placeholder="1. Bombo (Beta 52)&#10;2. Caja Top (SM57)&#10;3. Bajo (D.I. Radial)&#10;4. Guitarra (e906)&#10;5. Voz (Beta 58)..."
+                     className={`w-full px-3 py-2 rounded-lg text-xs font-mono leading-relaxed border ${
+                       isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/80 border-neutral-700 text-white'
+                     }`}
+                   />
+                 </div>
+
+                 {/* Notas de Producción y Carga */}
+                 <div className={`p-4 rounded-xl space-y-2 ${isStitchLight ? 'bg-slate-50 border border-slate-200' : 'bg-[#141414] border border-neutral-800'}`}>
+                   <label className={`block text-[10px] font-mono uppercase font-bold ${textSub}`}>
+                     Notas de Acceso, Muelle de Carga & Observaciones
+                   </label>
+                   <textarea
+                     rows={2}
+                     value={modalRoadbook.notasTecnicas || ''}
+                     onChange={(e) => updateRoadbookField(modalRoadbookKey, { notasTecnicas: e.target.value })}
+                     placeholder="Ej: Acceso por puerta trasera calle peatonal. Se requiere autorización de matrícula para la furgoneta."
+                     className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                       isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/60 border-neutral-700 text-white'
+                     }`}
+                   />
+                 </div>
+               </div>
+             )}
+
+             {/* TAB 3: 2. CONTACTOS CLAVE */}
+             {modalActiveTab === 'contactos' && (
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between pb-1 border-b border-emerald-500/20 flex-wrap gap-2">
+                   <div className="flex items-center gap-2">
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-emerald-500 text-stone-950">
+                       Sección 2
+                     </span>
+                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+                       Directorio de Contactos Clave de Producción
+                     </h3>
+                   </div>
+                   <button
+                     type="button"
+                     onClick={() => setShowAddContactForm(!showAddContactForm)}
+                     className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                   >
+                     <span>+</span> Añadir Contacto
+                   </button>
+                 </div>
+
+                 {/* Formulario de Nuevo Contacto */}
+                 {showAddContactForm && (
+                   <form 
+                     onSubmit={(e) => handleAddKeyContact(modalRoadbookKey, e)}
+                     className={`p-4 rounded-xl border space-y-3 animate-in fade-in ${
+                       isStitchLight ? 'bg-emerald-50 border-emerald-300' : 'bg-emerald-950/30 border-emerald-500/40'
+                     }`}
+                   >
+                     <h4 className="text-xs font-mono font-bold text-emerald-400">Nuevo Contacto Clave</h4>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                       <div>
+                         <label className="block text-[10px] font-mono uppercase font-bold text-neutral-300 mb-1">Nombre y Apellidos *</label>
+                         <input
+                           type="text"
+                           required
+                           value={newContactNombre}
+                           onChange={(e) => setNewContactNombre(e.target.value)}
+                           placeholder="Ej: Manuel Producción"
+                           className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                             isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/70 border-neutral-700 text-white'
+                           }`}
+                         />
+                       </div>
+                       <div>
+                         <label className="block text-[10px] font-mono uppercase font-bold text-neutral-300 mb-1">Rol / Cargo</label>
+                         <select
+                           value={newContactRol}
+                           onChange={(e) => setNewContactRol(e.target.value)}
+                           className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                             isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/70 border-neutral-700 text-white'
+                           }`}
+                         >
+                           <option value="Promotor / Sala">Promotor / Sala</option>
+                           <option value="Técnico de Sonido (P.A.)">Técnico de Sonido (P.A.)</option>
+                           <option value="Técnico de Monitores">Técnico de Monitores</option>
+                           <option value="Técnico de Iluminación">Técnico de Iluminación</option>
+                           <option value="Producción / Camerinos">Producción / Camerinos</option>
+                           <option value="Hotel / Alojamiento">Hotel / Alojamiento</option>
+                           <option value="Seguridad / Acceso">Seguridad / Acceso</option>
+                           <option value="Road Manager">Road Manager</option>
+                         </select>
+                       </div>
+                       <div>
+                         <label className="block text-[10px] font-mono uppercase font-bold text-neutral-300 mb-1">Teléfono (WhatsApp) *</label>
+                         <input
+                           type="tel"
+                           required
+                           value={newContactTelefono}
+                           onChange={(e) => setNewContactTelefono(e.target.value)}
+                           placeholder="+34 600 000 000"
+                           className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                             isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/70 border-neutral-700 text-white'
+                           }`}
+                         />
+                       </div>
+                       <div>
+                         <label className="block text-[10px] font-mono uppercase font-bold text-neutral-300 mb-1">Email</label>
+                         <input
+                           type="email"
+                           value={newContactEmail}
+                           onChange={(e) => setNewContactEmail(e.target.value)}
+                           placeholder="produccion@sala.com"
+                           className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                             isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/70 border-neutral-700 text-white'
+                           }`}
+                         />
+                       </div>
+                     </div>
+                     <div>
+                       <label className="block text-[10px] font-mono uppercase font-bold text-neutral-300 mb-1">Notas u observaciones</label>
+                       <input
+                         type="text"
+                         value={newContactNotas}
+                         onChange={(e) => setNewContactNotas(e.target.value)}
+                         placeholder="Ej: Contacto para cobro de taquilla y apertura de puerta muelle"
+                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black/70 border-neutral-700 text-white'
+                         }`}
+                       />
+                     </div>
+                     <div className="flex justify-end gap-2 pt-1">
+                       <button
+                         type="button"
+                         onClick={() => setShowAddContactForm(false)}
+                         className="px-3 py-1.5 text-xs font-mono rounded-lg border border-neutral-600 hover:bg-neutral-800 text-neutral-300 transition-colors"
+                       >
+                         Cancelar
+                       </button>
+                       <button
+                         type="submit"
+                         className="px-4 py-1.5 text-xs font-mono font-bold rounded-lg bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition-colors"
+                       >
+                         Guardar Contacto
+                       </button>
+                     </div>
+                   </form>
+                 )}
+
+                 {/* Lista de Contactos */}
+                 <div className="space-y-2.5">
+                   {(modalRoadbook.contactosClave || []).length === 0 ? (
+                     <div className="text-center py-6 text-neutral-400 font-mono text-xs">
+                       No hay contactos clave registrados para este concierto.
+                       <p className="text-[10px] mt-1 text-emerald-400">Pulsa en &ldquo;+ Añadir Contacto&rdquo; para registrar promotor, técnico de sonido o producción.</p>
+                     </div>
+                   ) : (
+                     (modalRoadbook.contactosClave || []).map((contact) => (
+                       <div
+                         key={contact.id}
+                         className={`p-3.5 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                           isStitchLight ? 'bg-white border-slate-200 hover:border-emerald-400' : 'bg-[#141414] border-neutral-800 hover:border-emerald-500/40'
+                         }`}
+                       >
+                         <div className="min-w-0 flex-1">
+                           <div className="flex items-center gap-2 flex-wrap mb-1">
+                             <span className="text-xs font-mono font-bold text-white">
+                               {contact.nombre}
+                             </span>
+                             <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                               {contact.rol}
+                             </span>
+                           </div>
+                           <p className="text-xs font-mono text-neutral-300">
+                             📞 {contact.telefono}
+                             {contact.email && <span className="ml-2 text-neutral-400">✉️ {contact.email}</span>}
+                           </p>
+                           {contact.notas && (
+                             <p className="text-[11px] font-sans text-neutral-400 mt-1 italic">
+                               &ldquo;{contact.notas}&rdquo;
+                             </p>
+                           )}
+                         </div>
+
+                         {/* Botones de acción rápida: WhatsApp directo, llamada, eliminar */}
+                         <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
+                           <button
+                             type="button"
+                             onClick={() => openWhatsAppContact(contact, eventDateStr, selectedEventDetails.lugar || 'la sala')}
+                             className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1 cursor-pointer transition-all active:scale-95 shadow-sm"
+                             title="Abrir WhatsApp directo con mensaje predefinido"
+                           >
+                             <MessageSquare className="w-3.5 h-3.5" />
+                             <span>WhatsApp</span>
+                           </button>
+                           <a
+                             href={`tel:${contact.telefono.replace(/\s+/g, '')}`}
+                             className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10 flex items-center gap-1 transition-colors"
+                             title="Llamar directamente por teléfono"
+                           >
+                             <Phone className="w-3.5 h-3.5" />
+                             <span className="hidden sm:inline">Llamar</span>
+                           </a>
+                           <button
+                             type="button"
+                             onClick={() => handleDeleteKeyContact(contact.id, modalRoadbookKey)}
+                             className="p-1 rounded-lg text-neutral-400 hover:text-rose-400 hover:bg-rose-950/30 transition-colors cursor-pointer"
+                             title="Eliminar este contacto"
+                           >
+                             <Trash2 className="w-3.5 h-3.5" />
+                           </button>
+                         </div>
+                       </div>
+                     ))
+                   )}
+                 </div>
+               </div>
+             )}
+
+             {/* TAB 3: 3. CONTROL DE MERCHANDISING POR BOLO */}
+             {modalActiveTab === 'merchan' && (() => {
+               const merch = modalRoadbook.merchControl || getDefaultRoadbook(selectedConcert).merchControl!;
+               const items = merch.items || [];
+               const totalInicial = items.reduce((acc, i) => acc + (i.stockInicial || 0), 0);
+               const totalFinal = items.reduce((acc, i) => acc + (i.stockFinal || 0), 0);
+               const totalVendidas = Math.max(0, totalInicial - totalFinal);
+               const totalVentaTeorica = items.reduce((acc, i) => acc + Math.max(0, (i.stockInicial || 0) - (i.stockFinal || 0)) * (i.precioUnitario || 0), 0);
+               const totalCobradoReal = (merch.ingresosEfectivo || 0) + (merch.ingresosBizum || 0);
+               const diferenciaCuadre = totalCobradoReal - totalVentaTeorica;
+               const porcentajeVendido = totalInicial > 0 ? Math.round((totalVendidas / totalInicial) * 100) : 0;
+
+               const categoriaIcons: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
+                 camisetas: { icon: <Shirt className="w-3.5 h-3.5" />, label: 'Camisetas', color: 'text-amber-400 bg-amber-500/15 border-amber-500/30' },
+                 vinilos: { icon: <Disc3 className="w-3.5 h-3.5" />, label: 'Vinilos', color: 'text-sky-400 bg-sky-500/15 border-sky-500/30' },
+                 musica: { icon: <Music className="w-3.5 h-3.5" />, label: 'Música (CD/Tape)', color: 'text-purple-400 bg-purple-500/15 border-purple-500/30' },
+                 accesorios: { icon: <Tag className="w-3.5 h-3.5" />, label: 'Accesorios & Púas', color: 'text-emerald-400 bg-emerald-500/15 border-emerald-500/30' },
+                 otro: { icon: <ShoppingBag className="w-3.5 h-3.5" />, label: 'Otro', color: 'text-rose-400 bg-rose-500/15 border-rose-500/30' }
+               };
+
+               return (
+                 <div className="space-y-4">
+                   {/* Cabecera de la Sección de Merchan */}
+                   <div className="flex items-center justify-between pb-1 border-b border-amber-500/20 flex-wrap gap-2">
+                     <div className="flex items-center gap-2">
+                       <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-amber-500 text-stone-950">
+                         Sección 3
+                       </span>
+                       <div>
+                         <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+                           Control de Merchandising por Bolo
+                         </h3>
+                         <p className={`text-[11px] font-mono ${textSub}`}>
+                           Inventario que sube a la furgoneta vs. stock final de noche, arqueo de Efectivo y Bizum
+                         </p>
+                       </div>
+                     </div>
+                     <div className="flex items-center gap-1.5">
+                       <button
+                         type="button"
+                         onClick={() => handleCopyMerchSummary(modalRoadbook, modalRoadbookKey, selectedConcert)}
+                         className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-colors flex items-center gap-1 cursor-pointer"
+                         title="Copiar arqueo y balance para WhatsApp"
+                       >
+                         {merchCopiedToast ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                         <span>{merchCopiedToast ? '¡Copiado!' : 'Copiar Arqueo (WhatsApp)'}</span>
+                       </button>
+                       <button
+                         type="button"
+                         onClick={() => setShowAddMerchForm(!showAddMerchForm)}
+                         className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-amber-500 text-stone-950 hover:bg-amber-400 transition-colors flex items-center gap-1 cursor-pointer"
+                       >
+                         <Plus className="w-3.5 h-3.5" />
+                         <span>{showAddMerchForm ? 'Cerrar' : '+ Añadir Producto'}</span>
+                       </button>
+                     </div>
+                   </div>
+
+                   {/* Toast de copiado */}
+                   {merchCopiedToast && (
+                     <motion.div
+                       initial={{ opacity: 0, y: -6 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       className="p-2.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2"
+                     >
+                       <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                       <span>¡Resumen de arqueo y ventas copiado al portapapeles con formato WhatsApp para el grupo de la banda!</span>
+                     </motion.div>
+                   )}
+
+                   {/* KPI Grid: Cuadre y Métricas Principales */}
+                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                     <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+                       <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1">
+                         <Truck className="w-3 h-3 text-sky-400" /> Sube a Furgón
+                       </span>
+                       <div className="mt-1 flex items-baseline gap-1">
+                         <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalInicial}</span>
+                         <span className="text-[10px] text-neutral-400 font-mono">uds</span>
+                       </div>
+                       <p className="text-[9px] text-neutral-500 font-mono">Inventario de salida</p>
+                     </div>
+
+                     <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+                       <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1">
+                         <ShoppingBag className="w-3 h-3 text-amber-400" /> Stock Final
+                       </span>
+                       <div className="mt-1 flex items-baseline gap-1">
+                         <span className={`text-lg font-bold font-mono ${textTitle}`}>{totalFinal}</span>
+                         <span className="text-[10px] text-neutral-400 font-mono">uds</span>
+                       </div>
+                       <p className="text-[9px] text-neutral-500 font-mono">Quedan en furgoneta</p>
+                     </div>
+
+                     <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+                       <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1">
+                         <Zap className="w-3 h-3 text-emerald-400" /> Vendidas
+                       </span>
+                       <div className="mt-1 flex items-baseline gap-1">
+                         <span className="text-lg font-bold font-mono text-emerald-400">{totalVendidas}</span>
+                         <span className="text-[10px] text-emerald-400/70 font-mono font-bold">({porcentajeVendido}%)</span>
+                       </div>
+                       <p className="text-[9px] text-neutral-500 font-mono">Salidas del bolo</p>
+                     </div>
+
+                     <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+                       <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1">
+                         <Calculator className="w-3 h-3 text-purple-400" /> Venta Teórica
+                       </span>
+                       <div className="mt-1 flex items-baseline gap-1">
+                         <span className="text-lg font-bold font-mono text-purple-400">{totalVentaTeorica.toFixed(2)}</span>
+                         <span className="text-[10px] text-neutral-400 font-mono">€</span>
+                       </div>
+                       <p className="text-[9px] text-neutral-500 font-mono">Según inventario</p>
+                     </div>
+
+                     <div className={`p-2.5 rounded-xl border ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/60 border-neutral-800'}`}>
+                       <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1">
+                         <Coins className="w-3 h-3 text-emerald-400" /> Cobrado Real
+                       </span>
+                       <div className="mt-1 flex items-baseline gap-1">
+                         <span className="text-lg font-bold font-mono text-emerald-400">{totalCobradoReal.toFixed(2)}</span>
+                         <span className="text-[10px] text-neutral-400 font-mono">€</span>
+                       </div>
+                       <p className="text-[9px] text-neutral-500 font-mono">Efectivo + Bizum</p>
+                     </div>
+
+                     <div className={`p-2.5 rounded-xl border ${
+                       diferenciaCuadre === 0
+                         ? isStitchLight ? 'bg-emerald-50 border-emerald-300' : 'bg-emerald-950/30 border-emerald-500/40'
+                         : diferenciaCuadre > 0
+                         ? isStitchLight ? 'bg-sky-50 border-sky-300' : 'bg-sky-950/30 border-sky-500/40'
+                         : isStitchLight ? 'bg-rose-50 border-rose-300' : 'bg-rose-950/30 border-rose-500/40'
+                     }`}>
+                       <span className="text-[10px] font-mono uppercase text-neutral-400 flex items-center gap-1">
+                         <ShieldCheck className="w-3 h-3" /> Cuadre Caja
+                       </span>
+                       <div className="mt-1 flex items-baseline gap-1">
+                         <span className={`text-base font-bold font-mono ${
+                           diferenciaCuadre === 0 ? 'text-emerald-400' : diferenciaCuadre > 0 ? 'text-sky-400' : 'text-rose-400'
+                         }`}>
+                           {diferenciaCuadre === 0 ? '0.00' : (diferenciaCuadre > 0 ? `+${diferenciaCuadre.toFixed(2)}` : diferenciaCuadre.toFixed(2))}
+                         </span>
+                         <span className="text-[10px] font-mono text-neutral-400">€</span>
+                       </div>
+                       <p className={`text-[9px] font-mono font-bold ${
+                         diferenciaCuadre === 0 ? 'text-emerald-400' : diferenciaCuadre > 0 ? 'text-sky-400' : 'text-rose-400'
+                       }`}>
+                         {diferenciaCuadre === 0 ? '✓ Caja exacta' : diferenciaCuadre > 0 ? 'Superávit / Propinas' : 'Descuadre faltante'}
+                       </p>
+                     </div>
+                   </div>
+
+                   {/* Formulario Añadir Producto */}
+                   <AnimatePresence>
+                     {showAddMerchForm && (
+                       <motion.form
+                         initial={{ opacity: 0, height: 0 }}
+                         animate={{ opacity: 1, height: 'auto' }}
+                         exit={{ opacity: 0, height: 0 }}
+                         onSubmit={(e) => handleAddMerchItem(modalRoadbookKey, e)}
+                         className={`p-3.5 rounded-xl border space-y-3 ${
+                           isStitchLight ? 'bg-amber-50/70 border-amber-300' : 'bg-amber-950/20 border-amber-500/30'
+                         }`}
+                       >
+                         <div className="flex items-center justify-between">
+                           <span className="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5">
+                             <Plus className="w-3.5 h-3.5" /> Nuevo Artículo de Merchandising para este Concierto
+                           </span>
+                           <button
+                             type="button"
+                             onClick={() => setShowAddMerchForm(false)}
+                             className="text-neutral-400 hover:text-neutral-200 text-xs font-mono cursor-pointer"
+                           >
+                             ✕ Cancelar
+                           </button>
+                         </div>
+
+                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs font-mono">
+                           <div className="md:col-span-2">
+                             <label className={`block text-[10px] mb-1 ${textSub}`}>Nombre del Producto *</label>
+                             <input
+                               type="text"
+                               required
+                               placeholder="Ej: Camiseta Gira Oficial, Vinilo LP..."
+                               value={newMerchNombre}
+                               onChange={(e) => setNewMerchNombre(e.target.value)}
+                               className={`w-full px-2.5 py-1.5 rounded-lg border outline-none text-xs ${
+                                 isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-neutral-100'
+                               }`}
+                             />
+                           </div>
+
+                           <div>
+                             <label className={`block text-[10px] mb-1 ${textSub}`}>Categoría</label>
+                             <select
+                               value={newMerchCategoria}
+                               onChange={(e) => setNewMerchCategoria(e.target.value as any)}
+                               className={`w-full px-2 py-1.5 rounded-lg border outline-none text-xs ${
+                                 isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-neutral-100'
+                               }`}
+                             >
+                               <option value="camisetas">👕 Camisetas</option>
+                               <option value="vinilos">💿 Vinilos</option>
+                               <option value="musica">🎵 Música (CD/Tape)</option>
+                               <option value="accesorios">🎸 Púas / Accesorios</option>
+                               <option value="otro">🏷️ Otro</option>
+                             </select>
+                           </div>
+
+                           <div>
+                             <label className={`block text-[10px] mb-1 ${textSub}`}>Talla / Versión</label>
+                             <input
+                               type="text"
+                               placeholder="Ej: M, L, XL, 12'', Pack..."
+                               value={newMerchTalla}
+                               onChange={(e) => setNewMerchTalla(e.target.value)}
+                               className={`w-full px-2.5 py-1.5 rounded-lg border outline-none text-xs ${
+                                 isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-neutral-100'
+                               }`}
+                             />
+                           </div>
+
+                           <div className="grid grid-cols-2 gap-1.5">
+                             <div>
+                               <label className={`block text-[10px] mb-1 ${textSub}`}>Precio (€)</label>
+                               <input
+                                 type="number"
+                                 step="0.5"
+                                 min="0"
+                                 value={newMerchPrecio}
+                                 onChange={(e) => setNewMerchPrecio(e.target.value)}
+                                 className={`w-full px-2 py-1.5 rounded-lg border outline-none text-xs font-mono ${
+                                   isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-neutral-100'
+                                 }`}
+                               />
+                             </div>
+                             <div>
+                               <label className={`block text-[10px] mb-1 ${textSub}`}>Furgón (uds)</label>
+                               <input
+                                 type="number"
+                                 min="0"
+                                 value={newMerchStockInicial}
+                                 onChange={(e) => setNewMerchStockInicial(e.target.value)}
+                                 className={`w-full px-2 py-1.5 rounded-lg border outline-none text-xs font-mono ${
+                                   isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-900 border-neutral-700 text-neutral-100'
+                                 }`}
+                               />
+                             </div>
+                           </div>
+                         </div>
+
+                         <div className="flex justify-end pt-1">
+                           <button
+                             type="submit"
+                             className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-amber-500 text-stone-950 hover:bg-amber-400 transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+                           >
+                             <Check className="w-3.5 h-3.5" />
+                             <span>Guardar Producto en el Bolo</span>
+                           </button>
+                         </div>
+                       </motion.form>
+                     )}
+                   </AnimatePresence>
+
+                   {/* Tabla de Artículos: Sube a Furgoneta vs Stock Final Noche */}
+                   <div className={`rounded-xl border overflow-hidden ${isStitchLight ? 'bg-white border-slate-200' : 'bg-[#131313]/90 border-neutral-800'}`}>
+                     <div className="p-3 border-b border-neutral-800/80 flex items-center justify-between flex-wrap gap-2">
+                       <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                         <Shirt className="w-4 h-4" /> Inventario de Merchandising ({items.length} productos)
+                       </span>
+                       <span className={`text-[11px] font-mono ${textSub}`}>
+                         Ajusta las unidades al subir a la furgoneta y al terminar el bolo
+                       </span>
+                     </div>
+
+                     {items.length === 0 ? (
+                       <div className="p-8 text-center space-y-2">
+                         <Shirt className="w-8 h-8 text-neutral-600 mx-auto" />
+                         <p className={`text-xs font-mono ${textSub}`}>
+                           Aún no has registrado productos para este bolo.
+                         </p>
+                         <button
+                           type="button"
+                           onClick={() => setShowAddMerchForm(true)}
+                           className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-colors inline-flex items-center gap-1.5 cursor-pointer"
+                         >
+                           <Plus className="w-3.5 h-3.5" />
+                           <span>Añadir primer producto</span>
+                         </button>
+                       </div>
+                     ) : (
+                       <div className="divide-y divide-neutral-800/60">
+                         {items.map((item) => {
+                           const vendidas = Math.max(0, (item.stockInicial || 0) - (item.stockFinal || 0));
+                           const subtotal = vendidas * (item.precioUnitario || 0);
+                           const catConfig = categoriaIcons[item.categoria] || categoriaIcons.otro;
+                           const pctVendido = item.stockInicial > 0 ? Math.round((vendidas / item.stockInicial) * 100) : 0;
+
+                           return (
+                             <div
+                               key={item.id}
+                               className={`p-3 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 ${
+                                 isStitchLight ? 'hover:bg-slate-50' : 'hover:bg-neutral-900/40'
+                               }`}
+                             >
+                               {/* Datos del producto */}
+                               <div className="flex items-center gap-2.5 min-w-[220px]">
+                                 <div className={`p-2 rounded-lg border shrink-0 ${catConfig.color}`}>
+                                   {catConfig.icon}
+                                 </div>
+                                 <div className="min-w-0">
+                                   <div className="flex items-center gap-1.5 flex-wrap">
+                                     <h4 className={`text-xs font-bold font-sans ${textTitle}`}>
+                                       {item.nombre}
+                                     </h4>
+                                     {item.talla && (
+                                       <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-neutral-800 text-neutral-300 border border-neutral-700">
+                                         {item.talla}
+                                       </span>
+                                     )}
+                                   </div>
+                                   <div className="flex items-center gap-2 mt-0.5 text-[10px] font-mono text-neutral-400">
+                                     <span>Precio: <strong className="text-amber-400">{item.precioUnitario}€</strong></span>
+                                     <span>•</span>
+                                     <span>{catConfig.label}</span>
+                                   </div>
+                                 </div>
+                               </div>
+
+                               {/* Controles de Stock Inicial (Sube a Furgoneta) y Stock Final */}
+                               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 items-center flex-1 max-w-lg">
+                                 {/* Sube a Furgoneta */}
+                                 <div className={`p-1.5 rounded-lg border ${isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}>
+                                   <span className="block text-[9px] font-mono text-neutral-400 mb-1 flex items-center gap-1">
+                                     <Truck className="w-2.5 h-2.5 text-sky-400" /> Sube Furgón
+                                   </span>
+                                   <div className="flex items-center gap-1">
+                                     <button
+                                       type="button"
+                                       onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                         stockInicial: Math.max(0, (item.stockInicial || 0) - 1)
+                                       })}
+                                       className="w-5 h-5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+                                     >
+                                       -
+                                     </button>
+                                     <input
+                                       type="number"
+                                       min="0"
+                                       value={item.stockInicial}
+                                       onChange={(e) => handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                         stockInicial: Math.max(0, parseInt(e.target.value, 10) || 0)
+                                       })}
+                                       className={`w-12 text-center text-xs font-mono font-bold py-0.5 rounded border outline-none ${
+                                         isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-700 text-neutral-100'
+                                       }`}
+                                     />
+                                     <button
+                                       type="button"
+                                       onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                         stockInicial: (item.stockInicial || 0) + 1
+                                       })}
+                                       className="w-5 h-5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+                                     >
+                                       +
+                                     </button>
+                                   </div>
+                                 </div>
+
+                                 {/* Stock Final (Fin de Noche) */}
+                                 <div className={`p-1.5 rounded-lg border ${isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-neutral-900 border-neutral-800'}`}>
+                                   <div className="flex items-center justify-between mb-1">
+                                     <span className="text-[9px] font-mono text-neutral-400 flex items-center gap-1">
+                                       <DoorClosed className="w-2.5 h-2.5 text-amber-400" /> Stock Final
+                                     </span>
+                                     <button
+                                       type="button"
+                                       onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, { stockFinal: 0 })}
+                                       className="text-[8px] font-mono px-1 py-0.2 rounded bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 cursor-pointer"
+                                       title="Marcar como agotado tras el concierto"
+                                     >
+                                       Agotado (0)
+                                     </button>
+                                   </div>
+                                   <div className="flex items-center gap-1">
+                                     <button
+                                       type="button"
+                                       onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                         stockFinal: Math.max(0, (item.stockFinal || 0) - 1)
+                                       })}
+                                       className="w-5 h-5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+                                     >
+                                       -
+                                     </button>
+                                     <input
+                                       type="number"
+                                       min="0"
+                                       value={item.stockFinal}
+                                       onChange={(e) => handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                         stockFinal: Math.max(0, parseInt(e.target.value, 10) || 0)
+                                       })}
+                                       className={`w-12 text-center text-xs font-mono font-bold py-0.5 rounded border outline-none ${
+                                         isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-700 text-neutral-100'
+                                       }`}
+                                     />
+                                     <button
+                                       type="button"
+                                       onClick={() => handleUpdateMerchItem(modalRoadbookKey, item.id, {
+                                         stockFinal: (item.stockFinal || 0) + 1
+                                       })}
+                                       className="w-5 h-5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs flex items-center justify-center font-mono cursor-pointer shrink-0"
+                                     >
+                                       +
+                                     </button>
+                                   </div>
+                                 </div>
+
+                                 {/* Resumen Ventas del Artículo */}
+                                 <div className="col-span-2 sm:col-span-1 flex flex-col items-end justify-center pr-2">
+                                   <div className="text-right">
+                                     <span className="text-xs font-mono font-black text-amber-400">
+                                       {vendidas} vendidas
+                                     </span>
+                                     <span className="block text-xs font-mono font-bold text-emerald-400">
+                                       {subtotal.toFixed(2)} €
+                                     </span>
+                                   </div>
+                                   <div className="w-20 bg-neutral-800 rounded-full h-1 mt-1 overflow-hidden">
+                                     <div
+                                       className="h-full bg-amber-400 transition-all duration-300"
+                                       style={{ width: `${Math.min(100, pctVendido)}%` }}
+                                     />
+                                   </div>
+                                 </div>
+                                </div>
+
+                                {/* Acciones */}
+                                <div className="flex items-center justify-end">
+                                 <button
+                                   type="button"
+                                   onClick={() => handleDeleteMerchItem(modalRoadbookKey, item.id)}
+                                   className="p-1.5 rounded-lg text-neutral-500 hover:text-rose-400 hover:bg-rose-950/30 transition-colors cursor-pointer"
+                                   title="Eliminar este artículo del bolo"
+                                 >
+                                   <Trash2 className="w-4 h-4" />
+                                 </button>
+                                </div>
+                             </div>
+                           );
+                         })}
+                       </div>
+                     )}
+                   </div>
+
+                   {/* Módulo de Arqueo de Caja y Cobros (Efectivo & Bizum) */}
+                   <div className={`p-4 rounded-xl border space-y-4 ${
+                     isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-neutral-900/50 border-neutral-800'
+                   }`}>
+                     <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
+                       <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                         <Coins className="w-4 h-4" /> Arqueo de Caja y Métodos de Cobro
+                       </span>
+                       <span className="text-[10px] font-mono text-neutral-400">
+                         Introduce los importes reales cobrados durante la noche
+                       </span>
+                     </div>
+
+                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                       {/* Efectivo Recaudado */}
+                       <div className={`p-3 rounded-xl border ${
+                         isStitchLight ? 'bg-white border-emerald-200' : 'bg-neutral-900 border-emerald-500/30'
+                       }`}>
+                         <div className="flex items-center gap-1.5 text-emerald-400 font-mono font-bold text-xs mb-1">
+                           <Banknote className="w-4 h-4" />
+                           <span>Efectivo en Caja (€)</span>
+                         </div>
+                         <p className="text-[10px] text-neutral-400 font-mono mb-2">
+                           Billetes y monedas cobrados en el bolo
+                         </p>
+                         <div className="flex items-center gap-1.5">
+                           <input
+                             type="number"
+                             step="1"
+                             min="0"
+                             value={merch.ingresosEfectivo ?? 0}
+                             onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, {
+                               ingresosEfectivo: Math.max(0, parseFloat(e.target.value) || 0)
+                             })}
+                             className={`w-full px-3 py-1.5 rounded-lg border font-mono font-bold text-sm outline-none ${
+                               isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-700 text-neutral-100'
+                             }`}
+                           />
+                           <span className="font-mono text-xs font-bold text-neutral-400">€</span>
+                         </div>
+                       </div>
+
+                       {/* Bizum / TPV Recaudado */}
+                       <div className={`p-3 rounded-xl border ${
+                         isStitchLight ? 'bg-white border-sky-200' : 'bg-neutral-900 border-sky-500/30'
+                       }`}>
+                         <div className="flex items-center gap-1.5 text-sky-400 font-mono font-bold text-xs mb-1">
+                           <Smartphone className="w-4 h-4" />
+                           <span>Bizum / TPV (€)</span>
+                         </div>
+                         <p className="text-[10px] text-neutral-400 font-mono mb-2">
+                           Pagos por móvil y datáfono del bolo
+                         </p>
+                         <div className="flex items-center gap-1.5">
+                           <input
+                             type="number"
+                             step="1"
+                             min="0"
+                             value={merch.ingresosBizum ?? 0}
+                             onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, {
+                               ingresosBizum: Math.max(0, parseFloat(e.target.value) || 0)
+                             })}
+                             className={`w-full px-3 py-1.5 rounded-lg border font-mono font-bold text-sm outline-none ${
+                               isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-700 text-neutral-100'
+                             }`}
+                           />
+                           <span className="font-mono text-xs font-bold text-neutral-400">€</span>
+                         </div>
+                       </div>
+
+                       {/* Fondo de Caja Inicial */}
+                       <div className={`p-3 rounded-xl border ${
+                         isStitchLight ? 'bg-white border-amber-200' : 'bg-neutral-900 border-amber-500/30'
+                       }`}>
+                         <div className="flex items-center gap-1.5 text-amber-400 font-mono font-bold text-xs mb-1">
+                           <Coins className="w-4 h-4" />
+                           <span>Fondo de Caja (€)</span>
+                         </div>
+                         <p className="text-[10px] text-neutral-400 font-mono mb-2">
+                           Cambio que se llevó al inicio para la mesa
+                         </p>
+                         <div className="flex items-center gap-1.5">
+                           <input
+                             type="number"
+                             step="1"
+                             min="0"
+                             value={merch.fondoCajaInicial ?? 0}
+                             onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, {
+                               fondoCajaInicial: Math.max(0, parseFloat(e.target.value) || 0)
+                             })}
+                             className={`w-full px-3 py-1.5 rounded-lg border font-mono font-bold text-sm outline-none ${
+                               isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-700 text-neutral-100'
+                             }`}
+                           />
+                           <span className="font-mono text-xs font-bold text-neutral-400">€</span>
+                         </div>
+                       </div>
+                     </div>
+
+                     {/* Desglose de Caja Total en Mano */}
+                     <div className={`p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                       isStitchLight ? 'bg-white border-slate-300' : 'bg-neutral-950 border-neutral-800'
+                     }`}>
+                       <div className="space-y-0.5">
+                         <span className="text-xs font-mono font-bold text-neutral-300">
+                           Resumen del Dinero Recaudado en el Puesto:
+                         </span>
+                         <p className="text-[11px] font-mono text-neutral-400">
+                           💵 {(merch.ingresosEfectivo || 0).toFixed(2)}€ Efectivo + 📱 {(merch.ingresosBizum || 0).toFixed(2)}€ Bizum = <strong className="text-emerald-400">{totalCobradoReal.toFixed(2)}€ Total Ventas</strong>
+                         </p>
+                         {merch.fondoCajaInicial ? (
+                           <p className="text-[10px] font-mono text-neutral-500">
+                             (Efectivo físico total a retirar del cajón incluyendo fondo de caja: {((merch.ingresosEfectivo || 0) + (merch.fondoCajaInicial || 0)).toFixed(2)} €)
+                           </p>
+                         ) : null}
+                       </div>
+
+                       <div className="text-right shrink-0">
+                         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-bold border ${
+                           diferenciaCuadre === 0
+                             ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                             : diferenciaCuadre > 0
+                             ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                             : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                         }`}>
+                           {diferenciaCuadre === 0 ? (
+                             <>
+                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                               <span>¡Caja Cuadrada al Céntimo!</span>
+                             </>
+                           ) : diferenciaCuadre > 0 ? (
+                             <>
+                               <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                               <span>+{diferenciaCuadre.toFixed(2)} € (Superávit / Donaciones)</span>
+                             </>
+                           ) : (
+                             <>
+                               <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+                               <span>{diferenciaCuadre.toFixed(2)} € (Descuadre por revisar)</span>
+                             </>
+                           )}
+                         </span>
+                       </div>
+                     </div>
+
+                     {/* Observaciones y Notas del Puesto de Merch */}
+                     <div>
+                       <label className="block text-[10px] font-mono uppercase text-neutral-400 mb-1">
+                         Notas del Puesto de Merchandising / Incidencias
+                       </label>
+                       <textarea
+                         rows={2}
+                         placeholder="Ej: Encargado de mesa: Andrea. Las camisetas talla L se agotaron antes del bis. Mucha demanda de púas."
+                         value={merch.notas || ''}
+                         onChange={(e) => handleUpdateMerchTotals(modalRoadbookKey, { notas: e.target.value })}
+                         className={`w-full p-2.5 rounded-lg border text-xs font-mono outline-none resize-none ${
+                           isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-neutral-950 border-neutral-700 text-neutral-200'
+                         }`}
+                       />
+                     </div>
+                   </div>
+                 </div>
+               );
+             })()}
+
+             {/* TAB 4: 5. CHECKLIST CIERRE DE MATERIAL */}
+             {modalActiveTab === 'cierre' && (
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between pb-1 border-b border-purple-500/20 flex-wrap gap-2">
+                   <div className="flex items-center gap-2">
+                     <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-black uppercase tracking-wider bg-purple-500 text-white">
+                       Sección 5
+                     </span>
+                     <h3 className={`text-sm font-mono font-bold ${textTitle}`}>
+                       Checklist de Cierre de Material & Carga de Furgoneta
+                     </h3>
+                   </div>
+                   <div className="flex items-center gap-1.5">
+                     <button
+                       type="button"
+                       onClick={() => handleToggleAllCierreItems(modalRoadbookKey, true)}
+                       className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors cursor-pointer"
+                     >
+                       ✓ Marcar Todo
+                     </button>
+                     <button
+                       type="button"
+                       onClick={() => handleToggleAllCierreItems(modalRoadbookKey, false)}
+                       className="px-2 py-1 rounded text-[10px] font-mono font-bold bg-neutral-800 text-neutral-300 border border-neutral-700 hover:bg-neutral-700 transition-colors cursor-pointer"
+                     >
+                       ↺ Desmarcar
+                     </button>
+                   </div>
+                 </div>
+
+                 {/* Barra de Progreso y Banner de Estado */}
+                 {(() => {
+                   const items = modalRoadbook.cierreMaterial || [];
+                   const checkedCount = items.filter(i => i.checked).length;
+                   const totalCount = items.length;
+                   const pct = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+                   const isCompleted = totalCount > 0 && checkedCount === totalCount;
+
+                   return (
+                     <div className="space-y-2">
+                       <div className="flex items-center justify-between text-xs font-mono font-bold">
+                         <span className="text-purple-300">
+                           {checkedCount} de {totalCount} elementos verificados
+                         </span>
+                         <span className={isCompleted ? 'text-emerald-400' : 'text-amber-400'}>
+                           {pct}%
+                         </span>
+                       </div>
+                       <div className="w-full h-2.5 rounded-full bg-neutral-800 overflow-hidden">
+                         <div
+                           className={`h-full transition-all duration-300 ${
+                             isCompleted ? 'bg-emerald-500' : pct > 50 ? 'bg-purple-500' : 'bg-amber-500'
+                           }`}
+                           style={{ width: `${pct}%` }}
+                         />
+                       </div>
+
+                       {isCompleted ? (
+                         <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/50 text-emerald-200 text-xs font-mono flex items-center gap-2">
+                           <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                           <span>¡TODO EL MATERIAL VERIFICADO! Escenario y camerinos despejados. Furgoneta cerrada y lista para partir.</span>
+                         </div>
+                       ) : (
+                         <div className="p-3 rounded-xl bg-purple-950/30 border border-purple-500/40 text-purple-200 text-xs font-mono flex items-center gap-2">
+                           <ShieldCheck className="w-4 h-4 text-purple-400 shrink-0" />
+                           <span>Verifica uno a uno antes de cerrar la furgoneta para garantizar cero olvidos de cables, instrumentos o ropa.</span>
+                         </div>
+                       )}
+                     </div>
+                   );
+                 })()}
+
+                 {/* Listado clasificado por categoría */}
+                 {['escenario', 'camerino', 'furgoneta'].map((catKey) => {
+                   const catLabel = catKey === 'escenario' ? '🎸 Escenario (Backline & Sonido)' : catKey === 'camerino' ? '👕 Camerino (Ropa, Móviles & Merch)' : '🚐 Furgoneta & Vehículo (Estiba & Cierre)';
+                   const catItems = (modalRoadbook.cierreMaterial || []).filter(i => i.categoria === catKey);
+                   if (catItems.length === 0) return null;
+
+                   return (
+                     <div key={catKey} className={`p-3.5 rounded-xl border space-y-2 ${isStitchLight ? 'bg-slate-50 border-slate-200' : 'bg-[#141414] border-neutral-800'}`}>
+                       <div className="flex items-center justify-between">
+                         <h4 className="text-xs font-mono font-bold text-purple-300">
+                           {catLabel}
+                         </h4>
+                         <span className="text-[10px] font-mono text-neutral-400">
+                           {catItems.filter(i => i.checked).length}/{catItems.length}
+                         </span>
+                       </div>
+                       <div className="space-y-1.5">
+                         {catItems.map((item) => (
+                           <div
+                             key={item.id}
+                             onClick={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
+                             className={`p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2.5 cursor-pointer select-none ${
+                               item.checked
+                                 ? 'bg-emerald-950/30 border-emerald-500/40 text-neutral-400 line-through'
+                                 : isStitchLight
+                                 ? 'bg-white border-slate-200 text-slate-800 hover:border-purple-400'
+                                 : 'bg-black/50 border-neutral-700/80 text-neutral-200 hover:border-purple-500/40'
+                             }`}
+                           >
+                             <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                               <input
+                                 type="checkbox"
+                                 checked={item.checked}
+                                 onChange={() => handleToggleCierreItem(item.id, modalRoadbookKey)}
+                                 onClick={(e) => e.stopPropagation()}
+                                 className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 cursor-pointer"
+                               />
+                               <span className="text-xs font-mono font-medium">
+                                 {item.item}
+                                </span>
+                             </div>
+                             <button
+                               type="button"
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 handleDeleteCierreItem(item.id, modalRoadbookKey);
+                               }}
+                               className="p-1 text-neutral-500 hover:text-rose-400 transition-colors cursor-pointer"
+                               title="Eliminar este ítem"
+                             >
+                               <Trash2 className="w-3 h-3" />
+                             </button>
+                           </div>
+                         ))}
+                       </div>
+                     </div>
+                   );
+                 })}
+
+                 {/* Formulario para añadir ítem al checklist */}
+                 <form
+                   onSubmit={(e) => handleAddCierreItem(modalRoadbookKey, e)}
+                   className={`p-3 rounded-xl border flex items-center gap-2 flex-wrap ${
+                     isStitchLight ? 'bg-slate-100 border-slate-300' : 'bg-neutral-900 border-neutral-800'
+                   }`}
+                 >
+                   <select
+                     value={newCierreItemCat}
+                     onChange={(e) => setNewCierreItemCat(e.target.value as any)}
+                     className={`px-2 py-1.5 rounded-lg text-xs font-mono border ${
+                       isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black border-neutral-700 text-white'
+                     }`}
+                   >
+                     <option value="escenario">🎸 Escenario</option>
+                     <option value="camerino">👕 Camerino</option>
+                     <option value="furgoneta">🚐 Furgoneta</option>
+                   </select>
+                   <input
+                     type="text"
+                     value={newCierreItemText}
+                     onChange={(e) => setNewCierreItemText(e.target.value)}
+                     placeholder="Añadir ítem a comprobar (ej: soporte de guitarra, cargador portátil)..."
+                     className={`flex-1 min-w-[200px] px-2.5 py-1.5 rounded-lg text-xs font-mono border ${
+                       isStitchLight ? 'bg-white border-slate-300 text-slate-900' : 'bg-black border-neutral-700 text-white'
+                     }`}
+                   />
+                   <button
+                     type="submit"
+                     disabled={!newCierreItemText.trim()}
+                     className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-purple-600 hover:bg-purple-500 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                   >
+                     + Añadir Ítem
+                   </button>
+                 </form>
+               </div>
+             )}
+           </div>
+         </div>
+       </div>
+     </ModalPortal>
+   );
+ })()}
 
  {/* Tutorial Interactivo Paso a Paso */}
  <ModuleTutorialModal

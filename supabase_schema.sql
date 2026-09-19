@@ -942,3 +942,68 @@ CREATE INDEX IF NOT EXISTS idx_stem_prediction_jobs_status ON stem_prediction_jo
 ALTER TABLE stem_prediction_jobs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Permitir acceso total al backend" ON stem_prediction_jobs FOR ALL USING (true);
 
+-- ====================================================================
+-- 37. STRICT ROW LEVEL SECURITY (RLS) POLICIES & FUNCTIONS
+-- ====================================================================
+
+CREATE OR REPLACE FUNCTION public.is_service_role()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (
+    coalesce(current_setting('request.jwt.claim.role', true), '') = 'service_role' OR
+    coalesce((auth.jwt() ->> 'role'), '') = 'service_role'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION public.get_active_band_id()
+RETURNS TEXT AS $$
+BEGIN
+  RETURN coalesce(
+    nullif(current_setting('app.current_band_id', true), ''),
+    nullif(auth.jwt() ->> 'band_id', ''),
+    nullif(auth.jwt() -> 'user_metadata' ->> 'band_id', ''),
+    nullif(auth.jwt() -> 'app_metadata' ->> 'band_id', '')
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION public.get_user_authorized_band_ids()
+RETURNS TABLE(band_id TEXT) AS $$
+BEGIN
+  IF public.is_service_role() THEN
+    RETURN QUERY SELECT rb.band_id FROM public.registered_bands rb;
+    RETURN;
+  END IF;
+
+  IF public.get_active_band_id() IS NOT NULL THEN
+    RETURN QUERY SELECT public.get_active_band_id();
+  END IF;
+
+  IF auth.uid() IS NOT NULL THEN
+    RETURN QUERY
+      SELECT ub.band_id FROM public.user_bands ub WHERE ub.user_id = auth.uid()::text
+      UNION
+      SELECT u.band_id FROM public.users u WHERE u.id = auth.uid()::text AND u.band_id IS NOT NULL AND u.band_id != ''
+      UNION
+      SELECT u.main_band_id FROM public.users u WHERE u.id = auth.uid()::text AND u.main_band_id IS NOT NULL AND u.main_band_id != '';
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Calendar policies (Concerts & Rehearsals)
+CREATE POLICY "concerts_select_policy" ON public.concerts
+  FOR SELECT USING (
+    public.is_service_role() OR
+    band_id = public.get_active_band_id() OR
+    band_id IN (SELECT public.get_user_authorized_band_ids())
+  );
+
+CREATE POLICY "rehearsals_select_policy" ON public.rehearsals
+  FOR SELECT USING (
+    public.is_service_role() OR
+    band_id = public.get_active_band_id() OR
+    band_id IN (SELECT public.get_user_authorized_band_ids())
+  );
+
+

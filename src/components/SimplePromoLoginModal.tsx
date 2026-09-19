@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Lock, Mail, Eye, EyeOff, AlertCircle, CheckCircle2, Guitar, User as UserIcon, ArrowLeft, ArrowRight, Shield, Sparkles, Music, Zap } from 'lucide-react';
 import { User as UserType } from '../types';
+import { signInWithGoogleIdentity } from '../utils/googleAuth';
 import { guardarCookieDeSesion } from '../utils/sessionCookie';
 import { ModalPortal } from './common/ModalPortal';
 
@@ -13,6 +14,78 @@ interface SimplePromoLoginModalProps {
 }
 
 type ViewState = 'login' | 'register' | 'reset-password';
+
+// El poster tiene que ser un fotograma real del propio vídeo YA recortado (mismo encuadre,
+// misma proporción 720x1024): el JPEG de marca genérico es un render cuadrado sin recortar,
+// así que al arrancar el vídeo la imagen "saltaba" a otro encuadre.
+const LOGIN_POSTER = '/login-animation-poster.jpg';
+
+// Network Information API: no estandarizada en todos los navegadores (Safari/Firefox no la
+// tienen), por eso el chequeo es "opt-out": si no existe o no se puede leer, se asume conexión
+// buena y se intenta el vídeo igualmente - degradar solo cuando hay evidencia real de que la
+// red va mal (2G/slow-2g o modo Ahorro de Datos activado).
+function tieneConexionMala(): boolean {
+  try {
+    const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (!conn) return false;
+    if (conn.saveData) return true;
+    return conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g';
+  } catch {
+    return false;
+  }
+}
+
+// Logo animado con fallback a la imagen estática (por conexión mala o por fallo real de carga).
+// Sin loop a propósito: es una animación de "revelado" (barras que crecen de la nada, logo que
+// se dibuja, luces que barren), no un movimiento cíclico - repetirla en bucle fuerza un corte
+// visible al volver del final al principio. Se reproduce una vez y se queda congelada en el
+// último fotograma, que ya lleva el logo + naming compuesto.
+// Es su propio componente porque USE_SIMPLE_LOGIN (App.tsx) hace que esta ventana sea la que de
+// verdad se muestra en producción hoy - LoginModal.tsx tiene la misma pieza pero no se está
+// renderizando - y aquí se necesita en dos sitios (login y alta).
+const LoginBrandVideo: React.FC = () => {
+  const ref = useRef<HTMLVideoElement | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [skipVideo] = useState(tieneConexionMala);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = true;
+    el.play().catch(() => {});
+  }, []);
+  const handleReplay = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.currentTime = 0;
+    el.play().catch(() => {});
+  };
+  if (failed || skipVideo) {
+    return (
+      <img
+        src={LOGIN_POSTER}
+        alt="BandManager.io"
+        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
+      />
+    );
+  }
+  return (
+    <video
+      ref={ref}
+      autoPlay
+      muted
+      playsInline
+      preload="auto"
+      poster={LOGIN_POSTER}
+      aria-label="BandManager.io - Plataforma Integral para Bandas"
+      className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden cursor-pointer"
+      onError={() => setFailed(true)}
+      onMouseEnter={handleReplay}
+    >
+      <source src="/login-animation.mp4" type="video/mp4" />
+      <source src="/login-animation.webm" type="video/webm" />
+    </video>
+  );
+};
 
 export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ onLoginSuccess }) => {
   const [view, setView] = useState<ViewState>('login');
@@ -39,6 +112,67 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
   const [resetConfirmPassword, setResetConfirmPassword] = useState('');
   const [resetSuccessMsg, setResetSuccessMsg] = useState<string | null>(null);
   const [resetMaskedEmail, setResetMaskedEmail] = useState<string | null>(null);
+
+  // --- Google Social Login / Registration ---
+  const handleGoogleSocialSignIn = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const googleUser = await signInWithGoogleIdentity();
+      if (!googleUser) return; // User closed popup
+
+      const email = googleUser.email;
+      const displayName = (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : (googleUser.name || email.split('@')[0]);
+
+      try {
+        const response = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: displayName,
+            uid: googleUser.sub,
+            accessToken: googleUser.accessToken,
+            bandName: (view === 'register' && regBandName.trim()) ? regBandName.trim() : undefined,
+            leaderName: (view === 'register' && regLeaderName.trim()) ? regLeaderName.trim() : undefined
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.token) {
+          localStorage.setItem('bakandeya_token', data.token);
+          guardarCookieDeSesion(data.token);
+          onLoginSuccess(data.user, data.token, data.availableBands);
+          return;
+        }
+      } catch (backendErr) {
+        console.warn("API de auth Google fallo, iniciando sesion local:", backendErr);
+      }
+
+      const fallbackUser: UserType = {
+        id: googleUser.sub || `user-${Date.now()}`,
+        username: email,
+        name: displayName,
+        bandName: (view === 'register' && regBandName.trim()) || 'Mi Banda',
+        email: email,
+        role: 'leader',
+        plan: 'promo',
+        createdAt: new Date().toISOString()
+      };
+      onLoginSuccess(fallbackUser, googleUser.accessToken || '');
+    } catch (err: any) {
+      console.error("Error al iniciar sesión con Google:", err);
+      setError(err.message || 'Error al conectar con Google OAuth.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const GoogleIcon = () => (
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+      <path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"/>
+    </svg>
+  );
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,7 +260,6 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         throw new Error(data.error || 'No se pudo procesar la solicitud.');
       }
       setResetMaskedEmail(data.emailMasked);
-      if (data.code) setResetCode(data.code);
       setResetSuccessMsg(data.message || 'Código de recuperación generado.');
       setResetStep(2);
     } catch (err: any) {
@@ -201,13 +334,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
                     <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50]">
-                      <img
-                        src="/bandmanageriodefinitiva.jpeg"
-                        alt="BandManager.io"
-                        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
-                        referrerPolicy="no-referrer"
-                      />
+                      <LoginBrandVideo />
                     </div>
                   </div>
                 </div>
@@ -239,6 +366,26 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     {loading ? 'Entrando...' : 'Entrar a mi cuenta'}
                   </button>
                 </form>
+
+                <div className="relative mt-3 mb-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-neutral-800/80"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2.5 bg-[#111116] text-neutral-500 font-medium">O continuar con</span>
+                  </div>
+                </div>
+
+                <button 
+                  type="button" 
+                  onClick={handleGoogleSocialSignIn}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] border border-neutral-800/80 rounded-2xl text-sm font-medium text-neutral-200 hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
+                >
+                  <GoogleIcon />
+                  <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
+                </button>
+
                 <p className="text-center text-xs text-neutral-400 pt-1">
                   ¿Primera vez por aquí?{' '}
                   <button type="button" onClick={() => { setError(null); setView('register'); }} className="text-[#f2ca50] hover:underline font-medium cursor-pointer">
@@ -262,13 +409,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                   
                   <div className="relative group cursor-pointer w-full max-w-[380px] sm:max-w-[420px] flex justify-center">
                     <div className="p-1.5 rounded-3xl bg-gradient-to-b from-[#f2ca50]/45 via-neutral-800/60 to-neutral-900/90 border-2 border-[#f2ca50]/70 shadow-[0_16px_40px_rgba(242,202,80,0.35)] backdrop-blur-md transition-all duration-300 group-hover:scale-[1.02] group-hover:border-[#f2ca50]">
-                      <img
-                        src="/bandmanageriodefinitiva.jpeg"
-                        alt="BandManager.io"
-                        className="w-full h-auto max-h-60 sm:max-h-72 object-contain rounded-[1.25rem] overflow-hidden"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/logo_bandmanager_official.svg'; }}
-                        referrerPolicy="no-referrer"
-                      />
+                      <LoginBrandVideo />
                     </div>
                   </div>
                   <p className="mt-3 text-sm text-neutral-300 font-medium">
@@ -300,6 +441,26 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
                     {loading ? 'Creando cuenta...' : (<><span>Crear mi Dossier y QR</span><ArrowRight className="w-4 h-4" /></>)}
                   </button>
                 </form>
+
+                <div className="relative mt-3 mb-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-neutral-800/80"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2.5 bg-[#111116] text-neutral-500 font-medium">O registrarme con</span>
+                  </div>
+                </div>
+
+                <button 
+                  type="button" 
+                  onClick={handleGoogleSocialSignIn}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2.5 py-3 bg-[#131317]/80 hover:bg-[#1f1f26] border border-neutral-800/80 rounded-2xl text-sm font-medium text-neutral-200 hover:text-white transition-all shadow-inner cursor-pointer disabled:opacity-50"
+                >
+                  <GoogleIcon />
+                  <span>{loading ? 'Conectando...' : 'Continuar con Google'}</span>
+                </button>
+
                 <p className="text-center text-xs text-neutral-400">
                   ¿Ya tienes cuenta?{' '}
                   <button type="button" onClick={() => { setError(null); setView('login'); }} className="text-[#f2ca50] hover:underline font-medium cursor-pointer">

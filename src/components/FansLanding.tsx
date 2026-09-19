@@ -3,7 +3,7 @@ import {
   Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame,
   Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle,
   Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, ChevronDown, ChevronUp,
-  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2
+  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2, Ticket
 } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
@@ -1317,16 +1317,37 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                 </div>
                 <div className={`space-y-1.5 ${showAllConcerts ? 'max-h-64 overflow-y-auto pr-0.5' : ''}`}>
                   {(showAllConcerts ? upcomingConcerts : upcomingConcerts.slice(0, 3)).map(c => (
-                    <div key={c.id} className="p-2.5 rounded-xl bg-neutral-950 border border-neutral-800 flex items-center justify-between text-xs font-mono">
-                      <div className="min-w-0 pr-2">
-                        <p className="font-bold text-white truncate">{c.sala}</p>
-                        <p className="text-[11px] text-neutral-400 truncate flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-amber-500/80 shrink-0" /> {c.ciudad}
-                        </p>
+                    <div key={c.id} className="p-2.5 rounded-xl bg-neutral-950 border border-neutral-800 text-xs font-mono space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="min-w-0 pr-2">
+                          <p className="font-bold text-white truncate">{c.sala}</p>
+                          <p className="text-[11px] text-neutral-400 truncate flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-amber-500/80 shrink-0" /> {c.ciudad}
+                          </p>
+                        </div>
+                        <span className="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 text-[10px] font-bold shrink-0 font-mono">
+                          {c.fecha}
+                        </span>
                       </div>
-                      <span className="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 text-[10px] font-bold shrink-0 font-mono">
-                        {c.fecha}
-                      </span>
+                      {(c.entradasUrl || c.entradasLugarFisico) && (
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-neutral-800">
+                          {c.entradasUrl && (
+                            <a
+                              href={c.entradasUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500 text-stone-950 text-[10px] font-bold hover:bg-emerald-400 transition-colors"
+                            >
+                              <Ticket className="w-3 h-3" /> Comprar Entradas
+                            </a>
+                          )}
+                          {c.entradasLugarFisico && (
+                            <span className="text-[10px] text-neutral-400 truncate">
+                              📍 También en: {c.entradasLugarFisico}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

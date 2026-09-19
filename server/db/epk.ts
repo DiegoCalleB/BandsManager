@@ -330,10 +330,18 @@ export async function dbUpsertEpkConfig(bandId: string, config: any) {
 
   if (error) throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);
 
-  // Also sync logo into registered_bands table
+  // Also sync logo & band name into registered_bands table
+  const regUpdates: Record<string, any> = {};
   if (newLogoUrl && newLogoUrl.trim()) {
+    regUpdates.logo_url = newLogoUrl.trim();
+  }
+  const providedName = (config.bandName || config.nombre_banda || config.localBandName || config.contactoBooking?.nombre || "").trim();
+  if (providedName && providedName.toLowerCase() !== "banda" && !providedName.toLowerCase().includes("bakandeya")) {
+    regUpdates.nombre_banda = providedName;
+  }
+  if (Object.keys(regUpdates).length > 0) {
     try {
-      await sb.from("registered_bands").update({ logo_url: newLogoUrl }).eq("band_id", targetBandId);
+      await sb.from("registered_bands").update(regUpdates).eq("band_id", targetBandId);
     } catch (regErr) {
       // Non-blocking
     }

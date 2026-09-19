@@ -32,7 +32,7 @@ router.post("/leads/realign-headers", requireAuth, async (req, res) => {
 
 // GET all leads (supports optional server pagination & filtering)
 router.get("/leads", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = getTargetBandId(req);
   try {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
     const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
@@ -110,7 +110,7 @@ router.get("/leads/:id/messages", requireAuth, async (req, res) => {
 // Update a single lead
 router.put("/leads/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const { id } = req.params;
     const updatedFields = req.body;
     
@@ -159,7 +159,7 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
 // Create a lead
 router.post("/leads", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const state = loadState();
     const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
     const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
@@ -296,7 +296,7 @@ router.post("/leads", requireAuth, async (req, res) => {
 // Bulk delete leads
 router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = getTargetBandId(req);
     const { ids } = req.body;
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ error: "Debe proporcionar una lista de IDs para eliminar." });
@@ -321,7 +321,7 @@ router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
 // Delete a lead
 router.delete("/leads/:id", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = getTargetBandId(req);
     const { id } = req.params;
     await dbDeleteLead(id, userBandId);
 

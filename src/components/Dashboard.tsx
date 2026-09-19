@@ -9,6 +9,7 @@ import { AiSupportWidget, AiUsageCard } from './dashboard/AiUsageSupportWidget';
 import { EmailTemplatesModal } from './dashboard/EmailTemplatesModal';
 import { AgentAutonomySettingsModal } from './dashboard/AgentAutonomySettingsModal';
 import { SocialAndFansGrowthChart } from './dashboard/SocialAndFansGrowthChart';
+import { DashboardWidgetGrid } from './dashboard/DashboardWidgetGrid';
 import { MobileBottomSheet } from './booking/MobileBottomSheet';
 import { autoDetectVenueAddress, normalizeStatus, normalizeType } from '../utils/bookingUtils';
 import { leadStatusDotColor, leadStatusBadgeClass, leadStatusLabel } from '../utils/leadStatusPresentation';
@@ -437,7 +438,7 @@ export default function Dashboard({
  // una sin dejarse alguna (ya pasó: la sección de "Acciones Rápidas" y el botón flotante de
  // Agente IA se colaban). Así que en vez de parchear el dashboard grande, Promo tiene su
  // propio resumen reducido, aparte, que solo usa lo que ese plan permite: EPK, calendario y fans.
- if (isPromo) {
+ if (false && isPromo) {
     const totalFansCount = (fans || []).length;
     const maxPromoFans = 250;
 
@@ -445,7 +446,7 @@ export default function Dashboard({
       <div className={`space-y-6 ${isStitchLight ? "text-slate-800" : "text-zinc-100"} font-sans w-full max-w-full overflow-x-hidden`}>
         <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
+            <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
             <p className="text-sm font-mono text-zinc-400 uppercase tracking-widest">
               Panel de {activeBandName}
               {agendaFilterMode === 'all' && hasMultipleBands && (
@@ -727,7 +728,7 @@ export default function Dashboard({
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Resumen</h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold">
               Panel de {activeBandName}
@@ -751,301 +752,23 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* 1. SECCIÓN PRINCIPAL: PRÓXIMAS FECHAS Y AGENDA */}
-      <div className={`p-5 rounded-2xl transition-all border ${
-        isStitchLight 
-          ? 'bg-white border-slate-200 text-slate-800 shadow-sm' 
-          : 'bg-[#181716] border-stone-800 text-zinc-100 shadow-sm'
-      }`}>
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 mb-4 border-b border-stone-800/60">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 shrink-0">
-              <Calendar className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-100 flex items-center gap-2">
-                Próximas Fechas & Agenda
-              </h3>
-              <p className="text-[11px] text-neutral-400 mt-0.5">
-                Conciertos confirmados, directos en negociación y ensayos programados.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 flex-wrap">
-            {/* Band Filter Mode Toggle */}
-            <div className={`flex items-center rounded-xl p-1 gap-1 border ${
-              isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-stone-900 border-stone-800'
-            }`}>
-              <button
-                id="dashboard-agenda-active-band-btn"
-                onClick={() => setAgendaFilterMode('active')}
-                className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
-                  agendaFilterMode === 'active'
-                    ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
-                    : 'text-neutral-400 hover:text-neutral-200'
-                }`}
-                title={`Ver solo eventos de ${activeBandName}`}
-              >
-                <Music className="w-3 h-3 shrink-0" />
-                <span className="truncate max-w-[90px] sm:max-w-none">{activeBandName}</span>
-                <span className="ml-1 text-[9px] font-mono opacity-80">({activeBandConcerts.length + activeBandRehearsals.length})</span>
-              </button>
-
-              <button
-                id="dashboard-agenda-all-bands-btn"
-                onClick={() => setAgendaFilterMode('all')}
-                className={`px-2.5 py-1 text-[10px] font-mono font-bold rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap ${
-                  agendaFilterMode === 'all'
-                    ? 'bg-amber-500 text-stone-950 font-black shadow-xs'
-                    : 'text-neutral-400 hover:text-neutral-200'
-                }`}
-                title="Ver eventos de todas las bandas"
-              >
-                <Users className="w-3 h-3 shrink-0" />
-                <span>Todas</span>
-                <span className="ml-1 text-[9px] font-mono opacity-80">({concerts.length + rehearsals.length})</span>
-              </button>
-            </div>
-
-            <button
-              id="dashboard-btn-full-agenda"
-              onClick={() => onNavigate && onNavigate('calendario')}
-              className="px-2.5 py-1.5 font-mono text-xs font-bold rounded-lg text-amber-400 hover:text-amber-300 hover:bg-stone-800/60 transition-all flex items-center gap-1 cursor-pointer"
-            >
-              <span>Ver agenda</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* List of upcoming events */}
-        {upcomingEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {upcomingEvents.slice(0, 6).map((item) => (
-              <div 
-                key={item.id}
-                onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: item.id, selectedDate: item.dateStr })}
-                className="p-3.5 rounded-xl bg-[#121214] border border-stone-800 hover:border-amber-500/40 transition-all flex flex-col justify-between cursor-pointer group active:scale-[0.99]"
-              >
-                <div className="flex items-start gap-3">
-                  {/* Custom calendar badge */}
-                  <div className="w-11 h-11 rounded-xl bg-stone-900 border border-stone-800 flex flex-col items-center justify-center shrink-0 shadow-sm">
-                    <span className="text-base font-mono font-black leading-none text-amber-400">
-                      {item.day}
-                    </span>
-                    <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-amber-300 mt-0.5">
-                      {item.month}
-                    </span>
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
-                        item.type === 'concierto'
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                          : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                      }`}>
-                        {item.type}
-                      </span>
-                      {(agendaFilterMode === 'all' || hasMultipleBands) && item.bandName && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-stone-800/80 text-amber-300/90 border border-stone-700/60 truncate max-w-[120px] flex items-center gap-1">
-                          <Music className="w-2.5 h-2.5 text-amber-400 shrink-0" />
-                          <span className="truncate">{item.bandName}</span>
-                        </span>
-                      )}
-                      <span className="text-[10px] font-mono text-neutral-400 truncate">
-                        • {item.badge}
-                      </span>
-                    </div>
-
-                    <h4 className="text-sm font-bold font-display tracking-wide mt-1 text-zinc-100 truncate group-hover:text-amber-400 transition-colors">
-                      {item.title}
-                    </h4>
-
-                    <p className="text-xs font-semibold mt-0.5 flex items-center gap-1 text-zinc-300 truncate">
-                      <MapPin className="w-3 h-3 text-rose-400 shrink-0" />
-                      <span className="truncate">{item.location}</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-2.5 pt-2 border-t border-stone-800/80 text-[11px] font-mono text-neutral-400 flex items-center justify-between">
-                  <span className="truncate">{item.details}</span>
-                  <ArrowRight className="w-3.5 h-3.5 shrink-0 text-amber-400/80 group-hover:translate-x-0.5 transition-transform" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          // En móvil este estado vacío se comía media pantalla (icono grande + título + párrafo
-          // + botón, cada uno con su margen) y empujaba todo lo de abajo -incluido el widget de
-          // Ko-fi- fuera de la vista. En una sola fila cabe lo mismo dicho más corto.
-          <div className="px-4 py-3 rounded-xl bg-[#121214] border border-stone-800/80 flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <Calendar className="w-4 h-4 text-neutral-500 shrink-0" />
-              <p className="text-xs font-mono text-neutral-400 truncate">Sin próximas fechas programadas</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => onNavigate && onNavigate('calendario')}
-              className="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-mono font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 shrink-0"
-            >
-              <Plus className="w-3 h-3" />
-              <span>Programar Fecha</span>
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* APOYO AL PROYECTO Y CONSUMO DE IA — justo debajo de la agenda, no lo primero que se ve
-          nada más entrar (Diego: eso debe seguir siendo la agenda de fechas). */}
-      {!isPromo && (
-        <div className="space-y-3">
-          <AiSupportWidget variant="card" />
-          <AiUsageCard isStitchLight={isStitchLight} />
-        </div>
-      )}
-
-      {/* 2. SECCIÓN: CORREOS Y ACCIONES PENDIENTES */}
-      <div className={`p-5 rounded-2xl transition-all border ${
-        isStitchLight 
-          ? 'bg-white border-slate-200 text-slate-800 shadow-sm' 
-          : 'bg-[#181716] border-stone-800 text-zinc-100 shadow-sm'
-      }`}>
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 mb-4 border-b border-stone-800/60">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 shrink-0">
-              <Send className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-zinc-100 flex items-center gap-2">
-                Correos & Acciones de Booking Pendientes
-              </h3>
-              <p className="text-[11px] text-neutral-400 mt-0.5">
-                Borradores de presentación redactados por la IA esperando visto bueno y respuestas recibidas de programadores.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => onNavigate && onNavigate('booking')}
-              className="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-400 text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
-            >
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Abrir Booking CRM</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Dynamic Pending Actions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Card 1: Pitches redactados pendientes de aprobación */}
-          <div className="p-4 rounded-xl bg-[#121214] border border-stone-800 flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center justify-between gap-2 pb-2 border-b border-stone-800/80">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Borradores por Aprobar
-                </span>
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                  urgentApprovalsNeeded.length > 0 ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' : 'bg-stone-800 text-stone-500 border-stone-700'
-                }`}>
-                  {urgentApprovalsNeeded.length} listos
-                </span>
-              </div>
-
-              {urgentApprovalsNeeded.length > 0 ? (
-                <div className="space-y-2 mt-3">
-                  {urgentApprovalsNeeded.slice(0, 2).map(lead => (
-                    <div 
-                      key={lead.id} 
-                      onClick={() => onNavigate && onNavigate(isMedio(lead) ? 'medios' : isManagement(lead) ? 'management' : 'booking', { statusFilter: 'pendiente_aprobacion', selectedLeadId: lead.id })}
-                      className="p-3 rounded-xl bg-stone-900/60 border border-stone-800/80 hover:border-amber-500/30 text-xs cursor-pointer transition-all"
-                    >
-                      <div className="flex items-center justify-between gap-2 font-medium">
-                        <span className="text-zinc-100 font-bold truncate">
-                          {lead.nombre_sala} <span className="text-neutral-400 font-normal">({lead.ciudad})</span>
-                        </span>
-                        <span className="px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-amber-500/15 text-amber-300 font-mono shrink-0">
-                          Redactado
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-zinc-300 font-sans mt-1 leading-snug line-clamp-2">
-                        {lead.pitch_generado || 'Correo generado por el Agente Redactor listo para revisión y envío.'}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs font-mono text-neutral-400 my-4 text-center">
-                  No hay borradores de presentación esperando aprobación.
-                </p>
-              )}
-            </div>
-
-            <button
-              onClick={() => onNavigate && onNavigate('booking', { statusFilter: 'pendiente_aprobacion' })}
-              className="pt-2 border-t border-stone-800/80 flex items-center justify-between text-xs font-mono font-bold text-amber-400 hover:text-amber-300 cursor-pointer transition-colors"
-            >
-              <span>{urgentApprovalsNeeded.length > 0 ? 'Revisar y Aprobar Correos' : 'Ver Todos los Contactos'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Card 2: Salas que han respondido e Interesadas */}
-          <div className="p-4 rounded-xl bg-[#121214] border border-stone-800 flex flex-col justify-between space-y-3">
-            <div>
-              <div className="flex items-center justify-between gap-2 pb-2 border-b border-stone-800/80">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                  <Send className="w-3.5 h-3.5" /> Respuestas Recibidas / Interesados
-                </span>
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                  urgentRepliesNeeded.length > 0 ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-stone-800 text-stone-500 border-stone-700'
-                }`}>
-                  {urgentRepliesNeeded.length} por contestar
-                </span>
-              </div>
-
-              {urgentRepliesNeeded.length > 0 ? (
-                <div className="space-y-2 mt-3">
-                  {urgentRepliesNeeded.slice(0, 2).map(lead => (
-                    <div 
-                      key={lead.id} 
-                      onClick={() => onNavigate && onNavigate(isMedio(lead) ? 'medios' : isManagement(lead) ? 'management' : 'booking', { statusFilter: normalizeStatus(lead.estado), selectedLeadId: lead.id })}
-                      className="p-3 rounded-xl bg-stone-900/60 border border-stone-800/80 hover:border-emerald-500/30 text-xs cursor-pointer transition-all"
-                    >
-                      <div className="flex items-center justify-between gap-2 font-medium">
-                        <span className="text-zinc-100 font-bold truncate">
-                          {lead.nombre_sala} <span className="text-neutral-400 font-normal">({lead.ciudad})</span>
-                        </span>
-                        <span className="px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-emerald-500/15 text-emerald-300 font-mono shrink-0">
-                          {lead.estado}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-zinc-300 font-sans mt-1 leading-snug line-clamp-2">
-                        {lead.notas || 'Respuesta recibida interesándose en fecha o presupuesto.'}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-xs font-mono text-neutral-400 my-4 text-center">
-                  No hay respuestas pendientes de contestación en este momento.
-                </p>
-              )}
-            </div>
-
-            <button
-              onClick={() => onNavigate && onNavigate('booking', { statusFilter: 'interesado' })}
-              className="pt-2 border-t border-stone-800/80 flex items-center justify-between text-xs font-mono font-bold text-emerald-400 hover:text-emerald-300 cursor-pointer transition-colors"
-            >
-              <span>{urgentRepliesNeeded.length > 0 ? 'Contestar Respuestas Ahora' : 'Ir al panel de Booking'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* WIDGET GRID PERSONALIZABLE Y PERSISTENTE EN BBDD */}
+      <DashboardWidgetGrid
+        currentUser={currentUser}
+        concerts={concerts}
+        rehearsals={rehearsals}
+        leads={leads}
+        tours={tours}
+        fans={fans}
+        posts={posts}
+        epkConfig={epkConfig}
+        activeBandName={activeBandName}
+        colors={colors}
+        isStitchLight={isStitchLight}
+        agendaFilterMode={agendaFilterMode}
+        onSetAgendaFilterMode={setAgendaFilterMode}
+        onNavigate={onNavigate}
+      />
 
       {/* 3. SECCIÓN: ESTADO DE ENTRENAMIENTO & PREPARACIÓN DE AGENTES IA */}
       <ProfileCompletenessCard

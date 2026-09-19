@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { captureFrontendError } from '../utils/errorTracking';
 
 interface Props {
   children: ReactNode;
@@ -31,6 +32,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
+    captureFrontendError(error, {
+      componentStack: errorInfo.componentStack,
+      fallbackTitle: this.props.fallbackTitle || 'Global ErrorBoundary',
+    });
   }
 
   handleReset = () => {
