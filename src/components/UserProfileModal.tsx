@@ -3,6 +3,13 @@ import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, U
 import { User, ThemeName } from '../types';
 import { THEMES } from '../utils/theme';
 import { FONT_PRESETS, FontPresetKey } from '../utils/typography';
+import {
+  PREFERENCIAS as PREFERENCIAS_ESPECTRO,
+  PreferenciaTema,
+  guardarPreferencia as guardarPreferenciaEspectro,
+  leerPreferencia as leerPreferenciaEspectro,
+  resolverTema as resolverTemaEspectro,
+} from '../utils/temaEspectro';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { api, getAuthHeaders } from '../services/api';
 import { getPlanDefinition, getPlanChangeType, normalizePlan, PLANS } from '../utils/planPermissions';
@@ -90,6 +97,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  const [uploadingLogo, setUploadingLogo] = useState(false);
  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
  const [showAppearance, setShowAppearance] = useState(false);
+ const [prefEspectro, setPrefEspectro] = useState<PreferenciaTema>(() => leerPreferenciaEspectro());
  const [showAgentConfig, setShowAgentConfig] = useState(false);
  
  const activeBandMatch = availableBands?.find(b => b.band_id === (currentUser.band_id || currentUser.main_band_id) || (b as any).id === (currentUser.band_id || currentUser.main_band_id));
@@ -974,6 +982,53 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
  )}
  </div>
  )}
+
+ {/* Sistema «Espectro» — el rediseño en curso, real y en vivo. Independiente del
+     selector THEMES de arriba (ese es el sistema viejo, con colors/ThemeColors por
+     prop — sigue vivo y no se toca). Este escribe directo en <html data-theme> via
+     src/utils/temaEspectro.ts, asi que el cambio es instantaneo sin re-render del
+     arbol: las 4.365 clases de color se resuelven solas via CSS vars. Por defecto
+     'classic' = exactamente la app de siempre; el resto son las pantallas ya
+     migradas (login, panel) mas el resto de la app tal cual, mientras avanza. */}
+ <div className="pt-3 border-t border-neutral-800/80">
+   <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/[0.04] space-y-2.5">
+     <label className="text-[11px] font-mono font-semibold text-amber-300 flex items-center gap-1.5">
+       <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+       <span>Nuevo diseño — Espectro (en pruebas)</span>
+     </label>
+     <p className="text-[11px] text-neutral-400 leading-relaxed">
+       Ve probando el rediseño mientras migro pantalla a pantalla. Lo que aún no está
+       migrado se ve igual que siempre en cualquiera de las cuatro opciones — no rompe nada.
+     </p>
+     <div className="grid grid-cols-2 gap-2">
+       {PREFERENCIAS_ESPECTRO.map((p) => {
+         const isSelected = prefEspectro === p.id;
+         return (
+           <button
+             key={p.id}
+             type="button"
+             onClick={() => {
+               setPrefEspectro(p.id);
+               guardarPreferenciaEspectro(p.id);
+             }}
+             className={`p-2 rounded-xl text-left transition-all cursor-pointer flex items-center justify-between gap-1.5 border ${
+               isSelected
+                 ? 'bg-amber-500/15 border-amber-500/50 text-amber-300 font-bold'
+                 : 'bg-neutral-900 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+             }`}
+             title={p.descripcion}
+           >
+             <span className="text-[11px] font-mono truncate">{p.etiqueta}</span>
+             {isSelected && <Check className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+           </button>
+         );
+       })}
+     </div>
+     <p className="text-[10px] text-neutral-500 font-mono">
+       Ahora mismo: {resolverTemaEspectro(prefEspectro) === 'dark' ? 'oscuro' : resolverTemaEspectro(prefEspectro) === 'light' ? 'claro' : 'clásico'}
+     </p>
+   </div>
+ </div>
 
  {/* Agent Configuration Entry Point (Autonomía, Horarios & Email) - un único modal
      centralizado (AgentAutonomySettingsModal, el mismo que usan Dashboard/Chatbot/BookingCRM)

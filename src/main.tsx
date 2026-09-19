@@ -6,9 +6,18 @@ import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
+import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './utils/temaEspectro';
 
 // Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
 initFrontendErrorTracking();
+
+// Tema «Espectro»: el atributo data-theme ya se estampó antes de este punto (script
+// inline en index.html, para no parpadear en la primera carga). Esto solo mantiene el
+// tema sincronizado con el sistema operativo MIENTRAS la app está abierta, si la
+// preferencia guardada es 'system' — sin esto, elegir "Automático" y luego cambiar el
+// modo oscuro del móvil no se notaría hasta recargar. Vive aquí (arranque, se monta una
+// sola vez) y no en UserProfileModal, que puede cerrarse.
+escucharSistema(leerPreferenciaEspectro);
 
 // Rutas públicas (/epk, /musicos) se cargan bajo demanda
 const PublicEPK = lazy(() => import('./components/PublicEPK'));
