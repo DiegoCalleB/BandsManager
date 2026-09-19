@@ -308,29 +308,29 @@ export function DashboardWidgetGrid({
   return (
     <div className="space-y-4 w-full">
       {/* Top Customization Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#18181b]/95 border border-neutral-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)]">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
+          <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
             <LayoutGrid className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-neutral-100 uppercase tracking-wider">
-                Dashboard Configurable
+              <span className="text-sm font-semibold text-[var(--ink)]">
+                Tu panel
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-                Arrastrar y Soltar
+              <span className="text-[11px] px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)] font-medium">
+                Arrastra para reordenar
               </span>
             </div>
-            <p className="text-[11px] font-mono text-neutral-400 mt-0.5">
-              {visibleWidgets.length} widgets activos • Se guardan automáticamente en tu perfil de Supabase
+            <p className="text-xs text-[var(--ink-3)] mt-0.5">
+              {visibleWidgets.length} widgets activos · se guardan solos
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
           {saveSuccessMsg && (
-            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 animate-fade-in">
+            <span className="text-xs text-[var(--ok)] bg-[var(--ok-soft)] px-2.5 py-1 rounded-[var(--r-pill)] flex items-center gap-1 animate-fade-in">
               <Check className="w-3.5 h-3.5" /> Guardado en BBDD
             </span>
           )}
@@ -338,13 +338,13 @@ export function DashboardWidgetGrid({
           <button
             type="button"
             onClick={() => setIsEditMode(!isEditMode)}
-            className={`px-3.5 py-2 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-[var(--r-pill)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5 ${
               isEditMode
-                ? 'bg-amber-500 text-stone-950 shadow-md font-black ring-2 ring-amber-300'
-                : 'bg-neutral-800/90 text-neutral-200 hover:bg-neutral-700 hover:text-white border border-neutral-700/80'
+                ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+                : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:brightness-110 hover:text-[var(--ink)]'
             }`}
           >
-            <Settings className={`w-4 h-4 ${isEditMode ? 'animate-spin-slow text-stone-950' : 'text-amber-400'}`} />
+            <Settings className={`w-4 h-4 ${isEditMode ? 'text-[var(--on-acc)]' : 'text-[var(--acc-ink)]'}`} />
             <span>{isEditMode ? 'Finalizar Edición' : 'Personalizar Dashboard'}</span>
           </button>
 
@@ -353,7 +353,7 @@ export function DashboardWidgetGrid({
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(true)}
-                className="px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-[var(--r-pill)] bg-[var(--acc-soft)] hover:brightness-95 text-[var(--acc-ink)] text-xs font-semibold transition-[filter] cursor-pointer flex items-center gap-1.5"
               >
                 <Plus className="w-4 h-4" />
                 <span>Añadir Widget</span>
@@ -362,7 +362,7 @@ export function DashboardWidgetGrid({
               <button
                 type="button"
                 onClick={handleResetDefault}
-                className="px-2.5 py-2 rounded-xl bg-neutral-800 text-neutral-400 hover:text-neutral-200 border border-neutral-700 font-mono text-xs transition-all cursor-pointer flex items-center gap-1"
+                className="px-3 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-3)] hover:text-[var(--ink)] text-xs transition-colors cursor-pointer flex items-center gap-1"
                 title="Restablecer disposición por defecto"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -375,22 +375,22 @@ export function DashboardWidgetGrid({
 
       {/* Edit Mode Instructions Banner */}
       {isEditMode && (
-        <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs font-mono space-y-1.5">
-          <div className="flex items-center gap-2 font-bold text-amber-400">
+        <div className="p-4 rounded-[var(--r-l)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs space-y-1.5">
+          <div className="flex items-center gap-2 font-semibold text-[var(--acc-ink)]">
             <Info className="w-4 h-4 shrink-0" />
             <span>Modo de Edición Activo:</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-amber-200/90 pt-1">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-[var(--acc-ink)]/85 pt-1">
             <div className="flex items-center gap-1.5">
-              <GripVertical className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <GripVertical className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span><strong>Arrastra:</strong> Usa el asa para mover libremente.</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Maximize2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span><strong>Ancho & Alto:</strong> Ajusta el tamaño (25%, 50%, 100%).</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Monitor className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span><strong>Multi-dispositivo:</strong> En móvil se apila a 1 columna.</span>
             </div>
           </div>

@@ -123,19 +123,19 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
   const minHeightClass = heightMode === 'compact' ? 'h-[220px]' : heightMode === 'tall' ? 'h-[380px]' : 'h-[290px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5 border-b border-neutral-800">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-2.5">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400 shrink-0">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)] shrink-0">
             <Zap className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold font-display uppercase tracking-wider text-neutral-100 flex items-center gap-2">
-              Flujo de Energía del Repertorio
+            <h3 className="text-sm font-semibold text-[var(--ink)] flex items-center gap-2">
+              Energía del repertorio
             </h3>
-            <p className="text-[11px] font-mono text-neutral-400">
-              {activeSetlist ? activeSetlist.nombre || 'Setlist Activo' : 'Perfil de Pacing & Ritmo'}
+            <p className="text-[11px] text-[var(--ink-3)]">
+              {activeSetlist ? activeSetlist.nombre || 'Setlist activo' : 'Perfil de ritmo del bolo'}
             </p>
           </div>
         </div>
@@ -146,7 +146,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
               <select
                 value={selectedSetlistId}
                 onChange={(e) => setSelectedSetlistId(e.target.value)}
-                className="bg-stone-900 border border-stone-800 text-amber-300 font-mono text-[11px] font-bold rounded-lg px-2.5 py-1 pr-6 cursor-pointer focus:outline-none focus:border-amber-500"
+                className="bg-[var(--sunken)] text-[var(--acc-ink)] text-[11px] font-semibold rounded-[var(--r-s)] px-2.5 py-1 pr-6 cursor-pointer outline-none focus:ring-2 focus:ring-[var(--acc)]"
               >
                 {setlistsList.map(s => (
                   <option key={s.id} value={s.id}>{s.nombre || 'Setlist sin nombre'}</option>
@@ -159,7 +159,7 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
             <button
               type="button"
               onClick={() => onNavigate('repertorio')}
-              className="text-xs font-mono text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 cursor-pointer shrink-0"
+              className="text-xs text-[var(--acc-ink)] hover:opacity-80 font-semibold flex items-center gap-1 cursor-pointer shrink-0"
             >
               <span>Setlists</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -169,18 +169,18 @@ export function RepertorioEnergyChartWidget({ onNavigate, heightMode = 'normal' 
       </div>
 
       {/* Stats Summary Bar */}
-      <div className="grid grid-cols-3 gap-2 font-mono text-center text-xs">
-        <div className="p-2 rounded-xl bg-[#121214] border border-amber-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Temas</span>
-          <span className="font-bold text-amber-400 text-sm">{chartData.length}</span>
+      <div className="grid grid-cols-3 gap-2 text-center text-xs">
+        <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
+          <span className="text-[10px] text-[var(--ink-3)] block">Temas</span>
+          <span className="font-semibold text-[var(--acc-ink)] text-sm tabular-nums">{chartData.length}</span>
         </div>
-        <div className="p-2 rounded-xl bg-[#121214] border border-purple-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Energía Media</span>
-          <span className="font-bold text-purple-400 text-sm">{avgEnergy} / 20</span>
+        <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
+          <span className="text-[10px] text-[var(--ink-3)] block">Energía media</span>
+          <span className="font-semibold text-[var(--ink)] text-sm tabular-nums">{avgEnergy} / 20</span>
         </div>
-        <div className="p-2 rounded-xl bg-[#121214] border border-emerald-500/20">
-          <span className="text-[10px] text-neutral-400 block uppercase">Duración</span>
-          <span className="font-bold text-emerald-400 text-sm">~{totalDuration} min</span>
+        <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--sunken)]">
+          <span className="text-[10px] text-[var(--ink-3)] block">Duración</span>
+          <span className="font-semibold text-[var(--ok)] text-sm tabular-nums">~{totalDuration} min</span>
         </div>
       </div>
 
@@ -265,7 +265,7 @@ export function BookingFunnelChartWidget({ leads = [], onNavigate, heightMode = 
   const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-sky-500/15 text-sky-400 shrink-0">
@@ -355,7 +355,7 @@ export function FinancesChartWidget({ concerts = [], onNavigate, heightMode = 'n
   const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 shrink-0">
@@ -439,7 +439,7 @@ export function SocialFansGrowthWidget({ fans = [], onNavigate, heightMode = 'no
   const minHeightClass = heightMode === 'compact' ? 'h-[200px]' : heightMode === 'tall' ? 'h-[360px]' : 'h-[270px]';
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-3 flex flex-col justify-between h-full">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-3 flex flex-col justify-between h-full">
       <div className="flex items-center justify-between pb-2.5 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400 shrink-0">

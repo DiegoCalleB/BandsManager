@@ -724,17 +724,17 @@ export default function Dashboard({
   }
 
   return (
-    <div className={`space-y-6 ${isStitchLight ? 'text-slate-800' : 'text-zinc-100'} font-sans w-full max-w-full overflow-x-hidden`}>
+    <div className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 font-sans w-full max-w-full overflow-x-hidden">
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-zinc-100">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[var(--ink)]">Panel</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold">
-              Panel de {activeBandName}
+            <p className="text-xs text-[var(--ink-3)] font-medium">
+              {activeBandName}
             </p>
-            <span className="text-zinc-600 hidden sm:inline">•</span>
-            <span className="text-[11px] font-mono text-neutral-400">
+            <span className="text-[var(--ink-3)] hidden sm:inline">•</span>
+            <span className="text-xs text-[var(--ink-3)] tabular-nums">
               {leads.length} contactos en CRM · {upcomingEvents.length} fechas agendadas
             </span>
           </div>
@@ -744,7 +744,7 @@ export default function Dashboard({
           <button
             type="button"
             onClick={() => onNavigate && onNavigate('calendario')}
-            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-mono text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5 active:scale-95"
+            className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-105 text-[var(--on-acc)] text-xs font-semibold transition-[filter,transform] cursor-pointer flex items-center gap-1.5 active:scale-[0.98]"
           >
             <Calendar className="w-3.5 h-3.5" />
             <span>Ver Calendario</span>

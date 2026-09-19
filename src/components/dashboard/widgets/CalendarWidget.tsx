@@ -23,8 +23,6 @@ export function CalendarWidget({
   concerts,
   rehearsals,
   activeBandName = 'Banda',
-  colors,
-  isStitchLight = false,
   agendaFilterMode,
   onSetAgendaFilterMode,
   onNavigate,
@@ -169,20 +167,18 @@ export function CalendarWidget({
   const fullMonthName = currentMonthDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
 
   return (
-    <div className={`p-5 rounded-2xl ${
-      isStitchLight ? 'bg-white border border-slate-200 shadow-xs' : 'bg-[#18181b]/95 border border-neutral-800/90 shadow-sm'
-    } transition-all space-y-4`}>
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-all space-y-4">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3 border-b border-neutral-800/80">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
             <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display uppercase tracking-wider text-neutral-100 flex items-center gap-2">
-              Agenda & Calendario
+            <h3 className="text-base font-semibold text-[var(--ink)] flex items-center gap-2">
+              Agenda
             </h3>
-            <p className="text-xs font-mono text-neutral-400">
+            <p className="text-xs text-[var(--ink-3)]">
               {agendaFilterMode === 'all' ? 'Eventos de todas las bandas' : `Eventos de ${activeBandName}`}
             </p>
           </div>
@@ -191,16 +187,14 @@ export function CalendarWidget({
         {/* View mode buttons & Filter controls */}
         <div className="flex items-center gap-2 flex-wrap">
           {/* View Mode Switcher */}
-          <div className={`flex items-center rounded-xl p-1 gap-1 border ${
-            isStitchLight ? 'bg-slate-100 border-slate-200' : 'bg-stone-900 border-stone-800'
-          }`}>
+          <div className="flex items-center rounded-[var(--r-pill)] p-1 gap-1 bg-[var(--sunken)]">
             <button
               type="button"
               onClick={() => handleSetViewMode('list')}
-              className={`p-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+              className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
                 viewMode === 'list'
-                  ? 'bg-amber-500 text-stone-950 shadow-xs font-black'
-                  : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+                  : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
               }`}
               title="Vista Lista Próximos"
             >
@@ -210,10 +204,10 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetViewMode('mini_month')}
-              className={`p-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+              className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
                 viewMode === 'mini_month'
-                  ? 'bg-amber-500 text-stone-950 shadow-xs font-black'
-                  : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+                  : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
               }`}
               title="Vista Mensual Compacta"
             >
@@ -223,10 +217,10 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetViewMode('weekly_grid')}
-              className={`p-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+              className={`p-1.5 text-xs font-semibold rounded-[var(--r-pill)] transition-colors flex items-center gap-1 cursor-pointer ${
                 viewMode === 'weekly_grid'
-                  ? 'bg-amber-500 text-stone-950 shadow-xs font-black'
-                  : 'text-neutral-400 hover:text-neutral-200'
+                  ? 'bg-[var(--acc)] text-[var(--on-acc)]'
+                  : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
               }`}
               title="Vista Agenda Semanal"
             >
@@ -240,10 +234,10 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => onSetAgendaFilterMode(agendaFilterMode === 'all' ? 'active' : 'all')}
-              className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all border cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer flex items-center gap-1 ${
                 agendaFilterMode === 'all'
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
-                  : 'bg-neutral-800 text-neutral-300 border-neutral-700 font-medium'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
+                  : 'bg-[var(--sunken)] text-[var(--ink-2)] font-medium'
               }`}
               title={agendaFilterMode === 'all' ? 'Ver solo eventos de la banda activa' : 'Ver eventos de todas las bandas'}
             >
@@ -257,10 +251,10 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetFilterType('all')}
-              className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all border cursor-pointer ${
+              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                 filterType === 'all'
-                  ? 'bg-neutral-800 text-amber-300 border-amber-500/40 font-bold'
-                  : 'text-neutral-400 border-transparent hover:text-neutral-200'
+                  ? 'bg-[var(--sunken)] text-[var(--acc-ink)] font-semibold'
+                  : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
               }`}
             >
               Todos
@@ -268,10 +262,10 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetFilterType('concierto')}
-              className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all border cursor-pointer ${
+              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                 filterType === 'concierto'
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold'
-                  : 'text-neutral-400 border-transparent hover:text-neutral-200'
+                  ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold'
+                  : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
               }`}
             >
               Bolos
@@ -279,10 +273,10 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => handleSetFilterType('ensayo')}
-              className={`px-2 py-1 text-[10px] font-mono rounded-lg transition-all border cursor-pointer ${
+              className={`px-2.5 py-1 text-[11px] rounded-[var(--r-pill)] transition-colors cursor-pointer ${
                 filterType === 'ensayo'
-                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold'
-                  : 'text-neutral-400 border-transparent hover:text-neutral-200'
+                  ? 'bg-[var(--ok-soft)] text-[var(--ok)] font-semibold'
+                  : 'text-[var(--ink-3)] hover:text-[var(--ink)]'
               }`}
             >
               Ensayos
@@ -294,7 +288,7 @@ export function CalendarWidget({
             <button
               type="button"
               onClick={() => onNavigate('calendario')}
-              className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer ml-1"
+              className="text-xs text-[var(--acc-ink)] hover:underline font-semibold flex items-center gap-1 cursor-pointer ml-1"
             >
               <span>Ver Completo</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -312,39 +306,39 @@ export function CalendarWidget({
                 <div
                   key={item.id}
                   onClick={() => onNavigate && onNavigate('calendario', { selectedEventId: item.id, selectedDate: item.dateStr })}
-                  className="p-3.5 rounded-xl bg-[#121214] border border-neutral-800/90 hover:border-amber-500/40 transition-all flex items-start gap-3 cursor-pointer hover:scale-[1.01]"
+                  className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] hover:brightness-110 transition-[filter,transform] flex items-start gap-3 cursor-pointer hover:scale-[1.01]"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-[#1c1b1b] text-neutral-100 flex flex-col items-center justify-center shrink-0 border border-neutral-800 shadow-xs">
-                    <span className="text-base font-mono font-black leading-none text-amber-400">
+                  <div className="w-11 h-11 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] flex flex-col items-center justify-center shrink-0">
+                    <span className="text-base font-bold leading-none text-[var(--acc-ink)] tabular-nums">
                       {item.day}
                     </span>
-                    <span className="text-[9px] font-mono font-extrabold uppercase tracking-widest text-amber-300 mt-0.5">
+                    <span className="text-[9px] font-semibold uppercase tracking-wide text-[var(--acc-ink)]/80 mt-0.5">
                       {item.month}
                     </span>
                   </div>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold uppercase tracking-wider ${
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-[var(--r-pill)] font-semibold uppercase tracking-wide ${
                         item.type === 'concierto'
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                          : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+                          : 'bg-[var(--ok-soft)] text-[var(--ok)]'
                       }`}>
                         {item.type}
                       </span>
                       {item.bandName && (
-                        <span className="text-[9px] font-mono text-amber-300/80 truncate max-w-[100px]">
+                        <span className="text-[9px] text-[var(--acc-ink)]/70 truncate max-w-[100px]">
                           {item.bandName}
                         </span>
                       )}
                     </div>
 
-                    <h4 className="text-sm font-bold font-display tracking-wide mt-1 text-neutral-100 truncate">
+                    <h4 className="text-sm font-semibold mt-1 text-[var(--ink)] truncate">
                       {item.title}
                     </h4>
 
-                    <p className="text-xs font-mono text-neutral-400 truncate mt-0.5 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-neutral-500 shrink-0" />
+                    <p className="text-xs text-[var(--ink-3)] truncate mt-0.5 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 shrink-0" />
                       <span className="truncate">{item.location}</span>
                     </p>
                   </div>
@@ -352,10 +346,10 @@ export function CalendarWidget({
               ))}
             </div>
           ) : (
-            <div className="p-8 text-center bg-[#121214] rounded-xl border border-neutral-800/60">
-              <Calendar className="w-8 h-8 text-neutral-600 mx-auto mb-2" />
-              <p className="text-sm font-bold text-neutral-300">No hay eventos próximos en la agenda</p>
-              <p className="text-xs text-neutral-500 mt-1">Añade conciertos o ensayos desde el módulo de Calendario.</p>
+            <div className="p-8 text-center bg-[var(--sunken)] rounded-[var(--r-m)]">
+              <Calendar className="w-8 h-8 text-[var(--ink-3)] mx-auto mb-2 opacity-60" />
+              <p className="text-sm font-semibold text-[var(--ink-2)]">Todavía no hay nada en la agenda</p>
+              <p className="text-xs text-[var(--ink-3)] mt-1">Añade un bolo o un ensayo y aquí aparece lo próximo.</p>
             </div>
           )}
         </>

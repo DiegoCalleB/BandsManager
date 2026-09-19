@@ -27,24 +27,24 @@ export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: Mod
   const confirmedShows = leads.filter(l => l.estado === 'confirmado');
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
+      <div className="flex items-center justify-between pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-sky-500/15 text-sky-400">
+          <div className="p-2 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
             <Building2 className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold font-display uppercase tracking-wider text-neutral-100">
-              Pipeline de Booking
+            <h3 className="text-base font-semibold text-[var(--ink)]">
+              Booking
             </h3>
-            <p className="text-xs font-mono text-neutral-400">Resumen CRM de contrataciones</p>
+            <p className="text-xs text-[var(--ink-3)]">Resumen de contrataciones</p>
           </div>
         </div>
         {onNavigate && (
           <button
             type="button"
             onClick={() => onNavigate('booking')}
-            className="text-xs font-mono text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+            className="text-xs text-[var(--acc-ink)] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
           >
             <span>Ver CRM</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -52,24 +52,24 @@ export function CrmPipelineWidget({ leads = [], onNavigate, isStitchLight }: Mod
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-center font-mono">
-        <div className="p-3 rounded-xl bg-[#121214] border border-amber-500/30">
-          <span className="text-xl font-bold text-amber-400">{urgentRepliesNeeded.length}</span>
-          <p className="text-[10px] text-neutral-400 uppercase tracking-wider mt-1">Negociando</p>
+      <div className="grid grid-cols-3 gap-3 text-center">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)]">
+          <span className="text-xl font-bold text-[var(--ink)] tabular-nums">{urgentRepliesNeeded.length}</span>
+          <p className="text-[10px] text-[var(--ink-3)] mt-1">Negociando</p>
         </div>
-        <div className="p-3 rounded-xl bg-[#121214] border border-purple-500/30">
-          <span className="text-xl font-bold text-purple-400">{urgentApprovalsNeeded.length}</span>
-          <p className="text-[10px] text-neutral-400 uppercase tracking-wider mt-1">Por Aprobar</p>
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--acc-soft)]">
+          <span className="text-xl font-bold text-[var(--acc-ink)] tabular-nums">{urgentApprovalsNeeded.length}</span>
+          <p className="text-[10px] text-[var(--acc-ink)]/75 mt-1">Por aprobar</p>
         </div>
-        <div className="p-3 rounded-xl bg-[#121214] border border-emerald-500/30">
-          <span className="text-xl font-bold text-emerald-400">{confirmedShows.length}</span>
-          <p className="text-[10px] text-neutral-400 uppercase tracking-wider mt-1">Confirmados</p>
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ok-soft)]">
+          <span className="text-xl font-bold text-[var(--ok)] tabular-nums">{confirmedShows.length}</span>
+          <p className="text-[10px] text-[var(--ok)]/75 mt-1">Confirmados</p>
         </div>
       </div>
 
-      <div className="text-xs font-mono text-neutral-400 flex items-center justify-between pt-1">
-        <span>Total de salas & eventos en embudo:</span>
-        <span className="font-bold text-neutral-200">{leads.length} registros</span>
+      <div className="text-xs text-[var(--ink-3)] flex items-center justify-between pt-1">
+        <span>Total de salas y eventos en el embudo</span>
+        <span className="font-semibold text-[var(--ink-2)] tabular-nums">{leads.length}</span>
       </div>
     </div>
   );
@@ -87,7 +87,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
   } catch {}
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400">
@@ -133,7 +133,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
   const totalCache = concerts.reduce((acc, c) => acc + (Number(c.cache) || 0), 0);
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400">
@@ -175,7 +175,7 @@ export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps)
 /* 4. SOCIAL & FANS WIDGET */
 export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
@@ -221,7 +221,7 @@ export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
 /* 5. EPK DOSSIER WIDGET */
 export function EpkStatusWidget({ epkConfig, onNavigate }: ModuleWidgetProps) {
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-purple-500/15 text-purple-400">
@@ -269,7 +269,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
   const pendingApprovals = leads.filter(l => l.estado === 'pendiente_aprobacion').length;
 
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
@@ -310,7 +310,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate }: ModuleWid
 /* 7. TOUR LOGISTICS WIDGET */
 export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) {
   return (
-    <div className="p-5 rounded-2xl bg-[#18181b]/95 border border-neutral-800/90 shadow-sm space-y-4">
+    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-sky-500/15 text-sky-400">
