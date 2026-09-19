@@ -25,9 +25,27 @@
     <meta property="og:description" content="Gestión inteligente de booking, CRM de salas, fans y logística de conciertos." />
     <meta property="og:image" content="/bandmanageriodefinitiva.jpeg" />
     <meta property="og:type" content="website" />
+    <!-- Tema: estampa data-theme antes de pintar para evitar el fogonazo
+         blanco en la primera carga. Debe ir ANTES del CSS y del bundle.
+         Espejo de src/utils/temaEspectro.ts — si cambia el contrato de
+         'bm-tema' o los temas válidos, cambia los dos. -->
+    <script>
+      (function () {
+        try {
+          var p = localStorage.getItem('bm-tema');
+          if (p !== 'light' && p !== 'dark' && p !== 'classic' && p !== 'system') p = 'classic';
+          var r = p === 'system'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : p;
+          document.documentElement.setAttribute('data-theme', r);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'classic');
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#121110] text-zinc-100 overflow-x-hidden">
     <div id="root" class="overflow-x-hidden max-w-full"></div>

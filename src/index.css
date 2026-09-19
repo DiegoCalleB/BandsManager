@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* Sistema «Espectro» — ver skills/visual-identity/SKILL.md.
+   Por defecto [data-theme="classic"]: no cambia el aspecto actual. */
+@import "./styles/tokens.css";
+
 :root {
   --font-sans-current: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display-current: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;

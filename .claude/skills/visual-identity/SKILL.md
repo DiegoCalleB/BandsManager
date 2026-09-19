@@ -1,9 +1,9 @@
 ---
 name: visual-identity
-description: Sistema de identidad visual «Sala» de BandManager.io — ley del oro, la Onda como lenguaje de datos, tokens de color, tipografía y los tres temas (Carga/Directo/Escenario). Usar SIEMPRE antes de escribir, tocar o revisar cualquier `className`, color, fuente, sombra o componente de UI. Tiene precedencia sobre cualquier otra guía estética del repo.
+description: Sistema de identidad visual «Espectro» de BandManager.io — cero bordes, radio escalado, color por módulo, la Onda como lenguaje de datos y los tres temas (Claro/Oscuro/Clásico). Usar SIEMPRE antes de escribir, tocar o revisar cualquier `className`, color, fuente, sombra o componente de UI. Tiene precedencia sobre cualquier otra guía estética del repo, brand book externo incluido.
 ---
 
-# 🎭 Skill: Identidad visual «Sala»
+# 🌈 Skill: Identidad visual «Espectro»
 
 Esta skill es **la autoridad estética del repositorio**. Si otra documentación, un brand book externo o una salida de una herramienta generativa contradice algo de aquí, manda esto.
 
@@ -11,40 +11,32 @@ Esta skill es **la autoridad estética del repositorio**. Si otra documentación
 
 ---
 
-## ⚖️ 1. La ley — lo único que hay que memorizar
+## ⚖️ 1. Las dos leyes
 
-> ## El oro ilumina. No rellena.
+> ## 1 · Ningún borde. La separación es luz y espacio.
+> ## 2 · Cada módulo tiene su color. El resto es gris.
 
-El `#F2CA50` de BandManager viene del logo, donde **no es pintura: son haces de luz cenital cayendo sobre un público**. Respeta esa física en toda la interfaz.
+**Los músicos pasan de 4 a 6 horas seguidas dentro de la app.** La fatiga visual es la restricción que manda sobre cualquier consideración estética. Las seis causas reales, todas medibles:
 
-**El oro SÍ puede ser:**
-- Haz cenital del encabezado (degradado vertical que cae y desaparece, ~12-20% alpha).
-- Filo del elemento activo de navegación (`box-shadow: inset 3px 0 0`).
-- Anillo de foco (`outline`).
-- La barra destacada de una Onda.
-- El fondo de **la** acción principal de la pantalla (una, no cinco), en plano y sin degradado.
-
-**El oro NUNCA puede ser:**
-- Fondo de tarjeta o de panel.
-- Borde con resplandor (`box-shadow: 0 0 Npx rgba(242,202,80,...)`) — **prohibido explícitamente**.
-- Halo alrededor de un logo o de una imagen.
-- Color de texto de enlaces secundarios.
-- Degradado (`bg-gradient-*` con oro).
-
-**Por qué importa:** oro rellenando sobre casi-negro es la firma visual de los exchanges de cripto y los casinos online. Oro entrando como luz desde arriba es un concierto. Mismo hexadecimal, lectura opuesta.
-
----
+| Causa | Regla |
+|---|---|
+| Contraste extremo | Texto entre **10:1 y 14:1**. Espectro está en 12,4:1. Ni menos (ilegible) ni más (quema). |
+| Exceso de bordes | **Cero `border`.** Separa el escalón de luminancia (superficie más clara que el fondo) y el espacio. |
+| Mayúsculas | Caja de frase siempre. Las versalitas eliminan la silueta de la palabra. |
+| Tipografía condensada | Prohibida. Humanista de aperturas abiertas. |
+| Negro puro de noche | Nunca `#000`/`#FFF`. Provocan halación con astigmatismo. |
+| Color saturado en superficie | El color vive en dosis pequeñas: píldora activa, botón, barra destacada de la Onda. |
 
 ## 🌊 2. La Onda — lenguaje único de datos
 
 El logo lleva dentro un espectro de audio. Ese espectro es el **único** lenguaje de visualización de datos de BandManager.
 
-- Toda serie temporal o comparativa se dibuja como **barras verticales de altura variable**: bolos por semana, crecimiento de fans, energía de un setlist, ingresos por mes, ocupación de una gira.
+- Toda serie temporal o comparativa se dibuja como **barras verticales de altura variable y puntas redondeadas** (`border-radius: 999px`): bolos por semana, crecimiento de fans, energía de un setlist, ingresos por mes, ocupación de una gira. Las puntas redondeadas no son decoración — son lo que separa un gráfico técnico de algo que se mira a gusto durante horas.
 - Componente canónico: `src/components/ui/Onda.tsx`. **No instales librerías de gráficos** (Recharts, Chart.js, D3) sin discutirlo antes — rompen la firma visual y pesan.
 - Gramática de color fija, en los tres temas:
-  - **Oro** = estado consumado (confirmado, cobrado, pico).
-  - **`--ink-3`** = en curso (negociando, pendiente).
-  - **`--line`** = inerte (enviado sin respuesta, sin dato).
+  - **`--acc`** (el color del módulo activo) = estado consumado: confirmado, cobrado, pico.
+  - **`--ok`** = en curso: negociando, pendiente.
+  - **`--hair`** = inerte: enviado sin respuesta, sin dato.
 - **Prohibida la semántica verde-sube / rojo-baja.** Es lenguaje de P&L bursátil y es la mitad de por qué la app olía a bróker. Rojo (`--alert`) solo para errores reales del sistema.
 
 **La prueba que hay que pasar:** un recorte de 200 píxeles de cualquier pantalla debe ser reconocible como BandManager. Si no lo es, falta Onda.
@@ -63,70 +55,90 @@ La silueta del público con los brazos en alto es la única parte del logo con c
 
 ## 🎨 4. Tokens — contrato inviolable
 
-**Todo color, fuente, radio y sombra sale de un token.** Un componente nunca sabe qué tema está activo.
+**Todo color, fuente, radio y sombra sale de un token.** Un componente nunca sabe qué tema está activo. Fuente única de verdad: `src/styles/tokens.css`.
 
 ```css
-/* src/styles/tokens.css — fuente única de verdad */
-:root {                        /* CARGA (claro) — por defecto */
-  --bg:#FBFBF9; --surface:#FFFFFF; --sunken:#F1F1ED;
-  --ink:#111116; --ink-2:#55555E; --ink-3:#8E8E97; --line:#E3E3DE;
-  --gold:#F2CA50; --gold-ink:#7A5A0E;   /* gold-ink = versión que pasa AA sobre claro */
-  --beam:rgba(242,202,80,.20); --on-gold:#111116; --alert:#B8341C;
+:root {                                   /* CLARO — por defecto */
+  --bg:#F6F7F9; --surface:#FFFFFF; --sunken:#E8EBEF;
+  --ink:#2A2E35; --ink-2:#646C78; --ink-3:#98A0AC;
+  --hair:rgba(42,46,53,.065);
+  --ok:#17998C; --ok-soft:#DDF1EE; --alert:#B3453C;
+  --sh-s:none; --sh-m:none;               /* Espectro es plano: separa el relleno */
+  --r-s:12px; --r-m:18px; --r-l:24px; --r-xl:32px; --r-pill:999px;
 }
-[data-theme="dark"] {          /* DIRECTO — negros exactos del brand book */
-  --bg:#09090B; --surface:#111116; --sunken:#0D0D10;
-  --ink:#FFFFFF; --ink-2:#A1A1AA; --ink-3:#6B6B74; --line:#232329;
-  --gold:#F2CA50; --gold-ink:#F2CA50;
-  --beam:rgba(242,202,80,.13); --on-gold:#09090B; --alert:#FF7A5C;
-}
-[data-theme="stage"] {         /* ESCENARIO — alto contraste, leer bajo cañón de luz */
-  --bg:#FFFFFF; --surface:#FFFFFF; --sunken:#F0F0F0;
-  --ink:#000000; --ink-2:#000000; --ink-3:#3A3A3A; --line:#000000;
-  --gold:#6B4E00; --gold-ink:#000000; --beam:transparent;
-  --on-gold:#FFFFFF; --alert:#8B0000;
+[data-theme="dark"] {                     /* OSCURO — de primera, no invertido */
+  --bg:#101216; --surface:#191C21; --sunken:#0B0D10;
+  --ink:#E3E7EC; --ink-2:#99A1AC; --ink-3:#6B7380;
+  --hair:rgba(227,231,236,.08);
+  --ok:#4FC7B8; --ok-soft:#122D29; --alert:#E27A70;
 }
 ```
 
-**`--gold` y `--gold-ink` son dos cosas distintas y no son intercambiables.** `#F2CA50` sobre fondo claro da 2,7:1 de contraste: **no vale para texto**. Sirve para rellenos y elementos gráficos. Para texto dorado sobre claro se usa `--gold-ink` (`#7A5A0E`, 5,2:1, AA).
+### Color por módulo — la segunda ley
+Cada módulo tiñe `--acc` para que el usuario sepa dónde está sin leer el título. Se aplica con `data-modulo` en el contenedor raíz de la vista.
 
-Y en Tailwind v4, el truco que permite repintar sin tocar componentes:
+| Módulo | Claro `--acc` / `--acc-soft` / `--acc-ink` | Oscuro `--acc` |
+|---|---|---|
+| Panel · Booking | `#D9A62B` / `#FBF1DA` / `#8A6612` | `#EFC55F` |
+| Repertorio | `#E0615C` / `#FDE9E7` / `#A83C37` | `#F08B84` |
+| Gira · Sala | `#17998C` / `#DDF1EE` / `#0E6B62` | `#4FC7B8` |
+| Finanzas | `#3C7EA8` / `#E2EDF4` / `#24587A` | `#6FB0D9` |
+| Fans · Reels | `#9B5FB5` / `#F0E7F5` / `#6F3D87` | `#C08FD6` |
 
+- **`--acc` y `--acc-ink` no son intercambiables.** `--acc` es para rellenos y elementos gráficos; `--acc-ink` es la versión oscurecida que pasa AA para texto sobre claro. El ámbar `#D9A62B` sobre blanco no llega a 4,5:1 — para texto va `#8A6612`.
+- El ámbar de Booking es el descendiente directo del `#F2CA50` de marca, apenas oscurecido para contraste. **La marca no se pierde: se le da un sitio.**
+
+### Repintado sin tocar componentes (Tailwind v4)
 ```css
 @theme {
-  --color-amber-500: var(--gold);   /* las 1.630 clases bg-amber-500 se repintan solas */
-  --font-mono: var(--font-sans);    /* desactiva 2.711 monoespaciadas de golpe */
+  --color-amber-500: var(--acc);    /* repinta 1.630 clases bg-amber-500 de golpe */
+  --font-mono: var(--font-sans);    /* desactiva 2.711 monoespaciadas */
 }
 ```
 
 ### Prohibiciones duras
+- ❌ **Cualquier `border`.** Es la ley 1. Separa con escalón de luminancia (`--surface` más clara que `--bg`), espacio, o `--sunken` al pasar el ratón.
 - ❌ Hexadecimal literal en un `.tsx` (`bg-[#f2ca50]`, `text-[#131313]`). Token o nada.
 - ❌ Más de una escala de gris. **`neutral` es la única permitida**; `slate`, `zinc`, `stone` y `gray` quedan retiradas.
 - ❌ `dark:` de Tailwind en componentes. El tema se resuelve en tokens, no en el marcado.
-- ❌ `backdrop-blur` fuera de un modal. `glow-*`, `shadow-[0_0_...]` y `animate-pulse` decorativo: fuera. `animate-pulse` solo para carga real.
-- ❌ `bg-gradient-*` salvo el haz cenital.
+- ❌ `backdrop-blur`, `glow-*`, `shadow-[0_0_...]`, halos y degradados. `animate-pulse` solo para carga real.
+- ❌ `#000` o `#FFF` como fondo o como texto.
 
 ---
 
-## 🔤 5. Tipografía
+## 📐 5. La escala de radios
 
-| Rol | Familia | Uso |
+**Un solo radio para todo aplana la jerarquía.** El radio crece con el peso del objeto, y así se ve ópticamente parejo:
+
+| Token | Valor | Para |
 |---|---|---|
-| Titulares / nav / cifras | **Archivo** (eje `wdth` 62–125) | `font-display`. Caja alta, `font-stretch` 78–88%. Comparte proporciones con el logotipo, y la anchura variable es funcional: «Valladolid — Sala Porta Caeli» tiene que caber en columna. |
-| Texto corrido | **Inter** | `font-sans`. Se mantiene del brand book: es excelente en cuerpo. |
-| Dato tabular | **IBM Plex Mono** | `font-mono`. **Solo** BPM, timecodes, fechas, importes, IDs y cabeceras de tabla. |
-
-- **Inter en titulares está vetada.** Es la fuente de interfaz más usada del planeta y el delator número uno del diseño generado por IA.
-- La monoespaciada en etiquetas de UI está vetada. Si el contenido no es un número o un código, no es mono. Referencia histórica: la app llegó a tener 2.711 usos frente a 339 de `font-sans`.
-- El combo `font-mono` + `uppercase` + `tracking-widest` es la gramática de una pantalla de Bloomberg. **Prohibido.**
-- Cifras alineadas en columna: `font-variant-numeric: tabular-nums`. Sin cero a la izquierda (`7`, no `07` — eso es un tic de ticker).
+| `--r-pill` | `999px` | Chips, badges, píldoras de estado, items de navegación, botones |
+| `--r-s` | `12px` | Campos de formulario, celdas pequeñas |
+| `--r-m` | `18px` | Tarjetas, filas de lista |
+| `--r-l` | `24px` | Paneles y contenedores |
+| `--r-xl` | `32px` | Modales y hojas |
 
 ---
 
-## 🌓 6. Los tres temas
+## 🔤 6. Tipografía
 
-Nombres de cara al usuario: **Carga** (claro, por defecto), **Directo** (oscuro), **Escenario** (alto contraste). El tercero ya existía a medias como `glareMode` en `SetlistPerformanceView`.
+**Una sola familia: `Onest`.** La jerarquía la hace el peso y el tamaño, no mezclar fuentes. Es lo más minimalista, lo más barato de cargar y lo más descansado de leer en jornadas largas.
 
-Separa **preferencia** (lo que el usuario eligió: `light` | `dark` | `stage` | `system`) de **tema resuelto** (lo que se pinta):
+- Es humanista, de aperturas abiertas y altura de x generosa: diseñada para leerse, no para impresionar.
+- **Vetadas por delatoras de diseño generado:** Inter, Poppins, Space Grotesk, Plus Jakarta, Bricolage Grotesque, Newsreader, Montserrat, Nunito, Quicksand. *(Inter era la del brand book de Pomelli; se anula a propósito.)*
+- **Nada de tipografía condensada** y **nada de mayúsculas decorativas**: las dos cansan en sesiones largas.
+- `font-mono` **solo** en dato tabular real: BPM, timecodes, fechas, importes, IDs. El combo `font-mono` + `uppercase` + `tracking-widest` es la gramática de una pantalla de Bloomberg y está **prohibido**.
+- Cifras en columna: `font-variant-numeric: tabular-nums`. Sin cero a la izquierda (`7`, no `07` — es un tic de ticker).
+
+---
+
+## 🌓 7. Los tres temas
+
+De cara al usuario: **Claro** (por defecto), **Oscuro** y **Clásico**.
+
+> **Clásico es innegociable y es lo que hace reversible todo esto.** Es el diseño anterior de BandManager, conservado como un juego de tokens más. No se borra nunca. Un usuario que no quiera el cambio lo elige y sigue con lo de siempre. **Ninguna migración a Espectro puede eliminarlo.**
+
+Separa **preferencia** (`light` | `dark` | `classic` | `system`) de **tema resuelto** (lo que se pinta):
 
 ```ts
 const mq = matchMedia('(prefers-color-scheme: dark)');
@@ -135,18 +147,17 @@ export function aplicarTema(pref: Preferencia) {
   const resuelto = pref === 'system' ? (mq.matches ? 'dark' : 'light') : pref;
   document.documentElement.dataset.theme = resuelto;
 }
-// Con 'system', el SO manda en caliente: sin recargar, sin parpadeo.
 mq.addEventListener('change', () => { if (leerPref() === 'system') aplicarTema('system'); });
 ```
 
-Reglas de implantación:
 1. **La preferencia se persiste en el perfil de usuario** (Supabase), no solo en `localStorage`. Se entra desde el portátil en casa y desde el móvil en la furgo y se espera el mismo tema. `localStorage` queda como caché de arranque.
 2. **Script inline en `index.html`, antes del CSS**, que lea la caché y estampe `data-theme`. Sin él hay un fogonazo blanco en cada carga con tema oscuro.
-3. Todo componente debe verse correcto en los **tres** temas. No se da por bueno un componente probado solo en oscuro.
+3. Todo componente debe verse correcto en los **tres** temas. No se da por bueno un componente probado solo en uno.
+4. El modo de alto contraste para leer en escenario sigue siendo `glareMode` en `SetlistPerformanceView` — es una vista puntual, no un tema global.
 
 ---
 
-## 🚫 7. Checklist anti-plantilla de IA
+## 🚫 8. Checklist anti-plantilla de IA
 
 Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una pantalla.
 
@@ -162,7 +173,7 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 
 ---
 
-## 📱 8. Simplicidad en pantalla (AGENTS.md §6 — manda sobre lo estético)
+## 📱 9. Simplicidad en pantalla (AGENTS.md §6 — manda sobre lo estético)
 
 - Móvil primero de verdad, ~390 px: **máximo 3 bloques antes del primer scroll**.
 - Acciones secundarias detrás de `⋯`, nunca una fila de botones siempre visible.
@@ -173,12 +184,17 @@ Los nueve delatores del diseño generado. Pásalo antes de dar por cerrada una p
 
 ## ✅ Checklist antes de PR de UI
 
-- [ ] Cero hexadecimales literales nuevos; todo por token.
+- [ ] **Cero `border` nuevos.** ¿Separa el escalón de luminancia y el espacio?
+- [ ] Cero hexadecimales literales; todo por token.
 - [ ] Cero `slate`/`zinc`/`stone`/`gray` nuevos (solo `neutral`).
-- [ ] Ningún `glow`, `shadow-[0_0_...]`, halo ni degradado dorado.
+- [ ] El radio sale de la escala y corresponde al peso del objeto.
+- [ ] Caja de frase en todo. Ni una mayúscula decorativa.
+- [ ] `--acc` viene del módulo (`data-modulo`), no hardcodeado.
+- [ ] Texto entre 10:1 y 14:1 de contraste. `--acc-ink` para texto, `--acc` para relleno.
 - [ ] `font-mono` solo en dato tabular real.
-- [ ] Probado en **Carga, Directo y Escenario**.
-- [ ] Toda serie de datos usa `<Onda>`, no una librería de gráficos.
+- [ ] Probado en **Claro, Oscuro y Clásico**.
+- [ ] Toda serie de datos usa `<Onda>` con puntas redondeadas, no una librería de gráficos.
 - [ ] Estado vacío con voz propia, no «No hay datos».
-- [ ] Checklist anti-plantilla del §7 pasado.
+- [ ] Checklist anti-plantilla del §8 pasado.
+- [ ] Cabe en 3 bloques el primer viewport móvil (~390 px).
 - [ ] `npx tsc --noEmit` sin errores nuevos.

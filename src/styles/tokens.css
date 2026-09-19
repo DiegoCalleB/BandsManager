@@ -1,0 +1,175 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ESPECTRO — sistema de tokens de BandManager.io
+   Autoridad: skills/visual-identity/SKILL.md
+
+   Dos leyes:
+     1 · Ningún borde. La separación es luz y espacio.
+     2 · Cada módulo tiene su color. El resto es gris.
+
+   Los músicos pasan de 4 a 6 horas seguidas aquí dentro: la fatiga visual
+   manda sobre cualquier consideración estética. Por eso el contraste de
+   texto se queda en 12,4:1 (ni menos, que es ilegible, ni 21:1, que quema),
+   no hay blanco ni negro puros, y no hay una sola mayúscula decorativa.
+
+   NADA se sustituye: el diseño anterior vive en [data-theme="classic"] y no
+   se elimina nunca. Cambiar de tema es un interruptor, no una migración.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ───────────────────────── CLARO (por defecto) ───────────────────────── */
+:root {
+  /* Superficies — la tarjeta es MÁS clara que el fondo. Ese escalón es lo
+     que separa: no hay bordes. */
+  --bg:       #F6F7F9;
+  --surface:  #FFFFFF;
+  --sunken:   #E8EBEF;
+
+  /* Tinta — #2A2E35 sobre #F6F7F9 da 12,4:1. Cómodo, no agresivo. */
+  --ink:      #2A2E35;
+  --ink-2:    #646C78;
+  --ink-3:    #98A0AC;
+  --hair:     rgba(42, 46, 53, 0.065);
+
+  /* Estado — sin semántica verde-sube/rojo-baja: eso es lenguaje de bolsa */
+  --ok:       #17998C;
+  --ok-soft:  #DDF1EE;
+  --alert:    #B3453C;
+  --alert-soft: #FAE7E5;
+
+  /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo]. */
+  --acc:      #D9A62B;
+  --acc-soft: #FBF1DA;
+  --acc-ink:  #8A6612;
+  --on-acc:   #241A04;
+
+  /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
+  --sh-s: none;
+  --sh-m: none;
+
+  /* Radio — crece con el peso del objeto. Un radio único aplana la jerarquía. */
+  --r-pill: 999px;
+  --r-s:    12px;
+  --r-m:    18px;
+  --r-l:    24px;
+  --r-xl:   32px;
+
+  --font-ui: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  color-scheme: light;
+}
+
+/* ───────────────────────── OSCURO ─────────────────────────
+   Diseñado de primera, no invertido. Fondo #101216 en vez de negro puro y
+   tinta #E3E7EC en vez de blanco: el blanco puro sobre casi-negro produce
+   halación (las letras vibran y sangran), y con astigmatismo pasa factura
+   en veinte minutos. */
+[data-theme="dark"] {
+  --bg:       #101216;
+  --surface:  #191C21;
+  --sunken:   #0B0D10;
+
+  --ink:      #E3E7EC;
+  --ink-2:    #99A1AC;
+  --ink-3:    #6B7380;
+  --hair:     rgba(227, 231, 236, 0.08);
+
+  --ok:       #4FC7B8;
+  --ok-soft:  #122D29;
+  --alert:    #E27A70;
+  --alert-soft: #2E1815;
+
+  --acc:      #EFC55F;
+  --acc-soft: #2A2312;
+  --acc-ink:  #EFC55F;
+  --on-acc:   #1A1405;
+
+  color-scheme: dark;
+}
+
+/* ───────────────────────── CLÁSICO ─────────────────────────
+   El diseño anterior, conservado como un juego de tokens más. Es lo que
+   hace reversible todo el rediseño: quien no quiera Espectro elige esto y
+   sigue con lo de siempre. NO SE ELIMINA NUNCA. */
+[data-theme="classic"] {
+  --bg:       #121110;
+  --surface:  #18181B;
+  --sunken:   #0D0C0C;
+
+  --ink:      #F4F4F5;
+  --ink-2:    #A1A1AA;
+  --ink-3:    #71717A;
+  --hair:     rgba(244, 244, 245, 0.09);
+
+  --ok:       #10B981;
+  --ok-soft:  #062C22;
+  --alert:    #F43F5E;
+  --alert-soft: #2C0C14;
+
+  --acc:      #F2CA50;
+  --acc-soft: #2C2310;
+  --acc-ink:  #F2CA50;
+  --on-acc:   #2C2200;
+
+  --r-pill: 999px;
+  --r-s:    8px;
+  --r-m:    12px;
+  --r-l:    14px;
+  --r-xl:   16px;
+
+  color-scheme: dark;
+}
+
+/* ═══════════ COLOR POR MÓDULO ═══════════
+   La segunda ley. Se sabe dónde se está sin leer el título.
+   Se aplica con data-modulo en el contenedor raíz de cada vista.
+
+   --acc  → rellenos y elementos gráficos
+   --acc-ink → texto (versión oscurecida que pasa AA sobre claro)
+   No son intercambiables: #D9A62B sobre blanco no llega a 4,5:1.       */
+
+[data-modulo="repertorio"] { --acc:#E0615C; --acc-soft:#FDE9E7; --acc-ink:#A83C37; --on-acc:#FFFFFF; }
+[data-modulo="gira"],
+[data-modulo="sala"]       { --acc:#17998C; --acc-soft:#DDF1EE; --acc-ink:#0E6B62; --on-acc:#FFFFFF; }
+[data-modulo="finanzas"]   { --acc:#3C7EA8; --acc-soft:#E2EDF4; --acc-ink:#24587A; --on-acc:#FFFFFF; }
+[data-modulo="fans"],
+[data-modulo="reels"]      { --acc:#9B5FB5; --acc-soft:#F0E7F5; --acc-ink:#6F3D87; --on-acc:#FFFFFF; }
+
+[data-theme="dark"] [data-modulo="repertorio"] { --acc:#F08B84; --acc-soft:#2E1A18; --acc-ink:#F08B84; --on-acc:#2A100D; }
+[data-theme="dark"] [data-modulo="gira"],
+[data-theme="dark"] [data-modulo="sala"]       { --acc:#4FC7B8; --acc-soft:#122D29; --acc-ink:#4FC7B8; --on-acc:#08201C; }
+[data-theme="dark"] [data-modulo="finanzas"]   { --acc:#6FB0D9; --acc-soft:#14232E; --acc-ink:#6FB0D9; --on-acc:#0B1A24; }
+[data-theme="dark"] [data-modulo="fans"],
+[data-theme="dark"] [data-modulo="reels"]      { --acc:#C08FD6; --acc-soft:#241A2B; --acc-ink:#C08FD6; --on-acc:#1C1023; }
+
+/* Clásico ignora el color por módulo a propósito: es el diseño de antes,
+   y antes no había color por módulo. Cambiarlo sería no conservarlo. */
+[data-theme="classic"] [data-modulo] {
+  --acc:      #F2CA50;
+  --acc-soft: #2C2310;
+  --acc-ink:  #F2CA50;
+  --on-acc:   #2C2200;
+}
+
+/* ═══════════ PUENTE CON TAILWIND — DESACTIVADO A PROPÓSITO ═══════════
+
+   Tailwind v4 permite redefinir QUÉ SIGNIFICAN los colores que ya usan los
+   164 componentes, en vez de reescribirlos uno a uno: `bg-amber-500` sigue
+   escrito igual en el .tsx y pasa a pintar el acento del módulo. Repinta la
+   app entera desde este fichero, sin tocar una línea de JSX.
+
+   Queda comentado adrede. Activarlo repinta las 164 pantallas de una vez, y
+   esa no es forma de migrar: se enciende cuando haya red de regresión visual
+   (capturas de Playwright) y pantalla a pantalla, no en el commit que
+   simplemente introduce los tokens.
+
+   Ojo al activarlo: amber-400 y amber-500 pasarían a ser el MISMO color, y
+   hoy no lo son. Hay que darle a cada uno su token, no mapear los dos a
+   --acc como estaba escrito en el primer borrador de este fichero.
+
+@theme inline {
+  --color-amber-500: var(--acc);
+  --color-amber-400: var(--acc-ink);
+  --color-emerald-500: var(--ok);
+  --color-rose-500: var(--alert);
+  --font-sans: var(--font-ui);
+}
+*/
