@@ -79,14 +79,14 @@ Cada módulo tiñe `--acc` para que el usuario sepa dónde está sin leer el tí
 
 | Módulo | Claro `--acc` / `--acc-soft` / `--acc-ink` | Oscuro `--acc` |
 |---|---|---|
-| Panel · Booking | `#D9A62B` / `#FBF1DA` / `#8A6612` | `#EFC55F` |
+| Panel · Booking | `#D86E31` / `#F9EAE1` / `#813F18` | `#E99463` |
 | Repertorio | `#E0615C` / `#FDE9E7` / `#A83C37` | `#F08B84` |
 | Gira · Sala | `#17998C` / `#DDF1EE` / `#0E6B62` | `#4FC7B8` |
 | Finanzas | `#3C7EA8` / `#E2EDF4` / `#24587A` | `#6FB0D9` |
 | Fans · Reels | `#9B5FB5` / `#F0E7F5` / `#6F3D87` | `#C08FD6` |
 
-- **`--acc` y `--acc-ink` no son intercambiables.** `--acc` es para rellenos y elementos gráficos; `--acc-ink` es la versión oscurecida que pasa AA para texto sobre claro. El ámbar `#D9A62B` sobre blanco no llega a 4,5:1 — para texto va `#8A6612`.
-- El ámbar de Booking es el descendiente directo del `#F2CA50` de marca, apenas oscurecido para contraste. **La marca no se pierde: se le da un sitio.**
+- **`--acc` y `--acc-ink` no son intercambiables.** `--acc` es para rellenos y elementos gráficos; `--acc-ink` es la versión oscurecida que pasa AA para texto sobre claro. El naranja de Panel/Booking `#D86E31` sobre blanco no llega a 4,5:1 — para texto va `#813F18`.
+- Panel/Booking usaron el ámbar de marca (`#F2CA50`) hasta el 2026-09-19: "se le da un sitio" resultó ser insuficiente — combinado con el sidebar (aún sin migrar, `App.tsx`, negro), dorado+negro leía a bróker cripto pese a tener cero bordes ni glow. El color por sí solo pesa más que la forma. La primera sustituta, terracota (`#C2703D`), duró minutos: el propio checklist del §8 la señala como paleta segura de diseño generado, junto a salvia/crema/azul polvoriento. El tono final es naranja quemado (`#D86E31`), más saturado (68% vs 52%) y sin el barniz "de buen gusto". El dorado de marca se queda en el logo y en `[data-theme="classic"]`, no vuelve a la UI de Espectro.
 
 ### Repintado sin tocar componentes (Tailwind v4)
 ```css

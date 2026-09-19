@@ -35,11 +35,20 @@
   --alert:    #B3453C;
   --alert-soft: #FAE7E5;
 
-  /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo]. */
-  --acc:      #D9A62B;
-  --acc-soft: #FBF1DA;
-  --acc-ink:  #8A6612;
-  --on-acc:   #241A04;
+  /* Acento por defecto (módulo Panel/Booking). Lo tiñe [data-modulo].
+     Naranja quemado, no dorado: el ámbar quedó descartado el 2026-09-19 —
+     pasado por bordes y glow, seguía leyendo a bróker cripto en cuanto se
+     juntaba con el sidebar oscuro. El dorado de marca (#F2CA50) se queda
+     en el logo; no vuelve a la UI salvo en [data-theme="classic"].
+     OJO: la primera propuesta fue terracota (#C2703D) — descartada porque
+     el propio §8 de esta skill la señala, junto a salvia/crema/azul
+     polvoriento, como LA paleta segura de diseño generado. Este tono sube
+     la saturación (68% vs 52%) y baja el nombre de "de buen gusto" a
+     "naranja quemado" sin más: vivo, no de catálogo de interiorismo. */
+  --acc:      #D86E31;
+  --acc-soft: #F9EAE1;
+  --acc-ink:  #813F18;
+  --on-acc:   #FFFFFF;
 
   /* Elevación — Espectro es plano. Separa el relleno, no la sombra. */
   --sh-s: none;
@@ -77,10 +86,10 @@
   --alert:    #E27A70;
   --alert-soft: #2E1815;
 
-  --acc:      #EFC55F;
-  --acc-soft: #2A2312;
-  --acc-ink:  #EFC55F;
-  --on-acc:   #1A1405;
+  --acc:      #E99463;
+  --acc-soft: #3B2416;
+  --acc-ink:  #E99463;
+  --on-acc:   #33190A;
 
   color-scheme: dark;
 }
