@@ -956,7 +956,7 @@ export default function BookingCRM({
  const activeFiltersCount = (searchTerm ? 1 : 0) + (selectedCityFilter ? 1 : 0) + (statusFilter !== 'todos' ? 1 : 0) + (typeFilter !== 'todos' ? 1 : 0) + (minCapacityFilter > 0 ? 1 : 0) + (onlyFavoritesFilter ? 1 : 0) + (onlyVerifiedFilter ? 1 : 0) + (activeSavedFilterId ? 1 : 0);
 
  return (
- <div className="space-y-4 text-[var(--ink)] font-sans w-full max-w-full overflow-x-hidden">
+ <div className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden">
  
  {/* 2. LEADS CRM WORKSPACE */}
  <div className={`grid grid-cols-1 ${selectedLead ? 'lg:grid-cols-3 gap-8' : 'w-full'} items-start transition-all duration-300`}>
@@ -2061,20 +2061,20 @@ export default function BookingCRM({
 </div>
 
   {/* 3. EMAIL TEMPLATES & AI SETTINGS EDITOR CARD */}
-  <div id="ai-template-config-section" className={`${colors.card} p-4 sm:p-5 rounded-2xl border ${isStitchLight ? 'border-slate-200' : 'border-white/5'} transition-all`}>
+  <div id="ai-template-config-section" className="bg-[var(--surface)] p-4 sm:p-5 rounded-[var(--r-l)] transition-colors">
     <div
       className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
       onClick={() => setIsTemplatesSectionOpen(!isTemplatesSectionOpen)}
     >
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+        <div className="w-9 h-9 rounded-[var(--r-m)] bg-[var(--acc-soft)] flex items-center justify-center text-[var(--acc-ink)] shrink-0">
           <Settings className="w-4 h-4" />
         </div>
         <div>
-          <h3 className={`text-sm font-bold font-display uppercase tracking-wider flex items-center gap-2 ${isStitchLight ? 'text-sky-400' : 'text-[#f2ca50]'}`}>
-            Configuración de Plantillas y Pautas AI (Redactor)
+          <h3 className="text-sm font-bold font-display flex items-center gap-2 text-[var(--ink)]">
+            Configuración de plantillas y pautas AI (Redactor)
           </h3>
-          <p className={`text-[11px] font-sans mt-0.5 ${textSub}`}>
+          <p className="text-[11px] font-sans mt-0.5 text-[var(--ink-3)]">
             Personaliza el correo por defecto y las directrices del Redactor AI para Salas, Festivales, Medios y Grupos.
           </p>
         </div>
@@ -2087,10 +2087,10 @@ export default function BookingCRM({
             e.stopPropagation();
             setIsTemplatesSectionOpen(!isTemplatesSectionOpen);
           }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-bold transition-colors cursor-pointer ${
             isTemplatesSectionOpen
-              ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
-              : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:text-white hover:bg-zinc-800'
+              ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
+              : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
           }`}
         >
           <span>{isTemplatesSectionOpen ? 'Plegar' : 'Configurar'}</span>

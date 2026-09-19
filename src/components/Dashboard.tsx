@@ -724,7 +724,7 @@ export default function Dashboard({
   }
 
   return (
-    <div className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 font-sans w-full max-w-full overflow-x-hidden">
+    <div className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden">
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
